@@ -1,6 +1,8 @@
 react-jsonschema-form
 =====================
 
+[![Build Status](https://travis-ci.org/mozilla-services/react-jsonschema-form.svg)](https://travis-ci.org/mozilla-services/react-jsonschema-form)
+
 A simple [React]() component capable of building forms from a [JSON schema]().
 
 Requires React 0.14+.
