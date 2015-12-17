@@ -29,7 +29,7 @@
     "eslint": "^1.8.0",
     "eslint-plugin-react": "^3.6.3",
     "gh-pages": "^0.4.0",
-    "jsdom": "^7.1.0",
+    "jsdom": "^7.2.1",
     "json-loader": "^0.5.4",
     "mocha": "^2.3.0",
     "react-addons-test-utils": "^0.14.3",

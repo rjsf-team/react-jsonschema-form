@@ -150,7 +150,8 @@ class BooleanField extends React.Component {
 class ArrayField extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {items: props.formData || props.schema.default || []};
+    const formData = Array.isArray(props.formData) ? props.formData : null;
+    this.state = {items: formData || props.schema.default || []};
   }
 
   get itemTitle() {

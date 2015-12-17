@@ -157,6 +157,71 @@ describe("Form", () => {
     });
   });
 
+  describe("ArrayField", () => {
+    const schema = {
+      type: "array",
+      title: "my list",
+      items: {type: "string"}
+    };
+
+    it("should render a fieldset", () => {
+      const {node} = createComponent({schema});
+
+      expect(node.querySelectorAll("fieldset"))
+        .to.have.length.of(1);
+    });
+
+    it("should render a fieldset legend", () => {
+      const {node} = createComponent({schema});
+
+      expect(node.querySelector("fieldset > legend").textContent)
+        .eql("my list");
+    });
+
+    it("should contain no field in the list by default", () => {
+      const {node} = createComponent({schema});
+
+      expect(node.querySelectorAll(".field-string"))
+        .to.have.length.of(0);
+    });
+
+    it("should add an add button", () => {
+      const {node} = createComponent({schema});
+
+      expect(node.querySelector(".array-item-add button"))
+        .to.be.truthy;
+    });
+
+    it("should add a new field when clicking the add button", () => {
+      const {node} = createComponent({schema});
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelectorAll(".field-string"))
+        .to.have.length.of(1);
+    });
+
+    it("should fill an array field with data", () => {
+      const {node} = createComponent({schema, formData: ["foo", "bar"]});
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+
+      expect(inputs).to.have.length.of(2);
+      expect(inputs[0].value).eql("foo");
+      expect(inputs[1].value).eql("bar");
+    });
+
+    it("should remove a field from the list", () => {
+      const {node} = createComponent({schema, formData: ["foo", "bar"]});
+      const dropBtns = node.querySelectorAll(".array-item-remove button");
+
+      Simulate.click(dropBtns[0]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+      expect(inputs).to.have.length.of(1);
+      expect(inputs[0].value).eql("bar");
+    });
+  });
+
   describe("ObjectField", () => {
     const schema = {
       type: "object",
