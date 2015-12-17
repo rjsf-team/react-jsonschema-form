@@ -9,9 +9,21 @@ Requires React 0.14+.
 
 ## Installation
 
+As a npm-based project dependency:
+
 ```
 $ npm install react-jsonschema-form --save
 ```
+
+As an standalone CDN url:
+
+```html
+  <script src="https://npmcdn.com/react-jsonschema-form@0.1.0/dist/react-jsonschema-form-0.1.0.js"></script>
+```
+
+Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form@0.1.0/dist/react-jsonschema-form-0.1.0.js.map).
+
+Note that the CDN version **does not** embed *react* nor *react-dom*.
 
 ## Usage
 
@@ -31,16 +43,20 @@ const schema = {
   }
 };
 
-const log = (type) => console.log.bind(console, type);
-
-const App = ({schema}) => {
-  return <Form schema={schema}
-               onChange={log("changed")}
-               onSubmit={log("submitted")}
-               onError={log("errors")} />;
+const formData =  {
+  title: "First task",
+  done: true
 };
 
-render(<App schema={schema} />, document.getElementById("app"));
+const log = (type) => console.log.bind(console, type);
+
+render((
+  <Form schema={schema}
+        formData={formData}
+        onChange={log("changed")}
+        onSubmit={log("submitted")}
+        onError={log("errors")} />
+), document.getElementById("app"));
 ```
 
 ## License
