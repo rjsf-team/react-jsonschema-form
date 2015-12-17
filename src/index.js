@@ -3,15 +3,38 @@ import { Validator } from "jsonschema";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 
+function defaultTypeValue(type) {
+  switch (type) {
+  case "array":     return [];
+  case "boolean":   return false;
+  case "date-time": return "";
+  case "number":    return 0;
+  case "object":    return {};
+  case "string":    return "";
+  default:        return undefined;
+  }
+}
+
+function defaultFieldValue(formData, schema) {
+  if (formData === null) {
+    return defaultTypeValue(schema.type);
+  }
+  if (schema.default) {
+    return schema.default;
+  }
+  return formData;
+}
+
 class Field extends React.Component {
   get label() {
-    if (!this.props.label) {
+    const {label, required} = this.props;
+    if (!label) {
       return null;
     }
-    if (this.props.required) {
-      return this.props.label + REQUIRED_FIELD_SYMBOL;
+    if (required) {
+      return label + REQUIRED_FIELD_SYMBOL;
     }
-    return this.props.label;
+    return label;
   }
 
   render() {
@@ -34,12 +57,11 @@ class TextField extends React.Component {
 
   render() {
     const {schema, formData, label, required, placeholder} = this.props;
-    const _formData = typeof formData === "string" ? formData : undefined;
     return (
       <Field label={label} required={required}
         type={schema.type}>
         <input type="text"
-          value={_formData || schema.default}
+          value={defaultFieldValue(formData, schema)}
           placeholder={placeholder}
           required={required}
           onChange={this.onChange.bind(this)} />
@@ -55,14 +77,12 @@ class CheckboxField extends React.Component {
 
   render() {
     const {schema, formData, label, required, placeholder} = this.props;
-    const _formData = typeof formData === "boolean" ?
-                     formData : false;
     return (
       <Field label={label} required={required}
         type={schema.type}>
         <input type="checkbox"
           title={placeholder}
-          checked={Boolean(_formData || schema.default)}
+          checked={defaultFieldValue(formData, schema)}
           required={required}
           onChange={this.onChange.bind(this)} />
       </Field>
@@ -79,7 +99,7 @@ class SelectField extends React.Component {
     const {schema, formData, options, required, label} = this.props;
     return (
       <Field label={label} required={required}>
-        <select value={formData || schema.default}
+        <select value={defaultFieldValue(formData, schema)}
           title={schema.description}
           onChange={this.onChange.bind(this)}>{
           options.map((option, i) => {
@@ -167,13 +187,7 @@ class ArrayField extends React.Component {
     if (itemsSchema.default) {
       return itemsSchema.default;
     }
-    switch (itemsSchema.type) {
-    case "string": return "";
-    case "array":  return [];
-    case "boolean": return false;
-    case "object": return {};
-    default: return undefined;
-    }
+    return defaultTypeValue(itemsSchema.type);
   }
 
   isItemRequired(itemsSchema) {
@@ -295,7 +309,7 @@ export default class Form extends React.Component {
   constructor(props) {
     super(props);
     const edit = !!props.formData;
-    const formData = props.formData || this.props.schema.default || {};
+    const formData = props.formData || props.schema.default || null;
     this.state = {
       status: "initial",
       formData,
@@ -348,12 +362,14 @@ export default class Form extends React.Component {
   }
 
   render() {
+    const {schema} = this.props;
+    const {formData} = this.state;
     return (
       <form className="generic-form" onSubmit={this.onSubmit.bind(this)}>
         {this.renderErrors()}
         <SchemaField
-          schema={this.props.schema}
-          formData={this.state.formData}
+          schema={schema}
+          formData={formData}
           onChange={this.onChange.bind(this)} />
         <p><button type="submit">Submit</button></p>
       </form>

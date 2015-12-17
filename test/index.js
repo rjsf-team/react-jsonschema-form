@@ -12,9 +12,9 @@ function createComponent(props) {
   return {comp, node};
 }
 
-function d(node) {
-  console.log(node.outerHTML);
-}
+// function d(node) {
+//   console.log(node.outerHTML);
+// }
 
 describe("Form", () => {
   var sandbox;
@@ -301,6 +301,7 @@ describe("Form", () => {
       },
       properties: {
         foo: {
+          title: "foo",
           type: "string",
         },
         bar: {
@@ -352,6 +353,8 @@ describe("Form", () => {
       // Required field is <input type="text" required="">
       expect(node.querySelector("input[type=text]").getAttribute("required"))
         .eql("");
+      expect(node.querySelector(".field label").textContent)
+        .eql("foo*");
     });
 
     it("should fill fields with form data", () => {
@@ -374,6 +377,119 @@ describe("Form", () => {
       });
 
       expect(comp.state.formData.foo).eql("changed");
+    });
+  });
+
+  describe("Validation", () => {
+    describe("Required fields", () => {
+      const schema = {
+        type: "object",
+        required: ["foo"],
+        properties: {
+          foo: {type: "string"},
+          bar: {type: "string"},
+        }
+      };
+
+      var comp, node, onError;
+
+      beforeEach(() => {
+        onError = sandbox.spy();
+        const compInfo = createComponent({schema, formData: {
+          foo: undefined
+        }, onError});
+        comp = compInfo.comp;
+        node = compInfo.node;
+
+        Simulate.submit(node);
+      });
+
+      it("should validate a required field", () => {
+        expect(comp.state.errors)
+          .to.have.length.of(1);
+        expect(comp.state.errors[0].message)
+          .eql(`requires property "foo"`);
+      });
+
+      it("should render errors", () => {
+        expect(node.querySelectorAll(".errors li"))
+          .to.have.length.of(1);
+        expect(node.querySelector(".errors li").textContent)
+          .eql(`instance requires property "foo"`);
+      });
+
+      it("should trigger the onError handler", () => {
+        sinon.assert.calledWith(onError, sinon.match(errors => {
+          return errors[0].message === `requires property "foo"`;
+        }));
+      });
+    });
+
+    describe("Min length", () => {
+      const schema = {
+        type: "object",
+        required: ["foo"],
+        properties: {
+          foo: {
+            type: "string",
+            minLength: 10,
+          },
+        }
+      };
+
+      var comp, node, onError;
+
+      beforeEach(() => {
+        onError = sandbox.spy();
+        const compInfo = createComponent({schema, formData: {
+          foo: "123456789"
+        }, onError});
+        comp = compInfo.comp;
+        node = compInfo.node;
+
+        Simulate.submit(node);
+      });
+
+      it("should validate a minLength field", () => {
+        expect(comp.state.errors)
+          .to.have.length.of(1);
+        expect(comp.state.errors[0].message)
+          .eql(`does not meet minimum length of 10`);
+      });
+
+      it("should render errors", () => {
+        expect(node.querySelectorAll(".errors li"))
+          .to.have.length.of(1);
+        expect(node.querySelector(".errors li").textContent)
+          .eql("instance.foo does not meet minimum length of 10");
+      });
+
+      it("should trigger the onError handler", () => {
+        sinon.assert.calledWith(onError, sinon.match(errors => {
+          return errors[0].message ===
+            "does not meet minimum length of 10";
+        }));
+      });
+    });
+  });
+
+  describe("Submit handler", () => {
+    it("should call provided submit handler with form state", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {type: "string"},
+        }
+      };
+      const formData = {
+        foo: "bar"
+      };
+      const onSubmit = sandbox.spy();
+      const {comp, node} = createComponent({schema, formData, onSubmit});
+
+      Simulate.submit(node);
+
+      sinon.assert.calledWithExactly(onSubmit, comp.state);
     });
   });
 });
