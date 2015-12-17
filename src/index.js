@@ -15,11 +15,12 @@ class Field extends React.Component {
   }
 
   render() {
+    const {type, children} = this.props;
     return (
-      <div className={`field field-${this.props.type}`}>
+      <div className={`field field-${type}`}>
         <label>
           {this.label}
-          {this.props.children}
+          {children}
         </label>
       </div>
     );
@@ -32,15 +33,15 @@ class TextField extends React.Component {
   }
 
   render() {
-    const formData = typeof this.props.formData === "string" ?
-                     this.props.formData : undefined;
+    const {schema, formData, label, required, placeholder} = this.props;
+    const _formData = typeof formData === "string" ? formData : undefined;
     return (
-      <Field label={this.props.label} required={this.props.required}
-        type={this.props.schema.type}>
+      <Field label={label} required={required}
+        type={schema.type}>
         <input type="text"
-          value={formData || this.props.schema.default}
-          placeholder={this.props.placeholder}
-          required={this.props.required}
+          value={_formData || schema.default}
+          placeholder={placeholder}
+          required={required}
           onChange={this.onChange.bind(this)} />
       </Field>
     );
@@ -53,15 +54,16 @@ class CheckboxField extends React.Component {
   }
 
   render() {
-    const formData = typeof this.props.formData === "boolean" ?
-                     this.props.formData : false;
+    const {schema, formData, label, required, placeholder} = this.props;
+    const _formData = typeof formData === "boolean" ?
+                     formData : false;
     return (
-      <Field label={this.props.label} required={this.props.required}
-        type={this.props.schema.type}>
+      <Field label={label} required={required}
+        type={schema.type}>
         <input type="checkbox"
-          title={this.props.placeholder}
-          checked={Boolean(formData || this.props.schema.default)}
-          required={this.props.required}
+          title={placeholder}
+          checked={Boolean(_formData || schema.default)}
+          required={required}
           onChange={this.onChange.bind(this)} />
       </Field>
     );
@@ -74,11 +76,13 @@ class SelectField extends React.Component {
   }
 
   render() {
+    const {schema, formData, options, required, label} = this.props;
     return (
-      <Field label={this.props.label} required={this.props.required}>
-        <select value={this.props.formData || this.props.schema.default}
+      <Field label={label} required={required}>
+        <select value={formData || schema.default}
+          title={schema.description}
           onChange={this.onChange.bind(this)}>{
-          this.props.options.map((option, i) => {
+          options.map((option, i) => {
             return <option key={i}>{option}</option>;
           })
         }</select>
@@ -109,8 +113,8 @@ class SchemaField extends React.Component {
   }
 
   render() {
-    const schemaType = this.props.schema.type;
-    const FieldComponent = SchemaField.fieldComponents[schemaType] ||
+    const {schema} = this.props;
+    const FieldComponent = SchemaField.fieldComponents[schema.type] ||
       UnsupportedField;
     return <FieldComponent {...this.props} />;
   }
@@ -118,13 +122,13 @@ class SchemaField extends React.Component {
 
 class StringField extends React.Component {
   render() {
-    const schema = this.props.schema;
+    const {schema, formData, required, onChange} = this.props;
     const commonProps = {
       schema,
       label:    schema.title,
-      formData: this.props.formData,
-      required: this.props.required,
-      onChange: this.props.onChange.bind(this),
+      formData: formData,
+      required: required,
+      onChange: onChange.bind(this),
     };
     if (Array.isArray(schema.enum)) {
       return <SelectField options={schema.enum} {...commonProps} />;
@@ -135,13 +139,13 @@ class StringField extends React.Component {
 
 class BooleanField extends React.Component {
   render() {
-    const schema = this.props.schema;
+    const {schema, formData, required, onChange} = this.props;
     const commonProps = {
       schema,
       label:    schema.title,
-      formData: this.props.formData,
-      required: this.props.required,
-      onChange: this.props.onChange.bind(this),
+      formData: formData,
+      required: required,
+      onChange: onChange.bind(this),
     };
     return <CheckboxField placeholder={schema.description} {...commonProps} />;
   }
@@ -155,7 +159,7 @@ class ArrayField extends React.Component {
   }
 
   get itemTitle() {
-    const schema = this.props.schema;
+    const {schema} = this.props;
     return schema.items.title || schema.items.description || "Item";
   }
 
@@ -204,17 +208,18 @@ class ArrayField extends React.Component {
   }
 
   render() {
-    const schema = this.props.schema;
+    const {schema} = this.props;
+    const {items} = this.state;
     return (
       <fieldset
         className={`field field-array field-array-of-${schema.items.type}`}>
         <legend>{schema.title}</legend>
         {schema.description ? <div>{schema.description}</div> : null}
         <div className="array-item-list">{
-          this.state.items.map((item, index) => {
+          items.map((item, index) => {
             return <div key={index}>
               <SchemaField schema={schema.items}
-                formData={this.state.items[index]}
+                formData={items[index]}
                 required={this.isItemRequired(schema.items)}
                 onChange={this.onChange.bind(this, index)} />
               <p className="array-item-remove">
@@ -253,7 +258,7 @@ class ObjectField extends React.Component {
   }
 
   render() {
-    const schema = this.props.schema;
+    const {schema} = this.props;
     return <fieldset>
       <legend>{schema.title || "Object"}</legend>
       {
@@ -271,7 +276,7 @@ class ObjectField extends React.Component {
 
 class ErrorList extends React.Component {
   render() {
-    const errors = this.props.errors;
+    const {errors} = this.props;
     if (errors.length === 0) {
       return null;
     }

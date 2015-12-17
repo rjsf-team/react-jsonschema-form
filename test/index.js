@@ -12,9 +12,9 @@ function createComponent(props) {
   return {comp, node};
 }
 
-// function d(node) {
-//   console.log(node.outerHTML);
-// }
+function d(node) {
+  console.log(node.outerHTML);
+}
 
 describe("Form", () => {
   var sandbox;
@@ -43,64 +43,132 @@ describe("Form", () => {
   });
 
   describe("StringField", () => {
-    it("should render a string field", () => {
-      const {node} = createComponent({schema: {
-        type: "string"
-      }});
+    describe("TextField", () => {
+      it("should render a string field", () => {
+        const {node} = createComponent({schema: {
+          type: "string"
+        }});
 
-      expect(node.querySelectorAll(".field input[type=text]"))
-        .to.have.length.of(1);
-    });
-
-    it("should render a string field with a label", () => {
-      const {node} = createComponent({schema: {
-        type: "string",
-        title: "foo"
-      }});
-
-      expect(node.querySelector(".field label > span").textContent)
-        .eql("foo");
-    });
-
-    it("should render a string field with a placeholder", () => {
-      const {node} = createComponent({schema: {
-        type: "string",
-        description: "bar",
-      }});
-
-      expect(node.querySelector(".field input").getAttribute("placeholder"))
-        .eql("bar");
-    });
-
-    it("should assign a default value", () => {
-      const {node} = createComponent({schema: {
-        type: "string",
-        default: "plop",
-      }});
-
-      expect(node.querySelector(".field input").getAttribute("value"))
-        .eql("plop");
-    });
-
-    it("should handle a change event", () => {
-      const {comp, node} = createComponent({schema: {
-        type: "string",
-      }});
-
-      Simulate.change(node.querySelector("input"), {
-        target: {value: "yo"}
+        expect(node.querySelectorAll(".field input[type=text]"))
+          .to.have.length.of(1);
       });
 
-      expect(comp.state.formData).eql("yo");
+      it("should render a string field with a label", () => {
+        const {node} = createComponent({schema: {
+          type: "string",
+          title: "foo"
+        }});
+
+        expect(node.querySelector(".field label > span").textContent)
+          .eql("foo");
+      });
+
+      it("should render a string field with a placeholder", () => {
+        const {node} = createComponent({schema: {
+          type: "string",
+          description: "bar",
+        }});
+
+        expect(node.querySelector(".field input").getAttribute("placeholder"))
+          .eql("bar");
+      });
+
+      it("should assign a default value", () => {
+        const {node} = createComponent({schema: {
+          type: "string",
+          default: "plop",
+        }});
+
+        expect(node.querySelector(".field input").getAttribute("value"))
+          .eql("plop");
+      });
+
+      it("should handle a change event", () => {
+        const {comp, node} = createComponent({schema: {
+          type: "string",
+        }});
+
+        Simulate.change(node.querySelector("input"), {
+          target: {value: "yo"}
+        });
+
+        expect(comp.state.formData).eql("yo");
+      });
+
+      it("should fill field with data", () => {
+        const {node} = createComponent({schema: {
+          type: "string",
+        }, formData: "plip"});
+
+        expect(node.querySelector(".field input").getAttribute("value"))
+          .eql("plip");
+      });
     });
 
-    it("should fill field with data", () => {
-      const {node} = createComponent({schema: {
-        type: "string",
-      }, formData: "plip"});
+    describe("SelectField", () => {
+      it("should render a string field", () => {
+        const {node} = createComponent({schema: {
+          type: "string",
+          enum: ["foo", "bar"]
+        }});
 
-      expect(node.querySelector(".field input").getAttribute("value"))
-        .eql("plip");
+        expect(node.querySelectorAll(".field select"))
+          .to.have.length.of(1);
+      });
+
+      it("should render a string field with a label", () => {
+        const {node} = createComponent({schema: {
+          type: "string",
+          enum: ["foo", "bar"],
+          title: "foo",
+        }});
+
+        expect(node.querySelector(".field label > span").textContent)
+          .eql("foo");
+      });
+
+      it("should render a select field with a tooltip", () => {
+        const {node} = createComponent({schema: {
+          type: "string",
+          enum: ["foo", "bar"],
+          description: "baz",
+        }});
+
+        expect(node.querySelector(".field select").getAttribute("title"))
+          .eql("baz");
+      });
+
+      it("should assign a default value", () => {
+        const {comp} = createComponent({schema: {
+          type: "string",
+          enum: ["foo", "bar"],
+          default: "bar",
+        }});
+
+        expect(comp.state.formData).eql("bar");
+      });
+
+      it("should handle a change event", () => {
+        const {comp, node} = createComponent({schema: {
+          type: "string",
+          enum: ["foo", "bar"],
+        }});
+
+        Simulate.change(node.querySelector("select"), {
+          target: {value: "yo"}
+        });
+
+        expect(comp.state.formData).eql("yo");
+      });
+
+      it("should fill field with data", () => {
+        const {comp} = createComponent({schema: {
+          type: "string",
+          enum: ["foo", "bar"],
+        }, formData: "bar"});
+
+        expect(comp.state.formData).eql("bar");
+      });
     });
   });
 
