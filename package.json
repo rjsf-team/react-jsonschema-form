@@ -3,13 +3,15 @@
   "version": "0.1.0",
   "description": "A simple React component capable of building forms from a JSON schema.",
   "scripts": {
-    "build": "babel-node -d lib/ src/",
+    "dist": "babel -d lib/ src/ && rimraf dist && webpack --optimize-minimize",
     "lint": "eslint src test",
+    "publish": "npm run dist && npm publish",
     "tdd": "npm run test -- -w",
     "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive --require ./test/setup-jsdom.js $(find test -name '*_test.js')"
   },
   "main": "lib/index.js",
   "files": [
+    "dist",
     "lib"
   ],
   "peerDependencies": {
@@ -23,19 +25,16 @@
     "babel": "^5.8.20",
     "babel-eslint": "^4.1.6",
     "babel-loader": "^5.3.2",
-    "babel-plugin-react-transform": "^1.1.1",
     "chai": "^3.3.0",
-    "css-loader": "^0.15.6",
     "eslint": "^1.8.0",
     "eslint-plugin-react": "^3.6.3",
     "gh-pages": "^0.4.0",
     "jsdom": "^7.2.1",
-    "json-loader": "^0.5.4",
     "mocha": "^2.3.0",
     "react-addons-test-utils": "^0.14.3",
     "rimraf": "^2.4.4",
     "sinon": "^1.17.2",
-    "style-loader": "^0.12.3"
+    "webpack": "^1.10.5"
   },
   "directories": {
     "test": "test"
