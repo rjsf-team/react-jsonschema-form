@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "description": "A simple React component capable of building forms from a JSON schema.",
   "scripts": {
-    "dist": "babel -d lib/ src/ && rimraf dist && webpack --optimize-minimize",
+    "dist": "babel -d lib/ src/ && rimraf dist && webpack --config webpack.config.dist.js --optimize-minimize",
     "lint": "eslint src test",
     "publish": "npm run dist && npm publish",
+    "start": "node devServer.js",
     "tdd": "npm run test -- -w",
     "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive --require ./test/setup-jsdom.js $(find test -name '*_test.js')"
   },
@@ -25,16 +26,24 @@
     "babel": "^5.8.20",
     "babel-eslint": "^4.1.6",
     "babel-loader": "^5.3.2",
+    "babel-plugin-react-transform": "^1.1.1",
     "chai": "^3.3.0",
+    "cosmos-js": "^0.7.1",
     "eslint": "^1.8.0",
     "eslint-plugin-react": "^3.6.3",
+    "express": "^4.13.3",
     "gh-pages": "^0.4.0",
     "jsdom": "^7.2.1",
     "mocha": "^2.3.0",
     "react-addons-test-utils": "^0.14.3",
+    "react-transform-catch-errors": "^1.0.0",
+    "react-transform-hmr": "^1.0.1",
+    "redbox-react": "^1.2.0",
     "rimraf": "^2.4.4",
     "sinon": "^1.17.2",
-    "webpack": "^1.10.5"
+    "webpack": "^1.10.5",
+    "webpack-dev-middleware": "^1.4.0",
+    "webpack-hot-middleware": "^2.6.0"
   },
   "directories": {
     "test": "test"

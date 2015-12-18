@@ -3,7 +3,8 @@ react-jsonschema-form
 
 [![Build Status](https://travis-ci.org/mozilla-services/react-jsonschema-form.svg)](https://travis-ci.org/mozilla-services/react-jsonschema-form)
 
-A simple [React]() component capable of building forms from a [JSON schema]().
+A simple [React](http://facebook.github.io/react/) component capable of building
+forms from a [JSON schema](http://jsonschema.net/).
 
 Requires React 0.14+.
 
@@ -15,7 +16,7 @@ As a npm-based project dependency:
 $ npm install react-jsonschema-form --save
 ```
 
-As an standalone CDN url:
+As a script dependency served from a CDN:
 
 ```html
   <script src="https://npmcdn.com/react-jsonschema-form@0.1.0/dist/react-jsonschema-form-0.1.0.js"></script>
@@ -57,6 +58,28 @@ render((
         onSubmit={log("submitted")}
         onError={log("errors")} />
 ), document.getElementById("app"));
+```
+
+## Development server
+
+```
+$ npm start
+```
+
+A [Cosmos development server](https://github.com/skidding/cosmos) showcasing
+components with hot reload enabled is available at
+[localhost:8080](http://localhost:8080).
+
+## Tests
+
+```
+$ npm test
+```
+
+### TDD
+
+```
+$ npm run tdd
 ```
 
 ## License
