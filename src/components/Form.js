@@ -1,7 +1,7 @@
 import React from "react";
 import { Validator } from "jsonschema";
 
-import SchemaField from "./SchemaField";
+import SchemaField from "./fields/SchemaField";
 import ErrorList from "./ErrorList";
 
 

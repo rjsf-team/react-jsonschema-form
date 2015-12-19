@@ -1,7 +1,7 @@
 import React from "react";
 
-import TextField from "./TextField";
-import SelectField from "./SelectField";
+import TextField from "./../widgets/TextWidget";
+import SelectField from "./../widgets/SelectWidget";
 
 
 export default function StringField({schema, formData, required, onChange}) {

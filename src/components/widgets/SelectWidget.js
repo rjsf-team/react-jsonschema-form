@@ -1,7 +1,7 @@
 import React from "react";
 
-import { defaultFieldValue } from "../utils";
-import Field from "./Field";
+import { defaultFieldValue } from "../../utils";
+import Field from "./../fields/Field";
 
 
 export default function SelectField({

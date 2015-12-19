@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { defaultTypeValue } from "../utils";
+import { defaultTypeValue } from "../../utils";
 import SchemaField from "./SchemaField";
 
 

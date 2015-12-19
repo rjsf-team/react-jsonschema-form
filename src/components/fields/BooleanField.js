@@ -1,6 +1,6 @@
 import React from "react";
 
-import CheckboxField from "./CheckboxField";
+import CheckboxField from "./../widgets/CheckboxWidget";
 
 export default function BooleanField({schema, formData, required, onChange}) {
   // XXX at some point in the future we'll support other widgets for boolean
