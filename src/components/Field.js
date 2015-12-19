@@ -1,28 +1,24 @@
-import React, { Component } from "react";
+import React from "react";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 
-export default class Field extends Component {
-  get label() {
-    const {label, required} = this.props;
-    if (!label) {
-      return null;
-    }
-    if (required) {
-      return label + REQUIRED_FIELD_SYMBOL;
-    }
-    return label;
+function getLabel(label, required) {
+  if (!label) {
+    return null;
   }
+  if (required) {
+    return label + REQUIRED_FIELD_SYMBOL;
+  }
+  return label;
+}
 
-  render() {
-    const {type, children} = this.props;
-    return (
-      <div className={`field field-${type}`}>
-        <label>
-          {this.label}
-          {children}
-        </label>
-      </div>
-    );
-  }
+export default function Field({type, children, label, required}) {
+  return (
+    <div className={`field field-${type}`}>
+      <label>
+        {getLabel(label, required)}
+        {children}
+      </label>
+    </div>
+  );
 }
