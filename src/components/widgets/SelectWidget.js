@@ -1,23 +1,24 @@
-import React from "react";
+import React, { PropTypes } from "react";
 
-import { defaultFieldValue } from "../../utils";
 import Wrapper from "./../widgets/Wrapper";
 
 
-export default function SelectWidget({
-  schema,
-  formData,
+function SelectWidget({
+  type,
   options,
-  required,
   label,
+  placeholder,
+  value,
+  defaultValue,
+  required,
   onChange
 }) {
   return (
-    <Wrapper label={label} required={required}>
+    <Wrapper label={label} required={required} type={type}>
       <select
-        title={schema.description}
-        value={defaultFieldValue(formData, schema)}
-        defaultValue={schema.default}
+        title={placeholder}
+        value={value}
+        defaultValue={defaultValue}
         onChange={(event) => onChange(event.target.value)}>{
         options.map((option, i) => {
           return <option key={i}>{option}</option>;
@@ -26,3 +27,16 @@ export default function SelectWidget({
     </Wrapper>
   );
 }
+
+SelectWidget.propTypes = {
+  type: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  value: PropTypes.any,
+  defaultValue: PropTypes.any,
+  required: PropTypes.bool,
+  onChange: PropTypes.func,
+};
+
+export default SelectWidget;

@@ -3,6 +3,7 @@ import React, { PropTypes } from "react";
 import Wrapper from "./../widgets/Wrapper";
 
 function CheckboxWidget({
+  type,
   onChange,
   label,
   defaultValue,
@@ -11,7 +12,7 @@ function CheckboxWidget({
   placeholder
 }) {
   return (
-    <Wrapper label={label} required={required} type="boolean">
+    <Wrapper label={label} required={required} type={type}>
       <input type="checkbox"
         title={placeholder}
         checked={value}
@@ -23,6 +24,7 @@ function CheckboxWidget({
 }
 
 CheckboxWidget.propTypes = {
+  type: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   label: PropTypes.string,
   defaultValue: PropTypes.bool,

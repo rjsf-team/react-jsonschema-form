@@ -1,8 +1,7 @@
 module.exports = {
-  schema: {
-    type: "string",
-    title: "foo",
-    default: "b"
-  },
-  options: ["a", "b"]
+  type: "string",
+  label: "foo",
+  defaultValue: "b",
+  options: ["a", "b"],
+  onChange: console.log.bind(console)
 };

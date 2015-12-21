@@ -1,26 +1,37 @@
-import React from "react";
+import React, { PropTypes } from "react";
 
-import { defaultFieldValue } from "../../utils";
 import Wrapper from "./../widgets/Wrapper";
 
 
-export default function TextWidget({
-  schema,
-  formData,
+function TextWidget({
+  type,
   label,
-  required,
   placeholder,
+  value,
+  defaultValue,
+  required,
   onChange
 }) {
   return (
-    <Wrapper label={label} required={required}
-      type={schema.type}>
+    <Wrapper label={label} required={required} type={type}>
       <input type="text"
-        value={defaultFieldValue(formData, schema)}
-        defaultValue={schema.default}
+        value={value}
+        defaultValue={defaultValue}
         placeholder={placeholder}
         required={required}
         onChange={(event) => onChange(event.target.value)} />
     </Wrapper>
   );
 }
+
+TextWidget.propTypes = {
+  type: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  value: PropTypes.string,
+  defaultValue: PropTypes.string,
+  required: PropTypes.bool,
+  onChange: PropTypes.func,
+};
+
+export default TextWidget;

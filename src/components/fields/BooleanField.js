@@ -6,6 +6,7 @@ import CheckboxField from "./../widgets/CheckboxWidget";
 export default function BooleanField({schema, formData, required, onChange}) {
   const {title, description} = schema;
   const commonProps = {
+    type: schema.type,
     onChange,
     label: title,
     placeholder: description,

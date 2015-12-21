@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropTypes } from "react";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 
@@ -12,7 +12,7 @@ function getLabel(label, required) {
   return label;
 }
 
-export default function Wrapper({type, children, label, required}) {
+function Wrapper({type, children, label, required}) {
   return (
     <div className={`field field-${type}`}>
       <label>
@@ -22,3 +22,12 @@ export default function Wrapper({type, children, label, required}) {
     </div>
   );
 }
+
+Wrapper.propTypes = {
+  type: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  required: PropTypes.bool,
+  children: React.PropTypes.node.isRequired,
+};
+
+export default Wrapper;

@@ -1,5 +1,6 @@
 module.exports = {
-  type: "boolean",
+  type: "string",
   label: "foo",
+  options: ["foo", "bar", "baz"],
   onChange: console.log.bind(console)
 };
