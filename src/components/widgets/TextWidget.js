@@ -1,10 +1,10 @@
 import React from "react";
 
 import { defaultFieldValue } from "../../utils";
-import Field from "./../fields/Field";
+import Wrapper from "./../widgets/Wrapper";
 
 
-export default function TextField({
+export default function TextWidget({
   schema,
   formData,
   label,
@@ -13,7 +13,7 @@ export default function TextField({
   onChange
 }) {
   return (
-    <Field label={label} required={required}
+    <Wrapper label={label} required={required}
       type={schema.type}>
       <input type="text"
         value={defaultFieldValue(formData, schema)}
@@ -21,6 +21,6 @@ export default function TextField({
         placeholder={placeholder}
         required={required}
         onChange={(event) => onChange(event.target.value)} />
-    </Field>
+    </Wrapper>
   );
 }

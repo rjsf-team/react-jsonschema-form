@@ -12,7 +12,7 @@ function getLabel(label, required) {
   return label;
 }
 
-export default function Field({type, children, label, required}) {
+export default function Wrapper({type, children, label, required}) {
   return (
     <div className={`field field-${type}`}>
       <label>

@@ -1,13 +1,13 @@
 import React from "react";
 
-import Field from "./../fields/Field";
+import Wrapper from "./../widgets/Wrapper";
 
 
-export default function RadioField({schema, formData, options, onChange}) {
+export default function RadioWidget({schema, formData, options, onChange}) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   return (
-    <Field type={schema.type} label={schema.title}>
+    <Wrapper type={schema.type} label={schema.title}>
       {
         options.map((option, i) => {
           const checked = formData ? option === formData :
@@ -26,6 +26,6 @@ export default function RadioField({schema, formData, options, onChange}) {
           );
         })
       }
-    </Field>
+    </Wrapper>
   );
 }

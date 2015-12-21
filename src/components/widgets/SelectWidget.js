@@ -1,10 +1,10 @@
 import React from "react";
 
 import { defaultFieldValue } from "../../utils";
-import Field from "./../fields/Field";
+import Wrapper from "./../widgets/Wrapper";
 
 
-export default function SelectField({
+export default function SelectWidget({
   schema,
   formData,
   options,
@@ -13,7 +13,7 @@ export default function SelectField({
   onChange
 }) {
   return (
-    <Field label={label} required={required}>
+    <Wrapper label={label} required={required}>
       <select
         title={schema.description}
         value={defaultFieldValue(formData, schema)}
@@ -23,6 +23,6 @@ export default function SelectField({
           return <option key={i}>{option}</option>;
         })
       }</select>
-    </Field>
+    </Wrapper>
   );
 }

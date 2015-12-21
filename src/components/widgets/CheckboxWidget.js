@@ -1,9 +1,9 @@
 import React from "react";
 
 import { defaultFieldValue } from "../../utils";
-import Field from "./../fields/Field";
+import Wrapper from "./../widgets/Wrapper";
 
-export default function CheckboxField({
+export default function CheckboxWidget({
   schema,
   onChange,
   formData,
@@ -12,13 +12,13 @@ export default function CheckboxField({
   placeholder
 }) {
   return (
-    <Field label={label} required={required} type={schema.type}>
+    <Wrapper label={label} required={required} type={schema.type}>
       <input type="checkbox"
         title={placeholder}
         checked={defaultFieldValue(formData, schema)}
         defaultChecked={!!schema.default}
         required={required}
         onChange={(event) => onChange(event.target.checked)} />
-    </Field>
+    </Wrapper>
   );
 }
