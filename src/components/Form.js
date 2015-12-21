@@ -24,8 +24,9 @@ export default class Form extends React.Component {
   }
 
   renderErrors() {
-    if (this.state.edit && this.state.status !== "editing") {
-      return <ErrorList errors={this.state.errors} />;
+    const {edit, status, errors} = this.state;
+    if (edit && status !== "editing" && errors.length) {
+      return <ErrorList errors={errors} />;
     }
     return null;
   }

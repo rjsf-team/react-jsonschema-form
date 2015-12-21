@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 import StringField from "./StringField";
 import ArrayField from "./ArrayField";
@@ -7,22 +7,16 @@ import ObjectField from "./ObjectField";
 import UnsupportedField from "./UnsupportedField";
 
 
-export default class SchemaField extends Component {
-  static get fieldComponents() {
-    return {
-      string: StringField,
-      array:  ArrayField,
-      boolean: BooleanField,
-      object: ObjectField,
-      "date-time": StringField,
-      number: StringField,
-    };
-  }
+const COMPONENT_TYPES = {
+  "string":    StringField,
+  "array":     ArrayField,
+  "boolean":   BooleanField,
+  "object":    ObjectField,
+  "date-time": StringField,
+  "number":    StringField,
+};
 
-  render() {
-    const {schema} = this.props;
-    const FieldComponent = SchemaField.fieldComponents[schema.type] ||
-      UnsupportedField;
-    return <FieldComponent {...this.props} />;
-  }
+export default function SchemaField(props) {
+  const FieldComponent = COMPONENT_TYPES[props.schema.type] || UnsupportedField;
+  return <FieldComponent {...props} />;
 }
