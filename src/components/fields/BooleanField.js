@@ -1,9 +1,9 @@
-import React from "react";
+import React, { PropTypes } from "react";
 
 import { defaultFieldValue } from "../../utils";
 import CheckboxField from "./../widgets/CheckboxWidget";
 
-export default function BooleanField({schema, formData, required, onChange}) {
+function BooleanField({schema, formData, required, onChange}) {
   const {title, description} = schema;
   const commonProps = {
     type: schema.type,
@@ -17,3 +17,12 @@ export default function BooleanField({schema, formData, required, onChange}) {
   // XXX handle uiSchema.widget here
   return <CheckboxField {...commonProps} />;
 }
+
+BooleanField.propTypes = {
+  schema: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  formData: PropTypes.bool,
+  required: PropTypes.bool,
+};
+
+export default BooleanField;

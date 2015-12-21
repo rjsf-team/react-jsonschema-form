@@ -1,9 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 
 import SchemaField from "./SchemaField";
 
 
 export default class ObjectField extends Component {
+  static propTypes = {
+    schema: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    formData: PropTypes.object,
+    required: PropTypes.bool,
+  }
+
   constructor(props) {
     super(props);
     this.state = props.formData || props.schema.default || {};

@@ -1,20 +1,20 @@
-import React from "react";
+import React, { PropTypes } from "react";
 
 import { defaultFieldValue } from "../../utils";
 import TextWidget from "./../widgets/TextWidget";
 import SelectWidget from "./../widgets/SelectWidget";
 
 
-export default function StringField({schema, formData, required, onChange}) {
+function StringField({schema, formData, required, onChange}) {
   const {type, title, description} = schema;
   const commonProps = {
     type: type,
     label: title,
     placeholder: description,
     onChange,
-    value: formData,
+    value: defaultFieldValue(formData, schema),
     required: required,
-    defaultValue: defaultFieldValue(formData, schema),
+    defaultValue: schema.default,
   };
   if (Array.isArray(schema.enum)) {
     // XXX uiSchema: Could also be a list of radio buttons
@@ -23,3 +23,12 @@ export default function StringField({schema, formData, required, onChange}) {
   // XXX uiSchema: Could also be a textarea for longer texts
   return <TextWidget {...commonProps} />;
 }
+
+StringField.propTypes = {
+  schema: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  formData: PropTypes.string,
+  required: PropTypes.bool,
+};
+
+export default StringField;
