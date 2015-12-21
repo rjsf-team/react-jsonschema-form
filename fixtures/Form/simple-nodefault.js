@@ -21,8 +21,6 @@ module.exports = {
       }
     }
   },
-  formData: {
-    title: "My task",
-    done: true
-  }
+  onSubmit: console.log.bind(console, "submit"),
+  onError: console.log.bind(console, "errors")
 };

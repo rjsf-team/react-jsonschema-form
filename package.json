@@ -3,7 +3,9 @@
   "version": "0.2.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "dist": "babel -d lib/ src/ && rimraf dist && webpack --config webpack.config.dist.js --optimize-minimize",
+    "build:lib": "rimraf lib && babel -d lib/ src/",
+    "build:dist": "rimraf dist && webpack --config webpack.config.dist.js --optimize-minimize",
+    "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test",
     "publish": "npm run dist && npm publish",
     "start": "node devServer.js",

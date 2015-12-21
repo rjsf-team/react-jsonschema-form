@@ -1,10 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 
-import { defaultTypeValue } from "../utils";
+import { defaultTypeValue } from "../../utils";
 import SchemaField from "./SchemaField";
 
 
 export default class ArrayField extends Component {
+  static propTypes = {
+    schema: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    formData: PropTypes.array,
+  }
+
   constructor(props) {
     super(props);
     const formData = Array.isArray(props.formData) ? props.formData : null;

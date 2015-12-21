@@ -43,7 +43,7 @@ describe("Form", () => {
   });
 
   describe("StringField", () => {
-    describe("TextField", () => {
+    describe("TextWidget", () => {
       it("should render a string field", () => {
         const {node} = createComponent({schema: {
           type: "string"
@@ -105,7 +105,7 @@ describe("Form", () => {
       });
     });
 
-    describe("SelectField", () => {
+    describe("SelectWidget", () => {
       it("should render a string field", () => {
         const {node} = createComponent({schema: {
           type: "string",
