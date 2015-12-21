@@ -7,7 +7,7 @@
     "build:dist": "rimraf dist && webpack --config webpack.config.dist.js --optimize-minimize",
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test",
-    "publish": "npm run dist && npm publish",
+    "publish-to-npm": "npm run dist && npm publish",
     "start": "node devServer.js",
     "tdd": "npm run test -- -w",
     "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive --require ./test/setup-jsdom.js $(find test -name '*_test.js')"

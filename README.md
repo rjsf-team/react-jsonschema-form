@@ -19,7 +19,7 @@ $ npm install react-jsonschema-form --save
 As a script dependency served from a CDN:
 
 ```html
-  <script src="https://npmcdn.com/react-jsonschema-form@0.1.0/dist/react-jsonschema-form-0.1.0.js"></script>
+  <script src="https://npmcdn.com/react-jsonschema-form@0.3.0/dist/react-jsonschema-form-0.3.0.js"></script>
 ```
 
 Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form@0.1.0/dist/react-jsonschema-form-0.1.0.js.map).
