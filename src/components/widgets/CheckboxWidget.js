@@ -1,24 +1,34 @@
-import React from "react";
+import React, { PropTypes } from "react";
 
-import { defaultFieldValue } from "../../utils";
 import Wrapper from "./../widgets/Wrapper";
 
-export default function CheckboxWidget({
-  schema,
+function CheckboxWidget({
   onChange,
-  formData,
   label,
+  defaultValue,
+  value,
   required,
   placeholder
 }) {
   return (
-    <Wrapper label={label} required={required} type={schema.type}>
+    <Wrapper label={label} required={required} type="boolean">
       <input type="checkbox"
         title={placeholder}
-        checked={defaultFieldValue(formData, schema)}
-        defaultChecked={!!schema.default}
+        checked={value}
+        defaultChecked={defaultValue}
         required={required}
         onChange={(event) => onChange(event.target.checked)} />
     </Wrapper>
   );
 }
+
+CheckboxWidget.propTypes = {
+  onChange: PropTypes.func,
+  label: PropTypes.string,
+  defaultValue: PropTypes.bool,
+  value: PropTypes.bool,
+  required: PropTypes.bool,
+  placeholder: PropTypes.string,
+};
+
+export default CheckboxWidget;

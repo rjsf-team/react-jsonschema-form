@@ -1,16 +1,18 @@
 import React from "react";
 
+import { defaultFieldValue } from "../../utils";
 import CheckboxField from "./../widgets/CheckboxWidget";
 
 export default function BooleanField({schema, formData, required, onChange}) {
-  // XXX at some point in the future we'll support other widgets for boolean
-  // fields; radio buttons and selectbox mainly.
+  const {title, description} = schema;
   const commonProps = {
-    schema,
     onChange,
-    label:    schema.title,
-    formData: formData,
-    required: required,
+    label: title,
+    placeholder: description,
+    defaultValue: schema.default,
+    value: defaultFieldValue(formData, schema),
+    required,
   };
-  return <CheckboxField placeholder={schema.description} {...commonProps} />;
+  // XXX handle uiSchema.widget here
+  return <CheckboxField {...commonProps} />;
 }

@@ -11,14 +11,18 @@ module.exports = {
       done: {
         type: "boolean",
         title: "Done?",
-        description: "Is that task done already?"
+        description: "Is that task done already?",
+        default: false
       },
       title: {
         type: "string",
         title: "Title",
         description: "The task title.",
-        minLength: 1
+        minLength: 1,
+        default: "default value"
       }
     }
-  }
+  },
+  onSubmit: console.log.bind(console, "submit"),
+  onError: console.log.bind(console, "errors")
 };

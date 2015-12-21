@@ -13,7 +13,7 @@ export default function RadioWidget({schema, formData, options, onChange}) {
           const checked = formData ? option === formData :
                                      option === schema.default;
           return (
-            <div>
+            <div key={i}>
               <label>
                 <input type="radio"
                   name={name}
