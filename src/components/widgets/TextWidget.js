@@ -24,14 +24,16 @@ function TextWidget({
   );
 }
 
-TextWidget.propTypes = {
-  type: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
-  value: PropTypes.string,
-  defaultValue: PropTypes.string,
-  required: PropTypes.bool,
-  onChange: PropTypes.func,
-};
+if (process.env.NODE_ENV !== "production") {
+  TextWidget.propTypes = {
+    type: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    placeholder: PropTypes.string,
+    value: PropTypes.string,
+    defaultValue: PropTypes.string,
+    required: PropTypes.bool,
+    onChange: PropTypes.func,
+  };
+}
 
 export default TextWidget;

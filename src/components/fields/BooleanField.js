@@ -22,13 +22,15 @@ function BooleanField({schema, uiSchema, formData, required, onChange}) {
   return <CheckboxField {...commonProps} />;
 }
 
-BooleanField.propTypes = {
-  schema: PropTypes.object.isRequired,
-  uiSchema: PropTypes.object,
-  onChange: PropTypes.func.isRequired,
-  formData: PropTypes.bool,
-  required: PropTypes.bool,
-};
+if (process.env.NODE_ENV !== "production") {
+  BooleanField.propTypes = {
+    schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
+    onChange: PropTypes.func.isRequired,
+    formData: PropTypes.bool,
+    required: PropTypes.bool,
+  };
+}
 
 BooleanField.defaultProps = {
   uiSchema: {}

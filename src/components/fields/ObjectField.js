@@ -3,15 +3,7 @@ import React, { Component, PropTypes } from "react";
 import SchemaField from "./SchemaField";
 
 
-export default class ObjectField extends Component {
-  static propTypes = {
-    schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    formData: PropTypes.object,
-    required: PropTypes.bool,
-  }
-
+class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {}
   }
@@ -55,3 +47,15 @@ export default class ObjectField extends Component {
     );
   }
 }
+
+if (process.env.NODE_ENV !== "production") {
+  ObjectField.propTypes = {
+    schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
+    onChange: PropTypes.func.isRequired,
+    formData: PropTypes.object,
+    required: PropTypes.bool,
+  };
+}
+
+export default ObjectField;

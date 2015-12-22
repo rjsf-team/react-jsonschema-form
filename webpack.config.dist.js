@@ -1,3 +1,4 @@
+var webpack = require("webpack");
 var pkg = require("./package");
 
 module.exports = {
@@ -11,6 +12,13 @@ module.exports = {
     library: "JSONSchemaForm",
     libraryTarget: "umd"
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify("production")
+      }
+    })
+  ],
   devtool: "source-map",
   externals: {
     react: {

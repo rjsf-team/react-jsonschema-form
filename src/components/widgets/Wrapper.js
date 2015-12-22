@@ -23,11 +23,13 @@ function Wrapper({type, children, label, required}) {
   );
 }
 
-Wrapper.propTypes = {
-  type: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  required: PropTypes.bool,
-  children: React.PropTypes.node.isRequired,
-};
+if (process.env.NODE_ENV !== "production") {
+  Wrapper.propTypes = {
+    type: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    required: PropTypes.bool,
+    children: React.PropTypes.node.isRequired,
+  };
+}
 
 export default Wrapper;

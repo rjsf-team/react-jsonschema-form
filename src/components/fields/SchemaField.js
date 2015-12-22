@@ -21,9 +21,11 @@ function SchemaField(props) {
   return <FieldComponent {...props} />;
 }
 
-SchemaField.propTypes = {
-  schema: PropTypes.object.isRequired,
-  uiSchema: PropTypes.object,
-};
+if (process.env.NODE_ENV !== "production") {
+  SchemaField.propTypes = {
+    schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
+  };
+}
 
 export default SchemaField;
