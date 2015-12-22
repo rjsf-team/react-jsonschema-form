@@ -1,3 +1,5 @@
+/*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
+
 import { expect } from "chai";
 import sinon from "sinon";
 import React from "react";
@@ -12,9 +14,9 @@ function createComponent(props) {
   return {comp, node};
 }
 
-// function d(node) {
-//   console.log(node.outerHTML);
-// }
+function d(node) {
+  console.log(node.outerHTML);
+}
 
 describe("Form", () => {
   var sandbox;
@@ -377,6 +379,224 @@ describe("Form", () => {
       });
 
       expect(comp.state.formData.foo).eql("changed");
+    });
+  });
+
+  describe("uiSchema", () => {
+    describe("string", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+          }
+        }
+      };
+
+      describe("textarea", () => {
+        const uiSchema = {
+          foo: {
+            widget: "textarea"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("textarea"))
+            .to.have.length.of(1);
+        });
+
+        it("should support formData", () => {
+          const {node} = createComponent({schema, uiSchema, formData: {
+            foo: "a"
+          }});
+
+          expect(node.querySelector("textarea").value)
+            .eql("a");
+        });
+
+        it("should update state when text is updated is checked", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: "a"
+          }});
+
+          Simulate.change(node.querySelector("textarea"), {
+            target: {value: "b"}
+          });
+
+          expect(comp.state.formData).eql({foo: "b"});
+        });
+      });
+    });
+
+    describe("string (enum)", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            enum: ["a", "b"],
+          }
+        }
+      };
+
+      describe("radio", () => {
+        const uiSchema = {
+          foo: {
+            widget: "radio"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("[type=radio]"))
+            .to.have.length.of(2);
+        });
+
+        it("should support formData", () => {
+          const {node} = createComponent({schema, uiSchema, formData: {
+            foo: "b"
+          }});
+
+          expect(node.querySelector("[type=radio][value=b]").checked)
+            .eql(true);
+        });
+
+        it("should update state when value is updated", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: "a"
+          }});
+
+          Simulate.change(node.querySelector("[type=radio][value=b]"), {
+            target: {checked: true}
+          });
+
+          expect(comp.state.formData).eql({foo: "b"});
+        });
+      });
+    });
+
+    describe("boolean", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "boolean",
+          }
+        }
+      };
+
+      describe("radio", () => {
+        const uiSchema = {
+          foo: {
+            widget: "radio"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("[type=radio]"))
+            .to.have.length.of(2);
+          expect(node.querySelector("[type=radio][value=true]"))
+            .to.be.truthy;
+          expect(node.querySelector("[type=radio][value=false]"))
+            .to.be.truthy;
+        });
+
+        it("should render boolean option labels", () => {
+          const {node} = createComponent({schema, uiSchema});
+          const labels = [].map.call(node.querySelectorAll("label span"),
+                                     node => node.textContent);
+          expect(labels)
+            .eql(["true", "false"]);
+        });
+
+        it("should support formData", () => {
+          const {node} = createComponent({schema, uiSchema, formData: {
+            foo: false
+          }});
+
+          expect(node.querySelector("[type=radio][value=false]").checked)
+            .eql(true);
+        });
+
+        it("should update state when false is checked", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: true
+          }});
+
+          Simulate.change(node.querySelector("[type=radio][value=false]"), {
+            target: {checked: true}
+          });
+
+          expect(comp.state.formData).eql({foo: false});
+        });
+
+        it("should update state when true is checked", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: false
+          }});
+
+          Simulate.change(node.querySelector("[type=radio][value=true]"), {
+            target: {checked: true}
+          });
+
+          expect(comp.state.formData).eql({foo: true});
+        });
+      });
+
+      describe("select", () => {
+        const uiSchema = {
+          foo: {
+            widget: "select"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("select option"))
+            .to.have.length.of(2);
+        });
+
+        it("should render boolean option labels", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("option")[0].textContent)
+            .eql("true");
+          expect(node.querySelectorAll("option")[1].textContent)
+            .eql("false");
+        });
+
+        it("should update state when true is selected", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: false
+          }});
+
+          Simulate.change(node.querySelector("select"), {
+            // DOM option change events always return strings
+            target: {value: "true"}
+          });
+
+          expect(comp.state.formData).eql({foo: true});
+        });
+
+        it("should update state when false is selected", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: false
+          }});
+
+          Simulate.change(node.querySelector("select"), {
+            // DOM option change events always return strings
+            target: {value: "false"}
+          });
+
+          expect(comp.state.formData).eql({foo: false});
+        });
+      });
     });
   });
 

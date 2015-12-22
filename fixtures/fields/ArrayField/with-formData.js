@@ -8,5 +8,5 @@ module.exports = {
     }
   },
   formData: ["item1", "item2"],
-  onChange: console.log.bind(console)
+  onChange: console.log.bind(console, "change")
 };

@@ -1,12 +1,13 @@
 import React, { PropTypes } from "react";
 
-import { defaultFieldValue } from "../../utils";
+import { defaultFieldValue, getAlternativeWidget } from "../../utils";
 import TextWidget from "./../widgets/TextWidget";
 import SelectWidget from "./../widgets/SelectWidget";
 
 
-function StringField({schema, formData, required, onChange}) {
+function StringField({schema, uiSchema, formData, required, onChange}) {
   const {type, title, description} = schema;
+  const {widget} = uiSchema;
   const commonProps = {
     type: type,
     label: title,
@@ -17,10 +18,16 @@ function StringField({schema, formData, required, onChange}) {
     defaultValue: schema.default,
   };
   if (Array.isArray(schema.enum)) {
-    // XXX uiSchema: Could also be a list of radio buttons
+    if (widget) {
+      const Widget = getAlternativeWidget(widget);
+      return <Widget options={schema.enum} {...commonProps} />;
+    }
     return <SelectWidget options={schema.enum} {...commonProps} />;
   }
-  // XXX uiSchema: Could also be a textarea for longer texts
+  if (widget) {
+    const Widget = getAlternativeWidget(widget);
+    return <Widget {...commonProps} />;
+  }
   return <TextWidget {...commonProps} />;
 }
 
@@ -29,6 +36,10 @@ StringField.propTypes = {
   onChange: PropTypes.func.isRequired,
   formData: PropTypes.string,
   required: PropTypes.bool,
+};
+
+StringField.defaultProps = {
+  uiSchema: {}
 };
 
 export default StringField;

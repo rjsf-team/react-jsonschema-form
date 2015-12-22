@@ -17,5 +17,5 @@ module.exports = {
       }
     }
   },
-  onChange: console.log.bind(console)
+  onChange: console.log.bind(console, "change")
 };

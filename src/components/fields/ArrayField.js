@@ -7,9 +7,14 @@ import SchemaField from "./SchemaField";
 export default class ArrayField extends Component {
   static propTypes = {
     schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.array,
   }
+
+  static defaultProps = {
+    uiSchema: {}
+  };
 
   constructor(props) {
     super(props);
@@ -61,7 +66,7 @@ export default class ArrayField extends Component {
   }
 
   render() {
-    const {schema} = this.props;
+    const {schema, uiSchema} = this.props;
     const {items} = this.state;
     return (
       <fieldset
@@ -71,7 +76,9 @@ export default class ArrayField extends Component {
         <div className="array-item-list">{
           items.map((item, index) => {
             return <div key={index}>
-              <SchemaField schema={schema.items}
+              <SchemaField
+                schema={schema.items}
+                uiSchema={uiSchema.items}
                 formData={items[index]}
                 required={this.isItemRequired(schema.items)}
                 onChange={this.onChange.bind(this, index)} />

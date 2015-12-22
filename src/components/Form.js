@@ -1,11 +1,24 @@
-import React from "react";
+import React, { Component, PropTypes } from "react";
 import { Validator } from "jsonschema";
 
 import SchemaField from "./fields/SchemaField";
 import ErrorList from "./ErrorList";
 
 
-export default class Form extends React.Component {
+export default class Form extends Component {
+  static propTypes = {
+    schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
+    formData: PropTypes.any,
+    onChange: PropTypes.func,
+    onError: PropTypes.func,
+    onSubmit: PropTypes.func,
+  }
+
+  static defaultProps = {
+    uiSchema: {}
+  }
+
   constructor(props) {
     super(props);
     const edit = !!props.formData;
@@ -63,13 +76,14 @@ export default class Form extends React.Component {
   }
 
   render() {
-    const {schema} = this.props;
+    const {schema, uiSchema} = this.props;
     const {formData} = this.state;
     return (
       <form className="generic-form" onSubmit={this.onSubmit.bind(this)}>
         {this.renderErrors()}
         <SchemaField
           schema={schema}
+          uiSchema={uiSchema}
           formData={formData}
           onChange={this.onChange.bind(this)} />
         <p><button type="submit">Submit</button></p>

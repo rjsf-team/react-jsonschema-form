@@ -3,5 +3,5 @@ module.exports = {
   label: "foo",
   defaultValue: "b",
   options: ["a", "b"],
-  onChange: console.log.bind(console)
+  onChange: console.log.bind(console, "change")
 };

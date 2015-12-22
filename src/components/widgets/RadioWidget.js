@@ -19,10 +19,10 @@ function RadioWidget({
     <Wrapper type={type} label={label}>
       {
         options.map((option, i) => {
-          const checked = value ? option === value :
-                                  option === defaultValue;
+          const checked = value !== undefined ? option === value :
+                                                option === defaultValue;
           return (
-            <div key={i}>
+            <div className="field-radio-group" key={i}>
               <label>
                 <input type="radio"
                   name={name}
@@ -30,7 +30,7 @@ function RadioWidget({
                   checked={checked}
                   placeholder={placeholder}
                   onChange={_ => onChange(option)} />
-                {option}
+                {String(option)}
               </label>
             </div>
           );

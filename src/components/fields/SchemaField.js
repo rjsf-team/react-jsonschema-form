@@ -22,7 +22,8 @@ function SchemaField(props) {
 }
 
 SchemaField.propTypes = {
-  schema: PropTypes.object.isRequired
+  schema: PropTypes.object.isRequired,
+  uiSchema: PropTypes.object,
 };
 
 export default SchemaField;
