@@ -2,11 +2,16 @@ module.exports = {
   schema: {
     type: "array",
     title: "title",
-    default: ["default1", "default2"],
     items: {
       type: "string",
       title: "item"
     }
   },
+  uiSchema: {
+    items: {
+      widget: "textarea"
+    }
+  },
+  formData: ["item1", "item2"],
   onChange: console.log.bind(console, "change")
 };

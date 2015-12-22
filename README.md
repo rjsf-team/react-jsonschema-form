@@ -3,8 +3,7 @@ react-jsonschema-form
 
 [![Build Status](https://travis-ci.org/mozilla-services/react-jsonschema-form.svg)](https://travis-ci.org/mozilla-services/react-jsonschema-form)
 
-A simple [React](http://facebook.github.io/react/) component capable of building
-HTML forms out of a [JSON schema](http://jsonschema.net/).
+A simple [React](http://facebook.github.io/react/) component capable of building HTML forms out of a [JSON schema](http://jsonschema.net/).
 
 Requires React 0.14+.
 
@@ -60,15 +59,46 @@ render((
 ), document.getElementById("app"));
 ```
 
+### Alternative widgets
+
+JSONSchema is limited for describing how a given data type should be rendered as an input component, that's why this lib introduces the concept of *UI schema*. A UI schema is basically an object literal describing which UI widget should be used to render a certain field
+
+Example:
+
+```js
+const uiSchema =  {
+  done: {
+    widget: "radio" // could also be "select"
+  }
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData} />
+), document.getElementById("app"));
+```
+
+Here's a list of supported alternative widgets for different JSONSchema data types:
+
+#### `boolean`
+
+  * `radio`: a radio button group with `true` and `false` as selectable values;
+  * `select`: a select box with `true` and `false` as options;
+  * by default, a checkbox is used
+
+#### `string`:
+
+  * `textarea`: a `textarea` element
+  * by default, a regular `input[type=text]` element is used.
+
 ## Development server
 
 ```
 $ npm start
 ```
 
-A [Cosmos development server](https://github.com/skidding/cosmos) showcasing
-components with hot reload enabled is available at
-[localhost:8080](http://localhost:8080).
+A [Cosmos development server](https://github.com/skidding/cosmos) showcasing components with hot reload enabled is available at [localhost:8080](http://localhost:8080).
 
 ## Tests
 

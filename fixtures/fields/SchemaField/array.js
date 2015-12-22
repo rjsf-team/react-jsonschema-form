@@ -7,5 +7,5 @@ module.exports = {
       title: "item"
     }
   },
-  onChange: console.log.bind(console)
+  onChange: console.log.bind(console, "change")
 };

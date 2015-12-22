@@ -4,5 +4,5 @@ module.exports = {
     title: "My boolean",
     default: true,
   },
-  onChange: console.log.bind(console)
+  onChange: console.log.bind(console, "change")
 };

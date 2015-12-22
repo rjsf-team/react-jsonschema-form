@@ -3,5 +3,5 @@ module.exports = {
     type: "boolean",
     title: "My boolean",
   },
-  onChange: console.log.bind(console)
+  onChange: console.log.bind(console, "change")
 };

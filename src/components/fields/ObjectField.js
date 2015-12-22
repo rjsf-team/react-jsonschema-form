@@ -6,9 +6,14 @@ import SchemaField from "./SchemaField";
 export default class ObjectField extends Component {
   static propTypes = {
     schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.object,
     required: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    uiSchema: {}
   }
 
   constructor(props) {
@@ -32,18 +37,21 @@ export default class ObjectField extends Component {
   }
 
   render() {
-    const {schema} = this.props;
-    return <fieldset>
-      <legend>{schema.title || "Object"}</legend>
-      {
-      Object.keys(schema.properties).map((name, index) => {
-        return <SchemaField key={index}
-          name={name}
-          required={this.isRequired(name)}
-          schema={schema.properties[name]}
-          formData={this.state[name]}
-          onChange={this.onChange.bind(this, name)} />;
-      })
-    }</fieldset>;
+    const {schema, uiSchema} = this.props;
+    return (
+      <fieldset>
+        <legend>{schema.title || "Object"}</legend>
+        {
+        Object.keys(schema.properties).map((name, index) => {
+          return <SchemaField key={index}
+            name={name}
+            required={this.isRequired(name)}
+            schema={schema.properties[name]}
+            uiSchema={uiSchema[name]}
+            formData={this.state[name]}
+            onChange={this.onChange.bind(this, name)} />;
+        })
+      }</fieldset>
+    );
   }
 }

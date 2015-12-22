@@ -13,9 +13,13 @@ module.exports = {
       }
     }
   },
-  formData: {
-    string: "an existing string",
-    bool: true
+  uiSchema: {
+    string: {
+      widget: "textarea"
+    },
+    bool: {
+      widget: "select"
+    }
   },
   onChange: console.log.bind(console, "change")
 };
