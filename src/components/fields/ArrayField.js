@@ -4,14 +4,7 @@ import { defaultTypeValue } from "../../utils";
 import SchemaField from "./SchemaField";
 
 
-export default class ArrayField extends Component {
-  static propTypes = {
-    schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    formData: PropTypes.array,
-  }
-
+class ArrayField extends Component {
   static defaultProps = {
     uiSchema: {}
   };
@@ -95,3 +88,14 @@ export default class ArrayField extends Component {
     );
   }
 }
+
+if (process.env.NODE_ENV !== "production") {
+  ArrayField.propTypes = {
+    schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
+    onChange: PropTypes.func.isRequired,
+    formData: PropTypes.array,
+  };
+}
+
+export default ArrayField;

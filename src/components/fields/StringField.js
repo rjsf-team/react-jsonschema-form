@@ -31,12 +31,14 @@ function StringField({schema, uiSchema, formData, required, onChange}) {
   return <TextWidget {...commonProps} />;
 }
 
-StringField.propTypes = {
-  schema: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
-  formData: PropTypes.string,
-  required: PropTypes.bool,
-};
+if (process.env.NODE_ENV !== "production") {
+  StringField.propTypes = {
+    schema: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    formData: PropTypes.string,
+    required: PropTypes.bool,
+  };
+}
 
 StringField.defaultProps = {
   uiSchema: {}

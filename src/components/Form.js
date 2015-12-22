@@ -6,15 +6,6 @@ import ErrorList from "./ErrorList";
 
 
 export default class Form extends Component {
-  static propTypes = {
-    schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.object,
-    formData: PropTypes.any,
-    onChange: PropTypes.func,
-    onError: PropTypes.func,
-    onSubmit: PropTypes.func,
-  }
-
   static defaultProps = {
     uiSchema: {}
   }
@@ -92,3 +83,15 @@ export default class Form extends Component {
   }
 }
 
+if (process.env.NODE_ENV !== "production") {
+  Form.propTypes = {
+    schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
+    formData: PropTypes.any,
+    onChange: PropTypes.func,
+    onError: PropTypes.func,
+    onSubmit: PropTypes.func,
+  };
+}
+
+export default Form;

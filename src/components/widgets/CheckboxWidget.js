@@ -22,15 +22,16 @@ function CheckboxWidget({
     </Wrapper>
   );
 }
-
-CheckboxWidget.propTypes = {
-  type: PropTypes.string.isRequired,
-  onChange: PropTypes.func,
-  label: PropTypes.string,
-  defaultValue: PropTypes.bool,
-  value: PropTypes.bool,
-  required: PropTypes.bool,
-  placeholder: PropTypes.string,
-};
+if (process.env.NODE_ENV !== "production") {
+  CheckboxWidget.propTypes = {
+    type: PropTypes.string.isRequired,
+    onChange: PropTypes.func,
+    label: PropTypes.string,
+    defaultValue: PropTypes.bool,
+    value: PropTypes.bool,
+    required: PropTypes.bool,
+    placeholder: PropTypes.string,
+  };
+}
 
 export default CheckboxWidget;

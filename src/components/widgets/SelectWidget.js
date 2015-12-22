@@ -41,15 +41,17 @@ function SelectWidget({
   );
 }
 
-SelectWidget.propTypes = {
-  type: PropTypes.string.isRequired,
-  options: PropTypes.array.isRequired,
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
-  value: PropTypes.any,
-  defaultValue: PropTypes.any,
-  required: PropTypes.bool,
-  onChange: PropTypes.func,
-};
+if (process.env.NODE_ENV !== "production") {
+  SelectWidget.propTypes = {
+    type: PropTypes.string.isRequired,
+    options: PropTypes.array.isRequired,
+    label: PropTypes.string,
+    placeholder: PropTypes.string,
+    value: PropTypes.any,
+    defaultValue: PropTypes.any,
+    required: PropTypes.bool,
+    onChange: PropTypes.func,
+  };
+}
 
 export default SelectWidget;
