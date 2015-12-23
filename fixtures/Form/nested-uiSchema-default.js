@@ -7,13 +7,6 @@ module.exports = {
     required: [
       "title", "tasks"
     ],
-    default: {
-      title: "Default task list",
-      tasks: [
-        {title: "A default task", done: true},
-        {title: "Another default task", done: false},
-      ]
-    },
     properties: {
       title: {
         type: "string",
@@ -25,11 +18,16 @@ module.exports = {
         items: {
           type: "object",
           properties: {
+            type: {
+              type: "string",
+              title: "Category",
+              enum: ["coding", "sleeping"]
+            },
             done: {
               type: "boolean",
               title: "Done?",
               description: "Is that task done already?",
-              default: true,
+              default: false
             },
             title: {
               type: "string",
@@ -38,6 +36,24 @@ module.exports = {
               minLength: 1
             }
           }
+        }
+      }
+    }
+  },
+  uiSchema: {
+    title: {
+      widget: "textarea",
+    },
+    tasks: {
+      items: {
+        type: {
+          widget: "radio"
+        },
+        done: {
+          widget: "select",
+        },
+        title: {
+          widget: "textarea"
         }
       }
     }

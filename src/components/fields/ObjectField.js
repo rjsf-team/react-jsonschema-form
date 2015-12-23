@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 
+import { getDefaultFormState } from "../../utils";
 import SchemaField from "./SchemaField";
 
 
@@ -10,7 +11,7 @@ class ObjectField extends Component {
 
   constructor(props) {
     super(props);
-    this.state = props.formData || props.schema.default || {};
+    this.state = props.formData || getDefaultFormState(props.schema) || {};
   }
 
   isRequired(name) {

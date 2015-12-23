@@ -15,7 +15,7 @@ function createComponent(props) {
 }
 
 function d(node) {
-  console.log(node.outerHTML);
+  console.log(require("html").prettyPrint(node.outerHTML, {indent_size: 2}));
 }
 
 describe("Form", () => {
@@ -596,6 +596,51 @@ describe("Form", () => {
 
           expect(comp.state.formData).eql({foo: false});
         });
+      });
+    });
+  });
+
+  describe("Defaults array items default propagation", () => {
+    const schema = {
+      type: "object",
+      title: "lvl 1 obj",
+      properties: {
+        object: {
+          type: "object",
+          title: "lvl 2 obj",
+          properties: {
+            array: {
+              type: "array",
+              items: {
+                type: "object",
+                title: "lvl 3 obj",
+                properties: {
+                  bool: {
+                    type: "boolean",
+                    default: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+
+    it("should propagate deeply nested defaults to form state", () => {
+      const {comp, node} = createComponent({schema});
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+      Simulate.submit(node);
+
+      expect(comp.state.formData).eql({
+        object: {
+          array: [
+            {
+              bool: true
+            }
+          ]
+        }
       });
     });
   });
