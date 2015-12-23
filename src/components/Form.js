@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { Validator } from "jsonschema";
 
+import { getDefaultFormState } from "../utils";
 import SchemaField from "./fields/SchemaField";
 import ErrorList from "./ErrorList";
 
@@ -13,7 +14,7 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     const edit = !!props.formData;
-    const formData = props.formData || props.schema.default || null;
+    const formData = props.formData || getDefaultFormState(props.schema) || null;
     this.state = {
       status: "initial",
       formData,
@@ -28,18 +29,18 @@ export default class Form extends Component {
   }
 
   renderErrors() {
-    const {edit, status, errors} = this.state;
-    if (edit && status !== "editing" && errors.length) {
+    const {status, errors} = this.state;
+    if (status !== "editing" && errors.length) {
       return <ErrorList errors={errors} />;
     }
     return null;
   }
 
-  onChange(formData) {
+  onChange(formData, options={validate: true}) {
     this.setState({
       status: "editing",
       formData,
-      errors: this.validate(formData)
+      errors: options.validate ? this.validate(formData) : this.state.errors
     }, _ => {
       if (this.props.onChange) {
         this.props.onChange(this.state);
