@@ -255,11 +255,11 @@ describe("Form", () => {
         .to.have.length.of(0);
     });
 
-    it("should add an add button", () => {
+    it("should have an add button", () => {
       const {node} = createComponent({schema});
 
       expect(node.querySelector(".array-item-add button"))
-        .to.be.truthy;
+        .not.eql(null);
     });
 
     it("should add a new field when clicking the add button", () => {
@@ -501,9 +501,9 @@ describe("Form", () => {
           expect(node.querySelectorAll("[type=radio]"))
             .to.have.length.of(2);
           expect(node.querySelector("[type=radio][value=true]"))
-            .to.be.truthy;
+            .not.eql(null);
           expect(node.querySelector("[type=radio][value=false]"))
-            .to.be.truthy;
+            .not.eql(null);
         });
 
         it("should render boolean option labels", () => {
@@ -755,6 +755,79 @@ describe("Form", () => {
       Simulate.submit(node);
 
       sinon.assert.calledWithExactly(onSubmit, comp.state);
+    });
+
+    it("should not call provided submit handler on validation errors", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            minLength: 1,
+          },
+        }
+      };
+      const formData = {
+        foo: ""
+      };
+      const onSubmit = sandbox.spy();
+      const onError = sandbox.spy();
+      const {node} = createComponent({schema, formData, onSubmit, onError});
+
+      Simulate.submit(node);
+
+      sinon.assert.notCalled(onSubmit);
+    });
+  });
+
+  describe("Change handler", () => {
+    it("should call provided change handler on form state change", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+          },
+        }
+      };
+      const formData = {
+        foo: ""
+      };
+      const onChange = sandbox.spy();
+      const {node} = createComponent({schema, formData, onChange});
+
+      Simulate.change(node.querySelector("[type=text]"), {
+        target: {value: "new"}
+      });
+
+      sinon.assert.calledWithMatch(onChange, {
+        formData: {
+          foo: "new"
+        }
+      });
+    });
+  });
+
+  describe("Error handler", () => {
+    it("should call provided error handler on validation errors", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            minLength: 1,
+          },
+        }
+      };
+      const formData = {
+        foo: ""
+      };
+      const onError = sandbox.spy();
+      const {node} = createComponent({schema, formData, onError});
+
+      Simulate.submit(node);
+
+      sinon.assert.calledOnce(onError);
     });
   });
 });
