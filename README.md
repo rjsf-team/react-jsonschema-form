@@ -18,12 +18,18 @@ $ npm install react-jsonschema-form --save
 As a script dependency served from a CDN:
 
 ```html
-  <script src="https://npmcdn.com/react-jsonschema-form@0.4.1/dist/react-jsonschema-form-0.4.1.js"></script>
+  <script src="https://npmcdn.com/react-jsonschema-form@0.5.0/dist/react-jsonschema-form.js"></script>
 ```
 
-Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form@0.4.1/dist/react-jsonschema-form-0.4.1.js.map).
+Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form@0.5.0/dist/react-jsonschema-form.js.map).
 
 Note that the CDN version **does not** embed *react* nor *react-dom*.
+
+A default, very basic CSS stylesheet is provided, though you're encouraged to build your own.
+
+```html
+<link rel="stylesheet" href="https://npmcdn.com/react-jsonschema-form@0.5.0/dist/react-jsonschema-form.css">
+```
 
 ## Usage
 
@@ -43,7 +49,7 @@ const schema = {
   }
 };
 
-const formData =  {
+const formData = {
   title: "First task",
   done: true
 };
@@ -58,6 +64,10 @@ render((
         onError={log("errors")} />
 ), document.getElementById("app"));
 ```
+
+That should give something like this (if you use the default stylesheet):
+
+![](http://i.imgur.com/qKFvod6.png)
 
 ### Alternative widgets
 
@@ -99,6 +109,9 @@ $ npm start
 ```
 
 A [Cosmos development server](https://github.com/skidding/cosmos) showcasing components with hot reload enabled is available at [localhost:8080](http://localhost:8080).
+
+![](http://i.imgur.com/51KtbqO.png)
+
 
 ## Tests
 
