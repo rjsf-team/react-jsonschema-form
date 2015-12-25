@@ -13,9 +13,17 @@ export default class Form extends Component {
 
   constructor(props) {
     super(props);
+    this.state = this.getStateFromProps(props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(this.getStateFromProps(nextProps));
+  }
+
+  getStateFromProps(props) {
     const edit = !!props.formData;
     const formData = props.formData || getDefaultFormState(props.schema) || null;
-    this.state = {
+    return {
       status: "initial",
       formData,
       edit,

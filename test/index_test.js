@@ -830,4 +830,51 @@ describe("Form", () => {
       sinon.assert.calledOnce(onError);
     });
   });
+
+  describe("External formData updates", () => {
+    describe("root level", () => {
+      it("should update form state from new formData prop value", () => {
+        const schema = {type: "string"};
+        const {comp} = createComponent({schema});
+
+        comp.componentWillReceiveProps({formData: "yo"});
+
+        expect(comp.state.formData).eql("yo");
+      });
+    });
+
+    describe("object level", () => {
+      it("should update form state from new formData prop value", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              type: "string"
+            }
+          }
+        };
+        const {comp} = createComponent({schema});
+
+        comp.componentWillReceiveProps({formData: {foo: "yo"}});
+
+        expect(comp.state.formData).eql({foo: "yo"});
+      });
+    });
+
+    describe("array level", () => {
+      it("should update form state from new formData prop value", () => {
+        const schema = {
+          type: "array",
+          items: {
+            type: "string"
+          }
+        };
+        const {comp} = createComponent({schema});
+
+        comp.componentWillReceiveProps({formData: ["yo"]});
+
+        expect(comp.state.formData).eql(["yo"]);
+      });
+    });
+  });
 });

@@ -11,8 +11,16 @@ class ArrayField extends Component {
 
   constructor(props) {
     super(props);
+    this.state = this.getStateFromProps(props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(this.getStateFromProps(nextProps));
+  }
+
+  getStateFromProps(props) {
     const formData = Array.isArray(props.formData) ? props.formData : null;
-    this.state = {items: formData || getDefaultFormState(props.schema) || []};
+    return {items: formData || getDefaultFormState(props.schema) || []};
   }
 
   get itemTitle() {
