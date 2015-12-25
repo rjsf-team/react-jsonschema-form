@@ -11,7 +11,15 @@ class ObjectField extends Component {
 
   constructor(props) {
     super(props);
-    this.state = props.formData || getDefaultFormState(props.schema) || {};
+    this.state = this.getStateFromProps(props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(this.getStateFromProps(nextProps));
+  }
+
+  getStateFromProps(props) {
+    return props.formData || getDefaultFormState(props.schema) || {};
   }
 
   isRequired(name) {
