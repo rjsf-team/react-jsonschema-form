@@ -14,6 +14,11 @@ const uiSchema = {
   }
 };
 
+const formData = {
+  title: "My task",
+  done: false
+};
+
 const cmOptions = {
   theme: "default",
   mode: {
@@ -34,6 +39,10 @@ class Editor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {valid: true, code: props.code, data: fromJson(props.code)}
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({code: props.code, data: fromJson(props.code)});
   }
 
   onCodeChange(code) {
@@ -67,7 +76,7 @@ class Editor extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {schema, uiSchema};
+    this.state = {schema, uiSchema, formData};
   }
 
   render() {
@@ -77,16 +86,26 @@ class App extends React.Component {
           <Editor title="JSONSchema"
             code={toJson(this.state.schema)}
             onChange={schema => this.setState({schema})} />
-          <Editor title="UISchema"
-            code={toJson(this.state.uiSchema)}
-            onChange={uiSchema => this.setState({uiSchema})} />
+          <div>
+            <div className="col-md-6">
+              <Editor title="UISchema"
+                code={toJson(this.state.uiSchema)}
+                onChange={uiSchema => this.setState({uiSchema})} />
+            </div>
+            <div className="col-md-6">
+              <Editor title="formData"
+                code={toJson(this.state.formData)}
+                onChange={formData => this.setState({formData})} />
+            </div>
+          </div>
         </div>
         <div className="col-md-6">
           <JSONSchemaForm
             schema={this.state.schema}
             uiSchema={this.state.uiSchema}
-            onChange={log("changed")}
-            onSubmit={log("submitted")}
+            formData={this.state.formData}
+            onChange={data => this.setState({formData: data.formData})}
+            onSubmit={data => this.setState({formData: data.formData})}
             onError={log("errors")} />
         </div>
       </div>
