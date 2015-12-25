@@ -1,0 +1,16 @@
+.rjsf label {
+  width: 200px;
+}
+
+.rjsf input[type=text], .rjsf textarea {
+  font-weight: normal;
+  width: 350px;
+}
+
+.rjsf textarea {
+  height: 120px;
+}
+
+.rjsf input[type=radio] {
+  margin-right: .4em;
+}
