@@ -19,11 +19,15 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+app.get("/react-jsonschema-form.css", function(req, res) {
+  res.sendFile(path.join(__dirname, "css", "react-jsonschema-form.css"));
+});
+
 app.listen(port, "localhost", function(err) {
   if (err) {
     console.log(err);
     return;
   }
 
-  console.log("Listening at localhost:" + port);
+  console.log("Listening at http://localhost:" + port);
 });

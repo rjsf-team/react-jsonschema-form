@@ -79,7 +79,7 @@ export default class Form extends Component {
     const {schema, uiSchema} = this.props;
     const {formData} = this.state;
     return (
-      <form className="generic-form" onSubmit={this.onSubmit.bind(this)}>
+      <form className="rjsf" onSubmit={this.onSubmit.bind(this)}>
         {this.renderErrors()}
         <SchemaField
           schema={schema}

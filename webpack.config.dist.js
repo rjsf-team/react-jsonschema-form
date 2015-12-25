@@ -1,5 +1,4 @@
 var webpack = require("webpack");
-var pkg = require("./package");
 
 module.exports = {
   cache: true,
@@ -8,7 +7,7 @@ module.exports = {
   output: {
     path: "./dist",
     publicPath: "/dist/",
-    filename: "react-jsonschema-form-" + pkg.version + ".js",
+    filename: "react-jsonschema-form.js",
     library: "JSONSchemaForm",
     libraryTarget: "umd"
   },
