@@ -27,67 +27,59 @@ const cmOptions = {
 };
 
 const log = (type) => console.log.bind(console, type);
+const fromJson = (json) => JSON.parse(json);
+const toJson = (val) => JSON.stringify(val, null, 2);
+
+class Editor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {valid: true, code: props.code, data: fromJson(props.code)}
+  }
+
+  onCodeChange(code) {
+    try {
+      this.setState({valid: true, data: fromJson(code), code});
+      this.props.onChange(this.state.data);
+    } catch(err) {
+      this.setState({valid: false, code});
+    }
+  }
+
+  render() {
+    const  {title, code} = this.props;
+    const icon = this.state.valid ? "ok" : "remove";
+    return (
+      <fieldset>
+        <legend>
+          <span className={`glyphicon glyphicon-${icon}`} />
+          {" "}
+          {title}
+        </legend>
+        <Codemirror
+          value={this.state.code}
+          onChange={this.onCodeChange.bind(this)}
+          options={cmOptions} />
+      </fieldset>
+    );
+  }
+}
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      valid: true,
-      schema,
-      schemaJson: JSON.stringify(schema, null, 2),
-      uiSchema,
-      uiSchemaJson: JSON.stringify(uiSchema, null, 2),
-    };
-  }
-
-  onJsonSchemaUpdate(schemaJson) {
-    try {
-      this.setState({
-        valid: true,
-        schema: JSON.parse(schemaJson, null, 2),
-        schemaJson
-      });
-    } catch(err) {
-      this.setState({
-        valid: false,
-        schemaJson
-      });
-    }
-  }
-
-  onUISchemaJsonUpdate(uiSchemaJson) {
-    try {
-      this.setState({
-        valid: true,
-        uiSchema: JSON.parse(uiSchemaJson, null, 2),
-        uiSchemaJson
-      });
-    } catch(err) {
-      this.setState({
-        valid: false,
-        uiSchemaJson
-      });
-    }
+    this.state = {schema, uiSchema};
   }
 
   render() {
     return (
       <div>
         <div className="editor col-md-6">
-          <fieldset>
-            <legend>JSONSchema</legend>
-            <Codemirror
-              value={this.state.schemaJson}
-              onChange={this.onJsonSchemaUpdate.bind(this)}
-              options={cmOptions} />
-          </fieldset>
-          <fieldset>
-            <legend>UISchema</legend>
-            <Codemirror
-              value={this.state.uiSchemaJson}
-              onChange={this.onUISchemaJsonUpdate.bind(this)}
-              options={cmOptions} />
-          </fieldset>
+          <Editor title="JSONSchema"
+            code={toJson(this.state.schema)}
+            onChange={schema => this.setState({schema})} />
+          <Editor title="UISchema"
+            code={toJson(this.state.uiSchema)}
+            onChange={uiSchema => this.setState({uiSchema})} />
         </div>
         <div className="col-md-6">
           <JSONSchemaForm
