@@ -19,6 +19,7 @@ const samples = {
   Simple: "simple.json",
   Nested: "nested.json",
   Widgets: "widgets.json",
+  Arrays: "arrays.json",
 };
 
 function loadSample(url) {
