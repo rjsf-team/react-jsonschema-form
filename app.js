@@ -18,6 +18,7 @@ const cmOptions = {
 const samples = {
   Simple: "simple.json",
   Nested: "nested.json",
+  Widgets: "widgets.json",
 };
 
 function loadSample(url) {
