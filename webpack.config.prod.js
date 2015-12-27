@@ -1,21 +1,25 @@
 var path = require("path");
 var webpack = require("webpack");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-  devtool: "eval",
-  entry: [
-    "webpack-hot-middleware/client?reload=true",
-    "./playground/app"
-  ],
+  entry: "./playground/app",
   output: {
     path: path.join(__dirname, "build"),
     filename: "bundle.js",
     publicPath: "/static/"
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new ExtractTextPlugin("styles.css", {allChunks: true}),
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify("production")
+      }
+    })
   ],
+  resolve: {
+    extensions: ["", ".js", ".jsx", ".css"]
+  },
   module: {
     loaders: [
       {
@@ -26,25 +30,10 @@ module.exports = {
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "codemirror", "mode", "javascript"),
         ],
-        query: {
-          plugins: ["react-transform"],
-          extra: {
-            "react-transform": {
-              transforms: [{
-                transform: "react-transform-hmr",
-                imports: ["react"],
-                locals: ["module"]
-              }, {
-                transform: "react-transform-catch-errors",
-                imports: ["react", "redbox-react"]
-              }]
-            }
-          }
-        }
       },
       {
         test: /\.css$/,
-        loader: "style!css",
+        loader: ExtractTextPlugin.extract("css-loader"),
         include: [
           path.join(__dirname, "css"),
           path.join(__dirname, "playground"),

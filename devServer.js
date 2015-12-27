@@ -16,7 +16,7 @@ app.use(require("webpack-dev-middleware")(compiler, {
 app.use(require("webpack-hot-middleware")(compiler));
 
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "playground", "index.html"));
 });
 
 app.get("/react-jsonschema-form.css", function(req, res) {
