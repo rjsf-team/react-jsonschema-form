@@ -1,4 +1,6 @@
 import RadioWidget from "./components/widgets/RadioWidget";
+import UpDownWidget from "./components/widgets/UpDownWidget";
+import RangeWidget from "./components/widgets/RangeWidget";
 import SelectWidget from "./components/widgets/SelectWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 
@@ -19,12 +21,36 @@ export function defaultFieldValue(formData, schema) {
   return formData === null ? defaultTypeValue(schema.type) : formData;
 }
 
-export function getAlternativeWidget(name) {
-  switch(name) {
-  case "radio": return RadioWidget;
-  case "select": return SelectWidget;
-  case "textarea": return TextareaWidget;
-  default: throw new Error(`No alternative widget for "${name}"`);
+export function getAlternativeWidget(type, name) {
+  switch(type) {
+  case "boolean":
+    switch(name) {
+    case "radio": return RadioWidget;
+    case "select": return SelectWidget;
+    default:
+      throw new Error(`No alternative widget "${name}" for type ${type}`);
+    }
+    break;
+  case "string":
+    switch(name) {
+    case "radio": return RadioWidget;
+    case "select": return SelectWidget;
+    case "textarea": return TextareaWidget;
+    default:
+      throw new Error(`No alternative widget "${name}" for type ${type}`);
+    }
+    break;
+  case "number":
+  case "integer":
+    switch(name) {
+    case "updown": return UpDownWidget;
+    case "range": return RangeWidget;
+    default:
+      throw new Error(`No alternative widget "${name}" for type ${type}`);
+    }
+    break;
+  default:
+    throw new Error(`No alternative widget for type ${type}`);
   }
 }
 

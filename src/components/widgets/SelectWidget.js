@@ -1,7 +1,6 @@
 import React, { PropTypes } from "react";
 
 import { asNumber } from "../../utils";
-import Wrapper from "./../widgets/Wrapper";
 
 
 /**
@@ -18,6 +17,7 @@ function processValue(type, value) {
 }
 
 function SelectWidget({
+  schema,
   type,
   options,
   label,
@@ -28,22 +28,21 @@ function SelectWidget({
   onChange
 }) {
   return (
-    <Wrapper label={label} required={required} type={type}>
-      <select
-        title={placeholder}
-        value={value}
-        defaultValue={defaultValue}
-        onChange={(event) => onChange(processValue(type, event.target.value))}>{
-        options.map((option, i) => {
-          return <option key={i} value={option}>{String(option)}</option>;
-        })
-      }</select>
-    </Wrapper>
+    <select
+      title={placeholder}
+      value={value}
+      defaultValue={defaultValue}
+      onChange={(event) => onChange(processValue(type, event.target.value))}>{
+      options.map((option, i) => {
+        return <option key={i} value={option}>{String(option)}</option>;
+      })
+    }</select>
   );
 }
 
 if (process.env.NODE_ENV !== "production") {
   SelectWidget.propTypes = {
+    schema: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     label: PropTypes.string,

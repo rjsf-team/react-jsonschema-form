@@ -13,6 +13,9 @@ function getLabel(label, required) {
 }
 
 function Wrapper({type, children, label, required}) {
+  if (["object", "array"].indexOf(type) !==-1) {
+    return children;
+  }
   return (
     <div className={`field field-${type}`}>
       <label>

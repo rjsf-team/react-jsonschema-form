@@ -7,6 +7,7 @@ function BooleanField({schema, name, uiSchema, formData, required, onChange}) {
   const {title, description} = schema;
   const {widget} = uiSchema;
   const commonProps = {
+    schema,
     type: schema.type,
     onChange,
     label: title || name,
@@ -16,7 +17,7 @@ function BooleanField({schema, name, uiSchema, formData, required, onChange}) {
     required,
   };
   if (widget) {
-    const Widget = getAlternativeWidget(widget);
+    const Widget = getAlternativeWidget(schema.type, widget);
     return <Widget options={[true, false]} {... commonProps} />;
   }
   return <CheckboxField {...commonProps} />;

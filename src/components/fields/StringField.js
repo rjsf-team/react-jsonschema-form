@@ -9,6 +9,7 @@ function StringField({schema, name, uiSchema, formData, required, onChange}) {
   const {type, title, description} = schema;
   const {widget} = uiSchema;
   const commonProps = {
+    schema,
     type: type,
     label: title || name,
     placeholder: description,
@@ -19,13 +20,13 @@ function StringField({schema, name, uiSchema, formData, required, onChange}) {
   };
   if (Array.isArray(schema.enum)) {
     if (widget) {
-      const Widget = getAlternativeWidget(widget);
+      const Widget = getAlternativeWidget(schema.type, widget);
       return <Widget options={schema.enum} {...commonProps} />;
     }
     return <SelectWidget options={schema.enum} {...commonProps} />;
   }
   if (widget) {
-    const Widget = getAlternativeWidget(widget);
+    const Widget = getAlternativeWidget(schema.type, widget);
     return <Widget {...commonProps} />;
   }
   return <TextWidget {...commonProps} />;

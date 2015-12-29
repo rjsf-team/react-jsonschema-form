@@ -1,9 +1,8 @@
 import React, { PropTypes } from "react";
 
-import Wrapper from "./../widgets/Wrapper";
-
 
 function RadioWidget({
+  schema,
   type,
   options,
   label,
@@ -16,32 +15,29 @@ function RadioWidget({
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   return (
-    <Wrapper type={type} label={label}>
-      {
-        options.map((option, i) => {
-          const checked = value !== undefined ? option === value :
-                                                option === defaultValue;
-          return (
-            <div className="field-radio-group" key={i}>
-              <label>
-                <input type="radio"
-                  name={name}
-                  value={option}
-                  checked={checked}
-                  placeholder={placeholder}
-                  onChange={_ => onChange(option)} />
-                {String(option)}
-              </label>
-            </div>
-          );
-        })
-      }
-    </Wrapper>
+    <div className="field-radio-group">{
+      options.map((option, i) => {
+        const checked = value !== undefined ? option === value :
+                                              option === defaultValue;
+        return (
+          <label key={i}>
+            <input type="radio"
+              name={name}
+              value={option}
+              checked={checked}
+              placeholder={placeholder}
+              onChange={_ => onChange(option)} />
+            {String(option)}
+          </label>
+        );
+      })
+    }</div>
   );
 }
 
 if (process.env.NODE_ENV !== "production") {
   RadioWidget.propTypes = {
+    schema: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     label: PropTypes.string,

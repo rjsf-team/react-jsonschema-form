@@ -492,7 +492,7 @@ describe("Form", () => {
       // Required field is <input type="text" required="">
       expect(node.querySelector("input[type=text]").getAttribute("required"))
         .eql("");
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field-string label").textContent)
         .eql("Foo*");
     });
 
@@ -611,6 +611,172 @@ describe("Form", () => {
           });
 
           expect(comp.state.formData).eql({foo: "b"});
+        });
+      });
+    });
+
+    describe("number", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+          }
+        }
+      };
+
+      describe("updown", () => {
+        const uiSchema = {
+          foo: {
+            widget: "updown"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("[type=number]"))
+            .to.have.length.of(1);
+        });
+
+        it("should support formData", () => {
+          const {node} = createComponent({schema, uiSchema, formData: {
+            foo: 3.14
+          }});
+
+          expect(node.querySelector("[type=number]").value)
+            .eql("3.14");
+        });
+
+        it("should update state when value is updated", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: 3.14
+          }});
+
+          Simulate.change(node.querySelector("[type=number]"), {
+            target: {value: "6.28"}
+          });
+
+          expect(comp.state.formData).eql({foo: 6.28});
+        });
+      });
+
+      describe("range", () => {
+        const uiSchema = {
+          foo: {
+            widget: "range"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("[type=range]"))
+            .to.have.length.of(1);
+        });
+
+        it("should support formData", () => {
+          const {node} = createComponent({schema, uiSchema, formData: {
+            foo: 3.14
+          }});
+
+          expect(node.querySelector("[type=range]").value)
+            .eql("3.14");
+        });
+
+        it("should update state when value is updated", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: 3.14
+          }});
+
+          Simulate.change(node.querySelector("[type=range]"), {
+            target: {value: "6.28"}
+          });
+
+          expect(comp.state.formData).eql({foo: 6.28});
+        });
+      });
+    });
+
+    describe("integer", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "integer",
+          }
+        }
+      };
+
+      describe("updown", () => {
+        const uiSchema = {
+          foo: {
+            widget: "updown"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("[type=number]"))
+            .to.have.length.of(1);
+        });
+
+        it("should support formData", () => {
+          const {node} = createComponent({schema, uiSchema, formData: {
+            foo: 3
+          }});
+
+          expect(node.querySelector("[type=number]").value)
+            .eql("3");
+        });
+
+        it("should update state when value is updated", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: 3
+          }});
+
+          Simulate.change(node.querySelector("[type=number]"), {
+            target: {value: "6"}
+          });
+
+          expect(comp.state.formData).eql({foo: 6});
+        });
+      });
+
+      describe("range", () => {
+        const uiSchema = {
+          foo: {
+            widget: "range"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("[type=range]"))
+            .to.have.length.of(1);
+        });
+
+        it("should support formData", () => {
+          const {node} = createComponent({schema, uiSchema, formData: {
+            foo: 3
+          }});
+
+          expect(node.querySelector("[type=range]").value)
+            .eql("3");
+        });
+
+        it("should update state when value is updated", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: 3
+          }});
+
+          Simulate.change(node.querySelector("[type=range]"), {
+            target: {value: "6"}
+          });
+
+          expect(comp.state.formData).eql({foo: 6});
         });
       });
     });

@@ -1,8 +1,8 @@
 import React, { PropTypes } from "react";
 
-import Wrapper from "./../widgets/Wrapper";
 
 function CheckboxWidget({
+  schema,
   type,
   onChange,
   label,
@@ -12,18 +12,17 @@ function CheckboxWidget({
   placeholder
 }) {
   return (
-    <Wrapper label={label} required={required} type={type}>
-      <input type="checkbox"
-        title={placeholder}
-        checked={value}
-        defaultChecked={defaultValue}
-        required={required}
-        onChange={(event) => onChange(event.target.checked)} />
-    </Wrapper>
+    <input type="checkbox"
+      title={placeholder}
+      checked={value}
+      defaultChecked={defaultValue}
+      required={required}
+      onChange={(event) => onChange(event.target.checked)} />
   );
 }
 if (process.env.NODE_ENV !== "production") {
   CheckboxWidget.propTypes = {
+    schema: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
     onChange: PropTypes.func,
     label: PropTypes.string,

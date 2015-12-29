@@ -1,7 +1,21 @@
 import React, { PropTypes } from "react";
 
 
-function TextWidget({
+function rangeSpec(schema) {
+  const spec = {};
+  if (schema.multipleOf) {
+    spec.step = schema.multipleOf;
+  }
+  if (schema.minimum) {
+    spec.min = schema.minimum;
+  }
+  if (schema.maximum) {
+    spec.max = schema.maximum;
+  }
+  return spec;
+}
+
+function UpDownWidget({
   schema,
   type,
   label,
@@ -12,17 +26,18 @@ function TextWidget({
   onChange
 }) {
   return (
-    <input type="text"
+    <input type="number"
       value={value}
       defaultValue={defaultValue}
       placeholder={placeholder}
       required={required}
-      onChange={(event) => onChange(event.target.value)} />
+      onChange={(event) => onChange(event.target.value)}
+      {...rangeSpec(schema)} />
   );
 }
 
 if (process.env.NODE_ENV !== "production") {
-  TextWidget.propTypes = {
+  UpDownWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
     label: PropTypes.string,
@@ -40,4 +55,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default TextWidget;
+export default UpDownWidget;

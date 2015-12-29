@@ -38,19 +38,24 @@ class ObjectField extends Component {
   }
 
   render() {
-    const {schema, uiSchema} = this.props;
+    const {schema, uiSchema, name} = this.props;
+    const title = name || schema.title;
     return (
       <fieldset>
-        <legend>{schema.title || "Object"}</legend>
+        {title ? <legend>{title}</legend> : null}
+        {schema.description ?
+          <div className="field-description">{schema.description}</div> : null}
         {
         Object.keys(schema.properties).map((name, index) => {
-          return <SchemaField key={index}
-            name={name}
-            required={this.isRequired(name)}
-            schema={schema.properties[name]}
-            uiSchema={uiSchema[name]}
-            formData={this.state[name]}
-            onChange={this.onChange.bind(this, name)} />;
+          return (
+            <SchemaField key={index}
+              name={name}
+              required={this.isRequired(name)}
+              schema={schema.properties[name]}
+              uiSchema={uiSchema[name]}
+              formData={this.state[name]}
+              onChange={this.onChange.bind(this, name)} />
+            );
         })
       }</fieldset>
     );

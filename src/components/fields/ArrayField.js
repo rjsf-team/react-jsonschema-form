@@ -63,12 +63,14 @@ class ArrayField extends Component {
 
   render() {
     const {schema, uiSchema, name} = this.props;
+    const title = name || schema.title;
     const {items} = this.state;
     return (
       <fieldset
         className={`field field-array field-array-of-${schema.items.type}`}>
-        <legend>{schema.title || name}</legend>
-        {schema.description ? <div>{schema.description}</div> : null}
+        {title ? <legend>{title}</legend> : null}
+        {schema.description ?
+          <div className="field-description">{schema.description}</div> : null}
         <div className="array-item-list">{
           items.map((item, index) => {
             return (

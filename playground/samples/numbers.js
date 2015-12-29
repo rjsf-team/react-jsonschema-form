@@ -1,6 +1,7 @@
 module.exports = {
   schema: {
     type: "object",
+    title: "Number fields & widgets",
     properties: {
       number: {
         title: "Number",
@@ -14,13 +15,38 @@ module.exports = {
         type: "number",
         title: "Number enum",
         enum: [1, 2, 3]
+      },
+      integerRange: {
+        title: "Integer range",
+        type: "integer",
+        minimum: 42,
+        maximum: 100,
+      },
+      integerRangeSteps: {
+        title: "Integer range (by 10)",
+        type: "integer",
+        minimum: 50,
+        maximum: 100,
+        multipleOf: 10,
       }
     }
   },
-  uiSchema: {},
+  uiSchema: {
+    integer: {
+      widget: "updown"
+    },
+    integerRange: {
+      widget: "range"
+    },
+    integerRangeSteps: {
+      widget: "range"
+    }
+  },
   formData: {
     number: 3.14,
     integer: 42,
-    numberEnum: 2
+    numberEnum: 2,
+    integerRange: 42,
+    integerRangeSteps: 80,
   }
 };

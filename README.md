@@ -95,7 +95,7 @@ render((
 
 Here's a list of supported alternative widgets for different JSONSchema data types:
 
-#### `boolean`
+#### `boolean`:
 
   * `radio`: a radio button group with `true` and `false` as selectable values;
   * `select`: a select box with `true` and `false` as options;
@@ -103,8 +103,16 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 #### `string`:
 
-  * `textarea`: a `textarea` element
+  * `textarea`: a `textarea` element;
   * by default, a regular `input[type=text]` element is used.
+
+#### `number` and `integer`:
+
+  * `updown`: an `input[type=number]` updown selector;
+  * `range`: an `input[type=range]` slider;
+  * by default, a regular `input[type=text]` element is used.
+
+> Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
 
 ## Development server
 

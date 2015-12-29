@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
 
+import Wrapper from "./Wrapper";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import NumberField from "./NumberField";
@@ -19,8 +20,16 @@ const COMPONENT_TYPES = {
 };
 
 function SchemaField(props) {
-  const FieldComponent = COMPONENT_TYPES[props.schema.type] || UnsupportedField;
-  return <FieldComponent {...props} />;
+  const {schema, name, required} = props;
+  const FieldComponent = COMPONENT_TYPES[schema.type] || UnsupportedField;
+  return (
+    <Wrapper
+      label={schema.title || name}
+      required={required}
+      type={schema.type}>
+      <FieldComponent {...props} />
+    </Wrapper>
+  );
 }
 
 if (process.env.NODE_ENV !== "production") {
