@@ -5,9 +5,13 @@ react-jsonschema-form
 
 A simple [React](http://facebook.github.io/react/) component capable of building HTML forms out of a [JSON schema](http://jsonschema.net/).
 
-Requires React 0.14+.
+A [live demo](https://mozilla-services.github.io/react-jsonschema-form/) is hosted on gh-pages.
+
+![](http://i.imgur.com/oxBlg96.png)
 
 ## Installation
+
+Requires React 0.14+.
 
 As a npm-based project dependency:
 
@@ -108,10 +112,7 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 $ npm start
 ```
 
-A [Cosmos development server](https://github.com/skidding/cosmos) showcasing components with hot reload enabled is available at [localhost:8080](http://localhost:8080).
-
-![](http://i.imgur.com/51KtbqO.png)
-
+A live development server showcasing components with hot reload enabled is available at [localhost:8080](http://localhost:8080).
 
 ## Tests
 
