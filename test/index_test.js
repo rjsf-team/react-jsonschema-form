@@ -433,7 +433,7 @@ describe("Form", () => {
       },
       properties: {
         foo: {
-          title: "foo",
+          title: "Foo",
           type: "string",
         },
         bar: {
@@ -442,18 +442,25 @@ describe("Form", () => {
       }
     };
 
-    it("should render an fieldset", () => {
+    it("should render a fieldset", () => {
       const {node} = createComponent({schema});
 
       expect(node.querySelectorAll("fieldset"))
         .to.have.length.of(1);
     });
 
-    it("should render an fieldset legend", () => {
+    it("should render a fieldset legend", () => {
       const {node} = createComponent({schema});
 
       expect(node.querySelector("fieldset > legend").textContent)
         .eql("my object");
+    });
+
+    it("should render a default property label", () => {
+      const {node} = createComponent({schema});
+
+      expect(node.querySelector(".field-boolean label > span").textContent)
+        .eql("bar");
     });
 
     it("should render a string property", () => {
@@ -486,7 +493,7 @@ describe("Form", () => {
       expect(node.querySelector("input[type=text]").getAttribute("required"))
         .eql("");
       expect(node.querySelector(".field label").textContent)
-        .eql("foo*");
+        .eql("Foo*");
     });
 
     it("should fill fields with form data", () => {
@@ -638,8 +645,10 @@ describe("Form", () => {
 
         it("should render boolean option labels", () => {
           const {node} = createComponent({schema, uiSchema});
-          const labels = [].map.call(node.querySelectorAll("label span"),
-                                     node => node.textContent);
+          const labels = [].map.call(
+            node.querySelectorAll(".field-radio-group label > span"),
+            node => node.textContent);
+
           expect(labels)
             .eql(["true", "false"]);
         });

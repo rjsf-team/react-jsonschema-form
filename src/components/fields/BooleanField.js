@@ -3,13 +3,13 @@ import React, { PropTypes } from "react";
 import { defaultFieldValue, getAlternativeWidget } from "../../utils";
 import CheckboxField from "./../widgets/CheckboxWidget";
 
-function BooleanField({schema, uiSchema, formData, required, onChange}) {
+function BooleanField({schema, name, uiSchema, formData, required, onChange}) {
   const {title, description} = schema;
   const {widget} = uiSchema;
   const commonProps = {
     type: schema.type,
     onChange,
-    label: title,
+    label: title || name,
     placeholder: description,
     defaultValue: schema.default,
     value: defaultFieldValue(formData, schema),

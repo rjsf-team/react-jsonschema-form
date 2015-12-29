@@ -5,12 +5,12 @@ import TextWidget from "./../widgets/TextWidget";
 import SelectWidget from "./../widgets/SelectWidget";
 
 
-function StringField({schema, uiSchema, formData, required, onChange}) {
+function StringField({schema, name, uiSchema, formData, required, onChange}) {
   const {type, title, description} = schema;
   const {widget} = uiSchema;
   const commonProps = {
     type: type,
-    label: title,
+    label: title || name,
     placeholder: description,
     onChange,
     value: defaultFieldValue(formData, schema),
