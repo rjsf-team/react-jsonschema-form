@@ -35,7 +35,10 @@ if (process.env.NODE_ENV !== "production") {
   StringField.propTypes = {
     schema: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    formData: PropTypes.string,
+    formData: PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number,
+    ]),
     required: PropTypes.bool,
   };
 }

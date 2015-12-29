@@ -29,8 +29,14 @@ if (process.env.NODE_ENV !== "production") {
     type: PropTypes.string.isRequired,
     label: PropTypes.string,
     placeholder: PropTypes.string,
-    value: PropTypes.string,
-    defaultValue: PropTypes.string,
+    value: PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number,
+    ]),
+    defaultValue: PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number,
+    ]),
     required: PropTypes.bool,
     onChange: PropTypes.func,
   };

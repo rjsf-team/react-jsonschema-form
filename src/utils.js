@@ -43,3 +43,9 @@ export function getDefaultFormState(schema) {
   }
   return defaultTypeValue(schema.type);
 }
+
+export function asNumber(value) {
+  const n = Number(value);
+  const valid = typeof n === "number" && !Number.isNaN(n);
+  return valid ? n : value;
+}

@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
 
+import { asNumber } from "../../utils";
 import Wrapper from "./../widgets/Wrapper";
 
 
@@ -11,7 +12,7 @@ function processValue(type, value) {
   if (type === "boolean") {
     return value === "true";
   } else if (type === "number") {
-    return value === Number(value);
+    return asNumber(value);
   }
   return value;
 }

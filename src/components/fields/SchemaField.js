@@ -1,19 +1,21 @@
 import React, { PropTypes } from "react";
 
-import StringField from "./StringField";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
+import NumberField from "./NumberField";
 import ObjectField from "./ObjectField";
+import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
 
 
 const COMPONENT_TYPES = {
-  "string":    StringField,
   "array":     ArrayField,
   "boolean":   BooleanField,
-  "object":    ObjectField,
   "date-time": StringField,
-  "number":    StringField,
+  "integer":   NumberField,
+  "number":    NumberField,
+  "object":    ObjectField,
+  "string":    StringField,
 };
 
 function SchemaField(props) {
