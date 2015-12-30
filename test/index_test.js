@@ -520,6 +520,30 @@ describe("Form", () => {
   });
 
   describe("uiSchema", () => {
+    describe("custom classNames", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {type: "string"},
+          bar: {type: "string"},
+        }
+      };
+
+      const uiSchema = {
+        foo: { classNames: "class-for-foo"},
+        bar: { classNames: "class-for-bar another-for-bar"},
+      };
+
+      it("should apply custom class names to target widgets", () => {
+        const {node} = createComponent({schema, uiSchema});
+        const [foo, bar] = node.querySelectorAll(".field-string");
+
+        expect(foo.classList.contains("class-for-foo")).eql(true);
+        expect(bar.classList.contains("class-for-bar")).eql(true);
+        expect(bar.classList.contains("another-for-bar")).eql(true);
+      });
+    });
+
     describe("string", () => {
       const schema = {
         type: "object",
