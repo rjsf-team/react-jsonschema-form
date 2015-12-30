@@ -114,6 +114,29 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 > Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
 
+## Custom styles
+
+The UISchema object accepts a `classNames` property for each field of the schema:
+
+```js
+const uiSchema = {
+  title: {
+    classNames: "task-title foo-bar"
+  }
+};
+```
+
+Will result in:
+
+```html
+<div class="field field-string task-title foo-bar" >
+  <label>
+    <span>Title*</span>
+    <input value="My task" required="" type="text">
+  </label>
+</div>
+```
+
 ## Development server
 
 ```
