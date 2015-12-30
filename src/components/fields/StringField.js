@@ -6,11 +6,10 @@ import SelectWidget from "./../widgets/SelectWidget";
 
 
 function StringField({schema, name, uiSchema, formData, required, onChange}) {
-  const {type, title, description} = schema;
+  const {title, description} = schema;
   const {widget} = uiSchema;
   const commonProps = {
     schema,
-    type: type,
     label: title || name,
     placeholder: description,
     onChange,

@@ -3,7 +3,6 @@ import React, { PropTypes } from "react";
 
 function CheckboxWidget({
   schema,
-  type,
   onChange,
   label,
   defaultValue,
@@ -23,7 +22,6 @@ function CheckboxWidget({
 if (process.env.NODE_ENV !== "production") {
   CheckboxWidget.propTypes = {
     schema: PropTypes.object.isRequired,
-    type: PropTypes.string.isRequired,
     onChange: PropTypes.func,
     label: PropTypes.string,
     defaultValue: PropTypes.bool,

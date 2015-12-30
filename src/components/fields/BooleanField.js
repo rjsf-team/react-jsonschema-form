@@ -8,7 +8,6 @@ function BooleanField({schema, name, uiSchema, formData, required, onChange}) {
   const {widget} = uiSchema;
   const commonProps = {
     schema,
-    type: schema.type,
     onChange,
     label: title || name,
     placeholder: description,

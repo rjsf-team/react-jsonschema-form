@@ -18,7 +18,6 @@ function processValue(type, value) {
 
 function SelectWidget({
   schema,
-  type,
   options,
   label,
   placeholder,
@@ -32,7 +31,9 @@ function SelectWidget({
       title={placeholder}
       value={value}
       defaultValue={defaultValue}
-      onChange={(event) => onChange(processValue(type, event.target.value))}>{
+      onChange={(event) => {
+        onChange(processValue(schema.type, event.target.value));
+      }}>{
       options.map((option, i) => {
         return <option key={i} value={option}>{String(option)}</option>;
       })
@@ -43,7 +44,6 @@ function SelectWidget({
 if (process.env.NODE_ENV !== "production") {
   SelectWidget.propTypes = {
     schema: PropTypes.object.isRequired,
-    type: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     label: PropTypes.string,
     placeholder: PropTypes.string,
