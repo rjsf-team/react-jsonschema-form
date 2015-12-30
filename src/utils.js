@@ -1,3 +1,4 @@
+import PasswordWidget from "./components/widgets/PasswordWidget";
 import RadioWidget from "./components/widgets/RadioWidget";
 import UpDownWidget from "./components/widgets/UpDownWidget";
 import RangeWidget from "./components/widgets/RangeWidget";
@@ -33,6 +34,7 @@ export function getAlternativeWidget(type, name) {
     break;
   case "string":
     switch(name) {
+    case "password": return PasswordWidget;
     case "radio": return RadioWidget;
     case "select": return SelectWidget;
     case "textarea": return TextareaWidget;

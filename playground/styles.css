@@ -2,9 +2,14 @@
   width: 200px;
 }
 
-.rjsf input[type=text], .rjsf textarea {
+.rjsf input[type=text],
+.rjsf input[type=number],
+.rjsf input[type=password],
+.rjsf input[type=range],
+.rjsf textarea,
+.rjsf select {
   font-weight: normal;
-  width: 350px;
+  width: 320px;
 }
 
 .rjsf textarea {

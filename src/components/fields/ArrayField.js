@@ -63,7 +63,7 @@ class ArrayField extends Component {
 
   render() {
     const {schema, uiSchema, name} = this.props;
-    const title = name || schema.title;
+    const title = schema.title || name;
     const {items} = this.state;
     return (
       <fieldset

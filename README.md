@@ -104,6 +104,7 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 #### `string`:
 
   * `textarea`: a `textarea` element;
+  * `password`: an `input[type=password]` element;
   * by default, a regular `input[type=text]` element is used.
 
 #### `number` and `integer`:

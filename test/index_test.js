@@ -589,6 +589,42 @@ describe("Form", () => {
           expect(comp.state.formData).eql({foo: "b"});
         });
       });
+
+      describe("password", () => {
+        const uiSchema = {
+          foo: {
+            widget: "password"
+          }
+        };
+
+        it("should accept a uiSchema object", () => {
+          const {node} = createComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll("[type=password]"))
+            .to.have.length.of(1);
+        });
+
+        it("should support formData", () => {
+          const {node} = createComponent({schema, uiSchema, formData: {
+            foo: "a"
+          }});
+
+          expect(node.querySelector("[type=password]").value)
+            .eql("a");
+        });
+
+        it("should update state when text is updated is checked", () => {
+          const {comp, node} = createComponent({schema, uiSchema, formData: {
+            foo: "a"
+          }});
+
+          Simulate.change(node.querySelector("[type=password]"), {
+            target: {value: "b"}
+          });
+
+          expect(comp.state.formData).eql({foo: "b"});
+        });
+      });
     });
 
     describe("string (enum)", () => {

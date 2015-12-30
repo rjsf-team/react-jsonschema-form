@@ -10,9 +10,9 @@ module.exports = {
       },
       tasks: {
         type: "array",
+        title: "Tasks",
         items: {
           type: "object",
-          title: "Task",
           required: ["title"],
           properties: {
             title: {

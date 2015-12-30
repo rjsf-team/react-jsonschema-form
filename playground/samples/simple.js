@@ -1,20 +1,47 @@
 module.exports = {
   schema: {
-    title: "A simple todo entry",
+    title: "A registration form",
     type: "object",
-    required: ["title"],
+    required: ["firstName", "lastName"],
     properties: {
-      title: {type: "string", title: "Title", default: "A new task"},
-      done: {type: "boolean", title: "Done?", default: false}
+      firstName: {
+        type: "string",
+        title: "First name",
+      },
+      lastName: {
+        type: "string",
+        title: "Last name",
+      },
+      age: {
+        type: "integer",
+        title: "Age"
+      },
+      bio: {
+        type: "string",
+        title: "Bio",
+      },
+      password: {
+        type: "string",
+        title: "Password"
+      }
     }
   },
   uiSchema: {
-    done: {
-      widget: "radio"
+    age: {
+      widget: "updown"
+    },
+    bio: {
+      widget: "textarea"
+    },
+    password: {
+      widget: "password"
     }
   },
   formData: {
-    title: "My task",
-    done: false
+    firstName: "Chuck",
+    lastName: "Norris",
+    age: 75,
+    bio: "Roundhouse kicking asses since 1940",
+    password: "noneed",
   }
 };
