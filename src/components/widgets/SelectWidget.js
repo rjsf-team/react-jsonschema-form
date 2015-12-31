@@ -19,7 +19,6 @@ function processValue(type, value) {
 function SelectWidget({
   schema,
   options,
-  label,
   placeholder,
   value,
   defaultValue,
@@ -45,7 +44,6 @@ if (process.env.NODE_ENV !== "production") {
   SelectWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     options: PropTypes.array.isRequired,
-    label: PropTypes.string,
     placeholder: PropTypes.string,
     value: PropTypes.any,
     defaultValue: PropTypes.any,

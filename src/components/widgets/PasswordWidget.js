@@ -3,7 +3,6 @@ import React, { PropTypes } from "react";
 
 function PasswordWidget({
   schema,
-  label,
   placeholder,
   value,
   defaultValue,
@@ -23,7 +22,6 @@ function PasswordWidget({
 if (process.env.NODE_ENV !== "production") {
   PasswordWidget.propTypes = {
     schema: PropTypes.object.isRequired,
-    label: PropTypes.string,
     placeholder: PropTypes.string,
     value: PropTypes.oneOfType([
       React.PropTypes.string,

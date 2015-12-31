@@ -17,7 +17,6 @@ function rangeSpec(schema) {
 
 function RangeWidget({
   schema,
-  label,
   placeholder,
   value,
   defaultValue,
@@ -41,7 +40,6 @@ function RangeWidget({
 if (process.env.NODE_ENV !== "production") {
   RangeWidget.propTypes = {
     schema: PropTypes.object.isRequired,
-    label: PropTypes.string,
     placeholder: PropTypes.string,
     value: PropTypes.oneOfType([
       React.PropTypes.string,

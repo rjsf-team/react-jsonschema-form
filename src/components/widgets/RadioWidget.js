@@ -4,7 +4,6 @@ import React, { PropTypes } from "react";
 function RadioWidget({
   schema,
   options,
-  label,
   placeholder,
   value,
   defaultValue,
@@ -38,7 +37,6 @@ if (process.env.NODE_ENV !== "production") {
   RadioWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     options: PropTypes.array.isRequired,
-    label: PropTypes.string,
     placeholder: PropTypes.string,
     value: PropTypes.any,
     defaultValue: PropTypes.any,

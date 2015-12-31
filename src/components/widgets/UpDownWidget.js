@@ -17,7 +17,6 @@ function rangeSpec(schema) {
 
 function UpDownWidget({
   schema,
-  label,
   placeholder,
   value,
   defaultValue,
@@ -38,7 +37,6 @@ function UpDownWidget({
 if (process.env.NODE_ENV !== "production") {
   UpDownWidget.propTypes = {
     schema: PropTypes.object.isRequired,
-    label: PropTypes.string,
     placeholder: PropTypes.string,
     value: PropTypes.oneOfType([
       React.PropTypes.string,
