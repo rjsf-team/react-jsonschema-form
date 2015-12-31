@@ -544,6 +544,31 @@ describe("Form", () => {
       });
     });
 
+    describe("custom widget", () => {
+      const schema = {
+        type: "string"
+      };
+
+      const uiSchema = {
+        widget: (props) => {
+          return (
+            <input type="text"
+              className="custom"
+              value={props.value}
+              defaultValue={props.defaultValue}
+              required={props.required}
+              onChange={(event) => props.onChange(event.target.value)} />
+          );
+        }
+      };
+
+      it("should render a custom widget", () => {
+        const {node} = createComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+      });
+    });
+
     describe("string", () => {
       const schema = {
         type: "object",

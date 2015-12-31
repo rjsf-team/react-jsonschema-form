@@ -6,6 +6,27 @@ import SelectWidget from "./components/widgets/SelectWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 
 
+const altWidgetMap = {
+  boolean: {
+    radio: RadioWidget,
+    select: SelectWidget,
+  },
+  string: {
+    password: PasswordWidget,
+    radio: RadioWidget,
+    select: SelectWidget,
+    textarea: TextareaWidget,
+  },
+  number: {
+    updown: UpDownWidget,
+    range: RangeWidget,
+  },
+  integer: {
+    updown: UpDownWidget,
+    range: RangeWidget,
+  }
+};
+
 export function defaultTypeValue(type) {
   switch (type) {
   case "array":     return [];
@@ -22,38 +43,20 @@ export function defaultFieldValue(formData, schema) {
   return formData === null ? defaultTypeValue(schema.type) : formData;
 }
 
-export function getAlternativeWidget(type, name) {
-  switch(type) {
-  case "boolean":
-    switch(name) {
-    case "radio": return RadioWidget;
-    case "select": return SelectWidget;
-    default:
-      throw new Error(`No alternative widget "${name}" for type ${type}`);
-    }
-    break;
-  case "string":
-    switch(name) {
-    case "password": return PasswordWidget;
-    case "radio": return RadioWidget;
-    case "select": return SelectWidget;
-    case "textarea": return TextareaWidget;
-    default:
-      throw new Error(`No alternative widget "${name}" for type ${type}`);
-    }
-    break;
-  case "number":
-  case "integer":
-    switch(name) {
-    case "updown": return UpDownWidget;
-    case "range": return RangeWidget;
-    default:
-      throw new Error(`No alternative widget "${name}" for type ${type}`);
-    }
-    break;
-  default:
+export function getAlternativeWidget(type, widget) {
+  if (typeof widget === "function") {
+    return widget;
+  }
+  if (typeof widget !== "string") {
+    throw new Error(`Unsupported widget definition: ${typeof widget}`);
+  }
+  if (!altWidgetMap.hasOwnProperty(type)) {
     throw new Error(`No alternative widget for type ${type}`);
   }
+  if (!altWidgetMap[type].hasOwnProperty(widget)) {
+    throw new Error(`No alternative widget "${widget}" for type ${type}`);
+  }
+  return altWidgetMap[type][widget];
 }
 
 export function getDefaultFormState(schema) {
