@@ -119,24 +119,24 @@ class App extends Component {
           <h1>react-jsonschema-form</h1>
           <Selector onSelected={this.load.bind(this)} />
         </div>
-        <div className="col-md-6">
+        <div className="col-sm-6">
           <Editor title="JSONSchema"
             code={toJson(this.state.schema)}
             onChange={schema => this.setState({schema})} />
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-sm-6">
               <Editor title="UISchema"
                 code={toJson(this.state.uiSchema)}
                 onChange={uiSchema => this.setState({uiSchema})} />
             </div>
-            <div className="col-md-6">
+            <div className="col-sm-6">
               <Editor title="formData"
                 code={toJson(this.state.formData)}
                 onChange={formData => this.setState({formData})} />
             </div>
           </div>
         </div>
-        <div className="col-md-6">
+        <div className="col-sm-6">
           {!this.state.form ? null :
             <Form
               schema={this.state.schema}
