@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 
 import { getDefaultFormState } from "../../utils";
-import SchemaField from "./SchemaField";
 
 
 class ObjectField extends Component {
@@ -40,6 +39,7 @@ class ObjectField extends Component {
   render() {
     const {schema, uiSchema, name} = this.props;
     const title = name || schema.title;
+    const SchemaField = this.context.schemaField;
     return (
       <fieldset>
         {title ? <legend>{title}</legend> : null}
@@ -71,5 +71,9 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
   };
 }
+
+ObjectField.childContextTypes = {
+  schemaField: PropTypes.oneOfType([Component, Function])
+};
 
 export default ObjectField;

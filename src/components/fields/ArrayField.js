@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 
 import { getDefaultFormState } from "../../utils";
-import SchemaField from "./SchemaField";
 
 
 class ArrayField extends Component {
@@ -65,6 +64,8 @@ class ArrayField extends Component {
     const {schema, uiSchema, name} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
+    const SchemaField = this.context.schemaField;
+    console.log("In ArrayField, got", SchemaField);
     return (
       <fieldset
         className={`field field-array field-array-of-${schema.items.type}`}>
@@ -80,7 +81,8 @@ class ArrayField extends Component {
                   uiSchema={uiSchema.items}
                   formData={items[index]}
                   required={this.isItemRequired(schema.items)}
-                  onChange={this.onChange.bind(this, index)} />
+                  onChange={this.onChange.bind(this, index)}
+                  schemaField={SchemaField}/>
                 <p className="array-item-remove">
                   <button type="button"
                     onClick={this.onDropClick.bind(this, index)}>-</button></p>
@@ -104,5 +106,9 @@ if (process.env.NODE_ENV !== "production") {
     formData: PropTypes.array,
   };
 }
+
+ArrayField.childContextTypes = {
+  schemaField: PropTypes.oneOfType([Component, Function])
+};
 
 export default ArrayField;

@@ -4,6 +4,7 @@ import UpDownWidget from "./components/widgets/UpDownWidget";
 import RangeWidget from "./components/widgets/RangeWidget";
 import SelectWidget from "./components/widgets/SelectWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
+import SchemaField from "./components/fields/SchemaField";
 
 
 const altWidgetMap = {
@@ -79,4 +80,11 @@ export function asNumber(value) {
   const n = Number(value);
   const valid = typeof n === "number" && !Number.isNaN(n);
   return valid ? n : value;
+}
+
+export function getSchemaField(props, context) {
+  if (props == undefined) {
+    return SchemaField;
+  }
+  return props.hasOwnProperty("schemaField") ? props.schemaField : SchemaField;
 }

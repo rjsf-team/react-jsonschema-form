@@ -1252,7 +1252,7 @@ describe("Form", () => {
     });
 
     describe("array level", () => {
-      it("should update form state from new formData prop value", () => {
+      it.only("should update form state from new formData prop value", () => {
         const schema = {
           type: "array",
           items: {

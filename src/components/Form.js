@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { Validator } from "jsonschema";
 
-import { getDefaultFormState } from "../utils";
-import SchemaField from "./fields/SchemaField";
+import { getDefaultFormState, getSchemaField } from "../utils";
 import ErrorList from "./ErrorList";
 
 
@@ -28,6 +27,13 @@ export default class Form extends Component {
       formData,
       edit,
       errors: edit ? this.validate(formData) : []
+    };
+  }
+
+  getChildContext() {
+    const SchemaField = getSchemaField(this.props);
+    return {
+      schemaField: SchemaField
     };
   }
 
@@ -78,6 +84,8 @@ export default class Form extends Component {
   render() {
     const {schema, uiSchema} = this.props;
     const {formData} = this.state;
+    const SchemaField = getSchemaField(this.props, this.context);
+    console.log("THIS IS FORM", SchemaField);
     return (
       <form className="rjsf" onSubmit={this.onSubmit.bind(this)}>
         {this.renderErrors()}
@@ -102,5 +110,9 @@ if (process.env.NODE_ENV !== "production") {
     onSubmit: PropTypes.func,
   };
 }
+
+Form.childContextTypes = {
+  schemaField: PropTypes.oneOfType([Component, Function])
+};
 
 export default Form;
