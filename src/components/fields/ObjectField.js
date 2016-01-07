@@ -39,7 +39,7 @@ class ObjectField extends Component {
   render() {
     const {schema, uiSchema, name} = this.props;
     const title = name || schema.title;
-    const SchemaField = this.context.schemaField;
+    const SchemaField = this.props.SchemaField;
     return (
       <fieldset>
         {title ? <legend>{title}</legend> : null}
@@ -54,7 +54,8 @@ class ObjectField extends Component {
               schema={schema.properties[name]}
               uiSchema={uiSchema[name]}
               formData={this.state[name]}
-              onChange={this.onChange.bind(this, name)} />
+              onChange={this.onChange.bind(this, name)}
+              SchemaField={SchemaField}/>
             );
         })
       }</fieldset>
@@ -69,11 +70,8 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.object,
     required: PropTypes.bool,
+    SchemaField: PropTypes.oneOfType([Component, PropTypes.func]).isRequired
   };
 }
-
-ObjectField.childContextTypes = {
-  schemaField: PropTypes.oneOfType([Component, Function])
-};
 
 export default ObjectField;
