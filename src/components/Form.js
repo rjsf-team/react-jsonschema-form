@@ -100,7 +100,7 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
     onError: PropTypes.func,
     onSubmit: PropTypes.func,
-    SchemaField: PropTypes.oneOfType([Component, PropTypes.func])
+    SchemaField: PropTypes.func,
   };
 }
 

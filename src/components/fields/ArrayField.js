@@ -103,7 +103,7 @@ if (process.env.NODE_ENV !== "production") {
     uiSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.array,
-    SchemaField: PropTypes.oneOfType([Component, PropTypes.func]).isRequired
+    SchemaField: PropTypes.func.isRequired,
   };
 }
 

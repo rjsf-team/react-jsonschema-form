@@ -56,11 +56,9 @@ describe("Form", () => {
         SchemaField: CustomSchemaField
       });
 
-      expect(node.querySelectorAll("#custom>.field input[type=text]"))
+      expect(node.querySelectorAll("#custom > .field input[type=text]"))
         .to.have.length.of(1);
-
     });
-
   });
 
   describe("StringField", () => {
