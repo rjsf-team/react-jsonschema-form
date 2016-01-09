@@ -22,17 +22,17 @@ $ npm install react-jsonschema-form --save
 As a script dependency served from a CDN:
 
 ```html
-  <script src="https://npmcdn.com/react-jsonschema-form@0.9.0/dist/react-jsonschema-form.js"></script>
+  <script src="https://npmcdn.com/react-jsonschema-form@0.9.1/dist/react-jsonschema-form.js"></script>
 ```
 
-Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form@0.9.0/dist/react-jsonschema-form.js.map).
+Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form@0.9.1/dist/react-jsonschema-form.js.map).
 
 Note that the CDN version **does not** embed *react* nor *react-dom*.
 
 A default, very basic CSS stylesheet is provided, though you're encouraged to build your own.
 
 ```html
-<link rel="stylesheet" href="https://npmcdn.com/react-jsonschema-form@0.9.0/dist/react-jsonschema-form.css">
+<link rel="stylesheet" href="https://npmcdn.com/react-jsonschema-form@0.9.1/dist/react-jsonschema-form.css">
 ```
 
 ## Usage
