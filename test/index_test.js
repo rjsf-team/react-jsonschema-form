@@ -72,7 +72,7 @@ describe("Form", () => {
 
     it("should use provided order", () => {
       const {node} = createComponent({schema, uiSchema: {
-        order: ["bar", "foo"]
+        "ui:order": ["bar", "foo"]
       }});
       const labels = [].map.call(
         node.querySelectorAll(".field > label"), l => l.textContent);
@@ -82,7 +82,7 @@ describe("Form", () => {
 
     it("should throw when order list length mismatches", () => {
       const {node} = createComponent({schema, uiSchema: {
-        order: ["bar", "foo", "baz?"]
+        "ui:order": ["bar", "foo", "baz?"]
       }});
 
       expect(node.querySelector(".config-error").textContent)
@@ -91,7 +91,7 @@ describe("Form", () => {
 
     it("should throw when order and properties lists differs", () => {
       const {node} = createComponent({schema, uiSchema: {
-        order: ["bar", "wut?"]
+        "ui:order": ["bar", "wut?"]
       }});
 
       expect(node.querySelector(".config-error").textContent)

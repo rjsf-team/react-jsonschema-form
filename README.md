@@ -117,7 +117,7 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 ## Object fields ordering
 
-The `uiSchema` object spec also allows you to define in which order a given object field properties should be rendered using the `order` property:
+The `uiSchema` object spec also allows you to define in which order a given object field properties should be rendered using the `ui:order` property:
 
 ```jsx
 const schema = {
@@ -129,12 +129,11 @@ const schema = {
 };
 
 const uiSchema = {
-  order: ["bar", "foo"]
+  "ui:order": ["bar", "foo"]
 };
 
 render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 

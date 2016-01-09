@@ -42,7 +42,7 @@ class ObjectField extends Component {
     const SchemaField = this.props.SchemaField;
     try {
       var orderedProperties = orderProperties(
-        Object.keys(schema.properties), uiSchema.order);
+        Object.keys(schema.properties), uiSchema["ui:order"]);
     } catch(err) {
       return (
         <p className="config-error" style={{color: "red"}}>
