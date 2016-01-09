@@ -5,7 +5,7 @@ import CheckboxWidget from "./../widgets/CheckboxWidget";
 
 function BooleanField({schema, name, uiSchema, formData, required, onChange}) {
   const {title, description} = schema;
-  const {widget} = uiSchema;
+  const widget = uiSchema["ui:widget"];
   const commonProps = {
     schema,
     onChange,

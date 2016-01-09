@@ -605,7 +605,7 @@ describe("Form", () => {
       };
 
       const uiSchema = {
-        widget: (props) => {
+        "ui:widget": (props) => {
           return (
             <input type="text"
               className="custom"
@@ -637,7 +637,7 @@ describe("Form", () => {
       describe("textarea", () => {
         const uiSchema = {
           foo: {
-            widget: "textarea"
+            "ui:widget": "textarea"
           }
         };
 
@@ -673,7 +673,7 @@ describe("Form", () => {
       describe("password", () => {
         const uiSchema = {
           foo: {
-            widget: "password"
+            "ui:widget": "password"
           }
         };
 
@@ -721,7 +721,7 @@ describe("Form", () => {
       describe("radio", () => {
         const uiSchema = {
           foo: {
-            widget: "radio"
+            "ui:widget": "radio"
           }
         };
 
@@ -768,7 +768,7 @@ describe("Form", () => {
       describe("updown", () => {
         const uiSchema = {
           foo: {
-            widget: "updown"
+            "ui:widget": "updown"
           }
         };
 
@@ -804,7 +804,7 @@ describe("Form", () => {
       describe("range", () => {
         const uiSchema = {
           foo: {
-            widget: "range"
+            "ui:widget": "range"
           }
         };
 
@@ -851,7 +851,7 @@ describe("Form", () => {
       describe("updown", () => {
         const uiSchema = {
           foo: {
-            widget: "updown"
+            "ui:widget": "updown"
           }
         };
 
@@ -887,7 +887,7 @@ describe("Form", () => {
       describe("range", () => {
         const uiSchema = {
           foo: {
-            widget: "range"
+            "ui:widget": "range"
           }
         };
 
@@ -934,7 +934,7 @@ describe("Form", () => {
       describe("radio", () => {
         const uiSchema = {
           foo: {
-            widget: "radio"
+            "ui:widget": "radio"
           }
         };
 
@@ -996,7 +996,7 @@ describe("Form", () => {
       describe("select", () => {
         const uiSchema = {
           foo: {
-            widget: "select"
+            "ui:widget": "select"
           }
         };
 

@@ -28,13 +28,13 @@ module.exports = {
   },
   uiSchema: {
     age: {
-      widget: "updown"
+      "ui:widget": "updown"
     },
     bio: {
-      widget: "textarea"
+      "ui:widget": "textarea"
     },
     password: {
-      widget: "password"
+      "ui:widget": "password"
     }
   },
   formData: {

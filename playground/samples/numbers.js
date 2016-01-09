@@ -33,13 +33,13 @@ module.exports = {
   },
   uiSchema: {
     integer: {
-      widget: "updown"
+      "ui:widget": "updown"
     },
     integerRange: {
-      widget: "range"
+      "ui:widget": "range"
     },
     integerRangeSteps: {
-      widget: "range"
+      "ui:widget": "range"
     }
   },
   formData: {

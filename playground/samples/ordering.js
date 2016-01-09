@@ -29,13 +29,13 @@ module.exports = {
   uiSchema: {
     "ui:order": ["firstName", "lastName", "age", "bio", "password"],
     age: {
-      widget: "updown"
+      "ui:widget": "updown"
     },
     bio: {
-      widget: "textarea"
+      "ui:widget": "textarea"
     },
     password: {
-      widget: "password"
+      "ui:widget": "password"
     }
   },
   formData: {
