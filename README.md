@@ -37,7 +37,7 @@ A default, very basic CSS stylesheet is provided, though you're encouraged to bu
 
 ## Usage
 
-```js
+```jsx
 import React, { Component } from "react";
 import { render } from "react-dom";
 
@@ -79,7 +79,7 @@ JSONSchema is limited for describing how a given data type should be rendered as
 
 Example:
 
-```js
+```jsx
 const uiSchema =  {
   done: {
     widget: "radio" // could also be "select"
@@ -119,7 +119,7 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 The UISchema object accepts a `classNames` property for each field of the schema:
 
-```js
+```jsx
 const uiSchema = {
   title: {
     classNames: "task-title foo-bar"
@@ -148,7 +148,7 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 - `boolean`
 - `date-time`
 
-```js
+```jsx
 const schema = {
   type: "string"
 };
@@ -178,6 +178,36 @@ The following props are passed to the widget component:
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
 - `placeholder`: The placeholder value, if any;
 - `options`: The list of options for `enum` fields;
+
+## Custom SchemaField
+
+**Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
+
+You can provide your own implementation of the `SchemaField` base React component for rendering any JSONSchema field type, including objects and arrays. This is useful when you want to augment a given field type with supplementary powers.
+
+To proceed so, you can pass a `SchemaField` prop to the `Form` component instance; here's a rather silly example wrapping the standard `SchemaField` lib component:
+
+```jsx
+import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+
+const CustomSchemaField = function(props) {
+  return (
+    <div id="custom">
+      <p>Yeah, I'm pretty dumb.</p>
+      <SchemaField {...props} />
+    </div>
+  );
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        SchemaField={CustomSchemaField} />
+), document.getElementById("app"));
+```
+
+If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
 ## Development server
 
