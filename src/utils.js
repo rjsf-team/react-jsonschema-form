@@ -80,3 +80,19 @@ export function asNumber(value) {
   const valid = typeof n === "number" && !Number.isNaN(n);
   return valid ? n : value;
 }
+
+export function orderProperties(properties, order) {
+  if (!Array.isArray(order)) {
+    return properties;
+  }
+  if (order.length !== properties.length) {
+    throw new Error(
+      "uiSchema order list length should match object properties length");
+  }
+  const fingerprint = (arr) => [].slice.call(arr).sort().toString();
+  if (fingerprint(order) !== fingerprint(properties)) {
+    throw new Error(
+      "uiSchema order list does not match object properties list");
+  }
+  return order;
+}

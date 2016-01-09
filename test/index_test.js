@@ -61,6 +61,44 @@ describe("Form", () => {
     });
   });
 
+  describe("Object fields ordering", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {type: "string"},
+        bar: {type: "string"}
+      }
+    };
+
+    it("should use provided order", () => {
+      const {node} = createComponent({schema, uiSchema: {
+        order: ["bar", "foo"]
+      }});
+      const labels = [].map.call(
+        node.querySelectorAll(".field > label"), l => l.textContent);
+
+      expect(labels).eql(["bar", "foo"]);
+    });
+
+    it("should throw when order list length mismatches", () => {
+      const {node} = createComponent({schema, uiSchema: {
+        order: ["bar", "foo", "baz?"]
+      }});
+
+      expect(node.querySelector(".config-error").textContent)
+        .to.match(/should match object properties length/);
+    });
+
+    it("should throw when order and properties lists differs", () => {
+      const {node} = createComponent({schema, uiSchema: {
+        order: ["bar", "wut?"]
+      }});
+
+      expect(node.querySelector(".config-error").textContent)
+        .to.match(/does not match object properties list/);
+    });
+  });
+
   describe("StringField", () => {
     describe("TextWidget", () => {
       it("should render a string field", () => {

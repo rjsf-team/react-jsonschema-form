@@ -3,6 +3,7 @@ import nested from "./nested";
 import numbers from "./numbers";
 import simple from "./simple";
 import widgets from "./widgets";
+import ordering from "./ordering";
 
 export const samples = {
   Simple: simple,
@@ -10,4 +11,5 @@ export const samples = {
   Arrays: arrays,
   Numbers: numbers,
   Widgets: widgets,
+  Ordering: ordering,
 };

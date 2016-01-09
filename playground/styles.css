@@ -19,3 +19,11 @@
 .rjsf input[type=radio] {
   margin-right: .4em;
 }
+
+.invalid {
+  color: red;
+}
+
+.valid {
+  color: green;
+}

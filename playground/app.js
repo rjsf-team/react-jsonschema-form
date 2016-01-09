@@ -49,10 +49,11 @@ class Editor extends Component {
   render() {
     const {title} = this.props;
     const icon = this.state.valid ? "ok" : "remove";
+    const cls = this.state.valid ? "valid" : "invalid";
     return (
       <fieldset>
         <legend>
-          <span className={`glyphicon glyphicon-${icon}`} />
+          <span className={`${cls} glyphicon glyphicon-${icon}`} />
           {" "}
           {title}
         </legend>

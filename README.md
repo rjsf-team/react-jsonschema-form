@@ -75,7 +75,7 @@ That should give something like this (if you use the default stylesheet):
 
 ### Alternative widgets
 
-JSONSchema is limited for describing how a given data type should be rendered as an input component, that's why this lib introduces the concept of *UI schema*. A UI schema is basically an object literal describing which UI widget should be used to render a certain field
+JSONSchema is limited for describing how a given data type should be rendered as an input component, that's why this lib introduces the concept of *UI schema*. A UI schema is basically an object literal describing which UI widget should be used to render a certain field.
 
 Example:
 
@@ -114,6 +114,29 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
   * by default, a regular `input[type=text]` element is used.
 
 > Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
+
+## Object fields ordering
+
+The `uiSchema` object spec also allows you to define in which order a given object field properties should be rendered using the `order` property:
+
+```jsx
+const schema = {
+  type: "object",
+  properties: {
+    foo: {type: "string"},
+    bar: {type: "string"}
+  }
+};
+
+const uiSchema = {
+  order: ["bar", "foo"]
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
+```
 
 ## Custom styles
 

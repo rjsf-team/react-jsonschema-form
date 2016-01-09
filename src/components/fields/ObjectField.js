@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 
-import { getDefaultFormState } from "../../utils";
+import { getDefaultFormState, orderProperties } from "../../utils";
 
 
 class ObjectField extends Component {
@@ -40,13 +40,24 @@ class ObjectField extends Component {
     const {schema, uiSchema, name} = this.props;
     const title = name || schema.title;
     const SchemaField = this.props.SchemaField;
+    try {
+      var orderedProperties = orderProperties(
+        Object.keys(schema.properties), uiSchema.order);
+    } catch(err) {
+      return (
+        <p className="config-error" style={{color: "red"}}>
+          Invalid {name || "root"} object field configuration:
+          <em>{err.message}</em>.
+        </p>
+      );
+    }
     return (
       <fieldset>
         {title ? <legend>{title}</legend> : null}
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
         {
-        Object.keys(schema.properties).map((name, index) => {
+        orderedProperties.map((name, index) => {
           return (
             <SchemaField key={index}
               name={name}
