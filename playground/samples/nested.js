@@ -39,7 +39,7 @@ module.exports = {
     tasks: {
       items: {
         details: {
-          widget: "textarea"
+          "ui:widget": "textarea"
         }
       }
     }

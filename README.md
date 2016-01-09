@@ -75,14 +75,14 @@ That should give something like this (if you use the default stylesheet):
 
 ### Alternative widgets
 
-JSONSchema is limited for describing how a given data type should be rendered as an input component, that's why this lib introduces the concept of *UI schema*. A UI schema is basically an object literal describing which UI widget should be used to render a certain field.
+JSONSchema is limited for describing how a given data type should be rendered as an input component, that's why this lib introduces the concept of *UI schema*. A UI schema is basically an object literal describing how the form should be rendered, eg. which UI widget should be used to render a certain field thanks to the `ui:widget` property:
 
 Example:
 
 ```jsx
 const uiSchema =  {
   done: {
-    widget: "radio" // could also be "select"
+    "ui:widget": "radio" // could also be "select"
   }
 };
 
@@ -176,7 +176,7 @@ const schema = {
 };
 
 const uiSchema = {
-  widget: (props) => {
+  "ui:widget": (props) => {
     return (
       <input type="text"
         className="custom"

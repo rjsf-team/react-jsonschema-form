@@ -40,15 +40,15 @@ module.exports = {
   uiSchema: {
     boolean: {
       radio: {
-        widget: "radio"
+        "ui:widget": "radio"
       },
       select: {
-        widget: "select"
+        "ui:widget": "select"
       }
     },
     string: {
       textarea: {
-        widget: "textarea"
+        "ui:widget": "textarea"
       }
     }
   },
