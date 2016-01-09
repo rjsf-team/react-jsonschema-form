@@ -5,6 +5,7 @@ import sinon from "sinon";
 import React from "react";
 import { Simulate, renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
+import SchemaField from "../src/components/fields/SchemaField";
 
 import Form from "../src";
 
@@ -40,6 +41,22 @@ describe("Form", () => {
       const {node} = createComponent({schema: {}});
 
       expect(node.querySelectorAll("button[type=submit]"))
+        .to.have.length.of(1);
+    });
+  });
+
+  describe("Custom SchemaField", () => {
+    const CustomSchemaField = function(props) {
+      return (<div id="custom"><SchemaField {...props} /></div>);
+    };
+
+    it("should use the specified custom SchemaType property", () => {
+      const {node} = createComponent({
+        schema: {type: "string"},
+        SchemaField: CustomSchemaField
+      });
+
+      expect(node.querySelectorAll("#custom > .field input[type=text]"))
         .to.have.length.of(1);
     });
   });

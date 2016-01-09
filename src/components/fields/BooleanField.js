@@ -1,7 +1,7 @@
 import React, { PropTypes } from "react";
 
 import { defaultFieldValue, getAlternativeWidget } from "../../utils";
-import CheckboxField from "./../widgets/CheckboxWidget";
+import CheckboxWidget from "./../widgets/CheckboxWidget";
 
 function BooleanField({schema, name, uiSchema, formData, required, onChange}) {
   const {title, description} = schema;
@@ -19,7 +19,7 @@ function BooleanField({schema, name, uiSchema, formData, required, onChange}) {
     const Widget = getAlternativeWidget(schema.type, widget);
     return <Widget options={[true, false]} {... commonProps} />;
   }
-  return <CheckboxField {...commonProps} />;
+  return <CheckboxWidget {...commonProps} />;
 }
 
 if (process.env.NODE_ENV !== "production") {

@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import { Validator } from "jsonschema";
-
-import { getDefaultFormState } from "../utils";
 import SchemaField from "./fields/SchemaField";
+import { getDefaultFormState } from "../utils";
 import ErrorList from "./ErrorList";
-
 
 export default class Form extends Component {
   static defaultProps = {
@@ -78,14 +76,16 @@ export default class Form extends Component {
   render() {
     const {schema, uiSchema} = this.props;
     const {formData} = this.state;
+    const _SchemaField = this.props.SchemaField || SchemaField;
     return (
       <form className="rjsf" onSubmit={this.onSubmit.bind(this)}>
         {this.renderErrors()}
-        <SchemaField
+        <_SchemaField
           schema={schema}
           uiSchema={uiSchema}
           formData={formData}
-          onChange={this.onChange.bind(this)} />
+          onChange={this.onChange.bind(this)}
+          SchemaField={_SchemaField}/>
         <p><button type="submit">Submit</button></p>
       </form>
     );
@@ -100,6 +100,7 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
     onError: PropTypes.func,
     onSubmit: PropTypes.func,
+    SchemaField: PropTypes.func,
   };
 }
 
