@@ -38,7 +38,7 @@ class ObjectField extends Component {
 
   render() {
     const {schema, uiSchema, name} = this.props;
-    const title = name || schema.title;
+    const title = schema.title || name;
     const SchemaField = this.props.SchemaField;
     try {
       var orderedProperties = orderProperties(
