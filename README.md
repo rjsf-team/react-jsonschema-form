@@ -245,6 +245,8 @@ render(
   </Form>);
 ```
 
+**Warning:** there should be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
+
 ## Development server
 
 ```
