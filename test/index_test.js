@@ -58,6 +58,23 @@ describe("Form", () => {
     });
   });
 
+  describe("Custom submit buttons", () => {
+    it("should submit the form when clicked", () => {
+      const onSubmit = sandbox.spy();
+      const comp = renderIntoDocument(
+        <Form onSubmit={ onSubmit } schema={ {} }>
+          <button type="submit">Submit</button>
+          <button type="submit">Another submit</button>
+        </Form>
+      );
+      const node = findDOMNode(comp);
+      const buttons = node.querySelectorAll("button[type=submit]");
+      buttons[0].click();
+      buttons[1].click();
+      sinon.assert.calledTwice(onSubmit);
+    });
+  });
+
   describe("Custom SchemaField", () => {
     const CustomSchemaField = function(props) {
       return (<div id="custom"><SchemaField {...props} /></div>);
