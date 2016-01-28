@@ -52,10 +52,9 @@ describe("Form", () => {
           <button type="submit">Another submit</button>
         </Form>
       );
-
       const node = findDOMNode(comp);
       expect(node.querySelectorAll("button[type=submit]"))
-      .to.have.length.of(2);
+        .to.have.length.of(2);
     });
   });
 
