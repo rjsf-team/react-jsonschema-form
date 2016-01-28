@@ -1,6 +1,6 @@
 {
   "name": "react-jsonschema-form",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build:css": "cp css/react-jsonschema-form.css dist/",
