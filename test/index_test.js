@@ -43,6 +43,20 @@ describe("Form", () => {
       expect(node.querySelectorAll("button[type=submit]"))
         .to.have.length.of(1);
     });
+
+    it("should render children buttons", () => {
+      const props = {schema: {}};
+      const comp = renderIntoDocument(
+        <Form {...props}>
+          <button type="submit">Submit</button>
+          <button type="submit">Another submit</button>
+        </Form>
+      );
+
+      const node = findDOMNode(comp);
+      expect(node.querySelectorAll("button[type=submit]"))
+      .to.have.length.of(2);
+    });
   });
 
   describe("Custom SchemaField", () => {

@@ -74,7 +74,7 @@ export default class Form extends Component {
   }
 
   render() {
-    const {schema, uiSchema} = this.props;
+    const {children, schema, uiSchema} = this.props;
     const {formData} = this.state;
     const _SchemaField = this.props.SchemaField || SchemaField;
     return (
@@ -86,7 +86,7 @@ export default class Form extends Component {
           formData={formData}
           onChange={this.onChange.bind(this)}
           SchemaField={_SchemaField}/>
-        <p><button type="submit">Submit</button></p>
+        { children ? children : <p><button type="submit">Submit</button></p> }
       </form>
     );
   }
