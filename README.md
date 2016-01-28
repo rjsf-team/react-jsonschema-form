@@ -231,6 +231,22 @@ render((
 
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
+## Custom buttons
+
+You can provide custom buttons to your form via the `Form` component's `children`. A default submit button will be rendered if you don't provide children to the `Form` component.
+
+```jsx
+render(
+  <Form schema={schema}>
+    <div>
+      <button type="submit">Submit</button>
+      <button>Cancel</button>
+    </div>
+  </Form>);
+```
+
+**Warning:** there should be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
+
 ## Development server
 
 ```
