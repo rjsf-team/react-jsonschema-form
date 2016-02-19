@@ -25,13 +25,19 @@ export default class Form extends Component {
       status: "initial",
       formData,
       edit,
-      errors: edit ? this.validate(formData) : []
+      errors: edit ? this.validate(formData,props) : []
     };
   }
 
-  validate(formData) {
+  validate(formData,newProps) {
+    // console.log('validate this.props',this.props);
+    // console.log('validate props',props);
+    var props=this.props;
+    if(newProps){
+      props=Object.assign(this.props,newProps);
+    }
     const validator = new Validator();
-    return validator.validate(formData, this.props.schema).errors;
+    return validator.validate(formData, props.schema).errors;
   }
 
   renderErrors() {
