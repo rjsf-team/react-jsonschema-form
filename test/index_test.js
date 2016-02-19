@@ -1351,5 +1351,21 @@ describe("Form", () => {
         expect(comp.state.formData).eql(["yo"]);
       });
     });
+
+    describe("root level", () => {
+      it("should update form state from new formData and new schema prop value", () => {
+        const schema = {type: "string"};
+        const {comp} = createComponent({schema});
+
+        comp.componentWillReceiveProps({formData: "yo"});
+
+        expect(comp.state.formData).eql("yo");
+
+        const schema2 = {type: "number"};
+        comp.componentWillReceiveProps({schema:schema2,formData: 2});
+        expect(comp.state.errors).to.have.length.of(0);
+
+      });
+    });
   });
 });

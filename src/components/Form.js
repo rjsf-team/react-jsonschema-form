@@ -30,13 +30,8 @@ export default class Form extends Component {
   }
 
   validate(formData,newProps) {
-    // console.log('validate this.props',this.props);
-    // console.log('validate props',props);
-    var props=this.props;
-    if(newProps){
-      props=Object.assign(this.props,newProps);
-    }
     const validator = new Validator();
+    var props=!newProps?this.props:Object.assign({},this.props,newProps);
     return validator.validate(formData, props.schema).errors;
   }
 
