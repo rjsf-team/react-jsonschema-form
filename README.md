@@ -231,6 +231,25 @@ render((
 
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
+## Custom titles
+
+You can provide your own implementation of the `TitleField` base React component for rendering any title. This is useful when you want to augment how titles are handled.
+
+
+To proceed so, you can pass a `TitleField` prop to the `Form` component instance:
+
+```jsx
+
+const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        TitleField={CustomTitleField} />
+), document.getElementById("app"));
+```
+
 ## Custom buttons
 
 You can provide custom buttons to your form via the `Form` component's `children`. A default submit button will be rendered if you don't provide children to the `Form` component.
