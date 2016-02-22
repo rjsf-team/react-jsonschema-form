@@ -78,7 +78,7 @@ export default class Form extends Component {
     return {
       SchemaField: this.props.SchemaField || SchemaField,
       TitleField: this.props.TitleField || TitleField,
-    }
+    };
   }
 
   render() {
@@ -110,6 +110,7 @@ if (process.env.NODE_ENV !== "production") {
     onError: PropTypes.func,
     onSubmit: PropTypes.func,
     SchemaField: PropTypes.func,
+    TitleField: PropTypes.func,
   };
 }
 

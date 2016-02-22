@@ -103,7 +103,10 @@ if (process.env.NODE_ENV !== "production") {
     uiSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.array,
-    registry: PropTypes.object,
+    registry: PropTypes.shape({
+      SchemaField: PropTypes.func.isRequired,
+      TitleField: PropTypes.func.isRequired
+    })
   };
 }
 

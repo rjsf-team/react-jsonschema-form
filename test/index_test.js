@@ -542,9 +542,7 @@ describe("Form", () => {
     });
 
     it("should render a customized title", () => {
-      const CustomTitleField = function(props) {
-        return (<div id="custom">{ props.title }</div>);
-      };
+      const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
       const {node} = createComponent({schema, TitleField: CustomTitleField});
       expect(node.querySelector("fieldset > #custom").textContent)
