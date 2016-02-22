@@ -541,6 +541,16 @@ describe("Form", () => {
         .eql("my object");
     });
 
+    it("should render a customized title", () => {
+      const CustomTitleField = function(props) {
+        return (<div id="custom">{ props.title }</div>);
+      };
+
+      const {node} = createComponent({schema, TitleField: CustomTitleField});
+      expect(node.querySelector("fieldset > #custom").textContent)
+      .to.eql("my object");
+    });
+
     it("should render a default property label", () => {
       const {node} = createComponent({schema});
 

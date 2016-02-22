@@ -39,7 +39,8 @@ class ObjectField extends Component {
   render() {
     const {schema, uiSchema, name} = this.props;
     const title = schema.title || name;
-    const SchemaField = this.props.SchemaField;
+    const SchemaField = this.props.registry.SchemaField;
+    const TitleField = this.props.registry.TitleField;
     try {
       var orderedProperties = orderProperties(
         Object.keys(schema.properties), uiSchema["ui:order"]);
@@ -53,7 +54,7 @@ class ObjectField extends Component {
     }
     return (
       <fieldset>
-        {title ? <legend>{title}</legend> : null}
+        {title ? <TitleField title={title}/> : null}
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
         {
@@ -66,7 +67,7 @@ class ObjectField extends Component {
               uiSchema={uiSchema[name]}
               formData={this.state[name]}
               onChange={this.onChange.bind(this, name)}
-              SchemaField={SchemaField}/>
+              registry={this.props.registry} />
             );
         })
       }</fieldset>
@@ -81,7 +82,7 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.object,
     required: PropTypes.bool,
-    SchemaField: PropTypes.func.isRequired,
+    registry: PropTypes.object,
   };
 }
 
