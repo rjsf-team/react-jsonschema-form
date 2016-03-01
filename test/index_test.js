@@ -541,14 +541,6 @@ describe("Form", () => {
         .eql("my object");
     });
 
-    it("should render a customized title", () => {
-      const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
-
-      const {node} = createComponent({schema, TitleField: CustomTitleField});
-      expect(node.querySelector("fieldset > #custom").textContent)
-      .to.eql("my object");
-    });
-
     it("should render a default property label", () => {
       const {node} = createComponent({schema});
 
@@ -1357,22 +1349,6 @@ describe("Form", () => {
         comp.componentWillReceiveProps({formData: ["yo"]});
 
         expect(comp.state.formData).eql(["yo"]);
-      });
-    });
-
-    describe("root level", () => {
-      it("should update form state from new formData and new schema prop value", () => {
-        const schema = {type: "string"};
-        const {comp} = createComponent({schema});
-
-        comp.componentWillReceiveProps({formData: "yo"});
-
-        expect(comp.state.formData).eql("yo");
-
-        const schema2 = {type: "number"};
-        comp.componentWillReceiveProps({schema:schema2,formData: 2});
-        expect(comp.state.errors).to.have.length.of(0);
-
       });
     });
   });
