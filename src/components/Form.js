@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { Validator } from "jsonschema";
 import SchemaField from "./fields/SchemaField";
+import TitleField from "./fields/TitleField";
 import { getDefaultFormState } from "../utils";
 import ErrorList from "./ErrorList";
 
@@ -77,10 +78,18 @@ export default class Form extends Component {
     this.setState({status: "initial"});
   }
 
+  getRegistry() {
+    return {
+      SchemaField: this.props.SchemaField || SchemaField,
+      TitleField: this.props.TitleField || TitleField,
+    };
+  }
+
   render() {
     const {children, schema, uiSchema} = this.props;
     const {formData} = this.state;
-    const _SchemaField = this.props.SchemaField || SchemaField;
+    const registry = this.getRegistry();
+    const _SchemaField = registry.SchemaField;
     return (
       <form className="rjsf" onSubmit={this.onSubmit.bind(this)}>
         {this.renderErrors()}
@@ -89,7 +98,7 @@ export default class Form extends Component {
           uiSchema={uiSchema}
           formData={formData}
           onChange={this.onChange.bind(this)}
-          SchemaField={_SchemaField}/>
+          registry={registry}/>
         { children ? children : <p><button type="submit">Submit</button></p> }
       </form>
     );
@@ -105,6 +114,7 @@ if (process.env.NODE_ENV !== "production") {
     onError: PropTypes.func,
     onSubmit: PropTypes.func,
     SchemaField: PropTypes.func,
+    TitleField: PropTypes.func,
   };
 }
 
