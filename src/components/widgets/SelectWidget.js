@@ -23,15 +23,30 @@ function SelectWidget({
   value,
   defaultValue,
   required,
+  multiple,
   onChange
 }) {
   return (
     <select
+      multiple={multiple}
       title={placeholder}
       value={value}
       defaultValue={defaultValue}
       onChange={(event) => {
-        onChange(processValue(schema.type, event.target.value));
+        let newValue;
+        if (multiple) {
+          newValue = [];
+          const options = event.target.options;
+          for (let i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+              newValue.push(options[i].value);
+            }
+          }
+        } else {
+          newValue = event.target.value;
+        }
+
+        onChange(processValue(schema.type, newValue));
       }}>{
       options.map((option, i) => {
         return <option key={i} value={option}>{String(option)}</option>;
@@ -48,6 +63,7 @@ if (process.env.NODE_ENV !== "production") {
     value: PropTypes.any,
     defaultValue: PropTypes.any,
     required: PropTypes.bool,
+    multiple: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

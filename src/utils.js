@@ -96,3 +96,7 @@ export function orderProperties(properties, order) {
   }
   return order;
 }
+
+export function isMultiSelect(schema) {
+  return Array.isArray(schema.items.enum) && schema.uniqueItems;
+}

@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
 
+import { isMultiSelect } from "../../utils";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import NumberField from "./NumberField";
@@ -29,10 +30,11 @@ function getLabel(label, required) {
   return label;
 }
 
-function getContent({type, label, required, children}) {
-  if (["object", "array"].indexOf(type) !==-1) {
+function getContent({type, label, required, children, displayLabel}) {
+  if (!displayLabel) {
     return children;
   }
+
   return (
     <label>
       {getLabel(label, required)}
@@ -55,6 +57,7 @@ if (process.env.NODE_ENV !== "production") {
     type: PropTypes.string.isRequired,
     label: PropTypes.string,
     required: PropTypes.bool,
+    isEnum: PropTypes.bool,
     children: React.PropTypes.node.isRequired,
     classNames: React.PropTypes.string,
   };
@@ -67,11 +70,20 @@ Wrapper.defaultProps = {
 function SchemaField(props) {
   const {schema, uiSchema, name, required} = props;
   const FieldComponent = COMPONENT_TYPES[schema.type] || UnsupportedField;
+  let displayLabel = true;
+  if (schema.type === "array") {
+    displayLabel = isMultiSelect(schema);
+  }
+  if (schema.type === "object") {
+    displayLabel = false;
+  }
+
   return (
     <Wrapper
       label={schema.title || name}
       required={required}
       type={schema.type}
+      displayLabel={ displayLabel }
       classNames={uiSchema.classNames}>
       <FieldComponent {...props} />
     </Wrapper>
