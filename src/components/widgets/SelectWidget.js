@@ -35,13 +35,8 @@ function SelectWidget({
       onChange={(event) => {
         let newValue;
         if (multiple) {
-          newValue = [];
-          const options = event.target.options;
-          for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) {
-              newValue.push(options[i].value);
-            }
-          }
+          newValue = [].filter.call(
+            event.target.options, o => o.selected).map(o => o.value);
         } else {
           newValue = event.target.value;
         }

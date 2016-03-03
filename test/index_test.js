@@ -454,28 +454,28 @@ describe("Form", () => {
         const {node} = createComponent({schema});
 
         expect(node.querySelectorAll("fieldset"))
-        .to.have.length.of(1);
+          .to.have.length.of(1);
       });
 
       it("should render a fieldset legend", () => {
         const {node} = createComponent({schema});
 
         expect(node.querySelector("fieldset > legend").textContent)
-        .eql("my list");
+          .eql("my list");
       });
 
       it("should contain no field in the list by default", () => {
         const {node} = createComponent({schema});
 
         expect(node.querySelectorAll(".field-string"))
-        .to.have.length.of(0);
+          .to.have.length.of(0);
       });
 
       it("should have an add button", () => {
         const {node} = createComponent({schema});
 
         expect(node.querySelector(".array-item-add button"))
-        .not.eql(null);
+          .not.eql(null);
       });
 
       it("should add a new field when clicking the add button", () => {
@@ -484,7 +484,7 @@ describe("Form", () => {
         Simulate.click(node.querySelector(".array-item-add button"));
 
         expect(node.querySelectorAll(".field-string"))
-        .to.have.length.of(1);
+          .to.have.length.of(1);
       });
 
       it("should fill an array field with data", () => {
@@ -508,7 +508,7 @@ describe("Form", () => {
       });
     });
 
-    describe("Multiselect", () => {
+    describe("Multiple choices list", () => {
       const schema = {
         type: "array",
         title: "My field",
@@ -524,7 +524,7 @@ describe("Form", () => {
         const {node} = createComponent({schema});
 
         expect(node.querySelectorAll("select"))
-        .to.have.length.of(1);
+          .to.have.length.of(1);
       });
 
       it("should render a select widget with a label", () => {
@@ -545,7 +545,7 @@ describe("Form", () => {
         const {node} = createComponent({schema});
 
         expect(node.querySelectorAll("select option"))
-        .to.have.length.of(3);
+          .to.have.length.of(3);
       });
 
       it("should handle a change event", () => {
@@ -556,8 +556,7 @@ describe("Form", () => {
             {selected: true, value: "foo"},
             {selected: true, value: "bar"},
             {selected: false, value: "fuzz"},
-          ]
-          }
+          ]}
         });
 
         expect(comp.state.formData).eql(["foo", "bar"]);

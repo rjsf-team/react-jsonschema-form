@@ -62,9 +62,7 @@ class ArrayField extends Component {
   }
 
   onSelectChange(value) {
-    this.asyncSetState({
-      items: value
-    }, {validate: false});
+    this.asyncSetState({items: value}, {validate: false});
   }
 
   render() {
