@@ -67,10 +67,14 @@ export function getDefaultFormState(schema) {
     return schema.default;
   }
   if (schema.type === "object") {
-    return Object.keys(schema.properties).reduce((acc, key) => {
-      acc[key] = getDefaultFormState(schema.properties[key]);
-      return acc;
-    }, {});
+    if (schema.properties) {
+      return Object.keys(schema.properties).reduce((acc, key) => {
+        acc[key] = getDefaultFormState(schema.properties[key]);
+        return acc;
+      }, {});
+    } else {
+      return {}
+    }
   }
   return defaultTypeValue(schema.type);
 }
