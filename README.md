@@ -137,6 +137,12 @@ render((
 ), document.getElementById("app"));
 ```
 
+## Multiple choices list
+
+The default behavior for array fields is a list of text inputs with add/remove buttons. If you want a multiple choices list, you have to provide an `enum` list to the `items` property of the array field and set `uniqueItems` property to `true`.
+
+See the "Arrays" section of the demo app and [this issue](https://github.com/mozilla-services/react-jsonschema-form/issues/41) for more information.
+
 ## Custom styles
 
 The UISchema object accepts a `classNames` property for each field of the schema:

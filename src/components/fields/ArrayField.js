@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 
-import { getDefaultFormState } from "../../utils";
+import { getDefaultFormState, isMultiSelect } from "../../utils";
+import SelectWidget from "./../widgets/SelectWidget";
 
 
 class ArrayField extends Component {
@@ -60,11 +61,29 @@ class ArrayField extends Component {
     }, {validate: false});
   }
 
+  onSelectChange(value) {
+    this.asyncSetState({items: value}, {validate: false});
+  }
+
   render() {
     const {schema, uiSchema, name} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
     const SchemaField = this.props.registry.SchemaField;
+    if (isMultiSelect(schema)) {
+      return (
+        <SelectWidget
+          multiple
+          onChange={this.onSelectChange.bind(this)}
+          options={schema.items.enum}
+          schema={schema}
+          title={title}
+          defaultValue={schema.default}
+          value={items}
+        />
+      );
+    }
+
     return (
       <fieldset
         className={`field field-array field-array-of-${schema.items.type}`}>

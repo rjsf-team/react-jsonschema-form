@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { getDefaultFormState } from "../src/utils";
+import { getDefaultFormState, isMultiSelect } from "../src/utils";
 
 
 describe("utils", () => {
@@ -78,6 +78,23 @@ describe("utils", () => {
           }
         })).to.eql({object: {array: ["foo", "bar"]}});
       });
+    });
+  });
+
+  describe("isMultiSelect()", () => {
+    it("should be true if schema items enum is an array and uniqueItems is true", () => {
+      let schema = {items: {enum: ["foo", "bar"]}, uniqueItems: true};
+      expect(isMultiSelect(schema)).to.be.true;
+    });
+
+    it("should be false if uniqueItems is false", () => {
+      const schema = {items: {enum: ["foo", "bar"]}, uniqueItems: false};
+      expect(isMultiSelect(schema)).to.be.false;
+    });
+
+    it("should be false if schema items enum is not an array", () => {
+      const schema = {items: {}, uniqueItems: true};
+      expect(isMultiSelect(schema)).to.be.false;
     });
   });
 });
