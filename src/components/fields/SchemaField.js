@@ -44,9 +44,11 @@ function getContent({type, label, required, children, displayLabel}) {
 }
 
 function Wrapper(props) {
+  const style = props.hidden ? {"display": "none"} : {};
   const {type, classNames} = props;
+
   return (
-    <div className={`field field-${type} ${classNames}`}>
+    <div style={style} className={`field field-${type} ${classNames}`}>
       {getContent(props)}
     </div>
   );
@@ -81,6 +83,7 @@ function SchemaField(props) {
   return (
     <Wrapper
       label={schema.title || name}
+      hidden={(uiSchema["ui:widget"] === "hidden" ? true : false)}
       required={required}
       type={schema.type}
       displayLabel={displayLabel}

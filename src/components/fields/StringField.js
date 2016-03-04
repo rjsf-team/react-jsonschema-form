@@ -3,6 +3,7 @@ import React, { PropTypes } from "react";
 import { defaultFieldValue, getAlternativeWidget } from "../../utils";
 import TextWidget from "./../widgets/TextWidget";
 import SelectWidget from "./../widgets/SelectWidget";
+import HiddenWidget from "./../widgets/HiddenWidget";
 
 
 function StringField({schema, name, uiSchema, formData, required, onChange}) {
