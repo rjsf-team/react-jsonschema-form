@@ -1,9 +1,7 @@
-/*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
-
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, d } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("ArrayField", () => {
   describe("List of inputs", () => {
@@ -179,7 +177,7 @@ describe("ArrayField", () => {
       expect(node.querySelector("select").id).eql("root");
     });
   });
-  
+
   describe("Nested lists", () => {
     const schema = {
       "type": "array",

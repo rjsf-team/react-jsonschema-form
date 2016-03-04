@@ -15,7 +15,3 @@ export function createComponent(Component, props) {
 export function createFormComponent(props) {
   return createComponent(Form, props);
 }
-
-export function d(node) {
-  console.log(require("html").prettyPrint(node.outerHTML, {indent_size: 2}));
-}

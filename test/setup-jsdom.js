@@ -7,3 +7,8 @@ if (!global.hasOwnProperty("window")) {
   global.window = document.defaultView;
   global.navigator = global.window.navigator;
 }
+
+// HTML debugging helper
+global.d = function d(node) {
+  console.log(require("html").prettyPrint(node.outerHTML, {indent_size: 2}));
+};

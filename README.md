@@ -21,6 +21,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [For boolean fields](#for-boolean-fields)
         - [For string fields](#for-string-fields)
         - [For number and integer fields](#for-number-and-integer-fields)
+        - [Hidden widgets](#hidden-widgets)
      - [Object fields ordering](#object-fields-ordering)
      - [Custom CSS class names](#custom-css-class-names)
      - [Custom labels for enum fields](#custom-labels-for-enum-fields)
@@ -188,6 +189,28 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
   * by default, a regular `input[type=text]` element is used.
 
 > Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
+
+#### Hidden widgets
+
+It's possible to use an hidden widget for a given field by setting the `ui:widget` uiSchema directive to `hidden` for this field:
+
+```js
+const schema = {
+  type: "object",
+  properties: {
+    foo: {type: "boolean"}
+  }
+};
+
+const uiSchema = {
+  foo: {"ui:widget": "hidden"}
+};
+```
+
+> Notes
+>
+> - Hiding widgets is only supported for `boolean`, `string`, `number`, `integer` and `date-time` schema types;
+> - An hidden widget takes its value from the `formData` prop.
 
 ### Object fields ordering
 

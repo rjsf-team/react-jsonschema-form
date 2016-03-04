@@ -34,6 +34,10 @@ module.exports = {
             title: "textarea"
           }
         }
+      },
+      secret: {
+        type: "string",
+        default: "I'm a hidden string."
       }
     }
   },
@@ -50,6 +54,9 @@ module.exports = {
       textarea: {
         "ui:widget": "textarea"
       }
+    },
+    secret: {
+      "ui:widget": "hidden"
     }
   },
   formData: {
@@ -61,6 +68,7 @@ module.exports = {
     string: {
       default: "Hello...",
       textarea: "... World"
-    }
+    },
+    secret: "I'm a hidden string."
   }
 };
