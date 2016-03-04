@@ -57,7 +57,7 @@ if (process.env.NODE_ENV !== "production") {
     type: PropTypes.string.isRequired,
     label: PropTypes.string,
     required: PropTypes.bool,
-    isEnum: PropTypes.bool,
+    displayLabel: PropTypes.bool,
     children: React.PropTypes.node.isRequired,
     classNames: React.PropTypes.string,
   };
