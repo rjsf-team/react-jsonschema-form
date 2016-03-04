@@ -45,6 +45,7 @@ function getContent({type, label, required, children, displayLabel}) {
 
 function Wrapper(props) {
   const {type, classNames} = props;
+
   return (
     <div className={`field field-${type} ${classNames}`}>
       {getContent(props)}
@@ -66,7 +67,7 @@ if (process.env.NODE_ENV !== "production") {
 Wrapper.defaultProps = {
   classNames: ""
 };
-
+ 
 function SchemaField(props) {
   const {schema, uiSchema, name, required} = props;
   const FieldComponent = COMPONENT_TYPES[schema.type] || UnsupportedField;
@@ -77,6 +78,8 @@ function SchemaField(props) {
   if (schema.type === "object") {
     displayLabel = false;
   }
+
+  if (props.uiSchema["ui:hideLabel"] ===  true) displayLabel=false;
 
   return (
     <Wrapper
