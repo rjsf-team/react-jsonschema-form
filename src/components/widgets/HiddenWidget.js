@@ -13,7 +13,6 @@ function HiddenWidget({
     <input type="hidden"
       value={value}
       defaultValue={defaultValue}
-      placeholder={placeholder}
       required={required}
       onChange={(event) => onChange(event.target.value)} />
   );
