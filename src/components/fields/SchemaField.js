@@ -78,8 +78,9 @@ function SchemaField(props) {
   if (schema.type === "object") {
     displayLabel = false;
   }
-
-  if (props.uiSchema["ui:hideLabel"] ===  true) displayLabel=false;
+  if (props.uiSchema["ui:hideLabel"] ===  true) {
+    displayLabel=false;
+  }
 
   return (
     <Wrapper
