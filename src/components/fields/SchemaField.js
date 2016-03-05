@@ -83,7 +83,7 @@ function SchemaField(props) {
   return (
     <Wrapper
       label={schema.title || name}
-      hidden={(uiSchema["ui:widget"] === "hidden" ? true : false)}
+      hidden={uiSchema["ui:widget"] === "hidden"}
       required={required}
       type={schema.type}
       displayLabel={displayLabel}
