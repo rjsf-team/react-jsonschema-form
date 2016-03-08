@@ -1391,6 +1391,16 @@ describe("Form", () => {
 
         expect(comp.state.formData).eql("yo");
       });
+
+      it("should validate formData when the schema is updated", () => {
+        const {comp} = createComponent({schema: {type: "string"}});
+
+        comp.componentWillReceiveProps({formData: "yo", schema: {type: "number"}});
+
+        expect(comp.state.errors).to.have.length.of(1);
+        expect(comp.state.errors[0].stack)
+          .to.eql("instance is not of a type(s) number");
+      });
     });
 
     describe("object level", () => {
