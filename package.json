@@ -20,6 +20,11 @@
     "dist",
     "lib"
   ],
+  "engineStrict": false,
+  "engines": {
+      "npm": "^2.14.7",
+      "node": ">=4"
+  },
   "peerDependencies": {
     "react": "^0.14.3",
     "react-dom": "^0.14.3"
