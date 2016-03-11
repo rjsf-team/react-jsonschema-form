@@ -59,20 +59,63 @@ export function getAlternativeWidget(type, widget) {
   return altWidgetMap[type][widget];
 }
 
-export function getDefaultFormState(schema) {
-  if (typeof schema !== "object") {
-    throw new Error("Invalid schema: " + schema);
+function computeDefaults(schema, parentDefaults) {
+  // Compute the defaults recursively: give highest priority to deepest nodes.
+  let defaults = parentDefaults;
+  if (isObject(defaults) && isObject(schema.default)) {
+    // For object defaults, only override parent defaults that are defined in
+    // schema.default.
+    defaults = mergeObjects(defaults, schema.default);
+  } else if ("default" in schema) {
+    // Use schema defaults for this node.
+    defaults = schema.default;
   }
-  if ("default" in schema) {
-    return schema.default;
+  // Not defaults defined for this node, fallback to generic typed ones.
+  if (typeof(defaults) === "undefined") {
+    defaults = defaultTypeValue(schema.type);
   }
+  // We need to recur for object schema inner default values.
   if (schema.type === "object") {
     return Object.keys(schema.properties).reduce((acc, key) => {
-      acc[key] = getDefaultFormState(schema.properties[key]);
+      // Compute the defaults for this node, with the parent defaults we might
+      // have from a previous run: defaults[key].
+      acc[key] = computeDefaults(schema.properties[key], defaults[key]);
       return acc;
     }, {});
   }
-  return defaultTypeValue(schema.type);
+  return defaults;
+}
+
+export function getDefaultFormState(schema, formData) {
+  if (!isObject(schema)) {
+    throw new Error("Invalid schema: " + schema);
+  }
+  const defaults = computeDefaults(schema);
+  if (typeof(formData) === "undefined") { // No form data? Use schema defaults.
+    return defaults;
+  }
+  if (isObject(formData)) { // Override schema defaults with form data.
+    return mergeObjects(defaults, formData);
+  }
+  return formData || defaults;
+}
+
+function isObject(thing) {
+  return typeof(thing) == "object" && thing !== null && !Array.isArray(thing);
+}
+
+export function mergeObjects(obj1, obj2) {
+  // Recursively merge deeply nested objects.
+  var acc = Object.assign({}, obj1); // Prevent mutation of source object.
+  return Object.keys(obj2).reduce((acc, key) =>{
+    const right = obj2[key];
+    if (obj1.hasOwnProperty(key) && isObject(right)) {
+      acc[key] = mergeObjects(obj1[key], right);
+    } else {
+      acc[key] = right;
+    }
+    return acc;
+  }, acc);
 }
 
 export function asNumber(value) {
