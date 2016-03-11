@@ -1434,7 +1434,7 @@ describe("Form", () => {
       });
     });
 
-    describe("array level", () => {
+    describe.only("array level", () => {
       it("should update form state from new formData prop value", () => {
         const schema = {
           type: "array",
@@ -1444,7 +1444,7 @@ describe("Form", () => {
         };
         const {comp} = createComponent({schema});
 
-        comp.componentWillReceiveProps({formData: ["yo"]});
+        comp.componentWillReceiveProps({formData: ["FOOBARBAZ"]});
 
         expect(comp.state.formData).eql(["yo"]);
       });

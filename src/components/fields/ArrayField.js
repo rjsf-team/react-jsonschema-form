@@ -20,6 +20,7 @@ class ArrayField extends Component {
 
   getStateFromProps(props) {
     const formData = Array.isArray(props.formData) ? props.formData : null;
+    console.log('fobbar', formData);
     return {items: formData || getDefaultFormState(props.schema) || []};
   }
 
