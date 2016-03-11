@@ -235,17 +235,30 @@ describe("Form", () => {
         expect(comp.state.formData).eql("bar");
       });
 
-      it("should handle a change event", () => {
+      it("should reflect the change into the form state", () => {
         const {comp, node} = createComponent({schema: {
           type: "string",
           enum: ["foo", "bar"],
         }});
 
         Simulate.change(node.querySelector("select"), {
-          target: {value: "yo"}
+          target: {value: "foo"}
         });
 
-        expect(comp.state.formData).eql("yo");
+        expect(comp.state.formData).eql("foo");
+      });
+
+      it("should reflect the change into the dom", () => {
+        const {node} = createComponent({schema: {
+          type: "string",
+          enum: ["foo", "bar"],
+        }});
+
+        Simulate.change(node.querySelector("select"), {
+          target: {value: "foo"}
+        });
+
+        expect(node.querySelector("select").value).eql("foo");
       });
 
       it("should fill field with data", () => {
