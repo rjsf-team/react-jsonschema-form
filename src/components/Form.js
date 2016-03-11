@@ -20,19 +20,20 @@ export default class Form extends Component {
   }
 
   getStateFromProps(props) {
+    const schema = "schema" in props ? props.schema : this.props.schema;
     const edit = !!props.formData;
-    const formData = props.formData || getDefaultFormState(props.schema) || null;
+    const formData = props.formData || getDefaultFormState(schema) || null;
     return {
       status: "initial",
       formData,
       edit,
-      errors: edit ? this.validate(formData) : []
+      errors: edit ? this.validate(formData, schema) : []
     };
   }
 
-  validate(formData) {
+  validate(formData, schema) {
     const validator = new Validator();
-    return validator.validate(formData, this.props.schema).errors;
+    return validator.validate(formData, schema || this.props.schema).errors;
   }
 
   renderErrors() {
