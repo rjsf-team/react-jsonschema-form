@@ -59,7 +59,7 @@ export function getAlternativeWidget(type, widget) {
   return altWidgetMap[type][widget];
 }
 
-export function getDefaultFormState(schema) {
+export function getDefaultFormState(schema, formData) {
   if (typeof schema !== "object") {
     throw new Error("Invalid schema: " + schema);
   }
@@ -67,12 +67,35 @@ export function getDefaultFormState(schema) {
     return schema.default;
   }
   if (schema.type === "object") {
-    return Object.keys(schema.properties).reduce((acc, key) => {
+    var schemaDefaultData = Object.keys(schema.properties).reduce((acc, key) => {
+      // XXX !!!! deal with recursive on formData too.
       acc[key] = getDefaultFormState(schema.properties[key]);
       return acc;
     }, {});
+    if (typeof(formData) == "undefined") {
+      return schemaDefaultData;
+    }
+    return mergeObjects(schemaDefaultData, formData);
   }
-  return defaultTypeValue(schema.type);
+  return formData || defaultTypeValue(schema.type);
+}
+
+function isObject(thing) {
+  return typeof(thing) == "object" && !Array.isArray(thing);
+}
+
+export function mergeObjects(obj1, obj2) {
+  // Recursively merge deeply nested objects.
+  var acc = Object.assign({}, obj1); // Prevent mutation of source object.
+  return Object.keys(obj2).reduce((acc, key) =>{
+    const right = obj2[key];
+    if (obj1.hasOwnProperty(key) && isObject(right)) {
+      acc[key] = mergeObjects(obj1[key], right);
+    } else {
+      acc[key] = right;
+    }
+    return acc;
+  }, acc);
 }
 
 export function asNumber(value) {
