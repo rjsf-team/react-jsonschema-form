@@ -22,7 +22,7 @@ export default class Form extends Component {
   getStateFromProps(props) {
     const schema = "schema" in props ? props.schema : this.props.schema;
     const edit = !!props.formData;
-    const formData = props.formData || getDefaultFormState(schema) || null;
+    const formData = getDefaultFormState(schema, props.formData) || null;
     return {
       status: "initial",
       formData,
