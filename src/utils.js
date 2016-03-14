@@ -76,6 +76,11 @@ export function getDefaultFormState(schema) {
 }
 
 export function asNumber(value) {
+  if (/\.$/.test(value)) {
+    // "3." can't really be considered a number even if it parses in js. The
+    // user is most likely entering a float.
+    return value;
+  }
   const n = Number(value);
   const valid = typeof n === "number" && !Number.isNaN(n);
   return valid ? n : value;

@@ -333,6 +333,18 @@ describe("Form", () => {
         expect(node.querySelector(".field input").getAttribute("value"))
           .eql("2");
       });
+
+      it("should not cast the input as a number if it ends with a dot", () => {
+        const {comp, node} = createComponent({schema: {
+          type: "number",
+        }});
+
+        Simulate.change(node.querySelector("input"), {
+          target: {value: "2."}
+        });
+
+        expect(comp.state.formData).eql("2.");
+      });
     });
 
     describe("SelectWidget", () => {
