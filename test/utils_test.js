@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { getDefaultFormState, isMultiSelect } from "../src/utils";
+import { asNumber, getDefaultFormState, isMultiSelect } from "../src/utils";
 
 
 describe("utils", () => {
@@ -78,6 +78,20 @@ describe("utils", () => {
           }
         })).to.eql({object: {array: ["foo", "bar"]}});
       });
+    });
+  });
+
+  describe("asNumber()", () => {
+    it("should return a number out of a string representing a number", () => {
+      expect(asNumber("3")).eql(3);
+    });
+
+    it("should return a float out of a string representing a float", () => {
+      expect(asNumber("3.14")).eql(3.14);
+    });
+
+    it("should return the raw value if the input ends with a dot", () => {
+      expect(asNumber("3.")).eql("3.");
     });
   });
 
