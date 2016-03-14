@@ -78,6 +78,89 @@ describe("utils", () => {
           }
         })).to.eql({object: {array: ["foo", "bar"]}});
       });
+
+      it("should deeply spread schema defaults to resulting formData", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            object: {
+              type: "object",
+              default: {array: ["one", "two"],
+                        bool: true},
+              properties: {
+                array: {
+                  type: "array",
+                  default: ["foo", "bar"],
+                  items: {
+                    type: "string"
+                  }
+                },
+                bool: {
+                  type: "boolean"
+                }
+              }
+            }
+          }
+        };
+        const formData = {object: {array: ["baz", "cruux"], bool: false}};
+        // The formData has precedence. Always.
+        expect(getDefaultFormState(schema, formData))
+          .eql({object: {array: ["baz", "cruux"], bool: false}});
+      });
+
+      it("should propagate nested defaults to resulting formData by default", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            object: {
+              type: "object",
+              properties: {
+                array: {
+                  type: "array",
+                  default: ["foo", "bar"],
+                  items: {
+                    type: "string"
+                  }
+                },
+                bool: {
+                  type: "boolean",
+                  default: true
+                }
+              }
+            }
+          }
+        };
+        expect(getDefaultFormState(schema, {}))
+          .eql({object: {array: ["foo", "bar"], bool: true}});
+      });
+
+      it("should give the highest precedence to the deepest schema defaults", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            object: {
+              type: "object",
+              default: {array: ["one", "two"],
+                        bool: true},
+              properties: {
+                array: {
+                  type: "array",
+                  default: ["foo", "bar"],
+                  items: {
+                    type: "string"
+                  }
+                },
+                bool: {
+                  type: "boolean",
+                  default: false
+                }
+              }
+            }
+          }
+        };
+        expect(getDefaultFormState(schema, {}))
+          .eql({object: {array: ["foo", "bar"], bool: false}});
+      });
     });
   });
 

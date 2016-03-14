@@ -63,19 +63,25 @@ export function getDefaultFormState(schema, formData) {
   if (typeof schema !== "object") {
     throw new Error("Invalid schema: " + schema);
   }
-  if ("default" in schema) {
-    return schema.default;
-  }
   if (schema.type === "object") {
+    let acc = {};
+    if (isObject(schema.default)) {
+      acc = Object.assign({}, schema.default);
+    }
     var schemaDefaultData = Object.keys(schema.properties).reduce((acc, key) => {
-      // XXX !!!! deal with recursive on formData too.
-      acc[key] = getDefaultFormState(schema.properties[key]);
+      const nodeSchema = schema.properties[key];
+      if ("default" in nodeSchema) {
+        acc[key] = getDefaultFormState(nodeSchema);
+      }
       return acc;
-    }, {});
+    }, acc);
     if (typeof(formData) == "undefined") {
       return schemaDefaultData;
     }
     return mergeObjects(schemaDefaultData, formData);
+  }
+  if ("default" in schema) {
+    return schema.default;
   }
   return formData || defaultTypeValue(schema.type);
 }
