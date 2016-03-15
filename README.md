@@ -73,6 +73,30 @@ That should give something like this (if you use the default stylesheet):
 
 ![](http://i.imgur.com/qKFvod6.png)
 
+### Custom labels for `enum` fields
+
+This library supports the [enumNames](https://github.com/json-schema/json-schema/wiki/enumNames-%28v5-proposal%29) property, which allows defining custom labels for each option of an `enum`:
+
+```js
+const schema = {
+  type: "number",
+  enum: [1, 2, 3],
+  enumNames: ["one", "two", "three"]
+};
+```
+
+This will be rendered using a select box that way:
+
+```html
+<select>
+  <option value="1">one</option>
+  <option value="2">two</option>
+  <option value="3">three</option>
+</select>
+```
+
+Note that string representations of numbers will be cast back and reflected as actual numbers into form state.
+
 ### Alternative widgets
 
 JSONSchema is limited for describing how a given data type should be rendered as an input component, that's why this lib introduces the concept of *UI schema*. A UI schema is basically an object literal describing how the form should be rendered, eg. which UI widget should be used to render a certain field thanks to the `ui:widget` property:
