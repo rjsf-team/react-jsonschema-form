@@ -148,3 +148,10 @@ export function orderProperties(properties, order) {
 export function isMultiSelect(schema) {
   return Array.isArray(schema.items.enum) && schema.uniqueItems;
 }
+
+export function optionsList(schema) {
+  return schema.enum.map((value, i) => {
+    const label = schema.enumNames && schema.enumNames[i] || String(value);
+    return {label, value};
+  });
+}

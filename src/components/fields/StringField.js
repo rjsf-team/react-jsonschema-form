@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 
-import { defaultFieldValue, getAlternativeWidget } from "../../utils";
+import { defaultFieldValue, getAlternativeWidget, optionsList } from "../../utils";
 import TextWidget from "./../widgets/TextWidget";
 import SelectWidget from "./../widgets/SelectWidget";
 
@@ -20,9 +20,9 @@ function StringField({schema, name, uiSchema, formData, required, onChange}) {
   if (Array.isArray(schema.enum)) {
     if (widget) {
       const Widget = getAlternativeWidget(schema.type, widget);
-      return <Widget options={schema.enum} {...commonProps} />;
+      return <Widget options={optionsList(schema)} {...commonProps} />;
     }
-    return <SelectWidget options={schema.enum} {...commonProps} />;
+    return <SelectWidget options={optionsList(schema)} {...commonProps} />;
   }
   if (widget) {
     const Widget = getAlternativeWidget(schema.type, widget);

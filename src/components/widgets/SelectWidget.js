@@ -43,8 +43,8 @@ function SelectWidget({
 
         onChange(processValue(schema.type, newValue));
       }}>{
-      options.map((option, i) => {
-        return <option key={i} value={option}>{String(option)}</option>;
+      options.map(({value, label}, i) => {
+        return <option key={i} value={value}>{label}</option>;
       })
     }</select>
   );
