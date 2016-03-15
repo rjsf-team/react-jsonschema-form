@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 
-import { getDefaultFormState, isMultiSelect } from "../../utils";
+import { getDefaultFormState, isMultiSelect, optionsList } from "../../utils";
 import SelectWidget from "./../widgets/SelectWidget";
 
 
@@ -75,7 +75,7 @@ class ArrayField extends Component {
         <SelectWidget
           multiple
           onChange={this.onSelectChange.bind(this)}
-          options={schema.items.enum}
+          options={optionsList(schema.items)}
           schema={schema}
           title={title}
           defaultValue={schema.default}

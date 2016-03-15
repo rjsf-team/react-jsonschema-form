@@ -15,17 +15,17 @@ function RadioWidget({
   return (
     <div className="field-radio-group">{
       options.map((option, i) => {
-        const checked = value !== undefined ? option === value :
-                                              option === defaultValue;
+        const checked = value !== undefined ? option.value === value :
+                                              option.value === defaultValue;
         return (
           <label key={i}>
             <input type="radio"
               name={name}
-              value={option}
+              value={option.value}
               checked={checked}
               placeholder={placeholder}
-              onChange={_ => onChange(option)} />
-            {String(option)}
+              onChange={_ => onChange(option.value)} />
+            {option.label}
           </label>
         );
       })

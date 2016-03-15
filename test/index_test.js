@@ -269,6 +269,23 @@ describe("Form", () => {
 
         expect(comp.state.formData).eql("bar");
       });
+
+
+      describe("enumNames", () => {
+        it("should use enumNames as labels for option tags", () => {
+          const {node} = createComponent({schema: {
+            type: "string",
+            enum: ["1", "2"],
+            enumNames: ["foo", "bar"]
+          }});
+
+          const options = node.querySelectorAll(".field select option");
+          const labels = [].map.call(options, (n) => n.textContent);
+          expect(labels).eql(["foo", "bar"]);
+          const values = [].map.call(options, (n) => n.getAttribute("value"));
+          expect(values).eql(["1", "2"]);
+        });
+      });
     });
   });
 
