@@ -18,7 +18,7 @@ class ObjectField extends Component {
   }
 
   getStateFromProps(props) {
-    return props.formData || getDefaultFormState(props.schema) || {};
+    return getDefaultFormState(props.schema, props.formData) || {};
   }
 
   isRequired(name) {

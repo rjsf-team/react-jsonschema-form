@@ -20,7 +20,7 @@ class ArrayField extends Component {
 
   getStateFromProps(props) {
     const formData = Array.isArray(props.formData) ? props.formData : null;
-    return {items: formData || getDefaultFormState(props.schema) || []};
+    return {items: getDefaultFormState(props.schema, formData) || []};
   }
 
   get itemTitle() {
