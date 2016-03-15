@@ -67,7 +67,7 @@ class ObjectField extends Component {
               formData={this.state[name]}
               onChange={this.onChange.bind(this, name)}
               registry={this.props.registry} />
-            );
+          );
         })
       }</fieldset>
     );

@@ -5,7 +5,8 @@ import TextWidget from "./../widgets/TextWidget";
 import SelectWidget from "./../widgets/SelectWidget";
 
 
-function StringField({schema, name, uiSchema, formData, required, onChange}) {
+function StringField(props) {
+  const {schema, widgets, name, uiSchema, formData, required, onChange} = props;
   const {title, description} = schema;
   const widget = uiSchema["ui:widget"];
   const commonProps = {
@@ -19,13 +20,13 @@ function StringField({schema, name, uiSchema, formData, required, onChange}) {
   };
   if (Array.isArray(schema.enum)) {
     if (widget) {
-      const Widget = getAlternativeWidget(schema.type, widget);
+      const Widget = getAlternativeWidget(schema.type, widget, widgets);
       return <Widget options={optionsList(schema)} {...commonProps} />;
     }
     return <SelectWidget options={optionsList(schema)} {...commonProps} />;
   }
   if (widget) {
-    const Widget = getAlternativeWidget(schema.type, widget);
+    const Widget = getAlternativeWidget(schema.type, widget, widgets);
     return <Widget {...commonProps} />;
   }
   return <TextWidget {...commonProps} />;
