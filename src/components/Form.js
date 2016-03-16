@@ -79,11 +79,12 @@ export default class Form extends Component {
     return {
       SchemaField: this.props.SchemaField || SchemaField,
       TitleField: this.props.TitleField || TitleField,
+      widgets: this.props.widgets || {},
     };
   }
 
   render() {
-    const {children, schema, uiSchema} = this.props;
+    const {children, schema, uiSchema, widgets} = this.props;
     const {formData} = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.SchemaField;
@@ -94,6 +95,7 @@ export default class Form extends Component {
           schema={schema}
           uiSchema={uiSchema}
           formData={formData}
+          widgets={widgets}
           onChange={this.onChange.bind(this)}
           registry={registry}/>
         { children ? children : <p><button type="submit">Submit</button></p> }
@@ -107,6 +109,7 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     formData: PropTypes.any,
+    widgets: PropTypes.object,
     onChange: PropTypes.func,
     onError: PropTypes.func,
     onSubmit: PropTypes.func,

@@ -98,6 +98,7 @@ if (process.env.NODE_ENV !== "production") {
   SchemaField.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    registry: PropTypes.object,
   };
 }
 

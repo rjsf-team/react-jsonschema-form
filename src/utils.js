@@ -43,12 +43,15 @@ export function defaultFieldValue(formData, schema) {
   return formData === null ? defaultTypeValue(schema.type) : formData;
 }
 
-export function getAlternativeWidget(type, widget) {
+export function getAlternativeWidget(type, widget, registeredWidgets={}) {
   if (typeof widget === "function") {
     return widget;
   }
   if (typeof widget !== "string") {
     throw new Error(`Unsupported widget definition: ${typeof widget}`);
+  }
+  if (widget in registeredWidgets) {
+    return registeredWidgets[widget];
   }
   if (!altWidgetMap.hasOwnProperty(type)) {
     throw new Error(`No alternative widget for type ${type}`);

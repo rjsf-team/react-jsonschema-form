@@ -91,6 +91,26 @@ describe("Form", () => {
     });
   });
 
+  describe("Custom widgets", () => {
+    it("should support custom StringField widgets", () => {
+      const schema = {type: "string"};
+      const uiSchema = {"ui:widget": "foo"};
+      const foo = () => <div id="custom">yo</div>;
+      const {node} = createComponent({schema, uiSchema, widgets: {foo}});
+
+      expect(node.querySelector("#custom").textContent).eql("yo");
+    });
+
+    it("should support custom BooleanField widgets", () => {
+      const schema = {type: "boolean"};
+      const uiSchema = {"ui:widget": "foo"};
+      const foo = () => <div id="custom">yo</div>;
+      const {node} = createComponent({schema, uiSchema, widgets: {foo}});
+
+      expect(node.querySelector("#custom").textContent).eql("yo");
+    });
+  });
+
   describe("Object fields ordering", () => {
     const schema = {
       type: "object",

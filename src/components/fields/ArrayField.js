@@ -69,7 +69,7 @@ class ArrayField extends Component {
     const {schema, uiSchema, name} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const SchemaField = this.props.registry.SchemaField;
+    const {SchemaField} = this.props.registry;
     if (isMultiSelect(schema)) {
       return (
         <SelectWidget
