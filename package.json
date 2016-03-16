@@ -3,6 +3,7 @@
   "version": "0.14.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
+    "build:readme": "toctoc README.md -w",
     "build:css": "cp css/react-jsonschema-form.css dist/",
     "build:lib": "rimraf lib && babel -d lib/ src/",
     "build:dist": "rimraf dist && webpack --config webpack.config.dist.js --optimize-minimize",
@@ -10,7 +11,7 @@
     "dist": "npm run build:lib && npm run build:dist && npm run build:css",
     "lint": "eslint src test",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "publish-to-npm": "npm run dist && npm publish",
+    "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
     "start": "node devServer.js",
     "tdd": "npm run test -- -w",
     "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive --require ./test/setup-jsdom.js $(find test -name '*_test.js')"
@@ -22,8 +23,8 @@
   ],
   "engineStrict": false,
   "engines": {
-      "npm": "^2.14.7",
-      "node": ">=4"
+    "npm": "^2.14.7",
+    "node": ">=4"
   },
   "peerDependencies": {
     "react": "^0.14.3",
@@ -56,6 +57,7 @@
     "rimraf": "^2.4.4",
     "sinon": "^1.17.2",
     "style-loader": "^0.13.0",
+    "toctoc": "^0.0.6",
     "webpack": "^1.10.5",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0"

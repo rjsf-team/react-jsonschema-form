@@ -9,6 +9,29 @@ A [live demo](https://mozilla-services.github.io/react-jsonschema-form/) is host
 
 ![](http://i.imgur.com/oxBlg96.png)
 
+## Table of Contents
+
+  - [Installation](#installation)
+  - [Usage](#usage)
+     - [Custom labels for <code>enum</code> fields](#custom-labels-for-enum-fields)
+     - [Alternative widgets](#alternative-widgets)
+        - [For <code>boolean</code> fields](#for-boolean-fields)
+        - [For <code>string</code> fields](#for-string-fields)
+        - [For <code>number</code> and <code>integer</code> fields](#for-number-and-integer-fields)
+  - [Object fields ordering](#object-fields-ordering)
+  - [Multiple choices list](#multiple-choices-list)
+  - [Custom styles](#custom-styles)
+  - [Custom widgets](#custom-widgets)
+  - [Custom SchemaField](#custom-schemafield)
+  - [Custom titles](#custom-titles)
+  - [Custom buttons](#custom-buttons)
+  - [Development server](#development-server)
+  - [Tests](#tests)
+     - [TDD](#tdd)
+  - [License](#license)
+
+---
+
 ## Installation
 
 Requires React 0.14+.
@@ -119,19 +142,19 @@ render((
 
 Here's a list of supported alternative widgets for different JSONSchema data types:
 
-#### `boolean`:
+#### For `boolean` fields
 
   * `radio`: a radio button group with `true` and `false` as selectable values;
   * `select`: a select box with `true` and `false` as options;
   * by default, a checkbox is used
 
-#### `string`:
+#### For `string` fields
 
   * `textarea`: a `textarea` element;
   * `password`: an `input[type=password]` element;
   * by default, a regular `input[type=text]` element is used.
 
-#### `number` and `integer`:
+#### For `number` and `integer` fields
 
   * `updown`: an `input[type=number]` updown selector;
   * `range`: an `input[type=range]` slider;
@@ -220,6 +243,36 @@ const uiSchema = {
 
 render(<Form schema={schema} uiSchema={uiSchema} />);
 ```
+
+Alternatively, you can register them all at once by passing the `widgets` prop to the `Form` component, and reference their identifier from the `uiSchema`:
+
+```jsx
+const MyCustomWidget = (props) => {
+  return (
+    <input type="text"
+      className="custom"
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+      onChange={(event) => props.onChange(event.target.value)} />
+  );
+};
+
+const widgets = {
+  myCustomWidget: MyCustomWidget
+};
+
+const uiSchema = {
+  "ui:widget": "myCustomWidget"
+}
+
+render(<Form
+  schema={schema}
+  uiSchema={uiSchema}
+  widgets={widgets}/>);
+```
+
+This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
 
 The following props are passed to the widget component:
 
