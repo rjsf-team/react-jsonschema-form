@@ -6,7 +6,7 @@ import SelectWidget from "./../widgets/SelectWidget";
 
 
 function StringField(props) {
-  const {schema, widgets, name, uiSchema, formData, required, onChange} = props;
+  const {schema, name, uiSchema, formData, widgets, required, onChange} = props;
   const {title, description} = schema;
   const widget = uiSchema["ui:widget"];
   const commonProps = {
