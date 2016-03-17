@@ -5,7 +5,8 @@ import {
   getDefaultFormState,
   isMultiSelect,
   mergeObjects,
-  retrieveSchema
+  retrieveSchema,
+  shouldRender
 } from "../src/utils";
 
 
@@ -280,6 +281,88 @@ describe("utils", () => {
       };
       const definitions = { address: address_definition };
       expect(retrieveSchema(schema, definitions)).eql(address_definition);
+    });
+  });
+
+  describe("shouldRender", () => {
+    describe("single level comparison checks", () => {
+      const initial = {props: {myProp: 1}, state: {myState: 1}};
+
+      it("should detect equivalent props and state", () => {
+        expect(shouldRender(
+          initial,
+          {myProp: 1},
+          {myState: 1}
+        )).eql(false);
+      });
+
+      it("should detect diffing props", () => {
+        expect(shouldRender(
+          initial,
+          {myProp: 2},
+          {myState: 1}
+        )).eql(true);
+      });
+
+      it("should detect diffing state", () => {
+        expect(shouldRender(
+          initial,
+          {myProp: 1},
+          {myState: 2}
+        )).eql(true);
+      });
+
+      it("should handle equivalent function prop", () => {
+        const fn = () => {};
+        expect(shouldRender(
+          {props: {myProp: fn}, state: {myState: 1}},
+          {myProp: fn},
+          {myState: 1}
+        )).eql(false);
+      });
+    });
+
+    describe("nested levels comparison checks", () => {
+      const initial = {
+        props: {myProp: {mySubProp: 1}},
+        state: {myState: {mySubState: 1}}
+      };
+
+      it("should detect equivalent props and state", () => {
+        expect(shouldRender(
+          initial,
+          {myProp: {mySubProp: 1}},
+          {myState: {mySubState: 1}}
+        )).eql(false);
+      });
+
+      it("should detect diffing props", () => {
+        expect(shouldRender(
+          initial,
+          {myProp: {mySubProp: 2}},
+          {myState: {mySubState: 1}}
+        )).eql(true);
+      });
+
+      it("should detect diffing state", () => {
+        expect(shouldRender(
+          initial,
+          {myProp: {mySubProp: 1}},
+          {myState: {mySubState: 2}}
+        )).eql(true);
+      });
+
+      it("should handle equivalent function prop", () => {
+        const fn = () => {};
+        expect(shouldRender(
+          {
+            props: {myProp: {mySubProp: fn}},
+            state: {myState: {mySubState: fn}}
+          },
+          {myProp: {mySubProp: fn}},
+          {myState: {mySubState: fn}}
+        )).eql(false);
+      });
     });
   });
 });

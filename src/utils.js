@@ -1,3 +1,5 @@
+import deeper from "deeper";
+
 import PasswordWidget from "./components/widgets/PasswordWidget";
 import RadioWidget from "./components/widgets/RadioWidget";
 import UpDownWidget from "./components/widgets/UpDownWidget";
@@ -185,4 +187,8 @@ export function retrieveSchema(schema, definitions={}) {
   }
   // Retrieve the referenced schema definition.
   return findSchemaDefinition(schema.$ref, definitions);
+}
+
+export function shouldRender(comp, nextProps, nextState) {
+  return !deeper(comp.props, nextProps) || !deeper(comp.state, nextState);
 }

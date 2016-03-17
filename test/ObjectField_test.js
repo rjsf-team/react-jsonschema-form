@@ -2,7 +2,7 @@ import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createComponent } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("ObjectField", () => {
   describe("schema", () => {
@@ -26,14 +26,14 @@ describe("ObjectField", () => {
     };
 
     it("should render a fieldset", () => {
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelectorAll("fieldset"))
         .to.have.length.of(1);
     });
 
     it("should render a fieldset legend", () => {
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelector("fieldset > legend").textContent)
         .eql("my object");
@@ -42,34 +42,34 @@ describe("ObjectField", () => {
     it("should render a customized title", () => {
       const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
-      const {node} = createComponent({schema, TitleField: CustomTitleField});
+      const {node} = createFormComponent({schema, TitleField: CustomTitleField});
       expect(node.querySelector("fieldset > #custom").textContent)
       .to.eql("my object");
     });
 
     it("should render a default property label", () => {
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelector(".field-boolean label > span").textContent)
         .eql("bar");
     });
 
     it("should render a string property", () => {
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelectorAll(".field input[type=text]"))
         .to.have.length.of(1);
     });
 
     it("should render a boolean property", () => {
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelectorAll(".field input[type=checkbox]"))
         .to.have.length.of(1);
     });
 
     it("should handle a default object value", () => {
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelector(".field input[type=text]").value)
         .eql("hey");
@@ -78,7 +78,7 @@ describe("ObjectField", () => {
     });
 
     it("should handle required values", () => {
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       // Required field is <input type="text" required="">
       expect(node.querySelector("input[type=text]").getAttribute("required"))
@@ -88,7 +88,7 @@ describe("ObjectField", () => {
     });
 
     it("should fill fields with form data", () => {
-      const {node} = createComponent({schema, formData: {
+      const {node} = createFormComponent({schema, formData: {
         foo: "hey",
         bar: true,
       }});
@@ -100,7 +100,7 @@ describe("ObjectField", () => {
     });
 
     it("should handle object fields change events", () => {
-      const {comp, node} = createComponent({schema});
+      const {comp, node} = createFormComponent({schema});
 
       Simulate.change(node.querySelector("input[type=text]"), {
         target: {value: "changed"}
@@ -120,7 +120,7 @@ describe("ObjectField", () => {
     };
 
     it("should use provided order", () => {
-      const {node} = createComponent({schema, uiSchema: {
+      const {node} = createFormComponent({schema, uiSchema: {
         "ui:order": ["bar", "foo"]
       }});
       const labels = [].map.call(
@@ -130,7 +130,7 @@ describe("ObjectField", () => {
     });
 
     it("should throw when order list length mismatches", () => {
-      const {node} = createComponent({schema, uiSchema: {
+      const {node} = createFormComponent({schema, uiSchema: {
         "ui:order": ["bar", "foo", "baz?"]
       }});
 
@@ -139,7 +139,7 @@ describe("ObjectField", () => {
     });
 
     it("should throw when order and properties lists differs", () => {
-      const {node} = createComponent({schema, uiSchema: {
+      const {node} = createFormComponent({schema, uiSchema: {
         "ui:order": ["bar", "wut?"]
       }});
 
@@ -159,7 +159,7 @@ describe("ObjectField", () => {
         }
       };
 
-      const {node} = createComponent({schema: refSchema, uiSchema: {
+      const {node} = createFormComponent({schema: refSchema, uiSchema: {
         "ui:order": ["bar", "foo"]
       }});
       const labels = [].map.call(
@@ -185,7 +185,7 @@ describe("ObjectField", () => {
         }
       };
 
-      const {node} = createComponent({schema: refSchema, uiSchema: {
+      const {node} = createFormComponent({schema: refSchema, uiSchema: {
         root: {
           "ui:order": ["bar", "foo"]
         }
