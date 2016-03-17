@@ -1,6 +1,11 @@
 import React, { Component, PropTypes } from "react";
 
-import { getDefaultFormState, isMultiSelect, optionsList } from "../../utils";
+import {
+  getDefaultFormState,
+  isMultiSelect,
+  optionsList,
+  retrieveSchema
+} from "../../utils";
 import SelectWidget from "./../widgets/SelectWidget";
 
 
@@ -20,7 +25,10 @@ class ArrayField extends Component {
 
   getStateFromProps(props) {
     const formData = Array.isArray(props.formData) ? props.formData : null;
-    return {items: getDefaultFormState(props.schema, formData) || []};
+    const {definitions} = this.props.registry;
+    return {
+      items: getDefaultFormState(props.schema, formData, definitions) || []
+    };
   }
 
   get itemTitle() {
@@ -40,9 +48,10 @@ class ArrayField extends Component {
   onAddClick(event) {
     event.preventDefault();
     const {items} = this.state;
-    const {schema} = this.props;
+    const {schema, registry} = this.props;
+    const {definitions} = registry;
     this.asyncSetState({
-      items: items.concat(getDefaultFormState(schema.items))
+      items: items.concat(getDefaultFormState(schema.items, undefined, definitions))
     }, {validate: false});
   }
 
@@ -69,13 +78,14 @@ class ArrayField extends Component {
     const {schema, uiSchema, name} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const {SchemaField} = this.props.registry;
+    const {SchemaField, definitions} = this.props.registry;
+    const itemsSchema = retrieveSchema(schema.items, definitions);
     if (isMultiSelect(schema)) {
       return (
         <SelectWidget
           multiple
           onChange={this.onSelectChange.bind(this)}
-          options={optionsList(schema.items)}
+          options={optionsList(itemsSchema)}
           schema={schema}
           title={title}
           defaultValue={schema.default}
@@ -86,7 +96,7 @@ class ArrayField extends Component {
 
     return (
       <fieldset
-        className={`field field-array field-array-of-${schema.items.type}`}>
+        className={`field field-array field-array-of-${itemsSchema.type}`}>
         {title ? <legend>{title}</legend> : null}
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
@@ -95,10 +105,10 @@ class ArrayField extends Component {
             return (
               <div key={index}>
                 <SchemaField
-                  schema={schema.items}
+                  schema={itemsSchema}
                   uiSchema={uiSchema.items}
                   formData={items[index]}
-                  required={this.isItemRequired(schema.items)}
+                  required={this.isItemRequired(itemsSchema)}
                   onChange={this.onChange.bind(this, index)}
                   registry={this.props.registry}/>
                 <p className="array-item-remove">

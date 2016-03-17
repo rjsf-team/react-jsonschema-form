@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 
-import { isMultiSelect } from "../../utils";
+import { isMultiSelect, retrieveSchema } from "../../utils";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import NumberField from "./NumberField";
@@ -68,8 +68,15 @@ Wrapper.defaultProps = {
 };
 
 function SchemaField(props) {
-  const {schema, uiSchema, name, required} = props;
+  const {uiSchema, name, required, registry} = props;
+  const {definitions} = registry;
+  const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = COMPONENT_TYPES[schema.type] || UnsupportedField;
+
+  if (Object.keys(schema).length === 0) {
+    return <div />;
+  }
+
   let displayLabel = true;
   if (schema.type === "array") {
     displayLabel = isMultiSelect(schema);
