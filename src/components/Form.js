@@ -80,6 +80,7 @@ export default class Form extends Component {
       SchemaField: this.props.SchemaField || SchemaField,
       TitleField: this.props.TitleField || TitleField,
       widgets: this.props.widgets || {},
+      definitions: this.props.schema.definitions || {},
     };
   }
 

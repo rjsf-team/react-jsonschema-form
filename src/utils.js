@@ -158,3 +158,22 @@ export function optionsList(schema) {
     return {label, value};
   });
 }
+
+function findSchemaDefinition($ref, definitions) {
+  // Extract and use the referenced definition if we have it.
+  const match = /#\/definitions\/(.*)$/.exec($ref);
+  if (match && match[1] && definitions.hasOwnProperty(match[1])) {
+    return definitions[match[1]];
+  }
+  // No matching definition found, that's an error (bogus schema?)
+  throw new Error(`Could not find a definition for ${$ref}.`);
+}
+
+export function retrieveSchema(schema, definitions) {
+  // No $ref attribute found, returning the original schema.
+  if (!schema.hasOwnProperty("$ref")) {
+    return schema;
+  }
+  // Retrieve the referenced schema definition.
+  return findSchemaDefinition(schema.$ref, definitions);
+}

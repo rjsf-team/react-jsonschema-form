@@ -66,6 +66,82 @@ describe("Form", () => {
     });
   });
 
+  describe("Schema definitions", () => {
+    it("should handle schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: {type: "string"}
+        },
+        type: "object",
+        properties: {
+          foo: {"$ref": "#/definitions/testdef"},
+          bar: {"$ref": "#/definitions/testdef"},
+        }
+      };
+
+      const {node} = createComponent({schema});
+
+      expect(node.querySelectorAll("input[type=text]"))
+        .to.have.length.of(2);
+    });
+
+    it("should handle deeply referenced schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: {type: "string"}
+        },
+        type: "object",
+        properties: {
+          foo: {
+            type: "object",
+            properties: {
+              bar: {"$ref": "#/definitions/testdef"},
+            }
+          }
+        }
+      };
+
+      const {node} = createComponent({schema});
+
+      expect(node.querySelectorAll("input[type=text]"))
+        .to.have.length.of(1);
+    });
+
+    it("should handle referenced definitions for array items", () => {
+      const schema = {
+        definitions: {
+          testdef: {type: "string"}
+        },
+        type: "object",
+        properties: {
+          foo: {
+            type: "array",
+            items: {"$ref": "#/definitions/testdef"}
+          }
+        }
+      };
+
+      const {node} = createComponent({schema, formData: {
+        foo: ["blah"]
+      }});
+
+      expect(node.querySelectorAll("input[type=text]"))
+        .to.have.length.of(1);
+    });
+
+    it("should raise for non-existent definitions referenced", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {"$ref": "#/definitions/nonexistent"},
+        }
+      };
+
+      expect(() => createComponent({schema}))
+        .to.Throw(Error, /#\/definitions\/nonexistent/);
+    });
+  });
+
   describe("Defaults array items default propagation", () => {
     const schema = {
       type: "object",
