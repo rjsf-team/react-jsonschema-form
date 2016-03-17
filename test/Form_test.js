@@ -140,6 +140,37 @@ describe("Form", () => {
       expect(() => createComponent({schema}))
         .to.Throw(Error, /#\/definitions\/nonexistent/);
     });
+
+    it("should propagate referenced definition defaults", () => {
+      const schema = {
+        definitions: {
+          testdef: {type: "string", default: "hello"}
+        },
+        $ref: "#/definitions/testdef"
+      };
+
+      const {node} = createComponent({schema});
+
+      expect(node.querySelector("input[type=text]").value)
+        .eql("hello");
+    });
+
+    it("should propagate nested referenced definition defaults", () => {
+      const schema = {
+        definitions: {
+          testdef: {type: "string", default: "hello"}
+        },
+        type: "object",
+        properties: {
+          foo: {"$ref": "#/definitions/testdef"}
+        }
+      };
+
+      const {node} = createComponent({schema});
+
+      expect(node.querySelector("input[type=text]").value)
+        .eql("hello");
+    });
   });
 
   describe("Defaults array items default propagation", () => {
