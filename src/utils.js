@@ -62,7 +62,7 @@ export function getAlternativeWidget(type, widget, registeredWidgets={}) {
   return altWidgetMap[type][widget];
 }
 
-function computeDefaults(schema, parentDefaults, definitions) {
+function computeDefaults(schema, parentDefaults, definitions={}) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
@@ -86,8 +86,8 @@ function computeDefaults(schema, parentDefaults, definitions) {
     return Object.keys(schema.properties).reduce((acc, key) => {
       // Compute the defaults for this node, with the parent defaults we might
       // have from a previous run: defaults[key].
-      acc[key] = computeDefaults(schema.properties[key], defaults[key],
-        definitions);
+      acc[key] = computeDefaults(
+        schema.properties[key], defaults[key], definitions);
       return acc;
     }, {});
   }
@@ -165,7 +165,7 @@ export function optionsList(schema) {
   });
 }
 
-function findSchemaDefinition($ref, definitions) {
+function findSchemaDefinition($ref, definitions={}) {
   // Extract and use the referenced definition if we have it.
   const match = /#\/definitions\/(.*)$/.exec($ref);
   if (match && match[1] && definitions.hasOwnProperty(match[1])) {
@@ -175,7 +175,7 @@ function findSchemaDefinition($ref, definitions) {
   throw new Error(`Could not find a definition for ${$ref}.`);
 }
 
-export function retrieveSchema(schema, definitions) {
+export function retrieveSchema(schema, definitions={}) {
   // No $ref attribute found, returning the original schema.
   if (!schema.hasOwnProperty("$ref")) {
     return schema;
