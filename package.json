@@ -57,7 +57,7 @@
     "rimraf": "^2.4.4",
     "sinon": "^1.17.2",
     "style-loader": "^0.13.0",
-    "toctoc": "^0.0.6",
+    "toctoc": "^0.2.3",
     "webpack": "^1.10.5",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0"
