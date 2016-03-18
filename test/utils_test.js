@@ -171,6 +171,19 @@ describe("utils", () => {
           .eql({level1: [1, 2, 3]});
       });
 
+      it("should use first enum value when no default is specified", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              type: "string",
+              enum: ["a", "b", "c"],
+            }
+          }
+        };
+        expect(getDefaultFormState(schema, {}))
+          .eql({foo: "a"});
+      });
     });
   });
 
