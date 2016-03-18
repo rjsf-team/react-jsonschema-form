@@ -4,7 +4,8 @@ import {
   asNumber,
   getDefaultFormState,
   isMultiSelect,
-  mergeObjects
+  mergeObjects,
+  retrieveSchema
 } from "../src/utils";
 
 
@@ -249,6 +250,23 @@ describe("utils", () => {
         c: 3
       };
       expect(mergeObjects(obj1, obj2)).eql(expected);
+    });
+  });
+
+  describe("retrieveSchema()", () => {
+    it("should 'resolve' a schema which contains definitions", () => {
+      const schema = { $ref: "#/definitions/address" };
+      const address_definition = {
+        type: "object",
+        properties: {
+          street_address: { type: "string" },
+          city: { type: "string" },
+          state: { type: "string" }
+        },
+        required: [ "street_address", "city", "state" ]
+      };
+      const definitions = { address: address_definition };
+      expect(retrieveSchema(schema, definitions)).eql(address_definition);
     });
   });
 });

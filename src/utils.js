@@ -62,7 +62,7 @@ export function getAlternativeWidget(type, widget, registeredWidgets={}) {
   return altWidgetMap[type][widget];
 }
 
-function computeDefaults(schema, parentDefaults) {
+function computeDefaults(schema, parentDefaults, definitions={}) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
@@ -72,6 +72,10 @@ function computeDefaults(schema, parentDefaults) {
   } else if ("default" in schema) {
     // Use schema defaults for this node.
     defaults = schema.default;
+  } else if ("$ref" in schema) {
+    // Use referenced schema defaults for this node.
+    const refSchema = findSchemaDefinition(schema.$ref, definitions);
+    defaults = computeDefaults(refSchema, defaults, definitions);
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof(defaults) === "undefined") {
@@ -82,18 +86,20 @@ function computeDefaults(schema, parentDefaults) {
     return Object.keys(schema.properties).reduce((acc, key) => {
       // Compute the defaults for this node, with the parent defaults we might
       // have from a previous run: defaults[key].
-      acc[key] = computeDefaults(schema.properties[key], defaults[key]);
+      acc[key] = computeDefaults(
+        schema.properties[key], defaults[key], definitions);
       return acc;
     }, {});
   }
   return defaults;
 }
 
-export function getDefaultFormState(schema, formData) {
-  if (!isObject(schema)) {
-    throw new Error("Invalid schema: " + schema);
+export function getDefaultFormState(_schema, formData, definitions={}) {
+  if (!isObject(_schema)) {
+    throw new Error("Invalid schema: " + _schema);
   }
-  const defaults = computeDefaults(schema);
+  const schema = retrieveSchema(_schema, definitions);
+  const defaults = computeDefaults(schema, undefined, definitions);
   if (typeof(formData) === "undefined") { // No form data? Use schema defaults.
     return defaults;
   }
@@ -157,4 +163,23 @@ export function optionsList(schema) {
     const label = schema.enumNames && schema.enumNames[i] || String(value);
     return {label, value};
   });
+}
+
+function findSchemaDefinition($ref, definitions={}) {
+  // Extract and use the referenced definition if we have it.
+  const match = /#\/definitions\/(.*)$/.exec($ref);
+  if (match && match[1] && definitions.hasOwnProperty(match[1])) {
+    return definitions[match[1]];
+  }
+  // No matching definition found, that's an error (bogus schema?)
+  throw new Error(`Could not find a definition for ${$ref}.`);
+}
+
+export function retrieveSchema(schema, definitions={}) {
+  // No $ref attribute found, returning the original schema.
+  if (!schema.hasOwnProperty("$ref")) {
+    return schema;
+  }
+  // Retrieve the referenced schema definition.
+  return findSchemaDefinition(schema.$ref, definitions);
 }

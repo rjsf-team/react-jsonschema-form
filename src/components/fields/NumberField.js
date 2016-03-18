@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== "production") {
   NumberField.propTypes = {
     schema: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    formData: PropTypes.number,
+    formData: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     required: PropTypes.bool,
   };
 }
