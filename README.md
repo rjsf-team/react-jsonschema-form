@@ -25,6 +25,7 @@ A [live demo](https://mozilla-services.github.io/react-jsonschema-form/) is host
   - [Custom SchemaField](#custom-schemafield)
   - [Custom titles](#custom-titles)
   - [Custom buttons](#custom-buttons)
+  - [Schema definitions &amp; references](#schema-definitions-amp-references)
   - [Development server](#development-server)
   - [Tests](#tests)
      - [TDD](#tdd)
