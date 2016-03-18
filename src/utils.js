@@ -73,8 +73,8 @@ function computeDefaults(schema, parentDefaults, definitions) {
     // Use schema defaults for this node.
     defaults = schema.default;
   } else if ("$ref" in schema) {
-    let refSchema = findSchemaDefinition(schema.$ref, definitions);
-    defaults = refSchema.default;
+    // Use referenced schema defaults for this node.
+    defaults = findSchemaDefinition(schema.$ref, definitions).default;
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof(defaults) === "undefined") {

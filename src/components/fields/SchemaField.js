@@ -72,6 +72,11 @@ function SchemaField(props) {
   const {definitions} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = COMPONENT_TYPES[schema.type] || UnsupportedField;
+
+  if (Object.keys(schema).length === 0) {
+    return <div />;
+  }
+
   let displayLabel = true;
   if (schema.type === "array") {
     displayLabel = isMultiSelect(schema);
