@@ -146,5 +146,54 @@ describe("ObjectField", () => {
       expect(node.querySelector(".config-error").textContent)
         .to.match(/does not match object properties list/);
     });
+
+    it("should order referenced schema definitions", () => {
+      const refSchema = {
+        definitions: {
+          testdef: {type: "string"}
+        },
+        type: "object",
+        properties: {
+          foo: {$ref: "#/definitions/testdef"},
+          bar: {$ref: "#/definitions/testdef"}
+        }
+      };
+
+      const {node} = createComponent({schema: refSchema, uiSchema: {
+        "ui:order": ["bar", "foo"]
+      }});
+      const labels = [].map.call(
+        node.querySelectorAll(".field > label"), l => l.textContent);
+
+      expect(labels).eql(["bar", "foo"]);
+    });
+
+    it("should order referenced object schema definition properties", () => {
+      const refSchema = {
+        definitions: {
+          testdef: {
+            type: "object",
+            properties: {
+              foo: {type: "string"},
+              bar: {type: "string"},
+            }
+          }
+        },
+        type: "object",
+        properties: {
+          root: {$ref: "#/definitions/testdef"},
+        }
+      };
+
+      const {node} = createComponent({schema: refSchema, uiSchema: {
+        root: {
+          "ui:order": ["bar", "foo"]
+        }
+      }});
+      const labels = [].map.call(
+        node.querySelectorAll(".field > label"), l => l.textContent);
+
+      expect(labels).eql(["bar", "foo"]);
+    });
   });
 });
