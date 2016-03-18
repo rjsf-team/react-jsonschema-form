@@ -25,7 +25,10 @@ class ArrayField extends Component {
 
   getStateFromProps(props) {
     const formData = Array.isArray(props.formData) ? props.formData : null;
-    return {items: getDefaultFormState(props.schema, formData) || []};
+    const {definitions} = this.props.registry;
+    return {
+      items: getDefaultFormState(props.schema, formData, definitions) || []
+    };
   }
 
   get itemTitle() {
@@ -45,9 +48,10 @@ class ArrayField extends Component {
   onAddClick(event) {
     event.preventDefault();
     const {items} = this.state;
-    const {schema} = this.props;
+    const {schema, registry} = this.props;
+    const {definitions} = registry;
     this.asyncSetState({
-      items: items.concat(getDefaultFormState(schema.items))
+      items: items.concat(getDefaultFormState(schema.items, undefined, definitions))
     }, {validate: false});
   }
 

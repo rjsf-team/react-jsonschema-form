@@ -67,15 +67,29 @@ describe("Form", () => {
   });
 
   describe("Schema definitions", () => {
-    it("should handle schema definitions", () => {
+    it("should use a single schema definition reference", () => {
+      const schema = {
+        definitions: {
+          testdef: {type: "string"}
+        },
+        $ref: "#/definitions/testdef"
+      };
+
+      const {node} = createComponent({schema});
+
+      expect(node.querySelectorAll("input[type=text]"))
+        .to.have.length.of(1);
+    });
+
+    it("should handle multiple schema definition references", () => {
       const schema = {
         definitions: {
           testdef: {type: "string"}
         },
         type: "object",
         properties: {
-          foo: {"$ref": "#/definitions/testdef"},
-          bar: {"$ref": "#/definitions/testdef"},
+          foo: {$ref: "#/definitions/testdef"},
+          bar: {$ref: "#/definitions/testdef"},
         }
       };
 
@@ -95,7 +109,7 @@ describe("Form", () => {
           foo: {
             type: "object",
             properties: {
-              bar: {"$ref": "#/definitions/testdef"},
+              bar: {$ref: "#/definitions/testdef"},
             }
           }
         }
@@ -116,7 +130,7 @@ describe("Form", () => {
         properties: {
           foo: {
             type: "array",
-            items: {"$ref": "#/definitions/testdef"}
+            items: {$ref: "#/definitions/testdef"}
           }
         }
       };
@@ -133,7 +147,7 @@ describe("Form", () => {
       const schema = {
         type: "object",
         properties: {
-          foo: {"$ref": "#/definitions/nonexistent"},
+          foo: {$ref: "#/definitions/nonexistent"},
         }
       };
 
@@ -162,11 +176,30 @@ describe("Form", () => {
         },
         type: "object",
         properties: {
-          foo: {"$ref": "#/definitions/testdef"}
+          foo: {$ref: "#/definitions/testdef"}
         }
       };
 
       const {node} = createComponent({schema});
+
+      expect(node.querySelector("input[type=text]").value)
+        .eql("hello");
+    });
+
+    it("should propagate referenced definition defaults for array items", () => {
+      const schema = {
+        definitions: {
+          testdef: {type: "string", default: "hello"}
+        },
+        type: "array",
+        items: {
+          $ref: "#/definitions/testdef"
+        }
+      };
+
+      const {node} = createComponent({schema});
+
+      Simulate.click(node.querySelector(".array-item-add button"));
 
       expect(node.querySelector("input[type=text]").value)
         .eql("hello");
