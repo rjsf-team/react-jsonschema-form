@@ -2,7 +2,7 @@ import { expect } from "chai";
 import React from "react";
 import { Simulate } from "react-addons-test-utils";
 
-import { createComponent } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("uiSchema", () => {
   describe("custom classNames", () => {
@@ -20,7 +20,7 @@ describe("uiSchema", () => {
     };
 
     it("should apply custom class names to target widgets", () => {
-      const {node} = createComponent({schema, uiSchema});
+      const {node} = createFormComponent({schema, uiSchema});
       const [foo, bar] = node.querySelectorAll(".field-string");
 
       expect(foo.classList.contains("class-for-foo")).eql(true);
@@ -48,7 +48,7 @@ describe("uiSchema", () => {
     };
 
     it("should render a custom widget", () => {
-      const {node} = createComponent({schema, uiSchema});
+      const {node} = createFormComponent({schema, uiSchema});
 
       expect(node.querySelectorAll(".custom")).to.have.length.of(1);
     });
@@ -72,14 +72,14 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("textarea"))
           .to.have.length.of(1);
       });
 
       it("should support formData", () => {
-        const {node} = createComponent({schema, uiSchema, formData: {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
           foo: "a"
         }});
 
@@ -88,7 +88,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when text is updated is checked", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: "a"
         }});
 
@@ -108,14 +108,14 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("[type=password]"))
           .to.have.length.of(1);
       });
 
       it("should support formData", () => {
-        const {node} = createComponent({schema, uiSchema, formData: {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
           foo: "a"
         }});
 
@@ -124,7 +124,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when text is updated is checked", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: "a"
         }});
 
@@ -156,14 +156,14 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("[type=radio]"))
           .to.have.length.of(2);
       });
 
       it("should support formData", () => {
-        const {node} = createComponent({schema, uiSchema, formData: {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
           foo: "b"
         }});
 
@@ -172,7 +172,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: "a"
         }});
 
@@ -203,14 +203,14 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("[type=number]"))
           .to.have.length.of(1);
       });
 
       it("should support formData", () => {
-        const {node} = createComponent({schema, uiSchema, formData: {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
           foo: 3.14
         }});
 
@@ -219,7 +219,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: 3.14
         }});
 
@@ -239,14 +239,14 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("[type=range]"))
           .to.have.length.of(1);
       });
 
       it("should support formData", () => {
-        const {node} = createComponent({schema, uiSchema, formData: {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
           foo: 3.14
         }});
 
@@ -255,7 +255,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: 3.14
         }});
 
@@ -286,14 +286,14 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("[type=number]"))
           .to.have.length.of(1);
       });
 
       it("should support formData", () => {
-        const {node} = createComponent({schema, uiSchema, formData: {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
           foo: 3
         }});
 
@@ -302,7 +302,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: 3
         }});
 
@@ -322,14 +322,14 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("[type=range]"))
           .to.have.length.of(1);
       });
 
       it("should support formData", () => {
-        const {node} = createComponent({schema, uiSchema, formData: {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
           foo: 3
         }});
 
@@ -338,7 +338,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: 3
         }});
 
@@ -369,7 +369,7 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("[type=radio]"))
           .to.have.length.of(2);
@@ -380,7 +380,7 @@ describe("uiSchema", () => {
       });
 
       it("should render boolean option labels", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
         const labels = [].map.call(
           node.querySelectorAll(".field-radio-group label > span"),
           node => node.textContent);
@@ -390,7 +390,7 @@ describe("uiSchema", () => {
       });
 
       it("should support formData", () => {
-        const {node} = createComponent({schema, uiSchema, formData: {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
           foo: false
         }});
 
@@ -399,7 +399,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when false is checked", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: true
         }});
 
@@ -411,7 +411,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when true is checked", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: false
         }});
 
@@ -431,14 +431,14 @@ describe("uiSchema", () => {
       };
 
       it("should accept a uiSchema object", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("select option"))
           .to.have.length.of(2);
       });
 
       it("should render boolean option labels", () => {
-        const {node} = createComponent({schema, uiSchema});
+        const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("option")[0].textContent)
           .eql("true");
@@ -447,7 +447,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when true is selected", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: false
         }});
 
@@ -460,7 +460,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when false is selected", () => {
-        const {comp, node} = createComponent({schema, uiSchema, formData: {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: false
         }});
 

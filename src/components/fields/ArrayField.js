@@ -4,7 +4,8 @@ import {
   getDefaultFormState,
   isMultiSelect,
   optionsList,
-  retrieveSchema
+  retrieveSchema,
+  shouldRender
 } from "../../utils";
 import SelectWidget from "./../widgets/SelectWidget";
 
@@ -17,6 +18,13 @@ class ArrayField extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
+    // Caching bound instance methods for rendering perf optimization.
+    this._onSelectChange = this.onSelectChange.bind(this);
+    this._onChange = this.onChange.bind(this);
+    this._onChangeForIndex = (index) => this._onChange.bind(this, index);
+    this._onDropClick = this.onDropClick.bind(this);
+    this._onDropIndexClick = (index) => this._onDropClick.bind(this, index);
+    this._onAddClick = this.onAddClick.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -29,6 +37,10 @@ class ArrayField extends Component {
     return {
       items: getDefaultFormState(props.schema, formData, definitions) || []
     };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
   }
 
   get itemTitle() {
@@ -84,7 +96,7 @@ class ArrayField extends Component {
       return (
         <SelectWidget
           multiple
-          onChange={this.onSelectChange.bind(this)}
+          onChange={this._onSelectChange}
           options={optionsList(itemsSchema)}
           schema={schema}
           title={title}
@@ -109,17 +121,17 @@ class ArrayField extends Component {
                   uiSchema={uiSchema.items}
                   formData={items[index]}
                   required={this.isItemRequired(itemsSchema)}
-                  onChange={this.onChange.bind(this, index)}
+                  onChange={this._onChangeForIndex(index)}
                   registry={this.props.registry}/>
                 <p className="array-item-remove">
                   <button type="button"
-                    onClick={this.onDropClick.bind(this, index)}>-</button></p>
+                    onClick={this._onDropIndexClick(index)}>-</button></p>
               </div>
             );
           })
         }</div>
         <p className="array-item-add">
-          <button type="button" onClick={this.onAddClick.bind(this)}>+</button>
+          <button type="button" onClick={this._onAddClick}>+</button>
         </p>
       </fieldset>
     );

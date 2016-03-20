@@ -8,7 +8,7 @@ import { Simulate, renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createComponent } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("Form", () => {
   var sandbox;
@@ -23,13 +23,13 @@ describe("Form", () => {
 
   describe("Empty schema", () => {
     it("should render a form tag", () => {
-      const {node} = createComponent({schema: {}});
+      const {node} = createFormComponent({schema: {}});
 
       expect(node.tagName).eql("FORM");
     });
 
     it("should render a submit button", () => {
-      const {node} = createComponent({schema: {}});
+      const {node} = createFormComponent({schema: {}});
 
       expect(node.querySelectorAll("button[type=submit]"))
         .to.have.length.of(1);
@@ -75,7 +75,7 @@ describe("Form", () => {
         $ref: "#/definitions/testdef"
       };
 
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelectorAll("input[type=text]"))
         .to.have.length.of(1);
@@ -93,7 +93,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelectorAll("input[type=text]"))
         .to.have.length.of(2);
@@ -115,7 +115,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelectorAll("input[type=text]"))
         .to.have.length.of(1);
@@ -135,7 +135,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createComponent({schema, formData: {
+      const {node} = createFormComponent({schema, formData: {
         foo: ["blah"]
       }});
 
@@ -151,7 +151,7 @@ describe("Form", () => {
         }
       };
 
-      expect(() => createComponent({schema}))
+      expect(() => createFormComponent({schema}))
         .to.Throw(Error, /#\/definitions\/nonexistent/);
     });
 
@@ -163,7 +163,7 @@ describe("Form", () => {
         $ref: "#/definitions/testdef"
       };
 
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelector("input[type=text]").value)
         .eql("hello");
@@ -180,7 +180,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       expect(node.querySelector("input[type=text]").value)
         .eql("hello");
@@ -197,7 +197,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createComponent({schema});
+      const {node} = createFormComponent({schema});
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
@@ -234,7 +234,7 @@ describe("Form", () => {
     };
 
     it("should propagate deeply nested defaults to form state", () => {
-      const {comp, node} = createComponent({schema});
+      const {comp, node} = createFormComponent({schema});
 
       Simulate.click(node.querySelector(".array-item-add button"));
       Simulate.submit(node);
@@ -266,7 +266,7 @@ describe("Form", () => {
 
       beforeEach(() => {
         onError = sandbox.spy();
-        const compInfo = createComponent({schema, formData: {
+        const compInfo = createFormComponent({schema, formData: {
           foo: undefined
         }, onError});
         comp = compInfo.comp;
@@ -312,7 +312,7 @@ describe("Form", () => {
 
       beforeEach(() => {
         onError = sandbox.spy();
-        const compInfo = createComponent({schema, formData: {
+        const compInfo = createFormComponent({schema, formData: {
           foo: "123456789"
         }, onError});
         comp = compInfo.comp;
@@ -356,7 +356,7 @@ describe("Form", () => {
         foo: "bar"
       };
       const onSubmit = sandbox.spy();
-      const {comp, node} = createComponent({schema, formData, onSubmit});
+      const {comp, node} = createFormComponent({schema, formData, onSubmit});
 
       Simulate.submit(node);
 
@@ -378,7 +378,7 @@ describe("Form", () => {
       };
       const onSubmit = sandbox.spy();
       const onError = sandbox.spy();
-      const {node} = createComponent({schema, formData, onSubmit, onError});
+      const {node} = createFormComponent({schema, formData, onSubmit, onError});
 
       Simulate.submit(node);
 
@@ -400,7 +400,7 @@ describe("Form", () => {
         foo: ""
       };
       const onChange = sandbox.spy();
-      const {node} = createComponent({schema, formData, onChange});
+      const {node} = createFormComponent({schema, formData, onChange});
 
       Simulate.change(node.querySelector("[type=text]"), {
         target: {value: "new"}
@@ -429,7 +429,7 @@ describe("Form", () => {
         foo: ""
       };
       const onError = sandbox.spy();
-      const {node} = createComponent({schema, formData, onError});
+      const {node} = createFormComponent({schema, formData, onError});
 
       Simulate.submit(node);
 
@@ -441,7 +441,7 @@ describe("Form", () => {
     describe("root level", () => {
       it("should update form state from new formData prop value", () => {
         const schema = {type: "string"};
-        const {comp} = createComponent({schema});
+        const {comp} = createFormComponent({schema});
 
         comp.componentWillReceiveProps({formData: "yo"});
 
@@ -449,7 +449,7 @@ describe("Form", () => {
       });
 
       it("should validate formData when the schema is updated", () => {
-        const {comp} = createComponent({schema: {type: "string"}});
+        const {comp} = createFormComponent({schema: {type: "string"}});
 
         comp.componentWillReceiveProps({formData: "yo", schema: {type: "number"}});
 
@@ -469,7 +469,7 @@ describe("Form", () => {
             }
           }
         };
-        const {comp} = createComponent({schema});
+        const {comp} = createFormComponent({schema});
 
         comp.componentWillReceiveProps({formData: {foo: "yo"}});
 
@@ -485,7 +485,7 @@ describe("Form", () => {
             type: "string"
           }
         };
-        const {comp} = createComponent({schema});
+        const {comp} = createFormComponent({schema});
 
         comp.componentWillReceiveProps({formData: ["yo"]});
 

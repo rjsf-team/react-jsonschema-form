@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createComponent } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("BooleanField", () => {
   it("should render a boolean field", () => {
-    const {node} = createComponent({schema: {
+    const {node} = createFormComponent({schema: {
       type: "boolean"
     }});
 
@@ -14,7 +14,7 @@ describe("BooleanField", () => {
   });
 
   it("should render a boolean field with a label", () => {
-    const {node} = createComponent({schema: {
+    const {node} = createFormComponent({schema: {
       type: "boolean",
       title: "foo"
     }});
@@ -24,7 +24,7 @@ describe("BooleanField", () => {
   });
 
   it("should assign a default value", () => {
-    const {node} = createComponent({schema: {
+    const {node} = createFormComponent({schema: {
       type: "boolean",
       default: true,
     }});
@@ -34,7 +34,7 @@ describe("BooleanField", () => {
   });
 
   it("should handle a change event", () => {
-    const {comp, node} = createComponent({schema: {
+    const {comp, node} = createFormComponent({schema: {
       type: "boolean",
       default: false,
     }});
@@ -47,7 +47,7 @@ describe("BooleanField", () => {
   });
 
   it("should fill field with data", () => {
-    const {node} = createComponent({schema: {
+    const {node} = createFormComponent({schema: {
       type: "boolean",
     }, formData: true});
 

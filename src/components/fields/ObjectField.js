@@ -3,7 +3,8 @@ import React, { Component, PropTypes } from "react";
 import {
   getDefaultFormState,
   orderProperties,
-  retrieveSchema
+  retrieveSchema,
+  shouldRender
 } from "../../utils";
 
 
@@ -15,6 +16,9 @@ class ObjectField extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
+    // Caching bound instance methods for rendering perf optimization.
+    this._onChange = this.onChange.bind(this);
+    this._onPropertyChange = (name) => this._onChange.bind(this, name);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -24,6 +28,10 @@ class ObjectField extends Component {
   getStateFromProps(props) {
     const {schema, formData, registry} = props;
     return getDefaultFormState(schema, formData, registry.definitions) || {};
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
   }
 
   isRequired(name) {
@@ -75,7 +83,7 @@ class ObjectField extends Component {
               schema={schema.properties[name]}
               uiSchema={uiSchema[name]}
               formData={this.state[name]}
-              onChange={this.onChange.bind(this, name)}
+              onChange={this._onPropertyChange(name)}
               registry={this.props.registry} />
           );
         })

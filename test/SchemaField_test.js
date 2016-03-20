@@ -2,7 +2,7 @@ import React from "react";
 import { expect } from "chai";
 import SchemaField from "../src/components/fields/SchemaField";
 
-import { createComponent } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("Custom SchemaField", () => {
   const CustomSchemaField = function(props) {
@@ -10,7 +10,7 @@ describe("Custom SchemaField", () => {
   };
 
   it("should use the specified custom SchemaType property", () => {
-    const {node} = createComponent({
+    const {node} = createFormComponent({
       schema: {type: "string"},
       SchemaField: CustomSchemaField
     });

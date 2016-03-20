@@ -3,8 +3,11 @@ import { render } from "react-dom";
 import Codemirror from "react-codemirror";
 import "codemirror/mode/javascript/javascript";
 
+import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
+
+import Immutable from "immutable";
 
 import "codemirror/lib/codemirror.css";
 import "./styles.css";
@@ -31,10 +34,15 @@ class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {valid: true, code: props.code, data: fromJson(props.code)};
+    this._onCodeChange = this.onCodeChange.bind(this);
   }
 
   componentWillReceiveProps(props) {
     this.setState({code: props.code, data: fromJson(props.code)});
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
   }
 
   onCodeChange(code) {
@@ -59,7 +67,7 @@ class Editor extends Component {
         </legend>
         <Codemirror
           value={this.state.code}
-          onChange={this.onCodeChange.bind(this)}
+          onChange={this._onCodeChange}
           options={cmOptions} />
       </fieldset>
     );
@@ -70,6 +78,12 @@ class Selector extends Component {
   constructor(props) {
     super(props);
     this.state = {current: "Simple"};
+    this._onClick = this.onClick.bind(this);
+    this._onLabelClick = (label) => this._onClick.bind(this, label, samples[label]);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
   }
 
   onClick(label, sampleData, event) {
@@ -86,7 +100,7 @@ class Selector extends Component {
             <li key={i} role="presentation"
               className={this.state.current === label ? "active" : ""}>
               <a href="#"
-                onClick={this.onClick.bind(this, label, samples[label])}>
+                onClick={this._onLabelClick(label)}>
                 {label}
               </a>
             </li>
@@ -101,16 +115,35 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {form: false, schema: {}, uiSchema: {}, formData: {}};
+    this._onSchemaChange = this.onSchemaChange.bind(this);
+    this._onUISchemaChange = this.onUISchemaChange.bind(this);
+    this._onFormDataChange = this.onFormDataChange.bind(this);
   }
 
   componentDidMount() {
     this.setState({...samples.Simple, form: true});
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
+  }
+
   load(data) {
     // force resetting form component instance
     this.setState({form: false},
       _ => this.setState({...data, form: true}));
+  }
+
+  onSchemaChange(schema) {
+    this.setState({schema});
+  }
+
+  onUISchemaChange(uiSchema) {
+    this.setState({uiSchema});
+  }
+
+  onFormDataChange(formData) {
+    this.setState({formData});
   }
 
   render() {
@@ -123,17 +156,17 @@ class App extends Component {
         <div className="col-sm-6">
           <Editor title="JSONSchema"
             code={toJson(this.state.schema)}
-            onChange={schema => this.setState({schema})} />
+            onChange={this._onSchemaChange} />
           <div className="row">
             <div className="col-sm-6">
               <Editor title="UISchema"
                 code={toJson(this.state.uiSchema)}
-                onChange={uiSchema => this.setState({uiSchema})} />
+                onChange={this._onUISchemaChange} />
             </div>
             <div className="col-sm-6">
               <Editor title="formData"
                 code={toJson(this.state.formData)}
-                onChange={formData => this.setState({formData})} />
+                onChange={this._onFormDataChange} />
             </div>
           </div>
         </div>

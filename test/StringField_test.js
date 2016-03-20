@@ -1,12 +1,12 @@
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createComponent } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("StringField", () => {
   describe("TextWidget", () => {
     it("should render a string field", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string"
       }});
 
@@ -15,7 +15,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a label", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string",
         title: "foo"
       }});
@@ -25,7 +25,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a placeholder", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string",
         description: "bar",
       }});
@@ -35,7 +35,7 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string",
         default: "plop",
       }});
@@ -45,7 +45,7 @@ describe("StringField", () => {
     });
 
     it("should handle a change event", () => {
-      const {comp, node} = createComponent({schema: {
+      const {comp, node} = createFormComponent({schema: {
         type: "string",
       }});
 
@@ -57,7 +57,7 @@ describe("StringField", () => {
     });
 
     it("should fill field with data", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string",
       }, formData: "plip"});
 
@@ -68,7 +68,7 @@ describe("StringField", () => {
 
   describe("SelectWidget", () => {
     it("should render a string field", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"]
       }});
@@ -78,7 +78,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a label", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
         title: "foo",
@@ -89,7 +89,7 @@ describe("StringField", () => {
     });
 
     it("should render a select field with a tooltip", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
         description: "baz",
@@ -100,7 +100,7 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", () => {
-      const {comp} = createComponent({schema: {
+      const {comp} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
         default: "bar",
@@ -110,7 +110,7 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the form state", () => {
-      const {comp, node} = createComponent({schema: {
+      const {comp, node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
       }});
@@ -123,7 +123,7 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", () => {
-      const {node} = createComponent({schema: {
+      const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
       }});
@@ -136,7 +136,7 @@ describe("StringField", () => {
     });
 
     it("should fill field with data", () => {
-      const {comp} = createComponent({schema: {
+      const {comp} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
       }, formData: "bar"});

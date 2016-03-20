@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import { Validator } from "jsonschema";
+
 import SchemaField from "./fields/SchemaField";
 import TitleField from "./fields/TitleField";
-import { getDefaultFormState } from "../utils";
+import { getDefaultFormState, shouldRender } from "../utils";
 import ErrorList from "./ErrorList";
 
 export default class Form extends Component {
@@ -13,6 +14,9 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
+    // Caching bound instance methods for rendering perf optimization.
+    this._onChange = this.onChange.bind(this);
+    this._onSubmit = this.onSubmit.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -30,6 +34,10 @@ export default class Form extends Component {
       edit,
       errors: edit ? this.validate(formData, schema) : []
     };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
   }
 
   validate(formData, schema) {
@@ -91,14 +99,14 @@ export default class Form extends Component {
     const registry = this.getRegistry();
     const _SchemaField = registry.SchemaField;
     return (
-      <form className="rjsf" onSubmit={this.onSubmit.bind(this)}>
+      <form className="rjsf" onSubmit={this._onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
           uiSchema={uiSchema}
           formData={formData}
           widgets={widgets}
-          onChange={this.onChange.bind(this)}
+          onChange={this._onChange}
           registry={registry}/>
         { children ? children : <p><button type="submit">Submit</button></p> }
       </form>

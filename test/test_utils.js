@@ -6,10 +6,14 @@ import { findDOMNode } from "react-dom";
 
 import Form from "../src";
 
-export function createComponent(props) {
-  const comp = renderIntoDocument(<Form {...props} />);
+export function createComponent(Component, props) {
+  const comp = renderIntoDocument(<Component {...props} />);
   const node = findDOMNode(comp);
   return {comp, node};
+}
+
+export function createFormComponent(props) {
+  return createComponent(Form, props);
 }
 
 export function d(node) {

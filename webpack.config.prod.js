@@ -10,6 +10,7 @@ module.exports = {
     publicPath: "/static/"
   },
   plugins: [
+    new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
     new ExtractTextPlugin("styles.css", {allChunks: true}),
     new webpack.DefinePlugin({
       "process.env": {
