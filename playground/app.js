@@ -7,8 +7,6 @@ import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
 
-import Immutable from "immutable";
-
 import "codemirror/lib/codemirror.css";
 import "./styles.css";
 
