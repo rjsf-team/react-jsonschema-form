@@ -13,22 +13,26 @@ A [live demo](https://mozilla-services.github.io/react-jsonschema-form/) is host
 
   - [Installation](#installation)
   - [Usage](#usage)
-     - [Custom labels for enum fields](#custom-labels-for-enum-fields)
+  - [Form customization](#form-customization)
+     - [The uiSchema object](#the-uischema-object)
      - [Alternative widgets](#alternative-widgets)
         - [For boolean fields](#for-boolean-fields)
         - [For string fields](#for-string-fields)
         - [For number and integer fields](#for-number-and-integer-fields)
-  - [Object fields ordering](#object-fields-ordering)
-  - [Multiple choices list](#multiple-choices-list)
-  - [Custom styles](#custom-styles)
-  - [Custom widgets](#custom-widgets)
-  - [Custom SchemaField](#custom-schemafield)
-  - [Custom titles](#custom-titles)
-  - [Custom buttons](#custom-buttons)
-  - [Schema definitions &amp; references](#schema-definitions-references)
-  - [Development server](#development-server)
-  - [Tests](#tests)
-     - [TDD](#tdd)
+     - [Object fields ordering](#object-fields-ordering)
+     - [Custom CSS class names](#custom-css-class-names)
+     - [Custom labels for enum fields](#custom-labels-for-enum-fields)
+     - [Multiple choices list](#multiple-choices-list)
+     - [Form action buttons](#form-action-buttons)
+  - [Advanced customization](#advanced-customization)
+     - [Custom widgets](#custom-widgets)
+     - [Custom SchemaField](#custom-schemafield)
+     - [Custom titles](#custom-titles)
+  - [Schema definitions and references](#schema-definitions-and-references)
+  - [Contributing](#contributing)
+     - [Development server](#development-server)
+     - [Tests](#tests)
+        - [TDD](#tdd)
   - [License](#license)
 
 ---
@@ -97,33 +101,44 @@ That should give something like this (if you use the default stylesheet):
 
 ![](http://i.imgur.com/qKFvod6.png)
 
-### Custom labels for `enum` fields
+## Form customization
 
-This library supports the [enumNames](https://github.com/json-schema/json-schema/wiki/enumNames-%28v5-proposal%29) property, which allows defining custom labels for each option of an `enum`:
+### The `uiSchema` object
+
+JSONSchema is limited for describing how a given data type should be rendered as a form input component, that's why this lib introduces the concept of *UI schema*.
+
+A UI schema is basically an object literal providing information on **how** the form should be rendered, while the JSON schema tells **what**.
+
+The uiSchema object follows the tree structure of the form field hierarchy, and for each allows to define how it should be rendered:
 
 ```js
 const schema = {
-  type: "number",
-  enum: [1, 2, 3],
-  enumNames: ["one", "two", "three"]
-};
+  type: "object",
+  properties: {
+    foo: {
+      type: "object",
+      properties: {
+        bar: {type: "string"}
+      }
+    }
+  }
+}
+
+const uiSchema = {
+  foo: {
+    bar: {
+      "ui:widget": "textarea"
+    }
+  }
+}
+
+render(<Form schema={schema} uiSchema={formData} />,
+       document.getElementById("app"));
 ```
-
-This will be rendered using a select box that way:
-
-```html
-<select>
-  <option value="1">one</option>
-  <option value="2">two</option>
-  <option value="3">three</option>
-</select>
-```
-
-Note that string representations of numbers will be cast back and reflected as actual numbers into form state.
 
 ### Alternative widgets
 
-JSONSchema is limited for describing how a given data type should be rendered as an input component, that's why this lib introduces the concept of *UI schema*. A UI schema is basically an object literal describing how the form should be rendered, eg. which UI widget should be used to render a certain field thanks to the `ui:widget` property:
+The uiSchema `ui:widget` property tells the form which UI widget should be used to render a certain field:
 
 Example:
 
@@ -163,7 +178,7 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 > Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
 
-## Object fields ordering
+### Object fields ordering
 
 The `uiSchema` object spec also allows you to define in which order a given object field properties should be rendered using the `ui:order` property:
 
@@ -185,15 +200,9 @@ render((
 ), document.getElementById("app"));
 ```
 
-## Multiple choices list
+### Custom CSS class names
 
-The default behavior for array fields is a list of text inputs with add/remove buttons. If you want a multiple choices list, you have to provide an `enum` list to the `items` property of the array field and set `uniqueItems` property to `true`.
-
-See the "Arrays" section of the demo app and [this issue](https://github.com/mozilla-services/react-jsonschema-form/issues/41) for more information.
-
-## Custom styles
-
-The UISchema object accepts a `classNames` property for each field of the schema:
+The uiSchema object accepts a `classNames` property for each field of the schema:
 
 ```jsx
 const uiSchema = {
@@ -214,7 +223,55 @@ Will result in:
 </div>
 ```
 
-## Custom widgets
+### Custom labels for `enum` fields
+
+This library supports the [`enumNames`](https://github.com/json-schema/json-schema/wiki/enumNames-%28v5-proposal%29) property for `enum` fields, which allows defining custom labels for each option of an `enum`:
+
+```js
+const schema = {
+  type: "number",
+  enum: [1, 2, 3],
+  enumNames: ["one", "two", "three"]
+};
+```
+
+This will be rendered using a select box that way:
+
+```html
+<select>
+  <option value="1">one</option>
+  <option value="2">two</option>
+  <option value="3">three</option>
+</select>
+```
+
+Note that string representations of numbers will be cast back and reflected as actual numbers into form state.
+
+### Multiple choices list
+
+The default behavior for array fields is a list of text inputs with add/remove buttons. If you want a multiple choices list, you have to provide an `enum` list to the `items` property of the array field and set `uniqueItems` property to `true`.
+
+See the "Arrays" section of the demo app and [this issue](https://github.com/mozilla-services/react-jsonschema-form/issues/41) for more information.
+
+### Form action buttons
+
+You can provide custom buttons to your form via the `Form` component's `children`. A default submit button will be rendered if you don't provide children to the `Form` component.
+
+```jsx
+render(
+  <Form schema={schema}>
+    <div>
+      <button type="submit">Submit</button>
+      <button>Cancel</button>
+    </div>
+  </Form>);
+```
+
+**Warning:** there should be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
+
+## Advanced customization
+
+### Custom widgets
 
 You can provide your own custom widgets to a uiSchema for the following json data types:
 
@@ -285,7 +342,7 @@ The following props are passed to the widget component:
 - `placeholder`: The placeholder value, if any;
 - `options`: The list of options for `enum` fields;
 
-## Custom SchemaField
+### Custom SchemaField
 
 **Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
 
@@ -315,7 +372,7 @@ render((
 
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
-## Custom titles
+### Custom titles
 
 You can provide your own implementation of the `TitleField` base React component for rendering any title. This is useful when you want to augment how titles are handled.
 
@@ -334,23 +391,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-## Custom buttons
-
-You can provide custom buttons to your form via the `Form` component's `children`. A default submit button will be rendered if you don't provide children to the `Form` component.
-
-```jsx
-render(
-  <Form schema={schema}>
-    <div>
-      <button type="submit">Submit</button>
-      <button>Cancel</button>
-    </div>
-  </Form>);
-```
-
-**Warning:** there should be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
-
-## Schema definitions & references
+## Schema definitions and references
 
 This library partially supports [inline schema definition dereferencing]( http://json-schema.org/latest/json-schema-core.html#rfc.section.7.2.3), which is Barbarian for *avoiding to copy and paste commonly used field schemas*:
 
@@ -379,7 +420,9 @@ This library partially supports [inline schema definition dereferencing]( http:/
 
 Note that it only supports local definition referencing, we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
 
-## Development server
+## Contributing
+
+### Development server
 
 ```
 $ npm start
@@ -387,13 +430,13 @@ $ npm start
 
 A live development server showcasing components with hot reload enabled is available at [localhost:8080](http://localhost:8080).
 
-## Tests
+### Tests
 
 ```
 $ npm test
 ```
 
-### TDD
+#### TDD
 
 ```
 $ npm run tdd
