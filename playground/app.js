@@ -45,15 +45,17 @@ class GeoPosition extends Component {
   render() {
     const {lat, lon} = this.state;
     return (
-      <div>
+      <div className="geo">
+        <h3>Hey, I'm a custom component</h3>
+        <p>I'm registered as <code>geo</code> and referenced in
+        <code>uiSchema</code> as the <code>ui:field</code> to use for this
+        shcema.</p>
         <p>
-          <label>Latitude
+          <label>Lat
             <input type="number" value={lat} step="0.00001"
               onChange={this.onChange("lat")} />
           </label>
-        </p>
-        <p>
-          <label>Longitude
+          <label>Lon
             <input type="number" value={lon} step="0.00001"
               onChange={this.onChange("lon")} />
           </label>

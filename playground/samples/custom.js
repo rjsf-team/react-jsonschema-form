@@ -6,11 +6,9 @@ module.exports = {
     properties: {
       lat: {
         type: "number",
-        title: "Latitude",
       },
       lon: {
         type: "number",
-        title: "Longitude",
       }
     }
   },

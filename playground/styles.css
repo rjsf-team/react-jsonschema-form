@@ -27,3 +27,8 @@
 .valid {
   color: green;
 }
+
+.rjsf .geo input {
+  width: 160px;
+  margin-left: 4px;
+}
