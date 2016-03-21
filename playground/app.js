@@ -28,6 +28,41 @@ const cmOptions = {
   tabSize: 2,
 };
 
+class GeoPosition extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {...props.formData};
+  }
+
+  onChange(name) {
+    return (event) => {
+      this.setState({
+        [name]: parseFloat(event.target.value)
+      }, () => this.props.onChange(this.state));
+    };
+  }
+
+  render() {
+    const {lat, lon} = this.state;
+    return (
+      <div>
+        <p>
+          <label>Latitude
+            <input type="number" value={lat} step="0.00001"
+              onChange={this.onChange("lat")} />
+          </label>
+        </p>
+        <p>
+          <label>Longitude
+            <input type="number" value={lon} step="0.00001"
+              onChange={this.onChange("lon")} />
+          </label>
+        </p>
+      </div>
+    );
+  }
+}
+
 class Editor extends Component {
   constructor(props) {
     super(props);
@@ -176,6 +211,7 @@ class App extends Component {
               formData={this.state.formData}
               onChange={data => this.setState({formData: data.formData})}
               onSubmit={data => this.setState({formData: data.formData})}
+              fields={{geo: GeoPosition}}
               onError={log("errors")} />}
         </div>
       </div>

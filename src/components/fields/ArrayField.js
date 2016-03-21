@@ -90,7 +90,8 @@ class ArrayField extends Component {
     const {schema, uiSchema, name} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const {SchemaField, definitions} = this.props.registry;
+    const {fields, definitions} = this.props.registry;
+    const {SchemaField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     if (isMultiSelect(schema)) {
       return (
@@ -145,8 +146,8 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.array,
     registry: PropTypes.shape({
-      SchemaField: PropTypes.func.isRequired,
-      TitleField: PropTypes.func.isRequired
+      widgets: PropTypes.objectOf(PropTypes.func).isRequired,
+      fields: PropTypes.objectOf(PropTypes.func).isRequired,
     })
   };
 }

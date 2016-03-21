@@ -19,6 +19,16 @@ const COMPONENT_TYPES = {
   "string":    StringField,
 };
 
+function getFieldComponent(schema, uiSchema, fields) {
+  const field = uiSchema["ui:field"];
+  if (typeof field === "function") {
+    return field;
+  }
+  if (typeof field === "string" && field in fields) {
+    return fields[field];
+  }
+  return COMPONENT_TYPES[schema.type] || UnsupportedField;
+}
 
 function getLabel(label, required) {
   if (!label) {
@@ -69,9 +79,9 @@ Wrapper.defaultProps = {
 
 function SchemaField(props) {
   const {uiSchema, name, required, registry} = props;
-  const {definitions} = registry;
+  const {definitions, fields} = registry;
   const schema = retrieveSchema(props.schema, definitions);
-  const FieldComponent = COMPONENT_TYPES[schema.type] || UnsupportedField;
+  const FieldComponent = getFieldComponent(schema, uiSchema, fields);
 
   if (Object.keys(schema).length === 0) {
     return <div />;
@@ -105,7 +115,10 @@ if (process.env.NODE_ENV !== "production") {
   SchemaField.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
-    registry: PropTypes.object,
+    registry: PropTypes.shape({
+      widgets: PropTypes.objectOf(PropTypes.func).isRequired,
+      fields: PropTypes.objectOf(PropTypes.func).isRequired,
+    })
   };
 }
 

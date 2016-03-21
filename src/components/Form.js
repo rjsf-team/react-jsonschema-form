@@ -85,19 +85,26 @@ export default class Form extends Component {
   }
 
   getRegistry() {
+    // For BC, accept passed SchemaField and TitleField props and pass them to
+    // the "fields" registry one.
+    const _SchemaField = this.props.SchemaField || SchemaField;
+    const _TitleField = this.props.TitleField || TitleField;
+    const fields = Object.assign({
+      SchemaField: _SchemaField,
+      TitleField: _TitleField,
+    }, this.props.fields);
     return {
-      SchemaField: this.props.SchemaField || SchemaField,
-      TitleField: this.props.TitleField || TitleField,
+      fields,
       widgets: this.props.widgets || {},
       definitions: this.props.schema.definitions || {},
     };
   }
 
   render() {
-    const {children, schema, uiSchema, widgets} = this.props;
+    const {children, schema, uiSchema} = this.props;
     const {formData} = this.state;
     const registry = this.getRegistry();
-    const _SchemaField = registry.SchemaField;
+    const _SchemaField = registry.fields.SchemaField;
     return (
       <form className="rjsf" onSubmit={this._onSubmit}>
         {this.renderErrors()}
@@ -105,7 +112,6 @@ export default class Form extends Component {
           schema={schema}
           uiSchema={uiSchema}
           formData={formData}
-          widgets={widgets}
           onChange={this._onChange}
           registry={registry}/>
         { children ? children : <p><button type="submit">Submit</button></p> }
@@ -119,12 +125,11 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     formData: PropTypes.any,
-    widgets: PropTypes.object,
+    widgets: PropTypes.objectOf(PropTypes.func),
+    fields: PropTypes.objectOf(PropTypes.func),
     onChange: PropTypes.func,
     onError: PropTypes.func,
     onSubmit: PropTypes.func,
-    SchemaField: PropTypes.func,
-    TitleField: PropTypes.func,
   };
 }
 

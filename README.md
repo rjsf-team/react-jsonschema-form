@@ -25,7 +25,8 @@ A [live demo](https://mozilla-services.github.io/react-jsonschema-form/) is host
      - [Multiple choices list](#multiple-choices-list)
      - [Form action buttons](#form-action-buttons)
   - [Advanced customization](#advanced-customization)
-     - [Custom widgets](#custom-widgets)
+     - [Custom widget components](#custom-widget-components)
+     - [Custom field components](#custom-field-components)
      - [Custom SchemaField](#custom-schemafield)
      - [Custom titles](#custom-titles)
   - [Schema definitions and references](#schema-definitions-and-references)
@@ -271,7 +272,12 @@ render(
 
 ## Advanced customization
 
-### Custom widgets
+The API allows to specify your own custom *widgets* and *fields* components:
+
+- A *widget* represents a HTML tag for the user to enter data, eg. `input`, `select`, etc.
+- A *field* usually wraps one or more widgets and most often handles internal field state; think of a field as a form row, including the labels.
+
+### Custom widget components
 
 You can provide your own custom widgets to a uiSchema for the following json data types:
 
@@ -341,6 +347,65 @@ The following props are passed to the widget component:
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
 - `placeholder`: The placeholder value, if any;
 - `options`: The list of options for `enum` fields;
+
+### Custom field components
+
+You can provide your own field components to a uiSchema for basically any json schema data type, by specifying a `ui:field` property.
+
+For example, let's create and register a dumb `geo` component handling a *latitude* and a *longitude*:
+
+```jsx
+const schema = {
+  type: "object",
+  required: ["lat", "lon"],
+  properties: {
+    lat: {type: "number"},
+    lon: {type: "number"}
+  }
+};
+
+// Define a custom component for handling the root position object
+class GeoPosition extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {...props.formData};
+  }
+
+  onChange(name) {
+    return (event) => {
+      this.setState({
+        [name]: parseFloat(event.target.value)
+      }, () => this.props.onChange(this.state));
+    };
+  }
+
+  render() {
+    const {lat, lon} = this.state;
+    return (
+      <div>
+        <input type="number" value={lat} onChange={this.onChange("lat")} />
+        <input type="number" value={lon} onChange={this.onChange("lon")} />
+      </div>
+    );
+  }
+}
+
+// Define the custom field component to use for the root object
+const uiSchema = {"ui:field": "geo"};
+
+// Define the custom field components to register; here our "geo"
+// custom field component
+const fields = {geo: GeoPosition};
+
+// Render the form with all the properties we just defined passed
+// as props
+render(<Form
+  schema={schema}
+  uiSchema={uiSchema}
+  fields={fields}/>);
+```
+
+Note: Registered fields can be reused accross the entire schema.
 
 ### Custom SchemaField
 
