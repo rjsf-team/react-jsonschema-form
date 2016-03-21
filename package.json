@@ -31,6 +31,7 @@
     "react-dom": "^0.14.3"
   },
   "dependencies": {
+    "deeper": "^2.1.0",
     "jsonschema": "^1.0.2"
   },
   "devDependencies": {
@@ -41,7 +42,6 @@
     "chai": "^3.3.0",
     "codemirror": "^5.10.0",
     "css-loader": "^0.23.1",
-    "deeper": "^2.1.0",
     "eslint": "^1.8.0",
     "eslint-plugin-react": "^3.6.3",
     "express": "^4.13.3",
