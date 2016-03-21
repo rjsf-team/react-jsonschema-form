@@ -52,7 +52,11 @@ describe("Rendering performance optimizations", () => {
     const onChange = () => {};
     const schema = {type: "array", items: {type: "string"}};
     const uiSchema = {};
-    const registry = {TitleField, SchemaField, definitions: {}};
+    const registry = {
+      fields: {TitleField, SchemaField},
+      widgets: {},
+      definitions: {}
+    };
 
     it("should not render if next props are equivalent", () => {
       const {comp} = createComponent(ArrayField, {
@@ -87,7 +91,11 @@ describe("Rendering performance optimizations", () => {
 
   describe("ObjectField", () => {
     const onChange = () => {};
-    const registry = {TitleField, SchemaField, definitions: {}};
+    const registry = {
+      fields: {TitleField, SchemaField},
+      widgets: {},
+      definitions: {}
+    };
     const uiSchema = {};
     const schema = {
       type: "object",

@@ -51,7 +51,8 @@ class ObjectField extends Component {
 
   render() {
     const {uiSchema, name} = this.props;
-    const {SchemaField, TitleField, definitions} = this.props.registry;
+    const {definitions, fields} = this.props.registry;
+    const {SchemaField, TitleField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = schema.title || name;
     let orderedProperties;
@@ -100,8 +101,8 @@ if (process.env.NODE_ENV !== "production") {
     formData: PropTypes.object,
     required: PropTypes.bool,
     registry: PropTypes.shape({
-      SchemaField: PropTypes.func.isRequired,
-      TitleField: PropTypes.func.isRequired
+      widgets: PropTypes.objectOf(PropTypes.func).isRequired,
+      fields: PropTypes.objectOf(PropTypes.func).isRequired,
     })
   };
 }
