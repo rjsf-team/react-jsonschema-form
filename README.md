@@ -165,6 +165,8 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
   * `select`: a select box with `true` and `false` as options;
   * by default, a checkbox is used
 
+> Note: To set the labels for a boolean field, instead of using `true` and `false` you can set `enumNames` in your schema. Note that `enumNames` belongs in your `schema`, not the `uiSchema`, and the order is always `[true, false]`.
+
 #### For `string` fields
 
   * `textarea`: a `textarea` element;

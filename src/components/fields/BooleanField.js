@@ -3,6 +3,14 @@ import React, { PropTypes } from "react";
 import { defaultFieldValue, getAlternativeWidget, optionsList } from "../../utils";
 import CheckboxWidget from "./../widgets/CheckboxWidget";
 
+
+function buildOptions(schema) {
+  return optionsList(Object.assign({
+    enumNames: ["true", "false"],
+    enum: [true, false]
+  }, {enumNames: schema.enumNames}));
+}
+
 function BooleanField(props) {
   const {schema, name, uiSchema, formData, widgets, required, onChange} = props;
   const {title, description} = schema;
@@ -18,7 +26,7 @@ function BooleanField(props) {
   };
   if (widget) {
     const Widget = getAlternativeWidget(schema.type, widget, widgets);
-    return <Widget options={optionsList({enum: [true, false]})} {... commonProps} />;
+    return <Widget options={buildOptions(schema)} {... commonProps} />;
   }
   return <CheckboxWidget {...commonProps} />;
 }
