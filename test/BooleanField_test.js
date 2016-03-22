@@ -54,4 +54,26 @@ describe("BooleanField", () => {
     expect(node.querySelector(".field input").checked)
       .eql(true);
   });
+
+  it("should support enumNames for radio widgets", () => {
+    const {node} = createFormComponent({schema: {
+      type: "boolean",
+      enumNames: ["Yes", "No"],
+    }, formData: true, uiSchema: {"ui:widget": "radio"}});
+
+    const labels = [].map.call(node.querySelectorAll(".field-radio-group label"),
+                               label => label.textContent);
+    expect(labels).eql(["Yes", "No"]);
+  });
+
+  it("should support enumNames for select", () => {
+    const {node} = createFormComponent({schema: {
+      type: "boolean",
+      enumNames: ["Yes", "No"],
+    }, formData: true, uiSchema: {"ui:widget": "select"}});
+
+    const labels = [].map.call(node.querySelectorAll(".field option"),
+                               label => label.textContent);
+    expect(labels).eql(["Yes", "No"]);
+  });
 });
