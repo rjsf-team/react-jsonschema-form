@@ -10,7 +10,8 @@ import {
 
 class ObjectField extends Component {
   static defaultProps = {
-    uiSchema: {}
+    uiSchema: {},
+    errorSchema: {},
   }
 
   constructor(props) {
@@ -50,7 +51,7 @@ class ObjectField extends Component {
   }
 
   render() {
-    const {uiSchema, name} = this.props;
+    const {uiSchema, errorSchema, name} = this.props;
     const {definitions, fields} = this.props.registry;
     const {SchemaField, TitleField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
@@ -83,6 +84,7 @@ class ObjectField extends Component {
               required={this.isRequired(name)}
               schema={schema.properties[name]}
               uiSchema={uiSchema[name]}
+              errorSchema={errorSchema[name]}
               formData={this.state[name]}
               onChange={this._onPropertyChange(name)}
               registry={this.props.registry} />

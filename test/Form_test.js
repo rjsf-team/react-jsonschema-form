@@ -8,7 +8,7 @@ import { Simulate, renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, d } from "./test_utils";
 
 describe("Form", () => {
   var sandbox;
@@ -491,6 +491,240 @@ describe("Form", () => {
 
         expect(comp.state.formData).eql(["yo"]);
       });
+    });
+  });
+
+  describe("Error contextualization", () => {
+    describe("root level", () => {
+      const schema = {
+        type: "string",
+        minLength: 8
+      };
+
+      it("should reflect the contextualized error in state", () => {
+        const {comp} = createFormComponent({schema, formData: "short"});
+
+        expect(comp.state.errorSchema).eql({
+          errors: ["does not meet minimum length of 8"]
+        });
+      });
+
+      it("should denote the error in the field", () => {
+        const {node} = createFormComponent({schema, formData: "short"});
+
+        expect(node.querySelectorAll(".field-error"))
+          .to.have.length.of(1);
+        expect(node.querySelector(".field-string .error-detail").textContent)
+          .eql("does not meet minimum length of 8");
+      });
+    });
+
+    describe("root level with multiple errors", () => {
+      const schema = {
+        type: "string",
+        minLength: 8,
+        pattern: "\d+"
+      };
+
+      it("should reflect the contextualized error in state", () => {
+        const {comp} = createFormComponent({schema, formData: "short"});
+        expect(comp.state.errorSchema).eql({
+          errors: [
+            "does not meet minimum length of 8",
+            `does not match pattern "\d+"`
+          ]
+        });
+      });
+
+      it("should denote the error in the field", () => {
+        const {node} = createFormComponent({schema, formData: "short"});
+
+        const liNodes = node.querySelectorAll(".field-string .error-detail li");
+        const errors = [].map.call(liNodes, li => li.textContent);
+
+        expect(errors).eql([
+          "does not meet minimum length of 8",
+          `does not match pattern "\d+"`
+        ]);
+      });
+    });
+
+    describe("nested field level", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          level1: {
+            type: "object",
+            properties: {
+              level2: {
+                type: "string",
+                minLength: 8
+              }
+            }
+          }
+        }
+      };
+
+      it("should reflect the contextualized error in state", () => {
+        const {comp} = createFormComponent({schema, formData: {
+          level1: {
+            level2: "short"
+          }
+        }});
+
+        expect(comp.state.errorSchema).eql({
+          level1: {
+            level2: {
+              errors: ["does not meet minimum length of 8"]
+            }
+          }
+        });
+      });
+
+      it("should denote the error in the field", () => {
+        const {node} = createFormComponent({schema, formData: {
+          level1: {
+            level2: "short"
+          }
+        }});
+        const errorDetail = node.querySelector(
+          ".field-object .field-string .error-detail");
+
+        expect(node.querySelectorAll(".field-error"))
+          .to.have.length.of(1);
+        expect(errorDetail.textContent)
+          .eql("does not meet minimum length of 8");
+      });
+    });
+
+    describe("array indices", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+          minLength: 4
+        }
+      };
+
+      it("should contextualize the error for array indices", () => {
+        const {comp} = createFormComponent({schema, formData: [
+          "good", "bad", "good"
+        ]});
+
+        expect(comp.state.errorSchema)
+          .eql({
+            1: {errors: ["does not meet minimum length of 4"]}
+          });
+      });
+
+      it("should denote the error in the item field in error", () => {
+        const {node} = createFormComponent({schema, formData: [
+          "good", "bad", "good"
+        ]});
+        const fieldNodes = node.querySelectorAll(".field-string");
+
+        const liNodes = fieldNodes[1]
+          .querySelectorAll(".field-string .error-detail li");
+        const errors = [].map.call(liNodes, li => li.textContent);
+
+        expect(fieldNodes[1].classList.contains("field-error")).eql(true);
+        expect(errors)
+          .eql(["does not meet minimum length of 4"]);
+      });
+
+      it("should not denote errors on non impacted fields", () => {
+        const {node} = createFormComponent({schema, formData: [
+          "good", "bad", "good"
+        ]});
+        const fieldNodes = node.querySelectorAll(".field-string");
+
+        expect(fieldNodes[0].classList.contains("field-error")).eql(false);
+        expect(fieldNodes[2].classList.contains("field-error")).eql(false);
+      });
+    });
+
+    describe("nested array indices", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          level1: {
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 4
+            }
+          }
+        }
+      };
+
+      it("should contextualize the error for nested array indices", () => {
+        const {comp} = createFormComponent({schema, formData: {
+          level1: ["good", "bad", "good", "bad"]
+        }});
+
+        expect(comp.state.errorSchema).eql({
+          level1: {
+            1: {errors: ["does not meet minimum length of 4"]},
+            3: {errors: ["does not meet minimum length of 4"]},
+          }
+        });
+      });
+
+      it("should denote the error in the nested item field in error", () => {
+        const {node} = createFormComponent({schema, formData: {
+          level1: ["good", "bad", "good"]
+        }});
+
+        const liNodes = node.querySelectorAll(".field-string .error-detail li");
+        const errors = [].map.call(liNodes, li => li.textContent);
+
+        expect(errors)
+          .eql(["does not meet minimum length of 4"]);
+      });
+    });
+  });
+
+  describe("array nested items", () => {
+    const schema = {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            minLength: 4
+          }
+        }
+      }
+    };
+
+    it("should contextualize the error for array nested items", () => {
+      const {comp} = createFormComponent({schema, formData: [
+        {foo: "good"}, {foo: "bad"}, {foo: "good"}
+      ]});
+
+      expect(comp.state.errorSchema).eql({
+        1: {
+          foo: {
+            errors: ["does not meet minimum length of 4"]
+          }
+        }
+      });
+    });
+
+    it("should denote the error in the array nested item", () => {
+      const {node} = createFormComponent({schema, formData: [
+        {foo: "good"}, {foo: "bad"}, {foo: "good"}
+      ]});
+      const fieldNodes = node.querySelectorAll(".field-string");
+
+      const liNodes = fieldNodes[1]
+        .querySelectorAll(".field-string .error-detail li");
+      const errors = [].map.call(liNodes, li => li.textContent);
+
+      expect(fieldNodes[1].classList.contains("field-error")).eql(true);
+      expect(errors)
+        .eql(["does not meet minimum length of 4"]);
     });
   });
 });
