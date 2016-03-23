@@ -8,6 +8,8 @@ import SelectWidget from "./components/widgets/SelectWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 
 
+const RE_ERROR_ARRAY_PATH = /(.*)\[(\d+)\]$/;
+
 const altWidgetMap = {
   boolean: {
     radio: RadioWidget,
@@ -191,4 +193,56 @@ export function retrieveSchema(schema, definitions={}) {
 
 export function shouldRender(comp, nextProps, nextState) {
   return !deeper(comp.props, nextProps) || !deeper(comp.state, nextState);
+}
+
+function errorPropertyToPath(property) {
+  // Parse array indices, eg. "instance.level1.level2[2].level3"
+  // => ["instance", "level1", "level2", 2, "level3"]
+  return property.split(".").reduce((path, node) => {
+    const match = RE_ERROR_ARRAY_PATH.exec(node);
+    if (match) {
+      path = path.concat([match[1], parseInt(match[2], 10)]);
+    } else {
+      path.push(node);
+    }
+    return path;
+  }, []);
+}
+
+export function toErrorSchema(errors) {
+  // Transforms a jsonschema validation errors list:
+  // [
+  //   {property: "instance.level1.level2[2].level3", message: "err a"},
+  //   {property: "instance.level1.level2[2].level3", message: "err b"},
+  //   {property: "instance.level1.level2[4].level3", message: "err b"},
+  // ]
+  // Into an error tree:
+  // {
+  //   level1: {
+  //     level2: {
+  //       2: {level3: {errors: ["err a", "err b"]}},
+  //       4: {level3: {errors: ["err b"]}},
+  //     }
+  //   }
+  // };
+  if (!errors.length) {
+    return {};
+  }
+  return errors.reduce((errorSchema, error) => {
+    const {property, message} = error;
+    const path = errorPropertyToPath(property);
+    let parent = errorSchema;
+    for (const segment of path.slice(1)) {
+      if (!(segment in parent)) {
+        parent[segment] = {};
+      }
+      parent = parent[segment];
+    }
+    if (Array.isArray(parent.errors)) {
+      parent.errors = parent.errors.concat(message);
+    } else {
+      parent.errors = [message];
+    }
+    return errorSchema;
+  }, {});
 }

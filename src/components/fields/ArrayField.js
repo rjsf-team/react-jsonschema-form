@@ -87,7 +87,7 @@ class ArrayField extends Component {
   }
 
   render() {
-    const {schema, uiSchema, name} = this.props;
+    const {schema, uiSchema, errorSchema, name} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
     const {fields, definitions} = this.props.registry;
@@ -115,12 +115,14 @@ class ArrayField extends Component {
           <div className="field-description">{schema.description}</div> : null}
         <div className="array-item-list">{
           items.map((item, index) => {
+            const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
             return (
               <div key={index}>
                 <SchemaField
                   schema={itemsSchema}
                   uiSchema={uiSchema.items}
                   formData={items[index]}
+                  errorSchema={itemErrorSchema}
                   required={this.isItemRequired(itemsSchema)}
                   onChange={this._onChangeForIndex(index)}
                   registry={this.props.registry}/>
@@ -143,6 +145,7 @@ if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.array,
     registry: PropTypes.shape({

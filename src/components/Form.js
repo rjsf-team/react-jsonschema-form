@@ -3,8 +3,9 @@ import { Validator } from "jsonschema";
 
 import SchemaField from "./fields/SchemaField";
 import TitleField from "./fields/TitleField";
-import { getDefaultFormState, shouldRender } from "../utils";
+import { getDefaultFormState, shouldRender, toErrorSchema } from "../utils";
 import ErrorList from "./ErrorList";
+
 
 export default class Form extends Component {
   static defaultProps = {
@@ -28,12 +29,9 @@ export default class Form extends Component {
     const edit = !!props.formData;
     const {definitions} = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions) || null;
-    return {
-      status: "initial",
-      formData,
-      edit,
-      errors: edit ? this.validate(formData, schema) : []
-    };
+    const errors = edit ? this.validate(formData, schema) : [];
+    const errorSchema = toErrorSchema(errors);
+    return {status: "initial", formData, edit, errors, errorSchema};
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -102,7 +100,7 @@ export default class Form extends Component {
 
   render() {
     const {children, schema, uiSchema} = this.props;
-    const {formData} = this.state;
+    const {formData, errorSchema} = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
     return (
@@ -111,6 +109,7 @@ export default class Form extends Component {
         <_SchemaField
           schema={schema}
           uiSchema={uiSchema}
+          errorSchema={errorSchema}
           formData={formData}
           onChange={this._onChange}
           registry={registry}/>

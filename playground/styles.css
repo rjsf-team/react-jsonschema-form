@@ -32,3 +32,16 @@
   width: 160px;
   margin-left: 4px;
 }
+
+.rjsf .field-error input[type=text],
+.rjsf .field-error select {
+  background-color: pink;
+}
+
+.rjsf .field-error .error-detail {
+  color: red;
+}
+
+.rjsf .errors {
+  color: red;
+}
