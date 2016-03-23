@@ -35,9 +35,9 @@ function getLabel(label, required) {
     return null;
   }
   if (required) {
-    return label + REQUIRED_FIELD_SYMBOL;
+    return <span>{label + REQUIRED_FIELD_SYMBOL}</span>;
   }
-  return label;
+  return <span>{label}</span>;
 }
 
 function getContent({type, label, required, children, displayLabel}) {
