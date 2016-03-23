@@ -48,7 +48,7 @@
     "extract-text-webpack-plugin": "^0.9.1",
     "gh-pages": "^0.4.0",
     "html": "0.0.10",
-    "jsdom": "^7.2.1",
+    "jsdom": "^8.1.0",
     "mocha": "^2.3.0",
     "react-addons-test-utils": "^0.14.3",
     "react-codemirror": "^0.2.3",
