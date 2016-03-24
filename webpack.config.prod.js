@@ -21,6 +21,9 @@ module.exports = {
   resolve: {
     extensions: ["", ".js", ".jsx", ".css"]
   },
+  node: {
+    Buffer: "mock",
+  },
   module: {
     loaders: [
       {

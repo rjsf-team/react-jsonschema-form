@@ -17,6 +17,9 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],
+  node: {
+    Buffer: "mock",
+  },
   module: {
     loaders: [
       {

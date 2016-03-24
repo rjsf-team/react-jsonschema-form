@@ -19,6 +19,9 @@ module.exports = {
       }
     })
   ],
+  node: {
+    Buffer: "mock",
+  },
   devtool: "source-map",
   externals: {
     react: {
