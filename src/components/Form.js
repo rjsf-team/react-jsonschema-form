@@ -52,10 +52,14 @@ export default class Form extends Component {
   }
 
   onChange(formData, options={validate: true}) {
+    const errors = options.validate ? this.validate(formData) :
+                                      this.state.errors;
+    const errorSchema = toErrorSchema(errors);
     this.setState({
       status: "editing",
       formData,
-      errors: options.validate ? this.validate(formData) : this.state.errors
+      errors,
+      errorSchema
     }, _ => {
       if (this.props.onChange) {
         this.props.onChange(this.state);
@@ -68,7 +72,8 @@ export default class Form extends Component {
     this.setState({status: "submitted"});
     const errors = this.validate(this.state.formData);
     if (Object.keys(errors).length > 0) {
-      this.setState({errors}, _ => {
+      const errorSchema = toErrorSchema(errors);
+      this.setState({errors, errorSchema}, _ => {
         if (this.props.onError) {
           this.props.onError(errors);
         } else {

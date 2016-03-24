@@ -495,6 +495,59 @@ describe("Form", () => {
   });
 
   describe("Error contextualization", () => {
+    describe("on form state updated", () => {
+      const schema = {
+        type: "string",
+        minLength: 8
+      };
+
+      it("should update the errorSchema when the formData changes", () => {
+        const {comp, node} = createFormComponent({schema});
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: {value: "short"}
+        });
+
+        expect(comp.state.errorSchema).eql({
+          errors: ["does not meet minimum length of 8"]
+        });
+      });
+
+      it("should denote the new error in the field", () => {
+        const {node} = createFormComponent({schema});
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: {value: "short"}
+        });
+
+        expect(node.querySelectorAll(".field-error"))
+          .to.have.length.of(1);
+        expect(node.querySelector(".field-string .error-detail").textContent)
+          .eql("does not meet minimum length of 8");
+      });
+    });
+
+    describe("on form submitted", () => {
+      const schema = {
+        type: "string",
+        minLength: 8
+      };
+
+      it("should update the errorSchema on form submission", () => {
+        const {comp, node} = createFormComponent({schema});
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: {value: "short"}
+        });
+
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({
+          errors: ["does not meet minimum length of 8"]
+        });
+      });
+    });
+
     describe("root level", () => {
       const schema = {
         type: "string",
