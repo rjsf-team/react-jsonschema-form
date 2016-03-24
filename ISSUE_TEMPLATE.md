@@ -12,7 +12,7 @@
 2. [Second Step]
 3. [and so on...]
 
-#### Expected behavior
+#### Expected behavior
 
 [What you expected to happen]
 
