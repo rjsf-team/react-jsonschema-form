@@ -55,11 +55,11 @@ function getContent({type, label, required, children, displayLabel}) {
 
 function ErrorList({errors}) {
   return (
-    <div className="error-detail">{
+    <ul className="error-detail">{
       (errors || []).map((error, index) => {
         return <li key={index}>{error}</li>;
       })
-    }</div>
+    }</ul>
   );
 }
 
