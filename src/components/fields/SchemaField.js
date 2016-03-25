@@ -40,42 +40,45 @@ function getLabel(label, required) {
   return label;
 }
 
-function getContent({type, label, required, children, displayLabel}) {
-  if (!displayLabel) {
-    return children;
-  }
-
-  return (
-    <label>
-      {getLabel(label, required)}
-      {children}
-    </label>
-  );
-}
-
 function ErrorList({errors}) {
   return (
-    <ul className="error-detail">{
-      (errors || []).map((error, index) => {
-        return <li key={index}>{error}</li>;
-      })
-    }</ul>
+    <div>
+      <p/>
+      <ul className="error-detail bs-callout bs-callout-info">{
+        (errors || []).map((error, index) => {
+          return <li className="text-danger" key={index}>{error}</li>;
+        })
+      }</ul>
+    </div>
   );
 }
 
-function Wrapper(props) {
-  const {type, classNames, errorSchema} = props;
+function Wrapper({
+    type,
+    classNames,
+    errorSchema,
+    label,
+    required,
+    widget,
+    displayLabel,
+    children
+  }) {
   const {errors} = errorSchema;
   const isError = errors && errors.length > 0;
   const classList = [
+    "form-group",
     "field",
     `field-${type}`,
-    isError ? "field-error" : "",
+    isError ? "field-error has-error" : "",
     classNames,
   ].join(" ").trim();
+  // XXX detect widget name?
   return (
     <div className={classList}>
-      {getContent(props)}
+      {displayLabel && label ? <label className="control-label">
+                                 {getLabel(label, required)}
+                               </label> : null}
+      {children}
       {isError ? <ErrorList errors={errors} /> : <div/>}
     </div>
   );
@@ -84,11 +87,12 @@ function Wrapper(props) {
 if (process.env.NODE_ENV !== "production") {
   Wrapper.propTypes = {
     type: PropTypes.string.isRequired,
+    classNames: React.PropTypes.string,
     label: PropTypes.string,
     required: PropTypes.bool,
     displayLabel: PropTypes.bool,
+    widget: PropTypes.any, // XXX non
     children: React.PropTypes.node.isRequired,
-    classNames: React.PropTypes.string,
   };
 }
 

@@ -118,7 +118,10 @@ export default class Form extends Component {
           formData={formData}
           onChange={this._onChange}
           registry={registry}/>
-        { children ? children : <p><button type="submit">Submit</button></p> }
+        { children ? children :
+          <p>
+            <button type="submit" className="btn btn-info">Submit</button>
+          </p> }
       </form>
     );
   }

@@ -18,15 +18,17 @@ function RadioWidget({
         const checked = value !== undefined ? option.value === value :
                                               option.value === defaultValue;
         return (
-          <label key={i}>
-            <input type="radio"
-              name={name}
-              value={option.value}
-              checked={checked}
-              placeholder={placeholder}
-              onChange={_ => onChange(option.value)} />
-            {option.label}
-          </label>
+          <div className="radio">
+            <label key={i}>
+              <input type="radio"
+                name={name}
+                value={option.value}
+                checked={checked}
+                placeholder={placeholder}
+                onChange={_ => onChange(option.value)} />
+              {option.label}
+            </label>
+          </div>
         );
       })
     }</div>

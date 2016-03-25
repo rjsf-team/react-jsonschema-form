@@ -91,7 +91,7 @@ describe("ArrayField", () => {
     it("should render a select widget with a label", () => {
       const {node} = createFormComponent({schema});
 
-      expect(node.querySelector(".field label > span").textContent)
+      expect(node.querySelector(".field label").textContent)
         .eql("My field");
     });
 

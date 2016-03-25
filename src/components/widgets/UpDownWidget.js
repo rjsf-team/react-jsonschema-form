@@ -25,6 +25,7 @@ function UpDownWidget({
 }) {
   return (
     <input type="number"
+      className="form-control"
       value={value}
       defaultValue={defaultValue}
       placeholder={placeholder}

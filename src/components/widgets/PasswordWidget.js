@@ -11,6 +11,7 @@ function PasswordWidget({
 }) {
   return (
     <input type="password"
+      className="form-control"
       value={value}
       defaultValue={defaultValue}
       placeholder={placeholder}

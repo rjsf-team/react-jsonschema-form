@@ -11,6 +11,7 @@ function TextWidget({
 }) {
   return (
     <input type="text"
+      className="form-control"
       value={value}
       defaultValue={defaultValue}
       placeholder={placeholder}

@@ -8,14 +8,20 @@ function CheckboxWidget({
   required,
   placeholder,
   onChange,
+  label,
 }) {
   return (
-    <input type="checkbox"
-      title={placeholder}
-      checked={value}
-      defaultChecked={defaultValue}
-      required={required}
-      onChange={(event) => onChange(event.target.checked)} />
+    <div className="checkbox">
+      <label>
+        <input type="checkbox"
+          title={placeholder}
+          checked={value}
+          defaultChecked={defaultValue}
+          required={required}
+          onChange={(event) => onChange(event.target.checked)} />
+        {label}
+      </label>
+    </div>
   );
 }
 if (process.env.NODE_ENV !== "production") {

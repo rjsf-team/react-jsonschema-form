@@ -113,29 +113,35 @@ class ArrayField extends Component {
         {title ? <legend>{title}</legend> : null}
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
-        <div className="array-item-list">{
+        <div className="row array-item-list">{
           items.map((item, index) => {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
             return (
               <div key={index}>
-                <SchemaField
-                  schema={itemsSchema}
-                  uiSchema={uiSchema.items}
-                  formData={items[index]}
-                  errorSchema={itemErrorSchema}
-                  required={this.isItemRequired(itemsSchema)}
-                  onChange={this._onChangeForIndex(index)}
-                  registry={this.props.registry}/>
-                <p className="array-item-remove">
-                  <button type="button"
-                    onClick={this._onDropIndexClick(index)}>-</button></p>
+                <div className="col-xs-10">
+                  <SchemaField
+                    schema={itemsSchema}
+                    uiSchema={uiSchema.items}
+                    formData={items[index]}
+                    errorSchema={itemErrorSchema}
+                    required={this.isItemRequired(itemsSchema)}
+                    onChange={this._onChangeForIndex(index)}
+                    registry={this.props.registry}/>
+                </div>
+                <div className="col-xs-2 array-item-remove text-right">
+                  <button type="button" className="btn btn-danger"
+                    onClick={this._onDropIndexClick(index)}>Delete</button>
+                </div>
               </div>
             );
           })
         }</div>
-        <p className="array-item-add">
-          <button type="button" onClick={this._onAddClick}>+</button>
-        </p>
+        <div className="row">
+          <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
+            <button type="button" className="btn btn-info"
+              onClick={this._onAddClick}>Add</button>
+          </p>
+        </div>
       </fieldset>
     );
   }

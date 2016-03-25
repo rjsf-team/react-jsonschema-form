@@ -29,6 +29,7 @@ function SelectWidget({
   return (
     <select
       multiple={multiple}
+      className="form-control"
       title={placeholder}
       value={value}
       defaultValue={defaultValue}

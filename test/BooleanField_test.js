@@ -19,7 +19,7 @@ describe("BooleanField", () => {
       title: "foo"
     }});
 
-    expect(node.querySelector(".field label > span").textContent)
+    expect(node.querySelector(".field label").textContent)
       .eql("foo");
   });
 
