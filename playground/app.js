@@ -94,17 +94,17 @@ class Editor extends Component {
     const icon = this.state.valid ? "ok" : "remove";
     const cls = this.state.valid ? "valid" : "invalid";
     return (
-      <fieldset>
-        <legend>
+      <div className="panel panel-default">
+        <div className="panel-heading">
           <span className={`${cls} glyphicon glyphicon-${icon}`} />
           {" "}
           {title}
-        </legend>
+        </div>
         <Codemirror
           value={this.state.code}
           onChange={this._onCodeChange}
           options={cmOptions} />
-      </fieldset>
+      </div>
     );
   }
 }
