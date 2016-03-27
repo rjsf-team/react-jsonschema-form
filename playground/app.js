@@ -7,6 +7,8 @@ import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
 
+// Import a few CodeMirror themes; these are used to match alternative
+// bootstrap ones.
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/dracula.css";
 import "codemirror/theme/blackboard.css";
@@ -15,7 +17,6 @@ import "codemirror/theme/ttcn.css";
 import "codemirror/theme/solarized.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/eclipse.css";
-import "./styles.css";
 
 const log = (type) => console.log.bind(console, type);
 const fromJson = (json) => JSON.parse(json);

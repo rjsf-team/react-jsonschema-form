@@ -11,10 +11,6 @@ import {
 import SelectWidget from "./../widgets/SelectWidget";
 
 
-function itemIndexSchema(idSchema, index) {
-  return toIdSchema();
-}
-
 class ArrayField extends Component {
   static defaultProps = {
     uiSchema: {},
