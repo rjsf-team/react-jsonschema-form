@@ -30,14 +30,15 @@ function getFieldComponent(schema, uiSchema, fields) {
   return COMPONENT_TYPES[schema.type] || UnsupportedField;
 }
 
-function getLabel(label, required) {
+function getLabel(label, required, id) {
   if (!label) {
     return null;
   }
-  if (required) {
-    return label + REQUIRED_FIELD_SYMBOL;
-  }
-  return label;
+  return (
+    <label className="control-label" htmlFor={id}>
+      {required ? label + REQUIRED_FIELD_SYMBOL : label}
+    </label>
+  );
 }
 
 function ErrorList({errors}) {
@@ -59,9 +60,9 @@ function Wrapper({
     errorSchema,
     label,
     required,
-    widget,
     displayLabel,
-    children
+    id,
+    children,
   }) {
   const {errors} = errorSchema;
   const isError = errors && errors.length > 0;
@@ -72,12 +73,9 @@ function Wrapper({
     isError ? "field-error has-error" : "",
     classNames,
   ].join(" ").trim();
-  // XXX detect widget name?
   return (
     <div className={classList}>
-      {displayLabel && label ? <label className="control-label">
-                                 {getLabel(label, required)}
-                               </label> : null}
+      {displayLabel && label ? getLabel(label, required, id) : null}
       {children}
       {isError ? <ErrorList errors={errors} /> : <div/>}
     </div>
@@ -87,11 +85,11 @@ function Wrapper({
 if (process.env.NODE_ENV !== "production") {
   Wrapper.propTypes = {
     type: PropTypes.string.isRequired,
+    id: PropTypes.string,
     classNames: React.PropTypes.string,
     label: PropTypes.string,
     required: PropTypes.bool,
     displayLabel: PropTypes.bool,
-    widget: PropTypes.any, // XXX non
     children: React.PropTypes.node.isRequired,
   };
 }
@@ -101,7 +99,7 @@ Wrapper.defaultProps = {
 };
 
 function SchemaField(props) {
-  const {uiSchema, errorSchema, name, required, registry} = props;
+  const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
   const {definitions, fields} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
@@ -125,6 +123,7 @@ function SchemaField(props) {
       required={required}
       type={schema.type}
       displayLabel={displayLabel}
+      id={idSchema.id}
       classNames={uiSchema.classNames}>
       <FieldComponent {...props} />
     </Wrapper>
@@ -134,12 +133,14 @@ function SchemaField(props) {
 SchemaField.defaultProps = {
   uiSchema: {},
   errorSchema: {},
+  idSchema: {},
 };
 
 if (process.env.NODE_ENV !== "production") {
   SchemaField.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    idSchema: PropTypes.object,
     formData: PropTypes.any,
     errorSchema: PropTypes.object,
     registry: PropTypes.shape({

@@ -1,7 +1,9 @@
+/*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
+
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, d } from "./test_utils";
 
 describe("ArrayField", () => {
   describe("List of inputs", () => {
@@ -67,6 +69,14 @@ describe("ArrayField", () => {
       expect(inputs).to.have.length.of(1);
       expect(inputs[0].value).eql("bar");
     });
+
+    it("should render the select widget with the expected id", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs[0].id).eql("root_0");
+      expect(inputs[1].id).eql("root_1");
+    });
   });
 
   describe("Multiple choices list", () => {
@@ -131,6 +141,12 @@ describe("ArrayField", () => {
       expect(options[0].getAttribute("selected")).not.to.be.null;  // foo
       expect(options[1].getAttribute("selected")).not.to.be.null;  // bar
       expect(options[2].getAttribute("selected")).to.be.null;  // fuzz
+    });
+
+    it("should render the select widget with the expected id", () => {
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector("select").id).eql("root");
     });
   });
 });

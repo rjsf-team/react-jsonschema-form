@@ -1,4 +1,3 @@
-
 /*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
 
 import { expect } from "chai";

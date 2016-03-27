@@ -6,11 +6,21 @@ import SelectWidget from "./../widgets/SelectWidget";
 
 
 function StringField(props) {
-  const {schema, name, uiSchema, formData, widgets, required, onChange} = props;
+  const {
+    schema,
+    name,
+    uiSchema,
+    idSchema,
+    formData,
+    widgets,
+    required,
+    onChange
+  } = props;
   const {title, description} = schema;
   const widget = uiSchema["ui:widget"];
   const commonProps = {
     schema,
+    id: idSchema && idSchema.id,
     label: title || name,
     placeholder: description,
     onChange,
@@ -35,6 +45,7 @@ function StringField(props) {
 if (process.env.NODE_ENV !== "production") {
   StringField.propTypes = {
     schema: PropTypes.object.isRequired,
+    idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.oneOfType([
       React.PropTypes.string,

@@ -5,14 +5,20 @@ import {
   isMultiSelect,
   optionsList,
   retrieveSchema,
+  toIdSchema,
   shouldRender
 } from "../../utils";
 import SelectWidget from "./../widgets/SelectWidget";
 
 
+function itemIndexSchema(idSchema, index) {
+  return toIdSchema();
+}
+
 class ArrayField extends Component {
   static defaultProps = {
-    uiSchema: {}
+    uiSchema: {},
+    idSchema: {},
   };
 
   constructor(props) {
@@ -87,7 +93,7 @@ class ArrayField extends Component {
   }
 
   render() {
-    const {schema, uiSchema, errorSchema, name} = this.props;
+    const {schema, uiSchema, errorSchema, idSchema, name} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
     const {fields, definitions} = this.props.registry;
@@ -96,6 +102,7 @@ class ArrayField extends Component {
     if (isMultiSelect(schema)) {
       return (
         <SelectWidget
+          id={idSchema && idSchema.id}
           multiple
           onChange={this._onSelectChange}
           options={optionsList(itemsSchema)}
@@ -116,6 +123,8 @@ class ArrayField extends Component {
         <div className="row array-item-list">{
           items.map((item, index) => {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+            const itemIdPrefix = idSchema.id + "_" + index;
+            const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
             return (
               <div key={index}>
                 <div className="col-xs-10">
@@ -124,6 +133,7 @@ class ArrayField extends Component {
                     uiSchema={uiSchema.items}
                     formData={items[index]}
                     errorSchema={itemErrorSchema}
+                    idSchema={itemIdSchema}
                     required={this.isItemRequired(itemsSchema)}
                     onChange={this._onChangeForIndex(index)}
                     registry={this.props.registry}/>
@@ -151,6 +161,7 @@ if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    idSchema: PropTypes.object,
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.array,

@@ -76,4 +76,13 @@ describe("BooleanField", () => {
                                label => label.textContent);
     expect(labels).eql(["Yes", "No"]);
   });
+
+  it("should render the widget with the expected id", () => {
+    const {node} = createFormComponent({schema: {
+      type: "boolean",
+    }});
+
+    expect(node.querySelector("input[type=checkbox]").id)
+      .eql("root");
+  });
 });

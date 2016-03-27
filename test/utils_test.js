@@ -6,7 +6,8 @@ import {
   isMultiSelect,
   mergeObjects,
   retrieveSchema,
-  shouldRender
+  shouldRender,
+  toIdSchema
 } from "../src/utils";
 
 
@@ -362,6 +363,86 @@ describe("utils", () => {
           {myProp: {mySubProp: fn}},
           {myState: {mySubState: fn}}
         )).eql(false);
+      });
+    });
+  });
+
+  describe("toIdSchema", () => {
+    it("should return an idSchema for root field", () => {
+      const schema = {type: "string"};
+
+      expect(toIdSchema(schema)).eql({id: "root"});
+    });
+
+    it("should return an idSchema for nested objects", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          level1: {
+            type: "object",
+            properties: {
+              level2: {
+                type: "string"
+              }
+            }
+          }
+        }
+      };
+
+      expect(toIdSchema(schema)).eql({
+        id: "root",
+        level1: {
+          id: "root_level1",
+          level2: {
+            id: "root_level1_level2",
+          }
+        }
+      });
+    });
+
+    it("should return an idSchema for array item objects", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            foo: {
+              type: "string"
+            }
+          }
+        }
+      };
+
+      expect(toIdSchema(schema)).eql({
+        id: "root",
+        foo: {
+          id: "root_foo"
+        }
+      });
+    });
+
+    it("should retrieve reference schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            type: "object",
+            properties: {
+              foo: {type: "string"},
+              bar: {type: "string"},
+            }
+          }
+        },
+        $ref: "#/definitions/testdef"
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions)).eql({
+        id: "root",
+        foo: {
+          id: "root_foo"
+        },
+        bar: {
+          id: "root_bar"
+        }
       });
     });
   });

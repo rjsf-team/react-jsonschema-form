@@ -17,6 +17,7 @@ function rangeSpec(schema) {
 
 function RangeWidget({
   schema,
+  id,
   placeholder,
   value,
   defaultValue,
@@ -26,6 +27,7 @@ function RangeWidget({
   return (
     <div className="field-range-wrapper">
       <input type="range"
+        id={id}
         value={value}
         defaultValue={defaultValue}
         placeholder={placeholder}
@@ -40,6 +42,7 @@ function RangeWidget({
 if (process.env.NODE_ENV !== "production") {
   RangeWidget.propTypes = {
     schema: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.oneOfType([
       React.PropTypes.string,

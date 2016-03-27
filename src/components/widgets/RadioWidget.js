@@ -18,8 +18,8 @@ function RadioWidget({
         const checked = value !== undefined ? option.value === value :
                                               option.value === defaultValue;
         return (
-          <div className="radio">
-            <label key={i}>
+          <div key={i} className="radio">
+            <label>
               <input type="radio"
                 name={name}
                 value={option.value}
@@ -38,6 +38,7 @@ function RadioWidget({
 if (process.env.NODE_ENV !== "production") {
   RadioWidget.propTypes = {
     schema: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,

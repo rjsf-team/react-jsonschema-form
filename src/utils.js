@@ -246,3 +246,23 @@ export function toErrorSchema(errors) {
     return errorSchema;
   }, {});
 }
+
+export function toIdSchema(schema, id, definitions) {
+  const idSchema = {id: id || "root"};
+  if ("$ref" in schema) {
+    const _schema = retrieveSchema(schema, definitions);
+    return toIdSchema(_schema, id, definitions);
+  }
+  if ("items" in schema) {
+    return toIdSchema(schema.items, id, definitions);
+  }
+  if (schema.type !== "object") {
+    return idSchema;
+  }
+  for (const name in schema.properties || {}) {
+    const field = schema.properties[name];
+    const fieldId = idSchema.id + "_" + name;
+    idSchema[name] = toIdSchema(field, fieldId, definitions);
+  }
+  return idSchema;
+}
