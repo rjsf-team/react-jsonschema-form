@@ -8,6 +8,13 @@ import { samples } from "./samples";
 import Form from "../src";
 
 import "codemirror/lib/codemirror.css";
+import "codemirror/theme/dracula.css";
+import "codemirror/theme/blackboard.css";
+import "codemirror/theme/mbo.css";
+import "codemirror/theme/ttcn.css";
+import "codemirror/theme/solarized.css";
+import "codemirror/theme/monokai.css";
+import "codemirror/theme/eclipse.css";
 import "./styles.css";
 
 const log = (type) => console.log.bind(console, type);
@@ -38,13 +45,16 @@ const themes = {
     stylesheet: "http://bootswatch.com/cosmo/bootstrap.min.css"
   },
   cyborg: {
-    stylesheet: "http://bootswatch.com/cyborg/bootstrap.min.css"
+    stylesheet: "http://bootswatch.com/cyborg/bootstrap.min.css",
+    editor: "blackboard",
   },
   darkly: {
-    stylesheet: "http://bootswatch.com/darkly/bootstrap.min.css"
+    stylesheet: "http://bootswatch.com/darkly/bootstrap.min.css",
+    editor: "mbo",
   },
   flatly: {
-    stylesheet: "http://bootswatch.com/flatly/bootstrap.min.css"
+    stylesheet: "http://bootswatch.com/flatly/bootstrap.min.css",
+    editor: "ttcn",
   },
   journal: {
     stylesheet: "http://bootswatch.com/journal/bootstrap.min.css"
@@ -59,31 +69,38 @@ const themes = {
     stylesheet: "http://bootswatch.com/readable/bootstrap.min.css"
   },
   sandstone: {
-    stylesheet: "http://bootswatch.com/sandstone/bootstrap.min.css"
+    stylesheet: "http://bootswatch.com/sandstone/bootstrap.min.css",
+    editor: "solarized",
   },
   simplex: {
-    stylesheet: "http://bootswatch.com/simplex/bootstrap.min.css"
+    stylesheet: "http://bootswatch.com/simplex/bootstrap.min.css",
+    editor: "ttcn",
   },
   slate: {
-    stylesheet: "http://bootswatch.com/slate/bootstrap.min.css"
+    stylesheet: "http://bootswatch.com/slate/bootstrap.min.css",
+    editor: "monokai",
   },
   spacelab: {
     stylesheet: "http://bootswatch.com/spacelab/bootstrap.min.css"
   },
   "solarized-dark": {
     stylesheet: "https://cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-dark.css",
+    editor: "dracula",
   },
   "solarized-light": {
     stylesheet: "https://cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-light.css",
+    editor: "solarized",
   },
   superhero: {
-    stylesheet: "http://bootswatch.com/superhero/bootstrap.min.css"
+    stylesheet: "http://bootswatch.com/superhero/bootstrap.min.css",
+    editor: "dracula",
   },
   united: {
     stylesheet: "http://bootswatch.com/united/bootstrap.min.css"
   },
   yeti: {
-    stylesheet: "http://bootswatch.com/yeti/bootstrap.min.css"
+    stylesheet: "http://bootswatch.com/yeti/bootstrap.min.css",
+    editor: "eclipse",
   },
 };
 
@@ -149,7 +166,7 @@ class Editor extends Component {
   }
 
   render() {
-    const {title} = this.props;
+    const {title, theme} = this.props;
     const icon = this.state.valid ? "ok" : "remove";
     const cls = this.state.valid ? "valid" : "invalid";
     return (
@@ -162,7 +179,7 @@ class Editor extends Component {
         <Codemirror
           value={this.state.code}
           onChange={this._onCodeChange}
-          options={cmOptions} />
+          options={Object.assign({}, cmOptions, {theme})} />
       </div>
     );
   }
@@ -213,7 +230,7 @@ function ThemeSelector({theme, select}) {
   return (
     <Form schema={themeSchema}
           formData={theme}
-          onChange={({formData}) => select(themes[formData])}>
+          onChange={({formData}) => select(formData, themes[formData])}>
       <div/>
     </Form>
   );
@@ -227,6 +244,8 @@ class App extends Component {
       schema: {},
       uiSchema: {},
       formData: {},
+      editor: "default",
+      theme: "default",
     };
     this._onSchemaChange = this.onSchemaChange.bind(this);
     this._onUISchemaChange = this.onUISchemaChange.bind(this);
@@ -260,12 +279,15 @@ class App extends Component {
     this.setState({formData});
   }
 
-  onThemeSelected(theme) {
-    document.getElementById("theme")
-      .setAttribute("href", theme.stylesheet);
+  onThemeSelected(theme, {stylesheet, editor}) {
+    // Side effect!
+    this.setState({theme, editor: editor ? editor : "default"}, _ => {
+      document.getElementById("theme").setAttribute("href", stylesheet);
+    });
   }
 
   render() {
+    const {theme} = this.state;
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -275,23 +297,25 @@ class App extends Component {
               <Selector onSelected={this.load.bind(this)} />
             </div>
             <div className="col-sm-2">
-              <ThemeSelector theme={this.state.theme}
-                             select={this._onThemeSelected} />
+              <ThemeSelector theme={theme} select={this._onThemeSelected} />
             </div>
           </div>
         </div>
         <div className="col-sm-6">
           <Editor title="JSONSchema"
+            theme={this.state.editor}
             code={toJson(this.state.schema)}
             onChange={this._onSchemaChange} />
           <div className="row">
             <div className="col-sm-6">
               <Editor title="UISchema"
+                theme={this.state.editor}
                 code={toJson(this.state.uiSchema)}
                 onChange={this._onUISchemaChange} />
             </div>
             <div className="col-sm-6">
               <Editor title="formData"
+                theme={this.state.editor}
                 code={toJson(this.state.formData)}
                 onChange={this._onFormDataChange} />
             </div>
