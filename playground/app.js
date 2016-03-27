@@ -27,6 +27,65 @@ const cmOptions = {
   indentWithTabs: false,
   tabSize: 2,
 };
+const themes = {
+  default: {
+    stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+  },
+  cerulean: {
+    stylesheet: "http://bootswatch.com/cerulean/bootstrap.min.css"
+  },
+  cosmo: {
+    stylesheet: "http://bootswatch.com/cosmo/bootstrap.min.css"
+  },
+  cyborg: {
+    stylesheet: "http://bootswatch.com/cyborg/bootstrap.min.css"
+  },
+  darkly: {
+    stylesheet: "http://bootswatch.com/darkly/bootstrap.min.css"
+  },
+  flatly: {
+    stylesheet: "http://bootswatch.com/flatly/bootstrap.min.css"
+  },
+  journal: {
+    stylesheet: "http://bootswatch.com/journal/bootstrap.min.css"
+  },
+  lumen: {
+    stylesheet: "http://bootswatch.com/lumen/bootstrap.min.css"
+  },
+  paper: {
+    stylesheet: "http://bootswatch.com/paper/bootstrap.min.css"
+  },
+  readable: {
+    stylesheet: "http://bootswatch.com/readable/bootstrap.min.css"
+  },
+  sandstone: {
+    stylesheet: "http://bootswatch.com/sandstone/bootstrap.min.css"
+  },
+  simplex: {
+    stylesheet: "http://bootswatch.com/simplex/bootstrap.min.css"
+  },
+  slate: {
+    stylesheet: "http://bootswatch.com/slate/bootstrap.min.css"
+  },
+  spacelab: {
+    stylesheet: "http://bootswatch.com/spacelab/bootstrap.min.css"
+  },
+  "solarized-dark": {
+    stylesheet: "https://cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-dark.css",
+  },
+  "solarized-light": {
+    stylesheet: "https://cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-light.css",
+  },
+  superhero: {
+    stylesheet: "http://bootswatch.com/superhero/bootstrap.min.css"
+  },
+  united: {
+    stylesheet: "http://bootswatch.com/united/bootstrap.min.css"
+  },
+  yeti: {
+    stylesheet: "http://bootswatch.com/yeti/bootstrap.min.css"
+  },
+};
 
 class GeoPosition extends Component {
   constructor(props) {
@@ -146,13 +205,33 @@ class Selector extends Component {
   }
 }
 
+function ThemeSelector({theme, select}) {
+  const themeSchema = {
+    type: "string",
+    enum: Object.keys(themes)
+  };
+  return (
+    <Form schema={themeSchema}
+          formData={theme}
+          onChange={({formData}) => select(themes[formData])}>
+      <div/>
+    </Form>
+  );
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {form: false, schema: {}, uiSchema: {}, formData: {}};
+    this.state = {
+      form: false,
+      schema: {},
+      uiSchema: {},
+      formData: {},
+    };
     this._onSchemaChange = this.onSchemaChange.bind(this);
     this._onUISchemaChange = this.onUISchemaChange.bind(this);
     this._onFormDataChange = this.onFormDataChange.bind(this);
+    this._onThemeSelected = this.onThemeSelected.bind(this);
   }
 
   componentDidMount() {
@@ -181,12 +260,25 @@ class App extends Component {
     this.setState({formData});
   }
 
+  onThemeSelected(theme) {
+    document.getElementById("theme")
+      .setAttribute("href", theme.stylesheet);
+  }
+
   render() {
     return (
       <div className="container-fluid">
         <div className="page-header">
           <h1>react-jsonschema-form</h1>
-          <Selector onSelected={this.load.bind(this)} />
+          <div className="row">
+            <div className="col-sm-10">
+              <Selector onSelected={this.load.bind(this)} />
+            </div>
+            <div className="col-sm-2">
+              <ThemeSelector theme={this.state.theme}
+                             select={this._onThemeSelected} />
+            </div>
+          </div>
         </div>
         <div className="col-sm-6">
           <Editor title="JSONSchema"
