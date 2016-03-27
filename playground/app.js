@@ -125,17 +125,19 @@ class GeoPosition extends Component {
         <h3>Hey, I'm a custom component</h3>
         <p>I'm registered as <code>geo</code> and referenced in
         <code>uiSchema</code> as the <code>ui:field</code> to use for this
-        shcema.</p>
-        <p>
-          <label>Lat
-            <input type="number" value={lat} step="0.00001"
+        schema.</p>
+        <div className="row">
+          <div className="col-sm-6">
+            <label>Latitude</label>
+            <input className="form-control" type="number" value={lat} step="0.00001"
               onChange={this.onChange("lat")} />
-          </label>
-          <label>Lon
-            <input type="number" value={lon} step="0.00001"
+          </div>
+          <div className="col-sm-6">
+            <label>Longitude</label>
+            <input className="form-control" type="number" value={lon} step="0.00001"
               onChange={this.onChange("lon")} />
-          </label>
-        </p>
+          </div>
+        </div>
       </div>
     );
   }
