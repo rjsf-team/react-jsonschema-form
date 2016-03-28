@@ -70,12 +70,42 @@ describe("ArrayField", () => {
       expect(inputs[0].value).eql("bar");
     });
 
-    it("should render the select widget with the expected id", () => {
+    it("should render the input widgets with the expected ids", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
 
       const inputs = node.querySelectorAll("input[type=text]");
       expect(inputs[0].id).eql("root_0");
       expect(inputs[1].id).eql("root_1");
+    });
+
+    it("should render nested input widgets with the expected ids", () => {
+      const complexSchema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                bar: {type: "string"},
+                baz: {type: "string"}
+              }
+            }
+          }
+        }
+      };
+      const {node} = createFormComponent({schema: complexSchema, formData: {
+        foo: [
+          {bar: "bar1", baz: "baz1"},
+          {bar: "bar2", baz: "baz2"},
+        ]
+      }});
+
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs[0].id).eql("root_foo_0_bar");
+      expect(inputs[1].id).eql("root_foo_0_baz");
+      expect(inputs[2].id).eql("root_foo_1_bar");
+      expect(inputs[3].id).eql("root_foo_1_baz");
     });
   });
 
