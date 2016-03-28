@@ -400,6 +400,42 @@ describe("utils", () => {
       });
     });
 
+    it("should return an idSchema for multiple nested objects", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          level1a: {
+            type: "object",
+            properties: {
+              level1a2a: {type: "string"},
+              level1a2b: {type: "string"}
+            }
+          },
+          level1b: {
+            type: "object",
+            properties: {
+              level1b2a: {type: "string"},
+              level1b2b: {type: "string"}
+            }
+          }
+        }
+      };
+
+      expect(toIdSchema(schema)).eql({
+        id: "root",
+        level1a: {
+          id: "root_level1a",
+          level1a2a: {id: "root_level1a_level1a2a"},
+          level1a2b: {id: "root_level1a_level1a2b"},
+        },
+        level1b: {
+          id: "root_level1b",
+          level1b2a: {id: "root_level1b_level1b2a"},
+          level1b2b: {id: "root_level1b_level1b2b"},
+        },
+      });
+    });
+
     it("should return an idSchema for array item objects", () => {
       const schema = {
         type: "array",
