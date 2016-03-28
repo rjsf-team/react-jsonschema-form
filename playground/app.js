@@ -304,7 +304,7 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <div className="col-sm-6">
+        <div className="col-sm-7">
           <Editor title="JSONSchema"
             theme={this.state.editor}
             code={toJson(this.state.schema)}
@@ -324,7 +324,7 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <div className="col-sm-6">
+        <div className="col-sm-5">
           {!this.state.form ? null :
             <Form
               schema={this.state.schema}
