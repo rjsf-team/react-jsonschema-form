@@ -381,9 +381,7 @@ describe("utils", () => {
           level1: {
             type: "object",
             properties: {
-              level2: {
-                type: "string"
-              }
+              level2: {type: "string"}
             }
           }
         }
@@ -393,9 +391,7 @@ describe("utils", () => {
         id: "root",
         level1: {
           id: "root_level1",
-          level2: {
-            id: "root_level1_level2",
-          }
+          level2: {id: "root_level1_level2"}
         }
       });
     });
@@ -442,18 +438,14 @@ describe("utils", () => {
         items: {
           type: "object",
           properties: {
-            foo: {
-              type: "string"
-            }
+            foo: {type: "string"}
           }
         }
       };
 
       expect(toIdSchema(schema)).eql({
         id: "root",
-        foo: {
-          id: "root_foo"
-        }
+        foo: {id: "root_foo"}
       });
     });
 
@@ -473,12 +465,8 @@ describe("utils", () => {
 
       expect(toIdSchema(schema, undefined, schema.definitions)).eql({
         id: "root",
-        foo: {
-          id: "root_foo"
-        },
-        bar: {
-          id: "root_bar"
-        }
+        foo: {id: "root_foo"},
+        bar: {id: "root_bar"}
       });
     });
   });
