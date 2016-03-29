@@ -12,6 +12,7 @@ class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {},
     errorSchema: {},
+    idSchema: {},
   }
 
   constructor(props) {
@@ -51,7 +52,7 @@ class ObjectField extends Component {
   }
 
   render() {
-    const {uiSchema, errorSchema, name} = this.props;
+    const {uiSchema, errorSchema, idSchema, name} = this.props;
     const {definitions, fields} = this.props.registry;
     const {SchemaField, TitleField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
@@ -85,6 +86,7 @@ class ObjectField extends Component {
               schema={schema.properties[name]}
               uiSchema={uiSchema[name]}
               errorSchema={errorSchema[name]}
+              idSchema={idSchema[name]}
               formData={this.state[name]}
               onChange={this._onPropertyChange(name)}
               registry={this.props.registry} />
@@ -99,6 +101,8 @@ if (process.env.NODE_ENV !== "production") {
   ObjectField.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    errorSchema: PropTypes.object,
+    idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.object,
     required: PropTypes.bool,

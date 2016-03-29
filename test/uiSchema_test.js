@@ -473,4 +473,65 @@ describe("uiSchema", () => {
       });
     });
   });
+
+  describe("custom root field id", () => {
+    it("should use a custom root field id for objects", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {type: "string"},
+          bar: {type: "string"},
+        }
+      };
+      const uiSchema = {"ui:rootFieldId": "myform"};
+      const {node} = createFormComponent({schema, uiSchema});
+
+      const ids = [].map.call(node.querySelectorAll("input[type=text]"),
+                              node => node.id);
+      expect(ids).eql(["myform_foo", "myform_bar"]);
+    });
+
+    it("should use a custom root field id for arrays", () => {
+      const schema = {
+        type: "array",
+        items: {type: "string"},
+      };
+      const uiSchema = {"ui:rootFieldId": "myform"};
+      const {node} = createFormComponent({schema, uiSchema, formData: [
+        "foo",
+        "bar"
+      ]});
+
+      const ids = [].map.call(node.querySelectorAll("input[type=text]"),
+                              node => node.id);
+      expect(ids).eql(["myform_0", "myform_1"]);
+    });
+
+    it("should use a custom root field id for array of objects", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            foo: {type: "string"},
+            bar: {type: "string"},
+          }
+        },
+      };
+      const uiSchema = {"ui:rootFieldId": "myform"};
+      const {node} = createFormComponent({schema, uiSchema, formData: [
+        {foo: "foo1", bar: "bar1"},
+        {foo: "foo2", bar: "bar2"},
+      ]});
+
+      const ids = [].map.call(node.querySelectorAll("input[type=text]"),
+                              node => node.id);
+      expect(ids).eql([
+        "myform_0_foo",
+        "myform_0_bar",
+        "myform_1_foo",
+        "myform_1_bar"
+      ]);
+    });
+  });
 });

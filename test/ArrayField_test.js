@@ -1,7 +1,9 @@
+/*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
+
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, d } from "./test_utils";
 
 describe("ArrayField", () => {
   describe("List of inputs", () => {
@@ -67,6 +69,44 @@ describe("ArrayField", () => {
       expect(inputs).to.have.length.of(1);
       expect(inputs[0].value).eql("bar");
     });
+
+    it("should render the input widgets with the expected ids", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs[0].id).eql("root_0");
+      expect(inputs[1].id).eql("root_1");
+    });
+
+    it("should render nested input widgets with the expected ids", () => {
+      const complexSchema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                bar: {type: "string"},
+                baz: {type: "string"}
+              }
+            }
+          }
+        }
+      };
+      const {node} = createFormComponent({schema: complexSchema, formData: {
+        foo: [
+          {bar: "bar1", baz: "baz1"},
+          {bar: "bar2", baz: "baz2"},
+        ]
+      }});
+
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs[0].id).eql("root_foo_0_bar");
+      expect(inputs[1].id).eql("root_foo_0_baz");
+      expect(inputs[2].id).eql("root_foo_1_bar");
+      expect(inputs[3].id).eql("root_foo_1_baz");
+    });
   });
 
   describe("Multiple choices list", () => {
@@ -91,7 +131,7 @@ describe("ArrayField", () => {
     it("should render a select widget with a label", () => {
       const {node} = createFormComponent({schema});
 
-      expect(node.querySelector(".field label > span").textContent)
+      expect(node.querySelector(".field label").textContent)
         .eql("My field");
     });
 
@@ -131,6 +171,12 @@ describe("ArrayField", () => {
       expect(options[0].getAttribute("selected")).not.to.be.null;  // foo
       expect(options[1].getAttribute("selected")).not.to.be.null;  // bar
       expect(options[2].getAttribute("selected")).to.be.null;  // fuzz
+    });
+
+    it("should render the select widget with the expected id", () => {
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector("select").id).eql("root");
     });
   });
 });

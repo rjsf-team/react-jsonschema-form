@@ -13,6 +13,7 @@ function NumberField(props) {
 if (process.env.NODE_ENV !== "production") {
   NumberField.propTypes = {
     schema: PropTypes.object.isRequired,
+    idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     required: PropTypes.bool,

@@ -20,7 +20,7 @@ describe("NumberField", () => {
         title: "foo"
       }});
 
-      expect(node.querySelector(".field label > span").textContent)
+      expect(node.querySelector(".field label").textContent)
         .eql("foo");
     });
 
@@ -76,6 +76,15 @@ describe("NumberField", () => {
 
       expect(comp.state.formData).eql("2.");
     });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "number",
+      }});
+
+      expect(node.querySelector("input[type=text]").id)
+        .eql("root");
+    });
   });
 
   describe("SelectWidget", () => {
@@ -96,7 +105,7 @@ describe("NumberField", () => {
         title: "foo",
       }});
 
-      expect(node.querySelector(".field label > span").textContent)
+      expect(node.querySelector(".field label").textContent)
         .eql("foo");
     });
 
@@ -141,6 +150,16 @@ describe("NumberField", () => {
       }, formData: 2});
 
       expect(comp.state.formData).eql(2);
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "number",
+        enum: [1, 2]
+      }});
+
+      expect(node.querySelector("select").id)
+        .eql("root");
     });
   });
 });

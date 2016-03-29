@@ -12,11 +12,21 @@ function buildOptions(schema) {
 }
 
 function BooleanField(props) {
-  const {schema, name, uiSchema, formData, widgets, required, onChange} = props;
+  const {
+    schema,
+    name,
+    uiSchema,
+    idSchema,
+    formData,
+    widgets,
+    required,
+    onChange
+  } = props;
   const {title, description} = schema;
   const widget = uiSchema["ui:widget"];
   const commonProps = {
     schema,
+    id: idSchema && idSchema.id,
     onChange,
     label: title || name,
     placeholder: description,
@@ -35,6 +45,7 @@ if (process.env.NODE_ENV !== "production") {
   BooleanField.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.bool,
     required: PropTypes.bool,

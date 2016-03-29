@@ -103,6 +103,7 @@ describe("Rendering performance optimizations", () => {
         foo: {type: "string"}
       }
     };
+    const idSchema = {id: "root", foo: {id: "root_plop"}};
 
     it("should not render if next props are equivalent", () => {
       const {comp} = createComponent(ObjectField, {
@@ -110,6 +111,7 @@ describe("Rendering performance optimizations", () => {
         schema,
         uiSchema,
         onChange,
+        idSchema,
       });
       sandbox.stub(comp, "render").returns(<div/>);
 
@@ -126,6 +128,7 @@ describe("Rendering performance optimizations", () => {
         schema,
         formData,
         onChange,
+        idSchema,
       });
       sandbox.stub(comp, "render").returns(<div/>);
 

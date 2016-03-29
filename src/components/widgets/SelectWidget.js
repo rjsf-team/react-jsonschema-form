@@ -18,6 +18,7 @@ function processValue(type, value) {
 
 function SelectWidget({
   schema,
+  id,
   options,
   placeholder,
   value,
@@ -28,7 +29,9 @@ function SelectWidget({
 }) {
   return (
     <select
+      id={id}
       multiple={multiple}
+      className="form-control"
       title={placeholder}
       value={value}
       defaultValue={defaultValue}
@@ -53,6 +56,7 @@ function SelectWidget({
 if (process.env.NODE_ENV !== "production") {
   SelectWidget.propTypes = {
     schema: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,

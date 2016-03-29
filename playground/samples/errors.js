@@ -9,6 +9,10 @@ module.exports = {
         minLength: 8,
         pattern: "\\d+"
       },
+      active: {
+        type: "boolean",
+        title: "Active"
+      },
       skills: {
         type: "array",
         items: {
@@ -31,6 +35,7 @@ module.exports = {
   uiSchema: {},
   formData: {
     firstName: "Chuck",
+    active: "wrong",
     skills: ["karate", "budo", "aikido"],
     multipleChoicesList: ["foo", "bar", "fuzz"]
   }

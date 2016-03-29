@@ -1,8 +1,10 @@
+/*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
+
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, d } from "./test_utils";
 
 describe("ObjectField", () => {
   describe("schema", () => {
@@ -50,7 +52,7 @@ describe("ObjectField", () => {
     it("should render a default property label", () => {
       const {node} = createFormComponent({schema});
 
-      expect(node.querySelector(".field-boolean label > span").textContent)
+      expect(node.querySelector(".field-boolean label").textContent)
         .eql("bar");
     });
 
@@ -107,6 +109,13 @@ describe("ObjectField", () => {
       });
 
       expect(comp.state.formData.foo).eql("changed");
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector("input[type=text]").id).eql("root_foo");
+      expect(node.querySelector("input[type=checkbox]").id).eql("root_bar");
     });
   });
 
@@ -194,6 +203,16 @@ describe("ObjectField", () => {
         node.querySelectorAll(".field > label"), l => l.textContent);
 
       expect(labels).eql(["bar", "foo"]);
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema, uiSchema: {
+        "ui:order": ["bar", "foo"]
+      }});
+
+      const ids = [].map.call(node.querySelectorAll("input[type=text]"),
+        (node) => node.id);
+      expect(ids).eql(["root_bar", "root_foo"]);
     });
   });
 });

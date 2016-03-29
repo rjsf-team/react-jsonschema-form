@@ -19,7 +19,7 @@ describe("BooleanField", () => {
       title: "foo"
     }});
 
-    expect(node.querySelector(".field label > span").textContent)
+    expect(node.querySelector(".field label").textContent)
       .eql("foo");
   });
 
@@ -75,5 +75,14 @@ describe("BooleanField", () => {
     const labels = [].map.call(node.querySelectorAll(".field option"),
                                label => label.textContent);
     expect(labels).eql(["Yes", "No"]);
+  });
+
+  it("should render the widget with the expected id", () => {
+    const {node} = createFormComponent({schema: {
+      type: "boolean",
+    }});
+
+    expect(node.querySelector("input[type=checkbox]").id)
+      .eql("root");
   });
 });

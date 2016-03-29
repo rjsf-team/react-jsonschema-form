@@ -20,7 +20,7 @@ describe("StringField", () => {
         title: "foo"
       }});
 
-      expect(node.querySelector(".field label > span").textContent)
+      expect(node.querySelector(".field label").textContent)
         .eql("foo");
     });
 
@@ -64,6 +64,15 @@ describe("StringField", () => {
       expect(node.querySelector(".field input").getAttribute("value"))
         .eql("plip");
     });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+      }});
+
+      expect(node.querySelector("input[type=text]").id)
+        .eql("root");
+    });
   });
 
   describe("SelectWidget", () => {
@@ -84,7 +93,7 @@ describe("StringField", () => {
         title: "foo",
       }});
 
-      expect(node.querySelector(".field label > span").textContent)
+      expect(node.querySelector(".field label").textContent)
         .eql("foo");
     });
 
@@ -142,6 +151,16 @@ describe("StringField", () => {
       }, formData: "bar"});
 
       expect(comp.state.formData).eql("bar");
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        enum: ["a", "b"]
+      }});
+
+      expect(node.querySelector("select").id)
+        .eql("root");
     });
   });
 });

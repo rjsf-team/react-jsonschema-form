@@ -3,6 +3,7 @@ import React, { PropTypes } from "react";
 
 function TextWidget({
   schema,
+  id,
   placeholder,
   value,
   defaultValue,
@@ -11,6 +12,8 @@ function TextWidget({
 }) {
   return (
     <textarea
+      id={id}
+      className="form-control"
       value={value}
       defaultValue={defaultValue}
       placeholder={placeholder}
@@ -22,6 +25,7 @@ function TextWidget({
 if (process.env.NODE_ENV !== "production") {
   TextWidget.propTypes = {
     schema: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.string,
     defaultValue: PropTypes.string,

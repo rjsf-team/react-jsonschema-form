@@ -17,6 +17,7 @@ function rangeSpec(schema) {
 
 function UpDownWidget({
   schema,
+  id,
   placeholder,
   value,
   defaultValue,
@@ -25,6 +26,8 @@ function UpDownWidget({
 }) {
   return (
     <input type="number"
+      id={id}
+      className="form-control"
       value={value}
       defaultValue={defaultValue}
       placeholder={placeholder}
@@ -37,6 +40,7 @@ function UpDownWidget({
 if (process.env.NODE_ENV !== "production") {
   UpDownWidget.propTypes = {
     schema: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.oneOfType([
       React.PropTypes.string,
