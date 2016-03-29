@@ -14,7 +14,8 @@ import ErrorList from "./ErrorList";
 
 export default class Form extends Component {
   static defaultProps = {
-    uiSchema: {}
+    uiSchema: {},
+    liveValidate: false,
   }
 
   constructor(props) {
@@ -55,9 +56,10 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange = (formData, options={validate: true}) => {
-    const errors = options.validate ? this.validate(formData) :
-                                      this.state.errors;
+  onChange = (formData, options={validate: false}) => {
+    const liveValidate = this.props.liveValidate || options.validate;
+    const errors = liveValidate ? this.validate(formData) :
+                                  this.state.errors;
     const errorSchema = toErrorSchema(errors);
     this.setState({
       status: "editing",
@@ -142,6 +144,7 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
     onError: PropTypes.func,
     onSubmit: PropTypes.func,
+    liveValidate: PropTypes.bool,
   };
 }
 
