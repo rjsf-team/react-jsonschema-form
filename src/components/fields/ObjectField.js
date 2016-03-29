@@ -18,9 +18,6 @@ class ObjectField extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
-    // Caching bound instance methods for rendering perf optimization.
-    this._onChange = this.onChange.bind(this);
-    this._onPropertyChange = (name) => this._onChange.bind(this, name);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -47,9 +44,11 @@ class ObjectField extends Component {
     this.setState(state, _ => this.props.onChange(this.state));
   }
 
-  onChange(name, value) {
-    this.asyncSetState({[name]: value});
-  }
+  onPropertyChange = (name) => {
+    return (value) => {
+      this.asyncSetState({[name]: value});
+    };
+  };
 
   render() {
     const {uiSchema, errorSchema, idSchema, name} = this.props;
@@ -88,7 +87,7 @@ class ObjectField extends Component {
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               formData={this.state[name]}
-              onChange={this._onPropertyChange(name)}
+              onChange={this.onPropertyChange(name)}
               registry={this.props.registry} />
           );
         })

@@ -20,9 +20,6 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
-    // Caching bound instance methods for rendering perf optimization.
-    this._onChange = this.onChange.bind(this);
-    this._onSubmit = this.onSubmit.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,7 +55,7 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange(formData, options={validate: true}) {
+  onChange = (formData, options={validate: true}) => {
     const errors = options.validate ? this.validate(formData) :
                                       this.state.errors;
     const errorSchema = toErrorSchema(errors);
@@ -72,9 +69,9 @@ export default class Form extends Component {
         this.props.onChange(this.state);
       }
     });
-  }
+  };
 
-  onSubmit(event) {
+  onSubmit = (event) => {
     event.preventDefault();
     this.setState({status: "submitted"});
     const errors = this.validate(this.state.formData);
@@ -92,7 +89,7 @@ export default class Form extends Component {
       this.props.onSubmit(this.state);
     }
     this.setState({status: "initial"});
-  }
+  };
 
   getRegistry() {
     // For BC, accept passed SchemaField and TitleField props and pass them to
@@ -116,7 +113,7 @@ export default class Form extends Component {
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
     return (
-      <form className="rjsf" onSubmit={this._onSubmit}>
+      <form className="rjsf" onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
@@ -124,7 +121,7 @@ export default class Form extends Component {
           errorSchema={errorSchema}
           idSchema={idSchema}
           formData={formData}
-          onChange={this._onChange}
+          onChange={this.onChange}
           registry={registry}/>
         { children ? children :
           <p>

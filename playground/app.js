@@ -148,7 +148,6 @@ class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {valid: true, code: props.code, data: fromJson(props.code)};
-    this._onCodeChange = this.onCodeChange.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -159,14 +158,14 @@ class Editor extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onCodeChange(code) {
+  onCodeChange = (code) => {
     try {
       this.setState({valid: true, data: fromJson(code), code});
       this.props.onChange(this.state.data);
     } catch(err) {
       this.setState({valid: false, code});
     }
-  }
+  };
 
   render() {
     const {title, theme} = this.props;
@@ -181,7 +180,7 @@ class Editor extends Component {
         </div>
         <Codemirror
           value={this.state.code}
-          onChange={this._onCodeChange}
+          onChange={this.onCodeChange}
           options={Object.assign({}, cmOptions, {theme})} />
       </div>
     );
@@ -192,19 +191,19 @@ class Selector extends Component {
   constructor(props) {
     super(props);
     this.state = {current: "Simple"};
-    this._onClick = this.onClick.bind(this);
-    this._onLabelClick = (label) => this._onClick.bind(this, label, samples[label]);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onClick(label, sampleData, event) {
-    event.preventDefault();
-    this.setState({current: label});
-    this.props.onSelected(sampleData);
-  }
+  onLabelClick = (label) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({current: label});
+      this.props.onSelected(samples[label]);
+    };
+  };
 
   render() {
     return (
@@ -214,7 +213,7 @@ class Selector extends Component {
             <li key={i} role="presentation"
               className={this.state.current === label ? "active" : ""}>
               <a href="#"
-                onClick={this._onLabelClick(label)}>
+                onClick={this.onLabelClick(label)}>
                 {label}
               </a>
             </li>
@@ -250,10 +249,6 @@ class App extends Component {
       editor: "default",
       theme: "default",
     };
-    this._onSchemaChange = this.onSchemaChange.bind(this);
-    this._onUISchemaChange = this.onUISchemaChange.bind(this);
-    this._onFormDataChange = this.onFormDataChange.bind(this);
-    this._onThemeSelected = this.onThemeSelected.bind(this);
   }
 
   componentDidMount() {
@@ -264,43 +259,39 @@ class App extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  load(data) {
+  load = (data) => {
     // force resetting form component instance
     this.setState({form: false},
       _ => this.setState({...data, form: true}));
-  }
+  };
 
-  onSchemaChange(schema) {
-    this.setState({schema});
-  }
+  onSchemaEdited   = (schema) => this.setState({schema});
 
-  onUISchemaChange(uiSchema) {
-    this.setState({uiSchema});
-  }
+  onUISchemaEdited = (uiSchema) => this.setState({uiSchema});
 
-  onFormDataChange(formData) {
-    this.setState({formData});
-  }
+  onFormDataEdited = (formData) => this.setState({formData});
 
-  onThemeSelected(theme, {stylesheet, editor}) {
+  onThemeSelected  = (theme, {stylesheet, editor}) => {
     // Side effect!
     this.setState({theme, editor: editor ? editor : "default"}, _ => {
       document.getElementById("theme").setAttribute("href", stylesheet);
     });
-  }
+  };
+
+  onFormDataChange = ({formData}) => this.setState({formData});
 
   render() {
-    const {theme} = this.state;
+    const {schema, uiSchema, formData, theme} = this.state;
     return (
       <div className="container-fluid">
         <div className="page-header">
           <h1>react-jsonschema-form</h1>
           <div className="row">
             <div className="col-sm-10">
-              <Selector onSelected={this.load.bind(this)} />
+              <Selector onSelected={this.load} />
             </div>
             <div className="col-sm-2">
-              <ThemeSelector theme={theme} select={this._onThemeSelected} />
+              <ThemeSelector theme={theme} select={this.onThemeSelected} />
             </div>
           </div>
         </div>
@@ -308,32 +299,33 @@ class App extends Component {
           <Editor title="JSONSchema"
             theme={this.state.editor}
             code={toJson(this.state.schema)}
-            onChange={this._onSchemaChange} />
+            onChange={this.onSchemaEdited} />
           <div className="row">
             <div className="col-sm-6">
               <Editor title="UISchema"
                 theme={this.state.editor}
                 code={toJson(this.state.uiSchema)}
-                onChange={this._onUISchemaChange} />
+                onChange={this.onUISchemaEdited} />
             </div>
             <div className="col-sm-6">
               <Editor title="formData"
                 theme={this.state.editor}
                 code={toJson(this.state.formData)}
-                onChange={this._onFormDataChange} />
+                onChange={this.onFormDataEdited} />
             </div>
           </div>
         </div>
         <div className="col-sm-5">
           {!this.state.form ? null :
             <Form
-              schema={this.state.schema}
-              uiSchema={this.state.uiSchema}
-              formData={this.state.formData}
-              onChange={data => this.setState({formData: data.formData})}
-              onSubmit={data => this.setState({formData: data.formData})}
+              schema={schema}
+              uiSchema={uiSchema}
+              formData={formData}
+              onChange={this.onFormDataChange}
               fields={{geo: GeoPosition}}
-              onError={log("errors")} />}
+              onError={log("errors")}>
+              <div/>
+            </Form>}
         </div>
       </div>
     );
