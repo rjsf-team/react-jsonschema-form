@@ -20,13 +20,6 @@ class ArrayField extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
-    // Caching bound instance methods for rendering perf optimization.
-    this._onSelectChange = this.onSelectChange.bind(this);
-    this._onChange = this.onChange.bind(this);
-    this._onChangeForIndex = (index) => this._onChange.bind(this, index);
-    this._onDropClick = this.onDropClick.bind(this);
-    this._onDropIndexClick = (index) => this._onDropClick.bind(this, index);
-    this._onAddClick = this.onAddClick.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,7 +52,7 @@ class ArrayField extends Component {
     this.setState(state, _ => this.props.onChange(this.state.items, options));
   }
 
-  onAddClick(event) {
+  onAddClick = (event) => {
     event.preventDefault();
     const {items} = this.state;
     const {schema, registry} = this.props;
@@ -67,26 +60,30 @@ class ArrayField extends Component {
     this.asyncSetState({
       items: items.concat(getDefaultFormState(schema.items, undefined, definitions))
     }, {validate: false});
-  }
+  };
 
-  onDropClick(index, event) {
-    event.preventDefault();
-    this.asyncSetState({
-      items: this.state.items.filter((_, i) => i !== index)
-    }, {validate: false});
-  }
+  onDropIndexClick = (index) => {
+    return (event) => {
+      event.preventDefault();
+      this.asyncSetState({
+        items: this.state.items.filter((_, i) => i !== index)
+      }, {validate: false});
+    };
+  };
 
-  onChange(index, value) {
-    this.asyncSetState({
-      items: this.state.items.map((item, i) => {
-        return index === i ? value : item;
-      })
-    }, {validate: false});
-  }
+  onChangeForIndex = (index) => {
+    return (value) => {
+      this.asyncSetState({
+        items: this.state.items.map((item, i) => {
+          return index === i ? value : item;
+        })
+      }, {validate: false});
+    };
+  };
 
-  onSelectChange(value) {
+  onSelectChange = (value) => {
     this.asyncSetState({items: value}, {validate: false});
-  }
+  };
 
   render() {
     const {schema, uiSchema, errorSchema, idSchema, name} = this.props;
@@ -100,7 +97,7 @@ class ArrayField extends Component {
         <SelectWidget
           id={idSchema && idSchema.id}
           multiple
-          onChange={this._onSelectChange}
+          onChange={this.onSelectChange}
           options={optionsList(itemsSchema)}
           schema={schema}
           title={title}
@@ -131,12 +128,12 @@ class ArrayField extends Component {
                     errorSchema={itemErrorSchema}
                     idSchema={itemIdSchema}
                     required={this.isItemRequired(itemsSchema)}
-                    onChange={this._onChangeForIndex(index)}
+                    onChange={this.onChangeForIndex(index)}
                     registry={this.props.registry}/>
                 </div>
                 <div className="col-xs-2 array-item-remove text-right">
                   <button type="button" className="btn btn-danger col-xs-12"
-                    onClick={this._onDropIndexClick(index)}>Delete</button>
+                    onClick={this.onDropIndexClick(index)}>Delete</button>
                 </div>
               </div>
             );
@@ -145,7 +142,7 @@ class ArrayField extends Component {
         <div className="row">
           <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
             <button type="button" className="btn btn-info col-xs-12"
-              onClick={this._onAddClick}>Add</button>
+              onClick={this.onAddClick}>Add</button>
           </p>
         </div>
       </fieldset>
