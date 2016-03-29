@@ -31,12 +31,13 @@ export default class Form extends Component {
 
   getStateFromProps(props) {
     const schema = "schema" in props ? props.schema : this.props.schema;
+    const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = !!props.formData;
     const {definitions} = schema;
-    const formData = getDefaultFormState(schema, props.formData, definitions) || null;
+    const formData = getDefaultFormState(schema, props.formData, definitions);
     const errors = edit ? this.validate(formData, schema) : [];
     const errorSchema = toErrorSchema(errors);
-    const idSchema = toIdSchema(schema, undefined, definitions);
+    const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
     return {status: "initial", formData, edit, errors, errorSchema, idSchema};
   }
 
