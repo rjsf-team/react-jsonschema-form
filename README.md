@@ -65,6 +65,12 @@ Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form
 
 > Note: The CDN version **does not** embed *react* nor *react-dom*.
 
+> You'll also need to alias the default export property to use the Form component:
+
+```jsx
+const Form = JSONSchemaForm.default;
+```
+
 ## Usage
 
 ```jsx
