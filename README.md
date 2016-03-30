@@ -32,6 +32,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Custom field components](#custom-field-components)
      - [Custom SchemaField](#custom-schemafield)
      - [Custom titles](#custom-titles)
+  - [Live form data validation](#live-form-data-validation)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [Contributing](#contributing)
@@ -470,6 +471,14 @@ render((
         TitleField={CustomTitleField} />
 ), document.getElementById("app"));
 ```
+
+## Live form data validation
+
+By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.
+
+You can enable live form data validation by passing a `liveValidate` prop to the `Form` component, and set it to `true`. Then, everytime a value changes within the form data tree (eg. the user entering a character in a field), a validation operation is performed, and the validation results are reflected into the form state.
+
+Be warned that this is an expensive strategy, with possibly strong impact on performances.
 
 ## Styling your forms
 
