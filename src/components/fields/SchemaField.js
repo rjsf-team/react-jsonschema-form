@@ -6,6 +6,7 @@ import BooleanField from "./BooleanField";
 import NumberField from "./NumberField";
 import ObjectField from "./ObjectField";
 import StringField from "./StringField";
+import TitleField from "./TitleField";
 import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -95,7 +96,10 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 Wrapper.defaultProps = {
-  classNames: ""
+  classNames: "",
+  errorSchema: {errors: []},
+  required: false,
+  displayLabel: true,
 };
 
 function SchemaField(props) {
@@ -134,6 +138,11 @@ SchemaField.defaultProps = {
   uiSchema: {},
   errorSchema: {},
   idSchema: {},
+  registry: {
+    fields: {SchemaField, TitleField},
+    widgets: {},
+    definitions: {},
+  }
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -146,6 +155,7 @@ if (process.env.NODE_ENV !== "production") {
     registry: PropTypes.shape({
       widgets: PropTypes.objectOf(PropTypes.func).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
+      definitions: PropTypes.object.isRequired,
     })
   };
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 import SchemaField from "../src/components/fields/SchemaField";
+import TitleField from "../src/components/fields/TitleField";
 
 import { createFormComponent } from "./test_utils";
 
@@ -47,6 +48,28 @@ describe("SchemaField", () => {
 
       expect(node.querySelectorAll("#custom"))
         .to.have.length.of(1);
+    });
+
+    it("should provide custom field the expected fields", () => {
+      let receivedProps;
+      createFormComponent({schema, uiSchema: {
+        "ui:field": class extends React.Component {
+          constructor(props) {
+            super(props);
+            receivedProps = props;
+          }
+          render() {
+            return <div/>;
+          }
+        }
+      }});
+
+      const {registry} = receivedProps;
+      expect(registry.widgets).eql({});
+      expect(registry.definitions).eql({});
+      expect(registry.fields).to.be.an("object");
+      expect(registry.fields.SchemaField).eql(SchemaField);
+      expect(registry.fields.TitleField).eql(TitleField);
     });
 
     it("should use registered custom component for object", () => {
