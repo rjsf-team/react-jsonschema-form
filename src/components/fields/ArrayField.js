@@ -58,7 +58,7 @@ class ArrayField extends Component {
     const {schema, registry} = this.props;
     const {definitions} = registry;
     this.asyncSetState({
-      items: items.concat(getDefaultFormState(schema.items, undefined, definitions))
+      items: items.concat([getDefaultFormState(schema.items, undefined, definitions)])
     }, {validate: false});
   };
 
