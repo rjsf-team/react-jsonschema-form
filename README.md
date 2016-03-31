@@ -535,6 +535,12 @@ $ npm start
 
 A live development server showcasing components with hot reload enabled is available at [localhost:8080](http://localhost:8080).
 
+If you want the development server to listen on another host or port, you can use the RJSF_DEV_SERVER env variable:
+
+```
+$ RJSF_DEV_SERVER=0.0.0.0:8000 npm start
+```
+
 ### Tests
 
 ```

@@ -1,12 +1,16 @@
-var path = require("path");
-var express = require("express");
-var webpack = require("webpack");
+const path = require("path");
+const express = require("express");
+const webpack = require("webpack");
 
-var env = "dev", port = 8080;
+const server = process.env.RJSF_DEV_SERVER || "localhost:8080";
+const splitServer = server.split(":");
+const host = splitServer[0];
+const port = splitServer[1];
+const env = "dev";
 
-var webpackConfig = require("./webpack.config." + env);
-var compiler = webpack(webpackConfig);
-var app = express();
+const webpackConfig = require("./webpack.config." + env);
+const compiler = webpack(webpackConfig);
+const app = express();
 
 app.use(require("webpack-dev-middleware")(compiler, {
   publicPath: webpackConfig.output.publicPath,
@@ -19,11 +23,11 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "playground", "index.html"));
 });
 
-app.listen(port, "localhost", function(err) {
+app.listen(port, host, function(err) {
   if (err) {
     console.log(err);
     return;
   }
 
-  console.log("Listening at http://localhost:" + port);
+  console.log(`Listening at ${server}`);
 });
