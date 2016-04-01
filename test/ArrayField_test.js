@@ -179,4 +179,30 @@ describe("ArrayField", () => {
       expect(node.querySelector("select").id).eql("root");
     });
   });
+  
+  describe("Nested lists", () => {
+    const schema = {
+      "type": "array",
+      "title": "A list of arrays",
+      "items": {
+        "type": "array",
+        "title": "A list of numbers",
+        "items": {
+          "type": "number"
+        }
+      }
+    };
+
+    it("should render two lists of inputs inside of a list", () => {
+      const {node} = createFormComponent({schema, formData: [[1, 2], [3, 4]]});
+      expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(2);
+    });
+
+    it("should add an inner list when clicking the add button", () => {
+      const {node} = createFormComponent({schema});
+      expect(node.querySelectorAll("fieldset fieldset")).to.be.empty;
+      Simulate.click(node.querySelector(".array-item-add button"));
+      expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(1);
+    });
+  });
 });
