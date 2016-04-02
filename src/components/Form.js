@@ -1,13 +1,11 @@
 import React, { Component, PropTypes } from "react";
 import { Validator } from "jsonschema";
 
-import SchemaField from "./fields/SchemaField";
-import TitleField from "./fields/TitleField";
+import FieldSet from "./FieldSet";
 import {
-  getDefaultFormState,
-  shouldRender,
   toErrorSchema,
-  toIdSchema
+  getDefaultFormState,
+  shouldRender
 } from "../utils";
 import ErrorList from "./ErrorList";
 
@@ -29,14 +27,12 @@ export default class Form extends Component {
 
   getStateFromProps(props) {
     const schema = "schema" in props ? props.schema : this.props.schema;
-    const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = !!props.formData;
     const {definitions} = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
     const errors = edit ? this.validate(formData, schema) : [];
     const errorSchema = toErrorSchema(errors);
-    const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
-    return {status: "initial", formData, edit, errors, errorSchema, idSchema};
+    return {status: "initial", formData, edit, errors, errorSchema};
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -93,38 +89,22 @@ export default class Form extends Component {
     this.setState({status: "initial"});
   };
 
-  getRegistry() {
-    // For BC, accept passed SchemaField and TitleField props and pass them to
-    // the "fields" registry one.
-    const _SchemaField = this.props.SchemaField || SchemaField;
-    const _TitleField = this.props.TitleField || TitleField;
-    const fields = Object.assign({
-      SchemaField: _SchemaField,
-      TitleField: _TitleField,
-    }, this.props.fields);
-    return {
-      fields,
-      widgets: this.props.widgets || {},
-      definitions: this.props.schema.definitions || {},
-    };
-  }
-
   render() {
-    const {children, schema, uiSchema} = this.props;
-    const {formData, errorSchema, idSchema} = this.state;
-    const registry = this.getRegistry();
-    const _SchemaField = registry.fields.SchemaField;
+    const {children, schema, uiSchema, TitleField, SchemaField, fields, widgets} = this.props;
+    const {formData, errorSchema} = this.state;
     return (
       <form className="rjsf" onSubmit={this.onSubmit}>
         {this.renderErrors()}
-        <_SchemaField
+        <FieldSet
           schema={schema}
           uiSchema={uiSchema}
+          TitleField={TitleField}
+          SchemaField={SchemaField}
+          fields={fields}
+          widgets={widgets}
           errorSchema={errorSchema}
-          idSchema={idSchema}
           formData={formData}
-          onChange={this.onChange}
-          registry={registry}/>
+          onChange={this.onChange}/>
         { children ? children :
           <p>
             <button type="submit" className="btn btn-info">Submit</button>
@@ -138,6 +118,8 @@ if (process.env.NODE_ENV !== "production") {
   Form.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    TitleField: React.PropTypes.element,
+    SchemaField: React.PropTypes.element,
     formData: PropTypes.any,
     widgets: PropTypes.objectOf(PropTypes.func),
     fields: PropTypes.objectOf(PropTypes.func),
