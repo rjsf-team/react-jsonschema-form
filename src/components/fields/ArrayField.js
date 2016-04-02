@@ -133,6 +133,7 @@ class ArrayField extends Component {
                 </div>
                 <div className="col-xs-2 array-item-remove text-right">
                   <button type="button" className="btn btn-danger col-xs-12"
+                    tabIndex="-1"
                     onClick={this.onDropIndexClick(index)}>Delete</button>
                 </div>
               </div>
@@ -142,7 +143,7 @@ class ArrayField extends Component {
         <div className="row">
           <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
             <button type="button" className="btn btn-info col-xs-12"
-              onClick={this.onAddClick}>Add</button>
+              tabIndex="-1" onClick={this.onAddClick}>Add</button>
           </p>
         </div>
       </fieldset>
