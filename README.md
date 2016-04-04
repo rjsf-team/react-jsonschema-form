@@ -15,6 +15,9 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [As a npm-based project dependency](#as-a-npm-based-project-dependency)
      - [As a script served from a CDN](#as-a-script-served-from-a-cdn)
   - [Usage](#usage)
+     - [Form event handlers](#form-event-handlers)
+        - [Form submission](#form-submission)
+        - [Form data changes](#form-data-changes)
   - [Form customization](#form-customization)
      - [The uiSchema object](#the-uischema-object)
      - [Alternative widgets](#alternative-widgets)
@@ -111,6 +114,30 @@ render((
 That should give something like this (if you took care of loading the standard [Bootstrap](http://getbootstrap.com/) stylesheet):
 
 ![](http://i.imgur.com/DZQYPyu.png)
+
+### Form event handlers
+
+#### Form submission
+
+You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after:
+
+```js
+const onSubmit = ({formData}) => console.log("yay I'm valid!");
+
+<Form schema={schema} onSubmit={onSubmit} />;
+```
+
+To react to when submitted form data are invalid, pass an `onError` handler, which is passed the list of encoutered errors:
+
+```js
+const onError = (errors) => console.log("I have", errors.length, "errors to fix");
+
+<Form schema={schema} onError={onError} />;
+```
+
+#### Form data changes
+
+If you plan on being notified everytime the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
 
 ## Form customization
 
