@@ -241,5 +241,202 @@ describe("StringField", () => {
       expect(node.querySelector("[type=datetime-local]").id)
         .eql("root");
     });
+
+    it("should reject an invalid entered datetime", () => {
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, liveValidate: true});
+
+      Simulate.change(node.querySelector("[type=datetime-local]"), {
+        target: {value: "invalid"}
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
+    });
+  });
+
+  describe("EmailWidget", () => {
+    it("should render an email field", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+      }});
+
+      expect(node.querySelectorAll(".field [type=email]"))
+        .to.have.length.of(1);
+    });
+
+    it("should render a string field with a label", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+        title: "foo",
+      }});
+
+      expect(node.querySelector(".field label").textContent)
+        .eql("foo");
+    });
+
+    it("should render a select field with a placeholder", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+        description: "baz",
+      }});
+
+      expect(node.querySelector(".field [type=email]").getAttribute("placeholder"))
+        .eql("baz");
+    });
+
+    it("should assign a default value", () => {
+      const email = "foo@bar.baz";
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+        default: email,
+      }});
+
+      expect(comp.state.formData).eql(email);
+    });
+
+    it("should reflect the change into the dom", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+      }});
+
+      const newDatetime = new Date().toJSON();
+      Simulate.change(node.querySelector("[type=email]"), {
+        target: {value: newDatetime}
+      });
+
+      expect(node.querySelector("[type=email]").value).eql(newDatetime);
+    });
+
+    it("should fill field with data", () => {
+      const email = "foo@bar.baz";
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+      }, formData: email});
+
+      expect(comp.state.formData).eql(email);
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+      }});
+
+      expect(node.querySelector("[type=email]").id)
+        .eql("root");
+    });
+
+    it("should reject an invalid entered email", () => {
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+      }, liveValidate: true});
+
+      Simulate.change(node.querySelector("[type=email]"), {
+        target: {value: "invalid"}
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
+    });
+  });
+
+  describe("URLWidget", () => {
+    it("should render an url field", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+      }});
+
+      expect(node.querySelectorAll(".field [type=url]"))
+        .to.have.length.of(1);
+    });
+
+    it("should render a string field with a label", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+        title: "foo",
+      }});
+
+      expect(node.querySelector(".field label").textContent)
+        .eql("foo");
+    });
+
+    it("should render a select field with a placeholder", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+        description: "baz",
+      }});
+
+      expect(node.querySelector(".field [type=url]").getAttribute("placeholder"))
+        .eql("baz");
+    });
+
+    it("should assign a default value", () => {
+      const url = "http://foo.bar/baz";
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+        default: url,
+      }});
+
+      expect(comp.state.formData).eql(url);
+    });
+
+    it("should reflect the change into the dom", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+      }});
+
+      const newDatetime = new Date().toJSON();
+      Simulate.change(node.querySelector("[type=url]"), {
+        target: {value: newDatetime}
+      });
+
+      expect(node.querySelector("[type=url]").value).eql(newDatetime);
+    });
+
+    it("should fill field with data", () => {
+      const url = "http://foo.bar/baz";
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+      }, formData: url});
+
+      expect(comp.state.formData).eql(url);
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+      }});
+
+      expect(node.querySelector("[type=url]").id)
+        .eql("root");
+    });
+
+    it("should reject an invalid entered email", () => {
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+      }, liveValidate: true});
+
+      Simulate.change(node.querySelector("[type=url]"), {
+        target: {value: "invalid"}
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
+    });
   });
 });

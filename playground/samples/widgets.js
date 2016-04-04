@@ -35,9 +35,23 @@ module.exports = {
           }
         }
       },
-      datetime: {
-        type: "string",
-        format: "date-time"
+      stringFormats: {
+        type: "object",
+        title: "String formats",
+        properties: {
+          email: {
+            type: "string",
+            format: "email"
+          },
+          uri: {
+            type: "string",
+            format: "uri"
+          },
+          datetime: {
+            type: "string",
+            format: "date-time"
+          }
+        }
       },
       secret: {
         type: "string",
@@ -73,7 +87,11 @@ module.exports = {
       default: "Hello...",
       textarea: "... World"
     },
-    datetime: new Date().toJSON(),
+    stringFormats: {
+      email: "chuck@norris.net",
+      uri: "http://chucknorris.com/",
+      datetime: new Date().toJSON(),
+    },
     secret: "I'm a hidden string."
   }
 };
