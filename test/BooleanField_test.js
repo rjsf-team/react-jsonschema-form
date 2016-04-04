@@ -19,8 +19,18 @@ describe("BooleanField", () => {
       title: "foo"
     }});
 
-    expect(node.querySelector(".field label").textContent)
+    expect(node.querySelector(".field label strong").textContent)
       .eql("foo");
+  });
+
+  it("should render a single label", () => {
+    const {node} = createFormComponent({schema: {
+      type: "boolean",
+      title: "foo"
+    }});
+
+    expect(node.querySelectorAll(".field label"))
+      .to.have.length.of(1);
   });
 
   it("should assign a default value", () => {
