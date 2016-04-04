@@ -43,6 +43,10 @@ module.exports = {
             type: "string",
             format: "email"
           },
+          uri: {
+            type: "string",
+            format: "uri"
+          },
           datetime: {
             type: "string",
             format: "date-time"
@@ -85,6 +89,7 @@ module.exports = {
     },
     stringFormats: {
       email: "chuck@norris.net",
+      uri: "http://chucknorris.com/",
       datetime: new Date().toJSON(),
     },
     secret: "I'm a hidden string."
