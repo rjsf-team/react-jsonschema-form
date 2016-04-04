@@ -186,6 +186,7 @@ The built-in string field also supports the JSONSchema `format` property, and wi
 
 - `date-time`: An `input[type=datetime-local]` element is used;
 - `email`: An `input[type=email]` element is used;
+- `uri`: An `input[type=url]` element is used;
 - More formats could be supported in a near future, feel free to help us going faster!
 
 #### For `number` and `integer` fields

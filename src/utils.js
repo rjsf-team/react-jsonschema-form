@@ -8,6 +8,7 @@ import SelectWidget from "./components/widgets/SelectWidget";
 import TextWidget from "./components/widgets/TextWidget";
 import DateTimeWidget from "./components/widgets/DateTimeWidget";
 import EmailWidget from "./components/widgets/EmailWidget";
+import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 
@@ -45,7 +46,7 @@ const stringFormatWidgets = {
   "hostname": TextWidget,
   "ipv4": TextWidget,
   "ipv6": TextWidget,
-  "uri": TextWidget, // XXX: to customize appropriately
+  "uri": URLWidget,
 };
 
 export function defaultTypeValue(type) {
