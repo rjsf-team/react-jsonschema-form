@@ -21,7 +21,7 @@ function CheckboxWidget({
           defaultChecked={defaultValue}
           required={required}
           onChange={(event) => onChange(event.target.checked)} />
-        {label}
+        <strong>{label}</strong>
       </label>
     </div>
   );
