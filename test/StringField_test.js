@@ -171,7 +171,7 @@ describe("StringField", () => {
         format: "date-time",
       }});
 
-      expect(node.querySelectorAll(".field [type=datetime]"))
+      expect(node.querySelectorAll(".field [type=datetime-local]"))
         .to.have.length.of(1);
     });
 
@@ -193,7 +193,7 @@ describe("StringField", () => {
         description: "baz",
       }});
 
-      expect(node.querySelector(".field [type=datetime]").getAttribute("placeholder"))
+      expect(node.querySelector(".field [type=datetime-local]").getAttribute("placeholder"))
         .eql("baz");
     });
 
@@ -215,11 +215,11 @@ describe("StringField", () => {
       }});
 
       const newDatetime = new Date().toJSON();
-      Simulate.change(node.querySelector("[type=datetime]"), {
+      Simulate.change(node.querySelector("[type=datetime-local]"), {
         target: {value: newDatetime}
       });
 
-      expect(node.querySelector("[type=datetime]").value).eql(newDatetime);
+      expect(node.querySelector("[type=datetime-local]").value).eql(newDatetime);
     });
 
     it("should fill field with data", () => {
@@ -238,7 +238,7 @@ describe("StringField", () => {
         format: "date-time",
       }});
 
-      expect(node.querySelector("[type=datetime]").id)
+      expect(node.querySelector("[type=datetime-local]").id)
         .eql("root");
     });
   });

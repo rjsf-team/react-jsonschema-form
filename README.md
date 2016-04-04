@@ -184,7 +184,8 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following formats:
 
-- `date-time`: An `input[type=datetime]` will be rendered.
+- `date-time`: An `input[type=datetime-local]` will be rendered.
+- More formats will be supported in a near future, feel free to help us going faster!
 
 #### For `number` and `integer` fields
 

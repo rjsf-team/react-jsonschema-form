@@ -11,7 +11,7 @@ function DateTimeWidget({
   onChange
 }) {
   return (
-    <input type="datetime"
+    <input type="datetime-local"
       id={id}
       className="form-control"
       value={value}
