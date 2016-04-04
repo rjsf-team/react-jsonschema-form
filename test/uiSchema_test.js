@@ -54,6 +54,17 @@ describe("uiSchema", () => {
     });
   });
 
+  describe("ui:help", () => {
+    it("should render the provided help text", () => {
+      const schema = {type: "string"};
+      const uiSchema = {"ui:help": "plop"};
+
+      const {node} = createFormComponent({schema, uiSchema});
+
+      expect(node.querySelector(".help-block").textContent).eql("plop");
+    });
+  });
+
   describe("string", () => {
     const schema = {
       type: "object",

@@ -22,7 +22,8 @@ module.exports = {
       },
       password: {
         type: "string",
-        title: "Password"
+        title: "Password",
+        minLength: 3
       }
     }
   },
@@ -34,7 +35,8 @@ module.exports = {
       "ui:widget": "textarea"
     },
     password: {
-      "ui:widget": "password"
+      "ui:widget": "password",
+      "ui:help": "Hint: Make it strong!"
     }
   },
   formData: {

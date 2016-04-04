@@ -60,6 +60,7 @@ function Wrapper({
     errorSchema,
     label,
     hidden,
+    help,
     required,
     displayLabel,
     id,
@@ -82,6 +83,7 @@ function Wrapper({
       {displayLabel && label ? getLabel(label, required, id) : null}
       {children}
       {isError ? <ErrorList errors={errors} /> : <div/>}
+      {help ? <p className="help-block">{help}</p> : null}
     </div>
   );
 }
@@ -93,6 +95,7 @@ if (process.env.NODE_ENV !== "production") {
     classNames: React.PropTypes.string,
     label: PropTypes.string,
     hidden: PropTypes.bool,
+    help: PropTypes.string,
     required: PropTypes.bool,
     displayLabel: PropTypes.bool,
     children: React.PropTypes.node.isRequired,
@@ -133,6 +136,7 @@ function SchemaField(props) {
       label={schema.title || name}
       errorSchema={errorSchema}
       hidden={uiSchema["ui:widget"] === "hidden"}
+      help={uiSchema["ui:help"]}
       required={required}
       type={schema.type}
       displayLabel={displayLabel}
