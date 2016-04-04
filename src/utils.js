@@ -7,6 +7,7 @@ import RangeWidget from "./components/widgets/RangeWidget";
 import SelectWidget from "./components/widgets/SelectWidget";
 import TextWidget from "./components/widgets/TextWidget";
 import DateTimeWidget from "./components/widgets/DateTimeWidget";
+import EmailWidget from "./components/widgets/EmailWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 
@@ -40,7 +41,7 @@ const altWidgetMap = {
 
 const stringFormatWidgets = {
   "date-time": DateTimeWidget,
-  "email": TextWidget, // XXX: to customize appropriately
+  "email": EmailWidget,
   "hostname": TextWidget,
   "ipv4": TextWidget,
   "ipv6": TextWidget,

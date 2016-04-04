@@ -178,14 +178,15 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 #### For `string` fields
 
-  * `textarea`: a `textarea` element;
-  * `password`: an `input[type=password]` element;
+  * `textarea`: a `textarea` element is used;
+  * `password`: an `input[type=password]` element is used;
   * by default, a regular `input[type=text]` element is used.
 
 The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following formats:
 
-- `date-time`: An `input[type=datetime-local]` will be rendered.
-- More formats will be supported in a near future, feel free to help us going faster!
+- `date-time`: An `input[type=datetime-local]` element is used;
+- `email`: An `input[type=email]` element is used;
+- More formats could be supported in a near future, feel free to help us going faster!
 
 #### For `number` and `integer` fields
 
