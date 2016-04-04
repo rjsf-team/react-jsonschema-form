@@ -1,10 +1,8 @@
-/*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
-
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, d } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("ObjectField", () => {
   describe("schema", () => {

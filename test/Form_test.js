@@ -1,5 +1,3 @@
-/*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
-
 import { expect } from "chai";
 import sinon from "sinon";
 import React from "react";
@@ -7,7 +5,7 @@ import { Simulate, renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createFormComponent, d } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("Form", () => {
   var sandbox;

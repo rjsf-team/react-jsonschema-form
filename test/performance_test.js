@@ -1,6 +1,3 @@
-
-/*eslint no-unused-vars: [2, { "varsIgnorePattern": "^d$" }]*/
-
 import sinon from "sinon";
 import React from "react";
 

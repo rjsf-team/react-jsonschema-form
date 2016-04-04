@@ -54,6 +54,50 @@ describe("uiSchema", () => {
     });
   });
 
+  describe("date-time", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "date-time",
+        }
+      }
+    };
+
+    describe("hidden", () => {
+      const uiSchema = {
+        foo: {
+          "ui:widget": "hidden"
+        }
+      };
+      const datetime = new Date().toJSON();
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=hidden]"))
+          .to.have.length.of(1);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: datetime
+        }});
+
+        expect(node.querySelector("[type=hidden]").value)
+          .eql(datetime);
+      });
+
+      it("should map widget value to a typed state one", () => {
+        const {comp} = createFormComponent({schema, uiSchema, formData: {
+          foo: datetime
+        }});
+
+        expect(comp.state.formData.foo).eql(datetime);
+      });
+    });
+  });
+
   describe("string", () => {
     const schema = {
       type: "object",
@@ -133,6 +177,38 @@ describe("uiSchema", () => {
         });
 
         expect(comp.state.formData).eql({foo: "b"});
+      });
+    });
+
+    describe("hidden", () => {
+      const uiSchema = {
+        foo: {
+          "ui:widget": "hidden"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=hidden]"))
+          .to.have.length.of(1);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: "a"
+        }});
+
+        expect(node.querySelector("[type=hidden]").value)
+          .eql("a");
+      });
+
+      it("should map widget value to a typed state one", () => {
+        const {comp} = createFormComponent({schema, uiSchema, formData: {
+          foo: "a"
+        }});
+
+        expect(comp.state.formData.foo).eql("a");
       });
     });
   });
@@ -266,6 +342,38 @@ describe("uiSchema", () => {
         expect(comp.state.formData).eql({foo: 6.28});
       });
     });
+
+    describe("hidden", () => {
+      const uiSchema = {
+        foo: {
+          "ui:widget": "hidden"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=hidden]"))
+          .to.have.length.of(1);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 42
+        }});
+
+        expect(node.querySelector("[type=hidden]").value)
+          .eql("42");
+      });
+
+      it("should map widget value to a typed state one", () => {
+        const {comp} = createFormComponent({schema, uiSchema, formData: {
+          foo: 42
+        }});
+
+        expect(comp.state.formData.foo).eql(42);
+      });
+    });
   });
 
   describe("integer", () => {
@@ -347,6 +455,38 @@ describe("uiSchema", () => {
         });
 
         expect(comp.state.formData).eql({foo: 6});
+      });
+    });
+
+    describe("hidden", () => {
+      const uiSchema = {
+        foo: {
+          "ui:widget": "hidden"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=hidden]"))
+          .to.have.length.of(1);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 42
+        }});
+
+        expect(node.querySelector("[type=hidden]").value)
+          .eql("42");
+      });
+
+      it("should map widget value to a typed state one", () => {
+        const {comp} = createFormComponent({schema, uiSchema, formData: {
+          foo: 42
+        }});
+
+        expect(comp.state.formData.foo).eql(42);
       });
     });
   });
@@ -470,6 +610,38 @@ describe("uiSchema", () => {
         });
 
         expect(comp.state.formData).eql({foo: false});
+      });
+    });
+
+    describe("hidden", () => {
+      const uiSchema = {
+        foo: {
+          "ui:widget": "hidden"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=hidden]"))
+          .to.have.length.of(1);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: true
+        }});
+
+        expect(node.querySelector("[type=hidden]").value)
+          .eql("true");
+      });
+
+      it("should map widget value to a typed state one", () => {
+        const {comp} = createFormComponent({schema, uiSchema, formData: {
+          foo: true
+        }});
+
+        expect(comp.state.formData.foo).eql(true);
       });
     });
   });

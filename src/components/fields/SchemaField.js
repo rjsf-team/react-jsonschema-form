@@ -60,11 +60,15 @@ function Wrapper({
     classNames,
     errorSchema,
     label,
+    hidden,
     required,
     displayLabel,
     id,
     children,
   }) {
+  if (hidden) {
+    return children;
+  }
   const {errors} = errorSchema;
   const isError = errors && errors.length > 0;
   const classList = [
@@ -89,6 +93,7 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string,
     classNames: React.PropTypes.string,
     label: PropTypes.string,
+    hidden: PropTypes.bool,
     required: PropTypes.bool,
     displayLabel: PropTypes.bool,
     children: React.PropTypes.node.isRequired,
@@ -98,6 +103,7 @@ if (process.env.NODE_ENV !== "production") {
 Wrapper.defaultProps = {
   classNames: "",
   errorSchema: {errors: []},
+  hidden: false,
   required: false,
   displayLabel: true,
 };
@@ -124,6 +130,7 @@ function SchemaField(props) {
     <Wrapper
       label={schema.title || name}
       errorSchema={errorSchema}
+      hidden={uiSchema["ui:widget"] === "hidden"}
       required={required}
       type={schema.type}
       displayLabel={displayLabel}

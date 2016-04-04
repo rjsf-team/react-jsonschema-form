@@ -6,6 +6,7 @@ import UpDownWidget from "./components/widgets/UpDownWidget";
 import RangeWidget from "./components/widgets/RangeWidget";
 import SelectWidget from "./components/widgets/SelectWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
+import HiddenWidget from "./components/widgets/HiddenWidget";
 
 
 const RE_ERROR_ARRAY_PATH = /(.*)\[(\d+)\]$/;
@@ -14,20 +15,27 @@ const altWidgetMap = {
   boolean: {
     radio: RadioWidget,
     select: SelectWidget,
+    hidden: HiddenWidget,
   },
   string: {
     password: PasswordWidget,
     radio: RadioWidget,
     select: SelectWidget,
     textarea: TextareaWidget,
+    hidden: HiddenWidget,
   },
   number: {
     updown: UpDownWidget,
     range: RangeWidget,
+    hidden: HiddenWidget,
   },
   integer: {
     updown: UpDownWidget,
     range: RangeWidget,
+    hidden: HiddenWidget,
+  },
+  "date-time": {
+    hidden: HiddenWidget,
   }
 };
 
