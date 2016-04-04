@@ -35,7 +35,7 @@ function BooleanField(props) {
     required,
   };
   if (widget) {
-    const Widget = getAlternativeWidget(schema.type, widget, widgets);
+    const Widget = getAlternativeWidget(schema, widget, widgets);
     return <Widget options={buildOptions(schema)} {... commonProps} />;
   }
   return <CheckboxWidget {...commonProps} />;

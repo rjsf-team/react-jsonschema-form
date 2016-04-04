@@ -17,7 +17,7 @@ function StringField(props) {
     onChange
   } = props;
   const {title, description} = schema;
-  const widget = uiSchema["ui:widget"];
+  const widget = uiSchema["ui:widget"] || schema.format;
   const commonProps = {
     schema,
     id: idSchema && idSchema.id,
@@ -30,13 +30,13 @@ function StringField(props) {
   };
   if (Array.isArray(schema.enum)) {
     if (widget) {
-      const Widget = getAlternativeWidget(schema.type, widget, widgets);
+      const Widget = getAlternativeWidget(schema, widget, widgets);
       return <Widget options={optionsList(schema)} {...commonProps} />;
     }
     return <SelectWidget options={optionsList(schema)} {...commonProps} />;
   }
   if (widget) {
-    const Widget = getAlternativeWidget(schema.type, widget, widgets);
+    const Widget = getAlternativeWidget(schema, widget, widgets);
     return <Widget {...commonProps} />;
   }
   return <TextWidget {...commonProps} />;
