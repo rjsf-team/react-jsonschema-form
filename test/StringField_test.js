@@ -163,4 +163,83 @@ describe("StringField", () => {
         .eql("root");
     });
   });
+
+  describe("DateTimeWidget", () => {
+    it("should render a datetime field", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }});
+
+      expect(node.querySelectorAll(".field [type=datetime-local]"))
+        .to.have.length.of(1);
+    });
+
+    it("should render a string field with a label", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+        title: "foo",
+      }});
+
+      expect(node.querySelector(".field label").textContent)
+        .eql("foo");
+    });
+
+    it("should render a select field with a placeholder", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+        description: "baz",
+      }});
+
+      expect(node.querySelector(".field [type=datetime-local]").getAttribute("placeholder"))
+        .eql("baz");
+    });
+
+    it("should assign a default value", () => {
+      const datetime = new Date().toJSON();
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+        default: datetime,
+      }});
+
+      expect(comp.state.formData).eql(datetime);
+    });
+
+    it("should reflect the change into the dom", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }});
+
+      const newDatetime = new Date().toJSON();
+      Simulate.change(node.querySelector("[type=datetime-local]"), {
+        target: {value: newDatetime}
+      });
+
+      expect(node.querySelector("[type=datetime-local]").value).eql(newDatetime);
+    });
+
+    it("should fill field with data", () => {
+      const datetime = new Date().toJSON();
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, formData: datetime});
+
+      expect(comp.state.formData).eql(datetime);
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }});
+
+      expect(node.querySelector("[type=datetime-local]").id)
+        .eql("root");
+    });
+  });
 });

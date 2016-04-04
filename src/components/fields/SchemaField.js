@@ -13,7 +13,6 @@ const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   "array":     ArrayField,
   "boolean":   BooleanField,
-  "date-time": StringField,
   "integer":   NumberField,
   "number":    NumberField,
   "object":    ObjectField,

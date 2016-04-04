@@ -35,6 +35,10 @@ module.exports = {
           }
         }
       },
+      datetime: {
+        type: "string",
+        format: "date-time"
+      },
       secret: {
         type: "string",
         default: "I'm a hidden string."
@@ -69,6 +73,7 @@ module.exports = {
       default: "Hello...",
       textarea: "... World"
     },
+    datetime: new Date().toJSON(),
     secret: "I'm a hidden string."
   }
 };

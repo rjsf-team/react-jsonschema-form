@@ -54,50 +54,6 @@ describe("uiSchema", () => {
     });
   });
 
-  describe("date-time", () => {
-    const schema = {
-      type: "object",
-      properties: {
-        foo: {
-          type: "date-time",
-        }
-      }
-    };
-
-    describe("hidden", () => {
-      const uiSchema = {
-        foo: {
-          "ui:widget": "hidden"
-        }
-      };
-      const datetime = new Date().toJSON();
-
-      it("should accept a uiSchema object", () => {
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelectorAll("[type=hidden]"))
-          .to.have.length.of(1);
-      });
-
-      it("should support formData", () => {
-        const {node} = createFormComponent({schema, uiSchema, formData: {
-          foo: datetime
-        }});
-
-        expect(node.querySelector("[type=hidden]").value)
-          .eql(datetime);
-      });
-
-      it("should map widget value to a typed state one", () => {
-        const {comp} = createFormComponent({schema, uiSchema, formData: {
-          foo: datetime
-        }});
-
-        expect(comp.state.formData.foo).eql(datetime);
-      });
-    });
-  });
-
   describe("string", () => {
     const schema = {
       type: "object",

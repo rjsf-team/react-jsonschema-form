@@ -182,6 +182,11 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
   * `password`: an `input[type=password]` element;
   * by default, a regular `input[type=text]` element is used.
 
+The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following formats:
+
+- `date-time`: An `input[type=datetime-local]` will be rendered.
+- More formats will be supported in a near future, feel free to help us going faster!
+
 #### For `number` and `integer` fields
 
   * `updown`: an `input[type=number]` updown selector;
@@ -209,7 +214,7 @@ const uiSchema = {
 
 > Notes
 >
-> - Hiding widgets is only supported for `boolean`, `string`, `number`, `integer` and `date-time` schema types;
+> - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
 > - An hidden widget takes its value from the `formData` prop.
 
 ### Object fields ordering
@@ -330,7 +335,6 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 - `number`
 - `integer`
 - `boolean`
-- `date-time`
 
 ```jsx
 const schema = {

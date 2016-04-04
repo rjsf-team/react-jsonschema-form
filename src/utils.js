@@ -5,6 +5,8 @@ import RadioWidget from "./components/widgets/RadioWidget";
 import UpDownWidget from "./components/widgets/UpDownWidget";
 import RangeWidget from "./components/widgets/RangeWidget";
 import SelectWidget from "./components/widgets/SelectWidget";
+import TextWidget from "./components/widgets/TextWidget";
+import DateTimeWidget from "./components/widgets/DateTimeWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 
@@ -33,17 +35,22 @@ const altWidgetMap = {
     updown: UpDownWidget,
     range: RangeWidget,
     hidden: HiddenWidget,
-  },
-  "date-time": {
-    hidden: HiddenWidget,
   }
+};
+
+const stringFormatWidgets = {
+  "date-time": DateTimeWidget,
+  "email": TextWidget, // XXX: to customize appropriately
+  "hostname": TextWidget,
+  "ipv4": TextWidget,
+  "ipv6": TextWidget,
+  "uri": TextWidget, // XXX: to customize appropriately
 };
 
 export function defaultTypeValue(type) {
   switch (type) {
   case "array":     return [];
   case "boolean":   return false;
-  case "date-time": return "";
   case "number":    return 0;
   case "object":    return {};
   case "string":    return "";
@@ -55,7 +62,8 @@ export function defaultFieldValue(formData, schema) {
   return formData === null ? defaultTypeValue(schema.type) : formData;
 }
 
-export function getAlternativeWidget(type, widget, registeredWidgets={}) {
+export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
+  const {type, format} = schema;
   if (typeof widget === "function") {
     return widget;
   }
@@ -68,10 +76,14 @@ export function getAlternativeWidget(type, widget, registeredWidgets={}) {
   if (!altWidgetMap.hasOwnProperty(type)) {
     throw new Error(`No alternative widget for type ${type}`);
   }
-  if (!altWidgetMap[type].hasOwnProperty(widget)) {
-    throw new Error(`No alternative widget "${widget}" for type ${type}`);
+  if (altWidgetMap[type].hasOwnProperty(widget)) {
+    return altWidgetMap[type][widget];
   }
-  return altWidgetMap[type][widget];
+  if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
+    return stringFormatWidgets[format];
+  }
+  const info = type === "string" && format ? `/${format}` : "";
+  throw new Error(`No alternative widget "${widget}" for type ${type}${info}`);
 }
 
 function computeDefaults(schema, parentDefaults, definitions={}) {
