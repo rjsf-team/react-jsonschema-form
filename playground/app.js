@@ -37,70 +37,70 @@ const cmOptions = {
 };
 const themes = {
   default: {
-    stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    stylesheet: "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
   },
   cerulean: {
-    stylesheet: "http://bootswatch.com/cerulean/bootstrap.min.css"
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cerulean/bootstrap.min.css"
   },
   cosmo: {
-    stylesheet: "http://bootswatch.com/cosmo/bootstrap.min.css"
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cosmo/bootstrap.min.css"
   },
   cyborg: {
-    stylesheet: "http://bootswatch.com/cyborg/bootstrap.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cyborg/bootstrap.min.css",
     editor: "blackboard",
   },
   darkly: {
-    stylesheet: "http://bootswatch.com/darkly/bootstrap.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/darkly/bootstrap.min.css",
     editor: "mbo",
   },
   flatly: {
-    stylesheet: "http://bootswatch.com/flatly/bootstrap.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/flatly/bootstrap.min.css",
     editor: "ttcn",
   },
   journal: {
-    stylesheet: "http://bootswatch.com/journal/bootstrap.min.css"
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/journal/bootstrap.min.css"
   },
   lumen: {
-    stylesheet: "http://bootswatch.com/lumen/bootstrap.min.css"
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/lumen/bootstrap.min.css"
   },
   paper: {
-    stylesheet: "http://bootswatch.com/paper/bootstrap.min.css"
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/paper/bootstrap.min.css"
   },
   readable: {
-    stylesheet: "http://bootswatch.com/readable/bootstrap.min.css"
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/readable/bootstrap.min.css"
   },
   sandstone: {
-    stylesheet: "http://bootswatch.com/sandstone/bootstrap.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/sandstone/bootstrap.min.css",
     editor: "solarized",
   },
   simplex: {
-    stylesheet: "http://bootswatch.com/simplex/bootstrap.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/simplex/bootstrap.min.css",
     editor: "ttcn",
   },
   slate: {
-    stylesheet: "http://bootswatch.com/slate/bootstrap.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/slate/bootstrap.min.css",
     editor: "monokai",
   },
   spacelab: {
-    stylesheet: "http://bootswatch.com/spacelab/bootstrap.min.css"
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/spacelab/bootstrap.min.css"
   },
   "solarized-dark": {
-    stylesheet: "https://cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-dark.css",
+    stylesheet: "//cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-dark.css",
     editor: "dracula",
   },
   "solarized-light": {
-    stylesheet: "https://cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-light.css",
+    stylesheet: "//cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-light.css",
     editor: "solarized",
   },
   superhero: {
-    stylesheet: "http://bootswatch.com/superhero/bootstrap.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/superhero/bootstrap.min.css",
     editor: "dracula",
   },
   united: {
-    stylesheet: "http://bootswatch.com/united/bootstrap.min.css"
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/united/bootstrap.min.css"
   },
   yeti: {
-    stylesheet: "http://bootswatch.com/yeti/bootstrap.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/yeti/bootstrap.min.css",
     editor: "eclipse",
   },
 };
