@@ -171,11 +171,11 @@ describe("StringField", () => {
         format: "date-time",
       }});
 
-      expect(node.querySelectorAll(".field [type=datetime-local]"))
-        .to.have.length.of(1);
+      expect(node.querySelectorAll(".field select"))
+        .to.have.length.of(6);
     });
 
-    it("should render a string field with a label", () => {
+    it("should render a string field with a main label", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -184,17 +184,6 @@ describe("StringField", () => {
 
       expect(node.querySelector(".field label").textContent)
         .eql("foo");
-    });
-
-    it("should render a select field with a placeholder", () => {
-      const {node} = createFormComponent({schema: {
-        type: "string",
-        format: "date-time",
-        description: "baz",
-      }});
-
-      expect(node.querySelector(".field [type=datetime-local]").getAttribute("placeholder"))
-        .eql("baz");
     });
 
     it("should assign a default value", () => {
@@ -209,17 +198,19 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", () => {
-      const {node} = createFormComponent({schema: {
+      const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }});
 
-      const newDatetime = new Date().toJSON();
-      Simulate.change(node.querySelector("[type=datetime-local]"), {
-        target: {value: newDatetime}
-      });
+      Simulate.change(node.querySelector("#root_year"), {target: {value: "2010"}});
+      Simulate.change(node.querySelector("#root_month"), {target: {value: "12"}});
+      Simulate.change(node.querySelector("#root_day"), {target: {value: "1"}});
+      Simulate.change(node.querySelector("#root_hour"), {target: {value: "0"}});
+      Simulate.change(node.querySelector("#root_minute"), {target: {value: "0"}});
+      Simulate.change(node.querySelector("#root_second"), {target: {value: "0"}});
 
-      expect(node.querySelector("[type=datetime-local]").value).eql(newDatetime);
+      expect(comp.state.formData).eql("2010-12-01T00:00:00.000Z");
     });
 
     it("should fill field with data", () => {
@@ -232,27 +223,22 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should render the widget with the expected id", () => {
+    it("should render the widgets with the expected ids", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }});
 
-      expect(node.querySelector("[type=datetime-local]").id)
-        .eql("root");
-    });
+      const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
 
-    it("should reject an invalid entered datetime", () => {
-      const {comp, node} = createFormComponent({schema: {
-        type: "string",
-        format: "date-time",
-      }, liveValidate: true});
-
-      Simulate.change(node.querySelector("[type=datetime-local]"), {
-        target: {value: "invalid"}
-      });
-
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(ids).eql([
+        "root_year",
+        "root_month",
+        "root_day",
+        "root_hour",
+        "root_minute",
+        "root_second",
+      ]);
     });
   });
 
