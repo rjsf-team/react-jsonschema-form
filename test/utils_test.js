@@ -7,7 +7,10 @@ import {
   mergeObjects,
   retrieveSchema,
   shouldRender,
-  toIdSchema
+  toIdSchema,
+  parseDateString,
+  toDateString,
+  pad
 } from "../src/utils";
 
 
@@ -468,6 +471,45 @@ describe("utils", () => {
         foo: {id: "root_foo"},
         bar: {id: "root_bar"}
       });
+    });
+  });
+
+  describe("parseDateString()", () => {
+    it("should parse a valid JSON datetime string", () => {
+      expect(parseDateString("2016-04-05T14:01:30.182Z"))
+        .eql({
+          "year": 2016,
+          "month": 4,
+          "day": 5,
+          "hour": 14,
+          "minute": 1,
+          "second": 30,
+        });
+    });
+
+    it("should raise on invalid JSON datetime", () => {
+      expect(() => parseDateString("plop"))
+        .to.Throw(Error, "Unable to parse");
+    });
+  });
+
+  describe("toDateString()", () => {
+    it("should transform an object to a valid json datetime", () => {
+      expect(toDateString({
+        "year": 2016,
+        "month": 4,
+        "day": 5,
+        "hour": 14,
+        "minute": 1,
+        "second": 30,
+      }))
+        .eql("2016-04-05T14:01:30.000Z");
+    });
+  });
+
+  describe("pad()", () => {
+    it("should pad a string with 0s", () => {
+      expect(pad(4, 3)).eql("004");
     });
   });
 });

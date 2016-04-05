@@ -49,19 +49,25 @@ const stringFormatWidgets = {
   "uri": URLWidget,
 };
 
-export function defaultTypeValue(type) {
+export function defaultTypeValue(schema) {
+  const {type} = schema;
   switch (type) {
   case "array":     return [];
   case "boolean":   return false;
   case "number":    return 0;
   case "object":    return {};
-  case "string":    return "";
+  case "string":    {
+    if (schema.format === "date-time") {
+      return new Date().toJSON();
+    }
+    return "";
+  }
   default:        return undefined;
   }
 }
 
 export function defaultFieldValue(formData, schema) {
-  return formData === null ? defaultTypeValue(schema.type) : formData;
+  return formData === null ? defaultTypeValue(schema) : formData;
 }
 
 export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
@@ -108,7 +114,7 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof(defaults) === "undefined") {
-    defaults = defaultTypeValue(schema.type);
+    defaults = defaultTypeValue(schema);
   }
   // We need to recur for object schema inner default values.
   if (schema.type === "object") {
@@ -287,4 +293,36 @@ export function toIdSchema(schema, id, definitions) {
     idSchema[name] = toIdSchema(field, fieldId, definitions);
   }
   return idSchema;
+}
+
+export function parseDateString(dateString) {
+  if (!dateString) {
+    dateString = new Date().toJSON();
+  }
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error("Unable to parse date " + dateString);
+  }
+  return {
+    year: date.getUTCFullYear(),
+    month: date.getUTCMonth() + 1, // oh you, javascript.
+    day: date.getUTCDate(),
+    hour: date.getUTCHours(),
+    minute: date.getUTCMinutes(),
+    second: date.getUTCSeconds(),
+  };
+}
+
+export function toDateString(dateObj) {
+  const {year, month, day, hour, minute, second} = dateObj;
+  const utcTime = Date.UTC(year, month - 1, day, hour, minute, second);
+  return new Date(utcTime).toJSON();
+}
+
+export function pad(num, size) {
+  let s = String(num);
+  while (s.length < size) {
+    s = "0" + s;
+  }
+  return s;
 }

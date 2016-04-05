@@ -24,6 +24,11 @@ module.exports = {
         type: "string",
         title: "Password",
         minLength: 3
+      },
+      date: {
+        type: "string",
+        format: "date-time",
+        title: "Subscription date"
       }
     }
   },
@@ -45,5 +50,6 @@ module.exports = {
     age: 75,
     bio: "Roundhouse kicking asses since 1940",
     password: "noneed",
+    date: new Date().toJSON()
   }
 };
