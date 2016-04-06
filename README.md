@@ -41,6 +41,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [Troubleshooting](#troubleshooting)
+     - [Build error wrt missing &quot;buffertools&quot; module](#build-error-wrt-missing-buffertools-module)
   - [Contributing](#contributing)
      - [Development server](#development-server)
      - [Tests](#tests)
@@ -607,13 +608,15 @@ Note that it only supports local definition referencing, we do not plan on fetch
 
 ## Troubleshooting
 
-### Build error: Cannot find module 'buffertools' from  .../node_modules/react-jsonschema-form/node_modules/deeper
+### Build error wrt missing "buffertools" module
+
+> Build error: Cannot find module 'buffertools' from  .../node_modules/react-jsonschema-form/node_modules/deeper
 
 This is [an issue](https://github.com/othiym23/node-deeper/issues/3#issuecomment-206232232) in the way `deeper` handles the optional `buffertools` dependency (by using try/catch around a require('buffertools')).
 
 If you use **webpack** you can do the following to ignore this import:
 
-~~~javascript
+```javascript
 module.exports = {
   entry: "app",
   output: { ... },
@@ -622,16 +625,13 @@ module.exports = {
     ...
   ]
 }
-~~~
+```
 
 If you are using **browserify** instead, do the following:
 
-~~~javascript
+```javascript
     var bundler = browserify({ ... yourconfig ... }).ignore('buffertools')
-~~~
-
-
-    
+```
 
 
 ## Contributing
