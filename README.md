@@ -428,7 +428,7 @@ const uiSchema = {
 render(<Form
   schema={schema}
   uiSchema={uiSchema}
-  widgets={widgets}/>);
+  widgets={widgets} />);
 ```
 
 This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
@@ -502,6 +502,20 @@ render(<Form
 
 Note: Registered fields can be reused accross the entire schema.
 
+#### Field props
+
+A field component will always be passed the following props:
+
+ - `schema`: The JSON schema for this schema field;
+ - `uiSchema`: The [uiSchema](#the-uischema-object) for this schema field;
+ - `idSchema`: The tree of unique ids for every field in the schema;
+ - `formData`: The form data for this schema field;
+ - `errorSchema`: The tree of errors for every field in the schema;
+ - `registry`: An object containing the registered custom fields and widgets as well as root schema definitions;
+     - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
+     - `fields`: The [custom registered fields](#custom-field-components), if any;
+     - `definitions`: The root schema definitions, if any.
+
 ### Custom SchemaField
 
 **Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
@@ -526,11 +540,13 @@ render((
   <Form schema={schema}
         uiSchema={uiSchema}
         formData={formData}
-        SchemaField={CustomSchemaField} />
+        fields={SchemaField: CustomSchemaField} />
 ), document.getElementById("app"));
 ```
 
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
+
+Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
 
 ### Custom titles
 
