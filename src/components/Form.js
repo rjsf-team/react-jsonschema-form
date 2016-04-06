@@ -110,7 +110,7 @@ export default class Form extends Component {
   }
 
   render() {
-    const {children, schema, uiSchema} = this.props;
+    const {children, schema, uiSchema, widgets} = this.props;
     const {formData, errorSchema, idSchema} = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
@@ -124,6 +124,7 @@ export default class Form extends Component {
           idSchema={idSchema}
           formData={formData}
           onChange={this.onChange}
+          widgets={widgets}
           registry={registry}/>
         { children ? children :
           <p>

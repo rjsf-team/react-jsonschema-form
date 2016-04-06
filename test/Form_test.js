@@ -801,5 +801,50 @@ describe("Form", () => {
           .eql(["does not meet minimum length of 4"]);
       });
     });
+    
+    
+  });
+  
+  describe("Custom widgets", () => {
+    
+    const schema = {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        }
+      }
+    }
+    
+    const uiSchema = {
+      "field": {
+        "ui:widget": "customWidget"
+      }
+    }
+    
+    const CustomWidget = (props) => {
+      return (
+        <input type="text"
+          className="customWidget"
+          value={props.value}
+          defaultValue={props.defaultValue}
+          required={props.required}
+          onChange={(event) => props.onChange(event.target.value)} />
+      );
+    };
+
+    const widgets = {
+      customWidget: CustomWidget
+    };
+    
+    it("should be rendered", () => {
+      const comp = renderIntoDocument(
+        <Form schema={ schema } uiSchema={ uiSchema } widgets={ widgets } />
+      );
+      const node = findDOMNode(comp);
+      const input = node.querySelectorAll(".customWidget");
+      expect(input.length).eql(1)
+
+    });
   });
 });

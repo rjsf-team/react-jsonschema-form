@@ -25,7 +25,7 @@ class ObjectField extends Component {
   }
 
   getStateFromProps(props) {
-    const {schema, formData, registry} = props;
+    const {schema, formData, registry, widgets} = props;
     return getDefaultFormState(schema, formData, registry.definitions) || {};
   }
 
@@ -87,6 +87,7 @@ class ObjectField extends Component {
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               formData={this.state[name]}
+              widgets={this.props.widgets}
               onChange={this.onPropertyChange(name)}
               registry={this.props.registry} />
           );
