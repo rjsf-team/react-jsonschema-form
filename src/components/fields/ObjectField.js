@@ -4,7 +4,8 @@ import {
   getDefaultFormState,
   orderProperties,
   retrieveSchema,
-  shouldRender
+  shouldRender,
+  getDefaultRegistry
 } from "../../utils";
 
 
@@ -13,6 +14,7 @@ class ObjectField extends Component {
     uiSchema: {},
     errorSchema: {},
     idSchema: {},
+    registry: getDefaultRegistry(),
   }
 
   constructor(props) {
@@ -108,6 +110,7 @@ if (process.env.NODE_ENV !== "production") {
     registry: PropTypes.shape({
       widgets: PropTypes.objectOf(PropTypes.func).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
+      definitions: PropTypes.object.isRequired,
     })
   };
 }

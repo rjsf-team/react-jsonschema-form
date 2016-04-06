@@ -1,8 +1,13 @@
 import React, { PropTypes } from "react";
 
-import { defaultFieldValue, getAlternativeWidget, optionsList } from "../../utils";
-import TextWidget from "./../widgets/TextWidget";
-import SelectWidget from "./../widgets/SelectWidget";
+import {
+  defaultFieldValue,
+  getAlternativeWidget,
+  optionsList,
+  getDefaultRegistry
+} from "../../utils";
+import TextWidget from "../widgets/TextWidget";
+import SelectWidget from "../widgets/SelectWidget";
 
 
 function StringField(props) {
@@ -12,11 +17,12 @@ function StringField(props) {
     uiSchema,
     idSchema,
     formData,
-    widgets,
+    registry,
     required,
     onChange
   } = props;
   const {title, description} = schema;
+  const {widgets} = registry;
   const widget = uiSchema["ui:widget"] || schema.format;
   const commonProps = {
     schema,
@@ -51,12 +57,18 @@ if (process.env.NODE_ENV !== "production") {
       React.PropTypes.string,
       React.PropTypes.number,
     ]),
+    registry: PropTypes.shape({
+      widgets: PropTypes.objectOf(PropTypes.func).isRequired,
+      fields: PropTypes.objectOf(PropTypes.func).isRequired,
+      definitions: PropTypes.object.isRequired,
+    }),
     required: PropTypes.bool,
   };
 }
 
 StringField.defaultProps = {
-  uiSchema: {}
+  uiSchema: {},
+  registry: getDefaultRegistry(),
 };
 
 export default StringField;

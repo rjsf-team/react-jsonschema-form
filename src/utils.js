@@ -11,6 +11,9 @@ import EmailWidget from "./components/widgets/EmailWidget";
 import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
+import SchemaField from "./components/fields/SchemaField";
+import TitleField from "./components/fields/TitleField";
+
 
 
 const RE_ERROR_ARRAY_PATH = /(.*)\[(\d+)\]$/;
@@ -48,6 +51,14 @@ const stringFormatWidgets = {
   "ipv6": TextWidget,
   "uri": URLWidget,
 };
+
+export function getDefaultRegistry() {
+  return {
+    fields: {SchemaField, TitleField},
+    widgets: {},
+    definitions: {},
+  };
+}
 
 export function defaultTypeValue(schema) {
   const {type} = schema;

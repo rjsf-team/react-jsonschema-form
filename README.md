@@ -35,6 +35,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Advanced customization](#advanced-customization)
      - [Custom widget components](#custom-widget-components)
      - [Custom field components](#custom-field-components)
+        - [Field props](#field-props)
+        - [The registry object](#the-registry-object)
      - [Custom SchemaField](#custom-schemafield)
      - [Custom titles](#custom-titles)
   - [Live form data validation](#live-form-data-validation)
@@ -428,7 +430,7 @@ const uiSchema = {
 render(<Form
   schema={schema}
   uiSchema={uiSchema}
-  widgets={widgets}/>);
+  widgets={widgets} />);
 ```
 
 This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
@@ -497,10 +499,31 @@ const fields = {geo: GeoPosition};
 render(<Form
   schema={schema}
   uiSchema={uiSchema}
-  fields={fields}/>);
+  fields={fields} />);
 ```
 
 Note: Registered fields can be reused accross the entire schema.
+
+#### Field props
+
+A field component will always be passed the following props:
+
+ - `schema`: The JSON schema for this field;
+ - `uiSchema`: The [uiSchema](#the-uischema-object) for this field;
+ - `idSchema`: The tree of unique ids for every child field;
+ - `formData`: The data for this field;
+ - `errorSchema`: The tree of errors for this field and its children;
+ - `registry`: A [registry](#the-registry-object) object (read next).
+
+#### The `registry` object
+
+The `registry` is an object containing the registered custom fields and widgets as well as root schema definitions.
+
+ - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField` and `TitleField` components;
+ - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
+ - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
+
+The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
 
 ### Custom SchemaField
 
@@ -508,7 +531,7 @@ Note: Registered fields can be reused accross the entire schema.
 
 You can provide your own implementation of the `SchemaField` base React component for rendering any JSONSchema field type, including objects and arrays. This is useful when you want to augment a given field type with supplementary powers.
 
-To proceed so, you can pass a `SchemaField` prop to the `Form` component instance; here's a rather silly example wrapping the standard `SchemaField` lib component:
+To proceed so, pass a `fields` object having a `SchemaField` property to your `Form` component; here's a rather silly example wrapping the standard `SchemaField` lib component:
 
 ```jsx
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -522,32 +545,42 @@ const CustomSchemaField = function(props) {
   );
 };
 
+const fields = {
+  SchemaField: CustomSchemaField
+};
+
 render((
   <Form schema={schema}
         uiSchema={uiSchema}
         formData={formData}
-        SchemaField={CustomSchemaField} />
+        fields={fields} />
 ), document.getElementById("app"));
 ```
 
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
+
+Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
 
 ### Custom titles
 
 You can provide your own implementation of the `TitleField` base React component for rendering any title. This is useful when you want to augment how titles are handled.
 
 
-To proceed so, you can pass a `TitleField` prop to the `Form` component instance:
+Simply pass a `fields` object having a `TitleField` property to your `Form` component:
 
 ```jsx
 
 const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
+const fields = {
+  TitleField: CustomTitleField
+};
+
 render((
   <Form schema={schema}
         uiSchema={uiSchema}
         formData={formData}
-        TitleField={CustomTitleField} />
+        fields={fields} />
 ), document.getElementById("app"));
 ```
 

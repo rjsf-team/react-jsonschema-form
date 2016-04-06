@@ -30,12 +30,48 @@ describe("uiSchema", () => {
   });
 
   describe("custom widget", () => {
-    const schema = {
-      type: "string"
-    };
+    describe("root widget", () => {
+      const schema = {
+        type: "string"
+      };
 
-    const uiSchema = {
-      "ui:widget": (props) => {
+      const uiSchema = {
+        "ui:widget": (props) => {
+          return (
+            <input type="text"
+              className="custom"
+              value={props.value}
+              defaultValue={props.defaultValue}
+              required={props.required}
+              onChange={(event) => props.onChange(event.target.value)} />
+          );
+        }
+      };
+
+      it("should render a root custom widget", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+      });
+    });
+
+    describe("nested widget", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          }
+        }
+      };
+
+      const uiSchema = {
+        "field": {
+          "ui:widget": "custom"
+        }
+      };
+
+      const CustomWidget = (props) => {
         return (
           <input type="text"
             className="custom"
@@ -44,13 +80,17 @@ describe("uiSchema", () => {
             required={props.required}
             onChange={(event) => props.onChange(event.target.value)} />
         );
-      }
-    };
+      };
 
-    it("should render a custom widget", () => {
-      const {node} = createFormComponent({schema, uiSchema});
+      const widgets = {
+        custom: CustomWidget
+      };
 
-      expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+      it("should render a nested custom widget", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+
+        expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+      });
     });
   });
 

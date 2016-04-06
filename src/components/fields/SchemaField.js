@@ -1,12 +1,11 @@
 import React, { PropTypes } from "react";
 
-import { isMultiSelect, retrieveSchema } from "../../utils";
+import { isMultiSelect, retrieveSchema, getDefaultRegistry } from "../../utils";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import NumberField from "./NumberField";
 import ObjectField from "./ObjectField";
 import StringField from "./StringField";
-import TitleField from "./TitleField";
 import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -151,11 +150,7 @@ SchemaField.defaultProps = {
   uiSchema: {},
   errorSchema: {},
   idSchema: {},
-  registry: {
-    fields: {SchemaField, TitleField},
-    widgets: {},
-    definitions: {},
-  }
+  registry: getDefaultRegistry(),
 };
 
 if (process.env.NODE_ENV !== "production") {
