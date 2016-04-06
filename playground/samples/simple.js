@@ -26,7 +26,7 @@ module.exports = {
         minLength: 3
       },
       date: {
-        type:"string",
+        type: "string",
         format: "date-time",
         title: "Subscription date"
       }

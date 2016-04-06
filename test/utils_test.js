@@ -496,13 +496,13 @@ describe("utils", () => {
   describe("toDateString()", () => {
     it("should transform an object to a valid json datetime", () => {
       expect(toDateString({
-          "year": 2016,
-          "month": 4,
-          "day": 5,
-          "hour": 14,
-          "minute": 1,
-          "second": 30,
-        }))
+        "year": 2016,
+        "month": 4,
+        "day": 5,
+        "hour": 14,
+        "minute": 1,
+        "second": 30,
+      }))
         .eql("2016-04-05T14:01:30.000Z");
     });
   });

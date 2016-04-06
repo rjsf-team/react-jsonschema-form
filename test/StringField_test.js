@@ -203,15 +203,6 @@ describe("StringField", () => {
         format: "date-time",
       }});
 
-      Simulate.change(node.querySelector("#root_year"), {target: {value: "2010"}});
-      Simulate.change(node.querySelector("#root_month"), {target: {value: "12"}});
-      Simulate.change(node.querySelector("#root_day"), {target: {value: "1"}});
-      Simulate.change(node.querySelector("#root_hour"), {target: {value: "0"}});
-      Simulate.change(node.querySelector("#root_minute"), {target: {value: "0"}});
-      Simulate.change(node.querySelector("#root_second"), {target: {value: "0"}});
-
-      expect(comp.state.formData).eql("2010-12-01T00:00:00.000Z");
-
       Simulate.change(node.querySelector("#root_year"), {target: {value: "2012"}});
       Simulate.change(node.querySelector("#root_month"), {target: {value: "10"}});
       Simulate.change(node.querySelector("#root_day"), {target: {value: "2"}});
@@ -250,7 +241,7 @@ describe("StringField", () => {
       ]);
     });
 
-    it("should render the widgets with the expected options", () => {
+    it("should render the widgets with the expected options' values", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -270,6 +261,18 @@ describe("StringField", () => {
       const monthOptionsValues = [].map.call(monthOptions, option => option.value);
       expect(monthOptionsValues).eql([
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]);
+    });
+
+    it("should render the widgets with the expected options' labels", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }});
+
+      const monthOptions = node.querySelectorAll("select#root_month option");
+      const monthOptionsLabels = [].map.call(monthOptions, option => option.text);
+      expect(monthOptionsLabels).eql([
+        "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]);
     });
   });
 
