@@ -42,6 +42,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Live form data validation](#live-form-data-validation)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
+  - [Troubleshooting](#troubleshooting)
+     - [Build error wrt missing &quot;buffertools&quot; module](#build-error-wrt-missing-buffertools-module)
   - [Contributing](#contributing)
      - [Development server](#development-server)
      - [Tests](#tests)
@@ -636,6 +638,34 @@ This library partially supports [inline schema definition dereferencing]( http:/
 *(Sample schema courtesy of the [Space Telescope Science Institute](http://spacetelescope.github.io/understanding-json-schema/structuring.html))*
 
 Note that it only supports local definition referencing, we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
+
+## Troubleshooting
+
+### Build error wrt missing "buffertools" module
+
+> Build error: Cannot find module 'buffertools' from  .../node_modules/react-jsonschema-form/node_modules/deeper
+
+This is [an issue](https://github.com/othiym23/node-deeper/issues/3#issuecomment-206232232) in the way `deeper` handles the optional `buffertools` dependency (by using try/catch around a require('buffertools')).
+
+If you use **webpack** you can do the following to ignore this import:
+
+```javascript
+module.exports = {
+  entry: "app",
+  output: { ... },
+  plugins: [
+    new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
+    ...
+  ]
+}
+```
+
+If you are using **browserify** instead, do the following:
+
+```javascript
+    var bundler = browserify({ ... yourconfig ... }).ignore('buffertools')
+```
+
 
 ## Contributing
 
