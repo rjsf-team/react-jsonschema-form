@@ -1,8 +1,7 @@
 import sinon from "sinon";
 import React from "react";
 
-import SchemaField from "../src/components/fields/SchemaField";
-import TitleField from "../src/components/fields/TitleField";
+import { getDefaultRegistry } from "../src/utils";
 import ArrayField from "../src/components/fields/ArrayField";
 import ObjectField from "../src/components/fields/ObjectField";
 import { createComponent, createFormComponent } from "./test_utils";
@@ -49,11 +48,7 @@ describe("Rendering performance optimizations", () => {
     const onChange = () => {};
     const schema = {type: "array", items: {type: "string"}};
     const uiSchema = {};
-    const registry = {
-      fields: {TitleField, SchemaField},
-      widgets: {},
-      definitions: {}
-    };
+    const registry = getDefaultRegistry();
 
     it("should not render if next props are equivalent", () => {
       const {comp} = createComponent(ArrayField, {
@@ -88,11 +83,7 @@ describe("Rendering performance optimizations", () => {
 
   describe("ObjectField", () => {
     const onChange = () => {};
-    const registry = {
-      fields: {TitleField, SchemaField},
-      widgets: {},
-      definitions: {}
-    };
+    const registry = getDefaultRegistry();
     const uiSchema = {};
     const schema = {
       type: "object",

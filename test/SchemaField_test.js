@@ -12,9 +12,10 @@ describe("SchemaField", () => {
     };
 
     it("should use the specified custom SchemaType property", () => {
+      const fields = {SchemaField: CustomSchemaField};
       const {node} = createFormComponent({
         schema: {type: "string"},
-        SchemaField: CustomSchemaField
+        fields
       });
 
       expect(node.querySelectorAll("#custom > .field input[type=text]"))

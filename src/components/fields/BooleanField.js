@@ -1,6 +1,11 @@
 import React, { PropTypes } from "react";
 
-import { defaultFieldValue, getAlternativeWidget, optionsList } from "../../utils";
+import {
+  defaultFieldValue,
+  getAlternativeWidget,
+  optionsList,
+  getDefaultRegistry
+} from "../../utils";
 import CheckboxWidget from "./../widgets/CheckboxWidget";
 
 
@@ -18,11 +23,12 @@ function BooleanField(props) {
     uiSchema,
     idSchema,
     formData,
-    widgets,
+    registry,
     required,
     onChange
   } = props;
   const {title, description} = schema;
+  const {widgets} = registry;
   const widget = uiSchema["ui:widget"];
   const commonProps = {
     schema,
@@ -49,11 +55,17 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.bool,
     required: PropTypes.bool,
+    registry: PropTypes.shape({
+      widgets: PropTypes.objectOf(PropTypes.func).isRequired,
+      fields: PropTypes.objectOf(PropTypes.func).isRequired,
+      definitions: PropTypes.object.isRequired,
+    })
   };
 }
 
 BooleanField.defaultProps = {
-  uiSchema: {}
+  uiSchema: {},
+  registry: getDefaultRegistry(),
 };
 
 export default BooleanField;
