@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from "react";
 import {
   getDefaultFormState,
   isMultiSelect,
+  isFixedItems,
   optionsList,
   retrieveSchema,
   toIdSchema,
@@ -93,6 +94,39 @@ class ArrayField extends Component {
     const {items} = this.state;
     const {fields, definitions} = this.props.registry;
     const {SchemaField} = fields;
+    if (isFixedItems(schema)) {
+      const itemSchemas = schema.items.map(item => retrieveSchema(item, definitions));
+      return (
+          <fieldset
+              className={`field field-array field-array-fixed-items`}>
+            {title ? <legend>{title}</legend> : null}
+            {schema.description ?
+                <div className="field-description">{schema.description}</div> : null}
+            <div className="row array-item-list">{
+              itemSchemas.map((itemSchema, index) => {
+                const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+                const itemIdPrefix = idSchema.id + "_" + index;
+                const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
+                return (
+                    <div key={index}>
+                      <div className="col-xs-12">
+                        <SchemaField
+                            schema={itemSchema}
+                            uiSchema={uiSchema.items}
+                            formData={items[index]}
+                            errorSchema={itemErrorSchema}
+                            idSchema={itemIdSchema}
+                            required={this.isItemRequired(itemSchema)}
+                            onChange={this.onChangeForIndex(index)}
+                            registry={this.props.registry}/>
+                      </div>
+                    </div>
+                );
+              })
+            }</div>
+          </fieldset>
+      );
+    }
     const itemsSchema = retrieveSchema(schema.items, definitions);
     if (isMultiSelect(schema)) {
       return (

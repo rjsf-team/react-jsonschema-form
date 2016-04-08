@@ -111,6 +111,8 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
     defaults = computeDefaults(refSchema, defaults, definitions);
+  } else if (isFixedItems(schema)) {
+    defaults = schema.items.map(itemSchema => computeDefaults(itemSchema, undefined, definitions));
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof(defaults) === "undefined") {
@@ -191,6 +193,10 @@ export function orderProperties(properties, order) {
 
 export function isMultiSelect(schema) {
   return Array.isArray(schema.items.enum) && schema.uniqueItems;
+}
+
+export function isFixedItems(schema) {
+  return Array.isArray(schema.items) && schema.items.length > 0 && schema.items.every(item => isObject(item));
 }
 
 export function optionsList(schema) {
