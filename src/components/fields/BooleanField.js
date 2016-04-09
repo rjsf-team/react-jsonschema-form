@@ -36,7 +36,6 @@ function BooleanField(props) {
     onChange,
     label: title || name,
     placeholder: description,
-    defaultValue: schema.default,
     value: defaultFieldValue(formData, schema),
     required,
   };

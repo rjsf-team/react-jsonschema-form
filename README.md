@@ -397,7 +397,6 @@ const uiSchema = {
       <input type="text"
         className="custom"
         value={props.value}
-        defaultValue={props.defaultValue}
         required={props.required}
         onChange={(event) => props.onChange(event.target.value)} />
     );
@@ -415,7 +414,6 @@ const MyCustomWidget = (props) => {
     <input type="text"
       className="custom"
       value={props.value}
-      defaultValue={props.defaultValue}
       required={props.required}
       onChange={(event) => props.onChange(event.target.value)} />
   );
@@ -441,7 +439,6 @@ The following props are passed to the widget component:
 
 - `schema`: The JSONSchema subschema object for this field;
 - `value`: The current value for this field;
-- `defaultValue`: The default value for this field;
 - `required`: The required status of this field;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
 - `placeholder`: The placeholder value, if any;

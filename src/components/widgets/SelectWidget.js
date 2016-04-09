@@ -22,7 +22,6 @@ function SelectWidget({
   options,
   placeholder,
   value,
-  defaultValue,
   required,
   multiple,
   onChange
@@ -34,7 +33,6 @@ function SelectWidget({
       className="form-control"
       title={placeholder}
       value={value}
-      defaultValue={defaultValue}
       onChange={(event) => {
         let newValue;
         if (multiple) {
@@ -60,7 +58,6 @@ if (process.env.NODE_ENV !== "production") {
     options: PropTypes.array.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,
-    defaultValue: PropTypes.any,
     required: PropTypes.bool,
     multiple: PropTypes.bool,
     onChange: PropTypes.func,

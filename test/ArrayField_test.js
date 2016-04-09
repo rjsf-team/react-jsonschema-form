@@ -166,9 +166,9 @@ describe("ArrayField", () => {
 
       const options = node.querySelectorAll(".field select option");
       expect(options).to.have.length.of(3);
-      expect(options[0].getAttribute("selected")).not.to.be.null;  // foo
-      expect(options[1].getAttribute("selected")).not.to.be.null;  // bar
-      expect(options[2].getAttribute("selected")).to.be.null;  // fuzz
+      expect(options[0].selected).eql(true);   // foo
+      expect(options[1].selected).eql(true);   // bar
+      expect(options[2].selected).eql(false);  // fuzz
     });
 
     it("should render the select widget with the expected id", () => {

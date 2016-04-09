@@ -40,7 +40,7 @@ describe("StringField", () => {
         default: "plop",
       }});
 
-      expect(node.querySelector(".field input").getAttribute("value"))
+      expect(node.querySelector(".field input").value)
         .eql("plop");
     });
 
@@ -61,7 +61,7 @@ describe("StringField", () => {
         type: "string",
       }, formData: "plip"});
 
-      expect(node.querySelector(".field input").getAttribute("value"))
+      expect(node.querySelector(".field input").value)
         .eql("plip");
     });
 

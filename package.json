@@ -26,8 +26,7 @@
     "node": ">=4"
   },
   "peerDependencies": {
-    "react": "^0.14.3",
-    "react-dom": "^0.14.3"
+    "react": "^0.14.0 || ^15.0.0"
   },
   "dependencies": {
     "deeper": "^2.1.0",
@@ -56,11 +55,13 @@
     "html": "0.0.10",
     "jsdom": "^8.3.0",
     "mocha": "^2.3.0",
-    "react-addons-test-utils": "^0.14.3",
+    "react": "^15.0.0",
+    "react-addons-test-utils": "^15.0.1",
     "react-codemirror": "^0.2.3",
+    "react-dom": "^15.0.0",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
-    "redbox-react": "^1.2.0",
+    "redbox-react": "^1.2.3",
     "rimraf": "^2.4.4",
     "sinon": "^1.17.2",
     "style-loader": "^0.13.1",

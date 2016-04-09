@@ -6,7 +6,6 @@ function RadioWidget({
   options,
   placeholder,
   value,
-  defaultValue,
   required,
   onChange
 }) {
@@ -15,8 +14,7 @@ function RadioWidget({
   return (
     <div className="field-radio-group">{
       options.map((option, i) => {
-        const checked = value !== undefined ? option.value === value :
-                                              option.value === defaultValue;
+        const checked = option.value === value;
         return (
           <div key={i} className="radio">
             <label>
@@ -42,7 +40,6 @@ if (process.env.NODE_ENV !== "production") {
     options: PropTypes.array.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,
-    defaultValue: PropTypes.any,
     required: PropTypes.bool,
     onChange: PropTypes.func,
   };

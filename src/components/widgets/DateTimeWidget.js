@@ -33,11 +33,11 @@ function DateElement({type, range, value, select, rootId}) {
 class DateTimeWidget extends Component {
   constructor(props) {
     super(props);
-    this.state = parseDateString(props.value || props.defaultValue);
+    this.state = parseDateString(props.value);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(parseDateString(nextProps.value || nextProps.defaultValue));
+    this.setState(parseDateString(nextProps.value));
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -85,7 +85,6 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: React.PropTypes.string,
-    defaultValue: React.PropTypes.string,
     required: PropTypes.bool,
     onChange: PropTypes.func,
   };

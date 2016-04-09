@@ -241,11 +241,13 @@ function ThemeSelector({theme, select}) {
 class App extends Component {
   constructor(props) {
     super(props);
+    // initialize state with Simple data sample
+    const {schema, uiSchema, formData} = samples.Simple;
     this.state = {
       form: false,
-      schema: {},
-      uiSchema: {},
-      formData: {},
+      schema,
+      uiSchema,
+      formData,
       editor: "default",
       theme: "default",
     };

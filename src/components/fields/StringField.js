@@ -32,7 +32,6 @@ function StringField(props) {
     onChange,
     value: defaultFieldValue(formData, schema),
     required: required,
-    defaultValue: schema.default,
   };
   if (Array.isArray(schema.enum)) {
     if (widget) {
