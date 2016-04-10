@@ -250,7 +250,7 @@ describe("uiSchema", () => {
           foo: "b"
         }});
 
-        expect(node.querySelector("[type=radio][value=b]").checked)
+        expect(node.querySelectorAll("[type=radio]")[1].checked)
           .eql(true);
       });
 
@@ -259,7 +259,7 @@ describe("uiSchema", () => {
           foo: "a"
         }});
 
-        Simulate.change(node.querySelector("[type=radio][value=b]"), {
+        Simulate.change(node.querySelectorAll("[type=radio]")[1], {
           target: {checked: true}
         });
 
@@ -520,16 +520,16 @@ describe("uiSchema", () => {
 
         expect(node.querySelectorAll("[type=radio]"))
           .to.have.length.of(2);
-        expect(node.querySelector("[type=radio][value=true]"))
+        expect(node.querySelectorAll("[type=radio]")[0])
           .not.eql(null);
-        expect(node.querySelector("[type=radio][value=false]"))
+        expect(node.querySelectorAll("[type=radio]")[1])
           .not.eql(null);
       });
 
       it("should render boolean option labels", () => {
         const {node} = createFormComponent({schema, uiSchema});
         const labels = [].map.call(
-          node.querySelectorAll(".field-radio-group label > span"),
+          node.querySelectorAll(".field-radio-group label"),
           node => node.textContent);
 
         expect(labels)
@@ -541,7 +541,7 @@ describe("uiSchema", () => {
           foo: false
         }});
 
-        expect(node.querySelector("[type=radio][value=false]").checked)
+        expect(node.querySelectorAll("[type=radio]")[1].checked)
           .eql(true);
       });
 
@@ -550,7 +550,7 @@ describe("uiSchema", () => {
           foo: true
         }});
 
-        Simulate.change(node.querySelector("[type=radio][value=false]"), {
+        Simulate.change(node.querySelectorAll("[type=radio]")[1], {
           target: {checked: true}
         });
 
@@ -562,7 +562,7 @@ describe("uiSchema", () => {
           foo: false
         }});
 
-        Simulate.change(node.querySelector("[type=radio][value=true]"), {
+        Simulate.change(node.querySelectorAll("[type=radio]")[0], {
           target: {checked: true}
         });
 

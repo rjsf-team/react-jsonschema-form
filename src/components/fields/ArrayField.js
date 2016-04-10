@@ -103,7 +103,6 @@ class ArrayField extends Component {
           options={optionsList(itemsSchema)}
           schema={schema}
           title={title}
-          defaultValue={schema.default}
           value={items}
         />
       );

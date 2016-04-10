@@ -1,16 +1,9 @@
 import React, { PropTypes } from "react";
 
 
-function HiddenWidget({
-  id,
-  value,
-  defaultValue
-}) {
+function HiddenWidget({id, value}) {
   return (
-    <input type="hidden"
-      id={id}
-      value={value}
-      defaultValue={defaultValue} />
+    <input type="hidden" id={id} value={value} />
   );
 }
 
@@ -22,11 +15,6 @@ if (process.env.NODE_ENV !== "production") {
       React.PropTypes.number,
       React.PropTypes.bool,
     ]),
-    defaultValue: PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
-      React.PropTypes.bool,
-    ])
   };
 }
 

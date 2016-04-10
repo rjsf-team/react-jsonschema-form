@@ -40,7 +40,7 @@ describe("NumberField", () => {
         default: 2,
       }});
 
-      expect(node.querySelector(".field input").getAttribute("value"))
+      expect(node.querySelector(".field input").value)
         .eql("2");
     });
 
@@ -61,7 +61,7 @@ describe("NumberField", () => {
         type: "number",
       }, formData: 2});
 
-      expect(node.querySelector(".field input").getAttribute("value"))
+      expect(node.querySelector(".field input").value)
         .eql("2");
     });
 

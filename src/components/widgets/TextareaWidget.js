@@ -6,7 +6,6 @@ function TextWidget({
   id,
   placeholder,
   value,
-  defaultValue,
   required,
   onChange
 }) {
@@ -15,7 +14,6 @@ function TextWidget({
       id={id}
       className="form-control"
       value={value}
-      defaultValue={defaultValue}
       placeholder={placeholder}
       required={required}
       onChange={(event) => onChange(event.target.value)} />
@@ -28,7 +26,6 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.string,
-    defaultValue: PropTypes.string,
     required: PropTypes.bool,
     onChange: PropTypes.func,
   };

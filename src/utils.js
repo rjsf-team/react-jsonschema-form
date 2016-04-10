@@ -1,5 +1,6 @@
 import deeper from "deeper";
 
+import TitleField from "./components/fields/TitleField";
 import PasswordWidget from "./components/widgets/PasswordWidget";
 import RadioWidget from "./components/widgets/RadioWidget";
 import UpDownWidget from "./components/widgets/UpDownWidget";
@@ -11,10 +12,6 @@ import EmailWidget from "./components/widgets/EmailWidget";
 import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
-import SchemaField from "./components/fields/SchemaField";
-import TitleField from "./components/fields/TitleField";
-
-
 
 const RE_ERROR_ARRAY_PATH = /(.*)\[(\d+)\]$/;
 
@@ -54,13 +51,25 @@ const stringFormatWidgets = {
 
 export function getDefaultRegistry() {
   return {
-    fields: {SchemaField, TitleField},
+    fields: {
+      // Prevent a bug where SchemaField is undefined when imported via Babel.
+      // This seems to have been introduced when upgrading React from 0.14 to to
+      // 15.0, which now seems to prevent cyclic references of exported
+      // components.
+      // Investigation hint: getDefaultRegistry is called from within
+      // SchemaField itself.
+      SchemaField: require("./components/fields/SchemaField").default,
+      TitleField,
+    },
     widgets: {},
     definitions: {},
   };
 }
 
 export function defaultTypeValue(schema) {
+  if (typeof schema.default !== "undefined") {
+    return schema.default;
+  }
   const {type} = schema;
   switch (type) {
   case "array":     return [];
@@ -78,7 +87,7 @@ export function defaultTypeValue(schema) {
 }
 
 export function defaultFieldValue(formData, schema) {
-  return formData === null ? defaultTypeValue(schema) : formData;
+  return typeof formData === "undefined" ? defaultTypeValue(schema) : formData;
 }
 
 export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
@@ -156,7 +165,7 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
 }
 
 function isObject(thing) {
-  return typeof(thing) == "object" && thing !== null && !Array.isArray(thing);
+  return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
 export function mergeObjects(obj1, obj2) {
