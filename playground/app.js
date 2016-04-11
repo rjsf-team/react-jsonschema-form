@@ -145,23 +145,27 @@ class GeoPosition extends Component {
 }
 
 class Editor extends Component {
+  defaultProps = {
+    forceRender: false
+  };
+
   constructor(props) {
     super(props);
-    this.state = {valid: true, code: props.code, data: fromJson(props.code)};
+    this.state = {valid: true, code: props.code};
   }
 
   componentWillReceiveProps(props) {
-    this.setState({code: props.code, data: fromJson(props.code)});
+    this.setState({code: props.code});
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return shouldRender(this, nextProps, nextState);
+    return this.props.forceRender || shouldRender(this, nextProps, nextState);
   }
 
   onCodeChange = (code) => {
     try {
-      this.setState({valid: true, data: fromJson(code), code});
-      this.props.onChange(this.state.data);
+      this.setState({valid: true, code});
+      this.props.onChange(fromJson(this.state.code));
     } catch(err) {
       this.setState({valid: false, code});
     }
@@ -175,8 +179,7 @@ class Editor extends Component {
       <div className="panel panel-default">
         <div className="panel-heading">
           <span className={`${cls} glyphicon glyphicon-${icon}`} />
-          {" "}
-          {title}
+          {" " + title}
         </div>
         <Codemirror
           value={this.state.code}
@@ -254,7 +257,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.setState({...samples.Simple, form: true});
+    this.load(samples.Simple);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -301,7 +304,8 @@ class App extends Component {
           <Editor title="JSONSchema"
             theme={this.state.editor}
             code={toJson(this.state.schema)}
-            onChange={this.onSchemaEdited} />
+            onChange={this.onSchemaEdited}
+            forceRender={true} />
           <div className="row">
             <div className="col-sm-6">
               <Editor title="UISchema"
