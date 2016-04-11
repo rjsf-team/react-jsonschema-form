@@ -230,7 +230,24 @@ describe("ArrayField", () => {
         }
       ]
     };
-
+    const schemaAdditional = {
+      type: "array",
+      title: "List of fixed items",
+      items: [
+        {
+          type: "number",
+          title: "A number"
+        },
+        {
+          type: "number",
+          title: "Another number"
+        }
+      ],
+      additionalItems: {
+        type: "string",
+        title: "Additional item"
+      }
+    };
     it("should render a fieldset", () => {
       const {node} = createFormComponent({schema});
 
@@ -274,6 +291,38 @@ describe("ArrayField", () => {
       });
 
       expect(comp.state.formData).eql(["bar", 101]);
+    });
+
+    it("should generate additional fields and fill data", () => {
+      const {node} = createFormComponent({schema: schemaAdditional, formData: [1, 2, "bar"]});
+      const addInput = node.querySelector("fieldset .field-string input[type=text]");
+      expect(addInput.id).eql("root_2");
+      expect(addInput.value).eql("bar");
+    });
+
+    it("add, remove, change for additional items", () => {
+      const {comp, node} = createFormComponent({schema: schemaAdditional, formData: [1, 2, "foo"]});
+
+      const addBtn = node.querySelector(".array-item-add button");
+
+      Simulate.click(addBtn);
+      expect(node.querySelectorAll('.field-string')).to.have.length.of(2);
+      expect(comp.state.formData).eql([1, 2, "foo", ""]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+      Simulate.change(inputs[0], {target: {value: "bar"}});
+      Simulate.change(inputs[1], {target: {value: "baz"}});
+      expect(comp.state.formData).eql([1, 2, "bar", "baz"]);
+
+      let dropBtns = node.querySelectorAll(".array-item-remove button");
+      Simulate.click(dropBtns[0]);
+      expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
+      expect(comp.state.formData).eql([1, 2, "baz"]);
+
+      dropBtns = node.querySelectorAll(".array-item-remove button");
+      Simulate.click(dropBtns[0]);
+      expect(node.querySelectorAll('.field-string')).to.be.empty;
+      expect(comp.state.formData).eql([1, 2]);
     });
 
   });
