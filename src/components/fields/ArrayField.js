@@ -4,6 +4,7 @@ import {
   getDefaultFormState,
   isMultiSelect,
   isFixedItems,
+  allowAdditionalItems,
   optionsList,
   retrieveSchema,
   toIdSchema,
@@ -60,8 +61,13 @@ class ArrayField extends Component {
     const {items} = this.state;
     const {schema, registry} = this.props;
     const {definitions} = registry;
+    let itemSchema = schema.items;
+    if (isFixedItems(schema) && allowAdditionalItems(schema)) {
+      itemSchema = schema.additionalItems;
+    }
+    console.log(itemSchema, getDefaultFormState(itemSchema, undefined, definitions));
     this.asyncSetState({
-      items: items.concat([getDefaultFormState(schema.items, undefined, definitions)])
+      items: items.concat([getDefaultFormState(itemSchema, undefined, definitions)])
     }, {validate: false});
   };
 
@@ -96,6 +102,7 @@ class ArrayField extends Component {
     const {SchemaField} = fields;
     if (isFixedItems(schema)) {
       const itemSchemas = schema.items.map(item => retrieveSchema(item, definitions));
+      const additionalSchema = allowAdditionalItems(schema) ? retrieveSchema(schema.additionalItems, definitions) : null;
       return (
           <fieldset
               className={`field field-array field-array-fixed-items`}>
@@ -123,7 +130,45 @@ class ArrayField extends Component {
                     </div>
                 );
               })
+            }{
+              additionalSchema && items && items.length <= itemSchemas.length ? null :
+                items.slice(itemSchemas.length).map((item, index) => {
+                  index = index + itemSchemas.length;
+                  const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+                  const itemIdPrefix = idSchema.id + "_" + index;
+                  const itemIdSchema = toIdSchema(additionalSchema, itemIdPrefix, definitions);
+                  return (
+                      <div key={index}>
+                        <div className="col-xs-10">
+                          <SchemaField
+                              schema={additionalSchema}
+                              uiSchema={uiSchema.items}
+                              formData={items[index]}
+                              errorSchema={itemErrorSchema}
+                              idSchema={itemIdSchema}
+                              required={this.isItemRequired(additionalSchema)}
+                              onChange={this.onChangeForIndex(index)}
+                              registry={this.props.registry}/>
+                        </div>
+                        <div className="col-xs-2 array-item-remove text-right">
+                          <button type="button" className="btn btn-danger col-xs-12"
+                                  tabIndex="-1"
+                                  onClick={this.onDropIndexClick(index)}>Delete</button>
+                        </div>
+                      </div>
+                  );
+                })
             }</div>
+            {
+              additionalSchema ? (
+                <div className="row">
+                  <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
+                    <button type="button" className="btn btn-info col-xs-12"
+                            tabIndex="-1" onClick={this.onAddClick}>Add</button>
+                  </p>
+                </div>
+              ) : null
+            }
           </fieldset>
       );
     }

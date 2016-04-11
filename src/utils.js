@@ -199,6 +199,10 @@ export function isFixedItems(schema) {
   return Array.isArray(schema.items) && schema.items.length > 0 && schema.items.every(item => isObject(item));
 }
 
+export function allowAdditionalItems(schema) {
+  return isObject(schema.additionalItems);
+}
+
 export function optionsList(schema) {
   return schema.enum.map((value, i) => {
     const label = schema.enumNames && schema.enumNames[i] || String(value);

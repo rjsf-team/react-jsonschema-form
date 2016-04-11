@@ -24,15 +24,19 @@ module.exports = {
         title: "A list of fixed items",
         items: [
           {
-            title: "Item 1",
+            title: "A string value",
             type: "string",
             default: "lorem ipsum"
           },
           {
-            title: "Item 2",
-            type: "integer"
+            title: "a boolean value",
+            type: "boolean"
           }
-        ]
+        ],
+        additionalItems: {
+          title: "Additional item",
+          type: "number"
+        }
       },
       nestedList: {
         type: "array",
@@ -52,7 +56,7 @@ module.exports = {
   formData: {
     listOfStrings: ["foo", "bar"],
     multipleChoicesList: ["foo", "bar"],
-    fixedItemsList: ["Some text", 123],
+    fixedItemsList: ["Some text", true, 123],
     nestedList: [["lorem", "ipsum"], ["dolor"]]
   }
 };
