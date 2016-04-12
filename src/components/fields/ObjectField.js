@@ -77,7 +77,7 @@ class ObjectField extends Component {
       <fieldset>
         {title ? <TitleField title={title}/> : null}
         {schema.description ?
-          <div className="field-description">{schema.description}</div> : null}
+          <p className="field-description">{schema.description}</p> : null}
         {
         orderedProperties.map((name, index) => {
           return (
