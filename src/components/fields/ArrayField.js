@@ -95,87 +95,54 @@ class ArrayField extends Component {
   };
 
   render() {
+    const {schema} = this.props;
+    if (isFixedItems(schema)) {
+      return this.renderFixedArray();
+    }
+    if (isMultiSelect(schema)) {
+      return this.renderMultiSelect();
+    }
+    return this.renderNormalArray();
+  }
+
+  renderNormalArray() {
     const {schema, uiSchema, errorSchema, idSchema, name} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const {fields, definitions} = this.props.registry;
-    const {SchemaField} = fields;
-    if (isFixedItems(schema)) {
-      const itemSchemas = schema.items.map(item => retrieveSchema(item, definitions));
-      const additionalSchema = allowAdditionalItems(schema) ? retrieveSchema(schema.additionalItems, definitions) : null;
-      return (
-          <fieldset
-              className={`field field-array field-array-fixed-items`}>
-            {title ? <legend>{title}</legend> : null}
-            {schema.description ?
-                <div className="field-description">{schema.description}</div> : null}
-            <div className="row array-item-list">{
-              itemSchemas.map((itemSchema, index) => {
-                const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-                const itemIdPrefix = idSchema.id + "_" + index;
-                const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
-                return (
-                    <div key={index}>
-                      <div className="col-xs-12">
-                        <SchemaField
-                            schema={itemSchema}
-                            uiSchema={uiSchema.items}
-                            formData={items[index]}
-                            errorSchema={itemErrorSchema}
-                            idSchema={itemIdSchema}
-                            required={this.isItemRequired(itemSchema)}
-                            onChange={this.onChangeForIndex(index)}
-                            registry={this.props.registry}/>
-                      </div>
-                    </div>
-                );
-              })
-            }{
-              additionalSchema && items && items.length <= itemSchemas.length ? null :
-                items.slice(itemSchemas.length).map((item, index) => {
-                  index = index + itemSchemas.length;
-                  const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-                  const itemIdPrefix = idSchema.id + "_" + index;
-                  const itemIdSchema = toIdSchema(additionalSchema, itemIdPrefix, definitions);
-                  return (
-                      <div key={index}>
-                        <div className="col-xs-10">
-                          <SchemaField
-                              schema={additionalSchema}
-                              uiSchema={uiSchema.items}
-                              formData={items[index]}
-                              errorSchema={itemErrorSchema}
-                              idSchema={itemIdSchema}
-                              required={this.isItemRequired(additionalSchema)}
-                              onChange={this.onChangeForIndex(index)}
-                              registry={this.props.registry}/>
-                        </div>
-                        <div className="col-xs-2 array-item-remove text-right">
-                          <button type="button" className="btn btn-danger col-xs-12"
-                                  tabIndex="-1"
-                                  onClick={this.onDropIndexClick(index)}>Delete</button>
-                        </div>
-                      </div>
-                  );
-                })
-            }</div>
-            {
-              additionalSchema ? (
-                <div className="row">
-                  <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
-                    <button type="button" className="btn btn-info col-xs-12"
-                            tabIndex="-1" onClick={this.onAddClick}>Add</button>
-                  </p>
-                </div>
-              ) : null
-            }
-          </fieldset>
-      );
-    }
+    const {definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    if (isMultiSelect(schema)) {
-      return (
-        <SelectWidget
+
+    return (
+      <fieldset
+          className={`field field-array field-array-of-${itemsSchema.type}`}>
+        {title ? <legend>{title}</legend> : null}
+        {schema.description ?
+            <div className="field-description">{schema.description}</div> : null}
+        <div className="row array-item-list">{
+          items.map((item, index) => {
+            const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+            const itemIdPrefix = idSchema.id + "_" + index;
+            const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
+            return this.renderArrayFieldItem({
+              index, itemSchema: itemsSchema, itemIdSchema, itemErrorSchema,
+              itemData: items[index],
+              itemUiSchema: uiSchema.items
+            });
+          })
+        }</div>
+        <AddButton onClick={this.onAddClick}/>
+      </fieldset>
+    );
+  }
+
+  renderMultiSelect() {
+    const {schema, idSchema, name} = this.props;
+    const title = schema.title || name;
+    const {items} = this.state;
+    const {definitions} = this.props.registry;
+    const itemsSchema = retrieveSchema(schema.items, definitions);
+    return (
+      <SelectWidget
           id={idSchema && idSchema.id}
           multiple
           onChange={this.onSelectChange}
@@ -183,52 +150,101 @@ class ArrayField extends Component {
           schema={schema}
           title={title}
           value={items}
-        />
-      );
-    }
+      />
+    );
+  }
 
+  renderFixedArray() {
+    const {schema, uiSchema, errorSchema, idSchema, name} = this.props;
+    const title = schema.title || name;
+    const {items} = this.state;
+    const {definitions} = this.props.registry;
+    const itemSchemas = schema.items.map(item => retrieveSchema(item, definitions));
+    const additionalSchema = allowAdditionalItems(schema) ? retrieveSchema(schema.additionalItems, definitions) : null;
+    const additionalItems = additionalSchema && items && (items.length > itemSchemas.length) && items.slice(itemSchemas.length);
     return (
       <fieldset
-        className={`field field-array field-array-of-${itemsSchema.type}`}>
+          className={`field field-array field-array-fixed-items`}>
         {title ? <legend>{title}</legend> : null}
         {schema.description ?
-          <div className="field-description">{schema.description}</div> : null}
+            <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{
-          items.map((item, index) => {
+          itemSchemas.map((itemSchema, index) => {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
             const itemIdPrefix = idSchema.id + "_" + index;
-            const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
-            return (
-              <div key={index}>
-                <div className="col-xs-10">
-                  <SchemaField
-                    schema={itemsSchema}
-                    uiSchema={uiSchema.items}
-                    formData={items[index]}
-                    errorSchema={itemErrorSchema}
-                    idSchema={itemIdSchema}
-                    required={this.isItemRequired(itemsSchema)}
-                    onChange={this.onChangeForIndex(index)}
-                    registry={this.props.registry}/>
-                </div>
-                <div className="col-xs-2 array-item-remove text-right">
-                  <button type="button" className="btn btn-danger col-xs-12"
-                    tabIndex="-1"
-                    onClick={this.onDropIndexClick(index)}>Delete</button>
-                </div>
-              </div>
-            );
+            const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
+            return this.renderArrayFieldItem({
+              index, itemSchema, itemIdSchema, itemErrorSchema,
+              removable: false,
+              itemData: items[index],
+              itemUiSchema: uiSchema.items
+            });
           })
+        }{
+          additionalItems ?
+            additionalItems.map((item, index) => {
+              index = index + itemSchemas.length;
+              const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+              const itemIdPrefix = idSchema.id + "_" + index;
+              const itemIdSchema = toIdSchema(additionalSchema, itemIdPrefix, definitions);
+              return this.renderArrayFieldItem({
+                index, itemIdSchema, itemErrorSchema,
+                itemData: items[index],
+                itemSchema: additionalSchema,
+                itemUiSchema: uiSchema.items
+              });
+            }) : null
         }</div>
-        <div className="row">
-          <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
-            <button type="button" className="btn btn-info col-xs-12"
-              tabIndex="-1" onClick={this.onAddClick}>Add</button>
-          </p>
-        </div>
+        {
+          additionalSchema ? (
+            <AddButton onClick={this.onAddClick}/>
+          ) : null
+        }
       </fieldset>
     );
   }
+
+  renderArrayFieldItem({
+      index, removable=true, itemSchema, itemData,
+      itemUiSchema, itemIdSchema, itemErrorSchema
+  }) {
+    const {SchemaField} = this.props.registry.fields;
+    return (
+      <div key={index}>
+        <div className={removable ? "col-xs-10" : "col-xs-12"}>
+          <SchemaField
+              schema={itemSchema}
+              uiSchema={itemUiSchema}
+              formData={itemData}
+              errorSchema={itemErrorSchema}
+              idSchema={itemIdSchema}
+              required={this.isItemRequired(itemSchema)}
+              onChange={this.onChangeForIndex(index)}
+              registry={this.props.registry}/>
+        </div>
+        {
+          removable ?
+            <div className="col-xs-2 array-item-remove text-right">
+              <button type="button" className="btn btn-danger col-xs-12"
+                      tabIndex="-1"
+                      onClick={this.onDropIndexClick(index)}>Delete</button>
+            </div>
+          : null
+        }
+      </div>
+    )
+  }
+}
+
+function AddButton({onClick}) {
+  return (
+      <div className="row">
+        <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
+          <button type="button" className="btn btn-info col-xs-12"
+                  tabIndex="-1" onClick={onClick}>Add</button>
+        </p>
+      </div>
+  );
 }
 
 if (process.env.NODE_ENV !== "production") {
