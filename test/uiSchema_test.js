@@ -2,9 +2,20 @@ import { expect } from "chai";
 import React from "react";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
+
 
 describe("uiSchema", () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   describe("custom classNames", () => {
     const schema = {
       type: "object",

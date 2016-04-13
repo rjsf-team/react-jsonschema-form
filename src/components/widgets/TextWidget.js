@@ -13,7 +13,7 @@ function TextWidget({
     <input type="text"
       id={id}
       className="form-control"
-      value={value}
+      value={typeof value === "undefined" ? "" : value}
       placeholder={placeholder}
       required={required}
       onChange={(event) => onChange(event.target.value)} />

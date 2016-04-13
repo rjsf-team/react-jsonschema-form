@@ -1,9 +1,20 @@
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
+
 
 describe("StringField", () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   describe("TextWidget", () => {
     it("should render a string field", () => {
       const {node} = createFormComponent({schema: {
@@ -42,6 +53,12 @@ describe("StringField", () => {
 
       expect(node.querySelector(".field input").value)
         .eql("plop");
+    });
+
+    it("should default state value to undefined", () => {
+      const {comp} = createFormComponent({schema: {type: "string"}});
+
+      expect(comp.state.formData).eql(undefined);
     });
 
     it("should handle a change event", () => {

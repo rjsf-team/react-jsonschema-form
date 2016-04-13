@@ -1,9 +1,20 @@
 import { expect } from "chai";
 import { Simulate} from "react-addons-test-utils";
 
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
+
 
 describe("NumberField", () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   describe("TextWidget", () => {
     it("should render a string field", () => {
       const {node} = createFormComponent({schema: {
@@ -32,6 +43,12 @@ describe("NumberField", () => {
 
       expect(node.querySelector(".field input").getAttribute("placeholder"))
         .eql("bar");
+    });
+
+    it("should default state value to undefined", () => {
+      const {comp} = createFormComponent({schema: {type: "number"}});
+
+      expect(comp.state.formData).eql(undefined);
     });
 
     it("should assign a default value", () => {

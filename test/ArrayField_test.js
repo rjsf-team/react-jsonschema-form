@@ -1,9 +1,20 @@
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
+
 
 describe("ArrayField", () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   describe("List of inputs", () => {
     const schema = {
       type: "array",
