@@ -324,6 +324,7 @@ class App extends Component {
         <div className="col-sm-5">
           {!this.state.form ? null :
             <Form
+              liveValidate
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
