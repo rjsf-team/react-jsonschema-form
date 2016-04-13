@@ -436,9 +436,13 @@ describe("Form", () => {
 
   describe("External formData updates", () => {
     describe("root level", () => {
+      const formProps = {
+        schema: {type: "string"},
+        liveValidate: true,
+      };
+
       it("should update form state from new formData prop value", () => {
-        const schema = {type: "string"};
-        const {comp} = createFormComponent({schema});
+        const {comp} = createFormComponent(formProps);
 
         comp.componentWillReceiveProps({formData: "yo"});
 
@@ -446,7 +450,7 @@ describe("Form", () => {
       });
 
       it("should validate formData when the schema is updated", () => {
-        const {comp} = createFormComponent({schema: {type: "string"}});
+        const {comp} = createFormComponent(formProps);
 
         comp.componentWillReceiveProps({formData: "yo", schema: {type: "number"}});
 
@@ -458,15 +462,16 @@ describe("Form", () => {
 
     describe("object level", () => {
       it("should update form state from new formData prop value", () => {
-        const schema = {
-          type: "object",
-          properties: {
-            foo: {
-              type: "string"
+        const {comp} = createFormComponent({
+          schema: {
+            type: "object",
+            properties: {
+              foo: {
+                type: "string"
+              }
             }
           }
-        };
-        const {comp} = createFormComponent({schema});
+        });
 
         comp.componentWillReceiveProps({formData: {foo: "yo"}});
 
@@ -571,13 +576,17 @@ describe("Form", () => {
     });
 
     describe("root level", () => {
-      const schema = {
-        type: "string",
-        minLength: 8
+      const formProps = {
+        liveValidate: true,
+        schema: {
+          type: "string",
+          minLength: 8
+        },
+        formData: "short"
       };
 
       it("should reflect the contextualized error in state", () => {
-        const {comp} = createFormComponent({schema, formData: "short"});
+        const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
           errors: ["does not meet minimum length of 8"]
@@ -585,7 +594,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the field", () => {
-        const {node} = createFormComponent({schema, formData: "short"});
+        const {node} = createFormComponent(formProps);
 
         expect(node.querySelectorAll(".field-error"))
           .to.have.length.of(1);
@@ -595,14 +604,18 @@ describe("Form", () => {
     });
 
     describe("root level with multiple errors", () => {
-      const schema = {
-        type: "string",
-        minLength: 8,
-        pattern: "\d+"
+      const formProps = {
+        liveValidate: true,
+        schema: {
+          type: "string",
+          minLength: 8,
+          pattern: "\d+",
+        },
+        formData: "short"
       };
 
       it("should reflect the contextualized error in state", () => {
-        const {comp} = createFormComponent({schema, formData: "short"});
+        const {comp} = createFormComponent(formProps);
         expect(comp.state.errorSchema).eql({
           errors: [
             "does not meet minimum length of 8",
@@ -612,7 +625,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the field", () => {
-        const {node} = createFormComponent({schema, formData: "short"});
+        const {node} = createFormComponent(formProps);
 
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
         const errors = [].map.call(liNodes, li => li.textContent);
@@ -640,12 +653,18 @@ describe("Form", () => {
         }
       };
 
-      it("should reflect the contextualized error in state", () => {
-        const {comp} = createFormComponent({schema, formData: {
+      const formProps = {
+        schema,
+        liveValidate: true,
+        formData: {
           level1: {
             level2: "short"
           }
-        }});
+        }
+      };
+
+      it("should reflect the contextualized error in state", () => {
+        const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
           level1: {
@@ -657,11 +676,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the field", () => {
-        const {node} = createFormComponent({schema, formData: {
-          level1: {
-            level2: "short"
-          }
-        }});
+        const {node} = createFormComponent(formProps);
         const errorDetail = node.querySelector(
           ".field-object .field-string .error-detail");
 
@@ -681,10 +696,14 @@ describe("Form", () => {
         }
       };
 
+      const formProps = {
+        schema,
+        liveValidate: true,
+        formData: ["good", "bad", "good"]
+      };
+
       it("should contextualize the error for array indices", () => {
-        const {comp} = createFormComponent({schema, formData: [
-          "good", "bad", "good"
-        ]});
+        const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema)
           .eql({
@@ -693,9 +712,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the item field in error", () => {
-        const {node} = createFormComponent({schema, formData: [
-          "good", "bad", "good"
-        ]});
+        const {node} = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 
         const liNodes = fieldNodes[1]
@@ -708,9 +725,7 @@ describe("Form", () => {
       });
 
       it("should not denote errors on non impacted fields", () => {
-        const {node} = createFormComponent({schema, formData: [
-          "good", "bad", "good"
-        ]});
+        const {node} = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 
         expect(fieldNodes[0].classList.contains("field-error")).eql(false);
@@ -732,8 +747,10 @@ describe("Form", () => {
         }
       };
 
+      const formProps = {schema, liveValidate: true};
+
       it("should contextualize the error for nested array indices", () => {
-        const {comp} = createFormComponent({schema, formData: {
+        const {comp} = createFormComponent({...formProps, formData: {
           level1: ["good", "bad", "good", "bad"]
         }});
 
@@ -746,7 +763,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the nested item field in error", () => {
-        const {node} = createFormComponent({schema, formData: {
+        const {node} = createFormComponent({...formProps, formData: {
           level1: ["good", "bad", "good"]
         }});
 
@@ -772,10 +789,16 @@ describe("Form", () => {
         }
       };
 
-      it("should contextualize the error for array nested items", () => {
-        const {comp} = createFormComponent({schema, formData: [
+      const formProps = {
+        schema,
+        liveValidate: true,
+        formData: [
           {foo: "good"}, {foo: "bad"}, {foo: "good"}
-        ]});
+        ]
+      };
+
+      it("should contextualize the error for array nested items", () => {
+        const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
           1: {
@@ -787,9 +810,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the array nested item", () => {
-        const {node} = createFormComponent({schema, formData: [
-          {foo: "good"}, {foo: "bad"}, {foo: "good"}
-        ]});
+        const {node} = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 
         const liNodes = fieldNodes[1]
