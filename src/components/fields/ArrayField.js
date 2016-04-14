@@ -113,10 +113,10 @@ class ArrayField extends Component {
 
     return (
       <fieldset
-          className={`field field-array field-array-of-${itemsSchema.type}`}>
+        className={`field field-array field-array-of-${itemsSchema.type}`}>
         {title ? <legend>{title}</legend> : null}
         {schema.description ?
-            <div className="field-description">{schema.description}</div> : null}
+          <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{
           items.map((item, index) => {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
