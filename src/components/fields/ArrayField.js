@@ -123,7 +123,10 @@ class ArrayField extends Component {
             const itemIdPrefix = idSchema.id + "_" + index;
             const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
             return this.renderArrayFieldItem({
-              index, itemSchema: itemsSchema, itemIdSchema, itemErrorSchema,
+              index,
+              itemSchema: itemsSchema,
+              itemIdSchema,
+              itemErrorSchema,
               itemData: items[index],
               itemUiSchema: uiSchema.items
             });
@@ -142,13 +145,13 @@ class ArrayField extends Component {
     const itemsSchema = retrieveSchema(schema.items, definitions);
     return (
       <SelectWidget
-          id={idSchema && idSchema.id}
-          multiple
-          onChange={this.onSelectChange}
-          options={optionsList(itemsSchema)}
-          schema={schema}
-          title={title}
-          value={items}
+        id={idSchema && idSchema.id}
+        multiple
+        onChange={this.onSelectChange}
+        options={optionsList(itemsSchema)}
+        schema={schema}
+        title={title}
+        value={items}
       />
     );
   }
@@ -156,71 +159,76 @@ class ArrayField extends Component {
   renderFixedArray() {
     const {schema, uiSchema, errorSchema, idSchema, name} = this.props;
     const title = schema.title || name;
-    const {items} = this.state;
+    let {items} = this.state;
     const {definitions} = this.props.registry;
-    const itemSchemas = schema.items.map(item => retrieveSchema(item, definitions));
-    const additionalSchema = allowAdditionalItems(schema) ? retrieveSchema(schema.additionalItems, definitions) : null;
-    const additionalItems = additionalSchema && items && (items.length > itemSchemas.length) && items.slice(itemSchemas.length);
+    const itemSchemas = schema.items.map(item =>
+      retrieveSchema(item, definitions));
+    const additionalSchema = allowAdditionalItems(schema) ?
+      retrieveSchema(schema.additionalItems, definitions) : null;
+
+    if (!items || items.length < itemSchemas.length) {
+      items = items || [];
+      items = items.concat(new Array(itemSchemas.length - items.length));
+    }
+
     return (
-      <fieldset
-          className="field field-array field-array-fixed-items">
+      <fieldset className="field field-array field-array-fixed-items">
         {title ? <legend>{title}</legend> : null}
         {schema.description ?
-            <div className="field-description">{schema.description}</div> : null}
+          <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{
-          itemSchemas.map((itemSchema, index) => {
-            const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+          items.map((item, index) => {
+            const additional = index >= itemSchemas.length;
+            const itemSchema = additional ?
+              additionalSchema : itemSchemas[index];
             const itemIdPrefix = idSchema.id + "_" + index;
             const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
-            const itemUiSchema = (uiSchema.items instanceof Array) ? uiSchema.items[index] : uiSchema.items || {};
+            const itemUiSchema = additional ?
+              uiSchema.additionalItems || {} :
+              Array.isArray(uiSchema.items) ?
+                uiSchema.items[index] : uiSchema.items || {};
+            const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+
             return this.renderArrayFieldItem({
-              index, itemSchema, itemIdSchema, itemErrorSchema,
-              removable: false,
-              itemData: items[index],
-              itemUiSchema
+              index,
+              removable: additional,
+              itemSchema,
+              itemData: item,
+              itemUiSchema,
+              itemIdSchema,
+              itemErrorSchema
             });
           })
-        }{
-          additionalItems ?
-            additionalItems.map((item, index) => {
-              index = index + itemSchemas.length;
-              const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-              const itemIdPrefix = idSchema.id + "_" + index;
-              const itemIdSchema = toIdSchema(additionalSchema, itemIdPrefix, definitions);
-              return this.renderArrayFieldItem({
-                index, itemIdSchema, itemErrorSchema,
-                itemData: items[index],
-                itemSchema: additionalSchema,
-                itemUiSchema: uiSchema.additionalItems
-              });
-            }) : null
         }</div>
         {
-          additionalSchema ? (
-            <AddButton onClick={this.onAddClick}/>
-          ) : null
+          additionalSchema ? <AddButton onClick={this.onAddClick}/> : null
         }
       </fieldset>
     );
   }
 
   renderArrayFieldItem({
-      index, removable=true, itemSchema, itemData,
-      itemUiSchema, itemIdSchema, itemErrorSchema
+    index,
+    removable=true,
+    itemSchema,
+    itemData,
+    itemUiSchema,
+    itemIdSchema,
+    itemErrorSchema
   }) {
     const {SchemaField} = this.props.registry.fields;
     return (
       <div key={index}>
         <div className={removable ? "col-xs-10" : "col-xs-12"}>
           <SchemaField
-              schema={itemSchema}
-              uiSchema={itemUiSchema}
-              formData={itemData}
-              errorSchema={itemErrorSchema}
-              idSchema={itemIdSchema}
-              required={this.isItemRequired(itemSchema)}
-              onChange={this.onChangeForIndex(index)}
-              registry={this.props.registry}/>
+            schema={itemSchema}
+            uiSchema={itemUiSchema}
+            formData={itemData}
+            errorSchema={itemErrorSchema}
+            idSchema={itemIdSchema}
+            required={this.isItemRequired(itemSchema)}
+            onChange={this.onChangeForIndex(index)}
+            registry={this.props.registry}/>
         </div>
         {
           removable ?
@@ -238,12 +246,12 @@ class ArrayField extends Component {
 
 function AddButton({onClick}) {
   return (
-      <div className="row">
-        <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
-          <button type="button" className="btn btn-info col-xs-12"
-                  tabIndex="-1" onClick={onClick}>Add</button>
-        </p>
-      </div>
+    <div className="row">
+      <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
+        <button type="button" className="btn btn-info col-xs-12"
+                tabIndex="-1" onClick={onClick}>Add</button>
+      </p>
+    </div>
   );
 }
 

@@ -42,6 +42,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Live form data validation](#live-form-data-validation)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
+  - [JSON Schema supporting status](#json-schema-supporting-status)
   - [Troubleshooting](#troubleshooting)
      - [Build error wrt missing &quot;buffertools&quot; module](#build-error-wrt-missing-buffertools-module)
   - [Contributing](#contributing)
@@ -641,7 +642,7 @@ Note that it only supports local definition referencing, we do not plan on fetch
 This component follows [JSON Schema](http://json-schema.org/documentation.html) specs. Due to the limitation of form widgets, there are some exceptions as follows:
 
 * `additionalItems` keyword for arrays
-    This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent a item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
+    This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
 
 ## Troubleshooting
 

@@ -52,7 +52,17 @@ module.exports = {
       }
     }
   },
-  uiSchema: {},
+  uiSchema: {
+    fixedItemsList: {
+      items: [
+        {"ui:widget": "textarea"},
+        {"ui:widget": "select"}
+      ],
+      additionalItems: {
+        "ui:widget": "updown"
+      }
+    }
+  },
   formData: {
     listOfStrings: ["foo", "bar"],
     multipleChoicesList: ["foo", "bar"],
