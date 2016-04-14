@@ -167,6 +167,7 @@ class ArrayField extends Component {
       retrieveSchema(schema.additionalItems, definitions) : null;
 
     if (!items || items.length < itemSchemas.length) {
+      // to make sure at least all fixed items are generated
       items = items || [];
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
