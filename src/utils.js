@@ -13,7 +13,7 @@ import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 
-const RE_ERROR_ARRAY_PATH = /(.*)\[(\d+)\]$/;
+const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
 
 const altWidgetMap = {
   boolean: {
@@ -242,9 +242,11 @@ function errorPropertyToPath(property) {
   // Parse array indices, eg. "instance.level1.level2[2].level3"
   // => ["instance", "level1", "level2", 2, "level3"]
   return property.split(".").reduce((path, node) => {
-    const match = RE_ERROR_ARRAY_PATH.exec(node);
+    const match = node.match(RE_ERROR_ARRAY_PATH);
     if (match) {
-      path = path.concat([match[1], parseInt(match[2], 10)]);
+      const nodeName = node.slice(0, node.indexOf('['));
+      const indices = match.map(str => parseInt(str.slice(1, -1), 10));
+      path = path.concat(nodeName, indices);
     } else {
       path.push(node);
     }
