@@ -323,7 +323,7 @@ describe("ArrayField", () => {
         
         Simulate.click(addBtn);
         
-        expect(node.querySelectorAll('.field-string')).to.have.length.of(2);
+        expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
         expect(comp.state.formData).eql([1, 2, "foo", ""]);
       });
       
@@ -341,14 +341,14 @@ describe("ArrayField", () => {
         
         Simulate.click(dropBtns[0]);
         
-        expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
+        expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
         expect(comp.state.formData).eql([1, 2, "baz"]);
         
         dropBtns = node.querySelectorAll(".array-item-remove button");
         
         Simulate.click(dropBtns[0]);
         
-        expect(node.querySelectorAll('.field-string')).to.be.empty;
+        expect(node.querySelectorAll(".field-string")).to.be.empty;
         expect(comp.state.formData).eql([1, 2]);
       });
     });

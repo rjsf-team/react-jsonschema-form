@@ -163,7 +163,7 @@ class ArrayField extends Component {
     const additionalItems = additionalSchema && items && (items.length > itemSchemas.length) && items.slice(itemSchemas.length);
     return (
       <fieldset
-          className={`field field-array field-array-fixed-items`}>
+          className="field field-array field-array-fixed-items">
         {title ? <legend>{title}</legend> : null}
         {schema.description ?
             <div className="field-description">{schema.description}</div> : null}
@@ -232,7 +232,7 @@ class ArrayField extends Component {
           : null
         }
       </div>
-    )
+    );
   }
 }
 

@@ -210,7 +210,7 @@ describe("utils", () => {
         };
         expect(getDefaultFormState(schema, {}))
           .eql({array: ["foo", 0]});
-      })
+      });
     });
   });
 
