@@ -196,7 +196,9 @@ export function isMultiSelect(schema) {
 }
 
 export function isFixedItems(schema) {
-  return Array.isArray(schema.items) && schema.items.length > 0 && schema.items.every(item => isObject(item));
+  return Array.isArray(schema.items) &&
+         schema.items.length > 0 &&
+         schema.items.every(item => isObject(item));
 }
 
 export function allowAdditionalItems(schema) {
