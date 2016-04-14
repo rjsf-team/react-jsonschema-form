@@ -636,6 +636,13 @@ This library partially supports [inline schema definition dereferencing]( http:/
 
 Note that it only supports local definition referencing, we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
 
+## JSON Schema supporting status
+
+This component follows [JSON Schema](http://json-schema.org/documentation.html) specs. Due to the limitation of form widgets, there are some exceptions as follows:
+
+* `additionalItems` keyword for arrays
+    This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent a item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
+
 ## Troubleshooting
 
 ### Build error wrt missing "buffertools" module

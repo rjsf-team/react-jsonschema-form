@@ -65,7 +65,6 @@ class ArrayField extends Component {
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    console.log(itemSchema, getDefaultFormState(itemSchema, undefined, definitions));
     this.asyncSetState({
       items: items.concat([getDefaultFormState(itemSchema, undefined, definitions)])
     }, {validate: false});

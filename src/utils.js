@@ -200,6 +200,9 @@ export function isFixedItems(schema) {
 }
 
 export function allowAdditionalItems(schema) {
+  if (schema.additionalItems === true) {
+    console.warn("additionalItems=true is currently not supported");
+  }
   return isObject(schema.additionalItems);
 }
 
