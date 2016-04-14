@@ -172,11 +172,12 @@ class ArrayField extends Component {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
             const itemIdPrefix = idSchema.id + "_" + index;
             const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
+            const itemUiSchema = (uiSchema.items instanceof Array) ? uiSchema.items[index] : uiSchema.items || {};
             return this.renderArrayFieldItem({
               index, itemSchema, itemIdSchema, itemErrorSchema,
               removable: false,
               itemData: items[index],
-              itemUiSchema: uiSchema.items
+              itemUiSchema
             });
           })
         }{
@@ -190,7 +191,7 @@ class ArrayField extends Component {
                 index, itemIdSchema, itemErrorSchema,
                 itemData: items[index],
                 itemSchema: additionalSchema,
-                itemUiSchema: uiSchema.items
+                itemUiSchema: uiSchema.additionalItems
               });
             }) : null
         }</div>
