@@ -330,9 +330,7 @@ class App extends Component {
               formData={formData}
               onChange={this.onFormDataChange}
               fields={{geo: GeoPosition}}
-              onError={log("errors")}>
-              <div/>
-            </Form>}
+              onError={log("errors")} />}
         </div>
       </div>
     );
