@@ -1,11 +1,22 @@
 import React from "react";
 import { expect } from "chai";
+
 import SchemaField from "../src/components/fields/SchemaField";
 import TitleField from "../src/components/fields/TitleField";
+import { createFormComponent, createSandbox } from "./test_utils";
 
-import { createFormComponent } from "./test_utils";
 
 describe("SchemaField", () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   describe("Custom SchemaField component", () => {
     const CustomSchemaField = function(props) {
       return (<div id="custom"><SchemaField {...props} /></div>);

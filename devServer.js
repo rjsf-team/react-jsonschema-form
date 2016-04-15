@@ -29,5 +29,5 @@ app.listen(port, host, function(err) {
     return;
   }
 
-  console.log(`Listening at ${server}`);
+  console.log(`Listening at http://${server}`);
 });

@@ -4,14 +4,18 @@ import React from "react";
 import { getDefaultRegistry } from "../src/utils";
 import ArrayField from "../src/components/fields/ArrayField";
 import ObjectField from "../src/components/fields/ObjectField";
-import { createComponent, createFormComponent } from "./test_utils";
+import {
+  createComponent,
+  createFormComponent,
+  createSandbox
+} from "./test_utils";
 
 
 describe("Rendering performance optimizations", () => {
   var sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = createSandbox();
   });
 
   afterEach(() => {

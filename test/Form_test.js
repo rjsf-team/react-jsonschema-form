@@ -5,13 +5,14 @@ import { Simulate, renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
+
 
 describe("Form", () => {
-  var sandbox;
+  let sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = createSandbox();
   });
 
   afterEach(() => {
@@ -561,7 +562,7 @@ describe("Form", () => {
       };
 
       it("should update the errorSchema on form submission", () => {
-        const {comp, node} = createFormComponent({schema});
+        const {comp, node} = createFormComponent({schema, onError: () => {}});
 
         Simulate.change(node.querySelector("input[type=text]"), {
           target: {value: "short"}
@@ -572,6 +573,22 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           errors: ["does not meet minimum length of 8"]
         });
+      });
+
+      it("should call the onError handler", () => {
+        const onError = sandbox.spy();
+        const {node} = createFormComponent({schema, onError});
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: {value: "short"}
+        });
+
+        Simulate.submit(node);
+
+        sinon.assert.calledWithMatch(onError, sinon.match(value => {
+          return value.length === 1 &&
+                 value[0].message === "does not meet minimum length of 8";
+        }));
       });
     });
 

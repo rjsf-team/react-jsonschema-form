@@ -16,7 +16,7 @@ function CheckboxWidget({
         <input type="checkbox"
           id={id}
           title={placeholder}
-          checked={value}
+          checked={typeof value === "undefined" ? false : value}
           required={required}
           onChange={(event) => onChange(event.target.checked)} />
         <strong>{label}</strong>

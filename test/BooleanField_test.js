@@ -1,9 +1,20 @@
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
+
 
 describe("BooleanField", () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   it("should render a boolean field", () => {
     const {node} = createFormComponent({schema: {
       type: "boolean"
@@ -41,6 +52,12 @@ describe("BooleanField", () => {
 
     expect(node.querySelector(".field input").checked)
       .eql(true);
+  });
+
+  it("should default state value to undefined", () => {
+    const {comp} = createFormComponent({schema: {type: "boolean"}});
+
+    expect(comp.state.formData).eql(undefined);
   });
 
   it("should handle a change event", () => {

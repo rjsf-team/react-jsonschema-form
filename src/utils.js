@@ -66,28 +66,8 @@ export function getDefaultRegistry() {
   };
 }
 
-export function defaultTypeValue(schema) {
-  if (typeof schema.default !== "undefined") {
-    return schema.default;
-  }
-  const {type} = schema;
-  switch (type) {
-  case "array":     return [];
-  case "boolean":   return false;
-  case "number":    return 0;
-  case "object":    return {};
-  case "string":    {
-    if (schema.format === "date-time") {
-      return new Date().toJSON();
-    }
-    return "";
-  }
-  default:        return undefined;
-  }
-}
-
 export function defaultFieldValue(formData, schema) {
-  return typeof formData === "undefined" ? defaultTypeValue(schema) : formData;
+  return typeof formData === "undefined" ? schema.default : formData;
 }
 
 export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
@@ -134,7 +114,7 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof(defaults) === "undefined") {
-    defaults = defaultTypeValue(schema);
+    defaults = schema.default;
   }
   // We need to recur for object schema inner default values.
   if (schema.type === "object") {
@@ -142,7 +122,7 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
       // Compute the defaults for this node, with the parent defaults we might
       // have from a previous run: defaults[key].
       acc[key] = computeDefaults(
-        schema.properties[key], defaults[key], definitions);
+        schema.properties[key], (defaults || {})[key], definitions);
       return acc;
     }, {});
   }
