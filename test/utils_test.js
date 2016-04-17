@@ -211,6 +211,24 @@ describe("utils", () => {
         expect(getDefaultFormState(schema, {}))
           .eql({array: ["foo", undefined]});
       });
+
+      it("should use schema default for referenced definitions", () => {
+        const schema = {
+          definitions: {
+            testdef: {
+              type: "object",
+              properties: {
+                foo: {type: "number"}
+              }
+            }
+          },
+          $ref: "#/definitions/testdef",
+          default: {foo: 42}
+        };
+
+        expect(getDefaultFormState(schema, undefined, schema.definitions))
+          .eql({foo: 42});
+      });
     });
   });
 

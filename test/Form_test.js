@@ -202,6 +202,33 @@ describe("Form", () => {
       expect(node.querySelector("input[type=text]").value)
         .eql("hello");
     });
+
+    it("should priorize definition over schema type property", () => {
+      // Refs bug #140
+      const schema = {
+        type: "object",
+        properties: {
+          name: {type: "string"},
+          childObj: {
+            type: "object",
+            $ref: "#/definitions/childObj"
+          }
+        },
+        definitions: {
+          childObj: {
+            type: "object",
+            properties: {
+              otherName: {type: "string"}
+            }
+          }
+        }
+      };
+
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelectorAll("input[type=text]"))
+        .to.have.length.of(2);
+    });
   });
 
   describe("Defaults array items default propagation", () => {
