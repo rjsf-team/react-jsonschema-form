@@ -7,6 +7,7 @@ import UpDownWidget from "./components/widgets/UpDownWidget";
 import RangeWidget from "./components/widgets/RangeWidget";
 import SelectWidget from "./components/widgets/SelectWidget";
 import TextWidget from "./components/widgets/TextWidget";
+import DateWidget from "./components/widgets/DateWidget";
 import DateTimeWidget from "./components/widgets/DateTimeWidget";
 import EmailWidget from "./components/widgets/EmailWidget";
 import URLWidget from "./components/widgets/URLWidget";
@@ -27,6 +28,7 @@ const altWidgetMap = {
     select: SelectWidget,
     textarea: TextareaWidget,
     hidden: HiddenWidget,
+    date: DateWidget,
   },
   number: {
     updown: UpDownWidget,
@@ -244,7 +246,7 @@ function errorPropertyToPath(property) {
   return property.split(".").reduce((path, node) => {
     const match = node.match(RE_ERROR_ARRAY_PATH);
     if (match) {
-      const nodeName = node.slice(0, node.indexOf('['));
+      const nodeName = node.slice(0, node.indexOf("["));
       const indices = match.map(str => parseInt(str.slice(1, -1), 10));
       path = path.concat(nodeName, indices);
     } else {
@@ -312,7 +314,7 @@ export function toIdSchema(schema, id, definitions) {
   return idSchema;
 }
 
-export function parseDateString(dateString) {
+export function parseDateString(dateString, includeTime = true) {
   if (!dateString) {
     dateString = new Date().toJSON();
   }
@@ -324,9 +326,9 @@ export function parseDateString(dateString) {
     year: date.getUTCFullYear(),
     month: date.getUTCMonth() + 1, // oh you, javascript.
     day: date.getUTCDate(),
-    hour: date.getUTCHours(),
-    minute: date.getUTCMinutes(),
-    second: date.getUTCSeconds(),
+    hour: includeTime ? date.getUTCHours() : 0,
+    minute: includeTime ? date.getUTCMinutes() : 0,
+    second: includeTime ? date.getUTCSeconds() : 0,
   };
 }
 

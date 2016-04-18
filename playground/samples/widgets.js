@@ -50,6 +50,10 @@ module.exports = {
           datetime: {
             type: "string",
             format: "date-time"
+          },
+          date: {
+            type: "string",
+            format: "date-time"
           }
         }
       },
@@ -73,6 +77,11 @@ module.exports = {
         "ui:widget": "textarea"
       }
     },
+    stringFormats: {
+      date: {
+        "ui:widget": "date"
+      }
+    },
     secret: {
       "ui:widget": "hidden"
     }
@@ -90,7 +99,6 @@ module.exports = {
     stringFormats: {
       email: "chuck@norris.net",
       uri: "http://chucknorris.com/",
-      datetime: new Date().toJSON(),
     },
     secret: "I'm a hidden string."
   }

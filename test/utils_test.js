@@ -515,6 +515,11 @@ describe("utils", () => {
   });
 
   describe("parseDateString()", () => {
+    it("should raise on invalid JSON datetime", () => {
+      expect(() => parseDateString("plop"))
+        .to.Throw(Error, "Unable to parse");
+    });
+
     it("should parse a valid JSON datetime string", () => {
       expect(parseDateString("2016-04-05T14:01:30.182Z"))
         .eql({
@@ -527,9 +532,16 @@ describe("utils", () => {
         });
     });
 
-    it("should raise on invalid JSON datetime", () => {
-      expect(() => parseDateString("plop"))
-        .to.Throw(Error, "Unable to parse");
+    it("should exclude time when includeTime is false", () => {
+      expect(parseDateString("2016-04-05T14:01:30.182Z", false))
+        .eql({
+          "year": 2016,
+          "month": 4,
+          "day": 5,
+          "hour": 0,
+          "minute": 0,
+          "second": 0,
+        });
     });
   });
 

@@ -293,6 +293,111 @@ describe("StringField", () => {
     });
   });
 
+  describe("DateWidget", () => {
+    const uiSchema = {"ui:widget": "date"};
+
+    it("should render a date field", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, uiSchema});
+
+      expect(node.querySelectorAll(".field select"))
+        .to.have.length.of(3);
+    });
+
+    it("should render a string field with a main label", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+        title: "foo",
+      }, uiSchema});
+
+      expect(node.querySelector(".field label").textContent)
+        .eql("foo");
+    });
+
+    it("should assign a default value", () => {
+      const datetime = new Date().toJSON();
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+        default: datetime,
+      }, uiSchema});
+
+      expect(comp.state.formData).eql(datetime);
+    });
+
+    it("should reflect the change into the dom", () => {
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, uiSchema});
+
+      Simulate.change(node.querySelector("#root_year"), {target: {value: "2012"}});
+      Simulate.change(node.querySelector("#root_month"), {target: {value: "10"}});
+      Simulate.change(node.querySelector("#root_day"), {target: {value: "2"}});
+
+      expect(comp.state.formData).eql("2012-10-02T00:00:00.000Z");
+    });
+
+    it("should fill field with data", () => {
+      const datetime = new Date().toJSON();
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, uiSchema, formData: datetime});
+
+      expect(comp.state.formData).eql(datetime);
+    });
+
+    it("should render the widgets with the expected ids", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, uiSchema});
+
+      const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
+
+      expect(ids).eql([
+        "root_year",
+        "root_month",
+        "root_day",
+      ]);
+    });
+
+    it("should render the widgets with the expected options' values", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, uiSchema});
+
+      const lengths = [].map.call(node.querySelectorAll("select"), node => node.length);
+
+      expect(lengths).eql([
+        121, // from 1900 to 2020
+        12,
+        31,
+      ]);
+      const monthOptions = node.querySelectorAll("select#root_month option");
+      const monthOptionsValues = [].map.call(monthOptions, option => option.value);
+      expect(monthOptionsValues).eql([
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]);
+    });
+
+    it("should render the widgets with the expected options' labels", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, uiSchema});
+
+      const monthOptions = node.querySelectorAll("select#root_month option");
+      const monthOptionsLabels = [].map.call(monthOptions, option => option.text);
+      expect(monthOptionsLabels).eql([
+        "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]);
+    });
+  });
+
   describe("EmailWidget", () => {
     it("should render an email field", () => {
       const {node} = createFormComponent({schema: {

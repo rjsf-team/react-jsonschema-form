@@ -218,6 +218,7 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following formats:
 
 - `date-time`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
+    * If you don't want to deal with time, a `"ui:widget": "date"` uiSchema widget is alternatively available, exposing three selects for year, month and day only;
 - `email`: An `input[type=email]` element is used;
 - `uri`: An `input[type=url]` element is used;
 - More formats could be supported in a near future, feel free to help us going faster!
