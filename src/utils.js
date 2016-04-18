@@ -13,7 +13,7 @@ import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 
-const RE_ERROR_ARRAY_PATH = /(.*)\[(\d+)\]$/;
+const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
 
 const altWidgetMap = {
   boolean: {
@@ -111,6 +111,8 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
     defaults = computeDefaults(refSchema, defaults, definitions);
+  } else if (isFixedItems(schema)) {
+    defaults = schema.items.map(itemSchema => computeDefaults(itemSchema, undefined, definitions));
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof(defaults) === "undefined") {
@@ -193,6 +195,19 @@ export function isMultiSelect(schema) {
   return Array.isArray(schema.items.enum) && schema.uniqueItems;
 }
 
+export function isFixedItems(schema) {
+  return Array.isArray(schema.items) &&
+         schema.items.length > 0 &&
+         schema.items.every(item => isObject(item));
+}
+
+export function allowAdditionalItems(schema) {
+  if (schema.additionalItems === true) {
+    console.warn("additionalItems=true is currently not supported");
+  }
+  return isObject(schema.additionalItems);
+}
+
 export function optionsList(schema) {
   return schema.enum.map((value, i) => {
     const label = schema.enumNames && schema.enumNames[i] || String(value);
@@ -227,9 +242,11 @@ function errorPropertyToPath(property) {
   // Parse array indices, eg. "instance.level1.level2[2].level3"
   // => ["instance", "level1", "level2", 2, "level3"]
   return property.split(".").reduce((path, node) => {
-    const match = RE_ERROR_ARRAY_PATH.exec(node);
+    const match = node.match(RE_ERROR_ARRAY_PATH);
     if (match) {
-      path = path.concat([match[1], parseInt(match[2], 10)]);
+      const nodeName = node.slice(0, node.indexOf('['));
+      const indices = match.map(str => parseInt(str.slice(1, -1), 10));
+      path = path.concat(nodeName, indices);
     } else {
       path.push(node);
     }

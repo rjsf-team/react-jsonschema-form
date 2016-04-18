@@ -18,12 +18,55 @@ module.exports = {
           enum: ["foo", "bar", "fuzz"],
         },
         uniqueItems: true
+      },
+      fixedItemsList: {
+        type: "array",
+        title: "A list of fixed items",
+        items: [
+          {
+            title: "A string value",
+            type: "string",
+            default: "lorem ipsum"
+          },
+          {
+            title: "a boolean value",
+            type: "boolean"
+          }
+        ],
+        additionalItems: {
+          title: "Additional item",
+          type: "number"
+        }
+      },
+      nestedList: {
+        type: "array",
+        title: "Nested list",
+        items: {
+          type: "array",
+          title: "Inner list",
+          items: {
+            type: "string",
+            default: "lorem ipsum"
+          }
+        }
       }
     }
   },
-  uiSchema: {},
+  uiSchema: {
+    fixedItemsList: {
+      items: [
+        {"ui:widget": "textarea"},
+        {"ui:widget": "select"}
+      ],
+      additionalItems: {
+        "ui:widget": "updown"
+      }
+    }
+  },
   formData: {
     listOfStrings: ["foo", "bar"],
-    multipleChoicesList: ["foo", "bar"]
+    multipleChoicesList: ["foo", "bar"],
+    fixedItemsList: ["Some text", true, 123],
+    nestedList: [["lorem", "ipsum"], ["dolor"]]
   }
 };

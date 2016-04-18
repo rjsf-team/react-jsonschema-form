@@ -792,6 +792,65 @@ describe("Form", () => {
       });
     });
 
+    describe("nested arrays", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          outer: {
+            type: "array",
+            items: {
+              type: "array",
+              items: {
+                type: "string",
+                minLength: 4
+              }
+            }
+          }
+        }
+      };
+
+      const formData = {
+        outer: [
+          ["good", "bad"],
+          ["bad", "good"]
+        ]
+      };
+
+      const formProps = {schema, formData, liveValidate: true};
+
+      it("should contextualize the error for nested array indices", () => {
+        const {comp} = createFormComponent(formProps);
+
+        expect(comp.state.errorSchema).eql({
+          outer: {
+            0: {
+              1: {errors: ["does not meet minimum length of 4"]}
+            },
+            1: {
+              0: {errors: ["does not meet minimum length of 4"]}
+            }
+          }
+        });
+      });
+
+      it("should denote the error in the nested item field in error", () => {
+        const {node} = createFormComponent(formProps);
+        const fields = node.querySelectorAll(".field-string");
+        const errors = [].map.call(fields, field => {
+          const li = field.querySelector(".error-detail li");
+          return li && li.textContent;
+        });
+
+        expect(errors)
+          .eql([
+            null,
+            "does not meet minimum length of 4",
+            "does not meet minimum length of 4",
+            null
+          ]);
+      });
+    });
+
     describe("array nested items", () => {
       const schema = {
         type: "array",

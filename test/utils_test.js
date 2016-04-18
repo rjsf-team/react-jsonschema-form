@@ -189,6 +189,28 @@ describe("utils", () => {
         expect(getDefaultFormState(schema, {}))
           .eql({foo: "a"});
       });
+
+      it("should map item defaults to fixed array default", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              items: [
+                {
+                  type: "string",
+                  default: "foo"
+                },
+                {
+                  type: "number"
+                }
+              ]
+            }
+          }
+        };
+        expect(getDefaultFormState(schema, {}))
+          .eql({array: ["foo", undefined]});
+      });
     });
   });
 
