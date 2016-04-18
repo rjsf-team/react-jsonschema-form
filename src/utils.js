@@ -110,7 +110,7 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
-    defaults = computeDefaults(refSchema, defaults, definitions);
+    return computeDefaults(refSchema, defaults, definitions);
   } else if (isFixedItems(schema)) {
     defaults = schema.items.map(itemSchema => computeDefaults(itemSchema, undefined, definitions));
   }
@@ -136,7 +136,7 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
     throw new Error("Invalid schema: " + _schema);
   }
   const schema = retrieveSchema(_schema, definitions);
-  const defaults = computeDefaults(schema, undefined, definitions);
+  const defaults = computeDefaults(schema, _schema.default, definitions);
   if (typeof(formData) === "undefined") { // No form data? Use schema defaults.
     return defaults;
   }
