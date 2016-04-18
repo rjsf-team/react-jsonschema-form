@@ -324,7 +324,7 @@ describe("ArrayField", () => {
         Simulate.click(addBtn);
         
         expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
-        expect(comp.state.formData).eql([1, 2, "foo", ""]);
+        expect(comp.state.formData).eql([1, 2, "foo", undefined]);
       });
       
       it("should change the state when changing input value", () => {

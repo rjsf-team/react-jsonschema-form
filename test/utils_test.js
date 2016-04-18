@@ -209,7 +209,7 @@ describe("utils", () => {
           }
         };
         expect(getDefaultFormState(schema, {}))
-          .eql({array: ["foo", 0]});
+          .eql({array: ["foo", undefined]});
       });
     });
   });
