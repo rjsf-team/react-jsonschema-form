@@ -6,11 +6,11 @@ export default class AutocompleteWidget extends React.Component {
   
   constructor(props){
     super(props);
-    this.uniqId = uniqueId('AcW');
+    this.uniqId = uniqueId("AcW");
     this.state = {
       label: this.props.defaultValue,
       ajaxData: this.valuesHandler(this.props.schema.autocomplete.values)
-    }
+    };
   }
   
   // adapt the object data to awesomplete data schema
@@ -33,7 +33,7 @@ export default class AutocompleteWidget extends React.Component {
       const label = labelFieldname;
       values.map((item) => {
         newValues.push({"label": item[label], "value": item[value]});
-      })
+      });
       values = newValues;
     }
     return values;
@@ -69,7 +69,7 @@ export default class AutocompleteWidget extends React.Component {
     } else {
       //the data and init autocomplete via CallBack
       this.initDataFetch((data) => {
-        this.setState({ajaxData: this.getOption('remote_ajaxHandler')(data, this.getOption('remote_value'), this.getOption('remote_label'))});
+        this.setState({ajaxData: this.getOption("remote_ajaxHandler")(data, this.getOption("remote_value"), this.getOption("remote_label"))});
         //init the autocomplete
         this.initAwesomplete();
       });
@@ -79,9 +79,9 @@ export default class AutocompleteWidget extends React.Component {
   // anytime the awesomplete replace, the state and parent form data change
   onReplace(input) {
     return ((item) => {
-    	  this.props.onChange(this.onChangeHandler(item.value));
-    	  this.setState({label: item.label});
-    	}).bind(this)
+      this.props.onChange(this.onChangeHandler(item.value));
+      this.setState({label: item.label});
+    }).bind(this);
   }
   
   // Adapt the data depending on the schema type
@@ -101,12 +101,12 @@ export default class AutocompleteWidget extends React.Component {
   // Init awesomplete
   initAwesomplete(){
     var input = document.getElementById("autocomplete" + this.uniqId);
-    var awesomplete = new Awesomplete(input, {
-      minChars: this.getOption('minChar'),
-    	list: this.state.ajaxData,
-    	replace: this.onReplace(input),
-    	autoFirst: this.getOption('auto_first')?true:false,
-    	filter: this.filter()
+    new Awesomplete(input, {
+      minChars: this.getOption("minChar"),
+      list: this.state.ajaxData,
+      replace: this.onReplace(input),
+      autoFirst: this.getOption("auto_first")?true:false,
+      filter: this.filter()
     });
   }
   
@@ -124,7 +124,7 @@ export default class AutocompleteWidget extends React.Component {
   // get all options
   get options(){
     if(!this._options){
-      this._options = this.getDefaultOptions()
+      this._options = this.getDefaultOptions();
     }
     return this._options;
   }
@@ -135,29 +135,29 @@ export default class AutocompleteWidget extends React.Component {
     const props = this.props;
     return {
       // when popup open, first item is selected
-      'auto_first': acOptions['auto_first']?acOptions['only_values']:false,
+      "auto_first": acOptions["auto_first"]?acOptions["only_values"]:false,
       // values to display in th popup
-      'values': acOptions['values']?acOptions['values']:null,
+      "values": acOptions["values"]?acOptions["values"]:null,
       // if true, data is needed to validate the form
-      'required': props['required']?acOptions['required']:false,
+      "required": props["required"]?acOptions["required"]:false,
       // minimum character before popup open
-      'minChar': acOptions['minChar']?acOptions['minChar']:2,
+      "minChar": acOptions["minChar"]?acOptions["minChar"]:2,
       // url : remote url where to access data
-      'remote_url': acOptions['remote_url']?acOptions['remote_url']:null, 
+      "remote_url": acOptions["remote_url"]?acOptions["remote_url"]:null, 
       // value: from the fetched data, the value will be send to the server
-      'remote_value': acOptions['remote_value']?acOptions['remote_value']:null, 
+      "remote_value": acOptions["remote_value"]?acOptions["remote_value"]:null, 
       // label: from the fetched data, the data you want to display in popup
-      'remote_label': acOptions['remote_label']?acOptions['remote_label']:null,
+      "remote_label": acOptions["remote_label"]?acOptions["remote_label"]:null,
       // ajaxHandler: on reception of the remote, convert the Json into 
-      // [{'label': label, 'value': value}, {...}] acceptable by awesomplete
-      'remote_ajaxHandler': acOptions['remote_ajaxHandler']?acOptions['remote_ajaxHandler']:this.ajaxHandler
+      // [{"label": label, "value": value}, {...}] acceptable by awesomplete
+      "remote_ajaxHandler": acOptions["remote_ajaxHandler"]?acOptions["remote_ajaxHandler"]:this.ajaxHandler
       
     };
   }
   
   // fetch the data and callback a function on success
   initDataFetch(cb){
-    fetch(this.getOption('remote_url'))
+    fetch(this.getOption("remote_url"))
       // parse
       .then((res) => {
         return res.json();
@@ -166,7 +166,7 @@ export default class AutocompleteWidget extends React.Component {
       .then(cb)
       // throw if issue
       .catch((ex) => {
-        console.log('parsing failed', ex)
+        console.log("parsing failed", ex);
       });
   }
   
@@ -181,7 +181,7 @@ export default class AutocompleteWidget extends React.Component {
     return (
       <input 
         value={this.state.label}
-        class='form-control dropdown-input' 
+        class="form-control dropdown-input" 
         id={"autocomplete" + this.uniqId} 
         onChange={this.onChange.bind(this)}
         />
