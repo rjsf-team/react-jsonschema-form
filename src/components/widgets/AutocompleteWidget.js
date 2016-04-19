@@ -72,6 +72,8 @@ export default class AutocompleteWidget extends React.Component {
         this.setState({ajaxData: this.getOption("remote_ajaxHandler")(data, this.getOption("remote_value"), this.getOption("remote_label"))});
         //init the autocomplete
         this.initAwesomplete();
+        // will refresh state and update render
+        this.setState({label: this.getLabelFromValue(this.props.value) });
       });
     }
   }
