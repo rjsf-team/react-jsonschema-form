@@ -13,6 +13,8 @@ import EmailWidget from "./components/widgets/EmailWidget";
 import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
+import AutocompleteWidget from "./components/widgets/AutocompleteWidget";
+import ComboAutocompleteWidget from "./components/widgets/ComboAutocompleteWidget";
 
 const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
 
@@ -29,6 +31,8 @@ const altWidgetMap = {
     textarea: TextareaWidget,
     hidden: HiddenWidget,
     date: DateWidget,
+    autocomplete: AutocompleteWidget,
+    comboautocomplete: ComboAutocompleteWidget
   },
   number: {
     updown: UpDownWidget,
@@ -39,6 +43,8 @@ const altWidgetMap = {
     updown: UpDownWidget,
     range: RangeWidget,
     hidden: HiddenWidget,
+    autocomplete: AutocompleteWidget,
+    comboautocomplete: ComboAutocompleteWidget
   }
 };
 
