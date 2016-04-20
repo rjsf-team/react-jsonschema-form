@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 
-import { asNumber } from "../../utils";
+import { asNumber, memoizeStatelessComponent } from "../../utils";
 
 
 /**
@@ -64,4 +64,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default SelectWidget;
+export default memoizeStatelessComponent(SelectWidget);

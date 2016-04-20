@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { memoizeStatelessComponent } from "../../utils";
+
 
 function rangeSpec(schema) {
   const spec = {};
@@ -49,4 +51,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default UpDownWidget;
+export default memoizeStatelessComponent(UpDownWidget);

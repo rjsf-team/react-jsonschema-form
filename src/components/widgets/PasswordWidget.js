@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { memoizeStatelessComponent } from "../../utils";
+
 
 function PasswordWidget({
   schema,
@@ -34,4 +36,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default PasswordWidget;
+export default memoizeStatelessComponent(PasswordWidget);

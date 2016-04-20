@@ -1,3 +1,4 @@
+import React from "react";
 import deeper from "deeper";
 
 import TitleField from "./components/fields/TitleField";
@@ -344,4 +345,16 @@ export function pad(num, size) {
     s = "0" + s;
   }
   return s;
+}
+
+export function memoizeStatelessComponent(Component) {
+  let previousProps, previousRender;
+  return (nextProps) => {
+    if (previousRender && deeper(previousProps, nextProps)) {
+      return previousRender;
+    }
+    previousRender = <Component {...nextProps} />;
+    previousProps = nextProps;
+    return previousRender;
+  };
 }
