@@ -1,5 +1,8 @@
 import React, { PropTypes } from "react";
 
+import { memoizeStatelessComponent } from "../../utils";
+
+
 import {
   defaultFieldValue,
   getAlternativeWidget,
@@ -67,4 +70,4 @@ BooleanField.defaultProps = {
   registry: getDefaultRegistry(),
 };
 
-export default BooleanField;
+export default memoizeStatelessComponent(BooleanField);

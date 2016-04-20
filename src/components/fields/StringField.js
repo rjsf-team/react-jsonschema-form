@@ -4,7 +4,8 @@ import {
   defaultFieldValue,
   getAlternativeWidget,
   optionsList,
-  getDefaultRegistry
+  getDefaultRegistry,
+  memoizeStatelessComponent
 } from "../../utils";
 import TextWidget from "../widgets/TextWidget";
 import SelectWidget from "../widgets/SelectWidget";
@@ -70,4 +71,4 @@ StringField.defaultProps = {
   registry: getDefaultRegistry(),
 };
 
-export default StringField;
+export default memoizeStatelessComponent(StringField);
