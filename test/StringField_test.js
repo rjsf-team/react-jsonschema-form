@@ -1,7 +1,6 @@
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, SimulateAsync } from "./test_utils";
 
 
 describe("StringField", () => {
@@ -66,11 +65,9 @@ describe("StringField", () => {
         type: "string",
       }});
 
-      Simulate.change(node.querySelector("input"), {
+      return SimulateAsync().change(node.querySelector("input"), {
         target: {value: "yo"}
-      });
-
-      expect(comp.state.formData).eql("yo");
+      }).then(() => expect(comp.state.formData).eql("yo"));
     });
 
     it("should fill field with data", () => {
@@ -141,11 +138,9 @@ describe("StringField", () => {
         enum: ["foo", "bar"],
       }});
 
-      Simulate.change(node.querySelector("select"), {
+      return SimulateAsync().change(node.querySelector("select"), {
         target: {value: "foo"}
-      });
-
-      expect(comp.state.formData).eql("foo");
+      }).then(() => expect(comp.state.formData).eql("foo"));
     });
 
     it("should reflect the change into the dom", () => {
@@ -154,11 +149,9 @@ describe("StringField", () => {
         enum: ["foo", "bar"],
       }});
 
-      Simulate.change(node.querySelector("select"), {
+      return SimulateAsync().change(node.querySelector("select"), {
         target: {value: "foo"}
-      });
-
-      expect(node.querySelector("select").value).eql("foo");
+      }).then(() => expect(node.querySelector("select").value).eql("foo"));
     });
 
     it("should fill field with data", () => {
@@ -220,14 +213,17 @@ describe("StringField", () => {
         format: "date-time",
       }});
 
-      Simulate.change(node.querySelector("#root_year"), {target: {value: "2012"}});
-      Simulate.change(node.querySelector("#root_month"), {target: {value: "10"}});
-      Simulate.change(node.querySelector("#root_day"), {target: {value: "2"}});
-      Simulate.change(node.querySelector("#root_hour"), {target: {value: "1"}});
-      Simulate.change(node.querySelector("#root_minute"), {target: {value: "2"}});
-      Simulate.change(node.querySelector("#root_second"), {target: {value: "3"}});
-
-      expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
+      return Promise.all([
+        SimulateAsync().change(node.querySelector("#root_year"), {target: {value: "2012"}}),
+        SimulateAsync().change(node.querySelector("#root_month"), {target: {value: "10"}}),
+        SimulateAsync().change(node.querySelector("#root_day"), {target: {value: "2"}}),
+        SimulateAsync().change(node.querySelector("#root_hour"), {target: {value: "1"}}),
+        SimulateAsync().change(node.querySelector("#root_minute"), {target: {value: "2"}}),
+        SimulateAsync().change(node.querySelector("#root_second"), {target: {value: "3"}}),
+      ])
+        .then(() => {
+          expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
+        });
     });
 
     it("should fill field with data", () => {
@@ -334,11 +330,14 @@ describe("StringField", () => {
         format: "date-time",
       }, uiSchema});
 
-      Simulate.change(node.querySelector("#root_year"), {target: {value: "2012"}});
-      Simulate.change(node.querySelector("#root_month"), {target: {value: "10"}});
-      Simulate.change(node.querySelector("#root_day"), {target: {value: "2"}});
-
-      expect(comp.state.formData).eql("2012-10-02T00:00:00.000Z");
+      return Promise.all([
+        SimulateAsync().change(node.querySelector("#root_year"), {target: {value: "2012"}}),
+        SimulateAsync().change(node.querySelector("#root_month"), {target: {value: "10"}}),
+        SimulateAsync().change(node.querySelector("#root_day"), {target: {value: "2"}}),
+      ])
+        .then(() => {
+          expect(comp.state.formData).eql("2012-10-02T00:00:00.000Z");
+        });
     });
 
     it("should fill field with data", () => {
@@ -449,11 +448,10 @@ describe("StringField", () => {
       }});
 
       const newDatetime = new Date().toJSON();
-      Simulate.change(node.querySelector("[type=email]"), {
+      return SimulateAsync().change(node.querySelector("[type=email]"), {
         target: {value: newDatetime}
-      });
-
-      expect(node.querySelector("[type=email]").value).eql(newDatetime);
+      })
+        .then(() => expect(node.querySelector("[type=email]").value).eql(newDatetime));
     });
 
     it("should fill field with data", () => {
@@ -482,11 +480,10 @@ describe("StringField", () => {
         format: "email",
       }, liveValidate: true});
 
-      Simulate.change(node.querySelector("[type=email]"), {
+      return SimulateAsync().change(node.querySelector("[type=email]"), {
         target: {value: "invalid"}
-      });
-
-      expect(comp.state.errors).to.have.length.of(1);
+      })
+        .then(() => expect(comp.state.errors).to.have.length.of(1));
     });
   });
 
@@ -541,11 +538,10 @@ describe("StringField", () => {
       }});
 
       const newDatetime = new Date().toJSON();
-      Simulate.change(node.querySelector("[type=url]"), {
+      return SimulateAsync().change(node.querySelector("[type=url]"), {
         target: {value: newDatetime}
-      });
-
-      expect(node.querySelector("[type=url]").value).eql(newDatetime);
+      })
+        .then(() => expect(node.querySelector("[type=url]").value).eql(newDatetime));
     });
 
     it("should fill field with data", () => {
@@ -574,11 +570,10 @@ describe("StringField", () => {
         format: "uri",
       }, liveValidate: true});
 
-      Simulate.change(node.querySelector("[type=url]"), {
+      return SimulateAsync().change(node.querySelector("[type=url]"), {
         target: {value: "invalid"}
-      });
-
-      expect(comp.state.errors).to.have.length.of(1);
+      })
+        .then(() => expect(comp.state.errors).to.have.length.of(1));
     });
   });
 });

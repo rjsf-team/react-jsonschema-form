@@ -1,7 +1,6 @@
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, SimulateAsync } from "./test_utils";
 
 
 describe("ArrayField", () => {
@@ -53,10 +52,11 @@ describe("ArrayField", () => {
     it("should add a new field when clicking the add button", () => {
       const {node} = createFormComponent({schema});
 
-      Simulate.click(node.querySelector(".array-item-add button"));
-
-      expect(node.querySelectorAll(".field-string"))
-        .to.have.length.of(1);
+      return SimulateAsync().click(node.querySelector(".array-item-add button"))
+        .then(() => {
+          expect(node.querySelectorAll(".field-string"))
+            .to.have.length.of(1);
+        });
     });
 
     it("should fill an array field with data", () => {
@@ -72,11 +72,12 @@ describe("ArrayField", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
       const dropBtns = node.querySelectorAll(".array-item-remove button");
 
-      Simulate.click(dropBtns[0]);
-
-      const inputs = node.querySelectorAll(".field-string input[type=text]");
-      expect(inputs).to.have.length.of(1);
-      expect(inputs[0].value).eql("bar");
+      return SimulateAsync().click(dropBtns[0])
+        .then(() => {
+          const inputs = node.querySelectorAll(".field-string input[type=text]");
+          expect(inputs).to.have.length.of(1);
+          expect(inputs[0].value).eql("bar");
+        });
     });
 
     it("should render the input widgets with the expected ids", () => {
@@ -161,15 +162,14 @@ describe("ArrayField", () => {
     it("should handle a change event", () => {
       const {comp, node} = createFormComponent({schema});
 
-      Simulate.change(node.querySelector(".field select"), {
+      return SimulateAsync().change(node.querySelector(".field select"), {
         target: {options: [
           {selected: true, value: "foo"},
           {selected: true, value: "bar"},
           {selected: false, value: "fuzz"},
         ]}
-      });
-
-      expect(comp.state.formData).eql(["foo", "bar"]);
+      })
+        .then(() => expect(comp.state.formData).eql(["foo", "bar"]));
     });
 
     it("should fill field with data", () => {
@@ -210,8 +210,11 @@ describe("ArrayField", () => {
     it("should add an inner list when clicking the add button", () => {
       const {node} = createFormComponent({schema});
       expect(node.querySelectorAll("fieldset fieldset")).to.be.empty;
-      Simulate.click(node.querySelector(".array-item-add button"));
-      expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(1);
+
+      return SimulateAsync().click(node.querySelector(".array-item-add button"))
+        .then(() => {
+          expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(1);
+        });
     });
   });
 
@@ -230,7 +233,7 @@ describe("ArrayField", () => {
         }
       ]
     };
-    
+
     const schemaAdditional = {
       type: "array",
       title: "List of fixed items",
@@ -249,7 +252,7 @@ describe("ArrayField", () => {
         title: "Additional item"
       }
     };
-    
+
     it("should render a fieldset", () => {
       const {node} = createFormComponent({schema});
 
@@ -291,14 +294,9 @@ describe("ArrayField", () => {
       const numInput =
           node.querySelector("fieldset .field-number input[type=text]");
 
-      Simulate.change(strInput, {
-        target: { value: "bar" }
-      });
-      Simulate.change(numInput, {
-        target: { value: "101" }
-      });
-
-      expect(comp.state.formData).eql(["bar", 101]);
+      return SimulateAsync().change(strInput, {target: { value: "bar" }})
+        .then(() => SimulateAsync().change(numInput, {target: { value: "101" }}))
+        .then(() => expect(comp.state.formData).eql(["bar", 101]));
     });
 
     it("should generate additional fields and fill data", () => {
@@ -320,36 +318,37 @@ describe("ArrayField", () => {
 
       it("should add a field when clicking add button", () => {
         const addBtn = node.querySelector(".array-item-add button");
-        
-        Simulate.click(addBtn);
-        
-        expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
-        expect(comp.state.formData).eql([1, 2, "foo", undefined]);
+
+        return SimulateAsync().click(addBtn)
+          .then(() => {
+            expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
+            expect(comp.state.formData).eql([1, 2, "foo", undefined]);
+          });
       });
-      
+
       it("should change the state when changing input value", () => {
         const inputs = node.querySelectorAll(".field-string input[type=text]");
-        
-        Simulate.change(inputs[0], {target: {value: "bar"}});
-        Simulate.change(inputs[1], {target: {value: "baz"}});
-        
-        expect(comp.state.formData).eql([1, 2, "bar", "baz"]);
+
+        return SimulateAsync().change(inputs[0], {target: {value: "bar"}})
+          .then(() => SimulateAsync().change(inputs[1], {target: {value: "baz"}}))
+          .then(() => expect(comp.state.formData).eql([1, 2, "bar", "baz"]));
       });
-      
+
       it("should remove array items when clicking remove buttons", () => {
         let dropBtns = node.querySelectorAll(".array-item-remove button");
-        
-        Simulate.click(dropBtns[0]);
-        
-        expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
-        expect(comp.state.formData).eql([1, 2, "baz"]);
-        
-        dropBtns = node.querySelectorAll(".array-item-remove button");
-        
-        Simulate.click(dropBtns[0]);
-        
-        expect(node.querySelectorAll(".field-string")).to.be.empty;
-        expect(comp.state.formData).eql([1, 2]);
+
+        return SimulateAsync().click(dropBtns[0])
+          .then(() => {
+            expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+            expect(comp.state.formData).eql([1, 2, "baz"]);
+
+            dropBtns = node.querySelectorAll(".array-item-remove button");
+            return SimulateAsync().click(dropBtns[0]);
+          })
+          .then(() => {
+            expect(node.querySelectorAll(".field-string")).to.be.empty;
+            expect(comp.state.formData).eql([1, 2]);
+          });
       });
     });
   });
