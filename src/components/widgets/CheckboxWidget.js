@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { memoizeStatelessComponent } from "../../utils";
+
 
 function CheckboxWidget({
   schema,
@@ -35,4 +37,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default CheckboxWidget;
+export default memoizeStatelessComponent(CheckboxWidget);

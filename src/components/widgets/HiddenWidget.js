@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { memoizeStatelessComponent } from "../../utils";
+
 
 function HiddenWidget({id, value}) {
   return (
@@ -18,4 +20,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default HiddenWidget;
+export default memoizeStatelessComponent(HiddenWidget);

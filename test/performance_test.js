@@ -1,7 +1,7 @@
 import sinon from "sinon";
 import React from "react";
 
-import { getDefaultRegistry } from "../src/utils";
+import { getDefaultRegistry, memoizeStatelessComponent } from "../src/utils";
 import ArrayField from "../src/components/fields/ArrayField";
 import ObjectField from "../src/components/fields/ObjectField";
 import {
@@ -127,6 +127,34 @@ describe("Rendering performance optimizations", () => {
       comp.componentWillReceiveProps({schema, formData, registry});
 
       sinon.assert.notCalled(comp.render);
+    });
+  });
+
+  describe("Memoized components", () => {
+    it("should avoid rerendering a component with exact same props", () => {
+      const fakeCostlyOperation = sinon.spy();
+      const Memoized = memoizeStatelessComponent(({a}) => {
+        fakeCostlyOperation();
+        return <div>{a}</div>;
+      });
+
+      class Container extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = props;
+        }
+        componentWillReceiveProps(props) {
+          this.setState(props);
+        }
+        render() {
+          return <div><Memoized {...this.state} /></div>;
+        }
+      }
+
+      const {comp} = createComponent(Container, {a: 1});
+      comp.componentWillReceiveProps({a: 1});
+
+      sinon.assert.calledOnce(fakeCostlyOperation);
     });
   });
 });

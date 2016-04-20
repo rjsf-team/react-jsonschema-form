@@ -1,6 +1,11 @@
 import React, { PropTypes } from "react";
 
-import { isMultiSelect, retrieveSchema, getDefaultRegistry } from "../../utils";
+import {
+  isMultiSelect,
+  retrieveSchema,
+  getDefaultRegistry,
+  memoizeStatelessComponent
+} from "../../utils";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import NumberField from "./NumberField";
@@ -168,4 +173,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default SchemaField;
+export default memoizeStatelessComponent(SchemaField);

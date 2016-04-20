@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { memoizeStatelessComponent } from "../../utils";
+
 
 function EmailWidget({
   schema,
@@ -31,4 +33,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default EmailWidget;
+export default memoizeStatelessComponent(EmailWidget);

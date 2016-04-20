@@ -1,7 +1,8 @@
 import React, { PropTypes } from "react";
 
-import { asNumber } from "../../utils";
+import { asNumber, memoizeStatelessComponent } from "../../utils";
 import StringField from "./StringField";
+
 
 function NumberField(props) {
   return (
@@ -24,4 +25,4 @@ NumberField.defaultProps = {
   uiSchema: {}
 };
 
-export default NumberField;
+export default memoizeStatelessComponent(NumberField);

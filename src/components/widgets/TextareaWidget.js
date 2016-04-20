@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { memoizeStatelessComponent } from "../../utils";
+
 
 function TextWidget({
   schema,
@@ -31,4 +33,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default TextWidget;
+export default memoizeStatelessComponent(TextWidget);

@@ -52,8 +52,8 @@ class ArrayField extends Component {
   }
 
   asyncSetState(state, options) {
-    // ensure state is propagated to parent component when it's actually set
-    this.setState(state, _ => this.props.onChange(this.state.items, options));
+    this.setState(state);
+    setImmediate(() => this.props.onChange(this.state.items, options));
   }
 
   onAddClick = (event) => {

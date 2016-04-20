@@ -42,8 +42,8 @@ class ObjectField extends Component {
   }
 
   asyncSetState(state) {
-    // ensure state is propagated to parent component when it's actually set
-    this.setState(state, _ => this.props.onChange(this.state));
+    this.setState(state);
+    setImmediate(() => this.props.onChange(this.state));
   }
 
   onPropertyChange = (name) => {

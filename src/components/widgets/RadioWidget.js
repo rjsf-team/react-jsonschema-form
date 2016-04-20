@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { memoizeStatelessComponent } from "../../utils";
+
 
 function RadioWidget({
   schema,
@@ -44,4 +46,4 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
   };
 }
-export default RadioWidget;
+export default memoizeStatelessComponent(RadioWidget);
