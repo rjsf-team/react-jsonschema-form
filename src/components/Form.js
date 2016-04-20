@@ -67,7 +67,8 @@ export default class Form extends Component {
       formData,
       errors,
       errorSchema
-    }, _ => {
+    });
+    setImmediate(() => {
       if (this.props.onChange) {
         this.props.onChange(this.state);
       }
