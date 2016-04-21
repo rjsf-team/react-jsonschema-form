@@ -1,0 +1,31 @@
+/**
+ * bootstrap's input groups modify the float & z-index of form-controls, this allows awesomplete
+ * to assume the position of the form-control and reset the input
+ */
+.input-group div.awesomplete {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 100%;
+    margin-bottom: 0;
+}
+.input-group div.awesomplete > input {
+    float: none;
+}
+.input-group div.awesomplete > ul {
+    z-index: 3; /* bootstrap sets .input-group .form-control to 2 */
+}
+/* reinstitute initial .form-control border radius when nested within .awesomeplete */
+.input-group .awesomplete .form-control {
+    border-radius: 4px;
+}
+.input-group .awesomplete:not(:first-child) .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.input-group .awesomplete:not(:first-child):not(:last-child) .form-control {
+    border-radius: 0;
+}
+div.awesomplete {
+    display: inherit;
+}

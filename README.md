@@ -213,6 +213,8 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
   * `textarea`: a `textarea` element is used;
   * `password`: an `input[type=password]` element is used;
+  * `autocomplete` and `comboautocomplete` : a widget that use the library [Awesomplete](http://leaverou.github.io/awesomplete/), 
+display a select or combo completing your input
   * by default, a regular `input[type=text]` element is used.
 
 The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following formats:
@@ -252,6 +254,110 @@ const uiSchema = {
 >
 > - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
 > - An hidden widget takes its value from the `formData` prop.
+
+#### AutoComplete and ComboAutoComplete widget
+
+It is possbile to create an autocomplete field from a list of values or from remote data
+
+From a list:
+```js
+const schema = {
+  type: "object",
+  properties: {
+    foo: {
+      type: "string"
+      "description": "Data Report",
+      "title": "Data",
+      "default": null,
+      "autocomplete": {
+        "values": ["Belgium", "France", "Croatia", "US"]
+      }
+    }
+  }
+};
+
+const uiSchema = {
+  foo: {"ui:widget": "autocomplete"}
+};
+```
+
+From Remote server:
+
+```js
+const schema = {
+  type: "object",
+  properties: {
+    foo: {
+      "type": "integer",
+      "description": "display my combo from remote",
+      "title": "My title",
+      "default": null,
+      "autocomplete": {
+        "remote_url": "http://remote.com/api/v1/objects",
+        "remote_value": "id",
+        "remote_label": "display_name"
+      }
+    }
+  }
+};
+
+const uiSchema = {
+  foo: {"ui:widget": "comboautocomplete"}
+};
+```
+Data format:
+```js
+"autocomplete": {
+  "values": ["Belarus", "China", "United States"]
+  // or
+  "values": [
+		[ "Belarus", "BY" ],
+		[ "China", "CN" ],
+		[ "United States", "US" ]
+	]
+	// or 
+	"values": [
+		{ label: "Belarus", value: "BY" },
+		{ label: "China", value: "CN" },
+		{ label: "United States", value: "US" }
+	]
+	// or
+	"values": {1: "Belarus", 2: "China", 3: "United States"}
+}
+```
+
+All options:
+```js
+const schema = {
+  type: "object",
+  properties: {
+    foo: {
+      "type": "integer",
+      "description": "display my combo from remote",
+      "title": "My title",
+      "default": null,
+      "autocomplete": {
+        "values": [data, data2, data3], 
+        // If values is not null, remote won't be used
+        "remote_url": "http://remote.com/api/v1/objects",
+        "remote_value": "id",
+        "remote_label": "display_name",
+        "remote_ajaxHandler": function,
+        // minimum of character before popup appear
+        "minChar": 0,
+        // select the first item from the popup by default
+        "auto_first": false
+      }
+    }
+  }
+};
+```
+##### remote_ajaxHandler
+on reception of the remote, convert the Json into 
+[{'label': label, 'value': value}, {...}] acceptable by awesomplete
+
+    Must be a function given
+
 
 ### Object fields ordering
 

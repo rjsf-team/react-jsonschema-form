@@ -3,6 +3,7 @@
   "version": "0.26.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
+    "grunt": "node_modules/grunt-cli/bin/grunt",
     "build:readme": "toctoc README.md -w",
     "build:lib": "rimraf lib && NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
@@ -30,7 +31,9 @@
   },
   "dependencies": {
     "deeper": "^2.1.0",
-    "jsonschema": "^1.0.2"
+    "jsonschema": "^1.0.2",
+    "lodash": "^4.6.1",
+    "awesomplete": "^1.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
@@ -52,6 +55,9 @@
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "gh-pages": "^0.11.0",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-copy": "^1.0.0",
     "html": "0.0.10",
     "jsdom": "^8.3.0",
     "mocha": "^2.3.0",
