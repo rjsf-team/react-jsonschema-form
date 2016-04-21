@@ -520,6 +520,28 @@ describe("utils", () => {
         .to.Throw(Error, "Unable to parse");
     });
 
+    it("should return a default object when no datetime is passed", () => {
+      expect(parseDateString()).eql({
+        "year": -1,
+        "month": -1,
+        "day": -1,
+        "hour": -1,
+        "minute": -1,
+        "second": -1,
+      });
+    });
+
+    it("should return a default object when time should not be included", () => {
+      expect(parseDateString(undefined, false)).eql({
+        "year": -1,
+        "month": -1,
+        "day": -1,
+        "hour": 0,
+        "minute": 0,
+        "second": 0,
+      });
+    });
+
     it("should parse a valid JSON datetime string", () => {
       expect(parseDateString("2016-04-05T14:01:30.182Z"))
         .eql({

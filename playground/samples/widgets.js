@@ -3,6 +3,28 @@ module.exports = {
     title: "Widgets",
     type: "object",
     properties: {
+      stringFormats: {
+        type: "object",
+        title: "String formats",
+        properties: {
+          email: {
+            type: "string",
+            format: "email"
+          },
+          uri: {
+            type: "string",
+            format: "uri"
+          },
+          datetime: {
+            type: "string",
+            format: "date-time"
+          },
+          date: {
+            type: "string",
+            format: "date-time"
+          }
+        }
+      },
       boolean: {
         type: "object",
         title: "Boolean field",
@@ -32,28 +54,6 @@ module.exports = {
           textarea: {
             type: "string",
             title: "textarea"
-          }
-        }
-      },
-      stringFormats: {
-        type: "object",
-        title: "String formats",
-        properties: {
-          email: {
-            type: "string",
-            format: "email"
-          },
-          uri: {
-            type: "string",
-            format: "uri"
-          },
-          datetime: {
-            type: "string",
-            format: "date-time"
-          },
-          date: {
-            type: "string",
-            format: "date-time"
           }
         }
       },
@@ -87,6 +87,10 @@ module.exports = {
     }
   },
   formData: {
+    stringFormats: {
+      email: "chuck@norris.net",
+      uri: "http://chucknorris.com/",
+    },
     boolean: {
       default: true,
       radio: true,
@@ -95,10 +99,6 @@ module.exports = {
     string: {
       default: "Hello...",
       textarea: "... World"
-    },
-    stringFormats: {
-      email: "chuck@norris.net",
-      uri: "http://chucknorris.com/",
     },
     secret: "I'm a hidden string."
   }

@@ -316,7 +316,14 @@ export function toIdSchema(schema, id, definitions) {
 
 export function parseDateString(dateString, includeTime = true) {
   if (!dateString) {
-    dateString = new Date().toJSON();
+    return {
+      year: -1,
+      month: -1,
+      day: -1,
+      hour: includeTime ? -1 : 0,
+      minute: includeTime ? -1 : 0,
+      second: includeTime ? -1 : 0,
+    };
   }
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) {
@@ -332,8 +339,7 @@ export function parseDateString(dateString, includeTime = true) {
   };
 }
 
-export function toDateString(dateObj) {
-  const {year, month, day, hour, minute, second} = dateObj;
+export function toDateString({year, month, day, hour=0, minute=0, second=0}) {
   const utcTime = Date.UTC(year, month - 1, day, hour, minute, second);
   return new Date(utcTime).toJSON();
 }
