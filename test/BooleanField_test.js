@@ -1,7 +1,6 @@
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, SimulateAsync } from "./test_utils";
 
 
 describe("BooleanField", () => {
@@ -66,11 +65,9 @@ describe("BooleanField", () => {
       default: false,
     }});
 
-    Simulate.change(node.querySelector("input"), {
+    return SimulateAsync().change(node.querySelector("input"), {
       target: {checked: true}
-    });
-
-    expect(comp.state.formData).eql(true);
+    }).then(() => expect(comp.state.formData).eql(true));
   });
 
   it("should fill field with data", () => {

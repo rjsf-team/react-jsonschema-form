@@ -67,7 +67,8 @@ export default class Form extends Component {
       formData,
       errors,
       errorSchema
-    }, _ => {
+    });
+    setImmediate(() => {
       if (this.props.onChange) {
         this.props.onChange(this.state);
       }
@@ -80,7 +81,8 @@ export default class Form extends Component {
     const errors = this.validate(this.state.formData);
     if (Object.keys(errors).length > 0) {
       const errorSchema = toErrorSchema(errors);
-      this.setState({errors, errorSchema}, _ => {
+      this.setState({errors, errorSchema});
+      setImmediate(() => {
         if (this.props.onError) {
           this.props.onError(errors);
         } else {
