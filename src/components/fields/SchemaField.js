@@ -132,7 +132,7 @@ function SchemaField(props) {
 
   return (
     <Wrapper
-      label={schema.title || name}
+      label={props.schema.title || schema.title || name}
       errorSchema={errorSchema}
       hidden={uiSchema["ui:widget"] === "hidden"}
       help={uiSchema["ui:help"]}
@@ -141,7 +141,7 @@ function SchemaField(props) {
       displayLabel={displayLabel}
       id={idSchema.id}
       classNames={uiSchema.classNames}>
-      <FieldComponent {...props} />
+      <FieldComponent {...props} schema={schema} />
     </Wrapper>
   );
 }
