@@ -1,10 +1,31 @@
 import React, { PropTypes } from "react";
 
-import DateWidget from "./DateWidget";
 
+function fromJSONDate(jsonDate) {
+  return jsonDate ? jsonDate.slice(0, 19) : "";
+}
 
-function DateTimeWidget(props) {
-  return <DateWidget time {...props} />;
+function toJSONDate(dateString) {
+  if (dateString) {
+    return new Date(dateString).toJSON();
+  }
+}
+
+function DateTimeWidget({
+  schema,
+  id,
+  value,
+  required,
+  onChange
+}) {
+  return (
+    <input type="datetime-local"
+      id={id}
+      className="form-control"
+      value={fromJSONDate(value)}
+      required={required}
+      onChange={(event) => onChange(toJSONDate(event.target.value))} />
+  );
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -12,7 +33,7 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
-    value: React.PropTypes.string,
+    value: PropTypes.string,
     required: PropTypes.bool,
     onChange: PropTypes.func,
   };

@@ -8,6 +8,7 @@ import references from "./references";
 import custom from "./custom";
 import errors from "./errors";
 import large from "./large";
+import date from "./date";
 
 export const samples = {
   Simple: simple,
@@ -20,4 +21,5 @@ export const samples = {
   Custom: custom,
   Errors: errors,
   Large: large,
+  "Date & time": date,
 };

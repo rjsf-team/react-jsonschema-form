@@ -9,6 +9,8 @@ import SelectWidget from "./components/widgets/SelectWidget";
 import TextWidget from "./components/widgets/TextWidget";
 import DateWidget from "./components/widgets/DateWidget";
 import DateTimeWidget from "./components/widgets/DateTimeWidget";
+import AltDateWidget from "./components/widgets/AltDateWidget";
+import AltDateTimeWidget from "./components/widgets/AltDateTimeWidget";
 import EmailWidget from "./components/widgets/EmailWidget";
 import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
@@ -29,6 +31,9 @@ const altWidgetMap = {
     textarea: TextareaWidget,
     hidden: HiddenWidget,
     date: DateWidget,
+    datetime: DateTimeWidget,
+    "alt-date": AltDateWidget,
+    "alt-datetime": AltDateTimeWidget,
   },
   number: {
     updown: UpDownWidget,

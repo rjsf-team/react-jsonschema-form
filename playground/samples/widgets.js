@@ -14,14 +14,6 @@ module.exports = {
           uri: {
             type: "string",
             format: "uri"
-          },
-          datetime: {
-            type: "string",
-            format: "date-time"
-          },
-          date: {
-            type: "string",
-            format: "date-time"
           }
         }
       },
@@ -75,11 +67,6 @@ module.exports = {
     string: {
       textarea: {
         "ui:widget": "textarea"
-      }
-    },
-    stringFormats: {
-      date: {
-        "ui:widget": "date"
       }
     },
     secret: {
