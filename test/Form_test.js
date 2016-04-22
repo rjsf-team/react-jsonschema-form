@@ -230,6 +230,23 @@ describe("Form", () => {
       expect(node.querySelectorAll("input[type=text]"))
         .to.have.length.of(2);
     });
+
+    it("should propagate and handle a resolved schema definition", () => {
+      const schema = {
+        definitions: {
+          enumDef: {type: "string", enum: ["a", "b"]}
+        },
+        type: "object",
+        properties: {
+          name: {$ref: "#/definitions/enumDef"}
+        },
+      };
+
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelectorAll("option"))
+        .to.have.length.of(2);
+    });
   });
 
   describe("Defaults array items default propagation", () => {

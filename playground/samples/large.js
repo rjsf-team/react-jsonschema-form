@@ -8,6 +8,9 @@ function largeEnum(n) {
 
 module.exports = {
   schema: {
+    definitions: {
+      largeEnum: {type: "string", enum: largeEnum(100)}
+    },
     title: "A rather large form",
     type: "object",
     properties: {
@@ -15,16 +18,16 @@ module.exports = {
         type: "string",
         title: "Some string",
       },
-      choice1: {type: "string", enum: largeEnum(100)},
-      choice2: {type: "string", enum: largeEnum(100)},
-      choice3: {type: "string", enum: largeEnum(100)},
-      choice4: {type: "string", enum: largeEnum(100)},
-      choice5: {type: "string", enum: largeEnum(100)},
-      choice6: {type: "string", enum: largeEnum(100)},
-      choice7: {type: "string", enum: largeEnum(100)},
-      choice8: {type: "string", enum: largeEnum(100)},
-      choice9: {type: "string", enum: largeEnum(100)},
-      choice10: {type: "string", enum: largeEnum(100)},
+      choice1: {$ref: "#/definitions/largeEnum"},
+      choice2: {$ref: "#/definitions/largeEnum"},
+      choice3: {$ref: "#/definitions/largeEnum"},
+      choice4: {$ref: "#/definitions/largeEnum"},
+      choice5: {$ref: "#/definitions/largeEnum"},
+      choice6: {$ref: "#/definitions/largeEnum"},
+      choice7: {$ref: "#/definitions/largeEnum"},
+      choice8: {$ref: "#/definitions/largeEnum"},
+      choice9: {$ref: "#/definitions/largeEnum"},
+      choice10: {$ref: "#/definitions/largeEnum"},
     }
   },
   uiSchema: {},
