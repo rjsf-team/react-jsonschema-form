@@ -23,6 +23,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Alternative widgets](#alternative-widgets)
         - [For boolean fields](#for-boolean-fields)
         - [For string fields](#for-string-fields)
+           - [String formats](#string-formats)
         - [For number and integer fields](#for-number-and-integer-fields)
         - [Hidden widgets](#hidden-widgets)
      - [Object fields ordering](#object-fields-ordering)
@@ -215,13 +216,22 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
   * `password`: an `input[type=password]` element is used;
   * by default, a regular `input[type=text]` element is used.
 
-The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following formats:
+##### String formats
 
-- `date-time`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
-    * If you don't want to deal with time, a `"ui:widget": "date"` uiSchema widget is alternatively available, exposing three selects for year, month and day only;
+The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following string formats:
+
 - `email`: An `input[type=email]` element is used;
 - `uri`: An `input[type=url]` element is used;
-- More formats could be supported in a near future, feel free to help us going faster!
+- `date-time`: By default, an `input[type=datetime-local]` element is used; if you solely want to rely on a date, a `date` uiSchema alternative widget is available:
+
+![](http://i.imgur.com/xqu6Lcp.png)
+
+Please note that while standardized, `datetime-local` and `date` input elements are not yet supported by Firefox and IE. If you plan on targetting these platforms, two alternative widgets are available:
+
+- `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
+- `alt-date`: Three `select` elements are used to select the year, month and the day.
+
+![](http://i.imgur.com/VF5tY60.png)
 
 #### For `number` and `integer` fields
 
