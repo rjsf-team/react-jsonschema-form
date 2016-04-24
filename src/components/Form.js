@@ -1,16 +1,17 @@
 import React, { Component, PropTypes } from "react";
-import { Validator } from "jsonschema";
+import { validate as jsonValidate } from "jsonschema";
 
 import SchemaField from "./fields/SchemaField";
 import TitleField from "./fields/TitleField";
+import ErrorList from "./ErrorList";
 import {
   getDefaultFormState,
   shouldRender,
   toErrorSchema,
   toIdSchema,
-  setState
+  setState,
+  userValidate
 } from "../utils";
-import ErrorList from "./ErrorList";
 
 
 export default class Form extends Component {
@@ -38,10 +39,11 @@ export default class Form extends Component {
     const mustValidate = edit && liveValidate;
     const {definitions} = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
-    const previousErrors = state.errors || [];
-    const previousErrorSchema = state.errorSchema || {};
-    const errors = mustValidate ? this.validate(formData, schema) : previousErrors;
-    const errorSchema = mustValidate ? toErrorSchema(errors) : previousErrorSchema;
+    const {errors, errorSchema} = mustValidate ?
+      this.validate(formData, schema) : {
+        errors: state.errors || [],
+        errorSchema: state.errorSchema || {}
+      };
     const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
     return {status: "initial", formData, edit, errors, errorSchema, idSchema};
   }
@@ -51,8 +53,13 @@ export default class Form extends Component {
   }
 
   validate(formData, schema) {
-    const validator = new Validator();
-    return validator.validate(formData, schema || this.props.schema).errors;
+    const {validate} = this.props;
+    const {errors} = jsonValidate(formData, schema || this.props.schema);
+    const errorSchema = toErrorSchema(errors);
+    if (typeof validate === "function") {
+      return userValidate(validate, formData, schema, errorSchema);
+    }
+    return {errors, errorSchema};
   }
 
   renderErrors() {
@@ -65,13 +72,10 @@ export default class Form extends Component {
 
   onChange = (formData, options={validate: false}) => {
     const mustValidate = this.props.liveValidate || options.validate;
-    let state;
-    if (!mustValidate) {
-      state = {status: "editing", formData};
-    } else {
-      const errors = this.validate(formData);
-      const errorSchema = toErrorSchema(errors);
-      state = {status: "editing", formData, errors, errorSchema};
+    let state = {status: "editing", formData};
+    if (mustValidate) {
+      const {errors, errorSchema} = this.validate(formData);
+      state = {...state, errors, errorSchema};
     }
     setState(this, state, () => {
       if (this.props.onChange) {
@@ -83,9 +87,8 @@ export default class Form extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     this.setState({status: "submitted"});
-    const errors = this.validate(this.state.formData);
+    const {errors, errorSchema} = this.validate(this.state.formData);
     if (Object.keys(errors).length > 0) {
-      const errorSchema = toErrorSchema(errors);
       setState(this, {errors, errorSchema}, () => {
         if (this.props.onError) {
           this.props.onError(errors);

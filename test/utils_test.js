@@ -8,6 +8,7 @@ import {
   retrieveSchema,
   shouldRender,
   toIdSchema,
+  toErrorList,
   parseDateString,
   toDateString,
   pad
@@ -308,6 +309,29 @@ describe("utils", () => {
         c: 3
       };
       expect(mergeObjects(obj1, obj2)).eql(expected);
+    });
+
+    describe("concatArrays option", () => {
+      it("should not concat arrays by default", () => {
+        const obj1 = {a: [1]};
+        const obj2 = {a: [2]};
+
+        expect(mergeObjects(obj1, obj2)).eql({a: [2]});
+      });
+
+      it("should concat arrays when concatArrays is true", () => {
+        const obj1 = {a: [1]};
+        const obj2 = {a: [2]};
+
+        expect(mergeObjects(obj1, obj2, true)).eql({a: [1, 2]});
+      });
+
+      it("should concat nested arrays when concatArrays is true", () => {
+        const obj1 = {a: {b: [1]}};
+        const obj2 = {a: {b: [2]}};
+
+        expect(mergeObjects(obj1, obj2, true)).eql({a: {b: [1, 2]}});
+      });
     });
   });
 
@@ -610,6 +634,25 @@ describe("utils", () => {
   describe("pad()", () => {
     it("should pad a string with 0s", () => {
       expect(pad(4, 3)).eql("004");
+    });
+  });
+
+  describe("toErrorList()", () => {
+    it("should convert an errorSchema into a flat list", () => {
+      expect(toErrorList({
+        a: {
+          b: {
+            __errors: ["err1", "err2"]
+          }
+        },
+        c: {
+          __errors: ["err3"]
+        }
+      })).eql([
+        {stack: "b err1"},
+        {stack: "b err2"},
+        {stack: "c err3"},
+      ]);
     });
   });
 });

@@ -38,6 +38,7 @@ Codemirror.prototype.componentWillReceiveProps = function (nextProps) {
 const log = (type) => console.log.bind(console, type);
 const fromJson = (json) => JSON.parse(json);
 const toJson = (val) => JSON.stringify(val, null, 2);
+const liveValidateSchema = {type: "boolean", title: "Live validation"};
 const cmOptions = {
   theme: "default",
   height: "auto",
@@ -258,12 +259,13 @@ class App extends Component {
   constructor(props) {
     super(props);
     // initialize state with Simple data sample
-    const {schema, uiSchema, formData} = samples.Simple;
+    const {schema, uiSchema, formData, validate} = samples.Simple;
     this.state = {
       form: false,
       schema,
       uiSchema,
       formData,
+      validate,
       editor: "default",
       theme: "default",
       liveValidate: true,
@@ -303,8 +305,16 @@ class App extends Component {
   onFormDataChange = ({formData}) => this.setState({formData});
 
   render() {
-    const {schema, uiSchema, formData, liveValidate, theme, editor} = this.state;
-    const liveValidateSchema = {type: "boolean", title: "Live validation"};
+    const {
+      schema,
+      uiSchema,
+      formData,
+      liveValidate,
+      validate,
+      theme,
+      editor
+    } = this.state;
+
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -346,6 +356,7 @@ class App extends Component {
               formData={formData}
               onChange={this.onFormDataChange}
               fields={{geo: GeoPosition}}
+              validate={validate}
               onError={log("errors")} />}
         </div>
       </div>

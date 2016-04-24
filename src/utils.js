@@ -160,13 +160,15 @@ function isObject(thing) {
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
-export function mergeObjects(obj1, obj2) {
+export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) =>{
-    const right = obj2[key];
+    const left = obj1[key], right = obj2[key];
     if (obj1.hasOwnProperty(key) && isObject(right)) {
-      acc[key] = mergeObjects(obj1[key], right);
+      acc[key] = mergeObjects(left, right, concatArrays);
+    } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
+      acc[key] = left.concat(right);
     } else {
       acc[key] = right;
     }
@@ -268,6 +270,18 @@ function errorPropertyToPath(property) {
   }, []);
 }
 
+export function toErrorList(errorSchema) {
+  return Object.keys(errorSchema).reduce((acc, key) => {
+    const field = errorSchema[key];
+    if ("__errors" in field) {
+      acc = acc.concat(field.__errors.map(stack => ({stack: `${key} ${stack}`})));
+    } else if (isObject(field)) {
+      acc = acc.concat(toErrorList(field));
+    }
+    return acc;
+  }, []);
+}
+
 export function toErrorSchema(errors) {
   // Transforms a jsonschema validation errors list:
   // [
@@ -297,10 +311,10 @@ export function toErrorSchema(errors) {
       }
       parent = parent[segment];
     }
-    if (Array.isArray(parent.errors)) {
-      parent.errors = parent.errors.concat(message);
+    if (Array.isArray(parent.__errors)) {
+      parent.__errors = parent.__errors.concat(message);
     } else {
-      parent.errors = [message];
+      parent.__errors = [message];
     }
     return errorSchema;
   }, {});
@@ -325,6 +339,51 @@ export function toIdSchema(schema, id, definitions) {
   }
   return idSchema;
 }
+
+export function userValidate(validate, formData, schema, errorSchema) {
+  function wrapFormDataValue(value) {
+    return {
+      __errors: [],
+      getValue() {
+        return value;
+      },
+      addError(message) {
+        this.__errors.push(message);
+      },
+    };
+  }
+
+  function wrapFormData(formData) {
+    if (!isObject(formData)) {
+      return wrapFormDataValue(formData);
+    }
+    return Object.keys(formData).reduce((acc, key) => {
+      return {...acc, [key]: wrapFormDataValue(formData[key])};
+    }, {}); 
+  }
+
+  function extractWrappedErrors(wrappedFormData) {
+    // if (!isObject(wrappedFormData)) {
+    //   return {__errors: wrappedFormData.__errors};
+    // }
+    return Object.keys(wrappedFormData).reduce((acc, key) => {
+      if (key === "addError" || key === "getValue") {
+        return acc;
+      } else if (key === "__errors") {
+        return {...acc, [key]: wrappedFormData[key]};
+      }
+      return {...acc, [key]: extractWrappedErrors(wrappedFormData[key])};
+    }, {}); 
+  }
+
+  const wrappedFormData = wrapFormData(formData);
+
+  validate(wrappedFormData, schema);
+
+  const newErrorSchema = mergeObjects(errorSchema, extractWrappedErrors(wrappedFormData), true);
+  const newErrors = toErrorList(newErrorSchema);
+  return {errors: newErrors, errorSchema: newErrorSchema};
+} 
 
 export function parseDateString(dateString, includeTime = true) {
   if (!dateString) {
