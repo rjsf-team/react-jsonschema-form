@@ -53,7 +53,7 @@ class ObjectField extends Component {
   };
 
   render() {
-    const {uiSchema, errorSchema, idSchema, name} = this.props;
+    const {uiSchema, errorSchema, idSchema, name, required} = this.props;
     const {definitions, fields} = this.props.registry;
     const {SchemaField, TitleField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
@@ -75,7 +75,7 @@ class ObjectField extends Component {
     }
     return (
       <fieldset>
-        {title ? <TitleField title={title}/> : null}
+        {title ? <TitleField title={title} required={required} /> : null}
         {schema.description ?
           <p className="field-description">{schema.description}</p> : null}
         {
