@@ -51,7 +51,7 @@ describe("ObjectField", () => {
 
     it("should render a customized title", () => {
       const CustomTitleField = ({title, required}) => {
-        const legend = required ? title + '*' : title;
+        const legend = required ? title + "*" : title;
         return <div id="custom">{legend}</div>;
       };
 

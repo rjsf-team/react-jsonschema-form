@@ -1,6 +1,4 @@
 import { expect } from "chai";
-
-import React from "react";
 import { renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
@@ -26,7 +24,7 @@ describe("TitleField", () => {
     const comp = renderIntoDocument(TitleField(props));
     const node = findDOMNode(comp);
 
-    expect(node.tagName).to.equal('LEGEND');
+    expect(node.tagName).to.equal("LEGEND");
   });
 
   it("should include only title, when field is not required", () => {
@@ -39,7 +37,6 @@ describe("TitleField", () => {
 
     expect(node.textContent).to.equal(props.title);
   });
-
 
   it("should add an asterisk to the title, when field is required", () => {
     const props = {
