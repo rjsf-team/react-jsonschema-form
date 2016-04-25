@@ -50,10 +50,7 @@ describe("ObjectField", () => {
     });
 
     it("should render a customized title", () => {
-      const CustomTitleField = ({title, required}) => {
-        const legend = required ? title + "*" : title;
-        return <div id="custom">{legend}</div>;
-      };
+      const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
       const {node} = createFormComponent({schema, TitleField: CustomTitleField});
       expect(node.querySelector("fieldset > #custom").textContent)
