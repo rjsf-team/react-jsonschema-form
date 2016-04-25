@@ -15,6 +15,7 @@ import EmailWidget from "./components/widgets/EmailWidget";
 import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
+import ColorWidget from "./components/widgets/ColorWidget";
 
 const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
 
@@ -34,6 +35,7 @@ const altWidgetMap = {
     datetime: DateTimeWidget,
     "alt-date": AltDateWidget,
     "alt-datetime": AltDateTimeWidget,
+    color: ColorWidget,
   },
   number: {
     updown: UpDownWidget,

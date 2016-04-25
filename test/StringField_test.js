@@ -818,4 +818,77 @@ describe("StringField", () => {
         .then(() => expect(comp.state.errors).to.have.length.of(1));
     });
   });
+
+  describe("ColorWidget", () => {
+    const uiSchema = {"ui:widget": "color"};
+    const color = "#123456";
+
+    it("should render a color field", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "color",
+      }, uiSchema});
+
+      expect(node.querySelectorAll(".field [type=color]"))
+        .to.have.length.of(1);
+    });
+
+    it("should assign a default value", () => {
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "color",
+        default: color,
+      }, uiSchema});
+
+      expect(comp.state.formData).eql(color);
+    });
+
+    it("should reflect the change into the dom", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "color",
+      }, uiSchema});
+
+      const newColor = "#654321";
+      return SimulateAsync().change(node.querySelector("[type=color]"), {
+        target: {value: newColor}
+      })
+        .then(() => {
+          return expect(node.querySelector("[type=color]").value)
+            .eql(newColor);
+        });
+    });
+
+    it("should fill field with data", () => {
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "color",
+      }, formData: color});
+
+      expect(comp.state.formData).eql(color);
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "color",
+      }, uiSchema});
+
+      expect(node.querySelector("[type=color]").id)
+        .eql("root");
+    });
+
+
+    it("should reject an invalid entered color", () => {
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "color",
+      }, uiSchema, liveValidate: true});
+
+      return SimulateAsync().change(node.querySelector("[type=color]"), {
+        target: {value: "invalid"}
+      })
+        .then(() => expect(comp.state.errors).to.have.length.of(1));
+    });
+  });
 });

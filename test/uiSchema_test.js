@@ -148,7 +148,7 @@ describe("uiSchema", () => {
           .eql("a");
       });
 
-      it("should update state when text is updated is checked", () => {
+      it("should update state when text is updated", () => {
         const {comp, node} = createFormComponent({schema, uiSchema, formData: {
           foo: "a"
         }});
@@ -192,6 +192,41 @@ describe("uiSchema", () => {
           target: {value: "b"}
         })
           .then(() => expect(comp.state.formData).eql({foo: "b"}));
+      });
+    });
+
+    describe("color", () => {
+      const uiSchema = {
+        foo: {
+          "ui:widget": "color"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=color]"))
+          .to.have.length.of(1);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: "#151ce6"
+        }});
+
+        expect(node.querySelector("[type=color]").value)
+          .eql("#151ce6");
+      });
+
+      it("should update state when text is updated", () => {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
+          foo: "#151ce6"
+        }});
+
+        return SimulateAsync().change(node.querySelector("[type=color]"), {
+          target: {value: "#001122"}
+        })
+          .then(() => expect(comp.state.formData).eql({foo: "#001122"}));
       });
     });
 
