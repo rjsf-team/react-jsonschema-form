@@ -105,16 +105,17 @@ class ArrayField extends Component {
   }
 
   renderNormalArray() {
-    const {schema, uiSchema, errorSchema, idSchema, name} = this.props;
+    const {schema, uiSchema, errorSchema, idSchema, name, required} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const {definitions} = this.props.registry;
+    const {definitions, fields} = this.props.registry;
+    const {TitleField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
 
     return (
       <fieldset
         className={`field field-array field-array-of-${itemsSchema.type}`}>
-        {title ? <legend>{title}</legend> : null}
+        {title ? <TitleField title={title} required={required} /> : null}
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{
@@ -157,10 +158,11 @@ class ArrayField extends Component {
   }
 
   renderFixedArray() {
-    const {schema, uiSchema, errorSchema, idSchema, name} = this.props;
+    const {schema, uiSchema, errorSchema, idSchema, name, required} = this.props;
     const title = schema.title || name;
     let {items} = this.state;
-    const {definitions} = this.props.registry;
+    const {definitions, fields} = this.props.registry;
+    const {TitleField} = fields;
     const itemSchemas = schema.items.map(item =>
       retrieveSchema(item, definitions));
     const additionalSchema = allowAdditionalItems(schema) ?
@@ -174,7 +176,7 @@ class ArrayField extends Component {
 
     return (
       <fieldset className="field field-array field-array-fixed-items">
-        {title ? <legend>{title}</legend> : null}
+        {title ? <TitleField title={title} required={required} /> : null}
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{

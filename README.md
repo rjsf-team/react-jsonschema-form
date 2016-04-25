@@ -582,7 +582,10 @@ Simply pass a `fields` object having a `TitleField` property to your `Form` comp
 
 ```jsx
 
-const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
+const CustomTitleField = ({title, required}) => {
+  const legend = required ? title + '*' : title;
+  return <div id="custom">{legend}</div>;
+};
 
 const fields = {
   TitleField: CustomTitleField
