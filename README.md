@@ -214,6 +214,7 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
   * `textarea`: a `textarea` element is used;
   * `password`: an `input[type=password]` element is used;
+  * `color`: an `input[type=color]` element is used;
   * by default, a regular `input[type=text]` element is used.
 
 ##### String formats
