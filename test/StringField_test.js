@@ -466,8 +466,10 @@ describe("StringField", () => {
 
         return SimulateAsync().click(node.querySelector("a.btn-now"))
           .then(() => {
-            const expected = toDateString(parseDateString(new Date().toJSON(), true));
-            expect(comp.state.formData).eql(expected);
+            // Test that the two DATETIMEs are within 5 seconds of each other.
+            const now = new Date().getTime();
+            const timeDiff = now - new Date(comp.state.formData).getTime();
+            expect(timeDiff).to.be.at.most(5000);
           });
       });
 
