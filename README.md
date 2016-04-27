@@ -176,7 +176,7 @@ const uiSchema = {
   }
 }
 
-render(<Form schema={schema} uiSchema={formData} />,
+render(<Form schema={schema} uiSchema={uiSchema} />,
        document.getElementById("app"));
 ```
 
