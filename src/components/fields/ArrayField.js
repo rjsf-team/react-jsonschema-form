@@ -9,7 +9,8 @@ import {
   retrieveSchema,
   toIdSchema,
   shouldRender,
-  getDefaultRegistry
+  getDefaultRegistry,
+  setState
 } from "../../utils";
 import SelectWidget from "./../widgets/SelectWidget";
 
@@ -51,9 +52,10 @@ class ArrayField extends Component {
     return itemsSchema.type === "string" && itemsSchema.minLength > 0;
   }
 
-  asyncSetState(state, options) {
-    this.setState(state);
-    setImmediate(() => this.props.onChange(this.state.items, options));
+  asyncSetState(state) {
+    setState(this, state, () => {
+      this.props.onChange(this.state.items, {validate: false});
+    });
   }
 
   onAddClick = (event) => {
@@ -66,8 +68,10 @@ class ArrayField extends Component {
       itemSchema = schema.additionalItems;
     }
     this.asyncSetState({
-      items: items.concat([getDefaultFormState(itemSchema, undefined, definitions)])
-    }, {validate: false});
+      items: items.concat([
+        getDefaultFormState(itemSchema, undefined, definitions)
+      ])
+    });
   };
 
   onDropIndexClick = (index) => {
@@ -75,7 +79,7 @@ class ArrayField extends Component {
       event.preventDefault();
       this.asyncSetState({
         items: this.state.items.filter((_, i) => i !== index)
-      }, {validate: false});
+      });
     };
   };
 
@@ -85,12 +89,12 @@ class ArrayField extends Component {
         items: this.state.items.map((item, i) => {
           return index === i ? value : item;
         })
-      }, {validate: false});
+      });
     };
   };
 
   onSelectChange = (value) => {
-    this.asyncSetState({items: value}, {validate: false});
+    this.asyncSetState({items: value});
   };
 
   render() {

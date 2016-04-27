@@ -1,7 +1,8 @@
 import React from "react";
 import { expect } from "chai";
+import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox, SimulateAsync } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
 
 
 describe("ObjectField", () => {
@@ -112,10 +113,11 @@ describe("ObjectField", () => {
     it("should handle object fields change events", () => {
       const {comp, node} = createFormComponent({schema});
 
-      return SimulateAsync().change(node.querySelector("input[type=text]"), {
+      Simulate.change(node.querySelector("input[type=text]"), {
         target: {value: "changed"}
-      })
-        .then(() => expect(comp.state.formData.foo).eql("changed"));
+      });
+
+      expect(comp.state.formData.foo).eql("changed");
     });
 
     it("should render the widget with the expected id", () => {

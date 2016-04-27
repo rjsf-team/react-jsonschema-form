@@ -1,7 +1,8 @@
 import { expect } from "chai";
+import { Simulate } from "react-addons-test-utils";
 
 import { parseDateString, toDateString } from "../src/utils";
-import { createFormComponent, createSandbox, SimulateAsync } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
 
 
 describe("StringField", () => {
@@ -66,9 +67,11 @@ describe("StringField", () => {
         type: "string",
       }});
 
-      return SimulateAsync().change(node.querySelector("input"), {
+      Simulate.change(node.querySelector("input"), {
         target: {value: "yo"}
-      }).then(() => expect(comp.state.formData).eql("yo"));
+      });
+
+      expect(comp.state.formData).eql("yo");
     });
 
     it("should fill field with data", () => {
@@ -139,9 +142,11 @@ describe("StringField", () => {
         enum: ["foo", "bar"],
       }});
 
-      return SimulateAsync().change(node.querySelector("select"), {
+      Simulate.change(node.querySelector("select"), {
         target: {value: "foo"}
-      }).then(() => expect(comp.state.formData).eql("foo"));
+      });
+
+      expect(comp.state.formData).eql("foo");
     });
 
     it("should reflect the change into the dom", () => {
@@ -150,9 +155,11 @@ describe("StringField", () => {
         enum: ["foo", "bar"],
       }});
 
-      return SimulateAsync().change(node.querySelector("select"), {
+      Simulate.change(node.querySelector("select"), {
         target: {value: "foo"}
-      }).then(() => expect(node.querySelector("select").value).eql("foo"));
+      });
+
+      expect(node.querySelector("select").value).eql("foo");
     });
 
     it("should fill field with data", () => {
@@ -204,14 +211,14 @@ describe("StringField", () => {
       }});
 
       const newDatetime = new Date().toJSON();
-      return SimulateAsync().change(node.querySelector("[type=datetime-local]"), {
+
+      Simulate.change(node.querySelector("[type=datetime-local]"), {
         target: {value: newDatetime}
-      })
-        .then(() => {
-          return expect(node.querySelector("[type=datetime-local]").value)
-            // XXX import and use conversion helper
-            .eql(newDatetime.slice(0, 19));
-        });
+      });
+
+      expect(node.querySelector("[type=datetime-local]").value)
+        // XXX import and use conversion helper
+        .eql(newDatetime.slice(0, 19));
     });
 
     it("should fill field with data", () => {
@@ -240,10 +247,11 @@ describe("StringField", () => {
         format: "date-time",
       }, liveValidate: true});
 
-      return SimulateAsync().change(node.querySelector("[type=datetime-local]"), {
+      Simulate.change(node.querySelector("[type=datetime-local]"), {
         target: {value: "invalid"}
-      })
-        .then(() => expect(comp.state.errors).to.have.length.of(1));
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
     });
   });
 
@@ -278,14 +286,14 @@ describe("StringField", () => {
       }, uiSchema});
 
       const newDatetime = new Date().toJSON();
-      return SimulateAsync().change(node.querySelector("[type=date]"), {
+
+      Simulate.change(node.querySelector("[type=date]"), {
         target: {value: newDatetime}
-      })
-        .then(() => {
-          return expect(node.querySelector("[type=date]").value)
-            // XXX import and use conversion helper
-            .eql(newDatetime.slice(0, 10));
-        });
+      });
+
+      expect(node.querySelector("[type=date]").value)
+        // XXX import and use conversion helper
+        .eql(newDatetime.slice(0, 10));
     });
 
     it("should fill field with data", () => {
@@ -314,10 +322,11 @@ describe("StringField", () => {
         format: "date-time",
       }, uiSchema, liveValidate: true});
 
-      return SimulateAsync().change(node.querySelector("[type=date]"), {
+      Simulate.change(node.querySelector("[type=date]"), {
         target: {value: "invalid"}
-      })
-        .then(() => expect(comp.state.errors).to.have.length.of(1));
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
     });
   });
 
@@ -362,23 +371,14 @@ describe("StringField", () => {
         format: "date-time",
       }, uiSchema});
 
-      return Promise.all([
-        SimulateAsync().change(
-          node.querySelector("#root_year"), {target: {value: 2012}}),
-        SimulateAsync().change(
-          node.querySelector("#root_month"), {target: {value: 10}}),
-        SimulateAsync().change(
-          node.querySelector("#root_day"), {target: {value: 2}}),
-        SimulateAsync().change(
-          node.querySelector("#root_hour"), {target: {value: 1}}),
-        SimulateAsync().change(
-          node.querySelector("#root_minute"), {target: {value: 2}}),
-        SimulateAsync().change(
-          node.querySelector("#root_second"), {target: {value: 3}}),
-      ])
-        .then(() => {
-          expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
-        });
+      Simulate.change(node.querySelector("#root_year"), {target: {value: 2012}});
+      Simulate.change(node.querySelector("#root_month"), {target: {value: 10}});
+      Simulate.change(node.querySelector("#root_day"), {target: {value: 2}});
+      Simulate.change(node.querySelector("#root_hour"), {target: {value: 1}});
+      Simulate.change(node.querySelector("#root_minute"), {target: {value: 2}});
+      Simulate.change(node.querySelector("#root_second"), {target: {value: 3}});
+
+      expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
     });
 
     it("should fill field with data", () => {
@@ -464,13 +464,12 @@ describe("StringField", () => {
           format: "date-time",
         }, uiSchema});
 
-        return SimulateAsync().click(node.querySelector("a.btn-now"))
-          .then(() => {
-            // Test that the two DATETIMEs are within 5 seconds of each other.
-            const now = new Date().getTime();
-            const timeDiff = now - new Date(comp.state.formData).getTime();
-            expect(timeDiff).to.be.at.most(5000);
-          });
+        Simulate.click(node.querySelector("a.btn-now"));
+
+        // Test that the two DATETIMEs are within 5 seconds of each other.
+        const now = new Date().getTime();
+        const timeDiff = now - new Date(comp.state.formData).getTime();
+        expect(timeDiff).to.be.at.most(5000);
       });
 
       it("should clear current date when pressing the Clear button", () => {
@@ -479,9 +478,10 @@ describe("StringField", () => {
           format: "date-time",
         }, uiSchema});
 
-        return SimulateAsync().click(node.querySelector("a.btn-now"))
-          .then(() => SimulateAsync().click(node.querySelector("a.btn-clear")))
-          .then(() => expect(comp.state.formData).eql(undefined));
+        Simulate.click(node.querySelector("a.btn-now"));
+        Simulate.click(node.querySelector("a.btn-clear"));
+
+        expect(comp.state.formData).eql(undefined);
       });
     });
   });
@@ -527,17 +527,11 @@ describe("StringField", () => {
         format: "date-time",
       }, uiSchema});
 
-      return Promise.all([
-        SimulateAsync().change(
-            node.querySelector("#root_year"), {target: {value: 2012}}),
-        SimulateAsync().change(
-            node.querySelector("#root_month"), {target: {value: 10}}),
-        SimulateAsync().change(
-            node.querySelector("#root_day"), {target: {value: 2}}),
-      ])
-        .then(() => {
-          expect(comp.state.formData).eql("2012-10-02T00:00:00.000Z");
-        });
+      Simulate.change(node.querySelector("#root_year"), {target: {value: 2012}});
+      Simulate.change(node.querySelector("#root_month"), {target: {value: 10}});
+      Simulate.change(node.querySelector("#root_day"), {target: {value: 2}});
+
+      expect(comp.state.formData).eql("2012-10-02T00:00:00.000Z");
     });
 
     it("should fill field with data", () => {
@@ -616,11 +610,10 @@ describe("StringField", () => {
           format: "date-time",
         }, uiSchema});
 
-        return SimulateAsync().click(node.querySelector("a.btn-now"))
-          .then(() => {
-            const expected = toDateString(parseDateString(new Date().toJSON(), false));
-            expect(comp.state.formData).eql(expected);
-          });
+        Simulate.click(node.querySelector("a.btn-now"));
+
+        const expected = toDateString(parseDateString(new Date().toJSON(), false));
+        expect(comp.state.formData).eql(expected);
       });
 
       it("should clear current date when pressing the Clear button", () => {
@@ -629,9 +622,10 @@ describe("StringField", () => {
           format: "date-time",
         }, uiSchema});
 
-        return SimulateAsync().click(node.querySelector("a.btn-now"))
-          .then(() => SimulateAsync().click(node.querySelector("a.btn-clear")))
-          .then(() => expect(comp.state.formData).eql(undefined));
+        Simulate.click(node.querySelector("a.btn-now"));
+        Simulate.click(node.querySelector("a.btn-clear"));
+
+        expect(comp.state.formData).eql(undefined);
       });
     });
   });
@@ -687,13 +681,13 @@ describe("StringField", () => {
       }});
 
       const newDatetime = new Date().toJSON();
-      return SimulateAsync().change(node.querySelector("[type=email]"), {
+
+      Simulate.change(node.querySelector("[type=email]"), {
         target: {value: newDatetime}
-      })
-        .then(() => {
-          return expect(node.querySelector("[type=email]").value)
-            .eql(newDatetime);
-        });
+      });
+
+      expect(node.querySelector("[type=email]").value)
+        .eql(newDatetime);
     });
 
     it("should fill field with data", () => {
@@ -722,10 +716,11 @@ describe("StringField", () => {
         format: "email",
       }, liveValidate: true});
 
-      return SimulateAsync().change(node.querySelector("[type=email]"), {
+      Simulate.change(node.querySelector("[type=email]"), {
         target: {value: "invalid"}
-      })
-        .then(() => expect(comp.state.errors).to.have.length.of(1));
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
     });
   });
 
@@ -780,10 +775,11 @@ describe("StringField", () => {
       }});
 
       const newDatetime = new Date().toJSON();
-      return SimulateAsync().change(node.querySelector("[type=url]"), {
+      Simulate.change(node.querySelector("[type=url]"), {
         target: {value: newDatetime}
-      })
-        .then(() => expect(node.querySelector("[type=url]").value).eql(newDatetime));
+      });
+
+      expect(node.querySelector("[type=url]").value).eql(newDatetime);
     });
 
     it("should fill field with data", () => {
@@ -812,10 +808,11 @@ describe("StringField", () => {
         format: "uri",
       }, liveValidate: true});
 
-      return SimulateAsync().change(node.querySelector("[type=url]"), {
+      Simulate.change(node.querySelector("[type=url]"), {
         target: {value: "invalid"}
-      })
-        .then(() => expect(comp.state.errors).to.have.length.of(1));
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
     });
   });
 
@@ -850,13 +847,13 @@ describe("StringField", () => {
       }, uiSchema});
 
       const newColor = "#654321";
-      return SimulateAsync().change(node.querySelector("[type=color]"), {
+
+      Simulate.change(node.querySelector("[type=color]"), {
         target: {value: newColor}
-      })
-        .then(() => {
-          return expect(node.querySelector("[type=color]").value)
-            .eql(newColor);
-        });
+      });
+
+      expect(node.querySelector("[type=color]").value)
+        .eql(newColor);
     });
 
     it("should fill field with data", () => {
@@ -885,10 +882,11 @@ describe("StringField", () => {
         format: "color",
       }, uiSchema, liveValidate: true});
 
-      return SimulateAsync().change(node.querySelector("[type=color]"), {
+      Simulate.change(node.querySelector("[type=color]"), {
         target: {value: "invalid"}
-      })
-        .then(() => expect(comp.state.errors).to.have.length.of(1));
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
     });
   });
 });

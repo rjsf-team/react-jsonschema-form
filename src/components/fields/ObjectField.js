@@ -5,7 +5,8 @@ import {
   orderProperties,
   retrieveSchema,
   shouldRender,
-  getDefaultRegistry
+  getDefaultRegistry,
+  setState
 } from "../../utils";
 
 
@@ -42,8 +43,7 @@ class ObjectField extends Component {
   }
 
   asyncSetState(state) {
-    this.setState(state);
-    setImmediate(() => this.props.onChange(this.state));
+    setState(this, state, () => this.props.onChange(this.state));
   }
 
   onPropertyChange = (name) => {

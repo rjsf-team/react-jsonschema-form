@@ -358,3 +358,13 @@ export function pad(num, size) {
   }
   return s;
 }
+
+export function setState(instance, state, callback) {
+  const {safeRenderCompletion} = instance.props;
+  if (safeRenderCompletion) {
+    instance.setState(state, callback);
+  } else {
+    instance.setState(state);
+    setImmediate(callback);
+  }
+}

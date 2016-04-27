@@ -7,7 +7,8 @@ import {
   getDefaultFormState,
   shouldRender,
   toErrorSchema,
-  toIdSchema
+  toIdSchema,
+  setState
 } from "../utils";
 import ErrorList from "./ErrorList";
 
@@ -16,6 +17,7 @@ export default class Form extends Component {
   static defaultProps = {
     uiSchema: {},
     liveValidate: false,
+    safeRenderCompletion: false,
   }
 
   constructor(props) {
@@ -62,13 +64,12 @@ export default class Form extends Component {
     const errors = liveValidate ? this.validate(formData) :
                                   this.state.errors;
     const errorSchema = toErrorSchema(errors);
-    this.setState({
+    setState(this, {
       status: "editing",
       formData,
       errors,
       errorSchema
-    });
-    setImmediate(() => {
+    }, () => {
       if (this.props.onChange) {
         this.props.onChange(this.state);
       }
@@ -81,8 +82,7 @@ export default class Form extends Component {
     const errors = this.validate(this.state.formData);
     if (Object.keys(errors).length > 0) {
       const errorSchema = toErrorSchema(errors);
-      this.setState({errors, errorSchema});
-      setImmediate(() => {
+      setState(this, {errors, errorSchema}, () => {
         if (this.props.onError) {
           this.props.onError(errors);
         } else {
@@ -113,7 +113,7 @@ export default class Form extends Component {
   }
 
   render() {
-    const {children, schema, uiSchema} = this.props;
+    const {children, schema, uiSchema, safeRenderCompletion} = this.props;
     const {formData, errorSchema, idSchema} = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
@@ -127,7 +127,8 @@ export default class Form extends Component {
           idSchema={idSchema}
           formData={formData}
           onChange={this.onChange}
-          registry={registry}/>
+          registry={registry}
+          safeRenderCompletion={safeRenderCompletion} />
         { children ? children :
           <p>
             <button type="submit" className="btn btn-info">Submit</button>
@@ -148,6 +149,7 @@ if (process.env.NODE_ENV !== "production") {
     onError: PropTypes.func,
     onSubmit: PropTypes.func,
     liveValidate: PropTypes.bool,
+    safeRenderCompletion: PropTypes.bool,
   };
 }
 

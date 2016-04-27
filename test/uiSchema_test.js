@@ -1,7 +1,8 @@
 import { expect } from "chai";
 import React from "react";
+import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox, SimulateAsync } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
 
 
 describe("uiSchema", () => {
@@ -153,10 +154,11 @@ describe("uiSchema", () => {
           foo: "a"
         }});
 
-        return SimulateAsync().change(node.querySelector("textarea"), {
+        Simulate.change(node.querySelector("textarea"), {
           target: {value: "b"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: "b"}));
+        });
+
+        expect(comp.state.formData).eql({foo: "b"});
       });
     });
 
@@ -188,10 +190,11 @@ describe("uiSchema", () => {
           foo: "a"
         }});
 
-        return SimulateAsync().change(node.querySelector("[type=password]"), {
+        Simulate.change(node.querySelector("[type=password]"), {
           target: {value: "b"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: "b"}));
+        });
+
+        expect(comp.state.formData).eql({foo: "b"});
       });
     });
 
@@ -223,10 +226,11 @@ describe("uiSchema", () => {
           foo: "#151ce6"
         }});
 
-        return SimulateAsync().change(node.querySelector("[type=color]"), {
+        Simulate.change(node.querySelector("[type=color]"), {
           target: {value: "#001122"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: "#001122"}));
+        });
+
+        expect(comp.state.formData).eql({foo: "#001122"});
       });
     });
 
@@ -302,10 +306,11 @@ describe("uiSchema", () => {
           foo: "a"
         }});
 
-        return SimulateAsync().change(node.querySelectorAll("[type=radio]")[1], {
+        Simulate.change(node.querySelectorAll("[type=radio]")[1], {
           target: {checked: true}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: "b"}));
+        });
+
+        expect(comp.state.formData).eql({foo: "b"});
       });
     });
   });
@@ -348,10 +353,11 @@ describe("uiSchema", () => {
           foo: 3.14
         }});
 
-        return SimulateAsync().change(node.querySelector("[type=number]"), {
+        Simulate.change(node.querySelector("[type=number]"), {
           target: {value: "6.28"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: 6.28}));
+        });
+
+        expect(comp.state.formData).eql({foo: 6.28});
       });
     });
 
@@ -383,10 +389,11 @@ describe("uiSchema", () => {
           foo: 3.14
         }});
 
-        return SimulateAsync().change(node.querySelector("[type=range]"), {
+        Simulate.change(node.querySelector("[type=range]"), {
           target: {value: "6.28"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: 6.28}));
+        });
+
+        expect(comp.state.formData).eql({foo: 6.28});
       });
     });
 
@@ -461,10 +468,11 @@ describe("uiSchema", () => {
           foo: 3
         }});
 
-        return SimulateAsync().change(node.querySelector("[type=number]"), {
+        Simulate.change(node.querySelector("[type=number]"), {
           target: {value: "6"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: 6}));
+        });
+
+        expect(comp.state.formData).eql({foo: 6});
       });
     });
 
@@ -496,10 +504,11 @@ describe("uiSchema", () => {
           foo: 3
         }});
 
-        return SimulateAsync().change(node.querySelector("[type=range]"), {
+        Simulate.change(node.querySelector("[type=range]"), {
           target: {value: "6"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: 6}));
+        });
+
+        expect(comp.state.formData).eql({foo: 6});
       });
     });
 
@@ -588,10 +597,11 @@ describe("uiSchema", () => {
           foo: true
         }});
 
-        return SimulateAsync().change(node.querySelectorAll("[type=radio]")[1], {
+        Simulate.change(node.querySelectorAll("[type=radio]")[1], {
           target: {checked: true}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: false}));
+        });
+
+        expect(comp.state.formData).eql({foo: false});
       });
 
       it("should update state when true is checked", () => {
@@ -599,10 +609,11 @@ describe("uiSchema", () => {
           foo: false
         }});
 
-        return SimulateAsync().change(node.querySelectorAll("[type=radio]")[0], {
+        Simulate.change(node.querySelectorAll("[type=radio]")[0], {
           target: {checked: true}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: true}));
+        });
+
+        expect(comp.state.formData).eql({foo: true});
       });
     });
 
@@ -634,11 +645,12 @@ describe("uiSchema", () => {
           foo: false
         }});
 
-        return SimulateAsync().change(node.querySelector("select"), {
+        Simulate.change(node.querySelector("select"), {
           // DOM option change events always return strings
           target: {value: "true"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: true}));
+        });
+
+        expect(comp.state.formData).eql({foo: true});
       });
 
       it("should update state when false is selected", () => {
@@ -646,11 +658,12 @@ describe("uiSchema", () => {
           foo: false
         }});
 
-        return SimulateAsync().change(node.querySelector("select"), {
+        Simulate.change(node.querySelector("select"), {
           // DOM option change events always return strings
           target: {value: "false"}
-        })
-          .then(() => expect(comp.state.formData).eql({foo: false}));
+        });
+
+        expect(comp.state.formData).eql({foo: false});
       });
     });
 

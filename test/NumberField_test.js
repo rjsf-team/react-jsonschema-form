@@ -1,6 +1,7 @@
 import { expect } from "chai";
+import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox, SimulateAsync } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
 
 
 describe("NumberField", () => {
@@ -65,10 +66,11 @@ describe("NumberField", () => {
         type: "number",
       }});
 
-      return SimulateAsync().change(node.querySelector("input"), {
+      Simulate.change(node.querySelector("input"), {
         target: {value: "2"}
-      })
-        .then(() => expect(comp.state.formData).eql(2));
+      });
+
+      expect(comp.state.formData).eql(2);
     });
 
     it("should fill field with data", () => {
@@ -85,10 +87,11 @@ describe("NumberField", () => {
         type: "number",
       }});
 
-      return SimulateAsync().change(node.querySelector("input"), {
+      Simulate.change(node.querySelector("input"), {
         target: {value: "2."}
-      })
-        .then(() => expect(comp.state.formData).eql("2."));
+      });
+
+      expect(comp.state.formData).eql("2.");
     });
 
     it("should render the widget with the expected id", () => {
@@ -150,10 +153,11 @@ describe("NumberField", () => {
         enum: [1, 2],
       }});
 
-      return SimulateAsync().change(node.querySelector("select"), {
+      Simulate.change(node.querySelector("select"), {
         target: {value: "2"}
-      })
-        .then(() => expect(comp.state.formData).eql(2));
+      });
+
+      expect(comp.state.formData).eql(2);
     });
 
     it("should fill field with data", () => {

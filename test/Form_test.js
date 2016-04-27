@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import React from "react";
-import { renderIntoDocument } from "react-addons-test-utils";
+import { renderIntoDocument, Simulate } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createFormComponent, createSandbox, SimulateAsync } from "./test_utils";
+import { createFormComponent, createSandbox } from "./test_utils";
 
 
 describe("Form", () => {
@@ -197,11 +197,10 @@ describe("Form", () => {
 
       const {node} = createFormComponent({schema});
 
-      return SimulateAsync().click(node.querySelector(".array-item-add button"))
-        .then(() => {
-          expect(node.querySelector("input[type=text]").value)
-            .eql("hello");
-        });
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector("input[type=text]").value)
+        .eql("hello");
     });
 
     it("should priorize definition over schema type property", () => {
@@ -276,22 +275,25 @@ describe("Form", () => {
       }
     };
 
-    it("should propagate deeply nested defaults to form state", () => {
+    it("should propagate deeply nested defaults to form state", (done) => {
       const {comp, node} = createFormComponent({schema});
 
-      return SimulateAsync().click(node.querySelector(".array-item-add button"))
-        .then(() => SimulateAsync().submit(node))
-        .then(() => {
-          expect(comp.state.formData).eql({
-            object: {
-              array: [
-                {
-                  bool: true
-                }
-              ]
-            }
-          });
+      Simulate.click(node.querySelector(".array-item-add button"));
+      Simulate.submit(node);
+
+      // For some reason this may take some time to render, hence the safe wait.
+      setTimeout(() => {
+        expect(comp.state.formData).eql({
+          object: {
+            array: [
+              {
+                bool: true
+              }
+            ]
+          }
         });
+        done();
+      }, 250);
     });
   });
 
@@ -316,7 +318,7 @@ describe("Form", () => {
         comp = compInfo.comp;
         node = compInfo.node;
 
-        return SimulateAsync().submit(node);
+        Simulate.submit(node);
       });
 
       it("should validate a required field", () => {
@@ -362,7 +364,7 @@ describe("Form", () => {
         comp = compInfo.comp;
         node = compInfo.node;
 
-        return SimulateAsync().submit(node);
+        Simulate.submit(node);
       });
 
       it("should validate a minLength field", () => {
@@ -402,10 +404,9 @@ describe("Form", () => {
       const onSubmit = sandbox.spy();
       const {comp, node} = createFormComponent({schema, formData, onSubmit});
 
-      return SimulateAsync().submit(node)
-        .then(() => {
-          sinon.assert.calledWithExactly(onSubmit, comp.state);
-        });
+      Simulate.submit(node);
+
+      sinon.assert.calledWithExactly(onSubmit, comp.state);
     });
 
     it("should not call provided submit handler on validation errors", () => {
@@ -425,10 +426,9 @@ describe("Form", () => {
       const onError = sandbox.spy();
       const {node} = createFormComponent({schema, formData, onSubmit, onError});
 
-      return SimulateAsync().submit(node)
-        .then(() => {
-          sinon.assert.notCalled(onSubmit);
-        });
+      Simulate.submit(node);
+
+      sinon.assert.notCalled(onSubmit);
     });
   });
 
@@ -448,16 +448,15 @@ describe("Form", () => {
       const onChange = sandbox.spy();
       const {node} = createFormComponent({schema, formData, onChange});
 
-      return SimulateAsync().change(node.querySelector("[type=text]"), {
+      Simulate.change(node.querySelector("[type=text]"), {
         target: {value: "new"}
-      })
-        .then(() => {
-          sinon.assert.calledWithMatch(onChange, {
-            formData: {
-              foo: "new"
-            }
-          });
-        });
+      });
+
+      sinon.assert.calledWithMatch(onChange, {
+        formData: {
+          foo: "new"
+        }
+      });
     });
   });
 
@@ -478,10 +477,9 @@ describe("Form", () => {
       const onError = sandbox.spy();
       const {node} = createFormComponent({schema, formData, onError});
 
-      return SimulateAsync().submit(node)
-        .then(() => {
-          sinon.assert.calledOnce(onError);
-        });
+      Simulate.submit(node);
+
+      sinon.assert.calledOnce(onError);
     });
   });
 
@@ -558,22 +556,22 @@ describe("Form", () => {
         it("should not update the errorSchema when the formData changes", () => {
           const {comp, node} = createFormComponent({schema});
 
-          return SimulateAsync().change(node.querySelector("input[type=text]"), {
+          Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
-          })
-            .then(() => expect(comp.state.errorSchema).eql({}));
+          });
+
+          expect(comp.state.errorSchema).eql({});
         });
 
         it("should not denote an error in the field", () => {
           const {node} = createFormComponent({schema});
 
-          return SimulateAsync().change(node.querySelector("input[type=text]"), {
+          Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
-          })
-            .then(() => {
-              expect(node.querySelectorAll(".field-error"))
-                .to.have.length.of(0);
-            });
+          });
+
+          expect(node.querySelectorAll(".field-error"))
+            .to.have.length.of(0);
         });
       });
 
@@ -581,28 +579,26 @@ describe("Form", () => {
         it("should update the errorSchema when the formData changes", () => {
           const {comp, node} = createFormComponent({schema, liveValidate: true});
 
-          return SimulateAsync().change(node.querySelector("input[type=text]"), {
+          Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
-          })
-            .then(() => {
-              expect(comp.state.errorSchema).eql({
-                errors: ["does not meet minimum length of 8"]
-              });
-            });
+          });
+
+          expect(comp.state.errorSchema).eql({
+            errors: ["does not meet minimum length of 8"]
+          });
         });
 
         it("should denote the new error in the field", () => {
           const {node} = createFormComponent({schema, liveValidate: true});
 
-          return SimulateAsync().change(node.querySelector("input[type=text]"), {
+          Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
-          })
-            .then(() => {
-              expect(node.querySelectorAll(".field-error"))
-                .to.have.length.of(1);
-              expect(node.querySelector(".field-string .error-detail").textContent)
-                .eql("does not meet minimum length of 8");
-            });
+          });
+
+          expect(node.querySelectorAll(".field-error"))
+            .to.have.length.of(1);
+          expect(node.querySelector(".field-string .error-detail").textContent)
+            .eql("does not meet minimum length of 8");
         });
       });
     });
@@ -616,31 +612,29 @@ describe("Form", () => {
       it("should update the errorSchema on form submission", () => {
         const {comp, node} = createFormComponent({schema, onError: () => {}});
 
-        return SimulateAsync().change(node.querySelector("input[type=text]"), {
+        Simulate.change(node.querySelector("input[type=text]"), {
           target: {value: "short"}
-        })
-          .then(() => SimulateAsync().submit(node))
-          .then(() => {
-            expect(comp.state.errorSchema).eql({
-              errors: ["does not meet minimum length of 8"]
-            });
-          });
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({
+          errors: ["does not meet minimum length of 8"]
+        });
       });
 
       it("should call the onError handler", () => {
         const onError = sandbox.spy();
         const {node} = createFormComponent({schema, onError});
 
-        return SimulateAsync().change(node.querySelector("input[type=text]"), {
+        Simulate.change(node.querySelector("input[type=text]"), {
           target: {value: "short"}
-        })
-          .then(() => SimulateAsync().submit(node))
-          .then(() => {
-            sinon.assert.calledWithMatch(onError, sinon.match(value => {
-              return value.length === 1 &&
-                     value[0].message === "does not meet minimum length of 8";
-            }));
-          });
+        });
+        Simulate.submit(node);
+
+        sinon.assert.calledWithMatch(onError, sinon.match(value => {
+          return value.length === 1 &&
+                 value[0].message === "does not meet minimum length of 8";
+        }));
       });
     });
 
