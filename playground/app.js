@@ -18,6 +18,23 @@ import "codemirror/theme/solarized.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/eclipse.css";
 
+// Patching CodeMirror#componentWillReceiveProps so it's executed synchronously
+// Ref https://github.com/mozilla-services/react-jsonschema-form/issues/174
+Codemirror.prototype.componentWillReceiveProps = function (nextProps) {
+  if (this.codeMirror &&
+      nextProps.value !== undefined &&
+      this.codeMirror.getValue() != nextProps.value) {
+    this.codeMirror.setValue(nextProps.value);
+  }
+  if (typeof nextProps.options === "object") {
+    for (var optionName in nextProps.options) {
+      if (nextProps.options.hasOwnProperty(optionName)) {
+        this.codeMirror.setOption(optionName, nextProps.options[optionName]);
+      }
+    }
+  }
+};
+
 const log = (type) => console.log.bind(console, type);
 const fromJson = (json) => JSON.parse(json);
 const toJson = (val) => JSON.stringify(val, null, 2);
@@ -113,9 +130,8 @@ class GeoPosition extends Component {
 
   onChange(name) {
     return (event) => {
-      this.setState({
-        [name]: parseFloat(event.target.value)
-      }, () => this.props.onChange(this.state));
+      this.setState({[name]: parseFloat(event.target.value)});
+      setImmediate(() => this.props.onChange(this.state));
     };
   }
 
@@ -145,27 +161,23 @@ class GeoPosition extends Component {
 }
 
 class Editor extends Component {
-  defaultProps = {
-    forceRender: false
-  };
-
   constructor(props) {
     super(props);
     this.state = {valid: true, code: props.code};
   }
 
   componentWillReceiveProps(props) {
-    this.setState({code: props.code});
+    this.setState({valid: true, code: props.code});
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.forceRender || shouldRender(this, nextProps, nextState);
+    return shouldRender(this, nextProps, nextState);
   }
 
   onCodeChange = (code) => {
     try {
       this.setState({valid: true, code});
-      this.props.onChange(fromJson(this.state.code));
+      setImmediate(() => this.props.onChange(fromJson(this.state.code)));
     } catch(err) {
       console.error(err);
       this.setState({valid: false, code});
@@ -205,7 +217,7 @@ class Selector extends Component {
     return (event) => {
       event.preventDefault();
       this.setState({current: label});
-      this.props.onSelected(samples[label]);
+      setImmediate(() => this.props.onSelected(samples[label]));
     };
   };
 
@@ -278,8 +290,9 @@ class App extends Component {
   onFormDataEdited = (formData) => this.setState({formData});
 
   onThemeSelected  = (theme, {stylesheet, editor}) => {
-    // Side effect!
-    this.setState({theme, editor: editor ? editor : "default"}, _ => {
+    this.setState({theme, editor: editor ? editor : "default"});
+    setImmediate(() => {
+      // Side effect!
       document.getElementById("theme").setAttribute("href", stylesheet);
     });
   };
@@ -305,8 +318,7 @@ class App extends Component {
           <Editor title="JSONSchema"
             theme={this.state.editor}
             code={toJson(this.state.schema)}
-            onChange={this.onSchemaEdited}
-            forceRender={true} />
+            onChange={this.onSchemaEdited} />
           <div className="row">
             <div className="col-sm-6">
               <Editor title="UISchema"
