@@ -573,6 +573,55 @@ describe("Form", () => {
           expect(node.querySelectorAll(".field-error"))
             .to.have.length.of(0);
         });
+
+        it("should clean contextualized errors up when they're fixed", () => {
+          const altSchema = {
+            type: "object",
+            properties: {
+              field1: {type: "string", minLength: 8},
+              field2: {type: "string", minLength: 8},
+            }
+          };
+          const {node} = createFormComponent({schema: altSchema, formData: {
+            field1: "short",
+            field2: "short",
+          }});
+
+          function submit(node) {
+            try {
+              Simulate.submit(node);
+            } catch(err) {
+              // Validation is expected to fail and call console.error, which is
+              // stubbed to actually throw in createSandbox().
+            }
+          }
+
+          submit(node);
+
+          // Fix the first field
+          Simulate.change(node.querySelectorAll("input[type=text]")[0], {
+            target: {value: "fixed error"}
+          });
+          submit(node);
+
+          expect(node.querySelectorAll(".field-error"))
+            .to.have.length.of(1);
+
+          // Fix the second field
+          Simulate.change(node.querySelectorAll("input[type=text]")[1], {
+            target: {value: "fixed error too"}
+          });
+          submit(node);
+
+          try {
+            Simulate.submit(node);
+          } catch(err) {
+            // Ditto.
+          }
+
+          expect(node.querySelectorAll(".field-error"))
+            .to.have.length.of(0);
+        });
       });
 
       describe("Live validation", () => {
