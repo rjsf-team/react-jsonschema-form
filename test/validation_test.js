@@ -8,10 +8,11 @@ describe("Custom validation", () => {
     const schema = {type: "string"};
     const formData = "a";
 
-    function validate(string) {
-      if (string.getValue() !== "hello") {
-        string.addError("Invalid");
+    function validate(formData) {
+      if (formData.getValue() !== "hello") {
+        formData.addError("Invalid");
       }
+      return formData;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});
@@ -33,16 +34,19 @@ describe("Custom validation", () => {
 
     const formData = {pass1: "aaa", pass2: "b"};
 
-    function validate({pass1, pass2}) {
+    function validate(formData) {
+      const {pass1, pass2} = formData;
       if (pass1.getValue() !== pass2.getValue()) {
         pass2.addError("Passwords don't match");
       }
+      return formData;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});
     comp.componentWillReceiveProps({formData});
 
     expect(comp.state.errorSchema).eql({
+      __errors: [],
       pass1: {
         __errors: [],
       },
@@ -65,10 +69,11 @@ describe("Custom validation", () => {
 
     const formData = ["aaa", "bbb", "ccc"];
 
-    function validate(array) {
-      if (array.getValue().indexOf("bbb") !== -1) {
-        array.addError("Forbidden value: bbb");
+    function validate(formData) {
+      if (formData.getValue().indexOf("bbb") !== -1) {
+        formData.addError("Forbidden value: bbb");
       }
+      return formData;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});

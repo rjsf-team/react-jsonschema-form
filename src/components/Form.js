@@ -10,8 +10,8 @@ import {
   toErrorSchema,
   toIdSchema,
   setState,
-  userValidate
 } from "../utils";
+import userValidate from "../validate";
 
 
 export default class Form extends Component {
