@@ -8,10 +8,11 @@ describe("Custom validation", () => {
     const schema = {type: "string"};
     const formData = "a";
 
-    function validate(formData) {
-      if (formData.getValue() !== "hello") {
-        formData.addError("Invalid");
+    function validate(formData, errors) {
+      if (formData !== "hello") {
+        errors.addError("Invalid");
       }
+      return errors;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});
@@ -33,11 +34,12 @@ describe("Custom validation", () => {
 
     const formData = {pass1: "aaa", pass2: "b"};
 
-    function validate(formData) {
+    function validate(formData, errors) {
       const {pass1, pass2} = formData;
-      if (pass1.getValue() !== pass2.getValue()) {
-        pass2.addError("Passwords don't match");
+      if (pass1 !== pass2) {
+        errors.pass2.addError("Passwords don't match");
       }
+      return errors;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});
@@ -67,10 +69,11 @@ describe("Custom validation", () => {
 
     const formData = ["aaa", "bbb", "ccc"];
 
-    function validate(formData) {
-      if (formData.getValue().indexOf("bbb") !== -1) {
-        formData.addError("Forbidden value: bbb");
+    function validate(formData, errors) {
+      if (formData.indexOf("bbb") !== -1) {
+        errors.addError("Forbidden value: bbb");
       }
+      return errors;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});

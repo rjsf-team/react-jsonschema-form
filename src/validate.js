@@ -1,43 +1,36 @@
 import { isObject, toErrorList, mergeObjects } from "./utils";
 
 
-function wrapFormDataValue(value) {
-  return {
+function createErrorHandler(formData) {
+  const handler = {
     __errors: [],
-    getValue() {
-      return value;
-    },
     addError(message) {
-      this.__errors.push(message);
+      this.__errors = [...this.__errors, message];
     },
   };
-}
-
-function wrapFormData(formData) {
-  if (!isObject(formData)) {
-    return wrapFormDataValue(formData);
+  if (isObject(formData)) {
+    return Object.keys(formData).reduce((acc, key) => {
+      return {...acc, [key]: createErrorHandler(formData[key])};
+    }, handler);
   }
-  return Object.keys(formData).reduce((acc, key) => {
-    return {...acc, [key]: wrapFormDataValue(formData[key])};
-  }, wrapFormDataValue(formData));
+  return handler;
 }
 
-function extractWrappedErrors(wrappedFormData) {
-  return Object.keys(wrappedFormData).reduce((acc, key) => {
-    if (key === "addError" || key === "getValue") {
+function unwrapErrorHandler(errorHandler) {
+  return Object.keys(errorHandler).reduce((acc, key) => {
+    if (key === "addError") {
       return acc;
     } else if (key === "__errors") {
-      return {...acc, [key]: wrappedFormData[key]};
+      return {...acc, [key]: errorHandler[key]};
     }
-    return {...acc, [key]: extractWrappedErrors(wrappedFormData[key])};
+    return {...acc, [key]: unwrapErrorHandler(errorHandler[key])};
   }, {});
 }
 
 export default function userValidate(validate, formData, errorSchema) {
-  const wrappedFormData = wrapFormData(formData);
-  validate(wrappedFormData);
-  const unWrappedErrors = extractWrappedErrors(wrappedFormData);
-  const newErrorSchema = mergeObjects(errorSchema, unWrappedErrors, true);
+  const errorHandler = validate(formData, createErrorHandler(formData));
+  const userErrorSchema = unwrapErrorHandler(errorHandler);
+  const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
   const newErrors = toErrorList(newErrorSchema);
   return {errors: newErrors, errorSchema: newErrorSchema};
 }

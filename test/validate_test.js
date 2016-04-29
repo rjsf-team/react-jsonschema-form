@@ -8,7 +8,7 @@ describe("userValidate()", () => {
   it("should return errors and errorSchema properties", () => {
     const formData = {};
     const errorSchema = {};
-    const validate = () => {};
+    const validate = (formData, errors) => errors;
 
     const result = userValidate(validate, formData, errorSchema);
 
@@ -16,29 +16,23 @@ describe("userValidate()", () => {
   });
 
   describe("wrapped formData", () => {
-    let wrappedFormData;
+    let errorHandler;
 
     beforeEach(() => {
       const formData = {a: {b: 42}};
       const errorSchema = {};
-      const validate = sinon.spy();
+      const validate = sinon.stub().returns({});
 
       userValidate(validate, formData, errorSchema);
-      wrappedFormData = validate.getCall(0).args[0];
-    });
-
-    it("should implement getValue", () => {
-      expect(wrappedFormData).to.include.key("getValue");
-      expect(wrappedFormData.getValue()).eql({a: {b: 42}});
+      errorHandler = validate.getCall(0).args[1];
     });
 
     it("should implement addError", () => {
-      expect(wrappedFormData).to.include.key("addError");
-    });
-
-    it("should expose wrapped formData children", () => {
-      expect(wrappedFormData).to.include.key("a");
-      expect(wrappedFormData.a.getValue()).eql({b: 42});
+      expect(errorHandler).to.include.key("addError");
+      expect(errorHandler).to.include.key("a");
+      expect(errorHandler.a).to.include.key("addError");
+      expect(errorHandler.a).to.include.key("b");
+      expect(errorHandler.a.b).to.include.key("addError");
     });
   });
 });
