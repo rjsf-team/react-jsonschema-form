@@ -33,9 +33,10 @@ function extractWrappedErrors(wrappedFormData) {
   }, {});
 }
 
-export default function userValidate(validate, formData, schema, errorSchema) {
-  const validationResult = validate(wrapFormData(formData), schema);
-  const unWrappedErrors = extractWrappedErrors(validationResult);
+export default function userValidate(validate, formData, errorSchema) {
+  const wrappedFormData = wrapFormData(formData);
+  validate(wrappedFormData);
+  const unWrappedErrors = extractWrappedErrors(wrappedFormData);
   const newErrorSchema = mergeObjects(errorSchema, unWrappedErrors, true);
   const newErrors = toErrorList(newErrorSchema);
   return {errors: newErrors, errorSchema: newErrorSchema};

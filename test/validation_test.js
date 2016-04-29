@@ -12,7 +12,6 @@ describe("Custom validation", () => {
       if (formData.getValue() !== "hello") {
         formData.addError("Invalid");
       }
-      return formData;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});
@@ -39,7 +38,6 @@ describe("Custom validation", () => {
       if (pass1.getValue() !== pass2.getValue()) {
         pass2.addError("Passwords don't match");
       }
-      return formData;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});
@@ -73,7 +71,6 @@ describe("Custom validation", () => {
       if (formData.getValue().indexOf("bbb") !== -1) {
         formData.addError("Forbidden value: bbb");
       }
-      return formData;
     }
 
     const {comp} = createFormComponent({schema, validate, liveValidate: true});

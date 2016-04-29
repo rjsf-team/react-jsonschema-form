@@ -57,7 +57,7 @@ export default class Form extends Component {
     const {errors} = jsonValidate(formData, schema || this.props.schema);
     const errorSchema = toErrorSchema(errors);
     if (typeof validate === "function") {
-      return userValidate(validate, formData, schema, errorSchema);
+      return userValidate(validate, formData, errorSchema);
     }
     return {errors, errorSchema};
   }

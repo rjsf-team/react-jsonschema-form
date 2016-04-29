@@ -6,39 +6,24 @@ import userValidate from "../src/validate";
 
 describe("userValidate()", () => {
   it("should return errors and errorSchema properties", () => {
-    const schema = {};
     const formData = {};
     const errorSchema = {};
-    const validate = formData => formData;
+    const validate = () => {};
 
-    const result = userValidate(validate, formData, schema, errorSchema);
+    const result = userValidate(validate, formData, errorSchema);
 
-    expect(result).eql({errors: [], errorSchema: {
-      __errors: []
-    }});
-  });
-
-  it("should custom validate function with the schema", () => {
-    const schema = {};
-    const formData = {};
-    const errorSchema = {};
-    const validate = sinon.stub().returns(schema);
-
-    userValidate(validate, formData, schema, errorSchema);
-
-    sinon.assert.calledWithMatch(validate, {}, schema);
+    expect(result).eql({errors: [], errorSchema: {__errors: []}});
   });
 
   describe("wrapped formData", () => {
     let wrappedFormData;
 
     beforeEach(() => {
-      const schema = {};
       const formData = {a: {b: 42}};
       const errorSchema = {};
-      const validate = sinon.stub().returns(schema);
+      const validate = sinon.spy();
 
-      userValidate(validate, formData, schema, errorSchema);
+      userValidate(validate, formData, errorSchema);
       wrappedFormData = validate.getCall(0).args[0];
     });
 
