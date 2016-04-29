@@ -613,11 +613,8 @@ describe("Form", () => {
           });
           submit(node);
 
-          try {
-            Simulate.submit(node);
-          } catch(err) {
-            // Ditto.
-          }
+          // No error remaining, shouldn't throw.
+          Simulate.submit(node);
 
           expect(node.querySelectorAll(".field-error"))
             .to.have.length.of(0);
