@@ -13,8 +13,14 @@ module.exports = {
     },
     type: "object",
     properties: {
-      billing_address: { $ref: "#/definitions/address" },
-      shipping_address: { $ref: "#/definitions/address" }
+      billing_address: {
+        title: "Billing address",
+        $ref: "#/definitions/address"
+      },
+      shipping_address: {
+        title: "Shipping address",
+        $ref: "#/definitions/address"
+      }
     }
   },
   uiSchema: {

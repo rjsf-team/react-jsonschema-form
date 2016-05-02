@@ -230,6 +230,33 @@ describe("Form", () => {
         .to.have.length.of(2);
     });
 
+    it("should priorize local properties over definition ones", () => {
+      // Refs bug #140
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            title: "custom title",
+            $ref: "#/definitions/objectDef"
+          }
+        },
+        definitions: {
+          objectDef: {
+            type: "object",
+            title: "definition title",
+            properties: {
+              field: {type: "string"}
+            }
+          }
+        }
+      };
+
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector("legend").textContent)
+        .eql("custom title");
+    });
+
     it("should propagate and handle a resolved schema definition", () => {
       const schema = {
         definitions: {

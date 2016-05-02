@@ -314,7 +314,7 @@ describe("utils", () => {
   describe("retrieveSchema()", () => {
     it("should 'resolve' a schema which contains definitions", () => {
       const schema = { $ref: "#/definitions/address" };
-      const address_definition = {
+      const address = {
         type: "object",
         properties: {
           street_address: { type: "string" },
@@ -323,8 +323,25 @@ describe("utils", () => {
         },
         required: [ "street_address", "city", "state" ]
       };
-      const definitions = { address: address_definition };
-      expect(retrieveSchema(schema, definitions)).eql(address_definition);
+      const definitions = {address};
+
+      expect(retrieveSchema(schema, definitions))
+        .eql(address);
+    });
+
+    it("should priorize local definitions over foreign ones", () => {
+      const schema = {
+        $ref: "#/definitions/address",
+        title: "foo"
+      };
+      const address = {
+        type: "string",
+        title: "bar",
+      };
+      const definitions = {address};
+
+      expect(retrieveSchema(schema, definitions))
+        .eql({...address, title: "foo"});
     });
   });
 
