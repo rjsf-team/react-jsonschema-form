@@ -760,4 +760,52 @@ describe("uiSchema", () => {
       ]);
     });
   });
+
+  describe("Disabled fields", () => {
+    describe("Widgets", () => {
+      it("should disable a text widget", () => {
+        const schema = {type: "string"};
+        const uiSchema = {"ui:disabled": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=text]").disabled).eql(true);
+      });
+
+      it("should disable a checkbox widget", () => {
+        const schema = {type: "boolean"};
+        const uiSchema = {"ui:disabled": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=checkbox]").disabled).eql(true);
+        expect(node.querySelectorAll(".field-boolean .disabled"))
+          .to.have.length.of(1);
+      });
+    });
+  });
+
+  describe("Readonly fields", () => {
+    describe("Widgets", () => {
+      it("should mark as readonly a text widget", () => {
+        const schema = {type: "string"};
+        const uiSchema = {"ui:readonly": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=text]").hasAttribute("readonly"))
+          .eql(true);
+      });
+
+      it("should mark as readonly a checkbox widget", () => {
+        const schema = {type: "boolean"};
+        const uiSchema = {"ui:readonly": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=checkbox]").hasAttribute("readonly"))
+          .eql(true);
+      });
+    });
+  });
 });

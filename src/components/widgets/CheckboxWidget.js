@@ -6,18 +6,22 @@ function CheckboxWidget({
   id,
   value,
   required,
+  disabled,
+  readonly,
   placeholder,
   onChange,
   label,
 }) {
   return (
-    <div className="checkbox">
+    <div className={`checkbox ${disabled ? "disabled" : ""}`}>
       <label>
         <input type="checkbox"
           id={id}
           title={placeholder}
           checked={typeof value === "undefined" ? false : value}
           required={required}
+          disabled={disabled}
+          readOnly={readonly}
           onChange={(event) => onChange(event.target.checked)} />
         <strong>{label}</strong>
       </label>

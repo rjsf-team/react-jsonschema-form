@@ -19,6 +19,8 @@ function StringField(props) {
     formData,
     registry,
     required,
+    disabled,
+    readonly,
     onChange
   } = props;
   const {title, description} = schema;
@@ -31,7 +33,9 @@ function StringField(props) {
     placeholder: description,
     onChange,
     value: defaultFieldValue(formData, schema),
-    required: required,
+    required,
+    disabled,
+    readonly,
   };
   if (Array.isArray(schema.enum)) {
     if (widget) {
@@ -62,12 +66,16 @@ if (process.env.NODE_ENV !== "production") {
       definitions: PropTypes.object.isRequired,
     }),
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
   };
 }
 
 StringField.defaultProps = {
   uiSchema: {},
   registry: getDefaultRegistry(),
+  disabled: false,
+  readonly: false,
 };
 
 export default StringField;
