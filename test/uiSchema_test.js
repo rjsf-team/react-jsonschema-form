@@ -761,7 +761,7 @@ describe("uiSchema", () => {
     });
   });
 
-  describe("Disabled fields", () => {
+  describe("Disabled", () => {
     describe("Widgets", () => {
       function shouldBeDisabled(selector, schema, uiSchema) {
         const {node} = createFormComponent({schema, uiSchema});
@@ -845,10 +845,32 @@ describe("uiSchema", () => {
                          {type: "string", format: "date-time"},
                          {"ui:disabled": true});
       });
+
+      it("should disable an alternative date widget", () => {
+        const {node} = createFormComponent({
+          schema: {type: "string", format: "date"},
+          uiSchema: {"ui:disabled": true, "ui:widget": "alt-date"}
+        });
+
+        const disabled = [].map.call(node.querySelectorAll("select"),
+                                     node => node.disabled);
+        expect(disabled).eql([true, true, true]);
+      });
+
+      it("should disable an alternative datetime widget", () => {
+        const {node} = createFormComponent({
+          schema: {type: "string", format: "date-time"},
+          uiSchema: {"ui:disabled": true, "ui:widget": "alt-datetime"}
+        });
+
+        const disabled = [].map.call(node.querySelectorAll("select"),
+                                     node => node.disabled);
+        expect(disabled).eql([true, true, true, true, true, true]);
+      });
     });
   });
 
-  describe("Readonly fields", () => {
+  describe("Readonly", () => {
     describe("Widgets", () => {
       function shouldBeReadonly(selector, schema, uiSchema) {
         const {node} = createFormComponent({schema, uiSchema});
@@ -926,6 +948,28 @@ describe("uiSchema", () => {
         shouldBeReadonly("input[type=datetime-local]",
                          {type: "string", format: "date-time"},
                          {"ui:readonly": true});
+      });
+
+      it("should mark as readonly an alternative date widget", () => {
+        const {node} = createFormComponent({
+          schema: {type: "string", format: "date"},
+          uiSchema: {"ui:readonly": true, "ui:widget": "alt-date"}
+        });
+
+        const readonly = [].map.call(node.querySelectorAll("select"),
+                                     node => node.hasAttribute("readonly"));
+        expect(readonly).eql([true, true, true]);
+      });
+
+      it("should mark as readonly an alternative datetime widget", () => {
+        const {node} = createFormComponent({
+          schema: {type: "string", format: "date-time"},
+          uiSchema: {"ui:readonly": true, "ui:widget": "alt-datetime"}
+        });
+
+        const readonly = [].map.call(node.querySelectorAll("select"),
+                                     node => node.hasAttribute("readonly"));
+        expect(readonly).eql([true, true, true, true, true, true]);
       });
     });
   });
