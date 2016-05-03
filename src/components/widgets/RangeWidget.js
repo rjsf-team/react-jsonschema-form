@@ -21,6 +21,8 @@ function RangeWidget({
   placeholder,
   value,
   required,
+  disabled,
+  readonly,
   onChange
 }) {
   return (
@@ -30,6 +32,8 @@ function RangeWidget({
         value={value}
         placeholder={placeholder}
         required={required}
+        disabled={disabled}
+        readOnly={readonly}
         onChange={(event) => onChange(event.target.value)}
         {...rangeSpec(schema)} />
       <span className="range-view">{value}</span>

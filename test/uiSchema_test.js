@@ -781,6 +781,42 @@ describe("uiSchema", () => {
         expect(node.querySelector("textarea").disabled).eql(true);
       });
 
+      it("should disable a number text widget", () => {
+        const schema = {type: "number"};
+        const uiSchema = {"ui:disabled": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=text]").disabled).eql(true);
+      });
+
+      it("should disable a number widget", () => {
+        const schema = {type: "number"};
+        const uiSchema = {"ui:disabled": true, "ui:widget": "updown"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=number]").disabled).eql(true);
+      });
+
+      it("should disable a range widget", () => {
+        const schema = {type: "number"};
+        const uiSchema = {"ui:disabled": true, "ui:widget": "range"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=range]").disabled).eql(true);
+      });
+
+      it("should disable a select widget", () => {
+        const schema = {type: "string", enum: ["a", "b"]};
+        const uiSchema = {"ui:disabled": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("select").disabled).eql(true);
+      });
+
       it("should disable a checkbox widget", () => {
         const schema = {type: "boolean"};
         const uiSchema = {"ui:disabled": true};
@@ -790,6 +826,17 @@ describe("uiSchema", () => {
         expect(node.querySelector("input[type=checkbox]").disabled).eql(true);
         expect(node.querySelectorAll(".field-boolean .disabled"))
           .to.have.length.of(1);
+      });
+
+      it("should disable a radio widget", () => {
+        const schema = {type: "boolean"};
+        const uiSchema = {"ui:disabled": true, "ui:widget": "radio"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=radio]").disabled).eql(true);
+        expect(node.querySelectorAll(".field-boolean .disabled"))
+          .to.have.length.of(2);
       });
     });
   });
@@ -806,7 +853,7 @@ describe("uiSchema", () => {
           .eql(true);
       });
 
-      it("should mark as readonly a text widget", () => {
+      it("should mark as readonly a textarea widget", () => {
         const schema = {type: "string"};
         const uiSchema = {"ui:readonly": true, "ui:widget": "textarea"};
 
@@ -816,13 +863,43 @@ describe("uiSchema", () => {
           .eql(true);
       });
 
-      it("should mark as readonly a checkbox widget", () => {
-        const schema = {type: "boolean"};
+      it("should mark as readonly a number text widget", () => {
+        const schema = {type: "number"};
         const uiSchema = {"ui:readonly": true};
 
         const {node} = createFormComponent({schema, uiSchema});
 
-        expect(node.querySelector("input[type=checkbox]").hasAttribute("readonly"))
+        expect(node.querySelector("input[type=text]").hasAttribute("readonly"))
+          .eql(true);
+      });
+
+      it("should mark as readonly a number widget", () => {
+        const schema = {type: "number"};
+        const uiSchema = {"ui:readonly": true, "ui:widget": "updown"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=number]").hasAttribute("readonly"))
+          .eql(true);
+      });
+
+      it("should mark as readonly a range widget", () => {
+        const schema = {type: "number"};
+        const uiSchema = {"ui:readonly": true, "ui:widget": "range"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=range]").hasAttribute("readonly"))
+          .eql(true);
+      });
+
+      it("should mark as readonly a select widget", () => {
+        const schema = {type: "string", enum: ["a", "b"]};
+        const uiSchema = {"ui:readonly": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("select").hasAttribute("readonly"))
           .eql(true);
       });
     });

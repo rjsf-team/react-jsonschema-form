@@ -21,6 +21,8 @@ function UpDownWidget({
   placeholder,
   value,
   required,
+  disabled,
+  readonly,
   onChange
 }) {
   return (
@@ -30,6 +32,8 @@ function UpDownWidget({
       value={typeof value === "undefined" ? "" : value}
       placeholder={placeholder}
       required={required}
+      disabled={disabled}
+      readOnly={readonly}
       onChange={(event) => onChange(event.target.value)}
       {...rangeSpec(schema)} />
   );

@@ -7,6 +7,7 @@ function RadioWidget({
   placeholder,
   value,
   required,
+  disabled,
   onChange
 }) {
   // Generating a unique field name to identify this set of radio buttons
@@ -16,12 +17,13 @@ function RadioWidget({
       options.map((option, i) => {
         const checked = option.value === value;
         return (
-          <div key={i} className="radio">
+          <div key={i} className={`radio ${disabled ? "disabled" : ""}`}>
             <label>
               <input type="radio"
                 name={name}
                 value={option.value}
                 checked={checked}
+                disabled={disabled}
                 placeholder={placeholder}
                 onChange={_ => onChange(option.value)} />
               {option.label}
