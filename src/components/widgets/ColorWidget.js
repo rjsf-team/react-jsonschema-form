@@ -1,25 +1,14 @@
 import React, { PropTypes } from "react";
 
+import BaseInput from "./BaseInput";
 
-function ColorWidget({
-  schema,
-  id,
-  placeholder,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange
-}) {
+
+function ColorWidget(props) {
+  const {onChange} = props;
   return (
-    <input type="color"
-      id={id}
-      className="form-control"
-      value={typeof value === "undefined" ? "" : value}
-      placeholder={placeholder}
-      required={required}
-      disabled={disabled}
-      readOnly={readonly}
+    <BaseInput
+      type="color"
+      {...props}
       onChange={(event) => onChange(event.target.value)} />
   );
 }

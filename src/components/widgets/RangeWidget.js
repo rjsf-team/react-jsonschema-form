@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import BaseInput from "./BaseInput";
+
 
 function rangeSpec(schema) {
   const spec = {};
@@ -15,27 +17,15 @@ function rangeSpec(schema) {
   return spec;
 }
 
-function RangeWidget({
-  schema,
-  id,
-  placeholder,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange
-}) {
+function RangeWidget(props) {
+  const {schema, value, onChange} = props;
   return (
     <div className="field-range-wrapper">
-      <input type="range"
-        id={id}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        disabled={disabled}
-        readOnly={readonly}
-        onChange={(event) => onChange(event.target.value)}
-        {...rangeSpec(schema)} />
+      <BaseInput
+        type="range"
+        {...props}
+        {...rangeSpec(schema)}
+        onChange={(event) => onChange(event.target.value)} />
       <span className="range-view">{value}</span>
     </div>
   );
