@@ -585,7 +585,7 @@ describe("utils", () => {
   });
 
   describe("toDateString()", () => {
-    it("should transform an object to a valid json datetime", () => {
+    it("should transform an object to a valid json datetime if time=true", () => {
       expect(toDateString({
         "year": 2016,
         "month": 4,
@@ -595,6 +595,15 @@ describe("utils", () => {
         "second": 30,
       }))
         .eql("2016-04-05T14:01:30.000Z");
+    });
+
+    it("should transform an object to a valid date string if time=false", () => {
+      expect(toDateString({
+        "year": 2016,
+        "month": 4,
+        "day": 5,
+      }, false))
+        .eql("2016-04-05");
     });
   });
 

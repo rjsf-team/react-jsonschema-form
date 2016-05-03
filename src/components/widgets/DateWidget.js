@@ -1,16 +1,6 @@
 import React, { PropTypes } from "react";
 
 
-function fromJSONDate(jsonDate) {
-  return jsonDate ? jsonDate.slice(0, 10) : "";
-}
-
-function toJSONDate(dateString) {
-  if (dateString) {
-    return new Date(dateString).toJSON();
-  }
-}
-
 function DateWidget({
   schema,
   id,
@@ -22,9 +12,9 @@ function DateWidget({
     <input type="date"
       id={id}
       className="form-control"
-      value={fromJSONDate(value)}
+      value={typeof value === "undefined" ? "" : value}
       required={required}
-      onChange={(event) => onChange(toJSONDate(event.target.value))} />
+      onChange={(event) => onChange(event.target.value)} />
   );
 }
 

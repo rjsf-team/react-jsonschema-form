@@ -12,7 +12,7 @@ function rangeOptions(type, start, stop) {
   return options;
 }
 
-function valid(state) {
+function readyForChange(state) {
   return Object.keys(state).every(key => state[key] !== -1);
 }
 
@@ -50,8 +50,8 @@ class AltDateWidget extends Component {
   onChange = (property, value) => {
     this.setState({[property]: value}, () => {
       // Only propagate to parent state if we have a complete date{time}
-      if (valid(this.state)) {
-        this.props.onChange(toDateString(this.state));
+      if (readyForChange(this.state)) {
+        this.props.onChange(toDateString(this.state, this.props.time));
       }
     });
   };
@@ -60,7 +60,7 @@ class AltDateWidget extends Component {
     event.preventDefault();
     const {time, onChange} = this.props;
     const nowDateObj = parseDateString(new Date().toJSON(), time);
-    this.setState(nowDateObj, () => onChange(toDateString(this.state)));
+    this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
   };
 
   clear = (event) => {

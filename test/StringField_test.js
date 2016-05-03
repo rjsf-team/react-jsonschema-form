@@ -261,7 +261,7 @@ describe("StringField", () => {
     it("should render a date field", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema});
 
       expect(node.querySelectorAll(".field [type=date]"))
@@ -272,7 +272,7 @@ describe("StringField", () => {
       const datetime = new Date().toJSON();
       const {comp} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
         default: datetime,
       }, uiSchema});
 
@@ -282,10 +282,10 @@ describe("StringField", () => {
     it("should reflect the change into the dom", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema});
 
-      const newDatetime = new Date().toJSON();
+      const newDatetime = "2012-12-12";
 
       Simulate.change(node.querySelector("[type=date]"), {
         target: {value: newDatetime}
@@ -300,7 +300,7 @@ describe("StringField", () => {
       const datetime = new Date().toJSON();
       const {comp} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, formData: datetime});
 
       expect(comp.state.formData).eql(datetime);
@@ -309,17 +309,31 @@ describe("StringField", () => {
     it("should render the widget with the expected id", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema});
 
       expect(node.querySelector("[type=date]").id)
         .eql("root");
     });
 
-    it("should reject an invalid entered datetime", () => {
+    it("should accept a valid entered date", () => {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
+      }, uiSchema, liveValidate: true});
+
+      Simulate.change(node.querySelector("[type=date]"), {
+        target: {value: "2012-12-12"}
+      });
+
+      expect(comp.state.errors).to.have.length.of(0);
+      expect(comp.state.formData).eql("2012-12-12");
+    });
+
+    it("should reject an invalid entered date", () => {
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "date",
       }, uiSchema, liveValidate: true});
 
       Simulate.change(node.querySelector("[type=date]"), {
@@ -492,7 +506,7 @@ describe("StringField", () => {
     it("should render a date field", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema});
 
       expect(node.querySelectorAll(".field select"))
@@ -502,7 +516,7 @@ describe("StringField", () => {
     it("should render a string field with a main label", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
         title: "foo",
       }, uiSchema});
 
@@ -511,10 +525,10 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", () => {
-      const datetime = new Date().toJSON();
+      const datetime = "2012-12-12";
       const {comp} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
         default: datetime,
       }, uiSchema});
 
@@ -524,21 +538,21 @@ describe("StringField", () => {
     it("should reflect the change into the dom", () => {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema});
 
       Simulate.change(node.querySelector("#root_year"), {target: {value: 2012}});
       Simulate.change(node.querySelector("#root_month"), {target: {value: 10}});
       Simulate.change(node.querySelector("#root_day"), {target: {value: 2}});
 
-      expect(comp.state.formData).eql("2012-10-02T00:00:00.000Z");
+      expect(comp.state.formData).eql("2012-10-02");
     });
 
     it("should fill field with data", () => {
-      const datetime = new Date().toJSON();
+      const datetime = "2012-12-12";
       const {comp} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema, formData: datetime});
 
       expect(comp.state.formData).eql(datetime);
@@ -547,7 +561,7 @@ describe("StringField", () => {
     it("should render the widgets with the expected ids", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema});
 
       const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
@@ -562,7 +576,7 @@ describe("StringField", () => {
     it("should render the widgets with the expected options' values", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema});
 
       const lengths = [].map.call(node.querySelectorAll("select"),
@@ -582,7 +596,7 @@ describe("StringField", () => {
     it("should render the widgets with the expected options' labels", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
-        format: "date-time",
+        format: "date",
       }, uiSchema});
 
       const monthOptions = node.querySelectorAll("select#root_month option");
@@ -592,11 +606,22 @@ describe("StringField", () => {
         "07", "08", "09", "10", "11", "12"]);
     });
 
+    it("should accept a valid date", () => {
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "date",
+      }, uiSchema, liveValidate: true});
+
+      comp.componentWillReceiveProps({formData: "2012-12-12"});
+
+      expect(comp.state.errors).to.have.length.of(0);
+    });
+
     describe("Action buttons", () => {
       it("should render action buttons", () => {
         const {node} = createFormComponent({schema: {
           type: "string",
-          format: "date-time",
+          format: "date",
         }, uiSchema});
 
         const buttonLabels = [].map.call(node.querySelectorAll("a.btn"),
@@ -607,19 +632,19 @@ describe("StringField", () => {
       it("should set current date when pressing the Now button", () => {
         const {comp, node} = createFormComponent({schema: {
           type: "string",
-          format: "date-time",
+          format: "date",
         }, uiSchema});
 
         Simulate.click(node.querySelector("a.btn-now"));
 
-        const expected = toDateString(parseDateString(new Date().toJSON(), false));
+        const expected = toDateString(parseDateString(new Date().toJSON()), false);
         expect(comp.state.formData).eql(expected);
       });
 
       it("should clear current date when pressing the Clear button", () => {
         const {comp, node} = createFormComponent({schema: {
           type: "string",
-          format: "date-time",
+          format: "date",
         }, uiSchema});
 
         Simulate.click(node.querySelector("a.btn-now"));
