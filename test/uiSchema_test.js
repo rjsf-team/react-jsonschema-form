@@ -763,182 +763,133 @@ describe("uiSchema", () => {
 
   describe("Disabled fields", () => {
     describe("Widgets", () => {
-      it("should disable a text widget", () => {
-        const schema = {type: "string"};
-        const uiSchema = {"ui:disabled": true};
-
+      function shouldBeDisabled(selector, schema, uiSchema) {
         const {node} = createFormComponent({schema, uiSchema});
+        expect(node.querySelector(selector).disabled).eql(true);
+      }
 
-        expect(node.querySelector("input[type=text]").disabled).eql(true);
+      it("should disable a text widget", () => {
+        shouldBeDisabled("input[type=text]",
+                         {type: "string"},
+                         {"ui:disabled": true});
       });
 
       it("should disable a textarea widget", () => {
-        const schema = {type: "string"};
-        const uiSchema = {"ui:disabled": true, "ui:widget": "textarea"};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("textarea").disabled).eql(true);
+        shouldBeDisabled("textarea",
+                         {type: "string"},
+                         {"ui:disabled": true, "ui:widget": "textarea"});
       });
 
       it("should disable a number text widget", () => {
-        const schema = {type: "number"};
-        const uiSchema = {"ui:disabled": true};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=text]").disabled).eql(true);
+        shouldBeDisabled("input[type=text]",
+                         {type: "number"},
+                         {"ui:disabled": true});
       });
 
       it("should disable a number widget", () => {
-        const schema = {type: "number"};
-        const uiSchema = {"ui:disabled": true, "ui:widget": "updown"};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=number]").disabled).eql(true);
+        shouldBeDisabled("input[type=number]",
+                         {type: "number"},
+                         {"ui:disabled": true, "ui:widget": "updown"});
       });
 
       it("should disable a range widget", () => {
-        const schema = {type: "number"};
-        const uiSchema = {"ui:disabled": true, "ui:widget": "range"};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=range]").disabled).eql(true);
+        shouldBeDisabled("input[type=range]",
+                         {type: "number"},
+                         {"ui:disabled": true, "ui:widget": "range"});
       });
 
       it("should disable a select widget", () => {
-        const schema = {type: "string", enum: ["a", "b"]};
-        const uiSchema = {"ui:disabled": true};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("select").disabled).eql(true);
+        shouldBeDisabled("select",
+                         {type: "string", enum: ["a", "b"]},
+                         {"ui:disabled": true});
       });
 
       it("should disable a checkbox widget", () => {
-        const schema = {type: "boolean"};
-        const uiSchema = {"ui:disabled": true};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=checkbox]").disabled).eql(true);
-        expect(node.querySelectorAll(".field-boolean .disabled"))
-          .to.have.length.of(1);
+        shouldBeDisabled("input[type=checkbox]",
+                         {type: "boolean"},
+                         {"ui:disabled": true});
       });
 
       it("should disable a radio widget", () => {
-        const schema = {type: "boolean"};
-        const uiSchema = {"ui:disabled": true, "ui:widget": "radio"};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=radio]").disabled).eql(true);
-        expect(node.querySelectorAll(".field-boolean .disabled"))
-          .to.have.length.of(2);
+        shouldBeDisabled("input[type=radio]",
+                         {type: "boolean"},
+                         {"ui:disabled": true, "ui:widget": "radio"});
       });
 
       it("should disable a color widget", () => {
-        const schema = {type: "string", format: "color"};
-        const uiSchema = {"ui:disabled": true};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=color]").disabled).eql(true);
+        shouldBeDisabled("input[type=color]",
+                         {type: "string", format: "color"},
+                         {"ui:disabled": true});
       });
 
       it("should disable a password widget", () => {
-        const schema = {type: "string"};
-        const uiSchema = {"ui:disabled": true, "ui:widget": "password"};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=password]").disabled).eql(true);
+        shouldBeDisabled("input[type=password]",
+                         {type: "string"},
+                         {"ui:disabled": true, "ui:widget": "password"});
       });
     });
   });
 
   describe("Readonly fields", () => {
     describe("Widgets", () => {
-      it("should mark as readonly a text widget", () => {
-        const schema = {type: "string"};
-        const uiSchema = {"ui:readonly": true};
-
+      function shouldBeReadonly(selector, schema, uiSchema) {
         const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=text]").hasAttribute("readonly"))
+        expect(node.querySelector(selector).hasAttribute("readonly"))
           .eql(true);
+      }
+
+      it("should mark as readonly a text widget", () => {
+        shouldBeReadonly("input[type=text]",
+                         {type: "string"},
+                         {"ui:readonly": true});
       });
 
       it("should mark as readonly a textarea widget", () => {
-        const schema = {type: "string"};
-        const uiSchema = {"ui:readonly": true, "ui:widget": "textarea"};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("textarea").hasAttribute("readonly"))
-          .eql(true);
+        shouldBeReadonly("textarea",
+                         {type: "string"},
+                         {"ui:readonly": true, "ui:widget": "textarea"});
       });
 
       it("should mark as readonly a number text widget", () => {
-        const schema = {type: "number"};
-        const uiSchema = {"ui:readonly": true};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=text]").hasAttribute("readonly"))
-          .eql(true);
+        shouldBeReadonly("input[type=text]",
+                         {type: "number"},
+                         {"ui:readonly": true});
       });
 
       it("should mark as readonly a number widget", () => {
-        const schema = {type: "number"};
-        const uiSchema = {"ui:readonly": true, "ui:widget": "updown"};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=number]").hasAttribute("readonly"))
-          .eql(true);
+        shouldBeReadonly("input[type=number]",
+                         {type: "number"},
+                         {"ui:readonly": true, "ui:widget": "updown"});
       });
 
       it("should mark as readonly a range widget", () => {
-        const schema = {type: "number"};
-        const uiSchema = {"ui:readonly": true, "ui:widget": "range"};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=range]").hasAttribute("readonly"))
-          .eql(true);
+        shouldBeReadonly("input[type=range]",
+                         {type: "number"},
+                         {"ui:readonly": true, "ui:widget": "range"});
       });
 
       it("should mark as readonly a select widget", () => {
-        const schema = {type: "string", enum: ["a", "b"]};
-        const uiSchema = {"ui:readonly": true};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("select").hasAttribute("readonly"))
-          .eql(true);
+        shouldBeReadonly("select",
+                         {type: "string", enum: ["a", "b"]},
+                         {"ui:readonly": true});
       });
 
       it("should mark as readonly a color widget", () => {
-        const schema = {type: "string", format: "color"};
-        const uiSchema = {"ui:readonly": true};
-
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=color]").hasAttribute("readonly"))
-          .eql(true);
+        shouldBeReadonly("input[type=color]",
+                         {type: "string", format: "color"},
+                         {"ui:readonly": true});
       });
 
       it("should mark as readonly a password widget", () => {
-        const schema = {type: "string"};
-        const uiSchema = {"ui:readonly": true, "ui:widget": "password"};
+        shouldBeReadonly("input[type=password]",
+                         {type: "string"},
+                         {"ui:readonly": true, "ui:widget": "password"});
+      });
 
-        const {node} = createFormComponent({schema, uiSchema});
-
-        expect(node.querySelector("input[type=password]").hasAttribute("readonly"))
-          .eql(true);
+      it("should mark as readonly a url widget", () => {
+        shouldBeReadonly("input[type=url]",
+                         {type: "string", format: "uri"},
+                         {"ui:readonly": true});
       });
     });
   });
