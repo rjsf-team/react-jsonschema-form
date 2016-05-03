@@ -18,14 +18,13 @@ function rangeSpec(schema) {
 }
 
 function RangeWidget(props) {
-  const {schema, value, onChange} = props;
+  const {schema, value} = props;
   return (
     <div className="field-range-wrapper">
       <BaseInput
         type="range"
         {...props}
-        {...rangeSpec(schema)}
-        onChange={(event) => onChange(event.target.value)} />
+        {...rangeSpec(schema)} />
       <span className="range-view">{value}</span>
     </div>
   );
@@ -33,15 +32,10 @@ function RangeWidget(props) {
 
 if (process.env.NODE_ENV !== "production") {
   RangeWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
     value: PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
+      PropTypes.string,
+      PropTypes.number,
     ]),
-    required: PropTypes.bool,
-    onChange: PropTypes.func,
   };
 }
 

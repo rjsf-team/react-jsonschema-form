@@ -4,12 +4,7 @@ import BaseInput from "./BaseInput";
 
 
 function TextWidget(props) {
-  const {onChange} = props;
-  return (
-    <BaseInput
-      {...props}
-      onChange={(event) => onChange(event.target.value)} />
-  );
+  return <BaseInput {...props} />;
 }
 
 if (process.env.NODE_ENV !== "production") {

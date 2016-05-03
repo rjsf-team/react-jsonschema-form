@@ -4,13 +4,7 @@ import BaseInput from "./BaseInput";
 
 
 function URLWidget(props) {
-  const {onChange} = props;
-  return (
-    <BaseInput
-      type="url"
-      {...props}
-      onChange={(event) => onChange(event.target.value)} />
-  );
+  return <BaseInput type="url" {...props} />;
 }
 
 if (process.env.NODE_ENV !== "production") {

@@ -4,13 +4,7 @@ import BaseInput from "./BaseInput";
 
 
 function DateWidget(props) {
-  const {onChange} = props;
-  return (
-    <BaseInput
-      type="date"
-      {...props}
-      onChange={(event) => onChange(event.target.value)} />
-  );
+  return <BaseInput type="date" {...props} />;
 }
 
 if (process.env.NODE_ENV !== "production") {

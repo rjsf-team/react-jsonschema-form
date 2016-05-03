@@ -20,7 +20,7 @@ function BaseInput({
       required={required}
       disabled={disabled}
       readOnly={readonly}
-      onChange={onChange} />
+      onChange={(event) => onChange(event.target.value)} />
   );
 }
 

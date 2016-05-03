@@ -18,14 +18,7 @@ function rangeSpec(schema) {
 }
 
 function UpDownWidget(props) {
-  const {schema, onChange} = props;
-  return (
-    <BaseInput
-      type="number"
-      {...props}
-      {...rangeSpec(schema)}
-      onChange={(event) => onChange(event.target.value)} />
-  );
+  return <BaseInput type="number" {...props} {...rangeSpec(props.schema)} />;
 }
 
 if (process.env.NODE_ENV !== "production") {

@@ -20,7 +20,7 @@ function DateTimeWidget(props) {
       type="datetime-local"
       {...props}
       value={fromJSONDate(value)}
-      onChange={(event) => onChange(toJSONDate(event.target.value))}
+      onChange={(value) => onChange(toJSONDate(value))}
     />
   );
 }
