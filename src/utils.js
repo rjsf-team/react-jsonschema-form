@@ -51,6 +51,7 @@ const altWidgetMap = {
 
 const stringFormatWidgets = {
   "date-time": DateTimeWidget,
+  "date": DateWidget,
   "email": EmailWidget,
   "hostname": TextWidget,
   "ipv4": TextWidget,
@@ -350,9 +351,17 @@ export function parseDateString(dateString, includeTime = true) {
   };
 }
 
-export function toDateString({year, month, day, hour=0, minute=0, second=0}) {
+export function toDateString({
+  year,
+  month,
+  day,
+  hour=0,
+  minute=0,
+  second=0
+}, time = true) {
   const utcTime = Date.UTC(year, month - 1, day, hour, minute, second);
-  return new Date(utcTime).toJSON();
+  const datetime = new Date(utcTime).toJSON();
+  return time ? datetime : datetime.slice(0, 10);
 }
 
 export function pad(num, size) {

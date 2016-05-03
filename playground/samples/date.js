@@ -14,7 +14,7 @@ module.exports = {
           },
           "date": {
             type: "string",
-            format: "date-time"
+            format: "date"
           }
         }
       },
@@ -29,18 +29,13 @@ module.exports = {
           },
           "alt-date": {
             type: "string",
-            format: "date-time"
+            format: "date"
           }
         }
       }
     }
   },
   uiSchema: {
-    native: {
-      date: {
-        "ui:widget": "date"
-      }
-    },
     alternative: {
       "alt-datetime": {
         "ui:widget": "alt-datetime"

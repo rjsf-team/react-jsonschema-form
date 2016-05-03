@@ -223,7 +223,8 @@ The built-in string field also supports the JSONSchema `format` property, and wi
 
 - `email`: An `input[type=email]` element is used;
 - `uri`: An `input[type=url]` element is used;
-- `date-time`: By default, an `input[type=datetime-local]` element is used; if you solely want to rely on a date, a `date` uiSchema alternative widget is available:
+- `date`: By default, an `input[type=date]` element is used;
+- `date-time`: By default, an `input[type=datetime-local]` element is used.
 
 ![](http://i.imgur.com/xqu6Lcp.png)
 
