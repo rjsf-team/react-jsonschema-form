@@ -833,6 +833,18 @@ describe("uiSchema", () => {
                          {type: "string", format: "email"},
                          {"ui:disabled": true});
       });
+
+      it("should disable a date widget", () => {
+        shouldBeDisabled("input[type=date]",
+                         {type: "string", format: "date"},
+                         {"ui:disabled": true});
+      });
+
+      it("should disable a datetime widget", () => {
+        shouldBeDisabled("input[type=datetime-local]",
+                         {type: "string", format: "date-time"},
+                         {"ui:disabled": true});
+      });
     });
   });
 
@@ -901,6 +913,18 @@ describe("uiSchema", () => {
       it("should mark as readonly an email widget", () => {
         shouldBeReadonly("input[type=email]",
                          {type: "string", format: "email"},
+                         {"ui:readonly": true});
+      });
+
+      it("should mark as readonly a date widget", () => {
+        shouldBeReadonly("input[type=date]",
+                         {type: "string", format: "date"},
+                         {"ui:readonly": true});
+      });
+
+      it("should mark as readonly a datetime widget", () => {
+        shouldBeReadonly("input[type=datetime-local]",
+                         {type: "string", format: "date-time"},
                          {"ui:readonly": true});
       });
     });

@@ -6,6 +6,8 @@ function DateWidget({
   id,
   value,
   required,
+  disabled,
+  readonly,
   onChange
 }) {
   return (
@@ -14,6 +16,8 @@ function DateWidget({
       className="form-control"
       value={typeof value === "undefined" ? "" : value}
       required={required}
+      disabled={disabled}
+      readOnly={readonly}
       onChange={(event) => onChange(event.target.value)} />
   );
 }
@@ -25,6 +29,8 @@ if (process.env.NODE_ENV !== "production") {
     placeholder: PropTypes.string,
     value: PropTypes.string,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }
