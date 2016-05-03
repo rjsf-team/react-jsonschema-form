@@ -847,6 +847,15 @@ describe("uiSchema", () => {
 
         expect(node.querySelector("input[type=color]").disabled).eql(true);
       });
+
+      it("should disable a password widget", () => {
+        const schema = {type: "string"};
+        const uiSchema = {"ui:disabled": true, "ui:widget": "password"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=password]").disabled).eql(true);
+      });
     });
   });
 
@@ -919,6 +928,16 @@ describe("uiSchema", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelector("input[type=color]").hasAttribute("readonly"))
+          .eql(true);
+      });
+
+      it("should mark as readonly a password widget", () => {
+        const schema = {type: "string"};
+        const uiSchema = {"ui:readonly": true, "ui:widget": "password"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=password]").hasAttribute("readonly"))
           .eql(true);
       });
     });

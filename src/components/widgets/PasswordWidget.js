@@ -7,6 +7,8 @@ function PasswordWidget({
   placeholder,
   value,
   required,
+  disabled,
+  readonly,
   onChange
 }) {
   return (
@@ -16,6 +18,8 @@ function PasswordWidget({
       value={typeof value === "undefined" ? "" : value}
       placeholder={placeholder}
       required={required}
+      disabled={disabled}
+      readOnly={readonly}
       onChange={(event) => onChange(event.target.value)} />
   );
 }
@@ -30,6 +34,8 @@ if (process.env.NODE_ENV !== "production") {
       React.PropTypes.number,
     ]),
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }
