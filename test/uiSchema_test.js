@@ -827,6 +827,12 @@ describe("uiSchema", () => {
                          {type: "string"},
                          {"ui:disabled": true, "ui:widget": "password"});
       });
+
+      it("should disable an email widget", () => {
+        shouldBeDisabled("input[type=email]",
+                         {type: "string", format: "email"},
+                         {"ui:disabled": true});
+      });
     });
   });
 
@@ -889,6 +895,12 @@ describe("uiSchema", () => {
       it("should mark as readonly a url widget", () => {
         shouldBeReadonly("input[type=url]",
                          {type: "string", format: "uri"},
+                         {"ui:readonly": true});
+      });
+
+      it("should mark as readonly an email widget", () => {
+        shouldBeReadonly("input[type=email]",
+                         {type: "string", format: "email"},
                          {"ui:readonly": true});
       });
     });
