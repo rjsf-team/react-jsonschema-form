@@ -1,39 +1,21 @@
 import React, { PropTypes } from "react";
 
+import BaseInput from "./BaseInput";
 
-function URLWidget({
-  schema,
-  id,
-  placeholder,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange
-}) {
+
+function URLWidget(props) {
+  const {onChange} = props;
   return (
-    <input type="url"
-      id={id}
-      className="form-control"
-      value={typeof value === "undefined" ? "" : value}
-      placeholder={placeholder}
-      required={required}
-      disabled={disabled}
-      readOnly={readonly}
+    <BaseInput
+      type="url"
+      {...props}
       onChange={(event) => onChange(event.target.value)} />
   );
 }
 
 if (process.env.NODE_ENV !== "production") {
   URLWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
-    value: React.PropTypes.string,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    onChange: PropTypes.func,
+    value: PropTypes.string,
   };
 }
 
