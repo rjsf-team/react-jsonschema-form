@@ -20,6 +20,9 @@ class ArrayField extends Component {
     uiSchema: {},
     idSchema: {},
     registry: getDefaultRegistry(),
+    required: false,
+    disabled: false,
+    readonly: false,
   };
 
   constructor(props) {
@@ -109,7 +112,16 @@ class ArrayField extends Component {
   }
 
   renderNormalArray() {
-    const {schema, uiSchema, errorSchema, idSchema, name, required} = this.props;
+    const {
+      schema,
+      uiSchema,
+      errorSchema,
+      idSchema,
+      name,
+      required,
+      disabled,
+      readonly
+    } = this.props;
     const title = schema.title || name;
     const {items} = this.state;
     const {definitions, fields} = this.props.registry;
@@ -137,13 +149,14 @@ class ArrayField extends Component {
             });
           })
         }</div>
-        <AddButton onClick={this.onAddClick}/>
+        <AddButton
+          onClick={this.onAddClick} disabled={disabled || readonly} />
       </fieldset>
     );
   }
 
   renderMultiSelect() {
-    const {schema, idSchema, name} = this.props;
+    const {schema, idSchema, name, disabled, readonly} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
     const {definitions} = this.props.registry;
@@ -157,12 +170,23 @@ class ArrayField extends Component {
         schema={schema}
         title={title}
         value={items}
+        disabled={disabled}
+        readonly={readonly}
       />
     );
   }
 
   renderFixedArray() {
-    const {schema, uiSchema, errorSchema, idSchema, name, required} = this.props;
+    const {
+      schema,
+      uiSchema,
+      errorSchema,
+      idSchema,
+      name,
+      required,
+      disabled,
+      readonly
+    } = this.props;
     const title = schema.title || name;
     let {items} = this.state;
     const {definitions, fields} = this.props.registry;
@@ -208,7 +232,9 @@ class ArrayField extends Component {
           })
         }</div>
         {
-          additionalSchema ? <AddButton onClick={this.onAddClick}/> : null
+          additionalSchema ? <AddButton
+                               onClick={this.onAddClick}
+                               disabled={disabled || readonly} /> : null
         }
       </fieldset>
     );
@@ -224,6 +250,7 @@ class ArrayField extends Component {
     itemErrorSchema
   }) {
     const {SchemaField} = this.props.registry.fields;
+    const {disabled, readonly} = this.props;
     return (
       <div key={index}>
         <div className={removable ? "col-xs-10" : "col-xs-12"}>
@@ -235,13 +262,16 @@ class ArrayField extends Component {
             idSchema={itemIdSchema}
             required={this.isItemRequired(itemSchema)}
             onChange={this.onChangeForIndex(index)}
-            registry={this.props.registry}/>
+            registry={this.props.registry}
+            disabled={this.props.disabled}
+            readonly={this.props.readonly} />
         </div>
         {
           removable ?
             <div className="col-xs-2 array-item-remove text-right">
               <button type="button" className="btn btn-danger col-xs-12"
                       tabIndex="-1"
+                      disabled={disabled || readonly}
                       onClick={this.onDropIndexClick(index)}>Delete</button>
             </div>
           : null
@@ -251,12 +281,13 @@ class ArrayField extends Component {
   }
 }
 
-function AddButton({onClick}) {
+function AddButton({onClick, disabled}) {
   return (
     <div className="row">
       <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
         <button type="button" className="btn btn-info col-xs-12"
-                tabIndex="-1" onClick={onClick}>Add</button>
+                tabIndex="-1" onClick={onClick}
+                disabled={disabled}>Add</button>
       </p>
     </div>
   );
@@ -270,6 +301,9 @@ if (process.env.NODE_ENV !== "production") {
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.array,
+    required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     registry: PropTypes.shape({
       widgets: PropTypes.objectOf(PropTypes.func).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,

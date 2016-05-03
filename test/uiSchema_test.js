@@ -762,6 +762,61 @@ describe("uiSchema", () => {
   });
 
   describe("Disabled", () => {
+    describe("Fields", () => {
+      describe("ArrayField", () => {
+        let node;
+
+        beforeEach(() => {
+          const schema = {type: "array", items: {type: "string"}};
+          const uiSchema = {"ui:disabled": true};
+          const formData = ["a", "b"];
+
+          let rendered = createFormComponent({schema, uiSchema, formData});
+          node = rendered.node;
+        });
+
+        it("should disable an ArrayField", () => {
+          const disabled = [].map.call(node.querySelectorAll("[type=text]"),
+                                       node => node.disabled);
+          expect(disabled).eql([true, true]);
+        });
+
+        it("should disable the Add button", () => {
+          expect(node.querySelector(".array-item-add button").disabled)
+            .eql(true);
+        });
+
+        it("should disable the Delete button", () => {
+          expect(node.querySelector(".array-item-remove button").disabled)
+            .eql(true);
+        });
+      });
+
+      describe("ObjectField", () => {
+        let node;
+
+        beforeEach(() => {
+          const schema = {
+            type: "object",
+            properties: {
+              foo: {type: "string"},
+              bar: {type: "string"},
+            }
+          };
+          const uiSchema = {"ui:disabled": true};
+
+          let rendered = createFormComponent({schema, uiSchema});
+          node = rendered.node;
+        });
+
+        it("should disable an ObjectField", () => {
+          const disabled = [].map.call(node.querySelectorAll("[type=text]"),
+                                       node => node.disabled);
+          expect(disabled).eql([true, true]);
+        });
+      });
+    });
+
     describe("Widgets", () => {
       function shouldBeDisabled(selector, schema, uiSchema) {
         const {node} = createFormComponent({schema, uiSchema});
@@ -871,6 +926,61 @@ describe("uiSchema", () => {
   });
 
   describe("Readonly", () => {
+    describe("Fields", () => {
+      describe("ArrayField", () => {
+        let node;
+
+        beforeEach(() => {
+          const schema = {type: "array", items: {type: "string"}};
+          const uiSchema = {"ui:readonly": true};
+          const formData = ["a", "b"];
+
+          let rendered = createFormComponent({schema, uiSchema, formData});
+          node = rendered.node;
+        });
+
+        it("should mark as readonly an ArrayField", () => {
+          const disabled = [].map.call(node.querySelectorAll("[type=text]"),
+                                       node => node.hasAttribute("readonly"));
+          expect(disabled).eql([true, true]);
+        });
+
+        it("should disable the Add button", () => {
+          expect(node.querySelector(".array-item-add button").disabled)
+            .eql(true);
+        });
+
+        it("should disable the Delete button", () => {
+          expect(node.querySelector(".array-item-remove button").disabled)
+            .eql(true);
+        });
+      });
+
+      describe("ObjectField", () => {
+        let node;
+
+        beforeEach(() => {
+          const schema = {
+            type: "object",
+            properties: {
+              foo: {type: "string"},
+              bar: {type: "string"},
+            }
+          };
+          const uiSchema = {"ui:readonly": true};
+
+          let rendered = createFormComponent({schema, uiSchema});
+          node = rendered.node;
+        });
+
+        it("should mark as readonly an ObjectField", () => {
+          const disabled = [].map.call(node.querySelectorAll("[type=text]"),
+                                       node => node.hasAttribute("readonly"));
+          expect(disabled).eql([true, true]);
+        });
+      });
+    });
+
     describe("Widgets", () => {
       function shouldBeReadonly(selector, schema, uiSchema) {
         const {node} = createFormComponent({schema, uiSchema});
