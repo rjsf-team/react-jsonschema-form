@@ -838,6 +838,15 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll(".field-boolean .disabled"))
           .to.have.length.of(2);
       });
+
+      it("should disable a color widget", () => {
+        const schema = {type: "string", format: "color"};
+        const uiSchema = {"ui:disabled": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=color]").disabled).eql(true);
+      });
     });
   });
 
@@ -900,6 +909,16 @@ describe("uiSchema", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelector("select").hasAttribute("readonly"))
+          .eql(true);
+      });
+
+      it("should mark as readonly a color widget", () => {
+        const schema = {type: "string", format: "color"};
+        const uiSchema = {"ui:readonly": true};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("input[type=color]").hasAttribute("readonly"))
           .eql(true);
       });
     });

@@ -7,6 +7,8 @@ function ColorWidget({
   placeholder,
   value,
   required,
+  disabled,
+  readonly,
   onChange
 }) {
   return (
@@ -16,6 +18,8 @@ function ColorWidget({
       value={typeof value === "undefined" ? "" : value}
       placeholder={placeholder}
       required={required}
+      disabled={disabled}
+      readOnly={readonly}
       onChange={(event) => onChange(event.target.value)} />
   );
 }
@@ -26,6 +30,8 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     value: React.PropTypes.string,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }
