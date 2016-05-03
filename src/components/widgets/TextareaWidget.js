@@ -7,6 +7,8 @@ function TextWidget({
   placeholder,
   value,
   required,
+  disabled,
+  readonly,
   onChange
 }) {
   return (
@@ -16,6 +18,8 @@ function TextWidget({
       value={typeof value === "undefined" ? "" : value}
       placeholder={placeholder}
       required={required}
+      disabled={disabled}
+      readOnly={readonly}
       onChange={(event) => onChange(event.target.value)} />
   );
 }

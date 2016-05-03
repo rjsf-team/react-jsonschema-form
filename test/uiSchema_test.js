@@ -772,6 +772,15 @@ describe("uiSchema", () => {
         expect(node.querySelector("input[type=text]").disabled).eql(true);
       });
 
+      it("should disable a textarea widget", () => {
+        const schema = {type: "string"};
+        const uiSchema = {"ui:disabled": true, "ui:widget": "textarea"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("textarea").disabled).eql(true);
+      });
+
       it("should disable a checkbox widget", () => {
         const schema = {type: "boolean"};
         const uiSchema = {"ui:disabled": true};
@@ -794,6 +803,16 @@ describe("uiSchema", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelector("input[type=text]").hasAttribute("readonly"))
+          .eql(true);
+      });
+
+      it("should mark as readonly a text widget", () => {
+        const schema = {type: "string"};
+        const uiSchema = {"ui:readonly": true, "ui:widget": "textarea"};
+
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("textarea").hasAttribute("readonly"))
           .eql(true);
       });
 
