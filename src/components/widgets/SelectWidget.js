@@ -23,6 +23,8 @@ function SelectWidget({
   placeholder,
   value,
   required,
+  disabled,
+  readonly,
   multiple,
   onChange
 }) {
@@ -33,6 +35,9 @@ function SelectWidget({
       className="form-control"
       title={placeholder}
       value={value}
+      required={required}
+      disabled={disabled}
+      readOnly={readonly}
       onChange={(event) => {
         let newValue;
         if (multiple) {

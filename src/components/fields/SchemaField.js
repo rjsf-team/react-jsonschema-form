@@ -114,6 +114,8 @@ function SchemaField(props) {
   const {definitions, fields} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+  const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
+  const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
 
   if (Object.keys(schema).length === 0) {
     return <div />;
@@ -141,7 +143,10 @@ function SchemaField(props) {
       displayLabel={displayLabel}
       id={idSchema.id}
       classNames={uiSchema.classNames}>
-      <FieldComponent {...props} schema={schema} />
+      <FieldComponent {...props}
+        schema={schema}
+        disabled={disabled}
+        readonly={readonly} />
     </Wrapper>
   );
 }
@@ -151,6 +156,8 @@ SchemaField.defaultProps = {
   errorSchema: {},
   idSchema: {},
   registry: getDefaultRegistry(),
+  disabled: false,
+  readonly: false,
 };
 
 if (process.env.NODE_ENV !== "production") {

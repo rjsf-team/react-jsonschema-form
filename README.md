@@ -25,6 +25,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [For string fields](#for-string-fields)
            - [String formats](#string-formats)
         - [For number and integer fields](#for-number-and-integer-fields)
+        - [Disabled fields](#disabled-fields)
+        - [Read-only fields](#read-only-fields)
         - [Hidden widgets](#hidden-widgets)
      - [Object fields ordering](#object-fields-ordering)
      - [Custom CSS class names](#custom-css-class-names)
@@ -242,6 +244,16 @@ Please note that while standardized, `datetime-local` and `date` input elements 
   * by default, a regular `input[type=text]` element is used.
 
 > Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
+
+#### Disabled fields
+
+The `ui:disabled` uiSchema directive will disable all child widgets from a given field.
+
+#### Read-only fields
+
+The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only.
+
+> Note: if you're about the difference between a *disabled* field and a *readonly* one: marking a field as read-only will render it greyed but its text value will be selectable; disabling it will prevent its value to be selected at all.
 
 #### Hidden widgets
 

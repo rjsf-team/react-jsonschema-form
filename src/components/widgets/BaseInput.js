@@ -1,9 +1,9 @@
 import React, { PropTypes } from "react";
 
 
-function TextWidget({
-  schema,
+function BaseInput({
   id,
+  type,
   placeholder,
   value,
   required,
@@ -12,7 +12,7 @@ function TextWidget({
   onChange
 }) {
   return (
-    <textarea
+    <input type={type}
       id={id}
       className="form-control"
       value={typeof value === "undefined" ? "" : value}
@@ -24,15 +24,23 @@ function TextWidget({
   );
 }
 
+BaseInput.defaultProps = {
+  type: "text",
+  required: false,
+  disabled: false,
+  readonly: false,
+};
+
 if (process.env.NODE_ENV !== "production") {
-  TextWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
+  BaseInput.propTypes = {
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
-    value: PropTypes.string,
+    value: PropTypes.any,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }
 
-export default TextWidget;
+export default BaseInput;

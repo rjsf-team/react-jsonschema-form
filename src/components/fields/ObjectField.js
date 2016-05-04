@@ -16,6 +16,9 @@ class ObjectField extends Component {
     errorSchema: {},
     idSchema: {},
     registry: getDefaultRegistry(),
+    required: false,
+    disabled: false,
+    readonly: false,
   }
 
   constructor(props) {
@@ -53,7 +56,15 @@ class ObjectField extends Component {
   };
 
   render() {
-    const {uiSchema, errorSchema, idSchema, name, required} = this.props;
+    const {
+      uiSchema,
+      errorSchema,
+      idSchema,
+      name,
+      required,
+      disabled,
+      readonly
+    } = this.props;
     const {definitions, fields} = this.props.registry;
     const {SchemaField, TitleField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
@@ -90,7 +101,9 @@ class ObjectField extends Component {
               idSchema={idSchema[name]}
               formData={this.state[name]}
               onChange={this.onPropertyChange(name)}
-              registry={this.props.registry} />
+              registry={this.props.registry}
+              disabled={disabled}
+              readonly={readonly} />
           );
         })
       }</fieldset>
@@ -107,6 +120,8 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.object,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     registry: PropTypes.shape({
       widgets: PropTypes.objectOf(PropTypes.func).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,

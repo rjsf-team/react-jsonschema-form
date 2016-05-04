@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import BaseInput from "./BaseInput";
+
 
 function rangeSpec(schema) {
   const spec = {};
@@ -15,22 +17,13 @@ function rangeSpec(schema) {
   return spec;
 }
 
-function RangeWidget({
-  schema,
-  id,
-  placeholder,
-  value,
-  required,
-  onChange
-}) {
+function RangeWidget(props) {
+  const {schema, value} = props;
   return (
     <div className="field-range-wrapper">
-      <input type="range"
-        id={id}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(event) => onChange(event.target.value)}
+      <BaseInput
+        type="range"
+        {...props}
         {...rangeSpec(schema)} />
       <span className="range-view">{value}</span>
     </div>
@@ -39,15 +32,10 @@ function RangeWidget({
 
 if (process.env.NODE_ENV !== "production") {
   RangeWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
     value: PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
+      PropTypes.string,
+      PropTypes.number,
     ]),
-    required: PropTypes.bool,
-    onChange: PropTypes.func,
   };
 }
 

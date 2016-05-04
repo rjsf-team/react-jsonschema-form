@@ -16,7 +16,8 @@ function readyForChange(state) {
   return Object.keys(state).every(key => state[key] !== -1);
 }
 
-function DateElement({type, range, value, select, rootId}) {
+function DateElement(props) {
+  const {type, range, value, select, rootId, disabled, readonly} = props;
   const id = rootId + "_" + type;
   return (
     <SelectWidget
@@ -25,13 +26,17 @@ function DateElement({type, range, value, select, rootId}) {
       className="form-control"
       options={rangeOptions(type, range[0], range[1])}
       value={value}
+      disabled={disabled}
+      readonly={readonly}
       onChange={(value) => select(type, value)} />
   );
 }
 
 class AltDateWidget extends Component {
   static defaultProps = {
-    time: false
+    time: false,
+    disabled: false,
+    readonly: false,
   };
 
   constructor(props) {
@@ -58,14 +63,20 @@ class AltDateWidget extends Component {
 
   setNow = (event) => {
     event.preventDefault();
-    const {time, onChange} = this.props;
+    const {time, disabled, readonly, onChange} = this.props;
+    if (disabled || readonly) {
+      return;
+    }
     const nowDateObj = parseDateString(new Date().toJSON(), time);
     this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
   };
 
   clear = (event) => {
     event.preventDefault();
-    const {time, onChange} = this.props;
+    const {time, disabled, readonly, onChange} = this.props;
+    if (disabled || readonly) {
+      return;
+    }
     this.setState(parseDateString("", time), () => onChange(undefined));
   };
 
@@ -88,12 +99,17 @@ class AltDateWidget extends Component {
   }
 
   render() {
-    const {id} = this.props;
+    const {id, disabled, readonly} = this.props;
     return (
       <ul className="list-inline">{
-        this.dateElementProps.map((props, i) => (
+        this.dateElementProps.map((elemProps, i) => (
           <li key={i}>
-            <DateElement rootId={id} select={this.onChange} {...props} />
+            <DateElement
+              rootId={id}
+              select={this.onChange}
+              {...elemProps}
+              disabled= {disabled}
+              readonly={readonly} />
           </li>
         ))
       }
@@ -117,6 +133,8 @@ if (process.env.NODE_ENV !== "production") {
     placeholder: PropTypes.string,
     value: React.PropTypes.string,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     onChange: PropTypes.func,
     time: PropTypes.bool,
   };

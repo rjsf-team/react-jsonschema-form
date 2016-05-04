@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import BaseInput from "./BaseInput";
+
 
 function rangeSpec(schema) {
   const spec = {};
@@ -15,37 +17,16 @@ function rangeSpec(schema) {
   return spec;
 }
 
-function UpDownWidget({
-  schema,
-  id,
-  placeholder,
-  value,
-  required,
-  onChange
-}) {
-  return (
-    <input type="number"
-      id={id}
-      className="form-control"
-      value={typeof value === "undefined" ? "" : value}
-      placeholder={placeholder}
-      required={required}
-      onChange={(event) => onChange(event.target.value)}
-      {...rangeSpec(schema)} />
-  );
+function UpDownWidget(props) {
+  return <BaseInput type="number" {...props} {...rangeSpec(props.schema)} />;
 }
 
 if (process.env.NODE_ENV !== "production") {
   UpDownWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
     value: PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
+      PropTypes.number,
+      PropTypes.string,
     ]),
-    required: PropTypes.bool,
-    onChange: PropTypes.func,
   };
 }
 

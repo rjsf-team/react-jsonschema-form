@@ -57,6 +57,16 @@ module.exports = {
       secret: {
         type: "string",
         default: "I'm a hidden string."
+      },
+      disabled: {
+        type: "string",
+        title: "A disabled field",
+        default: "I am disabled."
+      },
+      readonly: {
+        type: "string",
+        title: "A readonly field",
+        default: "I am read-only."
       }
     }
   },
@@ -79,6 +89,12 @@ module.exports = {
     },
     secret: {
       "ui:widget": "hidden"
+    },
+    disabled: {
+      "ui:disabled": true
+    },
+    readonly: {
+      "ui:readonly": true
     }
   },
   formData: {

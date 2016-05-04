@@ -1,33 +1,15 @@
 import React, { PropTypes } from "react";
 
+import BaseInput from "./BaseInput";
 
-function EmailWidget({
-  schema,
-  id,
-  placeholder,
-  value,
-  required,
-  onChange
-}) {
-  return (
-    <input type="email"
-      id={id}
-      className="form-control"
-      value={typeof value === "undefined" ? "" : value}
-      placeholder={placeholder}
-      required={required}
-      onChange={(event) => onChange(event.target.value)} />
-  );
+
+function EmailWidget(props) {
+  return <BaseInput type="email" {...props} />;
 }
 
 if (process.env.NODE_ENV !== "production") {
   EmailWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
-    value: React.PropTypes.string,
-    required: PropTypes.bool,
-    onChange: PropTypes.func,
+    value: PropTypes.string,
   };
 }
 
