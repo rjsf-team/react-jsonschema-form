@@ -1,25 +1,14 @@
 import React, { PropTypes } from "react";
 
 
-function BaseInput({
-  id,
-  type,
-  placeholder,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange
-}) {
+function BaseInput(props) {
+  const {value, readonly, onChange} = props;
   return (
-    <input type={type}
-      id={id}
+    <input
+      {...props}
       className="form-control"
-      value={typeof value === "undefined" ? "" : value}
-      placeholder={placeholder}
-      required={required}
-      disabled={disabled}
       readOnly={readonly}
+      value={typeof value === "undefined" ? "" : value}
       onChange={(event) => onChange(event.target.value)} />
   );
 }
