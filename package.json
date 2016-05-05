@@ -30,7 +30,8 @@
   },
   "dependencies": {
     "deeper": "^2.1.0",
-    "jsonschema": "^1.0.2"
+    "jsonschema": "^1.0.2",
+    "setimmediate": "^1.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
