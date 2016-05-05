@@ -15,6 +15,14 @@ import {
 import SelectWidget from "./../widgets/SelectWidget";
 
 
+function ArrayFieldTitle({TitleField, idSchema, title, required}) {
+  if (!title) {
+    return null;
+  }
+  const id = `${idSchema.id}__title`;
+  return <TitleField id={id} title={title} required={required} />;
+}
+
 class ArrayField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -131,7 +139,11 @@ class ArrayField extends Component {
     return (
       <fieldset
         className={`field field-array field-array-of-${itemsSchema.type}`}>
-        {title ? <TitleField title={title} required={required} /> : null}
+        <ArrayFieldTitle
+          TitleField={TitleField}
+          idSchema={idSchema}
+          title={title}
+          required={required} />
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{
@@ -204,7 +216,11 @@ class ArrayField extends Component {
 
     return (
       <fieldset className="field field-array field-array-fixed-items">
-        {title ? <TitleField title={title} required={required} /> : null}
+        <ArrayFieldTitle
+          TitleField={TitleField}
+          idSchema={idSchema}
+          title={title}
+          required={required} />
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{

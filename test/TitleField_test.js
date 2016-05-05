@@ -36,6 +36,17 @@ describe("TitleField", () => {
     expect(node.tagName).to.equal("LEGEND");
   });
 
+  it("should have the expected id", () => {
+    const props = {
+      title: "Field title",
+      required: true,
+      id: "sample_id"
+    };
+    const {node} = createComponent(TitleFieldWrapper, props);
+
+    expect(node.id).to.equal("sample_id");
+  });
+
   it("should include only title, when field is not required", () => {
     const props = {
       title: "Field title",

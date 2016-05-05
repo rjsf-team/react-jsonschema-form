@@ -32,8 +32,10 @@ describe("ArrayField", () => {
     it("should render a fieldset legend", () => {
       const {node} = createFormComponent({schema});
 
-      expect(node.querySelector("fieldset > legend").textContent)
-        .eql("my list");
+      const legend = node.querySelector("fieldset > legend");
+
+      expect(legend.textContent).eql("my list");
+      expect(legend.id).eql("root__title");
     });
 
     it("should contain no field in the list by default", () => {
@@ -261,9 +263,9 @@ describe("ArrayField", () => {
 
     it("should render a fieldset legend", () => {
       const {node} = createFormComponent({schema});
-
-      expect(node.querySelector("fieldset > legend").textContent)
-          .eql("List of fixed items");
+      const legend = node.querySelector("fieldset > legend");
+      expect(legend.textContent).eql("List of fixed items");
+      expect(legend.id).eql("root__title");
     });
 
     it("should render field widgets", () => {
