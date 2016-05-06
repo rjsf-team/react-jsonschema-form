@@ -60,7 +60,6 @@ class FileWidget extends Component {
 
   onChange = (event) => {
     const {multiple, onChange} = this.props;
-    const {values} = this.state;
     processFiles(event.target.files).then((filesInfo) => {
       const state = {
         values: filesInfo.map(fileInfo => fileInfo.dataURL),
