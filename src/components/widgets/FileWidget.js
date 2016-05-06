@@ -76,6 +76,7 @@ class FileWidget extends Component {
   };
 
   render() {
+    const {multiple} = this.props;
     const {readonly, filesInfo} = this.state;
     return (
       <div>
@@ -85,7 +86,7 @@ class FileWidget extends Component {
             readOnly={readonly}
             onChange={this.onChange}
             defaultValue=""
-            multiple />
+            multiple={multiple} />
         </p>
         <FilesInfo filesInfo={filesInfo} />
       </div>
