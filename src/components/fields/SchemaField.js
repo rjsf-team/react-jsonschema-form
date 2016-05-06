@@ -126,7 +126,7 @@ function SchemaField(props) {
 
   let displayLabel = true;
   if (schema.type === "array") {
-    displayLabel = isMultiSelect(schema);
+    displayLabel = isMultiSelect(schema) || uiSchema["ui:widget"] === "files";
   }
   if (schema.type === "object") {
     displayLabel = false;
