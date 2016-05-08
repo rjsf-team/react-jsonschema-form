@@ -175,13 +175,15 @@ class Editor extends Component {
   }
 
   onCodeChange = (code) => {
-    try {
-      this.setState({valid: true, code});
-      setImmediate(() => this.props.onChange(fromJson(this.state.code)));
-    } catch(err) {
-      console.error(err);
-      this.setState({valid: false, code});
-    }
+    this.setState({valid: true, code});
+    setImmediate(() => {
+      try {
+        this.props.onChange(fromJson(this.state.code));
+      } catch(err) {
+        console.error(err);
+        this.setState({valid: false, code});
+      }
+    });
   };
 
   render() {
