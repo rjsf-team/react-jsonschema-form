@@ -17,7 +17,6 @@ import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 import ColorWidget from "./components/widgets/ColorWidget";
 
-const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
 
 const altWidgetMap = {
   boolean: {
@@ -252,75 +251,6 @@ export function retrieveSchema(schema, definitions={}) {
 
 export function shouldRender(comp, nextProps, nextState) {
   return !deeper(comp.props, nextProps) || !deeper(comp.state, nextState);
-}
-
-function errorPropertyToPath(property) {
-  // Parse array indices, eg. "instance.level1.level2[2].level3"
-  // => ["instance", "level1", "level2", 2, "level3"]
-  return property.split(".").reduce((path, node) => {
-    const match = node.match(RE_ERROR_ARRAY_PATH);
-    if (match) {
-      const nodeName = node.slice(0, node.indexOf("["));
-      const indices = match.map(str => parseInt(str.slice(1, -1), 10));
-      path = path.concat(nodeName, indices);
-    } else {
-      path.push(node);
-    }
-    return path;
-  }, []);
-}
-
-export function toErrorList(errorSchema) {
-  return Object.keys(errorSchema).reduce((acc, key) => {
-    const field = errorSchema[key];
-    if ("__errors" in field) {
-      acc = acc.concat(field.__errors.map(stack => ({stack: `${key} ${stack}`})));
-    } else if (isObject(field)) {
-      acc = acc.concat(toErrorList(field));
-    }
-    return acc;
-  }, []);
-}
-
-export function toErrorSchema(errors) {
-  // Transforms a jsonschema validation errors list:
-  // [
-  //   {property: "instance.level1.level2[2].level3", message: "err a"},
-  //   {property: "instance.level1.level2[2].level3", message: "err b"},
-  //   {property: "instance.level1.level2[4].level3", message: "err b"},
-  // ]
-  // Into an error tree:
-  // {
-  //   level1: {
-  //     level2: {
-  //       2: {level3: {errors: ["err a", "err b"]}},
-  //       4: {level3: {errors: ["err b"]}},
-  //     }
-  //   }
-  // };
-  if (!errors.length) {
-    return {};
-  }
-  return errors.reduce((errorSchema, error) => {
-    const {property, message} = error;
-    const path = errorPropertyToPath(property);
-    let parent = errorSchema;
-    for (const segment of path.slice(1)) {
-      if (!(segment in parent)) {
-        parent[segment] = {};
-      }
-      parent = parent[segment];
-    }
-    if (Array.isArray(parent.__errors)) {
-      // We store the list of errors for this node in a property named __errors
-      // to avoid name collision with a possible sub schema field named
-      // "errors" (see `validate.createErrorHandler`).
-      parent.__errors = parent.__errors.concat(message);
-    } else {
-      parent.__errors = [message];
-    }
-    return errorSchema;
-  }, {});
 }
 
 export function toIdSchema(schema, id, definitions) {

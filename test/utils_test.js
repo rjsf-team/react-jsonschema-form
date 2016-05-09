@@ -8,7 +8,6 @@ import {
   retrieveSchema,
   shouldRender,
   toIdSchema,
-  toErrorList,
   parseDateString,
   toDateString,
   pad
@@ -634,25 +633,6 @@ describe("utils", () => {
   describe("pad()", () => {
     it("should pad a string with 0s", () => {
       expect(pad(4, 3)).eql("004");
-    });
-  });
-
-  describe("toErrorList()", () => {
-    it("should convert an errorSchema into a flat list", () => {
-      expect(toErrorList({
-        a: {
-          b: {
-            __errors: ["err1", "err2"]
-          }
-        },
-        c: {
-          __errors: ["err3"]
-        }
-      })).eql([
-        {stack: "b err1"},
-        {stack: "b err2"},
-        {stack: "c err3"},
-      ]);
     });
   });
 });

@@ -1,7 +1,79 @@
 import { validate as jsonValidate } from "jsonschema";
 
-import { isObject, toErrorSchema, toErrorList, mergeObjects } from "./utils";
+import { isObject, mergeObjects } from "./utils";
 
+
+const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
+
+function errorPropertyToPath(property) {
+  // Parse array indices, eg. "instance.level1.level2[2].level3"
+  // => ["instance", "level1", "level2", 2, "level3"]
+  return property.split(".").reduce((path, node) => {
+    const match = node.match(RE_ERROR_ARRAY_PATH);
+    if (match) {
+      const nodeName = node.slice(0, node.indexOf("["));
+      const indices = match.map(str => parseInt(str.slice(1, -1), 10));
+      path = path.concat(nodeName, indices);
+    } else {
+      path.push(node);
+    }
+    return path;
+  }, []);
+}
+
+function toErrorSchema(errors) {
+  // Transforms a jsonschema validation errors list:
+  // [
+  //   {property: "instance.level1.level2[2].level3", message: "err a"},
+  //   {property: "instance.level1.level2[2].level3", message: "err b"},
+  //   {property: "instance.level1.level2[4].level3", message: "err b"},
+  // ]
+  // Into an error tree:
+  // {
+  //   level1: {
+  //     level2: {
+  //       2: {level3: {errors: ["err a", "err b"]}},
+  //       4: {level3: {errors: ["err b"]}},
+  //     }
+  //   }
+  // };
+  if (!errors.length) {
+    return {};
+  }
+  return errors.reduce((errorSchema, error) => {
+    const {property, message} = error;
+    const path = errorPropertyToPath(property);
+    let parent = errorSchema;
+    for (const segment of path.slice(1)) {
+      if (!(segment in parent)) {
+        parent[segment] = {};
+      }
+      parent = parent[segment];
+    }
+    if (Array.isArray(parent.__errors)) {
+      // We store the list of errors for this node in a property named __errors
+      // to avoid name collision with a possible sub schema field named
+      // "errors" (see `validate.createErrorHandler`).
+      parent.__errors = parent.__errors.concat(message);
+    } else {
+      parent.__errors = [message];
+    }
+    return errorSchema;
+  }, {});
+}
+
+export function toErrorList(errorSchema) {
+  return Object.keys(errorSchema).reduce((acc, key) => {
+    const field = errorSchema[key];
+    if ("__errors" in field) {
+      // XXX: We should transform key as a full field path string.
+      acc = acc.concat(field.__errors.map(stack => ({stack: `${key} ${stack}`})));
+    } else if (isObject(field)) {
+      acc = acc.concat(toErrorList(field));
+    }
+    return acc;
+  }, []);
+}
 
 function createErrorHandler(formData) {
   const handler = {
@@ -48,6 +120,9 @@ export default function validateFormData(formData, schema, customValidate) {
   const errorHandler = customValidate(formData, createErrorHandler(formData));
   const userErrorSchema = unwrapErrorHandler(errorHandler);
   const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
+  // XXX: The errors list produced is not fully compliant with the format
+  // exposed by the jsonschema lib, which contains full field paths and other
+  // properties.
   const newErrors = toErrorList(newErrorSchema);
 
   return {errors: newErrors, errorSchema: newErrorSchema};
