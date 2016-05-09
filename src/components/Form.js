@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import { validate as jsonValidate } from "jsonschema";
 
 import SchemaField from "./fields/SchemaField";
 import TitleField from "./fields/TitleField";
@@ -7,11 +6,10 @@ import ErrorList from "./ErrorList";
 import {
   getDefaultFormState,
   shouldRender,
-  toErrorSchema,
   toIdSchema,
   setState,
 } from "../utils";
-import userValidate from "../validate";
+import validateFormData from "../validate";
 
 
 export default class Form extends Component {
@@ -54,12 +52,7 @@ export default class Form extends Component {
 
   validate(formData, schema) {
     const {validate} = this.props;
-    const {errors} = jsonValidate(formData, schema || this.props.schema);
-    const errorSchema = toErrorSchema(errors);
-    if (typeof validate === "function") {
-      return userValidate(validate, formData, errorSchema);
-    }
-    return {errors, errorSchema};
+    return validateFormData(formData, schema || this.props.schema, validate);
   }
 
   renderErrors() {

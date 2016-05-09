@@ -1,16 +1,22 @@
 import { expect } from "chai";
 import sinon from "sinon";
 
-import userValidate from "../src/validate";
+import validateFormData from "../src/validate";
 
 
-describe("userValidate()", () => {
+describe("validateFormData()", () => {
+  const schema = {
+    type: "object",
+    properties: {
+      foo: {type: "string"}
+    }
+  };
+
   it("should return errors and errorSchema properties", () => {
     const formData = {};
-    const errorSchema = {};
     const validate = (formData, errors) => errors;
 
-    const result = userValidate(validate, formData, errorSchema);
+    const result = validateFormData(formData, schema, validate);
 
     expect(result).eql({errors: [], errorSchema: {__errors: []}});
   });
@@ -20,10 +26,9 @@ describe("userValidate()", () => {
 
     beforeEach(() => {
       const formData = {a: {b: 42}};
-      const errorSchema = {};
       const validate = sinon.stub().returns({});
 
-      userValidate(validate, formData, errorSchema);
+      validateFormData(formData, schema, validate);
       errorHandler = validate.getCall(0).args[1];
     });
 

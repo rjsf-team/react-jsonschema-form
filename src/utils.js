@@ -312,6 +312,9 @@ export function toErrorSchema(errors) {
       parent = parent[segment];
     }
     if (Array.isArray(parent.__errors)) {
+      // We store the list of errors for this node in a property named __errors
+      // to avoid name collision with a possible sub schema field named
+      // "errors" (see `validate.createErrorHandler`).
       parent.__errors = parent.__errors.concat(message);
     } else {
       parent.__errors = [message];
