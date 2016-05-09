@@ -19,17 +19,19 @@ describe("Validation", () => {
       let errors, errorSchema;
 
       beforeEach(() => {
-        const result = validateFormData({foo: 42}, schema);
-        errors = result.errors;
-        errorSchema = result.errorSchema;
+        return validateFormData({foo: 42}, schema)
+          .then(result => {
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
       });
 
-      it("should return an error list", () => {
+      it("should return an error list", function*() {
         expect(errors).to.have.length.of(1);
         expect(errors[0].message).eql("is not of a type(s) string");
       });
 
-      it("should return an errorSchema", () => {
+      it("should return an errorSchema", function*() {
         expect(errorSchema.foo.__errors).to.have.length.of(1);
         expect(errorSchema.foo.__errors[0]).eql("is not of a type(s) string");
       });
@@ -55,24 +57,26 @@ describe("Validation", () => {
           return errors;
         };
         const formData = {pass1: "a", pass2: "b"};
-        const result = validateFormData(formData, schema, validate);
-        errors = result.errors;
-        errorSchema = result.errorSchema;
+        return validateFormData(formData, schema, validate)
+          .then(result => {
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
       });
 
-      it("should return an error list", () => {
+      it("should return an error list", function*() {
         expect(errors).to.have.length.of(1);
         expect(errors[0].stack).eql("pass2 passwords don't match.");
       });
 
-      it("should return an errorSchema", () => {
+      it("should return an errorSchema", function*() {
         expect(errorSchema.pass2.__errors).to.have.length.of(1);
         expect(errorSchema.pass2.__errors[0]).eql("passwords don't match.");
       });
     });
 
     describe("toErrorList()", () => {
-      it("should convert an errorSchema into a flat list", () => {
+      it("should convert an errorSchema into a flat list", function*() {
         expect(toErrorList({
           a: {
             b: {
@@ -126,21 +130,21 @@ describe("Validation", () => {
           Simulate.submit(node);
         });
 
-        it("should validate a required field", () => {
+        it("should validate a required field", function*() {
           expect(comp.state.errors)
             .to.have.length.of(1);
           expect(comp.state.errors[0].message)
             .eql(`requires property "foo"`);
         });
 
-        it("should render errors", () => {
+        it("should render errors", function*() {
           expect(node.querySelectorAll(".errors li"))
             .to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent)
             .eql(`instance requires property "foo"`);
         });
 
-        it("should trigger the onError handler", () => {
+        it("should trigger the onError handler", function*() {
           sinon.assert.calledWith(onError, sinon.match(errors => {
             return errors[0].message === `requires property "foo"`;
           }));
@@ -172,21 +176,21 @@ describe("Validation", () => {
           Simulate.submit(node);
         });
 
-        it("should validate a minLength field", () => {
+        it("should validate a minLength field", function*() {
           expect(comp.state.errors)
             .to.have.length.of(1);
           expect(comp.state.errors[0].message)
             .eql(`does not meet minimum length of 10`);
         });
 
-        it("should render errors", () => {
+        it("should render errors", function*() {
           expect(node.querySelectorAll(".errors li"))
             .to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent)
             .eql("instance.foo does not meet minimum length of 10");
         });
 
-        it("should trigger the onError handler", () => {
+        it("should trigger the onError handler", function*() {
           sinon.assert.calledWith(onError, sinon.match(errors => {
             return errors[0].message ===
               "does not meet minimum length of 10";
@@ -196,7 +200,7 @@ describe("Validation", () => {
     });
 
     describe("Custom Form validation", () => {
-      it("should validate a simple string value", () => {
+      it("should validate a simple string value", function*() {
         const schema = {type: "string"};
         const formData = "a";
 
@@ -215,7 +219,7 @@ describe("Validation", () => {
         });
       });
 
-      it("should validate a simple object", () => {
+      it("should validate a simple object", function*() {
         const schema = {
           type: "object",
           properties: {
@@ -251,7 +255,7 @@ describe("Validation", () => {
         });
       });
 
-      it("should validate a simple array", () => {
+      it("should validate a simple array", function*() {
         const schema = {
           type: "array",
           items: {

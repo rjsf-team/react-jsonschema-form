@@ -23,7 +23,7 @@ describe("Rendering performance optimizations", () => {
   });
 
   describe("Form", () => {
-    it("should not render if next props are equivalent", () => {
+    it("should not render if next props are equivalent", function*() {
       const schema = {type: "string"};
       const uiSchema = {};
 
@@ -35,7 +35,7 @@ describe("Rendering performance optimizations", () => {
       sinon.assert.notCalled(comp.render);
     });
 
-    it("should not render if next formData are equivalent", () => {
+    it("should not render if next formData are equivalent", function*() {
       const schema = {type: "string"};
       const formData = "foo";
 
@@ -54,7 +54,7 @@ describe("Rendering performance optimizations", () => {
     const uiSchema = {};
     const registry = getDefaultRegistry();
 
-    it("should not render if next props are equivalent", () => {
+    it("should not render if next props are equivalent", function*() {
       const {comp} = createComponent(ArrayField, {
         registry,
         schema,
@@ -68,7 +68,7 @@ describe("Rendering performance optimizations", () => {
       sinon.assert.notCalled(comp.render);
     });
 
-    it("should not render if next formData are equivalent", () => {
+    it("should not render if next formData are equivalent", function*() {
       const formData = ["a", "b"];
 
       const {comp} = createComponent(ArrayField, {
@@ -97,7 +97,7 @@ describe("Rendering performance optimizations", () => {
     };
     const idSchema = {id: "root", foo: {id: "root_plop"}};
 
-    it("should not render if next props are equivalent", () => {
+    it("should not render if next props are equivalent", function*() {
       const {comp} = createComponent(ObjectField, {
         registry,
         schema,
@@ -112,7 +112,7 @@ describe("Rendering performance optimizations", () => {
       sinon.assert.notCalled(comp.render);
     });
 
-    it("should not render if next formData are equivalent", () => {
+    it("should not render if next formData are equivalent", function*() {
       const formData = {foo: "blah"};
 
       const {comp} = createComponent(ObjectField, {

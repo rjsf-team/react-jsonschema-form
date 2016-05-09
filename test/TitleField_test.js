@@ -26,7 +26,7 @@ describe("TitleField", () => {
     }
   }
 
-  it("should return a legend", () => {
+  it("should return a legend", function*() {
     const props = {
       title: "Field title",
       required: true
@@ -36,7 +36,7 @@ describe("TitleField", () => {
     expect(node.tagName).to.equal("LEGEND");
   });
 
-  it("should have the expected id", () => {
+  it("should have the expected id", function*() {
     const props = {
       title: "Field title",
       required: true,
@@ -47,7 +47,7 @@ describe("TitleField", () => {
     expect(node.id).to.equal("sample_id");
   });
 
-  it("should include only title, when field is not required", () => {
+  it("should include only title, when field is not required", function*() {
     const props = {
       title: "Field title",
       required: false
@@ -57,7 +57,7 @@ describe("TitleField", () => {
     expect(node.textContent).to.equal(props.title);
   });
 
-  it("should add an asterisk to the title, when field is required", () => {
+  it("should add an asterisk to the title, when field is required", function*() {
     const props = {
       title: "Field title",
       required: true

@@ -20,20 +20,20 @@ describe("Form", () => {
   });
 
   describe("Empty schema", () => {
-    it("should render a form tag", () => {
+    it("should render a form tag", function*() {
       const {node} = createFormComponent({schema: {}});
 
       expect(node.tagName).eql("FORM");
     });
 
-    it("should render a submit button", () => {
+    it("should render a submit button", function*() {
       const {node} = createFormComponent({schema: {}});
 
       expect(node.querySelectorAll("button[type=submit]"))
         .to.have.length.of(1);
     });
 
-    it("should render children buttons", () => {
+    it("should render children buttons", function*() {
       const props = {schema: {}};
       const comp = renderIntoDocument(
         <Form {...props}>
@@ -48,7 +48,7 @@ describe("Form", () => {
   });
 
   describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", () => {
+    it("should submit the form when clicked", function*() {
       const onSubmit = sandbox.spy();
       const comp = renderIntoDocument(
         <Form onSubmit={ onSubmit } schema={ {} }>
@@ -65,7 +65,7 @@ describe("Form", () => {
   });
 
   describe("Schema definitions", () => {
-    it("should use a single schema definition reference", () => {
+    it("should use a single schema definition reference", function*() {
       const schema = {
         definitions: {
           testdef: {type: "string"}
@@ -79,7 +79,7 @@ describe("Form", () => {
         .to.have.length.of(1);
     });
 
-    it("should handle multiple schema definition references", () => {
+    it("should handle multiple schema definition references", function*() {
       const schema = {
         definitions: {
           testdef: {type: "string"}
@@ -97,7 +97,7 @@ describe("Form", () => {
         .to.have.length.of(2);
     });
 
-    it("should handle deeply referenced schema definitions", () => {
+    it("should handle deeply referenced schema definitions", function*() {
       const schema = {
         definitions: {
           testdef: {type: "string"}
@@ -119,7 +119,7 @@ describe("Form", () => {
         .to.have.length.of(1);
     });
 
-    it("should handle referenced definitions for array items", () => {
+    it("should handle referenced definitions for array items", function*() {
       const schema = {
         definitions: {
           testdef: {type: "string"}
@@ -141,7 +141,7 @@ describe("Form", () => {
         .to.have.length.of(1);
     });
 
-    it("should raise for non-existent definitions referenced", () => {
+    it("should raise for non-existent definitions referenced", function*() {
       const schema = {
         type: "object",
         properties: {
@@ -153,7 +153,7 @@ describe("Form", () => {
         .to.Throw(Error, /#\/definitions\/nonexistent/);
     });
 
-    it("should propagate referenced definition defaults", () => {
+    it("should propagate referenced definition defaults", function*() {
       const schema = {
         definitions: {
           testdef: {type: "string", default: "hello"}
@@ -167,7 +167,7 @@ describe("Form", () => {
         .eql("hello");
     });
 
-    it("should propagate nested referenced definition defaults", () => {
+    it("should propagate nested referenced definition defaults", function*() {
       const schema = {
         definitions: {
           testdef: {type: "string", default: "hello"}
@@ -184,7 +184,7 @@ describe("Form", () => {
         .eql("hello");
     });
 
-    it("should propagate referenced definition defaults for array items", () => {
+    it("should propagate referenced definition defaults for array items", function*() {
       const schema = {
         definitions: {
           testdef: {type: "string", default: "hello"}
@@ -203,7 +203,7 @@ describe("Form", () => {
         .eql("hello");
     });
 
-    it("should priorize definition over schema type property", () => {
+    it("should priorize definition over schema type property", function*() {
       // Refs bug #140
       const schema = {
         type: "object",
@@ -230,7 +230,7 @@ describe("Form", () => {
         .to.have.length.of(2);
     });
 
-    it("should priorize local properties over definition ones", () => {
+    it("should priorize local properties over definition ones", function*() {
       // Refs bug #140
       const schema = {
         type: "object",
@@ -257,7 +257,7 @@ describe("Form", () => {
         .eql("custom title");
     });
 
-    it("should propagate and handle a resolved schema definition", () => {
+    it("should propagate and handle a resolved schema definition", function*() {
       const schema = {
         definitions: {
           enumDef: {type: "string", enum: ["a", "b"]}
@@ -302,30 +302,26 @@ describe("Form", () => {
       }
     };
 
-    it("should propagate deeply nested defaults to form state", (done) => {
+    it("should propagate deeply nested defaults to form state", function* () {
       const {comp, node} = createFormComponent({schema});
 
       Simulate.click(node.querySelector(".array-item-add button"));
       Simulate.submit(node);
 
-      // For some reason this may take some time to render, hence the safe wait.
-      setTimeout(() => {
-        expect(comp.state.formData).eql({
-          object: {
-            array: [
-              {
-                bool: true
-              }
-            ]
-          }
-        });
-        done();
-      }, 250);
+      expect(comp.state.formData).eql({
+        object: {
+          array: [
+            {
+              bool: true
+            }
+          ]
+        }
+      });
     });
   });
 
   describe("Submit handler", () => {
-    it("should call provided submit handler with form state", () => {
+    it("should call provided submit handler with form state", function*() {
       const schema = {
         type: "object",
         properties: {
@@ -343,7 +339,7 @@ describe("Form", () => {
       sinon.assert.calledWithExactly(onSubmit, comp.state);
     });
 
-    it("should not call provided submit handler on validation errors", () => {
+    it("should not call provided submit handler on validation errors", function*() {
       const schema = {
         type: "object",
         properties: {
@@ -367,7 +363,7 @@ describe("Form", () => {
   });
 
   describe("Change handler", () => {
-    it("should call provided change handler on form state change", () => {
+    it("should call provided change handler on form state change", function*() {
       const schema = {
         type: "object",
         properties: {
@@ -395,7 +391,7 @@ describe("Form", () => {
   });
 
   describe("Error handler", () => {
-    it("should call provided error handler on validation errors", () => {
+    it("should call provided error handler on validation errors", function*() {
       const schema = {
         type: "object",
         properties: {
@@ -424,7 +420,7 @@ describe("Form", () => {
         liveValidate: true,
       };
 
-      it("should update form state from new formData prop value", () => {
+      it("should update form state from new formData prop value", function*() {
         const {comp} = createFormComponent(formProps);
 
         comp.componentWillReceiveProps({formData: "yo"});
@@ -432,7 +428,7 @@ describe("Form", () => {
         expect(comp.state.formData).eql("yo");
       });
 
-      it("should validate formData when the schema is updated", () => {
+      it("should validate formData when the schema is updated", function*() {
         const {comp} = createFormComponent(formProps);
 
         comp.componentWillReceiveProps({formData: "yo", schema: {type: "number"}});
@@ -444,7 +440,7 @@ describe("Form", () => {
     });
 
     describe("object level", () => {
-      it("should update form state from new formData prop value", () => {
+      it("should update form state from new formData prop value", function*() {
         const {comp} = createFormComponent({
           schema: {
             type: "object",
@@ -463,7 +459,7 @@ describe("Form", () => {
     });
 
     describe("array level", () => {
-      it("should update form state from new formData prop value", () => {
+      it("should update form state from new formData prop value", function*() {
         const schema = {
           type: "array",
           items: {
@@ -487,7 +483,7 @@ describe("Form", () => {
       };
 
       describe("Lazy validation", () => {
-        it("should not update the errorSchema when the formData changes", () => {
+        it("should not update the errorSchema when the formData changes", function*() {
           const {comp, node} = createFormComponent({schema});
 
           Simulate.change(node.querySelector("input[type=text]"), {
@@ -497,7 +493,7 @@ describe("Form", () => {
           expect(comp.state.errorSchema).eql({});
         });
 
-        it("should not denote an error in the field", () => {
+        it("should not denote an error in the field", function*() {
           const {node} = createFormComponent({schema});
 
           Simulate.change(node.querySelector("input[type=text]"), {
@@ -508,7 +504,7 @@ describe("Form", () => {
             .to.have.length.of(0);
         });
 
-        it("should clean contextualized errors up when they're fixed", () => {
+        it("should clean contextualized errors up when they're fixed", function*() {
           const altSchema = {
             type: "object",
             properties: {
@@ -556,7 +552,7 @@ describe("Form", () => {
       });
 
       describe("Live validation", () => {
-        it("should update the errorSchema when the formData changes", () => {
+        it("should update the errorSchema when the formData changes", function*() {
           const {comp, node} = createFormComponent({schema, liveValidate: true});
 
           Simulate.change(node.querySelector("input[type=text]"), {
@@ -568,7 +564,7 @@ describe("Form", () => {
           });
         });
 
-        it("should denote the new error in the field", () => {
+        it("should denote the new error in the field", function*() {
           const {node} = createFormComponent({schema, liveValidate: true});
 
           Simulate.change(node.querySelector("input[type=text]"), {
@@ -589,7 +585,7 @@ describe("Form", () => {
         minLength: 8
       };
 
-      it("should update the errorSchema on form submission", () => {
+      it("should update the errorSchema on form submission", function*() {
         const {comp, node} = createFormComponent({schema, onError: () => {}});
 
         Simulate.change(node.querySelector("input[type=text]"), {
@@ -602,7 +598,7 @@ describe("Form", () => {
         });
       });
 
-      it("should call the onError handler", () => {
+      it("should call the onError handler", function*() {
         const onError = sandbox.spy();
         const {node} = createFormComponent({schema, onError});
 
@@ -628,7 +624,7 @@ describe("Form", () => {
         formData: "short"
       };
 
-      it("should reflect the contextualized error in state", () => {
+      it("should reflect the contextualized error in state", function*() {
         const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
@@ -636,7 +632,7 @@ describe("Form", () => {
         });
       });
 
-      it("should denote the error in the field", () => {
+      it("should denote the error in the field", function*() {
         const {node} = createFormComponent(formProps);
 
         expect(node.querySelectorAll(".field-error"))
@@ -657,7 +653,7 @@ describe("Form", () => {
         formData: "short"
       };
 
-      it("should reflect the contextualized error in state", () => {
+      it("should reflect the contextualized error in state", function*() {
         const {comp} = createFormComponent(formProps);
         expect(comp.state.errorSchema).eql({
           __errors: [
@@ -667,7 +663,7 @@ describe("Form", () => {
         });
       });
 
-      it("should denote the error in the field", () => {
+      it("should denote the error in the field", function*() {
         const {node} = createFormComponent(formProps);
 
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
@@ -706,7 +702,7 @@ describe("Form", () => {
         }
       };
 
-      it("should reflect the contextualized error in state", () => {
+      it("should reflect the contextualized error in state", function*() {
         const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
@@ -718,7 +714,7 @@ describe("Form", () => {
         });
       });
 
-      it("should denote the error in the field", () => {
+      it("should denote the error in the field", function*() {
         const {node} = createFormComponent(formProps);
         const errorDetail = node.querySelector(
           ".field-object .field-string .error-detail");
@@ -745,7 +741,7 @@ describe("Form", () => {
         formData: ["good", "bad", "good"]
       };
 
-      it("should contextualize the error for array indices", () => {
+      it("should contextualize the error for array indices", function*() {
         const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema)
@@ -754,7 +750,7 @@ describe("Form", () => {
           });
       });
 
-      it("should denote the error in the item field in error", () => {
+      it("should denote the error in the item field in error", function*() {
         const {node} = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 
@@ -767,7 +763,7 @@ describe("Form", () => {
           .eql(["does not meet minimum length of 4"]);
       });
 
-      it("should not denote errors on non impacted fields", () => {
+      it("should not denote errors on non impacted fields", function*() {
         const {node} = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 
@@ -792,7 +788,7 @@ describe("Form", () => {
 
       const formProps = {schema, liveValidate: true};
 
-      it("should contextualize the error for nested array indices", () => {
+      it("should contextualize the error for nested array indices", function*() {
         const {comp} = createFormComponent({...formProps, formData: {
           level1: ["good", "bad", "good", "bad"]
         }});
@@ -805,7 +801,7 @@ describe("Form", () => {
         });
       });
 
-      it("should denote the error in the nested item field in error", () => {
+      it("should denote the error in the nested item field in error", function*() {
         const {node} = createFormComponent({...formProps, formData: {
           level1: ["good", "bad", "good"]
         }});
@@ -844,7 +840,7 @@ describe("Form", () => {
 
       const formProps = {schema, formData, liveValidate: true};
 
-      it("should contextualize the error for nested array indices", () => {
+      it("should contextualize the error for nested array indices", function*() {
         const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
@@ -859,7 +855,7 @@ describe("Form", () => {
         });
       });
 
-      it("should denote the error in the nested item field in error", () => {
+      it("should denote the error in the nested item field in error", function*() {
         const {node} = createFormComponent(formProps);
         const fields = node.querySelectorAll(".field-string");
         const errors = [].map.call(fields, field => {
@@ -899,7 +895,7 @@ describe("Form", () => {
         ]
       };
 
-      it("should contextualize the error for array nested items", () => {
+      it("should contextualize the error for array nested items", function*() {
         const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
@@ -911,7 +907,7 @@ describe("Form", () => {
         });
       });
 
-      it("should denote the error in the array nested item", () => {
+      it("should denote the error in the array nested item", function*() {
         const {node} = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 

@@ -17,7 +17,7 @@ describe("StringField", () => {
   });
 
   describe("TextWidget", () => {
-    it("should render a string field", () => {
+    it("should render a string field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string"
       }});
@@ -26,7 +26,7 @@ describe("StringField", () => {
         .to.have.length.of(1);
     });
 
-    it("should render a string field with a label", () => {
+    it("should render a string field with a label", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         title: "foo"
@@ -36,7 +36,7 @@ describe("StringField", () => {
         .eql("foo");
     });
 
-    it("should render a string field with a placeholder", () => {
+    it("should render a string field with a placeholder", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         description: "bar",
@@ -46,7 +46,7 @@ describe("StringField", () => {
         .eql("bar");
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         default: "plop",
@@ -56,13 +56,13 @@ describe("StringField", () => {
         .eql("plop");
     });
 
-    it("should default state value to undefined", () => {
+    it("should default state value to undefined", function*() {
       const {comp} = createFormComponent({schema: {type: "string"}});
 
       expect(comp.state.formData).eql(undefined);
     });
 
-    it("should handle a change event", () => {
+    it("should handle a change event", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
       }});
@@ -74,7 +74,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("yo");
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
       }, formData: "plip"});
@@ -83,7 +83,7 @@ describe("StringField", () => {
         .eql("plip");
     });
 
-    it("should render the widget with the expected id", () => {
+    it("should render the widget with the expected id", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
       }});
@@ -94,7 +94,7 @@ describe("StringField", () => {
   });
 
   describe("SelectWidget", () => {
-    it("should render a string field", () => {
+    it("should render a string field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"]
@@ -104,7 +104,7 @@ describe("StringField", () => {
         .to.have.length.of(1);
     });
 
-    it("should render a string field with a label", () => {
+    it("should render a string field with a label", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
@@ -115,7 +115,7 @@ describe("StringField", () => {
         .eql("foo");
     });
 
-    it("should render a select field with a tooltip", () => {
+    it("should render a select field with a tooltip", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
@@ -126,7 +126,7 @@ describe("StringField", () => {
         .eql("baz");
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const {comp} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
@@ -136,7 +136,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("bar");
     });
 
-    it("should reflect the change into the form state", () => {
+    it("should reflect the change into the form state", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
@@ -149,7 +149,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("foo");
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
@@ -162,7 +162,7 @@ describe("StringField", () => {
       expect(node.querySelector("select").value).eql("foo");
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const {comp} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
@@ -171,7 +171,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("bar");
     });
 
-    it("should render the widget with the expected id", () => {
+    it("should render the widget with the expected id", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         enum: ["a", "b"]
@@ -183,7 +183,7 @@ describe("StringField", () => {
   });
 
   describe("DateTimeWidget", () => {
-    it("should render an datetime-local field", () => {
+    it("should render an datetime-local field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -193,7 +193,7 @@ describe("StringField", () => {
         .to.have.length.of(1);
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const datetime = new Date().toJSON();
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -204,7 +204,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -221,7 +221,7 @@ describe("StringField", () => {
         .eql(newDatetime.slice(0, 19));
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const datetime = new Date().toJSON();
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -231,7 +231,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should render the widget with the expected id", () => {
+    it("should render the widget with the expected id", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -241,7 +241,7 @@ describe("StringField", () => {
         .eql("root");
     });
 
-    it("should reject an invalid entered datetime", () => {
+    it("should reject an invalid entered datetime", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -258,7 +258,7 @@ describe("StringField", () => {
   describe("DateWidget", () => {
     const uiSchema = {"ui:widget": "date"};
 
-    it("should render a date field", () => {
+    it("should render a date field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -268,7 +268,7 @@ describe("StringField", () => {
         .to.have.length.of(1);
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const datetime = new Date().toJSON();
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -279,7 +279,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -296,7 +296,7 @@ describe("StringField", () => {
         .eql(newDatetime.slice(0, 10));
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const datetime = new Date().toJSON();
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -306,7 +306,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should render the widget with the expected id", () => {
+    it("should render the widget with the expected id", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -316,7 +316,7 @@ describe("StringField", () => {
         .eql("root");
     });
 
-    it("should accept a valid entered date", () => {
+    it("should accept a valid entered date", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -330,7 +330,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("2012-12-12");
     });
 
-    it("should reject an invalid entered date", () => {
+    it("should reject an invalid entered date", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -347,7 +347,7 @@ describe("StringField", () => {
   describe("AltDateTimeWidget", () => {
     const uiSchema = {"ui:widget": "alt-datetime"};
 
-    it("should render a datetime field", () => {
+    it("should render a datetime field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -357,7 +357,7 @@ describe("StringField", () => {
         .to.have.length.of(6);
     });
 
-    it("should render a string field with a main label", () => {
+    it("should render a string field with a main label", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -368,7 +368,7 @@ describe("StringField", () => {
         .eql("foo");
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const datetime = new Date().toJSON();
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -379,7 +379,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -395,7 +395,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const datetime = new Date().toJSON();
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -405,7 +405,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should render the widgets with the expected ids", () => {
+    it("should render the widgets with the expected ids", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -423,7 +423,7 @@ describe("StringField", () => {
       ]);
     });
 
-    it("should render the widgets with the expected options' values", () => {
+    it("should render the widgets with the expected options' values", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -447,7 +447,7 @@ describe("StringField", () => {
         "7", "8", "9", "10", "11", "12"]);
     });
 
-    it("should render the widgets with the expected options' labels", () => {
+    it("should render the widgets with the expected options' labels", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -461,7 +461,7 @@ describe("StringField", () => {
     });
 
     describe("Action buttons", () => {
-      it("should render action buttons", () => {
+      it("should render action buttons", function*() {
         const {node} = createFormComponent({schema: {
           type: "string",
           format: "date-time",
@@ -472,7 +472,7 @@ describe("StringField", () => {
         expect(buttonLabels).eql(["Now", "Clear"]);
       });
 
-      it("should set current date when pressing the Now button", () => {
+      it("should set current date when pressing the Now button", function*() {
         const {comp, node} = createFormComponent({schema: {
           type: "string",
           format: "date-time",
@@ -486,7 +486,7 @@ describe("StringField", () => {
         expect(timeDiff).to.be.at.most(5000);
       });
 
-      it("should clear current date when pressing the Clear button", () => {
+      it("should clear current date when pressing the Clear button", function*() {
         const {comp, node} = createFormComponent({schema: {
           type: "string",
           format: "date-time",
@@ -503,7 +503,7 @@ describe("StringField", () => {
   describe("AltDateWidget", () => {
     const uiSchema = {"ui:widget": "alt-date"};
 
-    it("should render a date field", () => {
+    it("should render a date field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -513,7 +513,7 @@ describe("StringField", () => {
         .to.have.length.of(3);
     });
 
-    it("should render a string field with a main label", () => {
+    it("should render a string field with a main label", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -524,7 +524,7 @@ describe("StringField", () => {
         .eql("foo");
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const datetime = "2012-12-12";
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -535,7 +535,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -548,7 +548,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("2012-10-02");
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const datetime = "2012-12-12";
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -558,7 +558,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(datetime);
     });
 
-    it("should render the widgets with the expected ids", () => {
+    it("should render the widgets with the expected ids", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -573,7 +573,7 @@ describe("StringField", () => {
       ]);
     });
 
-    it("should render the widgets with the expected options' values", () => {
+    it("should render the widgets with the expected options' values", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -593,7 +593,7 @@ describe("StringField", () => {
         "-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]);
     });
 
-    it("should render the widgets with the expected options' labels", () => {
+    it("should render the widgets with the expected options' labels", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -606,7 +606,7 @@ describe("StringField", () => {
         "07", "08", "09", "10", "11", "12"]);
     });
 
-    it("should accept a valid date", () => {
+    it("should accept a valid date", function*() {
       const {comp} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -618,7 +618,7 @@ describe("StringField", () => {
     });
 
     describe("Action buttons", () => {
-      it("should render action buttons", () => {
+      it("should render action buttons", function*() {
         const {node} = createFormComponent({schema: {
           type: "string",
           format: "date",
@@ -629,7 +629,7 @@ describe("StringField", () => {
         expect(buttonLabels).eql(["Now", "Clear"]);
       });
 
-      it("should set current date when pressing the Now button", () => {
+      it("should set current date when pressing the Now button", function*() {
         const {comp, node} = createFormComponent({schema: {
           type: "string",
           format: "date",
@@ -641,7 +641,7 @@ describe("StringField", () => {
         expect(comp.state.formData).eql(expected);
       });
 
-      it("should clear current date when pressing the Clear button", () => {
+      it("should clear current date when pressing the Clear button", function*() {
         const {comp, node} = createFormComponent({schema: {
           type: "string",
           format: "date",
@@ -656,7 +656,7 @@ describe("StringField", () => {
   });
 
   describe("EmailWidget", () => {
-    it("should render an email field", () => {
+    it("should render an email field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "email",
@@ -666,7 +666,7 @@ describe("StringField", () => {
         .to.have.length.of(1);
     });
 
-    it("should render a string field with a label", () => {
+    it("should render a string field with a label", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "email",
@@ -677,7 +677,7 @@ describe("StringField", () => {
         .eql("foo");
     });
 
-    it("should render a select field with a placeholder", () => {
+    it("should render a select field with a placeholder", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "email",
@@ -688,7 +688,7 @@ describe("StringField", () => {
         .eql("baz");
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const email = "foo@bar.baz";
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -699,7 +699,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(email);
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "email",
@@ -715,7 +715,7 @@ describe("StringField", () => {
         .eql(newDatetime);
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const email = "foo@bar.baz";
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -725,7 +725,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(email);
     });
 
-    it("should render the widget with the expected id", () => {
+    it("should render the widget with the expected id", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "email",
@@ -735,7 +735,7 @@ describe("StringField", () => {
         .eql("root");
     });
 
-    it("should reject an invalid entered email", () => {
+    it("should reject an invalid entered email", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "email",
@@ -750,7 +750,7 @@ describe("StringField", () => {
   });
 
   describe("URLWidget", () => {
-    it("should render an url field", () => {
+    it("should render an url field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "uri",
@@ -760,7 +760,7 @@ describe("StringField", () => {
         .to.have.length.of(1);
     });
 
-    it("should render a string field with a label", () => {
+    it("should render a string field with a label", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "uri",
@@ -771,7 +771,7 @@ describe("StringField", () => {
         .eql("foo");
     });
 
-    it("should render a select field with a placeholder", () => {
+    it("should render a select field with a placeholder", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "uri",
@@ -782,7 +782,7 @@ describe("StringField", () => {
         .eql("baz");
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const url = "http://foo.bar/baz";
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -793,7 +793,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(url);
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "uri",
@@ -807,7 +807,7 @@ describe("StringField", () => {
       expect(node.querySelector("[type=url]").value).eql(newDatetime);
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const url = "http://foo.bar/baz";
       const {comp} = createFormComponent({schema: {
         type: "string",
@@ -817,7 +817,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(url);
     });
 
-    it("should render the widget with the expected id", () => {
+    it("should render the widget with the expected id", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "uri",
@@ -827,7 +827,7 @@ describe("StringField", () => {
         .eql("root");
     });
 
-    it("should reject an invalid entered url", () => {
+    it("should reject an invalid entered url", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "uri",
@@ -845,7 +845,7 @@ describe("StringField", () => {
     const uiSchema = {"ui:widget": "color"};
     const color = "#123456";
 
-    it("should render a color field", () => {
+    it("should render a color field", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "color",
@@ -855,7 +855,7 @@ describe("StringField", () => {
         .to.have.length.of(1);
     });
 
-    it("should assign a default value", () => {
+    it("should assign a default value", function*() {
       const {comp} = createFormComponent({schema: {
         type: "string",
         format: "color",
@@ -865,7 +865,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(color);
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "color",
@@ -881,7 +881,7 @@ describe("StringField", () => {
         .eql(newColor);
     });
 
-    it("should fill field with data", () => {
+    it("should fill field with data", function*() {
       const {comp} = createFormComponent({schema: {
         type: "string",
         format: "color",
@@ -890,7 +890,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql(color);
     });
 
-    it("should render the widget with the expected id", () => {
+    it("should render the widget with the expected id", function*() {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "color",
@@ -901,7 +901,7 @@ describe("StringField", () => {
     });
 
 
-    it("should reject an invalid entered color", () => {
+    it("should reject an invalid entered color", function*() {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "color",

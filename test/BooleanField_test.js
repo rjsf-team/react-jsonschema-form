@@ -15,7 +15,7 @@ describe("BooleanField", () => {
     sandbox.restore();
   });
 
-  it("should render a boolean field", () => {
+  it("should render a boolean field", function*() {
     const {node} = createFormComponent({schema: {
       type: "boolean"
     }});
@@ -24,7 +24,7 @@ describe("BooleanField", () => {
       .to.have.length.of(1);
   });
 
-  it("should render a boolean field with a label", () => {
+  it("should render a boolean field with a label", function*() {
     const {node} = createFormComponent({schema: {
       type: "boolean",
       title: "foo"
@@ -34,7 +34,7 @@ describe("BooleanField", () => {
       .eql("foo");
   });
 
-  it("should render a single label", () => {
+  it("should render a single label", function*() {
     const {node} = createFormComponent({schema: {
       type: "boolean",
       title: "foo"
@@ -44,7 +44,7 @@ describe("BooleanField", () => {
       .to.have.length.of(1);
   });
 
-  it("should assign a default value", () => {
+  it("should assign a default value", function*() {
     const {node} = createFormComponent({schema: {
       type: "boolean",
       default: true,
@@ -54,13 +54,13 @@ describe("BooleanField", () => {
       .eql(true);
   });
 
-  it("should default state value to undefined", () => {
+  it("should default state value to undefined", function*() {
     const {comp} = createFormComponent({schema: {type: "boolean"}});
 
     expect(comp.state.formData).eql(undefined);
   });
 
-  it("should handle a change event", () => {
+  it("should handle a change event", function*() {
     const {comp, node} = createFormComponent({schema: {
       type: "boolean",
       default: false,
@@ -73,7 +73,7 @@ describe("BooleanField", () => {
     expect(comp.state.formData).eql(true);
   });
 
-  it("should fill field with data", () => {
+  it("should fill field with data", function*() {
     const {node} = createFormComponent({schema: {
       type: "boolean",
     }, formData: true});
@@ -82,7 +82,7 @@ describe("BooleanField", () => {
       .eql(true);
   });
 
-  it("should support enumNames for radio widgets", () => {
+  it("should support enumNames for radio widgets", function*() {
     const {node} = createFormComponent({schema: {
       type: "boolean",
       enumNames: ["Yes", "No"],
@@ -93,7 +93,7 @@ describe("BooleanField", () => {
     expect(labels).eql(["Yes", "No"]);
   });
 
-  it("should support enumNames for select", () => {
+  it("should support enumNames for select", function*() {
     const {node} = createFormComponent({schema: {
       type: "boolean",
       enumNames: ["Yes", "No"],
@@ -104,7 +104,7 @@ describe("BooleanField", () => {
     expect(labels).eql(["Yes", "No"]);
   });
 
-  it("should render the widget with the expected id", () => {
+  it("should render the widget with the expected id", function*() {
     const {node} = createFormComponent({schema: {
       type: "boolean",
     }});

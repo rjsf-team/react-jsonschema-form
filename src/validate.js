@@ -108,22 +108,26 @@ function unwrapErrorHandler(errorHandler) {
  * This function processes the formData with a user `validate` contributed
  * function, which receives the form data and an `errorHandler` object that
  * will be used to add custom validation errors for each field.
+ *
+ * @return {Promise}
  */
 export default function validateFormData(formData, schema, customValidate) {
   const {errors} = jsonValidate(formData, schema);
   const errorSchema = toErrorSchema(errors);
 
   if (typeof customValidate !== "function") {
-    return {errors, errorSchema};
+    return Promise.resolve({errors, errorSchema});
   }
 
-  const errorHandler = customValidate(formData, createErrorHandler(formData));
-  const userErrorSchema = unwrapErrorHandler(errorHandler);
-  const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
-  // XXX: The errors list produced is not fully compliant with the format
-  // exposed by the jsonschema lib, which contains full field paths and other
-  // properties.
-  const newErrors = toErrorList(newErrorSchema);
-
-  return {errors: newErrors, errorSchema: newErrorSchema};
+  const errorHandler = createErrorHandler(formData);
+  return Promise.resolve(customValidate(formData, errorHandler))
+    .then(UserErrorHandler => {
+      const userErrorSchema = unwrapErrorHandler(UserErrorHandler);
+      const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
+      // XXX: The errors list produced is not fully compliant with the format
+      // exposed by the jsonschema lib, which contains full field paths and other
+      // properties.
+      const newErrors = toErrorList(newErrorSchema);
+      return {errors: newErrors, errorSchema: newErrorSchema};
+    });
 }
