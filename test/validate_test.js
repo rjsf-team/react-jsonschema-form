@@ -18,7 +18,7 @@ describe("Validation", () => {
 
       let errors, errorSchema;
 
-      beforeEach(() => {
+      beforeEach(function* () {
         return validateFormData({foo: 42}, schema)
           .then(result => {
             errors = result.errors;
@@ -49,7 +49,7 @@ describe("Validation", () => {
         }
       };
 
-      beforeEach(() => {
+      beforeEach(function* () {
         const validate = (formData, errors) => {
           if (formData.pass1 !== formData.pass2) {
             errors.pass2.addError("passwords don't match.");
@@ -119,7 +119,7 @@ describe("Validation", () => {
 
         var comp, node, onError;
 
-        beforeEach(() => {
+        beforeEach(function* () {
           onError = sandbox.spy();
           const compInfo = createFormComponent({schema, formData: {
             foo: undefined
@@ -165,7 +165,7 @@ describe("Validation", () => {
 
         var comp, node, onError;
 
-        beforeEach(() => {
+        beforeEach(function* () {
           onError = sandbox.spy();
           const compInfo = createFormComponent({schema, formData: {
             foo: "123456789"

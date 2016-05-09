@@ -53,7 +53,7 @@ function toErrorSchema(errors) {
     if (Array.isArray(parent.__errors)) {
       // We store the list of errors for this node in a property named __errors
       // to avoid name collision with a possible sub schema field named
-      // "errors" (see `validate.createErrorHandler`).
+      // "errors" (see `createErrorHandler`).
       parent.__errors = parent.__errors.concat(message);
     } else {
       parent.__errors = [message];
@@ -62,7 +62,7 @@ function toErrorSchema(errors) {
   }, {});
 }
 
-export function toErrorList(errorSchema) {
+function toErrorList(errorSchema) {
   return Object.keys(errorSchema).reduce((acc, key) => {
     const field = errorSchema[key];
     if ("__errors" in field) {
@@ -79,7 +79,7 @@ function createErrorHandler(formData) {
   const handler = {
     // We store the list of errors for this node in a property named __errors
     // to avoid name collision with a possible sub schema field named
-    // "errors" (see `utils.toErrorSchema`).
+    // "errors" (see `toErrorSchema`).
     __errors: [],
     addError(message) {
       this.__errors.push(message);
@@ -105,9 +105,18 @@ function unwrapErrorHandler(errorHandler) {
 }
 
 /**
- * This function processes the formData with a user `validate` contributed
- * function, which receives the form data and an `errorHandler` object that
- * will be used to add custom validation errors for each field.
+ * This function processes the formData against:
+ *
+ * 1. A JSON schema object, then
+ * 2. An optional `validate` contributed function, which receives the form data
+ * and an `errorHandler` object used to add custom validation errors for each
+ * field.
+ *
+ * It returns a Promise resolving with an object exposing the following
+ * properties:
+ *
+ * - `errors`: The list of encountered validation errors;
+ * - `errorSchema`: An error tree matching the formData structure.
  *
  * @return {Promise}
  */
@@ -121,8 +130,8 @@ export default function validateFormData(formData, schema, customValidate) {
 
   const errorHandler = createErrorHandler(formData);
   return Promise.resolve(customValidate(formData, errorHandler))
-    .then(UserErrorHandler => {
-      const userErrorSchema = unwrapErrorHandler(UserErrorHandler);
+    .then(userErrorHandler => {
+      const userErrorSchema = unwrapErrorHandler(userErrorHandler);
       const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
       // XXX: The errors list produced is not fully compliant with the format
       // exposed by the jsonschema lib, which contains full field paths and other

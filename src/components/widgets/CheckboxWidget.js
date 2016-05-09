@@ -29,7 +29,7 @@ function CheckboxWidget({
 if (process.env.NODE_ENV !== "production") {
   CheckboxWidget.propTypes = {
     schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     onChange: PropTypes.func,
     value: PropTypes.bool,
     required: PropTypes.bool,
