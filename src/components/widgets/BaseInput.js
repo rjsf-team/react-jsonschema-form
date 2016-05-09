@@ -22,7 +22,7 @@ BaseInput.defaultProps = {
 
 if (process.env.NODE_ENV !== "production") {
   BaseInput.propTypes = {
-    id: PropTypes.string,
+    id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,
     required: PropTypes.bool,

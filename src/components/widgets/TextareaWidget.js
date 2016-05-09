@@ -27,7 +27,7 @@ function TextWidget({
 if (process.env.NODE_ENV !== "production") {
   TextWidget.propTypes = {
     schema: PropTypes.object.isRequired,
-    id: PropTypes.string,
+    id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.string,
     required: PropTypes.bool,

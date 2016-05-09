@@ -38,7 +38,7 @@ function RadioWidget({
 if (process.env.NODE_ENV !== "production") {
   RadioWidget.propTypes = {
     schema: PropTypes.object.isRequired,
-    id: PropTypes.string,
+    id: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,

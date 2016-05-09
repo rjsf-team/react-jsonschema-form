@@ -30,11 +30,19 @@ export default class Form extends Component {
 
   constructor(props) {
     super(props);
-    this.state = Form.defaultState;
+    this.state = this.initFormState(props);
     this.getStateFromProps(props)
       .then(state => {
         this.setState(state);
       });
+  }
+
+  initFormState({schema, uiSchema}) {
+    const {definitions} = schema;
+    return {
+      ...Form.defaultState,
+      idSchema: toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions)
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,7 +53,7 @@ export default class Form extends Component {
   }
 
   getStateFromProps(props) {
-    const state = this.state || Form.defaultState;
+    const state = this.state || {...Form.defaultState};
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof props.formData !== "undefined";
@@ -53,13 +61,13 @@ export default class Form extends Component {
     const mustValidate = edit && liveValidate;
     const {definitions} = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
+    const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
     return Promise.resolve(mustValidate ?
       this.validate(formData, schema) : {
         errors: state.errors || [],
         errorSchema: state.errorSchema || {}
       })
         .then(({errors, errorSchema}) => {
-          const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
           return {
             status: "initial",
             formData,
