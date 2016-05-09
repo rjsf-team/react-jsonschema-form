@@ -309,6 +309,29 @@ describe("utils", () => {
       };
       expect(mergeObjects(obj1, obj2)).eql(expected);
     });
+
+    describe("concatArrays option", () => {
+      it("should not concat arrays by default", () => {
+        const obj1 = {a: [1]};
+        const obj2 = {a: [2]};
+
+        expect(mergeObjects(obj1, obj2)).eql({a: [2]});
+      });
+
+      it("should concat arrays when concatArrays is true", () => {
+        const obj1 = {a: [1]};
+        const obj2 = {a: [2]};
+
+        expect(mergeObjects(obj1, obj2, true)).eql({a: [1, 2]});
+      });
+
+      it("should concat nested arrays when concatArrays is true", () => {
+        const obj1 = {a: {b: [1]}};
+        const obj2 = {a: {b: [2]}};
+
+        expect(mergeObjects(obj1, obj2, true)).eql({a: {b: [1, 2]}});
+      });
+    });
   });
 
   describe("retrieveSchema()", () => {

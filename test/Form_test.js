@@ -324,99 +324,6 @@ describe("Form", () => {
     });
   });
 
-  describe("Validation", () => {
-    describe("Required fields", () => {
-      const schema = {
-        type: "object",
-        required: ["foo"],
-        properties: {
-          foo: {type: "string"},
-          bar: {type: "string"},
-        }
-      };
-
-      var comp, node, onError;
-
-      beforeEach(() => {
-        onError = sandbox.spy();
-        const compInfo = createFormComponent({schema, formData: {
-          foo: undefined
-        }, onError});
-        comp = compInfo.comp;
-        node = compInfo.node;
-
-        Simulate.submit(node);
-      });
-
-      it("should validate a required field", () => {
-        expect(comp.state.errors)
-          .to.have.length.of(1);
-        expect(comp.state.errors[0].message)
-          .eql(`requires property "foo"`);
-      });
-
-      it("should render errors", () => {
-        expect(node.querySelectorAll(".errors li"))
-          .to.have.length.of(1);
-        expect(node.querySelector(".errors li").textContent)
-          .eql(`instance requires property "foo"`);
-      });
-
-      it("should trigger the onError handler", () => {
-        sinon.assert.calledWith(onError, sinon.match(errors => {
-          return errors[0].message === `requires property "foo"`;
-        }));
-      });
-    });
-
-    describe("Min length", () => {
-      const schema = {
-        type: "object",
-        required: ["foo"],
-        properties: {
-          foo: {
-            type: "string",
-            minLength: 10,
-          },
-        }
-      };
-
-      var comp, node, onError;
-
-      beforeEach(() => {
-        onError = sandbox.spy();
-        const compInfo = createFormComponent({schema, formData: {
-          foo: "123456789"
-        }, onError});
-        comp = compInfo.comp;
-        node = compInfo.node;
-
-        Simulate.submit(node);
-      });
-
-      it("should validate a minLength field", () => {
-        expect(comp.state.errors)
-          .to.have.length.of(1);
-        expect(comp.state.errors[0].message)
-          .eql(`does not meet minimum length of 10`);
-      });
-
-      it("should render errors", () => {
-        expect(node.querySelectorAll(".errors li"))
-          .to.have.length.of(1);
-        expect(node.querySelector(".errors li").textContent)
-          .eql("instance.foo does not meet minimum length of 10");
-      });
-
-      it("should trigger the onError handler", () => {
-        sinon.assert.calledWith(onError, sinon.match(errors => {
-          return errors[0].message ===
-            "does not meet minimum length of 10";
-        }));
-      });
-    });
-  });
-
   describe("Submit handler", () => {
     it("should call provided submit handler with form state", () => {
       const schema = {
@@ -657,7 +564,7 @@ describe("Form", () => {
           });
 
           expect(comp.state.errorSchema).eql({
-            errors: ["does not meet minimum length of 8"]
+            __errors: ["does not meet minimum length of 8"]
           });
         });
 
@@ -691,7 +598,7 @@ describe("Form", () => {
         Simulate.submit(node);
 
         expect(comp.state.errorSchema).eql({
-          errors: ["does not meet minimum length of 8"]
+          __errors: ["does not meet minimum length of 8"]
         });
       });
 
@@ -725,7 +632,7 @@ describe("Form", () => {
         const {comp} = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
-          errors: ["does not meet minimum length of 8"]
+          __errors: ["does not meet minimum length of 8"]
         });
       });
 
@@ -753,7 +660,7 @@ describe("Form", () => {
       it("should reflect the contextualized error in state", () => {
         const {comp} = createFormComponent(formProps);
         expect(comp.state.errorSchema).eql({
-          errors: [
+          __errors: [
             "does not meet minimum length of 8",
             `does not match pattern "\d+"`
           ]
@@ -805,7 +712,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           level1: {
             level2: {
-              errors: ["does not meet minimum length of 8"]
+              __errors: ["does not meet minimum length of 8"]
             }
           }
         });
@@ -843,7 +750,7 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema)
           .eql({
-            1: {errors: ["does not meet minimum length of 4"]}
+            1: {__errors: ["does not meet minimum length of 4"]}
           });
       });
 
@@ -892,8 +799,8 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({
           level1: {
-            1: {errors: ["does not meet minimum length of 4"]},
-            3: {errors: ["does not meet minimum length of 4"]},
+            1: {__errors: ["does not meet minimum length of 4"]},
+            3: {__errors: ["does not meet minimum length of 4"]},
           }
         });
       });
@@ -943,10 +850,10 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           outer: {
             0: {
-              1: {errors: ["does not meet minimum length of 4"]}
+              1: {__errors: ["does not meet minimum length of 4"]}
             },
             1: {
-              0: {errors: ["does not meet minimum length of 4"]}
+              0: {__errors: ["does not meet minimum length of 4"]}
             }
           }
         });
@@ -998,7 +905,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           1: {
             foo: {
-              errors: ["does not meet minimum length of 4"]
+              __errors: ["does not meet minimum length of 4"]
             }
           }
         });

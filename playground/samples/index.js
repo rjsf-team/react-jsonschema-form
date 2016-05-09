@@ -9,6 +9,7 @@ import custom from "./custom";
 import errors from "./errors";
 import large from "./large";
 import date from "./date";
+import validation from "./validation";
 
 export const samples = {
   Simple: simple,
@@ -22,4 +23,5 @@ export const samples = {
   Errors: errors,
   Large: large,
   "Date & time": date,
+  Validation: validation
 };

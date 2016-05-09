@@ -42,7 +42,9 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [The registry object](#the-registry-object)
      - [Custom SchemaField](#custom-schemafield)
      - [Custom titles](#custom-titles)
-  - [Live form data validation](#live-form-data-validation)
+  - [Form data validation](#form-data-validation)
+     - [Live validation](#live-validation)
+     - [Custom validation](#custom-validation)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [JSON Schema supporting status](#json-schema-supporting-status)
@@ -612,13 +614,46 @@ render((
 ), document.getElementById("app"));
 ```
 
-## Live form data validation
+## Form data validation
+
+### Live validation
 
 By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.
 
 You can enable live form data validation by passing a `liveValidate` prop to the `Form` component, and set it to `true`. Then, everytime a value changes within the form data tree (eg. the user entering a character in a field), a validation operation is performed, and the validation results are reflected into the form state.
 
 Be warned that this is an expensive strategy, with possibly strong impact on performances.
+
+### Custom validation
+
+Form data is always validated against the JSON schema.
+
+But it is possible to define your own custom validation rules. This is especially useful when the validation depends on several interdependent fields.
+
+```js
+function validate(formData, errors) {
+  if (formData.pass1 !== formData.pass2) {
+    errors.pass2.addError("Passwords don't match");
+  }
+  return errors;
+}
+
+const schema = {
+  type: "object",
+  properties: {
+    pass1: {type: "string", minLength: 3},
+    pass2: {type: "string", minLength: 3},
+  }
+};
+
+render(<Form schema={schema} validate={validate} />);
+```
+
+> Notes:
+> - The `validate()` function must **always** return the `errors` object
+>   received as second argument.
+> - The `validate()` function is called **after** the JSON schema validation.
+
 
 ## Styling your forms
 

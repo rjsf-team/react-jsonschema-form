@@ -68,7 +68,7 @@ function Wrapper({
   if (hidden) {
     return children;
   }
-  const {errors} = errorSchema;
+  const errors = errorSchema.__errors;
   const isError = errors && errors.length > 0;
   const classList = [
     "form-group",

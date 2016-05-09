@@ -17,7 +17,6 @@ import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 import ColorWidget from "./components/widgets/ColorWidget";
 
-const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
 
 const altWidgetMap = {
   boolean: {
@@ -156,17 +155,19 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
   return formData || defaults;
 }
 
-function isObject(thing) {
+export function isObject(thing) {
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
-export function mergeObjects(obj1, obj2) {
+export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) =>{
-    const right = obj2[key];
+    const left = obj1[key], right = obj2[key];
     if (obj1.hasOwnProperty(key) && isObject(right)) {
-      acc[key] = mergeObjects(obj1[key], right);
+      acc[key] = mergeObjects(left, right, concatArrays);
+    } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
+      acc[key] = left.concat(right);
     } else {
       acc[key] = right;
     }
@@ -250,60 +251,6 @@ export function retrieveSchema(schema, definitions={}) {
 
 export function shouldRender(comp, nextProps, nextState) {
   return !deeper(comp.props, nextProps) || !deeper(comp.state, nextState);
-}
-
-function errorPropertyToPath(property) {
-  // Parse array indices, eg. "instance.level1.level2[2].level3"
-  // => ["instance", "level1", "level2", 2, "level3"]
-  return property.split(".").reduce((path, node) => {
-    const match = node.match(RE_ERROR_ARRAY_PATH);
-    if (match) {
-      const nodeName = node.slice(0, node.indexOf("["));
-      const indices = match.map(str => parseInt(str.slice(1, -1), 10));
-      path = path.concat(nodeName, indices);
-    } else {
-      path.push(node);
-    }
-    return path;
-  }, []);
-}
-
-export function toErrorSchema(errors) {
-  // Transforms a jsonschema validation errors list:
-  // [
-  //   {property: "instance.level1.level2[2].level3", message: "err a"},
-  //   {property: "instance.level1.level2[2].level3", message: "err b"},
-  //   {property: "instance.level1.level2[4].level3", message: "err b"},
-  // ]
-  // Into an error tree:
-  // {
-  //   level1: {
-  //     level2: {
-  //       2: {level3: {errors: ["err a", "err b"]}},
-  //       4: {level3: {errors: ["err b"]}},
-  //     }
-  //   }
-  // };
-  if (!errors.length) {
-    return {};
-  }
-  return errors.reduce((errorSchema, error) => {
-    const {property, message} = error;
-    const path = errorPropertyToPath(property);
-    let parent = errorSchema;
-    for (const segment of path.slice(1)) {
-      if (!(segment in parent)) {
-        parent[segment] = {};
-      }
-      parent = parent[segment];
-    }
-    if (Array.isArray(parent.errors)) {
-      parent.errors = parent.errors.concat(message);
-    } else {
-      parent.errors = [message];
-    }
-    return errorSchema;
-  }, {});
 }
 
 export function toIdSchema(schema, id, definitions) {
