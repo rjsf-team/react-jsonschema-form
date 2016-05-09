@@ -366,7 +366,7 @@ describe("uiSchema", () => {
       describe("Constraint attributes", () => {
         let input;
 
-        beforeEach(() => {
+        beforeEach(function* () {
           const {node} = createFormComponent({schema, uiSchema});
           input = node.querySelector("[type=number]");
         });
@@ -423,7 +423,7 @@ describe("uiSchema", () => {
       describe("Constraint attributes", () => {
         let input;
 
-        beforeEach(() => {
+        beforeEach(function* () {
           const {node} = createFormComponent({schema, uiSchema});
           input = node.querySelector("[type=range]");
         });
@@ -840,7 +840,7 @@ describe("uiSchema", () => {
       describe("ObjectField", () => {
         let node;
 
-        beforeEach(() => {
+        beforeEach(function* () {
           const schema = {
             type: "object",
             properties: {
@@ -1004,7 +1004,7 @@ describe("uiSchema", () => {
       describe("ObjectField", () => {
         let node;
 
-        beforeEach(() => {
+        beforeEach(function* () {
           const schema = {
             type: "object",
             properties: {
