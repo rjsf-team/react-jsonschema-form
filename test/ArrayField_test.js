@@ -81,6 +81,33 @@ describe("ArrayField", () => {
       expect(inputs[0].value).eql("bar");
     });
 
+    it("should force revalidation when a field is removed", () => {
+      // refs #195
+      const {node} = createFormComponent({
+        schema: {
+          ...schema,
+          items: {...schema.items, minLength: 4}
+        },
+        formData: ["foo", "bar!"],
+      });
+
+      try {
+        Simulate.submit(node);
+      } catch(e) {
+        // Silencing error thrown as failure is expected here
+      }
+
+      expect(node.querySelectorAll(".has-error .error-detail"))
+        .to.have.length.of(1);
+
+      const dropBtns = node.querySelectorAll(".array-item-remove button");
+
+      Simulate.click(dropBtns[0]);
+
+      expect(node.querySelectorAll(".has-error .error-detail"))
+        .to.have.length.of(0);
+    });
+
     it("should render the input widgets with the expected ids", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
 

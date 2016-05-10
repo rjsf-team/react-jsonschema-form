@@ -63,9 +63,9 @@ class ArrayField extends Component {
     return itemsSchema.type === "string" && itemsSchema.minLength > 0;
   }
 
-  asyncSetState(state) {
+  asyncSetState(state, options={validate: false}) {
     setState(this, state, () => {
-      this.props.onChange(this.state.items, {validate: false});
+      this.props.onChange(this.state.items, options);
     });
   }
 
@@ -90,7 +90,7 @@ class ArrayField extends Component {
       event.preventDefault();
       this.asyncSetState({
         items: this.state.items.filter((_, i) => i !== index)
-      });
+      }, {validate: true}); // refs #195
     };
   };
 
