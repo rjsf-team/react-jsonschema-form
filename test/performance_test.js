@@ -23,11 +23,11 @@ describe("Rendering performance optimizations", () => {
   });
 
   describe("Form", () => {
-    it("should not render if next props are equivalent", () => {
+    it("should not render if next props are equivalent", function*() {
       const schema = {type: "string"};
       const uiSchema = {};
 
-      const {comp} = createFormComponent({schema, uiSchema});
+      const {comp} = yield createFormComponent({schema, uiSchema});
       sandbox.stub(comp, "render").returns(<div/>);
 
       comp.componentWillReceiveProps({schema});
@@ -35,11 +35,11 @@ describe("Rendering performance optimizations", () => {
       sinon.assert.notCalled(comp.render);
     });
 
-    it("should not render if next formData are equivalent", () => {
+    it("should not render if next formData are equivalent", function*() {
       const schema = {type: "string"};
       const formData = "foo";
 
-      const {comp} = createFormComponent({schema, formData});
+      const {comp} = yield createFormComponent({schema, formData});
       sandbox.stub(comp, "render").returns(<div/>);
 
       comp.componentWillReceiveProps({formData});
@@ -54,8 +54,8 @@ describe("Rendering performance optimizations", () => {
     const uiSchema = {};
     const registry = getDefaultRegistry();
 
-    it("should not render if next props are equivalent", () => {
-      const {comp} = createComponent(ArrayField, {
+    it("should not render if next props are equivalent", function*() {
+      const {comp} = yield createComponent(ArrayField, {
         registry,
         schema,
         uiSchema,
@@ -68,10 +68,10 @@ describe("Rendering performance optimizations", () => {
       sinon.assert.notCalled(comp.render);
     });
 
-    it("should not render if next formData are equivalent", () => {
+    it("should not render if next formData are equivalent", function*() {
       const formData = ["a", "b"];
 
-      const {comp} = createComponent(ArrayField, {
+      const {comp} = yield createComponent(ArrayField, {
         registry,
         schema,
         formData,
@@ -97,8 +97,8 @@ describe("Rendering performance optimizations", () => {
     };
     const idSchema = {id: "root", foo: {id: "root_plop"}};
 
-    it("should not render if next props are equivalent", () => {
-      const {comp} = createComponent(ObjectField, {
+    it("should not render if next props are equivalent", function*() {
+      const {comp} = yield createComponent(ObjectField, {
         registry,
         schema,
         uiSchema,
@@ -112,10 +112,10 @@ describe("Rendering performance optimizations", () => {
       sinon.assert.notCalled(comp.render);
     });
 
-    it("should not render if next formData are equivalent", () => {
+    it("should not render if next formData are equivalent", function*() {
       const formData = {foo: "blah"};
 
-      const {comp} = createComponent(ObjectField, {
+      const {comp} = yield createComponent(ObjectField, {
         registry,
         schema,
         formData,

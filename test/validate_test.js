@@ -1,9 +1,8 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import { Simulate } from "react-addons-test-utils";
 
 import validateFormData, { toErrorList } from "../src/validate";
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, Simulate, updateComponentProps } from "./test_utils";
 
 
 describe("Validation", () => {
@@ -18,10 +17,12 @@ describe("Validation", () => {
 
       let errors, errorSchema;
 
-      beforeEach(() => {
-        const result = validateFormData({foo: 42}, schema);
-        errors = result.errors;
-        errorSchema = result.errorSchema;
+      beforeEach(function* () {
+        yield validateFormData({foo: 42}, schema)
+          .then(result => {
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
       });
 
       it("should return an error list", () => {
@@ -47,7 +48,7 @@ describe("Validation", () => {
         }
       };
 
-      beforeEach(() => {
+      beforeEach(function* () {
         const validate = (formData, errors) => {
           if (formData.pass1 !== formData.pass2) {
             errors.pass2.addError("passwords don't match.");
@@ -55,9 +56,11 @@ describe("Validation", () => {
           return errors;
         };
         const formData = {pass1: "a", pass2: "b"};
-        const result = validateFormData(formData, schema, validate);
-        errors = result.errors;
-        errorSchema = result.errorSchema;
+        yield validateFormData(formData, schema, validate)
+          .then(result => {
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
       });
 
       it("should return an error list", () => {
@@ -115,15 +118,17 @@ describe("Validation", () => {
 
         var comp, node, onError;
 
-        beforeEach(() => {
+        beforeEach(function* () {
           onError = sandbox.spy();
-          const compInfo = createFormComponent({schema, formData: {
-            foo: undefined
-          }, onError});
+          const compInfo = yield createFormComponent({
+            schema,
+            formData: {foo: undefined},
+            onError
+          });
           comp = compInfo.comp;
           node = compInfo.node;
 
-          Simulate.submit(node);
+          yield Simulate.submit(node);
         });
 
         it("should validate a required field", () => {
@@ -161,11 +166,13 @@ describe("Validation", () => {
 
         var comp, node, onError;
 
-        beforeEach(() => {
+        beforeEach(function* () {
           onError = sandbox.spy();
-          const compInfo = createFormComponent({schema, formData: {
-            foo: "123456789"
-          }, onError});
+          const compInfo = yield createFormComponent({
+            schema,
+            formData: {foo: "123456789"},
+            onError
+          });
           comp = compInfo.comp;
           node = compInfo.node;
 
@@ -196,7 +203,7 @@ describe("Validation", () => {
     });
 
     describe("Custom Form validation", () => {
-      it("should validate a simple string value", () => {
+      it("should validate a simple string value", function*() {
         const schema = {type: "string"};
         const formData = "a";
 
@@ -207,15 +214,19 @@ describe("Validation", () => {
           return errors;
         }
 
-        const {comp} = createFormComponent({schema, validate, liveValidate: true});
-        comp.componentWillReceiveProps({formData});
+        const {comp} = yield createFormComponent({
+          schema,
+          validate,
+          liveValidate: true
+        });
+        yield updateComponentProps(comp, {formData});
 
         expect(comp.state.errorSchema).eql({
           __errors: ["Invalid"],
         });
       });
 
-      it("should validate a simple object", () => {
+      it("should validate a simple object", function*() {
         const schema = {
           type: "object",
           properties: {
@@ -234,8 +245,13 @@ describe("Validation", () => {
           return errors;
         }
 
-        const {comp} = createFormComponent({schema, validate, liveValidate: true});
-        comp.componentWillReceiveProps({formData});
+        const {comp} = yield createFormComponent({
+          schema,
+          validate,
+          liveValidate: true
+        });
+
+        yield updateComponentProps(comp, {formData});
 
         expect(comp.state.errorSchema).eql({
           __errors: [],
@@ -251,7 +267,7 @@ describe("Validation", () => {
         });
       });
 
-      it("should validate a simple array", () => {
+      it("should validate a simple array", function*() {
         const schema = {
           type: "array",
           items: {
@@ -268,8 +284,13 @@ describe("Validation", () => {
           return errors;
         }
 
-        const {comp} = createFormComponent({schema, validate, liveValidate: true});
-        comp.componentWillReceiveProps({formData});
+        const {comp} = yield createFormComponent({
+          schema,
+          validate,
+          liveValidate: true
+        });
+
+        yield updateComponentProps(comp, {formData});
 
         expect(comp.state.errorSchema).eql({
           __errors: ["Forbidden value: bbb"],

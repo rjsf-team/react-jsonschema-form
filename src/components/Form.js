@@ -19,17 +19,35 @@ export default class Form extends Component {
     safeRenderCompletion: false,
   }
 
+  static defaultState = {
+    status: "initial",
+    formData: undefined,
+    edit: false,
+    errors: [],
+    errorSchema: {},
+    idSchema: {},
+  };
+
   constructor(props) {
     super(props);
-    this.state = this.getStateFromProps(props);
+    this.state = this.initFormState(props);
+    this.getStateFromProps(props).then(this.setState.bind(this));
+  }
+
+  initFormState({schema, uiSchema}) {
+    const {definitions} = schema;
+    return {
+      ...Form.defaultState,
+      idSchema: toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions)
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    this.getStateFromProps(nextProps).then(this.setState.bind(this));
   }
 
   getStateFromProps(props) {
-    const state = this.state || {};
+    const state = this.state || {...Form.defaultState};
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof props.formData !== "undefined";
@@ -37,13 +55,22 @@ export default class Form extends Component {
     const mustValidate = edit && liveValidate;
     const {definitions} = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
-    const {errors, errorSchema} = mustValidate ?
+    const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
+    return Promise.resolve(mustValidate ?
       this.validate(formData, schema) : {
         errors: state.errors || [],
         errorSchema: state.errorSchema || {}
-      };
-    const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
-    return {status: "initial", formData, edit, errors, errorSchema, idSchema};
+      })
+        .then(({errors, errorSchema}) => {
+          return {
+            status: "initial",
+            formData,
+            edit,
+            errors,
+            errorSchema,
+            idSchema,
+          };
+        });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -66,34 +93,44 @@ export default class Form extends Component {
   onChange = (formData, options={validate: false}) => {
     const mustValidate = this.props.liveValidate || options.validate;
     let state = {status: "editing", formData};
+    let promise;
     if (mustValidate) {
-      const {errors, errorSchema} = this.validate(formData);
-      state = {...state, errors, errorSchema};
+      promise = this.validate(formData)
+        .then(({errors, errorSchema}) => {
+          return {...state, errors, errorSchema};
+        });
+    } else {
+      promise = Promise.resolve(state);
     }
-    setState(this, state, () => {
-      if (this.props.onChange) {
-        this.props.onChange(this.state);
-      }
-    });
+    return promise
+      .then(state => {
+        setState(this, state, () => {
+          if (this.props.onChange) {
+            this.props.onChange(this.state);
+          }
+        });
+      });
   };
 
   onSubmit = (event) => {
     event.preventDefault();
     this.setState({status: "submitted"});
-    const {errors, errorSchema} = this.validate(this.state.formData);
-    if (Object.keys(errors).length > 0) {
-      setState(this, {errors, errorSchema}, () => {
-        if (this.props.onError) {
-          this.props.onError(errors);
-        } else {
-          console.error("Form validation failed", errors);
+    this.validate(this.state.formData)
+      .then(({errors, errorSchema}) => {
+        if (Object.keys(errors).length > 0) {
+          setState(this, {errors, errorSchema}, () => {
+            if (this.props.onError) {
+              this.props.onError(errors);
+            } else {
+              console.error("Form validation failed", errors);
+            }
+          });
+          return;
+        } else if (this.props.onSubmit) {
+          this.props.onSubmit(this.state);
         }
+        this.setState({status: "initial", errors: [], errorSchema: {}});
       });
-      return;
-    } else if (this.props.onSubmit) {
-      this.props.onSubmit(this.state);
-    }
-    this.setState({status: "initial", errors: [], errorSchema: {}});
   };
 
   getRegistry() {

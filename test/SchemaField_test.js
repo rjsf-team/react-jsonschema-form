@@ -22,9 +22,9 @@ describe("SchemaField", () => {
       return (<div id="custom"><SchemaField {...props} /></div>);
     };
 
-    it("should use the specified custom SchemaType property", () => {
+    it("should use the specified custom SchemaType property", function*() {
       const fields = {SchemaField: CustomSchemaField};
-      const {node} = createFormComponent({
+      const {node} = yield createFormComponent({
         schema: {type: "string"},
         fields
       });
@@ -53,18 +53,18 @@ describe("SchemaField", () => {
       }
     };
 
-    it("should use provided direct custom component for object", () => {
+    it("should use provided direct custom component for object", function*() {
       const uiSchema = {"ui:field": MyObject};
 
-      const {node} = createFormComponent({schema, uiSchema});
+      const {node} = yield createFormComponent({schema, uiSchema});
 
       expect(node.querySelectorAll("#custom"))
         .to.have.length.of(1);
     });
 
-    it("should provide custom field the expected fields", () => {
+    it("should provide custom field the expected fields", function*() {
       let receivedProps;
-      createFormComponent({schema, uiSchema: {
+      yield createFormComponent({schema, uiSchema: {
         "ui:field": class extends React.Component {
           constructor(props) {
             super(props);
@@ -84,17 +84,17 @@ describe("SchemaField", () => {
       expect(registry.fields.TitleField).eql(TitleField);
     });
 
-    it("should use registered custom component for object", () => {
+    it("should use registered custom component for object", function*() {
       const uiSchema = {"ui:field": "myobject"};
       const fields = {"myobject": MyObject};
 
-      const {node} = createFormComponent({schema, uiSchema, fields});
+      const {node} = yield createFormComponent({schema, uiSchema, fields});
 
       expect(node.querySelectorAll("#custom"))
         .to.have.length.of(1);
     });
 
-    it("should handle referenced schema definitions", () => {
+    it("should handle referenced schema definitions", function*() {
       const schema = {
         definitions: {
           foobar: {
@@ -110,7 +110,7 @@ describe("SchemaField", () => {
       const uiSchema = {"ui:field": "myobject"};
       const fields = {"myobject": MyObject};
 
-      const {node} = createFormComponent({schema, uiSchema, fields});
+      const {node} = yield createFormComponent({schema, uiSchema, fields});
 
       expect(node.querySelectorAll("#custom"))
         .to.have.length.of(1);
