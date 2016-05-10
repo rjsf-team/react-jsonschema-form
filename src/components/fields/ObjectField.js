@@ -45,13 +45,15 @@ class ObjectField extends Component {
       schema.required.indexOf(name) !== -1;
   }
 
-  asyncSetState(state) {
-    setState(this, state, () => this.props.onChange(this.state));
+  asyncSetState(state, options={validate: false}) {
+    setState(this, state, () => {
+      this.props.onChange(this.state, options);
+    });
   }
 
   onPropertyChange = (name) => {
-    return (value) => {
-      this.asyncSetState({[name]: value});
+    return (value, options) => {
+      this.asyncSetState({[name]: value}, options);
     };
   };
 
