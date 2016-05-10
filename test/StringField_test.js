@@ -1,8 +1,7 @@
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
 
 import { parseDateString, toDateString } from "../src/utils";
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, Simulate } from "./test_utils";
 
 
 describe("StringField", () => {
@@ -18,7 +17,7 @@ describe("StringField", () => {
 
   describe("TextWidget", () => {
     it("should render a string field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string"
       }});
 
@@ -27,7 +26,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a label", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         title: "foo"
       }});
@@ -37,7 +36,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a placeholder", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         description: "bar",
       }});
@@ -47,7 +46,7 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         default: "plop",
       }});
@@ -57,17 +56,17 @@ describe("StringField", () => {
     });
 
     it("should default state value to undefined", function*() {
-      const {comp} = createFormComponent({schema: {type: "string"}});
+      const {comp} = yield createFormComponent({schema: {type: "string"}});
 
       expect(comp.state.formData).eql(undefined);
     });
 
     it("should handle a change event", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
       }});
 
-      Simulate.change(node.querySelector("input"), {
+      yield Simulate.change(node.querySelector("input"), {
         target: {value: "yo"}
       });
 
@@ -75,7 +74,7 @@ describe("StringField", () => {
     });
 
     it("should fill field with data", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
       }, formData: "plip"});
 
@@ -84,7 +83,7 @@ describe("StringField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
       }});
 
@@ -95,7 +94,7 @@ describe("StringField", () => {
 
   describe("SelectWidget", () => {
     it("should render a string field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"]
       }});
@@ -105,7 +104,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a label", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
         title: "foo",
@@ -116,7 +115,7 @@ describe("StringField", () => {
     });
 
     it("should render a select field with a tooltip", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
         description: "baz",
@@ -127,7 +126,7 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", function*() {
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
         default: "bar",
@@ -137,12 +136,12 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the form state", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
       }});
 
-      Simulate.change(node.querySelector("select"), {
+      yield Simulate.change(node.querySelector("select"), {
         target: {value: "foo"}
       });
 
@@ -150,12 +149,12 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
       }});
 
-      Simulate.change(node.querySelector("select"), {
+      yield Simulate.change(node.querySelector("select"), {
         target: {value: "foo"}
       });
 
@@ -163,7 +162,7 @@ describe("StringField", () => {
     });
 
     it("should fill field with data", function*() {
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
       }, formData: "bar"});
@@ -172,7 +171,7 @@ describe("StringField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         enum: ["a", "b"]
       }});
@@ -184,7 +183,7 @@ describe("StringField", () => {
 
   describe("DateTimeWidget", () => {
     it("should render an datetime-local field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }});
@@ -195,7 +194,7 @@ describe("StringField", () => {
 
     it("should assign a default value", function*() {
       const datetime = new Date().toJSON();
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
         default: datetime,
@@ -205,14 +204,14 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }});
 
       const newDatetime = new Date().toJSON();
 
-      Simulate.change(node.querySelector("[type=datetime-local]"), {
+      yield Simulate.change(node.querySelector("[type=datetime-local]"), {
         target: {value: newDatetime}
       });
 
@@ -223,7 +222,7 @@ describe("StringField", () => {
 
     it("should fill field with data", function*() {
       const datetime = new Date().toJSON();
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }, formData: datetime});
@@ -232,7 +231,7 @@ describe("StringField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }});
@@ -242,12 +241,12 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered datetime", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }, liveValidate: true});
 
-      Simulate.change(node.querySelector("[type=datetime-local]"), {
+      yield Simulate.change(node.querySelector("[type=datetime-local]"), {
         target: {value: "invalid"}
       });
 
@@ -259,7 +258,7 @@ describe("StringField", () => {
     const uiSchema = {"ui:widget": "date"};
 
     it("should render a date field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema});
@@ -270,7 +269,7 @@ describe("StringField", () => {
 
     it("should assign a default value", function*() {
       const datetime = new Date().toJSON();
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
         default: datetime,
@@ -280,14 +279,14 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema});
 
       const newDatetime = "2012-12-12";
 
-      Simulate.change(node.querySelector("[type=date]"), {
+      yield Simulate.change(node.querySelector("[type=date]"), {
         target: {value: newDatetime}
       });
 
@@ -298,7 +297,7 @@ describe("StringField", () => {
 
     it("should fill field with data", function*() {
       const datetime = new Date().toJSON();
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, formData: datetime});
@@ -307,7 +306,7 @@ describe("StringField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema});
@@ -317,12 +316,12 @@ describe("StringField", () => {
     });
 
     it("should accept a valid entered date", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema, liveValidate: true});
 
-      Simulate.change(node.querySelector("[type=date]"), {
+      yield Simulate.change(node.querySelector("[type=date]"), {
         target: {value: "2012-12-12"}
       });
 
@@ -331,12 +330,12 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered date", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema, liveValidate: true});
 
-      Simulate.change(node.querySelector("[type=date]"), {
+      yield Simulate.change(node.querySelector("[type=date]"), {
         target: {value: "invalid"}
       });
 
@@ -348,7 +347,7 @@ describe("StringField", () => {
     const uiSchema = {"ui:widget": "alt-datetime"};
 
     it("should render a datetime field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }, uiSchema});
@@ -358,7 +357,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a main label", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
         title: "foo",
@@ -370,7 +369,7 @@ describe("StringField", () => {
 
     it("should assign a default value", function*() {
       const datetime = new Date().toJSON();
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
         default: datetime,
@@ -380,24 +379,24 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }, uiSchema});
 
-      Simulate.change(node.querySelector("#root_year"), {target: {value: 2012}});
-      Simulate.change(node.querySelector("#root_month"), {target: {value: 10}});
-      Simulate.change(node.querySelector("#root_day"), {target: {value: 2}});
-      Simulate.change(node.querySelector("#root_hour"), {target: {value: 1}});
-      Simulate.change(node.querySelector("#root_minute"), {target: {value: 2}});
-      Simulate.change(node.querySelector("#root_second"), {target: {value: 3}});
+      yield Simulate.change(node.querySelector("#root_year"), {target: {value: 2012}});
+      yield Simulate.change(node.querySelector("#root_month"), {target: {value: 10}});
+      yield Simulate.change(node.querySelector("#root_day"), {target: {value: 2}});
+      yield Simulate.change(node.querySelector("#root_hour"), {target: {value: 1}});
+      yield Simulate.change(node.querySelector("#root_minute"), {target: {value: 2}});
+      yield Simulate.change(node.querySelector("#root_second"), {target: {value: 3}});
 
       expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
     });
 
     it("should fill field with data", function*() {
       const datetime = new Date().toJSON();
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }, formData: datetime});
@@ -406,7 +405,7 @@ describe("StringField", () => {
     });
 
     it("should render the widgets with the expected ids", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }, uiSchema});
@@ -424,7 +423,7 @@ describe("StringField", () => {
     });
 
     it("should render the widgets with the expected options' values", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }, uiSchema});
@@ -448,7 +447,7 @@ describe("StringField", () => {
     });
 
     it("should render the widgets with the expected options' labels", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date-time",
       }, uiSchema});
@@ -462,7 +461,7 @@ describe("StringField", () => {
 
     describe("Action buttons", () => {
       it("should render action buttons", function*() {
-        const {node} = createFormComponent({schema: {
+        const {node} = yield createFormComponent({schema: {
           type: "string",
           format: "date-time",
         }, uiSchema});
@@ -473,12 +472,12 @@ describe("StringField", () => {
       });
 
       it("should set current date when pressing the Now button", function*() {
-        const {comp, node} = createFormComponent({schema: {
+        const {comp, node} = yield createFormComponent({schema: {
           type: "string",
           format: "date-time",
         }, uiSchema});
 
-        Simulate.click(node.querySelector("a.btn-now"));
+        yield Simulate.click(node.querySelector("a.btn-now"));
 
         // Test that the two DATETIMEs are within 5 seconds of each other.
         const now = new Date().getTime();
@@ -487,13 +486,13 @@ describe("StringField", () => {
       });
 
       it("should clear current date when pressing the Clear button", function*() {
-        const {comp, node} = createFormComponent({schema: {
+        const {comp, node} = yield createFormComponent({schema: {
           type: "string",
           format: "date-time",
         }, uiSchema});
 
-        Simulate.click(node.querySelector("a.btn-now"));
-        Simulate.click(node.querySelector("a.btn-clear"));
+        yield Simulate.click(node.querySelector("a.btn-now"));
+        yield Simulate.click(node.querySelector("a.btn-clear"));
 
         expect(comp.state.formData).eql(undefined);
       });
@@ -504,7 +503,7 @@ describe("StringField", () => {
     const uiSchema = {"ui:widget": "alt-date"};
 
     it("should render a date field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema});
@@ -514,7 +513,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a main label", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
         title: "foo",
@@ -526,7 +525,7 @@ describe("StringField", () => {
 
     it("should assign a default value", function*() {
       const datetime = "2012-12-12";
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
         default: datetime,
@@ -536,21 +535,21 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema});
 
-      Simulate.change(node.querySelector("#root_year"), {target: {value: 2012}});
-      Simulate.change(node.querySelector("#root_month"), {target: {value: 10}});
-      Simulate.change(node.querySelector("#root_day"), {target: {value: 2}});
+      yield Simulate.change(node.querySelector("#root_year"), {target: {value: 2012}});
+      yield Simulate.change(node.querySelector("#root_month"), {target: {value: 10}});
+      yield Simulate.change(node.querySelector("#root_day"), {target: {value: 2}});
 
       expect(comp.state.formData).eql("2012-10-02");
     });
 
     it("should fill field with data", function*() {
       const datetime = "2012-12-12";
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema, formData: datetime});
@@ -559,7 +558,7 @@ describe("StringField", () => {
     });
 
     it("should render the widgets with the expected ids", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema});
@@ -574,7 +573,7 @@ describe("StringField", () => {
     });
 
     it("should render the widgets with the expected options' values", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema});
@@ -594,7 +593,7 @@ describe("StringField", () => {
     });
 
     it("should render the widgets with the expected options' labels", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema});
@@ -607,7 +606,7 @@ describe("StringField", () => {
     });
 
     it("should accept a valid date", function*() {
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "date",
       }, uiSchema, liveValidate: true});
@@ -619,7 +618,7 @@ describe("StringField", () => {
 
     describe("Action buttons", () => {
       it("should render action buttons", function*() {
-        const {node} = createFormComponent({schema: {
+        const {node} = yield createFormComponent({schema: {
           type: "string",
           format: "date",
         }, uiSchema});
@@ -630,25 +629,25 @@ describe("StringField", () => {
       });
 
       it("should set current date when pressing the Now button", function*() {
-        const {comp, node} = createFormComponent({schema: {
+        const {comp, node} = yield createFormComponent({schema: {
           type: "string",
           format: "date",
         }, uiSchema});
 
-        Simulate.click(node.querySelector("a.btn-now"));
+        yield Simulate.click(node.querySelector("a.btn-now"));
 
         const expected = toDateString(parseDateString(new Date().toJSON()), false);
         expect(comp.state.formData).eql(expected);
       });
 
       it("should clear current date when pressing the Clear button", function*() {
-        const {comp, node} = createFormComponent({schema: {
+        const {comp, node} = yield createFormComponent({schema: {
           type: "string",
           format: "date",
         }, uiSchema});
 
-        Simulate.click(node.querySelector("a.btn-now"));
-        Simulate.click(node.querySelector("a.btn-clear"));
+        yield Simulate.click(node.querySelector("a.btn-now"));
+        yield Simulate.click(node.querySelector("a.btn-clear"));
 
         expect(comp.state.formData).eql(undefined);
       });
@@ -657,7 +656,7 @@ describe("StringField", () => {
 
   describe("EmailWidget", () => {
     it("should render an email field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "email",
       }});
@@ -667,7 +666,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a label", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "email",
         title: "foo",
@@ -678,7 +677,7 @@ describe("StringField", () => {
     });
 
     it("should render a select field with a placeholder", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "email",
         description: "baz",
@@ -690,7 +689,7 @@ describe("StringField", () => {
 
     it("should assign a default value", function*() {
       const email = "foo@bar.baz";
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "email",
         default: email,
@@ -700,14 +699,14 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "email",
       }});
 
       const newDatetime = new Date().toJSON();
 
-      Simulate.change(node.querySelector("[type=email]"), {
+      yield Simulate.change(node.querySelector("[type=email]"), {
         target: {value: newDatetime}
       });
 
@@ -717,7 +716,7 @@ describe("StringField", () => {
 
     it("should fill field with data", function*() {
       const email = "foo@bar.baz";
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "email",
       }, formData: email});
@@ -726,7 +725,7 @@ describe("StringField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "email",
       }});
@@ -736,12 +735,12 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered email", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         format: "email",
       }, liveValidate: true});
 
-      Simulate.change(node.querySelector("[type=email]"), {
+      yield Simulate.change(node.querySelector("[type=email]"), {
         target: {value: "invalid"}
       });
 
@@ -751,7 +750,7 @@ describe("StringField", () => {
 
   describe("URLWidget", () => {
     it("should render an url field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "uri",
       }});
@@ -761,7 +760,7 @@ describe("StringField", () => {
     });
 
     it("should render a string field with a label", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "uri",
         title: "foo",
@@ -772,7 +771,7 @@ describe("StringField", () => {
     });
 
     it("should render a select field with a placeholder", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "uri",
         description: "baz",
@@ -784,7 +783,7 @@ describe("StringField", () => {
 
     it("should assign a default value", function*() {
       const url = "http://foo.bar/baz";
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "uri",
         default: url,
@@ -794,13 +793,13 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "uri",
       }});
 
       const newDatetime = new Date().toJSON();
-      Simulate.change(node.querySelector("[type=url]"), {
+      yield Simulate.change(node.querySelector("[type=url]"), {
         target: {value: newDatetime}
       });
 
@@ -809,7 +808,7 @@ describe("StringField", () => {
 
     it("should fill field with data", function*() {
       const url = "http://foo.bar/baz";
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "uri",
       }, formData: url});
@@ -818,7 +817,7 @@ describe("StringField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "uri",
       }});
@@ -828,12 +827,12 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered url", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         format: "uri",
       }, liveValidate: true});
 
-      Simulate.change(node.querySelector("[type=url]"), {
+      yield Simulate.change(node.querySelector("[type=url]"), {
         target: {value: "invalid"}
       });
 
@@ -846,7 +845,7 @@ describe("StringField", () => {
     const color = "#123456";
 
     it("should render a color field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "color",
       }, uiSchema});
@@ -856,7 +855,7 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", function*() {
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "color",
         default: color,
@@ -866,14 +865,14 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "color",
       }, uiSchema});
 
       const newColor = "#654321";
 
-      Simulate.change(node.querySelector("[type=color]"), {
+      yield Simulate.change(node.querySelector("[type=color]"), {
         target: {value: newColor}
       });
 
@@ -882,7 +881,7 @@ describe("StringField", () => {
     });
 
     it("should fill field with data", function*() {
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "string",
         format: "color",
       }, formData: color});
@@ -891,7 +890,7 @@ describe("StringField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "string",
         format: "color",
       }, uiSchema});
@@ -902,12 +901,12 @@ describe("StringField", () => {
 
 
     it("should reject an invalid entered color", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "string",
         format: "color",
       }, uiSchema, liveValidate: true});
 
-      Simulate.change(node.querySelector("[type=color]"), {
+      yield Simulate.change(node.querySelector("[type=color]"), {
         target: {value: "invalid"}
       });
 

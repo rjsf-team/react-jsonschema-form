@@ -1,7 +1,6 @@
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, Simulate } from "./test_utils";
 
 
 describe("NumberField", () => {
@@ -17,7 +16,7 @@ describe("NumberField", () => {
 
   describe("TextWidget", () => {
     it("should render a string field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number"
       }});
 
@@ -26,7 +25,7 @@ describe("NumberField", () => {
     });
 
     it("should render a string field with a label", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
         title: "foo"
       }});
@@ -36,7 +35,7 @@ describe("NumberField", () => {
     });
 
     it("should render a string field with a placeholder", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
         description: "bar",
       }});
@@ -46,13 +45,13 @@ describe("NumberField", () => {
     });
 
     it("should default state value to undefined", function*() {
-      const {comp} = createFormComponent({schema: {type: "number"}});
+      const {comp} = yield createFormComponent({schema: {type: "number"}});
 
       expect(comp.state.formData).eql(undefined);
     });
 
     it("should assign a default value", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
         default: 2,
       }});
@@ -62,11 +61,11 @@ describe("NumberField", () => {
     });
 
     it("should handle a change event", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "number",
       }});
 
-      Simulate.change(node.querySelector("input"), {
+      yield Simulate.change(node.querySelector("input"), {
         target: {value: "2"}
       });
 
@@ -74,7 +73,7 @@ describe("NumberField", () => {
     });
 
     it("should fill field with data", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
       }, formData: 2});
 
@@ -83,11 +82,11 @@ describe("NumberField", () => {
     });
 
     it("should not cast the input as a number if it ends with a dot", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "number",
       }});
 
-      Simulate.change(node.querySelector("input"), {
+      yield Simulate.change(node.querySelector("input"), {
         target: {value: "2."}
       });
 
@@ -95,7 +94,7 @@ describe("NumberField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
       }});
 
@@ -106,7 +105,7 @@ describe("NumberField", () => {
 
   describe("SelectWidget", () => {
     it("should render a number field", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
         enum: [1, 2]
       }});
@@ -116,7 +115,7 @@ describe("NumberField", () => {
     });
 
     it("should render a string field with a label", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
         enum: [1, 2],
         title: "foo",
@@ -127,7 +126,7 @@ describe("NumberField", () => {
     });
 
     it("should render a select field with a tooltip", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
         enum: [1, 2],
         description: "baz",
@@ -138,7 +137,7 @@ describe("NumberField", () => {
     });
 
     it("should assign a default value", function*() {
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "number",
         enum: [1, 2],
         default: 1,
@@ -148,12 +147,12 @@ describe("NumberField", () => {
     });
 
     it("should handle a change event", function*() {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp, node} = yield createFormComponent({schema: {
         type: "number",
         enum: [1, 2],
       }});
 
-      Simulate.change(node.querySelector("select"), {
+      yield Simulate.change(node.querySelector("select"), {
         target: {value: "2"}
       });
 
@@ -161,7 +160,7 @@ describe("NumberField", () => {
     });
 
     it("should fill field with data", function*() {
-      const {comp} = createFormComponent({schema: {
+      const {comp} = yield createFormComponent({schema: {
         type: "number",
         enum: [1, 2],
       }, formData: 2});
@@ -170,7 +169,7 @@ describe("NumberField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema: {
+      const {node} = yield createFormComponent({schema: {
         type: "number",
         enum: [1, 2]
       }});

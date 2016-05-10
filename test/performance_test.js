@@ -27,7 +27,7 @@ describe("Rendering performance optimizations", () => {
       const schema = {type: "string"};
       const uiSchema = {};
 
-      const {comp} = createFormComponent({schema, uiSchema});
+      const {comp} = yield createFormComponent({schema, uiSchema});
       sandbox.stub(comp, "render").returns(<div/>);
 
       comp.componentWillReceiveProps({schema});
@@ -39,7 +39,7 @@ describe("Rendering performance optimizations", () => {
       const schema = {type: "string"};
       const formData = "foo";
 
-      const {comp} = createFormComponent({schema, formData});
+      const {comp} = yield createFormComponent({schema, formData});
       sandbox.stub(comp, "render").returns(<div/>);
 
       comp.componentWillReceiveProps({formData});
@@ -55,7 +55,7 @@ describe("Rendering performance optimizations", () => {
     const registry = getDefaultRegistry();
 
     it("should not render if next props are equivalent", function*() {
-      const {comp} = createComponent(ArrayField, {
+      const {comp} = yield createComponent(ArrayField, {
         registry,
         schema,
         uiSchema,
@@ -71,7 +71,7 @@ describe("Rendering performance optimizations", () => {
     it("should not render if next formData are equivalent", function*() {
       const formData = ["a", "b"];
 
-      const {comp} = createComponent(ArrayField, {
+      const {comp} = yield createComponent(ArrayField, {
         registry,
         schema,
         formData,
@@ -98,7 +98,7 @@ describe("Rendering performance optimizations", () => {
     const idSchema = {id: "root", foo: {id: "root_plop"}};
 
     it("should not render if next props are equivalent", function*() {
-      const {comp} = createComponent(ObjectField, {
+      const {comp} = yield createComponent(ObjectField, {
         registry,
         schema,
         uiSchema,
@@ -115,7 +115,7 @@ describe("Rendering performance optimizations", () => {
     it("should not render if next formData are equivalent", function*() {
       const formData = {foo: "blah"};
 
-      const {comp} = createComponent(ObjectField, {
+      const {comp} = yield createComponent(ObjectField, {
         registry,
         schema,
         formData,

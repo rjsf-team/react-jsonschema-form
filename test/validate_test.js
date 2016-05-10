@@ -1,9 +1,8 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import { Simulate } from "react-addons-test-utils";
 
 import validateFormData, { toErrorList } from "../src/validate";
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, Simulate, updateComponentProps } from "./test_utils";
 
 
 describe("Validation", () => {
@@ -19,19 +18,19 @@ describe("Validation", () => {
       let errors, errorSchema;
 
       beforeEach(function* () {
-        return validateFormData({foo: 42}, schema)
+        yield validateFormData({foo: 42}, schema)
           .then(result => {
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
       });
 
-      it("should return an error list", function*() {
+      it("should return an error list", () => {
         expect(errors).to.have.length.of(1);
         expect(errors[0].message).eql("is not of a type(s) string");
       });
 
-      it("should return an errorSchema", function*() {
+      it("should return an errorSchema", () => {
         expect(errorSchema.foo.__errors).to.have.length.of(1);
         expect(errorSchema.foo.__errors[0]).eql("is not of a type(s) string");
       });
@@ -57,26 +56,26 @@ describe("Validation", () => {
           return errors;
         };
         const formData = {pass1: "a", pass2: "b"};
-        return validateFormData(formData, schema, validate)
+        yield validateFormData(formData, schema, validate)
           .then(result => {
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
       });
 
-      it("should return an error list", function*() {
+      it("should return an error list", () => {
         expect(errors).to.have.length.of(1);
         expect(errors[0].stack).eql("pass2 passwords don't match.");
       });
 
-      it("should return an errorSchema", function*() {
+      it("should return an errorSchema", () => {
         expect(errorSchema.pass2.__errors).to.have.length.of(1);
         expect(errorSchema.pass2.__errors[0]).eql("passwords don't match.");
       });
     });
 
     describe("toErrorList()", () => {
-      it("should convert an errorSchema into a flat list", function*() {
+      it("should convert an errorSchema into a flat list", () => {
         expect(toErrorList({
           a: {
             b: {
@@ -121,30 +120,32 @@ describe("Validation", () => {
 
         beforeEach(function* () {
           onError = sandbox.spy();
-          const compInfo = createFormComponent({schema, formData: {
-            foo: undefined
-          }, onError});
+          const compInfo = yield createFormComponent({
+            schema,
+            formData: {foo: undefined},
+            onError
+          });
           comp = compInfo.comp;
           node = compInfo.node;
 
-          Simulate.submit(node);
+          yield Simulate.submit(node);
         });
 
-        it("should validate a required field", function*() {
+        it("should validate a required field", () => {
           expect(comp.state.errors)
             .to.have.length.of(1);
           expect(comp.state.errors[0].message)
             .eql(`requires property "foo"`);
         });
 
-        it("should render errors", function*() {
+        it("should render errors", () => {
           expect(node.querySelectorAll(".errors li"))
             .to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent)
             .eql(`instance requires property "foo"`);
         });
 
-        it("should trigger the onError handler", function*() {
+        it("should trigger the onError handler", () => {
           sinon.assert.calledWith(onError, sinon.match(errors => {
             return errors[0].message === `requires property "foo"`;
           }));
@@ -167,30 +168,32 @@ describe("Validation", () => {
 
         beforeEach(function* () {
           onError = sandbox.spy();
-          const compInfo = createFormComponent({schema, formData: {
-            foo: "123456789"
-          }, onError});
+          const compInfo = yield createFormComponent({
+            schema,
+            formData: {foo: "123456789"},
+            onError
+          });
           comp = compInfo.comp;
           node = compInfo.node;
 
           Simulate.submit(node);
         });
 
-        it("should validate a minLength field", function*() {
+        it("should validate a minLength field", () => {
           expect(comp.state.errors)
             .to.have.length.of(1);
           expect(comp.state.errors[0].message)
             .eql(`does not meet minimum length of 10`);
         });
 
-        it("should render errors", function*() {
+        it("should render errors", () => {
           expect(node.querySelectorAll(".errors li"))
             .to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent)
             .eql("instance.foo does not meet minimum length of 10");
         });
 
-        it("should trigger the onError handler", function*() {
+        it("should trigger the onError handler", () => {
           sinon.assert.calledWith(onError, sinon.match(errors => {
             return errors[0].message ===
               "does not meet minimum length of 10";
@@ -211,8 +214,12 @@ describe("Validation", () => {
           return errors;
         }
 
-        const {comp} = createFormComponent({schema, validate, liveValidate: true});
-        comp.componentWillReceiveProps({formData});
+        const {comp} = yield createFormComponent({
+          schema,
+          validate,
+          liveValidate: true
+        });
+        yield updateComponentProps(comp, {formData});
 
         expect(comp.state.errorSchema).eql({
           __errors: ["Invalid"],
@@ -238,8 +245,13 @@ describe("Validation", () => {
           return errors;
         }
 
-        const {comp} = createFormComponent({schema, validate, liveValidate: true});
-        comp.componentWillReceiveProps({formData});
+        const {comp} = yield createFormComponent({
+          schema,
+          validate,
+          liveValidate: true
+        });
+
+        yield updateComponentProps(comp, {formData});
 
         expect(comp.state.errorSchema).eql({
           __errors: [],
@@ -272,8 +284,13 @@ describe("Validation", () => {
           return errors;
         }
 
-        const {comp} = createFormComponent({schema, validate, liveValidate: true});
-        comp.componentWillReceiveProps({formData});
+        const {comp} = yield createFormComponent({
+          schema,
+          validate,
+          liveValidate: true
+        });
+
+        yield updateComponentProps(comp, {formData});
 
         expect(comp.state.errorSchema).eql({
           __errors: ["Forbidden value: bbb"],

@@ -1,8 +1,7 @@
 import React from "react";
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, Simulate } from "./test_utils";
 
 
 describe("ObjectField", () => {
@@ -37,14 +36,14 @@ describe("ObjectField", () => {
     };
 
     it("should render a fieldset", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("fieldset"))
         .to.have.length.of(1);
     });
 
     it("should render a fieldset legend", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       const legend = node.querySelector("fieldset > legend");
 
@@ -55,34 +54,34 @@ describe("ObjectField", () => {
     it("should render a customized title", function*() {
       const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
-      const {node} = createFormComponent({schema, TitleField: CustomTitleField});
+      const {node} = yield createFormComponent({schema, TitleField: CustomTitleField});
       expect(node.querySelector("fieldset > #custom").textContent)
       .to.eql("my object");
     });
 
     it("should render a default property label", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector(".field-boolean label").textContent)
         .eql("bar");
     });
 
     it("should render a string property", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll(".field input[type=text]"))
         .to.have.length.of(1);
     });
 
     it("should render a boolean property", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll(".field input[type=checkbox]"))
         .to.have.length.of(1);
     });
 
     it("should handle a default object value", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector(".field input[type=text]").value)
         .eql("hey");
@@ -91,7 +90,7 @@ describe("ObjectField", () => {
     });
 
     it("should handle required values", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       // Required field is <input type="text" required="">
       expect(node.querySelector("input[type=text]").getAttribute("required"))
@@ -101,7 +100,7 @@ describe("ObjectField", () => {
     });
 
     it("should fill fields with form data", function*() {
-      const {node} = createFormComponent({schema, formData: {
+      const {node} = yield createFormComponent({schema, formData: {
         foo: "hey",
         bar: true,
       }});
@@ -113,9 +112,9 @@ describe("ObjectField", () => {
     });
 
     it("should handle object fields change events", function*() {
-      const {comp, node} = createFormComponent({schema});
+      const {comp, node} = yield createFormComponent({schema});
 
-      Simulate.change(node.querySelector("input[type=text]"), {
+      yield Simulate.change(node.querySelector("input[type=text]"), {
         target: {value: "changed"}
       });
 
@@ -123,7 +122,7 @@ describe("ObjectField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector("input[type=text]").id).eql("root_foo");
       expect(node.querySelector("input[type=checkbox]").id).eql("root_bar");
@@ -140,7 +139,7 @@ describe("ObjectField", () => {
     };
 
     it("should use provided order", function*() {
-      const {node} = createFormComponent({schema, uiSchema: {
+      const {node} = yield createFormComponent({schema, uiSchema: {
         "ui:order": ["bar", "foo"]
       }});
       const labels = [].map.call(
@@ -150,7 +149,7 @@ describe("ObjectField", () => {
     });
 
     it("should throw when order list length mismatches", function*() {
-      const {node} = createFormComponent({schema, uiSchema: {
+      const {node} = yield createFormComponent({schema, uiSchema: {
         "ui:order": ["bar", "foo", "baz?"]
       }});
 
@@ -159,7 +158,7 @@ describe("ObjectField", () => {
     });
 
     it("should throw when order and properties lists differs", function*() {
-      const {node} = createFormComponent({schema, uiSchema: {
+      const {node} = yield createFormComponent({schema, uiSchema: {
         "ui:order": ["bar", "wut?"]
       }});
 
@@ -179,7 +178,7 @@ describe("ObjectField", () => {
         }
       };
 
-      const {node} = createFormComponent({schema: refSchema, uiSchema: {
+      const {node} = yield createFormComponent({schema: refSchema, uiSchema: {
         "ui:order": ["bar", "foo"]
       }});
       const labels = [].map.call(
@@ -205,7 +204,7 @@ describe("ObjectField", () => {
         }
       };
 
-      const {node} = createFormComponent({schema: refSchema, uiSchema: {
+      const {node} = yield createFormComponent({schema: refSchema, uiSchema: {
         root: {
           "ui:order": ["bar", "foo"]
         }
@@ -217,7 +216,7 @@ describe("ObjectField", () => {
     });
 
     it("should render the widget with the expected id", function*() {
-      const {node} = createFormComponent({schema, uiSchema: {
+      const {node} = yield createFormComponent({schema, uiSchema: {
         "ui:order": ["bar", "foo"]
       }});
 

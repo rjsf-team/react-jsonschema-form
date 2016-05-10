@@ -1,11 +1,16 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import React from "react";
-import { renderIntoDocument, Simulate } from "react-addons-test-utils";
+import { renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createFormComponent, createSandbox } from "./test_utils";
+import {
+  createFormComponent,
+  createSandbox,
+  Simulate,
+  updateComponentProps
+} from "./test_utils";
 
 
 describe("Form", () => {
@@ -21,19 +26,19 @@ describe("Form", () => {
 
   describe("Empty schema", () => {
     it("should render a form tag", function*() {
-      const {node} = createFormComponent({schema: {}});
+      const {node} = yield createFormComponent({schema: {}});
 
       expect(node.tagName).eql("FORM");
     });
 
     it("should render a submit button", function*() {
-      const {node} = createFormComponent({schema: {}});
+      const {node} = yield createFormComponent({schema: {}});
 
       expect(node.querySelectorAll("button[type=submit]"))
         .to.have.length.of(1);
     });
 
-    it("should render children buttons", function*() {
+    it("should render children buttons", () => {
       const props = {schema: {}};
       const comp = renderIntoDocument(
         <Form {...props}>
@@ -56,10 +61,16 @@ describe("Form", () => {
           <button type="submit">Another submit</button>
         </Form>
       );
+
+      yield new Promise(setImmediate);
+
       const node = findDOMNode(comp);
       const buttons = node.querySelectorAll("button[type=submit]");
       buttons[0].click();
       buttons[1].click();
+
+      yield new Promise(setImmediate);
+
       sinon.assert.calledTwice(onSubmit);
     });
   });
@@ -73,7 +84,7 @@ describe("Form", () => {
         $ref: "#/definitions/testdef"
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("input[type=text]"))
         .to.have.length.of(1);
@@ -91,7 +102,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("input[type=text]"))
         .to.have.length.of(2);
@@ -113,7 +124,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("input[type=text]"))
         .to.have.length.of(1);
@@ -133,7 +144,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createFormComponent({schema, formData: {
+      const {node} = yield createFormComponent({schema, formData: {
         foo: ["blah"]
       }});
 
@@ -141,7 +152,7 @@ describe("Form", () => {
         .to.have.length.of(1);
     });
 
-    it("should raise for non-existent definitions referenced", function*() {
+    it("should raise for non-existent definitions referenced", () => {
       const schema = {
         type: "object",
         properties: {
@@ -161,7 +172,7 @@ describe("Form", () => {
         $ref: "#/definitions/testdef"
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector("input[type=text]").value)
         .eql("hello");
@@ -178,7 +189,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector("input[type=text]").value)
         .eql("hello");
@@ -195,9 +206,9 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
-      Simulate.click(node.querySelector(".array-item-add button"));
+      yield Simulate.click(node.querySelector(".array-item-add button"));
 
       expect(node.querySelector("input[type=text]").value)
         .eql("hello");
@@ -224,7 +235,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("input[type=text]"))
         .to.have.length.of(2);
@@ -251,7 +262,7 @@ describe("Form", () => {
         }
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector("legend").textContent)
         .eql("custom title");
@@ -268,7 +279,7 @@ describe("Form", () => {
         },
       };
 
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("option"))
         .to.have.length.of(2);
@@ -303,10 +314,10 @@ describe("Form", () => {
     };
 
     it("should propagate deeply nested defaults to form state", function* () {
-      const {comp, node} = createFormComponent({schema});
+      const {comp, node} = yield createFormComponent({schema});
 
-      Simulate.click(node.querySelector(".array-item-add button"));
-      Simulate.submit(node);
+      yield Simulate.click(node.querySelector(".array-item-add button"));
+      yield Simulate.submit(node);
 
       expect(comp.state.formData).eql({
         object: {
@@ -322,21 +333,22 @@ describe("Form", () => {
 
   describe("Submit handler", () => {
     it("should call provided submit handler with form state", function*() {
-      const schema = {
-        type: "object",
-        properties: {
-          foo: {type: "string"},
-        }
-      };
-      const formData = {
-        foo: "bar"
-      };
       const onSubmit = sandbox.spy();
-      const {comp, node} = createFormComponent({schema, formData, onSubmit});
+      const {comp, node} = yield createFormComponent({
+        schema: {
+          type: "object",
+          properties: {
+            foo: {type: "string"},
+          }
+        },
+        formData: {foo: "bar"},
+        onSubmit
+      });
 
-      Simulate.submit(node);
+      yield Simulate.submit(node);
 
-      sinon.assert.calledWithExactly(onSubmit, comp.state);
+      sinon.assert.calledWithExactly(onSubmit,
+        {...comp.state, status: "submitted"});
     });
 
     it("should not call provided submit handler on validation errors", function*() {
@@ -354,9 +366,9 @@ describe("Form", () => {
       };
       const onSubmit = sandbox.spy();
       const onError = sandbox.spy();
-      const {node} = createFormComponent({schema, formData, onSubmit, onError});
+      const {node} = yield createFormComponent({schema, formData, onSubmit, onError});
 
-      Simulate.submit(node);
+      yield Simulate.submit(node);
 
       sinon.assert.notCalled(onSubmit);
     });
@@ -376,9 +388,9 @@ describe("Form", () => {
         foo: ""
       };
       const onChange = sandbox.spy();
-      const {node} = createFormComponent({schema, formData, onChange});
+      const {node} = yield createFormComponent({schema, formData, onChange});
 
-      Simulate.change(node.querySelector("[type=text]"), {
+      yield Simulate.change(node.querySelector("[type=text]"), {
         target: {value: "new"}
       });
 
@@ -405,9 +417,9 @@ describe("Form", () => {
         foo: ""
       };
       const onError = sandbox.spy();
-      const {node} = createFormComponent({schema, formData, onError});
+      const {node} = yield createFormComponent({schema, formData, onError});
 
-      Simulate.submit(node);
+      yield Simulate.submit(node);
 
       sinon.assert.calledOnce(onError);
     });
@@ -421,17 +433,17 @@ describe("Form", () => {
       };
 
       it("should update form state from new formData prop value", function*() {
-        const {comp} = createFormComponent(formProps);
+        const {comp} = yield createFormComponent(formProps);
 
-        comp.componentWillReceiveProps({formData: "yo"});
+        yield updateComponentProps(comp, {formData: "yo"});
 
         expect(comp.state.formData).eql("yo");
       });
 
       it("should validate formData when the schema is updated", function*() {
-        const {comp} = createFormComponent(formProps);
+        const {comp} = yield createFormComponent(formProps);
 
-        comp.componentWillReceiveProps({formData: "yo", schema: {type: "number"}});
+        yield updateComponentProps(comp, {formData: "yo", schema: {type: "number"}});
 
         expect(comp.state.errors).to.have.length.of(1);
         expect(comp.state.errors[0].stack)
@@ -441,7 +453,7 @@ describe("Form", () => {
 
     describe("object level", () => {
       it("should update form state from new formData prop value", function*() {
-        const {comp} = createFormComponent({
+        const {comp} = yield createFormComponent({
           schema: {
             type: "object",
             properties: {
@@ -452,7 +464,7 @@ describe("Form", () => {
           }
         });
 
-        comp.componentWillReceiveProps({formData: {foo: "yo"}});
+        yield updateComponentProps(comp, {formData: {foo: "yo"}});
 
         expect(comp.state.formData).eql({foo: "yo"});
       });
@@ -466,9 +478,9 @@ describe("Form", () => {
             type: "string"
           }
         };
-        const {comp} = createFormComponent({schema});
+        const {comp} = yield createFormComponent({schema});
 
-        comp.componentWillReceiveProps({formData: ["yo"]});
+        yield updateComponentProps(comp, {formData: ["yo"]});
 
         expect(comp.state.formData).eql(["yo"]);
       });
@@ -484,9 +496,9 @@ describe("Form", () => {
 
       describe("Lazy validation", () => {
         it("should not update the errorSchema when the formData changes", function*() {
-          const {comp, node} = createFormComponent({schema});
+          const {comp, node} = yield createFormComponent({schema});
 
-          Simulate.change(node.querySelector("input[type=text]"), {
+          yield Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
           });
 
@@ -494,9 +506,9 @@ describe("Form", () => {
         });
 
         it("should not denote an error in the field", function*() {
-          const {node} = createFormComponent({schema});
+          const {node} = yield createFormComponent({schema});
 
-          Simulate.change(node.querySelector("input[type=text]"), {
+          yield Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
           });
 
@@ -512,14 +524,14 @@ describe("Form", () => {
               field2: {type: "string", minLength: 8},
             }
           };
-          const {node} = createFormComponent({schema: altSchema, formData: {
+          const {node} = yield createFormComponent({schema: altSchema, formData: {
             field1: "short",
             field2: "short",
           }});
 
-          function submit(node) {
+          function* submit(node) {
             try {
-              Simulate.submit(node);
+              yield Simulate.submit(node);
             } catch(err) {
               // Validation is expected to fail and call console.error, which is
               // stubbed to actually throw in createSandbox().
@@ -529,22 +541,21 @@ describe("Form", () => {
           submit(node);
 
           // Fix the first field
-          Simulate.change(node.querySelectorAll("input[type=text]")[0], {
+          yield Simulate.change(node.querySelectorAll("input[type=text]")[0], {
             target: {value: "fixed error"}
           });
-          submit(node);
+          yield submit(node);
 
           expect(node.querySelectorAll(".field-error"))
             .to.have.length.of(1);
 
           // Fix the second field
-          Simulate.change(node.querySelectorAll("input[type=text]")[1], {
+          yield Simulate.change(node.querySelectorAll("input[type=text]")[1], {
             target: {value: "fixed error too"}
           });
-          submit(node);
 
           // No error remaining, shouldn't throw.
-          Simulate.submit(node);
+          yield Simulate.submit(node);
 
           expect(node.querySelectorAll(".field-error"))
             .to.have.length.of(0);
@@ -553,9 +564,9 @@ describe("Form", () => {
 
       describe("Live validation", () => {
         it("should update the errorSchema when the formData changes", function*() {
-          const {comp, node} = createFormComponent({schema, liveValidate: true});
+          const {comp, node} = yield createFormComponent({schema, liveValidate: true});
 
-          Simulate.change(node.querySelector("input[type=text]"), {
+          yield Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
           });
 
@@ -565,9 +576,9 @@ describe("Form", () => {
         });
 
         it("should denote the new error in the field", function*() {
-          const {node} = createFormComponent({schema, liveValidate: true});
+          const {node} = yield createFormComponent({schema, liveValidate: true});
 
-          Simulate.change(node.querySelector("input[type=text]"), {
+          yield Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
           });
 
@@ -586,12 +597,12 @@ describe("Form", () => {
       };
 
       it("should update the errorSchema on form submission", function*() {
-        const {comp, node} = createFormComponent({schema, onError: () => {}});
+        const {comp, node} = yield createFormComponent({schema, onError: () => {}});
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        yield Simulate.change(node.querySelector("input[type=text]"), {
           target: {value: "short"}
         });
-        Simulate.submit(node);
+        yield Simulate.submit(node);
 
         expect(comp.state.errorSchema).eql({
           __errors: ["does not meet minimum length of 8"]
@@ -600,12 +611,12 @@ describe("Form", () => {
 
       it("should call the onError handler", function*() {
         const onError = sandbox.spy();
-        const {node} = createFormComponent({schema, onError});
+        const {node} = yield createFormComponent({schema, onError});
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        yield Simulate.change(node.querySelector("input[type=text]"), {
           target: {value: "short"}
         });
-        Simulate.submit(node);
+        yield Simulate.submit(node);
 
         sinon.assert.calledWithMatch(onError, sinon.match(value => {
           return value.length === 1 &&
@@ -625,7 +636,7 @@ describe("Form", () => {
       };
 
       it("should reflect the contextualized error in state", function*() {
-        const {comp} = createFormComponent(formProps);
+        const {comp} = yield createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
           __errors: ["does not meet minimum length of 8"]
@@ -633,7 +644,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the field", function*() {
-        const {node} = createFormComponent(formProps);
+        const {node} = yield createFormComponent(formProps);
 
         expect(node.querySelectorAll(".field-error"))
           .to.have.length.of(1);
@@ -654,7 +665,7 @@ describe("Form", () => {
       };
 
       it("should reflect the contextualized error in state", function*() {
-        const {comp} = createFormComponent(formProps);
+        const {comp} = yield createFormComponent(formProps);
         expect(comp.state.errorSchema).eql({
           __errors: [
             "does not meet minimum length of 8",
@@ -664,7 +675,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the field", function*() {
-        const {node} = createFormComponent(formProps);
+        const {node} = yield createFormComponent(formProps);
 
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
         const errors = [].map.call(liNodes, li => li.textContent);
@@ -703,7 +714,7 @@ describe("Form", () => {
       };
 
       it("should reflect the contextualized error in state", function*() {
-        const {comp} = createFormComponent(formProps);
+        const {comp} = yield createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
           level1: {
@@ -715,7 +726,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the field", function*() {
-        const {node} = createFormComponent(formProps);
+        const {node} = yield createFormComponent(formProps);
         const errorDetail = node.querySelector(
           ".field-object .field-string .error-detail");
 
@@ -742,7 +753,7 @@ describe("Form", () => {
       };
 
       it("should contextualize the error for array indices", function*() {
-        const {comp} = createFormComponent(formProps);
+        const {comp} = yield createFormComponent(formProps);
 
         expect(comp.state.errorSchema)
           .eql({
@@ -751,7 +762,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the item field in error", function*() {
-        const {node} = createFormComponent(formProps);
+        const {node} = yield createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 
         const liNodes = fieldNodes[1]
@@ -764,7 +775,7 @@ describe("Form", () => {
       });
 
       it("should not denote errors on non impacted fields", function*() {
-        const {node} = createFormComponent(formProps);
+        const {node} = yield createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 
         expect(fieldNodes[0].classList.contains("field-error")).eql(false);
@@ -789,7 +800,7 @@ describe("Form", () => {
       const formProps = {schema, liveValidate: true};
 
       it("should contextualize the error for nested array indices", function*() {
-        const {comp} = createFormComponent({...formProps, formData: {
+        const {comp} = yield createFormComponent({...formProps, formData: {
           level1: ["good", "bad", "good", "bad"]
         }});
 
@@ -802,7 +813,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the nested item field in error", function*() {
-        const {node} = createFormComponent({...formProps, formData: {
+        const {node} = yield createFormComponent({...formProps, formData: {
           level1: ["good", "bad", "good"]
         }});
 
@@ -841,7 +852,7 @@ describe("Form", () => {
       const formProps = {schema, formData, liveValidate: true};
 
       it("should contextualize the error for nested array indices", function*() {
-        const {comp} = createFormComponent(formProps);
+        const {comp} = yield createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
           outer: {
@@ -856,7 +867,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the nested item field in error", function*() {
-        const {node} = createFormComponent(formProps);
+        const {node} = yield createFormComponent(formProps);
         const fields = node.querySelectorAll(".field-string");
         const errors = [].map.call(fields, field => {
           const li = field.querySelector(".error-detail li");
@@ -896,7 +907,7 @@ describe("Form", () => {
       };
 
       it("should contextualize the error for array nested items", function*() {
-        const {comp} = createFormComponent(formProps);
+        const {comp} = yield createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
           1: {
@@ -908,7 +919,7 @@ describe("Form", () => {
       });
 
       it("should denote the error in the array nested item", function*() {
-        const {node} = createFormComponent(formProps);
+        const {node} = yield createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll(".field-string");
 
         const liNodes = fieldNodes[1]

@@ -1,7 +1,6 @@
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, Simulate } from "./test_utils";
 
 
 describe("ArrayField", () => {
@@ -23,14 +22,14 @@ describe("ArrayField", () => {
     };
 
     it("should render a fieldset", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("fieldset"))
         .to.have.length.of(1);
     });
 
     it("should render a fieldset legend", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       const legend = node.querySelector("fieldset > legend");
 
@@ -39,30 +38,30 @@ describe("ArrayField", () => {
     });
 
     it("should contain no field in the list by default", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll(".field-string"))
         .to.have.length.of(0);
     });
 
     it("should have an add button", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector(".array-item-add button"))
         .not.eql(null);
     });
 
     it("should add a new field when clicking the add button", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
-      Simulate.click(node.querySelector(".array-item-add button"));
+      yield Simulate.click(node.querySelector(".array-item-add button"));
 
       expect(node.querySelectorAll(".field-string"))
         .to.have.length.of(1);
     });
 
     it("should fill an array field with data", function*() {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+      const {node} = yield createFormComponent({schema, formData: ["foo", "bar"]});
       const inputs = node.querySelectorAll(".field-string input[type=text]");
 
       expect(inputs).to.have.length.of(2);
@@ -71,10 +70,10 @@ describe("ArrayField", () => {
     });
 
     it("should remove a field from the list", function*() {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+      const {node} = yield createFormComponent({schema, formData: ["foo", "bar"]});
       const dropBtns = node.querySelectorAll(".array-item-remove button");
 
-      Simulate.click(dropBtns[0]);
+      yield Simulate.click(dropBtns[0]);
 
       const inputs = node.querySelectorAll(".field-string input[type=text]");
       expect(inputs).to.have.length.of(1);
@@ -82,7 +81,7 @@ describe("ArrayField", () => {
     });
 
     it("should render the input widgets with the expected ids", function*() {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+      const {node} = yield createFormComponent({schema, formData: ["foo", "bar"]});
 
       const inputs = node.querySelectorAll("input[type=text]");
       expect(inputs[0].id).eql("root_0");
@@ -105,7 +104,7 @@ describe("ArrayField", () => {
           }
         }
       };
-      const {node} = createFormComponent({schema: complexSchema, formData: {
+      const {node} = yield createFormComponent({schema: complexSchema, formData: {
         foo: [
           {bar: "bar1", baz: "baz1"},
           {bar: "bar2", baz: "baz2"},
@@ -133,37 +132,37 @@ describe("ArrayField", () => {
     };
 
     it("should render a select widget", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("select"))
         .to.have.length.of(1);
     });
 
     it("should render a select widget with a label", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector(".field label").textContent)
         .eql("My field");
     });
 
     it("should render a select widget with multiple attribute", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector(".field select").getAttribute("multiple"))
         .not.to.be.null;
     });
 
     it("should render options", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("select option"))
         .to.have.length.of(3);
     });
 
     it("should handle a change event", function*() {
-      const {comp, node} = createFormComponent({schema});
+      const {comp, node} = yield createFormComponent({schema});
 
-      Simulate.change(node.querySelector(".field select"), {
+      yield Simulate.change(node.querySelector(".field select"), {
         target: {options: [
           {selected: true, value: "foo"},
           {selected: true, value: "bar"},
@@ -175,7 +174,10 @@ describe("ArrayField", () => {
     });
 
     it("should fill field with data", function*() {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+      const {node} = yield createFormComponent({
+        schema,
+        formData: ["foo", "bar"]
+      });
 
       const options = node.querySelectorAll(".field select option");
       expect(options).to.have.length.of(3);
@@ -185,7 +187,7 @@ describe("ArrayField", () => {
     });
 
     it("should render the select widget with the expected id", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelector("select").id).eql("root");
     });
@@ -205,15 +207,15 @@ describe("ArrayField", () => {
     };
 
     it("should render two lists of inputs inside of a list", function*() {
-      const {node} = createFormComponent({schema, formData: [[1, 2], [3, 4]]});
+      const {node} = yield createFormComponent({schema, formData: [[1, 2], [3, 4]]});
       expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(2);
     });
 
     it("should add an inner list when clicking the add button", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
       expect(node.querySelectorAll("fieldset fieldset")).to.be.empty;
 
-      Simulate.click(node.querySelector(".array-item-add button"));
+      yield Simulate.click(node.querySelector(".array-item-add button"));
 
       expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(1);
     });
@@ -255,21 +257,21 @@ describe("ArrayField", () => {
     };
 
     it("should render a fieldset", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
 
       expect(node.querySelectorAll("fieldset"))
           .to.have.length.of(1);
     });
 
     it("should render a fieldset legend", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
       const legend = node.querySelector("fieldset > legend");
       expect(legend.textContent).eql("List of fixed items");
       expect(legend.id).eql("root__title");
     });
 
     it("should render field widgets", function*() {
-      const {node} = createFormComponent({schema});
+      const {node} = yield createFormComponent({schema});
       const strInput =
           node.querySelector("fieldset .field-string input[type=text]");
       const numInput =
@@ -279,7 +281,7 @@ describe("ArrayField", () => {
     });
 
     it("should fill fields with data", function*() {
-      const {node} = createFormComponent({schema, formData: ["foo", 42]});
+      const {node} = yield createFormComponent({schema, formData: ["foo", 42]});
       const strInput =
           node.querySelector("fieldset .field-string input[type=text]");
       const numInput =
@@ -289,20 +291,20 @@ describe("ArrayField", () => {
     });
 
     it("should handle change events", function*() {
-      const {comp, node} = createFormComponent({schema});
+      const {comp, node} = yield createFormComponent({schema});
       const strInput =
           node.querySelector("fieldset .field-string input[type=text]");
       const numInput =
           node.querySelector("fieldset .field-number input[type=text]");
 
-      Simulate.change(strInput, {target: { value: "bar" }});
-      Simulate.change(numInput, {target: { value: "101" }});
+      yield Simulate.change(strInput, {target: { value: "bar" }});
+      yield Simulate.change(numInput, {target: { value: "101" }});
 
       expect(comp.state.formData).eql(["bar", 101]);
     });
 
     it("should generate additional fields and fill data", function*() {
-      const {node} = createFormComponent({
+      const {node} = yield createFormComponent({
         schema: schemaAdditional,
         formData: [1, 2, "bar"]
       });
@@ -315,8 +317,8 @@ describe("ArrayField", () => {
     describe("operations for additional items", () => {
       let comp, node;
 
-      beforeEach(() => {
-        const res = createFormComponent({
+      beforeEach(function* () {
+        const res = yield createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, "foo"]
         });
@@ -327,7 +329,7 @@ describe("ArrayField", () => {
       it("should add a field when clicking add button", function*() {
         const addBtn = node.querySelector(".array-item-add button");
 
-        Simulate.click(addBtn);
+        yield Simulate.click(addBtn);
 
         expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
         expect(comp.state.formData).eql([1, 2, "foo", undefined]);
@@ -336,8 +338,8 @@ describe("ArrayField", () => {
       it("should change the state when changing input value", function*() {
         const inputs = node.querySelectorAll(".field-string input[type=text]");
 
-        Simulate.change(inputs[0], {target: {value: "bar"}});
-        Simulate.change(inputs[1], {target: {value: "baz"}});
+        yield Simulate.change(inputs[0], {target: {value: "bar"}});
+        yield Simulate.change(inputs[1], {target: {value: "baz"}});
 
         expect(comp.state.formData).eql([1, 2, "bar", "baz"]);
       });
@@ -345,13 +347,13 @@ describe("ArrayField", () => {
       it("should remove array items when clicking remove buttons", function*() {
         let dropBtns = node.querySelectorAll(".array-item-remove button");
 
-        Simulate.click(dropBtns[0]);
+        yield Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
         expect(comp.state.formData).eql([1, 2, "baz"]);
 
         dropBtns = node.querySelectorAll(".array-item-remove button");
-        Simulate.click(dropBtns[0]);
+        yield Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.be.empty;
         expect(comp.state.formData).eql([1, 2]);

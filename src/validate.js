@@ -62,7 +62,7 @@ function toErrorSchema(errors) {
   }, {});
 }
 
-function toErrorList(errorSchema) {
+export function toErrorList(errorSchema) {
   return Object.keys(errorSchema).reduce((acc, key) => {
     const field = errorSchema[key];
     if ("__errors" in field) {

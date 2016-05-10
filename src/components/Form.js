@@ -31,10 +31,7 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.state = this.initFormState(props);
-    this.getStateFromProps(props)
-      .then(state => {
-        this.setState(state);
-      });
+    this.getStateFromProps(props).then(this.setState.bind(this));
   }
 
   initFormState({schema, uiSchema}) {
@@ -46,10 +43,7 @@ export default class Form extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.getStateFromProps(nextProps)
-      .then(state => {
-        this.setState(state);
-      });
+    this.getStateFromProps(nextProps).then(this.setState.bind(this));
   }
 
   getStateFromProps(props) {
