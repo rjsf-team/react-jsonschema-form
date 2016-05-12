@@ -925,4 +925,58 @@ describe("Form", () => {
       });
     });
   });
+  
+  describe("Attributes", () => {
+    const formProps = {
+      schema: {},
+      id: "test-form",
+      className: "test-class other-class",
+      name: "testName",
+      method: "post",
+      target: "_blank",
+      action: "/users/list",
+      autocomplete: "off",
+      enctype: "multipart/form-data",
+      acceptcharset: "ISO-8859-1"
+    };
+
+    const {node} = createFormComponent(formProps);
+    console.log(node.autocomplete);
+
+    it("should set attr id of form", () => {
+      expect(node.id).eql(formProps.id);
+    });
+
+    it("should set attr class of form", () => {
+      expect(node.className).eql(formProps.className);
+    });
+
+    it("should set attr name of form", () => {
+      expect(node.name).eql(formProps.name);
+    });
+
+    it("should set attr method of form", () => {
+      expect(node.method).eql(formProps.method);
+    });
+
+    it("should set attr target of form", () => {
+      expect(node.target).eql(formProps.target);
+    });
+
+    it("should set attr action of form", () => {
+      expect(node.action).eql(formProps.action);
+    });
+
+    it("should set attr autoComplete of form", () => {
+      expect(node.autocomplete).eql(formProps.autocomplete);
+    });
+
+    it("should set attr enctype of form", () => {
+      expect(node.enctype).eql(formProps.enctype);
+    });
+
+    it("should set attr acceptcharset of form", () => {
+      expect(node.acceptCharset).eql(formProps.acceptcharset);
+    });
+  });
 });

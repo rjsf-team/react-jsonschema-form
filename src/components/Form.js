@@ -113,14 +113,50 @@ export default class Form extends Component {
   }
 
   render() {
-    const {children, schema, uiSchema, safeRenderCompletion, id, className} = this.props;
+    const {
+      children,
+      schema,
+      uiSchema,
+      safeRenderCompletion,
+      id,
+      className,
+      name,
+      method,
+      target,
+      action,
+      autocomplete,
+      enctype,
+      acceptcharset
+    } = this.props;
+
     const {formData, errorSchema, idSchema} = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
-    return (
+
+    const formJSX = (
       <form className={className ? className : "rjsf"}
         id={id}
-        onSubmit={this.onSubmit}>
+        name={name}
+        method={method}
+        target={target}
+        action={action}
+        autoComplete={autocomplete}
+        encType={enctype}
+        acceptCharset={acceptcharset}>
+      </form>
+    );
+    
+    return (
+      <form className={className ? className : "rjsf"}
+            id={id}
+            name={name}
+            method={method}
+            target={target}
+            action={action}
+            autoComplete={autocomplete}
+            encType={enctype}
+            acceptCharset={acceptcharset}
+            onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
@@ -152,6 +188,13 @@ if (process.env.NODE_ENV !== "production") {
     onSubmit: PropTypes.func,
     id: PropTypes.string,
     className: PropTypes.string,
+    name: PropTypes.string,
+    method: PropTypes.string,
+    target: PropTypes.string,
+    action: PropTypes.string,
+    autocomplete: PropTypes.string,
+    enctype: PropTypes.string,
+    acceptcharset: PropTypes.string,
     liveValidate: PropTypes.bool,
     safeRenderCompletion: PropTypes.bool,
   };
