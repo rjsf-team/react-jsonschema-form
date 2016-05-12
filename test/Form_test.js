@@ -925,7 +925,7 @@ describe("Form", () => {
       });
     });
   });
-  
+
   describe("Attributes", () => {
     const formProps = {
       schema: {},
@@ -941,7 +941,6 @@ describe("Form", () => {
     };
 
     const {node} = createFormComponent(formProps);
-    console.log(node.autocomplete);
 
     it("should set attr id of form", () => {
       expect(node.id).eql(formProps.id);
