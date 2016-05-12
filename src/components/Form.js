@@ -118,9 +118,9 @@ export default class Form extends Component {
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
     return (
-      <form className={className ? className : 'rjsf'}
-            id={id}
-            onSubmit={this.onSubmit}>
+      <form className={className ? className : "rjsf"}
+        id={id}
+        onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
