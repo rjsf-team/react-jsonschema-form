@@ -113,12 +113,14 @@ export default class Form extends Component {
   }
 
   render() {
-    const {children, schema, uiSchema, safeRenderCompletion} = this.props;
+    const {children, schema, uiSchema, safeRenderCompletion, id, className} = this.props;
     const {formData, errorSchema, idSchema} = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
     return (
-      <form className="rjsf" onSubmit={this.onSubmit}>
+      <form className={className ? className : 'rjsf'}
+            id={id}
+            onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
@@ -148,6 +150,8 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
     onError: PropTypes.func,
     onSubmit: PropTypes.func,
+    id: PropTypes.string,
+    className: PropTypes.string,
     liveValidate: PropTypes.bool,
     safeRenderCompletion: PropTypes.bool,
   };
