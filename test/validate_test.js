@@ -62,7 +62,7 @@ describe("Validation", () => {
 
       it("should return an error list", () => {
         expect(errors).to.have.length.of(1);
-        expect(errors[0].stack).eql("pass2 passwords don't match.");
+        expect(errors[0].stack).eql("pass2: passwords don't match.");
       });
 
       it("should return an errorSchema", () => {
@@ -74,18 +74,21 @@ describe("Validation", () => {
     describe("toErrorList()", () => {
       it("should convert an errorSchema into a flat list", () => {
         expect(toErrorList({
+          __errors: ["err1", "err2"],
           a: {
             b: {
-              __errors: ["err1", "err2"]
+              __errors: ["err3", "err4"]
             }
           },
           c: {
-            __errors: ["err3"]
+            __errors: ["err5"]
           }
         })).eql([
-          {stack: "b err1"},
-          {stack: "b err2"},
-          {stack: "c err3"},
+          {stack: "root: err1"},
+          {stack: "root: err2"},
+          {stack: "b: err3"},
+          {stack: "b: err4"},
+          {stack: "c: err5"},
         ]);
       });
     });
@@ -213,6 +216,57 @@ describe("Validation", () => {
         expect(comp.state.errorSchema).eql({
           __errors: ["Invalid"],
         });
+      });
+
+      it("should submit form on valid data", () => {
+        const schema = {type: "string"};
+        const formData = "hello";
+        const onSubmit = sandbox.spy();
+
+        function validate(formData, errors) {
+          if (formData !== "hello") {
+            errors.addError("Invalid");
+          }
+          return errors;
+        }
+
+        const {node} = createFormComponent({
+          schema,
+          formData,
+          validate,
+          onSubmit,
+        });
+
+        Simulate.submit(node);
+
+        sinon.assert.called(onSubmit);
+      });
+
+      it("should prevent form submission on invalid data", () => {
+        const schema = {type: "string"};
+        const formData = "a";
+        const onSubmit = sandbox.spy();
+        const onError = sandbox.spy();
+
+        function validate(formData, errors) {
+          if (formData !== "hello") {
+            errors.addError("Invalid");
+          }
+          return errors;
+        }
+
+        const {node} = createFormComponent({
+          schema,
+          formData,
+          validate,
+          onSubmit,
+          onError,
+        });
+
+        Simulate.submit(node);
+
+        sinon.assert.notCalled(onSubmit);
+        sinon.assert.called(onError);
       });
 
       it("should validate a simple object", () => {
