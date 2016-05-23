@@ -145,18 +145,18 @@ export default class Form extends Component {
         acceptCharset={acceptcharset}>
       </form>
     );
-    
+
     return (
       <form className={className ? className : "rjsf"}
-            id={id}
-            name={name}
-            method={method}
-            target={target}
-            action={action}
-            autoComplete={autocomplete}
-            encType={enctype}
-            acceptCharset={acceptcharset}
-            onSubmit={this.onSubmit}>
+        id={id}
+        name={name}
+        method={method}
+        target={target}
+        action={action}
+        autoComplete={autocomplete}
+        encType={enctype}
+        acceptCharset={acceptcharset}
+        onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
