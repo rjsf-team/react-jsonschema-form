@@ -133,19 +133,6 @@ export default class Form extends Component {
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
 
-    const formJSX = (
-      <form className={className ? className : "rjsf"}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autocomplete}
-        encType={enctype}
-        acceptCharset={acceptcharset}>
-      </form>
-    );
-
     return (
       <form className={className ? className : "rjsf"}
         id={id}
