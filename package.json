@@ -23,7 +23,7 @@
   "engineStrict": false,
   "engines": {
     "npm": "^2.14.7",
-    "node": ">=4"
+    "node": ">=6"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0"
