@@ -7,6 +7,8 @@ import NumberField from "./NumberField";
 import ObjectField from "./ObjectField";
 import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
+import {getAlternativeWidget} from "../../utils";
+
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -130,6 +132,14 @@ function SchemaField(props) {
   }
   if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
     displayLabel = false;
+  }
+
+  // Delegate the responsability to display or not the label to the uiWidget.
+  if (uiSchema["ui:widget"]) {
+    const widget = getAlternativeWidget(schema, uiSchema["ui:widget"]);
+    if (widget.hasOwnProperty("displayLabel")) {
+      displayLabel = widget.displayLabel;
+    }
   }
 
   return (

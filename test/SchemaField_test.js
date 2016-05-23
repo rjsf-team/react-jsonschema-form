@@ -34,6 +34,23 @@ describe("SchemaField", () => {
     });
   });
 
+  describe("ui:widget displayLabel support", () => {
+    class MyCustomWidget extends React.Component {
+      render() {
+        return <div>my-widget</div>;
+      }
+    }
+
+    MyCustomWidget.displayLabel = false;
+
+    const uiSchema = {"ui:widget": MyCustomWidget};
+
+    const {node} = createFormComponent({schema, uiSchema});
+
+    expect(node.querySelectorAll("#custom"))
+      .to.have.length.of(1);
+  });
+
   describe("ui:field support", () => {
     class MyObject extends React.Component {
       constructor(props) {

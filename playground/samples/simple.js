@@ -4,6 +4,10 @@ module.exports = {
     type: "object",
     required: ["firstName", "lastName"],
     properties: {
+      description: {
+        type: "string",
+        description: "This is a form where you can define some data."
+      },
       firstName: {
         type: "string",
         title: "First name",
@@ -28,6 +32,9 @@ module.exports = {
     }
   },
   uiSchema: {
+    description: {
+      "ui:widget": "paragraph"
+    },
     age: {
       "ui:widget": "updown"
     },
