@@ -94,7 +94,10 @@ if (process.env.NODE_ENV !== "production") {
     classNames: React.PropTypes.string,
     label: PropTypes.string,
     hidden: PropTypes.bool,
-    help: PropTypes.string,
+    help: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.element,
+    ]),
     required: PropTypes.bool,
     displayLabel: PropTypes.bool,
     children: React.PropTypes.node.isRequired,
