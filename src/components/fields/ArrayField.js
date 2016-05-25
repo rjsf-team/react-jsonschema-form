@@ -23,6 +23,14 @@ function ArrayFieldTitle({TitleField, idSchema, title, required}) {
   return <TitleField id={id} title={title} required={required} />;
 }
 
+function DescriptionFieldTitle({DescriptionField, idSchema, description}) {
+  if (!description) {
+    return null;
+  }
+  const id = `${idSchema.id}__description`;
+  return <DescriptionField id={id} description={description} />;
+}
+
 class ArrayField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -133,7 +141,7 @@ class ArrayField extends Component {
     const title = schema.title || name;
     const {items} = this.state;
     const {definitions, fields} = this.props.registry;
-    const {TitleField} = fields;
+    const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
 
     return (
@@ -145,7 +153,10 @@ class ArrayField extends Component {
           title={title}
           required={required} />
         {schema.description ?
-          <div className="field-description">{schema.description}</div> : null}
+          <DescriptionFieldTitle
+            DescriptionField={DescriptionField}
+            idSchema={idSchema}
+            description={description} /> : null}
         <div className="row array-item-list">{
           items.map((item, index) => {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;

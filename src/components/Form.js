@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from "react";
 
 import SchemaField from "./fields/SchemaField";
 import TitleField from "./fields/TitleField";
+import DescriptionField from "./fields/DescriptionField";
+
 import ErrorList from "./ErrorList";
 import {
   getDefaultFormState,
@@ -101,9 +103,12 @@ export default class Form extends Component {
     // the "fields" registry one.
     const _SchemaField = this.props.SchemaField || SchemaField;
     const _TitleField = this.props.TitleField || TitleField;
+    const _DescriptionField = this.props.DescriptionField || DescriptionField;
+
     const fields = Object.assign({
       SchemaField: _SchemaField,
       TitleField: _TitleField,
+      DescriptionField: _DescriptionField
     }, this.props.fields);
     return {
       fields,

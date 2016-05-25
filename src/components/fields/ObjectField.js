@@ -68,7 +68,7 @@ class ObjectField extends Component {
       readonly
     } = this.props;
     const {definitions, fields} = this.props.registry;
-    const {SchemaField, TitleField} = fields;
+    const {SchemaField, TitleField, DescriptionField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = schema.title || name;
     let orderedProperties;
@@ -93,7 +93,10 @@ class ObjectField extends Component {
                    title={title}
                    required={required} /> : null}
         {schema.description ?
-          <p className="field-description">{schema.description}</p> : null}
+          <DescriptionField
+            id={`${idSchema.id}__description`}
+            description={schema.description}
+          /> : null}
         {
         orderedProperties.map((name, index) => {
           return (
