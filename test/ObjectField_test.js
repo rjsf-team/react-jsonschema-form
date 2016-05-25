@@ -20,6 +20,7 @@ describe("ObjectField", () => {
     const schema = {
       type: "object",
       title: "my object",
+      description: "my description",
       required: ["foo"],
       default: {
         foo: "hey",
@@ -58,6 +59,14 @@ describe("ObjectField", () => {
       const {node} = createFormComponent({schema, TitleField: CustomTitleField});
       expect(node.querySelector("fieldset > #custom").textContent)
       .to.eql("my object");
+    });
+
+    it("should render a customized description", () => {
+      const CustomDescriptionField = ({description}) => <div id="custom">{description}</div>;
+
+      const {node} = createFormComponent({schema, DescriptionField: CustomDescriptionField});
+      expect(node.querySelector("fieldset > #custom").textContent)
+      .to.eql("my description");
     });
 
     it("should render a default property label", () => {

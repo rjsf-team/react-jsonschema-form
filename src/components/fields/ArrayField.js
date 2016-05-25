@@ -156,7 +156,7 @@ class ArrayField extends Component {
           <DescriptionFieldTitle
             DescriptionField={DescriptionField}
             idSchema={idSchema}
-            description={description} /> : null}
+            description={schema.description} /> : null}
         <div className="row array-item-list">{
           items.map((item, index) => {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;

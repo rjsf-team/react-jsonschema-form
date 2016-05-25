@@ -3,6 +3,8 @@ import { expect } from "chai";
 
 import SchemaField from "../src/components/fields/SchemaField";
 import TitleField from "../src/components/fields/TitleField";
+import DescriptionField from "../src/components/fields/DescriptionField";
+
 import { createFormComponent, createSandbox } from "./test_utils";
 
 
@@ -82,6 +84,7 @@ describe("SchemaField", () => {
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
       expect(registry.fields.TitleField).eql(TitleField);
+      expect(registry.fields.DescriptionField).eql(DescriptionField);
     });
 
     it("should use registered custom component for object", () => {
