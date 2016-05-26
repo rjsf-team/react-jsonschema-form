@@ -2,6 +2,7 @@ import "setimmediate";
 import deeper from "deeper";
 
 import TitleField from "./components/fields/TitleField";
+import DescriptionField from "./components/fields/DescriptionField";
 import PasswordWidget from "./components/widgets/PasswordWidget";
 import RadioWidget from "./components/widgets/RadioWidget";
 import UpDownWidget from "./components/widgets/UpDownWidget";
@@ -70,6 +71,7 @@ export function getDefaultRegistry() {
       // SchemaField itself.
       SchemaField: require("./components/fields/SchemaField").default,
       TitleField,
+      DescriptionField,
     },
     widgets: {},
     definitions: {},

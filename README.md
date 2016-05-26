@@ -565,7 +565,7 @@ A field component will always be passed the following props:
 
 The `registry` is an object containing the registered custom fields and widgets as well as root schema definitions.
 
- - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField` and `TitleField` components;
+ - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField`, `TitleField` and `DescriptionField` components;
  - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
  - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
 
@@ -611,7 +611,6 @@ Props passed to a custom SchemaField are the same as [the ones passed to a custo
 
 You can provide your own implementation of the `TitleField` base React component for rendering any title. This is useful when you want to augment how titles are handled.
 
-
 Simply pass a `fields` object having a `TitleField` property to your `Form` component:
 
 ```jsx
@@ -623,6 +622,30 @@ const CustomTitleField = ({title, required}) => {
 
 const fields = {
   TitleField: CustomTitleField
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        fields={fields} />
+), document.getElementById("app"));
+```
+
+### Custom descriptions
+
+You can provide your own implementation of the `DescriptionField` base React component for rendering any description.
+
+Simply pass a `fields` object having a `DescriptionField` property to your `Form` component:
+
+```jsx
+
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id}>{description}</div>;
+};
+
+const fields = {
+  DescriptionField: CustomDescriptionField
 };
 
 render((

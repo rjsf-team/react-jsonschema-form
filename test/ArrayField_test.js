@@ -1,3 +1,5 @@
+import React from "react";
+
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
@@ -19,6 +21,7 @@ describe("ArrayField", () => {
     const schema = {
       type: "array",
       title: "my list",
+      description: "my description",
       items: {type: "string"}
     };
 
@@ -36,6 +39,35 @@ describe("ArrayField", () => {
 
       expect(legend.textContent).eql("my list");
       expect(legend.id).eql("root__title");
+    });
+
+    it("should render a description", () => {
+      const {node} = createFormComponent({schema});
+
+      const description = node.querySelector("fieldset > div.field-description");
+
+      expect(description.textContent).eql("my description");
+      expect(description.id).eql("root__description");
+    });
+
+    it("should render a customized title", () => {
+      const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
+
+      const {node} = createFormComponent({schema,
+        fields: {TitleField: CustomTitleField}
+      });
+      expect(node.querySelector("fieldset > #custom").textContent)
+        .to.eql("my list");
+    });
+
+    it("should render a customized description", () => {
+      const CustomDescriptionField = ({description}) => <div id="custom">{description}</div>;
+
+      const {node} = createFormComponent({schema, fields: {
+        DescriptionField: CustomDescriptionField}
+      });
+      expect(node.querySelector("fieldset > #custom").textContent)
+        .to.eql("my description");
     });
 
     it("should contain no field in the list by default", () => {
