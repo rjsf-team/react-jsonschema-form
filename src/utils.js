@@ -6,6 +6,7 @@ import DescriptionField from "./components/fields/DescriptionField";
 import PasswordWidget from "./components/widgets/PasswordWidget";
 import RadioWidget from "./components/widgets/RadioWidget";
 import UpDownWidget from "./components/widgets/UpDownWidget";
+import ParagraphWidget from "./components/widgets/ParagraphWidget";
 import RangeWidget from "./components/widgets/RangeWidget";
 import SelectWidget from "./components/widgets/SelectWidget";
 import TextWidget from "./components/widgets/TextWidget";
@@ -37,6 +38,7 @@ const altWidgetMap = {
     "alt-date": AltDateWidget,
     "alt-datetime": AltDateTimeWidget,
     color: ColorWidget,
+    paragraph: ParagraphWidget
   },
   number: {
     updown: UpDownWidget,
