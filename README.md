@@ -611,7 +611,6 @@ Props passed to a custom SchemaField are the same as [the ones passed to a custo
 
 You can provide your own implementation of the `TitleField` base React component for rendering any title. This is useful when you want to augment how titles are handled.
 
-
 Simply pass a `fields` object having a `TitleField` property to your `Form` component:
 
 ```jsx
@@ -636,7 +635,6 @@ render((
 ### Custom descriptions
 
 You can provide your own implementation of the `DescriptionField` base React component for rendering any description.
-
 
 Simply pass a `fields` object having a `DescriptionField` property to your `Form` component:
 

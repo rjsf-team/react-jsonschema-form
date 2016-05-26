@@ -56,7 +56,9 @@ describe("ObjectField", () => {
     it("should render a customized title", () => {
       const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
-      const {node} = createFormComponent({schema, TitleField: CustomTitleField});
+      const {node} = createFormComponent({schema, fields: {
+        TitleField: CustomTitleField
+      }});
       expect(node.querySelector("fieldset > #custom").textContent)
       .to.eql("my object");
     });

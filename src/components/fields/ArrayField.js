@@ -23,7 +23,7 @@ function ArrayFieldTitle({TitleField, idSchema, title, required}) {
   return <TitleField id={id} title={title} required={required} />;
 }
 
-function DescriptionFieldTitle({DescriptionField, idSchema, description}) {
+function ArrayFieldDescription({DescriptionField, idSchema, description}) {
   if (!description) {
     return null;
   }
@@ -153,7 +153,7 @@ class ArrayField extends Component {
           title={title}
           required={required} />
         {schema.description ?
-          <DescriptionFieldTitle
+          <ArrayFieldDescription
             DescriptionField={DescriptionField}
             idSchema={idSchema}
             description={schema.description} /> : null}

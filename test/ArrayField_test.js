@@ -44,7 +44,7 @@ describe("ArrayField", () => {
     it("should render a description", () => {
       const {node} = createFormComponent({schema});
 
-      const description = node.querySelector("fieldset > div");
+      const description = node.querySelector("fieldset > div.field-description");
 
       expect(description.textContent).eql("my description");
       expect(description.id).eql("root__description");
@@ -53,17 +53,21 @@ describe("ArrayField", () => {
     it("should render a customized title", () => {
       const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
-      const {node} = createFormComponent({schema, TitleField: CustomTitleField});
+      const {node} = createFormComponent({schema,
+        fields: {TitleField: CustomTitleField}
+      });
       expect(node.querySelector("fieldset > #custom").textContent)
-      .to.eql("my list");
+        .to.eql("my list");
     });
 
     it("should render a customized description", () => {
       const CustomDescriptionField = ({description}) => <div id="custom">{description}</div>;
 
-      const {node} = createFormComponent({schema, DescriptionField: CustomDescriptionField});
+      const {node} = createFormComponent({schema, fields: {
+        DescriptionField: CustomDescriptionField}
+      });
       expect(node.querySelector("fieldset > #custom").textContent)
-      .to.eql("my description");
+        .to.eql("my description");
     });
 
     it("should contain no field in the list by default", () => {
