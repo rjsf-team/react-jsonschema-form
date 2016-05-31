@@ -50,9 +50,9 @@ function extractFileInfo(dataURLs) {
   return dataURLs
     .filter(dataURL => typeof dataURL !== "undefined")
     .map(dataURL => {
-      const blob = dataURItoBlob(dataURL);
+      const {blob, name} = dataURItoBlob(dataURL);
       return {
-        name: blob.name,
+        name: name,
         size: blob.size,
         type: blob.type,
       };

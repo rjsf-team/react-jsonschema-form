@@ -343,21 +343,34 @@ export function setState(instance, state, callback) {
 }
 
 export function dataURItoBlob(dataURI) {
+  // Split metadata from data
   const splitted = dataURI.split(",");
+  // Split params
   const params = splitted[0].split(";");
+  // Get mime-type from params
   const type = params[0].replace("data:", "");
+  // Filter the name property from params
+  const properties = params.filter(param => {
+    return param.split("=")[0] === "name";
+  });
+  // Look for the name and use unknown if no name property.
   let name;
-  if (!params[1]) {
+  if (properties.length !== 1) {
     name = "unknown";
   } else {
-    name = params[1].split("=")[1];
+    // Because we filtered out the other property,
+    // we only have the name case here.
+    name = properties[0].split("=")[1];
   }
-  var binary = atob(splitted[1]);
-  var array = [];
-  for(var i = 0; i < binary.length; i++) {
+
+  // Built the Uint8Array Blob parameter from the base64 string.
+  const binary = atob(splitted[1]);
+  const array = [];
+  for(let i = 0; i < binary.length; i++) {
     array.push(binary.charCodeAt(i));
   }
+  // Create the blob object
   const blob = new window.Blob([new Uint8Array(array)], {type});
-  blob.name = name;
-  return blob;
+
+  return {blob, name};
 }
