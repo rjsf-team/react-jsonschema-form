@@ -914,4 +914,60 @@ describe("StringField", () => {
       expect(comp.state.errors).to.have.length.of(1);
     });
   });
+
+  describe("FileWidget", () => {
+    const initialValue = "data:text/plain;name=file1.txt;base64,dGVzdDE=";
+
+    it("should render a color field", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "data-url",
+      }});
+
+      expect(node.querySelectorAll(".field [type=file]"))
+        .to.have.length.of(1);
+    });
+
+    it("should assign a default value", () => {
+      const {comp} = createFormComponent({schema: {
+        type: "string",
+        format: "color",
+        default: initialValue,
+      }});
+
+      expect(comp.state.formData).eql(initialValue);
+    });
+
+    it("should reflect the change into the dom", () => {
+      sandbox.stub(window, "FileReader").returns({
+        set onload(fn) {
+          fn({target: {result: "data:text/plain;base64,x="}});
+        },
+        readAsDataUrl() {}
+      });
+
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "data-url",
+      }});
+
+      Simulate.change(node.querySelector("[type=file]"), {
+        target: {files: [{name: "file1.txt", size: 1, type: "type"}]}
+      });
+
+      return new Promise(setImmediate)
+        .then(() => expect(comp.state.formData).eql(
+          "data:text/plain;name=file1.txt;base64,x="));
+    });
+
+    it("should render the widget with the expected id", () => {
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "data-url",
+      }});
+
+      expect(node.querySelector("[type=file]").id)
+        .eql("root");
+    });
+  });
 });
