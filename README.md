@@ -28,6 +28,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Disabled fields](#disabled-fields)
         - [Read-only fields](#read-only-fields)
         - [Hidden widgets](#hidden-widgets)
+        - [File widgets](#file-widgets)
+           - [Multiple files](#multiple-files)
      - [Object fields ordering](#object-fields-ordering)
      - [Custom CSS class names](#custom-css-class-names)
      - [Custom labels for enum fields](#custom-labels-for-enum-fields)
@@ -247,9 +249,9 @@ The built-in string field also supports the JSONSchema `format` property, and wi
 
 - `email`: An `input[type=email]` element is used;
 - `uri`: An `input[type=url]` element is used;
+- `data-url`: By default, an `input[type=file]` element is used; in case the string is part of an array, multiple files will be handled automatically (see [File widgets](#file-widgets)).
 - `date`: By default, an `input[type=date]` element is used;
 - `date-time`: By default, an `input[type=datetime-local]` element is used.
-- `data-url`: By default, an `input[type=file]` element is used; in case the string is part of an array, multiple files will be handled automatically.
 
 ![](http://i.imgur.com/xqu6Lcp.png)
 
@@ -299,6 +301,49 @@ const uiSchema = {
 >
 > - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
 > - An hidden widget takes its value from the `formData` prop.
+
+#### File widgets
+
+This library supports a limited form of `input[type=file]` widgets, in the sense that it will propagate file contents to form data state as [data-url](http://dataurl.net/#about)s.
+
+There are two ways to use file widgets:
+
+**By declaring a `string` json schema type along a `data-url` [format](#string-formats):**
+
+```js
+const schema = {
+  type: "string",
+  format: "data-url",
+};
+```
+
+**By specifying a `ui:widget` field uiSchema directive as `file`:**
+
+```js
+const schema = {
+  type: "string",
+};
+
+const uiSchema = {
+  "ui:widget": "file",
+};
+```
+
+##### Multiple files
+
+Multiple files selectors are supported by defining an array of strings having `data-url` as a format:
+
+```js
+const schema = {
+  type: "array",
+  items: {
+    type: "string",
+    format: "data-url",
+  }
+};
+```
+
+> Note that storing large dataURIs into form state might slow rendering.
 
 ### Object fields ordering
 
