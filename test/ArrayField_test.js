@@ -188,6 +188,7 @@ describe("ArrayField", () => {
         type: "string"
       },
       uniqueItems: true,
+      // XXX investigate why is this
       value: ["foo", "fuzz"]
     };
 
@@ -247,6 +248,86 @@ describe("ArrayField", () => {
       const {node} = createFormComponent({schema});
 
       expect(node.querySelector("select").id).eql("root");
+    });
+  });
+
+  describe("Multiple files field", () => {
+    const schema = {
+      type: "array",
+      title: "My field",
+      items: {
+        type: "string",
+        format: "data-url",
+      },
+    };
+
+    it("should render an input[type=file] widget", () => {
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelectorAll("input[type=file]"))
+        .to.have.length.of(1);
+    });
+
+    it("should render a select widget with a label", () => {
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector(".field label").textContent)
+        .eql("My field");
+    });
+
+    it("should render a file widget with multiple attribute", () => {
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector(".field [type=file]").getAttribute("multiple"))
+        .not.to.be.null;
+    });
+
+    it("should handle a change event", () => {
+      sandbox.stub(window, "FileReader").returns({
+        set onload(fn) {
+          fn({target: {result: "data:text/plain;base64,x="}});
+        },
+        readAsDataUrl() {}
+      });
+
+      const {comp, node} = createFormComponent({schema});
+
+      Simulate.change(node.querySelector(".field input[type=file]"), {
+        target: {
+          files: [
+            {name: "file1.txt", size: 1, type: "type"},
+            {name: "file2.txt", size: 2, type: "type"},
+          ]
+        }
+      });
+
+      return new Promise(setImmediate)
+        .then(() => expect(comp.state.formData).eql([
+          "data:text/plain;name=file1.txt;base64,x=",
+          "data:text/plain;name=file2.txt;base64,x=",
+        ]));
+    });
+
+    it("should fill field with data", () => {
+      const {node} = createFormComponent({
+        schema,
+        formData: [
+          "data:text/plain;name=file1.txt;base64,dGVzdDE=",
+          "data:image/png;name=file2.png;base64,ZmFrZXBuZw==",
+        ],
+      });
+
+      const li = node.querySelectorAll(".file-info li");
+
+      expect(li).to.have.length.of(2);
+      expect(li[0].textContent).eql("file1.txt (text/plain, 5 bytes)");
+      expect(li[1].textContent).eql("file2.png (image/png, 7 bytes)");
+    });
+
+    it("should render the file widget with the expected id", () => {
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector("input[type=file]").id).eql("root");
     });
   });
 
