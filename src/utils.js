@@ -341,3 +341,23 @@ export function setState(instance, state, callback) {
     setImmediate(callback);
   }
 }
+
+export function dataURItoBlob(dataURI) {
+  const splitted = dataURI.split(",");
+  const params = splitted[0].split(";");
+  const type = params[0].replace("data:", "");
+  let name;
+  if (!params[1]) {
+    name = "unknown";
+  } else {
+    name = params[1].split("=")[1];
+  }
+  var binary = atob(splitted[1]);
+  var array = [];
+  for(var i = 0; i < binary.length; i++) {
+    array.push(binary.charCodeAt(i));
+  }
+  const blob = new window.Blob([new Uint8Array(array)], {type});
+  blob.name = name;
+  return blob;
+}
