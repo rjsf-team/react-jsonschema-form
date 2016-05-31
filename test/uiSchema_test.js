@@ -1,3 +1,4 @@
+
 import { expect } from "chai";
 import React from "react";
 import { Simulate } from "react-addons-test-utils";
@@ -135,6 +136,22 @@ describe("uiSchema", () => {
       }
     };
 
+    describe("file", () => {
+      const uiSchema = {
+        foo: {
+          "ui:widget": "file"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("input[type=file]"))
+          .to.have.length.of(1);
+      });
+    });
+
+
     describe("textarea", () => {
       const uiSchema = {
         foo: {
@@ -148,6 +165,7 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll("textarea"))
           .to.have.length.of(1);
       });
+
 
       it("should support formData", () => {
         const {node} = createFormComponent({schema, uiSchema, formData: {
@@ -883,6 +901,14 @@ describe("uiSchema", () => {
                          {"ui:disabled": true});
       });
 
+      it("should disabled a file widget", () => {
+        const {node} = createFormComponent({
+          schema: {type: "string", format: "data-url"},
+          uiSchema: {"ui:disabled": true}});
+        expect(node.querySelector("input[type=file]").hasAttribute("disabled"))
+          .eql(true);
+      });
+
       it("should disable a textarea widget", () => {
         shouldBeDisabled("textarea",
                          {type: "string"},
@@ -1046,6 +1072,15 @@ describe("uiSchema", () => {
         shouldBeReadonly("input[type=text]",
                          {type: "string"},
                          {"ui:readonly": true});
+      });
+
+      it("should mark as readonly a file widget", () => {
+        // We mark a file widget as readonly by disabling it.
+        const {node} = createFormComponent({
+          schema: {type: "string", format: "data-url"},
+          uiSchema: {"ui:readonly": true}});
+        expect(node.querySelector("input[type=file]").hasAttribute("disabled"))
+          .eql(true);
       });
 
       it("should mark as readonly a textarea widget", () => {

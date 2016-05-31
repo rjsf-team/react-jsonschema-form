@@ -249,6 +249,7 @@ The built-in string field also supports the JSONSchema `format` property, and wi
 - `uri`: An `input[type=url]` element is used;
 - `date`: By default, an `input[type=date]` element is used;
 - `date-time`: By default, an `input[type=datetime-local]` element is used.
+- `data-url`: By default, an `input[type=file]` element is used; in case the string is part of an array, multiple files will be handled automatically.
 
 ![](http://i.imgur.com/xqu6Lcp.png)
 

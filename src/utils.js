@@ -18,6 +18,8 @@ import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 import ColorWidget from "./components/widgets/ColorWidget";
+import FileWidget from "./components/widgets/FileWidget";
+
 
 
 const altWidgetMap = {
@@ -37,6 +39,7 @@ const altWidgetMap = {
     "alt-date": AltDateWidget,
     "alt-datetime": AltDateTimeWidget,
     color: ColorWidget,
+    file: FileWidget,
   },
   number: {
     updown: UpDownWidget,
@@ -58,6 +61,7 @@ const stringFormatWidgets = {
   "ipv4": TextWidget,
   "ipv6": TextWidget,
   "uri": URLWidget,
+  "data-url": FileWidget,
 };
 
 export function getDefaultRegistry() {
@@ -209,6 +213,12 @@ export function isMultiSelect(schema) {
   return Array.isArray(schema.items.enum) && schema.uniqueItems;
 }
 
+export function isFilesArray(schema, uiSchema) {
+  return (
+    schema.items.type === "string" && schema.items.format === "data-url"
+  ) || uiSchema["ui:widget"] === "files";
+}
+
 export function isFixedItems(schema) {
   return Array.isArray(schema.items) &&
          schema.items.length > 0 &&
@@ -330,4 +340,37 @@ export function setState(instance, state, callback) {
     instance.setState(state);
     setImmediate(callback);
   }
+}
+
+export function dataURItoBlob(dataURI) {
+  // Split metadata from data
+  const splitted = dataURI.split(",");
+  // Split params
+  const params = splitted[0].split(";");
+  // Get mime-type from params
+  const type = params[0].replace("data:", "");
+  // Filter the name property from params
+  const properties = params.filter(param => {
+    return param.split("=")[0] === "name";
+  });
+  // Look for the name and use unknown if no name property.
+  let name;
+  if (properties.length !== 1) {
+    name = "unknown";
+  } else {
+    // Because we filtered out the other property,
+    // we only have the name case here.
+    name = properties[0].split("=")[1];
+  }
+
+  // Built the Uint8Array Blob parameter from the base64 string.
+  const binary = atob(splitted[1]);
+  const array = [];
+  for(let i = 0; i < binary.length; i++) {
+    array.push(binary.charCodeAt(i));
+  }
+  // Create the blob object
+  const blob = new window.Blob([new Uint8Array(array)], {type});
+
+  return {blob, name};
 }

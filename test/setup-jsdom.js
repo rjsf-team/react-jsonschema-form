@@ -8,6 +8,9 @@ if (!global.hasOwnProperty("window")) {
   global.navigator = global.window.navigator;
 }
 
+// atob
+global.atob = require("atob");
+
 // HTML debugging helper
 global.d = function d(node) {
   console.log(require("html").prettyPrint(node.outerHTML, {indent_size: 2}));

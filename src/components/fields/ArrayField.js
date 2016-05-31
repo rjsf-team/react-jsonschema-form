@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from "react";
 import {
   getDefaultFormState,
   isMultiSelect,
+  isFilesArray,
   isFixedItems,
   allowAdditionalItems,
   optionsList,
@@ -13,6 +14,7 @@ import {
   setState
 } from "../../utils";
 import SelectWidget from "./../widgets/SelectWidget";
+import FileWidget from "./../widgets/FileWidget";
 
 
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
@@ -117,7 +119,10 @@ class ArrayField extends Component {
   };
 
   render() {
-    const {schema} = this.props;
+    const {schema, uiSchema} = this.props;
+    if (isFilesArray(schema, uiSchema)) {
+      return this.renderFiles();
+    }
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
@@ -190,6 +195,24 @@ class ArrayField extends Component {
         multiple
         onChange={this.onSelectChange}
         options={optionsList(itemsSchema)}
+        schema={schema}
+        placeholder={title}
+        value={items}
+        disabled={disabled}
+        readonly={readonly}
+      />
+    );
+  }
+
+  renderFiles() {
+    const {schema, idSchema, name, disabled, readonly} = this.props;
+    const title = schema.title || name;
+    const {items} = this.state;
+    return (
+      <FileWidget
+        id={idSchema && idSchema.id}
+        multiple
+        onChange={this.onSelectChange}
         schema={schema}
         title={title}
         value={items}

@@ -2,15 +2,16 @@ import { expect } from "chai";
 
 import {
   asNumber,
+  dataURItoBlob,
   getDefaultFormState,
   isMultiSelect,
   mergeObjects,
+  pad,
+  parseDateString,
   retrieveSchema,
   shouldRender,
-  toIdSchema,
-  parseDateString,
   toDateString,
-  pad
+  toIdSchema,
 } from "../src/utils";
 
 
@@ -633,6 +634,29 @@ describe("utils", () => {
   describe("pad()", () => {
     it("should pad a string with 0s", () => {
       expect(pad(4, 3)).eql("004");
+    });
+  });
+
+  describe("dataURItoBlob()", () => {
+    it("should return the name of the file if present", () => {
+      const {blob, name} = dataURItoBlob("data:image/png;name=test.png;base64,VGVzdC5wbmc=");
+      expect(name).eql("test.png");
+      expect(blob).to.have.property("size").eql(8);
+      expect(blob).to.have.property("type").eql("image/png");
+    });
+
+    it("should return unknown if name is not provided", () => {
+      const {blob, name} = dataURItoBlob("data:image/png;base64,VGVzdC5wbmc=");
+      expect(name).eql("unknown");
+      expect(blob).to.have.property("size").eql(8);
+      expect(blob).to.have.property("type").eql("image/png");
+    });
+
+    it("should return ignore unsupported parameters", () => {
+      const {blob, name} = dataURItoBlob("data:image/png;unknown=foobar;name=test.png;base64,VGVzdC5wbmc=");
+      expect(name).eql("test.png");
+      expect(blob).to.have.property("size").eql(8);
+      expect(blob).to.have.property("type").eql("image/png");
     });
   });
 });

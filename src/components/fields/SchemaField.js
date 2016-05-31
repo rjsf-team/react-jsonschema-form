@@ -1,6 +1,11 @@
 import React, { PropTypes } from "react";
 
-import { isMultiSelect, retrieveSchema, getDefaultRegistry } from "../../utils";
+import {
+  isMultiSelect,
+  retrieveSchema,
+  getDefaultRegistry,
+  isFilesArray
+} from "../../utils";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import NumberField from "./NumberField";
@@ -126,7 +131,7 @@ function SchemaField(props) {
 
   let displayLabel = true;
   if (schema.type === "array") {
-    displayLabel = isMultiSelect(schema);
+    displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
   }
   if (schema.type === "object") {
     displayLabel = false;
