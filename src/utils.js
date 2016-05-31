@@ -61,7 +61,7 @@ const stringFormatWidgets = {
   "ipv4": TextWidget,
   "ipv6": TextWidget,
   "uri": URLWidget,
-  // "data-url": FileWidget,
+  "data-url": FileWidget,
 };
 
 export function getDefaultRegistry() {
@@ -211,6 +211,12 @@ export function orderProperties(properties, order) {
 
 export function isMultiSelect(schema) {
   return Array.isArray(schema.items.enum) && schema.uniqueItems;
+}
+
+export function isFilesArray(schema, uiSchema) {
+  return (
+    schema.items.type === "string" && schema.items.format === "data-url"
+  ) || uiSchema["ui:widget"] === "files";
 }
 
 export function isFixedItems(schema) {

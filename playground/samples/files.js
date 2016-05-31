@@ -5,24 +5,19 @@ module.exports = {
     properties: {
       file: {
         type: "string",
+        format: "data-url",
         title: "Single file",
       },
       files: {
         type: "array",
         title: "Multiple files",
         items: {
-          type: "string"
+          type: "string",
+          format: "data-url",
         }
       }
     }
   },
-  uiSchema: {
-    file: {
-      "ui:widget": "file"
-    },
-    files: {
-      "ui:widget": "files"
-    }
-  },
+  uiSchema: {},
   formData: {}
 };

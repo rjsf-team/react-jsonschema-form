@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from "react";
 import {
   getDefaultFormState,
   isMultiSelect,
+  isFilesArray,
   isFixedItems,
   allowAdditionalItems,
   optionsList,
@@ -119,7 +120,7 @@ class ArrayField extends Component {
 
   render() {
     const {schema, uiSchema} = this.props;
-    if (uiSchema["ui:widget"] === "files") {
+    if (isFilesArray(schema, uiSchema)) {
       return this.renderFiles();
     }
     if (isFixedItems(schema)) {
