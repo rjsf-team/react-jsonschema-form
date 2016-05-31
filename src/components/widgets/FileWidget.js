@@ -94,15 +94,15 @@ class FileWidget extends Component {
   };
 
   render() {
-    const {multiple, id} = this.props;
-    const {readonly, filesInfo} = this.state;
+    const {multiple, id, readonly, disabled} = this.props;
+    const {filesInfo} = this.state;
     return (
       <div>
         <p>
           <input
             id={id}
             type="file"
-            readOnly={readonly}
+            disabled={readonly || disabled}
             onChange={this.onChange}
             defaultValue=""
             multiple={multiple} />
