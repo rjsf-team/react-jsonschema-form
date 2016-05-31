@@ -42,6 +42,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [The registry object](#the-registry-object)
      - [Custom SchemaField](#custom-schemafield)
      - [Custom titles](#custom-titles)
+     - [Custom descriptions](#custom-descriptions)
   - [Form data validation](#form-data-validation)
      - [Live validation](#live-validation)
      - [Custom validation](#custom-validation)
