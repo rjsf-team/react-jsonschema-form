@@ -53,6 +53,9 @@ module.exports = {
     }
   },
   uiSchema: {
+    multipleChoicesList: {
+      "ui:widget": "checkboxes"
+    },
     fixedItemsList: {
       items: [
         {"ui:widget": "textarea"},

@@ -19,6 +19,7 @@ import TextareaWidget from "./components/widgets/TextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 import ColorWidget from "./components/widgets/ColorWidget";
 import FileWidget from "./components/widgets/FileWidget";
+import CheckboxesWidget from "./components/widgets/CheckboxesWidget";
 
 
 
@@ -50,6 +51,9 @@ const altWidgetMap = {
     updown: UpDownWidget,
     range: RangeWidget,
     hidden: HiddenWidget,
+  },
+  array: {
+    checkboxes: CheckboxesWidget,
   }
 };
 
