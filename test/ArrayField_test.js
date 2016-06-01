@@ -192,6 +192,17 @@ describe("ArrayField", () => {
       value: ["foo", "fuzz"]
     };
 
+    it("should be possible to specify a custom widget", () => {
+      const uiSchema = {
+        "ui:widget": "checkboxes"
+      };
+      const {node} = createFormComponent({schema, uiSchema});
+      d(node);
+
+      expect(node.querySelectorAll("select"))
+        .to.have.length.of(1);
+    });
+
     it("should render a select widget", () => {
       const {node} = createFormComponent({schema});
 
