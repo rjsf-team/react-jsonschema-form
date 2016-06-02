@@ -15,6 +15,7 @@ import {
 } from "../../utils";
 import SelectWidget from "./../widgets/SelectWidget";
 import FileWidget from "./../widgets/FileWidget";
+import CheckboxesWidget from "./../widgets/CheckboxesWidget";
 
 
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
@@ -184,13 +185,16 @@ class ArrayField extends Component {
   }
 
   renderMultiSelect() {
-    const {schema, idSchema, name, disabled, readonly} = this.props;
+    const {schema, idSchema, uiSchema, name, disabled, readonly} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
     const {definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
+
+    const multipleCheckboxes = uiSchema["ui:widget"] === "checkboxes";
+    const Widget = (multipleCheckboxes) ? CheckboxesWidget : SelectWidget;
     return (
-      <SelectWidget
+      <Widget
         id={idSchema && idSchema.id}
         multiple
         onChange={this.onSelectChange}

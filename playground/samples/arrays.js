@@ -15,7 +15,7 @@ module.exports = {
         title: "A multiple choices list",
         items: {
           type: "string",
-          enum: ["foo", "bar", "fuzz"],
+          enum: ["foo", "bar", "fuzz", "qux"],
         },
         uniqueItems: true
       },
@@ -53,6 +53,9 @@ module.exports = {
     }
   },
   uiSchema: {
+    multipleChoicesList: {
+      "ui:widget": "checkboxes"
+    },
     fixedItemsList: {
       items: [
         {"ui:widget": "textarea"},

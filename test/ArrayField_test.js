@@ -192,62 +192,116 @@ describe("ArrayField", () => {
       value: ["foo", "fuzz"]
     };
 
-    it("should render a select widget", () => {
-      const {node} = createFormComponent({schema});
+    describe("Select multiple widget", () => {
+      it("should render a select widget", () => {
+        const {node} = createFormComponent({schema});
 
-      expect(node.querySelectorAll("select"))
-        .to.have.length.of(1);
-    });
-
-    it("should render a select widget with a label", () => {
-      const {node} = createFormComponent({schema});
-
-      expect(node.querySelector(".field label").textContent)
-        .eql("My field");
-    });
-
-    it("should render a select widget with multiple attribute", () => {
-      const {node} = createFormComponent({schema});
-
-      expect(node.querySelector(".field select").getAttribute("multiple"))
-        .not.to.be.null;
-    });
-
-    it("should render options", () => {
-      const {node} = createFormComponent({schema});
-
-      expect(node.querySelectorAll("select option"))
-        .to.have.length.of(3);
-    });
-
-    it("should handle a change event", () => {
-      const {comp, node} = createFormComponent({schema});
-
-      Simulate.change(node.querySelector(".field select"), {
-        target: {options: [
-          {selected: true, value: "foo"},
-          {selected: true, value: "bar"},
-          {selected: false, value: "fuzz"},
-        ]}
+        expect(node.querySelectorAll("select"))
+          .to.have.length.of(1);
       });
 
-      expect(comp.state.formData).eql(["foo", "bar"]);
+      it("should render a select widget with a label", () => {
+        const {node} = createFormComponent({schema});
+
+        expect(node.querySelector(".field label").textContent)
+          .eql("My field");
+      });
+
+      it("should render a select widget with multiple attribute", () => {
+        const {node} = createFormComponent({schema});
+
+        expect(node.querySelector(".field select").getAttribute("multiple"))
+          .not.to.be.null;
+      });
+
+      it("should render options", () => {
+        const {node} = createFormComponent({schema});
+
+        expect(node.querySelectorAll("select option"))
+          .to.have.length.of(3);
+      });
+
+      it("should handle a change event", () => {
+        const {comp, node} = createFormComponent({schema});
+
+        Simulate.change(node.querySelector(".field select"), {
+          target: {options: [
+            {selected: true, value: "foo"},
+            {selected: true, value: "bar"},
+            {selected: false, value: "fuzz"},
+          ]}
+        });
+
+        expect(comp.state.formData).eql(["foo", "bar"]);
+      });
+
+      it("should fill field with data", () => {
+        const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+
+        const options = node.querySelectorAll(".field select option");
+        expect(options).to.have.length.of(3);
+        expect(options[0].selected).eql(true);   // foo
+        expect(options[1].selected).eql(true);   // bar
+        expect(options[2].selected).eql(false);  // fuzz
+      });
+
+      it("should render the select widget with the expected id", () => {
+        const {node} = createFormComponent({schema});
+
+        expect(node.querySelector("select").id).eql("root");
+      });
     });
 
-    it("should fill field with data", () => {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+    describe("CheckboxesWidget", () => {
+      const uiSchema = {
+        "ui:widget": "checkboxes"
+      };
 
-      const options = node.querySelectorAll(".field select option");
-      expect(options).to.have.length.of(3);
-      expect(options[0].selected).eql(true);   // foo
-      expect(options[1].selected).eql(true);   // bar
-      expect(options[2].selected).eql(false);  // fuzz
-    });
+      it("should render the expected number of checkboxes", () => {
+        const {node} = createFormComponent({schema, uiSchema});
 
-    it("should render the select widget with the expected id", () => {
-      const {node} = createFormComponent({schema});
+        expect(node.querySelectorAll("[type=checkbox]"))
+          .to.have.length.of(3);
+      });
 
-      expect(node.querySelector("select").id).eql("root");
+      it("should render the expected labels", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        const labels = [].map.call(node.querySelectorAll(".checkbox label"),
+                                   node => node.textContent);
+        expect(labels).eql(["foo", "bar", "fuzz"]);
+      });
+
+      it("should handle a change event", () => {
+        const {comp, node} = createFormComponent({schema, uiSchema});
+
+        Simulate.change(node.querySelectorAll("[type=checkbox]")[0], {
+          target: {checked: true}
+        });
+        Simulate.change(node.querySelectorAll("[type=checkbox]")[2], {
+          target: {checked: true}
+        });
+
+        expect(comp.state.formData).eql(["foo", "fuzz"]);
+      });
+
+      it("should fill field with data", () => {
+        const {node} = createFormComponent({
+          schema,
+          uiSchema,
+          formData: ["foo", "fuzz"]
+        });
+
+        const labels = [].map.call(node.querySelectorAll("[type=checkbox]"),
+                                   node => node.checked);
+        expect(labels).eql([true, false, true]);
+      });
+
+      it("should render the widget with the expected id", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector(".checkboxes").id).eql("root");
+      });
     });
   });
 
