@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 
 import {
   getDefaultFormState,
+  getAlternativeWidget,
   orderProperties,
   retrieveSchema,
   shouldRender,
@@ -57,6 +58,10 @@ class ObjectField extends Component {
     };
   };
 
+  onObjectChange = (value) => {
+    this.asyncSetState(value);
+  };
+
   render() {
     const {
       uiSchema,
@@ -67,10 +72,12 @@ class ObjectField extends Component {
       disabled,
       readonly
     } = this.props;
-    const {definitions, fields} = this.props.registry;
+    const {definitions, fields, widgets} = this.props.registry;
     const {SchemaField, TitleField, DescriptionField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = schema.title || name;
+    const {description} = schema;
+    const widget = uiSchema['ui:widget'] || schema.format;
     let orderedProperties;
     try {
       const properties = Object.keys(schema.properties);
@@ -85,6 +92,18 @@ class ObjectField extends Component {
           <pre>{JSON.stringify(schema)}</pre>
         </div>
       );
+    }
+    if(widget) {
+      const Widget = getAlternativeWidget(schema, widget, widgets);
+      return <Widget
+          id={idSchema && idSchema.id}
+          label={title}
+          placeholder={description}
+          onChange={this.onObjectChange}
+          schema={schema}
+          value={this.state}
+          required={required}
+        />;
     }
     return (
       <fieldset>
