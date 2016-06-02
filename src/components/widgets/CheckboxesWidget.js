@@ -1,55 +1,50 @@
-import React, { Component, PropTypes } from "react";
+import React, { PropTypes } from "react";
 
-class CheckboxesWidget extends Component {
-  constructor(props) {
-    super(props);
-    this.state = this.getStateFromProps(props);
-  }
 
-  getStateFromProps(props) {
-    const selected = props.options.reduce((o, {label}) => {
-      o[label] = props.value.indexOf(label) !== -1;
-      return o;
-    }, {});
-    console.log(selected);
-    return {selected};
-  }
+function selectValue(value, selected, all) {
+  const at = all.indexOf(value);
+  const updated = selected.slice(0, at).concat(value, selected.slice(at));
+  // As inserting values at predefined index positions doesn't work we empty
+  // arrays, we need to reorder the updated selection to match the initial order
+  return updated.sort((a, b) => {
+    const ai = all.findIndex(x => x === a);
+    const bi = all.findIndex(x => x === b);
+    return ai > bi;
+  });
+}
 
-  render() {
-    const {
-     options,
-     value,
-     onChange
-    } = this.props;
+function deselectValue(value, selected) {
+  return selected.filter(v => v !== value);
+}
 
-    return (
-      <div>{
-        options.map(({label}, i) => {
-          return (
-            <div className="checkbox">
+function CheckboxesWidget(props) {
+  const {id, disabled, options, value, onChange} = props;
+  return (
+    <div id={id}>{
+      options.map((option, index) => {
+        const checked = value.indexOf(option.value) !== -1;
+        return (
+          <div key={index} className="checkbox">
             <label>
               <input type="checkbox"
-                key={i}
-                id={label}
-                title={label}
-                checked={value.indexOf(label) !== -1}
+                id={`${id}_${option.label}`}
+                checked={checked}
+                disabled={disabled}
                 onChange={(event) => {
-                  this.state.selected[event.target.id] = event.target.checked;
-                  this.setState(this.state);
-
-                  const selectedKeys = Object.keys(this.state.selected).filter((key) => {
-                    return this.state.selected[key];
-                  });
-                  onChange(selectedKeys);
+                  const all = options.map(({value}) => value);
+                  if (event.target.checked) {
+                    onChange(selectValue(option.value, value, all));
+                  } else {
+                    onChange(deselectValue(option.value, value));
+                  }
                 }} />
-              <strong>{label}</strong>
+              <strong>{option.label}</strong>
             </label>
-            </div>
-          );
-        })
-      }</div>
-    );
-  }
+          </div>
+        );
+      })
+    }</div>
+  );
 }
 
 if (process.env.NODE_ENV !== "production") {
