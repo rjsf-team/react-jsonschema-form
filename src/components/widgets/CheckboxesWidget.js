@@ -6,11 +6,7 @@ function selectValue(value, selected, all) {
   const updated = selected.slice(0, at).concat(value, selected.slice(at));
   // As inserting values at predefined index positions doesn't work with empty
   // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a, b) => {
-    const ai = all.findIndex(x => x === a);
-    const bi = all.findIndex(x => x === b);
-    return ai > bi;
-  });
+  return updated.sort((a, b) => all.indexOf(a) > all.indexOf(b));
 }
 
 function deselectValue(value, selected) {
