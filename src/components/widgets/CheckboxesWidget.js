@@ -4,7 +4,7 @@ import React, { PropTypes } from "react";
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
   const updated = selected.slice(0, at).concat(value, selected.slice(at));
-  // As inserting values at predefined index positions doesn't work we empty
+  // As inserting values at predefined index positions doesn't work with empty
   // arrays, we need to reorder the updated selection to match the initial order
   return updated.sort((a, b) => {
     const ai = all.findIndex(x => x === a);
@@ -20,14 +20,14 @@ function deselectValue(value, selected) {
 function CheckboxesWidget(props) {
   const {id, disabled, options, value, onChange} = props;
   return (
-    <div id={id}>{
+    <div className="checkboxes" id={id}>{
       options.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         return (
           <div key={index} className="checkbox">
             <label>
               <input type="checkbox"
-                id={`${id}_${option.label}`}
+                id={`${id}_${index}`}
                 checked={checked}
                 disabled={disabled}
                 onChange={(event) => {
