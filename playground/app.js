@@ -352,14 +352,6 @@ class App extends Component {
         <div className="col-sm-5">
           {!this.state.form ? null :
             <Form
-              id="test-id"
-              className="testclass big"
-              name="test-name"
-              method="put"
-              target="_blank"
-              autocomplete="off"
-              enctype="multipart/form-data"
-              acceptcharset="ISO-8859-1"
               liveValidate={liveValidate}
               schema={schema}
               uiSchema={uiSchema}
