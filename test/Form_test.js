@@ -940,13 +940,11 @@ describe("Form", () => {
       acceptcharset: "ISO-8859-1"
     };
 
-    const comp = renderIntoDocument(
-      <div>
-        <Form {...formProps} />
-      </div>
-    );
+    let node;
 
-    const node = findDOMNode(comp).querySelector("form");
+    beforeEach(() => {
+      node = createFormComponent(formProps).node;
+    });
 
     it("should set attr id of form", () => {
       expect(node.getAttribute("id")).eql(formProps.id);
