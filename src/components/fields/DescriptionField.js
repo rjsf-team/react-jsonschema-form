@@ -8,7 +8,10 @@ function DescriptionField(props) {
 if (process.env.NODE_ENV !== "production") {
   DescriptionField.propTypes = {
     id: PropTypes.string,
-    description: PropTypes.string,
+    description: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.element,
+    ]),
   };
 }
 
