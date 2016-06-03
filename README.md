@@ -407,13 +407,13 @@ Form component supports the following html attributes:
 <Form
   id="edit-form"
   className="form form-wide"
-  name: "awesomeForm"
-  method: "post"
-  target: "_blank"
-  action: "/users/list"
-  autocomplete: "off"
-  enctype: "multipart/form-data"
-  acceptcharset: "ISO-8859-1"
+  name="awesomeForm"
+  method="post"
+  target="_blank"
+  action="/users/list"
+  autocomplete="off"
+  enctype="multipart/form-data"
+  acceptcharset="ISO-8859-1"
   schema={} />
 ```
 
