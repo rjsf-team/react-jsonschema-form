@@ -188,8 +188,6 @@ describe("ArrayField", () => {
         type: "string"
       },
       uniqueItems: true,
-      // XXX investigate why is this
-      value: ["foo", "fuzz"]
     };
 
     describe("Select multiple widget", () => {
