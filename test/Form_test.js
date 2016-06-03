@@ -925,4 +925,61 @@ describe("Form", () => {
       });
     });
   });
+
+  describe("Attributes", () => {
+    const formProps = {
+      schema: {},
+      id: "test-form",
+      className: "test-class other-class",
+      name: "testName",
+      method: "post",
+      target: "_blank",
+      action: "/users/list",
+      autocomplete: "off",
+      enctype: "multipart/form-data",
+      acceptcharset: "ISO-8859-1"
+    };
+
+    let node;
+
+    beforeEach(() => {
+      node = createFormComponent(formProps).node;
+    });
+
+    it("should set attr id of form", () => {
+      expect(node.getAttribute("id")).eql(formProps.id);
+    });
+
+    it("should set attr class of form", () => {
+      expect(node.getAttribute("class")).eql(formProps.className);
+    });
+
+    it("should set attr name of form", () => {
+      expect(node.getAttribute("name")).eql(formProps.name);
+    });
+
+    it("should set attr method of form", () => {
+      expect(node.getAttribute("method")).eql(formProps.method);
+    });
+
+    it("should set attr target of form", () => {
+      expect(node.getAttribute("target")).eql(formProps.target);
+    });
+
+    it("should set attr action of form", () => {
+      expect(node.getAttribute("action")).eql(formProps.action);
+    });
+
+    it("should set attr autoComplete of form", () => {
+      expect(node.getAttribute("autocomplete")).eql(formProps.autocomplete);
+    });
+
+    it("should set attr enctype of form", () => {
+      expect(node.getAttribute("enctype")).eql(formProps.enctype);
+    });
+
+    it("should set attr acceptcharset of form", () => {
+      expect(node.getAttribute("accept-charset")).eql(formProps.acceptcharset);
+    });
+  });
 });
