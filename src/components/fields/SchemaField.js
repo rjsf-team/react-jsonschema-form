@@ -45,6 +45,16 @@ function getLabel(label, required, id) {
   );
 }
 
+function renderHelp(help) {
+  if (!help) {
+    return null;
+  }
+  if (typeof help === "string") {
+    return <p className="help-block">{help}</p>;
+  }
+  return <div className="help-block">{help}</div>;
+}
+
 function ErrorList({errors}) {
   return (
     <div>
@@ -87,7 +97,7 @@ function Wrapper({
       {displayLabel && label ? getLabel(label, required, id) : null}
       {children}
       {isError ? <ErrorList errors={errors} /> : <div/>}
-      {help ? <p className="help-block">{help}</p> : null}
+      {renderHelp(help)}
     </div>
   );
 }

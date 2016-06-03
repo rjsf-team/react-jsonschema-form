@@ -113,7 +113,7 @@ describe("uiSchema", () => {
 
       const {node} = createFormComponent({schema, uiSchema});
 
-      expect(node.querySelector(".help-block").textContent).eql("plop");
+      expect(node.querySelector("p.help-block").textContent).eql("plop");
     });
 
     it("should accept a react element as help", () => {
@@ -122,7 +122,7 @@ describe("uiSchema", () => {
 
       const {node} = createFormComponent({schema, uiSchema});
 
-      expect(node.querySelector(".help-block").textContent).eql("plop");
+      expect(node.querySelector("div.help-block").textContent).eql("plop");
     });
   });
 
