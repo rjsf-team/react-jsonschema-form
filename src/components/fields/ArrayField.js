@@ -306,7 +306,7 @@ class ArrayField extends Component {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly} = this.props;
     return (
-      <div key={index}>
+      <div key={index} className="array-item">
         <div className={removable ? "col-xs-10" : "col-xs-12"}>
           <SchemaField
             schema={itemSchema}
