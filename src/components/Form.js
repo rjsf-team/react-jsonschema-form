@@ -45,7 +45,16 @@ export default class Form extends Component {
         errorSchema: state.errorSchema || {}
       };
     const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
-    return {status: "initial", formData, edit, errors, errorSchema, idSchema};
+    return {
+      status: "initial",
+      schema,
+      uiSchema,
+      idSchema,
+      formData,
+      edit,
+      errors,
+      errorSchema
+    };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -120,8 +129,6 @@ export default class Form extends Component {
   render() {
     const {
       children,
-      schema,
-      uiSchema,
       safeRenderCompletion,
       id,
       className,
@@ -134,7 +141,7 @@ export default class Form extends Component {
       acceptcharset
     } = this.props;
 
-    const {formData, errorSchema, idSchema} = this.state;
+    const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
 

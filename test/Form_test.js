@@ -662,7 +662,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           __errors: [
             "does not meet minimum length of 8",
-            `does not match pattern "\d+"`
+            "does not match pattern \"\d+\""
           ]
         });
       });
@@ -675,7 +675,7 @@ describe("Form", () => {
 
         expect(errors).eql([
           "does not meet minimum length of 8",
-          `does not match pattern "\d+"`
+          "does not match pattern \"\d+\""
         ]);
       });
     });
@@ -923,6 +923,58 @@ describe("Form", () => {
         expect(errors)
           .eql(["does not meet minimum length of 4"]);
       });
+    });
+  });
+
+  describe("Schema and formData updates", () => {
+    // https://github.com/mozilla-services/react-jsonschema-form/issues/231
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {type: "string"},
+        bar: {type: "string"},
+      }
+    };
+
+    it("should replace state when formData have keys removed", () => {
+      const formData = {foo: "foo", bar: "bar"};
+      const {comp, node} = createFormComponent({schema, formData});
+      comp.componentWillReceiveProps({
+        schema: {
+          type: "object",
+          properties: {
+            bar: {type: "string"},
+          }
+        },
+        formData: {bar: "bar"},
+      });
+
+      Simulate.change(node.querySelector("#root_bar"), {
+        target: {value: "baz"}
+      });
+
+      expect(comp.state.formData).eql({bar: "baz"});
+    });
+
+    it("should replace state when formData keys have changed", () => {
+      const formData = {foo: "foo", bar: "bar"};
+      const {comp, node} = createFormComponent({schema, formData});
+      comp.componentWillReceiveProps({
+        schema: {
+          type: "object",
+          properties: {
+            foo: {type: "string"},
+            baz: {type: "string"},
+          }
+        },
+        formData: {foo: "foo", baz: "bar"},
+      });
+
+      Simulate.change(node.querySelector("#root_baz"), {
+        target: {value: "baz"}
+      });
+
+      expect(comp.state.formData).eql({foo: "foo", baz: "baz"});
     });
   });
 

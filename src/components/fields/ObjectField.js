@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from "react";
+import deeper from "deeper";
+
 
 import {
   getDefaultFormState,
@@ -9,6 +11,20 @@ import {
   setState
 } from "../../utils";
 
+
+function objectKeysHaveChanged(formData, state) {
+  // for performance, first check for lengths
+  const newKeys = Object.keys(formData);
+  const oldKeys = Object.keys(state);
+  if (newKeys.length < oldKeys.length) {
+    return true;
+  }
+  // deep check on sorted keys
+  if (!deeper(newKeys.sort(), oldKeys.sort())) {
+    return true;
+  }
+  return false;
+}
 
 class ObjectField extends Component {
   static defaultProps = {
@@ -27,7 +43,16 @@ class ObjectField extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    const state = this.getStateFromProps(nextProps);
+    const {formData} = nextProps;
+    if (formData && objectKeysHaveChanged(formData, this.state)) {
+      // We *need* to replace state entirely here has we have received formData
+      // holding different keys (so with some removed).
+      this.state = state;
+      this.forceUpdate();
+    } else {
+      this.setState(state);
+    }
   }
 
   getStateFromProps(props) {
