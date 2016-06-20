@@ -581,6 +581,38 @@ describe("Form", () => {
             .eql("does not meet minimum length of 8");
         });
       });
+
+      describe("Disable validation onChange event", () => {
+        it("should not update errorSchema when the formData changes", () => {
+          const {comp, node} = createFormComponent({
+            schema,
+            noValidate: true,
+            liveValidate: true
+          });
+
+          Simulate.change(node.querySelector("input[type=text]"), {
+            target: {value: "short"}
+          });
+
+          expect(comp.state.errorSchema).eql({});
+        });
+      });
+
+      describe("Disable validation onSubmit event", () => {
+        it("should not update errorSchema when the formData changes", () => {
+          const {comp, node} = createFormComponent({
+            schema,
+            noValidate: true
+          });
+
+          Simulate.change(node.querySelector("input[type=text]"), {
+            target: {value: "short"}
+          });
+          Simulate.submit(node);
+
+          expect(comp.state.errorSchema).eql({});
+        });
+      });
     });
 
     describe("on form submitted", () => {

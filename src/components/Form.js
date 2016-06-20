@@ -17,6 +17,7 @@ import validateFormData from "../validate";
 export default class Form extends Component {
   static defaultProps = {
     uiSchema: {},
+    noValidate: false,
     liveValidate: false,
     safeRenderCompletion: false,
   }
@@ -36,7 +37,7 @@ export default class Form extends Component {
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof props.formData !== "undefined";
     const liveValidate = props.liveValidate || this.props.liveValidate;
-    const mustValidate = edit && liveValidate;
+    const mustValidate = edit && !props.noValidate && liveValidate;
     const {definitions} = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
     const {errors, errorSchema} = mustValidate ?
@@ -75,7 +76,7 @@ export default class Form extends Component {
   }
 
   onChange = (formData, options={validate: false}) => {
-    const mustValidate = this.props.liveValidate || options.validate;
+    const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
     let state = {status: "editing", formData};
     if (mustValidate) {
       const {errors, errorSchema} = this.validate(formData);
@@ -91,17 +92,22 @@ export default class Form extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     this.setState({status: "submitted"});
-    const {errors, errorSchema} = this.validate(this.state.formData);
-    if (Object.keys(errors).length > 0) {
-      setState(this, {errors, errorSchema}, () => {
-        if (this.props.onError) {
-          this.props.onError(errors);
-        } else {
-          console.error("Form validation failed", errors);
-        }
-      });
-      return;
-    } else if (this.props.onSubmit) {
+
+    if (!this.props.noValidate) {
+      const {errors, errorSchema} = this.validate(this.state.formData);
+      if (Object.keys(errors).length > 0) {
+        setState(this, {errors, errorSchema}, () => {
+          if (this.props.onError) {
+            this.props.onError(errors);
+          } else {
+            console.error("Form validation failed", errors);
+          }
+        });
+        return;
+      }
+    }
+
+    if (this.props.onSubmit) {
       this.props.onSubmit(this.state);
     }
     this.setState({status: "initial", errors: [], errorSchema: {}});
@@ -194,6 +200,7 @@ if (process.env.NODE_ENV !== "production") {
     autocomplete: PropTypes.string,
     enctype: PropTypes.string,
     acceptcharset: PropTypes.string,
+    noValidate: PropTypes.bool,
     liveValidate: PropTypes.bool,
     safeRenderCompletion: PropTypes.bool,
   };

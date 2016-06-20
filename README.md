@@ -757,6 +757,8 @@ You can enable live form data validation by passing a `liveValidate` prop to the
 
 Be warned that this is an expensive strategy, with possibly strong impact on performances.
 
+Completely disable the validation, you can use prop `noValidate` set in `true`.
+
 ### Custom validation
 
 Form data is always validated against the JSON schema.
