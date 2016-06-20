@@ -192,6 +192,10 @@ export function asNumber(value) {
     // user is most likely entering a float.
     return value;
   }
+  if (/\.0$/.test(value)) {
+    // we need to return this as a string here, to allow for input like 3.07
+    return value;
+  }
   const n = Number(value);
   const valid = typeof n === "number" && !Number.isNaN(n);
   return valid ? n : value;
