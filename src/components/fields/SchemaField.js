@@ -149,6 +149,9 @@ function SchemaField(props) {
   if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
     displayLabel = false;
   }
+  if (uiSchema["ui:field"]) {
+    displayLabel = false;
+  }
 
   return (
     <Wrapper
