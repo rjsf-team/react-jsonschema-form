@@ -62,6 +62,24 @@ describe("SchemaField", () => {
 
       expect(node.querySelectorAll("#custom"))
         .to.have.length.of(1);
+
+      expect(node.querySelectorAll("label")).to.have.length.of(0);
+    });
+
+    it("should use provided direct custom component for specific property", () => {
+      const uiSchema = {
+        foo: {"ui:field": MyObject}
+      };
+
+      const {node} = createFormComponent({schema, uiSchema});
+
+      expect(node.querySelectorAll("#custom"))
+        .to.have.length.of(1);
+
+      expect(node.querySelectorAll("input"))
+        .to.have.length.of(1);
+
+      expect(node.querySelectorAll("label")).to.have.length.of(1);
     });
 
     it("should provide custom field the expected fields", () => {
