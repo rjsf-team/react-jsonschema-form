@@ -112,7 +112,7 @@ class ArrayField extends Component {
       const item = items.splice(index, 1)[0];
       items.splice(newIndex, 0, item);
       this.asyncSetState({ items }, { validate: true });
-    }
+    };
   };
 
   onChangeForIndex = (index) => {
@@ -341,7 +341,7 @@ class ArrayField extends Component {
         {
           hasToolbar ?
             <div className="col-xs-2 array-item-remove text-right">
-              <div className="btn-group" style={{ display: 'flex' }}>
+              <div className="btn-group" style={{ display: "flex" }}>
                 {removable ?
                   <button type="button" className="btn btn-danger"
                           style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
