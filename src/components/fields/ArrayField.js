@@ -344,21 +344,21 @@ class ArrayField extends Component {
               <div className="btn-group" style={{ display: 'flex' }}>
                 {removable ?
                   <button type="button" className="btn btn-danger"
-                          style={canMoveUp || canMoveDown ? { paddingLeft: 6, paddingRight: 6 } : {}}
+                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
                           tabIndex="-1"
                           disabled={disabled || readonly}
                           onClick={this.onDropIndexClick(index)}>✖︎</button>
                   : null}
                 { canMoveUp || canMoveDown ?
                   <button type="button" className="btn btn-default"
-                          style={{ paddingLeft: 6, paddingRight: 6 }}
+                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
                           tabIndex="-1"
                           disabled={disabled || readonly || !canMoveUp}
                           onClick={this.onReorderClick(index, index - 1)}>⬆</button>
                   : null}
                 { canMoveUp || canMoveDown ?
                   <button type="button" className="btn btn-default"
-                          style={{ paddingLeft: 6, paddingRight: 6 }}
+                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
                           tabIndex="-1"
                           disabled={disabled || readonly || !canMoveDown}
                           onClick={this.onReorderClick(index, index + 1)}>⬇</button>
