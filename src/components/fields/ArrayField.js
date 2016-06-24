@@ -342,13 +342,6 @@ class ArrayField extends Component {
           hasToolbar ?
             <div className="col-xs-2 array-item-remove text-right">
               <div className="btn-group" style={{ display: "flex" }}>
-                {removable ?
-                  <button type="button" className="btn btn-danger"
-                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
-                          tabIndex="-1"
-                          disabled={disabled || readonly}
-                          onClick={this.onDropIndexClick(index)}>✖︎</button>
-                  : null}
                 { canMoveUp || canMoveDown ?
                   <button type="button" className="btn btn-default"
                           style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
@@ -362,6 +355,13 @@ class ArrayField extends Component {
                           tabIndex="-1"
                           disabled={disabled || readonly || !canMoveDown}
                           onClick={this.onReorderClick(index, index + 1)}>⬇</button>
+                  : null}
+                {removable ?
+                  <button type="button" className="btn btn-danger"
+                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
+                          tabIndex="-1"
+                          disabled={disabled || readonly}
+                          onClick={this.onDropIndexClick(index)}>✖︎</button>
                   : null}
               </div>
             </div>
