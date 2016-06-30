@@ -12,9 +12,10 @@ function RadioWidget({
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
+  const {enumOptions} = options;
   return (
     <div className="field-radio-group">{
-      options.map((option, i) => {
+      enumOptions.map((option, i) => {
         const checked = option.value === value;
         return (
           <div key={i} className={`radio ${disabled ? "disabled" : ""}`}>
@@ -39,7 +40,9 @@ if (process.env.NODE_ENV !== "production") {
   RadioWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    options: PropTypes.array.isRequired,
+    options: PropTypes.shape({
+      enumOptions: PropTypes.array,
+    }).isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,
     required: PropTypes.bool,

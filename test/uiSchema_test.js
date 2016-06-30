@@ -104,6 +104,127 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll(".custom")).to.have.length.of(1);
       });
     });
+
+    describe("options", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          }
+        }
+      };
+
+      const CustomWidget = (props) => {
+        const {value, options} = props;
+        return (
+          <input type="text" className={options.className} value={value} />
+        );
+      };
+
+      describe("direct reference", () => {
+        const uiSchema = {
+          "field": {
+            "ui:widget": {
+              component: CustomWidget,
+              options: {
+                className: "custom"
+              }
+            }
+          }
+        };
+
+        it("should render a custom widget with options", () => {
+          const {node} = createFormComponent({schema, uiSchema});
+
+          expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+        });
+      });
+
+      describe("string reference", () => {
+        const uiSchema = {
+          "field": {
+            "ui:widget": {
+              component: "custom",
+              options: {
+                className: "custom"
+              }
+            }
+          }
+        };
+
+        const widgets = {
+          custom: CustomWidget
+        };
+
+        it("should render a custom widget with options", () => {
+          const {node} = createFormComponent({schema, uiSchema, widgets});
+
+          expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+        });
+      });
+
+      describe("referenced descriptor", () => {
+        const uiSchema = {
+          "field": {
+            "ui:widget": "custom"
+          }
+        };
+
+        const widgets = {
+          custom: {
+            component: CustomWidget,
+            options: {
+              className: "custom"
+            }
+          }
+        };
+
+        it("should render a custom widget with options", () => {
+          const {node} = createFormComponent({schema, uiSchema, widgets});
+
+          expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+        });
+      });
+    });
+
+    describe("enum fields native options", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "enum": ["foo", "bar"]
+          }
+        }
+      };
+
+      const CustomWidget = (props) => {
+        const {value, options} = props;
+        const {enumOptions, className} = options;
+        return (
+          <select className={className}>{
+            enumOptions.map(({label, value}, i) => <option key={i}>{value}</option>)
+          }</select>
+        );
+      };
+
+      const uiSchema = {
+        "field": {
+          "ui:widget": {
+            component: CustomWidget,
+            options: {
+              className: "custom"
+            }
+          }
+        }
+      };
+
+      it("should merge enumOptions with custom options", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+        expect(node.querySelectorAll(".custom option")).to.have.length.of(2);
+      });
+    });
   });
 
   describe("ui:help", () => {

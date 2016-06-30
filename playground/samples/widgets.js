@@ -1,3 +1,6 @@
+import React from "react";
+
+
 module.exports = {
   schema: {
     title: "Widgets",
@@ -67,6 +70,17 @@ module.exports = {
         type: "string",
         title: "A readonly field",
         default: "I am read-only."
+      },
+      widgetOptions: {
+        title: "Custom widget with options",
+        type: "string",
+        default: "I am yellow",
+      },
+      selectWidgetOptions: {
+        title: "Custom select widget with options",
+        type: "string",
+        enum: ["foo", "bar"],
+        enumNames: ["Foo", "Bar"],
       }
     }
   },
@@ -95,7 +109,43 @@ module.exports = {
     },
     readonly: {
       "ui:readonly": true
-    }
+    },
+    widgetOptions: {
+      "ui:widget": {
+        component: ({value, onChange, options}) => {
+          const {backgroundColor} = options;
+          return (
+            <input className="form-control"
+              onChange={(event) => onChange(event.target.value)}
+              style={{backgroundColor}}
+              value={value} />
+          );
+        },
+        options: {
+          backgroundColor: "yellow",
+        }
+      }
+    },
+    selectWidgetOptions: {
+      "ui:widget": {
+        component: ({value, onChange, options}) => {
+          const {enumOptions, backgroundColor} = options;
+          return (
+            <select className="form-control"
+              style={{backgroundColor}}
+              value={value}
+              onChange={(event) => onChange(event.target.value)}>{
+              enumOptions.map(({label, value}, i) => {
+                return <option key={i} value={value}>{label}</option>;
+              })
+            }</select>
+          );
+        },
+        options: {
+          backgroundColor: "pink",
+        }
+      }
+    },
   },
   formData: {
     stringFormats: {

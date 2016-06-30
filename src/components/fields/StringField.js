@@ -38,11 +38,12 @@ function StringField(props) {
     readonly,
   };
   if (Array.isArray(schema.enum)) {
+    const enumOptions = optionsList(schema);
     if (widget) {
-      const Widget = getAlternativeWidget(schema, widget, widgets);
-      return <Widget options={optionsList(schema)} {...commonProps} />;
+      const Widget = getAlternativeWidget(schema, widget, widgets, {enumOptions});
+      return <Widget {...commonProps} />;
     }
-    return <SelectWidget options={optionsList(schema)} {...commonProps} />;
+    return <SelectWidget options={{enumOptions}} {...commonProps} />;
   }
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
@@ -61,7 +62,10 @@ if (process.env.NODE_ENV !== "production") {
       React.PropTypes.number,
     ]),
     registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(PropTypes.func).isRequired,
+      widgets: PropTypes.objectOf(PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.object,
+      ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
     }),
