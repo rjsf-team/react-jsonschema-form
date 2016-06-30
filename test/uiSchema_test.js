@@ -116,12 +116,9 @@ describe("uiSchema", () => {
       };
 
       const CustomWidget = (props) => {
-        const {value, onChange, options} = props;
+        const {value, options} = props;
         return (
-          <input type="text"
-            className={options.className}
-            value={value}
-            onChange={(event) => onChange(event.target.value)} />
+          <input type="text" className={options.className} value={value} />
         );
       };
 
@@ -188,6 +185,44 @@ describe("uiSchema", () => {
 
           expect(node.querySelectorAll(".custom")).to.have.length.of(1);
         });
+      });
+    });
+
+    describe("enum fields native options", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "enum": ["foo", "bar"]
+          }
+        }
+      };
+
+      const CustomWidget = (props) => {
+        const {value, options} = props;
+        const {enumOptions, className} = options;
+        return (
+          <select className={className}>{
+            enumOptions.map(({label, value}, i) => <option key={i}>{value}</option>)
+          }</select>
+        );
+      };
+
+      const uiSchema = {
+        "field": {
+          "ui:widget": {
+            component: CustomWidget,
+            options: {
+              className: "custom"
+            }
+          }
+        }
+      };
+
+      it("should merge enumOptions with custom options", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+        expect(node.querySelectorAll(".custom option")).to.have.length.of(2);
       });
     });
   });

@@ -28,6 +28,7 @@ function SelectWidget({
   multiple,
   onChange
 }) {
+  const {enumOptions} = options;
   return (
     <select
       id={id}
@@ -49,7 +50,7 @@ function SelectWidget({
 
         onChange(processValue(schema.type, newValue));
       }}>{
-      options.map(({value, label}, i) => {
+      enumOptions.map(({value, label}, i) => {
         return <option key={i} value={value}>{label}</option>;
       })
     }</select>
@@ -60,7 +61,9 @@ if (process.env.NODE_ENV !== "production") {
   SelectWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    options: PropTypes.array.isRequired,
+    options: PropTypes.shape({
+      enumOptions: PropTypes.array,
+    }).isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,
     required: PropTypes.bool,

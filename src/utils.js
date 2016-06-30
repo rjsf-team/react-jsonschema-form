@@ -109,7 +109,8 @@ export function getAlternativeWidget(
 
   if (isObject(widget)) {
     const {component, options} = widget;
-    return getAlternativeWidget(schema, component, registeredWidgets, options);
+    const mergedOptions = {...options, ...widgetOptions};
+    return getAlternativeWidget(schema, component, registeredWidgets, mergedOptions);
   }
 
   if (typeof widget !== "string") {
@@ -126,11 +127,13 @@ export function getAlternativeWidget(
   }
 
   if (altWidgetMap[type].hasOwnProperty(widget)) {
-    return altWidgetMap[type][widget];
+    const altWidget = altWidgetMap[type][widget];
+    return getAlternativeWidget(schema, altWidget, registeredWidgets, widgetOptions);
   }
 
   if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
-    return stringFormatWidgets[format];
+    const stringFormatWidget = stringFormatWidgets[format];
+    return getAlternativeWidget(schema, stringFormatWidget, registeredWidgets, widgetOptions);
   }
 
   const info = type === "string" && format ? `/${format}` : "";

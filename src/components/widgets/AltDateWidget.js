@@ -24,7 +24,7 @@ function DateElement(props) {
       schema={{type: "integer"}}
       id={id}
       className="form-control"
-      options={rangeOptions(type, range[0], range[1])}
+      options={{enumOptions: rangeOptions(type, range[0], range[1])}}
       value={value}
       disabled={disabled}
       readonly={readonly}

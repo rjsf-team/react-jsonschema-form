@@ -198,7 +198,7 @@ class ArrayField extends Component {
         id={idSchema && idSchema.id}
         multiple
         onChange={this.onSelectChange}
-        options={optionsList(itemsSchema)}
+        options={{enumOptions: optionsList(itemsSchema)}}
         schema={schema}
         placeholder={title}
         value={items}
