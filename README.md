@@ -546,6 +546,20 @@ const uiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} />);
 ```
 
+The following props are passed to custom widget components:
+
+- `schema`: The JSONSchema subschema object for this field;
+- `value`: The current value for this field;
+- `required`: The required status of this field;
+- `disabled`: `true` if the widget is disabled;
+- `readonly`: `true` if the widget is read-only;
+- `required`: The required status of this field;
+- `onChange`: The value change event handler; call it with the new value everytime it changes;
+- `placeholder`: The placeholder value, if any;
+- `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
+
+> Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
+
 #### Custom component registration
 
 Alternatively, you can register them all at once by passing the `widgets` prop to the `Form` component, and reference their identifier from the `uiSchema`:
@@ -576,17 +590,6 @@ render(<Form
 ```
 
 This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
-
-The following props are passed to the widget component:
-
-- `schema`: The JSONSchema subschema object for this field;
-- `value`: The current value for this field;
-- `required`: The required status of this field;
-- `onChange`: The value change event handler; call it with the new value everytime it changes;
-- `placeholder`: The placeholder value, if any;
-- `options`: The list of options to pass as props to the custom widget component (see next section).
-
-> Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
 
 #### Custom widget options
 
