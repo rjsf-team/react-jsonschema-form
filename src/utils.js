@@ -90,26 +90,49 @@ export function defaultFieldValue(formData, schema) {
   return typeof formData === "undefined" ? schema.default : formData;
 }
 
-export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
+export function getAlternativeWidget(
+  schema,
+  widget,
+  registeredWidgets={},
+  widgetOptions={}
+) {
   const {type, format} = schema;
-  if (typeof widget === "function") {
+
+  function setDefaultOptions(widget) {
+    widget.defaultProps = {...widget.defaultProps, options: widgetOptions};
     return widget;
   }
+
+  if (typeof widget === "function") {
+    return setDefaultOptions(widget);
+  }
+
+  if (isObject(widget)) {
+    const {component, options} = widget;
+    return getAlternativeWidget(schema, component, registeredWidgets, options);
+  }
+
   if (typeof widget !== "string") {
     throw new Error(`Unsupported widget definition: ${typeof widget}`);
   }
-  if (widget in registeredWidgets) {
-    return registeredWidgets[widget];
+
+  if (registeredWidgets.hasOwnProperty(widget)) {
+    const registeredWidget = registeredWidgets[widget];
+    return getAlternativeWidget(schema, registeredWidget, registeredWidgets, widgetOptions);
   }
+
   if (!altWidgetMap.hasOwnProperty(type)) {
     throw new Error(`No alternative widget for type ${type}`);
   }
+
   if (altWidgetMap[type].hasOwnProperty(widget)) {
     return altWidgetMap[type][widget];
   }
+
   if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
     return stringFormatWidgets[format];
   }
+
   const info = type === "string" && format ? `/${format}` : "";
   throw new Error(`No alternative widget "${widget}" for type ${type}${info}`);
 }

@@ -186,7 +186,10 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     formData: PropTypes.any,
-    widgets: PropTypes.objectOf(PropTypes.func),
+    widgets: PropTypes.objectOf(PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.object,
+    ])),
     fields: PropTypes.objectOf(PropTypes.func),
     onChange: PropTypes.func,
     onError: PropTypes.func,

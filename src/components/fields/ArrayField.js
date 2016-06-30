@@ -359,7 +359,10 @@ if (process.env.NODE_ENV !== "production") {
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(PropTypes.func).isRequired,
+      widgets: PropTypes.objectOf(PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.object,
+      ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
     })
