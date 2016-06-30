@@ -40,6 +40,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
      - [Custom widget components](#custom-widget-components)
+        - [Custom component registration](#custom-component-registration)
+        - [Custom widget options](#custom-widget-options)
      - [Custom field components](#custom-field-components)
         - [Field props](#field-props)
         - [The registry object](#the-registry-object)
@@ -544,6 +546,8 @@ const uiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} />);
 ```
 
+#### Custom component registration
+
 Alternatively, you can register them all at once by passing the `widgets` prop to the `Form` component, and reference their identifier from the `uiSchema`:
 
 ```jsx
@@ -580,7 +584,37 @@ The following props are passed to the widget component:
 - `required`: The required status of this field;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
 - `placeholder`: The placeholder value, if any;
-- `options`: The list of options for `enum` fields;
+- `options`: The list of options to pass as props to the custom widget component (see next section).
+
+> Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
+
+#### Custom widget options
+
+If you need to pass options to your custom widget, change your `ui:widget` value to be an object having the following structure:
+
+```jsx
+const schema = {
+  type: "string"
+};
+
+function MyCustomWidget(props) {
+  const {options} = props;
+  return <input style={{options.backgroundColor}} />;
+}
+
+const uiSchema = {
+  "ui:widget": {
+    options: {
+      backgroundColor: "yellow",
+    },
+    component: MyCustomWidget
+  }
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} />);
+```
+
+> Note: This also applies to [registered custom components](#custom-component-registration).
 
 ### Custom field components
 
