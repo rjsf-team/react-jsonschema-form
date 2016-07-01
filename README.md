@@ -182,7 +182,7 @@ const schema = {
         properties: {
           description: {
             "type": "string"
-          },
+          }
         }
       }
     }
