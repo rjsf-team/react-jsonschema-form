@@ -553,7 +553,6 @@ The following props are passed to custom widget components:
 - `required`: The required status of this field;
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
-- `required`: The required status of this field;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
 - `placeholder`: The placeholder value, if any;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
