@@ -2,10 +2,19 @@ import React, { PropTypes } from "react";
 
 
 function BaseInput(props) {
-  const {value, readonly, onChange} = props;
+  // Note: since React 15.2.0 we can't forward unknown element attributes, so we
+  // exclude the "options" and "schema" ones here.
+  const {
+    value,
+    readonly,
+    onChange,
+    options,  // eslint-disable-line
+    schema,   // eslint-disable-line
+    ...inputProps
+  } = props;
   return (
     <input
-      {...props}
+      {...inputProps}
       className="form-control"
       readOnly={readonly}
       value={typeof value === "undefined" ? "" : value}
