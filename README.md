@@ -66,7 +66,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
 
 ## Installation
 
-Requires React 0.14+.
+Requires React 15.0.0+.
 
 
 ### As a npm-based project dependency
