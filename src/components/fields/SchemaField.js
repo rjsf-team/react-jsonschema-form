@@ -106,7 +106,7 @@ if (process.env.NODE_ENV !== "production") {
   Wrapper.propTypes = {
     type: PropTypes.string.isRequired,
     id: PropTypes.string,
-    classNames: React.PropTypes.string,
+    classNames: PropTypes.string,
     label: PropTypes.string,
     hidden: PropTypes.bool,
     help: PropTypes.oneOfType([
@@ -115,7 +115,7 @@ if (process.env.NODE_ENV !== "production") {
     ]),
     required: PropTypes.bool,
     displayLabel: PropTypes.bool,
-    children: React.PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired,
   };
 }
 
