@@ -104,7 +104,7 @@ describe("ArrayField", () => {
 
     it("should remove a field from the list", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
-      const dropBtns = node.querySelectorAll(".array-item-remove button");
+      const dropBtns = node.querySelectorAll(".array-item-remove");
 
       Simulate.click(dropBtns[0]);
 
@@ -132,7 +132,7 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll(".has-error .error-detail"))
         .to.have.length.of(1);
 
-      const dropBtns = node.querySelectorAll(".array-item-remove button");
+      const dropBtns = node.querySelectorAll(".array-item-remove");
 
       Simulate.click(dropBtns[0]);
 
@@ -529,14 +529,14 @@ describe("ArrayField", () => {
       });
 
       it("should remove array items when clicking remove buttons", () => {
-        let dropBtns = node.querySelectorAll(".array-item-remove button");
+        let dropBtns = node.querySelectorAll(".array-item-remove");
 
         Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
         expect(comp.state.formData).eql([1, 2, "baz"]);
 
-        dropBtns = node.querySelectorAll(".array-item-remove button");
+        dropBtns = node.querySelectorAll(".array-item-remove");
         Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.be.empty;
