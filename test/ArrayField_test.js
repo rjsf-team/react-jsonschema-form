@@ -102,6 +102,61 @@ describe("ArrayField", () => {
       expect(inputs[1].value).eql("bar");
     });
 
+    it("should't have reorder buttons when list length <= 1", () => {
+      const {node} = createFormComponent({schema, formData: ["foo"]});
+
+      expect(node.querySelector(".array-item-move-up"))
+        .eql(null);
+      expect(node.querySelector(".array-item-move-down"))
+        .eql(null);
+    });
+
+    it("should have reorder buttons when list length >= 2", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+
+      expect(node.querySelector(".array-item-move-up"))
+        .not.eql(null);
+      expect(node.querySelector(".array-item-move-down"))
+        .not.eql(null);
+    });
+
+    it("should move down a field from the list", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar", "baz"]});
+      const moveDownBtns = node.querySelectorAll(".array-item-move-down");
+
+      Simulate.click(moveDownBtns[0]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+      expect(inputs).to.have.length.of(3);
+      expect(inputs[0].value).eql("bar");
+      expect(inputs[1].value).eql("foo");
+      expect(inputs[2].value).eql("baz");
+    });
+
+    it("should move up a field from the list", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar", "baz"]});
+      const moveUpBtns = node.querySelectorAll(".array-item-move-up");
+
+      Simulate.click(moveUpBtns[2]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+      expect(inputs).to.have.length.of(3);
+      expect(inputs[0].value).eql("foo");
+      expect(inputs[1].value).eql("baz");
+      expect(inputs[2].value).eql("bar");
+    });
+
+    it("should disable move buttons on the ends of the list", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+      const moveUpBtns = node.querySelectorAll(".array-item-move-up");
+      const moveDownBtns = node.querySelectorAll(".array-item-move-down");
+
+      expect(moveUpBtns[0].disabled).eql(true);
+      expect(moveDownBtns[0].disabled).eql(false);
+      expect(moveUpBtns[1].disabled).eql(false);
+      expect(moveDownBtns[1].disabled).eql(true);
+    });
+
     it("should remove a field from the list", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
       const dropBtns = node.querySelectorAll(".array-item-remove");
