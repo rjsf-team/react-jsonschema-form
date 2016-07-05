@@ -980,7 +980,7 @@ describe("uiSchema", () => {
         });
 
         it("should disable the Delete button", () => {
-          expect(node.querySelector(".array-item-remove button").disabled)
+          expect(node.querySelector(".array-item-remove").disabled)
             .eql(true);
         });
       });
@@ -1152,7 +1152,7 @@ describe("uiSchema", () => {
         });
 
         it("should disable the Delete button", () => {
-          expect(node.querySelector(".array-item-remove button").disabled)
+          expect(node.querySelector(".array-item-remove").disabled)
             .eql(true);
         });
       });

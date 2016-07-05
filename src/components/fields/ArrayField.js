@@ -105,6 +105,16 @@ class ArrayField extends Component {
     };
   };
 
+  onReorderClick = (index, newIndex) => {
+    return (event) => {
+      event.preventDefault();
+      const items = this.state.items.slice(0);
+      const item = items.splice(index, 1)[0];
+      items.splice(newIndex, 0, item);
+      this.asyncSetState({ items }, { validate: true });
+    };
+  };
+
   onChangeForIndex = (index) => {
     return (value) => {
       this.asyncSetState({
@@ -170,6 +180,8 @@ class ArrayField extends Component {
             const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
             return this.renderArrayFieldItem({
               index,
+              canMoveUp: index > 0,
+              canMoveDown: index < items.length - 1,
               itemSchema: itemsSchema,
               itemIdSchema,
               itemErrorSchema,
@@ -277,6 +289,8 @@ class ArrayField extends Component {
             return this.renderArrayFieldItem({
               index,
               removable: additional,
+              canMoveUp: index >= itemSchemas.length + 1,
+              canMoveDown: additional && index < items.length - 1,
               itemSchema,
               itemData: item,
               itemUiSchema,
@@ -297,6 +311,8 @@ class ArrayField extends Component {
   renderArrayFieldItem({
     index,
     removable=true,
+    canMoveUp=true,
+    canMoveDown=true,
     itemSchema,
     itemData,
     itemUiSchema,
@@ -305,9 +321,11 @@ class ArrayField extends Component {
   }) {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly} = this.props;
+    const hasToolbar = removable || canMoveUp || canMoveDown;
+
     return (
       <div key={index} className="array-item">
-        <div className={removable ? "col-xs-10" : "col-xs-12"}>
+        <div className={hasToolbar ? "col-xs-10" : "col-xs-12"}>
           <SchemaField
             schema={itemSchema}
             uiSchema={itemUiSchema}
@@ -321,12 +339,31 @@ class ArrayField extends Component {
             readonly={this.props.readonly} />
         </div>
         {
-          removable ?
-            <div className="col-xs-2 array-item-remove text-right">
-              <button type="button" className="btn btn-danger col-xs-12"
-                      tabIndex="-1"
-                      disabled={disabled || readonly}
-                      onClick={this.onDropIndexClick(index)}>Delete</button>
+          hasToolbar ?
+            <div className="col-xs-2 array-item-toolbox text-right">
+              <div className="btn-group" style={{ display: "flex" }}>
+                { canMoveUp || canMoveDown ?
+                  <button type="button" className="btn btn-default array-item-move-up"
+                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
+                          tabIndex="-1"
+                          disabled={disabled || readonly || !canMoveUp}
+                          onClick={this.onReorderClick(index, index - 1)}>⬆</button>
+                  : null}
+                { canMoveUp || canMoveDown ?
+                  <button type="button" className="btn btn-default array-item-move-down"
+                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
+                          tabIndex="-1"
+                          disabled={disabled || readonly || !canMoveDown}
+                          onClick={this.onReorderClick(index, index + 1)}>⬇</button>
+                  : null}
+                {removable ?
+                  <button type="button" className="btn btn-danger array-item-remove"
+                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
+                          tabIndex="-1"
+                          disabled={disabled || readonly}
+                          onClick={this.onDropIndexClick(index)}>✖︎</button>
+                  : null}
+              </div>
             </div>
           : null
         }
@@ -341,7 +378,7 @@ function AddButton({onClick, disabled}) {
       <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
         <button type="button" className="btn btn-info col-xs-12"
                 tabIndex="-1" onClick={onClick}
-                disabled={disabled}>Add</button>
+                disabled={disabled} style={{fontWeight: 'bold' }}>＋</button>
       </p>
     </div>
   );
