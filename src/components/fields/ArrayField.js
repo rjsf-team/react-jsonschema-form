@@ -111,7 +111,7 @@ class ArrayField extends Component {
       const items = this.state.items.slice(0);
       const item = items.splice(index, 1)[0];
       items.splice(newIndex, 0, item);
-      this.asyncSetState({ items }, { validate: true });
+      this.asyncSetState({items}, {validate: true});
     };
   };
 
@@ -341,24 +341,24 @@ class ArrayField extends Component {
         {
           hasToolbar ?
             <div className="col-xs-2 array-item-toolbox text-right">
-              <div className="btn-group" style={{ display: "flex" }}>
-                { canMoveUp || canMoveDown ?
+              <div className="btn-group" style={{display: "flex"}}>
+                {canMoveUp || canMoveDown ?
                   <button type="button" className="btn btn-default array-item-move-up"
-                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
+                          style={{flex: 1, paddingLeft: 6, paddingRight: 6}}
                           tabIndex="-1"
                           disabled={disabled || readonly || !canMoveUp}
                           onClick={this.onReorderClick(index, index - 1)}>⬆</button>
                   : null}
-                { canMoveUp || canMoveDown ?
+                {canMoveUp || canMoveDown ?
                   <button type="button" className="btn btn-default array-item-move-down"
-                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
+                          style={{flex: 1, paddingLeft: 6, paddingRight: 6}}
                           tabIndex="-1"
                           disabled={disabled || readonly || !canMoveDown}
                           onClick={this.onReorderClick(index, index + 1)}>⬇</button>
                   : null}
                 {removable ?
                   <button type="button" className="btn btn-danger array-item-remove"
-                          style={{ flex: 1, paddingLeft: 6, paddingRight: 6 }}
+                          style={{flex: 1, paddingLeft: 6, paddingRight: 6}}
                           tabIndex="-1"
                           disabled={disabled || readonly}
                           onClick={this.onDropIndexClick(index)}>✖︎</button>
@@ -378,7 +378,7 @@ function AddButton({onClick, disabled}) {
       <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
         <button type="button" className="btn btn-info col-xs-12"
                 tabIndex="-1" onClick={onClick}
-                disabled={disabled} style={{fontWeight: 'bold' }}>＋</button>
+                disabled={disabled} style={{fontWeight: "bold"}}>＋</button>
       </p>
     </div>
   );
