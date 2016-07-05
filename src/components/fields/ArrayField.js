@@ -108,10 +108,18 @@ class ArrayField extends Component {
   onReorderClick = (index, newIndex) => {
     return (event) => {
       event.preventDefault();
-      const items = this.state.items.slice(0);
-      const item = items.splice(index, 1)[0];
-      items.splice(newIndex, 0, item);
-      this.asyncSetState({items}, {validate: true});
+      const {items} = this.state;
+      this.asyncSetState({
+        items: items.map((item, i) => {
+          if (i === newIndex) {
+            return items[index];
+          } else if (i === index) {
+            return items[newIndex];
+          } else {
+            return item;
+          }
+        })
+      }, {validate: true});
     };
   };
 
