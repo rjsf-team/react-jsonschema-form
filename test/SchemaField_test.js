@@ -146,7 +146,7 @@ describe("SchemaField", () => {
         bar: {type: "string"}
       }
     };
-    
+
     it("should render description if available from the schema", () => {
       const {node} = createFormComponent({schema});
       expect(node.querySelectorAll("div#root_foo__description"))
@@ -155,7 +155,7 @@ describe("SchemaField", () => {
 
     it("should render description if available from a referenced schema", () => {
       // Overriding.
-      const schema = {
+      const schemaWithReference = {
         type: "object",
         properties: {
           foo: {$ref: "#/definitions/foo"},
@@ -168,7 +168,7 @@ describe("SchemaField", () => {
           }
         }
       };
-      const {node} = createFormComponent({schema});
+      const {node} = createFormComponent({schema: schemaWithReference});
       const matches = node.querySelectorAll("div#root_foo__description");
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.equal("A Foo field");
