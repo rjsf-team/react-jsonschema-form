@@ -162,7 +162,7 @@ function SchemaField(props) {
       required={required}
       type={schema.type}
       displayLabel={displayLabel}
-      id={idSchema.id}
+      id={idSchema.$id}
       classNames={uiSchema.classNames}>
       <FieldComponent {...props}
         schema={schema}

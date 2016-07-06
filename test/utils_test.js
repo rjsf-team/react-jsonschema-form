@@ -464,7 +464,7 @@ describe("utils", () => {
     it("should return an idSchema for root field", () => {
       const schema = {type: "string"};
 
-      expect(toIdSchema(schema)).eql({id: "root"});
+      expect(toIdSchema(schema)).eql({$id: "root"});
     });
 
     it("should return an idSchema for nested objects", () => {
@@ -481,10 +481,10 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema)).eql({
-        id: "root",
+        $id: "root",
         level1: {
-          id: "root_level1",
-          level2: {id: "root_level1_level2"}
+          $id: "root_level1",
+          level2: {$id: "root_level1_level2"}
         }
       });
     });
@@ -511,17 +511,41 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema)).eql({
-        id: "root",
+        $id: "root",
         level1a: {
-          id: "root_level1a",
-          level1a2a: {id: "root_level1a_level1a2a"},
-          level1a2b: {id: "root_level1a_level1a2b"},
+          $id: "root_level1a",
+          level1a2a: {$id: "root_level1a_level1a2a"},
+          level1a2b: {$id: "root_level1a_level1a2b"},
         },
         level1b: {
-          id: "root_level1b",
-          level1b2a: {id: "root_level1b_level1b2a"},
-          level1b2b: {id: "root_level1b_level1b2b"},
+          $id: "root_level1b",
+          level1b2a: {$id: "root_level1b_level1b2a"},
+          level1b2b: {$id: "root_level1b_level1b2b"},
         },
+      });
+    });
+
+    it("schema with an id property must not corrupt the idSchema", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          metadata: {
+            type: "object",
+            properties: {
+              id: {
+                type: "string"
+              }
+            },
+            required: [ "id" ]
+          }
+        }
+      };
+      expect(toIdSchema(schema)).eql({
+        $id: "root",
+        metadata: {
+          $id: "root_metadata",
+          id: { $id: "root_metadata_id" }
+        }
       });
     });
 
@@ -537,8 +561,8 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema)).eql({
-        id: "root",
-        foo: {id: "root_foo"}
+        $id: "root",
+        foo: {$id: "root_foo"}
       });
     });
 
@@ -557,9 +581,9 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions)).eql({
-        id: "root",
-        foo: {id: "root_foo"},
-        bar: {id: "root_bar"}
+        $id: "root",
+        foo: {$id: "root_foo"},
+        bar: {$id: "root_bar"}
       });
     });
   });

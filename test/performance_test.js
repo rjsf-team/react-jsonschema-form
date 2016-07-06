@@ -95,7 +95,7 @@ describe("Rendering performance optimizations", () => {
         foo: {type: "string"}
       }
     };
-    const idSchema = {id: "root", foo: {id: "root_plop"}};
+    const idSchema = {$id: "root", foo: {$id: "root_plop"}};
 
     it("should not render if next props are equivalent", () => {
       const {comp} = createComponent(ObjectField, {

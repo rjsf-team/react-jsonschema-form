@@ -36,7 +36,7 @@ function BooleanField(props) {
   const widget = uiSchema["ui:widget"];
   const commonProps = {
     schema,
-    id: idSchema && idSchema.id,
+    id: idSchema && idSchema.$id,
     onChange,
     label: title || name,
     placeholder: description,
