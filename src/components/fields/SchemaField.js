@@ -12,6 +12,7 @@ import NumberField from "./NumberField";
 import ObjectField from "./ObjectField";
 import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
+import DescriptionField from "./DescriptionField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -73,6 +74,7 @@ function Wrapper({
     classNames,
     errorSchema,
     label,
+    description,
     hidden,
     help,
     required,
@@ -95,6 +97,7 @@ function Wrapper({
   return (
     <div className={classList}>
       {displayLabel && label ? getLabel(label, required, id) : null}
+      {description ? <DescriptionField id={`${id}__description`} description={description} /> : null}
       {children}
       {isError ? <ErrorList errors={errors} /> : <div/>}
       {renderHelp(help)}
@@ -108,6 +111,7 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string,
     classNames: PropTypes.string,
     label: PropTypes.string,
+    description: PropTypes.string,
     hidden: PropTypes.bool,
     help: PropTypes.oneOfType([
       PropTypes.string,
@@ -156,6 +160,7 @@ function SchemaField(props) {
   return (
     <Wrapper
       label={props.schema.title || schema.title || name}
+      description={props.schema.description || schema.description}
       errorSchema={errorSchema}
       hidden={uiSchema["ui:widget"] === "hidden"}
       help={uiSchema["ui:help"]}

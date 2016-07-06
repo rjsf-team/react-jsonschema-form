@@ -137,4 +137,46 @@ describe("SchemaField", () => {
         .to.have.length.of(1);
     });
   });
+
+  describe("description support", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {type: "string", description:"A Foo field"},
+        bar: {type: "string"}
+      }
+    };
+    it("should render description if available from the schema", () => {
+      const {node} = createFormComponent({schema});
+      expect(node.querySelectorAll("div#root_foo__description"))
+        .to.have.length.of(1);
+    });
+
+    it("should render description if available from a referenced schema", () => {
+      // Overriding.
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {$ref: "#/definitions/foo"},
+          bar: {type: "string"}
+        },
+        definitions: {
+          foo: {
+            type: "string",
+            description: "A Foo field"
+          }
+        }
+      };
+      const {node} = createFormComponent({schema});
+      const matches = node.querySelectorAll("div#root_foo__description");
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.equal("A Foo field");
+    });
+
+    it("should not render description if not available from schema", () => {
+      const {node} = createFormComponent({schema});
+      expect(node.querySelectorAll("div#root_bar__description"))
+        .to.have.length.of(0);
+    });
+  });
 });
