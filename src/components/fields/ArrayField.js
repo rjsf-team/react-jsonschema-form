@@ -22,7 +22,7 @@ function ArrayFieldTitle({TitleField, idSchema, title, required}) {
   if (!title) {
     return null;
   }
-  const id = `${idSchema.id}__title`;
+  const id = `${idSchema.$id}__title`;
   return <TitleField id={id} title={title} required={required} />;
 }
 
@@ -30,7 +30,7 @@ function ArrayFieldDescription({DescriptionField, idSchema, description}) {
   if (!description) {
     return null;
   }
-  const id = `${idSchema.id}__description`;
+  const id = `${idSchema.$id}__description`;
   return <DescriptionField id={id} description={description} />;
 }
 
@@ -185,7 +185,7 @@ class ArrayField extends Component {
         <div className="row array-item-list">{
           items.map((item, index) => {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-            const itemIdPrefix = idSchema.id + "_" + index;
+            const itemIdPrefix = idSchema.$id + "_" + index;
             const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
             return this.renderArrayFieldItem({
               index,
@@ -216,7 +216,7 @@ class ArrayField extends Component {
     const Widget = (multipleCheckboxes) ? CheckboxesWidget : SelectWidget;
     return (
       <Widget
-        id={idSchema && idSchema.id}
+        id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
         options={{enumOptions: optionsList(itemsSchema)}}
@@ -235,7 +235,7 @@ class ArrayField extends Component {
     const {items} = this.state;
     return (
       <FileWidget
-        id={idSchema && idSchema.id}
+        id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
         schema={schema}
@@ -287,7 +287,7 @@ class ArrayField extends Component {
             const additional = index >= itemSchemas.length;
             const itemSchema = additional ?
               additionalSchema : itemSchemas[index];
-            const itemIdPrefix = idSchema.id + "_" + index;
+            const itemIdPrefix = idSchema.$id + "_" + index;
             const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
             const itemUiSchema = additional ?
               uiSchema.additionalItems || {} :

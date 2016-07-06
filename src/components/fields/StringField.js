@@ -28,7 +28,7 @@ function StringField(props) {
   const widget = uiSchema["ui:widget"] || schema.format;
   const commonProps = {
     schema,
-    id: idSchema && idSchema.id,
+    id: idSchema && idSchema.$id,
     label: title || name,
     placeholder: description,
     onChange,

@@ -114,12 +114,12 @@ class ObjectField extends Component {
     return (
       <fieldset>
         {title ? <TitleField
-                   id={`${idSchema.id}__title`}
+                   id={`${idSchema.$id}__title`}
                    title={title}
                    required={required} /> : null}
         {schema.description ?
           <DescriptionField
-            id={`${idSchema.id}__description`}
+            id={`${idSchema.$id}__description`}
             description={schema.description}
           /> : null}
         {
