@@ -878,34 +878,6 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 * `additionalItems` keyword for arrays
     This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
 
-## Troubleshooting
-
-### Build error wrt missing "buffertools" module
-
-> Build error: Cannot find module 'buffertools' from  .../node_modules/react-jsonschema-form/node_modules/deeper
-
-This is [an issue](https://github.com/othiym23/node-deeper/issues/3#issuecomment-206232232) in the way `deeper` handles the optional `buffertools` dependency (by using try/catch around a require('buffertools')).
-
-If you use **webpack** you can do the following to ignore this import:
-
-```javascript
-module.exports = {
-  entry: "app",
-  output: { ... },
-  plugins: [
-    new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
-    ...
-  ]
-}
-```
-
-If you are using **browserify** instead, do the following:
-
-```javascript
-    var bundler = browserify({ ... yourconfig ... }).ignore('buffertools')
-```
-
-
 ## Contributing
 
 ### Development server
