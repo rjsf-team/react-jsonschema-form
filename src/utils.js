@@ -296,8 +296,20 @@ export function retrieveSchema(schema, definitions={}) {
   return {...$refSchema, ...localSchema};
 }
 
-export function shouldRender(comp, nextProps, nextState) {
-  return !deeper(comp.props, nextProps) || !deeper(comp.state, nextState);
+function _removeFunctionsFromObj(obj) {
+  var newObj = {};
+  for (var key in obj) {
+    if (typeof obj[key] !== 'function') {
+      newObj[key] = obj[key];
+    }
+  }
+  return newObj;
+}
+
+export function shouldRender(comp, _nextProps, nextState) {
+  var props = _removeFunctionsFromObj(comp.props);
+  var nextProps = _removeFunctionsFromObj(_nextProps);
+  return !deeper(props, nextProps) || !deeper(comp.state, nextState);
 }
 
 export function toIdSchema(schema, id, definitions) {
