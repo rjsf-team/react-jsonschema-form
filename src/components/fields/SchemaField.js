@@ -97,7 +97,8 @@ function Wrapper({
   return (
     <div className={classList}>
       {displayLabel && label ? getLabel(label, required, id) : null}
-      {description ? <DescriptionField id={`${id}__description`} description={description} /> : null}
+      {displayLabel && description ?
+        <DescriptionField id={`${id}__description`} description={description} /> : null}
       {children}
       {isError ? <ErrorList errors={errors} /> : <div/>}
       {renderHelp(help)}

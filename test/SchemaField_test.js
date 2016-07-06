@@ -149,7 +149,8 @@ describe("SchemaField", () => {
 
     it("should render description if available from the schema", () => {
       const {node} = createFormComponent({schema});
-      expect(node.querySelectorAll("div#root_foo__description"))
+
+      expect(node.querySelectorAll("#root_foo__description"))
         .to.have.length.of(1);
     });
 
@@ -169,14 +170,16 @@ describe("SchemaField", () => {
         }
       };
       const {node} = createFormComponent({schema: schemaWithReference});
-      const matches = node.querySelectorAll("div#root_foo__description");
+
+      const matches = node.querySelectorAll("#root_foo__description");
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.equal("A Foo field");
     });
 
     it("should not render description if not available from schema", () => {
       const {node} = createFormComponent({schema});
-      expect(node.querySelectorAll("div#root_bar__description"))
+
+      expect(node.querySelectorAll("#root_bar__description"))
         .to.have.length.of(0);
     });
   });
