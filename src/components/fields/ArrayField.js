@@ -108,6 +108,7 @@ class ArrayField extends Component {
   onReorderClick = (index, newIndex) => {
     return (event) => {
       event.preventDefault();
+      event.target.blur();
       const {items} = this.state;
       this.asyncSetState({
         items: items.map((item, i) => {
@@ -330,6 +331,7 @@ class ArrayField extends Component {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly} = this.props;
     const hasToolbar = removable || canMoveUp || canMoveDown;
+    const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
     return (
       <div key={index} className="array-item">
@@ -352,24 +354,24 @@ class ArrayField extends Component {
               <div className="btn-group" style={{display: "flex"}}>
                 {canMoveUp || canMoveDown ?
                   <button type="button" className="btn btn-default array-item-move-up"
-                          style={{flex: 1, paddingLeft: 6, paddingRight: 6}}
+                          style={btnStyle}
                           tabIndex="-1"
                           disabled={disabled || readonly || !canMoveUp}
                           onClick={this.onReorderClick(index, index - 1)}>⬆</button>
                   : null}
                 {canMoveUp || canMoveDown ?
                   <button type="button" className="btn btn-default array-item-move-down"
-                          style={{flex: 1, paddingLeft: 6, paddingRight: 6}}
+                          style={btnStyle}
                           tabIndex="-1"
                           disabled={disabled || readonly || !canMoveDown}
                           onClick={this.onReorderClick(index, index + 1)}>⬇</button>
                   : null}
                 {removable ?
                   <button type="button" className="btn btn-danger array-item-remove"
-                          style={{flex: 1, paddingLeft: 6, paddingRight: 6}}
+                          style={btnStyle}
                           tabIndex="-1"
                           disabled={disabled || readonly}
-                          onClick={this.onDropIndexClick(index)}>✖︎</button>
+                          onClick={this.onDropIndexClick(index)}>✖</button>
                   : null}
               </div>
             </div>
