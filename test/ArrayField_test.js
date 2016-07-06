@@ -44,7 +44,7 @@ describe("ArrayField", () => {
     it("should render a description", () => {
       const {node} = createFormComponent({schema});
 
-      const description = node.querySelector("fieldset > div.field-description");
+      const description = node.querySelector("fieldset > .field-description");
 
       expect(description.textContent).eql("my description");
       expect(description.id).eql("root__description");
