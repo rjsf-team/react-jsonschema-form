@@ -3,6 +3,7 @@ import { expect } from "chai";
 import {
   asNumber,
   dataURItoBlob,
+  deepEquals,
   getDefaultFormState,
   isMultiSelect,
   mergeObjects,
@@ -690,6 +691,17 @@ describe("utils", () => {
       expect(name).eql("test.png");
       expect(blob).to.have.property("size").eql(8);
       expect(blob).to.have.property("type").eql("image/png");
+    });
+  });
+
+  describe("deepEquals()", () => {
+    // Note: deepEquals implementation being extracted from node-deeper, it's
+    // worthless to reproduce all the tests existing for it; so we focus on the
+    // behavioral differences we introduced.
+    it("should assume functions are always equivalent", () => {
+      expect(deepEquals(() => {}, () => {})).eql(true);
+      expect(deepEquals({foo(){}}, {foo(){}})).eql(true);
+      expect(deepEquals({foo: {bar(){}}}, {foo: {bar(){}}})).eql(true);
     });
   });
 });

@@ -13,13 +13,9 @@ module.exports = {
     publicPath: "/static/"
   },
   plugins: [
-    new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],
-  node: {
-    Buffer: "mock",
-  },
   module: {
     loaders: [
       {
