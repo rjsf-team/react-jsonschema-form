@@ -146,6 +146,7 @@ describe("SchemaField", () => {
         bar: {type: "string"}
       }
     };
+    
     it("should render description if available from the schema", () => {
       const {node} = createFormComponent({schema});
       expect(node.querySelectorAll("div#root_foo__description"))
