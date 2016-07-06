@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import deeper from "deeper";
+
+import { deepEquals } from "../../utils";
 
 
 import {
@@ -20,7 +21,7 @@ function objectKeysHaveChanged(formData, state) {
     return true;
   }
   // deep check on sorted keys
-  if (!deeper(newKeys.sort(), oldKeys.sort())) {
+  if (!deepEquals(newKeys.sort(), oldKeys.sort())) {
     return true;
   }
   return false;
