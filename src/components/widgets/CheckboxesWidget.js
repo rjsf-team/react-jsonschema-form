@@ -51,7 +51,6 @@ if (process.env.NODE_ENV !== "production") {
     options: PropTypes.shape({
       enumOptions: PropTypes.array,
     }).isRequired,
-    placeholder: PropTypes.string,
     value: PropTypes.any,
     required: PropTypes.bool,
     multiple: PropTypes.bool,

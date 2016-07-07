@@ -23,16 +23,16 @@ function StringField(props) {
     readonly,
     onChange
   } = props;
-  const {title, description} = schema;
+  const {title} = schema;
   const {widgets} = registry;
   const widget = uiSchema["ui:widget"] || schema.format;
+  const placeholder = uiSchema["ui:placeholder"] || "";
   const commonProps = {
     schema,
     id: idSchema && idSchema.$id,
     label: title || name,
-    placeholder: description,
-    onChange,
     value: defaultFieldValue(formData, schema),
+    onChange,
     required,
     disabled,
     readonly,
@@ -47,14 +47,15 @@ function StringField(props) {
   }
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
-    return <Widget {...commonProps} />;
+    return <Widget {...commonProps} placeholder={placeholder} />;
   }
-  return <TextWidget {...commonProps} />;
+  return <TextWidget {...commonProps} placeholder={placeholder} />;
 }
 
 if (process.env.NODE_ENV !== "production") {
   StringField.propTypes = {
     schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object.isRequired,
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.oneOfType([

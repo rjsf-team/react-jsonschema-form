@@ -206,8 +206,7 @@ class ArrayField extends Component {
   }
 
   renderMultiSelect() {
-    const {schema, idSchema, uiSchema, name, disabled, readonly} = this.props;
-    const title = schema.title || name;
+    const {schema, idSchema, uiSchema, disabled, readonly} = this.props;
     const {items} = this.state;
     const {definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
@@ -221,7 +220,6 @@ class ArrayField extends Component {
         onChange={this.onSelectChange}
         options={{enumOptions: optionsList(itemsSchema)}}
         schema={schema}
-        placeholder={title}
         value={items}
         disabled={disabled}
         readonly={readonly}

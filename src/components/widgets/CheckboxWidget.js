@@ -7,7 +7,6 @@ function CheckboxWidget({
   value,
   required,
   disabled,
-  placeholder,
   onChange,
   label,
 }) {
@@ -16,7 +15,6 @@ function CheckboxWidget({
       <label>
         <input type="checkbox"
           id={id}
-          title={placeholder}
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled}
@@ -33,7 +31,6 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
     value: PropTypes.bool,
     required: PropTypes.bool,
-    placeholder: PropTypes.string,
   };
 }
 
