@@ -54,8 +54,6 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [JSON Schema supporting status](#json-schema-supporting-status)
-  - [Troubleshooting](#troubleshooting)
-     - [Build error wrt missing &quot;buffertools&quot; module](#build-error-wrt-missing-buffertools-module)
   - [Contributing](#contributing)
      - [Development server](#development-server)
      - [Tests](#tests)

@@ -4,7 +4,6 @@ import React, { PropTypes } from "react";
 function RadioWidget({
   schema,
   options,
-  placeholder,
   value,
   required,
   disabled,
@@ -25,7 +24,6 @@ function RadioWidget({
                 value={option.value}
                 checked={checked}
                 disabled={disabled}
-                placeholder={placeholder}
                 onChange={_ => onChange(option.value)} />
               {option.label}
             </label>
@@ -43,7 +41,6 @@ if (process.env.NODE_ENV !== "production") {
     options: PropTypes.shape({
       enumOptions: PropTypes.array,
     }).isRequired,
-    placeholder: PropTypes.string,
     value: PropTypes.any,
     required: PropTypes.bool,
     onChange: PropTypes.func,

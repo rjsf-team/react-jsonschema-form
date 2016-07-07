@@ -276,7 +276,8 @@ describe("uiSchema", () => {
     describe("textarea", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "textarea"
+          "ui:widget": "textarea",
+          "ui:placeholder": "sample",
         }
       };
 
@@ -308,12 +309,20 @@ describe("uiSchema", () => {
 
         expect(comp.state.formData).eql({foo: "b"});
       });
+
+      it("should set a placeholder value", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("textarea").placeholder)
+          .eql("sample");
+      });
     });
 
     describe("password", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "password"
+          "ui:widget": "password",
+          "ui:placeholder": "sample",
         }
       };
 
@@ -343,6 +352,13 @@ describe("uiSchema", () => {
         });
 
         expect(comp.state.formData).eql({foo: "b"});
+      });
+
+      it("should set a placeholder value", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelector("[type=password]").placeholder)
+          .eql("sample");
       });
     });
 
