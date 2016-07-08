@@ -330,5 +330,51 @@ describe("Validation", () => {
         });
       });
     });
+
+    describe("Topbar prop validation", () => {
+      describe("Required fields", () => {
+        const schema = {
+          type: "object",
+          required: ["foo"],
+          properties: {
+            foo: {type: "string"},
+            bar: {type: "string"},
+          }
+        };
+
+        var comp, node, onError;
+
+        beforeEach(() => {
+          onError = sandbox.spy();
+          const compInfo = createFormComponent({schema, formData: {
+            foo: undefined
+          }, onError, topBar: false});
+          comp = compInfo.comp;
+          node = compInfo.node;
+
+          Simulate.submit(node);
+        });
+
+        it("should validate a required field", () => {
+          expect(comp.state.errors)
+            .to.have.length.of(1);
+          expect(comp.state.errors[0].message)
+            .eql(`requires property "foo"`);
+        });
+
+        it("should not render Topbar errors if prop true", () => {
+          expect(node.querySelectorAll(".errors li"))
+            .to.have.length.of(0);
+        });
+
+        it("should trigger the onError handler", () => {
+          sinon.assert.calledWith(onError, sinon.match(errors => {
+            return errors[0].message === `requires property "foo"`;
+          }));
+        });
+      });
+
+    });
+
   });
 });

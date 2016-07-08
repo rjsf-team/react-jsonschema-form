@@ -69,7 +69,9 @@ export default class Form extends Component {
 
   renderErrors() {
     const {status, errors} = this.state;
-    if (status !== "editing" && errors.length) {
+    const {topBar} = this.props;
+
+    if (status !== "editing" && errors.length && topBar != false) {
       return <ErrorList errors={errors} />;
     }
     return null;
@@ -193,6 +195,7 @@ if (process.env.NODE_ENV !== "production") {
     fields: PropTypes.objectOf(PropTypes.func),
     onChange: PropTypes.func,
     onError: PropTypes.func,
+    topBar: PropTypes.bool,
     onSubmit: PropTypes.func,
     id: PropTypes.string,
     className: PropTypes.string,
