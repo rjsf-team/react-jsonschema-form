@@ -353,7 +353,6 @@ class App extends Component {
           {!this.state.form ? null :
             <Form
               liveValidate={liveValidate}
-              topBar={true}
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
