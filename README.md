@@ -839,25 +839,11 @@ render(<Form schema={schema} validate={validate} />);
 
 ### Error List Display
 
-Form data allows you to hide the display of the validation Header.
-
-To disable the Error List display, you can set Form's showErrorList prop to false. Doing so will still validate the form but only the inline display will show.
+To disable rendering of the error list at the top of the form, you can set the `showErrorList` prop to `false`. Doing so will still validate the form, but only the inline display will show.
 
 ```js
-const schema = {
-  type: "object",
-  required: ["foo"],
-  properties: {
-    foo: {type: "string"},
-    bar: {type: "string"},
-  }
-};
-
 render(<Form schema={schema} showErrorList={false}/>);
-
 ```
-
-
 
 ## Styling your forms
 
