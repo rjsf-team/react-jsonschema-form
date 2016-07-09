@@ -52,6 +52,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Form data validation](#form-data-validation)
      - [Live validation](#live-validation)
      - [Custom validation](#custom-validation)
+     - [Error List Display](#error-list-display)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [JSON Schema supporting status](#json-schema-supporting-status)
@@ -709,7 +710,6 @@ The `registry` is an object containing the registered custom fields and widgets 
  - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
 
 The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
-
 ### Custom SchemaField
 
 **Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
@@ -836,6 +836,27 @@ render(<Form schema={schema} validate={validate} />);
 > - The `validate()` function must **always** return the `errors` object
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
+
+### Error List Display
+
+Form data allows you to hide the display of the validation Header.
+
+To disable the Error List display, you can set Form's showErrorList prop to false. Doing so will still validate the form but only the inline display will show.
+
+```js
+const schema = {
+  type: "object",
+  required: ["foo"],
+  properties: {
+    foo: {type: "string"},
+    bar: {type: "string"},
+  }
+};
+
+render(<Form schema={schema} showErrorList={false}/>);
+
+```
+
 
 
 ## Styling your forms
