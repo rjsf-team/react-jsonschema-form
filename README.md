@@ -15,8 +15,10 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [As a npm-based project dependency](#as-a-npm-based-project-dependency)
      - [As a script served from a CDN](#as-a-script-served-from-a-cdn)
   - [Usage](#usage)
+     - [Form initialization](#form-initialization)
      - [Form event handlers](#form-event-handlers)
         - [Form submission](#form-submission)
+        - [Form error event handler](#form-error-event-handler)
         - [Form data changes](#form-data-changes)
   - [Form customization](#form-customization)
      - [The uiSchema object](#the-uischema-object)
@@ -86,11 +88,13 @@ $ npm install react-jsonschema-form --save
 Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form/dist/react-jsonschema-form.js.map).
 
 > Note: The CDN version **does not** embed *react* nor *react-dom*.
-
+>
 > You'll also need to alias the default export property to use the Form component:
 
 ```jsx
 const Form = JSONSchemaForm.default;
+// or
+const {default: Form} = JSONSchemaForm;
 ```
 
 ## Usage
@@ -111,16 +115,10 @@ const schema = {
   }
 };
 
-const formData = {
-  title: "First task",
-  done: true
-};
-
 const log = (type) => console.log.bind(console, type);
 
 render((
   <Form schema={schema}
-        formData={formData}
         onChange={log("changed")}
         onSubmit={log("submitted")}
         onError={log("errors")} />
@@ -131,6 +129,22 @@ That should give something like this (if you took care of loading the standard [
 
 ![](http://i.imgur.com/DZQYPyu.png)
 
+### Form initialization
+
+Often you'll want to prefill a form with existing data; this is done by passing a `formData` prop object matching the schema:
+
+```jsx
+const formData = {
+  title: "First task",
+  done: true
+};
+
+render((
+  <Form schema={schema}
+        formData={formData}
+), document.getElementById("app"));
+```
+
 ### Form event handlers
 
 #### Form submission
@@ -140,15 +154,23 @@ You can pass a function as the `onSubmit` prop of your `Form` component to liste
 ```js
 const onSubmit = ({formData}) => console.log("yay I'm valid!");
 
-<Form schema={schema} onSubmit={onSubmit} />;
+render((
+  <Form schema={schema}
+        onSubmit={onSubmit} />
+), document.getElementById("app"));
 ```
+
+#### Form error event handler
 
 To react to when submitted form data are invalid, pass an `onError` handler, which is passed the list of encoutered errors:
 
 ```js
 const onError = (errors) => console.log("I have", errors.length, "errors to fix");
 
-<Form schema={schema} onError={onError} />;
+render((
+  <Form schema={schema}
+        onError={onError} />
+), document.getElementById("app"));
 ```
 
 #### Form data changes
@@ -205,8 +227,10 @@ const uiSchema = {
   }
 }
 
-render(<Form schema={schema} uiSchema={uiSchema} />,
-       document.getElementById("app"));
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 ### Alternative widgets
@@ -366,7 +390,8 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema} uiSchema={uiSchema} />
+  <Form schema={schema}
+        uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 
@@ -465,13 +490,14 @@ So all widgets will have an id prefixed with `myform`.
 You can provide custom buttons to your form via the `Form` component's `children`. A default submit button will be rendered if you don't provide children to the `Form` component.
 
 ```jsx
-render(
+render((
   <Form schema={schema}>
     <div>
       <button type="submit">Submit</button>
       <button>Cancel</button>
     </div>
-  </Form>);
+  </Form>
+), document.getElementById("app"));
 ```
 
 **Warning:** there should be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
@@ -556,7 +582,10 @@ const uiSchema = {
   }
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} />);
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />,
+), document.getElementById("app"));
 ```
 
 The following props are passed to custom widget components:
@@ -595,10 +624,12 @@ const uiSchema = {
   "ui:widget": "myCustomWidget"
 }
 
-render(<Form
-  schema={schema}
-  uiSchema={uiSchema}
-  widgets={widgets} />);
+render((
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    widgets={widgets} />
+), document.getElementById("app"));
 ```
 
 This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
@@ -626,7 +657,10 @@ const uiSchema = {
   }
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} />);
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
@@ -682,13 +716,15 @@ const fields = {geo: GeoPosition};
 
 // Render the form with all the properties we just defined passed
 // as props
-render(<Form
-  schema={schema}
-  uiSchema={uiSchema}
-  fields={fields} />);
+render((
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    fields={fields} />
+), document.getElementById("app"));
 ```
 
-Note: Registered fields can be reused accross the entire schema.
+> Note: Registered fields can be reused accross the entire schema.
 
 #### Field props
 
@@ -710,6 +746,7 @@ The `registry` is an object containing the registered custom fields and widgets 
  - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
 
 The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
+
 ### Custom SchemaField
 
 **Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
@@ -829,7 +866,10 @@ const schema = {
   }
 };
 
-render(<Form schema={schema} validate={validate} />);
+render((
+  <Form schema={schema}
+        validate={validate} />
+), document.getElementById("app"));
 ```
 
 > Notes:
@@ -842,7 +882,10 @@ render(<Form schema={schema} validate={validate} />);
 To disable rendering of the error list at the top of the form, you can set the `showErrorList` prop to `false`. Doing so will still validate the form, but only the inline display will show.
 
 ```js
-render(<Form schema={schema} showErrorList={false}/>);
+render((
+  <Form schema={schema}
+        showErrorList={false}/>
+), document.getElementById("app"));
 ```
 
 ## Styling your forms
