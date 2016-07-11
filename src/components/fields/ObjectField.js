@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 
 import { deepEquals } from "../../utils";
+import Collapsible from "../Collapsible";
 
 
 import {
@@ -113,34 +114,36 @@ class ObjectField extends Component {
       );
     }
     return (
-      <fieldset>
-        {title ? <TitleField
-                   id={`${idSchema.$id}__title`}
-                   title={title}
-                   required={required} /> : null}
-        {schema.description ?
-          <DescriptionField
-            id={`${idSchema.$id}__description`}
-            description={schema.description}
-          /> : null}
-        {
-        orderedProperties.map((name, index) => {
-          return (
-            <SchemaField key={index}
-              name={name}
-              required={this.isRequired(name)}
-              schema={schema.properties[name]}
-              uiSchema={uiSchema[name]}
-              errorSchema={errorSchema[name]}
-              idSchema={idSchema[name]}
-              formData={this.state[name]}
-              onChange={this.onPropertyChange(name)}
-              registry={this.props.registry}
-              disabled={disabled}
-              readonly={readonly} />
-          );
-        })
-      }</fieldset>
+      <Collapsible>
+        <fieldset>
+          {title ? <TitleField
+                     id={`${idSchema.$id}__title`}
+                     title={title}
+                     required={required} /> : null}
+          {schema.description ?
+            <DescriptionField
+              id={`${idSchema.$id}__description`}
+              description={schema.description}
+            /> : null}
+          {
+          orderedProperties.map((name, index) => {
+            return (
+              <SchemaField key={index}
+                name={name}
+                required={this.isRequired(name)}
+                schema={schema.properties[name]}
+                uiSchema={uiSchema[name]}
+                errorSchema={errorSchema[name]}
+                idSchema={idSchema[name]}
+                formData={this.state[name]}
+                onChange={this.onPropertyChange(name)}
+                registry={this.props.registry}
+                disabled={disabled}
+                readonly={readonly} />
+            );
+          })
+        }</fieldset>
+      </Collapsible>
     );
   }
 }
