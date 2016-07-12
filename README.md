@@ -791,8 +791,8 @@ Simply pass a `fields` object having a `TitleField` property to your `Form` comp
 
 ```jsx
 
-const CustomTitleField = ({title, required}) => {
-  const legend = required ? title + '*' : title;
+const CustomTitleField = ({title, required, root}) => {
+  const legend = root || required ? title + '*' : title;
   return <div id="custom">{legend}</div>;
 };
 
@@ -807,6 +807,8 @@ render((
         fields={fields} />
 ), document.getElementById("app"));
 ```
+
+> Note: the Boolean `root` prop denotes if the associated field is the root Form schema field itself; usually, you want to consider it to be always required.
 
 ### Custom descriptions
 

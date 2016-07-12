@@ -36,6 +36,16 @@ describe("TitleField", () => {
     expect(node.tagName).eql("LEGEND");
   });
 
+  it("should contain the field title", () => {
+    const props = {
+      title: "Field title",
+      required: true
+    };
+    const {node} = createComponent(TitleFieldWrapper, props);
+
+    expect(node.querySelector(".label-text").textContent).eql(props.title);
+  });
+
   it("should have the expected id", () => {
     const props = {
       title: "Field title",
@@ -57,13 +67,14 @@ describe("TitleField", () => {
     expect(node.querySelector(".field-optional").textContent).eql("- Optional");
   });
 
-  it("should add an asterisk to the title, when field is required", () => {
+  it("should always denote a root field title as required", () => {
     const props = {
       title: "Field title",
-      required: true
+      required: false,
+      root: true,
     };
     const {node} = createComponent(TitleFieldWrapper, props);
 
-    expect(node.textContent).eql(props.title);
+    expect(node.querySelector(".field-optional")).to.be.null;
   });
 });

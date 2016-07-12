@@ -18,12 +18,12 @@ import FileWidget from "./../widgets/FileWidget";
 import CheckboxesWidget from "./../widgets/CheckboxesWidget";
 
 
-function ArrayFieldTitle({TitleField, idSchema, title, required}) {
+function ArrayFieldTitle({TitleField, idSchema, title, required, root}) {
   if (!title) {
     return null;
   }
   const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} required={required} />;
+  return <TitleField id={id} title={title} required={required} root={root} />;
 }
 
 function ArrayFieldDescription({DescriptionField, idSchema, description}) {
@@ -36,6 +36,7 @@ function ArrayFieldDescription({DescriptionField, idSchema, description}) {
 
 class ArrayField extends Component {
   static defaultProps = {
+    root: false,
     uiSchema: {},
     idSchema: {},
     registry: getDefaultRegistry(),
@@ -154,6 +155,7 @@ class ArrayField extends Component {
 
   renderNormalArray() {
     const {
+      root,
       schema,
       uiSchema,
       errorSchema,
@@ -176,7 +178,8 @@ class ArrayField extends Component {
           TitleField={TitleField}
           idSchema={idSchema}
           title={title}
-          required={required} />
+          required={required}
+          root={root} />
         {schema.description ?
           <ArrayFieldDescription
             DescriptionField={DescriptionField}
@@ -247,6 +250,7 @@ class ArrayField extends Component {
 
   renderFixedArray() {
     const {
+      root,
       schema,
       uiSchema,
       errorSchema,
@@ -277,7 +281,8 @@ class ArrayField extends Component {
           TitleField={TitleField}
           idSchema={idSchema}
           title={title}
-          required={required} />
+          required={required}
+          root={root} />
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{
@@ -394,6 +399,7 @@ function AddButton({onClick, disabled}) {
 
 if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = {
+    root: PropTypes.bool.isRequired,
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,

@@ -245,4 +245,37 @@ describe("ObjectField", () => {
       expect(ids).eql(["root_bar", "root_foo"]);
     });
   });
+
+  describe("denoted required field", () => {
+    it("should consider a root Form ObjectField as required", () => {
+      const schema = {
+        title: "Form title",
+        type: "object",
+        properties: {foo: {type: "string"}}
+      };
+
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector(".field-object legend .field-optional"))
+        .to.be.null;
+    });
+
+    it("should denote optional sub object fields", () => {
+      const schema = {
+        title: "Form title",
+        type: "object",
+        properties: {
+          foo: {
+            type: "object",
+            properties: {bar: {type: "string"}}
+          }
+        }
+      };
+
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector(".field-object .field-object legend .field-optional"))
+        .to.not.be.null;
+    });
+  });
 });

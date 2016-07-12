@@ -183,6 +183,7 @@ function SchemaField(props) {
 }
 
 SchemaField.defaultProps = {
+  root: false,
   uiSchema: {},
   errorSchema: {},
   idSchema: {},
@@ -193,6 +194,7 @@ SchemaField.defaultProps = {
 
 if (process.env.NODE_ENV !== "production") {
   SchemaField.propTypes = {
+    root: PropTypes.bool.isRequired,
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,

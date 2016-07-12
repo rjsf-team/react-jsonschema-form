@@ -12,6 +12,9 @@ module.exports = {
       }
     },
     type: "object",
+    "required": [
+      "shipping_address"
+    ],
     properties: {
       billing_address: {
         title: "Billing address",
