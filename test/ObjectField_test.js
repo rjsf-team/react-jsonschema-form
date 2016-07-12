@@ -33,6 +33,9 @@ describe("ObjectField", () => {
         },
         bar: {
           type: "boolean",
+        },
+        baz: {
+          type: "string",
         }
       }
     };
@@ -49,7 +52,7 @@ describe("ObjectField", () => {
 
       const legend = node.querySelector("fieldset > legend");
 
-      expect(legend.textContent).eql("my object");
+      expect(legend.querySelector(".label-text").textContent).eql("my object");
       expect(legend.id).eql("root__title");
     });
 
@@ -78,11 +81,11 @@ describe("ObjectField", () => {
         .eql("bar");
     });
 
-    it("should render a string property", () => {
+    it("should render string fields", () => {
       const {node} = createFormComponent({schema});
 
       expect(node.querySelectorAll(".field input[type=text]"))
-        .to.have.length.of(1);
+        .to.have.length.of(2);
     });
 
     it("should render a boolean property", () => {
@@ -107,8 +110,13 @@ describe("ObjectField", () => {
       // Required field is <input type="text" required="">
       expect(node.querySelector("input[type=text]").getAttribute("required"))
         .eql("");
-      expect(node.querySelector(".field-string label").textContent)
-        .eql("Foo*");
+    });
+
+    it("should handle optional values", () => {
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector("[for=root_baz] .field-optional").textContent)
+        .eql("Optional");
     });
 
     it("should fill fields with form data", () => {
@@ -155,7 +163,7 @@ describe("ObjectField", () => {
         "ui:order": ["bar", "foo"]
       }});
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"), l => l.textContent);
+        node.querySelectorAll(".field .label-text"), l => l.textContent);
 
       expect(labels).eql(["bar", "foo"]);
     });
@@ -194,7 +202,7 @@ describe("ObjectField", () => {
         "ui:order": ["bar", "foo"]
       }});
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"), l => l.textContent);
+        node.querySelectorAll(".field .label-text"), l => l.textContent);
 
       expect(labels).eql(["bar", "foo"]);
     });
@@ -222,7 +230,7 @@ describe("ObjectField", () => {
         }
       }});
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"), l => l.textContent);
+        node.querySelectorAll(".field label .label-text"), l => l.textContent);
 
       expect(labels).eql(["bar", "foo"]);
     });

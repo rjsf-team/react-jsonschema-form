@@ -253,7 +253,7 @@ describe("Form", () => {
 
       const {node} = createFormComponent({schema});
 
-      expect(node.querySelector("legend").textContent)
+      expect(node.querySelector("legend .label-text").textContent)
         .eql("custom title");
     });
 

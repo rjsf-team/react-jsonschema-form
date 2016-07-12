@@ -31,7 +31,7 @@ describe("NumberField", () => {
         title: "foo"
       }});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("foo");
     });
 
@@ -122,7 +122,7 @@ describe("NumberField", () => {
         title: "foo",
       }});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("foo");
     });
 
