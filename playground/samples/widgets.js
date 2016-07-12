@@ -5,6 +5,16 @@ module.exports = {
   schema: {
     title: "Widgets",
     type: "object",
+    required: [
+      "stringFormats",
+      "boolean",
+      "string",
+      "secret",
+      "disabled",
+      "readonly",
+      "widgetOptions",
+      "selectWidgetOptions",
+    ],
     properties: {
       stringFormats: {
         type: "object",

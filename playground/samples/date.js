@@ -2,6 +2,7 @@ module.exports = {
   schema: {
     title: "Date and time widgets",
     type: "object",
+    required: ["native", "alternative"],
     properties: {
       native: {
         title: "Native",

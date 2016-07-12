@@ -116,7 +116,7 @@ describe("ObjectField", () => {
       const {node} = createFormComponent({schema});
 
       expect(node.querySelector("[for=root_baz] .field-optional").textContent)
-        .eql("Optional");
+        .eql("- Optional");
     });
 
     it("should fill fields with form data", () => {

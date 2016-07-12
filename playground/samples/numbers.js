@@ -2,6 +2,13 @@ module.exports = {
   schema: {
     type: "object",
     title: "Number fields & widgets",
+    required: [
+      "number",
+      "integer",
+      "numberEnum",
+      "integerRange",
+      "integerRangeSteps"
+    ],
     properties: {
       number: {
         title: "Number",

@@ -54,7 +54,7 @@ describe("TitleField", () => {
     };
     const {node} = createComponent(TitleFieldWrapper, props);
 
-    expect(node.querySelector(".field-optional").textContent).eql("Optional");
+    expect(node.querySelector(".field-optional").textContent).eql("- Optional");
   });
 
   it("should add an asterisk to the title, when field is required", () => {

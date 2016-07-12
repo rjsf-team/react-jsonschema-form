@@ -10,8 +10,8 @@ function LabelText({label, required}) {
   return (
     <span>
       <span className="label-text">{label}</span>
-      <sup className="field-optional text-muted"
-        style={{marginLeft: ".5rem"}}>Optional</sup>
+      <span className="field-optional text-muted"
+        style={{marginLeft: ".5rem", fontWeight: "normal"}}>- Optional</span>
     </span>
   );
 }
