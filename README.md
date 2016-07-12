@@ -596,7 +596,6 @@ The following props are passed to custom widget components:
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
-- `placeholder`: The placeholder value, if any;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 
 > Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
