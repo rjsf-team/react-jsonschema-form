@@ -114,11 +114,11 @@ class ObjectField extends Component {
     }
     return (
       <fieldset>
-        {title ? <TitleField
+        {typeof title === 'string' ? <TitleField
                    id={`${idSchema.$id}__title`}
                    title={title}
                    required={required} /> : null}
-        {schema.description ?
+        {typeof schema.description === 'string' ?
           <DescriptionField
             id={`${idSchema.$id}__description`}
             description={schema.description}
