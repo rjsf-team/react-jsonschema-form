@@ -29,6 +29,7 @@ function objectKeysHaveChanged(formData, state) {
 
 class ObjectField extends Component {
   static defaultProps = {
+    root: false,
     uiSchema: {},
     errorSchema: {},
     idSchema: {},
@@ -85,6 +86,7 @@ class ObjectField extends Component {
 
   render() {
     const {
+      root,
       uiSchema,
       errorSchema,
       idSchema,
@@ -117,7 +119,8 @@ class ObjectField extends Component {
         {title ? <TitleField
                    id={`${idSchema.$id}__title`}
                    title={title}
-                   required={required} /> : null}
+                   required={required}
+                   root={root} /> : null}
         {schema.description ?
           <DescriptionField
             id={`${idSchema.$id}__description`}
@@ -147,6 +150,7 @@ class ObjectField extends Component {
 
 if (process.env.NODE_ENV !== "production") {
   ObjectField.propTypes = {
+    root: PropTypes.bool.isRequired,
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     errorSchema: PropTypes.object,

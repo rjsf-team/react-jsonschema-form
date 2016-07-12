@@ -13,6 +13,7 @@ module.exports = {
     },
     title: "A rather large form",
     type: "object",
+    required: ["string"],
     properties: {
       string: {
         type: "string",
@@ -31,5 +32,7 @@ module.exports = {
     }
   },
   uiSchema: {},
-  formData: {}
+  formData: {
+    string: "This is large."
+  }
 };

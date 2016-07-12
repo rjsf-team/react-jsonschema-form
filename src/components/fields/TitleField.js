@@ -1,18 +1,27 @@
 import React, {PropTypes} from "react";
 
-const REQUIRED_FIELD_SYMBOL = "*";
+import LabelText from "./LabelText";
 
-function TitleField(props) {
-  const {id, title, required} = props;
-  const legend = required ? title + REQUIRED_FIELD_SYMBOL : title;
-  return <legend id={id}>{legend}</legend>;
+
+function TitleField({id, title, required, root}) {
+  return (
+    <legend id={id}>
+      <LabelText label={title} required={root || required} />
+    </legend>
+  );
 }
+
+TitleField.defaultProps = {
+  root: false,
+  required: false,
+};
 
 if (process.env.NODE_ENV !== "production") {
   TitleField.propTypes = {
+    root: PropTypes.bool.isRequired,
+    required: PropTypes.bool.isRequired,
     id: PropTypes.string,
     title: PropTypes.string,
-    required: PropTypes.bool,
   };
 }
 

@@ -32,7 +32,7 @@ describe("StringField", () => {
         title: "foo"
       }});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("foo");
     });
 
@@ -111,7 +111,7 @@ describe("StringField", () => {
         title: "foo",
       }});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("foo");
     });
 
@@ -353,7 +353,7 @@ describe("StringField", () => {
         title: "foo",
       }, uiSchema});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("foo");
     });
 
@@ -509,7 +509,7 @@ describe("StringField", () => {
         title: "foo",
       }, uiSchema});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("foo");
     });
 
@@ -662,7 +662,7 @@ describe("StringField", () => {
         title: "foo",
       }});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("foo");
     });
 
@@ -756,7 +756,7 @@ describe("StringField", () => {
         title: "foo",
       }});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("foo");
     });
 

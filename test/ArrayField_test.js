@@ -35,9 +35,9 @@ describe("ArrayField", () => {
     it("should render a fieldset legend", () => {
       const {node} = createFormComponent({schema});
 
-      const legend = node.querySelector("fieldset > legend");
+      const legend = node.querySelector("fieldset legend");
 
-      expect(legend.textContent).eql("my list");
+      expect(legend.querySelector(".label-text").textContent).eql("my list");
       expect(legend.id).eql("root__title");
     });
 
@@ -256,7 +256,7 @@ describe("ArrayField", () => {
       it("should render a select widget with a label", () => {
         const {node} = createFormComponent({schema});
 
-        expect(node.querySelector(".field label").textContent)
+        expect(node.querySelector(".field .label-text").textContent)
           .eql("My field");
       });
 
@@ -378,7 +378,7 @@ describe("ArrayField", () => {
     it("should render a select widget with a label", () => {
       const {node} = createFormComponent({schema});
 
-      expect(node.querySelector(".field label").textContent)
+      expect(node.querySelector(".field .label-text").textContent)
         .eql("My field");
     });
 
@@ -510,8 +510,9 @@ describe("ArrayField", () => {
 
     it("should render a fieldset legend", () => {
       const {node} = createFormComponent({schema});
-      const legend = node.querySelector("fieldset > legend");
-      expect(legend.textContent).eql("List of fixed items");
+      const legend = node.querySelector("fieldset legend");
+      expect(legend.querySelector(".label-text").textContent)
+        .eql("List of fixed items");
       expect(legend.id).eql("root__title");
     });
 

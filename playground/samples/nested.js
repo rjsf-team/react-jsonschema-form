@@ -2,7 +2,7 @@ module.exports = {
   schema: {
     title: "A list of tasks",
     type: "object",
-    required: ["title"],
+    required: ["title", "tasks"],
     properties: {
       title: {
         type: "string",

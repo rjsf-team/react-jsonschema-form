@@ -1,6 +1,12 @@
 module.exports = {
   schema: {
     type: "object",
+    required: [
+      "listOfStrings",
+      "multipleChoicesList",
+      "fixedItemsList",
+      "nestedList",
+    ],
     properties: {
       listOfStrings: {
         type: "array",

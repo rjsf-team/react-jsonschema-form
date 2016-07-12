@@ -2,7 +2,7 @@ module.exports = {
   schema: {
     title: "A registration form",
     type: "object",
-    required: ["firstName", "lastName"],
+    required: ["firstName", "lastName", "password"],
     properties: {
       password: {
         type: "string",

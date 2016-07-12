@@ -3,7 +3,7 @@ module.exports = {
     title: "A registration form",
     description: "A simple form example.",
     type: "object",
-    required: ["firstName", "lastName"],
+    required: ["firstName", "lastName", "password"],
     properties: {
       firstName: {
         type: "string",
