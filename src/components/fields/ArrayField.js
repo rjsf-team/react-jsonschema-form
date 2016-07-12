@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 
 import {
   getDefaultFormState,
+  getAlternativeWidget,
   isMultiSelect,
   isFilesArray,
   isFixedItems,
@@ -140,6 +141,10 @@ class ArrayField extends Component {
 
   render() {
     const {schema, uiSchema} = this.props;
+    const widget = uiSchema["ui:widget"] || schema.format;
+    if (widget && widget !== 'checkboxes') {
+      return this.renderWidget();
+    }
     if (isFilesArray(schema, uiSchema)) {
       return this.renderFiles();
     }
@@ -150,6 +155,25 @@ class ArrayField extends Component {
       return this.renderMultiSelect();
     }
     return this.renderNormalArray();
+  }
+
+  renderWidget() {
+    const {schema, idSchema, uiSchema, name, required} = this.props;
+    const {title, description} = schema;
+    const {items} = this.state;
+    const {widgets} = this.props.registry;
+
+    const widget = uiSchema["ui:widget"] || schema.format;
+    const Widget = getAlternativeWidget(schema, widget, widgets);
+    return <Widget
+        id={idSchema && idSchema.id}
+        label={title || name}
+        placeholder={description}
+        onChange={this.onSelectChange}
+        schema={schema}
+        value={items}
+        required={required}
+      />;
   }
 
   renderNormalArray() {
