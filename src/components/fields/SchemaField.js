@@ -14,7 +14,6 @@ import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
 import DescriptionField from "./DescriptionField";
 
-// const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   "array":     ArrayField,
   "boolean":   BooleanField,
@@ -40,8 +39,8 @@ function getLabel(label, required, id) {
     return null;
   }
   return (
-    <label className="control-label" htmlFor={id}>
-      label //{required ? label + REQUIRED_FIELD_SYMBOL : label}
+    <label className={required ? "control-label control-label-required":"control-label"} htmlFor={id}>
+      {label}
     </label>
   );
 }
