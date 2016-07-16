@@ -32,6 +32,9 @@ function getFieldComponent(schema, uiSchema, fields) {
   if (typeof field === "string" && field in fields) {
     return fields[field];
   }
+  if (schema.type != "object" && schema.type in fields) {
+    return fields[schema.type];
+  }
   return COMPONENT_TYPES[schema.type] || UnsupportedField;
 }
 
