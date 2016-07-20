@@ -33,6 +33,7 @@ class ObjectField extends Component {
     errorSchema: {},
     idSchema: {},
     registry: getDefaultRegistry(),
+    context: {},
     required: false,
     disabled: false,
     readonly: false,
@@ -136,6 +137,7 @@ class ObjectField extends Component {
               formData={this.state[name]}
               onChange={this.onPropertyChange(name)}
               registry={this.props.registry}
+              context={this.props.context}
               disabled={disabled}
               readonly={readonly} />
           );
@@ -163,7 +165,8 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-    })
+    }),
+    context: PropTypes.object
   };
 }
 

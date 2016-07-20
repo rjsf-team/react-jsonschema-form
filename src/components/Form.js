@@ -146,7 +146,8 @@ export default class Form extends Component {
       action,
       autocomplete,
       enctype,
-      acceptcharset
+      acceptcharset,
+	    context
     } = this.props;
 
     const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
@@ -173,7 +174,9 @@ export default class Form extends Component {
           formData={formData}
           onChange={this.onChange}
           registry={registry}
-          safeRenderCompletion={safeRenderCompletion} />
+          context={context}
+          safeRenderCompletion={safeRenderCompletion}
+        />
         { children ? children :
           <p>
             <button type="submit" className="btn btn-info">Submit</button>

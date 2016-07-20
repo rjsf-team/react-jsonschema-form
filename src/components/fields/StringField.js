@@ -18,6 +18,7 @@ function StringField(props) {
     idSchema,
     formData,
     registry,
+    context,
     required,
     disabled,
     readonly,
@@ -36,6 +37,7 @@ function StringField(props) {
     required,
     disabled,
     readonly,
+    context,
   };
   if (Array.isArray(schema.enum)) {
     const enumOptions = optionsList(schema);
@@ -70,6 +72,7 @@ if (process.env.NODE_ENV !== "production") {
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
     }),
+    context: PropTypes.object,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
@@ -79,6 +82,7 @@ if (process.env.NODE_ENV !== "production") {
 StringField.defaultProps = {
   uiSchema: {},
   registry: getDefaultRegistry(),
+  context: {},
   disabled: false,
   readonly: false,
 };
