@@ -147,7 +147,7 @@ export default class Form extends Component {
       autocomplete,
       enctype,
       acceptcharset,
-	    context
+      context
     } = this.props;
 
     const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
@@ -212,6 +212,7 @@ if (process.env.NODE_ENV !== "production") {
     noValidate: PropTypes.bool,
     liveValidate: PropTypes.bool,
     safeRenderCompletion: PropTypes.bool,
+    context: PropTypes.object,
   };
 }
 
