@@ -247,6 +247,29 @@ describe("uiSchema", () => {
     });
   });
 
+  describe("ui:focus", () => {
+    const shouldFocus = (schema, uiSchema, selector = "input") => {
+      const {node} = createFormComponent({schema, uiSchema});
+      expect(node.querySelector(selector)).eql(document.activeElement);
+    };
+
+    it("should focus on text input", () => {
+      shouldFocus({type: "string"}, {"ui:autoFocus": true});
+    });
+
+    it("should focus on integer input", () => {
+      shouldFocus({type: "integer"}, {"ui:autoFocus": true});
+    });
+
+    it("should focus on password input", () => {
+      shouldFocus({type: "string"}, {"ui:widget": "password", "ui:autoFocus": true});
+    });
+
+    it("should focus on textarea", () => {
+      shouldFocus({type: "string"}, {"ui:widget": "textarea", "ui:autoFocus": true}, "textarea");
+    });
+  });
+
   describe("string", () => {
     const schema = {
       type: "object",
