@@ -599,4 +599,31 @@ describe("ArrayField", () => {
       });
     });
   });
+
+  describe("Multiple number choices list", () => {
+    const schema = {
+      type: "array",
+      title: "My field",
+      items: {
+        enum: [1, 2, 3],
+        type: "integer"
+      },
+      uniqueItems: true,
+    };
+
+    it("should convert array of strings to numbers of type of items is 'number'", () => {
+      const {comp, node} = createFormComponent({schema});
+
+      Simulate.change(node.querySelector(".field select"), {
+        target: {options: [
+          {selected: true, value: "1"},
+          {selected: true, value: "2"},
+          {selected: false, value: "3"},
+        ]}
+      });
+
+      expect(comp.state.formData).eql([1, 2]);
+
+    });
+  });
 });
