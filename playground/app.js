@@ -7,6 +7,8 @@ import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
 
+import SchemaField from "../src/components/fields/SchemaField"
+
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
 import "codemirror/lib/codemirror.css";
@@ -155,6 +157,51 @@ class GeoPosition extends Component {
             <input className="form-control" type="number" value={lon} step="0.00001"
               onChange={this.onChange("lon")} />
           </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+class MultiArray extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {items: [], formData: props.formData};
+  }
+
+  onClick = (e) => {
+    let value = e.target.value;
+    let selectedSchema = this.props.schema.items.oneOf.find(i => i.title === value);
+
+    let newItems = this.state.items;
+    newItems.push(selectedSchema);
+    this.setState({items: newItems});
+  }
+
+  renderOptions() {
+    return this.props.schema.items.oneOf.map(option => <button key={option.title} onClick={this.onClick} type="button" value={option.title} className="list-group-item">{option.title}</button>)
+  }
+
+  renderWidgets() {
+    let schema = {
+      type: 'array',
+      items: this.state.items
+    };
+    let {idSchema, registry, formData, onChange, errorSchema} = this.props;
+    return <SchemaField errorSchema={errorSchema} formData={formData} schema={schema} onChange={onChange} idSchema={idSchema} registry={this.props.registry}/>
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderWidgets()}
+        <div className="btn-group">
+          <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Add Widget <span className="caret"></span>
+          </button>
+          <ul className="dropdown-menu list-group" style={{padding: 0, margin: 0, border: 0}}>
+            {this.renderOptions()}
+          </ul>
         </div>
       </div>
     );
@@ -357,7 +404,7 @@ class App extends Component {
               uiSchema={uiSchema}
               formData={formData}
               onChange={this.onFormDataChange}
-              fields={{geo: GeoPosition}}
+              fields={{geo: GeoPosition, multiArray: MultiArray}}
               validate={validate}
               onError={log("errors")} />}
         </div>
