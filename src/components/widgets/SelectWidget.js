@@ -9,14 +9,14 @@ import { asNumber } from "../../utils";
  */
 function processValue(schema, value) {
   if (schema.type === "array") {
-    var valueType = schema.items.type;
+    let valueType = schema.items.type;
     if (valueType === "number" || valueType === "integer") {
       return value.map(v => asNumber(v));
     }
-    return value
+    return value;
   }
   else {
-    var valueType = schema.type;
+    let valueType = schema.type;
     if (valueType === "boolean") {
       return value === "true";
     } else if (valueType === "number") {
