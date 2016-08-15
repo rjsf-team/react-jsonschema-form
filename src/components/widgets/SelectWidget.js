@@ -9,21 +9,19 @@ import { asNumber } from "../../utils";
  */
 function processValue(schema, value) {
   if (schema.type === "array") {
-    let valueType = schema.items.type;
+    const valueType = schema.items.type;
     if (valueType === "number" || valueType === "integer") {
       return value.map(v => asNumber(v));
     }
     return value;
   }
-  else {
-    let valueType = schema.type;
-    if (valueType === "boolean") {
-      return value === "true";
-    } else if (valueType === "number") {
-      return asNumber(value);
-    }
-    return value;
+  const valueType = schema.type;
+  if (valueType === "boolean") {
+    return value === "true";
+  } else if (valueType === "number") {
+    return asNumber(value);
   }
+  return value;
 }
 
 function SelectWidget({

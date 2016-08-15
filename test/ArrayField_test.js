@@ -623,7 +623,6 @@ describe("ArrayField", () => {
       });
 
       expect(comp.state.formData).eql([1, 2]);
-
     });
   });
 });
