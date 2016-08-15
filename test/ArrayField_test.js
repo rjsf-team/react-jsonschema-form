@@ -611,7 +611,7 @@ describe("ArrayField", () => {
       uniqueItems: true,
     };
 
-    it("should convert array of strings to numbers of type if items is 'number'", () => {
+    it("should convert array of strings to numbers if type of items is 'number'", () => {
       const {comp, node} = createFormComponent({schema});
 
       Simulate.change(node.querySelector(".field select"), {
