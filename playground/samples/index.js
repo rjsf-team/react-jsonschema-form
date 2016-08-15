@@ -12,7 +12,6 @@ import date from "./date";
 import validation from "./validation";
 import files from "./files";
 import oneOf from "./oneOf";
-import test from "./test";
 
 export const samples = {
   Simple: simple,
@@ -28,6 +27,5 @@ export const samples = {
   "Date & time": date,
   Validation: validation,
   Files: files,
-  OneOf: oneOf,
-  Test: test
+  OneOf: oneOf
 };
