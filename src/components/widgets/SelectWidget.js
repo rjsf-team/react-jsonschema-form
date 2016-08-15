@@ -7,8 +7,10 @@ import { asNumber } from "../../utils";
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
  */
-function processValue(type, value) {
-  if (type === "boolean") {
+function processValue({type, items}, value) {
+  if (type === "array" && items && ["number", "integer"].includes(items.type)) {
+    return value.map(asNumber);
+  } else if (type === "boolean") {
     return value === "true";
   } else if (type === "number") {
     return asNumber(value);
@@ -45,8 +47,7 @@ function SelectWidget({
         } else {
           newValue = event.target.value;
         }
-
-        onChange(processValue(schema.type, newValue));
+        onChange(processValue(schema, newValue));
       }}>{
       enumOptions.map(({value, label}, i) => {
         return <option key={i} value={value}>{label}</option>;
