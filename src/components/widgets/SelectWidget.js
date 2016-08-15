@@ -7,18 +7,12 @@ import { asNumber } from "../../utils";
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
  */
-function processValue(schema, value) {
-  if (schema.type === "array") {
-    const valueType = schema.items.type;
-    if (valueType === "number" || valueType === "integer") {
-      return value.map(v => asNumber(v));
-    }
-    return value;
-  }
-  const valueType = schema.type;
-  if (valueType === "boolean") {
+function processValue({type, items}, value) {
+  if (type === "array" && items && ["number", "integer"].includes(items.type)) {
+    return value.map(asNumber);
+  } else if (type === "boolean") {
     return value === "true";
-  } else if (valueType === "number") {
+  } else if (type === "number") {
     return asNumber(value);
   }
   return value;
