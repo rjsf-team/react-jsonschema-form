@@ -12,7 +12,6 @@ import NumberField from "./NumberField";
 import ObjectField from "./ObjectField";
 import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
-import DescriptionField from "./DescriptionField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -81,6 +80,7 @@ function Wrapper({
     displayLabel,
     id,
     children,
+    DescriptionField,
   }) {
   if (hidden) {
     return children;
@@ -124,6 +124,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     displayLabel: PropTypes.bool,
     children: PropTypes.node.isRequired,
+    DescriptionField: PropTypes.func,
   };
 }
 
@@ -172,7 +173,8 @@ function SchemaField(props) {
       type={schema.type}
       displayLabel={displayLabel}
       id={idSchema.$id}
-      classNames={uiSchema.classNames}>
+      classNames={uiSchema.classNames}
+      DescriptionField={fields.DescriptionField}>
       <FieldComponent {...props}
         schema={schema}
         disabled={disabled}

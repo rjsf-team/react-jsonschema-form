@@ -182,5 +182,16 @@ describe("SchemaField", () => {
       expect(node.querySelectorAll("#root_bar__description"))
         .to.have.length.of(0);
     });
+
+    it("should render a customized description field", () => {
+      const CustomDescriptionField = ({description}) => <div id="custom">{description}</div>;
+
+      const {node} = createFormComponent({schema, fields: {
+        DescriptionField: CustomDescriptionField}
+      });
+
+      expect(node.querySelector("#custom").textContent)
+        .to.eql("A Foo field");
+    });
   });
 });
