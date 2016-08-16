@@ -331,6 +331,20 @@ describe("StringField", () => {
 
       expect(comp.state.errors).to.have.length.of(1);
     });
+
+    it("should properly reset field value when null is selected", () => {
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "date",
+      }, uiSchema, liveValidate: true});
+
+      Simulate.change(node.querySelector("[type=date]"), {
+        target: {value: null}
+      });
+
+      expect(comp.state.formData).to.be.a("undefined");
+      expect(comp.state.errors).to.have.length.of(0);
+    });
   });
 
   describe("AltDateTimeWidget", () => {
