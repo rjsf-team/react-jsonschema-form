@@ -16,12 +16,12 @@ import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
-  "array":   ArrayField,
-  "boolean": BooleanField,
-  "integer": NumberField,
-  "number":  NumberField,
-  "object":  ObjectField,
-  "string":  StringField,
+  array:   ArrayField,
+  boolean: BooleanField,
+  integer: NumberField,
+  number:  NumberField,
+  object:  ObjectField,
+  string:  StringField,
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
