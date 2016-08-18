@@ -47,6 +47,80 @@ describe("Form", () => {
     });
   });
 
+  describe("Custom field template", () => {
+    const schema = {
+      type: "object",
+      title: "root object",
+      required: ["foo"],
+      properties: {
+        foo: {
+          type: "string",
+          description: "this is description",
+          minLength: 32,
+        }
+      }
+    };
+
+    const uiSchema = {
+      foo: {
+        "ui:help": "this is help"
+      }
+    };
+
+    const formData = {foo: "invalid"};
+
+    function FieldTemplate(props) {
+      const {id, classNames, label, help, required, description, errors, children} = props;
+      return (
+        <div className={"my-template " + classNames}>
+          <label htmlFor={id}>{label}{required ? "*" : null}</label>
+          {description}
+          {children}
+          {errors}
+          {help}
+        </div>
+      );
+    }
+
+    let node;
+
+    beforeEach(() => {
+      node = createFormComponent({
+        schema,
+        uiSchema,
+        formData,
+        FieldTemplate,
+        liveValidate: true,
+      }).node;
+    });
+
+    it("should use the provided field template", () => {
+      expect(node.querySelector(".my-template")).to.exist;
+    });
+
+    it("should use the provided template for labels", () => {
+      expect(node.querySelector(".my-template > label").textContent)
+        .eql("root object");
+      expect(node.querySelector(".my-template .field-string > label").textContent)
+        .eql("foo*");
+    });
+
+    it("should use the provided template for descriptions", () => {
+      expect(node.querySelector("#root_foo__description").textContent)
+        .eql("this is description");
+    });
+
+    it("should use the provided template for errors", () => {
+      expect(node.querySelectorAll(".error-detail li"))
+        .to.have.length.of(1);
+    });
+
+    it("should use the provided template for help", () => {
+      expect(node.querySelector(".help-block").textContent)
+        .eql("this is help");
+    });
+  });
+
   describe("Custom submit buttons", () => {
     it("should submit the form when clicked", () => {
       const onSubmit = sandbox.spy();

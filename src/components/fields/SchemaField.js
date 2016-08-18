@@ -13,14 +13,15 @@ import ObjectField from "./ObjectField";
 import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
 
+
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
-  "array":     ArrayField,
-  "boolean":   BooleanField,
-  "integer":   NumberField,
-  "number":    NumberField,
-  "object":    ObjectField,
-  "string":    StringField,
+  "array":   ArrayField,
+  "boolean": BooleanField,
+  "integer": NumberField,
+  "number":  NumberField,
+  "object":  ObjectField,
+  "string":  StringField,
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
@@ -34,7 +35,8 @@ function getFieldComponent(schema, uiSchema, fields) {
   return COMPONENT_TYPES[schema.type] || UnsupportedField;
 }
 
-function getLabel(label, required, id) {
+function Label(props) {
+  const {label, required, id} = props;
   if (!label) {
     return null;
   }
@@ -45,7 +47,8 @@ function getLabel(label, required, id) {
   );
 }
 
-function renderHelp(help) {
+function Help(props) {
+  const {help} = props;
   if (!help) {
     return null;
   }
@@ -55,12 +58,16 @@ function renderHelp(help) {
   return <div className="help-block">{help}</div>;
 }
 
-function ErrorList({errors}) {
+function ErrorList(props) {
+  const {errors = []} = props;
+  if (errors.length === 0) {
+    return null;
+  }
   return (
     <div>
       <p/>
       <ul className="error-detail bs-callout bs-callout-info">{
-        (errors || []).map((error, index) => {
+        errors.map((error, index) => {
           return <li className="text-danger" key={index}>{error}</li>;
         })
       }</ul>
@@ -68,10 +75,10 @@ function ErrorList({errors}) {
   );
 }
 
-function Wrapper({
+function DefaultTemplate({
     type,
     classNames,
-    errorSchema,
+    errors,
     label,
     description,
     hidden,
@@ -80,55 +87,38 @@ function Wrapper({
     displayLabel,
     id,
     children,
-    DescriptionField,
   }) {
   if (hidden) {
     return children;
   }
-  const errors = errorSchema.__errors;
-  const isError = errors && errors.length > 0;
-  const classList = [
-    "form-group",
-    "field",
-    `field-${type}`,
-    isError ? "field-error has-error" : "",
-    classNames,
-  ].join(" ").trim();
   return (
-    <div className={classList}>
-      {displayLabel && label ? getLabel(label, required, id) : null}
-      {displayLabel && description ?
-        <DescriptionField id={`${id}__description`} description={description} /> : null}
+    <div className={classNames}>
+      {displayLabel ? <Label label={label} required={required} id={id} /> : null}
+      {displayLabel && description ? description : null}
       {children}
-      {isError ? <ErrorList errors={errors} /> : <div/>}
-      {renderHelp(help)}
+      {errors}
+      {help}
     </div>
   );
 }
 
 if (process.env.NODE_ENV !== "production") {
-  Wrapper.propTypes = {
+  DefaultTemplate.propTypes = {
     type: PropTypes.string.isRequired,
     id: PropTypes.string,
     classNames: PropTypes.string,
     label: PropTypes.string,
-    description: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.element,
-    ]),
-    help: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.element,
-    ]),
+    description: PropTypes.element,
+    help: PropTypes.element,
     hidden: PropTypes.bool,
     required: PropTypes.bool,
+    readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
     children: PropTypes.node.isRequired,
-    DescriptionField: PropTypes.func,
   };
 }
 
-Wrapper.defaultProps = {
+DefaultTemplate.defaultProps = {
   classNames: "",
   errorSchema: {errors: []},
   hidden: false,
@@ -138,9 +128,10 @@ Wrapper.defaultProps = {
 
 function SchemaField(props) {
   const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
-  const {definitions, fields} = registry;
+  const {definitions, fields, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+  const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
 
@@ -162,25 +153,44 @@ function SchemaField(props) {
     displayLabel = false;
   }
 
-  return (
-    <Wrapper
-      label={props.schema.title || schema.title || name}
-      description={props.schema.description || schema.description}
-      errorSchema={errorSchema}
-      hidden={uiSchema["ui:widget"] === "hidden"}
-      help={uiSchema["ui:help"]}
-      required={required}
-      type={schema.type}
-      displayLabel={displayLabel}
-      id={idSchema.$id}
-      classNames={uiSchema.classNames}
-      DescriptionField={fields.DescriptionField}>
-      <FieldComponent {...props}
-        schema={schema}
-        disabled={disabled}
-        readonly={readonly} />
-    </Wrapper>
+  const field = (
+    <FieldComponent {...props}
+      schema={schema}
+      disabled={disabled}
+      readonly={readonly} />
   );
+
+  const {type} = schema;
+  const id = idSchema.$id;
+  const label = props.schema.title || schema.title || name;
+  const description = props.schema.description || schema.description;
+  const errors = errorSchema.__errors;
+  const isError = errors && errors.length > 0;
+  const help = uiSchema["ui:help"];
+  const hidden = uiSchema["ui:widget"] === "hidden";
+  const classNames = [
+    "form-group",
+    "field",
+    `field-${type}`,
+    isError ? "field-error has-error" : "",
+    uiSchema.classNames,
+  ].join(" ").trim();
+
+  const fieldProps = {
+    description: <DescriptionField id={id + "__description"} description={description} />,
+    help: <Help help={help} />,
+    errors: <ErrorList errors={errors} />,
+    type,
+    id,
+    label,
+    hidden,
+    required,
+    readonly,
+    displayLabel,
+    classNames,
+  };
+
+  return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
 }
 
 SchemaField.defaultProps = {
@@ -206,6 +216,7 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
+      FieldTemplate: PropTypes.func,
     })
   };
 }
