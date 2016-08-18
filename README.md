@@ -551,9 +551,9 @@ Form component supports the following html attributes:
 
 ## Advanced customization
 
-### Field templates
+### Field template
 
-To take control over the inner organization of each field (each form row), you can define a custom *field template*.
+To take control over the inner organization of each field (each form row), you can define a *field template* for your form.
 
 A field template is basically a React stateless component being passed field-related props so you can structure your form row as you like:
 
@@ -590,6 +590,8 @@ The following props are passed to a custom field template component:
 - `required`: A boolean value stating if the field is required;
 - `readonly`: A boolean value stating if the field is read-only;
 - `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in array where you don't want to clutter the UI.
+
+> Note: you can only define a single field template for a form. If you need many, it's probably time to look for [custom fields](#custom-field-components) instead.
 
 ### Custom widgets and fields
 
