@@ -75,19 +75,19 @@ function ErrorList(props) {
   );
 }
 
-function DefaultTemplate({
-    type,
+function DefaultTemplate(props) {
+  const {
+    id,
     classNames,
-    errors,
     label,
+    children,
+    errors,
+    help,
     description,
     hidden,
-    help,
     required,
     displayLabel,
-    id,
-    children,
-  }) {
+  } = props;
   if (hidden) {
     return children;
   }
@@ -104,24 +104,23 @@ function DefaultTemplate({
 
 if (process.env.NODE_ENV !== "production") {
   DefaultTemplate.propTypes = {
-    type: PropTypes.string.isRequired,
     id: PropTypes.string,
     classNames: PropTypes.string,
     label: PropTypes.string,
-    description: PropTypes.element,
+    children: PropTypes.node.isRequired,
+    errors: PropTypes.element,
     help: PropTypes.element,
+    description: PropTypes.element,
     hidden: PropTypes.bool,
     required: PropTypes.bool,
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
-    children: PropTypes.node.isRequired,
   };
 }
 
 DefaultTemplate.defaultProps = {
-  classNames: "",
-  errorSchema: {errors: []},
   hidden: false,
+  readonly: false,
   required: false,
   displayLabel: true,
 };
@@ -179,7 +178,6 @@ function SchemaField(props) {
     description: <DescriptionField id={id + "__description"} description={description} />,
     help: <Help help={help} />,
     errors: <ErrorList errors={errors} />,
-    type,
     id,
     label,
     hidden,
