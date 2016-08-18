@@ -173,6 +173,11 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
       return acc;
     }, {});
   }
+  
+  if (typeof(defaults) === "undefined") {
+    defaults = {};
+  }
+  
   return defaults;
 }
 
