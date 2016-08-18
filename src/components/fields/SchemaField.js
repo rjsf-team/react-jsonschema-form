@@ -165,14 +165,13 @@ function SchemaField(props) {
   const label = props.schema.title || schema.title || name;
   const description = props.schema.description || schema.description;
   const errors = errorSchema.__errors;
-  const isError = errors && errors.length > 0;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
   const classNames = [
     "form-group",
     "field",
     `field-${type}`,
-    isError ? "field-error has-error" : "",
+    errors && errors.length > 0 ? "field-error has-error" : "",
     uiSchema.classNames,
   ].join(" ").trim();
 
