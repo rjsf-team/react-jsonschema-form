@@ -551,7 +551,49 @@ Form component supports the following html attributes:
 
 ## Advanced customization
 
-The API allows to specify your own custom *widgets* and *fields* components:
+### Field templates
+
+To take control over the inner organization of each field (each form row), you can use a generic *field template*.
+
+A custom field template is a React stateless component being passed properties so you can structure your form row as you like:
+
+```jsx
+function CustomFieldTemplate(props) {
+  const {id, classNames, label, help, required, description, errors, children} = props;
+  return (
+    <div className={classNames}>
+      <label htmlFor={id}>{label}{required ? "*" : null}</label>
+      {description}
+      {children}
+      {errors}
+      {help}
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema}
+        FieldTemplate={CustomFieldTemplate} />,
+), document.getElementById("app"));
+```
+
+The following props are passed to a custom field template component:
+
+- `id`: The id of the field in the hierarchy. You can use it to render a label targetting the wrapped widget;
+- `classNames`: A string containing the base bootstrap CSS classes merged with any custom ones defined in your uiSchema;
+- `label`: The label for this field;
+- `children`: The field component instance itself;
+- `errors`: A component instance listing any encountered errors;
+- `help`: A component instance rendering any `ui:help` uiSchema directive defined;
+- `description`: A component instance rendering the field description, if any defined;
+- `hidden`: A boolean value stating if the field should be hidden;
+- `required`: A boolean value stating if the field is required;
+- `readonly`: A boolean value stating if the field is read-only;
+- `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in array where you don't want to clutter the UI.
+
+### Custom widgets and fields
+
+The API allows to specify your own custom *widget* and *field* components:
 
 - A *widget* represents a HTML tag for the user to enter data, eg. `input`, `select`, etc.
 - A *field* usually wraps one or more widgets and most often handles internal field state; think of a field as a form row, including the labels.
