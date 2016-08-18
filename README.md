@@ -553,9 +553,9 @@ Form component supports the following html attributes:
 
 ### Field templates
 
-To take control over the inner organization of each field (each form row), you can use a generic *field template*.
+To take control over the inner organization of each field (each form row), you can define a custom *field template*.
 
-A custom field template is a React stateless component being passed properties so you can structure your form row as you like:
+A field template is basically a React stateless component being passed field-related props so you can structure your form row as you like:
 
 ```jsx
 function CustomFieldTemplate(props) {
