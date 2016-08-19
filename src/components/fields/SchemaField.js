@@ -87,13 +87,14 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
+	  context,
   } = props;
   if (hidden) {
     return children;
   }
   return (
     <div className={classNames}>
-      {displayLabel ? <Label label={label} required={required} id={id} /> : null}
+      {displayLabel ? <Label label={label} required={required} id={id} context={context} /> : null}
       {displayLabel && description ? description : null}
       {children}
       {errors}
@@ -126,7 +127,7 @@ DefaultTemplate.defaultProps = {
 };
 
 function SchemaField(props) {
-  const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
+  const {uiSchema, errorSchema, idSchema, name, required, registry, context} = props;
   const {definitions, fields, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
@@ -175,9 +176,9 @@ function SchemaField(props) {
   ].join(" ").trim();
 
   const fieldProps = {
-    description: <DescriptionField id={id + "__description"} description={description} />,
-    help: <Help help={help} />,
-    errors: <ErrorList errors={errors} />,
+    description: <DescriptionField id={id + "__description"} description={description} context={context} />,
+    help: <Help help={help} context={context} />,
+    errors: <ErrorList errors={errors} context={context} />,
     id,
     label,
     hidden,
