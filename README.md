@@ -580,16 +580,16 @@ render((
 The following props are passed to a custom field template component:
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targetting the wrapped widget;
-- `classNames`: A string containing the base bootstrap CSS classes merged with any custom ones defined in your uiSchema;
-- `label`: The label for this field;
-- `children`: The field component instance itself;
-- `errors`: A component instance listing any encountered errors;
+- `classNames`: A string containing the base bootstrap CSS classes merged with any [custom ones](#custom-css-class-names) defined in your uiSchema;
+- `label`: The computed label for this field, as a string;
+- `description`: A component instance rendering the field description, if any defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined);
+- `children`: The field or widget component instance for this field row;
+- `errors`: A component instance listing any encountered errors for this field;
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined;
-- `description`: A component instance rendering the field description, if any defined;
 - `hidden`: A boolean value stating if the field should be hidden;
 - `required`: A boolean value stating if the field is required;
 - `readonly`: A boolean value stating if the field is read-only;
-- `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in array where you don't want to clutter the UI.
+- `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where you don't want to clutter the UI.
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look for [custom fields](#custom-field-components) instead.
 
