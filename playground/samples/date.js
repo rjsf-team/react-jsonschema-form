@@ -20,7 +20,7 @@ module.exports = {
       },
       alternative: {
         title: "Alternative",
-        description: "These work on every platform.",
+        description: "These work on most platforms.",
         type: "object",
         properties: {
           "alt-datetime": {
