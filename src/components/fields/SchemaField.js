@@ -87,7 +87,7 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
-	  context,
+    context,
   } = props;
   if (hidden) {
     return children;
