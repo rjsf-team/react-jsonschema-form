@@ -42,6 +42,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Placeholders](#placeholders)
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
+     - [Field template](#field-template)
+     - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)
         - [Custom widget options](#custom-widget-options)
