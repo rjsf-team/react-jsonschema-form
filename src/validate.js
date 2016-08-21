@@ -96,9 +96,9 @@ function createErrorHandler(formData) {
     }, handler);
   }
   if(Array.isArray(formData)){
-    return formData.reduce((acc, item, index) => {
+    return Object.assign([],formData.reduce((acc, item, index) => {
       return {...acc, [index]: createErrorHandler(item)};
-    }, handler);
+    }, handler));
   }
   return handler;
 }
