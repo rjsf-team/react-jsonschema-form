@@ -125,10 +125,11 @@ export default class Form extends Component {
     const fields = Object.assign({
       SchemaField: _SchemaField,
       TitleField: _TitleField,
-      DescriptionField: _DescriptionField
+      DescriptionField: _DescriptionField,
     }, this.props.fields);
     return {
       fields,
+      FieldTemplate: this.props.FieldTemplate,
       widgets: this.props.widgets || {},
       definitions: this.props.schema.definitions || {},
     };
@@ -193,6 +194,7 @@ if (process.env.NODE_ENV !== "production") {
       PropTypes.object,
     ])),
     fields: PropTypes.objectOf(PropTypes.func),
+    FieldTemplate: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,
     showErrorList: PropTypes.bool,
