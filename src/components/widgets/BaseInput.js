@@ -10,7 +10,7 @@ function BaseInput(props) {
     onChange,
     options,  // eslint-disable-line
     schema,   // eslint-disable-line
-    context,  // eslint-disable-line
+    formContext,  // eslint-disable-line
     ...inputProps
   } = props;
   return (

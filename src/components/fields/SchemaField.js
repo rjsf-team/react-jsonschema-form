@@ -87,14 +87,14 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
-    context,
+    formContext,
   } = props;
   if (hidden) {
     return children;
   }
   return (
     <div className={classNames}>
-      {displayLabel ? <Label label={label} required={required} id={id} context={context} /> : null}
+      {displayLabel ? <Label label={label} required={required} id={id} formContext={formContext} /> : null}
       {displayLabel && description ? description : null}
       {children}
       {errors}
@@ -127,7 +127,7 @@ DefaultTemplate.defaultProps = {
 };
 
 function SchemaField(props) {
-  const {uiSchema, errorSchema, idSchema, name, required, registry, context} = props;
+  const {uiSchema, errorSchema, idSchema, name, required, registry, formContext} = props;
   const {definitions, fields, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
@@ -176,9 +176,9 @@ function SchemaField(props) {
   ].join(" ").trim();
 
   const fieldProps = {
-    description: <DescriptionField id={id + "__description"} description={description} context={context} />,
-    help: <Help help={help} context={context} />,
-    errors: <ErrorList errors={errors} context={context} />,
+    description: <DescriptionField id={id + "__description"} description={description} formContext={formContext} />,
+    help: <Help help={help} formContext={formContext} />,
+    errors: <ErrorList errors={errors} formContext={formContext} />,
     id,
     label,
     hidden,
@@ -186,7 +186,7 @@ function SchemaField(props) {
     readonly,
     displayLabel,
     classNames,
-    context
+    formContext
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
@@ -197,7 +197,7 @@ SchemaField.defaultProps = {
   errorSchema: {},
   idSchema: {},
   registry: getDefaultRegistry(),
-  context: {},
+  formContext: {},
   disabled: false,
   readonly: false,
 };
@@ -216,7 +216,7 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-      context: PropTypes.object,
+      formContext: PropTypes.object,
       FieldTemplate: PropTypes.func,
     })
   };

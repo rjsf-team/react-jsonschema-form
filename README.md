@@ -50,7 +50,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Custom field components](#custom-field-components)
         - [Field props](#field-props)
         - [The registry object](#the-registry-object)
-        - [The context object](#the-context-object)
+        - [The formContext object](#the-formcontext-object)
      - [Custom SchemaField](#custom-schemafield)
      - [Custom titles](#custom-titles)
      - [Custom descriptions](#custom-descriptions)
@@ -782,7 +782,7 @@ A field component will always be passed the following props:
  - `formData`: The data for this field;
  - `errorSchema`: The tree of errors for this field and its children;
  - `registry`: A [registry](#the-registry-object) object (read next).
- - `context`: A [context](#the-context-object) object (read next next).
+ - `formContext`: A [formContext](#the-formcontext-object) object (read next next).
 
 #### The `registry` object
 
@@ -794,9 +794,9 @@ The `registry` is an object containing the registered custom fields and widgets 
 
 The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
 
-#### The `context` object
+#### The `formContext` object
 
-You can provide a `context` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
+You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
 
 ### Custom SchemaField
 
