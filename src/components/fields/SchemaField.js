@@ -177,8 +177,8 @@ function SchemaField(props) {
 
   const fieldProps = {
     description: <DescriptionField id={id + "__description"} description={description} formContext={formContext} />,
-    help: <Help help={help} formContext={formContext} />,
-    errors: <ErrorList errors={errors} formContext={formContext} />,
+    help: <Help help={help} />,
+    errors: <ErrorList errors={errors} />,
     id,
     label,
     hidden,
