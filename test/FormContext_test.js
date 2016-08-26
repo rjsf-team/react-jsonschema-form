@@ -1,65 +1,61 @@
 import React from "react";
 import { expect } from "chai";
 
-import SchemaField from "../src/components/fields/SchemaField";
-import TitleField from "../src/components/fields/TitleField";
-import DescriptionField from "../src/components/fields/DescriptionField";
-import TextWidget from "../src/components/widgets/TextWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("FormContext", () => {
-	let sandbox;
+  let sandbox;
 
-	beforeEach(() => {
-		sandbox = createSandbox();
-	});
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
 
-	afterEach(() => {
-		sandbox.restore();
-	});
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-	const schema = {type: "string"};
+  const schema = {type: "string"};
 
-	const formContext = {foo: "bar"};
+  const formContext = {foo: "bar"};
 
-	const CustomComponent = function(props) {
-		return (<div id={props.formContext.foo} />);
-	};
+  const CustomComponent = function(props) {
+    return (<div id={props.formContext.foo} />);
+  };
 
-	it("should be passed to Form", () => {
-		const {comp} = createFormComponent({
-			schema: schema,
-			formContext
-		});
-		expect(comp.props.formContext).eq(formContext);
-	});
+  it("should be passed to Form", () => {
+    const {comp} = createFormComponent({
+      schema: schema,
+      formContext
+    });
+    expect(comp.props.formContext).eq(formContext);
+  });
 
-	it("should be passed to custom field", () => {
-		const fields = {SchemaField: CustomComponent};
+  it("should be passed to custom field", () => {
+    const fields = {SchemaField: CustomComponent};
 
-		const {node} = createFormComponent({
-			schema: schema,
-			fields,
-			formContext
-		});
+    const {node} = createFormComponent({
+      schema: schema,
+      fields,
+      formContext
+    });
 
-		expect(node.querySelectorAll("#" + formContext.foo))
-			.to.have.length.of(1);
-	});
+    expect(node.querySelectorAll("#" + formContext.foo))
+      .to.have.length.of(1);
+  });
 
-	["string", "integer", "boolean"].forEach(type => {
-		it("should be passed to custom " + type + " widget", () => {
-			const widgets = {[type]: CustomComponent};
+  ["string", "integer", "boolean"].forEach(type => {
+    it("should be passed to custom " + type + " widget", () => {
+      const widgets = {[type]: CustomComponent};
 
-			const {node} = createFormComponent({
-				schema: {type:  type},
-				uiSchema: {"ui:widget": type},
-				widgets,
-				formContext
-			});
+      const {node} = createFormComponent({
+        schema: {type:  type},
+        uiSchema: {"ui:widget": type},
+        widgets,
+        formContext
+      });
 
-			expect(node.querySelectorAll("#" + formContext.foo))
-				.to.have.length.of(1);
-		});
-	})
+      expect(node.querySelectorAll("#" + formContext.foo))
+        .to.have.length.of(1);
+    });
+  });
 });
