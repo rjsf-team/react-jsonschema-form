@@ -217,5 +217,3 @@ if (process.env.NODE_ENV !== "production") {
     formContext: PropTypes.object,
   };
 }
-
-export default Form;
