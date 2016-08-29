@@ -39,7 +39,6 @@ class ArrayField extends Component {
     uiSchema: {},
     idSchema: {},
     registry: getDefaultRegistry(),
-    formContext: {},
     required: false,
     disabled: false,
     readonly: false,
@@ -344,7 +343,6 @@ class ArrayField extends Component {
             required={this.isItemRequired(itemSchema)}
             onChange={this.onChangeForIndex(index)}
             registry={this.props.registry}
-            formContext={this.props.formContext}
             disabled={this.props.disabled}
             readonly={this.props.readonly} />
         </div>
@@ -412,8 +410,7 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-    }),
-    formContext: PropTypes.object
+    })
   };
 }
 

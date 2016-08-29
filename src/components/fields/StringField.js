@@ -18,14 +18,13 @@ function StringField(props) {
     idSchema,
     formData,
     registry,
-    formContext,
     required,
     disabled,
     readonly,
     onChange
   } = props;
   const {title} = schema;
-  const {widgets} = registry;
+  const {widgets, formContext} = registry;
   const widget = uiSchema["ui:widget"] || schema.format;
   const placeholder = uiSchema["ui:placeholder"] || "";
   const commonProps = {
@@ -71,8 +70,8 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
+      formContext: PropTypes.any.isRequired,
     }),
-    formContext: PropTypes.object,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
@@ -82,7 +81,6 @@ if (process.env.NODE_ENV !== "production") {
 StringField.defaultProps = {
   uiSchema: {},
   registry: getDefaultRegistry(),
-  formContext: {},
   disabled: false,
   readonly: false,
 };

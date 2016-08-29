@@ -317,6 +317,13 @@ class App extends Component {
       editor
     } = this.state;
 
+    const CustomComponent = function(props) {
+      console.log(props);
+      console.log("!!!");
+      console.log(props.formContext);
+      return (<div id={props.formContext.foo} />);
+    };
+
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -357,8 +364,9 @@ class App extends Component {
               uiSchema={uiSchema}
               formData={formData}
               onChange={this.onFormDataChange}
-              fields={{geo: GeoPosition}}
+              fields={{geo: GeoPosition, string: CustomComponent}}
               validate={validate}
+              formContext={"Moi"}
               onError={log("errors")} />}
         </div>
       </div>

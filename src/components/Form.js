@@ -132,6 +132,7 @@ export default class Form extends Component {
       FieldTemplate: this.props.FieldTemplate,
       widgets: this.props.widgets || {},
       definitions: this.props.schema.definitions || {},
+      formContext: this.props.formContext || {},
     };
   }
 
@@ -147,8 +148,7 @@ export default class Form extends Component {
       action,
       autocomplete,
       enctype,
-      acceptcharset,
-      formContext
+      acceptcharset
     } = this.props;
 
     const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
@@ -175,7 +175,6 @@ export default class Form extends Component {
           formData={formData}
           onChange={this.onChange}
           registry={registry}
-          formContext={formContext}
           safeRenderCompletion={safeRenderCompletion}
         />
         { children ? children :
@@ -214,6 +213,6 @@ if (process.env.NODE_ENV !== "production") {
     noValidate: PropTypes.bool,
     liveValidate: PropTypes.bool,
     safeRenderCompletion: PropTypes.bool,
-    formContext: PropTypes.object,
+    formContext: PropTypes.any,
   };
 }

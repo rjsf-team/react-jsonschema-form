@@ -26,14 +26,13 @@ function BooleanField(props) {
     idSchema,
     formData,
     registry,
-    formContext,
     required,
     disabled,
     readonly,
     onChange
   } = props;
   const {title} = schema;
-  const {widgets} = registry;
+  const {widgets, formContext} = registry;
   const widget = uiSchema["ui:widget"];
   const commonProps = {
     schema,
@@ -45,7 +44,7 @@ function BooleanField(props) {
     disabled,
     readonly,
     registry,
-    formContext,
+    formContext
   };
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
@@ -71,15 +70,14 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-    }),
-    formContext: PropTypes.object
+      formContext: PropTypes.any.isRequired,
+    })
   };
 }
 
 BooleanField.defaultProps = {
   uiSchema: {},
   registry: getDefaultRegistry(),
-  formContext: {},
   disabled: false,
   readonly: false,
 };

@@ -33,7 +33,6 @@ class ObjectField extends Component {
     errorSchema: {},
     idSchema: {},
     registry: getDefaultRegistry(),
-    formContext: {},
     required: false,
     disabled: false,
     readonly: false,
@@ -94,7 +93,7 @@ class ObjectField extends Component {
       disabled,
       readonly
     } = this.props;
-    const {definitions, fields} = this.props.registry;
+    const {definitions, fields, formContext} = this.props.registry;
     const {SchemaField, TitleField, DescriptionField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = schema.title || name;
@@ -118,11 +117,13 @@ class ObjectField extends Component {
         {title ? <TitleField
                    id={`${idSchema.$id}__title`}
                    title={title}
-                   required={required} /> : null}
+                   required={required}
+                   formContext={formContext}/> : null}
         {schema.description ?
           <DescriptionField
             id={`${idSchema.$id}__description`}
             description={schema.description}
+            formContext={formContext}
           /> : null}
         {
         orderedProperties.map((name, index) => {
@@ -137,7 +138,6 @@ class ObjectField extends Component {
               formData={this.state[name]}
               onChange={this.onPropertyChange(name)}
               registry={this.props.registry}
-              formContext={this.props.formContext}
               disabled={disabled}
               readonly={readonly} />
           );
@@ -165,8 +165,8 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-    }),
-    formContext: PropTypes.object
+      formContext: PropTypes.any.isRequired,
+    })
   };
 }
 

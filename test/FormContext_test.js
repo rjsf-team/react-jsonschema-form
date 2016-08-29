@@ -19,6 +19,7 @@ describe("FormContext", () => {
   const formContext = {foo: "bar"};
 
   const CustomComponent = function(props) {
+    console.log(":D");
     return (<div id={props.formContext.foo} />);
   };
 
@@ -31,10 +32,11 @@ describe("FormContext", () => {
   });
 
   it("should be passed to custom field", () => {
-    const fields = {SchemaField: CustomComponent};
+    const fields = {custom: CustomComponent};
 
-    const {node} = createFormComponent({
+    const {comp, node} = createFormComponent({
       schema: schema,
+      uiSchema: {"ui:field": "custom"},
       fields,
       formContext
     });
@@ -43,19 +45,54 @@ describe("FormContext", () => {
       .to.have.length.of(1);
   });
 
-  ["string", "integer", "boolean"].forEach(type => {
-    it("should be passed to custom " + type + " widget", () => {
-      const widgets = {[type]: CustomComponent};
+  it("should be passed to custom widget", () => {
+    const widgets = {custom: CustomComponent};
 
-      const {node} = createFormComponent({
-        schema: {type:  type},
-        uiSchema: {"ui:widget": type},
-        widgets,
-        formContext
-      });
-
-      expect(node.querySelectorAll("#" + formContext.foo))
-        .to.have.length.of(1);
+    const {node} = createFormComponent({
+      schema: {type: "string"},
+      uiSchema: {"ui:widget": "custom"},
+      widgets,
+      formContext
     });
+
+    expect(node.querySelectorAll("#" + formContext.foo))
+      .to.have.length.of(1);
+  });
+
+  it("should be passed to custom TitleField", () => {
+    const fields = {TitleField: CustomComponent};
+
+    const {node} = createFormComponent({
+      schema: {
+        type: "object",
+        title: "A title",
+        properties: {
+          prop: {
+						type:  "string"
+          }
+        }
+      },
+      fields,
+      formContext
+    });
+
+    expect(node.querySelectorAll("#" + formContext.foo))
+      .to.have.length.of(1);
+  });
+
+  it("should be passed to custom DescriptionField", () => {
+    const fields = {DescriptionField: CustomComponent};
+
+    const {node} = createFormComponent({
+      schema: {type: "string"},
+      uiSchema: {
+        "ui:description": "A description"
+      },
+      fields,
+      formContext
+    });
+
+    expect(node.querySelectorAll("#" + formContext.foo))
+      .to.have.length.of(1);
   });
 });

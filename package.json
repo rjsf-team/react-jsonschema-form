@@ -13,7 +13,7 @@
     "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
     "start": "node devServer.js",
     "tdd": "NODE_ENV=test babel-node node_modules/.bin/_mocha --watch --require ./test/setup-jsdom.js 'test/**/*_test.js'",
-    "test": "NODE_ENV=test babel-node node_modules/.bin/_mocha --require ./test/setup-jsdom.js 'test/**/*_test.js'"
+    "test": "NODE_ENV=test babel-node node_modules/.bin/_mocha --require ./test/setup-jsdom.js 'test/**/FormContext_test.js'"
   },
   "main": "lib/index.js",
   "files": [

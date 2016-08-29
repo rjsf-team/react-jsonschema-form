@@ -87,14 +87,13 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
-    formContext,
   } = props;
   if (hidden) {
     return children;
   }
   return (
     <div className={classNames}>
-      {displayLabel ? <Label label={label} required={required} id={id} formContext={formContext} /> : null}
+      {displayLabel ? <Label label={label} required={required} id={id} /> : null}
       {displayLabel && description ? description : null}
       {children}
       {errors}
@@ -116,6 +115,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
+    formContext: PropTypes.any
   };
 }
 
@@ -127,8 +127,8 @@ DefaultTemplate.defaultProps = {
 };
 
 function SchemaField(props) {
-  const {uiSchema, errorSchema, idSchema, name, required, registry, formContext} = props;
-  const {definitions, fields, FieldTemplate = DefaultTemplate} = registry;
+  const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
+  const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
   const {DescriptionField} = fields;
@@ -157,7 +157,8 @@ function SchemaField(props) {
     <FieldComponent {...props}
       schema={schema}
       disabled={disabled}
-      readonly={readonly} />
+      readonly={readonly}
+      formContext={formContext} />
   );
 
   const {type} = schema;
@@ -197,7 +198,6 @@ SchemaField.defaultProps = {
   errorSchema: {},
   idSchema: {},
   registry: getDefaultRegistry(),
-  formContext: {},
   disabled: false,
   readonly: false,
 };
@@ -216,8 +216,8 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object,
       FieldTemplate: PropTypes.func,
+      formContext: PropTypes.any
     })
   };
 }
