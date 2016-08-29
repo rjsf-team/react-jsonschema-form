@@ -213,6 +213,6 @@ if (process.env.NODE_ENV !== "production") {
     noValidate: PropTypes.bool,
     liveValidate: PropTypes.bool,
     safeRenderCompletion: PropTypes.bool,
-    formContext: PropTypes.any,
+    formContext: PropTypes.object,
   };
 }
