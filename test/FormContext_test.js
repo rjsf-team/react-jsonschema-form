@@ -19,7 +19,6 @@ describe("FormContext", () => {
   const formContext = {foo: "bar"};
 
   const CustomComponent = function(props) {
-    console.log(":D");
     return (<div id={props.formContext.foo} />);
   };
 
@@ -34,7 +33,7 @@ describe("FormContext", () => {
   it("should be passed to custom field", () => {
     const fields = {custom: CustomComponent};
 
-    const {comp, node} = createFormComponent({
+    const {node} = createFormComponent({
       schema: schema,
       uiSchema: {"ui:field": "custom"},
       fields,
@@ -68,7 +67,7 @@ describe("FormContext", () => {
         title: "A title",
         properties: {
           prop: {
-						type:  "string"
+            type:  "string"
           }
         }
       },
