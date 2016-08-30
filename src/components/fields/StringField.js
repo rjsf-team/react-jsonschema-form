@@ -24,7 +24,7 @@ function StringField(props) {
     onChange
   } = props;
   const {title} = schema;
-  const {widgets} = registry;
+  const {widgets, formContext} = registry;
   const widget = uiSchema["ui:widget"] || schema.format;
   const placeholder = uiSchema["ui:placeholder"] || "";
   const commonProps = {
@@ -36,6 +36,7 @@ function StringField(props) {
     required,
     disabled,
     readonly,
+    formContext,
   };
   if (Array.isArray(schema.enum)) {
     const enumOptions = optionsList(schema);
@@ -69,7 +70,9 @@ if (process.env.NODE_ENV !== "production") {
       ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
+      formContext: PropTypes.object.isRequired,
     }),
+    formContext: PropTypes.object.isRequired,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,

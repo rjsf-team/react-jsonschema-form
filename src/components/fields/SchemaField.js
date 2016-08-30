@@ -115,6 +115,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
+    formContext: PropTypes.object,
   };
 }
 
@@ -127,7 +128,7 @@ DefaultTemplate.defaultProps = {
 
 function SchemaField(props) {
   const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
-  const {definitions, fields, FieldTemplate = DefaultTemplate} = registry;
+  const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
   const {DescriptionField} = fields;
@@ -156,7 +157,8 @@ function SchemaField(props) {
     <FieldComponent {...props}
       schema={schema}
       disabled={disabled}
-      readonly={readonly} />
+      readonly={readonly}
+      formContext={formContext} />
   );
 
   const {type} = schema;
@@ -175,7 +177,9 @@ function SchemaField(props) {
   ].join(" ").trim();
 
   const fieldProps = {
-    description: <DescriptionField id={id + "__description"} description={description} />,
+    description: <DescriptionField id={id + "__description"}
+                                   description={description}
+                                   formContext={formContext} />,
     help: <Help help={help} />,
     errors: <ErrorList errors={errors} />,
     id,
@@ -185,6 +189,7 @@ function SchemaField(props) {
     readonly,
     displayLabel,
     classNames,
+    formContext,
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
@@ -214,6 +219,7 @@ if (process.env.NODE_ENV !== "production") {
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
       FieldTemplate: PropTypes.func,
+      formContext: PropTypes.object.isRequired,
     })
   };
 }
