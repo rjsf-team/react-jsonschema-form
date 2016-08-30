@@ -175,8 +175,7 @@ export default class Form extends Component {
           formData={formData}
           onChange={this.onChange}
           registry={registry}
-          safeRenderCompletion={safeRenderCompletion}
-        />
+          safeRenderCompletion={safeRenderCompletion} />
         { children ? children :
           <p>
             <button type="submit" className="btn btn-info">Submit</button>

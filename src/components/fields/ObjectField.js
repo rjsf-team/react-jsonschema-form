@@ -123,8 +123,7 @@ class ObjectField extends Component {
           <DescriptionField
             id={`${idSchema.$id}__description`}
             description={schema.description}
-            formContext={formContext}
-          /> : null}
+            formContext={formContext} /> : null}
         {
         orderedProperties.map((name, index) => {
           return (

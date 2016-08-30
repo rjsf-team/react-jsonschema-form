@@ -44,7 +44,7 @@ function BooleanField(props) {
     disabled,
     readonly,
     registry,
-    formContext
+    formContext,
   };
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
