@@ -50,7 +50,7 @@ function Label(props) {
 function Help(props) {
   const {help} = props;
   if (!help) {
-    return null;
+    return <div />;
   }
   if (typeof help === "string") {
     return <p className="help-block">{help}</p>;
@@ -61,7 +61,7 @@ function Help(props) {
 function ErrorList(props) {
   const {errors = []} = props;
   if (errors.length === 0) {
-    return null;
+    return <div />;
   }
   return (
     <div>
