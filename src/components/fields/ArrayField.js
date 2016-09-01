@@ -401,10 +401,6 @@ function AddButton({onClick, disabled}) {
   );
 }
 
-ArrayField.defaultProps = {
-  autoFocus: false,
-};
-
 if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = {
     schema: PropTypes.object.isRequired,
