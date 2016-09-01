@@ -248,25 +248,108 @@ describe("uiSchema", () => {
   });
 
   describe("ui:focus", () => {
-    const shouldFocus = (schema, uiSchema, selector = "input") => {
-      const {node} = createFormComponent({schema, uiSchema});
+    const shouldFocus = (schema, uiSchema, selector = "input", formData) => {
+      const props = {schema, uiSchema};
+      if (typeof formData !== "undefined") {
+        props.formData = formData;
+      }
+
+      const {node} = createFormComponent(props);
       expect(node.querySelector(selector)).eql(document.activeElement);
     };
 
-    it("should focus on text input", () => {
-      shouldFocus({type: "string"}, {"ui:autoFocus": true});
+    describe("number", () => {
+      it("should focus on integer input", () => {
+        shouldFocus({type: "integer"}, {"ui:autoFocus": true});
+      });
+
+      it("should focus on integer input, updown widget", () => {
+        shouldFocus({type: "integer"}, {"ui:widget": "updown", "ui:autoFocus": true});
+      });
+
+      it("should focus on integer input, range widget", () => {
+        shouldFocus({type: "integer"}, {"ui:widget": "range", "ui:autoFocus": true});
+      });
+
+      it("should focus on integer enum input", () => {
+        shouldFocus({type: "integer", enum: [1, 2, 3]}, {"ui:autoFocus": true}, "select");
+      });
     });
 
-    it("should focus on integer input", () => {
-      shouldFocus({type: "integer"}, {"ui:autoFocus": true});
+    describe("string", () => {
+      it("should focus on text input", () => {
+        shouldFocus({type: "string"}, {"ui:autoFocus": true});
+      });
+
+      it("should focus on textarea", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "textarea", "ui:autoFocus": true}, "textarea");
+      });
+
+      it("should focus on password input", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "password", "ui:autoFocus": true});
+      });
+
+      it("should focus on color input", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "color", "ui:autoFocus": true});
+      });
+
+      it("should focus on email input", () => {
+        shouldFocus({type: "string", format: "email"}, {"ui:autoFocus": true});
+      });
+
+      it("should focus on uri input", () => {
+        shouldFocus({type: "string", format: "uri"}, {"ui:autoFocus": true});
+      });
+
+      it("should focus on data-url input", () => {
+        shouldFocus({type: "string", format: "data-url"}, {"ui:autoFocus": true});
+      });
     });
 
-    it("should focus on password input", () => {
-      shouldFocus({type: "string"}, {"ui:widget": "password", "ui:autoFocus": true});
+    describe("object", () => {
+      it("should focus on date input", () => {
+        shouldFocus({type: "string", format: "date"}, {"ui:autoFocus": true});
+      });
+
+      it("should focus on date-time input", () => {
+        shouldFocus({type: "string", format: "date-time"}, {"ui:autoFocus": true});
+      });
+
+      it("should focus on alt-date input", () => {
+        shouldFocus({type: "string", format: "date"}, {"ui:widget": "alt-date",  "ui:autoFocus": true}, "select");
+      });
+
+      it("should focus on alt-date-time input", () => {
+        shouldFocus({type: "string", format: "date-time"}, {"ui:widget": "alt-datetime",  "ui:autoFocus": true}, "select");
+      });
     });
 
-    it("should focus on textarea", () => {
-      shouldFocus({type: "string"}, {"ui:widget": "textarea", "ui:autoFocus": true}, "textarea");
+    describe("array", () => {
+      it("should focus on multiple files input", () => {
+        shouldFocus({type: "array", items: {type: "string", format: "data-url"}}, {"ui:autoFocus": true});
+      });
+
+      it("should focus on first item of a list of strings", () => {
+        shouldFocus({type: "array", items: {type: "string", default: "foo"}}, {"ui:autoFocus": true}, "input", ["foo", "bar"]);
+      });
+
+      it("should focus on first item of a multiple choices list", () => {
+        shouldFocus({type: "array", items: {type: "string", enum: ["foo", "bar"]}, uniqueItems: true}, {"ui:widget": "checkboxes", "ui:autoFocus": true}, "input", ["bar"]);
+      });
+    });
+
+    describe("boolean", () => {
+      it("should focus on checkbox input", () => {
+        shouldFocus({type: "boolean"}, {"ui:autoFocus": true});
+      });
+
+      it("should focus on radio input", () => {
+        shouldFocus({type: "boolean"}, {"ui:widget": "radio", "ui:autoFocus": true});
+      });
+
+      it("should focus on select input", () => {
+        shouldFocus({type: "boolean"}, {"ui:widget": "select", "ui:autoFocus": true}, "select");
+      });
     });
   });
 

@@ -7,8 +7,9 @@ function CheckboxWidget({
   value,
   required,
   disabled,
-  onChange,
   label,
+  autoFocus,
+  onChange,
 }) {
   return (
     <div className={`checkbox ${disabled ? "disabled" : ""}`}>
@@ -18,19 +19,26 @@ function CheckboxWidget({
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled}
+          autoFocus={autoFocus}
           onChange={(event) => onChange(event.target.checked)} />
         <strong>{label}</strong>
       </label>
     </div>
   );
 }
+
+CheckboxWidget.defaultProps = {
+  autoFocus: false,
+};
+
 if (process.env.NODE_ENV !== "production") {
   CheckboxWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    onChange: PropTypes.func,
     value: PropTypes.bool,
     required: PropTypes.bool,
+    autoFocus: PropTypes.bool,
+    onChange: PropTypes.func,
   };
 }
 
