@@ -22,4 +22,4 @@
 
 ### Version
 
-You can usually get this information in your `package.json` or in the file URL if you're using the npmcdn one.
+You can usually get this information in your `package.json` or in the file URL if you're using the unpkg one.

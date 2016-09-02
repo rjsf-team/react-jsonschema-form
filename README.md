@@ -85,10 +85,10 @@ $ npm install react-jsonschema-form --save
 ### As a script served from a CDN
 
 ```html
-  <script src="https://npmcdn.com/react-jsonschema-form/dist/react-jsonschema-form.js"></script>
+  <script src="https://unpkg.com/react-jsonschema-form/dist/react-jsonschema-form.js"></script>
 ```
 
-Source maps are available at [this url](https://npmcdn.com/react-jsonschema-form/dist/react-jsonschema-form.js.map).
+Source maps are available at [this url](https://unpkg.com/react-jsonschema-form/dist/react-jsonschema-form.js.map).
 
 > Note: The CDN version **does not** embed *react* nor *react-dom*.
 >
