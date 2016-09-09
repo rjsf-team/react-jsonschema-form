@@ -3,3 +3,5 @@ node_modules
 build
 dist
 lib
+
+.idea
