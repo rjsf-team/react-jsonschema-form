@@ -1,6 +1,6 @@
 {
-  "name": "react-jsonschema-form",
-  "version": "0.40.0",
+  "name": "book-md-react-jsonschema-form",
+  "version": "0.40.2",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build:readme": "toctoc README.md -w",
@@ -76,7 +76,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
+    "url": "git+https://github.com/bookmd/react-jsonschema-form.git"
   },
   "author": "Nicolas Perriault <nperriault@mozilla.com>",
   "keywords": [
@@ -85,5 +85,5 @@
     "json-schema"
   ],
   "license": "Apache-2.0",
-  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme"
+  "homepage": "https://github.com/bookmd/react-jsonschema-form#readme"
 }
