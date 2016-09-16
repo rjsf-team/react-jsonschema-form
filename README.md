@@ -296,6 +296,7 @@ Please note that while standardized, `datetime-local` and `date` input elements 
 
   * `updown`: an `input[type=number]` updown selector;
   * `range`: an `input[type=range]` slider;
+  * `radio`: a radio button group with enum values. **can only be used when `enum` values are specified for this input**
   * by default, a regular `input[type=text]` element is used.
 
 > Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
