@@ -606,6 +606,52 @@ describe("uiSchema", () => {
       });
     });
 
+    describe("radio", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [3.14159, 2.718, 1.4142],
+          }
+        }
+      };
+
+      const uiSchema = {
+        foo: {
+          "ui:widget": "radio"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=radio]"))
+          .to.have.length.of(3);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 2.718
+        }});
+
+        expect(node.querySelectorAll("[type=radio]")[1].checked)
+          .eql(true);
+      });
+
+      it("should update state when value is updated", () => {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 1.4142
+        }});
+
+        Simulate.change(node.querySelectorAll("[type=radio]")[2], {
+          target: {checked: true}
+        });
+
+        expect(comp.state.formData).eql({foo: 1.4142});
+      });
+    });
+
     describe("hidden", () => {
       const uiSchema = {
         foo: {
@@ -718,6 +764,52 @@ describe("uiSchema", () => {
         });
 
         expect(comp.state.formData).eql({foo: 6});
+      });
+    });
+
+    describe("radio", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "integer",
+            enum: [1, 2],
+          }
+        }
+      };
+
+      const uiSchema = {
+        foo: {
+          "ui:widget": "radio"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=radio]"))
+          .to.have.length.of(2);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 2
+        }});
+
+        expect(node.querySelectorAll("[type=radio]")[1].checked)
+          .eql(true);
+      });
+
+      it("should update state when value is updated", () => {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 1
+        }});
+
+        Simulate.change(node.querySelectorAll("[type=radio]")[1], {
+          target: {checked: true}
+        });
+
+        expect(comp.state.formData).eql({foo: 2});
       });
     });
 

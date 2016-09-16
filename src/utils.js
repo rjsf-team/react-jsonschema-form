@@ -44,11 +44,13 @@ const altWidgetMap = {
   number: {
     updown: UpDownWidget,
     range: RangeWidget,
+    radio: RadioWidget,
     hidden: HiddenWidget,
   },
   integer: {
     updown: UpDownWidget,
     range: RangeWidget,
+    radio: RadioWidget,
     hidden: HiddenWidget,
   },
   array: {
