@@ -2,6 +2,7 @@ import React, { PropTypes } from "react";
 
 import {
   isMultiSelect,
+  isHidden,
   retrieveSchema,
   getDefaultRegistry,
   isFilesArray
@@ -167,7 +168,7 @@ function SchemaField(props) {
   const description = props.schema.description || schema.description;
   const errors = errorSchema.__errors;
   const help = uiSchema["ui:help"];
-  const hidden = uiSchema["ui:widget"] === "hidden";
+  const hidden = isHidden(uiSchema);
   const classNames = [
     "form-group",
     "field",

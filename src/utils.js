@@ -53,6 +53,7 @@ const altWidgetMap = {
   },
   array: {
     checkboxes: CheckboxesWidget,
+    hidden: HiddenWidget
   }
 };
 
@@ -257,6 +258,10 @@ export function isFixedItems(schema) {
   return Array.isArray(schema.items) &&
          schema.items.length > 0 &&
          schema.items.every(item => isObject(item));
+}
+
+export function isHidden(uiSchema) {
+  return uiSchema["ui:widget"] === "hidden";
 }
 
 export function allowAdditionalItems(schema) {

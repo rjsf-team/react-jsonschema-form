@@ -13,6 +13,7 @@ if (process.env.NODE_ENV !== "production") {
     value: PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.number,
+      React.PropTypes.array,
       React.PropTypes.bool,
     ]),
   };
