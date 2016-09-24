@@ -490,3 +490,13 @@ export function dataURItoBlob(dataURI) {
 
   return {blob, name};
 }
+
+export function getSchemaTypeWithoutNull(schema) {
+  return Array.isArray(schema.type) ? schema.type.filter(function(i) {
+    return i != "null"
+  }) : schema.type;
+}
+
+export function isSchemaTypeNullable(schema) {
+  return Array.isArray(schema.type) ? schema.type.includes("null") : false;
+}

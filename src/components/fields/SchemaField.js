@@ -4,13 +4,16 @@ import {
   isMultiSelect,
   retrieveSchema,
   getDefaultRegistry,
-  isFilesArray
+  isFilesArray,
+  getSchemaTypeWithoutNull,
+  isSchemaTypeNullable,
 } from "../../utils";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import NumberField from "./NumberField";
 import ObjectField from "./ObjectField";
 import StringField from "./StringField";
+import Nullable from "./NullableField";
 import UnsupportedField from "./UnsupportedField";
 
 
@@ -21,18 +24,19 @@ const COMPONENT_TYPES = {
   integer: NumberField,
   number:  NumberField,
   object:  ObjectField,
-  string:  StringField,
+  string:  StringField
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
   const field = uiSchema["ui:field"];
+  const schemaType = getSchemaTypeWithoutNull(schema);
   if (typeof field === "function") {
     return field;
   }
   if (typeof field === "string" && field in fields) {
     return fields[field];
   }
-  return COMPONENT_TYPES[schema.type] || UnsupportedField;
+  return COMPONENT_TYPES[schemaType] || UnsupportedField;
 }
 
 function Label(props) {
@@ -87,12 +91,13 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
+    style,
   } = props;
   if (hidden) {
     return children;
   }
   return (
-    <div className={classNames}>
+    <div className={classNames} style={style}>
       {displayLabel ? <Label label={label} required={required} id={id} /> : null}
       {displayLabel && description ? description : null}
       {children}
@@ -130,7 +135,10 @@ function SchemaField(props) {
   const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
   const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
-  const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+  const initialFieldComponent = getFieldComponent(schema, uiSchema, fields);
+  //const FieldComponent = Array.isArray(schema.type)  ? nullableHOC(initialFieldComponent) : initialFieldComponent;
+  const FieldComponent = initialFieldComponent;
+
   const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
@@ -152,14 +160,22 @@ function SchemaField(props) {
   if (uiSchema["ui:field"]) {
     displayLabel = false;
   }
-
-  const field = (
+  const innerField = (
     <FieldComponent {...props}
       schema={schema}
       disabled={disabled}
       readonly={readonly}
       formContext={formContext} />
   );
+  const field = isSchemaTypeNullable(schema) ? (
+    <Nullable {...props}
+              schema={schema}
+              disabled={disabled}
+              readonly={readonly}
+              formContext={formContext} >
+      {innerField}
+    </Nullable>
+  ) : innerField;
 
   const {type} = schema;
   const id = idSchema.$id;
@@ -175,7 +191,9 @@ function SchemaField(props) {
     errors && errors.length > 0 ? "field-error has-error" : "",
     uiSchema.classNames,
   ].join(" ").trim();
-
+  const style = {
+    position: "relative"
+  };
   const fieldProps = {
     description: <DescriptionField id={id + "__description"}
                                    description={description}
@@ -190,6 +208,7 @@ function SchemaField(props) {
     displayLabel,
     classNames,
     formContext,
+    style,
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
