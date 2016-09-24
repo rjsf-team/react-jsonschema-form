@@ -65,11 +65,10 @@ function NullableField(props) {
     }
   };
   return <RadioWidget optionClassName="" optionStyle={optionStyle} value={isNull} options={buildOptions()} {...commonProps} onChange={(eventIsNull, event) => {
-      const schemaType = getSchemaTypeWithoutNull(schema);
-      const newValue = eventIsNull == false ? COMPONENT_TYPES_DEFAULTS[schemaType] : null;
-      onChange(newValue);
-    }
-  } />;
+    const schemaType = getSchemaTypeWithoutNull(schema);
+    const newValue = eventIsNull == false ? COMPONENT_TYPES_DEFAULTS[schemaType] : null;
+    onChange(newValue);
+  }} />;
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -117,6 +116,6 @@ export default class Nullable extends React.Component {
           : <span>{children}</span>
         }
       </div>
-    )
+    );
   }
 }

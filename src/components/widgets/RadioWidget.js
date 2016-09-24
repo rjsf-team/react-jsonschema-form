@@ -8,7 +8,7 @@ function RadioWidget({
   required,
   disabled,
   onChange,
-  optionStyle,
+  optionStyle = {groupStyle: {}, inputStyle: {}},
   optionClassName = "radio",
 }) {
   // Generating a unique field name to identify this set of radio buttons

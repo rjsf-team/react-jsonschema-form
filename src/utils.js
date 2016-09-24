@@ -493,7 +493,7 @@ export function dataURItoBlob(dataURI) {
 
 export function getSchemaTypeWithoutNull(schema) {
   return Array.isArray(schema.type) ? schema.type.filter(function(i) {
-    return i != "null"
+    return i != "null";
   }) : schema.type;
 }
 
