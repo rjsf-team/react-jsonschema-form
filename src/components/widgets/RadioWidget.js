@@ -7,19 +7,23 @@ function RadioWidget({
   value,
   required,
   disabled,
-  onChange
+  onChange,
+  optionStyle = {groupStyle: {}, inputStyle: {}},
+  optionClassName = "radio",
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   const {enumOptions} = options;
+  const {groupStyle, inputStyle} = optionStyle;
   return (
-    <div className="field-radio-group">{
+    <div className="field-radio-group" style={groupStyle}>{
       enumOptions.map((option, i) => {
         const checked = option.value === value;
         return (
-          <div key={i} className={`radio ${disabled ? "disabled" : ""}`}>
+          <span key={i} className={`${optionClassName} ${disabled ? "disabled" : ""}`}>
             <label>
               <input type="radio"
+                style={inputStyle}
                 name={name}
                 value={option.value}
                 checked={checked}
@@ -27,7 +31,7 @@ function RadioWidget({
                 onChange={_ => onChange(option.value)} />
               {option.label}
             </label>
-          </div>
+          </span>
         );
       })
     }</div>
