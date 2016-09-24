@@ -24,7 +24,7 @@ const COMPONENT_TYPES = {
   integer: NumberField,
   number:  NumberField,
   object:  ObjectField,
-  string:  StringField
+  string:  StringField,
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
@@ -135,9 +135,7 @@ function SchemaField(props) {
   const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
   const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
-  const initialFieldComponent = getFieldComponent(schema, uiSchema, fields);
-  //const FieldComponent = Array.isArray(schema.type)  ? nullableHOC(initialFieldComponent) : initialFieldComponent;
-  const FieldComponent = initialFieldComponent;
+  const FieldComponent = getFieldComponent(schema, uiSchema, fields);
 
   const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
