@@ -38,7 +38,7 @@ function BooleanField(props) {
     schema,
     id: idSchema && idSchema.$id,
     onChange,
-    label: (title === undefined) ?  name : title,
+    label: (title === undefined) ? name : title,
     value: defaultFieldValue(formData, schema),
     required,
     disabled,

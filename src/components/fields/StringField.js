@@ -30,7 +30,7 @@ function StringField(props) {
   const commonProps = {
     schema,
     id: idSchema && idSchema.$id,
-    label: (title === undefined) ?  name : title,
+    label: (title === undefined) ? name : title,
     value: defaultFieldValue(formData, schema),
     onChange,
     required,
