@@ -626,48 +626,48 @@ describe("ArrayField", () => {
     });
   });
 
-	describe("Title", () => {
-		const TitleField = props => <div id={`title-${props.title}`} />;
+  describe("Title", () => {
+    const TitleField = props => <div id={`title-${props.title}`} />;
 
-		const fields = {TitleField};
+    const fields = {TitleField};
 
-		it("should pass field name to TitleField if there is no title", () => {
-			const schema = {
-				"type": "object",
-				"properties": {
-					"array": {
-						"type": "array",
-						"items": {
-						}
-					}
-				}
-			};
+    it("should pass field name to TitleField if there is no title", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+          "array": {
+            "type": "array",
+            "items": {
+            }
+          }
+        }
+      };
 
-			const {node} = createFormComponent({schema, fields});
-			expect(node.querySelector("#title-array")).to.not.be.null;
-		});
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-array")).to.not.be.null;
+    });
 
-		it("should pass schema title to TitleField", () => {
-			const schema = {
-				"type": "array",
-				"title": "test",
-				"items": {
-				}
-			};
+    it("should pass schema title to TitleField", () => {
+      const schema = {
+        "type": "array",
+        "title": "test",
+        "items": {
+        }
+      };
 
-			const {node} = createFormComponent({schema, fields});
-			expect(node.querySelector("#title-test")).to.not.be.null;
-		});
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-test")).to.not.be.null;
+    });
 
-		it("should pass empty schema title to TitleField", () => {
-			const schema = {
-				"type": "array",
-				"title": "",
-				"items": {
-				}
-			};
-			const {node} = createFormComponent({schema, fields});
-			expect(node.querySelector("#title-")).to.be.null;
-		});
-	});
+    it("should pass empty schema title to TitleField", () => {
+      const schema = {
+        "type": "array",
+        "title": "",
+        "items": {
+        }
+      };
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-")).to.be.null;
+    });
+  });
 });

@@ -238,48 +238,48 @@ describe("ObjectField", () => {
     });
   });
 
-	describe("Title", () => {
-		const TitleField = props => <div id={`title-${props.title}`} />;
+  describe("Title", () => {
+    const TitleField = props => <div id={`title-${props.title}`} />;
 
-		const fields = {TitleField};
+    const fields = {TitleField};
 
-		it("should pass field name to TitleField if there is no title", () => {
-			const schema = {
-				"type": "object",
-				"properties": {
-					"object": {
-						"type": "object",
-						"properties": {
-						}
-					}
-				}
-			};
+    it("should pass field name to TitleField if there is no title", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "object",
+            "properties": {
+            }
+          }
+        }
+      };
 
-			const {node} = createFormComponent({schema, fields});
-			expect(node.querySelector("#title-object")).to.not.be.null;
-		});
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-object")).to.not.be.null;
+    });
 
-		it("should pass schema title to TitleField", () => {
-			const schema = {
-				"type": "object",
-				"properties": {
-				},
-				"title": "test"
-			};
+    it("should pass schema title to TitleField", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+        },
+        "title": "test"
+      };
 
-			const {node} = createFormComponent({schema, fields});
-			expect(node.querySelector("#title-test")).to.not.be.null;
-		});
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-test")).to.not.be.null;
+    });
 
-		it("should pass empty schema title to TitleField", () => {
-			const schema = {
-				"type": "object",
-				"properties": {
-				},
-				"title": ""
-			};
-			const {node} = createFormComponent({schema, fields});
-			expect(node.querySelector("#title-")).to.be.null;
-		});
-	});
+    it("should pass empty schema title to TitleField", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+        },
+        "title": ""
+      };
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-")).to.be.null;
+    });
+  });
 });
