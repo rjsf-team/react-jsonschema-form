@@ -524,7 +524,7 @@ Help texts work for any kind of field at any level, and will always be rendered 
 
 ### Auto focus
 
-If you want to focus on a text input or textarea input automatically, just set `ui:autoFocus` uiSchema directive to `true`.
+If you want to focus on a text input or textarea input/on a widget automatically, just set `ui:autoFocus` uiSchema directive to `true`.
 
 ```js
 const schema = {type: "string"};

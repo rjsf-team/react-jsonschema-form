@@ -8,7 +8,7 @@ function CheckboxWidget({
   required,
   disabled,
   label,
-  autoFocus,
+  autofocus,
   onChange,
 }) {
   return (
@@ -19,7 +19,7 @@ function CheckboxWidget({
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled}
-          autoFocus={autoFocus}
+          autoFocus={autofocus}
           onChange={(event) => onChange(event.target.checked)} />
         <strong>{label}</strong>
       </label>
@@ -28,7 +28,7 @@ function CheckboxWidget({
 }
 
 CheckboxWidget.defaultProps = {
-  autoFocus: false,
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -37,7 +37,7 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     value: PropTypes.bool,
     required: PropTypes.bool,
-    autoFocus: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

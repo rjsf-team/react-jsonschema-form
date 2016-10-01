@@ -7,7 +7,7 @@ function RadioWidget({
   value,
   required,
   disabled,
-  autoFocus,
+  autofocus,
   onChange
 }) {
   // Generating a unique field name to identify this set of radio buttons
@@ -25,7 +25,7 @@ function RadioWidget({
                 value={option.value}
                 checked={checked}
                 disabled={disabled}
-                autoFocus={autoFocus && i === 0}
+                autoFocus={autofocus && i === 0}
                 onChange={_ => onChange(option.value)} />
               {option.label}
             </label>
@@ -37,7 +37,7 @@ function RadioWidget({
 }
 
 RadioWidget.defaultProps = {
-  autoFocus: false,
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -49,7 +49,7 @@ if (process.env.NODE_ENV !== "production") {
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
-    autoFocus: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

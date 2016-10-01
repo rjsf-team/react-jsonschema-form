@@ -94,7 +94,7 @@ class FileWidget extends Component {
   };
 
   render() {
-    const {multiple, id, readonly, disabled, autoFocus} = this.props;
+    const {multiple, id, readonly, disabled, autofocus} = this.props;
     const {filesInfo} = this.state;
     return (
       <div>
@@ -105,7 +105,7 @@ class FileWidget extends Component {
             disabled={readonly || disabled}
             onChange={this.onChange}
             defaultValue=""
-            autoFocus={autoFocus}
+            autoFocus={autofocus}
             multiple={multiple} />
         </p>
         <FilesInfo filesInfo={filesInfo} />
@@ -115,7 +115,7 @@ class FileWidget extends Component {
 }
 
 FileWidget.defaultProps = {
-  autoFocus: false,
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -125,7 +125,7 @@ if (process.env.NODE_ENV !== "production") {
       PropTypes.string,
       PropTypes.arrayOf(PropTypes.string)
     ]),
-    autoFocus: PropTypes.bool,
+    autofocus: PropTypes.bool,
   };
 }
 

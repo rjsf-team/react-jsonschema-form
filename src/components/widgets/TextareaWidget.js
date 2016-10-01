@@ -9,7 +9,7 @@ function TextareaWidget({
   required,
   disabled,
   readonly,
-  autoFocus,
+  autofocus,
   onChange
 }) {
   return (
@@ -21,13 +21,13 @@ function TextareaWidget({
       required={required}
       disabled={disabled}
       readOnly={readonly}
-      autoFocus={autoFocus}
+      autoFocus={autofocus}
       onChange={(event) => onChange(event.target.value)} />
   );
 }
 
 TextareaWidget.defaultProps = {
-  autoFocus: false
+  autofocus: false
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -37,7 +37,7 @@ if (process.env.NODE_ENV !== "production") {
     placeholder: PropTypes.string,
     value: PropTypes.string,
     required: PropTypes.bool,
-    autoFocus: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

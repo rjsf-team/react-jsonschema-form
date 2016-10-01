@@ -17,7 +17,7 @@ function readyForChange(state) {
 }
 
 function DateElement(props) {
-  const {type, range, value, select, rootId, disabled, readonly, autoFocus} = props;
+  const {type, range, value, select, rootId, disabled, readonly, autofocus} = props;
   const id = rootId + "_" + type;
   return (
     <SelectWidget
@@ -28,7 +28,7 @@ function DateElement(props) {
       value={value}
       disabled={disabled}
       readonly={readonly}
-      autoFocus={autoFocus}
+      autofocus={autofocus}
       onChange={(value) => select(type, value)} />
   );
 }
@@ -38,7 +38,7 @@ class AltDateWidget extends Component {
     time: false,
     disabled: false,
     readonly: false,
-    autoFocus: false
+    autofocus: false
   };
 
   constructor(props) {
@@ -101,7 +101,7 @@ class AltDateWidget extends Component {
   }
 
   render() {
-    const {id, disabled, readonly, autoFocus} = this.props;
+    const {id, disabled, readonly, autofocus} = this.props;
     return (
       <ul className="list-inline">{
         this.dateElementProps.map((elemProps, i) => (
@@ -112,7 +112,7 @@ class AltDateWidget extends Component {
               {...elemProps}
               disabled= {disabled}
               readonly={readonly}
-              autoFocus={autoFocus && i === 0}/>
+              autofocus={autofocus && i === 0}/>
           </li>
         ))
       }
@@ -137,7 +137,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
-    autoFocus: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     time: PropTypes.bool,
   };

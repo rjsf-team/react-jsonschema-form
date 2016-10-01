@@ -27,7 +27,7 @@ function SelectWidget({
   disabled,
   readonly,
   multiple,
-  autoFocus,
+  autofocus,
   onChange
 }) {
   const {enumOptions} = options;
@@ -40,7 +40,7 @@ function SelectWidget({
       required={required}
       disabled={disabled}
       readOnly={readonly}
-      autoFocus={autoFocus}
+      autoFocus={autofocus}
       onChange={(event) => {
         let newValue;
         if (multiple) {
@@ -59,7 +59,7 @@ function SelectWidget({
 }
 
 SelectWidget.defaultProps = {
-  autoFocus: false,
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -72,7 +72,7 @@ if (process.env.NODE_ENV !== "production") {
     value: PropTypes.any,
     required: PropTypes.bool,
     multiple: PropTypes.bool,
-    autoFocus: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }
