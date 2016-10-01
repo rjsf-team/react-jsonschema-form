@@ -134,6 +134,7 @@ function SchemaField(props) {
   const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
+  const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
 
   if (Object.keys(schema).length === 0) {
     return <div />;
@@ -158,6 +159,7 @@ function SchemaField(props) {
       schema={schema}
       disabled={disabled}
       readonly={readonly}
+      autofocus={autofocus}
       formContext={formContext} />
   );
 
@@ -202,6 +204,7 @@ SchemaField.defaultProps = {
   registry: getDefaultRegistry(),
   disabled: false,
   readonly: false,
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
