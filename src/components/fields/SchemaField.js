@@ -38,7 +38,8 @@ function getFieldComponent(schema, uiSchema, fields) {
 function Label(props) {
   const {label, required, id} = props;
   if (!label) {
-    return null;
+    // See #312: Ensure compatibility with old versions of React.
+    return <div />;
   }
   return (
     <label className="control-label" htmlFor={id}>
@@ -50,6 +51,7 @@ function Label(props) {
 function Help(props) {
   const {help} = props;
   if (!help) {
+    // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
   if (typeof help === "string") {
@@ -136,6 +138,7 @@ function SchemaField(props) {
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
 
   if (Object.keys(schema).length === 0) {
+    // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
 
