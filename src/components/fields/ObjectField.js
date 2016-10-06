@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import deeper from "deeper";
+
+import { deepEquals } from "../../utils";
 
 
 import {
@@ -20,7 +21,7 @@ function objectKeysHaveChanged(formData, state) {
     return true;
   }
   // deep check on sorted keys
-  if (!deeper(newKeys.sort(), oldKeys.sort())) {
+  if (!deepEquals(newKeys.sort(), oldKeys.sort())) {
     return true;
   }
   return false;
@@ -92,7 +93,7 @@ class ObjectField extends Component {
       disabled,
       readonly
     } = this.props;
-    const {definitions, fields} = this.props.registry;
+    const {definitions, fields, formContext} = this.props.registry;
     const {SchemaField, TitleField, DescriptionField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = schema.title || name;
@@ -114,14 +115,15 @@ class ObjectField extends Component {
     return (
       <fieldset>
         {title ? <TitleField
-                   id={`${idSchema.id}__title`}
+                   id={`${idSchema.$id}__title`}
                    title={title}
-                   required={required} /> : null}
+                   required={required}
+                   formContext={formContext}/> : null}
         {schema.description ?
           <DescriptionField
-            id={`${idSchema.id}__description`}
+            id={`${idSchema.$id}__description`}
             description={schema.description}
-          /> : null}
+            formContext={formContext} /> : null}
         {
         orderedProperties.map((name, index) => {
           return (
@@ -156,9 +158,13 @@ if (process.env.NODE_ENV !== "production") {
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(PropTypes.func).isRequired,
+      widgets: PropTypes.objectOf(PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.object,
+      ])).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
+      formContext: PropTypes.object.isRequired,
     })
   };
 }

@@ -3,7 +3,7 @@ import React, { PropTypes } from "react";
 
 function HiddenWidget({id, value}) {
   return (
-    <input type="hidden" id={id} value={value} />
+    <input type="hidden" id={id} value={typeof value === "undefined" ? "" : value} />
   );
 }
 

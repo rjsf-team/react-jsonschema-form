@@ -12,16 +12,12 @@ module.exports = {
     libraryTarget: "umd"
   },
   plugins: [
-    new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("production")
       }
     })
   ],
-  node: {
-    Buffer: "mock",
-  },
   devtool: "source-map",
   externals: {
     react: {

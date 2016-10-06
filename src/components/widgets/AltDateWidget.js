@@ -17,17 +17,18 @@ function readyForChange(state) {
 }
 
 function DateElement(props) {
-  const {type, range, value, select, rootId, disabled, readonly} = props;
+  const {type, range, value, select, rootId, disabled, readonly, autofocus} = props;
   const id = rootId + "_" + type;
   return (
     <SelectWidget
       schema={{type: "integer"}}
       id={id}
       className="form-control"
-      options={rangeOptions(type, range[0], range[1])}
+      options={{enumOptions: rangeOptions(type, range[0], range[1])}}
       value={value}
       disabled={disabled}
       readonly={readonly}
+      autofocus={autofocus}
       onChange={(value) => select(type, value)} />
   );
 }
@@ -37,6 +38,7 @@ class AltDateWidget extends Component {
     time: false,
     disabled: false,
     readonly: false,
+    autofocus: false
   };
 
   constructor(props) {
@@ -99,7 +101,7 @@ class AltDateWidget extends Component {
   }
 
   render() {
-    const {id, disabled, readonly} = this.props;
+    const {id, disabled, readonly, autofocus} = this.props;
     return (
       <ul className="list-inline">{
         this.dateElementProps.map((elemProps, i) => (
@@ -109,7 +111,8 @@ class AltDateWidget extends Component {
               select={this.onChange}
               {...elemProps}
               disabled= {disabled}
-              readonly={readonly} />
+              readonly={readonly}
+              autofocus={autofocus && i === 0}/>
           </li>
         ))
       }
@@ -130,11 +133,11 @@ if (process.env.NODE_ENV !== "production") {
   AltDateWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
     value: React.PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     time: PropTypes.bool,
   };

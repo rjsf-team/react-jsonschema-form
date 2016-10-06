@@ -2,12 +2,24 @@ import React, { PropTypes } from "react";
 
 
 function BaseInput(props) {
-  const {value, readonly, onChange} = props;
+  // Note: since React 15.2.0 we can't forward unknown element attributes, so we
+  // exclude the "options" and "schema" ones here.
+  const {
+    value,
+    readonly,
+    autofocus,
+    onChange,
+    options,  // eslint-disable-line
+    schema,   // eslint-disable-line
+    formContext,  // eslint-disable-line
+    ...inputProps
+  } = props;
   return (
     <input
-      {...props}
+      {...inputProps}
       className="form-control"
       readOnly={readonly}
+      autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
       onChange={(event) => onChange(event.target.value)} />
   );
@@ -18,6 +30,7 @@ BaseInput.defaultProps = {
   required: false,
   disabled: false,
   readonly: false,
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -28,6 +41,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

@@ -36,13 +36,13 @@ describe("StringField", () => {
         .eql("foo");
     });
 
-    it("should render a string field with a placeholder", () => {
+    it("should render a string field with a description", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
         description: "bar",
       }});
 
-      expect(node.querySelector(".field input").getAttribute("placeholder"))
+      expect(node.querySelector(".field-description").textContent)
         .eql("bar");
     });
 
@@ -113,17 +113,6 @@ describe("StringField", () => {
 
       expect(node.querySelector(".field label").textContent)
         .eql("foo");
-    });
-
-    it("should render a select field with a tooltip", () => {
-      const {node} = createFormComponent({schema: {
-        type: "string",
-        enum: ["foo", "bar"],
-        description: "baz",
-      }});
-
-      expect(node.querySelector(".field select").getAttribute("title"))
-        .eql("baz");
     });
 
     it("should assign a default value", () => {
@@ -341,6 +330,20 @@ describe("StringField", () => {
       });
 
       expect(comp.state.errors).to.have.length.of(1);
+    });
+
+    it("should properly reset field value when null is selected", () => {
+      const {comp, node} = createFormComponent({schema: {
+        type: "string",
+        format: "date",
+      }, uiSchema, liveValidate: true});
+
+      Simulate.change(node.querySelector("[type=date]"), {
+        target: {value: null}
+      });
+
+      expect(comp.state.formData).to.be.a("undefined");
+      expect(comp.state.errors).to.have.length.of(0);
     });
   });
 
@@ -677,14 +680,14 @@ describe("StringField", () => {
         .eql("foo");
     });
 
-    it("should render a select field with a placeholder", () => {
+    it("should render a select field with a description", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
         format: "email",
         description: "baz",
       }});
 
-      expect(node.querySelector(".field [type=email]").getAttribute("placeholder"))
+      expect(node.querySelector(".field-description").textContent)
         .eql("baz");
     });
 
@@ -778,7 +781,7 @@ describe("StringField", () => {
         description: "baz",
       }});
 
-      expect(node.querySelector(".field [type=url]").getAttribute("placeholder"))
+      expect(node.querySelector(".field-description").textContent)
         .eql("baz");
     });
 

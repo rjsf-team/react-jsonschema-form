@@ -10,7 +10,6 @@ module.exports = {
     publicPath: "/static/"
   },
   plugins: [
-    new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
     new ExtractTextPlugin("styles.css", {allChunks: true}),
     new webpack.DefinePlugin({
       "process.env": {
@@ -20,9 +19,6 @@ module.exports = {
   ],
   resolve: {
     extensions: ["", ".js", ".jsx", ".css"]
-  },
-  node: {
-    Buffer: "mock",
   },
   module: {
     loaders: [

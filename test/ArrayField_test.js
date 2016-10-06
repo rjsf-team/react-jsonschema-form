@@ -44,7 +44,7 @@ describe("ArrayField", () => {
     it("should render a description", () => {
       const {node} = createFormComponent({schema});
 
-      const description = node.querySelector("fieldset > div.field-description");
+      const description = node.querySelector("fieldset > .field-description");
 
       expect(description.textContent).eql("my description");
       expect(description.id).eql("root__description");
@@ -102,9 +102,64 @@ describe("ArrayField", () => {
       expect(inputs[1].value).eql("bar");
     });
 
+    it("should't have reorder buttons when list length <= 1", () => {
+      const {node} = createFormComponent({schema, formData: ["foo"]});
+
+      expect(node.querySelector(".array-item-move-up"))
+        .eql(null);
+      expect(node.querySelector(".array-item-move-down"))
+        .eql(null);
+    });
+
+    it("should have reorder buttons when list length >= 2", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+
+      expect(node.querySelector(".array-item-move-up"))
+        .not.eql(null);
+      expect(node.querySelector(".array-item-move-down"))
+        .not.eql(null);
+    });
+
+    it("should move down a field from the list", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar", "baz"]});
+      const moveDownBtns = node.querySelectorAll(".array-item-move-down");
+
+      Simulate.click(moveDownBtns[0]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+      expect(inputs).to.have.length.of(3);
+      expect(inputs[0].value).eql("bar");
+      expect(inputs[1].value).eql("foo");
+      expect(inputs[2].value).eql("baz");
+    });
+
+    it("should move up a field from the list", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar", "baz"]});
+      const moveUpBtns = node.querySelectorAll(".array-item-move-up");
+
+      Simulate.click(moveUpBtns[2]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+      expect(inputs).to.have.length.of(3);
+      expect(inputs[0].value).eql("foo");
+      expect(inputs[1].value).eql("baz");
+      expect(inputs[2].value).eql("bar");
+    });
+
+    it("should disable move buttons on the ends of the list", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+      const moveUpBtns = node.querySelectorAll(".array-item-move-up");
+      const moveDownBtns = node.querySelectorAll(".array-item-move-down");
+
+      expect(moveUpBtns[0].disabled).eql(true);
+      expect(moveDownBtns[0].disabled).eql(false);
+      expect(moveUpBtns[1].disabled).eql(false);
+      expect(moveDownBtns[1].disabled).eql(true);
+    });
+
     it("should remove a field from the list", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
-      const dropBtns = node.querySelectorAll(".array-item-remove button");
+      const dropBtns = node.querySelectorAll(".array-item-remove");
 
       Simulate.click(dropBtns[0]);
 
@@ -132,7 +187,7 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll(".has-error .error-detail"))
         .to.have.length.of(1);
 
-      const dropBtns = node.querySelectorAll(".array-item-remove button");
+      const dropBtns = node.querySelectorAll(".array-item-remove");
 
       Simulate.click(dropBtns[0]);
 
@@ -529,19 +584,45 @@ describe("ArrayField", () => {
       });
 
       it("should remove array items when clicking remove buttons", () => {
-        let dropBtns = node.querySelectorAll(".array-item-remove button");
+        let dropBtns = node.querySelectorAll(".array-item-remove");
 
         Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
         expect(comp.state.formData).eql([1, 2, "baz"]);
 
-        dropBtns = node.querySelectorAll(".array-item-remove button");
+        dropBtns = node.querySelectorAll(".array-item-remove");
         Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.be.empty;
         expect(comp.state.formData).eql([1, 2]);
       });
+    });
+  });
+
+  describe("Multiple number choices list", () => {
+    const schema = {
+      type: "array",
+      title: "My field",
+      items: {
+        enum: [1, 2, 3],
+        type: "integer"
+      },
+      uniqueItems: true,
+    };
+
+    it("should convert array of strings to numbers if type of items is 'number'", () => {
+      const {comp, node} = createFormComponent({schema});
+
+      Simulate.change(node.querySelector(".field select"), {
+        target: {options: [
+          {selected: true, value: "1"},
+          {selected: true, value: "2"},
+          {selected: false, value: "3"},
+        ]}
+      });
+
+      expect(comp.state.formData).eql([1, 2]);
     });
   });
 });

@@ -1,5 +1,4 @@
 import "setimmediate";
-import deeper from "deeper";
 
 import TitleField from "./components/fields/TitleField";
 import DescriptionField from "./components/fields/DescriptionField";
@@ -83,6 +82,7 @@ export function getDefaultRegistry() {
     },
     widgets: {},
     definitions: {},
+    formContext: {}
   };
 }
 
@@ -90,26 +90,52 @@ export function defaultFieldValue(formData, schema) {
   return typeof formData === "undefined" ? schema.default : formData;
 }
 
-export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
+export function getAlternativeWidget(
+  schema,
+  widget,
+  registeredWidgets={},
+  widgetOptions={}
+) {
   const {type, format} = schema;
-  if (typeof widget === "function") {
+
+  function setDefaultOptions(widget) {
+    widget.defaultProps = {...widget.defaultProps, options: widgetOptions};
     return widget;
   }
+
+  if (typeof widget === "function") {
+    return setDefaultOptions(widget);
+  }
+
+  if (isObject(widget)) {
+    const {component, options} = widget;
+    const mergedOptions = {...options, ...widgetOptions};
+    return getAlternativeWidget(schema, component, registeredWidgets, mergedOptions);
+  }
+
   if (typeof widget !== "string") {
     throw new Error(`Unsupported widget definition: ${typeof widget}`);
   }
-  if (widget in registeredWidgets) {
-    return registeredWidgets[widget];
+
+  if (registeredWidgets.hasOwnProperty(widget)) {
+    const registeredWidget = registeredWidgets[widget];
+    return getAlternativeWidget(schema, registeredWidget, registeredWidgets, widgetOptions);
   }
+
   if (!altWidgetMap.hasOwnProperty(type)) {
     throw new Error(`No alternative widget for type ${type}`);
   }
+
   if (altWidgetMap[type].hasOwnProperty(widget)) {
-    return altWidgetMap[type][widget];
+    const altWidget = altWidgetMap[type][widget];
+    return getAlternativeWidget(schema, altWidget, registeredWidgets, widgetOptions);
   }
+
   if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
-    return stringFormatWidgets[format];
+    const stringFormatWidget = stringFormatWidgets[format];
+    return getAlternativeWidget(schema, stringFormatWidget, registeredWidgets, widgetOptions);
   }
+
   const info = type === "string" && format ? `/${format}` : "";
   throw new Error(`No alternative widget "${widget}" for type ${type}${info}`);
 }
@@ -270,12 +296,94 @@ export function retrieveSchema(schema, definitions={}) {
   return {...$refSchema, ...localSchema};
 }
 
+function isArguments (object) {
+  return Object.prototype.toString.call(object) === "[object Arguments]";
+}
+
+export function deepEquals(a, b, ca = [], cb = []) {
+  // Partially extracted from node-deeper and adapted to exclude comparison
+  // checks for functions.
+  // https://github.com/othiym23/node-deeper
+  if (a === b) {
+    return true;
+  } else if (typeof a === "function" || typeof b === "function") {
+    // Assume all functions are equivalent
+    // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
+    return true;
+  } else if (typeof a !== "object" || typeof b !== "object") {
+    return false;
+  } else if (a === null || b === null) {
+    return false;
+  } else if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  } else if (a instanceof RegExp && b instanceof RegExp) {
+    return a.source === b.source &&
+    a.global === b.global &&
+    a.multiline === b.multiline &&
+    a.lastIndex === b.lastIndex &&
+    a.ignoreCase === b.ignoreCase;
+  } else if (isArguments(a) || isArguments(b)) {
+    if (!(isArguments(a) && isArguments(b))) {
+      return false;
+    }
+    let slice = Array.prototype.slice;
+    return deepEquals(slice.call(a), slice.call(b), ca, cb);
+  } else {
+    if (a.constructor !== b.constructor) {
+      return false;
+    }
+
+    let ka = Object.keys(a);
+    let kb = Object.keys(b);
+    // don't bother with stack acrobatics if there's nothing there
+    if (ka.length === 0 && kb.length === 0) {
+      return true;
+    }
+    if (ka.length !== kb.length) {
+      return false;
+    }
+
+    let cal = ca.length;
+    while (cal--) {
+      if (ca[cal] === a) {
+        return cb[cal] === b;
+      }
+    }
+    ca.push(a);
+    cb.push(b);
+
+    ka.sort();
+    kb.sort();
+    for (var j = ka.length - 1; j >= 0; j--) {
+      if (ka[j] !== kb[j]) {
+        return false;
+      }
+    }
+
+    let key;
+    for (let k = ka.length - 1; k >= 0; k--) {
+      key = ka[k];
+      if (!deepEquals(a[key], b[key], ca, cb)) {
+        return false;
+      }
+    }
+
+    ca.pop();
+    cb.pop();
+
+    return true;
+  }
+}
+
 export function shouldRender(comp, nextProps, nextState) {
-  return !deeper(comp.props, nextProps) || !deeper(comp.state, nextState);
+  const {props, state} = comp;
+  return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
 }
 
 export function toIdSchema(schema, id, definitions) {
-  const idSchema = {id: id || "root"};
+  const idSchema = {
+    $id: id || "root"
+  };
   if ("$ref" in schema) {
     const _schema = retrieveSchema(schema, definitions);
     return toIdSchema(_schema, id, definitions);
@@ -288,7 +396,7 @@ export function toIdSchema(schema, id, definitions) {
   }
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.id + "_" + name;
+    const fieldId = idSchema.$id + "_" + name;
     idSchema[name] = toIdSchema(field, fieldId, definitions);
   }
   return idSchema;

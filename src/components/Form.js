@@ -69,7 +69,9 @@ export default class Form extends Component {
 
   renderErrors() {
     const {status, errors} = this.state;
-    if (status !== "editing" && errors.length) {
+    const {showErrorList} = this.props;
+
+    if (status !== "editing" && errors.length && showErrorList != false) {
       return <ErrorList errors={errors} />;
     }
     return null;
@@ -123,12 +125,14 @@ export default class Form extends Component {
     const fields = Object.assign({
       SchemaField: _SchemaField,
       TitleField: _TitleField,
-      DescriptionField: _DescriptionField
+      DescriptionField: _DescriptionField,
     }, this.props.fields);
     return {
       fields,
+      FieldTemplate: this.props.FieldTemplate,
       widgets: this.props.widgets || {},
       definitions: this.props.schema.definitions || {},
+      formContext: this.props.formContext || {},
     };
   }
 
@@ -186,10 +190,15 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     formData: PropTypes.any,
-    widgets: PropTypes.objectOf(PropTypes.func),
+    widgets: PropTypes.objectOf(PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.object,
+    ])),
     fields: PropTypes.objectOf(PropTypes.func),
+    FieldTemplate: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,
+    showErrorList: PropTypes.bool,
     onSubmit: PropTypes.func,
     id: PropTypes.string,
     className: PropTypes.string,
@@ -203,7 +212,6 @@ if (process.env.NODE_ENV !== "production") {
     noValidate: PropTypes.bool,
     liveValidate: PropTypes.bool,
     safeRenderCompletion: PropTypes.bool,
+    formContext: PropTypes.object,
   };
 }
-
-export default Form;
