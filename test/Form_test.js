@@ -6,6 +6,8 @@ import { findDOMNode } from "react-dom";
 
 import Form from "../src";
 import { createFormComponent, createSandbox } from "./test_utils";
+import { Help, ErrorList } from "../src/components/fields/SchemaField";
+import DescriptionField from "../src/components/fields/DescriptionField";
 
 
 describe("Form", () => {
@@ -74,9 +76,10 @@ describe("Form", () => {
       return (
         <div className={"my-template " + classNames}>
           <label htmlFor={id}>{label}{required ? "*" : null}</label>
-          {description}
+          <DescriptionField id={`${id}__description`} description={description} />
           {children}
-          {errors}
+          <ErrorList errors={errors} />
+          <Help help={help} />
           {help}
         </div>
       );
@@ -105,7 +108,7 @@ describe("Form", () => {
         .eql("foo*");
     });
 
-    it("should use the provided template for descriptions", () => {
+    it("should pass description as text", () => {
       expect(node.querySelector("#root_foo__description").textContent)
         .eql("this is description");
     });
@@ -115,7 +118,7 @@ describe("Form", () => {
         .to.have.length.of(1);
     });
 
-    it("should use the provided template for help", () => {
+    it("should pass help as text", () => {
       expect(node.querySelector(".help-block").textContent)
         .eql("this is help");
     });

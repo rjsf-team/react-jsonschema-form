@@ -48,7 +48,7 @@ function Label(props) {
   );
 }
 
-function Help(props) {
+export function Help(props) {
   const {help} = props;
   if (!help) {
     // See #312: Ensure compatibility with old versions of React.
@@ -60,7 +60,7 @@ function Help(props) {
   return <div className="help-block">{help}</div>;
 }
 
-function ErrorList(props) {
+export function ErrorList(props) {
   const {errors = []} = props;
   if (errors.length === 0) {
     return <div />;
@@ -89,17 +89,26 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
+    fields,
+    formContext
   } = props;
   if (hidden) {
     return children;
   }
+
+  const {DescriptionField} = fields;
+
   return (
     <div className={classNames}>
       {displayLabel ? <Label label={label} required={required} id={id} /> : null}
-      {displayLabel && description ? description : null}
+      {displayLabel && description ?
+        <DescriptionField id={id + "__description"}
+                          description={description}
+                          formContext={formContext} />
+        : null}
       {children}
-      {errors}
-      {help}
+      <ErrorList errors={errors} />
+      <Help help={help} />
     </div>
   );
 }
@@ -110,13 +119,14 @@ if (process.env.NODE_ENV !== "production") {
     classNames: PropTypes.string,
     label: PropTypes.string,
     children: PropTypes.node.isRequired,
-    errors: PropTypes.element,
-    help: PropTypes.element,
-    description: PropTypes.element,
+    errors: PropTypes.arrayOf(PropTypes.string),
+    help: PropTypes.string,
+    description: PropTypes.string,
     hidden: PropTypes.bool,
     required: PropTypes.bool,
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
+    fields: PropTypes.object,
     formContext: PropTypes.object,
   };
 }
@@ -133,7 +143,6 @@ function SchemaField(props) {
   const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
-  const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
@@ -182,11 +191,9 @@ function SchemaField(props) {
   ].join(" ").trim();
 
   const fieldProps = {
-    description: <DescriptionField id={id + "__description"}
-                                   description={description}
-                                   formContext={formContext} />,
-    help: <Help help={help} />,
-    errors: <ErrorList errors={errors} />,
+    description,
+    help,
+    errors,
     id,
     label,
     hidden,
@@ -195,6 +202,7 @@ function SchemaField(props) {
     displayLabel,
     classNames,
     formContext,
+    fields,
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
