@@ -86,17 +86,10 @@ class ObjectField extends Component {
   render() {
     const {
       uiSchema,
-      errorSchema,
-      idSchema,
-      name,
-      required,
-      disabled,
-      readonly
+      name
     } = this.props;
-    const {definitions, fields, formContext} = this.props.registry;
-    const {SchemaField, TitleField, DescriptionField} = fields;
+    const {definitions} = this.props.registry;
     const schema = retrieveSchema(this.props.schema, definitions);
-    const title = schema.title || name;
     let orderedProperties;
     try {
       const properties = Object.keys(schema.properties);
@@ -112,6 +105,32 @@ class ObjectField extends Component {
         </div>
       );
     }
+    return this._cacheRendered(orderedProperties);
+  }
+
+  _cacheRendered(orderedProperties) {
+    if (this.cachedProps !== this.props) {
+      this._cachedRendered = this._render(orderedProperties);
+    }
+
+    return this._cachedRendered;
+  }
+
+  _render(orderedProperties) {
+    const {
+      uiSchema,
+      errorSchema,
+      idSchema,
+      name,
+      required,
+      disabled,
+      readonly
+    } = this.props;
+    const {definitions, fields, formContext} = this.props.registry;
+    const {SchemaField, TitleField, DescriptionField} = fields;
+    const schema = retrieveSchema(this.props.schema, definitions);
+    const title = schema.title || name;
+
     return (
       <fieldset>
         {title ? <TitleField
@@ -126,22 +145,41 @@ class ObjectField extends Component {
             formContext={formContext} /> : null}
         {
         orderedProperties.map((name, index) => {
-          return (
-            <SchemaField key={index}
-              name={name}
-              required={this.isRequired(name)}
-              schema={schema.properties[name]}
-              uiSchema={uiSchema[name]}
-              errorSchema={errorSchema[name]}
-              idSchema={idSchema[name]}
-              formData={this.state[name]}
-              onChange={this.onPropertyChange(name)}
-              registry={this.props.registry}
-              disabled={disabled}
-              readonly={readonly} />
-          );
+          return this._cacheRenderedSchemaField(SchemaField, index, name, schema, uiSchema, errorSchema, idSchema, this.state[name], this.onPropertyChange(name), this.props.registry, disabled, readonly);
         })
       }</fieldset>
+    );
+  }
+
+  _cacheRenderedSchemaField(SchemaField, index, name, schema, uiSchema, errorSchema, idSchema, formData, onChange, registry, disabled, readonly) {
+    let props = {SchemaField, index, name, schema, uiSchema, errorSchema, idSchema, formData, onChange, registry, disabled, readonly};
+    if (!this._schemaFieldCache) {
+      this._schemaFieldCache = {};
+      this._schemaFieldProps = {};
+    }
+
+    if (!this._schemaFieldProps || !this._schemaFieldProps[name] || !deepEquals(this._schemaFieldProps[name], props)) {
+      this._schemaFieldProps[name] = props;
+      this._schemaFieldCache[name] = this._renderSchemaField(SchemaField, index, name, schema, uiSchema, errorSchema, idSchema, formData, onChange, registry, disabled, readonly);
+    }
+
+    return this._schemaFieldCache[name];
+  }
+
+  _renderSchemaField(SchemaField, index, name, schema, uiSchema, errorSchema, idSchema, formData, onChange, registry, disabled, readonly) {
+    return (
+      <SchemaField key={index}
+        name={name}
+        required={this.isRequired(name)}
+        schema={schema.properties[name]}
+        uiSchema={uiSchema[name]}
+        errorSchema={errorSchema[name]}
+        idSchema={idSchema[name]}
+        formData={formData}
+        onChange={onChange}
+        registry={registry}
+        disabled={disabled}
+        readonly={readonly} />
     );
   }
 }
