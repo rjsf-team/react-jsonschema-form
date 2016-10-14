@@ -167,7 +167,7 @@ class ArrayField extends Component {
       readonly,
       autofocus,
     } = this.props;
-    const title = schema.title || name;
+    const title = (schema.title === undefined) ? name : schema.title;
     const {items} = this.state;
     const {definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;

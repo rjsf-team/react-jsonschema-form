@@ -1,3 +1,4 @@
+import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
@@ -111,5 +112,55 @@ describe("BooleanField", () => {
 
     expect(node.querySelector("input[type=checkbox]").id)
       .eql("root");
+  });
+
+  describe("Label", () => {
+    const Widget = props => <div id={`label-${props.label}`}/>;
+
+    const widgets = {Widget};
+
+    it("should pass field name to widget if there is no title", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+          "boolean": {
+            "type": "boolean"
+          }
+        }
+      };
+      const uiSchema = {
+        "boolean": {
+          "ui:widget": "Widget"
+        }
+      };
+
+      const {node} = createFormComponent({schema, widgets, uiSchema});
+      expect(node.querySelector("#label-boolean")).to.not.be.null;
+    });
+
+    it("should pass schema title to widget", () => {
+      const schema = {
+        "type": "boolean",
+        "title": "test"
+      };
+      const uiSchema = {
+        "ui:widget": "Widget"
+      };
+
+      const {node} = createFormComponent({schema, widgets, uiSchema});
+      expect(node.querySelector("#label-test")).to.not.be.null;
+    });
+
+    it("should pass empty schema title to widget", () => {
+      const schema = {
+        "type": "boolean",
+        "title": ""
+      };
+      const uiSchema = {
+        "ui:widget": "Widget"
+      };
+      const {node} = createFormComponent({schema, widgets, uiSchema});
+      expect(node.querySelector("#label-")).to.not.be.null;
+    });
   });
 });

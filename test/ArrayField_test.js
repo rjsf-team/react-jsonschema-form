@@ -625,4 +625,49 @@ describe("ArrayField", () => {
       expect(comp.state.formData).eql([1, 2]);
     });
   });
+
+  describe("Title", () => {
+    const TitleField = props => <div id={`title-${props.title}`} />;
+
+    const fields = {TitleField};
+
+    it("should pass field name to TitleField if there is no title", () => {
+      const schema = {
+        "type": "object",
+        "properties": {
+          "array": {
+            "type": "array",
+            "items": {
+            }
+          }
+        }
+      };
+
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-array")).to.not.be.null;
+    });
+
+    it("should pass schema title to TitleField", () => {
+      const schema = {
+        "type": "array",
+        "title": "test",
+        "items": {
+        }
+      };
+
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-test")).to.not.be.null;
+    });
+
+    it("should pass empty schema title to TitleField", () => {
+      const schema = {
+        "type": "array",
+        "title": "",
+        "items": {
+        }
+      };
+      const {node} = createFormComponent({schema, fields});
+      expect(node.querySelector("#title-")).to.be.null;
+    });
+  });
 });
