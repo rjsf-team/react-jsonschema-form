@@ -102,6 +102,36 @@ describe("NumberField", () => {
       expect(node.querySelector("input[type=text]").id)
         .eql("root");
     });
+
+    it("should render with trailing zeroes", () => {
+      const {node} = createFormComponent({schema: {
+        type: "number"
+      }});
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: "2."}
+      });
+      expect(node.querySelector(".field input").value)
+        .eql("2.");
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: "2.0"}
+      });
+      expect(node.querySelector(".field input").value)
+        .eql("2.0");
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: "2.00"}
+      });
+      expect(node.querySelector(".field input").value)
+        .eql("2.00");
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: "2.000"}
+      });
+      expect(node.querySelector(".field input").value)
+        .eql("2.000");
+    });
   });
 
   describe("SelectWidget", () => {

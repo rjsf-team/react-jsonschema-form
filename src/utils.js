@@ -224,6 +224,14 @@ export function asNumber(value) {
   }
   const n = Number(value);
   const valid = typeof n === "number" && !Number.isNaN(n);
+
+  if (/\.\d*0$/.test(value)) {
+    // It's a number, that's cool - but we need it as a string so it doesn't screw
+    // with the user when entering dollar amounts or other values (such as those with
+    // specific precision or number of significant digits)
+    return value;
+  }
+
   return valid ? n : value;
 }
 
