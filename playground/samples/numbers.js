@@ -16,6 +16,11 @@ module.exports = {
         title: "Number enum",
         enum: [1, 2, 3]
       },
+      numberEnumRadio: {
+        type: "number",
+        title: "Number enum",
+        enum: [1, 2, 3]
+      },
       integerRange: {
         title: "Integer range",
         type: "integer",
@@ -34,6 +39,9 @@ module.exports = {
   uiSchema: {
     integer: {
       "ui:widget": "updown"
+    },
+    numberEnumRadio: {
+      "ui:widget": "radio"
     },
     integerRange: {
       "ui:widget": "range"
