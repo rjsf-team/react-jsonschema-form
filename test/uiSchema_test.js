@@ -944,8 +944,10 @@ describe("uiSchema", () => {
           foo: ["foo", "bar"]
         }});
 
+        // array values will be stored as comma seperated list in the DOM,
+        // it's the best we can do (pull request #324).
         expect(node.querySelector("[type=hidden]").value)
-          .eql(["foo", "bar"]);
+          .eql("foo,bar");
       });
 
       it("should map widget value to a typed state one", () => {
