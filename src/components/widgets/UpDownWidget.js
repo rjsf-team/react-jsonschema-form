@@ -8,10 +8,10 @@ function rangeSpec(schema) {
   if (schema.multipleOf) {
     spec.step = schema.multipleOf;
   }
-  if (schema.minimum) {
+  if (schema.minimum || schema.minimum === 0) {
     spec.min = schema.minimum;
   }
-  if (schema.maximum) {
+  if (schema.maximum || schema.maximum === 0) {
     spec.max = schema.maximum;
   }
   return spec;
