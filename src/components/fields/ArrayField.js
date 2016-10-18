@@ -329,11 +329,11 @@ class ArrayField extends Component {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly, uiSchema} = this.props;
 
-	  const sortable = uiSchema["ui:options"] ? uiSchema["ui:options"].sortable : true;
-	  if (!sortable) {
-		  canMoveUp = false;
-		  canMoveDown = false;
-	  }
+    const sortable = uiSchema["ui:options"] ? uiSchema["ui:options"].sortable : true;
+    if (!sortable) {
+      canMoveUp = false;
+      canMoveDown = false;
+    }
     const hasToolbar = removable || canMoveUp || canMoveDown;
 
     const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
