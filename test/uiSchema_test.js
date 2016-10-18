@@ -247,6 +247,117 @@ describe("uiSchema", () => {
     });
   });
 
+  describe("ui:focus", () => {
+    const shouldFocus = (schema, uiSchema, selector = "input", formData) => {
+      const props = {schema, uiSchema};
+      if (typeof formData !== "undefined") {
+        props.formData = formData;
+      }
+
+      const {node} = createFormComponent(props);
+      expect(node.querySelector(selector)).eql(document.activeElement);
+    };
+
+    describe("number", () => {
+      it("should focus on integer input", () => {
+        shouldFocus({type: "integer"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on integer input, updown widget", () => {
+        shouldFocus({type: "integer"}, {"ui:widget": "updown", "ui:autofocus": true});
+      });
+
+      it("should focus on integer input, range widget", () => {
+        shouldFocus({type: "integer"}, {"ui:widget": "range", "ui:autofocus": true});
+      });
+
+      it("should focus on integer enum input", () => {
+        shouldFocus({type: "integer", enum: [1, 2, 3]}, {"ui:autofocus": true}, "select");
+      });
+    });
+
+    describe("string", () => {
+      it("should focus on text input", () => {
+        shouldFocus({type: "string"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on textarea", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "textarea", "ui:autofocus": true}, "textarea");
+      });
+
+      it("should focus on password input", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "password", "ui:autofocus": true});
+      });
+
+      it("should focus on color input", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "color", "ui:autofocus": true});
+      });
+
+      it("should focus on email input", () => {
+        shouldFocus({type: "string", format: "email"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on uri input", () => {
+        shouldFocus({type: "string", format: "uri"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on data-url input", () => {
+        shouldFocus({type: "string", format: "data-url"}, {"ui:autofocus": true});
+      });
+    });
+
+    describe("object", () => {
+      it("should focus on date input", () => {
+        shouldFocus({type: "string", format: "date"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on date-time input", () => {
+        shouldFocus({type: "string", format: "date-time"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on alt-date input", () => {
+        shouldFocus({type: "string", format: "date"}, {"ui:widget": "alt-date",  "ui:autofocus": true}, "select");
+      });
+
+      it("should focus on alt-date-time input", () => {
+        shouldFocus({type: "string", format: "date-time"}, {"ui:widget": "alt-datetime",  "ui:autofocus": true}, "select");
+      });
+    });
+
+    describe("array", () => {
+      it("should focus on multiple files input", () => {
+        shouldFocus({type: "array", items: {type: "string", format: "data-url"}}, {"ui:autofocus": true});
+      });
+
+      it("should focus on first item of a list of strings", () => {
+        shouldFocus({type: "array", items: {type: "string", default: "foo"}}, {"ui:autofocus": true}, "input", ["foo", "bar"]);
+      });
+
+      it("should focus on first item of a multiple choices list", () => {
+        shouldFocus(
+          {type: "array", items: {type: "string", enum: ["foo", "bar"]}, uniqueItems: true},
+          {"ui:widget": "checkboxes", "ui:autofocus": true},
+          "input",
+          ["bar"]
+        );
+      });
+    });
+
+    describe("boolean", () => {
+      it("should focus on checkbox input", () => {
+        shouldFocus({type: "boolean"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on radio input", () => {
+        shouldFocus({type: "boolean"}, {"ui:widget": "radio", "ui:autofocus": true});
+      });
+
+      it("should focus on select input", () => {
+        shouldFocus({type: "boolean"}, {"ui:widget": "select", "ui:autofocus": true}, "select");
+      });
+    });
+  });
+
   describe("string", () => {
     const schema = {
       type: "object",
@@ -543,6 +654,20 @@ describe("uiSchema", () => {
           expect(input.getAttribute("max")).eql("100");
         });
 
+        it("should support '0' as minimum and maximum constraints", () => {
+          const schema = {
+            type: "number",
+            minimum: 0,
+            maximum: 0,
+          };
+          const uiSchema = {"ui:widget": "updown"};
+          const {node} = createFormComponent({schema, uiSchema});
+          input = node.querySelector("[type=number]");
+
+          expect(input.getAttribute("min")).eql("0");
+          expect(input.getAttribute("max")).eql("0");
+        });
+
         it("should support the multipleOf constraint", () => {
           expect(input.getAttribute("step")).eql("1");
         });
@@ -600,9 +725,69 @@ describe("uiSchema", () => {
           expect(input.getAttribute("max")).eql("100");
         });
 
+        it("should support '0' as minimum and maximum constraints", () => {
+          const schema = {
+            type: "number",
+            minimum: 0,
+            maximum: 0,
+          };
+          const uiSchema = {"ui:widget": "range"};
+          const {node} = createFormComponent({schema, uiSchema});
+          input = node.querySelector("[type=range]");
+
+          expect(input.getAttribute("min")).eql("0");
+          expect(input.getAttribute("max")).eql("0");
+        });
+
         it("should support the multipleOf constraint", () => {
           expect(input.getAttribute("step")).eql("1");
         });
+      });
+    });
+
+    describe("radio", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [3.14159, 2.718, 1.4142],
+          }
+        }
+      };
+
+      const uiSchema = {
+        foo: {
+          "ui:widget": "radio"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=radio]"))
+          .to.have.length.of(3);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 2.718
+        }});
+
+        expect(node.querySelectorAll("[type=radio]")[1].checked)
+          .eql(true);
+      });
+
+      it("should update state when value is updated", () => {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 1.4142
+        }});
+
+        Simulate.change(node.querySelectorAll("[type=radio]")[2], {
+          target: {checked: true}
+        });
+
+        expect(comp.state.formData).eql({foo: 1.4142});
       });
     });
 
@@ -718,6 +903,52 @@ describe("uiSchema", () => {
         });
 
         expect(comp.state.formData).eql({foo: 6});
+      });
+    });
+
+    describe("radio", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "integer",
+            enum: [1, 2],
+          }
+        }
+      };
+
+      const uiSchema = {
+        foo: {
+          "ui:widget": "radio"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=radio]"))
+          .to.have.length.of(2);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 2
+        }});
+
+        expect(node.querySelectorAll("[type=radio]")[1].checked)
+          .eql(true);
+      });
+
+      it("should update state when value is updated", () => {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 1
+        }});
+
+        Simulate.change(node.querySelectorAll("[type=radio]")[1], {
+          target: {checked: true}
+        });
+
+        expect(comp.state.formData).eql({foo: 2});
       });
     });
 
