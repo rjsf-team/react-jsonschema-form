@@ -500,3 +500,17 @@ export function dataURItoBlob(dataURI) {
 
   return {blob, name};
 }
+
+export function rangeSpec(schema) {
+  const spec = {};
+  if (schema.multipleOf) {
+    spec.step = schema.multipleOf;
+  }
+  if (schema.minimum || schema.minimum === 0) {
+    spec.min = schema.minimum;
+  }
+  if (schema.maximum || schema.maximum === 0) {
+    spec.max = schema.maximum;
+  }
+  return spec;
+}
