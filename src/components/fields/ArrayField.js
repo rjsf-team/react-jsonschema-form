@@ -348,7 +348,6 @@ class ArrayField extends Component {
 
     const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
-
     return (
       <div key={index} className="array-item">
         <div className={hasToolbar ? "col-xs-10" : "col-xs-12"}>
