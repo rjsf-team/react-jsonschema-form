@@ -1,21 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { rangeSpec } from "../../utils";
 import BaseInput from "./BaseInput";
-
-
-function rangeSpec(schema) {
-  const spec = {};
-  if (schema.multipleOf) {
-    spec.step = schema.multipleOf;
-  }
-  if (schema.minimum || schema.minimum === 0) {
-    spec.min = schema.minimum;
-  }
-  if (schema.maximum || schema.maximum === 0) {
-    spec.max = schema.maximum;
-  }
-  return spec;
-}
 
 function RangeWidget(props) {
   const {schema, value} = props;
