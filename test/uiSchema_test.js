@@ -654,6 +654,20 @@ describe("uiSchema", () => {
           expect(input.getAttribute("max")).eql("100");
         });
 
+        it("should support '0' as minimum and maximum constraints", () => {
+          const schema = {
+            type: "number",
+            minimum: 0,
+            maximum: 0,
+          };
+          const uiSchema = {"ui:widget": "updown"};
+          const {node} = createFormComponent({schema, uiSchema});
+          input = node.querySelector("[type=number]");
+
+          expect(input.getAttribute("min")).eql("0");
+          expect(input.getAttribute("max")).eql("0");
+        });
+
         it("should support the multipleOf constraint", () => {
           expect(input.getAttribute("step")).eql("1");
         });
@@ -709,6 +723,20 @@ describe("uiSchema", () => {
 
         it("should support maximum constraint", () => {
           expect(input.getAttribute("max")).eql("100");
+        });
+
+        it("should support '0' as minimum and maximum constraints", () => {
+          const schema = {
+            type: "number",
+            minimum: 0,
+            maximum: 0,
+          };
+          const uiSchema = {"ui:widget": "range"};
+          const {node} = createFormComponent({schema, uiSchema});
+          input = node.querySelector("[type=range]");
+
+          expect(input.getAttribute("min")).eql("0");
+          expect(input.getAttribute("max")).eql("0");
         });
 
         it("should support the multipleOf constraint", () => {
