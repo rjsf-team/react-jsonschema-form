@@ -1140,6 +1140,57 @@ describe("uiSchema", () => {
     });
   });
 
+  describe("array", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "array",
+          title: "A hidden list",
+          items: {
+            type: "string",
+            enum: ["foo", "bar", "baz"],
+          },
+          uniqueItems: true
+        }
+      }
+    };
+
+    describe("hidden", () => {
+      const uiSchema = {
+        foo: {
+          "ui:widget": "hidden"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=hidden]"))
+          .to.have.length.of(1);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: ["foo", "bar"]
+        }});
+
+        // array values will be stored as comma seperated list in the DOM,
+        // it's the best we can do (pull request #324).
+        expect(node.querySelector("[type=hidden]").value)
+          .eql("foo,bar");
+      });
+
+      it("should map widget value to a typed state one", () => {
+        const {comp} = createFormComponent({schema, uiSchema, formData: {
+          foo: ["foo", "bar"]
+        }});
+
+        expect(comp.state.formData.foo).eql(["foo", "bar"]);
+      });
+    });
+  });
+
   describe("custom root field id", () => {
     it("should use a custom root field id for objects", () => {
       const schema = {

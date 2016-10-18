@@ -5,6 +5,7 @@ import {
   isMultiSelect,
   isFilesArray,
   isFixedItems,
+  isHidden,
   allowAdditionalItems,
   optionsList,
   retrieveSchema,
@@ -16,6 +17,7 @@ import {
 import SelectWidget from "./../widgets/SelectWidget";
 import FileWidget from "./../widgets/FileWidget";
 import CheckboxesWidget from "./../widgets/CheckboxesWidget";
+import HiddenWidget from "../widgets/HiddenWidget";
 
 
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
@@ -143,6 +145,9 @@ class ArrayField extends Component {
 
   render() {
     const {schema, uiSchema} = this.props;
+    if (isHidden(uiSchema)) {
+      return this.renderHidden();
+    }
     if (isFilesArray(schema, uiSchema)) {
       return this.renderFiles();
     }
@@ -387,6 +392,17 @@ class ArrayField extends Component {
           : null
         }
       </div>
+    );
+  }
+
+  renderHidden() {
+    const {idSchema} = this.props;
+    const {items} = this.state;
+    return (
+      <HiddenWidget
+        id={idSchema && idSchema.$id}
+        value={items}
+      />
     );
   }
 }
