@@ -94,6 +94,24 @@ describe("BooleanField", () => {
     expect(labels).eql(["Yes", "No"]);
   });
 
+  it("should support inline radio widgets", () => {
+    const {node} = createFormComponent({
+      schema: {type: "boolean"},
+      formData: true,
+      uiSchema: {
+        "ui:widget": {
+          component: "radio",
+          options: {
+            inline: true
+          }
+        }
+      }
+    });
+
+    expect(node.querySelectorAll(".radio-inline"))
+      .to.have.length.of(2);
+  });
+
   it("should support enumNames for select", () => {
     const {node} = createFormComponent({schema: {
       type: "boolean",
