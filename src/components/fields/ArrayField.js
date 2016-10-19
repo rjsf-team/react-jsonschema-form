@@ -341,7 +341,9 @@ class ArrayField extends Component {
 
     let orderable = true;
     const options = uiSchema["ui:options"];
-    if (options && options.hasOwnProperty("orderable")) orderable = !!options.orderable;
+    if (options && options.hasOwnProperty("orderable")) {
+      orderable = !!options.orderable;
+    }
     if (!orderable) {
       canMoveUp = false;
       canMoveDown = false;
