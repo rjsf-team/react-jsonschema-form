@@ -402,7 +402,7 @@ render((
 ```
 ### Array items ordering
 
-Array items are sortable by default. The `uiSchema` object spec allows you to disable ordering:
+Array items are orderable by default, and react-jsonschema-form renders move up/down buttons along them. The `uiSchema` object spec allows you to disable ordering:
 
 ```jsx
 const schema = {
@@ -414,7 +414,7 @@ const schema = {
 
 const uiSchema = {
   "ui:options":  {
-    sortable: false
+    orderable: false
   }
 };
 ```

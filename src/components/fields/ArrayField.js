@@ -339,8 +339,10 @@ class ArrayField extends Component {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly, uiSchema} = this.props;
 
-    const sortable = uiSchema["ui:options"] ? uiSchema["ui:options"].sortable : true;
-    if (!sortable) {
+    let orderable = true;
+    const options = uiSchema["ui:options"];
+    if (options && options.hasOwnProperty("orderable")) orderable = !!options.orderable;
+    if (!orderable) {
       canMoveUp = false;
       canMoveDown = false;
     }
@@ -413,7 +415,11 @@ function AddButton({onClick, disabled}) {
 if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = {
     schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.object,
+    uiSchema: PropTypes.shape({
+      "ui:options": PropTypes.shape({
+        orderable: PropTypes.bool
+      })
+    }),
     idSchema: PropTypes.object,
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,

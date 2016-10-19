@@ -157,8 +157,8 @@ describe("ArrayField", () => {
       expect(moveDownBtns[1].disabled).eql(true);
     });
 
-    it("should not be sortable when uiSchema[\"ui:options\"].sortable === false", () => {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar"], uiSchema: {"ui:options": {sortable: false}}});
+    it("should not show move up/down buttons is orderable is false", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"], uiSchema: {"ui:options": {orderable: false}}});
       const moveUpBtns = node.querySelector(".array-item-move-up");
       const moveDownBtns = node.querySelector(".array-item-move-down");
 
