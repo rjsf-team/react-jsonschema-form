@@ -10,11 +10,13 @@ import {
 import CheckboxWidget from "./../widgets/CheckboxWidget";
 
 
-function buildOptions(schema, uiSchema={}) {
+function buildOptions(schema, uiWidget) {
+  // Note: uiWidget can be undefined, a string or an object; we only deal with
+  // the inline option when we're provided a definition object.
   return {
-    inline: isObject(uiSchema) &&
-            isObject(uiSchema.options) &&
-            uiSchema.options.inline,
+    inline: isObject(uiWidget) &&
+            isObject(uiWidget.options) &&
+            uiWidget.options.inline,
     enumOptions: optionsList(Object.assign({
       enumNames: ["true", "false"],
       enum: [true, false]

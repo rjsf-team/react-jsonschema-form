@@ -21,7 +21,7 @@ function CheckboxesWidget(props) {
       enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         return (
-          <div key={index} className={inline ? "checkbox-inline" : "checkbox"}>
+          <div key={index} className={`checkbox${inline ? "-inline" : ""}`}>
             <label>
               <input type="checkbox"
                 id={`${id}_${index}`}
