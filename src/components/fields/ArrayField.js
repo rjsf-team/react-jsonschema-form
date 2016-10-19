@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 
 import {
+  getAlternativeWidget,
   getDefaultFormState,
   isMultiSelect,
   isFilesArray,
@@ -13,9 +14,7 @@ import {
   getDefaultRegistry,
   setState
 } from "../../utils";
-import SelectWidget from "./../widgets/SelectWidget";
 import FileWidget from "./../widgets/FileWidget";
-import CheckboxesWidget from "./../widgets/CheckboxesWidget";
 
 
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
@@ -213,17 +212,19 @@ class ArrayField extends Component {
   renderMultiSelect() {
     const {schema, idSchema, uiSchema, disabled, readonly, autofocus} = this.props;
     const {items} = this.state;
-    const {definitions} = this.props.registry;
+    const {widgets, definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
 
-    const multipleCheckboxes = uiSchema["ui:widget"] === "checkboxes";
-    const Widget = (multipleCheckboxes) ? CheckboxesWidget : SelectWidget;
+    const Widget = getAlternativeWidget(schema, uiSchema["ui:widget"] || "select", widgets);
     return (
       <Widget
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
-        options={{enumOptions: optionsList(itemsSchema)}}
+        options={{
+          ...Widget.defaultProps.options,
+          enumOptions: optionsList(itemsSchema),
+        }}
         schema={schema}
         value={items}
         disabled={disabled}

@@ -355,6 +355,23 @@ describe("ArrayField", () => {
 
         expect(node.querySelector(".checkboxes").id).eql("root");
       });
+
+      it("should support inline checkboxes", () => {
+        const {node} = createFormComponent({
+          schema,
+          uiSchema: {
+            "ui:widget": {
+              component: "checkboxes",
+              options: {
+                inline: true
+              }
+            }
+          }
+        });
+
+        expect(node.querySelectorAll(".checkbox-inline"))
+          .to.have.length.of(3);
+      });
     });
   });
 

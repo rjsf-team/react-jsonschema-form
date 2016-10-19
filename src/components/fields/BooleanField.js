@@ -4,13 +4,19 @@ import {
   defaultFieldValue,
   getAlternativeWidget,
   optionsList,
-  getDefaultRegistry
+  getDefaultRegistry,
+  isObject,
 } from "../../utils";
 import CheckboxWidget from "./../widgets/CheckboxWidget";
 
 
-function buildOptions(schema) {
+function buildOptions(schema, uiWidget) {
+  // Note: uiWidget can be undefined, a string or an object; we only deal with
+  // the inline option when we're provided a definition object.
   return {
+    inline: isObject(uiWidget) &&
+            isObject(uiWidget.options) &&
+            uiWidget.options.inline,
     enumOptions: optionsList(Object.assign({
       enumNames: ["true", "false"],
       enum: [true, false]
@@ -50,7 +56,7 @@ function BooleanField(props) {
   };
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
-    return <Widget options={buildOptions(schema)} {...commonProps} />;
+    return <Widget options={buildOptions(schema, uiSchema["ui:widget"])} {...commonProps} />;
   }
   return <CheckboxWidget {...commonProps} />;
 }

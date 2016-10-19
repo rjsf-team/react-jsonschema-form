@@ -54,6 +54,7 @@ const altWidgetMap = {
     hidden: HiddenWidget,
   },
   array: {
+    select: SelectWidget,
     checkboxes: CheckboxesWidget,
   }
 };
@@ -101,7 +102,14 @@ export function getAlternativeWidget(
   const {type, format} = schema;
 
   function setDefaultOptions(widget) {
-    widget.defaultProps = {...widget.defaultProps, options: widgetOptions};
+    const {defaultProps={}} = widget;
+    widget.defaultProps = {
+      ...defaultProps,
+      options: {
+        ...defaultProps.options,
+        ...widgetOptions
+      }
+    };
     return widget;
   }
 
