@@ -339,10 +339,10 @@ class ArrayField extends Component {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly, uiSchema} = this.props;
 
-	  const {orderable} = {orderable: true, ...uiSchema["ui:options"]};
+    const {orderable} = {orderable: true, ...uiSchema["ui:options"]};
 
-	  const _canMoveUp = orderable && canMoveUp;
-	  const _canMoveDown = orderable && canMoveDown;
+    const _canMoveUp = orderable && canMoveUp;
+    const _canMoveDown = orderable && canMoveDown;
 
     const hasToolbar = removable || _canMoveUp || _canMoveDown;
 
