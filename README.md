@@ -574,15 +574,21 @@ To take control over the inner organization of each field (each form row), you c
 A field template is basically a React stateless component being passed field-related props so you can structure your form row as you like:
 
 ```jsx
+
+import {Help, ErrorList} from "react-jsonschema-form/lib/components/fields/SchemaField"; // You can import also the default 'Label' from SchemaField. Below we use a custom label.
+
 function CustomFieldTemplate(props) {
   const {id, classNames, label, help, required, description, errors, children} = props;
+
+  const {DescriptionField} = fields;
+
   return (
     <div className={classNames}>
       <label htmlFor={id}>{label}{required ? "*" : null}</label>
-      {description}
+      <DescriptionField id={id + "__description"} description={description} />
       {children}
-      {errors}
-      {help}
+      <ErrorList errors={errors} />
+      <Help help={help} />
     </div>
   );
 }
@@ -595,17 +601,18 @@ render((
 
 The following props are passed to a custom field template component:
 
-- `id`: The id of the field in the hierarchy. You can use it to render a label targetting the wrapped widget;
-- `classNames`: A string containing the base bootstrap CSS classes merged with any [custom ones](#custom-css-class-names) defined in your uiSchema;
-- `label`: The computed label for this field, as a string;
-- `description`: A component instance rendering the field description, if any defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined);
-- `children`: The field or widget component instance for this field row;
-- `errors`: A component instance listing any encountered errors for this field;
-- `help`: A component instance rendering any `ui:help` uiSchema directive defined;
-- `hidden`: A boolean value stating if the field should be hidden;
-- `required`: A boolean value stating if the field is required;
-- `readonly`: A boolean value stating if the field is read-only;
+- `id`: The id of the field in the hierarchy. You can use it to render a label targetting the wrapped widget.
+- `classNames`: A string containing the base bootstrap CSS classes merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
+- `label`: The computed label for this field, as a string.
+- `description`: A string containing any `ui:description` uiSchema directive defined.
+- `children`: The field or widget component instance for this field row.
+- `errors`: An array of strings listing all generated error messages from encountered errors for this field.
+- `help`: A string containing any `ui:help` uiSchema directive defined.
+- `hidden`: A boolean value stating if the field should be hidden.
+- `required`: A boolean value stating if the field is required.
+- `readonly`: A boolean value stating if the field is read-only.
 - `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where you don't want to clutter the UI.
+- `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.
 - `formContext`: The `formContext` object that you passed to Form.
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look for [custom fields](#custom-field-components) instead.
