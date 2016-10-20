@@ -33,6 +33,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [File widgets](#file-widgets)
            - [Multiple files](#multiple-files)
      - [Object fields ordering](#object-fields-ordering)
+     - [Array items ordering](#array-items-ordering)
      - [Custom CSS class names](#custom-css-class-names)
      - [Custom labels for enum fields](#custom-labels-for-enum-fields)
      - [Multiple choices list](#multiple-choices-list)
@@ -398,6 +399,24 @@ render((
   <Form schema={schema}
         uiSchema={uiSchema} />
 ), document.getElementById("app"));
+```
+### Array items ordering
+
+Array items are orderable by default, and react-jsonschema-form renders move up/down buttons alongside them. The `uiSchema` object spec allows you to disable ordering:
+
+```jsx
+const schema = {
+  type: "array",
+  properties: {
+    type: "string"
+  }
+};
+
+const uiSchema = {
+  "ui:options":  {
+    orderable: false
+  }
+};
 ```
 
 ### Custom CSS class names

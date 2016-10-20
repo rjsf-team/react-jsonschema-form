@@ -338,8 +338,15 @@ class ArrayField extends Component {
     autofocus
   }) {
     const {SchemaField} = this.props.registry.fields;
-    const {disabled, readonly} = this.props;
-    const hasToolbar = removable || canMoveUp || canMoveDown;
+    const {disabled, readonly, uiSchema} = this.props;
+
+    const {orderable} = {orderable: true, ...uiSchema["ui:options"]};
+
+    const _canMoveUp = orderable && canMoveUp;
+    const _canMoveDown = orderable && canMoveDown;
+
+    const hasToolbar = removable || _canMoveUp || _canMoveDown;
+
     const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
     return (
@@ -362,18 +369,18 @@ class ArrayField extends Component {
           hasToolbar ?
             <div className="col-xs-2 array-item-toolbox text-right">
               <div className="btn-group" style={{display: "flex"}}>
-                {canMoveUp || canMoveDown ?
+                {_canMoveUp || _canMoveDown ?
                   <button type="button" className="btn btn-default array-item-move-up"
                           style={btnStyle}
                           tabIndex="-1"
-                          disabled={disabled || readonly || !canMoveUp}
+                          disabled={disabled || readonly || !_canMoveUp}
                           onClick={this.onReorderClick(index, index - 1)}>⬆</button>
                   : null}
-                {canMoveUp || canMoveDown ?
+                {_canMoveUp || _canMoveDown ?
                   <button type="button" className="btn btn-default array-item-move-down"
                           style={btnStyle}
                           tabIndex="-1"
-                          disabled={disabled || readonly || !canMoveDown}
+                          disabled={disabled || readonly || !_canMoveDown}
                           onClick={this.onReorderClick(index, index + 1)}>⬇</button>
                   : null}
                 {removable ?
@@ -407,7 +414,11 @@ function AddButton({onClick, disabled}) {
 if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = {
     schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.object,
+    uiSchema: PropTypes.shape({
+      "ui:options": PropTypes.shape({
+        orderable: PropTypes.bool
+      })
+    }),
     idSchema: PropTypes.object,
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
