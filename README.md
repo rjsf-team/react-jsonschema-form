@@ -575,7 +575,7 @@ A field template is basically a React stateless component being passed field-rel
 
 ```jsx
 function CustomFieldTemplate(props) {
-  const {id, classNames, label, help, required, description, errors, children, fields} = props;
+  const {id, classNames, label, help, required, description, errors, children} = props;
   return (
     <div className={classNames}>
       <label htmlFor={id}>{label}{required ? "*" : null}</label>
@@ -614,7 +614,7 @@ The following props are passed to a custom field template component:
 - `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.
 - `formContext`: The `formContext` object that you passed to Form.
 
-> Note: you can only define a single field template for a form. If you need many, it's probably time to look for [custom fields](#custom-field-components) instead.
+> Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
 
 ### Custom widgets and fields
 
