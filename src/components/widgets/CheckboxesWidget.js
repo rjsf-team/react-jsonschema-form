@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-
+import { FormGroup, Checkbox } from "react-bootstrap";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -14,34 +14,34 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const {id, disabled, options, value, autofocus, onChange} = props;
-  const {enumOptions, inline} = options;
+  const { id, disabled, options, value, autofocus, onChange } = props;
+  const { enumOptions, inline } = options;
   return (
-    <div className="checkboxes" id={id}>{
+    <FormGroup id={id} className="checkbox-group">{
       enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         return (
-          <div key={index} className={`checkbox${inline ? "-inline" : ""}`}>
-            <label>
-              <input type="checkbox"
-                id={`${id}_${index}`}
-                checked={checked}
-                disabled={disabled}
-                autoFocus={autofocus && index === 0}
-                onChange={(event) => {
-                  const all = enumOptions.map(({value}) => value);
-                  if (event.target.checked) {
-                    onChange(selectValue(option.value, value, all));
-                  } else {
-                    onChange(deselectValue(option.value, value));
-                  }
-                }} />
-              <strong>{option.label}</strong>
-            </label>
-          </div>
+          <Checkbox
+            key={index}
+            id={`${id}_${index}`}
+            checked={checked}
+            disabled={disabled}
+            inline={inline}
+            autoFocus={autofocus && index === 0}
+            onChange={(event) => {
+              const all = enumOptions.map(({ value }) => value);
+              if (event.target.checked) {
+                onChange(selectValue(option.value, value, all));
+              } else {
+                onChange(deselectValue(option.value, value));
+              }
+            }}
+          >
+            {option.label}
+          </Checkbox>
         );
       })
-    }</div>
+    }</FormGroup>
   );
 }
 

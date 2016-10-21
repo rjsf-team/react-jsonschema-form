@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react";
 
+import { ControlLabel, HelpBlock } from "react-bootstrap";
+
 import {
   isMultiSelect,
   retrieveSchema,
@@ -16,12 +18,12 @@ import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
-  array:   ArrayField,
+  array: ArrayField,
   boolean: BooleanField,
   integer: NumberField,
-  number:  NumberField,
-  object:  ObjectField,
-  string:  StringField,
+  number: NumberField,
+  object: ObjectField,
+  string: StringField,
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
@@ -36,32 +38,29 @@ function getFieldComponent(schema, uiSchema, fields) {
 }
 
 function Label(props) {
-  const {label, required, id} = props;
+  const { label, required, id } = props;
   if (!label) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <ControlLabel htmlFor={id}>
       {required ? label + REQUIRED_FIELD_SYMBOL : label}
-    </label>
+    </ControlLabel>
   );
 }
 
 function Help(props) {
-  const {help} = props;
+  const { help } = props;
   if (!help) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
-  if (typeof help === "string") {
-    return <p className="help-block">{help}</p>;
-  }
-  return <div className="help-block">{help}</div>;
+  return <HelpBlock>{help}</HelpBlock>;
 }
 
 function ErrorList(props) {
-  const {errors = []} = props;
+  const { errors = [] } = props;
   if (errors.length === 0) {
     return <div />;
   }
@@ -95,7 +94,7 @@ function DefaultTemplate(props) {
   }
   return (
     <div className={classNames}>
-      {displayLabel ? <Label label={label} required={required} id={id} /> : null}
+      {displayLabel ? <Label label={label} required={required} id={id}/> : null}
       {displayLabel && description ? description : null}
       {children}
       {errors}
@@ -129,11 +128,11 @@ DefaultTemplate.defaultProps = {
 };
 
 function SchemaField(props) {
-  const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
-  const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
+  const { uiSchema, errorSchema, idSchema, name, required, registry } = props;
+  const { definitions, fields, formContext, FieldTemplate = DefaultTemplate } = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
-  const {DescriptionField} = fields;
+  const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
@@ -159,14 +158,14 @@ function SchemaField(props) {
 
   const field = (
     <FieldComponent {...props}
-      schema={schema}
-      disabled={disabled}
-      readonly={readonly}
-      autofocus={autofocus}
-      formContext={formContext} />
+                    schema={schema}
+                    disabled={disabled}
+                    readonly={readonly}
+                    autofocus={autofocus}
+                    formContext={formContext}/>
   );
 
-  const {type} = schema;
+  const { type } = schema;
   const id = idSchema.$id;
   const label = props.schema.title || schema.title || name;
   const description = props.schema.description || schema.description;
@@ -184,9 +183,9 @@ function SchemaField(props) {
   const fieldProps = {
     description: <DescriptionField id={id + "__description"}
                                    description={description}
-                                   formContext={formContext} />,
-    help: <Help help={help} />,
-    errors: <ErrorList errors={errors} />,
+                                   formContext={formContext}/>,
+    help: <Help help={help}/>,
+    errors: <ErrorList errors={errors}/>,
     id,
     label,
     hidden,

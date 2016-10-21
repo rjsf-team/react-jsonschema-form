@@ -26,7 +26,8 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "react": "^15.0.0"
+    "react": "^15.0.0",
+    "react-bootstrap": "^0.30.5"
   },
   "dependencies": {
     "jsonschema": "^1.0.2",
@@ -60,6 +61,7 @@
     "mocha": "^2.5.3",
     "react": "^15.0.0",
     "react-addons-test-utils": "^15.0.1",
+    "react-bootstrap": "^0.30.5",
     "react-codemirror": "^0.2.3",
     "react-dom": "^15.0.0",
     "react-transform-catch-errors": "^1.0.0",

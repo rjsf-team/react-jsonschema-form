@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
 
+import { FormGroup, Checkbox } from "react-bootstrap";
 
 function CheckboxWidget({
   schema,
@@ -12,18 +13,19 @@ function CheckboxWidget({
   onChange,
 }) {
   return (
-    <div className={`checkbox ${disabled ? "disabled" : ""}`}>
-      <label>
-        <input type="checkbox"
-          id={id}
-          checked={typeof value === "undefined" ? false : value}
-          required={required}
-          disabled={disabled}
-          autoFocus={autofocus}
-          onChange={(event) => onChange(event.target.checked)} />
-        <strong>{label}</strong>
-      </label>
-    </div>
+    <FormGroup>
+      <Checkbox
+        type="checkbox"
+        id={id}
+        checked={typeof value === "undefined" ? false : value}
+        required={required}
+        disabled={disabled}
+        autoFocus={autofocus}
+        onChange={(event) => onChange(event.target.checked)}
+      >
+        {label}
+      </Checkbox>
+    </FormGroup>
   );
 }
 

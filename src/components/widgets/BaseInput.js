@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
 
+import { FormControl as Input } from "react-bootstrap";
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
@@ -15,13 +16,12 @@ function BaseInput(props) {
     ...inputProps
   } = props;
   return (
-    <input
+    <Input
       {...inputProps}
-      className="form-control"
       readOnly={readonly}
       autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
-      onChange={(event) => onChange(event.target.value)} />
+      onChange={(event) => onChange(event.target.value)}/>
   );
 }
 
