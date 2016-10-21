@@ -13,7 +13,6 @@ import ObjectField from "./ObjectField";
 import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
 
-
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   array:   ArrayField,
@@ -48,7 +47,7 @@ function Label(props) {
   );
 }
 
-export function Help(props) {
+function Help(props) {
   const {help} = props;
   if (!help) {
     // See #312: Ensure compatibility with old versions of React.
@@ -60,7 +59,7 @@ export function Help(props) {
   return <div className="help-block">{help}</div>;
 }
 
-export function ErrorList(props) {
+function ErrorList(props) {
   const {errors = []} = props;
   if (errors.length === 0) {
     return <div />;
@@ -89,26 +88,18 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
-    fields,
-    formContext
   } = props;
   if (hidden) {
     return children;
   }
 
-  const {DescriptionField} = fields;
-
   return (
     <div className={classNames}>
       {displayLabel ? <Label label={label} required={required} id={id} /> : null}
-      {displayLabel && description ?
-        <DescriptionField id={id + "__description"}
-                          description={description}
-                          formContext={formContext} />
-        : null}
+      {displayLabel && description ? description : null}
       {children}
-      <ErrorList errors={errors} />
-      <Help help={help} />
+      {errors}
+      {help}
     </div>
   );
 }
@@ -119,9 +110,12 @@ if (process.env.NODE_ENV !== "production") {
     classNames: PropTypes.string,
     label: PropTypes.string,
     children: PropTypes.node.isRequired,
-    errors: PropTypes.arrayOf(PropTypes.string),
-    help: PropTypes.string,
-    description: PropTypes.string,
+    errors: PropTypes.element,
+    rawErrors: PropTypes.arrayOf(PropTypes.string),
+    help: PropTypes.element,
+    rawHelp: PropTypes.string,
+    description: PropTypes.element,
+    rawDescription: PropTypes.string,
     hidden: PropTypes.bool,
     required: PropTypes.bool,
     readonly: PropTypes.bool,
@@ -143,6 +137,7 @@ function SchemaField(props) {
   const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+  const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
@@ -191,9 +186,14 @@ function SchemaField(props) {
   ].join(" ").trim();
 
   const fieldProps = {
-    description,
-    help,
-    errors,
+    description: <DescriptionField id={id + "__description"}
+                                   description={description}
+                                   formContext={formContext} />,
+    rawDescription: description,
+    help: <Help help={help} />,
+    rawHelp: typeof help === "string" ? help : undefined,
+    errors: <ErrorList errors={errors} />,
+    rawErrors: errors,
     id,
     label,
     hidden,

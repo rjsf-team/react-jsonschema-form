@@ -238,6 +238,15 @@ describe("uiSchema", () => {
     });
   });
 
+  it("should accept a react element as help", () => {
+    const schema = {type: "string"};
+    const uiSchema = {"ui:help": (<b>plop</b>)};
+
+    const {node} = createFormComponent({schema, uiSchema});
+
+    expect(node.querySelector("div.help-block").textContent).eql("plop");
+  });
+
   describe("ui:focus", () => {
     const shouldFocus = (schema, uiSchema, selector = "input", formData) => {
       const props = {schema, uiSchema};

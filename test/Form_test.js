@@ -6,9 +6,6 @@ import { findDOMNode } from "react-dom";
 
 import Form from "../src";
 import { createFormComponent, createSandbox } from "./test_utils";
-import { Help, ErrorList } from "../src/components/fields/SchemaField";
-import DescriptionField from "../src/components/fields/DescriptionField";
-
 
 describe("Form", () => {
   let sandbox;
@@ -72,15 +69,29 @@ describe("Form", () => {
     const formData = {foo: "invalid"};
 
     function FieldTemplate(props) {
-      const {id, classNames, label, help, required, description, errors, children} = props;
+      const {
+        id,
+        classNames,
+        label,
+        help,
+        rawHelp,
+        required,
+        description,
+        rawDescription,
+        errors,
+        rawErrors,
+        children,
+      } = props;
       return (
         <div className={"my-template " + classNames}>
           <label htmlFor={id}>{label}{required ? "*" : null}</label>
-          <DescriptionField id={`${id}__description`} description={description} />
+          {description}
+          <span id={`${id}__raw_description`}>{`${rawDescription} rendered from the raw format`}</span>
           {children}
-          <ErrorList errors={errors} />
-          <Help help={help} />
+          {errors}
+          {rawErrors ? <ul>{rawErrors.map((error, i) => <li key={i} className="raw-error">{error}</li>)}</ul> : null}
           {help}
+          <span id={`${id}__raw_help`}>{`${rawHelp} rendered from the raw format`}</span>
         </div>
       );
     }
@@ -108,19 +119,34 @@ describe("Form", () => {
         .eql("foo*");
     });
 
-    it("should pass description as text", () => {
+    it("should pass description as the provided React element", () => {
       expect(node.querySelector("#root_foo__description").textContent)
         .eql("this is description");
     });
 
-    it("should use the provided template for errors", () => {
+    it("should pass rawDescription as a string", () => {
+      expect(node.querySelector("#root_foo__raw_description").textContent)
+        .eql("this is description rendered from the raw format");
+    });
+
+    it("should pass errors as the provided React component", () => {
       expect(node.querySelectorAll(".error-detail li"))
         .to.have.length.of(1);
     });
 
-    it("should pass help as text", () => {
+    it("should pass rawErrors as an array of strings", () => {
+      expect(node.querySelectorAll(".raw-error"))
+        .to.have.length.of(1);
+    });
+
+    it("should pass help as a the provided React element", () => {
       expect(node.querySelector(".help-block").textContent)
         .eql("this is help");
+    });
+
+    it("should pass rawHelp as a string", () => {
+      expect(node.querySelector("#root_foo__raw_help").textContent)
+        .eql("this is help rendered from the raw format");
     });
   });
 
