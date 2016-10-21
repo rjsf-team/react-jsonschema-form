@@ -380,7 +380,7 @@ const schema = {
 
 ##### File widget input ref
 
-The included `FileWidget` exposes its `<input type="file"></input>` via `inputRef`.
+The included `FileWidget` exposes a reference to the `<input type="file" />` element node as an `inputRef` component property.
 
 This allows you to programmatically trigger the browser's file selector which can be used in a custom file widget.
 
