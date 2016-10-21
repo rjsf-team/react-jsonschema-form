@@ -378,6 +378,12 @@ const schema = {
 
 > Note that storing large dataURIs into form state might slow rendering.
 
+##### File widget input ref
+
+The included `FileWidget` exposes a reference to the `<input type="file" />` element node as an `inputRef` component property.
+
+This allows you to programmatically trigger the browser's file selector which can be used in a custom file widget.
+
 ### Object fields ordering
 
 The `uiSchema` object spec also allows you to define in which order a given object field properties should be rendered using the `ui:order` property:
