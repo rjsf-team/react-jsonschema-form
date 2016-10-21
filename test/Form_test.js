@@ -86,12 +86,19 @@ describe("Form", () => {
         <div className={"my-template " + classNames}>
           <label htmlFor={id}>{label}{required ? "*" : null}</label>
           {description}
-          <span id={`${id}__raw_description`}>{`${rawDescription} rendered from the raw format`}</span>
           {children}
           {errors}
-          {rawErrors ? <ul>{rawErrors.map((error, i) => <li key={i} className="raw-error">{error}</li>)}</ul> : null}
           {help}
-          <span id={`${id}__raw_help`}>{`${rawHelp} rendered from the raw format`}</span>
+          <span className="raw-help">{`${rawHelp} rendered from the raw format`}</span>
+          <span className="raw-description">{`${rawDescription} rendered from the raw format`}</span>
+          {rawErrors ? (
+            <ul>
+              {rawErrors.map(
+                (error, i) => <li key={i} className="raw-error">{error}</li>
+              )}
+            </ul>
+          ) : null
+          }
         </div>
       );
     }
@@ -125,7 +132,7 @@ describe("Form", () => {
     });
 
     it("should pass rawDescription as a string", () => {
-      expect(node.querySelector("#root_foo__raw_description").textContent)
+      expect(node.querySelector(".raw-description").textContent)
         .eql("this is description rendered from the raw format");
     });
 
@@ -145,7 +152,7 @@ describe("Form", () => {
     });
 
     it("should pass rawHelp as a string", () => {
-      expect(node.querySelector("#root_foo__raw_help").textContent)
+      expect(node.querySelector(".raw-help").textContent)
         .eql("this is help rendered from the raw format");
     });
   });
