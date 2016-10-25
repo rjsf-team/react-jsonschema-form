@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 
-import { Button } from "react-bootstrap";
+import Button from "react-bootstrap/lib/Button";
 
 import SchemaField from "./fields/SchemaField";
 import TitleField from "./fields/TitleField";

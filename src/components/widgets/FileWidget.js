@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 
-import { FormControl as Input } from "react-bootstrap";
+import Input from "react-bootstrap/lib/FormControl";
 
 import { dataURItoBlob, shouldRender, setState } from "../../utils";
 

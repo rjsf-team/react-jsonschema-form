@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 
-import { FormControl as Select } from "react-bootstrap";
+import Select from "react-bootstrap/lib/FormControl";
 
 import { asNumber } from "../../utils";
 

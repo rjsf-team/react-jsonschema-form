@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 
-import { ControlLabel, HelpBlock } from "react-bootstrap";
+import ControlLabel from "react-bootstrap/lib/ControlLabel";
+import HelpBlock from "react-bootstrap/lib/HelpBlock";
 
 import {
   isMultiSelect,

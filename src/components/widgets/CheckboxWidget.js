@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 
-import { FormGroup, Checkbox } from "react-bootstrap";
+import FormGroup from "react-bootstrap/lib/FormGroup";
+import Checkbox from "react-bootstrap/lib/Checkbox";
 
 function CheckboxWidget({
   schema,

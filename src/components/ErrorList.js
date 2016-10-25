@@ -1,6 +1,8 @@
 import React from "react";
 
-import { Panel, ListGroup, ListGroupItem } from "react-bootstrap";
+import Panel from "react-bootstrap/lib/Panel";
+import ListGroup from "react-bootstrap/lib/ListGroup";
+import ListGroupItem from "react-bootstrap/lib/ListGroupItem";
 
 export default function ErrorList({ errors }) {
   return (

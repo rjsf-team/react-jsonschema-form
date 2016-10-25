@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 
-import { FormGroup, Radio } from "react-bootstrap";
+import FormGroup from "react-bootstrap/lib/FormGroup";
+import Radio from "react-bootstrap/lib/Radio";
 
 function RadioWidget({
   schema,

@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 
-import { FormControl as Input } from "react-bootstrap";
+import Input from "react-bootstrap/lib/FormControl";
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
