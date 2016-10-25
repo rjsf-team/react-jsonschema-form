@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, {Component, PropTypes} from "react";
 
 import {
   getAlternativeWidget,
@@ -20,19 +20,19 @@ import FileWidget from "./../widgets/FileWidget";
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
   if (!title) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return <div/>;
   }
   const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} required={required} />;
+  return <TitleField id={id} title={title} required={required}/>;
 }
 
 function ArrayFieldDescription({DescriptionField, idSchema, description}) {
   if (!description) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return <div/>;
   }
   const id = `${idSchema.$id}__description`;
-  return <DescriptionField id={id} description={description} />;
+  return <DescriptionField id={id} description={description}/>;
 }
 
 class ArrayField extends Component {
@@ -179,12 +179,12 @@ class ArrayField extends Component {
           TitleField={TitleField}
           idSchema={idSchema}
           title={title}
-          required={required} />
+          required={required}/>
         {schema.description ?
           <ArrayFieldDescription
             DescriptionField={DescriptionField}
             idSchema={idSchema}
-            description={schema.description} /> : null}
+            description={schema.description}/> : null}
         <div className="row array-item-list">{
           items.map((item, index) => {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
@@ -204,7 +204,7 @@ class ArrayField extends Component {
           })
         }</div>
         <AddButton
-          onClick={this.onAddClick} disabled={disabled || readonly} />
+          onClick={this.onAddClick} disabled={disabled || readonly}/>
       </fieldset>
     );
   }
@@ -229,8 +229,7 @@ class ArrayField extends Component {
         value={items}
         disabled={disabled}
         readonly={readonly}
-        autofocus={autofocus}
-      />
+        autofocus={autofocus}/>
     );
   }
 
@@ -248,8 +247,7 @@ class ArrayField extends Component {
         value={items}
         disabled={disabled}
         readonly={readonly}
-        autofocus={autofocus}
-      />
+        autofocus={autofocus}/>
     );
   }
 
@@ -286,7 +284,7 @@ class ArrayField extends Component {
           TitleField={TitleField}
           idSchema={idSchema}
           title={title}
-          required={required} />
+          required={required}/>
         {schema.description ?
           <div className="field-description">{schema.description}</div> : null}
         <div className="row array-item-list">{
@@ -319,7 +317,7 @@ class ArrayField extends Component {
         {
           additionalSchema ? <AddButton
                                onClick={this.onAddClick}
-                               disabled={disabled || readonly} /> : null
+                               disabled={disabled || readonly}/> : null
         }
       </fieldset>
     );
@@ -363,7 +361,7 @@ class ArrayField extends Component {
             registry={this.props.registry}
             disabled={this.props.disabled}
             readonly={this.props.readonly}
-            autofocus={autofocus} />
+            autofocus={autofocus}/>
         </div>
         {
           hasToolbar ?

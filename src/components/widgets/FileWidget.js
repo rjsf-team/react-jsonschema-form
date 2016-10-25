@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from "react";
+import React, {Component, PropTypes} from "react";
 
-import { dataURItoBlob, shouldRender, setState } from "../../utils";
+import {dataURItoBlob, shouldRender, setState} from "../../utils";
 
 
 function addNameToDataURL(dataURL, name) {
@@ -107,9 +107,9 @@ class FileWidget extends Component {
             onChange={this.onChange}
             defaultValue=""
             autoFocus={autofocus}
-            multiple={multiple} />
+            multiple={multiple}/>
         </p>
-        <FilesInfo filesInfo={filesInfo} />
+        <FilesInfo filesInfo={filesInfo}/>
       </div>
     );
   }

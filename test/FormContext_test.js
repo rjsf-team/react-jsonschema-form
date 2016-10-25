@@ -1,7 +1,7 @@
 import React from "react";
-import { expect } from "chai";
+import {expect} from "chai";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 describe("FormContext", () => {
   let sandbox;
@@ -19,7 +19,7 @@ describe("FormContext", () => {
   const formContext = {foo: "bar"};
 
   const CustomComponent = function(props) {
-    return (<div id={props.formContext.foo} />);
+    return (<div id={props.formContext.foo}/>);
   };
 
   it("should be passed to Form", () => {

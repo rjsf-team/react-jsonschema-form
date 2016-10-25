@@ -1,6 +1,6 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
-import { rangeSpec } from "../../utils";
+import {rangeSpec} from "../../utils";
 import BaseInput from "./BaseInput";
 
 function RangeWidget(props) {
@@ -10,7 +10,7 @@ function RangeWidget(props) {
       <BaseInput
         type="range"
         {...props}
-        {...rangeSpec(schema)} />
+        {...rangeSpec(schema)}/>
       <span className="range-view">{value}</span>
     </div>
   );
