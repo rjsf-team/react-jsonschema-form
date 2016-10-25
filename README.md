@@ -150,6 +150,8 @@ render((
 ), document.getElementById("app"));
 ```
 
+Therefore, if you have situations where your parent component can re-render, make sure you listen to the `onChange` event and update the data you pass to the `formData` field.
+
 ### Form event handlers
 
 #### Form submission
