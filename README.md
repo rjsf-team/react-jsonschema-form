@@ -150,7 +150,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-WARNING: The `formData` field is **not** used only for initialization but it sets the data of the form if your wrapping component rerenders. Therefore make sure you listen to the `onChange` event and update the data you pass to the `formData` field.
+Therefore, if you have situations where your parent component can re-render, make sure you listen to the `onChange` event and update the data you pass to the `formData` field.
 
 ### Form event handlers
 
