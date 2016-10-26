@@ -362,7 +362,7 @@ describe("ArrayField", () => {
       it("should render the widget with the expected id", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
-        expect(node.querySelector(".checkboxes").id).eql("root");
+        expect(node.querySelector(".checkbox-group").id).eql("root");
       });
 
       it("should support inline checkboxes", () => {

@@ -28,8 +28,7 @@ function RadioWidget({
             disabled={disabled}
             inline={inline}
             autoFocus={autofocus && i === 0}
-            onChange={_ => onChange(option.value)}
-          >
+            onChange={_ => onChange(option.value)}>
             {option.label}
           </Radio>
         );

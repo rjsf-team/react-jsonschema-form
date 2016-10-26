@@ -4,7 +4,7 @@ import Panel from "react-bootstrap/lib/Panel";
 import ListGroup from "react-bootstrap/lib/ListGroup";
 import ListGroupItem from "react-bootstrap/lib/ListGroupItem";
 
-export default function ErrorList({ errors }) {
+export default function ErrorList({errors}) {
   return (
     <Panel header="Errors" bsStyle="danger" className="errors">
       <ListGroup fill>{

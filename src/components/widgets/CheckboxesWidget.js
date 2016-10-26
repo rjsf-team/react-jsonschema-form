@@ -30,7 +30,7 @@ function CheckboxesWidget(props) {
             inline={inline}
             autoFocus={autofocus && index === 0}
             onChange={(event) => {
-              const all = enumOptions.map(({ value }) => value);
+              const all = enumOptions.map(({value}) => value);
               if (event.target.checked) {
                 onChange(selectValue(option.value, value, all));
               } else {
