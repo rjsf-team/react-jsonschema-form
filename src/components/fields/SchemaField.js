@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 import ControlLabel from "react-bootstrap/lib/ControlLabel";
 import HelpBlock from "react-bootstrap/lib/HelpBlock";
@@ -38,10 +38,10 @@ function getFieldComponent(schema, uiSchema, fields) {
 }
 
 function Label(props) {
-  const { label, required, id } = props;
+  const {label, required, id} = props;
   if (!label) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return <div/>;
   }
   return (
     <ControlLabel htmlFor={id}>
@@ -51,18 +51,18 @@ function Label(props) {
 }
 
 function Help(props) {
-  const { help } = props;
+  const {help} = props;
   if (!help) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return <div/>;
   }
   return <HelpBlock>{help}</HelpBlock>;
 }
 
 function ErrorList(props) {
-  const { errors = [] } = props;
+  const {errors = []} = props;
   if (errors.length === 0) {
-    return <div />;
+    return <div/>;
   }
   return (
     <div>
@@ -133,18 +133,18 @@ DefaultTemplate.defaultProps = {
 };
 
 function SchemaField(props) {
-  const { uiSchema, errorSchema, idSchema, name, required, registry } = props;
-  const { definitions, fields, formContext, FieldTemplate = DefaultTemplate } = registry;
+  const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
+  const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
-  const { DescriptionField } = fields;
+  const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
 
   if (Object.keys(schema).length === 0) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return <div/>;
   }
 
   let displayLabel = true;
@@ -170,7 +170,7 @@ function SchemaField(props) {
                     formContext={formContext}/>
   );
 
-  const { type } = schema;
+  const {type} = schema;
   const id = idSchema.$id;
   const label = props.schema.title || schema.title || name;
   const description = props.schema.description || schema.description;

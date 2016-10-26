@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 import {
   defaultFieldValue,
@@ -44,15 +44,15 @@ function StringField(props) {
     const enumOptions = optionsList(schema);
     if (widget) {
       const Widget = getAlternativeWidget(schema, widget, widgets, {enumOptions});
-      return <Widget {...commonProps} />;
+      return <Widget {...commonProps}/>;
     }
-    return <SelectWidget options={{enumOptions}} {...commonProps} />;
+    return <SelectWidget options={{enumOptions}} {...commonProps}/>;
   }
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
-    return <Widget {...commonProps} placeholder={placeholder} />;
+    return <Widget {...commonProps} placeholder={placeholder}/>;
   }
-  return <TextWidget {...commonProps} placeholder={placeholder} />;
+  return <TextWidget {...commonProps} placeholder={placeholder}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {

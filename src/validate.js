@@ -1,6 +1,6 @@
-import { validate as jsonValidate } from "jsonschema";
+import {validate as jsonValidate} from "jsonschema";
 
-import { isObject, mergeObjects } from "./utils";
+import {isObject, mergeObjects} from "./utils";
 
 
 const RE_ERROR_ARRAY_PATH = /\[\d+]/g;

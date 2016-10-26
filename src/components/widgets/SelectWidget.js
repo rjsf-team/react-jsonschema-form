@@ -1,15 +1,15 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 import Select from "react-bootstrap/lib/FormControl";
 
-import { asNumber } from "../../utils";
+import {asNumber} from "../../utils";
 
 
 /**
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
  */
-function processValue({ type, items }, value) {
+function processValue({type, items}, value) {
   if (type === "array" && items && ["number", "integer"].includes(items.type)) {
     return value.map(asNumber);
   } else if (type === "boolean") {
@@ -32,10 +32,9 @@ function SelectWidget({
   autofocus,
   onChange
 }) {
-  const { enumOptions } = options;
+  const {enumOptions} = options;
   return (
-    <Select
-      componentClass="select"
+    <Select componentClass="select"
       id={id}
       multiple={multiple}
       value={value}
@@ -53,7 +52,7 @@ function SelectWidget({
         }
         onChange(processValue(schema, newValue));
       }}>{
-      enumOptions.map(({ value, label }, i) => {
+      enumOptions.map(({value, label}, i) => {
         return <option key={i} value={value}>{label}</option>;
       })
     }</Select>

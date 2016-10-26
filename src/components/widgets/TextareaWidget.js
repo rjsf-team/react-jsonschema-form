@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 
 function TextareaWidget({
@@ -22,7 +22,7 @@ function TextareaWidget({
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
-      onChange={(event) => onChange(event.target.value)} />
+      onChange={(event) => onChange(event.target.value)}/>
   );
 }
 

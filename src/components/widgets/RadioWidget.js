@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 import FormGroup from "react-bootstrap/lib/FormGroup";
 import Radio from "react-bootstrap/lib/Radio";
@@ -14,7 +14,7 @@ function RadioWidget({
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const { enumOptions, inline } = options;
+  const {enumOptions, inline} = options;
   return (
     <FormGroup className="radio-group">{
       enumOptions.map((option, i) => {

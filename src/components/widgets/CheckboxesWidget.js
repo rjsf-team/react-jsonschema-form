@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 import FormGroup from "react-bootstrap/lib/FormGroup";
 import Checkbox from "react-bootstrap/lib/Checkbox";
@@ -16,15 +16,14 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const { id, disabled, options, value, autofocus, onChange } = props;
-  const { enumOptions, inline } = options;
+  const {id, disabled, options, value, autofocus, onChange} = props;
+  const {enumOptions, inline} = options;
   return (
     <FormGroup id={id} className="checkbox-group">{
       enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         return (
-          <Checkbox
-            key={index}
+          <Checkbox key={index}
             id={`${id}_${index}`}
             checked={checked}
             disabled={disabled}
@@ -37,8 +36,7 @@ function CheckboxesWidget(props) {
               } else {
                 onChange(deselectValue(option.value, value));
               }
-            }}
-          >
+            }}>
             {option.label}
           </Checkbox>
         );

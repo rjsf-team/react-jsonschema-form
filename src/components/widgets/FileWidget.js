@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from "react";
+import React, {Component, PropTypes} from "react";
 
 import Input from "react-bootstrap/lib/FormControl";
 
-import { dataURItoBlob, shouldRender, setState } from "../../utils";
+import {dataURItoBlob, shouldRender, setState} from "../../utils";
 
 
 function addNameToDataURL(dataURL, name) {
@@ -10,7 +10,7 @@ function addNameToDataURL(dataURL, name) {
 }
 
 function processFile(file) {
-  const { name, size, type } = file;
+  const {name, size, type} = file;
   return new Promise((resolve, reject) => {
     const reader = new window.FileReader();
     reader.onload = (event) => {
@@ -30,14 +30,14 @@ function processFiles(files) {
 }
 
 function FilesInfo(props) {
-  const { filesInfo } = props;
+  const {filesInfo} = props;
   if (filesInfo.length === 0) {
     return null;
   }
   return (
     <ul className="file-info">{
       filesInfo.map((fileInfo, key) => {
-        const { name, size, type } = fileInfo;
+        const {name, size, type} = fileInfo;
         return (
           <li key={key}>
             <strong>{name}</strong> ({type}, {size} bytes)
@@ -52,7 +52,7 @@ function extractFileInfo(dataURLs) {
   return dataURLs
     .filter(dataURL => typeof dataURL !== "undefined")
     .map(dataURL => {
-      const { blob, name } = dataURItoBlob(dataURL);
+      const {blob, name} = dataURItoBlob(dataURL);
       return {
         name: name,
         size: blob.size,
@@ -68,9 +68,9 @@ class FileWidget extends Component {
 
   constructor(props) {
     super(props);
-    const { value } = props;
+    const {value} = props;
     const values = Array.isArray(value) ? value : [value];
-    this.state = { values, filesInfo: extractFileInfo(values) };
+    this.state = {values, filesInfo: extractFileInfo(values)};
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -78,7 +78,7 @@ class FileWidget extends Component {
   }
 
   onChange = (event) => {
-    const { multiple, onChange } = this.props;
+    const {multiple, onChange} = this.props;
     processFiles(event.target.files)
       .then((filesInfo) => {
         const state = {
@@ -96,20 +96,18 @@ class FileWidget extends Component {
   };
 
   render() {
-    const { multiple, id, readonly, disabled, autofocus } = this.props;
-    const { filesInfo } = this.state;
+    const {multiple, id, readonly, disabled, autofocus} = this.props;
+    const {filesInfo} = this.state;
     return (
       <div>
-        <Input
-          ref={ref => this.inputRef = ref}
+        <Input ref={ref => this.inputRef = ref}
           id={id}
           type="file"
           disabled={readonly || disabled}
           onChange={this.onChange}
           defaultValue=""
           autoFocus={autofocus}
-          multiple={multiple}
-        />
+          multiple={multiple}/>
         <FilesInfo filesInfo={filesInfo}/>
       </div>
     );

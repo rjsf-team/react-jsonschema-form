@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from "react";
+import React, {Component, PropTypes} from "react";
 
-import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
+import {shouldRender, parseDateString, toDateString, pad} from "../../utils";
 import SelectWidget from "../widgets/SelectWidget";
 
 
@@ -29,7 +29,7 @@ function DateElement(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={(value) => select(type, value)} />
+      onChange={(value) => select(type, value)}/>
   );
 }
 
