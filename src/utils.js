@@ -44,14 +44,17 @@ const altWidgetMap = {
   number: {
     updown: UpDownWidget,
     range: RangeWidget,
+    radio: RadioWidget,
     hidden: HiddenWidget,
   },
   integer: {
     updown: UpDownWidget,
     range: RangeWidget,
+    radio: RadioWidget,
     hidden: HiddenWidget,
   },
   array: {
+    select: SelectWidget,
     checkboxes: CheckboxesWidget,
   }
 };
@@ -99,7 +102,14 @@ export function getAlternativeWidget(
   const {type, format} = schema;
 
   function setDefaultOptions(widget) {
-    widget.defaultProps = {...widget.defaultProps, options: widgetOptions};
+    const {defaultProps={}} = widget;
+    widget.defaultProps = {
+      ...defaultProps,
+      options: {
+        ...defaultProps.options,
+        ...widgetOptions
+      }
+    };
     return widget;
   }
 
@@ -224,6 +234,14 @@ export function asNumber(value) {
   }
   const n = Number(value);
   const valid = typeof n === "number" && !Number.isNaN(n);
+
+  if (/\.\d*0$/.test(value)) {
+    // It's a number, that's cool - but we need it as a string so it doesn't screw
+    // with the user when entering dollar amounts or other values (such as those with
+    // specific precision or number of significant digits)
+    return value;
+  }
+
   return valid ? n : value;
 }
 
@@ -489,4 +507,18 @@ export function dataURItoBlob(dataURI) {
   const blob = new window.Blob([new Uint8Array(array)], {type});
 
   return {blob, name};
+}
+
+export function rangeSpec(schema) {
+  const spec = {};
+  if (schema.multipleOf) {
+    spec.step = schema.multipleOf;
+  }
+  if (schema.minimum || schema.minimum === 0) {
+    spec.min = schema.minimum;
+  }
+  if (schema.maximum || schema.maximum === 0) {
+    spec.max = schema.maximum;
+  }
+  return spec;
 }

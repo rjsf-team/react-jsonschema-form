@@ -7,6 +7,7 @@ function BaseInput(props) {
   const {
     value,
     readonly,
+    autofocus,
     onChange,
     options,  // eslint-disable-line
     schema,   // eslint-disable-line
@@ -18,6 +19,7 @@ function BaseInput(props) {
       {...inputProps}
       className="form-control"
       readOnly={readonly}
+      autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
       onChange={(event) => onChange(event.target.value)} />
   );
@@ -28,6 +30,7 @@ BaseInput.defaultProps = {
   required: false,
   disabled: false,
   readonly: false,
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -38,6 +41,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

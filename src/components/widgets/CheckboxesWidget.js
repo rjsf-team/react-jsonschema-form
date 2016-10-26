@@ -14,19 +14,20 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const {id, disabled, options, value, onChange} = props;
-  const {enumOptions} = options;
+  const {id, disabled, options, value, autofocus, onChange} = props;
+  const {enumOptions, inline} = options;
   return (
     <div className="checkboxes" id={id}>{
       enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         return (
-          <div key={index} className="checkbox">
+          <div key={index} className={`checkbox${inline ? "-inline" : ""}`}>
             <label>
               <input type="checkbox"
                 id={`${id}_${index}`}
                 checked={checked}
                 disabled={disabled}
+                autoFocus={autofocus && index === 0}
                 onChange={(event) => {
                   const all = enumOptions.map(({value}) => value);
                   if (event.target.checked) {
@@ -44,16 +45,25 @@ function CheckboxesWidget(props) {
   );
 }
 
+CheckboxesWidget.defaultProps = {
+  autofocus: false,
+  options: {
+    inline: false
+  },
+};
+
 if (process.env.NODE_ENV !== "production") {
   CheckboxesWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     options: PropTypes.shape({
       enumOptions: PropTypes.array,
+      inline: PropTypes.bool,
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
     multiple: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

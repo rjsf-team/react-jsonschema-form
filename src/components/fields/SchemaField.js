@@ -13,7 +13,6 @@ import ObjectField from "./ObjectField";
 import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
 
-
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   array:   ArrayField,
@@ -38,7 +37,8 @@ function getFieldComponent(schema, uiSchema, fields) {
 function Label(props) {
   const {label, required, id} = props;
   if (!label) {
-    return null;
+    // See #312: Ensure compatibility with old versions of React.
+    return <div />;
   }
   return (
     <label className="control-label" htmlFor={id}>
@@ -50,7 +50,8 @@ function Label(props) {
 function Help(props) {
   const {help} = props;
   if (!help) {
-    return null;
+    // See #312: Ensure compatibility with old versions of React.
+    return <div />;
   }
   if (typeof help === "string") {
     return <p className="help-block">{help}</p>;
@@ -61,7 +62,7 @@ function Help(props) {
 function ErrorList(props) {
   const {errors = []} = props;
   if (errors.length === 0) {
-    return null;
+    return <div />;
   }
   return (
     <div>
@@ -91,6 +92,7 @@ function DefaultTemplate(props) {
   if (hidden) {
     return children;
   }
+
   return (
     <div className={classNames}>
       {displayLabel ? <Label label={label} required={required} id={id} /> : null}
@@ -109,12 +111,16 @@ if (process.env.NODE_ENV !== "production") {
     label: PropTypes.string,
     children: PropTypes.node.isRequired,
     errors: PropTypes.element,
+    rawErrors: PropTypes.arrayOf(PropTypes.string),
     help: PropTypes.element,
+    rawHelp: PropTypes.string,
     description: PropTypes.element,
+    rawDescription: PropTypes.string,
     hidden: PropTypes.bool,
     required: PropTypes.bool,
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
+    fields: PropTypes.object,
     formContext: PropTypes.object,
   };
 }
@@ -134,8 +140,10 @@ function SchemaField(props) {
   const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
+  const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
 
   if (Object.keys(schema).length === 0) {
+    // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
 
@@ -158,6 +166,7 @@ function SchemaField(props) {
       schema={schema}
       disabled={disabled}
       readonly={readonly}
+      autofocus={autofocus}
       formContext={formContext} />
   );
 
@@ -180,8 +189,11 @@ function SchemaField(props) {
     description: <DescriptionField id={id + "__description"}
                                    description={description}
                                    formContext={formContext} />,
+    rawDescription: description,
     help: <Help help={help} />,
+    rawHelp: typeof help === "string" ? help : undefined,
     errors: <ErrorList errors={errors} />,
+    rawErrors: errors,
     id,
     label,
     hidden,
@@ -190,6 +202,7 @@ function SchemaField(props) {
     displayLabel,
     classNames,
     formContext,
+    fields,
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
@@ -202,6 +215,7 @@ SchemaField.defaultProps = {
   registry: getDefaultRegistry(),
   disabled: false,
   readonly: false,
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {

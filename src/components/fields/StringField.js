@@ -21,6 +21,7 @@ function StringField(props) {
     required,
     disabled,
     readonly,
+    autofocus,
     onChange
   } = props;
   const {title} = schema;
@@ -37,6 +38,7 @@ function StringField(props) {
     disabled,
     readonly,
     formContext,
+    autofocus,
   };
   if (Array.isArray(schema.enum)) {
     const enumOptions = optionsList(schema);
@@ -76,6 +78,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
+    autofocus: PropTypes.bool,
   };
 }
 
@@ -84,6 +87,7 @@ StringField.defaultProps = {
   registry: getDefaultRegistry(),
   disabled: false,
   readonly: false,
+  autofocus: false,
 };
 
 export default StringField;
