@@ -134,6 +134,39 @@ class SchemaField extends Component {
     return this.COMPONENT_TYPES[schema.type] || UnsupportedField;
   }
 
+  shouldDisplayLabel(schema, uiSchema) {
+    let displayLabel = true;
+    if (schema.type === "array") {
+      displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
+    }
+    if (schema.type === "object") {
+      displayLabel = false;
+    }
+    if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
+      displayLabel = false;
+    }
+    if (uiSchema["ui:field"]) {
+      displayLabel = false;
+    }
+
+    return displayLabel;
+  }
+
+  buildFieldComponent(FieldComponent, props, schema, disabled, readonly, autofocus, formContext) {
+    return (
+      <FieldComponent {...this.props}
+        schema={schema}
+        disabled={disabled}
+        readonly={readonly}
+        autofocus={autofocus}
+        formContext={formContext}/>
+    );
+  }
+
+  buildFieldTemplate(FieldTemplate, fieldProps, field) {
+    return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
+  }
+
   render() {
     const {uiSchema, errorSchema, idSchema, name, required, registry} = this.props;
     const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
@@ -149,28 +182,9 @@ class SchemaField extends Component {
       return <div/>;
     }
 
-    let displayLabel = true;
-    if (schema.type === "array") {
-      displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
-    }
-    if (schema.type === "object") {
-      displayLabel = false;
-    }
-    if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
-      displayLabel = false;
-    }
-    if (uiSchema["ui:field"]) {
-      displayLabel = false;
-    }
+    let displayLabel = this.shouldDisplayLabel(schema, uiSchema);
 
-    const field = (
-      <FieldComponent {...this.props}
-        schema={schema}
-        disabled={disabled}
-        readonly={readonly}
-        autofocus={autofocus}
-        formContext={formContext}/>
-    );
+    const field = this.buildFieldComponent(FieldComponent, this.props, schema, disabled, readonly, autofocus, formContext);
 
     const {type} = schema;
     const id = idSchema.$id;
@@ -207,8 +221,10 @@ class SchemaField extends Component {
       fields,
     };
 
-    return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
+    return this.buildFieldTemplate(FieldTemplate, fieldProps, field);
   }
+
+
 }
 
 SchemaField.defaultProps = {
