@@ -1,6 +1,6 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
-import { asNumber } from "../../utils";
+import {asNumber} from "../../utils";
 
 
 /**

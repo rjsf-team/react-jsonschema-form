@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 
 function RadioWidget({
@@ -26,7 +26,7 @@ function RadioWidget({
                 checked={checked}
                 disabled={disabled}
                 autoFocus={autofocus && i === 0}
-                onChange={_ => onChange(option.value)} />
+                onChange={_ => onChange(option.value)}/>
               {option.label}
             </label>
           </div>

@@ -1,11 +1,11 @@
 import React from "react";
-import { expect } from "chai";
+import {expect} from "chai";
 
 import SchemaField from "../src/components/fields/SchemaField";
 import TitleField from "../src/components/fields/TitleField";
 import DescriptionField from "../src/components/fields/DescriptionField";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 
 describe("SchemaField", () => {
@@ -21,7 +21,7 @@ describe("SchemaField", () => {
 
   describe("Custom SchemaField component", () => {
     const CustomSchemaField = function(props) {
-      return (<div id="custom"><SchemaField {...props} /></div>);
+      return (<div id="custom"><SchemaField {...props}/></div>);
     };
 
     it("should use the specified custom SchemaType property", () => {
@@ -43,7 +43,7 @@ describe("SchemaField", () => {
       }
 
       render() {
-        return <div id="custom" />;
+        return <div id="custom"/>;
       }
     }
 

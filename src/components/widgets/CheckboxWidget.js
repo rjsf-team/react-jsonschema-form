@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 
 function CheckboxWidget({
@@ -20,7 +20,7 @@ function CheckboxWidget({
           required={required}
           disabled={disabled}
           autoFocus={autofocus}
-          onChange={(event) => onChange(event.target.checked)} />
+          onChange={(event) => onChange(event.target.checked)}/>
         <strong>{label}</strong>
       </label>
     </div>

@@ -1,9 +1,9 @@
 import React from "react";
-import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
+import {expect} from "chai";
+import {Simulate} from "react-addons-test-utils";
 
-import { parseDateString, toDateString } from "../src/utils";
-import { createFormComponent, createSandbox } from "./test_utils";
+import {parseDateString, toDateString} from "../src/utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 
 describe("StringField", () => {
@@ -976,7 +976,7 @@ describe("StringField", () => {
   });
 
   describe("Label", () => {
-    const Widget = props => <div id={`label-${props.label}`} />;
+    const Widget = props => <div id={`label-${props.label}`}/>;
 
     const widgets = {Widget};
 

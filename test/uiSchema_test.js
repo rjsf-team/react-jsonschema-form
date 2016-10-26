@@ -1,9 +1,9 @@
 
-import { expect } from "chai";
+import {expect} from "chai";
 import React from "react";
-import { Simulate } from "react-addons-test-utils";
+import {Simulate} from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 
 describe("uiSchema", () => {
@@ -27,8 +27,8 @@ describe("uiSchema", () => {
     };
 
     const uiSchema = {
-      foo: { classNames: "class-for-foo"},
-      bar: { classNames: "class-for-bar another-for-bar"},
+      foo: {classNames: "class-for-foo"},
+      bar: {classNames: "class-for-bar another-for-bar"},
     };
 
     it("should apply custom class names to target widgets", () => {
@@ -55,7 +55,7 @@ describe("uiSchema", () => {
               value={props.value}
               defaultValue={props.defaultValue}
               required={props.required}
-              onChange={(event) => props.onChange(event.target.value)} />
+              onChange={(event) => props.onChange(event.target.value)}/>
           );
         }
       };
@@ -90,7 +90,7 @@ describe("uiSchema", () => {
             value={props.value}
             defaultValue={props.defaultValue}
             required={props.required}
-            onChange={(event) => props.onChange(event.target.value)} />
+            onChange={(event) => props.onChange(event.target.value)}/>
         );
       };
 
@@ -118,7 +118,7 @@ describe("uiSchema", () => {
       const CustomWidget = (props) => {
         const {value, options} = props;
         return (
-          <input type="text" className={options.className} value={value} />
+          <input type="text" className={options.className} value={value}/>
         );
       };
 

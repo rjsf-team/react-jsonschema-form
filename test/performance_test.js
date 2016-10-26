@@ -1,7 +1,7 @@
 import sinon from "sinon";
 import React from "react";
 
-import { getDefaultRegistry } from "../src/utils";
+import {getDefaultRegistry} from "../src/utils";
 import ArrayField from "../src/components/fields/ArrayField";
 import ObjectField from "../src/components/fields/ObjectField";
 import {

@@ -1,8 +1,8 @@
 import React from "react";
-import { expect } from "chai";
+import {expect} from "chai";
 
 import TitleField from "../src/components/fields/TitleField";
-import { createSandbox, createComponent } from "./test_utils";
+import {createSandbox, createComponent} from "./test_utils";
 
 describe("TitleField", () => {
   let sandbox;
@@ -22,7 +22,7 @@ describe("TitleField", () => {
       super(props);
     }
     render() {
-      return <TitleField {...this.props} />;
+      return <TitleField {...this.props}/>;
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 import {
   isMultiSelect,
@@ -38,7 +38,7 @@ function Label(props) {
   const {label, required, id} = props;
   if (!label) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return <div/>;
   }
   return (
     <label className="control-label" htmlFor={id}>
@@ -51,7 +51,7 @@ function Help(props) {
   const {help} = props;
   if (!help) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return <div/>;
   }
   if (typeof help === "string") {
     return <p className="help-block">{help}</p>;
@@ -62,7 +62,7 @@ function Help(props) {
 function ErrorList(props) {
   const {errors = []} = props;
   if (errors.length === 0) {
-    return <div />;
+    return <div/>;
   }
   return (
     <div>
@@ -95,7 +95,7 @@ function DefaultTemplate(props) {
 
   return (
     <div className={classNames}>
-      {displayLabel ? <Label label={label} required={required} id={id} /> : null}
+      {displayLabel ? <Label label={label} required={required} id={id}/> : null}
       {displayLabel && description ? description : null}
       {children}
       {errors}
@@ -144,7 +144,7 @@ function SchemaField(props) {
 
   if (Object.keys(schema).length === 0) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return <div/>;
   }
 
   let displayLabel = true;
@@ -167,7 +167,7 @@ function SchemaField(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      formContext={formContext} />
+      formContext={formContext}/>
   );
 
   const {type} = schema;
@@ -188,11 +188,11 @@ function SchemaField(props) {
   const fieldProps = {
     description: <DescriptionField id={id + "__description"}
                                    description={description}
-                                   formContext={formContext} />,
+                                   formContext={formContext}/>,
     rawDescription: description,
-    help: <Help help={help} />,
+    help: <Help help={help}/>,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: <ErrorList errors={errors} />,
+    errors: <ErrorList errors={errors}/>,
     rawErrors: errors,
     id,
     label,

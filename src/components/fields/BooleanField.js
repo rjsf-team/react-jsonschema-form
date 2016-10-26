@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 import {
   defaultFieldValue,
@@ -56,9 +56,9 @@ function BooleanField(props) {
   };
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
-    return <Widget options={buildOptions(schema, uiSchema["ui:widget"])} {...commonProps} />;
+    return <Widget options={buildOptions(schema, uiSchema["ui:widget"])} {...commonProps}/>;
   }
-  return <CheckboxWidget {...commonProps} />;
+  return <CheckboxWidget {...commonProps}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {

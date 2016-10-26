@@ -1,10 +1,10 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 import BaseInput from "./BaseInput";
 
 
 function TextWidget(props) {
-  return <BaseInput {...props} />;
+  return <BaseInput {...props}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {
