@@ -13,7 +13,6 @@ import {
 } from "../utils";
 import validateFormData from "../validate";
 
-
 export default class Form extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -130,7 +129,7 @@ export default class Form extends Component {
     return {
       fields,
       FieldTemplate: this.props.FieldTemplate,
-      widgets: this.props.widgets || {},
+      widgets: {...{}, ...this.props.widgets} || this.props.widgets || {}, // FIXME
       definitions: this.props.schema.definitions || {},
       formContext: this.props.formContext || {},
     };

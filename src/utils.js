@@ -20,9 +20,18 @@ import ColorWidget from "./components/widgets/ColorWidget";
 import FileWidget from "./components/widgets/FileWidget";
 import CheckboxesWidget from "./components/widgets/CheckboxesWidget";
 
+import CheckboxWidget from "./components/widgets/CheckboxWidget";
 
+export const defaultWidgetMap = {
+  "boolean": CheckboxWidget,
+  "string": TextWidget,
+  "number": TextWidget,
+  "integer": TextWidget,
+  "enum": SelectWidget,
+  "file": FileWidget,
+};
 
-const altWidgetMap = {
+export const altWidgetMap = {
   boolean: {
     radio: RadioWidget,
     select: SelectWidget,
@@ -59,7 +68,7 @@ const altWidgetMap = {
   }
 };
 
-const stringFormatWidgets = {
+export const stringFormatWidgets = {
   "date-time": DateTimeWidget,
   "date": DateWidget,
   "email": EmailWidget,
@@ -93,6 +102,36 @@ export function defaultFieldValue(formData, schema) {
   return typeof formData === "undefined" ? schema.default : formData;
 }
 
+function setDefaultOptions(
+  widget,
+  widgetOptions = {}
+) {
+  const {defaultProps={}} = widget;
+  widget.defaultProps = {
+    ...defaultProps,
+    options: {
+      ...defaultProps.options,
+      ...widgetOptions
+    }
+  };
+  return widget;
+}
+
+export function getDefaultWidget(
+  schema,
+  widgetType,
+) {
+  const {type} = schema;
+  if(!widgetType && Array.isArray(schema.enum)) {
+    widgetType = "enum";
+  }
+  const widget = defaultWidgetMap[widgetType || type];
+  if (!widget) {
+    throw new Error(`No default widget for type ${type}`);
+  }
+  return setDefaultOptions(widget);
+}
+
 export function getAlternativeWidget(
   schema,
   widget,
@@ -101,20 +140,8 @@ export function getAlternativeWidget(
 ) {
   const {type, format} = schema;
 
-  function setDefaultOptions(widget) {
-    const {defaultProps={}} = widget;
-    widget.defaultProps = {
-      ...defaultProps,
-      options: {
-        ...defaultProps.options,
-        ...widgetOptions
-      }
-    };
-    return widget;
-  }
-
   if (typeof widget === "function") {
-    return setDefaultOptions(widget);
+    return setDefaultOptions(widget, widgetOptions);
   }
 
   if (isObject(widget)) {

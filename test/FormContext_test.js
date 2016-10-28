@@ -60,7 +60,7 @@ describe("FormContext", () => {
 
   it("should be passed to TemplateField", () => {
     function CustomTemplateField({formContext}) {
-      return <div id={formContext.foo} />;
+      return <div id={formContext.foo}/>;
     }
 
     const {node} = createFormComponent({
