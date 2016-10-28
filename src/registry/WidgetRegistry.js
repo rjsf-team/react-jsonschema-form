@@ -12,9 +12,14 @@ Registry.initRegistry({
   stringFormatWidgets: defaultWidgetMapping.stringFormatWidgets,
 });
 
-function _createOrUpdateRegistry(registryKey, key, value) {
+function _createOrUpdateRegistry(registryKey, key, value, type) {
   const registryMap = Registry.getFromRegistry(registryKey);
-  registryMap[key] = value;
+  if (type) {
+    const registryMapByType = registryMap[type];
+    registryMapByType[key] = value;
+  } else {
+    registryMap[key] = value;
+  }
   Registry.addToRegistry(registryKey, registryMap);
 }
 
@@ -22,8 +27,8 @@ function addToDefaultWidgetMap(key, value) {
   _createOrUpdateRegistry(DEFAULT_WIDGET_MAP_KEY, key, value);
 }
 
-function addToAltWidgetMap(key, value) {
-  _createOrUpdateRegistry(ALT_WIDGET_MAP_KEY, key, value);
+function addToAltWidgetMapByType(type, key, value) {
+  _createOrUpdateRegistry(ALT_WIDGET_MAP_KEY, key, value, type);
 }
 
 function addToStringFormatWidgets(key, value) {
@@ -44,7 +49,7 @@ function getStringFormatWidgets() {
 
 export default {
   addToDefaultWidgetMap,
-  addToAltWidgetMap,
+  addToAltWidgetMapByType,
   addToStringFormatWidgets,
   getDefaultWidgetMap,
   getAltWidgetMap,
