@@ -129,7 +129,7 @@ export default class Form extends Component {
     return {
       fields,
       FieldTemplate: this.props.FieldTemplate,
-      widgets: {...{}, ...this.props.widgets} || this.props.widgets || {}, // FIXME
+      widgets: this.props.widgets || {},
       definitions: this.props.schema.definitions || {},
       formContext: this.props.formContext || {},
     };
