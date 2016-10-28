@@ -5,9 +5,9 @@ import WidgetRegistry from "./registry/WidgetRegistry";
 import TitleField from "./components/fields/TitleField";
 import DescriptionField from "./components/fields/DescriptionField";
 
-const defaultWidgetMap = WidgetRegistry.getFromRegistry("defaultWidgetMap");
-const altWidgetMap = WidgetRegistry.getFromRegistry("altWidgetMap");
-const stringFormatWidgets = WidgetRegistry.getFromRegistry("stringFormatWidgets");
+const defaultWidgetMap = WidgetRegistry.getDefaultWidgetMap();
+const altWidgetMap = WidgetRegistry.getAltWidgetMap();
+const stringFormatWidgets = WidgetRegistry.getStringFormatWidgets();
 
 export function getDefaultRegistry() {
   return {

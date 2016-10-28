@@ -1,54 +1,46 @@
-/**
- * The registry that will have the singleton
- * - getRegistry() -> the registry which is a simple key/value POJO
- * @type {Object}
- */
-const Registry = {
-  _registry: {},
-  getRegistry() {
-    return this._registry;
-  }
-};
+import Registry from "./Registry";
 
-/**
- * Initialize registry with a value
- * @param {object} value the registry value
- */
-function initRegistry(value) {
-  Object.assign(Registry.getRegistry(), value);
+import defaultWidgetMapping from "../mapping/DefaultWidgetMapping";
+
+Registry.initRegistry({
+  defaultWidgetMap: defaultWidgetMapping.defaultWidgetMap,
+  altWidgetMap: defaultWidgetMapping.altWidgetMap,
+  stringFormatWidgets: defaultWidgetMapping.stringFormatWidgets,
+});
+
+function addToDefaultWidgetMap(key, value) {
+  const defaultWidgetMapKey = "defaultWidgetMap";
+  let defaultWidgetMap = Registry.getFromRegistry(defaultWidgetMapKey);
+  defaultWidgetMap[key] = value;
+  Registry.addToRegistry(defaultWidgetMapKey, defaultWidgetMap);
 }
 
-/**
- * Call this one to add anything you want into the registry.
- * It will be added only if not locked.
- * Be warned any existing content will be overridden.
- * @param {string} id Where you want it to store in the registry to get it later
- * @param {any} item Everything you want, a function, an object or whatever
- */
-function addToRegistry(id, item) {
-  const registry = Registry.getRegistry();
-  registry[id] = item;
+function addToAltWidgetMap(key, value) {
 }
 
-/**
- * @return {object} the registry singleton instance
- */
-function getRegistry() {
-  return Registry.getRegistry();
+function addToFormatWidgets(key, value) {
 }
 
-/**
- * @param  {string} id the object's id in the registry you want to get
- * @return {any}    the object you are looking for
- */
-function getFromRegistry(id) {
-  return getRegistry()[id];
+function getDefaultWidgetMap() {
+  const registryKey = "defaultWidgetMap";
+  return Registry.getFromRegistry(registryKey);
+}
+
+function getAltWidgetMap(){
+  const registryKey = "altWidgetMap";
+  return Registry.getFromRegistry(registryKey);
+}
+
+function getStringFormatWidgets(){
+  const registryKey = "stringFormatWidgets";
+  return Registry.getFromRegistry(registryKey);
 }
 
 export default {
-  Registry,
-  initRegistry,
-  addToRegistry,
-  getRegistry,
-  getFromRegistry,
+  addToDefaultWidgetMap,
+  addToAltWidgetMap,
+  addToFormatWidgets,
+  getDefaultWidgetMap,
+  getAltWidgetMap,
+  getStringFormatWidgets,
 };
