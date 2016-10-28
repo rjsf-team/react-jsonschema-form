@@ -6,15 +6,12 @@ import "codemirror/mode/javascript/javascript";
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 
-import WidgetRegistry from "../src/registry/WidgetRegistry";
+// Example of default widget override
+// import WidgetRegistry from "../src/registry/WidgetRegistry";
+// import TextareaWidget from "../src/components/widgets/TextareaWidget";
+// WidgetRegistry.addToDefaultWidgetMap("string", TextareaWidget);
 
 import Form from "../src";
-
-import TextareaWidget from "../src/components/widgets/TextareaWidget";
-
-WidgetRegistry.addToDefaultWidgetMap("string", TextareaWidget);
-
-console.log(WidgetRegistry.getAltWidgetMap());
 
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.

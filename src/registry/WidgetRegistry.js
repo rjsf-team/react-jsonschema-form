@@ -2,44 +2,50 @@ import Registry from "./Registry";
 
 import defaultWidgetMapping from "../mapping/DefaultWidgetMapping";
 
+const DEFAULT_WIDGET_MAP_KEY = "defaultWidgetMap";
+const ALT_WIDGET_MAP_KEY = "altWidgetMap";
+const STRING_FORMAT_WIDGETS_KEY = "stringFormatWidgets";
+
 Registry.initRegistry({
   defaultWidgetMap: defaultWidgetMapping.defaultWidgetMap,
   altWidgetMap: defaultWidgetMapping.altWidgetMap,
   stringFormatWidgets: defaultWidgetMapping.stringFormatWidgets,
 });
 
+function _createOrUpdateRegistry(registryKey, key, value) {
+  const registryMap = Registry.getFromRegistry(registryKey);
+  registryMap[key] = value;
+  Registry.addToRegistry(registryKey, registryMap);
+}
+
 function addToDefaultWidgetMap(key, value) {
-  const defaultWidgetMapKey = "defaultWidgetMap";
-  let defaultWidgetMap = Registry.getFromRegistry(defaultWidgetMapKey);
-  defaultWidgetMap[key] = value;
-  Registry.addToRegistry(defaultWidgetMapKey, defaultWidgetMap);
+  _createOrUpdateRegistry(DEFAULT_WIDGET_MAP_KEY, key, value);
 }
 
 function addToAltWidgetMap(key, value) {
+  _createOrUpdateRegistry(ALT_WIDGET_MAP_KEY, key, value);
 }
 
-function addToFormatWidgets(key, value) {
+function addToStringFormatWidgets(key, value) {
+  _createOrUpdateRegistry(STRING_FORMAT_WIDGETS_KEY, key, value);
 }
 
 function getDefaultWidgetMap() {
-  const registryKey = "defaultWidgetMap";
-  return Registry.getFromRegistry(registryKey);
+  return Registry.getFromRegistry(DEFAULT_WIDGET_MAP_KEY);
 }
 
-function getAltWidgetMap(){
-  const registryKey = "altWidgetMap";
-  return Registry.getFromRegistry(registryKey);
+function getAltWidgetMap() {
+  return Registry.getFromRegistry(ALT_WIDGET_MAP_KEY);
 }
 
-function getStringFormatWidgets(){
-  const registryKey = "stringFormatWidgets";
-  return Registry.getFromRegistry(registryKey);
+function getStringFormatWidgets() {
+  return Registry.getFromRegistry(STRING_FORMAT_WIDGETS_KEY);
 }
 
 export default {
   addToDefaultWidgetMap,
   addToAltWidgetMap,
-  addToFormatWidgets,
+  addToStringFormatWidgets,
   getDefaultWidgetMap,
   getAltWidgetMap,
   getStringFormatWidgets,
