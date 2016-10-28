@@ -19,7 +19,7 @@ export default class Form extends Component {
     noValidate: false,
     liveValidate: false,
     safeRenderCompletion: false,
-  }
+  };
 
   constructor(props) {
     super(props);
