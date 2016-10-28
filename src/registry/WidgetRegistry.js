@@ -1,16 +1,22 @@
-import defaultWidgetRegistry from "./DefaultWidgetRegistry";
-
 /**
  * The registry that will have the singleton
  * - getRegistry() -> the registry which is a simple key/value POJO
  * @type {Object}
  */
 const Registry = {
-  _registry: {defaultWidgetRegistry},
+  _registry: {},
   getRegistry() {
     return this._registry;
   }
 };
+
+/**
+ * Initialize registry with a value
+ * @param {object} value the registry value
+ */
+function initRegistry(value) {
+  Object.assign(Registry.getRegistry(), value);
+}
 
 /**
  * Call this one to add anything you want into the registry.
@@ -41,6 +47,7 @@ function getFromRegistry(id) {
 
 export default {
   Registry,
+  initRegistry,
   addToRegistry,
   getRegistry,
   getFromRegistry,
