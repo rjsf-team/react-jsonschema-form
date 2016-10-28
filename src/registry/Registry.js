@@ -11,7 +11,7 @@ const Registry = {
 };
 
 /**
- * Initialize registry with a value
+ * Initialize registry with value
  * @param {object} value the registry value
  */
 function initRegistry(value) {
@@ -20,7 +20,6 @@ function initRegistry(value) {
 
 /**
  * Call this one to add anything you want into the registry.
- * It will be added only if not locked.
  * Be warned any existing content will be overridden.
  * @param {string} id Where you want it to store in the registry to get it later
  * @param {any} item Everything you want, a function, an object or whatever
@@ -38,7 +37,7 @@ function getRegistry() {
 }
 
 /**
- * @param  {string} id the object's id in the registry you want to get
+ * @param  {string} id the object id in the registry you want to get
  * @return {any}    the object you are looking for
  */
 function getFromRegistry(id) {
