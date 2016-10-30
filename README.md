@@ -415,7 +415,7 @@ Array items are orderable by default, and react-jsonschema-form renders move up/
 ```jsx
 const schema = {
   type: "array",
-  properties: {
+  items: {
     type: "string"
   }
 };
