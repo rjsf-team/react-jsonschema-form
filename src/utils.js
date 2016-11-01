@@ -223,6 +223,9 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
 }
 
 export function asNumber(value) {
+  if (value === "") {
+    return undefined;
+  }
   if (/\.$/.test(value)) {
     // "3." can't really be considered a number even if it parses in js. The
     // user is most likely entering a float.
