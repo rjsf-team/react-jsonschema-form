@@ -408,6 +408,15 @@ render((
         uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
+
+For fields for which the order is OK already or a fixed order is not important, you can insert a wildcard `"*"` item in your `ui:oder` definition. All unreferenced fields will be rendered at that point:
+
+```js
+const uiSchema = {
+  "ui:order": ["bar", "*"]
+};
+```
+
 ### Array items ordering
 
 Array items are orderable by default, and react-jsonschema-form renders move up/down buttons alongside them. The `uiSchema` object spec allows you to disable ordering:
