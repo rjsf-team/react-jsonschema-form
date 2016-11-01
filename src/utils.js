@@ -252,24 +252,24 @@ export function orderProperties(properties, order) {
 
   const arrayToHash = arr => arr.reduce((prev, curr) => {
     prev[curr] = true;
-    return prev
+    return prev;
   }, {});
   const propertyHash = arrayToHash(properties);
   const orderHash = arrayToHash(order);
-  const extraneous = order.find(prop => prop !== '*' && !propertyHash[prop]);
+  const extraneous = order.find(prop => prop !== "*" && !propertyHash[prop]);
   if (extraneous) {
     throw new Error(`uiSchema order list contains extraneous property "${extraneous}"`);
   }
   const rest = properties.filter(prop => !orderHash[prop]);
-  const restIndex = order.indexOf('*');
+  const restIndex = order.indexOf("*");
   if (restIndex === -1) {
     if (rest.length) {
       throw new Error(`uiSchema order list does not contain property "${rest[0]}"`);
     }
     return order;
   }
-  if (restIndex !== order.lastIndexOf('*')) {
-    throw new Error('uiSchema order list contains more than one wildcard item');
+  if (restIndex !== order.lastIndexOf("*")) {
+    throw new Error("uiSchema order list contains more than one wildcard item");
   }
 
   const complete = [...order];
