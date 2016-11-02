@@ -1,5 +1,7 @@
 import React, {Component, PropTypes} from "react";
 
+import Input from "react-bootstrap/lib/FormControl";
+
 import {dataURItoBlob, shouldRender, setState} from "../../utils";
 
 
@@ -98,17 +100,14 @@ class FileWidget extends Component {
     const {filesInfo} = this.state;
     return (
       <div>
-        <p>
-          <input
-            ref={ref => this.inputRef = ref}
-            id={id}
-            type="file"
-            disabled={readonly || disabled}
-            onChange={this.onChange}
-            defaultValue=""
-            autoFocus={autofocus}
-            multiple={multiple}/>
-        </p>
+        <Input ref={ref => this.inputRef = ref}
+          id={id}
+          type="file"
+          disabled={readonly || disabled}
+          onChange={this.onChange}
+          defaultValue=""
+          autoFocus={autofocus}
+          multiple={multiple}/>
         <FilesInfo filesInfo={filesInfo}/>
       </div>
     );

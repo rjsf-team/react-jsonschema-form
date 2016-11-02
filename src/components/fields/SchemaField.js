@@ -1,5 +1,8 @@
 import React, {PropTypes} from "react";
 
+import ControlLabel from "react-bootstrap/lib/ControlLabel";
+import HelpBlock from "react-bootstrap/lib/HelpBlock";
+
 import {
   isMultiSelect,
   retrieveSchema,
@@ -15,12 +18,12 @@ import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
-  array:   ArrayField,
+  array: ArrayField,
   boolean: BooleanField,
   integer: NumberField,
-  number:  NumberField,
-  object:  ObjectField,
-  string:  StringField,
+  number: NumberField,
+  object: ObjectField,
+  string: StringField,
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
@@ -41,9 +44,9 @@ function Label(props) {
     return <div/>;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <ControlLabel htmlFor={id}>
       {required ? label + REQUIRED_FIELD_SYMBOL : label}
-    </label>
+    </ControlLabel>
   );
 }
 
@@ -53,10 +56,7 @@ function Help(props) {
     // See #312: Ensure compatibility with old versions of React.
     return <div/>;
   }
-  if (typeof help === "string") {
-    return <p className="help-block">{help}</p>;
-  }
-  return <div className="help-block">{help}</div>;
+  return <HelpBlock>{help}</HelpBlock>;
 }
 
 function ErrorList(props) {
@@ -163,11 +163,11 @@ function SchemaField(props) {
 
   const field = (
     <FieldComponent {...props}
-      schema={schema}
-      disabled={disabled}
-      readonly={readonly}
-      autofocus={autofocus}
-      formContext={formContext}/>
+                    schema={schema}
+                    disabled={disabled}
+                    readonly={readonly}
+                    autofocus={autofocus}
+                    formContext={formContext}/>
   );
 
   const {type} = schema;

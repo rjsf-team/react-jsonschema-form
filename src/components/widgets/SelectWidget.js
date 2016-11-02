@@ -1,5 +1,7 @@
 import React, {PropTypes} from "react";
 
+import Select from "react-bootstrap/lib/FormControl";
+
 import {asNumber} from "../../utils";
 
 
@@ -32,10 +34,9 @@ function SelectWidget({
 }) {
   const {enumOptions} = options;
   return (
-    <select
+    <Select componentClass="select"
       id={id}
       multiple={multiple}
-      className="form-control"
       value={value}
       required={required}
       disabled={disabled}
@@ -54,7 +55,7 @@ function SelectWidget({
       enumOptions.map(({value, label}, i) => {
         return <option key={i} value={value}>{label}</option>;
       })
-    }</select>
+    }</Select>
   );
 }
 

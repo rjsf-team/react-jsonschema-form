@@ -234,7 +234,7 @@ describe("uiSchema", () => {
 
       const {node} = createFormComponent({schema, uiSchema});
 
-      expect(node.querySelector("p.help-block").textContent).eql("plop");
+      expect(node.querySelector(".help-block").textContent).eql("plop");
     });
   });
 
@@ -244,7 +244,7 @@ describe("uiSchema", () => {
 
     const {node} = createFormComponent({schema, uiSchema});
 
-    expect(node.querySelector("div.help-block").textContent).eql("plop");
+    expect(node.querySelector(".help-block").textContent).eql("plop");
   });
 
   describe("ui:focus", () => {
@@ -1016,7 +1016,7 @@ describe("uiSchema", () => {
       it("should render boolean option labels", () => {
         const {node} = createFormComponent({schema, uiSchema});
         const labels = [].map.call(
-          node.querySelectorAll(".field-radio-group label"),
+          node.querySelectorAll(".radio-group label"),
           node => node.textContent);
 
         expect(labels)

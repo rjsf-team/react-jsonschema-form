@@ -1,22 +1,21 @@
 import React from "react";
 
+import Panel from "react-bootstrap/lib/Panel";
+import ListGroup from "react-bootstrap/lib/ListGroup";
+import ListGroupItem from "react-bootstrap/lib/ListGroupItem";
 
 export default function ErrorList({errors}) {
   return (
-    <div className="panel panel-danger errors">
-      <div className="panel-heading">
-        <h3 className="panel-title">Errors</h3>
-      </div>
-      <ul className="list-group">{
+    <Panel header="Errors" bsStyle="danger" className="errors">
+      <ListGroup fill>{
         errors.map((error, i) => {
           return (
-            <li key={i} className="list-group-item text-danger">{
+            <ListGroupItem key={i} bsStyle="danger">{
               error.stack
-            }</li>
+            }</ListGroupItem>
           );
         })
-      }</ul>
-    </div>
+      }</ListGroup>
+    </Panel>
   );
 }
-

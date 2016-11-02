@@ -1,5 +1,7 @@
 import React, {Component, PropTypes} from "react";
 
+import Button from "react-bootstrap/lib/Button";
+
 import SchemaField from "./fields/SchemaField";
 import TitleField from "./fields/TitleField";
 import DescriptionField from "./fields/DescriptionField";
@@ -176,10 +178,7 @@ export default class Form extends Component {
           onChange={this.onChange}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}/>
-        { children ? children :
-          <p>
-            <button type="submit" className="btn btn-info">Submit</button>
-          </p> }
+        { children ? children : <Button type="submit" bsStyle="info">Submit</Button> }
       </form>
     );
   }

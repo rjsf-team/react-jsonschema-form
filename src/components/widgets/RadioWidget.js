@@ -1,5 +1,7 @@
 import React, {PropTypes} from "react";
 
+import FormGroup from "react-bootstrap/lib/FormGroup";
+import Radio from "react-bootstrap/lib/Radio";
 
 function RadioWidget({
   schema,
@@ -14,25 +16,24 @@ function RadioWidget({
   const name = Math.random().toString();
   const {enumOptions, inline} = options;
   return (
-    <div className="field-radio-group">{
+    <FormGroup className="radio-group">{
       enumOptions.map((option, i) => {
         const checked = option.value === value;
         return (
-          <div key={i} className={`radio${inline ? "-inline" : ""} ${disabled ? "disabled" : ""}`}>
-            <label>
-              <input type="radio"
-                name={name}
-                value={option.value}
-                checked={checked}
-                disabled={disabled}
-                autoFocus={autofocus && i === 0}
-                onChange={_ => onChange(option.value)}/>
-              {option.label}
-            </label>
-          </div>
+          <Radio
+            key={i}
+            name={name}
+            value={option.value}
+            checked={checked}
+            disabled={disabled}
+            inline={inline}
+            autoFocus={autofocus && i === 0}
+            onChange={_ => onChange(option.value)}>
+            {option.label}
+          </Radio>
         );
       })
-    }</div>
+    }</FormGroup>
   );
 }
 
