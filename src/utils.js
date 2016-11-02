@@ -223,6 +223,9 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
 }
 
 export function asNumber(value) {
+  if (value === "") {
+    return undefined;
+  }
   if (/\.$/.test(value)) {
     // "3." can't really be considered a number even if it parses in js. The
     // user is most likely entering a float.
@@ -500,7 +503,7 @@ export function dataURItoBlob(dataURI) {
   // Built the Uint8Array Blob parameter from the base64 string.
   const binary = atob(splitted[1]);
   const array = [];
-  for(let i = 0; i < binary.length; i++) {
+  for (let i = 0; i < binary.length; i++) {
     array.push(binary.charCodeAt(i));
   }
   // Create the blob object

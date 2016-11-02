@@ -15,7 +15,8 @@
         "comma-dangle": [0],
         "no-unused-vars": [2, {"vars": "all", "args": "none"}],
         "no-console": [0],
-        "object-curly-spacing": [1, "never"]
+        "object-curly-spacing": [1, "never"],
+        "keyword-spacing": ["error"]
     },
     "env": {
         "es6": true,
