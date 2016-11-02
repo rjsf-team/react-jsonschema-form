@@ -6,21 +6,16 @@ import {
   getDefaultRegistry,
   isFilesArray
 } from "../../utils";
-import ArrayField from "./ArrayField";
-import BooleanField from "./BooleanField";
-import NumberField from "./NumberField";
-import ObjectField from "./ObjectField";
-import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
-  array:   ArrayField,
-  boolean: BooleanField,
-  integer: NumberField,
-  number:  NumberField,
-  object:  ObjectField,
-  string:  StringField,
+  array:   "ArrayField",
+  boolean: "BooleanField",
+  integer: "NumberField",
+  number:  "NumberField",
+  object:  "ObjectField",
+  string:  "StringField",
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
@@ -31,7 +26,7 @@ function getFieldComponent(schema, uiSchema, fields) {
   if (typeof field === "string" && field in fields) {
     return fields[field];
   }
-  return COMPONENT_TYPES[schema.type] || UnsupportedField;
+  return (COMPONENT_TYPES[schema.type] ? fields[COMPONENT_TYPES[schema.type]] : UnsupportedField) || UnsupportedField;
 }
 
 function Label(props) {

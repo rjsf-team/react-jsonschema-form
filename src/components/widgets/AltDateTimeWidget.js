@@ -1,9 +1,8 @@
 import React, {PropTypes} from "react";
 
-import AltDateWidget from "./AltDateWidget";
-
 
 function AltDateTimeWidget(props) {
+  const {AltDateWidget} = props.registry.widgets;
   return <AltDateWidget time {...props}/>;
 }
 

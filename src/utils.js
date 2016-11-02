@@ -1,7 +1,5 @@
 import "setimmediate";
 
-import TitleField from "./components/fields/TitleField";
-import DescriptionField from "./components/fields/DescriptionField";
 import PasswordWidget from "./components/widgets/PasswordWidget";
 import RadioWidget from "./components/widgets/RadioWidget";
 import UpDownWidget from "./components/widgets/UpDownWidget";
@@ -80,10 +78,34 @@ export function getDefaultRegistry() {
       // Investigation hint: getDefaultRegistry is called from within
       // SchemaField itself.
       SchemaField: require("./components/fields/SchemaField").default,
-      TitleField,
-      DescriptionField,
+      ArrayField: require("./components/fields/ArrayField").default,
+      BooleanField: require("./components/fields/BooleanField").default,
+      ObjectField: require("./components/fields/ObjectField").default,
+      StringField: require("./components/fields/StringField").default,
+      NumberField: require("./components/fields/NumberField").default,
+      TitleField: require("./components/fields/TitleField").default,
+      DescriptionField: require("./components/fields/DescriptionField").default,
     },
-    widgets: {},
+    widgets: {
+      PasswordWidget: require("./components/widgets/PasswordWidget").default,
+      RadioWidget: require("./components/widgets/RadioWidget").default,
+      UpDownWidget: require("./components/widgets/UpDownWidget").default,
+      RangeWidget: require("./components/widgets/RangeWidget").default,
+      SelectWidget: require("./components/widgets/SelectWidget").default,
+      TextWidget: require("./components/widgets/TextWidget").default,
+      DateWidget: require("./components/widgets/DateWidget").default,
+      DateTimeWidget: require("./components/widgets/DateTimeWidget").default,
+      AltDateWidget: require("./components/widgets/AltDateWidget").default,
+      AltDateTimeWidget: require("./components/widgets/AltDateTimeWidget").default,
+      EmailWidget: require("./components/widgets/EmailWidget").default,
+      URLWidget: require("./components/widgets/URLWidget").default,
+      TextareaWidget: require("./components/widgets/TextareaWidget").default,
+      HiddenWidget: require("./components/widgets/HiddenWidget").default,
+      ColorWidget: require("./components/widgets/ColorWidget").default,
+      FileWidget: require("./components/widgets/FileWidget").default,
+      CheckboxWidget: require("./components/widgets/CheckboxWidget").default,
+      CheckboxesWidget: require("./components/widgets/CheckboxesWidget").default,
+    },
     definitions: {},
     formContext: {}
   };
