@@ -53,7 +53,7 @@ export function getDefaultWidget(
 ) {
   const {type} = schema;
   if(!widgetType && Array.isArray(schema.enum)) {
-    widgetType = "enum";
+    widgetType = "array";
   }
   const widget = defaultWidgetMap[widgetType || type];
   if (!widget) {

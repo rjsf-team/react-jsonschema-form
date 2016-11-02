@@ -22,8 +22,7 @@ const defaultWidgetMap = {
   string: TextWidget,
   number: TextWidget,
   integer: TextWidget,
-  "enum": SelectWidget,
-  file: FileWidget,
+  array: SelectWidget
 };
 
 const altWidgetMap = {
@@ -60,6 +59,7 @@ const altWidgetMap = {
   array: {
     select: SelectWidget,
     checkboxes: CheckboxesWidget,
+    file: FileWidget,
   }
 };
 

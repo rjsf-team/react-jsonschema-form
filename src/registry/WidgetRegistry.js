@@ -47,6 +47,17 @@ function getStringFormatWidgets() {
   return Registry.getFromRegistry(STRING_FORMAT_WIDGETS_KEY);
 }
 
+function register(mapping) {
+  mapping && Object.keys(mapping).forEach(entryKey => {
+    const mappingEntry = mapping[entryKey];
+    addToDefaultWidgetMap(entryKey, mappingEntry.default);
+    mappingEntry.alternatives && Object.keys(mappingEntry.alternatives).forEach(altKey => {
+      const mappingAltEntry = mappingEntry.alternatives[altKey];
+      addToAltWidgetMapByType(entryKey, altKey, mappingAltEntry);
+    });
+  });
+}
+
 export default {
   addToDefaultWidgetMap,
   addToAltWidgetMapByType,
@@ -54,4 +65,5 @@ export default {
   getDefaultWidgetMap,
   getAltWidgetMap,
   getStringFormatWidgets,
+  register,
 };

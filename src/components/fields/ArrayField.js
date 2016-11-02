@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from "react";
 
 import {
-  getDefaultWidget,
   getAlternativeWidget,
   getDefaultFormState,
   isMultiSelect,
@@ -236,7 +235,7 @@ class ArrayField extends Component {
     const {schema, idSchema, name, disabled, readonly, autofocus} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const Widget = getDefaultWidget(schema, "file");
+    const Widget = getAlternativeWidget(schema, "file");
     return (
       <Widget
         id={idSchema && idSchema.$id}
