@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 
 function selectValue(value, selected, all) {
@@ -35,7 +35,7 @@ function CheckboxesWidget(props) {
                   } else {
                     onChange(deselectValue(option.value, value));
                   }
-                }} />
+                }}/>
               <strong>{option.label}</strong>
             </label>
           </div>

@@ -1,9 +1,9 @@
-import { expect } from "chai";
+import {expect} from "chai";
 import sinon from "sinon";
-import { Simulate } from "react-addons-test-utils";
+import {Simulate} from "react-addons-test-utils";
 
-import validateFormData, { toErrorList } from "../src/validate";
-import { createFormComponent } from "./test_utils";
+import validateFormData, {toErrorList} from "../src/validate";
+import {createFormComponent} from "./test_utils";
 
 
 describe("Validation", () => {
@@ -133,19 +133,19 @@ describe("Validation", () => {
           expect(comp.state.errors)
             .to.have.length.of(1);
           expect(comp.state.errors[0].message)
-            .eql(`requires property "foo"`);
+            .eql("requires property \"foo\"");
         });
 
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li"))
             .to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent)
-            .eql(`instance requires property "foo"`);
+            .eql("instance requires property \"foo\"");
         });
 
         it("should trigger the onError handler", () => {
           sinon.assert.calledWith(onError, sinon.match(errors => {
-            return errors[0].message === `requires property "foo"`;
+            return errors[0].message === "requires property \"foo\"";
           }));
         });
       });
@@ -179,7 +179,7 @@ describe("Validation", () => {
           expect(comp.state.errors)
             .to.have.length.of(1);
           expect(comp.state.errors[0].message)
-            .eql(`does not meet minimum length of 10`);
+            .eql("does not meet minimum length of 10");
         });
 
         it("should render errors", () => {
@@ -359,7 +359,7 @@ describe("Validation", () => {
           expect(comp.state.errors)
             .to.have.length.of(1);
           expect(comp.state.errors[0].message)
-            .eql(`requires property "foo"`);
+            .eql("requires property \"foo\"");
         });
 
         it("should not render error list if showErrorList prop true", () => {
@@ -369,7 +369,7 @@ describe("Validation", () => {
 
         it("should trigger the onError handler", () => {
           sinon.assert.calledWith(onError, sinon.match(errors => {
-            return errors[0].message === `requires property "foo"`;
+            return errors[0].message === "requires property \"foo\"";
           }));
         });
       });

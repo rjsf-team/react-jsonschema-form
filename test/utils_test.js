@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import {expect} from "chai";
 
 import {
   asNumber,
@@ -347,13 +347,13 @@ describe("utils", () => {
 
   describe("retrieveSchema()", () => {
     it("should 'resolve' a schema which contains definitions", () => {
-      const schema = { $ref: "#/definitions/address" };
+      const schema = {$ref: "#/definitions/address"};
       const address = {
         type: "object",
         properties: {
-          street_address: { type: "string" },
-          city: { type: "string" },
-          state: { type: "string" }
+          street_address: {type: "string"},
+          city: {type: "string"},
+          state: {type: "string"}
         },
         required: [ "street_address", "city", "state" ]
       };
@@ -545,7 +545,7 @@ describe("utils", () => {
         $id: "root",
         metadata: {
           $id: "root_metadata",
-          id: { $id: "root_metadata_id" }
+          id: {$id: "root_metadata_id"}
         }
       });
     });

@@ -1,9 +1,9 @@
 import React from "react";
 
-import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
+import {expect} from "chai";
+import {Simulate} from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 
 describe("ArrayField", () => {
@@ -568,8 +568,8 @@ describe("ArrayField", () => {
       const numInput =
           node.querySelector("fieldset .field-number input[type=text]");
 
-      Simulate.change(strInput, {target: { value: "bar" }});
-      Simulate.change(numInput, {target: { value: "101" }});
+      Simulate.change(strInput, {target: {value: "bar"}});
+      Simulate.change(numInput, {target: {value: "101"}});
 
       expect(comp.state.formData).eql(["bar", 101]);
     });
@@ -653,7 +653,7 @@ describe("ArrayField", () => {
   });
 
   describe("Title", () => {
-    const TitleField = props => <div id={`title-${props.title}`} />;
+    const TitleField = props => <div id={`title-${props.title}`}/>;
 
     const fields = {TitleField};
 

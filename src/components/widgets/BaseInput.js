@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 
 function BaseInput(props) {
@@ -21,7 +21,7 @@ function BaseInput(props) {
       readOnly={readonly}
       autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
-      onChange={(event) => onChange(event.target.value)} />
+      onChange={(event) => onChange(event.target.value)}/>
   );
 }
 

@@ -150,6 +150,8 @@ render((
 ), document.getElementById("app"));
 ```
 
+WARNING: If you have situations where your parent component can re-render, make sure you listen to the `onChange` event and update the data you pass to the `formData` attribute.
+
 ### Form event handlers
 
 #### Form submission
@@ -413,7 +415,7 @@ Array items are orderable by default, and react-jsonschema-form renders move up/
 ```jsx
 const schema = {
   type: "array",
-  properties: {
+  items: {
     type: "string"
   }
 };
