@@ -5,7 +5,6 @@ import "codemirror/mode/javascript/javascript";
 
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
-
 import Form from "../src";
 
 // Import a few CodeMirror themes; these are used to match alternative
