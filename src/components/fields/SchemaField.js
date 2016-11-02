@@ -1,6 +1,7 @@
 import React, {PropTypes} from "react";
 
 import {
+  mergeToDefaultWidgets,
   isMultiSelect,
   retrieveSchema,
   getDefaultRegistry,
@@ -134,7 +135,7 @@ DefaultTemplate.defaultProps = {
 
 function SchemaField(props) {
   const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
-  const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
+  const {definitions, fields, formContext, theme, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
   const {DescriptionField} = fields;
@@ -145,6 +146,10 @@ function SchemaField(props) {
   if (Object.keys(schema).length === 0) {
     // See #312: Ensure compatibility with old versions of React.
     return <div/>;
+  }
+
+  if (theme) {
+    mergeToDefaultWidgets(theme);
   }
 
   let displayLabel = true;
