@@ -101,7 +101,7 @@ class ObjectField extends Component {
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
-    } catch(err) {
+    } catch (err) {
       return (
         <div>
           <p className="config-error" style={{color: "red"}}>

@@ -503,7 +503,7 @@ export function dataURItoBlob(dataURI) {
   // Built the Uint8Array Blob parameter from the base64 string.
   const binary = atob(splitted[1]);
   const array = [];
-  for(let i = 0; i < binary.length; i++) {
+  for (let i = 0; i < binary.length; i++) {
     array.push(binary.charCodeAt(i));
   }
   // Create the blob object

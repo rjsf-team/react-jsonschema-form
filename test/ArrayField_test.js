@@ -189,7 +189,7 @@ describe("ArrayField", () => {
 
       try {
         Simulate.submit(node);
-      } catch(e) {
+      } catch (e) {
         // Silencing error thrown as failure is expected here
       }
 
