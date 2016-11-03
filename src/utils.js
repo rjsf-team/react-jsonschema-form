@@ -2,25 +2,33 @@ import "setimmediate";
 
 import TitleField from "./components/fields/TitleField";
 import DescriptionField from "./components/fields/DescriptionField";
+
+import AltDateTimeWidget from "./components/widgets/AltDateTimeWidget";
+import AltDateWidget from "./components/widgets/AltDateWidget";
+import CheckboxesWidget from "./components/widgets/CheckboxesWidget";
+import CheckboxWidget from "./components/widgets/CheckboxWidget";
+import ColorWidget from "./components/widgets/ColorWidget";
+import DateTimeWidget from "./components/widgets/DateTimeWidget";
+import DateWidget from "./components/widgets/DateWidget";
+import EmailWidget from "./components/widgets/EmailWidget";
+import FileWidget from "./components/widgets/FileWidget";
+import HiddenWidget from "./components/widgets/HiddenWidget";
 import PasswordWidget from "./components/widgets/PasswordWidget";
 import RadioWidget from "./components/widgets/RadioWidget";
-import UpDownWidget from "./components/widgets/UpDownWidget";
 import RangeWidget from "./components/widgets/RangeWidget";
 import SelectWidget from "./components/widgets/SelectWidget";
 import TextWidget from "./components/widgets/TextWidget";
-import DateWidget from "./components/widgets/DateWidget";
-import DateTimeWidget from "./components/widgets/DateTimeWidget";
-import AltDateWidget from "./components/widgets/AltDateWidget";
-import AltDateTimeWidget from "./components/widgets/AltDateTimeWidget";
-import EmailWidget from "./components/widgets/EmailWidget";
-import URLWidget from "./components/widgets/URLWidget";
 import TextareaWidget from "./components/widgets/TextareaWidget";
-import HiddenWidget from "./components/widgets/HiddenWidget";
-import ColorWidget from "./components/widgets/ColorWidget";
-import FileWidget from "./components/widgets/FileWidget";
-import CheckboxesWidget from "./components/widgets/CheckboxesWidget";
+import UpDownWidget from "./components/widgets/UpDownWidget";
+import URLWidget from "./components/widgets/URLWidget";
 
-
+const defaultWidgetMap = {
+  boolean: CheckboxWidget,
+  string: TextWidget,
+  number: TextWidget,
+  integer: TextWidget,
+  array: SelectWidget
+};
 
 const altWidgetMap = {
   boolean: {
@@ -56,6 +64,7 @@ const altWidgetMap = {
   array: {
     select: SelectWidget,
     checkboxes: CheckboxesWidget,
+    file: FileWidget,
   }
 };
 
@@ -69,6 +78,17 @@ const stringFormatWidgets = {
   "uri": URLWidget,
   "data-url": FileWidget,
 };
+
+export function mergeToDefaultWidgets(theme) {
+  theme && Object.keys(theme).forEach(entryKey => {
+    const mappingEntry = theme[entryKey];
+    defaultWidgetMap[entryKey] = mappingEntry.default;
+    mappingEntry.alternatives && Object.keys(mappingEntry.alternatives).forEach(altKey => {
+      const mappingAltEntry = mappingEntry.alternatives[altKey];
+      altWidgetMap[entryKey][altKey] = mappingAltEntry;
+    });
+  });
+}
 
 export function getDefaultRegistry() {
   return {
@@ -93,6 +113,36 @@ export function defaultFieldValue(formData, schema) {
   return typeof formData === "undefined" ? schema.default : formData;
 }
 
+function setDefaultOptions(
+  widget,
+  widgetOptions = {}
+) {
+  const {defaultProps={}} = widget;
+  widget.defaultProps = {
+    ...defaultProps,
+    options: {
+      ...defaultProps.options,
+      ...widgetOptions
+    }
+  };
+  return widget;
+}
+
+export function getDefaultWidget(
+  schema,
+  widgetType,
+) {
+  const {type} = schema;
+  if(!widgetType && Array.isArray(schema.enum)) {
+    widgetType = "array";
+  }
+  const widget = defaultWidgetMap[widgetType || type];
+  if (!widget) {
+    throw new Error(`No default widget for type ${type}`);
+  }
+  return setDefaultOptions(widget);
+}
+
 export function getAlternativeWidget(
   schema,
   widget,
@@ -101,20 +151,8 @@ export function getAlternativeWidget(
 ) {
   const {type, format} = schema;
 
-  function setDefaultOptions(widget) {
-    const {defaultProps={}} = widget;
-    widget.defaultProps = {
-      ...defaultProps,
-      options: {
-        ...defaultProps.options,
-        ...widgetOptions
-      }
-    };
-    return widget;
-  }
-
   if (typeof widget === "function") {
-    return setDefaultOptions(widget);
+    return setDefaultOptions(widget, widgetOptions);
   }
 
   if (isObject(widget)) {

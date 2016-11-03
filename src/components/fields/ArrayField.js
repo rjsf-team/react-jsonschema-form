@@ -14,8 +14,6 @@ import {
   getDefaultRegistry,
   setState
 } from "../../utils";
-import FileWidget from "./../widgets/FileWidget";
-
 
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
   if (!title) {
@@ -237,8 +235,9 @@ class ArrayField extends Component {
     const {schema, idSchema, name, disabled, readonly, autofocus} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
+    const Widget = getAlternativeWidget(schema, "file");
     return (
-      <FileWidget
+      <Widget
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}

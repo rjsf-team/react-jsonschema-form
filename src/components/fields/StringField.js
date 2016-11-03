@@ -2,13 +2,11 @@ import React, {PropTypes} from "react";
 
 import {
   defaultFieldValue,
+  getDefaultWidget,
   getAlternativeWidget,
   optionsList,
   getDefaultRegistry
 } from "../../utils";
-import TextWidget from "../widgets/TextWidget";
-import SelectWidget from "../widgets/SelectWidget";
-
 
 function StringField(props) {
   const {
@@ -46,13 +44,15 @@ function StringField(props) {
       const Widget = getAlternativeWidget(schema, widget, widgets, {enumOptions});
       return <Widget {...commonProps}/>;
     }
-    return <SelectWidget options={{enumOptions}} {...commonProps}/>;
+    const Widget = getDefaultWidget(schema);
+    return <Widget options={{enumOptions}} {...commonProps}/>;
   }
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
     return <Widget {...commonProps} placeholder={placeholder}/>;
   }
-  return <TextWidget {...commonProps} placeholder={placeholder}/>;
+  const Widget = getDefaultWidget(schema);
+  return <Widget {...commonProps} placeholder={placeholder}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {

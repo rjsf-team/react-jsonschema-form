@@ -2,13 +2,12 @@ import React, {PropTypes} from "react";
 
 import {
   defaultFieldValue,
+  getDefaultWidget,
   getAlternativeWidget,
   optionsList,
   getDefaultRegistry,
   isObject,
 } from "../../utils";
-import CheckboxWidget from "./../widgets/CheckboxWidget";
-
 
 function buildOptions(schema, uiWidget) {
   // Note: uiWidget can be undefined, a string or an object; we only deal with
@@ -58,7 +57,8 @@ function BooleanField(props) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
     return <Widget options={buildOptions(schema, uiSchema["ui:widget"])} {...commonProps}/>;
   }
-  return <CheckboxWidget {...commonProps}/>;
+  const Widget = getDefaultWidget(schema);
+  return <Widget {...commonProps}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {
