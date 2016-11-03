@@ -84,6 +84,12 @@ describe("ArrayField", () => {
         .not.eql(null);
     });
 
+    it("should not have an add button if addable is false", () => {
+      const {node} = createFormComponent({schema, uiSchema: {"ui:options": {addable: false}}});
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
     it("should add a new field when clicking the add button", () => {
       const {node} = createFormComponent({schema});
 
@@ -157,7 +163,7 @@ describe("ArrayField", () => {
       expect(moveDownBtns[1].disabled).eql(true);
     });
 
-    it("should not show move up/down buttons is orderable is false", () => {
+    it("should not show move up/down buttons if orderable is false", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"], uiSchema: {"ui:options": {orderable: false}}});
       const moveUpBtns = node.querySelector(".array-item-move-up");
       const moveDownBtns = node.querySelector(".array-item-move-down");
@@ -175,6 +181,13 @@ describe("ArrayField", () => {
       const inputs = node.querySelectorAll(".field-string input[type=text]");
       expect(inputs).to.have.length.of(1);
       expect(inputs[0].value).eql("bar");
+    });
+
+    it("should not show remove button if removable is false", () => {
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"], uiSchema: {"ui:options": {removable: false}}});
+      const dropBtn = node.querySelector(".array-item-remove");
+
+      expect(dropBtn).to.be.null;
     });
 
     it("should force revalidation when a field is removed", () => {
@@ -583,6 +596,21 @@ describe("ArrayField", () => {
           node.querySelector("fieldset .field-string input[type=text]");
       expect(addInput.id).eql("root_2");
       expect(addInput.value).eql("bar");
+    });
+
+    it("should have an add button if additionalItems is an object", () => {
+      const {node} = createFormComponent({schema: schemaAdditional});
+      expect(node.querySelector(".array-item-add button")).not.to.be.null;
+    });
+
+    it("should not have an add button if additionalItems is not set", () => {
+      const {node} = createFormComponent({schema});
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("should not have an add button if addable is false", () => {
+      const {node} = createFormComponent({schema, uiSchema: {"ui:options": {addable: false}}});
+      expect(node.querySelector(".array-item-add button")).to.be.null;
     });
 
     describe("operations for additional items", () => {

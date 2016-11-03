@@ -34,7 +34,10 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
            - [Multiple files](#multiple-files)
            - [File widget input ref](#file-widget-input-ref)
      - [Object fields ordering](#object-fields-ordering)
-     - [Array items ordering](#array-items-ordering)
+     - [Array item options](#array-items-options)
+        - [Orderable option](#orderable-option)
+        - [Addable option](#addable-option)
+        - [Removable option](#deletable-option)
      - [Custom CSS class names](#custom-css-class-names)
      - [Custom labels for enum fields](#custom-labels-for-enum-fields)
      - [Multiple choices list](#multiple-choices-list)
@@ -419,7 +422,9 @@ const uiSchema = {
 };
 ```
 
-### Array items ordering
+### Array item options
+
+#### `orderable` option
 
 Array items are orderable by default, and react-jsonschema-form renders move up/down buttons alongside them. The `uiSchema` object spec allows you to disable ordering:
 
@@ -434,6 +439,32 @@ const schema = {
 const uiSchema = {
   "ui:options":  {
     orderable: false
+  }
+};
+```
+
+#### `addable` option
+
+If either `items` or `additionalItems` contains a schema object, an add button for new items is shown by default. You can turn this off with the `addable` option:
+
+```jsx
+const schema = {
+const uiSchema = {
+  "ui:options":  {
+    addable: false
+  }
+};
+```
+
+#### `removable` option
+
+A remove button is shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance. You can turn this off with the `removable` option:
+
+```jsx
+const schema = {
+const uiSchema = {
+  "ui:options":  {
+    removable: false
   }
 };
 ```

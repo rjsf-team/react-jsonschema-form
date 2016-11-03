@@ -49,6 +49,51 @@ module.exports = {
             default: "lorem ipsum"
           }
         }
+      },
+      unorderable: {
+        title: "Unorderable items",
+        type: "array",
+        items: {
+          type: "string",
+          default: "lorem ipsum"
+        }
+      },
+      unremovable: {
+        title: "Unremovable items",
+        type: "array",
+        items: {
+          type: "string",
+          default: "lorem ipsum"
+        }
+      },
+      noToolbar: {
+        title: "No add, remove and order buttons",
+        type: "array",
+        items: {
+          type: "string",
+          default: "lorem ipsum"
+        }
+      },
+      fixedNoToolbar: {
+        title: "Fixed array without buttons",
+        type: "array",
+        items: [
+          {
+            title: "A number",
+            type: "number",
+            default: 42
+          },
+          {
+            title: "A boolean",
+            type: "boolean",
+            default: false
+          }
+        ],
+        additionalItems: {
+          title: "A string",
+          type: "string",
+          default: "lorem ipsum"
+        }
       }
     }
   },
@@ -64,12 +109,40 @@ module.exports = {
       additionalItems: {
         "ui:widget": "updown"
       }
+    },
+    unorderable: {
+      "ui:options": {
+        orderable: false
+      }
+    },
+    unremovable: {
+      "ui:options": {
+        removable: false
+      }
+    },
+    noToolbar: {
+      "ui:options": {
+        addable: false,
+        orderable: false,
+        removable: false
+      }
+    },
+    fixedNoToolbar: {
+      "ui:options": {
+        addable: false,
+        orderable: false,
+        removable: false
+      }
     }
   },
   formData: {
     listOfStrings: ["foo", "bar"],
     multipleChoicesList: ["foo", "bar"],
     fixedItemsList: ["Some text", true, 123],
-    nestedList: [["lorem", "ipsum"], ["dolor"]]
+    nestedList: [["lorem", "ipsum"], ["dolor"]],
+    unorderable: ["one", "two"],
+    unremovable: ["one", "two"],
+    noToolbar: ["one", "two"],
+    fixedNoToolbar: [42, true, "additional item one", "additional item two"]
   }
 };

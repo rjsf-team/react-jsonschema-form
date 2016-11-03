@@ -180,6 +180,10 @@ class ArrayField extends Component {
     const {definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
+    const {addable} = {
+      addable: true,
+      ...uiSchema["ui:options"]
+    };
 
     return (
       <fieldset
@@ -212,8 +216,9 @@ class ArrayField extends Component {
             });
           })
         }</div>
-        <AddButton
-          onClick={this.onAddClick} disabled={disabled || readonly}/>
+        {addable ? <AddButton
+                   onClick={this.onAddClick}
+                   disabled={disabled || readonly}/> : null}
       </fieldset>
     );
   }
@@ -280,6 +285,11 @@ class ArrayField extends Component {
       retrieveSchema(item, definitions));
     const additionalSchema = allowAdditionalItems(schema) ?
       retrieveSchema(schema.additionalItems, definitions) : null;
+    const {addable} = {
+      addable: true,
+      ...uiSchema["ui:options"]
+    };
+    const hasAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
       // to make sure at least all fixed items are generated
@@ -311,7 +321,7 @@ class ArrayField extends Component {
 
             return this.renderArrayFieldItem({
               index,
-              removable: additional,
+              canRemove: additional,
               canMoveUp: index >= itemSchemas.length + 1,
               canMoveDown: additional && index < items.length - 1,
               itemSchema,
@@ -324,7 +334,7 @@ class ArrayField extends Component {
           })
         }</div>
         {
-          additionalSchema ? <AddButton
+          hasAdd ? <AddButton
                                onClick={this.onAddClick}
                                disabled={disabled || readonly}/> : null
         }
@@ -334,7 +344,7 @@ class ArrayField extends Component {
 
   renderArrayFieldItem({
     index,
-    removable=true,
+    canRemove=true,
     canMoveUp=true,
     canMoveDown=true,
     itemSchema,
@@ -346,19 +356,22 @@ class ArrayField extends Component {
   }) {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly, uiSchema} = this.props;
-
-    const {orderable} = {orderable: true, ...uiSchema["ui:options"]};
-
-    const _canMoveUp = orderable && canMoveUp;
-    const _canMoveDown = orderable && canMoveDown;
-
-    const hasToolbar = removable || _canMoveUp || _canMoveDown;
-
+    const {orderable, removable} = {
+      orderable: true,
+      removable: true,
+      ...uiSchema["ui:options"]
+    };
+    const has = {
+      moveUp: orderable && canMoveUp,
+      moveDown: orderable && canMoveDown,
+      remove: removable && canRemove
+    };
+    has.toolbar = Object.keys(has).map(key => has[key]).includes(true);
     const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
     return (
       <div key={index} className="array-item">
-        <div className={hasToolbar ? "col-xs-9" : "col-xs-12"}>
+        <div className={has.toolbar ? "col-xs-9" : "col-xs-12"}>
           <SchemaField
             schema={itemSchema}
             uiSchema={itemUiSchema}
@@ -373,24 +386,24 @@ class ArrayField extends Component {
             autofocus={autofocus}/>
         </div>
         {
-          hasToolbar ?
+          has.toolbar ?
             <div className="col-xs-3 array-item-toolbox">
               <div className="btn-group" style={{display: "flex", justifyContent: "space-around"}}>
-                {_canMoveUp || _canMoveDown ?
+                {has.moveUp || has.moveDown ?
                   <IconBtn icon="arrow-up" className="array-item-move-up"
                           tabIndex="-1"
                           style={btnStyle}
-                          disabled={disabled || readonly || !_canMoveUp}
+                          disabled={disabled || readonly || !has.moveUp}
                           onClick={this.onReorderClick(index, index - 1)}/>
                   : null}
-                {_canMoveUp || _canMoveDown ?
+                {has.moveUp || has.moveDown ?
                   <IconBtn icon="arrow-down" className="array-item-move-down"
                           tabIndex="-1"
                           style={btnStyle}
-                          disabled={disabled || readonly || !_canMoveDown}
+                          disabled={disabled || readonly || !has.moveDown}
                           onClick={this.onReorderClick(index, index + 1)}/>
                   : null}
-                {removable ?
+                {has.remove ?
                   <IconBtn type="danger" icon="remove" className="array-item-remove"
                           tabIndex="-1"
                           style={btnStyle}
