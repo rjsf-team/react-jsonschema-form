@@ -252,16 +252,35 @@ export function orderProperties(properties, order) {
   if (!Array.isArray(order)) {
     return properties;
   }
-  if (order.length !== properties.length) {
-    throw new Error(
-      "uiSchema order list length should match object properties length");
+
+  const arrayToHash = arr => arr.reduce((prev, curr) => {
+    prev[curr] = true;
+    return prev;
+  }, {});
+  const errorPropList = arr => arr.length > 1 ?
+    `properties '${arr.join("', '")}'` :
+    `property '${arr[0]}'`;
+  const propertyHash = arrayToHash(properties);
+  const orderHash = arrayToHash(order);
+  const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
+  if (extraneous.length) {
+    throw new Error(`uiSchema order list contains extraneous ${errorPropList(extraneous)}`);
   }
-  const fingerprint = (arr) => [].slice.call(arr).sort().toString();
-  if (fingerprint(order) !== fingerprint(properties)) {
-    throw new Error(
-      "uiSchema order list does not match object properties list");
+  const rest = properties.filter(prop => !orderHash[prop]);
+  const restIndex = order.indexOf("*");
+  if (restIndex === -1) {
+    if (rest.length) {
+      throw new Error(`uiSchema order list does not contain ${errorPropList(rest)}`);
+    }
+    return order;
   }
-  return order;
+  if (restIndex !== order.lastIndexOf("*")) {
+    throw new Error("uiSchema order list contains more than one wildcard item");
+  }
+
+  const complete = [...order];
+  complete.splice(restIndex, 1, ...rest);
+  return complete;
 }
 
 export function isMultiSelect(schema) {
