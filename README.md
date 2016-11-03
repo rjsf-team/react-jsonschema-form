@@ -37,7 +37,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Array item options](#array-item-options)
         - [Orderable option](#orderable-option)
         - [Addable option](#addable-option)
-        - [Removable option](#removale-option)
+        - [Removable option](#removable-option)
      - [Custom CSS class names](#custom-css-class-names)
      - [Custom labels for enum fields](#custom-labels-for-enum-fields)
      - [Multiple choices list](#multiple-choices-list)
