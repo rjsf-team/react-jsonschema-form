@@ -250,7 +250,10 @@ export function orderProperties(properties, order) {
     return properties;
   }
 
-  const arrayToHash = arr => arr.reduce((prev, curr) => ({...prev, [curr]: true}), {});
+  const arrayToHash = arr => arr.reduce((prev, curr) => {
+    prev[curr] = true;
+    return prev;
+  }, {});
   const errorPropList = arr => arr.length > 1 ?
     `properties '${arr.join("', '")}'` :
     `property '${arr[0]}'`;
