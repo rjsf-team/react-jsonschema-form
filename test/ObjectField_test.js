@@ -174,20 +174,20 @@ describe("ObjectField", () => {
 
     it("should throw when order list contains an extraneous property", () => {
       const {node} = createFormComponent({schema, uiSchema: {
-        "ui:order": ["baz", "qux", "bar", "wut?", "foo"]
+        "ui:order": ["baz", "qux", "bar", "wut?", "foo", "huh?"]
       }});
 
       expect(node.querySelector(".config-error").textContent)
-        .to.match(/contains extraneous property "wut\?"/);
+        .to.match(/contains extraneous properties 'wut\?', 'huh\?'/);
     });
 
     it("should throw when order list misses an existing property", () => {
       const {node} = createFormComponent({schema, uiSchema: {
-        "ui:order": ["baz", "qux", "bar"]
+        "ui:order": ["baz", "bar"]
       }});
 
       expect(node.querySelector(".config-error").textContent)
-        .to.match(/does not contain property "foo"/);
+        .to.match(/does not contain properties 'foo', 'qux'/);
     });
 
     it("should throw when more than one wildcard is present", () => {

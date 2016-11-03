@@ -388,7 +388,7 @@ This allows you to programmatically trigger the browser's file selector which ca
 
 ### Object fields ordering
 
-The `uiSchema` object spec also allows you to define in which order a given object field properties should be rendered using the `ui:order` property:
+Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
 
 ```jsx
 const schema = {
@@ -409,7 +409,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-For fields for which the order is OK already or a fixed order is not important, you can insert a wildcard `"*"` item in your `ui:oder` definition. All unreferenced fields will be rendered at that point:
+If a guarenteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
 
 ```js
 const uiSchema = {
