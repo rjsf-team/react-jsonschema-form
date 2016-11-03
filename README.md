@@ -34,10 +34,10 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
            - [Multiple files](#multiple-files)
            - [File widget input ref](#file-widget-input-ref)
      - [Object fields ordering](#object-fields-ordering)
-     - [Array item options](#array-items-options)
+     - [Array item options](#array-item-options)
         - [Orderable option](#orderable-option)
         - [Addable option](#addable-option)
-        - [Removable option](#deletable-option)
+        - [Removable option](#removale-option)
      - [Custom CSS class names](#custom-css-class-names)
      - [Custom labels for enum fields](#custom-labels-for-enum-fields)
      - [Multiple choices list](#multiple-choices-list)
@@ -445,10 +445,9 @@ const uiSchema = {
 
 #### `addable` option
 
-If either `items` or `additionalItems` contains a schema object, an add button for new items is shown by default. You can turn this off with the `addable` option:
+If either `items` or `additionalItems` contains a schema object, an add button for new items is shown by default. You can turn this off with the `addable` option in `uiSchema`:
 
 ```jsx
-const schema = {
 const uiSchema = {
   "ui:options":  {
     addable: false
@@ -458,10 +457,9 @@ const uiSchema = {
 
 #### `removable` option
 
-A remove button is shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance. You can turn this off with the `removable` option:
+A remove button is shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance. You can turn this off with the `removable` option in `uiSchema`:
 
 ```jsx
-const schema = {
 const uiSchema = {
   "ui:options":  {
     removable: false
