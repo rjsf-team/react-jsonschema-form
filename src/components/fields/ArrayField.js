@@ -16,6 +16,7 @@ import {
 } from "../../utils";
 import FileWidget from "./../widgets/FileWidget";
 
+const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
   if (!title) {
@@ -345,7 +346,6 @@ class ArrayField extends Component {
 
     const hasToolbar = removable || _canMoveUp || _canMoveDown;
 
-    const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
     return (
       <div key={index} className="array-item">
@@ -398,12 +398,16 @@ class ArrayField extends Component {
 }
 
 function AddButton({onClick, disabled}) {
+  const plusStyle = {transform: "scale(1.6)", transformOrigin: "50% 70%"};
   return (
     <div className="row">
       <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
         <button type="button" className="btn btn-info col-xs-12"
+                style={btnStyle}
                 tabIndex="-1" onClick={onClick}
-                disabled={disabled} style={{fontWeight: "bold"}}>➕</button>
+                disabled={disabled}>
+          <div style={plusStyle}>+</div>
+        </button>
       </p>
     </div>
   );
