@@ -8,6 +8,7 @@ import {createFormComponent, createSandbox} from "./test_utils";
 
 describe("ArrayField", () => {
   let sandbox;
+  const CustomComponent = () => <div id="custom"/>;
 
   beforeEach(() => {
     sandbox = createSandbox();
@@ -51,23 +52,33 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized title", () => {
-      const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
       const {node} = createFormComponent({schema,
-        fields: {TitleField: CustomTitleField}
+        fields: {TitleField: CustomComponent}
       });
       expect(node.querySelector("fieldset > #custom").textContent)
         .to.eql("my list");
     });
 
     it("should render a customized description", () => {
-      const CustomDescriptionField = ({description}) => <div id="custom">{description}</div>;
 
       const {node} = createFormComponent({schema, fields: {
-        DescriptionField: CustomDescriptionField}
+        DescriptionField: CustomComponent}
       });
       expect(node.querySelector("fieldset > #custom").textContent)
         .to.eql("my description");
+    });
+
+    it("should render a customized file widget", () => {
+
+      const {node} = createFormComponent({schema,
+        uiSchema: {
+          "ui:widget": "files"
+        },
+        widgets: {FileWidget: CustomComponent}
+      });
+      expect(node.querySelector("#custom"))
+        .to.exist;
     });
 
     it("should contain no field in the list by default", () => {
