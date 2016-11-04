@@ -398,7 +398,7 @@ class ArrayField extends Component {
 }
 
 function AddButton({onClick, disabled}) {
-  const plusStyle = {transform: 'scale(1.6)', transformOrigin: '50% 70%'};
+  const plusStyle = {transform: "scale(1.6)", transformOrigin: "50% 70%"};
   return (
     <div className="row">
       <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
