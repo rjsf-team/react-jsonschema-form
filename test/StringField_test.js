@@ -96,7 +96,6 @@ describe("StringField", () => {
     });
 
     it("should render customized TextWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -189,7 +188,6 @@ describe("StringField", () => {
     });
 
     it("should render customized SelectWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -278,7 +276,6 @@ describe("StringField", () => {
     });
 
     it("should render customized DateTimeWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -397,7 +394,6 @@ describe("StringField", () => {
     });
 
     it("should render customized DateWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -570,7 +566,6 @@ describe("StringField", () => {
 
 
     it("should render customized AltDateWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -589,7 +584,6 @@ describe("StringField", () => {
     });
 
     it("should render customized AltDateTimeWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -763,7 +757,6 @@ describe("StringField", () => {
     });
 
     it("should render customized AltDateWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -876,7 +869,6 @@ describe("StringField", () => {
     });
 
     it("should render customized EmailWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -984,7 +976,6 @@ describe("StringField", () => {
     });
 
     it("should render customized URLWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -1074,7 +1065,6 @@ describe("StringField", () => {
     });
 
     it("should render customized ColorWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",
@@ -1146,7 +1136,6 @@ describe("StringField", () => {
     });
 
     it("should render customized FileWidget", () => {
-
       const {node} = createFormComponent({
         schema: {
           type: "string",

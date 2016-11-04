@@ -52,25 +52,26 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized title", () => {
+      const CustomTitleField = ({title}) => <div id="custom">{title}</div>;
 
       const {node} = createFormComponent({schema,
-        fields: {TitleField: CustomComponent}
+        fields: {TitleField: CustomTitleField}
       });
       expect(node.querySelector("fieldset > #custom").textContent)
         .to.eql("my list");
     });
 
     it("should render a customized description", () => {
+      const CustomDescriptionField = ({description}) => <div id="custom">{description}</div>;
 
       const {node} = createFormComponent({schema, fields: {
-        DescriptionField: CustomComponent}
+        DescriptionField: CustomDescriptionField}
       });
       expect(node.querySelector("fieldset > #custom").textContent)
         .to.eql("my description");
     });
 
     it("should render a customized file widget", () => {
-
       const {node} = createFormComponent({schema,
         uiSchema: {
           "ui:widget": "files"
