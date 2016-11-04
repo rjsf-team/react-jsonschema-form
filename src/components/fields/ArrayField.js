@@ -217,8 +217,8 @@ class ArrayField extends Component {
           })
         }</div>
         {addable ? <AddButton
-                   onClick={this.onAddClick}
-                   disabled={disabled || readonly}/> : null}
+                     onClick={this.onAddClick}
+                     disabled={disabled || readonly}/> : null}
       </fieldset>
     );
   }
@@ -289,7 +289,7 @@ class ArrayField extends Component {
       addable: true,
       ...uiSchema["ui:options"]
     };
-    const hasAdd = addable && additionalSchema;
+    const canAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
       // to make sure at least all fixed items are generated
@@ -334,7 +334,7 @@ class ArrayField extends Component {
           })
         }</div>
         {
-          hasAdd ? <AddButton
+          canAdd ? <AddButton
                                onClick={this.onAddClick}
                                disabled={disabled || readonly}/> : null
         }
@@ -366,7 +366,7 @@ class ArrayField extends Component {
       moveDown: orderable && canMoveDown,
       remove: removable && canRemove
     };
-    has.toolbar = Object.keys(has).map(key => has[key]).includes(true);
+    has.toolbar = Object.keys(has).some(key => has[key]);
     const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
     return (
