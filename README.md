@@ -54,6 +54,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [The registry object](#the-registry-object)
         - [The formContext object](#the-formcontext-object)
      - [Custom SchemaField](#custom-schemafield)
+     - [Customizing any fields or widgets](#customizing-any-fields-or-widgets)
      - [Custom titles](#custom-titles)
      - [Custom descriptions](#custom-descriptions)
   - [Form data validation](#form-data-validation)
@@ -896,6 +897,32 @@ render((
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
 Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
+
+### Customizing any fields or widgets
+
+You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field or widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
+
+```jsx
+
+const CustomCheckbox = function(props) {
+  return (
+    <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={props.onChange(!props.value)}>
+    	{props.value}
+    </button>
+  );
+};
+
+const widgets = {
+  CheckboxWidget: CustomCheckbox
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        widgets={widgets} />
+), document.getElementById("app"));
+```
 
 ### Custom titles
 
