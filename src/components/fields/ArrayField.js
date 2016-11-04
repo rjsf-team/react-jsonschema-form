@@ -35,6 +35,15 @@ function ArrayFieldDescription({DescriptionField, idSchema, description}) {
   return <DescriptionField id={id} description={description}/>;
 }
 
+function IconBtn(props) {
+  const {type="default", icon, className, ...otherProps} = props;
+  return (
+    <button type="button" className={`btn btn-${type} ${className}`} {...otherProps}>
+      <i className={`glyphicon glyphicon-${icon}`}/>
+    </button>
+  );
+}
+
 class ArrayField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -349,7 +358,7 @@ class ArrayField extends Component {
 
     return (
       <div key={index} className="array-item">
-        <div className={hasToolbar ? "col-xs-10" : "col-xs-12"}>
+        <div className={hasToolbar ? "col-xs-9" : "col-xs-12"}>
           <SchemaField
             schema={itemSchema}
             uiSchema={itemUiSchema}
@@ -365,28 +374,28 @@ class ArrayField extends Component {
         </div>
         {
           hasToolbar ?
-            <div className="col-xs-2 array-item-toolbox text-right">
-              <div className="btn-group" style={{display: "flex"}}>
+            <div className="col-xs-3 array-item-toolbox">
+              <div className="btn-group" style={{display: "flex", justifyContent: "space-around"}}>
                 {_canMoveUp || _canMoveDown ?
-                  <button type="button" className="btn btn-default array-item-move-up"
-                          style={btnStyle}
+                  <IconBtn icon="arrow-up" className="array-item-move-up"
                           tabIndex="-1"
+                          style={btnStyle}
                           disabled={disabled || readonly || !_canMoveUp}
-                          onClick={this.onReorderClick(index, index - 1)}>⬆</button>
+                          onClick={this.onReorderClick(index, index - 1)}/>
                   : null}
                 {_canMoveUp || _canMoveDown ?
-                  <button type="button" className="btn btn-default array-item-move-down"
-                          style={btnStyle}
+                  <IconBtn icon="arrow-down" className="array-item-move-down"
                           tabIndex="-1"
+                          style={btnStyle}
                           disabled={disabled || readonly || !_canMoveDown}
-                          onClick={this.onReorderClick(index, index + 1)}>⬇</button>
+                          onClick={this.onReorderClick(index, index + 1)}/>
                   : null}
                 {removable ?
-                  <button type="button" className="btn btn-danger array-item-remove"
-                          style={btnStyle}
+                  <IconBtn type="danger" icon="remove" className="array-item-remove"
                           tabIndex="-1"
+                          style={btnStyle}
                           disabled={disabled || readonly}
-                          onClick={this.onDropIndexClick(index)}>✖</button>
+                          onClick={this.onDropIndexClick(index)}/>
                   : null}
               </div>
             </div>
@@ -400,10 +409,10 @@ class ArrayField extends Component {
 function AddButton({onClick, disabled}) {
   return (
     <div className="row">
-      <p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
-        <button type="button" className="btn btn-info col-xs-12"
-                tabIndex="-1" onClick={onClick}
-                disabled={disabled} style={{fontWeight: "bold"}}>➕</button>
+      <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
+        <IconBtn type="info" icon="plus" className="btn-add col-xs-12"
+                 tabIndex="-1" onClick={onClick}
+                 disabled={disabled}/>
       </p>
     </div>
   );
