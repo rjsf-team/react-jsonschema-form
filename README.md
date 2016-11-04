@@ -32,6 +32,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Hidden widgets](#hidden-widgets)
         - [File widgets](#file-widgets)
            - [Multiple files](#multiple-files)
+           - [File widget input ref](#file-widget-input-ref)
      - [Object fields ordering](#object-fields-ordering)
      - [Array items ordering](#array-items-ordering)
      - [Custom CSS class names](#custom-css-class-names)
@@ -53,6 +54,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Field props](#field-props)
         - [The registry object](#the-registry-object)
         - [The formContext object](#the-formcontext-object)
+     - [Custom array field buttons](#custom-array-field-buttons)
      - [Custom SchemaField](#custom-schemafield)
      - [Custom titles](#custom-titles)
      - [Custom descriptions](#custom-descriptions)
@@ -869,6 +871,19 @@ The registry is passed down the component tree, so you can access it from your c
 #### The `formContext` object
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets (including [TitleField](#custom-titles) and [DescriptionField](#custom-descriptions)). Useful for implementing context aware fields and widgets.
+
+### Custom array field buttons
+
+The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use Bootstrap yet still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
+
+```css
+.btn-plus > i {
+  display: none;
+}
+.btn-plus::after {
+  content: "Add";
+}
+```
 
 ### Custom SchemaField
 
