@@ -358,7 +358,6 @@ class App extends Component {
               formData={formData}
               onChange={this.onFormDataChange}
               fields={{geo: GeoPosition}}
-              widgets={{AltDateTimeWidget: () => <div id="#custom" >moi</div>}}
               validate={validate}
               onError={log("errors")} />}
         </div>
