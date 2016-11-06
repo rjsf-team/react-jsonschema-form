@@ -67,6 +67,73 @@ describe("uiSchema", () => {
       });
     });
 
+    describe.only("custom options", () => {
+      const widget = ({label, options}) => <div className="custom" id={label} style={options}></div>;
+      widget.defaultProps = {options: {background: "yellow", color: "green"}};
+      const widgets = {widget};
+      const schema = {
+        type: "object",
+        properties: {
+          prop1: {type: "string"},
+          prop2: {type: "string"},
+          prop3: {type: "string"},
+          prop4: {type: "string"}
+        }
+      };
+      const uiSchema = {
+        prop1: {
+          "ui:widget": {
+            "component": widget, // as function
+            "options": {
+              "background": "red"
+            }
+          }
+        },
+        prop2: {
+          "ui:widget": widget // as function
+        },
+        prop3: {
+          "ui:widget": {
+            "component": "widget", // as string
+            "options": {
+              "background": "blue"
+            }
+          }
+        },
+        prop4: {
+          "ui:widget": "widget" // as string
+        }
+      };
+
+      it("should render merged ui:widget options for widget referenced as function", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+        const widget = node.querySelector('#prop1');
+        expect(widget.style.background).to.equal("red");
+        expect(widget.style.color).to.equal("green");
+      });
+
+      it("should render ui:widget default options for widget referenced as function", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+        const widget = node.querySelector('#prop2');
+        expect(widget.style.background).to.equal("yellow");
+        expect(widget.style.color).to.equal("green");
+      });
+
+      it("should render merged ui:widget options for widget referenced as string", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+        const widget = node.querySelector('#prop3');
+        expect(widget.style.background).to.equal("blue");
+        expect(widget.style.color).to.equal("green");
+      });
+
+      it("should render ui:widget default options for widget referenced as string", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+        const widget = node.querySelector('#prop4');
+        expect(widget.style.background).to.equal("yellow");
+        expect(widget.style.color).to.equal("green");
+      });
+    });
+
     describe("nested widget", () => {
       const schema = {
         "type": "object",
