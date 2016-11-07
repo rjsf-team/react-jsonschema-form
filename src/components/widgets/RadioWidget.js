@@ -37,7 +37,7 @@ function RadioWidget({
 }
 
 RadioWidget.defaultProps = {
-  autofocus: false,
+  autofocus: false
 };
 
 if (process.env.NODE_ENV !== "production") {

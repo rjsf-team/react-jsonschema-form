@@ -3,6 +3,7 @@ import React, {Component, PropTypes} from "react";
 import {
   getAlternativeWidget,
   getDefaultFormState,
+  getUiOptions,
   isMultiSelect,
   isFilesArray,
   isFixedItems,
@@ -178,10 +179,7 @@ class ArrayField extends Component {
     const {definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    const {addable} = {
-      addable: true,
-      ...uiSchema["ui:options"]
-    };
+    const {addable} = {addable: true, ...getUiOptions(uiSchema)};
 
     return (
       <fieldset
@@ -226,17 +224,15 @@ class ArrayField extends Component {
     const {items} = this.state;
     const {widgets, definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-
-    const Widget = getAlternativeWidget(schema, uiSchema["ui:widget"] || "select", widgets);
+    const enumOptions = optionsList(itemsSchema);
+    const {widget, ...options} = {widget: "select", ...getUiOptions(uiSchema), enumOptions};
+    const Widget = getAlternativeWidget(schema, widget, widgets);
     return (
       <Widget
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
-        options={{
-          ...Widget.defaultProps.options,
-          enumOptions: optionsList(itemsSchema),
-        }}
+        options={options}
         schema={schema}
         value={items}
         disabled={disabled}
@@ -284,10 +280,7 @@ class ArrayField extends Component {
       retrieveSchema(item, definitions));
     const additionalSchema = allowAdditionalItems(schema) ?
       retrieveSchema(schema.additionalItems, definitions) : null;
-    const {addable} = {
-      addable: true,
-      ...uiSchema["ui:options"]
-    };
+    const {addable} = {addable: true, ...getUiOptions(uiSchema)};
     const canAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
@@ -435,7 +428,9 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.shape({
       "ui:options": PropTypes.shape({
-        orderable: PropTypes.bool
+        addable: PropTypes.bool,
+        orderable: PropTypes.bool,
+        removable: PropTypes.bool
       })
     }),
     idSchema: PropTypes.object,

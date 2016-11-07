@@ -1,3 +1,5 @@
+import React from "react";
+
 import "setimmediate";
 
 
@@ -99,34 +101,21 @@ export function defaultFieldValue(formData, schema) {
   return typeof formData === "undefined" ? schema.default : formData;
 }
 
-export function getAlternativeWidget(
-  schema,
-  widget,
-  registeredWidgets={},
-  widgetOptions={}
-) {
+export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
   const {type, format} = schema;
 
-  function setDefaultOptions(widget) {
-    const {defaultProps={}} = widget;
-    widget.defaultProps = {
-      ...defaultProps,
-      options: {
-        ...defaultProps.options,
-        ...widgetOptions
-      }
-    };
-    return widget;
+  function mergeOptions(Widget) {
+    // cache return value as property of widget for proper react reconciliation
+    if (!widget.mergedOptions) {
+      const defaultOptions = Widget.defaultProps && Widget.defaultProps.options || {};
+      Widget.mergedOptions = ({options={}, ...props}) =>
+        <Widget options={{...defaultOptions, ...options}} {...props}/>;
+    }
+    return widget.mergedOptions;
   }
 
   if (typeof widget === "function") {
-    return setDefaultOptions(widget);
-  }
-
-  if (isObject(widget)) {
-    const {component, options} = widget;
-    const mergedOptions = {...options, ...widgetOptions};
-    return getAlternativeWidget(schema, component, registeredWidgets, mergedOptions);
+    return mergeOptions(widget);
   }
 
   if (typeof widget !== "string") {
@@ -135,7 +124,7 @@ export function getAlternativeWidget(
 
   if (registeredWidgets.hasOwnProperty(widget)) {
     const registeredWidget = registeredWidgets[widget];
-    return getAlternativeWidget(schema, registeredWidget, registeredWidgets, widgetOptions);
+    return getAlternativeWidget(schema, registeredWidget, registeredWidgets);
   }
 
   if (!altWidgetMap.hasOwnProperty(type)) {
@@ -144,12 +133,12 @@ export function getAlternativeWidget(
 
   if (altWidgetMap[type].hasOwnProperty(widget)) {
     const altWidget = registeredWidgets[altWidgetMap[type][widget]];
-    return getAlternativeWidget(schema, altWidget, registeredWidgets, widgetOptions);
+    return getAlternativeWidget(schema, altWidget, registeredWidgets);
   }
 
   if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
     const stringFormatWidget = registeredWidgets[stringFormatWidgets[format]];
-    return getAlternativeWidget(schema, stringFormatWidget, registeredWidgets, widgetOptions);
+    return getAlternativeWidget(schema, stringFormatWidget, registeredWidgets);
   }
 
   const info = type === "string" && format ? `/${format}` : "";
@@ -206,6 +195,31 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
     return mergeObjects(defaults, formData);
   }
   return formData || defaults;
+}
+
+export function getUiOptions(uiSchema) {
+  // get all passed options from ui:widget, ui:options, and ui:<optionName>
+  return Object.keys(uiSchema).filter(key => /^ui:/.test(key)).reduce((options, key) => {
+    const value = uiSchema[key];
+
+    if (key === "ui:widget" && isObject(value)) {
+      console.warn("Setting options via ui:widget object is deprecated, use ui:options instead");
+      options["widget"] = value.component;
+      if (isObject(value.options)) {
+        setOptions(options, value.options);
+      }
+    } else if (key === "ui:options" && isObject(value)) {
+      setOptions(options, value);
+    } else {
+      options[key.substring(3)] = value;
+    }
+
+    return options;
+  }, {});
+
+  function setOptions(dest, src) {
+    Object.keys(src).forEach(option => dest[option] = src[option]);
+  }
 }
 
 export function isObject(thing) {

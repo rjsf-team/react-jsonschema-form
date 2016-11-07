@@ -67,70 +67,111 @@ describe("uiSchema", () => {
       });
     });
 
-    describe.only("custom options", () => {
-      const widget = ({label, options}) => <div className="custom" id={label} style={options}></div>;
+    describe("custom options", () => {
+      const widget = ({label, options}) => <div id={label} style={options}></div>;
       widget.defaultProps = {options: {background: "yellow", color: "green"}};
+
       const widgets = {widget};
+
+      // all fields in one schema to catch errors where options passed to one
+      // instance of a widget are persistent across all instances
       const schema = {
         type: "object",
         properties: {
-          prop1: {type: "string"},
-          prop2: {type: "string"},
-          prop3: {type: "string"},
-          prop4: {type: "string"}
-        }
-      };
-      const uiSchema = {
-        prop1: {
-          "ui:widget": {
-            "component": widget, // as function
-            "options": {
-              "background": "red"
-            }
-          }
-        },
-        prop2: {
-          "ui:widget": widget // as function
-        },
-        prop3: {
-          "ui:widget": {
-            "component": "widget", // as string
-            "options": {
-              "background": "blue"
-            }
-          }
-        },
-        prop4: {
-          "ui:widget": "widget" // as string
+          funcAll: {type: "string"},
+          funcNone: {type: "string"},
+          stringAll: {type: "string"},
+          stringNone: {type: "string"}
         }
       };
 
+      const uiSchema = {
+        // pass widget as function
+        funcAll: {
+          "ui:widget": {
+            component: widget,
+            options: {
+              background: "purple"
+            }
+          },
+          "ui:options": {
+            margin: "7px"
+          },
+          "ui:padding": "42px"
+        },
+        funcNone: {
+          "ui:widget": widget
+        },
+
+        // pass widget as string
+        stringAll: {
+          "ui:widget": {
+            component: "widget",
+            options: {
+              background: "blue"
+            }
+          },
+          "ui:options": {
+            margin: "19px"
+          },
+          "ui:padding": "41px"
+        },
+        stringNone: {
+          "ui:widget": "widget"
+        }
+      };
+
+      beforeEach(() => {
+        sandbox.stub(console, "warn");
+      });
+
+      it("should log warning when deprecated ui:widget: {component, options} api is used", () => {
+        createFormComponent({
+          schema: {type:"string"},
+          uiSchema: {"ui:widget": {component: "widget"}},
+          widgets
+        });
+        expect(console.warn.calledWithMatch(/ui:widget object is deprecated/)).to.be.true;
+      });
+
       it("should render merged ui:widget options for widget referenced as function", () => {
         const {node} = createFormComponent({schema, uiSchema, widgets});
-        const widget = node.querySelector('#prop1');
-        expect(widget.style.background).to.equal("red");
+        const widget = node.querySelector("#funcAll");
+
+        expect(widget.style.background).to.equal("purple");
         expect(widget.style.color).to.equal("green");
+        expect(widget.style.margin).to.equal("7px");
+        expect(widget.style.padding).to.equal("42px");
       });
 
       it("should render ui:widget default options for widget referenced as function", () => {
         const {node} = createFormComponent({schema, uiSchema, widgets});
-        const widget = node.querySelector('#prop2');
+        const widget = node.querySelector("#funcNone");
+
         expect(widget.style.background).to.equal("yellow");
         expect(widget.style.color).to.equal("green");
+        expect(widget.style.margin).to.equal("");
+        expect(widget.style.padding).to.equal("");
       });
 
       it("should render merged ui:widget options for widget referenced as string", () => {
         const {node} = createFormComponent({schema, uiSchema, widgets});
-        const widget = node.querySelector('#prop3');
+        const widget = node.querySelector("#stringAll");
+
         expect(widget.style.background).to.equal("blue");
         expect(widget.style.color).to.equal("green");
+        expect(widget.style.margin).to.equal("19px");
+        expect(widget.style.padding).to.equal("41px");
       });
 
       it("should render ui:widget default options for widget referenced as string", () => {
         const {node} = createFormComponent({schema, uiSchema, widgets});
-        const widget = node.querySelector('#prop4');
+        const widget = node.querySelector("#stringNone");
+
         expect(widget.style.background).to.equal("yellow");
         expect(widget.style.color).to.equal("green");
+        expect(widget.style.margin).to.equal("");
+        expect(widget.style.padding).to.equal("");
       });
     });
 

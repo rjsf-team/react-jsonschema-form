@@ -3,6 +3,7 @@ import React, {PropTypes} from "react";
 import {
   defaultFieldValue,
   getAlternativeWidget,
+  getUiOptions,
   optionsList,
   getDefaultRegistry
 } from "../../utils";
@@ -22,10 +23,13 @@ function StringField(props) {
     autofocus,
     onChange
   } = props;
-  const {title} = schema;
+  const {title, format} = schema;
   const {widgets, formContext} = registry;
-  const widget = uiSchema["ui:widget"] || schema.format;
-  const placeholder = uiSchema["ui:placeholder"] || "";
+  const {widget, placeholder, ...options} = {
+    widget: format,
+    placeholder: "",
+    ...getUiOptions(uiSchema)
+  };
   const commonProps = {
     schema,
     id: idSchema && idSchema.$id,
@@ -45,14 +49,14 @@ function StringField(props) {
   if (Array.isArray(schema.enum)) {
     const enumOptions = optionsList(schema);
     if (widget) {
-      const Widget = getAlternativeWidget(schema, widget, widgets, {enumOptions});
-      return <Widget {...commonProps}/>;
+      const Widget = getAlternativeWidget(schema, widget, widgets);
+      return <Widget options={{...options, enumOptions}} {...commonProps}/>;
     }
     return <SelectWidget options={{enumOptions}} {...commonProps}/>;
   }
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
-    return <Widget {...commonProps} placeholder={placeholder}/>;
+    return <Widget options={options} {...commonProps} placeholder={placeholder}/>;
   }
   return <TextWidget {...commonProps} placeholder={placeholder}/>;
 }

@@ -550,11 +550,9 @@ By default, checkboxes are stacked but if you prefer them inline:
 
 ```js
 const uiSchema = {
-  "ui:widget": {
-    component: "checkboxes",
-    options: {
-      inline: true
-    }
+  "ui:widget": "checkboxes",
+  "ui:options": {
+    inline: true
   }
 };
 ```
@@ -787,7 +785,7 @@ This is useful if you expose the `uiSchema` as pure JSON, which can't carry func
 
 #### Custom widget options
 
-If you need to pass options to your custom widget, change your `ui:widget` value to be an object having the following structure:
+If you need to pass options to your custom widget, you can add a `ui:options` object containing those properties:
 
 ```jsx
 const schema = {
@@ -800,11 +798,9 @@ function MyCustomWidget(props) {
 }
 
 const uiSchema = {
-  "ui:widget": {
-    options: {
-      backgroundColor: "yellow",
-    },
-    component: MyCustomWidget
+  "ui:widget": MyCustomWidget,
+  "ui:options": {
+    backgroundColor: "yellow"
   }
 };
 
@@ -815,6 +811,8 @@ render((
 ```
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
+
+> Note: The `ui:widget` object API, where a widget and options were specified with `"ui:widget: {component, options}` shape, is deprecated. It will be removed in a future release.
 
 ### Custom field components
 

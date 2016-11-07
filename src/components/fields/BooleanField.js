@@ -3,25 +3,10 @@ import React, {PropTypes} from "react";
 import {
   defaultFieldValue,
   getAlternativeWidget,
+  getUiOptions,
   optionsList,
-  getDefaultRegistry,
-  isObject,
+  getDefaultRegistry
 } from "../../utils";
-
-
-function buildOptions(schema, uiWidget) {
-  // Note: uiWidget can be undefined, a string or an object; we only deal with
-  // the inline option when we're provided a definition object.
-  return {
-    inline: isObject(uiWidget) &&
-            isObject(uiWidget.options) &&
-            uiWidget.options.inline,
-    enumOptions: optionsList(Object.assign({
-      enumNames: ["true", "false"],
-      enum: [true, false]
-    }, {enumNames: schema.enumNames}))
-  };
-}
 
 function BooleanField(props) {
   const {
@@ -39,7 +24,7 @@ function BooleanField(props) {
   } = props;
   const {title} = schema;
   const {widgets, formContext} = registry;
-  const widget = uiSchema["ui:widget"];
+  const {widget, ...options} = getUiOptions(uiSchema);
   const commonProps = {
     schema,
     id: idSchema && idSchema.$id,
@@ -55,7 +40,8 @@ function BooleanField(props) {
   };
   if (widget) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
-    return <Widget options={buildOptions(schema, uiSchema["ui:widget"])} {...commonProps}/>;
+    const enumOptions = optionsList({enum: [true, false], enumNames: schema.enumNames});
+    return <Widget options={{...options, enumOptions}} {...commonProps}/>;
   }
   const {CheckboxWidget} = registry.widgets;
   return <CheckboxWidget {...commonProps}/>;
