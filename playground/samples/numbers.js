@@ -41,11 +41,9 @@ module.exports = {
       "ui:widget": "updown"
     },
     numberEnumRadio: {
-      "ui:widget": {
-        component: "radio",
-        options: {
-          inline: true
-        }
+      "ui:widget": "radio",
+      "ui:options": {
+        inline: true
       }
     },
     integerRange: {
