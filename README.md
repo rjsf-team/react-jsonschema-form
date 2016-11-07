@@ -785,7 +785,7 @@ This is useful if you expose the `uiSchema` as pure JSON, which can't carry func
 
 #### Custom widget options
 
-If you need to pass options to your custom widget, you can add a `ui:options` object containing those properties:
+If you need to pass options to your custom widget, you can add a `ui:options` object containing those properties. If the widget has `defaultProps`, the options will be merged with the (optional) options object from `defaultProps`:
 
 ```jsx
 const schema = {
@@ -794,8 +794,15 @@ const schema = {
 
 function MyCustomWidget(props) {
   const {options} = props;
-  return <input style={{options.backgroundColor}} />;
+  const {color, backgroundColor} = options;
+  return <input style={{color, backgroundColor}} />;
 }
+
+MyCustomWidget.defaultProps = {
+  options: {
+    color: "red"
+  }
+};
 
 const uiSchema = {
   "ui:widget": MyCustomWidget,
@@ -804,6 +811,7 @@ const uiSchema = {
   }
 };
 
+// renders red on yellow input
 render((
   <Form schema={schema}
         uiSchema={uiSchema} />
