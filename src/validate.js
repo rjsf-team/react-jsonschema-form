@@ -109,29 +109,31 @@ function unwrapErrorHandler(errorHandler) {
   }, {});
 }
 
+// function getRequiredFieldErrors(propSchema, requiredErrors){
+//   let requiredKey = propSchema.required;
+//   if(requiredKey){
+    
+//   }
+// }
+
 function formatJsonValidateResult(jsonValidateResult){
   const {errors, schema} = jsonValidateResult;
+
   const newErrors = errors.map((error) => {
-    const path = errorPropertyToPath(error.property);
-    let propName = "";
-    // We'll start drilling down from the root schema for the
-    // corresponding property, so just ignore instance...
-    if (path[0] === "instance") {
-      path.shift();
+    // If this is a required property error for an object, then
+    // re-frame the validation error as a 'Field is required' 
+    // error for the specified property...
+    if (error.name === "required") {
+      error.property += "." + error.argument;
+      error.message = "Field is required";
+      error.schema = error.schema.properties[error.argument];
     }
-    const propSchema = path.reduce((parent, prop) => {
-      propName = prop;
-      if(typeof prop === "number"){
-        return parent.items;
-      }
-      return parent.properties[prop];
-    }, schema);
     // If custom validation messages are defined for this property,
     // and a custom validation message exists for this particular
     // validation error, then set it in place of the default 
     // validation message coming out of the jsonschema validator...
-    if (propSchema.errors && propSchema.errors[error.name]) {
-      error.message = propSchema.errors[error.name];
+    if (error.schema.errors && error.schema.errors[error.name]) {
+      error.message = error.schema.errors[error.name];
     }
     // Otherwise, for the default validation message coming out of the
     // jsonschema validator, capitalize the first letter for nicer
@@ -139,8 +141,8 @@ function formatJsonValidateResult(jsonValidateResult){
     else {
       error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1);
     }
-    // Format error stack message to format: "[Prop Title or Prop Name]: Error Message"
-    error.stack = (propSchema.title ? propSchema.title : propName) + ": " + error.message;
+    // Format error stack message to format: "[Prop Title]: Error Message"
+    error.stack = error.schema.title + ": " + error.message;
     return error;
   });
   return Object.assign({}, jsonValidateResult, {
@@ -156,7 +158,6 @@ function formatJsonValidateResult(jsonValidateResult){
 export default function validateFormData(formData, schema, customValidate) {
   const {errors} = formatJsonValidateResult(jsonValidate(formData, schema));
   const errorSchema = toErrorSchema(errors);
-  console.log("Error schema ", errorSchema);
 
   if (typeof customValidate !== "function") {
     return {errors, errorSchema};
