@@ -13,7 +13,7 @@ import ObjectField from "./ObjectField";
 import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
 
-const REQUIRED_FIELD_SYMBOL = "*";
+const OPTIONAL_FIELD_SYMBOL = " (Optional)";
 const COMPONENT_TYPES = {
   array:   ArrayField,
   boolean: BooleanField,
@@ -42,7 +42,7 @@ function Label(props) {
   }
   return (
     <label className="control-label" htmlFor={id}>
-      {required ? label + REQUIRED_FIELD_SYMBOL : label}
+      {required ? label : label + OPTIONAL_FIELD_SYMBOL}
     </label>
   );
 }
@@ -54,7 +54,9 @@ function Help(props) {
     return <div/>;
   }
   if (typeof help === "string") {
-    return <p className="help-block">{help}</p>;
+    // Set HTML-based help using dangerouslySetInnerHTML unless more performant option
+    // becomes available
+    return <p className="help-block" dangerouslySetInnerHTML={{__html: help}}></p>;
   }
   return <div className="help-block">{help}</div>;
 }
