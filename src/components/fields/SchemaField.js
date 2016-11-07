@@ -26,7 +26,8 @@ function getFieldComponent(schema, uiSchema, fields) {
   if (typeof field === "string" && field in fields) {
     return fields[field];
   }
-  return (COMPONENT_TYPES[schema.type] ? fields[COMPONENT_TYPES[schema.type]] : UnsupportedField) || UnsupportedField;
+  const componentName = COMPONENT_TYPES[schema.type];
+  return componentName in fields ? fields[componentName] : UnsupportedField;
 }
 
 function Label(props) {
