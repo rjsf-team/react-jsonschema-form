@@ -9,7 +9,6 @@ import {
 import TextWidget from "../widgets/TextWidget";
 import SelectWidget from "../widgets/SelectWidget";
 
-
 function StringField(props) {
   const {
     schema,

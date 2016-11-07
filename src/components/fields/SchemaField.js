@@ -66,9 +66,14 @@ function ErrorList(props) {
   if (errors.length === 0) {
     return <div/>;
   }
+  else if (errors.length === 1) {
+    return (
+      <span className="text-danger">{errors[0]}</span>
+    );
+  }
   return (
     <div>
-      <p/>
+      <span className="text-danger">The following errors exist:</span>
       <ul className="error-detail bs-callout bs-callout-info">{
         errors.map((error, index) => {
           return <li className="text-danger" key={index}>{error}</li>;

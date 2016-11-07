@@ -1,6 +1,6 @@
 import React, {PropTypes} from "react";
 
-import BaseInput from "./BaseInput";
+import BaseInput from "./EPBCBaseInput";
 
 
 function PasswordWidget(props) {

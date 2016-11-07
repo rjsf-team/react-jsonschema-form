@@ -1,10 +1,10 @@
 import React, {PropTypes} from "react";
 
-import BaseInput from "./BaseInput";
-
+import BaseInput from "./EPBCBaseInput";
 
 function TextWidget(props) {
-  return <BaseInput {...props}/>;
+  const {schema} = props;
+  return <BaseInput maxLength={schema.maxLength} {...props}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -13,6 +13,7 @@ if (process.env.NODE_ENV !== "production") {
       React.PropTypes.string,
       React.PropTypes.number,
     ]),
+    maxLength: PropTypes.number,
   };
 }
 

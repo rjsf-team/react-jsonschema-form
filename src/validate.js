@@ -109,13 +109,54 @@ function unwrapErrorHandler(errorHandler) {
   }, {});
 }
 
+// function getRequiredFieldErrors(propSchema, requiredErrors){
+//   let requiredKey = propSchema.required;
+//   if(requiredKey){
+    
+//   }
+// }
+
+function formatJsonValidateResult(jsonValidateResult){
+  const {errors, schema} = jsonValidateResult;
+
+  const newErrors = errors.map((error) => {
+    // If this is a required property error for an object, then
+    // re-frame the validation error as a 'Field is required' 
+    // error for the specified property...
+    if (error.name === "required") {
+      error.property += "." + error.argument;
+      error.message = "Field is required";
+      error.schema = error.schema.properties[error.argument];
+    }
+    // If custom validation messages are defined for this property,
+    // and a custom validation message exists for this particular
+    // validation error, then set it in place of the default 
+    // validation message coming out of the jsonschema validator...
+    if (error.schema.errors && error.schema.errors[error.name]) {
+      error.message = error.schema.errors[error.name];
+    }
+    // Otherwise, for the default validation message coming out of the
+    // jsonschema validator, capitalize the first letter for nicer
+    // formatting...
+    else {
+      error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1);
+    }
+    // Format error stack message to format: "[Prop Title]: Error Message"
+    error.stack = error.schema.title + ": " + error.message;
+    return error;
+  });
+  return Object.assign({}, jsonValidateResult, {
+    errors: newErrors
+  });
+}
+
 /**
  * This function processes the formData with a user `validate` contributed
  * function, which receives the form data and an `errorHandler` object that
  * will be used to add custom validation errors for each field.
  */
 export default function validateFormData(formData, schema, customValidate) {
-  const {errors} = jsonValidate(formData, schema);
+  const {errors} = formatJsonValidateResult(jsonValidate(formData, schema));
   const errorSchema = toErrorSchema(errors);
 
   if (typeof customValidate !== "function") {

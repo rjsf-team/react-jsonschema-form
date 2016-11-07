@@ -14,7 +14,7 @@ import AltDateWidget from "./components/widgets/AltDateWidget";
 import AltDateTimeWidget from "./components/widgets/AltDateTimeWidget";
 import EmailWidget from "./components/widgets/EmailWidget";
 import URLWidget from "./components/widgets/URLWidget";
-import TextareaWidget from "./components/widgets/TextareaWidget";
+import TextareaWidget from "./components/widgets/EPBCTextareaWidget";
 import HiddenWidget from "./components/widgets/HiddenWidget";
 import ColorWidget from "./components/widgets/ColorWidget";
 import FileWidget from "./components/widgets/FileWidget";
