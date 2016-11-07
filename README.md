@@ -820,7 +820,7 @@ render((
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
 
-> Note: The `ui:widget` object API, where a widget and options were specified with `"ui:widget: {component, options}` shape, is deprecated. It will be removed in a future release.
+> Note: Since v0.40.0, the `ui:widget` object API, where a widget and options were specified with `"ui:widget": {component, options}` shape, is deprecated. It will be removed in a future release.
 
 ### Custom field components
 
