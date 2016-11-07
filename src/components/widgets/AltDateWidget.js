@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from "react";
 
 import {shouldRender, parseDateString, toDateString, pad} from "../../utils";
-import SelectWidget from "../widgets/SelectWidget";
 
 
 function rangeOptions(type, start, stop) {
@@ -17,8 +16,9 @@ function readyForChange(state) {
 }
 
 function DateElement(props) {
-  const {type, range, value, select, rootId, disabled, readonly, autofocus} = props;
+  const {type, range, value, select, rootId, disabled, readonly, autofocus, registry} = props;
   const id = rootId + "_" + type;
+  const {SelectWidget} = registry.widgets;
   return (
     <SelectWidget
       schema={{type: "integer"}}
@@ -101,7 +101,7 @@ class AltDateWidget extends Component {
   }
 
   render() {
-    const {id, disabled, readonly, autofocus} = this.props;
+    const {id, disabled, readonly, autofocus, registry} = this.props;
     return (
       <ul className="list-inline">{
         this.dateElementProps.map((elemProps, i) => (
@@ -112,6 +112,7 @@ class AltDateWidget extends Component {
               {...elemProps}
               disabled= {disabled}
               readonly={readonly}
+              registry={registry}
               autofocus={autofocus && i === 0}/>
           </li>
         ))

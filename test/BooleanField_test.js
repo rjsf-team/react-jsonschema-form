@@ -8,6 +8,8 @@ import {createFormComponent, createSandbox} from "./test_utils";
 describe("BooleanField", () => {
   let sandbox;
 
+  const CustomWidget = () => <div id="custom"/>;
+
   beforeEach(() => {
     sandbox = createSandbox();
   });
@@ -130,6 +132,20 @@ describe("BooleanField", () => {
 
     expect(node.querySelector("input[type=checkbox]").id)
       .eql("root");
+  });
+
+  it("should render customized checkbox", () => {
+    const {node} = createFormComponent({
+      schema: {
+        type: "boolean",
+      },
+      widgets: {
+        CheckboxWidget: CustomWidget
+      }
+    });
+
+    expect(node.querySelector("#custom"))
+      .to.exist;
   });
 
   describe("Label", () => {

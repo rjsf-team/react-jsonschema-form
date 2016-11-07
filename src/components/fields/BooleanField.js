@@ -7,7 +7,6 @@ import {
   getDefaultRegistry,
   isObject,
 } from "../../utils";
-import CheckboxWidget from "./../widgets/CheckboxWidget";
 
 
 function buildOptions(schema, uiWidget) {
@@ -58,6 +57,7 @@ function BooleanField(props) {
     const Widget = getAlternativeWidget(schema, widget, widgets);
     return <Widget options={buildOptions(schema, uiSchema["ui:widget"])} {...commonProps}/>;
   }
+  const {CheckboxWidget} = registry.widgets;
   return <CheckboxWidget {...commonProps}/>;
 }
 

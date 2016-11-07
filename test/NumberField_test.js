@@ -1,3 +1,4 @@
+import React from "react";
 import {expect} from "chai";
 import {Simulate} from "react-addons-test-utils";
 
@@ -131,6 +132,22 @@ describe("NumberField", () => {
       });
       expect(node.querySelector(".field input").value)
         .eql("2.000");
+    });
+
+    it("should render customized StringField", () => {
+      const CustomStringField = () => <div id="custom"/>;
+
+      const {node} = createFormComponent({
+        schema: {
+          type: "number",
+        },
+        fields: {
+          StringField: CustomStringField
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
     });
   });
 

@@ -9,6 +9,8 @@ import {createFormComponent, createSandbox} from "./test_utils";
 describe("StringField", () => {
   let sandbox;
 
+  const CustomWidget = () => <div id="custom"/>;
+
   beforeEach(() => {
     sandbox = createSandbox();
   });
@@ -92,6 +94,20 @@ describe("StringField", () => {
       expect(node.querySelector("input[type=text]").id)
         .eql("root");
     });
+
+    it("should render customized TextWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+        },
+        widgets: {
+          TextWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
   });
 
   describe("SelectWidget", () => {
@@ -170,6 +186,21 @@ describe("StringField", () => {
       expect(node.querySelector("select").id)
         .eql("root");
     });
+
+    it("should render customized SelectWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          enum: []
+        },
+        widgets: {
+          SelectWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
   });
 
   describe("DateTimeWidget", () => {
@@ -242,6 +273,21 @@ describe("StringField", () => {
       });
 
       expect(comp.state.errors).to.have.length.of(1);
+    });
+
+    it("should render customized DateTimeWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+        widgets: {
+          DateTimeWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
     });
   });
 
@@ -345,6 +391,21 @@ describe("StringField", () => {
 
       expect(comp.state.formData).to.be.a("undefined");
       expect(comp.state.errors).to.have.length.of(0);
+    });
+
+    it("should render customized DateWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date",
+        },
+        widgets: {
+          DateWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
     });
   });
 
@@ -502,6 +563,43 @@ describe("StringField", () => {
         expect(comp.state.formData).eql(undefined);
       });
     });
+
+
+    it("should render customized AltDateWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+        uiSchema: {
+          "ui:widget": "alt-datetime"
+        },
+        widgets: {
+          AltDateTimeWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
+
+    it("should render customized AltDateTimeWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date",
+        },
+        uiSchema: {
+          "ui:widget": "alt-datetime"
+        },
+        widgets: {
+          AltDateTimeWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
   });
 
   describe("AltDateWidget", () => {
@@ -657,6 +755,24 @@ describe("StringField", () => {
         expect(comp.state.formData).eql(undefined);
       });
     });
+
+    it("should render customized AltDateWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date",
+        },
+        uiSchema: {
+          "ui:widget": "alt-date"
+        },
+        widgets: {
+          AltDateWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
   });
 
   describe("EmailWidget", () => {
@@ -751,6 +867,21 @@ describe("StringField", () => {
 
       expect(comp.state.errors).to.have.length.of(1);
     });
+
+    it("should render customized EmailWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "email",
+        },
+        widgets: {
+          EmailWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
   });
 
   describe("URLWidget", () => {
@@ -843,6 +974,21 @@ describe("StringField", () => {
 
       expect(comp.state.errors).to.have.length.of(1);
     });
+
+    it("should render customized URLWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "uri",
+        },
+        widgets: {
+          URLWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
   });
 
   describe("ColorWidget", () => {
@@ -917,6 +1063,21 @@ describe("StringField", () => {
 
       expect(comp.state.errors).to.have.length.of(1);
     });
+
+    it("should render customized ColorWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "color",
+        },
+        widgets: {
+          ColorWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
   });
 
   describe("FileWidget", () => {
@@ -972,6 +1133,21 @@ describe("StringField", () => {
 
       expect(node.querySelector("[type=file]").id)
         .eql("root");
+    });
+
+    it("should render customized FileWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+          format: "data-url",
+        },
+        widgets: {
+          FileWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
     });
   });
 

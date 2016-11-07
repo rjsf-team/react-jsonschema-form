@@ -1,89 +1,95 @@
 import "setimmediate";
 
-import TitleField from "./components/fields/TitleField";
-import DescriptionField from "./components/fields/DescriptionField";
-import PasswordWidget from "./components/widgets/PasswordWidget";
-import RadioWidget from "./components/widgets/RadioWidget";
-import UpDownWidget from "./components/widgets/UpDownWidget";
-import RangeWidget from "./components/widgets/RangeWidget";
-import SelectWidget from "./components/widgets/SelectWidget";
-import TextWidget from "./components/widgets/TextWidget";
-import DateWidget from "./components/widgets/DateWidget";
-import DateTimeWidget from "./components/widgets/DateTimeWidget";
-import AltDateWidget from "./components/widgets/AltDateWidget";
-import AltDateTimeWidget from "./components/widgets/AltDateTimeWidget";
-import EmailWidget from "./components/widgets/EmailWidget";
-import URLWidget from "./components/widgets/URLWidget";
-import TextareaWidget from "./components/widgets/TextareaWidget";
-import HiddenWidget from "./components/widgets/HiddenWidget";
-import ColorWidget from "./components/widgets/ColorWidget";
-import FileWidget from "./components/widgets/FileWidget";
-import CheckboxesWidget from "./components/widgets/CheckboxesWidget";
-
-
 
 const altWidgetMap = {
   boolean: {
-    radio: RadioWidget,
-    select: SelectWidget,
-    hidden: HiddenWidget,
+    radio: "RadioWidget",
+    select: "SelectWidget",
+    hidden: "HiddenWidget",
   },
   string: {
-    password: PasswordWidget,
-    radio: RadioWidget,
-    select: SelectWidget,
-    textarea: TextareaWidget,
-    hidden: HiddenWidget,
-    date: DateWidget,
-    datetime: DateTimeWidget,
-    "alt-date": AltDateWidget,
-    "alt-datetime": AltDateTimeWidget,
-    color: ColorWidget,
-    file: FileWidget,
+    password: "PasswordWidget",
+    radio: "RadioWidget",
+    select: "SelectWidget",
+    textarea: "TextareaWidget",
+    hidden: "HiddenWidget",
+    date: "DateWidget",
+    datetime: "DateTimeWidget",
+    "alt-date": "AltDateWidget",
+    "alt-datetime": "AltDateTimeWidget",
+    color: "ColorWidget",
+    file: "FileWidget",
   },
   number: {
-    updown: UpDownWidget,
-    range: RangeWidget,
-    radio: RadioWidget,
-    hidden: HiddenWidget,
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
   },
   integer: {
-    updown: UpDownWidget,
-    range: RangeWidget,
-    radio: RadioWidget,
-    hidden: HiddenWidget,
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
   },
   array: {
-    select: SelectWidget,
-    checkboxes: CheckboxesWidget,
+    select: "SelectWidget",
+    checkboxes: "CheckboxesWidget",
   }
 };
 
 const stringFormatWidgets = {
-  "date-time": DateTimeWidget,
-  "date": DateWidget,
-  "email": EmailWidget,
-  "hostname": TextWidget,
-  "ipv4": TextWidget,
-  "ipv6": TextWidget,
-  "uri": URLWidget,
-  "data-url": FileWidget,
+  "date-time": "DateTimeWidget",
+  "date": "DateWidget",
+  "email": "EmailWidget",
+  "hostname": "TextWidget",
+  "ipv4": "TextWidget",
+  "ipv6": "TextWidget",
+  "uri": "URLWidget",
+  "data-url": "FileWidget",
 };
 
 export function getDefaultRegistry() {
+  const load = (prefix, arr) => arr.reduce((obj, comp) => {
+    obj[comp] = require(`./components/${prefix}/${comp}`).default;
+    return obj;
+  }, {});
+
+  const fields = load("fields", [
+    "SchemaField",
+    "ArrayField",
+    "BooleanField",
+    "ObjectField",
+    "StringField",
+    "NumberField",
+    "TitleField",
+    "DescriptionField",
+  ]);
+
+  const widgets = load("widgets", [
+    "PasswordWidget",
+    "RadioWidget",
+    "UpDownWidget",
+    "RangeWidget",
+    "SelectWidget",
+    "TextWidget",
+    "DateWidget",
+    "DateTimeWidget",
+    "AltDateWidget",
+    "AltDateTimeWidget",
+    "EmailWidget",
+    "URLWidget",
+    "TextareaWidget",
+    "HiddenWidget",
+    "ColorWidget",
+    "FileWidget",
+    "CheckboxWidget",
+    "CheckboxesWidget",
+  ]);
+
   return {
-    fields: {
-      // Prevent a bug where SchemaField is undefined when imported via Babel.
-      // This seems to have been introduced when upgrading React from 0.14 to to
-      // 15.0, which now seems to prevent cyclic references of exported
-      // components.
-      // Investigation hint: getDefaultRegistry is called from within
-      // SchemaField itself.
-      SchemaField: require("./components/fields/SchemaField").default,
-      TitleField,
-      DescriptionField,
-    },
-    widgets: {},
+    fields,
+    widgets,
     definitions: {},
     formContext: {}
   };
@@ -137,12 +143,12 @@ export function getAlternativeWidget(
   }
 
   if (altWidgetMap[type].hasOwnProperty(widget)) {
-    const altWidget = altWidgetMap[type][widget];
+    const altWidget = registeredWidgets[altWidgetMap[type][widget]];
     return getAlternativeWidget(schema, altWidget, registeredWidgets, widgetOptions);
   }
 
   if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
-    const stringFormatWidget = stringFormatWidgets[format];
+    const stringFormatWidget = registeredWidgets[stringFormatWidgets[format]];
     return getAlternativeWidget(schema, stringFormatWidget, registeredWidgets, widgetOptions);
   }
 

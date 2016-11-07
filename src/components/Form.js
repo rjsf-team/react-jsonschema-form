@@ -1,15 +1,12 @@
 import React, {Component, PropTypes} from "react";
 
-import SchemaField from "./fields/SchemaField";
-import TitleField from "./fields/TitleField";
-import DescriptionField from "./fields/DescriptionField";
-
 import ErrorList from "./ErrorList";
 import {
   getDefaultFormState,
   shouldRender,
   toIdSchema,
   setState,
+  getDefaultRegistry,
 } from "../utils";
 import validateFormData from "../validate";
 
@@ -118,19 +115,11 @@ export default class Form extends Component {
   getRegistry() {
     // For BC, accept passed SchemaField and TitleField props and pass them to
     // the "fields" registry one.
-    const _SchemaField = this.props.SchemaField || SchemaField;
-    const _TitleField = this.props.TitleField || TitleField;
-    const _DescriptionField = this.props.DescriptionField || DescriptionField;
-
-    const fields = Object.assign({
-      SchemaField: _SchemaField,
-      TitleField: _TitleField,
-      DescriptionField: _DescriptionField,
-    }, this.props.fields);
+    const {fields, widgets} = getDefaultRegistry();
     return {
-      fields,
+      fields: {...fields, ...this.props.fields},
+      widgets: {...widgets, ...this.props.widgets},
       FieldTemplate: this.props.FieldTemplate,
-      widgets: this.props.widgets || {},
       definitions: this.props.schema.definitions || {},
       formContext: this.props.formContext || {},
     };

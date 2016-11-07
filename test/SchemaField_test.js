@@ -6,6 +6,7 @@ import TitleField from "../src/components/fields/TitleField";
 import DescriptionField from "../src/components/fields/DescriptionField";
 
 import {createFormComponent, createSandbox} from "./test_utils";
+import {getDefaultRegistry} from "../src/utils";
 
 
 describe("SchemaField", () => {
@@ -97,7 +98,7 @@ describe("SchemaField", () => {
       }});
 
       const {registry} = receivedProps;
-      expect(registry.widgets).eql({});
+      expect(registry.widgets).eql(getDefaultRegistry().widgets);
       expect(registry.definitions).eql({});
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
