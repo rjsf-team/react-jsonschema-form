@@ -54,7 +54,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [The registry object](#the-registry-object)
         - [The formContext object](#the-formcontext-object)
      - [Custom SchemaField](#custom-schemafield)
-     - [Customizing any fields or widgets](#customizing-any-fields-or-widgets)
+     - [Customizing the fields and widgets](#customizing-the-default-fields-and-widgets)
      - [Custom titles](#custom-titles)
      - [Custom descriptions](#custom-descriptions)
   - [Form data validation](#form-data-validation)
@@ -898,9 +898,9 @@ If you're curious how this could ever be useful, have a look at the [Kinto formb
 
 Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
 
-### Customizing any fields or widgets
+### Customizing the default fields and widgets
 
-You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field or widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
+You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
 
 ```jsx
 
@@ -921,6 +921,23 @@ render((
         uiSchema={uiSchema}
         formData={formData}
         widgets={widgets} />
+), document.getElementById("app"));
+```
+
+This allows you to create a reusable customized form class with your custom fields and widgets:
+
+```jsx
+const customFields = {StringField: CustomString};
+const customWidgets = {CheckboxWidget: CustomCheckbox};
+
+function MyForm(props) {
+  return <Form fields={customFields} widgets={customWidgets} {...props} />;
+}
+
+render((
+  <MyForm schema={schema}
+    uiSchema={uiSchema}
+    formData={formData} />
 ), document.getElementById("app"));
 ```
 
