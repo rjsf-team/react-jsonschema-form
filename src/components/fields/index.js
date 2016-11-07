@@ -7,7 +7,12 @@ import SchemaField from "./SchemaField";
 import StringField from "./StringField";
 import TitleField from "./TitleField";
 import UnsupportedField from "./UnsupportedField";
-
+// bson specific fields
+import ObjectIdField from "./ObjectIdField";
+import DateField from "./DateField";
+import IntField from "./IntField";
+import LongField from "./LongField";
+import DoubleField from "./DoubleField";
 
 export default {
   ArrayField,
@@ -19,4 +24,9 @@ export default {
   StringField,
   TitleField,
   UnsupportedField,
+  ObjectIdField,
+  DateField,
+  IntField,
+  LongField,
+  DoubleField,
 };

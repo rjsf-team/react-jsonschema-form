@@ -50,8 +50,66 @@ const widgetMap = {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
     files: "FileWidget"
+  },
+  // bson specific fields
+  bool: {
+    checkbox: "CheckboxWidget",
+    radio: "RadioWidget",
+    select: "SelectWidget",
+    hidden: "HiddenWidget",
+  },
+  date: {
+    text: "TextWidget",
+    select: "SelectWidget",
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
+  },
+  objectId: {
+    text: "TextWidget",
+    select: "SelectWidget",
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
+    idden: "HiddenWidget"
+  },
+  long: {
+    text: "TextWidget",
+    select: "SelectWidget",
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
+    idden: "HiddenWidget"
+  },
+  int: {
+    text: "TextWidget",
+    select: "SelectWidget",
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
+    idden: "HiddenWidget"
+  },
+  double: {
+    text: "TextWidget",
+    select: "SelectWidget",
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
+    idden: "HiddenWidget"
   }
 };
+
+export function isInteger(value) {
+  // http://stackoverflow.com/questions/14636536/how-to-check-if-a-variable-is-an-integer-in-javascript
+  return !isNaN(value) &&
+    parseInt(Number(value)) == value &&
+    !isNaN(parseInt(value, 10));
+}
 
 const defaultRegistry = {
   fields: require("./components/fields").default,
@@ -152,6 +210,9 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
   if (typeof(formData) === "undefined") { // No form data? Use schema defaults.
     return defaults;
   }
+  // NOTE: for bson, there is some premitive that are objects
+  // For some usecase we do not need default.
+  // We will deal with this later.
   if (isObject(formData)) { // Override schema defaults with form data.
     return mergeObjects(defaults, formData);
   }
@@ -178,10 +239,26 @@ export function isObject(thing) {
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
+function shouldSkip (v) {
+  return v && (typeof(v.typeName) === 'function' || v instanceof Date);
+}
+
 export function mergeObjects(obj1, obj2, concatArrays = false) {
+  // NOTE: do not merge bson object types
+  if (shouldSkip(obj1)) {
+    return obj1;
+  }
+  if (shouldSkip(obj2)) {
+    return obj2;
+  }
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) =>{
+    if (obj1 == null) {
+      acc[key] = obj2[key];
+      return acc;
+    }
+
     const left = obj1[key], right = obj2[key];
     if (obj1.hasOwnProperty(key) && isObject(right)) {
       acc[key] = mergeObjects(left, right, concatArrays);

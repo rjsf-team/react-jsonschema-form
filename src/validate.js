@@ -1,7 +1,25 @@
 import toPath from "lodash.topath";
-import {validate as jsonValidate} from "jsonschema";
+import { Validator } from "bsonschema";
+import { isObject, mergeObjects } from "./utils";
 
-import {isObject, mergeObjects} from "./utils";
+// we monkey patch validator to make ObjectID pass for any object
+// who support toString function
+const bsonValidatorTypes = Object.assign(
+  {},
+  Validator.prototype.types,
+  {
+    objectId :(v) => {
+      return typeof v === 'object' && v.toString;
+    }
+  }
+)
+
+function bsonValidate(instance, schema, options) {
+  var v = new Validator();
+  v.types = bsonValidatorTypes;
+
+  return v.validate(instance, schema, options);
+}
 
 function toErrorSchema(errors) {
   // Transforms a jsonschema validation errors list:
@@ -97,7 +115,7 @@ function unwrapErrorHandler(errorHandler) {
  * will be used to add custom validation errors for each field.
  */
 export default function validateFormData(formData, schema, customValidate) {
-  const {errors} = jsonValidate(formData, schema);
+  const {errors} = bsonValidate(formData, schema);
   const errorSchema = toErrorSchema(errors);
 
   if (typeof customValidate !== "function") {

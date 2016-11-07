@@ -16,6 +16,13 @@ const COMPONENT_TYPES = {
   number:  "NumberField",
   object:  "ObjectField",
   string:  "StringField",
+  // bson specific fields
+  bool: "BooleanField",
+  objectId: "ObjectIdField",
+  date: "DateField",
+  int: "IntField",
+  long: "LongField",
+  double: "DoubleField",
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
