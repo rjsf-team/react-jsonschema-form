@@ -783,6 +783,8 @@ render((
 
 This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
 
+> Note: Until 0.40.0 it was possible to register a widget as object with shape `{ component: MyCustomWidget, options: {...} }`. This undocumented API has been removed. Instead, you can register a custom widget with a React `defaultProps` property. `defaultProps.options` can be an object containing your custom options.
+
 #### Custom widget options
 
 If you need to pass options to your custom widget, you can add a `ui:options` object containing those properties. If the widget has `defaultProps`, the options will be merged with the (optional) options object from `defaultProps`:
@@ -820,7 +822,7 @@ render((
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
 
-> Note: Since v0.40.0, the `ui:widget` object API, where a widget and options were specified with `"ui:widget": {component, options}` shape, is deprecated. It will be removed in a future release.
+> Note: Since v0.41.0, the `ui:widget` object API, where a widget and options were specified with `"ui:widget": {component, options}` shape, is deprecated. It will be removed in a future release.
 
 ### Custom field components
 

@@ -109,12 +109,12 @@ export function getWidget(schema, widget, registeredWidgets={}) {
 
   function mergeOptions(Widget) {
     // cache return value as property of widget for proper react reconciliation
-    if (!widget.mergedOptions) {
+    if (!Widget.MergedWidget) {
       const defaultOptions = Widget.defaultProps && Widget.defaultProps.options || {};
-      Widget.mergedOptions = ({options={}, ...props}) =>
+      Widget.MergedWidget = ({options={}, ...props}) =>
         <Widget options={{...defaultOptions, ...options}} {...props}/>;
     }
-    return widget.mergedOptions;
+    return Widget.MergedWidget;
   }
 
   if (typeof widget === "function") {
