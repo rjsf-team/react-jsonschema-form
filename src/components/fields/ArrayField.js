@@ -179,7 +179,7 @@ class ArrayField extends Component {
     const {definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    const {addable} = {addable: true, ...getUiOptions(uiSchema)};
+    const {addable=true} = getUiOptions(uiSchema);
 
     return (
       <fieldset
@@ -225,7 +225,7 @@ class ArrayField extends Component {
     const {widgets, definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const enumOptions = optionsList(itemsSchema);
-    const {widget, ...options} = {widget: "select", ...getUiOptions(uiSchema), enumOptions};
+    const {widget="select", ...options} = {...getUiOptions(uiSchema), enumOptions};
     const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget
@@ -246,7 +246,7 @@ class ArrayField extends Component {
     const title = schema.title || name;
     const {items} = this.state;
     const {widgets} = this.props.registry;
-    const {widget, ...options} = {widget: "files", ...getUiOptions(uiSchema)};
+    const {widget="files", ...options} = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget
@@ -283,7 +283,7 @@ class ArrayField extends Component {
       retrieveSchema(item, definitions));
     const additionalSchema = allowAdditionalItems(schema) ?
       retrieveSchema(schema.additionalItems, definitions) : null;
-    const {addable} = {addable: true, ...getUiOptions(uiSchema)};
+    const {addable=true} = getUiOptions(uiSchema);
     const canAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
