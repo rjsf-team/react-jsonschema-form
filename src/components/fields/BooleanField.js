@@ -2,7 +2,7 @@ import React, {PropTypes} from "react";
 
 import {
   defaultFieldValue,
-  getAlternativeWidget,
+  getWidget,
   getUiOptions,
   optionsList,
   getDefaultRegistry
@@ -24,27 +24,25 @@ function BooleanField(props) {
   } = props;
   const {title} = schema;
   const {widgets, formContext} = registry;
-  const {widget, ...options} = getUiOptions(uiSchema);
-  const commonProps = {
-    schema,
-    id: idSchema && idSchema.$id,
-    onChange,
-    label: (title === undefined) ? name : title,
-    value: defaultFieldValue(formData, schema),
-    required,
-    disabled,
-    readonly,
-    registry,
-    formContext,
-    autofocus,
-  };
-  if (widget) {
-    const Widget = getAlternativeWidget(schema, widget, widgets);
-    const enumOptions = optionsList({enum: [true, false], enumNames: schema.enumNames});
-    return <Widget options={{...options, enumOptions}} {...commonProps}/>;
-  }
-  const {CheckboxWidget} = registry.widgets;
-  return <CheckboxWidget {...commonProps}/>;
+  const {widget, ...options} = {widget: "checkbox", ...getUiOptions(uiSchema)};
+  const Widget = getWidget(schema, widget, widgets);
+  const enumOptions = optionsList({
+    enum: [true, false],
+    enumNames: schema.enumNames || ["yes", "no"]
+  });
+  return <Widget
+    options={{...options, enumOptions}}
+    schema={schema}
+    id={idSchema && idSchema.$id}
+    onChange={onChange}
+    label={title === undefined ? name : title}
+    value={defaultFieldValue(formData, schema)}
+    required={required}
+    disabled={disabled}
+    readonly={readonly}
+    registry={registry}
+    formContext={formContext}
+    autofocus={autofocus}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {

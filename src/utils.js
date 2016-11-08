@@ -3,32 +3,45 @@ import React from "react";
 import "setimmediate";
 
 
-const altWidgetMap = {
+const widgetMap = {
   boolean: {
+    checkbox: "CheckboxWidget",
     radio: "RadioWidget",
     select: "SelectWidget",
     hidden: "HiddenWidget",
   },
   string: {
+    text: "TextWidget",
     password: "PasswordWidget",
+    email: "EmailWidget",
+    hostname: "TextWidget",
+    ipv4: "TextWidget",
+    ipv6: "TextWidget",
+    uri: "URLWidget",
+    "data-url": "FileWidget",
     radio: "RadioWidget",
     select: "SelectWidget",
     textarea: "TextareaWidget",
     hidden: "HiddenWidget",
     date: "DateWidget",
     datetime: "DateTimeWidget",
+    "date-time": "DateTimeWidget",
     "alt-date": "AltDateWidget",
     "alt-datetime": "AltDateTimeWidget",
     color: "ColorWidget",
     file: "FileWidget",
   },
   number: {
+    text: "TextWidget",
+    select: "SelectWidget",
     updown: "UpDownWidget",
     range: "RangeWidget",
     radio: "RadioWidget",
     hidden: "HiddenWidget",
   },
   integer: {
+    text: "TextWidget",
+    select: "SelectWidget",
     updown: "UpDownWidget",
     range: "RangeWidget",
     radio: "RadioWidget",
@@ -37,18 +50,8 @@ const altWidgetMap = {
   array: {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
+    files: "FileWidget"
   }
-};
-
-const stringFormatWidgets = {
-  "date-time": "DateTimeWidget",
-  "date": "DateWidget",
-  "email": "EmailWidget",
-  "hostname": "TextWidget",
-  "ipv4": "TextWidget",
-  "ipv6": "TextWidget",
-  "uri": "URLWidget",
-  "data-url": "FileWidget",
 };
 
 export function getDefaultRegistry() {
@@ -101,8 +104,8 @@ export function defaultFieldValue(formData, schema) {
   return typeof formData === "undefined" ? schema.default : formData;
 }
 
-export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
-  const {type, format} = schema;
+export function getWidget(schema, widget, registeredWidgets={}) {
+  const {type} = schema;
 
   function mergeOptions(Widget) {
     // cache return value as property of widget for proper react reconciliation
@@ -124,25 +127,19 @@ export function getAlternativeWidget(schema, widget, registeredWidgets={}) {
 
   if (registeredWidgets.hasOwnProperty(widget)) {
     const registeredWidget = registeredWidgets[widget];
-    return getAlternativeWidget(schema, registeredWidget, registeredWidgets);
+    return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
-  if (!altWidgetMap.hasOwnProperty(type)) {
-    throw new Error(`No alternative widget for type ${type}`);
+  if (!widgetMap.hasOwnProperty(type)) {
+    throw new Error(`No widget for type "${type}"`);
   }
 
-  if (altWidgetMap[type].hasOwnProperty(widget)) {
-    const altWidget = registeredWidgets[altWidgetMap[type][widget]];
-    return getAlternativeWidget(schema, altWidget, registeredWidgets);
+  if (widgetMap[type].hasOwnProperty(widget)) {
+    const registeredWidget = registeredWidgets[widgetMap[type][widget]];
+    return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
-  if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
-    const stringFormatWidget = registeredWidgets[stringFormatWidgets[format]];
-    return getAlternativeWidget(schema, stringFormatWidget, registeredWidgets);
-  }
-
-  const info = type === "string" && format ? `/${format}` : "";
-  throw new Error(`No alternative widget "${widget}" for type ${type}${info}`);
+  throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
 function computeDefaults(schema, parentDefaults, definitions={}) {

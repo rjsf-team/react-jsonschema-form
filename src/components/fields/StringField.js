@@ -2,7 +2,7 @@ import React, {PropTypes} from "react";
 
 import {
   defaultFieldValue,
-  getAlternativeWidget,
+  getWidget as getWidget,
   getUiOptions,
   optionsList,
   getDefaultRegistry
@@ -16,49 +16,37 @@ function StringField(props) {
     uiSchema,
     idSchema,
     formData,
-    registry,
     required,
     disabled,
     readonly,
     autofocus,
+    registry,
     onChange
   } = props;
   const {title, format} = schema;
   const {widgets, formContext} = registry;
+  const enumOptions = Array.isArray(schema.enum) && optionsList(schema);
   const {widget, placeholder, ...options} = {
-    widget: format,
+    widget: format || (enumOptions ? "select" : "text"),
     placeholder: "",
     ...getUiOptions(uiSchema)
   };
-  const commonProps = {
-    schema,
-    id: idSchema && idSchema.$id,
-    label: (title === undefined) ? name : title,
-    value: defaultFieldValue(formData, schema),
-    onChange,
-    required,
-    disabled,
-    readonly,
-    formContext,
-    autofocus,
-    registry,
-  };
+  const Widget = getWidget(schema, widget, widgets);
 
-  const {TextWidget, SelectWidget} = widgets;
-
-  if (Array.isArray(schema.enum)) {
-    const enumOptions = optionsList(schema);
-    if (widget) {
-      const Widget = getAlternativeWidget(schema, widget, widgets);
-      return <Widget options={{...options, enumOptions}} {...commonProps}/>;
-    }
-    return <SelectWidget options={{enumOptions}} {...commonProps}/>;
-  }
-  if (widget) {
-    const Widget = getAlternativeWidget(schema, widget, widgets);
-    return <Widget options={options} {...commonProps} placeholder={placeholder}/>;
-  }
-  return <TextWidget {...commonProps} placeholder={placeholder}/>;
+  return <Widget
+    options={{...options, enumOptions}}
+    schema={schema}
+    id={idSchema && idSchema.$id}
+    label={title === undefined ? name : title}
+    value={defaultFieldValue(formData, schema)}
+    onChange={onChange}
+    required={required}
+    disabled={disabled}
+    readonly={readonly}
+    formContext={formContext}
+    autofocus={autofocus}
+    registry={registry}
+    placeholder={placeholder}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {

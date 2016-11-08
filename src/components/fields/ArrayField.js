@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from "react";
 
 import {
-  getAlternativeWidget,
+  getWidget,
   getDefaultFormState,
   getUiOptions,
   isMultiSelect,
@@ -226,7 +226,7 @@ class ArrayField extends Component {
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const enumOptions = optionsList(itemsSchema);
     const {widget, ...options} = {widget: "select", ...getUiOptions(uiSchema), enumOptions};
-    const Widget = getAlternativeWidget(schema, widget, widgets);
+    const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget
         id={idSchema && idSchema.$id}
@@ -242,12 +242,15 @@ class ArrayField extends Component {
   }
 
   renderFiles() {
-    const {schema, idSchema, name, disabled, readonly, autofocus} = this.props;
+    const {schema, uiSchema, idSchema, name, disabled, readonly, autofocus} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const {FileWidget} = this.props.registry.widgets;
+    const {widgets} = this.props.registry;
+    const {widget, ...options} = {widget: "files", ...getUiOptions(uiSchema)};
+    const Widget = getWidget(schema, widget, widgets);
     return (
-      <FileWidget
+      <Widget
+        options={options}
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
