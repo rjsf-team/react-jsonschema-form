@@ -255,6 +255,10 @@ describe("utils", () => {
     it("should allow numbers with a 0 in the first decimal place", () => {
       expect(asNumber("3.07")).eql(3.07);
     });
+
+    it("should return undefined if the input is empty", () => {
+      expect(asNumber("")).eql(undefined);
+    });
   });
 
   describe("isMultiSelect()", () => {

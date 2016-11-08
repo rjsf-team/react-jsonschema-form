@@ -27,7 +27,7 @@ module.exports = {
     }
   },
   uiSchema: {
-    "ui:order": ["firstName", "lastName", "age", "bio", "password"],
+    "ui:order": ["firstName", "lastName", "*", "password"],
     age: {
       "ui:widget": "updown"
     },

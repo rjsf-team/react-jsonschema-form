@@ -634,7 +634,7 @@ describe("Form", () => {
           function submit(node) {
             try {
               Simulate.submit(node);
-            } catch(err) {
+            } catch (err) {
               // Validation is expected to fail and call console.error, which is
               // stubbed to actually throw in createSandbox().
             }

@@ -32,8 +32,12 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Hidden widgets](#hidden-widgets)
         - [File widgets](#file-widgets)
            - [Multiple files](#multiple-files)
+           - [File widget input ref](#file-widget-input-ref)
      - [Object fields ordering](#object-fields-ordering)
-     - [Array items ordering](#array-items-ordering)
+     - [Array item options](#array-item-options)
+        - [Orderable option](#orderable-option)
+        - [Addable option](#addable-option)
+        - [Removable option](#removable-option)
      - [Custom CSS class names](#custom-css-class-names)
      - [Custom labels for enum fields](#custom-labels-for-enum-fields)
      - [Multiple choices list](#multiple-choices-list)
@@ -53,7 +57,9 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Field props](#field-props)
         - [The registry object](#the-registry-object)
         - [The formContext object](#the-formcontext-object)
+     - [Custom array field buttons](#custom-array-field-buttons)
      - [Custom SchemaField](#custom-schemafield)
+     - [Customizing the fields and widgets](#customizing-the-default-fields-and-widgets)
      - [Custom titles](#custom-titles)
      - [Custom descriptions](#custom-descriptions)
   - [Form data validation](#form-data-validation)
@@ -149,6 +155,8 @@ render((
         formData={formData}
 ), document.getElementById("app"));
 ```
+
+NOTE: If your form have a single field, pass a single value to `formData`. ex: `formData='Charlie'`
 
 WARNING: If you have situations where your parent component can re-render, make sure you listen to the `onChange` event and update the data you pass to the `formData` attribute.
 
@@ -388,7 +396,7 @@ This allows you to programmatically trigger the browser's file selector which ca
 
 ### Object fields ordering
 
-The `uiSchema` object spec also allows you to define in which order a given object field properties should be rendered using the `ui:order` property:
+Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
 
 ```jsx
 const schema = {
@@ -408,7 +416,18 @@ render((
         uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
-### Array items ordering
+
+If a guarenteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
+
+```js
+const uiSchema = {
+  "ui:order": ["bar", "*"]
+};
+```
+
+### Array item options
+
+#### `orderable` option
 
 Array items are orderable by default, and react-jsonschema-form renders move up/down buttons alongside them. The `uiSchema` object spec allows you to disable ordering:
 
@@ -423,6 +442,30 @@ const schema = {
 const uiSchema = {
   "ui:options":  {
     orderable: false
+  }
+};
+```
+
+#### `addable` option
+
+If either `items` or `additionalItems` contains a schema object, an add button for new items is shown by default. You can turn this off with the `addable` option in `uiSchema`:
+
+```jsx
+const uiSchema = {
+  "ui:options":  {
+    addable: false
+  }
+};
+```
+
+#### `removable` option
+
+A remove button is shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance. You can turn this off with the `removable` option in `uiSchema`:
+
+```jsx
+const uiSchema = {
+  "ui:options":  {
+    removable: false
   }
 };
 ```
@@ -861,6 +904,19 @@ The registry is passed down the component tree, so you can access it from your c
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets (including [TitleField](#custom-titles) and [DescriptionField](#custom-descriptions)). Useful for implementing context aware fields and widgets.
 
+### Custom array field buttons
+
+The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use Bootstrap yet still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
+
+```css
+.btn-plus > i {
+  display: none;
+}
+.btn-plus::after {
+  content: "Add";
+}
+```
+
 ### Custom SchemaField
 
 **Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
@@ -896,6 +952,49 @@ render((
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
 Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
+
+### Customizing the default fields and widgets
+
+You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
+
+```jsx
+
+const CustomCheckbox = function(props) {
+  return (
+    <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={props.onChange(!props.value)}>
+    	{props.value}
+    </button>
+  );
+};
+
+const widgets = {
+  CheckboxWidget: CustomCheckbox
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        widgets={widgets} />
+), document.getElementById("app"));
+```
+
+This allows you to create a reusable customized form class with your custom fields and widgets:
+
+```jsx
+const customFields = {StringField: CustomString};
+const customWidgets = {CheckboxWidget: CustomCheckbox};
+
+function MyForm(props) {
+  return <Form fields={customFields} widgets={customWidgets} {...props} />;
+}
+
+render((
+  <MyForm schema={schema}
+    uiSchema={uiSchema}
+    formData={formData} />
+), document.getElementById("app"));
+```
 
 ### Custom titles
 

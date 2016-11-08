@@ -6,8 +6,6 @@ import {
   optionsList,
   getDefaultRegistry
 } from "../../utils";
-import TextWidget from "../widgets/TextWidget";
-import SelectWidget from "../widgets/SelectWidget";
 
 
 function StringField(props) {
@@ -39,7 +37,11 @@ function StringField(props) {
     readonly,
     formContext,
     autofocus,
+    registry,
   };
+
+  const {TextWidget, SelectWidget} = widgets;
+
   if (Array.isArray(schema.enum)) {
     const enumOptions = optionsList(schema);
     if (widget) {

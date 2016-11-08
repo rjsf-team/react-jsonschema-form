@@ -12,6 +12,7 @@ function BaseInput(props) {
     options,  // eslint-disable-line
     schema,   // eslint-disable-line
     formContext,  // eslint-disable-line
+    registry, // eslint-disable-line
     ...inputProps
   } = props;
   return (
