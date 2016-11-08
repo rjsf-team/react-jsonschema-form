@@ -157,13 +157,15 @@ function SchemaField(props) {
     displayLabel = false;
   }
 
+  const {__errors, ...fieldErrorSchema} = errorSchema;
+
   const field = (
     <FieldComponent {...props}
       schema={schema}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      errorSchema={{...errorSchema, __errors: undefined}}
+      errorSchema={fieldErrorSchema}
       formContext={formContext}/>
   );
 
@@ -171,7 +173,7 @@ function SchemaField(props) {
   const id = idSchema.$id;
   const label = props.schema.title || schema.title || name;
   const description = props.schema.description || schema.description;
-  const errors = errorSchema.__errors;
+  const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
   const classNames = [
