@@ -2,7 +2,7 @@ import React, {PropTypes} from "react";
 
 import {
   defaultFieldValue,
-  getWidget as getWidget,
+  getWidget,
   getUiOptions,
   optionsList,
   getDefaultRegistry

@@ -271,29 +271,6 @@ describe("uiSchema", () => {
           expect(node.querySelectorAll(".custom")).to.have.length.of(1);
         });
       });
-
-      describe("referenced descriptor", () => {
-        const uiSchema = {
-          "field": {
-            "ui:widget": "custom"
-          }
-        };
-
-        const widgets = {
-          custom: {
-            component: CustomWidget,
-            options: {
-              className: "custom"
-            }
-          }
-        };
-
-        it("should render a custom widget with options", () => {
-          const {node} = createFormComponent({schema, uiSchema, widgets});
-
-          expect(node.querySelectorAll(".custom")).to.have.length.of(1);
-        });
-      });
     });
 
     describe("enum fields native options", () => {
@@ -1128,7 +1105,7 @@ describe("uiSchema", () => {
           node => node.textContent);
 
         expect(labels)
-          .eql(["true", "false"]);
+          .eql(["yes", "no"]);
       });
 
       it("should support formData", () => {
@@ -1183,9 +1160,9 @@ describe("uiSchema", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("option")[0].textContent)
-          .eql("true");
+          .eql("yes");
         expect(node.querySelectorAll("option")[1].textContent)
-          .eql("false");
+          .eql("no");
       });
 
       it("should update state when true is selected", () => {
