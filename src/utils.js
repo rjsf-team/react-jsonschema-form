@@ -195,26 +195,19 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
 }
 
 export function getUiOptions(uiSchema) {
-  let options = {};
-
   // get all passed options from ui:widget, ui:options, and ui:<optionName>
-  Object.keys(uiSchema).filter(key => /^ui:/.test(key)).forEach(key => {
+  return Object.keys(uiSchema).filter(key => /^ui:/.test(key)).reduce((options, key) => {
     const value = uiSchema[key];
 
     if (key === "ui:widget" && isObject(value)) {
       console.warn("Setting options via ui:widget object is deprecated, use ui:options instead");
-      options.widget = value.component;
-      if (isObject(value.options)) {
-        options = {...options, ...value.options};
-      }
-    } else if (key === "ui:options" && isObject(value)) {
-      options = {...options, ...value};
-    } else {
-      options[key.substring(3)] = value;
+      return {...options, ...(value.options || {}), widget: value.component};
     }
-  });
-
-  return options;
+    if (key === "ui:options" && isObject(value)) {
+      return {...options, ...value};
+    }
+    return {...options, [key.substring(3)]: value};
+  }, {});
 }
 
 export function isObject(thing) {

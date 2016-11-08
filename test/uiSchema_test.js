@@ -67,7 +67,7 @@ describe("uiSchema", () => {
       });
     });
 
-    describe.only("custom options", () => {
+    describe("custom options", () => {
       let widget, widgets, schema, uiSchema;
 
       beforeEach(() => {
