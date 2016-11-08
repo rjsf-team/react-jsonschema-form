@@ -67,62 +67,64 @@ describe("uiSchema", () => {
       });
     });
 
-    describe("custom options", () => {
-      const widget = ({label, options}) => <div id={label} style={options}></div>;
-      widget.defaultProps = {options: {background: "yellow", color: "green"}};
-
-      const widgets = {widget};
-
-      // all fields in one schema to catch errors where options passed to one
-      // instance of a widget are persistent across all instances
-      const schema = {
-        type: "object",
-        properties: {
-          funcAll: {type: "string"},
-          funcNone: {type: "string"},
-          stringAll: {type: "string"},
-          stringNone: {type: "string"}
-        }
-      };
-
-      const uiSchema = {
-        // pass widget as function
-        funcAll: {
-          "ui:widget": {
-            component: widget,
-            options: {
-              background: "purple"
-            }
-          },
-          "ui:options": {
-            margin: "7px"
-          },
-          "ui:padding": "42px"
-        },
-        funcNone: {
-          "ui:widget": widget
-        },
-
-        // pass widget as string
-        stringAll: {
-          "ui:widget": {
-            component: "widget",
-            options: {
-              background: "blue"
-            }
-          },
-          "ui:options": {
-            margin: "19px"
-          },
-          "ui:padding": "41px"
-        },
-        stringNone: {
-          "ui:widget": "widget"
-        }
-      };
+    describe.only("custom options", () => {
+      let widget, widgets, schema, uiSchema;
 
       beforeEach(() => {
         sandbox.stub(console, "warn");
+
+        widget = ({label, options}) => <div id={label} style={options}></div>;
+        widget.defaultProps = {options: {background: "yellow", color: "green"}};
+
+        widgets = {widget};
+
+        // all fields in one schema to catch errors where options passed to one
+        // instance of a widget are persistent across all instances
+        schema = {
+          type: "object",
+          properties: {
+            funcAll: {type: "string"},
+            funcNone: {type: "string"},
+            stringAll: {type: "string"},
+            stringNone: {type: "string"}
+          }
+        };
+
+        uiSchema = {
+          // pass widget as function
+          funcAll: {
+            "ui:widget": {
+              component: widget,
+              options: {
+                background: "purple"
+              }
+            },
+            "ui:options": {
+              margin: "7px"
+            },
+            "ui:padding": "42px"
+          },
+          funcNone: {
+            "ui:widget": widget
+          },
+
+          // pass widget as string
+          stringAll: {
+            "ui:widget": {
+              component: "widget",
+              options: {
+                background: "blue"
+              }
+            },
+            "ui:options": {
+              margin: "19px"
+            },
+            "ui:padding": "41px"
+          },
+          stringNone: {
+            "ui:widget": "widget"
+          }
+        };
       });
 
       it("should log warning when deprecated ui:widget: {component, options} api is used", () => {
@@ -132,6 +134,15 @@ describe("uiSchema", () => {
           widgets
         });
         expect(console.warn.calledWithMatch(/ui:widget object is deprecated/)).to.be.true;
+      });
+
+      it("should cache MergedWidget instance", () => {
+        expect(widget.MergedWidget).not.to.be.ok;
+        createFormComponent({schema: {type:"string"}, uiSchema: {"ui:widget": "widget"}, widgets});
+        const cached = widget.MergedWidget;
+        expect(cached).to.be.ok;
+        createFormComponent({schema: {type:"string"}, uiSchema: {"ui:widget": "widget"}, widgets});
+        expect(widget.MergedWidget).to.equal(cached);
       });
 
       it("should render merged ui:widget options for widget referenced as function", () => {
