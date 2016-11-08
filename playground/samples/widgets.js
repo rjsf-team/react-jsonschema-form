@@ -111,39 +111,35 @@ module.exports = {
       "ui:readonly": true
     },
     widgetOptions: {
-      "ui:widget": {
-        component: ({value, onChange, options}) => {
-          const {backgroundColor} = options;
-          return (
-            <input className="form-control"
-              onChange={(event) => onChange(event.target.value)}
-              style={{backgroundColor}}
-              value={value} />
-          );
-        },
-        options: {
-          backgroundColor: "yellow",
-        }
+      "ui:widget": ({value, onChange, options}) => {
+        const {backgroundColor} = options;
+        return (
+          <input className="form-control"
+            onChange={(event) => onChange(event.target.value)}
+            style={{backgroundColor}}
+            value={value} />
+        );
+      },
+      "ui:options": {
+        backgroundColor: "yellow"
       }
     },
     selectWidgetOptions: {
-      "ui:widget": {
-        component: ({value, onChange, options}) => {
-          const {enumOptions, backgroundColor} = options;
-          return (
-            <select className="form-control"
-              style={{backgroundColor}}
-              value={value}
-              onChange={(event) => onChange(event.target.value)}>{
-              enumOptions.map(({label, value}, i) => {
-                return <option key={i} value={value}>{label}</option>;
-              })
-            }</select>
-          );
-        },
-        options: {
-          backgroundColor: "pink",
-        }
+      "ui:widget": ({value, onChange, options}) => {
+        const {enumOptions, backgroundColor} = options;
+        return (
+          <select className="form-control"
+            style={{backgroundColor}}
+            value={value}
+            onChange={(event) => onChange(event.target.value)}>{
+            enumOptions.map(({label, value}, i) => {
+              return <option key={i} value={value}>{label}</option>;
+            })
+          }</select>
+        );
+      },
+      "ui:options": {
+        backgroundColor: "pink"
       }
     },
   },
