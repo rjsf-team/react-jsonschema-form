@@ -163,6 +163,7 @@ function SchemaField(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
+      errorSchema={{...errorSchema, __errors: undefined}}
       formContext={formContext}/>
   );
 
