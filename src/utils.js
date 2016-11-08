@@ -196,7 +196,7 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
 
 export function getUiOptions(uiSchema) {
   // get all passed options from ui:widget, ui:options, and ui:<optionName>
-  return Object.keys(uiSchema).filter(key => /^ui:/.test(key)).reduce((options, key) => {
+  return Object.keys(uiSchema).filter(key => key.indexOf("ui:") === 0).reduce((options, key) => {
     const value = uiSchema[key];
 
     if (key === "ui:widget" && isObject(value)) {
