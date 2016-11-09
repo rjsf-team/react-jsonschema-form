@@ -202,6 +202,8 @@ function SchemaField(props) {
     classNames,
     formContext,
     fields,
+    schema,
+    uiSchema,
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;

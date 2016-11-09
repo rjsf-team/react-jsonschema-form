@@ -694,6 +694,8 @@ The following props are passed to a custom field template component:
 - `readonly`: A boolean value stating if the field is read-only.
 - `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where you don't want to clutter the UI.
 - `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.
+- `schema`: The schema object for this field.
+- `uiSchema`: The uiSchema object for this field.
 - `formContext`: The `formContext` object that you passed to Form.
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
