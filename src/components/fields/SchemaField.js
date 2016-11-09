@@ -199,6 +199,7 @@ function SchemaField(props) {
     classNames,
     formContext,
     fields,
+    schema,
     uiSchema,
   };
 
