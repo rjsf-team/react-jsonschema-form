@@ -77,6 +77,42 @@ export default class Form extends Component {
     return null;
   }
 
+  removeEmptyRequiredFields(schema, formData) {
+    if (Array.isArray(formData)) {
+      for (let i = 0; i < formData.length; i++) {
+        this.removeEmptyRequiredFields(schema.items, formData[i]);
+      }
+    }
+    else if (typeof formData === "object") {
+      const keys = Object.keys(formData);
+      const requiredFields = schema.required;
+      for (let i = 0; i < keys.length; i++) {
+        const formDataPropertyName = keys[i];
+        const formDataPropertyValue = formData[formDataPropertyName];
+        const formDataPropertyRequired = requiredFields ? requiredFields.indexOf(formDataPropertyName) > -1 : false;
+        // If this property is an object, the recursively call removeEmptyRequiredFields...
+        if (typeof formDataPropertyValue === "object") {
+          this.removeEmptyRequiredFields(schema.properties[keys[i]], formData[keys[i]]);
+        }
+        // Otherwise, if this is a required property...
+        else if (formDataPropertyRequired) {
+          // If this property is an empty string, then remove it...
+          if (typeof formDataPropertyValue === "string" && formDataPropertyValue.trim().length === 0) {
+            delete formData[keys[i]];
+          }
+          // Otherwise if this property is a zero value, then remove it...
+          else if (typeof formDataPropertyValue === "number" && formDataPropertyValue === 0) {
+            delete formData[keys[i]];
+          }
+          // Otherwise if this property is undefined, then remove it...
+          else if (formDataPropertyValue === undefined) {
+            delete formData[keys[i]];
+          }
+        }
+      }
+    }
+  }
+
   onChange = (formData, options={validate: false}) => {
     const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
     let state = {status: "editing", formData};
@@ -96,17 +132,21 @@ export default class Form extends Component {
     this.setState({status: "submitted"});
 
     if (!this.props.noValidate) {
-      const {errors, errorSchema} = this.validate(this.state.formData);
-      if (Object.keys(errors).length > 0) {
-        setState(this, {errors, errorSchema}, () => {
-          if (this.props.onError) {
-            this.props.onError(errors);
-          } else {
-            console.error("Form validation failed", errors);
-          }
-        });
-        return;
-      }
+      let sanitizedFormData = Object.assign({}, this.state.formData);
+      this.removeEmptyRequiredFields(this.props.schema, sanitizedFormData);
+      this.setState({ formData: sanitizedFormData }, () => {
+        const {errors, errorSchema} = this.validate(this.state.formData);
+        if (Object.keys(errors).length > 0) {
+          setState(this, {errors, errorSchema}, () => {
+            if (this.props.onError) {
+              this.props.onError(errors);
+            } else {
+              console.error("Form validation failed", errors);
+            }
+          });
+          return;
+        }
+      });
     }
 
     if (this.props.onSubmit) {
