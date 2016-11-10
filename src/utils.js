@@ -53,13 +53,15 @@ const widgetMap = {
   }
 };
 
+const defaultRegistry = {
+  fields: require("./components/fields").default,
+  widgets: require("./components/widgets").default,
+  definitions: {},
+  formContext: {}
+};
+
 export function getDefaultRegistry() {
-  return {
-    fields: require("./components/fields").default,
-    widgets: require("./components/widgets").default,
-    definitions: {},
-    formContext: {}
-  };
+  return defaultRegistry;
 }
 
 export function defaultFieldValue(formData, schema) {
