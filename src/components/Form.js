@@ -130,11 +130,11 @@ export default class Form extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     this.setState({status: "submitted"});
-
+    let stateErrorsExist = false;
     if (!this.props.noValidate) {
-      let sanitizedFormData = Object.assign({}, this.state.formData);
-      this.removeEmptyRequiredFields(this.props.schema, sanitizedFormData);
-      this.setState({ formData: sanitizedFormData }, () => {
+      let formData = Object.assign({}, this.state.formData);
+      this.removeEmptyRequiredFields(this.props.schema, formData);
+      setState(this, {formData}, () => {
         const {errors, errorSchema} = this.validate(this.state.formData);
         if (Object.keys(errors).length > 0) {
           setState(this, {errors, errorSchema}, () => {
@@ -146,14 +146,20 @@ export default class Form extends Component {
           });
           return;
         }
-      });
+        this.onInnerSubmit(event);        
+      });      
     }
+    else {
+      this.onInnerSubmit(event);
+    }
+  };
 
+  onInnerSubmit = (event) => {
     if (this.props.onSubmit) {
       this.props.onSubmit(this.state);
     }
     this.setState({status: "initial", errors: [], errorSchema: {}});
-  };
+  }
 
   getRegistry() {
     // For BC, accept passed SchemaField and TitleField props and pass them to
