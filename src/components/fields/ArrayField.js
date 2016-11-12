@@ -419,7 +419,7 @@ function AddButton({onClick, disabled}) {
     <div className="row">
       <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
         <IconBtn type="info" icon="plus" className="btn-add col-xs-12"
-                 tabIndex="-1" onClick={onClick}
+                 tabIndex="0" onClick={onClick}
                  disabled={disabled}/>
       </p>
     </div>
