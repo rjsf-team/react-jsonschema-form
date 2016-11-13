@@ -136,10 +136,10 @@ function formatJsonValidateResult(jsonValidateResult){
       error.message = error.schema.errors[error.name];
     }
     // Otherwise, for the default validation message coming out of the
-    // jsonschema validator, capitalize the first letter for nicer
-    // formatting...
+    // jsonschema validator, capitalize the first letter and add a period
+    // at the end for nicer formatting...
     else {
-      error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1);
+      error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1) + ".";
     }
     // Format error stack message to format: "[Prop Title]: Error Message"
     error.stack = error.schema.title + ": " + error.message;

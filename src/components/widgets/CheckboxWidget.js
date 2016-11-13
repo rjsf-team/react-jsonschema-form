@@ -5,7 +5,6 @@ function CheckboxWidget({
   schema,
   id,
   value,
-  required,
   disabled,
   label,
   autofocus,
@@ -17,7 +16,6 @@ function CheckboxWidget({
         <input type="checkbox"
           id={id}
           checked={typeof value === "undefined" ? false : value}
-          required={required}
           disabled={disabled}
           autoFocus={autofocus}
           onChange={(event) => onChange(event.target.checked)}/>
