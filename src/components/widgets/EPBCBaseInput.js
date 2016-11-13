@@ -55,12 +55,14 @@ class BaseInput extends Component {
         formContext,  // eslint-disable-line
         ...inputProps
     } = this.props;
+    const maxLength = schema.maxLength ? schema.maxLength : null;
     return (
       <input
         {...inputProps}
         className="form-control"
         readOnly={readonly}
         autoFocus={autofocus}
+        maxlength={maxLength}
         value={typeof value === "undefined" ? "" : value}
         onChange={this.onChange()}
         onBlur={this.onBlur()}/>

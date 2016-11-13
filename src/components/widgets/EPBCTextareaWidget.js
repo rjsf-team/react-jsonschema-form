@@ -43,7 +43,6 @@ class TextareaWidget extends Component {
       id,
       placeholder,
       value,
-      required,
       disabled,
       readonly,
       autofocus,

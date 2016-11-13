@@ -3,8 +3,7 @@ import React, {PropTypes} from "react";
 import BaseInput from "./EPBCBaseInput";
 
 function TextWidget(props) {
-  const {schema} = props;
-  return <BaseInput maxLength={schema.maxLength} {...props}/>;
+  return <BaseInput {...props}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {
