@@ -181,42 +181,66 @@ class ArrayField extends Component {
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const {addable=true} = getUiOptions(uiSchema);
 
-    return (
-      <fieldset
-        className={`field field-array field-array-of-${itemsSchema.type}`}>
-        <ArrayFieldTitle
-          TitleField={TitleField}
-          idSchema={idSchema}
-          title={title}
-          required={required}/>
-        {schema.description ?
-          <ArrayFieldDescription
-            DescriptionField={DescriptionField}
+    const getElement = props => {
+      return (
+        <div className={props.className}>
+          {props.children}
+          {props.addable ? <AddButton
+                              onClick={this.onAddClick}
+                              disabled={props.disabled || props.readonly}/> : null}
+        </div>
+      );
+    }
+
+    const elementProps = {
+      className: `field field-array field-array-of-${itemsSchema.type}`,
+      children: (
+        <fieldset>
+
+          <ArrayFieldTitle
+            TitleField={TitleField}
             idSchema={idSchema}
-            description={schema.description}/> : null}
-        <div className="row array-item-list">{
-          items.map((item, index) => {
-            const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-            const itemIdPrefix = idSchema.$id + "_" + index;
-            const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
-            return this.renderArrayFieldItem({
-              index,
-              canMoveUp: index > 0,
-              canMoveDown: index < items.length - 1,
-              itemSchema: itemsSchema,
-              itemIdSchema,
-              itemErrorSchema,
-              itemData: items[index],
-              itemUiSchema: uiSchema.items,
-              autofocus: autofocus && index === 0
-            });
-          })
-        }</div>
-        {addable ? <AddButton
-                     onClick={this.onAddClick}
-                     disabled={disabled || readonly}/> : null}
-      </fieldset>
-    );
+            title={title}
+            required={required}/>
+
+          {
+            schema.description ? (
+              <ArrayFieldDescription
+                DescriptionField={DescriptionField}
+                idSchema={idSchema}
+                description={schema.description} />
+            ) : null
+          }
+
+          <div className="row array-item-list">
+            {
+              items.map((item, index) => {
+                const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+                const itemIdPrefix = idSchema.$id + "_" + index;
+                const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
+                return this.renderArrayFieldItem({
+                  index,
+                  canMoveUp: index > 0,
+                  canMoveDown: index < items.length - 1,
+                  itemSchema: itemsSchema,
+                  itemIdSchema,
+                  itemErrorSchema,
+                  itemData: items[index],
+                  itemUiSchema: uiSchema.items,
+                  autofocus: autofocus && index === 0
+                });
+              })
+            }
+          </div>
+
+        </fieldset>
+      ),
+      addable,
+      disabled,
+      readonly
+    };
+
+    return getElement(elementProps);
   }
 
   renderMultiSelect() {
@@ -292,49 +316,73 @@ class ArrayField extends Component {
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
 
-    return (
-      <fieldset className="field field-array field-array-fixed-items">
-        <ArrayFieldTitle
-          TitleField={TitleField}
-          idSchema={idSchema}
-          title={title}
-          required={required}/>
-        {schema.description ?
-          <div className="field-description">{schema.description}</div> : null}
-        <div className="row array-item-list">{
-          items.map((item, index) => {
-            const additional = index >= itemSchemas.length;
-            const itemSchema = additional ?
-              additionalSchema : itemSchemas[index];
-            const itemIdPrefix = idSchema.$id + "_" + index;
-            const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
-            const itemUiSchema = additional ?
-              uiSchema.additionalItems || {} :
-              Array.isArray(uiSchema.items) ?
-                uiSchema.items[index] : uiSchema.items || {};
-            const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+    const getElement = (props) => {
+      return (
+        <div className={props.className}>
+          {props.children}
+          {props.canAdd ? <AddButton onClick={props.addClick}
+                              disabled={props.disabled || props.readonly}/>
+                        : null}
+        </div>
+      )
+    };
 
-            return this.renderArrayFieldItem({
-              index,
-              canRemove: additional,
-              canMoveUp: index >= itemSchemas.length + 1,
-              canMoveDown: additional && index < items.length - 1,
-              itemSchema,
-              itemData: item,
-              itemUiSchema,
-              itemIdSchema,
-              itemErrorSchema,
-              autofocus: autofocus && index === 0
-            });
-          })
-        }</div>
-        {
-          canAdd ? <AddButton
-                               onClick={this.onAddClick}
-                               disabled={disabled || readonly}/> : null
-        }
-      </fieldset>
-    );
+    // These are the props passed into the getElement function
+    const arrayProps = {
+      className: "field field-array field-array-fixed-items",
+      canAdd,
+      children: (
+        <fieldset>
+
+          <ArrayFieldTitle
+            key="array-field-title"
+            TitleField={TitleField}
+            idSchema={idSchema}
+            title={title}
+            required={required} />
+
+          {schema.description ? (
+            <div className="field-description">{schema.description}</div>
+          ) : null}
+
+          <div className="row array-item-list">
+            {
+              items.map((item, index) => {
+                const additional = index >= itemSchemas.length;
+                const itemSchema = additional ?
+                  additionalSchema : itemSchemas[index];
+                const itemIdPrefix = idSchema.$id + "_" + index;
+                const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
+                const itemUiSchema = additional ?
+                  uiSchema.additionalItems || {} :
+                  Array.isArray(uiSchema.items) ?
+                    uiSchema.items[index] : uiSchema.items || {};
+                const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+
+                return this.renderArrayFieldItem({
+                  index,
+                  canRemove: additional,
+                  canMoveUp: index >= itemSchemas.length + 1,
+                  canMoveDown: additional && index < items.length - 1,
+                  itemSchema,
+                  itemData: item,
+                  itemUiSchema,
+                  itemIdSchema,
+                  itemErrorSchema,
+                  autofocus: autofocus && index === 0
+                });
+              })
+            }
+          </div>
+
+        </fieldset>
+      ),
+      addClick: this.onAddClick,
+      disabled,
+      readonly
+    };
+
+    return getElement(arrayProps);
   }
 
   renderArrayFieldItem({
