@@ -362,55 +362,75 @@ class ArrayField extends Component {
       remove: removable && canRemove
     };
     has.toolbar = Object.keys(has).some(key => has[key]);
-    const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
-    return (
-      <div key={index} className="array-item">
-        <div className={has.toolbar ? "col-xs-9" : "col-xs-12"}>
-          <SchemaField
-            schema={itemSchema}
-            uiSchema={itemUiSchema}
-            formData={itemData}
-            errorSchema={itemErrorSchema}
-            idSchema={itemIdSchema}
-            required={this.isItemRequired(itemSchema)}
-            onChange={this.onChangeForIndex(index)}
-            registry={this.props.registry}
-            disabled={this.props.disabled}
-            readonly={this.props.readonly}
-            autofocus={autofocus}/>
-        </div>
-        {
-          has.toolbar ?
+    // This function constructs each array item (and should optionally be passed in)
+    const getElement = (props) => {
+      const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
+      return (
+        <div key={props.index} className={props.className}>
+          <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
+            {props.children}
+          </div>
+          {props.hasToolbar ?
             <div className="col-xs-3 array-item-toolbox">
               <div className="btn-group" style={{display: "flex", justifyContent: "space-around"}}>
-                {has.moveUp || has.moveDown ?
+                {props.hasMoveUp || props.hasMoveDown ?
                   <IconBtn icon="arrow-up" className="array-item-move-up"
                           tabIndex="-1"
                           style={btnStyle}
-                          disabled={disabled || readonly || !has.moveUp}
-                          onClick={this.onReorderClick(index, index - 1)}/>
+                          disabled={props.disabled || props.readonly || !props.hasMoveUp}
+                          onClick={props.reorderClick(props.index, props.index - 1)}/>
                   : null}
-                {has.moveUp || has.moveDown ?
+                {props.hasMoveUp || props.hasMoveDown ?
                   <IconBtn icon="arrow-down" className="array-item-move-down"
                           tabIndex="-1"
                           style={btnStyle}
-                          disabled={disabled || readonly || !has.moveDown}
-                          onClick={this.onReorderClick(index, index + 1)}/>
+                          disabled={props.disabled || props.readonly || !props.hasMoveDown}
+                          onClick={props.reorderClick(props.index, props.index + 1)}/>
                   : null}
-                {has.remove ?
+                {props.hasRemove ?
                   <IconBtn type="danger" icon="remove" className="array-item-remove"
                           tabIndex="-1"
                           style={btnStyle}
-                          disabled={disabled || readonly}
-                          onClick={this.onDropIndexClick(index)}/>
+                          disabled={props.disabled || props.readonly}
+                          onClick={props.dropIndexClick(index)}/>
                   : null}
               </div>
             </div>
-          : null
-        }
-      </div>
-    );
+          : null}
+        </div>
+      );
+    };
+
+    // These are the props that should be accessible from getElement
+    const elementProps = {
+      disabled,
+      readonly,
+      children: (
+        <SchemaField
+          schema={itemSchema}
+          uiSchema={itemUiSchema}
+          formData={itemData}
+          errorSchema={itemErrorSchema}
+          idSchema={itemIdSchema}
+          required={this.isItemRequired(itemSchema)}
+          onChange={this.onChangeForIndex(index)}
+          registry={this.props.registry}
+          disabled={this.props.disabled}
+          readonly={this.props.readonly}
+          autofocus={autofocus}/>
+      ),
+      className: "array-item",
+      index,
+      hasToolbar: has.toolbar,
+      hasMoveUp: has.moveUp,
+      hasMoveDown: has.moveDown,
+      hasRemove: has.remove,
+      reorderClick: this.onReorderClick,
+      dropIndexClick: this.onDropIndexClick
+    }
+
+    return getElement(elementProps);
   }
 }
 
