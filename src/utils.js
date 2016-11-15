@@ -1,5 +1,4 @@
 import React from "react";
-
 import "setimmediate";
 
 
@@ -54,50 +53,15 @@ const widgetMap = {
   }
 };
 
+const defaultRegistry = {
+  fields: require("./components/fields").default,
+  widgets: require("./components/widgets").default,
+  definitions: {},
+  formContext: {}
+};
+
 export function getDefaultRegistry() {
-  const load = (prefix, arr) => arr.reduce((obj, comp) => {
-    obj[comp] = require(`./components/${prefix}/${comp}`).default;
-    return obj;
-  }, {});
-
-  const fields = load("fields", [
-    "SchemaField",
-    "ArrayField",
-    "BooleanField",
-    "ObjectField",
-    "StringField",
-    "NumberField",
-    "TitleField",
-    "DescriptionField",
-  ]);
-
-  const widgets = load("widgets", [
-    "PasswordWidget",
-    "RadioWidget",
-    "UpDownWidget",
-    "RangeWidget",
-    "SelectWidget",
-    "TextWidget",
-    "DateWidget",
-    "DateTimeWidget",
-    "AltDateWidget",
-    "AltDateTimeWidget",
-    "EmailWidget",
-    "URLWidget",
-    "TextareaWidget",
-    "HiddenWidget",
-    "ColorWidget",
-    "FileWidget",
-    "CheckboxWidget",
-    "CheckboxesWidget",
-  ]);
-
-  return {
-    fields,
-    widgets,
-    definitions: {},
-    formContext: {}
-  };
+  return defaultRegistry;
 }
 
 export function defaultFieldValue(formData, schema) {
