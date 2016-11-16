@@ -6,16 +6,25 @@ import SelectWidget from "../widgets/SelectWidget";
 const ASCENDING = "asc"
 const DESCENDING = "desc"
 
+const monthLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 function rangeOptions(type, start, stop, orderYearBy) {
-  let options = [{value: -1, label: "-- " + type + "--"}];
+  // Capitalize the first character of the type
+  let typeLabel = type.toLowerCase().replace(/\b[a-z](?=[a-z]{2})/g, function(letter) {
+    return letter.toUpperCase(); } );
+
+  let options = [{value: -1, label: typeLabel + "..."}];
   
+  // Check if the year's options order is DESCENDING
   if (type === "year" && orderYearBy.toLowerCase() === DESCENDING) {
     for (let i=stop; i>= start; i--) {
       options.push({value: i, label: pad(i, 2)});
     } 
   } else {
+    // Else, set the options in ASCENDING order
     for (let i=start; i<= stop; i++) {
-      options.push({value: i, label: pad(i, 2)});
+      // If the type is month, use string labels instead of integers
+      options.push({value: i, label: type === "month" ? monthLabels[i-1] : pad(i, 2)});
     } 
   }
 
@@ -23,7 +32,9 @@ function rangeOptions(type, start, stop, orderYearBy) {
 }
 
 function readyForChange(state) {
-  return Object.keys(state).every(key => state[key] !== -1);
+  return Object.keys(state).every(key => {
+    return state[key] !== -1
+  });
 }
 
 function DateElement(props) {
@@ -42,6 +53,10 @@ function DateElement(props) {
       autofocus={autofocus}
       onChange={(value) => select(type, value)}/>
   );
+}
+
+function daysInMonth(year, month) {
+    return new Date(year, month, 0).getDate();
 }
 
 class EPBCDateWidget extends Component {
@@ -64,7 +79,9 @@ class EPBCDateWidget extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(parseDateString(nextProps.value, nextProps.time));
+    if (nextProps.value !== undefined) {
+      this.setState(parseDateString(nextProps.value, nextProps.time));
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -72,10 +89,44 @@ class EPBCDateWidget extends Component {
   }
 
   onChange = (property, value) => {
-    this.setState({[property]: value}, () => {
+    value = parseInt(value);
+
+    let newState;
+
+    // If the year has changed, and month and day is set
+    if (property === "year" && this.state.month !== -1 && this.state.day !== -1){
+      let newYearValue = value;
+
+      // Check if the currently set day is within the new year and month
+      if (this.state.day <= daysInMonth(newYearValue, this.state.month)) {
+        newState = {[property]: value};
+      } else {
+        // Else, deselect the day
+        newState = {[property]: value, day: -1};
+      }
+    
+    // If the month has changed, and year and day is set
+    } else if (property === "month" && this.state.year !== -1 && this.state.day !== -1) {
+      let newMonthValue = value
+      // Check if the currently set day is within the year and new month
+      if (this.state.day <= daysInMonth(this.state.year, newMonthValue)) {
+        newState = {[property]: value};
+      } else {
+        // Else, deselect the day
+        newState = {[property]: value, day: -1};
+      }
+    } else {
+      // Else, set the date as usual
+      newState = {[property]: value};
+    }
+
+    this.setState(newState, () => {
       // Only propagate to parent state if we have a complete date{time}
       if (readyForChange(this.state)) {
-        this.props.onChange(toDateString(this.state, this.props.time));
+         this.props.onChange(toDateString(this.state, this.props.time));
+      } else {
+        // Else, set the date to undefined
+        this.props.onChange(undefined);
       }
     });
   };
@@ -102,10 +153,15 @@ class EPBCDateWidget extends Component {
   get dateElementProps() {
     const {time, options} = this.props;
     const {year, month, day, hour, minute, second} = this.state;
+
+    // If the year and month are set, then calculate the max number of days,
+    // otherwise, set to days in the month to 31 
+    let maxDays = year !== -1 && month !== -1 ? daysInMonth(year, month) : 31;
+
     const data = [
       {type: "year", range: [options.yearRange[0], options.yearRange[1]], value: year},
       {type: "month", range: [1, 12], value: month},
-      {type: "day", range: [1, 31], value: day},
+      {type: "day", range: [1, maxDays], value: day},
     ];
     if (time) {
       data.push(
@@ -119,7 +175,6 @@ class EPBCDateWidget extends Component {
 
   render() {
     const {id, disabled, readonly, autofocus, options} = this.props;
-
     return (
       <ul className="list-inline">{
         this.dateElementProps.map((elemProps, i) => (
