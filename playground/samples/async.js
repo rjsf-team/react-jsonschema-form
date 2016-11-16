@@ -1,16 +1,13 @@
-function validate(formData) {
+function validate({pass1, pass2}, errors) {
 
   return new Promise((resolve/*, reject*/) => {
 
     setTimeout(() => {
-      const errors = [];
-      const {pass1, pass2} = formData;
       if (pass1 !== pass2) {
-
-        errors.push({property: "instance.pass2", message: "Deferred check: passwords not matched"});
+        errors.pass2.addError("Deferred check: passwords not matched");
       }
       resolve(errors);
-    }, 500);
+    }, 42);
 
   });
 

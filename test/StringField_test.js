@@ -262,7 +262,7 @@ describe("StringField", () => {
         .eql("root");
     });
 
-    it("should reject an invalid entered datetime", () => {
+    it("should eventually reject an invalid entered datetime", (done) => {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
@@ -272,7 +272,10 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      setTimeout(function(){
+        expect(comp.state.errors).to.have.length.of(1);
+        done();
+      });
     });
 
     it("should render customized DateTimeWidget", () => {
@@ -366,7 +369,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("2012-12-12");
     });
 
-    it("should reject an invalid entered date", () => {
+    it("should eventually reject an invalid entered date", (done) => {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "date",
@@ -376,7 +379,10 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      setTimeout(function(){
+        expect(comp.state.errors).to.have.length.of(1);
+        done();
+      });
     });
 
     it("should properly reset field value when null is selected", () => {
@@ -855,7 +861,7 @@ describe("StringField", () => {
         .eql("root");
     });
 
-    it("should reject an invalid entered email", () => {
+    it("should eventually reject an invalid entered email", (done) => {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "email",
@@ -865,7 +871,10 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      setTimeout(function(){
+        expect(comp.state.errors).to.have.length.of(1);
+        done();
+      });
     });
 
     it("should render customized EmailWidget", () => {
@@ -962,7 +971,7 @@ describe("StringField", () => {
         .eql("root");
     });
 
-    it("should reject an invalid entered url", () => {
+    it("should eventually reject an invalid entered url", (done) => {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "uri",
@@ -972,7 +981,10 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      setTimeout(function(){
+        expect(comp.state.errors).to.have.length.of(1);
+        done();
+      });
     });
 
     it("should render customized URLWidget", () => {
@@ -1051,7 +1063,7 @@ describe("StringField", () => {
     });
 
 
-    it("should reject an invalid entered color", () => {
+    it("should eventually reject an invalid entered color", (done) => {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         format: "color",
@@ -1061,10 +1073,13 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      setTimeout(function(){
+        expect(comp.state.errors).to.have.length.of(1);
+        done();
+      });
     });
 
-    it("should render customized ColorWidget", () => {
+    it("should  render customized ColorWidget", () => {
       const {node} = createFormComponent({
         schema: {
           type: "string",

@@ -136,14 +136,20 @@ describe("Form", () => {
         .eql("this is description rendered from the raw format");
     });
 
-    it("should pass errors as the provided React component", () => {
-      expect(node.querySelectorAll(".error-detail li"))
-        .to.have.length.of(1);
+    it("should eventually pass errors as the provided React component", (done) => {
+      setTimeout(() => {
+        expect(node.querySelectorAll(".error-detail li"))
+          .to.have.length.of(1);
+        done();
+      });
     });
 
-    it("should pass rawErrors as an array of strings", () => {
-      expect(node.querySelectorAll(".raw-error"))
-        .to.have.length.of(1);
+    it("should eventually pass rawErrors as an array of strings", (done) => {
+      setTimeout(function(){
+        expect(node.querySelectorAll(".raw-error"))
+          .to.have.length.of(1);
+        done();
+      });
     });
 
     it("should pass help as a the provided React element", () => {
@@ -158,7 +164,7 @@ describe("Form", () => {
   });
 
   describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", () => {
+    it("should eventually submit the form when clicked", (done) => {
       const onSubmit = sandbox.spy();
       const comp = renderIntoDocument(
         <Form onSubmit={ onSubmit } schema={ {} }>
@@ -170,7 +176,10 @@ describe("Form", () => {
       const buttons = node.querySelectorAll("button[type=submit]");
       buttons[0].click();
       buttons[1].click();
-      sinon.assert.calledTwice(onSubmit);
+      setTimeout(function(){
+        sinon.assert.calledTwice(onSubmit);
+        done();
+      });
     });
   });
 
@@ -435,7 +444,7 @@ describe("Form", () => {
   });
 
   describe("Submit handler", () => {
-    it("should call provided submit handler with form state", () => {
+    it("should eventually call provided submit handler with form state", (done) => {
       const schema = {
         type: "object",
         properties: {
@@ -450,7 +459,13 @@ describe("Form", () => {
 
       Simulate.submit(node);
 
-      sinon.assert.calledWithExactly(onSubmit, comp.state);
+      setTimeout(function(){
+        // const arg = onSubmit.args[0][0];
+        // expect(arg).to.deep.equal(comp.state);
+        sinon.assert.calledWithExactly(onSubmit, comp.state);
+        done();
+      });
+
     });
 
     it("should not call provided submit handler on validation errors", () => {
@@ -477,7 +492,7 @@ describe("Form", () => {
   });
 
   describe("Change handler", () => {
-    it("should call provided change handler on form state change", () => {
+    it("should eventually call provided change handler on form state change", (done) => {
       const schema = {
         type: "object",
         properties: {
@@ -496,16 +511,19 @@ describe("Form", () => {
         target: {value: "new"}
       });
 
-      sinon.assert.calledWithMatch(onChange, {
-        formData: {
-          foo: "new"
-        }
+      setTimeout(function(){
+        sinon.assert.calledWithMatch(onChange, {
+          formData: {
+            foo: "new"
+          }
+        });
+        done();
       });
     });
   });
 
   describe("Error handler", () => {
-    it("should call provided error handler on validation errors", () => {
+    it("should eventually call provided error handler on validation errors", (done) => {
       const schema = {
         type: "object",
         properties: {
@@ -523,7 +541,10 @@ describe("Form", () => {
 
       Simulate.submit(node);
 
-      sinon.assert.calledOnce(onError);
+      setTimeout(function(){
+        sinon.assert.calledOnce(onError);
+        done();
+      });
     });
   });
 
@@ -542,19 +563,23 @@ describe("Form", () => {
         expect(comp.state.formData).eql("yo");
       });
 
-      it("should validate formData when the schema is updated", () => {
+      it("should eventually validate formData when the schema is updated", (done) => {
         const {comp} = createFormComponent(formProps);
 
         comp.componentWillReceiveProps({formData: "yo", schema: {type: "number"}});
 
-        expect(comp.state.errors).to.have.length.of(1);
-        expect(comp.state.errors[0].stack)
-          .to.eql("instance is not of a type(s) number");
+        setTimeout(function(){
+          expect(comp.state.errors).to.have.length.of(1);
+          expect(comp.state.errors[0].stack)
+            .to.eql("instance is not of a type(s) number");
+          done();
+        });
+
       });
     });
 
     describe("object level", () => {
-      it("should update form state from new formData prop value", () => {
+      it("should eventually update form state from new formData prop value", (done) => {
         const {comp} = createFormComponent({
           schema: {
             type: "object",
@@ -568,7 +593,10 @@ describe("Form", () => {
 
         comp.componentWillReceiveProps({formData: {foo: "yo"}});
 
-        expect(comp.state.formData).eql({foo: "yo"});
+        setTimeout(function(){
+          expect(comp.state.formData).eql({foo: "yo"});
+          done();
+        });
       });
     });
 
@@ -618,7 +646,7 @@ describe("Form", () => {
             .to.have.length.of(0);
         });
 
-        it("should clean contextualized errors up when they're fixed", () => {
+        it("should eventually clean contextualized errors up when they're fixed", (done) => {
           const altSchema = {
             type: "object",
             properties: {
@@ -642,53 +670,69 @@ describe("Form", () => {
 
           submit(node);
 
-          // Fix the first field
-          Simulate.change(node.querySelectorAll("input[type=text]")[0], {
-            target: {value: "fixed error"}
-          });
-          submit(node);
+          new Promise((resolve/*, reject*/) => {
+            // Fix the first field
+            Simulate.change(node.querySelectorAll("input[type=text]")[0], {
+              target: {value: "fixed error"}
+            });
+            submit(node);
 
-          expect(node.querySelectorAll(".field-error"))
-            .to.have.length.of(1);
+            setTimeout(function () {
+              expect(node.querySelectorAll(".field-error"))
+                .to.have.length.of(1);
+              resolve();
+            });
+          })
+            .then(() => {
+              // Fix the second field
+              Simulate.change(node.querySelectorAll("input[type=text]")[1], {
+                target: {value: "fixed error too"}
+              });
+              submit(node);
 
-          // Fix the second field
-          Simulate.change(node.querySelectorAll("input[type=text]")[1], {
-            target: {value: "fixed error too"}
-          });
-          submit(node);
+              // No error remaining, shouldn't throw.
+              Simulate.submit(node);
 
-          // No error remaining, shouldn't throw.
-          Simulate.submit(node);
+              setTimeout(function () {
+                expect(node.querySelectorAll(".field-error"))
+                  .to.have.length.of(0);
+                done();
+              });
+            });
 
-          expect(node.querySelectorAll(".field-error"))
-            .to.have.length.of(0);
         });
       });
 
       describe("Live validation", () => {
-        it("should update the errorSchema when the formData changes", () => {
+        it("should eventually update the errorSchema when the formData changes", (done) => {
           const {comp, node} = createFormComponent({schema, liveValidate: true});
 
           Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
           });
 
-          expect(comp.state.errorSchema).eql({
-            __errors: ["does not meet minimum length of 8"]
+          setTimeout(function(){
+            expect(comp.state.errorSchema).eql({
+              __errors: ["does not meet minimum length of 8"]
+            });
+            done();
           });
         });
 
-        it("should denote the new error in the field", () => {
+        it("should eventualy denote the new error in the field", (done) => {
           const {node} = createFormComponent({schema, liveValidate: true});
 
           Simulate.change(node.querySelector("input[type=text]"), {
             target: {value: "short"}
           });
 
-          expect(node.querySelectorAll(".field-error"))
-            .to.have.length.of(1);
-          expect(node.querySelector(".field-string .error-detail").textContent)
-            .eql("does not meet minimum length of 8");
+          setTimeout(function(){
+            expect(node.querySelectorAll(".field-error"))
+              .to.have.length.of(1);
+            expect(node.querySelector(".field-string .error-detail").textContent)
+              .eql("does not meet minimum length of 8");
+            done();
+          });
         });
       });
 
@@ -731,7 +775,7 @@ describe("Form", () => {
         minLength: 8
       };
 
-      it("should update the errorSchema on form submission", () => {
+      it("should eventually update the errorSchema on form submission", (done) => {
         const {comp, node} = createFormComponent({schema, onError: () => {}});
 
         Simulate.change(node.querySelector("input[type=text]"), {
@@ -739,12 +783,15 @@ describe("Form", () => {
         });
         Simulate.submit(node);
 
-        expect(comp.state.errorSchema).eql({
-          __errors: ["does not meet minimum length of 8"]
+        setTimeout(function(){
+          expect(comp.state.errorSchema).eql({
+            __errors: ["does not meet minimum length of 8"]
+          });
+          done();
         });
       });
 
-      it("should call the onError handler", () => {
+      it("should eventually call the onError handler", (done) => {
         const onError = sandbox.spy();
         const {node} = createFormComponent({schema, onError});
 
@@ -753,10 +800,13 @@ describe("Form", () => {
         });
         Simulate.submit(node);
 
-        sinon.assert.calledWithMatch(onError, sinon.match(value => {
-          return value.length === 1 &&
-                 value[0].message === "does not meet minimum length of 8";
-        }));
+        setTimeout(function(){
+          sinon.assert.calledWithMatch(onError, sinon.match(value => {
+            return value.length === 1 &&
+                   value[0].message === "does not meet minimum length of 8";
+          }));
+          done();
+        });
       });
     });
 
@@ -770,21 +820,27 @@ describe("Form", () => {
         formData: "short"
       };
 
-      it("should reflect the contextualized error in state", () => {
+      it("should eventually reflect the contextualized error in state", (done) => {
         const {comp} = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema).eql({
-          __errors: ["does not meet minimum length of 8"]
+        setTimeout(function(){
+          expect(comp.state.errorSchema).eql({
+            __errors: ["does not meet minimum length of 8"]
+          });
+          done();
         });
       });
 
-      it("should denote the error in the field", () => {
+      it("should eventually denote the error in the field", (done) => {
         const {node} = createFormComponent(formProps);
 
-        expect(node.querySelectorAll(".field-error"))
-          .to.have.length.of(1);
-        expect(node.querySelector(".field-string .error-detail").textContent)
-          .eql("does not meet minimum length of 8");
+        setTimeout(function(){
+          expect(node.querySelectorAll(".field-error"))
+            .to.have.length.of(1);
+          expect(node.querySelector(".field-string .error-detail").textContent)
+            .eql("does not meet minimum length of 8");
+          done();
+        });
       });
     });
 
@@ -799,26 +855,32 @@ describe("Form", () => {
         formData: "short"
       };
 
-      it("should reflect the contextualized error in state", () => {
+      it("should eventually reflect the contextualized error in state", (done) => {
         const {comp} = createFormComponent(formProps);
-        expect(comp.state.errorSchema).eql({
-          __errors: [
-            "does not meet minimum length of 8",
-            "does not match pattern \"\d+\""
-          ]
+        setTimeout(function(){
+          expect(comp.state.errorSchema).eql({
+            __errors: [
+              "does not meet minimum length of 8",
+              "does not match pattern \"\d+\""
+            ]
+          });
+          done();
         });
       });
 
-      it("should denote the error in the field", () => {
+      it("should eventually denote the error in the field", (done) => {
         const {node} = createFormComponent(formProps);
 
-        const liNodes = node.querySelectorAll(".field-string .error-detail li");
-        const errors = [].map.call(liNodes, li => li.textContent);
+        setTimeout(function(){
+          const liNodes = node.querySelectorAll(".field-string .error-detail li");
+          const errors = [].map.call(liNodes, li => li.textContent);
 
-        expect(errors).eql([
-          "does not meet minimum length of 8",
-          "does not match pattern \"\d+\""
-        ]);
+          expect(errors).eql([
+            "does not meet minimum length of 8",
+            "does not match pattern \"\d+\""
+          ]);
+          done();
+        });
       });
     });
 
@@ -848,27 +910,33 @@ describe("Form", () => {
         }
       };
 
-      it("should reflect the contextualized error in state", () => {
+      it("should eventually reflect the contextualized error in state", (done) => {
         const {comp} = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema).eql({
-          level1: {
-            level2: {
-              __errors: ["does not meet minimum length of 8"]
+        setTimeout(function(){
+          expect(comp.state.errorSchema).eql({
+            level1: {
+              level2: {
+                __errors: ["does not meet minimum length of 8"]
+              }
             }
-          }
+          });
+          done();
         });
       });
 
-      it("should denote the error in the field", () => {
+      it("should eventually denote the error in the field", (done) => {
         const {node} = createFormComponent(formProps);
-        const errorDetail = node.querySelector(
-          ".field-object .field-string .error-detail");
+        setTimeout(function(){
+          const errorDetail = node.querySelector(
+            ".field-object .field-string .error-detail");
 
-        expect(node.querySelectorAll(".field-error"))
-          .to.have.length.of(1);
-        expect(errorDetail.textContent)
-          .eql("does not meet minimum length of 8");
+          expect(node.querySelectorAll(".field-error"))
+            .to.have.length.of(1);
+          expect(errorDetail.textContent)
+            .eql("does not meet minimum length of 8");
+          done();
+        });
       });
     });
 
@@ -887,34 +955,43 @@ describe("Form", () => {
         formData: ["good", "bad", "good"]
       };
 
-      it("should contextualize the error for array indices", () => {
+      it("should eventually contextualize the error for array indices", (done) => {
         const {comp} = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema)
-          .eql({
-            1: {__errors: ["does not meet minimum length of 4"]}
-          });
+        setTimeout(function(){
+          expect(comp.state.errorSchema)
+            .eql({
+              1: {__errors: ["does not meet minimum length of 4"]}
+            });
+          done();
+        });
       });
 
-      it("should denote the error in the item field in error", () => {
+      it("should eventually denote the error in the item field in error", (done) => {
         const {node} = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll(".field-string");
+        setTimeout(function(){
+          const fieldNodes = node.querySelectorAll(".field-string");
 
-        const liNodes = fieldNodes[1]
-          .querySelectorAll(".field-string .error-detail li");
-        const errors = [].map.call(liNodes, li => li.textContent);
+          const liNodes = fieldNodes[1]
+            .querySelectorAll(".field-string .error-detail li");
+          const errors = [].map.call(liNodes, li => li.textContent);
 
-        expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors)
-          .eql(["does not meet minimum length of 4"]);
+          expect(fieldNodes[1].classList.contains("field-error")).eql(true);
+          expect(errors)
+            .eql(["does not meet minimum length of 4"]);
+          done();
+        });
       });
 
-      it("should not denote errors on non impacted fields", () => {
+      it("should not eventually denote errors on non impacted fields", (done) => {
         const {node} = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll(".field-string");
+        setTimeout(function(){
+          const fieldNodes = node.querySelectorAll(".field-string");
 
-        expect(fieldNodes[0].classList.contains("field-error")).eql(false);
-        expect(fieldNodes[2].classList.contains("field-error")).eql(false);
+          expect(fieldNodes[0].classList.contains("field-error")).eql(false);
+          expect(fieldNodes[2].classList.contains("field-error")).eql(false);
+          done();
+        });
       });
     });
 
@@ -934,29 +1011,35 @@ describe("Form", () => {
 
       const formProps = {schema, liveValidate: true};
 
-      it("should contextualize the error for nested array indices", () => {
+      it("should eventually contextualize the error for nested array indices", (done) => {
         const {comp} = createFormComponent({...formProps, formData: {
           level1: ["good", "bad", "good", "bad"]
         }});
 
-        expect(comp.state.errorSchema).eql({
-          level1: {
-            1: {__errors: ["does not meet minimum length of 4"]},
-            3: {__errors: ["does not meet minimum length of 4"]},
-          }
+        setTimeout(function(){
+          expect(comp.state.errorSchema).eql({
+            level1: {
+              1: {__errors: ["does not meet minimum length of 4"]},
+              3: {__errors: ["does not meet minimum length of 4"]},
+            }
+          });
+          done();
         });
       });
 
-      it("should denote the error in the nested item field in error", () => {
+      it("should eventually denote the error in the nested item field in error", (done) => {
         const {node} = createFormComponent({...formProps, formData: {
           level1: ["good", "bad", "good"]
         }});
 
-        const liNodes = node.querySelectorAll(".field-string .error-detail li");
-        const errors = [].map.call(liNodes, li => li.textContent);
+        setTimeout(function(){
+          const liNodes = node.querySelectorAll(".field-string .error-detail li");
+          const errors = [].map.call(liNodes, li => li.textContent);
 
-        expect(errors)
-          .eql(["does not meet minimum length of 4"]);
+          expect(errors)
+            .eql(["does not meet minimum length of 4"]);
+          done();
+        });
       });
     });
 
@@ -986,36 +1069,42 @@ describe("Form", () => {
 
       const formProps = {schema, formData, liveValidate: true};
 
-      it("should contextualize the error for nested array indices", () => {
+      it("should eventually contextualize the error for nested array indices", (done) => {
         const {comp} = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema).eql({
-          outer: {
-            0: {
-              1: {__errors: ["does not meet minimum length of 4"]}
-            },
-            1: {
-              0: {__errors: ["does not meet minimum length of 4"]}
+        setTimeout(function(){
+          expect(comp.state.errorSchema).eql({
+            outer: {
+              0: {
+                1: {__errors: ["does not meet minimum length of 4"]}
+              },
+              1: {
+                0: {__errors: ["does not meet minimum length of 4"]}
+              }
             }
-          }
+          });
+          done();
         });
       });
 
-      it("should denote the error in the nested item field in error", () => {
+      it("should eventually denote the error in the nested item field in error", (done) => {
         const {node} = createFormComponent(formProps);
-        const fields = node.querySelectorAll(".field-string");
-        const errors = [].map.call(fields, field => {
-          const li = field.querySelector(".error-detail li");
-          return li && li.textContent;
-        });
+        setTimeout(function(){
+          const fields = node.querySelectorAll(".field-string");
+          const errors = [].map.call(fields, field => {
+            const li = field.querySelector(".error-detail li");
+            return li && li.textContent;
+          });
 
-        expect(errors)
-          .eql([
-            null,
-            "does not meet minimum length of 4",
-            "does not meet minimum length of 4",
-            null
-          ]);
+          expect(errors)
+            .eql([
+              null,
+              "does not meet minimum length of 4",
+              "does not meet minimum length of 4",
+              null
+            ]);
+          done();
+        });
       });
     });
 
@@ -1041,29 +1130,35 @@ describe("Form", () => {
         ]
       };
 
-      it("should contextualize the error for array nested items", () => {
+      it("should eventually contextualize the error for array nested items", (done) => {
         const {comp} = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema).eql({
-          1: {
-            foo: {
-              __errors: ["does not meet minimum length of 4"]
+        setTimeout(function(){
+          expect(comp.state.errorSchema).eql({
+            1: {
+              foo: {
+                __errors: ["does not meet minimum length of 4"]
+              }
             }
-          }
+          });
+          done();
         });
       });
 
-      it("should denote the error in the array nested item", () => {
+      it("should eventually denote the error in the array nested item", (done) => {
         const {node} = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll(".field-string");
+        setTimeout(function(){
+          const fieldNodes = node.querySelectorAll(".field-string");
 
-        const liNodes = fieldNodes[1]
-          .querySelectorAll(".field-string .error-detail li");
-        const errors = [].map.call(liNodes, li => li.textContent);
+          const liNodes = fieldNodes[1]
+            .querySelectorAll(".field-string .error-detail li");
+          const errors = [].map.call(liNodes, li => li.textContent);
 
-        expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors)
-          .eql(["does not meet minimum length of 4"]);
+          expect(fieldNodes[1].classList.contains("field-error")).eql(true);
+          expect(errors)
+            .eql(["does not meet minimum length of 4"]);
+          done();
+        });
       });
     });
   });

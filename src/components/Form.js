@@ -5,7 +5,6 @@ import {
   getDefaultFormState,
   shouldRender,
   toIdSchema,
-  setState,
   getDefaultRegistry,
 } from "../utils";
 import validateFormData from "../validate";
@@ -17,7 +16,7 @@ export default class Form extends Component {
     noValidate: false,
     liveValidate: false,
     safeRenderCompletion: false,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -36,7 +35,16 @@ export default class Form extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    this.setState(this.getStateFromProps(nextProps), function(){
+      const {formData, errors = [], errorSchema = {}, schema} = this.state;
+      const {liveValidate, noValidate} = this.props;
+      const mustValidate = !!formData && !noValidate && liveValidate;
+
+      Promise
+        .resolve(mustValidate ? this.validate(formData, schema) : {errors, errorSchema})
+        .then(this.setValidationResult.bind(this));
+    });
+
   }
 
   getStateFromProps(props) {
@@ -64,6 +72,12 @@ export default class Form extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
+  /**
+   *
+   * @param formData
+   * @param schema
+   * @return Promise
+   */
   validate(formData, schema) {
     const {validate} = this.props;
     this.setValidateStatus("in_progress");
@@ -74,6 +88,11 @@ export default class Form extends Component {
 
   setValidateStatus(status = "") {
     this.setState(Object.assign({}, this.state, {validation: status}));
+  }
+
+  setValidationResult(result) {
+    this.setState(Object.assign({}, this.state, result));
+    return result;
   }
 
   renderErrors() {
@@ -89,36 +108,43 @@ export default class Form extends Component {
   onChange = (formData, options = {validate: false}) => {
     const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
     const onChange = this.props.onChange;
-    const state = Object.assign({}, this.state, {status: "editing", formData});
-    this.setState(state);
 
-    Promise
-      .resolve(mustValidate ? this.validate(formData) : {})
-      .then(this.setValidationResult.bind(this))
-      .then(onChange && onChange.bind(this, this.state));
+    this.setState(Object.assign({}, this.state, {status: "editing", formData}), () => {
+      Promise.resolve(mustValidate ? this.validate(formData) : {})
+        .then(this.setValidationResult.bind(this))
+        .then(() => {
+          if (typeof onChange === "function") {
+            onChange(this.state);
+          }
+        });
+    });
+
   };
-
-  setValidationResult(result) {
-    this.setState(Object.assign({}, this.state, result));
-    return result;
-  }
 
   onSubmit = (event) => {
     event.preventDefault();
-    const {onError, onSubmit} = this.props;
     this.setState({status: "submitted"});
+    const {onError, onSubmit} = this.props;
 
-    Promise
-      .resolve(this.props.noValidate ? this.state : this.validate(this.state.formData))
-      .then(this.setValidationResult.bind(this))
+    Promise.resolve(this.props.noValidate ? {} : this.validate(this.state.formData))
       .then((validationResult) => {
         if (Object.keys(validationResult.errors).length) {
-          onError && onError(validationResult.errors);
-          return Promise.reject(validationResult.errors);
+          if (typeof onError === "function") {
+            onError(validationResult.errors);
+          }
+          return Promise.reject(validationResult);
         }
       })
-      .then(setState.bind(this, this, Object.assign({}, this.state, {status: "initial", errors: [], errorSchema: {}})))
-      .then(onSubmit && onSubmit.bind(this, this.state));
+      .then(() => {
+        if (typeof onSubmit === "function") {
+          onSubmit(this.state);
+        }
+      })
+      .then(() => {
+        this.setState({status: "initial", errors: [], errorSchema: {}});
+      })
+      .catch(this.setValidationResult.bind(this));
+
   };
 
   getRegistry() {
@@ -176,9 +202,10 @@ export default class Form extends Component {
           safeRenderCompletion={safeRenderCompletion}/>
         { children ? children :
           <p>
-            <p>Validation status: {this.state.validation}</p>
             <button type="submit" className="btn btn-info">Submit</button>
-          </p> }
+            <span>Validation status: {this.state.validation}</span>
+          </p>
+        }
       </form>
     );
   }

@@ -139,7 +139,7 @@ describe("ArrayField", () => {
     });
 
     it("should move down a field from the list", () => {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar", "baz"]});
+      const {node} = createFormComponent({schema, formData: ["foo", "bar", "baz"], noValidate: true});
       const moveDownBtns = node.querySelectorAll(".array-item-move-down");
 
       Simulate.click(moveDownBtns[0]);
@@ -152,7 +152,7 @@ describe("ArrayField", () => {
     });
 
     it("should move up a field from the list", () => {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar", "baz"]});
+      const {node} = createFormComponent({schema, formData: ["foo", "bar", "baz"], noValidate: true});
       const moveUpBtns = node.querySelectorAll(".array-item-move-up");
 
       Simulate.click(moveUpBtns[2]);
@@ -185,7 +185,7 @@ describe("ArrayField", () => {
     });
 
     it("should remove a field from the list", () => {
-      const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
+      const {node} = createFormComponent({schema, formData: ["foo", "bar"], noValidate: true});
       const dropBtns = node.querySelectorAll(".array-item-remove");
 
       Simulate.click(dropBtns[0]);
@@ -203,30 +203,48 @@ describe("ArrayField", () => {
     });
 
     it("should force revalidation when a field is removed", () => {
-      // refs #195
-      const {node} = createFormComponent({
-        schema: {
-          ...schema,
-          items: {...schema.items, minLength: 4}
-        },
-        formData: ["foo", "bar!"],
-      });
 
-      try {
-        Simulate.submit(node);
-      } catch (e) {
-        // Silencing error thrown as failure is expected here
-      }
+      return new Promise((resolve) => {
+        // refs #195
+        const {node} = createFormComponent({
+          schema: {
+            ...schema,
+            items: {...schema.items, minLength: 4}
+          },
+          formData: ["foo", "bar!"]
+        });
 
-      expect(node.querySelectorAll(".has-error .error-detail"))
-        .to.have.length.of(1);
+        try {
+          Simulate.submit(node);
+        } catch (e) {
+          // Silencing error thrown as failure is expected here
+        }
+        setTimeout(() => resolve(node));
+      })
+        .then((node) => {
+          return new Promise((resolve) => {
+            setTimeout(function () {
+              expect(node.querySelectorAll(".has-error .error-detail"))
+                .to.have.length.of(1);
 
-      const dropBtns = node.querySelectorAll(".array-item-remove");
+              const dropBtns = node.querySelectorAll(".array-item-remove");
+              Simulate.click(dropBtns[0]);
 
-      Simulate.click(dropBtns[0]);
+              resolve(node);
+            }, 100);
+          });
+        })
+        .then((node) => {
+          setTimeout(function () {
 
-      expect(node.querySelectorAll(".has-error .error-detail"))
-        .to.have.length.of(0);
+            expect(node.querySelectorAll(".has-error .error-detail"))
+              .to.have.length.of(0);
+
+            return Promise.resolve();
+          });
+
+        });
+
     });
 
     it("should render the input widgets with the expected ids", () => {
@@ -628,7 +646,8 @@ describe("ArrayField", () => {
     describe("operations for additional items", () => {
       const {comp, node} = createFormComponent({
         schema: schemaAdditional,
-        formData: [1, 2, "foo"]
+        formData: [1, 2, "foo"],
+        noValidate: true
       });
 
       it("should add a field when clicking add button", () => {

@@ -226,22 +226,28 @@ describe("SchemaField", () => {
       }
     }
 
-    it("should render it's own errors", () => {
+    it("should eventually render it's own errors", (done) => {
       const {node} = createFormComponent({schema, uiSchema, validate});
       submit(node);
 
-      const matches = node.querySelectorAll("form > .form-group > div > .error-detail .text-danger");
-      expect(matches).to.have.length.of(1);
-      expect(matches[0].textContent).to.eql("container");
+      setTimeout(function(){
+        const matches = node.querySelectorAll("form > .form-group > div > .error-detail .text-danger");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.eql("container");
+        done();
+      });
     });
 
-    it("should pass errors to child component", () => {
+    it("should eventually pass errors to child component", (done) => {
       const {node} = createFormComponent({schema, uiSchema, validate});
       submit(node);
 
-      const matches = node.querySelectorAll("form .form-group .form-group .text-danger");
-      expect(matches).to.have.length.of(1);
-      expect(matches[0].textContent).to.contain("test");
+      setTimeout(function(){
+        const matches = node.querySelectorAll("form .form-group .form-group .text-danger");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.contain("test");
+        done();
+      });
     });
   });
 });
