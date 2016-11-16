@@ -92,21 +92,21 @@ export default class Form extends Component {
         const formDataPropertyRequired = requiredFields ? requiredFields.indexOf(formDataPropertyName) > -1 : false;
         // If this property is an object, the recursively call removeEmptyRequiredFields...
         if (typeof formDataPropertyValue === "object") {
-          this.removeEmptyRequiredFields(schema.properties[keys[i]], formData[keys[i]]);
+          this.removeEmptyRequiredFields(schema.properties[formDataPropertyName], formData[formDataPropertyName]);
         }
         // Otherwise, if this is a required property...
         else if (formDataPropertyRequired) {
           // If this property is an empty string, then remove it...
           if (typeof formDataPropertyValue === "string" && formDataPropertyValue.trim().length === 0) {
-            delete formData[keys[i]];
+            delete formData[formDataPropertyName];
           }
           // Otherwise if this property is a zero value, then remove it...
           else if (typeof formDataPropertyValue === "number" && formDataPropertyValue === 0) {
-            delete formData[keys[i]];
+            delete formData[formDataPropertyName];
           }
           // Otherwise if this property is undefined, then remove it...
           else if (formDataPropertyValue === undefined) {
-            delete formData[keys[i]];
+            delete formData[formDataPropertyName];
           }
         }
       }
