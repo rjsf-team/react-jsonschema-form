@@ -1,13 +1,24 @@
 import React, {Component, PropTypes} from "react";
 
 import {shouldRender, parseDateString, toDateString, pad} from "../../utils";
+import SelectWidget from "../widgets/SelectWidget";
 
+const ASCENDING = "asc"
+const DESCENDING = "desc"
 
-function rangeOptions(type, start, stop) {
-  let options = [{value: -1, label: type}];
-  for (let i=start; i<= stop; i++) {
-    options.push({value: i, label: pad(i, 2)});
+function rangeOptions(type, start, stop, orderYearBy) {
+  let options = [{value: -1, label: "-- " + type + "--"}];
+  
+  if (type === "year" && orderYearBy.toLowerCase() === DESCENDING) {
+    for (let i=stop; i>= start; i--) {
+      options.push({value: i, label: pad(i, 2)});
+    } 
+  } else {
+    for (let i=start; i<= stop; i++) {
+      options.push({value: i, label: pad(i, 2)});
+    } 
   }
+
   return options;
 }
 
@@ -16,15 +27,15 @@ function readyForChange(state) {
 }
 
 function DateElement(props) {
-  const {type, range, value, select, rootId, disabled, readonly, autofocus, registry} = props;
+  const {type, range, value, select, rootId, disabled, readonly, autofocus, widgetOptions} = props;
   const id = rootId + "_" + type;
-  const {SelectWidget} = registry.widgets;
+
   return (
     <SelectWidget
       schema={{type: "integer"}}
       id={id}
       className="form-control"
-      options={{enumOptions: rangeOptions(type, range[0], range[1])}}
+      options={{enumOptions: rangeOptions(type, range[0], range[1], widgetOptions.orderYearBy)}}
       value={value}
       disabled={disabled}
       readonly={readonly}
@@ -33,12 +44,18 @@ function DateElement(props) {
   );
 }
 
-class AltDateWidget extends Component {
+class EPBCDateWidget extends Component {
   static defaultProps = {
     time: false,
     disabled: false,
     readonly: false,
-    autofocus: false
+    autofocus: false,
+    options: {
+      yearRange: [new Date().getFullYear() - 100, new Date().getFullYear()],
+      enableNow: true,
+      enableClear: true,
+      orderYearBy: "ASC"
+    }
   };
 
   constructor(props) {
@@ -83,25 +100,26 @@ class AltDateWidget extends Component {
   };
 
   get dateElementProps() {
-    const {time} = this.props;
+    const {time, options} = this.props;
     const {year, month, day, hour, minute, second} = this.state;
     const data = [
-      {type: "year", range: [1900, 2020], value: year},
+      {type: "year", range: [options.yearRange[0], options.yearRange[1]], value: year},
       {type: "month", range: [1, 12], value: month},
       {type: "day", range: [1, 31], value: day},
     ];
     if (time) {
       data.push(
         {type: "hour", range: [0, 23], value: hour},
-        {type: "minute", range: [0, 59], value: minute},
-        {type: "second", range: [0, 59], value: second}
+        {type: "minutes", range: [0, 59], value: minute},
+        {type: "seconds", range: [0, 59], value: second}
       );
     }
     return data;
   }
 
   render() {
-    const {id, disabled, readonly, autofocus, registry} = this.props;
+    const {id, disabled, readonly, autofocus, options} = this.props;
+
     return (
       <ul className="list-inline">{
         this.dateElementProps.map((elemProps, i) => (
@@ -112,26 +130,26 @@ class AltDateWidget extends Component {
               {...elemProps}
               disabled= {disabled}
               readonly={readonly}
-              registry={registry}
-              autofocus={autofocus && i === 0}/>
+              autofocus={autofocus && i === 0}
+              widgetOptions={options}/>
           </li>
         ))
       }
-        <li>
+        {options.enableNow ? <li>
           <a href="#" className="btn btn-info btn-now"
              onClick={this.setNow}>Now</a>
-        </li>
-        <li>
+        </li> : null}
+        {options.enableClear ? <li>
           <a href="#" className="btn btn-warning btn-clear"
              onClick={this.clear}>Clear</a>
-        </li>
+        </li> : null}
       </ul>
     );
   }
 }
 
 if (process.env.NODE_ENV !== "production") {
-  AltDateWidget.propTypes = {
+  EPBCDateWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     value: React.PropTypes.string,
@@ -139,9 +157,15 @@ if (process.env.NODE_ENV !== "production") {
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
+    options: PropTypes.shape({
+      yearRange: PropTypes.array,
+      enableNow: PropTypes.bool,
+      enableClear: PropTypes.bool,
+      orderYearBy: PropTypes.string
+    }),
     onChange: PropTypes.func,
     time: PropTypes.bool,
   };
 }
 
-export default AltDateWidget;
+export default EPBCDateWidget;
