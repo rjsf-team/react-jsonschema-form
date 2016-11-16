@@ -181,18 +181,22 @@ class ArrayField extends Component {
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const {addable=true} = getUiOptions(uiSchema);
 
-    const getElement = props => {
+    const { "ui:options": options } = uiSchema || {};
+    const { render, renderItem } = options || {};
+
+    const defaultRender = props => {
       return (
         <div className={props.className}>
           {props.children}
           {props.addable ? <AddButton
-                              onClick={this.onAddClick}
+                              onClick={props.addClick}
                               disabled={props.disabled || props.readonly}/> : null}
         </div>
       );
-    }
+    };
 
     const elementProps = {
+      addClick: this.onAddClick,
       className: `field field-array field-array-of-${itemsSchema.type}`,
       children: (
         <fieldset>
@@ -227,7 +231,8 @@ class ArrayField extends Component {
                   itemErrorSchema,
                   itemData: items[index],
                   itemUiSchema: uiSchema.items,
-                  autofocus: autofocus && index === 0
+                  autofocus: autofocus && index === 0,
+                  customRenderFunction: renderItem
                 });
               })
             }
@@ -240,7 +245,9 @@ class ArrayField extends Component {
       readonly
     };
 
-    return getElement(elementProps);
+    // Check if a custom render function was passed in
+    const renderFunction = render || defaultRender;
+    return renderFunction(elementProps);
   }
 
   renderMultiSelect() {
@@ -316,7 +323,7 @@ class ArrayField extends Component {
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
 
-    const getElement = (props) => {
+    const defaultRenderFunction = (props) => {
       return (
         <div className={props.className}>
           {props.children}
@@ -382,7 +389,9 @@ class ArrayField extends Component {
       readonly
     };
 
-    return getElement(arrayProps);
+    // Check if a custom render function was passed in
+    const renderFunction = defaultRenderFunction;
+    return renderFunction(arrayProps);
   }
 
   renderArrayFieldItem({
@@ -395,7 +404,8 @@ class ArrayField extends Component {
     itemUiSchema,
     itemIdSchema,
     itemErrorSchema,
-    autofocus
+    autofocus,
+    customRenderFunction
   }) {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly, uiSchema} = this.props;
@@ -412,7 +422,7 @@ class ArrayField extends Component {
     has.toolbar = Object.keys(has).some(key => has[key]);
 
     // This function constructs each array item (and should optionally be passed in)
-    const getElement = (props) => {
+    const defaultRenderFunction = props => {
       const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
       return (
         <div key={props.index} className={props.className}>
@@ -441,7 +451,7 @@ class ArrayField extends Component {
                           tabIndex="-1"
                           style={btnStyle}
                           disabled={props.disabled || props.readonly}
-                          onClick={props.dropIndexClick(index)}/>
+                          onClick={props.dropIndexClick(props.index)}/>
                   : null}
               </div>
             </div>
@@ -450,7 +460,7 @@ class ArrayField extends Component {
       );
     };
 
-    // These are the props that should be accessible from getElement
+    // These are the props that will be accessible from renderFunction
     const elementProps = {
       disabled,
       readonly,
@@ -476,9 +486,11 @@ class ArrayField extends Component {
       hasRemove: has.remove,
       reorderClick: this.onReorderClick,
       dropIndexClick: this.onDropIndexClick
-    }
+    };
 
-    return getElement(elementProps);
+    // Check if a custom render function was passed in
+    const renderFunction = customRenderFunction || defaultRenderFunction;
+    return renderFunction(elementProps);
   }
 }
 
