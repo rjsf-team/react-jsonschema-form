@@ -106,10 +106,11 @@ export default class Form extends Component {
       }
     }
 
-    if (this.props.onSubmit) {
-      this.props.onSubmit(this.state);
-    }
-    this.setState({status: "initial", errors: [], errorSchema: {}});
+    setState(this, {status: "initial", errors: [], errorSchema: {}}, () => {
+      if (this.props.onSubmit) {
+        this.props.onSubmit(this.state);
+      }
+    });
   };
 
   getRegistry() {
