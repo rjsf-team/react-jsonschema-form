@@ -13,7 +13,7 @@ import ObjectField from "./ObjectField";
 import StringField from "./StringField";
 import UnsupportedField from "./UnsupportedField";
 
-const REQUIRED_FIELD_SYMBOL = "*";
+const OPTIONAL_FIELD_SYMBOL = " (Optional)";
 const COMPONENT_TYPES = {
   array:   ArrayField,
   boolean: BooleanField,
@@ -42,7 +42,7 @@ function Label(props) {
   }
   return (
     <label className="control-label" htmlFor={id}>
-      {required ? label + REQUIRED_FIELD_SYMBOL : label}
+      {required ? label : label + OPTIONAL_FIELD_SYMBOL}
     </label>
   );
 }
