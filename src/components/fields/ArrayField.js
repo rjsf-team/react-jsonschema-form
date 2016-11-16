@@ -230,7 +230,7 @@ class ArrayField extends Component {
                   itemData: items[index],
                   itemUiSchema: uiSchema.items,
                   autofocus: autofocus && index === 0,
-                  customRenderFunction: renderItem
+                  customRender: renderItem
                 });
               })
             }
@@ -321,6 +321,7 @@ class ArrayField extends Component {
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
 
+    // This is what's used to render the fixed array if render isn't passed in through ui options
     const defaultRender = props => {
       return (
         <fieldset className={props.className}>
@@ -332,7 +333,7 @@ class ArrayField extends Component {
       )
     };
 
-    // These are the props passed into the getElement function
+    // These are the props passed into the render function
     const arrayProps = {
       canAdd,
       children: [
@@ -378,7 +379,7 @@ class ArrayField extends Component {
                   itemIdSchema,
                   itemErrorSchema,
                   autofocus: autofocus && index === 0,
-                  customRenderFunction: renderItem
+                  customRender: renderItem
                 });
               })
             }
@@ -407,7 +408,7 @@ class ArrayField extends Component {
     itemIdSchema,
     itemErrorSchema,
     autofocus,
-    customRenderFunction
+    customRender
   }) {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly, uiSchema} = this.props;
@@ -424,7 +425,7 @@ class ArrayField extends Component {
     has.toolbar = Object.keys(has).some(key => has[key]);
 
     // This function constructs each array item (and should optionally be passed in)
-    const defaultRenderFunction = props => {
+    const defaultRender = props => {
       const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
       return (
         <div key={props.index} className={props.className}>
@@ -491,7 +492,7 @@ class ArrayField extends Component {
     };
 
     // Check if a custom render function was passed in
-    const renderFunction = customRenderFunction || defaultRenderFunction;
+    const renderFunction = customRender || defaultRender;
     return renderFunction(elementProps);
   }
 }
