@@ -186,36 +186,39 @@ class ArrayField extends Component {
 
     const defaultRender = props => {
       return (
-        <div className={props.className}>
+        <fieldset className={props.className}>
           {props.children}
           {props.addable ? <AddButton
                               onClick={props.addClick}
                               disabled={props.disabled || props.readonly}/> : null}
-        </div>
+        </fieldset>
       );
     };
 
     const arrayProps = {
       canAdd: addable,
-      children: (
-        <fieldset>
+      children: [
 
+        (
           <ArrayFieldTitle
+            key={`array-field-title-${idSchema.$id}`}
             TitleField={TitleField}
             idSchema={idSchema}
             title={title}
             required={required}/>
+        ),
 
-          {
-            schema.description ? (
-              <ArrayFieldDescription
-                DescriptionField={DescriptionField}
-                idSchema={idSchema}
-                description={schema.description} />
-            ) : null
-          }
+        schema.description ? (
+          <ArrayFieldDescription
+            key={`array-field-description-${idSchema.$id}`}
+            DescriptionField={DescriptionField}
+            idSchema={idSchema}
+            description={schema.description} />
+        ) : null,
 
-          <div className="row array-item-list">
+        (
+          <div className="row array-item-list"
+            key={`array-item-list-${idSchema.$id}`}>
             {
               items.map((item, index) => {
                 const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
@@ -236,9 +239,8 @@ class ArrayField extends Component {
               })
             }
           </div>
-
-        </fieldset>
-      ),
+        )
+      ],
       className: `field field-array field-array-of-${itemsSchema.type}`,
       disabled,
       onAddClick: this.onAddClick,
@@ -328,33 +330,37 @@ class ArrayField extends Component {
 
     const defaultRender = props => {
       return (
-        <div className={props.className}>
+        <fieldset className={props.className}>
           {props.children}
           {props.canAdd ? <AddButton
                             onClick={props.addClick}
                             disabled={props.disabled || props.readonly}/> : null}
-        </div>
+        </fieldset>
       )
     };
 
     // These are the props passed into the getElement function
     const arrayProps = {
       canAdd,
-      children: (
-        <fieldset>
-
+      children: [
+        (
           <ArrayFieldTitle
-            key="array-field-title"
+            key={`array-field-title-${idSchema.$id}`}
             TitleField={TitleField}
             idSchema={idSchema}
             title={title}
             required={required} />
+        ),
 
-          {schema.description ? (
-            <div className="field-description">{schema.description}</div>
-          ) : null}
+        schema.description ? (
+          <div className="field-description" key={`field-description-${idSchema.$id}`}>
+            {schema.description}
+          </div>
+        ) : null,
 
-          <div className="row array-item-list">
+        (
+          <div className="row array-item-list"
+            key={`array-item-list-${idSchema.$id}`}>
             {
               items.map((item, index) => {
                 const additional = index >= itemSchemas.length;
@@ -384,9 +390,8 @@ class ArrayField extends Component {
               })
             }
           </div>
-
-        </fieldset>
-      ),
+        )
+      ],
       className: "field field-array field-array-fixed-items",
       disabled,
       onAddClick: this.onAddClick,
