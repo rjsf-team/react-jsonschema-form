@@ -1,7 +1,7 @@
 import React from "react";
 
 
-export default function ErrorList({errors}) {
+export default function ErrorList({errors = []}) {
   return (
     <div className="panel panel-danger errors">
       <div className="panel-heading">

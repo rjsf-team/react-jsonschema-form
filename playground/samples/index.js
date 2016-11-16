@@ -10,6 +10,7 @@ import errors from "./errors";
 import large from "./large";
 import date from "./date";
 import validation from "./validation";
+import async from "./async";
 import files from "./files";
 import single from "./single";
 
@@ -27,5 +28,6 @@ export const samples = {
   "Date & time": date,
   Validation: validation,
   Files: files,
-  Single: single
+  Single: single,
+  Async: async
 };
