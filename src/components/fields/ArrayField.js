@@ -195,9 +195,8 @@ class ArrayField extends Component {
       );
     };
 
-    const elementProps = {
-      addClick: this.onAddClick,
-      className: `field field-array field-array-of-${itemsSchema.type}`,
+    const arrayProps = {
+      canAdd: addable,
       children: (
         <fieldset>
 
@@ -240,14 +239,15 @@ class ArrayField extends Component {
 
         </fieldset>
       ),
-      addable,
+      className: `field field-array field-array-of-${itemsSchema.type}`,
       disabled,
+      onAddClick: this.onAddClick,
       readonly
     };
 
     // Check if a custom render function was passed in
     const renderFunction = render || defaultRender;
-    return renderFunction(elementProps);
+    return renderFunction(arrayProps);
   }
 
   renderMultiSelect() {
@@ -323,20 +323,22 @@ class ArrayField extends Component {
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
 
-    const defaultRenderFunction = (props) => {
+    const { "ui:options": options } = uiSchema || {};
+    const { render, renderItem } = options || {};
+
+    const defaultRender = props => {
       return (
         <div className={props.className}>
           {props.children}
-          {props.canAdd ? <AddButton onClick={props.addClick}
-                              disabled={props.disabled || props.readonly}/>
-                        : null}
+          {props.canAdd ? <AddButton
+                            onClick={props.addClick}
+                            disabled={props.disabled || props.readonly}/> : null}
         </div>
       )
     };
 
     // These are the props passed into the getElement function
     const arrayProps = {
-      className: "field field-array field-array-fixed-items",
       canAdd,
       children: (
         <fieldset>
@@ -376,7 +378,8 @@ class ArrayField extends Component {
                   itemUiSchema,
                   itemIdSchema,
                   itemErrorSchema,
-                  autofocus: autofocus && index === 0
+                  autofocus: autofocus && index === 0,
+                  customRenderFunction: renderItem
                 });
               })
             }
@@ -384,13 +387,14 @@ class ArrayField extends Component {
 
         </fieldset>
       ),
-      addClick: this.onAddClick,
+      className: "field field-array field-array-fixed-items",
       disabled,
+      onAddClick: this.onAddClick,
       readonly
     };
 
     // Check if a custom render function was passed in
-    const renderFunction = defaultRenderFunction;
+    const renderFunction = render || defaultRender;
     return renderFunction(arrayProps);
   }
 
@@ -462,8 +466,6 @@ class ArrayField extends Component {
 
     // These are the props that will be accessible from renderFunction
     const elementProps = {
-      disabled,
-      readonly,
       children: (
         <SchemaField
           schema={itemSchema}
@@ -479,13 +481,15 @@ class ArrayField extends Component {
           autofocus={autofocus}/>
       ),
       className: "array-item",
-      index,
+      disabled,
       hasToolbar: has.toolbar,
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
       hasRemove: has.remove,
-      reorderClick: this.onReorderClick,
-      dropIndexClick: this.onDropIndexClick
+      index,
+      onDropIndexClick: this.onDropIndexClick,
+      onReorderClick: this.onReorderClick,
+      readonly
     };
 
     // Check if a custom render function was passed in

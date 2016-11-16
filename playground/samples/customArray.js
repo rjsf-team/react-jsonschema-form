@@ -4,7 +4,7 @@ const render = props => {
   return (
     <div className={props.className}>
       {props.children}
-      <button onClick={props.addClick}>Plus</button>
+      <button onClick={props.onAddClick}>Plus</button>
     </div>
   );
 };
@@ -13,10 +13,10 @@ const renderItem = props => {
   return (
     <div className={props.className} key={props.index}>
       {props.hasMoveDown &&
-        <button onClick={props.reorderClick(props.index, props.index + 1)}>Down</button>}
+        <button onClick={props.onReorderClick(props.index, props.index + 1)}>Down</button>}
       {props.hasMoveUp &&
-        <button onClick={props.reorderClick(props.index, props.index - 1)}>Up</button>}
-      <button onClick={props.dropIndexClick(props.index)}>Delete</button>
+        <button onClick={props.onReorderClick(props.index, props.index - 1)}>Up</button>}
+      <button onClick={props.onDropIndexClick(props.index)}>Delete</button>
       {props.children}
     </div>
   );
