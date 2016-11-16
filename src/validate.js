@@ -3,22 +3,22 @@ import {validate as jsonValidate} from "jsonschema";
 import {isObject, mergeObjects} from "./utils";
 
 
-const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
+const reEscapeChar = /\\(\\)?/g;
+const reLeadingDot = /^\./;
+const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
 
 function errorPropertyToPath(property) {
   // Parse array indices, eg. "instance.level1.level2[2].level3"
   // => ["instance", "level1", "level2", 2, "level3"]
-  return property.split(".").reduce((path, node) => {
-    const match = node.match(RE_ERROR_ARRAY_PATH);
-    if (match) {
-      const nodeName = node.slice(0, node.indexOf("["));
-      const indices = match.map(str => parseInt(str.slice(1, -1), 10));
-      path = path.concat(nodeName, indices);
-    } else {
-      path.push(node);
-    }
-    return path;
-  }, []);
+  // copied from lodash https://github.com/lodash/lodash/blob/4.17.1/lodash.js#L6744
+  const result = [];
+  if (reLeadingDot.test(property)) {
+    result.push('');
+  }
+  property.replace(rePropName, function(match, number, quote, string) {
+    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+  });
+  return result;
 }
 
 function toErrorSchema(errors) {
