@@ -108,7 +108,9 @@ class ArrayField extends Component {
 
   onDropIndexClick = (index) => {
     return (event) => {
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
       this.asyncSetState({
         items: this.state.items.filter((_, i) => i !== index)
       }, {validate: true}); // refs #195
@@ -117,8 +119,10 @@ class ArrayField extends Component {
 
   onReorderClick = (index, newIndex) => {
     return (event) => {
-      event.preventDefault();
-      event.target.blur();
+      if (event) {
+        event.preventDefault();
+        event.target.blur();
+      }
       const {items} = this.state;
       this.asyncSetState({
         items: items.map((item, i) => {
