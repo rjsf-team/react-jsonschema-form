@@ -158,7 +158,7 @@ describe("Form", () => {
   });
 
   describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", () => {
+    it("should submit the form when clicked", (done) => {
       const onSubmit = sandbox.spy();
       const comp = renderIntoDocument(
         <Form onSubmit={ onSubmit } schema={ {} }>
@@ -170,7 +170,10 @@ describe("Form", () => {
       const buttons = node.querySelectorAll("button[type=submit]");
       buttons[0].click();
       buttons[1].click();
-      sinon.assert.calledTwice(onSubmit);
+      setTimeout(() => {
+        sinon.assert.calledTwice(onSubmit);
+        done();
+      }, 250);
     });
   });
 
