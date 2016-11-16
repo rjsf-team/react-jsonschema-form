@@ -1,25 +1,7 @@
+import toPath from 'lodash.topath';
 import {validate as jsonValidate} from "jsonschema";
 
 import {isObject, mergeObjects} from "./utils";
-
-
-const reEscapeChar = /\\(\\)?/g;
-const reLeadingDot = /^\./;
-const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-
-function errorPropertyToPath(property) {
-  // Parse array indices, eg. "instance.level1.level2[2].level3"
-  // => ["instance", "level1", "level2", 2, "level3"]
-  // copied from lodash https://github.com/lodash/lodash/blob/4.17.1/lodash.js#L6744
-  const result = [];
-  if (reLeadingDot.test(property)) {
-    result.push('');
-  }
-  property.replace(rePropName, function(match, number, quote, string) {
-    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
-  });
-  return result;
-}
 
 function toErrorSchema(errors) {
   // Transforms a jsonschema validation errors list:
@@ -42,7 +24,7 @@ function toErrorSchema(errors) {
   }
   return errors.reduce((errorSchema, error) => {
     const {property, message} = error;
-    const path = errorPropertyToPath(property);
+    const path = toPath(property);
     let parent = errorSchema;
     for (const segment of path.slice(1)) {
       if (!(segment in parent)) {
