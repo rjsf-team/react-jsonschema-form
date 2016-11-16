@@ -179,17 +179,14 @@ class ArrayField extends Component {
     const {definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    const {addable=true} = getUiOptions(uiSchema);
-
-    const { "ui:options": options } = uiSchema || {};
-    const { render, renderItem } = options || {};
+    const {addable=true, render, renderItem} = getUiOptions(uiSchema);
 
     const defaultRender = props => {
       return (
         <fieldset className={props.className}>
           {props.children}
-          {props.addable ? <AddButton
-                              onClick={props.addClick}
+          {props.canAdd ? <AddButton
+                              onClick={props.onAddClick}
                               disabled={props.disabled || props.readonly}/> : null}
         </fieldset>
       );
@@ -198,7 +195,6 @@ class ArrayField extends Component {
     const arrayProps = {
       canAdd: addable,
       children: [
-
         (
           <ArrayFieldTitle
             key={`array-field-title-${idSchema.$id}`}
@@ -316,7 +312,7 @@ class ArrayField extends Component {
       retrieveSchema(item, definitions));
     const additionalSchema = allowAdditionalItems(schema) ?
       retrieveSchema(schema.additionalItems, definitions) : null;
-    const {addable=true} = getUiOptions(uiSchema);
+    const {addable=true, render, renderItem} = getUiOptions(uiSchema);
     const canAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
@@ -325,15 +321,12 @@ class ArrayField extends Component {
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
 
-    const { "ui:options": options } = uiSchema || {};
-    const { render, renderItem } = options || {};
-
     const defaultRender = props => {
       return (
         <fieldset className={props.className}>
           {props.children}
           {props.canAdd ? <AddButton
-                            onClick={props.addClick}
+                            onClick={props.onAddClick}
                             disabled={props.disabled || props.readonly}/> : null}
         </fieldset>
       )
@@ -446,21 +439,21 @@ class ArrayField extends Component {
                           tabIndex="-1"
                           style={btnStyle}
                           disabled={props.disabled || props.readonly || !props.hasMoveUp}
-                          onClick={props.reorderClick(props.index, props.index - 1)}/>
+                          onClick={props.onReorderClick(props.index, props.index - 1)}/>
                   : null}
                 {props.hasMoveUp || props.hasMoveDown ?
                   <IconBtn icon="arrow-down" className="array-item-move-down"
                           tabIndex="-1"
                           style={btnStyle}
                           disabled={props.disabled || props.readonly || !props.hasMoveDown}
-                          onClick={props.reorderClick(props.index, props.index + 1)}/>
+                          onClick={props.onReorderClick(props.index, props.index + 1)}/>
                   : null}
                 {props.hasRemove ?
                   <IconBtn type="danger" icon="remove" className="array-item-remove"
                           tabIndex="-1"
                           style={btnStyle}
                           disabled={props.disabled || props.readonly}
-                          onClick={props.dropIndexClick(props.index)}/>
+                          onClick={props.onDropIndexClick(props.index)}/>
                   : null}
               </div>
             </div>
