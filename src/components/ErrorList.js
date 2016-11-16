@@ -10,9 +10,7 @@ export default function ErrorList({errors}) {
       <ul className="list-group">{
         errors.map((error, i) => {
           return (
-            <li key={i} className="list-group-item text-danger">{
-              error.stack
-            }</li>
+            <li key={i} className="list-group-item text-danger" dangerouslySetInnerHTML={{__html: error.stack}}></li>
           );
         })
       }</ul>

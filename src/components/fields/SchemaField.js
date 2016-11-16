@@ -54,9 +54,7 @@ function Help(props) {
     return <div/>;
   }
   if (typeof help === "string") {
-    // Set HTML-based help using dangerouslySetInnerHTML unless more performant option
-    // becomes available
-    return <p className="help-block" dangerouslySetInnerHTML={{__html: help}}></p>;
+    return <div className="help-block" dangerouslySetInnerHTML={{__html: help}}></div>;
   }
   return <div className="help-block">{help}</div>;
 }
@@ -68,15 +66,15 @@ function ErrorList(props) {
   }
   else if (errors.length === 1) {
     return (
-      <span className="text-danger">{errors[0]}</span>
+      <div className="text-danger" dangerouslySetInnerHTML={{__html: errors[0]}}></div>
     );
   }
   return (
-    <div>
-      <span className="text-danger">The following errors exist:</span>
+    <div className="text-danger">
+      The following errors exist:
       <ul className="error-detail bs-callout bs-callout-info">{
         errors.map((error, index) => {
-          return <li className="text-danger" key={index}>{error}</li>;
+          return <li className="text-danger" key={index} dangerouslySetInnerHTML={{__html: error}}></li>;
         })
       }</ul>
     </div>

@@ -62,7 +62,7 @@ class BaseInput extends Component {
         className="form-control"
         readOnly={readonly}
         autoFocus={autofocus}
-        maxlength={maxLength}
+        maxLength={maxLength}
         value={typeof value === "undefined" ? "" : value}
         onChange={this.onChange()}
         onBlur={this.onBlur()}/>
