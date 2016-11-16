@@ -1,4 +1,4 @@
-import toPath from 'lodash.topath';
+import toPath from "lodash.topath";
 import {validate as jsonValidate} from "jsonschema";
 
 import {isObject, mergeObjects} from "./utils";

@@ -12,13 +12,13 @@ describe("Validation", () => {
       const illFormedKey = "bar.'\"[]()=+*&^%$#@!";
       const schema = {
         type: "object",
-        properties: { foo: {type: "string"}, [illFormedKey]: {type: "string"} }
+        properties: {foo: {type: "string"}, [illFormedKey]: {type: "string"}}
       };
 
       let errors, errorSchema;
 
       beforeEach(() => {
-        const result = validateFormData({ foo: 42, [illFormedKey]: 41 }, schema);
+        const result = validateFormData({foo: 42, [illFormedKey]: 41}, schema);
         errors = result.errors;
         errorSchema = result.errorSchema;
       });
