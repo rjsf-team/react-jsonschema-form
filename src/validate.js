@@ -68,7 +68,7 @@ function createErrorHandler(formData, path = ["instance"], __root = []) {
     // to avoid name collision with a possible sub schema field named
     // "errors" (see `utils.toErrorSchema`).
     __errors: [],
-    // Also we store errors in errorHandler root collection to avoid future unwrapping
+    // Also store errors in errorHandler root collection to avoid future unwrapping
     __root,
     addError(message) {
       this.__errors.push(message); // keep for backward compatibility

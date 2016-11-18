@@ -15,10 +15,10 @@ describe("Validation", () => {
         properties: {foo: {type: "string"}, [illFormedKey]: {type: "string"}}
       };
 
-      let validation = validateFormData({foo: 42}, schema);
+      let validation;
 
       beforeEach(() => {
-        validation = validateFormData({foo: 42}, [illFormedKey]: 41}, schema);
+        validation = validateFormData({foo: 42, [illFormedKey]: 41}, schema);
       });
 
       it("should return an error list", () => {
@@ -64,7 +64,6 @@ describe("Validation", () => {
 
       it("should return an error list", () => {
         return result.then(({errors}) => {
-          console.log(errors);
           expect(errors).to.have.length.of(1);
           expect(errors[0].stack).eql("instance.pass2: passwords don't match.");
         });
