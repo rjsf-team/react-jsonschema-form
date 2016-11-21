@@ -18,7 +18,7 @@ const COMPONENT_TYPES = {
   string:  "StringField",
 };
 
-function getFieldComponent(schema, uiSchema, fields) {
+function getFieldComponent(schema, name, uiSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -26,7 +26,10 @@ function getFieldComponent(schema, uiSchema, fields) {
   if (typeof field === "string" && field in fields) {
     return fields[field];
   }
-  const componentName = COMPONENT_TYPES[schema.type];
+
+
+  const type = name === "anyOf" ? "array" : schema.type;
+  let componentName = COMPONENT_TYPES[type];
   return componentName in fields ? fields[componentName] : UnsupportedField;
 }
 
@@ -131,8 +134,16 @@ DefaultTemplate.defaultProps = {
 function SchemaField(props) {
   const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
   const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
-  const schema = retrieveSchema(props.schema, definitions);
-  const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+  const schema1 = retrieveSchema(props.schema, definitions);
+  const FieldComponent = getFieldComponent(schema1, name, uiSchema, fields);
+  let schema2 = schema1;
+  if (name === "anyOf") {
+    schema2 = {
+      "items": [{"type": "number"}]
+    }
+  }
+
+  const schema = name === "anyOf" ? schema2 : schema1;
   const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
@@ -221,7 +232,10 @@ SchemaField.defaultProps = {
 
 if (process.env.NODE_ENV !== "production") {
   SchemaField.propTypes = {
-    schema: PropTypes.object.isRequired,
+    schema: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+      ]).isRequired,
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,
     formData: PropTypes.any,
