@@ -17,17 +17,28 @@ function RadioWidget({
     <div className="field-radio-group">{
       enumOptions.map((option, i) => {
         const checked = option.value === value;
-        return (
-          <div key={i} className={`radio${inline ? "-inline" : ""} ${disabled ? "disabled" : ""}`}>
+        const disabledCls = disabled ? "disabled" : "";
+        const radio = (
+          <span>
+            <input type="radio"
+              name={name}
+              value={option.value}
+              checked={checked}
+              disabled={disabled}
+              autoFocus={autofocus && i === 0}
+              onChange={_ => onChange(option.value)}/>
+            {option.label}
+          </span>
+        );
+
+        return inline ? (
+          <label key={i} className={`radio-inline ${disabledCls}`}>
+            {radio}
+          </label>
+        ) : (
+          <div key={i} className={`radio ${disabledCls}`}>
             <label>
-              <input type="radio"
-                name={name}
-                value={option.value}
-                checked={checked}
-                disabled={disabled}
-                autoFocus={autofocus && i === 0}
-                onChange={_ => onChange(option.value)}/>
-              {option.label}
+              {radio}
             </label>
           </div>
         );
