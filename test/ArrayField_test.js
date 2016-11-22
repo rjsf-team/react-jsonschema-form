@@ -736,7 +736,7 @@ describe("ArrayField", () => {
       expect(node.querySelector("#title-")).to.be.null;
     });
   });
-  describe.only("Any of", () => {
+  describe("Any of", () => {
     const schema = {
       "type": "array",
       "items": {
@@ -820,10 +820,15 @@ describe("ArrayField", () => {
         target: {value: "number"}
       });
 
+      const inputs = node.querySelectorAll("input[type=text]");
+      Simulate.change(inputs[0], {target: {value: 123}})
+      Simulate.change(inputs[1], {target: {value: 'abc'}})
+
       const dropBtns = node.querySelectorAll(".array-item-remove");
 
       Simulate.click(dropBtns[0]);
       expect(node.querySelectorAll(".array-item .field-number")).to.have.length.of(0);
+      expect(comp.state.formData).eql(['abc']);
     });
 
     it("should reorder widgets correctly", () => {
@@ -835,14 +840,15 @@ describe("ArrayField", () => {
         target: {value: "number"}
       });
 
+      const inputs = node.querySelectorAll("input[type=text]");
+      Simulate.change(inputs[0], {target: {value: 123}})
+      Simulate.change(inputs[1], {target: {value: 'abc'}})
+
       const moveDownBtns = node.querySelectorAll(".array-item-move-down");
       Simulate.click(moveDownBtns[0]);
 
-      const inputs = node.querySelectorAll(".field-string input[type=text]");
       expect(node.querySelectorAll(".array-item select")[0].value).eql('string');
-
-
-      // expect(comp.state.formData).eql([123, '123']);
+      expect(comp.state.formData).eql(['abc', 123]);
     });
   });
 });
