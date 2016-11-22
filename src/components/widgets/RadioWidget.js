@@ -18,7 +18,7 @@ function RadioWidget({
     <div className="field-radio-group">{
       enumOptions.map((option, i) => {
         const checked = option.value === value;
-        const disabledCls = disabled ? "disabled" : "";
+        const disabledCls = disabled || readonly ? "disabled" : "";
         const radio = (
           <span>
             <input type="radio"
