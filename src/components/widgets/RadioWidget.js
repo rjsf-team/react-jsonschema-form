@@ -23,6 +23,7 @@ function RadioWidget({
           <span>
             <input type="radio"
               name={name}
+              required={required}
               value={option.value}
               checked={checked}
               disabled={disabled || readonly}
