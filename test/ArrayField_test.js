@@ -107,7 +107,7 @@ describe("ArrayField", () => {
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
-      expect(node.querySelectorAll(".field-string"))
+      expect(node.querySelectorAll(".array-item"))
         .to.have.length.of(1);
     });
 
@@ -734,6 +734,115 @@ describe("ArrayField", () => {
       };
       const {node} = createFormComponent({schema, fields});
       expect(node.querySelector("#title-")).to.be.null;
+    });
+  });
+  describe.only("Any of", () => {
+    const schema = {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          }
+        ]
+      }
+    };
+
+    let node, comp;
+
+    beforeEach(() => {
+      const form = createFormComponent({schema});
+      node = form.node;
+      comp = form.comp;
+      Simulate.click(node.querySelector(".array-item-add button"));
+    });
+
+    it("should render an add button", () => { 
+      expect(node.querySelector(".array-item-add button"))
+        .not.eql(null);
+    });
+
+    it("should render a select along with the input field", () => {
+      expect(node.querySelectorAll(".array-item"))
+        .to.have.length.of(1);
+    });
+
+    it("should render two select and input fields", () => {
+      Simulate.click(node.querySelector(".array-item-add button"));
+      expect(node.querySelectorAll(".array-item")).to.have.length.of(2);
+    });
+
+    it("should change the type of the widget", () => { 
+      Simulate.change(node.querySelector(".array-item select"), {
+        target: {value: "number"}
+      });
+      expect(node.querySelector(".array-item select").value).eql("number");
+      expect(node.querySelectorAll(".array-item .field-number")).to.have.length.of(1);
+    });
+
+    it("should have correct type at start", () => {
+      Simulate.change(node.querySelector("fieldset .field-string input[type=text]"), {target: {value: 'asd'}});
+      expect(node.querySelector("fieldset .field-string input[type=text]").value).eql("asd");
+      expect(comp.state.formData).eql(['asd']);
+    });
+
+    it("should clear the value after type update", () => {
+      Simulate.change(node.querySelector("fieldset .field-string input[type=text]"), {target: {value: "bar"}});
+      Simulate.change(node.querySelector(".array-item select"), {
+        target: {value: "number"}
+      });
+
+      expect(node.querySelector("fieldset .field-number input[type=text]").value).eql('');
+    });
+
+    it("should update types accordingly", () => {
+      Simulate.click(node.querySelector(".array-item-add button"));
+      const selects = node.querySelectorAll(".array-item select");
+
+      Simulate.change(selects[0], {
+        target: {value: "number"}
+      });
+      
+      Simulate.change(node.querySelector("fieldset .field-number input[type=text]"), {target: {value: '123'}});
+      Simulate.change(node.querySelector("fieldset .field-string input[type=text]"), {target: {value: '123'}});
+      expect(comp.state.formData).eql([123, '123']);
+    });
+
+    it("should delete the correct widget", () => {
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      const selects = node.querySelectorAll(".array-item select");
+
+      Simulate.change(selects[0], {
+        target: {value: "number"}
+      });
+
+      const dropBtns = node.querySelectorAll(".array-item-remove");
+
+      Simulate.click(dropBtns[0]);
+      expect(node.querySelectorAll(".array-item .field-number")).to.have.length.of(0);
+    });
+
+    it("should reorder widgets correctly", () => {
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      const selects = node.querySelectorAll(".array-item select");
+
+      Simulate.change(selects[0], {
+        target: {value: "number"}
+      });
+
+      const moveDownBtns = node.querySelectorAll(".array-item-move-down");
+      Simulate.click(moveDownBtns[0]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+      expect(node.querySelectorAll(".array-item select")[0].value).eql('string');
+
+
+      // expect(comp.state.formData).eql([123, '123']);
     });
   });
 });

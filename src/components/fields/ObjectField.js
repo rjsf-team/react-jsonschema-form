@@ -71,12 +71,6 @@ class ObjectField extends Component {
       schema.required.indexOf(name) !== -1;
   }
 
-  // anyOfItems(name) {
-  //   const schema = this.props.schema;
-  //   console.log(schema);
-  //   return schema.properties.anyOf;
-  // }
-
   asyncSetState(state, options={validate: false}) {
     setState(this, state, () => {
       this.props.onChange(this.state, options);
@@ -103,7 +97,6 @@ class ObjectField extends Component {
     const {SchemaField, TitleField, DescriptionField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = (schema.title === undefined) ? name : schema.title;
-
     let orderedProperties;
     try {
       const properties = Object.keys(schema.properties);
@@ -119,7 +112,6 @@ class ObjectField extends Component {
         </div>
       );
     }
-
     return (
       <fieldset>
         {title ? <TitleField
@@ -146,7 +138,7 @@ class ObjectField extends Component {
               onChange={this.onPropertyChange(name)}
               registry={this.props.registry}
               disabled={disabled}
-              readonly={readonly} />
+              readonly={readonly}/>
           );
         })
       }</fieldset>

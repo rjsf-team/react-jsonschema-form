@@ -134,16 +134,8 @@ DefaultTemplate.defaultProps = {
 function SchemaField(props) {
   const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
   const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
-  const schema1 = retrieveSchema(props.schema, definitions);
-  const FieldComponent = getFieldComponent(schema1, name, uiSchema, fields);
-  let schema2 = schema1;
-  if (name === "anyOf") {
-    schema2 = {
-      "items": [{"type": "number"}]
-    }
-  }
-
-  const schema = name === "anyOf" ? schema2 : schema1;
+  const schema = retrieveSchema(props.schema, definitions);
+  const FieldComponent = getFieldComponent(schema, name, uiSchema, fields);
   const {DescriptionField} = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);

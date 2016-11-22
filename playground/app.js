@@ -209,7 +209,7 @@ class Editor extends Component {
 class Selector extends Component {
   constructor(props) {
     super(props);
-    this.state = {current: "Simple"};
+    this.state = {current: "AnyOf"};
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -261,7 +261,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     // initialize state with Simple data sample
-    const {schema, uiSchema, formData, validate} = samples.Simple;
+    const {schema, uiSchema, formData, validate} = samples.AnyOf;
     this.state = {
       form: false,
       schema,
@@ -275,7 +275,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.load(samples.Simple);
+    this.load(samples.AnyOf);
   }
 
   shouldComponentUpdate(nextProps, nextState) {

@@ -60,7 +60,7 @@ class ArrayField extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const newState = Object.assign(this.state, {formData: this.getStateFromProps(nextProps)});
+    const newState = Object.assign({}, this.state, {formData: this.getStateFromProps(nextProps)});
     this.setState(newState);
   }
 
@@ -91,7 +91,7 @@ class ArrayField extends Component {
     });
   }
 
-  anyOfItems1() {
+  getAnyOfItems() {
     const schema = this.props.schema;
     return schema.items.anyOf;
   }
@@ -102,31 +102,53 @@ class ArrayField extends Component {
     const {schema, registry } = this.props;
     const {definitions} = registry;
     let itemSchema = schema.items;
-    const anyOfItems = this.anyOfItems1();
+    const anyOfItems = this.getAnyOfItems();
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
+
+    let anyOfState = {}
+    let selectValues = []
     if (anyOfItems) {
-      itemSchema = anyOfItems ? anyOfItems[0] : null;
+      itemSchema = anyOfItems[0];
+
+      selectValues = [
+      ...this.state.selectValues,
+      itemSchema.type
+      ];
+
+      anyOfState = {anyOfItems: [
+        ...this.state.anyOfItems,
+        itemSchema
+      ]};
+      console.log(anyOfState);
     }
 
-    const items1 = {
+    const newItems = {
       items: items.concat([
         getDefaultFormState(itemSchema, undefined, definitions)
       ])
     };
-    const anyOfItems1 = this.state.anyOfItems.concat([anyOfItems[0]]);
-    const newState = Object.assign(this.state, {formData: items1}, {anyOfItems: anyOfItems1});
+    const newState = Object.assign({}, this.state, {formData: newItems}, anyOfState, {selectValues: selectValues});
     this.asyncSetState(newState);
   };
 
   onDropIndexClick = (index) => {
     return (event) => {
       event.preventDefault();
-      const items1 = {
-        items: this.state.formData.items.filter((_, i) => i !== index)
+      const {
+        formData: {
+          items
+        },
+        anyOfItems,
+        selectValues
+      } = this.state;
+      const newItems = {
+        items: items.filter((_, i) => i !== index)
       };
-      const newState = Object.assign(this.state, {formData: items1});
+      const newAnyOfItems = anyOfItems.filter((_, i) => i !== index);
+      const newSelectValues = selectValues.filter((_, i) => i !== index);
+      const newState = Object.assign({}, this.state, {formData: newItems}, {anyOfItems: newAnyOfItems}, {selectValues: newSelectValues});
       this.asyncSetState(newState, {validate: true}); // refs #195
     };
   };
@@ -136,7 +158,11 @@ class ArrayField extends Component {
       event.preventDefault();
       event.target.blur();
       const {items} = this.state.formData;
-      this.asyncSetState({
+      const {
+        anyOfItems,
+        selectValues
+      } = this.state;
+      const newItems = {
         items: items.map((item, i) => {
           if (i === newIndex) {
             return items[index];
@@ -146,24 +172,47 @@ class ArrayField extends Component {
             return item;
           }
         })
-      }, {validate: true});
+      };
+      const newAnyOfItems = anyOfItems.map((item, i) => {
+          if (i === newIndex) {
+            return anyOfItems[index];
+          } else if (i === index) {
+            return anyOfItems[newIndex];
+          } else {
+            return item;
+          }
+        });
+      const newSelectValues = 
+        selectValues.map((item, i) => {
+          if (i === newIndex) {
+            return selectValues[index];
+          } else if (i === index) {
+            return selectValues[newIndex];
+          } else {
+            return item;
+          }
+        });
+
+      const newState = Object.assign({}, this.state, {formData: newItems}, {anyOfItems: newAnyOfItems}, {selectValues: newSelectValues});
+      this.asyncSetState(newState, {validate: true});
     };
   };
 
   onChangeForIndex = (index) => {
     return (value) => {
-      const items1 = {
+      const items = {
         items: this.state.formData.items.map((item, i) => {
           return index === i ? value : item;
         })
       }
-      const newState = Object.assign(this.state, {formData: items1});
-      this.asyncSetState(items1);
+      const newState = Object.assign({}, this.state, {formData: items});
+      this.asyncSetState(newState);
     };
   };
 
   onSelectChange = (value) => {
-    this.asyncSetState({items: value});
+    const newState = Object.assign({}, this.state, {formData: {items: value}});
+    this.asyncSetState(newState);
   };
 
   anyOfOptions(anyOfItems) {
@@ -176,18 +225,18 @@ class ArrayField extends Component {
     const {schema, registry } = this.props;
     const {definitions} = registry;
     let itemSchema = schema.items;
-    const anyOfItems = this.anyOfItems1();
+    const anyOfItems = this.getAnyOfItems();
     const newItems = items.slice();
     const foundItem = anyOfItems.find((element) => { return element.type === value });
     newItems[index] = getDefaultFormState(foundItem, undefined, definitions);
     
-    const anyOfItems1 = this.state.anyOfItems;
-    anyOfItems1[index] = foundItem;
+    const newAnyOfItems = [...this.state.anyOfItems];
+    newAnyOfItems[index] = foundItem;
 
-    const selectValues = this.state.selectValues;
-    selectValues[index] = value;
+    const newSelectValues = [...this.state.selectValues];
+    newSelectValues[index] = value;
 
-    const newState = Object.assign(this.state, {formData: {items: newItems}}, {anyOfItems: anyOfItems1}, {selectValues: selectValues});
+    const newState = Object.assign({}, this.state, {formData: {items: newItems}}, {anyOfItems: newAnyOfItems}, {selectValues: newSelectValues});
 
     this.asyncSetState(newState);
 
@@ -221,13 +270,15 @@ class ArrayField extends Component {
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
     const {items} = this.state.formData;
+    const {selectValues} = this.state;
     const {definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;
     let itemsSchema = retrieveSchema(schema.items, definitions);
     const {addable=true} = getUiOptions(uiSchema);
-    const anyOfItems = this.anyOfItems1();
+    const anyOfItems = this.getAnyOfItems();
     const newItems = items;
 
+    console.log(selectValues, this.state.anyOfItems)
     return (
       <fieldset
         className={`field field-array field-array-of-${itemsSchema.type}`}>
@@ -259,7 +310,8 @@ class ArrayField extends Component {
               itemData: newItems[index],
               itemUiSchema: uiSchema.items,
               autofocus: autofocus && index === 0,
-              anyOfItems: anyOfItems
+              anyOfItems: anyOfItems,
+              value: selectValues[index] || ""
             });
           })
         }</div>
@@ -328,14 +380,13 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title || name;
     let {items} = this.state.formData;
-    const {selectValues} = this.state;
     const {definitions, fields} = this.props.registry;
     const {TitleField} = fields;
     const itemSchemas = schema.items.map(item =>
       retrieveSchema(item, definitions));
     let additionalSchema = allowAdditionalItems(schema) ?
       retrieveSchema(schema.additionalItems, definitions) : null;
-    const anyOfItems = this.anyOfItems1();
+    const anyOfItems = this.getAnyOfItems();
 
     // if (!additionalSchema) {
     //   additionalSchema = anyOfItems ? anyOfItems[0] : null;
@@ -348,7 +399,6 @@ class ArrayField extends Component {
       items = items || [];
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
-
     return (
       <fieldset className="field field-array field-array-fixed-items">
         <ArrayFieldTitle
@@ -382,8 +432,7 @@ class ArrayField extends Component {
               itemIdSchema,
               itemErrorSchema,
               autofocus: autofocus && index === 0,
-              anyOfItems,
-              value: selectValues[index] || ""
+              anyOfItems
             });
           })
         }</div>
@@ -425,7 +474,6 @@ class ArrayField extends Component {
     has.toolbar = Object.keys(has).some(key => has[key]);
     const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
     const {SelectWidget} = this.props.registry.widgets;
-
     return (
       <div key={index} className="array-item">
         <div className={has.toolbar ? "col-xs-9" : "col-xs-12"}>
