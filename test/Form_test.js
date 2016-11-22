@@ -460,9 +460,10 @@ describe("Form", () => {
       Simulate.submit(node);
 
       setTimeout(function(){
-        // const arg = onSubmit.args[0][0];
-        // expect(arg).to.deep.equal(comp.state);
-        sinon.assert.calledWithExactly(onSubmit, comp.state);
+        const actualArgument = onSubmit.firstCall.args[0];
+        const expectedArgument = comp.state;
+        expectedArgument.status = "submitted"; // actually, external onSubmit called at moment when state.status === "submitted", not "initial"
+        expect(actualArgument).to.deep.equal(expectedArgument);
         done();
       });
 

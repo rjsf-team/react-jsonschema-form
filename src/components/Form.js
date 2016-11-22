@@ -31,7 +31,7 @@ export default class Form extends Component {
 
     Promise
       .resolve(mustValidate ? this.validate(formData, schema) : {errors, errorSchema})
-      .then(this.setValidationResult.bind(this));
+      .then(this.setValidationResult);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,7 +42,7 @@ export default class Form extends Component {
 
       Promise
         .resolve(mustValidate ? this.validate(formData, schema) : {errors, errorSchema})
-        .then(this.setValidationResult.bind(this));
+        .then(this.setValidationResult);
     });
 
   }
@@ -86,14 +86,14 @@ export default class Form extends Component {
     return deferred;
   }
 
-  setValidateStatus(status = "") {
-    this.setState(Object.assign({}, this.state, {validation: status}));
-  }
+  setValidateStatus = (status = "") => {
+    this.setState({validation: status});
+  };
 
-  setValidationResult(result) {
-    this.setState(Object.assign({}, this.state, result));
+  setValidationResult = (result) => {
+    this.setState(result);
     return result;
-  }
+  };
 
   renderErrors() {
     const {status, errors} = this.state;
@@ -109,9 +109,9 @@ export default class Form extends Component {
     const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
     const onChange = this.props.onChange;
 
-    this.setState(Object.assign({}, this.state, {status: "editing", formData}), () => {
+    this.setState({status: "editing", formData}, () => {
       Promise.resolve(mustValidate ? this.validate(formData) : {})
-        .then(this.setValidationResult.bind(this))
+        .then(this.setValidationResult)
         .then(() => {
           if (typeof onChange === "function") {
             onChange(this.state);
@@ -139,11 +139,9 @@ export default class Form extends Component {
         if (typeof onSubmit === "function") {
           onSubmit(this.state);
         }
-      })
-      .then(() => {
         this.setState({status: "initial", errors: [], errorSchema: {}});
       })
-      .catch(this.setValidationResult.bind(this));
+      .catch(this.setValidationResult);
 
   };
 
@@ -181,15 +179,15 @@ export default class Form extends Component {
 
     return (
       <form className={className ? className : "rjsf"}
-            id={id}
-            name={name}
-            method={method}
-            target={target}
-            action={action}
-            autoComplete={autocomplete}
-            encType={enctype}
-            acceptCharset={acceptcharset}
-            onSubmit={this.onSubmit}>
+        id={id}
+        name={name}
+        method={method}
+        target={target}
+        action={action}
+        autoComplete={autocomplete}
+        encType={enctype}
+        acceptCharset={acceptcharset}
+        onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
@@ -203,7 +201,6 @@ export default class Form extends Component {
         { children ? children :
           <p>
             <button type="submit" className="btn btn-info">Submit</button>
-            <span>Validation status: {this.state.validation}</span>
           </p>
         }
       </form>
