@@ -78,6 +78,7 @@ if (process.env.NODE_ENV !== "production") {
     value: PropTypes.any,
     required: PropTypes.bool,
     readonly: PropTypes.bool,
+    disabled: PropTypes.bool,
     multiple: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
