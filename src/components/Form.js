@@ -86,7 +86,7 @@ export default class Form extends Component {
     return deferred;
   }
 
-  setValidateStatus = (status = "") => {
+  setValidateStatus = (status="") => {
     this.setState({validation: status});
   };
 
@@ -105,7 +105,7 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange = (formData, options = {validate: false}) => {
+  onChange = (formData, options={validate: false}) => {
     const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
     const onChange = this.props.onChange;
 

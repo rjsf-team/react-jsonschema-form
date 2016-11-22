@@ -44,7 +44,7 @@ function toErrorSchema(errors) {
   }, {});
 }
 
-export function toErrorList(errorSchema, fieldName = "root") {
+export function toErrorList(errorSchema, fieldName="root") {
   // XXX: We should transform fieldName as a full field path string.
   let errorList = [];
   if ("__errors" in errorSchema) {
@@ -62,7 +62,7 @@ export function toErrorList(errorSchema, fieldName = "root") {
   }, errorList);
 }
 
-function createErrorHandler(formData, path = ["instance"], __root = []) {
+function createErrorHandler(formData, path=["instance"], __root=[]) {
   const handler = {
     // We store the list of errors for this node in a property named __errors
     // to avoid name collision with a possible sub schema field named
@@ -90,7 +90,7 @@ function createErrorHandler(formData, path = ["instance"], __root = []) {
  * function, which receives the form data and an `errorHandler` object that
  * will be used to add custom validation errors for each field.
  */
-export default function validateFormData(formData, schema, customValidate = () => ({__root: []})) {
+export default function validateFormData(formData, schema, customValidate=() => ({__root: []})) {
   const {errors} = jsonValidate(formData, schema, {throwError: false});
 
   return Promise
