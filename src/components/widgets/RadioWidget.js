@@ -15,25 +15,32 @@ function RadioWidget({
   const name = Math.random().toString();
   const {inline} = options;
   var {enumOptions} = options;
+  var { enumLabel,enumValue } = schema;
+  if (!enumValue) {
+    enumValue = "value";
+  }
+  if (!enumLabel) {
+    enumLabel = "label";
+  }  
   if (!enumOptions) {
     enumOptions = [];
   }  
   return (
     <div className="field-radio-group">{
       enumOptions.map((option, i) => {
-        const checked = option.value === value;
+        const checked = option[enumValue] === value;
         const disabledCls = disabled || readonly ? "disabled" : "";
         const radio = (
           <span>
             <input type="radio"
               name={name}
               required={required}
-              value={option.value}
+              value={option[enumValue]}
               checked={checked}
               disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
-              onChange={_ => onChange(option.value)}/>
-            {option.label}
+              onChange={_ => onChange(option[enumValue])}/>
+            {option[enumLabel]}
           </span>
         );
 
