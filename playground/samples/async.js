@@ -1,7 +1,5 @@
 function validate({pass1, pass2}, errors) {
-
   return new Promise((resolve/*, reject*/) => {
-
     setTimeout(() => {
       if (pass1 !== pass2) {
         errors.pass2.addError("Deferred check: passwords not matched");
