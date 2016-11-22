@@ -10,7 +10,12 @@ function selectValue(value, selected, all) {
 }
 
 function deselectValue(value, selected) {
-  return selected.filter(v => v !== value);
+  var ret = selected.filter(v => v !== value);
+  if (ret.length == 0) {
+    return undefined;
+  } else {
+    return ret;    
+  }  
 }
 
 function CheckboxesWidget(props) {
