@@ -230,7 +230,7 @@ describe("SchemaField", () => {
       const {node} = createFormComponent({schema, uiSchema, validate});
       submit(node);
 
-      setTimeout(function(){
+      setTimeout(() => {
         const matches = node.querySelectorAll("form > .form-group > div > .error-detail .text-danger");
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.eql("container");
@@ -242,7 +242,7 @@ describe("SchemaField", () => {
       const {node} = createFormComponent({schema, uiSchema, validate});
       submit(node);
 
-      setTimeout(function(){
+      setTimeout(() => {
         const matches = node.querySelectorAll("form .form-group .form-group .text-danger");
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.contain("test");

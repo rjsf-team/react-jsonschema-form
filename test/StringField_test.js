@@ -272,7 +272,7 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      setTimeout(function(){
+      setTimeout(() => {
         expect(comp.state.errors).to.have.length.of(1);
         done();
       });
@@ -379,7 +379,7 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      setTimeout(function(){
+      setTimeout(() => {
         expect(comp.state.errors).to.have.length.of(1);
         done();
       });
@@ -871,7 +871,7 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      setTimeout(function(){
+      setTimeout(() => {
         expect(comp.state.errors).to.have.length.of(1);
         done();
       });
@@ -981,7 +981,7 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      setTimeout(function(){
+      setTimeout(() => {
         expect(comp.state.errors).to.have.length.of(1);
         done();
       });
@@ -1073,7 +1073,7 @@ describe("StringField", () => {
         target: {value: "invalid"}
       });
 
-      setTimeout(function(){
+      setTimeout(() => {
         expect(comp.state.errors).to.have.length.of(1);
         done();
       });

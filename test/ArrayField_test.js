@@ -223,7 +223,7 @@ describe("ArrayField", () => {
       })
         .then((node) => {
           return new Promise((resolve) => {
-            setTimeout(function () {
+            setTimeout(() => {
               expect(node.querySelectorAll(".has-error .error-detail"))
                 .to.have.length.of(1);
 
@@ -235,7 +235,7 @@ describe("ArrayField", () => {
           });
         })
         .then((node) => {
-          setTimeout(function () {
+          setTimeout(() => {
 
             expect(node.querySelectorAll(".has-error .error-detail"))
               .to.have.length.of(0);

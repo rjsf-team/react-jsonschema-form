@@ -136,7 +136,7 @@ describe("Validation", () => {
         });
 
         it("should eventually validate a required field", (done) => {
-          setTimeout(function(){
+          setTimeout(() => {
             expect(comp.state.errors)
               .to.have.length.of(1);
             expect(comp.state.errors[0].message)
@@ -146,7 +146,7 @@ describe("Validation", () => {
         });
 
         it("should eventually render errors", (done) => {
-          setTimeout(function(){
+          setTimeout(() => {
             expect(node.querySelectorAll(".errors li"))
               .to.have.length.of(1);
             expect(node.querySelector(".errors li").textContent)
@@ -156,7 +156,7 @@ describe("Validation", () => {
         });
 
         it("should eventually trigger the onError handler", (done) => {
-          setTimeout(function () {
+          setTimeout(() => {
             sinon.assert.calledWith(onError, sinon.match(errors => {
               return errors[0].message === "requires property \"foo\"";
             }));
@@ -191,7 +191,7 @@ describe("Validation", () => {
         });
 
         it("should eventually validate a minLength field", (done) => {
-          setTimeout(function(){
+          setTimeout(() => {
             expect(comp.state.errors)
               .to.have.length.of(1);
             expect(comp.state.errors[0].message)
@@ -201,7 +201,7 @@ describe("Validation", () => {
         });
 
         it("should eventually render errors", (done) => {
-          setTimeout(function(){
+          setTimeout(() => {
             expect(node.querySelectorAll(".errors li"))
               .to.have.length.of(1);
             expect(node.querySelector(".errors li").textContent)
@@ -211,7 +211,7 @@ describe("Validation", () => {
         });
 
         it("should eventually trigger the onError handler", (done) => {
-          setTimeout(function(){
+          setTimeout(() => {
             sinon.assert.calledWith(onError, sinon.match(errors => {
               return errors[0].message ===
                 "does not meet minimum length of 10";
@@ -237,7 +237,7 @@ describe("Validation", () => {
         const {comp} = createFormComponent({schema, validate, liveValidate: true});
         comp.componentWillReceiveProps({formData});
 
-        setTimeout(function(){
+        setTimeout(() => {
           expect(comp.state.errorSchema).eql({
             __errors: ["Invalid"],
           });
@@ -266,7 +266,7 @@ describe("Validation", () => {
 
         Simulate.submit(node);
 
-        setTimeout(function(){
+        setTimeout(() => {
           sinon.assert.called(onSubmit);
           done();
         });
@@ -296,7 +296,7 @@ describe("Validation", () => {
 
         Simulate.submit(node);
 
-        setTimeout(function(){
+        setTimeout(() => {
           sinon.assert.notCalled(onSubmit);
           sinon.assert.called(onError);
           done();
@@ -325,7 +325,7 @@ describe("Validation", () => {
         const {comp} = createFormComponent({schema, validate, liveValidate: true});
         comp.componentWillReceiveProps({formData});
 
-        setTimeout(function(){
+        setTimeout(() => {
           expect(comp.state.errorSchema).eql({
 /*
             //TODO: Resolve is it correct: with current flow empty errors does not appear in errorSchema
@@ -365,7 +365,7 @@ describe("Validation", () => {
         const {comp} = createFormComponent({schema, validate, liveValidate: true});
         comp.componentWillReceiveProps({formData});
 
-        setTimeout(function(){
+        setTimeout(() => {
           expect(comp.state.errorSchema).eql({
             __errors: ["Forbidden value: bbb"],
           });
@@ -399,7 +399,7 @@ describe("Validation", () => {
         });
 
         it("should eventually validate a required field", (done) => {
-          setTimeout(function(){
+          setTimeout(() => {
             expect(comp.state.errors)
               .to.have.length.of(1);
             expect(comp.state.errors[0].message)
@@ -414,7 +414,7 @@ describe("Validation", () => {
         });
 
         it("should eventually trigger the onError handler", (done) => {
-          setTimeout(function(){
+          setTimeout(() => {
             sinon.assert.calledWith(onError, sinon.match(errors => {
               return errors[0].message === "requires property \"foo\"";
             }));
