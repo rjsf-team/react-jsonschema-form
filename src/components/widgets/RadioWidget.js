@@ -13,7 +13,11 @@ function RadioWidget({
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const {enumOptions, inline} = options;
+  const {inline} = options;
+  var {enumOptions} = options;
+  if (!enumOptions) {
+    enumOptions = [];
+  }  
   return (
     <div className="field-radio-group">{
       enumOptions.map((option, i) => {
