@@ -278,17 +278,6 @@ export function allowAdditionalItems(schema) {
   return isObject(schema.additionalItems);
 }
 
-export function getSubschemaOptions(schema) {
-  // Get oneOf or anyOf subschemas
-  if (schema.items.oneOf) {
-    return schema.items.oneOf;
-  } else if (schema.items.anyOf) {
-    return schema.items.anyOf;
-  } else {
-    return null;
-  }
-}
-
 export function optionsList(schema) {
   return schema.enum.map((value, i) => {
     const label = schema.enumNames && schema.enumNames[i] || String(value);

@@ -13,8 +13,7 @@ import {
   toIdSchema,
   shouldRender,
   getDefaultRegistry,
-  setState,
-  getSubschemaOptions
+  setState
 } from "../../utils";
 
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
@@ -57,7 +56,7 @@ class ArrayField extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { formData: this.getStateFromProps(props), subschemaItems: []};
+    this.state = { formData: this.getStateFromProps(props), anyOfItems: []};
   }
 
   componentWillReceiveProps(nextProps) {
@@ -92,23 +91,34 @@ class ArrayField extends Component {
     });
   }
 
+  getAnyOfItemsSchema() {
+    const schema = this.props.schema;
+    if (schema.items.oneOf) {
+      return schema.items.oneOf;
+    } else if (schema.items.anyOf) {
+      return schema.items.anyOf;
+    } else {
+      return null;
+    }
+  }
+
   onAddClick = (event) => {
     event.preventDefault();
     const {items} = this.state.formData;
     const {schema, registry} = this.props;
     const {definitions} = registry;
     let itemSchema = schema.items;
-    const subschemaItems = getSubschemaOptions(schema);
+    const anyOfItems = this.getAnyOfItemsSchema();
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
 
-    let newSubschemaItems = {}
-    if (subschemaItems) {
-      itemSchema = subschemaItems[0];
+    let anyOfState = {}
+    if (anyOfItems) {
+      itemSchema = anyOfItems[0];
 
-      newSubschemaItems = {subschemaItems: [
-        ...this.state.subschemaItems,
+      anyOfState = {anyOfItems: [
+        ...this.state.anyOfItems,
         itemSchema
       ]};
     }
@@ -118,19 +128,19 @@ class ArrayField extends Component {
         getDefaultFormState(itemSchema, undefined, definitions)
       ])
     };
-    const newState = Object.assign({}, this.state, {formData: newItems}, newSubschemaItems);
+    const newState = Object.assign({}, this.state, {formData: newItems}, anyOfState);
     this.asyncSetState(newState);
   };
 
   onDropIndexClick = (index) => {
     return (event) => {
       event.preventDefault();
-      const {formData: {items}, subschemaItems} = this.state;
+      const {formData: {items}, anyOfItems} = this.state;
       const newItems = {
         items: items.filter((_, i) => i !== index)
       };
-      const newSubschemaItems = subschemaItems.filter((_, i) => i !== index);
-      const newState = Object.assign({}, this.state, {formData: newItems}, {subschemaItems: newSubschemaItems});
+      const newAnyOfItems = anyOfItems.filter((_, i) => i !== index);
+      const newState = Object.assign({}, this.state, {formData: newItems}, {anyOfItems: newAnyOfItems});
       this.asyncSetState(newState, {validate: true}); // refs #195
     };
   };
@@ -139,7 +149,7 @@ class ArrayField extends Component {
     return (event) => {
       event.preventDefault();
       event.target.blur();
-      const {formData: {items}, subschemaItems} = this.state;
+      const {formData: {items}, anyOfItems} = this.state;
       const newItems = {
         items: items.map((item, i) => {
           if (i === newIndex) {
@@ -151,17 +161,17 @@ class ArrayField extends Component {
           }
         })
       };
-      const newSubschemaItems = subschemaItems.map((item, i) => {
+      const newAnyOfItems = anyOfItems.map((item, i) => {
           if (i === newIndex) {
-            return subschemaItems[index];
+            return anyOfItems[index];
           } else if (i === index) {
-            return subschemaItems[newIndex];
+            return anyOfItems[newIndex];
           } else {
             return item;
           }
         });
 
-      const newState = Object.assign({}, this.state, {formData: newItems}, {subschemaItems: newSubschemaItems});
+      const newState = Object.assign({}, this.state, {formData: newItems}, {anyOfItems: newAnyOfItems});
       this.asyncSetState(newState, {validate: true});
     };
   };
@@ -183,8 +193,8 @@ class ArrayField extends Component {
     this.asyncSetState(newState);
   };
 
-  formSubschemaOptions(subschemaItems) {
-    return subschemaItems.map(item => { return {value: item.type, label: item.type}; });
+  anyOfOptions(anyOfItems) {
+    return anyOfItems.map(item => { return {value: item.type, label: item.type}; });
   }
 
   setType(index, value) {
@@ -192,15 +202,15 @@ class ArrayField extends Component {
     const {schema, registry } = this.props;
     const {definitions} = registry;
     let itemSchema = schema.items;
-    const subschemaItems = getSubschemaOptions(schema);
+    const anyOfItems = this.getAnyOfItemsSchema();
     const newItems = items.slice();
-    const foundItem = subschemaItems.find((element) => { return element.type === value });
+    const foundItem = anyOfItems.find((element) => { return element.type === value });
     newItems[index] = getDefaultFormState(foundItem, undefined, definitions);
     
-    const newSubschemaItems = [...this.state.subschemaItems];
-    newSubschemaItems[index] = foundItem;
+    const newAnyOfItems = [...this.state.anyOfItems];
+    newAnyOfItems[index] = foundItem;
 
-    const newState = Object.assign({}, this.state, {formData: {items: newItems}}, {subschemaItems: newSubschemaItems});
+    const newState = Object.assign({}, this.state, {formData: {items: newItems}}, {anyOfItems: newAnyOfItems});
 
     this.asyncSetState(newState);
   }
@@ -232,14 +242,12 @@ class ArrayField extends Component {
       autofocus,
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
-    const {formData: {items}, subschemaItems} = this.state;
+    const {formData: {items}, anyOfItems} = this.state;
     const {definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;
     let itemsSchema = retrieveSchema(schema.items, definitions);
     const {addable=true} = getUiOptions(uiSchema);
-    const subschemaOptions = getSubschemaOptions(schema);
-    // If this is an oneOf, it will only have one add button
-    const canAdd = (subschemaItems.length > 0 && addable && schema.items.oneOf) ? false : addable;
+    const anyOfItemsSchema = this.getAnyOfItemsSchema();
 
     return (
       <fieldset
@@ -256,8 +264,8 @@ class ArrayField extends Component {
             description={schema.description}/> : null}
         <div className="row array-item-list">{
           items.map((item, index) => {
-            if (subschemaOptions) {
-              itemsSchema = this.state.subschemaItems[index];
+            if (anyOfItemsSchema) {
+              itemsSchema = anyOfItems[index];
             }
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
             const itemIdPrefix = idSchema.$id + "_" + index;
@@ -272,12 +280,12 @@ class ArrayField extends Component {
               itemData: items[index],
               itemUiSchema: uiSchema.items,
               autofocus: autofocus && index === 0,
-              subschemaOptions: subschemaOptions,
-              value: subschemaItems.length > 0 ? subschemaItems[index].type : ""
+              anyOfItemsSchema: anyOfItemsSchema,
+              value: anyOfItems.length > 0 ? anyOfItems[index].type : ""
             });
           })
         }</div>
-        {canAdd ? <AddButton
+        {addable ? <AddButton
                      onClick={this.onAddClick}
                      disabled={disabled || readonly}/> : null}
       </fieldset>
@@ -413,7 +421,7 @@ class ArrayField extends Component {
     itemIdSchema,
     itemErrorSchema,
     autofocus,
-    subschemaOptions,
+    anyOfItemsSchema,
     value
   }) {
     const {SchemaField} = this.props.registry.fields;
@@ -436,14 +444,15 @@ class ArrayField extends Component {
       <div key={index} className="array-item">
         <div className={has.toolbar ? "col-xs-9" : "col-xs-12"}>
 
-          {subschemaOptions ? (
+          {anyOfItemsSchema ? (
             <div className="form-group">
-            <SelectWidget
-              schema={{type: "integer"}}
-              id="test"
-              options={{enumOptions: this.formSubschemaOptions(subschemaOptions)}}
-              value={value}
-              onChange={(value) => this.setType(index, value)}/></div>
+              <SelectWidget
+                schema={{type: "integer"}}
+                id="test"
+                options={{enumOptions: this.anyOfOptions(anyOfItemsSchema)}}
+                value={value}
+                onChange={(value) => this.setType(index, value)}/>
+            </div>
           ) : null}
 
           <SchemaField
