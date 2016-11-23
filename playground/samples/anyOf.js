@@ -8,10 +8,28 @@ module.exports = {
         "items": {
           "anyOf": [
             {
+              "title": "string",
               "type": "string"
             },
             {
-              "type": "number"
+              "title": "integer",
+              "type": "integer"
+            },
+            {
+              "title": "array",
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "title": "string",
+                    "type": "string"
+                  },
+                  {
+                    "title": "integer",
+                    "type": "integer"
+                  }
+                ]
+              }
             }
           ]
         }
@@ -19,5 +37,14 @@ module.exports = {
     }
   },
   uiSchema: {},
-  formData: {}
+  formData: {
+    "List of widgets": [
+      27,
+      "Batman",
+      [
+        "Bruce",
+        "Wayne"
+      ]
+    ]
+  }
 };

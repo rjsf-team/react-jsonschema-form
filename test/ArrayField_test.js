@@ -107,7 +107,7 @@ describe("ArrayField", () => {
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
-      expect(node.querySelectorAll(".array-item"))
+      expect(node.querySelectorAll(".field-string"))
         .to.have.length.of(1);
     });
 
@@ -783,10 +783,10 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll(".array-item .field-number")).to.have.length.of(1);
     });
 
-    it("should have correct type at start", () => {
-      Simulate.change(node.querySelector("fieldset .field-string input[type=text]"), {target: {value: 'asd'}});
+    it("should be created with correct type", () => {
+      Simulate.change(node.querySelector("fieldset .field-string input[type=text]"), {target: {value: "asd"}});
       expect(node.querySelector("fieldset .field-string input[type=text]").value).eql("asd");
-      expect(comp.state.formData).eql(['asd']);
+      expect(comp.state.formData).eql(["asd"]);
     });
 
     it("should clear the value after type update", () => {
@@ -795,7 +795,7 @@ describe("ArrayField", () => {
         target: {value: "number"}
       });
 
-      expect(node.querySelector("fieldset .field-number input[type=text]").value).eql('');
+      expect(node.querySelector("fieldset .field-number input[type=text]").value).eql("");
     });
 
     it("should update types accordingly", () => {
@@ -806,9 +806,9 @@ describe("ArrayField", () => {
         target: {value: "number"}
       });
       
-      Simulate.change(node.querySelector("fieldset .field-number input[type=text]"), {target: {value: '123'}});
-      Simulate.change(node.querySelector("fieldset .field-string input[type=text]"), {target: {value: '123'}});
-      expect(comp.state.formData).eql([123, '123']);
+      Simulate.change(node.querySelector("fieldset .field-number input[type=text]"), {target: {value: "123"}});
+      Simulate.change(node.querySelector("fieldset .field-string input[type=text]"), {target: {value: "123"}});
+      expect(comp.state.formData).eql([123, "123"]);
     });
 
     it("should delete the correct widget", () => {
@@ -821,14 +821,14 @@ describe("ArrayField", () => {
       });
 
       const inputs = node.querySelectorAll("input[type=text]");
-      Simulate.change(inputs[0], {target: {value: 123}})
-      Simulate.change(inputs[1], {target: {value: 'abc'}})
+      Simulate.change(inputs[0], {target: {value: 123}});
+      Simulate.change(inputs[1], {target: {value: "abc"}});
 
       const dropBtns = node.querySelectorAll(".array-item-remove");
 
       Simulate.click(dropBtns[0]);
       expect(node.querySelectorAll(".array-item .field-number")).to.have.length.of(0);
-      expect(comp.state.formData).eql(['abc']);
+      expect(comp.state.formData).eql(["abc"]);
     });
 
     it("should reorder widgets correctly", () => {
@@ -841,14 +841,14 @@ describe("ArrayField", () => {
       });
 
       const inputs = node.querySelectorAll("input[type=text]");
-      Simulate.change(inputs[0], {target: {value: 123}})
-      Simulate.change(inputs[1], {target: {value: 'abc'}})
+      Simulate.change(inputs[0], {target: {value: 123}});
+      Simulate.change(inputs[1], {target: {value: "abc"}});
 
       const moveDownBtns = node.querySelectorAll(".array-item-move-down");
       Simulate.click(moveDownBtns[0]);
 
-      expect(node.querySelectorAll(".array-item select")[0].value).eql('string');
-      expect(comp.state.formData).eql(['abc', 123]);
+      expect(node.querySelectorAll(".array-item select")[0].value).eql("string");
+      expect(comp.state.formData).eql(["abc", 123]);
     });
   });
 });

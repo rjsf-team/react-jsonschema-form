@@ -56,7 +56,14 @@ class ArrayField extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { formData: this.getStateFromProps(props), anyOfItems: []};
+    const formData = this.getStateFromProps(props);
+    let anyOfItems = [];
+    if (this.getAnyOfItemsSchema()) {
+      // We need to contruct the initial anyOfItems state, by searching for the props anyOf items
+      // in the available anyOf schema items
+      anyOfItems = this.getAnyOfItemsFromProps(formData.items, props.schema.items.anyOf);
+    }
+    this.state = {formData: formData, anyOfItems: anyOfItems};
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,6 +83,29 @@ class ArrayField extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
+  getAnyOfItemsFromProps(formDataItems, anyOfSchema) {
+    return formDataItems.map((item) => {
+      const type = typeof item;
+      const itemType = (type === "object" && Array.isArray(item)) ? "array" : type;
+      console.log(type, itemType);
+      const schema = this.getAnyOfItemSchema(anyOfSchema, itemType);
+
+      // If this schema is an array, we need to recursively add its contents
+      if (schema.type === "array") {
+        this.getAnyOfItemsFromProps(item, schema.items.anyOf);
+      }
+
+      return schema;
+    });
+  }
+
+  getAnyOfItemSchema(anyOfSchema, type) {
+    return anyOfSchema.find((schemaElement) => {
+      const schemaElementType = schemaElement.type === "integer" ? "number" : schemaElement.type;
+      return schemaElementType === type;
+    });
+  }
+
   get itemTitle() {
     const {schema} = this.props;
     return schema.items.title || schema.items.description || "Item";
@@ -92,14 +122,8 @@ class ArrayField extends Component {
   }
 
   getAnyOfItemsSchema() {
-    const schema = this.props.schema;
-    if (schema.items.oneOf) {
-      return schema.items.oneOf;
-    } else if (schema.items.anyOf) {
-      return schema.items.anyOf;
-    } else {
-      return null;
-    }
+    const {schema} = this.props;
+    return schema.items.anyOf;
   }
 
   onAddClick = (event) => {
@@ -113,14 +137,15 @@ class ArrayField extends Component {
       itemSchema = schema.additionalItems;
     }
 
-    let anyOfState = {}
+    let newAnyOfItems = [];
     if (anyOfItems) {
+      // We pick the first anyOf item by default
       itemSchema = anyOfItems[0];
 
-      anyOfState = {anyOfItems: [
+      newAnyOfItems = [
         ...this.state.anyOfItems,
         itemSchema
-      ]};
+      ];
     }
 
     const newItems = {
@@ -128,7 +153,7 @@ class ArrayField extends Component {
         getDefaultFormState(itemSchema, undefined, definitions)
       ])
     };
-    const newState = Object.assign({}, this.state, {formData: newItems}, anyOfState);
+    const newState = Object.assign({}, this.state, {formData: newItems, anyOfItems: newAnyOfItems});
     this.asyncSetState(newState);
   };
 
@@ -140,7 +165,8 @@ class ArrayField extends Component {
         items: items.filter((_, i) => i !== index)
       };
       const newAnyOfItems = anyOfItems.filter((_, i) => i !== index);
-      const newState = Object.assign({}, this.state, {formData: newItems}, {anyOfItems: newAnyOfItems});
+      const newState = Object.assign({}, this.state,
+        {formData: newItems, anyOfItems: newAnyOfItems});
       this.asyncSetState(newState, {validate: true}); // refs #195
     };
   };
@@ -150,8 +176,9 @@ class ArrayField extends Component {
       event.preventDefault();
       event.target.blur();
       const {formData: {items}, anyOfItems} = this.state;
-      const newItems = {
-        items: items.map((item, i) => {
+
+      const reorder = (items, newIndex) =>
+        items.map((item, i) => {
           if (i === newIndex) {
             return items[index];
           } else if (i === index) {
@@ -159,19 +186,15 @@ class ArrayField extends Component {
           } else {
             return item;
           }
-        })
-      };
-      const newAnyOfItems = anyOfItems.map((item, i) => {
-          if (i === newIndex) {
-            return anyOfItems[index];
-          } else if (i === index) {
-            return anyOfItems[newIndex];
-          } else {
-            return item;
-          }
         });
 
-      const newState = Object.assign({}, this.state, {formData: newItems}, {anyOfItems: newAnyOfItems});
+      const newItems = {
+        items: reorder(items, newIndex)
+      };
+      const newAnyOfItems = reorder(anyOfItems, newIndex);
+
+      const newState = Object.assign({}, this.state,
+        {formData: newItems}, {anyOfItems: newAnyOfItems});
       this.asyncSetState(newState, {validate: true});
     };
   };
@@ -182,7 +205,7 @@ class ArrayField extends Component {
         items: this.state.formData.items.map((item, i) => {
           return index === i ? value : item;
         })
-      }
+      };
       const newState = Object.assign({}, this.state, {formData: items});
       this.asyncSetState(newState);
     };
@@ -194,23 +217,23 @@ class ArrayField extends Component {
   };
 
   anyOfOptions(anyOfItems) {
-    return anyOfItems.map(item => { return {value: item.type, label: item.type}; });
+    return anyOfItems.map(item => ({value: item.type, label: item.type}));
   }
 
-  setType(index, value) {
+  setWidgetType(index, value) {
     const {items} = this.state.formData;
-    const {schema, registry } = this.props;
+    const {registry} = this.props;
     const {definitions} = registry;
-    let itemSchema = schema.items;
-    const anyOfItems = this.getAnyOfItemsSchema();
+    const anyOfItemsSchema = this.getAnyOfItemsSchema();
     const newItems = items.slice();
-    const foundItem = anyOfItems.find((element) => { return element.type === value });
+    const foundItem = anyOfItemsSchema.find((element) => element.type === value);
     newItems[index] = getDefaultFormState(foundItem, undefined, definitions);
     
     const newAnyOfItems = [...this.state.anyOfItems];
     newAnyOfItems[index] = foundItem;
 
-    const newState = Object.assign({}, this.state, {formData: {items: newItems}}, {anyOfItems: newAnyOfItems});
+    const newState = Object.assign({}, this.state,
+      {formData: {items: newItems}, anyOfItems: newAnyOfItems});
 
     this.asyncSetState(newState);
   }
@@ -281,7 +304,7 @@ class ArrayField extends Component {
               itemUiSchema: uiSchema.items,
               autofocus: autofocus && index === 0,
               anyOfItemsSchema: anyOfItemsSchema,
-              value: anyOfItems.length > 0 ? anyOfItems[index].type : ""
+              selectWidgetValue: anyOfItems.length > 0 ? anyOfItems[index].type : ""
             });
           })
         }</div>
@@ -422,7 +445,7 @@ class ArrayField extends Component {
     itemErrorSchema,
     autofocus,
     anyOfItemsSchema,
-    value
+    selectWidgetValue
   }) {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly, uiSchema} = this.props;
@@ -443,18 +466,16 @@ class ArrayField extends Component {
     return (
       <div key={index} className="array-item">
         <div className={has.toolbar ? "col-xs-9" : "col-xs-12"}>
-
           {anyOfItemsSchema ? (
-            <div className="form-group">
+            <div className="form-group" style={{width: 120}}>
               <SelectWidget
                 schema={{type: "integer"}}
                 id="test"
                 options={{enumOptions: this.anyOfOptions(anyOfItemsSchema)}}
-                value={value}
-                onChange={(value) => this.setType(index, value)}/>
+                value={selectWidgetValue}
+                onChange={(value) => this.setWidgetType(index, value)}/>
             </div>
           ) : null}
-
           <SchemaField
             schema={itemSchema}
             uiSchema={itemUiSchema}

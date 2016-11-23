@@ -29,5 +29,5 @@ export const samples = {
   Validation: validation,
   Files: files,
   Single: single,
-  AnyOf: anyOf
+  "Any of": anyOf
 };

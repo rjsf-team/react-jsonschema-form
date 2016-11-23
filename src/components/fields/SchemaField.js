@@ -28,8 +28,9 @@ function getFieldComponent(schema, name, uiSchema, fields) {
   }
 
 
-  const type = name === "anyOf" || name === "anyOf" ? "array" : schema.type;
-  let componentName = COMPONENT_TYPES[type];
+  // anyOf logic is handled inside the ArrayField component
+  const type = name === "anyOf" ? "array" : schema.type;
+  const componentName = COMPONENT_TYPES[type];
   return componentName in fields ? fields[componentName] : UnsupportedField;
 }
 
@@ -224,10 +225,7 @@ SchemaField.defaultProps = {
 
 if (process.env.NODE_ENV !== "production") {
   SchemaField.propTypes = {
-    schema: PropTypes.oneOfType([
-        PropTypes.object,
-        PropTypes.array,
-      ]).isRequired,
+    schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,
     formData: PropTypes.any,
