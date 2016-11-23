@@ -256,7 +256,7 @@ export function orderProperties(properties, order) {
 }
 
 export function isMultiSelect(schema) {
-  return Array.isArray(schema.items.enum) && schema.uniqueItems;
+  return (schema.items.enumOptions && schema.uniqueItems) || (Array.isArray(schema.items.enum) && schema.uniqueItems);
 }
 
 export function isFilesArray(schema, uiSchema) {
@@ -279,10 +279,14 @@ export function allowAdditionalItems(schema) {
 }
 
 export function optionsList(schema) {
-  return schema.enum.map((value, i) => {
-    const label = schema.enumNames && schema.enumNames[i] || String(value);
-    return {label, value};
-  });
+  if (schema.enumOptions != null){
+    return schema.enumOptions;
+  } else {
+    return schema.enum.map(function (value, i) {
+      var label = schema.enumNames && schema.enumNames[i] || String(value);
+      return { label: label, value: value };
+    });
+  }
 }
 
 function findSchemaDefinition($ref, definitions={}) {

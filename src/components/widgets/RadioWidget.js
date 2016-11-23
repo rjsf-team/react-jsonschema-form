@@ -6,28 +6,38 @@ function RadioWidget({
   options,
   value,
   required,
+  readonly,
   disabled,
   autofocus,
   onChange
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const {enumOptions, inline} = options;
+  const {inline} = options;
+  var {enumOptions} = options;
+  var { enumLabel,enumValue } = schema;
+  if (!enumValue) {
+    enumValue = "value";
+  }
+  if (!enumLabel) {
+    enumLabel = "label";
+  }  
   return (
     <div className="field-radio-group">{
       enumOptions.map((option, i) => {
-        const checked = option.value === value;
-        const disabledCls = disabled ? "disabled" : "";
+        const checked = option[enumValue] === value;
+        const disabledCls = disabled || readonly ? "disabled" : "";
         const radio = (
           <span>
             <input type="radio"
               name={name}
-              value={option.value}
+              required={required}
+              value={option[enumValue]}
               checked={checked}
-              disabled={disabled}
+              disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
-              onChange={_ => onChange(option.value)}/>
-            {option.label}
+              onChange={_ => onChange(option[enumValue])}/>
+            {option[enumLabel]}
           </span>
         );
 
@@ -61,6 +71,7 @@ if (process.env.NODE_ENV !== "production") {
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
+    readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
