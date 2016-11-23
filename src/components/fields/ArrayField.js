@@ -228,7 +228,7 @@ class ArrayField extends Component {
     const newItems = items.slice();
     const foundItem = anyOfItemsSchema.find((element) => element.type === value);
     newItems[index] = getDefaultFormState(foundItem, undefined, definitions);
-    
+
     const newAnyOfItems = [...this.state.anyOfItems];
     newAnyOfItems[index] = foundItem;
 

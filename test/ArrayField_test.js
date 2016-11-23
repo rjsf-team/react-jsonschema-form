@@ -760,7 +760,7 @@ describe("ArrayField", () => {
       Simulate.click(node.querySelector(".array-item-add button"));
     });
 
-    it("should render an add button", () => { 
+    it("should render an add button", () => {
       expect(node.querySelector(".array-item-add button"))
         .not.eql(null);
     });
@@ -775,7 +775,7 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll(".array-item")).to.have.length.of(2);
     });
 
-    it("should change the type of the widget", () => { 
+    it("should change the type of the widget", () => {
       Simulate.change(node.querySelector(".array-item select"), {
         target: {value: "number"}
       });
@@ -805,7 +805,7 @@ describe("ArrayField", () => {
       Simulate.change(selects[0], {
         target: {value: "number"}
       });
-      
+
       Simulate.change(node.querySelector("fieldset .field-number input[type=text]"), {target: {value: "123"}});
       Simulate.change(node.querySelector("fieldset .field-string input[type=text]"), {target: {value: "123"}});
       expect(comp.state.formData).eql([123, "123"]);
