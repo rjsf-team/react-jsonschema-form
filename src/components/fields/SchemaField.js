@@ -28,7 +28,7 @@ function getFieldComponent(schema, name, uiSchema, fields) {
   }
 
 
-  const type = name === "anyOf" ? "array" : schema.type;
+  const type = name === "anyOf" || name === "anyOf" ? "array" : schema.type;
   let componentName = COMPONENT_TYPES[type];
   return componentName in fields ? fields[componentName] : UnsupportedField;
 }
