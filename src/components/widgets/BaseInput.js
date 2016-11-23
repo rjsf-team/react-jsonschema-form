@@ -8,7 +8,7 @@ function BaseInput(props) {
     value,
     readonly,
     autofocus,
-    onChange,
+    _onChange,
     options,  // eslint-disable-line
     schema,   // eslint-disable-line
     formContext,  // eslint-disable-line
