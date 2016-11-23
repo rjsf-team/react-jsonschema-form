@@ -38,9 +38,6 @@ function CheckboxesWidget(props) {
   if (!enumLabel) {
     enumLabel = "label";
   }
-  if (!enumOptions) {
-    enumOptions = [];
-  }   
   return (
     <div className="checkboxes" id={id}>{
       enumOptions.map((option, index) => {

@@ -22,9 +22,6 @@ function RadioWidget({
   if (!enumLabel) {
     enumLabel = "label";
   }  
-  if (!enumOptions) {
-    enumOptions = [];
-  }  
   return (
     <div className="field-radio-group">{
       enumOptions.map((option, i) => {
