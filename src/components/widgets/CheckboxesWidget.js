@@ -14,12 +14,32 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const {id, disabled, options, value, autofocus, onChange} = props;
-  const {enumOptions, inline} = options;
+  const {id, disabled, options, value, autofocus, multiple, onChange} = props;
+  const {inline} = options;
+  var {enumOptions} = options;
+  var schema = props.schema;
+  var { enumLabel,enumValue } = schema;
+  if (multiple && schema.items) {
+    if (schema.items.enumLabel) {
+      enumLabel = schema.items.enumLabel;
+    }
+    if (schema.items.enumValue) {
+      enumValue = schema.items.enumValue;
+    }
+  }
+  if (!enumValue) {
+    enumValue = "value";
+  }
+  if (!enumLabel) {
+    enumLabel = "label";
+  }
+  if (!enumOptions) {
+    enumOptions = [];
+  }
   return (
     <div className="checkboxes" id={id}>{
       enumOptions.map((option, index) => {
-        const checked = value.indexOf(option.value) !== -1;
+        const checked = value.indexOf(option[enumValue]) !== -1;
         const disabledCls = disabled ? "disabled" : "";
         const checkbox = (
           <span>
@@ -31,12 +51,12 @@ function CheckboxesWidget(props) {
               onChange={(event) => {
                 const all = enumOptions.map(({value}) => value);
                 if (event.target.checked) {
-                  onChange(selectValue(option.value, value, all));
+                  onChange(selectValue(option[enumValue], value, all));
                 } else {
-                  onChange(deselectValue(option.value, value));
+                  onChange(deselectValue(option[enumValue], value));
                 }
               }}/>
-            {option.label}
+            {option[enumLabel]}
           </span>
         );
         return inline ? (

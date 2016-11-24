@@ -30,7 +30,25 @@ function SelectWidget({
   autofocus,
   onChange
 }) {
-  const {enumOptions} = options;
+  var {enumOptions} = options;
+  var { enumLabel,enumValue } = schema;
+  if (multiple && schema.items) {
+    if (schema.items.enumLabel) {
+      enumLabel = schema.items.enumLabel;
+    }
+    if (schema.items.enumValue) {
+      enumValue = schema.items.enumValue;
+    }
+  }
+  if (!enumValue) {
+    enumValue = "value";
+  }
+  if (!enumLabel) {
+    enumLabel = "label";
+  }  
+  if (!enumOptions) {
+    enumOptions = [];
+  }
   return (
     <select
       id={id}
@@ -51,8 +69,8 @@ function SelectWidget({
         }
         onChange(processValue(schema, newValue));
       }}>{
-      enumOptions.map(({value, label}, i) => {
-        return <option key={i} value={value}>{label}</option>;
+      enumOptions.map((option, i) => {
+        return <option key={i} value={option[enumValue]}>{option[enumLabel]}</option>;
       })
     }</select>
   );

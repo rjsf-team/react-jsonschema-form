@@ -308,7 +308,7 @@ Please note that while standardized, `datetime-local` and `date` input elements 
 
   * `updown`: an `input[type=number]` updown selector;
   * `range`: an `input[type=range]` slider;
-  * `radio`: a radio button group with enum values. **can only be used when `enum` values are specified for this input**
+  * `radio`: a radio button group with enum values. **can only be used when `enum` values or `enumOptions` are specified for this input**
   * by default, a regular `input[type=text]` element is used.
 
 > Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
@@ -515,6 +515,20 @@ This will be rendered using a select box that way:
 </select>
 ```
 
+Alternatively you can pass your own objects in and reference them directly as follows:
+
+    enumOptions: [{myvalue: 1, , mylabel: "one"}, {myvalue: 2, mylabel: "two"}, {myvalue: 3, mylabel: "three"}],
+    enumLabel: "mylabel",
+    enumValue: "myvalue"
+
+This will render indentically to the above.
+
+As a result it means you can use an existing array of objects and use "id" and "name" for example as the value and label.
+e.g.
+    enumOptions: myarray,
+    enumLabel: "name",
+    enumValue: "id"
+
 Note that string representations of numbers will be cast back and reflected as actual numbers into form state.
 
 ### Multiple choices list
@@ -523,6 +537,7 @@ The default behavior for array fields is a list of text inputs with add/remove b
 
 - an `enum` list for the `items` property of an `array` field
 - with the `uniqueItems` property set to `true`
+- again you can pass in your own structure through `enumOptions`, and reference it's label and value with `enumLabel` and `enumValue`
 
 Example:
 
