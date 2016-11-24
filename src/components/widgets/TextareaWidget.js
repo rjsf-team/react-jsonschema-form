@@ -12,6 +12,7 @@ function TextareaWidget({
   autofocus,
   onChange
 }) {
+  const _onChange = onChange;
   return (
     <textarea
       id={id}
@@ -22,7 +23,11 @@ function TextareaWidget({
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
-      onChange={(event) => onChange(event.target.value)}/>
+      onChange={(event) => {if (event.target.value == "") {
+        return _onChange(undefined);
+      } else {
+        return _onChange(event.target.value);
+      }}}/>
   );
 }
 
