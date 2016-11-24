@@ -31,7 +31,7 @@ function SelectWidget({
   onChange
 }) {
   var {enumOptions} = options;
-  var { enumLabel,enumValue } = schema;
+  var {enumLabel,enumValue} = schema;
   if (multiple && schema.items) {
     if (schema.items.enumLabel) {
       enumLabel = schema.items.enumLabel;

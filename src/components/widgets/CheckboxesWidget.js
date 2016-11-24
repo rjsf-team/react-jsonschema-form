@@ -18,7 +18,7 @@ function CheckboxesWidget(props) {
   const {inline} = options;
   var {enumOptions} = options;
   var schema = props.schema;
-  var { enumLabel,enumValue } = schema;
+  var {enumLabel,enumValue} = schema;
   if (multiple && schema.items) {
     if (schema.items.enumLabel) {
       enumLabel = schema.items.enumLabel;

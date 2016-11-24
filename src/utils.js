@@ -284,7 +284,7 @@ export function optionsList(schema) {
   } else {
     return schema.enum.map(function (value, i) {
       var label = schema.enumNames && schema.enumNames[i] || String(value);
-      return { label: label, value: value };
+      return {label: label, value: value};
     });
   }  
 }

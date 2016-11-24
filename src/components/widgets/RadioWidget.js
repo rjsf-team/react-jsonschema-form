@@ -14,7 +14,7 @@ function RadioWidget({
   const name = Math.random().toString();
   const {inline} = options;
   var {enumOptions} = options;
-  var { enumLabel,enumValue } = schema;
+  var {enumLabel,enumValue} = schema;
   if (!enumValue) {
     enumValue = "value";
   }
