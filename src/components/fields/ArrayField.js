@@ -216,8 +216,12 @@ class ArrayField extends Component {
       if (event) {
         event.preventDefault();
       }
+      var newitems = this.state.items.filter((_, i) => i !== index);
+      if (newitems.length == 0) {
+        newitems = undefined;
+      }
       this.asyncSetState({
-        items: this.state.items.filter((_, i) => i !== index)
+        items: newitems
       }, {validate: true}); // refs #195
     };
   };
@@ -327,7 +331,7 @@ class ArrayField extends Component {
   }
 
   renderMultiSelect() {
-    const {schema, idSchema, uiSchema, disabled, readonly, autofocus} = this.props;
+    const {schema, idSchema, uiSchema, disabled, required, readonly, autofocus} = this.props;
     const {items} = this.state;
     const {widgets, definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
@@ -338,6 +342,7 @@ class ArrayField extends Component {
       <Widget
         id={idSchema && idSchema.$id}
         multiple
+        required={required}
         onChange={this.onSelectChange}
         options={options}
         schema={schema}
