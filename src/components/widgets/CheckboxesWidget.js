@@ -36,7 +36,7 @@ function CheckboxesWidget(props) {
                   onChange(deselectValue(option.value, value));
                 }
               }}/>
-            {option.label}
+            <span>{option.label}</span>
           </span>
         );
         return inline ? (
