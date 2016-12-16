@@ -1,15 +1,7 @@
-import React, {Component, PropTypes} from "react";
-
-import ErrorList from "./ErrorList";
-import {
-  getDefaultFormState,
-  shouldRender,
-  toIdSchema,
-  setState,
-  getDefaultRegistry,
-} from "../utils";
-import validateFormData from "../validate";
-
+import React, { Component, PropTypes } from 'react';
+import ErrorList from './ErrorList';
+import { getDefaultFormState, shouldRender, toIdSchema, setState, getDefaultRegistry } from '../utils';
+import validateFormData from '../validate';
 
 export default class Form extends Component {
   static defaultProps = {
@@ -35,13 +27,13 @@ export default class Form extends Component {
     const edit = typeof props.formData !== "undefined";
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
-    const {definitions} = schema;
+    const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
-    const {errors, errorSchema} = mustValidate ?
+    const { errors, errorSchema } = mustValidate ?
       this.validate(formData, schema) : {
-        errors: state.errors || [],
-        errorSchema: state.errorSchema || {}
-      };
+      errors: state.errors || [],
+      errorSchema: state.errorSchema || {}
+    };
     const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
     return {
       status: "initial",
@@ -60,26 +52,26 @@ export default class Form extends Component {
   }
 
   validate(formData, schema) {
-    const {validate} = this.props;
+    const { validate } = this.props;
     return validateFormData(formData, schema || this.props.schema, validate);
   }
 
   renderErrors() {
-    const {status, errors} = this.state;
-    const {showErrorList} = this.props;
+    const { status, errors } = this.state;
+    const { showErrorList } = this.props;
 
     if (status !== "editing" && errors.length && showErrorList != false) {
-      return <ErrorList errors={errors}/>;
+      return <ErrorList errors={errors} />;
     }
     return null;
   }
 
-  onChange = (formData, options={validate: false}) => {
+  onChange = (formData, options = { validate: false }) => {
     const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
-    let state = {status: "editing", formData};
+    let state = { status: "editing", formData };
     if (mustValidate) {
-      const {errors, errorSchema} = this.validate(formData);
-      state = {...state, errors, errorSchema};
+      const { errors, errorSchema } = this.validate(formData);
+      state = { ...state, errors, errorSchema };
     }
     setState(this, state, () => {
       if (this.props.onChange) {
@@ -88,14 +80,22 @@ export default class Form extends Component {
     });
   };
 
+  onBlur = () => {
+    setState(this, state, () => {
+      if (this.props.onChange) {
+        this.props.onBlur(this.state);
+      }
+    })
+  }
+
   onSubmit = (event) => {
     event.preventDefault();
-    this.setState({status: "submitted"});
+    this.setState({ status: "submitted" });
 
     if (!this.props.noValidate) {
-      const {errors, errorSchema} = this.validate(this.state.formData);
+      const { errors, errorSchema } = this.validate(this.state.formData);
       if (Object.keys(errors).length > 0) {
-        setState(this, {errors, errorSchema}, () => {
+        setState(this, { errors, errorSchema }, () => {
           if (this.props.onError) {
             this.props.onError(errors);
           } else {
@@ -109,16 +109,16 @@ export default class Form extends Component {
     if (this.props.onSubmit) {
       this.props.onSubmit(this.state);
     }
-    this.setState({status: "initial", errors: [], errorSchema: {}});
+    this.setState({ status: "initial", errors: [], errorSchema: {} });
   };
 
   getRegistry() {
     // For BC, accept passed SchemaField and TitleField props and pass them to
     // the "fields" registry one.
-    const {fields, widgets} = getDefaultRegistry();
+    const { fields, widgets } = getDefaultRegistry();
     return {
-      fields: {...fields, ...this.props.fields},
-      widgets: {...widgets, ...this.props.widgets},
+      fields: { ...fields, ...this.props.fields },
+      widgets: { ...widgets, ...this.props.widgets },
       FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
       formContext: this.props.formContext || {},
@@ -140,21 +140,21 @@ export default class Form extends Component {
       acceptcharset
     } = this.props;
 
-    const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
+    const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
 
     return (
       <form className={className ? className : "rjsf"}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autocomplete}
-        encType={enctype}
-        acceptCharset={acceptcharset}
-        onSubmit={this.onSubmit}>
+            id={id}
+            name={name}
+            method={method}
+            target={target}
+            action={action}
+            autoComplete={autocomplete}
+            encType={enctype}
+            acceptCharset={acceptcharset}
+            onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
@@ -163,8 +163,9 @@ export default class Form extends Component {
           idSchema={idSchema}
           formData={formData}
           onChange={this.onChange}
+          onBlur={this.onBlur}
           registry={registry}
-          safeRenderCompletion={safeRenderCompletion}/>
+          safeRenderCompletion={safeRenderCompletion} />
         { children ? children :
           <p>
             <button type="submit" className="btn btn-info">Submit</button>
@@ -186,6 +187,7 @@ if (process.env.NODE_ENV !== "production") {
     fields: PropTypes.objectOf(PropTypes.func),
     FieldTemplate: PropTypes.func,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
     onError: PropTypes.func,
     showErrorList: PropTypes.bool,
     onSubmit: PropTypes.func,

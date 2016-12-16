@@ -63,6 +63,12 @@ class AltDateWidget extends Component {
     });
   };
 
+  onBlur = () => {
+    if(this.props.onBlur){
+      this.props.onBlur(toDateString(this.state, this.props.time));
+    }
+  };
+
   setNow = (event) => {
     event.preventDefault();
     const {time, disabled, readonly, onChange} = this.props;
@@ -140,6 +146,7 @@ if (process.env.NODE_ENV !== "production") {
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
     time: PropTypes.bool,
   };
 }

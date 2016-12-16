@@ -10,7 +10,8 @@ function TextareaWidget({
   disabled,
   readonly,
   autofocus,
-  onChange
+  onChange,
+  onBlur,
 }) {
   return (
     <textarea
@@ -22,7 +23,8 @@ function TextareaWidget({
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
-      onChange={(event) => onChange(event.target.value)}/>
+      onChange={(event) => onChange(event.target.value)}
+      onBlur={(event) => onBlur(event.target.value)}/>
   );
 }
 
@@ -39,6 +41,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 

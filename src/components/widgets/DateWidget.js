@@ -4,12 +4,13 @@ import BaseInput from "./BaseInput";
 
 
 function DateWidget(props) {
-  const {onChange} = props;
+  const {onChange, onBlur} = props;
   return (
     <BaseInput
       type="date"
       {...props}
-      onChange={(value) => onChange(value || undefined)}/>
+      onChange={(value) => onChange(value || undefined)}
+      onBlur={(value) => onBlur(value || undefined)}/>
   );
 }
 

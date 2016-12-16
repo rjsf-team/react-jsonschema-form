@@ -93,6 +93,12 @@ class FileWidget extends Component {
       });
   };
 
+  onBlur = (event) => {
+    if(this.props.onBlur){
+      this.props.onBlur(event);
+    }
+  };
+
   render() {
     const {multiple, id, readonly, disabled, autofocus} = this.props;
     const {filesInfo} = this.state;
@@ -105,6 +111,7 @@ class FileWidget extends Component {
             type="file"
             disabled={readonly || disabled}
             onChange={this.onChange}
+            onBlur={this.onBlur}
             defaultValue=""
             autoFocus={autofocus}
             multiple={multiple}/>

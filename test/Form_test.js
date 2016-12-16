@@ -504,6 +504,34 @@ describe("Form", () => {
     });
   });
 
+  describe("Blur handler", () => {
+    it("should call provided blur handler on field blur", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+          },
+        }
+      };
+      const formData = {
+        foo: ""
+      };
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema, formData, onBlur});
+
+      Simulate.blur(node.querySelector("[type=text]"), {
+        target: {value: "new"}
+      });
+
+      sinon.assert.calledWithMatch(onBlur, {
+        formData: {
+          foo: "new"
+        }
+      });
+    });
+  });
+
   describe("Error handler", () => {
     it("should call provided error handler on validation errors", () => {
       const schema = {

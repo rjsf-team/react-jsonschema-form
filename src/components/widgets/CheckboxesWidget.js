@@ -14,7 +14,7 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const {id, disabled, options, value, autofocus, onChange} = props;
+  const {id, disabled, options, value, autofocus, onChange, onBlur} = props;
   const {enumOptions, inline} = options;
   return (
     <div className="checkboxes" id={id}>{
@@ -35,7 +35,13 @@ function CheckboxesWidget(props) {
                 } else {
                   onChange(deselectValue(option.value, value));
                 }
-              }}/>
+              }}
+              onBlur={(event) => {
+                if(onBlur){
+                  this.props.onBlur(event);
+                }
+              }}
+            />
             <span>{option.label}</span>
           </span>
         );
@@ -76,6 +82,7 @@ if (process.env.NODE_ENV !== "production") {
     multiple: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 

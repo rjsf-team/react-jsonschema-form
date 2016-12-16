@@ -8,7 +8,8 @@ function RadioWidget({
   required,
   disabled,
   autofocus,
-  onChange
+  onChange,
+  onBlur
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
@@ -28,7 +29,8 @@ function RadioWidget({
               value={option.value}
               disabled={disabled}
               autoFocus={autofocus && i === 0}
-              onChange={_ => onChange(option.value)}/>
+              onChange={_ => onChange(option.value)}
+              onBlur={_ => onBlur(option.value)}/>
             <span>{option.label}</span>
           </span>
         );
@@ -65,6 +67,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 export default RadioWidget;
