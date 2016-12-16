@@ -136,6 +136,7 @@ class ObjectField extends Component {
               idSchema={idSchema[name]}
               formData={this.state[name]}
               onChange={this.onPropertyChange(name)}
+              onBlur={this.props.onBlur}
               registry={this.props.registry}
               disabled={disabled}
               readonly={readonly}/>
@@ -153,6 +154,7 @@ if (process.env.NODE_ENV !== "production") {
     errorSchema: PropTypes.object,
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func,
     formData: PropTypes.object,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

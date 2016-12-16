@@ -24,7 +24,11 @@ function TextareaWidget({
       readOnly={readonly}
       autoFocus={autofocus}
       onChange={(event) => onChange(event.target.value)}
-      onBlur={(event) => onBlur(event.target.value)}/>
+      onBlur={(event) => {
+        if(onBlur){
+          onBlur(event.target.value)
+        }
+      }} />
   );
 }
 

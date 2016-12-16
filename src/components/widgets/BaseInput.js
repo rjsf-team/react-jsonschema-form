@@ -2,6 +2,7 @@ import React, {PropTypes} from "react";
 
 
 function BaseInput(props) {
+  debugger;
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   const {
@@ -24,7 +25,11 @@ function BaseInput(props) {
       autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
       onChange={(event) => onChange(event.target.value)}
-      onBlur={(event) => onBlur(event.target.value)}/>
+      onBlur={(event) => {
+        if(onBlur) {
+          return onBlur(event.target.id);
+        }
+      }} />
   );
 }
 

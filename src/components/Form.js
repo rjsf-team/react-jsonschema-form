@@ -81,11 +81,9 @@ export default class Form extends Component {
   };
 
   onBlur = () => {
-    setState(this, state, () => {
-      if (this.props.onChange) {
-        this.props.onBlur(this.state);
-      }
-    })
+    if (this.props.onBlur) {
+      this.props.onBlur(this.state);
+    }
   }
 
   onSubmit = (event) => {
@@ -137,7 +135,8 @@ export default class Form extends Component {
       action,
       autocomplete,
       enctype,
-      acceptcharset
+      acceptcharset,
+      onBlur
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
@@ -163,7 +162,7 @@ export default class Form extends Component {
           idSchema={idSchema}
           formData={formData}
           onChange={this.onChange}
-          onBlur={this.onBlur}
+          onBlur={onBlur}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion} />
         { children ? children :
