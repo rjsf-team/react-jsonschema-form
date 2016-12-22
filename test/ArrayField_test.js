@@ -324,7 +324,7 @@ describe("ArrayField", () => {
 
       it("should handle a blur event", () => {
         const onBlur = sandbox.spy();
-        const {comp, node} = createFormComponent({schema, onBlur});
+        const {node} = createFormComponent({schema, onBlur});
 
         const select = node.querySelector(".field select");
         Simulate.blur(select, {
