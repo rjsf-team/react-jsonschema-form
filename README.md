@@ -195,7 +195,7 @@ If you plan on being notified everytime the form data are updated, you can pass 
 
 #### Form field blur events
 
-Sometimes you may want to trigger events or modify exteran state when a field has been touched, so you can pass an `onBlur` handler, which will receive the id of the input that was blurred and the field value.
+Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass an `onBlur` handler, which will receive the id of the input that was blurred and the field value.
 
 ## Form customization
 
