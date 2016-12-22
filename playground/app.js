@@ -359,6 +359,7 @@ class App extends Component {
               onChange={this.onFormDataChange}
               fields={{geo: GeoPosition}}
               validate={validate}
+              onBlur={(id, value) => console.log(`Touched ${id} with value ${value}`)}
               onError={log("errors")} />}
         </div>
       </div>
