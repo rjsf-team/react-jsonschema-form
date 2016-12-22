@@ -78,6 +78,7 @@ describe("Rendering performance optimizations", () => {
         schema,
         formData,
         onChange,
+        onBlur
       });
       sandbox.stub(comp, "render").returns(<div/>);
 
