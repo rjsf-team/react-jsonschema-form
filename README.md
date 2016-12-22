@@ -20,6 +20,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Form submission](#form-submission)
         - [Form error event handler](#form-error-event-handler)
         - [Form data changes](#form-data-changes)
+        - [Form field blur events](#form-field-blur-events)
   - [Form customization](#form-customization)
      - [The uiSchema object](#the-uischema-object)
      - [Alternative widgets](#alternative-widgets)
@@ -191,6 +192,10 @@ render((
 #### Form data changes
 
 If you plan on being notified everytime the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
+
+#### Form field blur events
+
+Sometimes you may want to trigger events or modify exteran state when a field has been touched, so you can pass an `onBlur` handler, which will receive the id of the input that was blurred and the field value.
 
 ## Form customization
 
@@ -741,12 +746,14 @@ render((
 
 The following props are passed to custom widget components:
 
+- `id`: The generated id for this field;
 - `schema`: The JSONSchema subschema object for this field;
 - `value`: The current value for this field;
 - `required`: The required status of this field;
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
+- `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `formContext`: The `formContext` object that you passed to Form.
 
