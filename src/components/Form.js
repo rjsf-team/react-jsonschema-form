@@ -60,8 +60,8 @@ export default class Form extends Component {
   }
 
   validate(formData, schema) {
-    const {validate} = this.props;
-    return validateFormData(formData, schema || this.props.schema, validate);
+    const {validate, transformErrors} = this.props;
+    return validateFormData(formData, schema || this.props.schema, validate, transformErrors);
   }
 
   renderErrors() {
@@ -200,6 +200,8 @@ if (process.env.NODE_ENV !== "production") {
     acceptcharset: PropTypes.string,
     noValidate: PropTypes.bool,
     liveValidate: PropTypes.bool,
+    validate: PropTypes.func,
+    transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
   };
