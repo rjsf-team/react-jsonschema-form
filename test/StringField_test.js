@@ -77,6 +77,19 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("yo");
     });
 
+    it("should handle a blur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+      }, onBlur});
+
+      const input = node.querySelector("input");
+      Simulate.blur(input, {
+        target: {value: "yo"}
+      });
+
+      expect(onBlur.calledWith(input.id, "yo")).to.be.true;
+    });
     it("should fill field with data", () => {
       const {node} = createFormComponent({schema: {
         type: "string",

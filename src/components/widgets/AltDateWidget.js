@@ -16,7 +16,7 @@ function readyForChange(state) {
 }
 
 function DateElement(props) {
-  const {type, range, value, select, rootId, disabled, readonly, autofocus, registry} = props;
+  const {type, range, value, select, rootId, disabled, readonly, autofocus, registry, onBlur} = props;
   const id = rootId + "_" + type;
   const {SelectWidget} = registry.widgets;
   return (
@@ -29,7 +29,8 @@ function DateElement(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={(value) => select(type, value)}/>
+      onChange={(value) => select(type, value)}
+      onBlur={onBlur}/>
   );
 }
 
@@ -101,7 +102,7 @@ class AltDateWidget extends Component {
   }
 
   render() {
-    const {id, disabled, readonly, autofocus, registry} = this.props;
+    const {id, disabled, readonly, autofocus, registry, onBlur} = this.props;
     return (
       <ul className="list-inline">{
         this.dateElementProps.map((elemProps, i) => (
@@ -113,6 +114,7 @@ class AltDateWidget extends Component {
               disabled= {disabled}
               readonly={readonly}
               registry={registry}
+              onBlur={onBlur}
               autofocus={autofocus && i === 0}/>
           </li>
         ))
@@ -140,6 +142,7 @@ if (process.env.NODE_ENV !== "production") {
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
     time: PropTypes.bool,
   };
 }

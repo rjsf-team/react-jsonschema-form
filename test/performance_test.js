@@ -50,6 +50,7 @@ describe("Rendering performance optimizations", () => {
 
   describe("ArrayField", () => {
     const onChange = () => {};
+    const onBlur = () => {};
     const schema = {type: "array", items: {type: "string"}};
     const uiSchema = {};
     const registry = getDefaultRegistry();
@@ -60,6 +61,7 @@ describe("Rendering performance optimizations", () => {
         schema,
         uiSchema,
         onChange,
+        onBlur
       });
       sandbox.stub(comp, "render").returns(<div/>);
 

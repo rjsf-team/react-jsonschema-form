@@ -173,6 +173,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
+      onBlur
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
     const {items} = this.state;
@@ -208,7 +209,8 @@ class ArrayField extends Component {
               itemErrorSchema,
               itemData: items[index],
               itemUiSchema: uiSchema.items,
-              autofocus: autofocus && index === 0
+              autofocus: autofocus && index === 0,
+              onBlur
             });
           })
         }</div>
@@ -220,7 +222,7 @@ class ArrayField extends Component {
   }
 
   renderMultiSelect() {
-    const {schema, idSchema, uiSchema, disabled, readonly, autofocus} = this.props;
+    const {schema, idSchema, uiSchema, disabled, readonly, autofocus, onBlur} = this.props;
     const {items} = this.state;
     const {widgets, definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
@@ -232,6 +234,7 @@ class ArrayField extends Component {
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
+        onBlur={onBlur}
         options={options}
         schema={schema}
         value={items}
@@ -242,7 +245,7 @@ class ArrayField extends Component {
   }
 
   renderFiles() {
-    const {schema, uiSchema, idSchema, name, disabled, readonly, autofocus} = this.props;
+    const {schema, uiSchema, idSchema, name, disabled, readonly, autofocus, onBlur} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
     const {widgets} = this.props.registry;
@@ -254,6 +257,7 @@ class ArrayField extends Component {
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
+        onBlur={onBlur}
         schema={schema}
         title={title}
         value={items}
@@ -274,6 +278,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
+      onBlur
     } = this.props;
     const title = schema.title || name;
     let {items} = this.state;
@@ -324,7 +329,8 @@ class ArrayField extends Component {
               itemUiSchema,
               itemIdSchema,
               itemErrorSchema,
-              autofocus: autofocus && index === 0
+              autofocus: autofocus && index === 0,
+              onBlur
             });
           })
         }</div>
@@ -347,7 +353,8 @@ class ArrayField extends Component {
     itemUiSchema,
     itemIdSchema,
     itemErrorSchema,
-    autofocus
+    autofocus,
+    onBlur
   }) {
     const {SchemaField} = this.props.registry.fields;
     const {disabled, readonly, uiSchema} = this.props;
@@ -375,6 +382,7 @@ class ArrayField extends Component {
             idSchema={itemIdSchema}
             required={this.isItemRequired(itemSchema)}
             onChange={this.onChangeForIndex(index)}
+            onBlur={onBlur}
             registry={this.props.registry}
             disabled={this.props.disabled}
             readonly={this.props.readonly}
@@ -439,6 +447,7 @@ if (process.env.NODE_ENV !== "production") {
     idSchema: PropTypes.object,
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func.isRequired,
     formData: PropTypes.array,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
