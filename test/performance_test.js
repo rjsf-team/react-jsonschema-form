@@ -90,6 +90,7 @@ describe("Rendering performance optimizations", () => {
 
   describe("ObjectField", () => {
     const onChange = () => {};
+    const onBlur = () => {};
     const registry = getDefaultRegistry();
     const uiSchema = {};
     const schema = {
@@ -107,6 +108,7 @@ describe("Rendering performance optimizations", () => {
         uiSchema,
         onChange,
         idSchema,
+        onBlur
       });
       sandbox.stub(comp, "render").returns(<div/>);
 
@@ -124,6 +126,7 @@ describe("Rendering performance optimizations", () => {
         formData,
         onChange,
         idSchema,
+        onBlur
       });
       sandbox.stub(comp, "render").returns(<div/>);
 
