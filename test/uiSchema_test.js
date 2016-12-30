@@ -244,11 +244,9 @@ describe("uiSchema", () => {
       describe("direct reference", () => {
         const uiSchema = {
           "field": {
-            "ui:widget": {
-              component: CustomWidget,
-              options: {
-                className: "custom"
-              }
+            "ui:widget": CustomWidget,
+            "ui:options": {
+              className: "custom"
             }
           }
         };
@@ -263,11 +261,9 @@ describe("uiSchema", () => {
       describe("string reference", () => {
         const uiSchema = {
           "field": {
-            "ui:widget": {
-              component: "custom",
-              options: {
-                className: "custom"
-              }
+            "ui:widget": "custom",
+            "ui:options": {
+              className: "custom"
             }
           }
         };
@@ -307,11 +303,9 @@ describe("uiSchema", () => {
 
       const uiSchema = {
         "field": {
-          "ui:widget": {
-            component: CustomWidget,
-            options: {
-              className: "custom"
-            }
+          "ui:widget": CustomWidget,
+          "ui:options": {
+            className: "custom"
           }
         }
       };
