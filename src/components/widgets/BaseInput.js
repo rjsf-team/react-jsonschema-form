@@ -2,7 +2,6 @@ import React, {PropTypes} from "react";
 
 
 function BaseInput(props) {
-  debugger;
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   const {
