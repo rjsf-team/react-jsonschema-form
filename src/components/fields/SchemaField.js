@@ -109,9 +109,9 @@ if (process.env.NODE_ENV !== "production") {
     errors: PropTypes.element,
     rawErrors: PropTypes.arrayOf(PropTypes.string),
     help: PropTypes.element,
-    rawHelp: PropTypes.string,
+    rawHelp: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     description: PropTypes.element,
-    rawDescription: PropTypes.string,
+    rawDescription: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     hidden: PropTypes.bool,
     required: PropTypes.bool,
     readonly: PropTypes.bool,
@@ -157,12 +157,15 @@ function SchemaField(props) {
     displayLabel = false;
   }
 
+  const {__errors, ...fieldErrorSchema} = errorSchema;
+
   const field = (
     <FieldComponent {...props}
       schema={schema}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
+      errorSchema={fieldErrorSchema}
       formContext={formContext}/>
   );
 
@@ -170,7 +173,7 @@ function SchemaField(props) {
   const id = idSchema.$id;
   const label = props.schema.title || schema.title || name;
   const description = props.schema.description || schema.description;
-  const errors = errorSchema.__errors;
+  const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
   const classNames = [
@@ -199,6 +202,8 @@ function SchemaField(props) {
     classNames,
     formContext,
     fields,
+    schema,
+    uiSchema,
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;

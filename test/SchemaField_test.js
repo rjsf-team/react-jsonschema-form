@@ -1,5 +1,6 @@
 import React from "react";
 import {expect} from "chai";
+import {Simulate} from "react-addons-test-utils";
 
 import SchemaField from "../src/components/fields/SchemaField";
 import TitleField from "../src/components/fields/TitleField";
@@ -193,6 +194,54 @@ describe("SchemaField", () => {
 
       expect(node.querySelector("#custom").textContent)
         .to.eql("A Foo field");
+    });
+  });
+
+  describe("errors", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {type: "string"}
+      }
+    };
+
+    const uiSchema = {
+      "ui:field": (props) => {
+        const {uiSchema, ...fieldProps} = props; //eslint-disable-line
+        return <SchemaField {...fieldProps}/>;
+      }
+    };
+
+    function validate(formData, errors) {
+      errors.addError("container");
+      errors.foo.addError("test");
+      return errors;
+    }
+
+    function submit(node) {
+      try {
+        Simulate.submit(node);
+      } catch (e) {
+        // Silencing error thrown as failure is expected here
+      }
+    }
+
+    it("should render it's own errors", () => {
+      const {node} = createFormComponent({schema, uiSchema, validate});
+      submit(node);
+
+      const matches = node.querySelectorAll("form > .form-group > div > .error-detail .text-danger");
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.eql("container");
+    });
+
+    it("should pass errors to child component", () => {
+      const {node} = createFormComponent({schema, uiSchema, validate});
+      submit(node);
+
+      const matches = node.querySelectorAll("form .form-group .form-group .text-danger");
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.contain("test");
     });
   });
 });

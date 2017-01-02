@@ -1,8 +1,9 @@
 import React, {Component, PropTypes} from "react";
 
 import {
-  getAlternativeWidget,
+  getWidget,
   getDefaultFormState,
+  getUiOptions,
   isMultiSelect,
   isFilesArray,
   isFixedItems,
@@ -178,10 +179,7 @@ class ArrayField extends Component {
     const {definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    const {addable} = {
-      addable: true,
-      ...uiSchema["ui:options"]
-    };
+    const {addable=true} = getUiOptions(uiSchema);
 
     return (
       <fieldset
@@ -226,17 +224,15 @@ class ArrayField extends Component {
     const {items} = this.state;
     const {widgets, definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-
-    const Widget = getAlternativeWidget(schema, uiSchema["ui:widget"] || "select", widgets);
+    const enumOptions = optionsList(itemsSchema);
+    const {widget="select", ...options} = {...getUiOptions(uiSchema), enumOptions};
+    const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
-        options={{
-          ...Widget.defaultProps.options,
-          enumOptions: optionsList(itemsSchema),
-        }}
+        options={options}
         schema={schema}
         value={items}
         disabled={disabled}
@@ -246,12 +242,15 @@ class ArrayField extends Component {
   }
 
   renderFiles() {
-    const {schema, idSchema, name, disabled, readonly, autofocus} = this.props;
+    const {schema, uiSchema, idSchema, name, disabled, readonly, autofocus} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const {FileWidget} = this.props.registry.widgets;
+    const {widgets} = this.props.registry;
+    const {widget="files", ...options} = getUiOptions(uiSchema);
+    const Widget = getWidget(schema, widget, widgets);
     return (
-      <FileWidget
+      <Widget
+        options={options}
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
@@ -284,10 +283,7 @@ class ArrayField extends Component {
       retrieveSchema(item, definitions));
     const additionalSchema = allowAdditionalItems(schema) ?
       retrieveSchema(schema.additionalItems, definitions) : null;
-    const {addable} = {
-      addable: true,
-      ...uiSchema["ui:options"]
-    };
+    const {addable=true} = getUiOptions(uiSchema);
     const canAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
@@ -423,7 +419,7 @@ function AddButton({onClick, disabled}) {
     <div className="row">
       <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
         <IconBtn type="info" icon="plus" className="btn-add col-xs-12"
-                 tabIndex="-1" onClick={onClick}
+                 tabIndex="0" onClick={onClick}
                  disabled={disabled}/>
       </p>
     </div>
@@ -435,7 +431,9 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.shape({
       "ui:options": PropTypes.shape({
-        orderable: PropTypes.bool
+        addable: PropTypes.bool,
+        orderable: PropTypes.bool,
+        removable: PropTypes.bool
       })
     }),
     idSchema: PropTypes.object,

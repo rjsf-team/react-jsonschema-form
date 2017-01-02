@@ -35,9 +35,9 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
            - [File widget input ref](#file-widget-input-ref)
      - [Object fields ordering](#object-fields-ordering)
      - [Array item options](#array-item-options)
-        - [Orderable option](#orderable-option)
-        - [Addable option](#addable-option)
-        - [Removable option](#removable-option)
+        - [orderable option](#orderable-option)
+        - [addable option](#addable-option)
+        - [removable option](#removable-option)
      - [Custom CSS class names](#custom-css-class-names)
      - [Custom labels for enum fields](#custom-labels-for-enum-fields)
      - [Multiple choices list](#multiple-choices-list)
@@ -59,7 +59,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [The formContext object](#the-formcontext-object)
      - [Custom array field buttons](#custom-array-field-buttons)
      - [Custom SchemaField](#custom-schemafield)
-     - [Customizing the fields and widgets](#customizing-the-default-fields-and-widgets)
+     - [Customizing the default fields and widgets](#customizing-the-default-fields-and-widgets)
      - [Custom titles](#custom-titles)
      - [Custom descriptions](#custom-descriptions)
   - [Form data validation](#form-data-validation)
@@ -550,11 +550,9 @@ By default, checkboxes are stacked but if you prefer them inline:
 
 ```js
 const uiSchema = {
-  "ui:widget": {
-    component: "checkboxes",
-    options: {
-      inline: true
-    }
+  "ui:widget": "checkboxes",
+  "ui:options": {
+    inline: true
   }
 };
 ```
@@ -582,7 +580,7 @@ render((
   <Form schema={schema}>
     <div>
       <button type="submit">Submit</button>
-      <button>Cancel</button>
+      <button type="button">Cancel</button>
     </div>
   </Form>
 ), document.getElementById("app"));
@@ -696,6 +694,8 @@ The following props are passed to a custom field template component:
 - `readonly`: A boolean value stating if the field is read-only.
 - `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where you don't want to clutter the UI.
 - `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.
+- `schema`: The schema object for this field.
+- `uiSchema`: The uiSchema object for this field.
 - `formContext`: The `formContext` object that you passed to Form.
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
@@ -785,9 +785,11 @@ render((
 
 This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
 
+> Note: Until 0.40.0 it was possible to register a widget as object with shape `{ component: MyCustomWidget, options: {...} }`. This undocumented API has been removed. Instead, you can register a custom widget with a React `defaultProps` property. `defaultProps.options` can be an object containing your custom options.
+
 #### Custom widget options
 
-If you need to pass options to your custom widget, change your `ui:widget` value to be an object having the following structure:
+If you need to pass options to your custom widget, you can add a `ui:options` object containing those properties. If the widget has `defaultProps`, the options will be merged with the (optional) options object from `defaultProps`:
 
 ```jsx
 const schema = {
@@ -796,18 +798,24 @@ const schema = {
 
 function MyCustomWidget(props) {
   const {options} = props;
-  return <input style={{options.backgroundColor}} />;
+  const {color, backgroundColor} = options;
+  return <input style={{color, backgroundColor}} />;
 }
 
-const uiSchema = {
-  "ui:widget": {
-    options: {
-      backgroundColor: "yellow",
-    },
-    component: MyCustomWidget
+MyCustomWidget.defaultProps = {
+  options: {
+    color: "red"
   }
 };
 
+const uiSchema = {
+  "ui:widget": MyCustomWidget,
+  "ui:options": {
+    backgroundColor: "yellow"
+  }
+};
+
+// renders red on yellow input
 render((
   <Form schema={schema}
         uiSchema={uiSchema} />
@@ -815,6 +823,8 @@ render((
 ```
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
+
+> Note: Since v0.41.0, the `ui:widget` object API, where a widget and options were specified with `"ui:widget": {component, options}` shape, is deprecated. It will be removed in a future release.
 
 ### Custom field components
 

@@ -20,23 +20,33 @@ function CheckboxesWidget(props) {
     <div className="checkboxes" id={id}>{
       enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
-        return (
-          <div key={index} className={`checkbox${inline ? "-inline" : ""}`}>
+        const disabledCls = disabled ? "disabled" : "";
+        const checkbox = (
+          <span>
+            <input type="checkbox"
+              id={`${id}_${index}`}
+              checked={checked}
+              disabled={disabled}
+              autoFocus={autofocus && index === 0}
+              onChange={(event) => {
+                const all = enumOptions.map(({value}) => value);
+                if (event.target.checked) {
+                  onChange(selectValue(option.value, value, all));
+                } else {
+                  onChange(deselectValue(option.value, value));
+                }
+              }}/>
+            <span>{option.label}</span>
+          </span>
+        );
+        return inline ? (
+          <label key={index} className={`checkbox-inline ${disabledCls}`}>
+            {checkbox}
+          </label>
+        ) : (
+          <div key={index} className={`checkbox ${disabledCls}`}>
             <label>
-              <input type="checkbox"
-                id={`${id}_${index}`}
-                checked={checked}
-                disabled={disabled}
-                autoFocus={autofocus && index === 0}
-                onChange={(event) => {
-                  const all = enumOptions.map(({value}) => value);
-                  if (event.target.checked) {
-                    onChange(selectValue(option.value, value, all));
-                  } else {
-                    onChange(deselectValue(option.value, value));
-                  }
-                }}/>
-              <strong>{option.label}</strong>
+              {checkbox}
             </label>
           </div>
         );
@@ -62,6 +72,7 @@ if (process.env.NODE_ENV !== "production") {
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
     multiple: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,

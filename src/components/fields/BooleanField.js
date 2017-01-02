@@ -2,26 +2,11 @@ import React, {PropTypes} from "react";
 
 import {
   defaultFieldValue,
-  getAlternativeWidget,
+  getWidget,
+  getUiOptions,
   optionsList,
-  getDefaultRegistry,
-  isObject,
+  getDefaultRegistry
 } from "../../utils";
-
-
-function buildOptions(schema, uiWidget) {
-  // Note: uiWidget can be undefined, a string or an object; we only deal with
-  // the inline option when we're provided a definition object.
-  return {
-    inline: isObject(uiWidget) &&
-            isObject(uiWidget.options) &&
-            uiWidget.options.inline,
-    enumOptions: optionsList(Object.assign({
-      enumNames: ["true", "false"],
-      enum: [true, false]
-    }, {enumNames: schema.enumNames}))
-  };
-}
 
 function BooleanField(props) {
   const {
@@ -39,26 +24,25 @@ function BooleanField(props) {
   } = props;
   const {title} = schema;
   const {widgets, formContext} = registry;
-  const widget = uiSchema["ui:widget"];
-  const commonProps = {
-    schema,
-    id: idSchema && idSchema.$id,
-    onChange,
-    label: (title === undefined) ? name : title,
-    value: defaultFieldValue(formData, schema),
-    required,
-    disabled,
-    readonly,
-    registry,
-    formContext,
-    autofocus,
-  };
-  if (widget) {
-    const Widget = getAlternativeWidget(schema, widget, widgets);
-    return <Widget options={buildOptions(schema, uiSchema["ui:widget"])} {...commonProps}/>;
-  }
-  const {CheckboxWidget} = registry.widgets;
-  return <CheckboxWidget {...commonProps}/>;
+  const {widget="checkbox", ...options} = getUiOptions(uiSchema);
+  const Widget = getWidget(schema, widget, widgets);
+  const enumOptions = optionsList({
+    enum: [true, false],
+    enumNames: schema.enumNames || ["yes", "no"]
+  });
+  return <Widget
+    options={{...options, enumOptions}}
+    schema={schema}
+    id={idSchema && idSchema.$id}
+    onChange={onChange}
+    label={title === undefined ? name : title}
+    value={defaultFieldValue(formData, schema)}
+    required={required}
+    disabled={disabled}
+    readonly={readonly}
+    registry={registry}
+    formContext={formContext}
+    autofocus={autofocus}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {

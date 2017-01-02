@@ -1,32 +1,46 @@
+import React from "react";
 import "setimmediate";
 
 
-const altWidgetMap = {
+const widgetMap = {
   boolean: {
+    checkbox: "CheckboxWidget",
     radio: "RadioWidget",
     select: "SelectWidget",
     hidden: "HiddenWidget",
   },
   string: {
+    text: "TextWidget",
     password: "PasswordWidget",
+    email: "EmailWidget",
+    hostname: "TextWidget",
+    ipv4: "TextWidget",
+    ipv6: "TextWidget",
+    uri: "URLWidget",
+    "data-url": "FileWidget",
     radio: "RadioWidget",
     select: "SelectWidget",
     textarea: "TextareaWidget",
     hidden: "HiddenWidget",
     date: "DateWidget",
     datetime: "DateTimeWidget",
+    "date-time": "DateTimeWidget",
     "alt-date": "AltDateWidget",
     "alt-datetime": "AltDateTimeWidget",
     color: "ColorWidget",
     file: "FileWidget",
   },
   number: {
+    text: "TextWidget",
+    select: "SelectWidget",
     updown: "UpDownWidget",
     range: "RangeWidget",
     radio: "RadioWidget",
     hidden: "HiddenWidget",
   },
   integer: {
+    text: "TextWidget",
+    select: "SelectWidget",
     updown: "UpDownWidget",
     range: "RangeWidget",
     radio: "RadioWidget",
@@ -35,98 +49,40 @@ const altWidgetMap = {
   array: {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
+    files: "FileWidget"
   }
 };
 
-const stringFormatWidgets = {
-  "date-time": "DateTimeWidget",
-  "date": "DateWidget",
-  "email": "EmailWidget",
-  "hostname": "TextWidget",
-  "ipv4": "TextWidget",
-  "ipv6": "TextWidget",
-  "uri": "URLWidget",
-  "data-url": "FileWidget",
+const defaultRegistry = {
+  fields: require("./components/fields").default,
+  widgets: require("./components/widgets").default,
+  definitions: {},
+  formContext: {}
 };
 
 export function getDefaultRegistry() {
-  const load = (prefix, arr) => arr.reduce((obj, comp) => {
-    obj[comp] = require(`./components/${prefix}/${comp}`).default;
-    return obj;
-  }, {});
-
-  const fields = load("fields", [
-    "SchemaField",
-    "ArrayField",
-    "BooleanField",
-    "ObjectField",
-    "StringField",
-    "NumberField",
-    "TitleField",
-    "DescriptionField",
-  ]);
-
-  const widgets = load("widgets", [
-    "PasswordWidget",
-    "RadioWidget",
-    "UpDownWidget",
-    "RangeWidget",
-    "SelectWidget",
-    "TextWidget",
-    "DateWidget",
-    "DateTimeWidget",
-    "AltDateWidget",
-    "AltDateTimeWidget",
-    "EmailWidget",
-    "URLWidget",
-    "TextareaWidget",
-    "HiddenWidget",
-    "ColorWidget",
-    "FileWidget",
-    "CheckboxWidget",
-    "CheckboxesWidget",
-  ]);
-
-  return {
-    fields,
-    widgets,
-    definitions: {},
-    formContext: {}
-  };
+  return defaultRegistry;
 }
 
 export function defaultFieldValue(formData, schema) {
   return typeof formData === "undefined" ? schema.default : formData;
 }
 
-export function getAlternativeWidget(
-  schema,
-  widget,
-  registeredWidgets={},
-  widgetOptions={}
-) {
-  const {type, format} = schema;
+export function getWidget(schema, widget, registeredWidgets={}) {
+  const {type} = schema;
 
-  function setDefaultOptions(widget) {
-    const {defaultProps={}} = widget;
-    widget.defaultProps = {
-      ...defaultProps,
-      options: {
-        ...defaultProps.options,
-        ...widgetOptions
-      }
-    };
-    return widget;
+  function mergeOptions(Widget) {
+    // cache return value as property of widget for proper react reconciliation
+    if (!Widget.MergedWidget) {
+      const defaultOptions = Widget.defaultProps && Widget.defaultProps.options || {};
+      Widget.MergedWidget = ({options={}, ...props}) =>
+        <Widget options={{...defaultOptions, ...options}} {...props}/>;
+    }
+    return Widget.MergedWidget;
   }
 
   if (typeof widget === "function") {
-    return setDefaultOptions(widget);
-  }
-
-  if (isObject(widget)) {
-    const {component, options} = widget;
-    const mergedOptions = {...options, ...widgetOptions};
-    return getAlternativeWidget(schema, component, registeredWidgets, mergedOptions);
+    return mergeOptions(widget);
   }
 
   if (typeof widget !== "string") {
@@ -135,25 +91,19 @@ export function getAlternativeWidget(
 
   if (registeredWidgets.hasOwnProperty(widget)) {
     const registeredWidget = registeredWidgets[widget];
-    return getAlternativeWidget(schema, registeredWidget, registeredWidgets, widgetOptions);
+    return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
-  if (!altWidgetMap.hasOwnProperty(type)) {
-    throw new Error(`No alternative widget for type ${type}`);
+  if (!widgetMap.hasOwnProperty(type)) {
+    throw new Error(`No widget for type "${type}"`);
   }
 
-  if (altWidgetMap[type].hasOwnProperty(widget)) {
-    const altWidget = registeredWidgets[altWidgetMap[type][widget]];
-    return getAlternativeWidget(schema, altWidget, registeredWidgets, widgetOptions);
+  if (widgetMap[type].hasOwnProperty(widget)) {
+    const registeredWidget = registeredWidgets[widgetMap[type][widget]];
+    return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
-  if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
-    const stringFormatWidget = registeredWidgets[stringFormatWidgets[format]];
-    return getAlternativeWidget(schema, stringFormatWidget, registeredWidgets, widgetOptions);
-  }
-
-  const info = type === "string" && format ? `/${format}` : "";
-  throw new Error(`No alternative widget "${widget}" for type ${type}${info}`);
+  throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
 function computeDefaults(schema, parentDefaults, definitions={}) {
@@ -206,6 +156,22 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
     return mergeObjects(defaults, formData);
   }
   return formData || defaults;
+}
+
+export function getUiOptions(uiSchema) {
+  // get all passed options from ui:widget, ui:options, and ui:<optionName>
+  return Object.keys(uiSchema).filter(key => key.indexOf("ui:") === 0).reduce((options, key) => {
+    const value = uiSchema[key];
+
+    if (key === "ui:widget" && isObject(value)) {
+      console.warn("Setting options via ui:widget object is deprecated, use ui:options instead");
+      return {...options, ...(value.options || {}), widget: value.component};
+    }
+    if (key === "ui:options" && isObject(value)) {
+      return {...options, ...value};
+    }
+    return {...options, [key.substring(3)]: value};
+  }, {});
 }
 
 export function isObject(thing) {
