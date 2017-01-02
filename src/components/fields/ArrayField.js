@@ -156,7 +156,8 @@ class ArrayField extends Component {
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
-    if (isMultiSelect(schema)) {
+    if (isMultiSelect(schema, uiSchema) &&
+	      (typeof uiSchema.items !== "object" || uiSchema.items["ui:widget"] === undefined)) {
       return this.renderMultiSelect();
     }
     return this.renderNormalArray();

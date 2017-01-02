@@ -145,7 +145,7 @@ function SchemaField(props) {
 
   let displayLabel = true;
   if (schema.type === "array") {
-    displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
+    displayLabel = isMultiSelect(schema, uiSchema) || isFilesArray(schema, uiSchema);
   }
   if (schema.type === "object") {
     displayLabel = false;

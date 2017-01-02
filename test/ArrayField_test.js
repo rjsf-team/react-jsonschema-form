@@ -337,6 +337,22 @@ describe("ArrayField", () => {
 
         expect(node.querySelector("select").id).eql("root");
       });
+
+	    it("should not render a select widget if items have ui:widget", () => {
+	    	const uiSchema = {
+					items: {
+						"ui:widget": "password"
+					}
+		    }
+
+		    const {node} = createFormComponent({schema, uiSchema});
+
+		    expect(node.querySelectorAll("select"))
+			    .to.have.length.of(0);
+
+		    expect(node.querySelectorAll(".array-item-list"))
+			    .to.have.length.of(1);
+	    });
     });
 
     describe("CheckboxesWidget", () => {
