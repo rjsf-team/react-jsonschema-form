@@ -257,9 +257,9 @@ export function orderProperties(properties, order) {
 
 export function isMultiSelect(schema, uiSchema={}) {
   return (
-  	Array.isArray(schema.items.enum) &&
-	  schema.uniqueItems &&
-	  (!isObject(uiSchema.items) || (isObject(uiSchema.items) && uiSchema.items["ui:widget"] === undefined))
+    Array.isArray(schema.items.enum) &&
+    schema.uniqueItems &&
+    (!isObject(uiSchema.items) || (isObject(uiSchema.items) && uiSchema.items["ui:widget"] === undefined))
   );
 }
 
