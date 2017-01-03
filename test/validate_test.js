@@ -9,29 +9,31 @@ import {createFormComponent} from "./test_utils";
 describe("Validation", () => {
   describe("validate.validateFormData()", () => {
     describe("No custom validate function", () => {
+      const illFormedKey = "bar.'\"[]()=+*&^%$#@!";
       const schema = {
         type: "object",
-        properties: {
-          foo: {type: "string"}
-        }
+        properties: {foo: {type: "string"}, [illFormedKey]: {type: "string"}}
       };
 
       let errors, errorSchema;
 
       beforeEach(() => {
-        const result = validateFormData({foo: 42}, schema);
+        const result = validateFormData({foo: 42, [illFormedKey]: 41}, schema);
         errors = result.errors;
         errorSchema = result.errorSchema;
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(1);
+        expect(errors).to.have.length.of(2);
         expect(errors[0].message).eql("is not of a type(s) string");
+        expect(errors[1].message).eql("is not of a type(s) string");
       });
 
       it("should return an errorSchema", () => {
         expect(errorSchema.foo.__errors).to.have.length.of(1);
         expect(errorSchema.foo.__errors[0]).eql("is not of a type(s) string");
+        expect(errorSchema[illFormedKey].__errors).to.have.length.of(1);
+        expect(errorSchema[illFormedKey].__errors[0]).eql("is not of a type(s) string");
       });
     });
 
