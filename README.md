@@ -470,6 +470,34 @@ const uiSchema = {
 };
 ```
 
+#### `render` option
+
+A `render` function can be passed which will customize how the array is rendered. Several methods are exposed that can be called in your custom element.
+
+```jsx
+const uiSchema = {
+  "ui:options":  {
+    render: props => <div>{props.children}</div>
+  }
+};
+```
+
+Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+
+#### `renderItem` option
+
+A `renderItem` function can be passed which will customize how each item in the array is rendered. Several methods are exposed that can be called in your custom element.
+
+```jsx
+const uiSchema = {
+  "ui:options":  {
+    renderItem: props => <div>{props.children}</div>
+  }
+};
+```
+
+Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+
 ### Custom CSS class names
 
 The uiSchema object accepts a `classNames` property for each field of the schema:
