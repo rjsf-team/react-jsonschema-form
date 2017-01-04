@@ -470,34 +470,6 @@ const uiSchema = {
 };
 ```
 
-#### `render` option
-
-A `render` function can be passed which will customize how the array is rendered. Several methods are exposed that can be called in your custom element.
-
-```jsx
-const uiSchema = {
-  "ui:options":  {
-    render: props => <div>{props.children}</div>
-  }
-};
-```
-
-Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
-
-#### `renderItem` option
-
-A `renderItem` function can be passed which will customize how each item in the array is rendered. Several methods are exposed that can be called in your custom element.
-
-```jsx
-const uiSchema = {
-  "ui:options":  {
-    renderItem: props => <div>{props.children}</div>
-  }
-};
-```
-
-Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
-
 ### Custom CSS class names
 
 The uiSchema object accepts a `classNames` property for each field of the schema:
@@ -727,6 +699,60 @@ The following props are passed to a custom field template component:
 - `formContext`: The `formContext` object that you passed to Form.
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
+
+#### `ArrayFieldTemplate` option
+
+You can use similar an `ArrayFieldTemplate` to customize how your arrays are rendered.
+
+`ArrayFieldTemplate` is identical to `FieldTemplate`, except it's called for each array.
+This allows you to customize the wrappers of each element in an array.
+
+```jsx
+function ArrayFieldTemplate(props) {
+  return (
+    <div>
+      {props.items.map(element => element.children)}
+      {props.canAdd && <button onClick={props.onAddClick}></button>}
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema}
+        ArrayFieldTemplate={ArrayFieldTemplate} />,
+), document.getElementById("app"));
+```
+
+Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+
+The following props are passed to each `ArrayFieldTemplate`:
+
+- `DescriptionField`: The generated `DescriptionField` (if you wanted to utilize it)
+- `TitleField`: The generated `TitleField` (if you wanted to utilize it)
+- `canAdd`: boolean whether new elements can be added to array
+- `className`: string
+- `disabled`: boolean
+- `idSchema`: Object
+- `items`: Object[] - Each of the items represent a child with properties described below.
+- `onAddClick`: (event) => void
+- `readonly`: boolean
+- `required`: boolean
+- `schema`: Object
+- `title`: string
+
+The following props are part of each eleemnt in `items`:
+
+- `children`: JSX.Element
+- `className`: string
+- `disabled`: boolean
+- `hasMoveDown`: boolean
+- `hasMoveUp`: boolean
+- `hasRemove`: boolean
+- `hasToolbar`: boolean
+- `index`: number
+- `onDropIndexClick`: (index) => void
+- `onReorderClick`: (index, newIndex) => void
+- `readonly`: boolean
 
 ### Custom widgets and fields
 

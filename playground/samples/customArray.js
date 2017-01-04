@@ -15,11 +15,12 @@ const ArrayFieldTemplate = props => (
       </div>
     ))}
 
-    <div className="row">
-      <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
-        <button onClick={props.onAddClick} type="button">Custom +</button>
-      </p>
-    </div>
+    {props.canAdd &&
+      <div className="row">
+        <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
+          <button onClick={props.onAddClick} type="button">Custom +</button>
+        </p>
+      </div>}
 
   </div>
 );
