@@ -43,6 +43,51 @@ function IconBtn(props) {
   );
 }
 
+// Used in the two templates
+function DefaultArrayItem(props) {
+  const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
+  return (
+    <div key={props.index} className={props.className}>
+
+      <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
+        {props.children}
+      </div>
+
+      {props.hasToolbar ?
+        <div className="col-xs-3 array-item-toolbox">
+          <div className="btn-group" style={{display: "flex", justifyContent: "space-around"}}>
+
+            {props.hasMoveUp || props.hasMoveDown ?
+              <IconBtn icon="arrow-up" className="array-item-move-up"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly || !props.hasMoveUp}
+                onClick={props.onReorderClick(props.index, props.index - 1)}/>
+            : null}
+
+            {props.hasMoveUp || props.hasMoveDown ?
+              <IconBtn icon="arrow-down" className="array-item-move-down"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly || !props.hasMoveDown}
+                onClick={props.onReorderClick(props.index, props.index + 1)}/>
+            : null}
+
+            {props.hasRemove ?
+              <IconBtn type="danger" icon="remove" className="array-item-remove"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly}
+                onClick={props.onDropIndexClick(props.index)} />
+            : null}
+          </div>
+        </div>
+      : null}
+
+    </div>
+  );
+}
+
 function DefaultFixedArrayFieldTemplate(props) {
   return (
     <fieldset className={props.className}>
@@ -62,9 +107,7 @@ function DefaultFixedArrayFieldTemplate(props) {
 
       <div className="row array-item-list"
         key={`array-item-list-${props.idSchema.$id}`}>
-        {
-          props.children
-        }
+        {props.items.map(p => DefaultArrayItem(p))}
       </div>
 
       {props.canAdd ? <AddButton
@@ -95,9 +138,7 @@ function DefaultNormalArrayFieldTemplate(props) {
 
       <div className="row array-item-list"
           key={`array-item-list-${props.idSchema.$id}`}>
-          {
-            props.children
-          }
+          {props.items.map(p => DefaultArrayItem(p))}
       </div>
 
       {props.canAdd ? <AddButton
@@ -252,7 +293,7 @@ class ArrayField extends Component {
 
     const arrayProps = {
       canAdd: addable,
-      children: items.map((item, index) => {
+      items: items.map((item, index) => {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
         const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
@@ -343,13 +384,13 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title || name;
     let {items} = this.state;
-    const {definitions, fields} = this.props.registry;
+    const {ArrayFieldTemplate, definitions, fields} = this.props.registry;
     const {TitleField} = fields;
     const itemSchemas = schema.items.map(item =>
       retrieveSchema(item, definitions));
     const additionalSchema = allowAdditionalItems(schema) ?
       retrieveSchema(schema.additionalItems, definitions) : null;
-    const {addable=true, render, renderItem} = getUiOptions(uiSchema);
+    const {addable=true} = getUiOptions(uiSchema);
     const canAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
@@ -428,47 +469,7 @@ class ArrayField extends Component {
     };
     has.toolbar = Object.keys(has).some(key => has[key]);
 
-    // This function constructs each array item (and should optionally be passed in)
-    const renderFunction = props => {
-      const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
-      return (
-        <div key={props.index} className={props.className}>
-          <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
-            {props.children}
-          </div>
-          {props.hasToolbar ?
-            <div className="col-xs-3 array-item-toolbox">
-              <div className="btn-group" style={{display: "flex", justifyContent: "space-around"}}>
-                {props.hasMoveUp || props.hasMoveDown ?
-                  <IconBtn icon="arrow-up" className="array-item-move-up"
-                          tabIndex="-1"
-                          style={btnStyle}
-                          disabled={props.disabled || props.readonly || !props.hasMoveUp}
-                          onClick={props.onReorderClick(props.index, props.index - 1)}/>
-                  : null}
-                {props.hasMoveUp || props.hasMoveDown ?
-                  <IconBtn icon="arrow-down" className="array-item-move-down"
-                          tabIndex="-1"
-                          style={btnStyle}
-                          disabled={props.disabled || props.readonly || !props.hasMoveDown}
-                          onClick={props.onReorderClick(props.index, props.index + 1)}/>
-                  : null}
-                {props.hasRemove ?
-                  <IconBtn type="danger" icon="remove" className="array-item-remove"
-                          tabIndex="-1"
-                          style={btnStyle}
-                          disabled={props.disabled || props.readonly}
-                          onClick={props.onDropIndexClick(props.index)}/>
-                  : null}
-              </div>
-            </div>
-          : null}
-        </div>
-      );
-    };
-
-    // These are the props that will be accessible from renderFunction
-    const elementProps = {
+    return {
       children: (
         <SchemaField
           schema={itemSchema}
@@ -494,8 +495,6 @@ class ArrayField extends Component {
       onReorderClick: this.onReorderClick,
       readonly
     };
-
-    return renderFunction(elementProps);
   }
 }
 
