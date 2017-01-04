@@ -1,26 +1,15 @@
 import React, { Component } from "react";
 
-const render = props => {
-  return (
-    <div className={props.className}>
-      {props.children}
-      <button onClick={props.onAddClick}>Plus</button>
+const ArrayFieldTemplate = props => (
+  <div className={props.className}>
+    {props.children}
+    <div className="row">
+      <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
+        <button onClick={props.onAddClick} type="button">Custom +</button>
+      </p>
     </div>
-  );
-};
-
-const renderItem = props => {
-  return (
-    <div className={props.className} key={props.index}>
-      {props.hasMoveDown &&
-        <button onClick={props.onReorderClick(props.index, props.index + 1)}>Down</button>}
-      {props.hasMoveUp &&
-        <button onClick={props.onReorderClick(props.index, props.index - 1)}>Up</button>}
-      <button onClick={props.onDropIndexClick(props.index)}>Delete</button>
-      {props.children}
-    </div>
-  );
-};
+  </div>
+);
 
 module.exports = {
   schema: {
@@ -30,8 +19,6 @@ module.exports = {
       type: "string"
     }
   },
-  uiSchema: {
-    "ui:options": { render, renderItem }
-  },
-  formData: ["react", "jsonschema", "form"]
+  formData: ["react", "jsonschema", "form"],
+  ArrayFieldTemplate
 };

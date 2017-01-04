@@ -314,7 +314,8 @@ class App extends Component {
       liveValidate,
       validate,
       theme,
-      editor
+      editor,
+      ArrayFieldTemplate
     } = this.state;
 
     return (
@@ -352,6 +353,7 @@ class App extends Component {
         <div className="col-sm-5">
           {!this.state.form ? null :
             <Form
+              ArrayFieldTemplate={ArrayFieldTemplate}
               liveValidate={liveValidate}
               schema={schema}
               uiSchema={uiSchema}
