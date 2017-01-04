@@ -3,7 +3,7 @@ import React, { Component } from "react";
 const ArrayFieldTemplate = props => (
   <div className={props.className}>
 
-    {props.items.map(element => (
+    {props.items && props.items.map(element => (
       <div key={element.index}>
         <div>{element.children}</div>
         {element.hasMoveDown &&

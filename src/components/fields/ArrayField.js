@@ -293,7 +293,7 @@ class ArrayField extends Component {
 
     const arrayProps = {
       canAdd: addable,
-      items: items.map((item, index) => {
+      items: items && items.map((item, index) => {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
         const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
@@ -402,7 +402,7 @@ class ArrayField extends Component {
     // These are the props passed into the render function
     const arrayProps = {
       canAdd,
-      children: items.map((item, index) => {
+      children: items && items.map((item, index) => {
         const additional = index >= itemSchemas.length;
         const itemSchema = additional ?
           additionalSchema : itemSchemas[index];
