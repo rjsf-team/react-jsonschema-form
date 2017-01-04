@@ -49,6 +49,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
+     - [Array template](#array-template)
      - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)
@@ -700,12 +701,10 @@ The following props are passed to a custom field template component:
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
 
-#### `ArrayFieldTemplate` option
+### Array Template
 
-You can similarly use an `ArrayFieldTemplate` to customize how your arrays are rendered.
-
-`ArrayFieldTemplate` is very similar to `FieldTemplate`, except it's called for each array.
-This allows you to customize your array, and each element in the array.
+Similarly to the `FieldTemplate` you can use an `ArrayFieldTemplate` to customize how your
+arrays are rendered. This allows you to customize your array, and each element in the array.
 
 ```jsx
 function ArrayFieldTemplate(props) {
@@ -745,9 +744,9 @@ The following props are part of each element in `items`:
 - `children`: JSX.Element
 - `className`: string
 - `disabled`: boolean
-- `hasMoveDown`: boolean
-- `hasMoveUp`: boolean
-- `hasRemove`: boolean
+- `hasMoveDown`: boolean whether the element can be moved down
+- `hasMoveUp`: boolean whether the element can be moved up
+- `hasRemove`: boolean whether the element can be removed
 - `hasToolbar`: boolean
 - `index`: number
 - `onDropIndexClick`: (index) => void
