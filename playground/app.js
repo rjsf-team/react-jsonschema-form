@@ -283,9 +283,11 @@ class App extends Component {
   }
 
   load = (data) => {
+    // Reset the ArrayFieldTemplate whenever you load new data
+    const { ArrayFieldTemplate } = data;
     // force resetting form component instance
     this.setState({form: false},
-      _ => this.setState({...data, form: true}));
+      _ => this.setState({...data, form: true, ArrayFieldTemplate}));
   };
 
   onSchemaEdited   = (schema) => this.setState({schema});
