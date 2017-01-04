@@ -107,7 +107,7 @@ function DefaultFixedArrayFieldTemplate(props) {
 
       <div className="row array-item-list"
         key={`array-item-list-${props.idSchema.$id}`}>
-        {props.items.map(p => DefaultArrayItem(p))}
+        {props.items && props.items.map(p => DefaultArrayItem(p))}
       </div>
 
       {props.canAdd ? <AddButton
@@ -138,7 +138,7 @@ function DefaultNormalArrayFieldTemplate(props) {
 
       <div className="row array-item-list"
           key={`array-item-list-${props.idSchema.$id}`}>
-          {props.items.map(p => DefaultArrayItem(p))}
+          {props.items && props.items.map(p => DefaultArrayItem(p))}
       </div>
 
       {props.canAdd ? <AddButton
@@ -285,7 +285,7 @@ class ArrayField extends Component {
       registry
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
-    const {items} = this.state;
+    const {items = []} = this.state;
     const {ArrayFieldTemplate, definitions, fields} = this.props.registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
@@ -293,7 +293,7 @@ class ArrayField extends Component {
 
     const arrayProps = {
       canAdd: addable,
-      items: items && items.map((item, index) => {
+      items: items.map((item, index) => {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
         const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
@@ -402,7 +402,10 @@ class ArrayField extends Component {
     // These are the props passed into the render function
     const arrayProps = {
       canAdd,
-      children: items && items.map((item, index) => {
+      className: "field field-array field-array-fixed-items",
+      disabled,
+      idSchema,
+      items: items.map((item, index) => {
         const additional = index >= itemSchemas.length;
         const itemSchema = additional ?
           additionalSchema : itemSchemas[index];
@@ -427,9 +430,6 @@ class ArrayField extends Component {
           autofocus: autofocus && index === 0
         });
       }),
-      className: "field field-array field-array-fixed-items",
-      disabled,
-      idSchema,
       onAddClick: this.onAddClick,
       readonly,
       required,
