@@ -702,10 +702,10 @@ The following props are passed to a custom field template component:
 
 #### `ArrayFieldTemplate` option
 
-You can use similar an `ArrayFieldTemplate` to customize how your arrays are rendered.
+You can similarly use an `ArrayFieldTemplate` to customize how your arrays are rendered.
 
-`ArrayFieldTemplate` is identical to `FieldTemplate`, except it's called for each array.
-This allows you to customize the wrappers of each element in an array.
+`ArrayFieldTemplate` is very similar to `FieldTemplate`, except it's called for each array.
+This allows you to customize your array, and each element in the array.
 
 ```jsx
 function ArrayFieldTemplate(props) {
@@ -740,7 +740,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `schema`: Object
 - `title`: string
 
-The following props are part of each eleemnt in `items`:
+The following props are part of each element in `items`:
 
 - `children`: JSX.Element
 - `className`: string

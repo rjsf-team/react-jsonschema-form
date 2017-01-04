@@ -78,7 +78,7 @@ function DefaultArrayItem(props) {
                 tabIndex="-1"
                 style={btnStyle}
                 disabled={props.disabled || props.readonly}
-                onClick={props.onDropIndexClick(props.index)} />
+                onClick={props.onDropIndexClick(props.index)}/>
             : null}
           </div>
         </div>
@@ -97,7 +97,7 @@ function DefaultFixedArrayFieldTemplate(props) {
           TitleField={props.TitleField}
           idSchema={props.idSchema}
           title={props.title}
-          required={props.required} />
+          required={props.required}/>
 
       {props.schema.description ? (
         <div className="field-description" key={`field-description-${props.idSchema.$id}`}>
@@ -126,7 +126,7 @@ function DefaultNormalArrayFieldTemplate(props) {
         TitleField={props.TitleField}
         idSchema={props.idSchema}
         title={props.title}
-        required={props.required} />
+        required={props.required}/>
 
       {props.schema.description ? (
         <ArrayFieldDescription
