@@ -286,7 +286,7 @@ class ArrayField extends Component {
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
     const {items = []} = this.state;
-    const {ArrayFieldTemplate, definitions, fields} = this.props.registry;
+    const {ArrayFieldTemplate, definitions, fields} = registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const {addable=true} = getUiOptions(uiSchema);
@@ -381,10 +381,11 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
+      registry
     } = this.props;
     const title = schema.title || name;
     let {items} = this.state;
-    const {ArrayFieldTemplate, definitions, fields} = this.props.registry;
+    const {ArrayFieldTemplate, definitions, fields} = registry;
     const {TitleField} = fields;
     const itemSchemas = schema.items.map(item =>
       retrieveSchema(item, definitions));
