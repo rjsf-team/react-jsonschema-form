@@ -519,16 +519,10 @@ describe("Form", () => {
       };
       const onBlur = sandbox.spy();
       const {node} = createFormComponent({schema, formData, onBlur});
-
       Simulate.blur(node.querySelector("[type=text]"), {
         target: {value: "new"}
       });
-
-      sinon.assert.calledWithMatch(onBlur, {
-        formData: {
-          foo: "new"
-        }
-      });
+      sinon.assert.calledOnce(onBlur);
     });
   });
 
