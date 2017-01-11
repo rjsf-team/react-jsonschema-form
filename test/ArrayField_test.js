@@ -2,7 +2,7 @@ import React from "react";
 
 import {expect} from "chai";
 import {Simulate} from "react-addons-test-utils";
-
+import {Sinon} from "sinon";
 import {createFormComponent, createSandbox} from "./test_utils";
 
 
@@ -370,6 +370,15 @@ describe("ArrayField", () => {
         });
 
         expect(comp.state.formData).eql(["foo", "fuzz"]);
+      });
+
+      it("should handle a on Blur event", () => {
+        const onBlurSpy = sandbox.spy();
+        const {node} = createFormComponent({schema, uiSchema, onBlurSpy});
+        Simulate.blur(node.querySelectorAll("[type=checkbox]")[0], {
+          target: {checked: true}
+        });
+        expect(onBlurSpy.calledOnce);
       });
 
       it("should fill field with data", () => {
