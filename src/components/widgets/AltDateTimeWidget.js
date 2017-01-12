@@ -1,10 +1,9 @@
-import React, { PropTypes } from "react";
-
-import AltDateWidget from "./AltDateWidget";
+import React, {PropTypes} from "react";
 
 
 function AltDateTimeWidget(props) {
-  return <AltDateWidget time {...props} />;
+  const {AltDateWidget} = props.registry.widgets;
+  return <AltDateWidget time {...props}/>;
 }
 
 if (process.env.NODE_ENV !== "production") {

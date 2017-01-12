@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 
 function selectValue(value, selected, all) {
@@ -14,28 +14,39 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const {id, disabled, options, value, onChange} = props;
-  const {enumOptions} = options;
+  const {id, disabled, options, value, autofocus, onChange} = props;
+  const {enumOptions, inline} = options;
   return (
     <div className="checkboxes" id={id}>{
       enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
-        return (
-          <div key={index} className="checkbox">
+        const disabledCls = disabled ? "disabled" : "";
+        const checkbox = (
+          <span>
+            <input type="checkbox"
+              id={`${id}_${index}`}
+              checked={checked}
+              disabled={disabled}
+              autoFocus={autofocus && index === 0}
+              onChange={(event) => {
+                const all = enumOptions.map(({value}) => value);
+                if (event.target.checked) {
+                  onChange(selectValue(option.value, value, all));
+                } else {
+                  onChange(deselectValue(option.value, value));
+                }
+              }}/>
+            <span>{option.label}</span>
+          </span>
+        );
+        return inline ? (
+          <label key={index} className={`checkbox-inline ${disabledCls}`}>
+            {checkbox}
+          </label>
+        ) : (
+          <div key={index} className={`checkbox ${disabledCls}`}>
             <label>
-              <input type="checkbox"
-                id={`${id}_${index}`}
-                checked={checked}
-                disabled={disabled}
-                onChange={(event) => {
-                  const all = enumOptions.map(({value}) => value);
-                  if (event.target.checked) {
-                    onChange(selectValue(option.value, value, all));
-                  } else {
-                    onChange(deselectValue(option.value, value));
-                  }
-                }} />
-              <strong>{option.label}</strong>
+              {checkbox}
             </label>
           </div>
         );
@@ -44,16 +55,26 @@ function CheckboxesWidget(props) {
   );
 }
 
+CheckboxesWidget.defaultProps = {
+  autofocus: false,
+  options: {
+    inline: false
+  },
+};
+
 if (process.env.NODE_ENV !== "production") {
   CheckboxesWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     options: PropTypes.shape({
       enumOptions: PropTypes.array,
+      inline: PropTypes.bool,
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
     multiple: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

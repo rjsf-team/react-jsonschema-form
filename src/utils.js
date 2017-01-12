@@ -1,116 +1,88 @@
+import React from "react";
 import "setimmediate";
 
-import TitleField from "./components/fields/TitleField";
-import DescriptionField from "./components/fields/DescriptionField";
-import PasswordWidget from "./components/widgets/PasswordWidget";
-import RadioWidget from "./components/widgets/RadioWidget";
-import UpDownWidget from "./components/widgets/UpDownWidget";
-import RangeWidget from "./components/widgets/RangeWidget";
-import SelectWidget from "./components/widgets/SelectWidget";
-import TextWidget from "./components/widgets/TextWidget";
-import DateWidget from "./components/widgets/DateWidget";
-import DateTimeWidget from "./components/widgets/DateTimeWidget";
-import AltDateWidget from "./components/widgets/AltDateWidget";
-import AltDateTimeWidget from "./components/widgets/AltDateTimeWidget";
-import EmailWidget from "./components/widgets/EmailWidget";
-import URLWidget from "./components/widgets/URLWidget";
-import TextareaWidget from "./components/widgets/TextareaWidget";
-import HiddenWidget from "./components/widgets/HiddenWidget";
-import ColorWidget from "./components/widgets/ColorWidget";
-import FileWidget from "./components/widgets/FileWidget";
-import CheckboxesWidget from "./components/widgets/CheckboxesWidget";
 
-
-
-const altWidgetMap = {
+const widgetMap = {
   boolean: {
-    radio: RadioWidget,
-    select: SelectWidget,
-    hidden: HiddenWidget,
+    checkbox: "CheckboxWidget",
+    radio: "RadioWidget",
+    select: "SelectWidget",
+    hidden: "HiddenWidget",
   },
   string: {
-    password: PasswordWidget,
-    radio: RadioWidget,
-    select: SelectWidget,
-    textarea: TextareaWidget,
-    hidden: HiddenWidget,
-    date: DateWidget,
-    datetime: DateTimeWidget,
-    "alt-date": AltDateWidget,
-    "alt-datetime": AltDateTimeWidget,
-    color: ColorWidget,
-    file: FileWidget,
+    text: "TextWidget",
+    password: "PasswordWidget",
+    email: "EmailWidget",
+    hostname: "TextWidget",
+    ipv4: "TextWidget",
+    ipv6: "TextWidget",
+    uri: "URLWidget",
+    "data-url": "FileWidget",
+    radio: "RadioWidget",
+    select: "SelectWidget",
+    textarea: "TextareaWidget",
+    hidden: "HiddenWidget",
+    date: "DateWidget",
+    datetime: "DateTimeWidget",
+    "date-time": "DateTimeWidget",
+    "alt-date": "AltDateWidget",
+    "alt-datetime": "AltDateTimeWidget",
+    color: "ColorWidget",
+    file: "FileWidget",
   },
   number: {
-    updown: UpDownWidget,
-    range: RangeWidget,
-    hidden: HiddenWidget,
+    text: "TextWidget",
+    select: "SelectWidget",
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
   },
   integer: {
-    updown: UpDownWidget,
-    range: RangeWidget,
-    hidden: HiddenWidget,
+    text: "TextWidget",
+    select: "SelectWidget",
+    updown: "UpDownWidget",
+    range: "RangeWidget",
+    radio: "RadioWidget",
+    hidden: "HiddenWidget",
   },
   array: {
-    checkboxes: CheckboxesWidget,
+    select: "SelectWidget",
+    checkboxes: "CheckboxesWidget",
+    files: "FileWidget"
   }
 };
 
-const stringFormatWidgets = {
-  "date-time": DateTimeWidget,
-  "date": DateWidget,
-  "email": EmailWidget,
-  "hostname": TextWidget,
-  "ipv4": TextWidget,
-  "ipv6": TextWidget,
-  "uri": URLWidget,
-  "data-url": FileWidget,
+const defaultRegistry = {
+  fields: require("./components/fields").default,
+  widgets: require("./components/widgets").default,
+  definitions: {},
+  formContext: {}
 };
 
 export function getDefaultRegistry() {
-  return {
-    fields: {
-      // Prevent a bug where SchemaField is undefined when imported via Babel.
-      // This seems to have been introduced when upgrading React from 0.14 to to
-      // 15.0, which now seems to prevent cyclic references of exported
-      // components.
-      // Investigation hint: getDefaultRegistry is called from within
-      // SchemaField itself.
-      SchemaField: require("./components/fields/SchemaField").default,
-      TitleField,
-      DescriptionField,
-    },
-    widgets: {},
-    definitions: {},
-    formContext: {}
-  };
+  return defaultRegistry;
 }
 
 export function defaultFieldValue(formData, schema) {
   return typeof formData === "undefined" ? schema.default : formData;
 }
 
-export function getAlternativeWidget(
-  schema,
-  widget,
-  registeredWidgets={},
-  widgetOptions={}
-) {
-  const {type, format} = schema;
+export function getWidget(schema, widget, registeredWidgets={}) {
+  const {type} = schema;
 
-  function setDefaultOptions(widget) {
-    widget.defaultProps = {...widget.defaultProps, options: widgetOptions};
-    return widget;
+  function mergeOptions(Widget) {
+    // cache return value as property of widget for proper react reconciliation
+    if (!Widget.MergedWidget) {
+      const defaultOptions = Widget.defaultProps && Widget.defaultProps.options || {};
+      Widget.MergedWidget = ({options={}, ...props}) =>
+        <Widget options={{...defaultOptions, ...options}} {...props}/>;
+    }
+    return Widget.MergedWidget;
   }
 
   if (typeof widget === "function") {
-    return setDefaultOptions(widget);
-  }
-
-  if (isObject(widget)) {
-    const {component, options} = widget;
-    const mergedOptions = {...options, ...widgetOptions};
-    return getAlternativeWidget(schema, component, registeredWidgets, mergedOptions);
+    return mergeOptions(widget);
   }
 
   if (typeof widget !== "string") {
@@ -119,25 +91,19 @@ export function getAlternativeWidget(
 
   if (registeredWidgets.hasOwnProperty(widget)) {
     const registeredWidget = registeredWidgets[widget];
-    return getAlternativeWidget(schema, registeredWidget, registeredWidgets, widgetOptions);
+    return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
-  if (!altWidgetMap.hasOwnProperty(type)) {
-    throw new Error(`No alternative widget for type ${type}`);
+  if (!widgetMap.hasOwnProperty(type)) {
+    throw new Error(`No widget for type "${type}"`);
   }
 
-  if (altWidgetMap[type].hasOwnProperty(widget)) {
-    const altWidget = altWidgetMap[type][widget];
-    return getAlternativeWidget(schema, altWidget, registeredWidgets, widgetOptions);
+  if (widgetMap[type].hasOwnProperty(widget)) {
+    const registeredWidget = registeredWidgets[widgetMap[type][widget]];
+    return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
-  if (type === "string" && stringFormatWidgets.hasOwnProperty(format)) {
-    const stringFormatWidget = stringFormatWidgets[format];
-    return getAlternativeWidget(schema, stringFormatWidget, registeredWidgets, widgetOptions);
-  }
-
-  const info = type === "string" && format ? `/${format}` : "";
-  throw new Error(`No alternative widget "${widget}" for type ${type}${info}`);
+  throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
 function computeDefaults(schema, parentDefaults, definitions={}) {
@@ -192,6 +158,22 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
   return formData || defaults;
 }
 
+export function getUiOptions(uiSchema) {
+  // get all passed options from ui:widget, ui:options, and ui:<optionName>
+  return Object.keys(uiSchema).filter(key => key.indexOf("ui:") === 0).reduce((options, key) => {
+    const value = uiSchema[key];
+
+    if (key === "ui:widget" && isObject(value)) {
+      console.warn("Setting options via ui:widget object is deprecated, use ui:options instead");
+      return {...options, ...(value.options || {}), widget: value.component};
+    }
+    if (key === "ui:options" && isObject(value)) {
+      return {...options, ...value};
+    }
+    return {...options, [key.substring(3)]: value};
+  }, {});
+}
+
 export function isObject(thing) {
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
@@ -213,6 +195,9 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
 }
 
 export function asNumber(value) {
+  if (value === "") {
+    return undefined;
+  }
   if (/\.$/.test(value)) {
     // "3." can't really be considered a number even if it parses in js. The
     // user is most likely entering a float.
@@ -224,6 +209,14 @@ export function asNumber(value) {
   }
   const n = Number(value);
   const valid = typeof n === "number" && !Number.isNaN(n);
+
+  if (/\.\d*0$/.test(value)) {
+    // It's a number, that's cool - but we need it as a string so it doesn't screw
+    // with the user when entering dollar amounts or other values (such as those with
+    // specific precision or number of significant digits)
+    return value;
+  }
+
   return valid ? n : value;
 }
 
@@ -231,16 +224,35 @@ export function orderProperties(properties, order) {
   if (!Array.isArray(order)) {
     return properties;
   }
-  if (order.length !== properties.length) {
-    throw new Error(
-      "uiSchema order list length should match object properties length");
+
+  const arrayToHash = arr => arr.reduce((prev, curr) => {
+    prev[curr] = true;
+    return prev;
+  }, {});
+  const errorPropList = arr => arr.length > 1 ?
+    `properties '${arr.join("', '")}'` :
+    `property '${arr[0]}'`;
+  const propertyHash = arrayToHash(properties);
+  const orderHash = arrayToHash(order);
+  const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
+  if (extraneous.length) {
+    throw new Error(`uiSchema order list contains extraneous ${errorPropList(extraneous)}`);
   }
-  const fingerprint = (arr) => [].slice.call(arr).sort().toString();
-  if (fingerprint(order) !== fingerprint(properties)) {
-    throw new Error(
-      "uiSchema order list does not match object properties list");
+  const rest = properties.filter(prop => !orderHash[prop]);
+  const restIndex = order.indexOf("*");
+  if (restIndex === -1) {
+    if (rest.length) {
+      throw new Error(`uiSchema order list does not contain ${errorPropList(rest)}`);
+    }
+    return order;
   }
-  return order;
+  if (restIndex !== order.lastIndexOf("*")) {
+    throw new Error("uiSchema order list contains more than one wildcard item");
+  }
+
+  const complete = [...order];
+  complete.splice(restIndex, 1, ...rest);
+  return complete;
 }
 
 export function isMultiSelect(schema) {
@@ -482,11 +494,25 @@ export function dataURItoBlob(dataURI) {
   // Built the Uint8Array Blob parameter from the base64 string.
   const binary = atob(splitted[1]);
   const array = [];
-  for(let i = 0; i < binary.length; i++) {
+  for (let i = 0; i < binary.length; i++) {
     array.push(binary.charCodeAt(i));
   }
   // Create the blob object
   const blob = new window.Blob([new Uint8Array(array)], {type});
 
   return {blob, name};
+}
+
+export function rangeSpec(schema) {
+  const spec = {};
+  if (schema.multipleOf) {
+    spec.step = schema.multipleOf;
+  }
+  if (schema.minimum || schema.minimum === 0) {
+    spec.min = schema.minimum;
+  }
+  if (schema.maximum || schema.maximum === 0) {
+    spec.max = schema.maximum;
+  }
+  return spec;
 }

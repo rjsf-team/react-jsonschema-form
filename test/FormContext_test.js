@@ -1,7 +1,7 @@
 import React from "react";
-import { expect } from "chai";
+import {expect} from "chai";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 describe("FormContext", () => {
   let sandbox;
@@ -19,7 +19,7 @@ describe("FormContext", () => {
   const formContext = {foo: "bar"};
 
   const CustomComponent = function(props) {
-    return (<div id={props.formContext.foo} />);
+    return (<div id={props.formContext.foo}/>);
   };
 
   it("should be passed to Form", () => {
@@ -40,8 +40,8 @@ describe("FormContext", () => {
       formContext
     });
 
-    expect(node.querySelectorAll("#" + formContext.foo))
-      .to.have.length.of(1);
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
   });
 
   it("should be passed to custom widget", () => {
@@ -54,8 +54,31 @@ describe("FormContext", () => {
       formContext
     });
 
-    expect(node.querySelectorAll("#" + formContext.foo))
-      .to.have.length.of(1);
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
+  });
+
+  it("should be passed to TemplateField", () => {
+    function CustomTemplateField({formContext}) {
+      return <div id={formContext.foo}/>;
+    }
+
+    const {node} = createFormComponent({
+      schema: {
+        type: "object",
+        title: "A title",
+        properties: {
+          prop: {
+            type:  "string"
+          }
+        }
+      },
+      FieldTemplate: CustomTemplateField,
+      formContext
+    });
+
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
   });
 
   it("should be passed to custom TitleField", () => {
@@ -75,23 +98,20 @@ describe("FormContext", () => {
       formContext
     });
 
-    expect(node.querySelectorAll("#" + formContext.foo))
-      .to.have.length.of(1);
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
   });
 
   it("should be passed to custom DescriptionField", () => {
     const fields = {DescriptionField: CustomComponent};
 
     const {node} = createFormComponent({
-      schema: {type: "string"},
-      uiSchema: {
-        "ui:description": "A description"
-      },
+      schema: {type: "string", description: "A description"},
       fields,
       formContext
     });
 
-    expect(node.querySelectorAll("#" + formContext.foo))
-      .to.have.length.of(1);
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
   });
 });

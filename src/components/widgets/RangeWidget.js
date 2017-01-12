@@ -1,21 +1,7 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
+import {rangeSpec} from "../../utils";
 import BaseInput from "./BaseInput";
-
-
-function rangeSpec(schema) {
-  const spec = {};
-  if (schema.multipleOf) {
-    spec.step = schema.multipleOf;
-  }
-  if (schema.minimum) {
-    spec.min = schema.minimum;
-  }
-  if (schema.maximum) {
-    spec.max = schema.maximum;
-  }
-  return spec;
-}
 
 function RangeWidget(props) {
   const {schema, value} = props;
@@ -24,7 +10,7 @@ function RangeWidget(props) {
       <BaseInput
         type="range"
         {...props}
-        {...rangeSpec(schema)} />
+        {...rangeSpec(schema)}/>
       <span className="range-view">{value}</span>
     </div>
   );

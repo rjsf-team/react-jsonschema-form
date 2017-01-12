@@ -1,7 +1,7 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 
-function TextWidget({
+function TextareaWidget({
   schema,
   id,
   placeholder,
@@ -9,6 +9,7 @@ function TextWidget({
   required,
   disabled,
   readonly,
+  autofocus,
   onChange
 }) {
   return (
@@ -20,19 +21,25 @@ function TextWidget({
       required={required}
       disabled={disabled}
       readOnly={readonly}
-      onChange={(event) => onChange(event.target.value)} />
+      autoFocus={autofocus}
+      onChange={(event) => onChange(event.target.value)}/>
   );
 }
 
+TextareaWidget.defaultProps = {
+  autofocus: false
+};
+
 if (process.env.NODE_ENV !== "production") {
-  TextWidget.propTypes = {
+  TextareaWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.string,
     required: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }
 
-export default TextWidget;
+export default TextareaWidget;

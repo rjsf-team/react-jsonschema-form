@@ -11,6 +11,7 @@ import large from "./large";
 import date from "./date";
 import validation from "./validation";
 import files from "./files";
+import single from "./single";
 
 export const samples = {
   Simple: simple,
@@ -26,4 +27,5 @@ export const samples = {
   "Date & time": date,
   Validation: validation,
   Files: files,
+  Single: single
 };

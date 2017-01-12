@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
 
 function CheckboxWidget({
@@ -7,8 +7,9 @@ function CheckboxWidget({
   value,
   required,
   disabled,
-  onChange,
   label,
+  autofocus,
+  onChange,
 }) {
   return (
     <div className={`checkbox ${disabled ? "disabled" : ""}`}>
@@ -18,19 +19,26 @@ function CheckboxWidget({
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled}
-          onChange={(event) => onChange(event.target.checked)} />
-        <strong>{label}</strong>
+          autoFocus={autofocus}
+          onChange={(event) => onChange(event.target.checked)}/>
+        <span>{label}</span>
       </label>
     </div>
   );
 }
+
+CheckboxWidget.defaultProps = {
+  autofocus: false,
+};
+
 if (process.env.NODE_ENV !== "production") {
   CheckboxWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    onChange: PropTypes.func,
     value: PropTypes.bool,
     required: PropTypes.bool,
+    autofocus: PropTypes.bool,
+    onChange: PropTypes.func,
   };
 }
 

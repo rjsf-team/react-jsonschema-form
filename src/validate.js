@@ -1,25 +1,7 @@
-import { validate as jsonValidate } from "jsonschema";
+import toPath from "lodash.topath";
+import {validate as jsonValidate} from "jsonschema";
 
-import { isObject, mergeObjects } from "./utils";
-
-
-const RE_ERROR_ARRAY_PATH = /\[\d+]/g;
-
-function errorPropertyToPath(property) {
-  // Parse array indices, eg. "instance.level1.level2[2].level3"
-  // => ["instance", "level1", "level2", 2, "level3"]
-  return property.split(".").reduce((path, node) => {
-    const match = node.match(RE_ERROR_ARRAY_PATH);
-    if (match) {
-      const nodeName = node.slice(0, node.indexOf("["));
-      const indices = match.map(str => parseInt(str.slice(1, -1), 10));
-      path = path.concat(nodeName, indices);
-    } else {
-      path.push(node);
-    }
-    return path;
-  }, []);
-}
+import {isObject, mergeObjects} from "./utils";
 
 function toErrorSchema(errors) {
   // Transforms a jsonschema validation errors list:
@@ -42,7 +24,7 @@ function toErrorSchema(errors) {
   }
   return errors.reduce((errorSchema, error) => {
     const {property, message} = error;
-    const path = errorPropertyToPath(property);
+    const path = toPath(property);
     let parent = errorSchema;
     for (const segment of path.slice(1)) {
       if (!(segment in parent)) {

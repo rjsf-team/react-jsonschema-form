@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import {expect} from "chai";
 
 import {
   asNumber,
@@ -255,6 +255,10 @@ describe("utils", () => {
     it("should allow numbers with a 0 in the first decimal place", () => {
       expect(asNumber("3.07")).eql(3.07);
     });
+
+    it("should return undefined if the input is empty", () => {
+      expect(asNumber("")).eql(undefined);
+    });
   });
 
   describe("isMultiSelect()", () => {
@@ -347,13 +351,13 @@ describe("utils", () => {
 
   describe("retrieveSchema()", () => {
     it("should 'resolve' a schema which contains definitions", () => {
-      const schema = { $ref: "#/definitions/address" };
+      const schema = {$ref: "#/definitions/address"};
       const address = {
         type: "object",
         properties: {
-          street_address: { type: "string" },
-          city: { type: "string" },
-          state: { type: "string" }
+          street_address: {type: "string"},
+          city: {type: "string"},
+          state: {type: "string"}
         },
         required: [ "street_address", "city", "state" ]
       };
@@ -545,7 +549,7 @@ describe("utils", () => {
         $id: "root",
         metadata: {
           $id: "root_metadata",
-          id: { $id: "root_metadata_id" }
+          id: {$id: "root_metadata_id"}
         }
       });
     });

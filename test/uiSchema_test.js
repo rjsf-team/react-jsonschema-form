@@ -1,9 +1,9 @@
 
-import { expect } from "chai";
+import {expect} from "chai";
 import React from "react";
-import { Simulate } from "react-addons-test-utils";
+import {Simulate} from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 
 describe("uiSchema", () => {
@@ -27,8 +27,8 @@ describe("uiSchema", () => {
     };
 
     const uiSchema = {
-      foo: { classNames: "class-for-foo"},
-      bar: { classNames: "class-for-bar another-for-bar"},
+      foo: {classNames: "class-for-foo"},
+      bar: {classNames: "class-for-bar another-for-bar"},
     };
 
     it("should apply custom class names to target widgets", () => {
@@ -55,7 +55,7 @@ describe("uiSchema", () => {
               value={props.value}
               defaultValue={props.defaultValue}
               required={props.required}
-              onChange={(event) => props.onChange(event.target.value)} />
+              onChange={(event) => props.onChange(event.target.value)}/>
           );
         }
       };
@@ -64,6 +64,125 @@ describe("uiSchema", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+      });
+    });
+
+    describe("custom options", () => {
+      let widget, widgets, schema, uiSchema;
+
+      beforeEach(() => {
+        sandbox.stub(console, "warn");
+
+        widget = ({label, options}) => <div id={label} style={options}></div>;
+        widget.defaultProps = {options: {background: "yellow", color: "green"}};
+
+        widgets = {widget};
+
+        // all fields in one schema to catch errors where options passed to one
+        // instance of a widget are persistent across all instances
+        schema = {
+          type: "object",
+          properties: {
+            funcAll: {type: "string"},
+            funcNone: {type: "string"},
+            stringAll: {type: "string"},
+            stringNone: {type: "string"}
+          }
+        };
+
+        uiSchema = {
+          // pass widget as function
+          funcAll: {
+            "ui:widget": {
+              component: widget,
+              options: {
+                background: "purple"
+              }
+            },
+            "ui:options": {
+              margin: "7px"
+            },
+            "ui:padding": "42px"
+          },
+          funcNone: {
+            "ui:widget": widget
+          },
+
+          // pass widget as string
+          stringAll: {
+            "ui:widget": {
+              component: "widget",
+              options: {
+                background: "blue"
+              }
+            },
+            "ui:options": {
+              margin: "19px"
+            },
+            "ui:padding": "41px"
+          },
+          stringNone: {
+            "ui:widget": "widget"
+          }
+        };
+      });
+
+      it("should log warning when deprecated ui:widget: {component, options} api is used", () => {
+        createFormComponent({
+          schema: {type:"string"},
+          uiSchema: {"ui:widget": {component: "widget"}},
+          widgets
+        });
+        expect(console.warn.calledWithMatch(/ui:widget object is deprecated/)).to.be.true;
+      });
+
+      it("should cache MergedWidget instance", () => {
+        expect(widget.MergedWidget).not.to.be.ok;
+        createFormComponent({schema: {type:"string"}, uiSchema: {"ui:widget": "widget"}, widgets});
+        const cached = widget.MergedWidget;
+        expect(cached).to.be.ok;
+        createFormComponent({schema: {type:"string"}, uiSchema: {"ui:widget": "widget"}, widgets});
+        expect(widget.MergedWidget).to.equal(cached);
+      });
+
+      it("should render merged ui:widget options for widget referenced as function", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+        const widget = node.querySelector("#funcAll");
+
+        expect(widget.style.background).to.equal("purple");
+        expect(widget.style.color).to.equal("green");
+        expect(widget.style.margin).to.equal("7px");
+        expect(widget.style.padding).to.equal("42px");
+      });
+
+      it("should render ui:widget default options for widget referenced as function", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+        const widget = node.querySelector("#funcNone");
+
+        expect(widget.style.background).to.equal("yellow");
+        expect(widget.style.color).to.equal("green");
+        expect(widget.style.margin).to.equal("");
+        expect(widget.style.padding).to.equal("");
+      });
+
+      it("should render merged ui:widget options for widget referenced as string", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+        const widget = node.querySelector("#stringAll");
+
+        expect(widget.style.background).to.equal("blue");
+        expect(widget.style.color).to.equal("green");
+        expect(widget.style.margin).to.equal("19px");
+        expect(widget.style.padding).to.equal("41px");
+      });
+
+      it("should render ui:widget default options for widget referenced as string", () => {
+        const {node} = createFormComponent({schema, uiSchema, widgets});
+        const widget = node.querySelector("#stringNone");
+
+        expect(widget.style.background).to.equal("yellow");
+        expect(widget.style.color).to.equal("green");
+        expect(widget.style.margin).to.equal("");
+        expect(widget.style.padding).to.equal("");
       });
     });
 
@@ -90,7 +209,7 @@ describe("uiSchema", () => {
             value={props.value}
             defaultValue={props.defaultValue}
             required={props.required}
-            onChange={(event) => props.onChange(event.target.value)} />
+            onChange={(event) => props.onChange(event.target.value)}/>
         );
       };
 
@@ -118,18 +237,16 @@ describe("uiSchema", () => {
       const CustomWidget = (props) => {
         const {value, options} = props;
         return (
-          <input type="text" className={options.className} value={value} />
+          <input type="text" className={options.className} value={value}/>
         );
       };
 
       describe("direct reference", () => {
         const uiSchema = {
           "field": {
-            "ui:widget": {
-              component: CustomWidget,
-              options: {
-                className: "custom"
-              }
+            "ui:widget": CustomWidget,
+            "ui:options": {
+              className: "custom"
             }
           }
         };
@@ -144,40 +261,15 @@ describe("uiSchema", () => {
       describe("string reference", () => {
         const uiSchema = {
           "field": {
-            "ui:widget": {
-              component: "custom",
-              options: {
-                className: "custom"
-              }
+            "ui:widget": "custom",
+            "ui:options": {
+              className: "custom"
             }
           }
         };
 
         const widgets = {
           custom: CustomWidget
-        };
-
-        it("should render a custom widget with options", () => {
-          const {node} = createFormComponent({schema, uiSchema, widgets});
-
-          expect(node.querySelectorAll(".custom")).to.have.length.of(1);
-        });
-      });
-
-      describe("referenced descriptor", () => {
-        const uiSchema = {
-          "field": {
-            "ui:widget": "custom"
-          }
-        };
-
-        const widgets = {
-          custom: {
-            component: CustomWidget,
-            options: {
-              className: "custom"
-            }
-          }
         };
 
         it("should render a custom widget with options", () => {
@@ -211,11 +303,9 @@ describe("uiSchema", () => {
 
       const uiSchema = {
         "field": {
-          "ui:widget": {
-            component: CustomWidget,
-            options: {
-              className: "custom"
-            }
+          "ui:widget": CustomWidget,
+          "ui:options": {
+            className: "custom"
           }
         }
       };
@@ -236,14 +326,125 @@ describe("uiSchema", () => {
 
       expect(node.querySelector("p.help-block").textContent).eql("plop");
     });
+  });
 
-    it("should accept a react element as help", () => {
-      const schema = {type: "string"};
-      const uiSchema = {"ui:help": (<b>plop</b>)};
+  it("should accept a react element as help", () => {
+    const schema = {type: "string"};
+    const uiSchema = {"ui:help": (<b>plop</b>)};
 
-      const {node} = createFormComponent({schema, uiSchema});
+    const {node} = createFormComponent({schema, uiSchema});
 
-      expect(node.querySelector("div.help-block").textContent).eql("plop");
+    expect(node.querySelector("div.help-block").textContent).eql("plop");
+  });
+
+  describe("ui:focus", () => {
+    const shouldFocus = (schema, uiSchema, selector = "input", formData) => {
+      const props = {schema, uiSchema};
+      if (typeof formData !== "undefined") {
+        props.formData = formData;
+      }
+
+      const {node} = createFormComponent(props);
+      expect(node.querySelector(selector)).eql(document.activeElement);
+    };
+
+    describe("number", () => {
+      it("should focus on integer input", () => {
+        shouldFocus({type: "integer"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on integer input, updown widget", () => {
+        shouldFocus({type: "integer"}, {"ui:widget": "updown", "ui:autofocus": true});
+      });
+
+      it("should focus on integer input, range widget", () => {
+        shouldFocus({type: "integer"}, {"ui:widget": "range", "ui:autofocus": true});
+      });
+
+      it("should focus on integer enum input", () => {
+        shouldFocus({type: "integer", enum: [1, 2, 3]}, {"ui:autofocus": true}, "select");
+      });
+    });
+
+    describe("string", () => {
+      it("should focus on text input", () => {
+        shouldFocus({type: "string"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on textarea", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "textarea", "ui:autofocus": true}, "textarea");
+      });
+
+      it("should focus on password input", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "password", "ui:autofocus": true});
+      });
+
+      it("should focus on color input", () => {
+        shouldFocus({type: "string"}, {"ui:widget": "color", "ui:autofocus": true});
+      });
+
+      it("should focus on email input", () => {
+        shouldFocus({type: "string", format: "email"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on uri input", () => {
+        shouldFocus({type: "string", format: "uri"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on data-url input", () => {
+        shouldFocus({type: "string", format: "data-url"}, {"ui:autofocus": true});
+      });
+    });
+
+    describe("object", () => {
+      it("should focus on date input", () => {
+        shouldFocus({type: "string", format: "date"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on date-time input", () => {
+        shouldFocus({type: "string", format: "date-time"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on alt-date input", () => {
+        shouldFocus({type: "string", format: "date"}, {"ui:widget": "alt-date",  "ui:autofocus": true}, "select");
+      });
+
+      it("should focus on alt-date-time input", () => {
+        shouldFocus({type: "string", format: "date-time"}, {"ui:widget": "alt-datetime",  "ui:autofocus": true}, "select");
+      });
+    });
+
+    describe("array", () => {
+      it("should focus on multiple files input", () => {
+        shouldFocus({type: "array", items: {type: "string", format: "data-url"}}, {"ui:autofocus": true});
+      });
+
+      it("should focus on first item of a list of strings", () => {
+        shouldFocus({type: "array", items: {type: "string", default: "foo"}}, {"ui:autofocus": true}, "input", ["foo", "bar"]);
+      });
+
+      it("should focus on first item of a multiple choices list", () => {
+        shouldFocus(
+          {type: "array", items: {type: "string", enum: ["foo", "bar"]}, uniqueItems: true},
+          {"ui:widget": "checkboxes", "ui:autofocus": true},
+          "input",
+          ["bar"]
+        );
+      });
+    });
+
+    describe("boolean", () => {
+      it("should focus on checkbox input", () => {
+        shouldFocus({type: "boolean"}, {"ui:autofocus": true});
+      });
+
+      it("should focus on radio input", () => {
+        shouldFocus({type: "boolean"}, {"ui:widget": "radio", "ui:autofocus": true});
+      });
+
+      it("should focus on select input", () => {
+        shouldFocus({type: "boolean"}, {"ui:widget": "select", "ui:autofocus": true}, "select");
+      });
     });
   });
 
@@ -543,6 +744,20 @@ describe("uiSchema", () => {
           expect(input.getAttribute("max")).eql("100");
         });
 
+        it("should support '0' as minimum and maximum constraints", () => {
+          const schema = {
+            type: "number",
+            minimum: 0,
+            maximum: 0,
+          };
+          const uiSchema = {"ui:widget": "updown"};
+          const {node} = createFormComponent({schema, uiSchema});
+          input = node.querySelector("[type=number]");
+
+          expect(input.getAttribute("min")).eql("0");
+          expect(input.getAttribute("max")).eql("0");
+        });
+
         it("should support the multipleOf constraint", () => {
           expect(input.getAttribute("step")).eql("1");
         });
@@ -600,9 +815,69 @@ describe("uiSchema", () => {
           expect(input.getAttribute("max")).eql("100");
         });
 
+        it("should support '0' as minimum and maximum constraints", () => {
+          const schema = {
+            type: "number",
+            minimum: 0,
+            maximum: 0,
+          };
+          const uiSchema = {"ui:widget": "range"};
+          const {node} = createFormComponent({schema, uiSchema});
+          input = node.querySelector("[type=range]");
+
+          expect(input.getAttribute("min")).eql("0");
+          expect(input.getAttribute("max")).eql("0");
+        });
+
         it("should support the multipleOf constraint", () => {
           expect(input.getAttribute("step")).eql("1");
         });
+      });
+    });
+
+    describe("radio", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [3.14159, 2.718, 1.4142],
+          }
+        }
+      };
+
+      const uiSchema = {
+        foo: {
+          "ui:widget": "radio"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=radio]"))
+          .to.have.length.of(3);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 2.718
+        }});
+
+        expect(node.querySelectorAll("[type=radio]")[1].checked)
+          .eql(true);
+      });
+
+      it("should update state when value is updated", () => {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 1.4142
+        }});
+
+        Simulate.change(node.querySelectorAll("[type=radio]")[2], {
+          target: {checked: true}
+        });
+
+        expect(comp.state.formData).eql({foo: 1.4142});
       });
     });
 
@@ -721,6 +996,52 @@ describe("uiSchema", () => {
       });
     });
 
+    describe("radio", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "integer",
+            enum: [1, 2],
+          }
+        }
+      };
+
+      const uiSchema = {
+        foo: {
+          "ui:widget": "radio"
+        }
+      };
+
+      it("should accept a uiSchema object", () => {
+        const {node} = createFormComponent({schema, uiSchema});
+
+        expect(node.querySelectorAll("[type=radio]"))
+          .to.have.length.of(2);
+      });
+
+      it("should support formData", () => {
+        const {node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 2
+        }});
+
+        expect(node.querySelectorAll("[type=radio]")[1].checked)
+          .eql(true);
+      });
+
+      it("should update state when value is updated", () => {
+        const {comp, node} = createFormComponent({schema, uiSchema, formData: {
+          foo: 1
+        }});
+
+        Simulate.change(node.querySelectorAll("[type=radio]")[1], {
+          target: {checked: true}
+        });
+
+        expect(comp.state.formData).eql({foo: 2});
+      });
+    });
+
     describe("hidden", () => {
       const uiSchema = {
         foo: {
@@ -789,7 +1110,7 @@ describe("uiSchema", () => {
           node => node.textContent);
 
         expect(labels)
-          .eql(["true", "false"]);
+          .eql(["yes", "no"]);
       });
 
       it("should support formData", () => {
@@ -844,9 +1165,9 @@ describe("uiSchema", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("option")[0].textContent)
-          .eql("true");
+          .eql("yes");
         expect(node.querySelectorAll("option")[1].textContent)
-          .eql("false");
+          .eql("no");
       });
 
       it("should update state when true is selected", () => {

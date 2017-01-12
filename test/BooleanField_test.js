@@ -1,12 +1,14 @@
 import React from "react";
-import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
+import {expect} from "chai";
+import {Simulate} from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 
 describe("BooleanField", () => {
   let sandbox;
+
+  const CustomWidget = () => <div id="custom"/>;
 
   beforeEach(() => {
     sandbox = createSandbox();
@@ -31,7 +33,7 @@ describe("BooleanField", () => {
       title: "foo"
     }});
 
-    expect(node.querySelector(".field label strong").textContent)
+    expect(node.querySelector(".field label span").textContent)
       .eql("foo");
   });
 
@@ -94,6 +96,22 @@ describe("BooleanField", () => {
     expect(labels).eql(["Yes", "No"]);
   });
 
+  it("should support inline radio widgets", () => {
+    const {node} = createFormComponent({
+      schema: {type: "boolean"},
+      formData: true,
+      uiSchema: {
+        "ui:widget": "radio",
+        "ui:options": {
+          inline: true
+        }
+      }
+    });
+
+    expect(node.querySelectorAll(".radio-inline"))
+      .to.have.length.of(2);
+  });
+
   it("should support enumNames for select", () => {
     const {node} = createFormComponent({schema: {
       type: "boolean",
@@ -112,6 +130,20 @@ describe("BooleanField", () => {
 
     expect(node.querySelector("input[type=checkbox]").id)
       .eql("root");
+  });
+
+  it("should render customized checkbox", () => {
+    const {node} = createFormComponent({
+      schema: {
+        type: "boolean",
+      },
+      widgets: {
+        CheckboxWidget: CustomWidget
+      }
+    });
+
+    expect(node.querySelector("#custom"))
+      .to.exist;
   });
 
   describe("Label", () => {

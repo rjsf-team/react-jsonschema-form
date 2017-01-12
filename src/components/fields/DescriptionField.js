@@ -3,7 +3,8 @@ import React, {PropTypes} from "react";
 function DescriptionField(props) {
   const {id, description} = props;
   if (!description) {
-    return null;
+    // See #312: Ensure compatibility with old versions of React.
+    return <div/>;
   }
   if (typeof description === "string") {
     return <p id={id} className="field-description">{description}</p>;
