@@ -1,11 +1,13 @@
 import React from "react";
-import { expect } from "chai";
+import {expect} from "chai";
+import {Simulate} from "react-addons-test-utils";
 
 import SchemaField from "../src/components/fields/SchemaField";
 import TitleField from "../src/components/fields/TitleField";
 import DescriptionField from "../src/components/fields/DescriptionField";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
+import {getDefaultRegistry} from "../src/utils";
 
 
 describe("SchemaField", () => {
@@ -21,7 +23,7 @@ describe("SchemaField", () => {
 
   describe("Custom SchemaField component", () => {
     const CustomSchemaField = function(props) {
-      return (<div id="custom"><SchemaField {...props} /></div>);
+      return (<div id="custom"><SchemaField {...props}/></div>);
     };
 
     it("should use the specified custom SchemaType property", () => {
@@ -43,7 +45,7 @@ describe("SchemaField", () => {
       }
 
       render() {
-        return <div id="custom" />;
+        return <div id="custom"/>;
       }
     }
 
@@ -97,7 +99,7 @@ describe("SchemaField", () => {
       }});
 
       const {registry} = receivedProps;
-      expect(registry.widgets).eql({});
+      expect(registry.widgets).eql(getDefaultRegistry().widgets);
       expect(registry.definitions).eql({});
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
@@ -192,6 +194,54 @@ describe("SchemaField", () => {
 
       expect(node.querySelector("#custom").textContent)
         .to.eql("A Foo field");
+    });
+  });
+
+  describe("errors", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {type: "string"}
+      }
+    };
+
+    const uiSchema = {
+      "ui:field": (props) => {
+        const {uiSchema, ...fieldProps} = props; //eslint-disable-line
+        return <SchemaField {...fieldProps}/>;
+      }
+    };
+
+    function validate(formData, errors) {
+      errors.addError("container");
+      errors.foo.addError("test");
+      return errors;
+    }
+
+    function submit(node) {
+      try {
+        Simulate.submit(node);
+      } catch (e) {
+        // Silencing error thrown as failure is expected here
+      }
+    }
+
+    it("should render it's own errors", () => {
+      const {node} = createFormComponent({schema, uiSchema, validate});
+      submit(node);
+
+      const matches = node.querySelectorAll("form > .form-group > div > .error-detail .text-danger");
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.eql("container");
+    });
+
+    it("should pass errors to child component", () => {
+      const {node} = createFormComponent({schema, uiSchema, validate});
+      submit(node);
+
+      const matches = node.querySelectorAll("form .form-group .form-group .text-danger");
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.contain("test");
     });
   });
 });

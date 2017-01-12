@@ -1,7 +1,6 @@
-import React, { Component, PropTypes } from "react";
+import React, {Component, PropTypes} from "react";
 
-import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
-import SelectWidget from "../widgets/SelectWidget";
+import {shouldRender, parseDateString, toDateString, pad} from "../../utils";
 
 
 function rangeOptions(type, start, stop) {
@@ -17,8 +16,9 @@ function readyForChange(state) {
 }
 
 function DateElement(props) {
-  const {type, range, value, select, rootId, disabled, readonly} = props;
+  const {type, range, value, select, rootId, disabled, readonly, autofocus, registry} = props;
   const id = rootId + "_" + type;
+  const {SelectWidget} = registry.widgets;
   return (
     <SelectWidget
       schema={{type: "integer"}}
@@ -28,7 +28,8 @@ function DateElement(props) {
       value={value}
       disabled={disabled}
       readonly={readonly}
-      onChange={(value) => select(type, value)} />
+      autofocus={autofocus}
+      onChange={(value) => select(type, value)}/>
   );
 }
 
@@ -37,6 +38,7 @@ class AltDateWidget extends Component {
     time: false,
     disabled: false,
     readonly: false,
+    autofocus: false
   };
 
   constructor(props) {
@@ -99,7 +101,7 @@ class AltDateWidget extends Component {
   }
 
   render() {
-    const {id, disabled, readonly} = this.props;
+    const {id, disabled, readonly, autofocus, registry} = this.props;
     return (
       <ul className="list-inline">{
         this.dateElementProps.map((elemProps, i) => (
@@ -109,7 +111,9 @@ class AltDateWidget extends Component {
               select={this.onChange}
               {...elemProps}
               disabled= {disabled}
-              readonly={readonly} />
+              readonly={readonly}
+              registry={registry}
+              autofocus={autofocus && i === 0}/>
           </li>
         ))
       }
@@ -134,6 +138,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     time: PropTypes.bool,
   };

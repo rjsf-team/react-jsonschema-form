@@ -1,6 +1,6 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
-import { asNumber } from "../../utils";
+import {asNumber} from "../../utils";
 
 
 /**
@@ -27,6 +27,7 @@ function SelectWidget({
   disabled,
   readonly,
   multiple,
+  autofocus,
   onChange
 }) {
   const {enumOptions} = options;
@@ -39,6 +40,7 @@ function SelectWidget({
       required={required}
       disabled={disabled}
       readOnly={readonly}
+      autoFocus={autofocus}
       onChange={(event) => {
         let newValue;
         if (multiple) {
@@ -56,6 +58,10 @@ function SelectWidget({
   );
 }
 
+SelectWidget.defaultProps = {
+  autofocus: false,
+};
+
 if (process.env.NODE_ENV !== "production") {
   SelectWidget.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -66,6 +72,7 @@ if (process.env.NODE_ENV !== "production") {
     value: PropTypes.any,
     required: PropTypes.bool,
     multiple: PropTypes.bool,
+    autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
 }

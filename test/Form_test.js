@@ -1,12 +1,11 @@
-import { expect } from "chai";
+import {expect} from "chai";
 import sinon from "sinon";
 import React from "react";
-import { renderIntoDocument, Simulate } from "react-addons-test-utils";
-import { findDOMNode } from "react-dom";
+import {renderIntoDocument, Simulate} from "react-addons-test-utils";
+import {findDOMNode} from "react-dom";
 
 import Form from "../src";
-import { createFormComponent, createSandbox } from "./test_utils";
-
+import {createFormComponent, createSandbox} from "./test_utils";
 
 describe("Form", () => {
   let sandbox;
@@ -70,7 +69,19 @@ describe("Form", () => {
     const formData = {foo: "invalid"};
 
     function FieldTemplate(props) {
-      const {id, classNames, label, help, required, description, errors, children} = props;
+      const {
+        id,
+        classNames,
+        label,
+        help,
+        rawHelp,
+        required,
+        description,
+        rawDescription,
+        errors,
+        rawErrors,
+        children,
+      } = props;
       return (
         <div className={"my-template " + classNames}>
           <label htmlFor={id}>{label}{required ? "*" : null}</label>
@@ -78,6 +89,16 @@ describe("Form", () => {
           {children}
           {errors}
           {help}
+          <span className="raw-help">{`${rawHelp} rendered from the raw format`}</span>
+          <span className="raw-description">{`${rawDescription} rendered from the raw format`}</span>
+          {rawErrors ? (
+            <ul>
+              {rawErrors.map(
+                (error, i) => <li key={i} className="raw-error">{error}</li>
+              )}
+            </ul>
+          ) : null
+          }
         </div>
       );
     }
@@ -105,19 +126,34 @@ describe("Form", () => {
         .eql("foo*");
     });
 
-    it("should use the provided template for descriptions", () => {
+    it("should pass description as the provided React element", () => {
       expect(node.querySelector("#root_foo__description").textContent)
         .eql("this is description");
     });
 
-    it("should use the provided template for errors", () => {
+    it("should pass rawDescription as a string", () => {
+      expect(node.querySelector(".raw-description").textContent)
+        .eql("this is description rendered from the raw format");
+    });
+
+    it("should pass errors as the provided React component", () => {
       expect(node.querySelectorAll(".error-detail li"))
         .to.have.length.of(1);
     });
 
-    it("should use the provided template for help", () => {
+    it("should pass rawErrors as an array of strings", () => {
+      expect(node.querySelectorAll(".raw-error"))
+        .to.have.length.of(1);
+    });
+
+    it("should pass help as a the provided React element", () => {
       expect(node.querySelector(".help-block").textContent)
         .eql("this is help");
+    });
+
+    it("should pass rawHelp as a string", () => {
+      expect(node.querySelector(".raw-help").textContent)
+        .eql("this is help rendered from the raw format");
     });
   });
 
@@ -598,7 +634,7 @@ describe("Form", () => {
           function submit(node) {
             try {
               Simulate.submit(node);
-            } catch(err) {
+            } catch (err) {
               // Validation is expected to fail and call console.error, which is
               // stubbed to actually throw in createSandbox().
             }

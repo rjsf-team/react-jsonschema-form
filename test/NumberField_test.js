@@ -1,7 +1,8 @@
-import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
+import React from "react";
+import {expect} from "chai";
+import {Simulate} from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import {createFormComponent, createSandbox} from "./test_utils";
 
 
 describe("NumberField", () => {
@@ -101,6 +102,52 @@ describe("NumberField", () => {
 
       expect(node.querySelector("input[type=text]").id)
         .eql("root");
+    });
+
+    it("should render with trailing zeroes", () => {
+      const {node} = createFormComponent({schema: {
+        type: "number"
+      }});
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: "2."}
+      });
+      expect(node.querySelector(".field input").value)
+        .eql("2.");
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: "2.0"}
+      });
+      expect(node.querySelector(".field input").value)
+        .eql("2.0");
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: "2.00"}
+      });
+      expect(node.querySelector(".field input").value)
+        .eql("2.00");
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: "2.000"}
+      });
+      expect(node.querySelector(".field input").value)
+        .eql("2.000");
+    });
+
+    it("should render customized StringField", () => {
+      const CustomStringField = () => <div id="custom"/>;
+
+      const {node} = createFormComponent({
+        schema: {
+          type: "number",
+        },
+        fields: {
+          StringField: CustomStringField
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
     });
   });
 

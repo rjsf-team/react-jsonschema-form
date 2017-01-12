@@ -1,12 +1,12 @@
-import React, { PropTypes } from "react";
+import React, {PropTypes} from "react";
 
-import { asNumber } from "../../utils";
-import StringField from "./StringField";
+import {asNumber} from "../../utils";
 
 function NumberField(props) {
+  const {StringField} = props.registry.fields;
   return (
     <StringField {...props}
-      onChange={(value) => props.onChange(asNumber(value))} />
+      onChange={(value) => props.onChange(asNumber(value))}/>
   );
 }
 

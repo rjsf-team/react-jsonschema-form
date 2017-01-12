@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from "react";
+import React, {Component, PropTypes} from "react";
 
-import { deepEquals } from "../../utils";
+import {deepEquals} from "../../utils";
 
 
 import {
@@ -101,7 +101,7 @@ class ObjectField extends Component {
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
-    } catch(err) {
+    } catch (err) {
       return (
         <div>
           <p className="config-error" style={{color: "red"}}>
@@ -123,7 +123,7 @@ class ObjectField extends Component {
           <DescriptionField
             id={`${idSchema.$id}__description`}
             description={schema.description}
-            formContext={formContext} /> : null}
+            formContext={formContext}/> : null}
         {
         orderedProperties.map((name, index) => {
           return (
@@ -138,7 +138,7 @@ class ObjectField extends Component {
               onChange={this.onPropertyChange(name)}
               registry={this.props.registry}
               disabled={disabled}
-              readonly={readonly} />
+              readonly={readonly}/>
           );
         })
       }</fieldset>

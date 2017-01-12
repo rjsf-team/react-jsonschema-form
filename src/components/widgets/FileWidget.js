@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from "react";
+import React, {Component, PropTypes} from "react";
 
-import { dataURItoBlob, shouldRender, setState } from "../../utils";
+import {dataURItoBlob, shouldRender, setState} from "../../utils";
 
 
 function addNameToDataURL(dataURL, name) {
@@ -94,24 +94,30 @@ class FileWidget extends Component {
   };
 
   render() {
-    const {multiple, id, readonly, disabled} = this.props;
+    const {multiple, id, readonly, disabled, autofocus} = this.props;
     const {filesInfo} = this.state;
     return (
       <div>
         <p>
           <input
+            ref={ref => this.inputRef = ref}
             id={id}
             type="file"
             disabled={readonly || disabled}
             onChange={this.onChange}
             defaultValue=""
-            multiple={multiple} />
+            autoFocus={autofocus}
+            multiple={multiple}/>
         </p>
-        <FilesInfo filesInfo={filesInfo} />
+        <FilesInfo filesInfo={filesInfo}/>
       </div>
     );
   }
 }
+
+FileWidget.defaultProps = {
+  autofocus: false,
+};
 
 if (process.env.NODE_ENV !== "production") {
   FileWidget.propTypes = {
@@ -119,7 +125,8 @@ if (process.env.NODE_ENV !== "production") {
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.arrayOf(PropTypes.string)
-    ])
+    ]),
+    autofocus: PropTypes.bool,
   };
 }
 
