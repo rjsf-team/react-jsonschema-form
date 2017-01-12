@@ -264,7 +264,8 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
       acc[key] = left.concat(right);
-    } else {
+    } else if ( typeof right !== 'undefined' ) {
+      // We treat undefined as not set
       acc[key] = right;
     }
     return acc;
