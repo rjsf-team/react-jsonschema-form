@@ -156,6 +156,7 @@ function SchemaField(props) {
   const field = (
     <FieldComponent {...props}
       schema={schema}
+      uiSchema={{...uiSchema, classNames: undefined}}
       disabled={disabled}
       readonly={readonly}
       formContext={formContext} />
