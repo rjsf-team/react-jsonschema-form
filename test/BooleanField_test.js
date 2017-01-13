@@ -5,7 +5,7 @@ import {Simulate} from "react-addons-test-utils";
 import {createFormComponent, createSandbox} from "./test_utils";
 
 
-describe.only("BooleanField", () => {
+describe("BooleanField", () => {
   let sandbox;
 
   const CustomWidget = () => <div id="custom"/>;
