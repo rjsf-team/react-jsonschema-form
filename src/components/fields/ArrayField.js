@@ -222,7 +222,7 @@ class ArrayField extends Component {
   renderMultiSelect() {
     const {schema, idSchema, uiSchema, disabled, readonly, autofocus} = this.props;
     const {items} = this.state;
-    const {widgets, definitions} = this.props.registry;
+    const {widgets, definitions, formContext} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const enumOptions = optionsList(itemsSchema);
     const {widget="select", ...options} = {...getUiOptions(uiSchema), enumOptions};
@@ -237,6 +237,7 @@ class ArrayField extends Component {
         value={items}
         disabled={disabled}
         readonly={readonly}
+        formContext={formContext}
         autofocus={autofocus}/>
     );
   }
@@ -245,7 +246,7 @@ class ArrayField extends Component {
     const {schema, uiSchema, idSchema, name, disabled, readonly, autofocus} = this.props;
     const title = schema.title || name;
     const {items} = this.state;
-    const {widgets} = this.props.registry;
+    const {widgets, formContext} = this.props.registry;
     const {widget="files", ...options} = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
     return (
@@ -259,6 +260,7 @@ class ArrayField extends Component {
         value={items}
         disabled={disabled}
         readonly={readonly}
+        formContext={formContext}
         autofocus={autofocus}/>
     );
   }

@@ -114,4 +114,43 @@ describe("FormContext", () => {
     expect(node.querySelector("#" + formContext.foo))
       .to.exist;
   });
+
+
+  it("should be passed to multiselect", () => {
+    const widgets = {SelectWidget: CustomComponent};
+    const {node} = createFormComponent({
+      schema: {
+        type: "array",
+        items: {
+          type: "string",
+          enum: ["foo"],
+          enumNames: ["bar"]
+        },
+        uniqueItems: true
+      },
+      widgets,
+      formContext
+    });
+
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
+  });
+
+  it("should be passed to files array", () => {
+    const widgets = {FileWidget: CustomComponent};
+    const {node} = createFormComponent({
+      schema: {
+        type: "array",
+        items: {
+          type: "string",
+          format: "data-url"
+        }
+      },
+      widgets,
+      formContext
+    });
+
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
+  });
 });
