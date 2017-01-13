@@ -5,7 +5,7 @@ import {Simulate} from "react-addons-test-utils";
 import {createFormComponent, createSandbox} from "./test_utils";
 
 
-describe("BooleanField", () => {
+describe.only("BooleanField", () => {
   let sandbox;
 
   const CustomWidget = () => <div id="custom"/>;
@@ -74,6 +74,20 @@ describe("BooleanField", () => {
     });
 
     expect(comp.state.formData).eql(true);
+  });
+
+  it("should handle a onBlur event", () => {
+    const onBlurSpy = sandbox.spy();
+    const {node} = createFormComponent({schema: {
+      type: "boolean",
+      default: false,
+    },onBlurSpy});
+
+    Simulate.change(node.querySelector("input"), {
+      target: {checked: true}
+    });
+
+    expect(onBlurSpy.calledOnce);
   });
 
   it("should fill field with data", () => {
