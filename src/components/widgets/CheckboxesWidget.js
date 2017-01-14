@@ -37,11 +37,10 @@ function CheckboxesWidget(props) {
                 }
               }}
               onBlur={(event) => {
-                if(onBlur){
+                if (onBlur){
                   this.props.onBlur(event);
                 }
-              }}
-            />
+              }}/>
             <span>{option.label}</span>
           </span>
         );
