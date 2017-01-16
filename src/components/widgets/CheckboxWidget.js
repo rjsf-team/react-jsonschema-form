@@ -22,7 +22,11 @@ function CheckboxWidget({
           disabled={disabled}
           autoFocus={autofocus}
           onChange={(event) => onChange(event.target.checked)}
-          onBlur={(event) => onBlur(event.target.checked)}/>
+          onBlur= {(event) => {
+              if (onBlur) {
+                return onBlur(event.target.checked);
+              }
+          }}/>
         <span>{label}</span>
       </label>
     </div>

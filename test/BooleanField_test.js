@@ -76,14 +76,14 @@ describe("BooleanField", () => {
     expect(comp.state.formData).eql(true);
   });
 
-  it("should handle a onBlur event", () => {
+  it.only("should handle a onBlur event", () => {
     const onBlurSpy = sandbox.spy();
     const {node} = createFormComponent({schema: {
       type: "boolean",
       default: false,
     },onBlurSpy});
 
-    Simulate.change(node.querySelector("input"), {
+    Simulate.blur(node.querySelector("input"), {
       target: {checked: true}
     });
 

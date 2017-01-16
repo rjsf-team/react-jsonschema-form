@@ -324,13 +324,7 @@ describe("ArrayField", () => {
         const onBlurSpy =sandbox.spy();
         const {node} = createFormComponent({schema, onBlurSpy});
 
-        Simulate.blur(node.querySelector(".field select"), {
-          target: {options: [
-            {selected: true, value: "foo"},
-            {selected: true, value: "bar"},
-            {selected: false, value: "fuzz"},
-          ]}
-        });
+        Simulate.blur(node.querySelector(".field select"));
         expect(onBlurSpy.calledOnce);
       });
 
