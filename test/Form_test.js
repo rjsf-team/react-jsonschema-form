@@ -519,9 +519,7 @@ describe("Form", () => {
       };
       const onBlur = sandbox.spy();
       const {node} = createFormComponent({schema, formData, onBlur});
-      Simulate.blur(node.querySelector("[type=text]"), {
-        target: {value: "new"}
-      });
+      Simulate.blur(node.querySelector("[type=text]"));
       sinon.assert.calledOnce(onBlur);
     });
   });

@@ -76,7 +76,7 @@ describe("BooleanField", () => {
     expect(comp.state.formData).eql(true);
   });
 
-  it.only("should handle a onBlur event", () => {
+  it("should handle a onBlur event", () => {
     const onBlurSpy = sandbox.spy();
     const {node} = createFormComponent({schema: {
       type: "boolean",

@@ -83,9 +83,7 @@ describe("StringField", () => {
         type: "string",
       },onBlurSpy});
 
-      Simulate.blur(node.querySelector("input"), {
-        target: {value: "yo"}
-      });
+      Simulate.blur(node.querySelector("input"));
 
       expect(onBlurSpy.calledOnce);
     });
@@ -225,6 +223,16 @@ describe("StringField", () => {
 
       expect(node.querySelectorAll(".field [type=datetime-local]"))
         .to.have.length.of(1);
+    });
+
+    it("should handle an onBlur event with the datetime-local field", () => {
+        const onBlurSpy = sandbox.spy();
+        const {node} = createFormComponent({schema: {
+            type: "string",
+            format: "date-time",
+        }},onBlurSpy);
+
+        expect(onBlurSpy.calledOnce);
     });
 
     it("should assign a default value", () => {

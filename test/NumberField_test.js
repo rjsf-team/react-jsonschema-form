@@ -80,9 +80,7 @@ describe("NumberField", () => {
         type: "number",
       }, onBlurSpy});
 
-      Simulate.blur(node.querySelector("input"), {
-        target: {value: "2"}
-      });
+      Simulate.blur(node.querySelector("input"));
 
       expect(onBlurSpy.calledOnce);
     });

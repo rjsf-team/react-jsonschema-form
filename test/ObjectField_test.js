@@ -137,9 +137,7 @@ describe("ObjectField", () => {
       const onBlurSpy = sandbox.spy();
       const {node} = createFormComponent({schema},onBlurSpy);
 
-      Simulate.blur(node.querySelector("input[type=text]"), {
-        target: {value: "changed"}
-      });
+      Simulate.blur(node.querySelector("input[type=text]"));
 
       expect(onBlurSpy.calledOnce);
     });
