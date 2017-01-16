@@ -52,8 +52,13 @@ function SelectWidget({
         }
         onChange(processValue(schema, newValue));
       }}
-      onBlur={(event)=> onBlur(event)}>{
-      enumOptions.map(({value, label}, i) => {
+      onBlur={(event) => {
+        if (onBlur){
+          //onBlur(event);
+          this.props.onBlur(event);
+        }
+      }}>
+      {enumOptions.map(({value, label}, i) => {
         return <option key={i} value={value}>{label}</option>;
       })
     }</select>

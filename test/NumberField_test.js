@@ -74,6 +74,19 @@ describe("NumberField", () => {
       expect(comp.state.formData).eql(2);
     });
 
+    it("should handle a onBlur event", () => {
+      const onBlurSpy = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "number",
+      }, onBlurSpy});
+
+      Simulate.blur(node.querySelector("input"), {
+        target: {value: "2"}
+      });
+
+      expect(onBlurSpy.calledOnce);
+    });
+
     it("should fill field with data", () => {
       const {node} = createFormComponent({schema: {
         type: "number",
