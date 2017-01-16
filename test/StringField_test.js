@@ -232,7 +232,7 @@ describe("StringField", () => {
             format: "date-time",
         }},onBlurSpy);
 
-        expect(onBlurSpy.calledOnce);
+        expect(onBlurSpy.calledOnce).to.equal(true);
     });
 
     it("should assign a default value", () => {
@@ -323,6 +323,16 @@ describe("StringField", () => {
 
       expect(node.querySelectorAll(".field [type=date]"))
         .to.have.length.of(1);
+    });
+
+    it.only("should handle a onBlur event for the date field", () => {
+        const onBlurSpy = sandbox.spy();
+        const {node} = createFormComponent({schema: {
+            type: "string",
+            format: "date",
+        }, uiSchema}, onBlurSpy);
+
+        expect(onBlurSpy.calledOnce);
     });
 
     it("should assign a default value", () => {

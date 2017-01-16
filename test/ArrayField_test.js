@@ -325,7 +325,7 @@ describe("ArrayField", () => {
         const {node} = createFormComponent({schema, onBlurSpy});
 
         Simulate.blur(node.querySelector(".field select"));
-        expect(onBlurSpy.calledOnce);
+        expect(onBlurSpy.calledOnce).to.be.true;
       });
 
       it("should fill field with data", () => {

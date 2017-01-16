@@ -139,7 +139,7 @@ describe("ObjectField", () => {
 
       Simulate.blur(node.querySelector("input[type=text]"));
 
-      expect(onBlurSpy.calledOnce);
+      expect(onBlurSpy.calledOnce).to.be.true;
     });
 
     it("should render the widget with the expected id", () => {

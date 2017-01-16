@@ -87,7 +87,7 @@ describe("BooleanField", () => {
       target: {checked: true}
     });
 
-    expect(onBlurSpy.calledOnce);
+    expect(onBlurSpy.calledOnce).to.be.true;
   });
 
   it("should fill field with data", () => {
