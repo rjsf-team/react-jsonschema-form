@@ -78,14 +78,14 @@ describe("StringField", () => {
     });
 
     it("should handle a onBlur event", () => {
-      const onBlurSpy = sandbox.spy();
+      const onBlur = sandbox.spy();
       const {node} = createFormComponent({schema: {
         type: "string",
-      },onBlurSpy});
+      },onBlur});
 
       Simulate.blur(node.querySelector("input"));
 
-      expect(onBlurSpy.calledOnce);
+      expect(onBlur.calledOnce);
     });
 
     it("should fill field with data", () => {
@@ -226,13 +226,13 @@ describe("StringField", () => {
     });
 
     it("should handle an onBlur event with the datetime-local field", () => {
-        const onBlurSpy = sandbox.spy();
+        const onBlur = sandbox.spy();
         const {node} = createFormComponent({schema: {
             type: "string",
             format: "date-time",
-        }},onBlurSpy);
+        },onBlur});
 
-        expect(onBlurSpy.calledOnce).to.equal(true);
+        expect(onBlur.calledOnce).to.be.true;
     });
 
     it("should assign a default value", () => {
@@ -325,7 +325,7 @@ describe("StringField", () => {
         .to.have.length.of(1);
     });
 
-    it.only("should handle a onBlur event for the date field", () => {
+    it("should handle a onBlur event for the date field", () => {
         const onBlurSpy = sandbox.spy();
         const {node} = createFormComponent({schema: {
             type: "string",
@@ -489,6 +489,17 @@ describe("StringField", () => {
       Simulate.change(node.querySelector("#root_second"), {target: {value: 3}});
 
       expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
+    });
+
+    it("should handle an onBlurEvent in the dateTimefield", () => {
+        const onBlurSpy = sandbox.spy()
+        const {node} = createFormComponent({schema: {
+            type: "string",
+            format: "date-time",
+        }, uiSchema}, onBlurSpy);
+        Simulate.blur(node.querySelector(".field select"));
+
+        expect(onBlurSpy.calledOnce).to.be.true;
     });
 
     it("should fill field with data", () => {

@@ -321,11 +321,11 @@ describe("ArrayField", () => {
       });
 
       it("should handle a onBlur event", () => {
-        const onBlurSpy =sandbox.spy();
-        const {node} = createFormComponent({schema, onBlurSpy});
+        const onBlur =sandbox.spy();
+        const {node} = createFormComponent({schema, onBlur});
 
         Simulate.blur(node.querySelector(".field select"));
-        expect(onBlurSpy.calledOnce).to.be.true;
+        expect(onBlur.calledOnce).to.be.true;
       });
 
       it("should fill field with data", () => {

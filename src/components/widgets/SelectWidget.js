@@ -54,8 +54,8 @@ function SelectWidget({
       }}
       onBlur={(event) => {
         if (onBlur){
-          //onBlur(event);
-          this.props.onBlur(event);
+          onBlur(event);
+          //this.props.onBlur(event);
         }
       }}>
       {enumOptions.map(({value, label}, i) => {

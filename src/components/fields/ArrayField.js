@@ -220,7 +220,7 @@ class ArrayField extends Component {
   }
 
   renderMultiSelect() {
-    const {schema, idSchema, uiSchema, disabled, readonly, autofocus} = this.props;
+    const {schema, idSchema, uiSchema, disabled, readonly, autofocus, onBlur} = this.props;
     const {items} = this.state;
     const {widgets, definitions} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
@@ -232,6 +232,7 @@ class ArrayField extends Component {
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
+        onBlur={onBlur}
         options={options}
         schema={schema}
         value={items}

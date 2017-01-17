@@ -16,7 +16,7 @@ function readyForChange(state) {
 }
 
 function DateElement(props) {
-  const {type, range, value, select, rootId, disabled, readonly, autofocus, registry} = props;
+  const {type, range, value, select, rootId, disabled, readonly, autofocus, registry,onBlur} = props;
   const id = rootId + "_" + type;
   const {SelectWidget} = registry.widgets;
   return (
@@ -29,7 +29,8 @@ function DateElement(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={(value) => select(type, value)}/>
+      onChange={(value) => select(type, value)}
+      onBlur={onBlur} />
   );
 }
 
@@ -115,6 +116,7 @@ class AltDateWidget extends Component {
             <DateElement
               rootId={id}
               select={this.onChange}
+              onBlur={this.onBlur}
               {...elemProps}
               disabled= {disabled}
               readonly={readonly}
