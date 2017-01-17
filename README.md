@@ -49,7 +49,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
-     - [Array template](#array-template)
+     - [Array field template](#array-field-template)
      - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)
@@ -701,7 +701,7 @@ The following props are passed to a custom field template component:
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
 
-### Array Template
+### Array Field Template
 
 Similarly to the `FieldTemplate` you can use an `ArrayFieldTemplate` to customize how your
 arrays are rendered. This allows you to customize your array, and each element in the array.
@@ -727,31 +727,31 @@ Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema
 The following props are passed to each `ArrayFieldTemplate`:
 
 - `DescriptionField`: The generated `DescriptionField` (if you wanted to utilize it)
-- `TitleField`: The generated `TitleField` (if you wanted to utilize it)
-- `canAdd`: boolean whether new elements can be added to array
-- `className`: string
-- `disabled`: boolean
+- `TitleField`: The generated `TitleField` (if you wanted to utilize it).
+- `canAdd`: A boolean value stating whether new elements can be added to the array.
+- `className`: The className string.
+- `disabled`: A boolean value stating if the array is disabled.
 - `idSchema`: Object
-- `items`: Object[] - Each of the items represent a child with properties described below.
-- `onAddClick`: (event) => void
-- `readonly`: boolean
-- `required`: boolean
-- `schema`: Object
-- `title`: string
+- `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
+- `onAddClick: (event) => (event) => void`: Returns a function that adds a new item to the array.
+- `readonly`: A boolean value stating if the array is readonly.
+- `required`: A boolean value stating if the array is required.
+- `schema`: The schema object for this array.
+- `title`: A string value containing the title for the array.
 
 The following props are part of each element in `items`:
 
-- `children`: JSX.Element
-- `className`: string
-- `disabled`: boolean
-- `hasMoveDown`: boolean whether the element can be moved down
-- `hasMoveUp`: boolean whether the element can be moved up
-- `hasRemove`: boolean whether the element can be removed
-- `hasToolbar`: boolean
-- `index`: number
-- `onDropIndexClick`: (index) => void
-- `onReorderClick`: (index, newIndex) => void
-- `readonly`: boolean
+- `children`: The html for the item's content.
+- `className`: The className string.
+- `disabled`: A boolean value stating if the array item is disabled.
+- `hasMoveDown`: A boolean value stating whether the array item can be moved down.
+- `hasMoveUp`: A boolean value stating whether the array item can be moved up.
+- `hasRemove`: A boolean value stating whether the array item can be removed.
+- `hasToolbar`: A boolean value stating whether the array item has a toolbar.
+- `index`: A number stating the index the array item occurs in `items`.
+- `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
+- `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
+- `readonly`: A boolean value stating if the array item is readonly.
 
 ### Custom widgets and fields
 
