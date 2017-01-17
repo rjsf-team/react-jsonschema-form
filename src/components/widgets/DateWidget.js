@@ -10,7 +10,9 @@ function DateWidget(props) {
       type="date"
       {...props}
       onChange={(value) => onChange(value || undefined)}
-      onBlur={(value) => onBlur(value || undefined)}/>
+      onBlur={(value) => {
+          return onBlur(value || undefined);
+      }}/>
   );
 }
 
