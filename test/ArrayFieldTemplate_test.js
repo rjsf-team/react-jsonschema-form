@@ -46,10 +46,13 @@ describe("ArrayFieldTemplate", () => {
         items: {type: "string"}
       };
 
-      const {node} = createFormComponent({
-        ArrayFieldTemplate,
-        formData,
-        schema
+      let node;
+      beforeEach(() => {
+        node = createFormComponent({
+          ArrayFieldTemplate,
+          formData,
+          schema
+        }).node;
       });
 
       it("should render one root element for the array", () => {
@@ -95,10 +98,13 @@ describe("ArrayFieldTemplate", () => {
         ]
       };
 
-      const {node} = createFormComponent({
-        ArrayFieldTemplate,
-        formData,
-        schema
+      let node;
+      beforeEach(() => {
+        node = createFormComponent({
+          ArrayFieldTemplate,
+          formData,
+          schema
+        }).node;
       });
 
       it("should render one root element for the array", () => {
