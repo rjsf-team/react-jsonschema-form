@@ -6,7 +6,7 @@ import {parseDateString, toDateString} from "../src/utils";
 import {createFormComponent, createSandbox} from "./test_utils";
 
 
-describe("StringField", () => {
+describe.only("StringField", () => {
   let sandbox;
 
   const CustomWidget = () => <div id="custom"/>;
@@ -116,6 +116,17 @@ describe("StringField", () => {
 
       expect(node.querySelector("#custom"))
         .to.exist;
+    });
+  });
+
+  describe("TextArea",() => {
+    it("should handle a onBlur event", () => {
+        const onBlur = sandbox.spy();
+        const {node} = createFormComponent({schema: {type: "string"}, onBlur});
+
+        Simulate.blur(node.querySelector("input"));
+
+        expect(onBlur.calledOnce).to.be.true;
     });
   });
 
@@ -1319,6 +1330,18 @@ describe("StringField", () => {
       };
       const {node} = createFormComponent({schema, widgets, uiSchema});
       expect(node.querySelector("#label-")).to.not.be.null;
+    });
+  });
+
+  describe("password",() => {
+    it("should handle a onBlur event", () => {
+        const onBlur = sandbox.spy();
+
+        const {node} = createFormComponent({schema: {type: "string"}, onBlur});
+
+        Simulate.blur(node.querySelector("input"));
+
+        expect(onBlur.calledOnce).to.be.true;
     });
   });
 });
