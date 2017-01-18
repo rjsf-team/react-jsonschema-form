@@ -14,7 +14,9 @@ function BaseInput(props) {
     registry, // eslint-disable-line
     ...inputProps
   } = props;
-  const _onChange = props.onChange;
+  const _onChange = ({target: {value}}) => {
+    return props.onChange(value === "" ? undefined : value);
+  };
   return (
     <input
       {...inputProps}
@@ -22,11 +24,7 @@ function BaseInput(props) {
       readOnly={readonly}
       autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
-      onChange={(event) => {if (event.target.value == "") {
-        return _onChange(undefined);
-      } else {
-        return _onChange(event.target.value);
-      }}}/>
+      onChange={_onChange} />
   );
 }
 
