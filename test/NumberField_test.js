@@ -208,18 +208,18 @@ describe("NumberField", () => {
     });
 
     it("should handle a onBlur event", () => {
-        const onBlur = sandbox.spy();
-        const {comp, node} = createFormComponent({schema: {
-            type: "number",
-            enum: [1, 2],
-        },onBlur});
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "number",
+        enum: [1, 2],
+      },onBlur});
 
-        Simulate.blur(node.querySelector("select"), {
-            target: {value: "2"}
-        });
+      Simulate.blur(node.querySelector("select"), {
+        target: {value: "2"}
+      });
 
 
-        expect(onBlur.calledOnce).to.be.true;
+      expect(onBlur.calledOnce).to.be.true;
     });
 
     it("should fill field with data", () => {
@@ -246,7 +246,7 @@ describe("NumberField", () => {
     it("should handle on Blur event", () => {
       const onBlur = sandbox.spy();
       const {node} = createFormComponent({schema: {
-          type: "number",
+        type: "number",
       }, onBlur});
 
       Simulate.blur(node.querySelector("input"));
@@ -256,29 +256,29 @@ describe("NumberField", () => {
   });
 
   describe("range",() =>{
-      it("should handle on Blur event", () => {
-          const onBlur = sandbox.spy();
-          const {node} = createFormComponent({schema: {
-              type: "number",
-          }, onBlur});
+    it("should handle on Blur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "number",
+      }, onBlur});
 
-          Simulate.blur(node.querySelector("input"));
+      Simulate.blur(node.querySelector("input"));
 
-          expect(onBlur.calledOnce).to.be.true;
-      });
+      expect(onBlur.calledOnce).to.be.true;
+    });
   });
 
   describe("up down widget",() =>{
-      it("should handle on Blur event", () => {
-          const onBlur = sandbox.spy();
-          const {node} = createFormComponent({schema: {
-              type: "number",
-          }, onBlur});
+    it("should handle on Blur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "number",
+      }, onBlur});
 
-          Simulate.blur(node.querySelector("input"));
+      Simulate.blur(node.querySelector("input"));
 
-          expect(onBlur.calledOnce).to.be.true;
-      });
+      expect(onBlur.calledOnce).to.be.true;
+    });
   });
 
 });

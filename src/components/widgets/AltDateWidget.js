@@ -30,7 +30,7 @@ function DateElement(props) {
       readonly={readonly}
       autofocus={autofocus}
       onChange={(value) => select(type, value)}
-      onBlur={onBlur} />
+      onBlur={onBlur}/>
   );
 }
 
@@ -65,7 +65,7 @@ class AltDateWidget extends Component {
   };
 
   onBlur = () => {
-    if(this.props.onBlur){
+    if (this.props.onBlur){
       this.props.onBlur(toDateString(this.state, this.props.time));
     }
   };

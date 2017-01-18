@@ -25,10 +25,10 @@ function BaseInput(props) {
       value={typeof value === "undefined" ? "" : value}
       onChange={(event) => onChange(event.target.value)}
       onBlur={(event) => {
-        if(onBlur) {
+        if (onBlur) {
           return onBlur(event.target.id);
         }
-      }} />
+      }}/>
   );
 }
 

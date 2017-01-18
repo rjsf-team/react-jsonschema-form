@@ -11,7 +11,7 @@ function DateWidget(props) {
       {...props}
       onChange={(value) => onChange(value || undefined)}
       onBlur={(value) => {
-          return onBlur(value || undefined);
+        return onBlur(value || undefined);
       }}/>
   );
 }

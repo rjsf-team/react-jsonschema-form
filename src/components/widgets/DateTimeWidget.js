@@ -21,8 +21,7 @@ function DateTimeWidget(props) {
       {...props}
       value={fromJSONDate(value)}
       onChange={(value) => onChange(toJSONDate(value))}
-      onBlur={(value) => onBlur(toJSONDate(value))}
-    />
+      onBlur={(value) => onBlur(toJSONDate(value))}/>
   );
 }
 

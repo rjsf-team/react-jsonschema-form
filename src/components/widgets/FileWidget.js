@@ -94,7 +94,7 @@ class FileWidget extends Component {
   };
 
   onBlur = (event) => {
-    if(this.props.onBlur){
+    if (this.props.onBlur){
       this.props.onBlur(event);
     }
   };
