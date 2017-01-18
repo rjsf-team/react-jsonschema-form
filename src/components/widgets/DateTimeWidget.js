@@ -14,13 +14,14 @@ function toJSONDate(dateString) {
 }
 
 function DateTimeWidget(props) {
-  const {value, onChange} = props;
+  const {value, onChange, onBlur} = props;
   return (
     <BaseInput
       type="datetime-local"
       {...props}
       value={fromJSONDate(value)}
-      onChange={(value) => onChange(toJSONDate(value))}/>
+      onChange={(value) => onChange(toJSONDate(value))}
+      onBlur={(value) => onBlur(toJSONDate(value))}/>
   );
 }
 

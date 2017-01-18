@@ -9,6 +9,7 @@ function BaseInput(props) {
     readonly,
     autofocus,
     onChange,
+    onBlur,
     options,  // eslint-disable-line
     schema,   // eslint-disable-line
     formContext,  // eslint-disable-line
@@ -22,7 +23,12 @@ function BaseInput(props) {
       readOnly={readonly}
       autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
-      onChange={(event) => onChange(event.target.value)}/>
+      onChange={(event) => onChange(event.target.value)}
+      onBlur={(event) => {
+        if (onBlur) {
+          return onBlur(event.target.id);
+        }
+      }}/>
   );
 }
 
@@ -44,6 +50,7 @@ if (process.env.NODE_ENV !== "production") {
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 

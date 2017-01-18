@@ -1,8 +1,6 @@
 import React from "react";
-
 import {expect} from "chai";
 import {Simulate} from "react-addons-test-utils";
-
 import {createFormComponent, createSandbox} from "./test_utils";
 
 
@@ -322,6 +320,14 @@ describe("ArrayField", () => {
         expect(comp.state.formData).eql(["foo", "bar"]);
       });
 
+      it("should handle a onBlur event", () => {
+        const onBlur =sandbox.spy();
+        const {node} = createFormComponent({schema, onBlur});
+
+        Simulate.blur(node.querySelector(".field select"));
+        expect(onBlur.calledOnce).to.be.true;
+      });
+
       it("should fill field with data", () => {
         const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
 
@@ -370,6 +376,17 @@ describe("ArrayField", () => {
         });
 
         expect(comp.state.formData).eql(["foo", "fuzz"]);
+      });
+
+      it("should handle a on Blur event", () => {
+        const onBlurSpy = sandbox.spy();
+
+        const {node} = createFormComponent({schema, uiSchema, onBlurSpy});
+        Simulate.blur(node.querySelectorAll("[type=checkbox]")[0], {
+          target: {checked: true}
+        });
+
+        expect(onBlurSpy.calledOnce);
       });
 
       it("should fill field with data", () => {
@@ -437,7 +454,7 @@ describe("ArrayField", () => {
       expect(node.querySelector(".field [type=file]").getAttribute("multiple"))
         .not.to.be.null;
     });
-
+//TODO typeError: Attempted to wrap FileReader which is already stubbed
     it("should handle a change event", () => {
       sandbox.stub(window, "FileReader").returns({
         set onload(fn) {
@@ -445,7 +462,6 @@ describe("ArrayField", () => {
         },
         readAsDataUrl() {}
       });
-
       const {comp, node} = createFormComponent({schema});
 
       Simulate.change(node.querySelector(".field input[type=file]"), {
@@ -463,7 +479,29 @@ describe("ArrayField", () => {
           "data:text/plain;name=file2.txt;base64,x=",
         ]));
     });
-
+//TODO fix me with multiple files
+    // it.only("should handle a onBlur event", () => {
+    //   const onBlurSpy = sandbox.spy();
+    //   sandbox.stub(window, "FileReader").returns({
+    //     set onload(fn) {
+    //       fn({target: {result: "data:text/plain;base64,x="}});
+    //     },
+    //     readAsDataUrl() {}
+    //   });
+    //
+    //   const {node} = createFormComponent({schema, onBlurSpy});
+    //
+    //   Simulate.blur(node.querySelector(".field input[type=file]"), {
+    //     target: {
+    //       files: [
+    //     {name: "file1.txt", size: 1, type: "type"},
+    //     {name: "file2.txt", size: 2, type: "type"},
+    //       ]
+    //     }
+    //   });
+    //   expect(onBlurSpy.calledOnce);
+    // });
+//
     it("should fill field with data", () => {
       const {node} = createFormComponent({
         schema,
@@ -595,6 +633,20 @@ describe("ArrayField", () => {
       Simulate.change(numInput, {target: {value: "101"}});
 
       expect(comp.state.formData).eql(["bar", 101]);
+    });
+
+    it("should handle onBlur events", () => {
+      const onBlurSpy = sandbox.spy();
+      const {node} = createFormComponent({schema, onBlurSpy});
+      const strInput =
+          node.querySelector("fieldset .field-string input[type=text]");
+      const numInput =
+          node.querySelector("fieldset .field-number input[type=text]");
+
+      Simulate.change(strInput, {target: {value: "bar"}});
+      Simulate.change(numInput, {target: {value: "101"}});
+
+      expect(onBlurSpy.calledOnce);
     });
 
     it("should generate additional fields and fill data", () => {

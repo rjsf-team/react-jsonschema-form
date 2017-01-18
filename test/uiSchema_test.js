@@ -55,7 +55,8 @@ describe("uiSchema", () => {
               value={props.value}
               defaultValue={props.defaultValue}
               required={props.required}
-              onChange={(event) => props.onChange(event.target.value)}/>
+              onChange={(event) => props.onChange(event.target.value)}
+              onBlur={(event) => props.onBlur(event.target.value)}/>
           );
         }
       };

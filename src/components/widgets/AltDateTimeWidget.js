@@ -13,6 +13,7 @@ if (process.env.NODE_ENV !== "production") {
     value: React.PropTypes.string,
     required: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 

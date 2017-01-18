@@ -133,6 +133,15 @@ describe("ObjectField", () => {
       expect(comp.state.formData.foo).eql("changed");
     });
 
+    it("should handle object fields onBlur events", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema,onBlur});
+
+      Simulate.blur(node.querySelector("input[type=text]"));
+
+      expect(onBlur.calledOnce).to.be.true;
+    });
+
     it("should render the widget with the expected id", () => {
       const {node} = createFormComponent({schema});
 

@@ -20,7 +20,8 @@ function BooleanField(props) {
     disabled,
     readonly,
     autofocus,
-    onChange
+    onChange,
+    onBlur,
   } = props;
   const {title} = schema;
   const {widgets, formContext} = registry;
@@ -35,6 +36,7 @@ function BooleanField(props) {
     schema={schema}
     id={idSchema && idSchema.$id}
     onChange={onChange}
+    onBlur={onBlur}
     label={title === undefined ? name : title}
     value={defaultFieldValue(formData, schema)}
     required={required}

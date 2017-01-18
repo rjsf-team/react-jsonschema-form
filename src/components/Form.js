@@ -1,15 +1,7 @@
 import React, {Component, PropTypes} from "react";
-
 import ErrorList from "./ErrorList";
-import {
-  getDefaultFormState,
-  shouldRender,
-  toIdSchema,
-  setState,
-  getDefaultRegistry,
-} from "../utils";
+import {getDefaultFormState, shouldRender, toIdSchema, setState, getDefaultRegistry} from "../utils";
 import validateFormData from "../validate";
-
 
 export default class Form extends Component {
   static defaultProps = {
@@ -74,7 +66,7 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange = (formData, options={validate: false}) => {
+  onChange = (formData, options = {validate: false}) => {
     const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
     let state = {status: "editing", formData};
     if (mustValidate) {
@@ -87,6 +79,12 @@ export default class Form extends Component {
       }
     });
   };
+
+  onBlur = () => {
+    if (this.props.onBlur) {
+      this.props.onBlur(this.state);
+    }
+  }
 
   onSubmit = (event) => {
     event.preventDefault();
@@ -138,7 +136,8 @@ export default class Form extends Component {
       action,
       autocomplete,
       enctype,
-      acceptcharset
+      acceptcharset,
+      onBlur
     } = this.props;
 
     const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
@@ -147,15 +146,15 @@ export default class Form extends Component {
 
     return (
       <form className={className ? className : "rjsf"}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autocomplete}
-        encType={enctype}
-        acceptCharset={acceptcharset}
-        onSubmit={this.onSubmit}>
+            id={id}
+            name={name}
+            method={method}
+            target={target}
+            action={action}
+            autoComplete={autocomplete}
+            encType={enctype}
+            acceptCharset={acceptcharset}
+            onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
@@ -164,6 +163,7 @@ export default class Form extends Component {
           idSchema={idSchema}
           formData={formData}
           onChange={this.onChange}
+          onBlur={onBlur}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}/>
         { children ? children :
@@ -188,6 +188,7 @@ if (process.env.NODE_ENV !== "production") {
     ArrayFieldTemplate: PropTypes.func,
     FieldTemplate: PropTypes.func,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
     onError: PropTypes.func,
     showErrorList: PropTypes.bool,
     onSubmit: PropTypes.func,

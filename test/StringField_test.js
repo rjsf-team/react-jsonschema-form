@@ -77,6 +77,15 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("yo");
     });
 
+    it("should handle a onBlur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {type: "string"}, onBlur});
+
+      Simulate.blur(node.querySelector("input"));
+
+      expect(onBlur.calledOnce).to.be.true;
+    });
+
     it("should fill field with data", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
@@ -107,6 +116,17 @@ describe("StringField", () => {
 
       expect(node.querySelector("#custom"))
         .to.exist;
+    });
+  });
+
+  describe("TextArea",() => {
+    it("should handle a onBlur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {type: "string"}, onBlur});
+
+      Simulate.blur(node.querySelector("input"));
+
+      expect(onBlur.calledOnce).to.be.true;
     });
   });
 
@@ -153,6 +173,18 @@ describe("StringField", () => {
       });
 
       expect(comp.state.formData).eql("foo");
+    });
+
+    it("should handle onBlur event on form element", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        enum: ["foo", "bar"],
+      }, onBlur});
+
+      Simulate.blur(node.querySelector("select"),{target:{value:"foo"}});
+
+      expect(onBlur.calledOnce).to.be.true;
     });
 
     it("should reflect the change into the dom", () => {
@@ -212,6 +244,16 @@ describe("StringField", () => {
 
       expect(node.querySelectorAll(".field [type=datetime-local]"))
         .to.have.length.of(1);
+    });
+
+    it("should handle an onBlur event with the datetime-local field", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      },onBlur});
+      Simulate.blur(node.querySelector(".field [type=datetime-local]"));
+      expect(onBlur.calledOnce).to.be.true;
     });
 
     it("should assign a default value", () => {
@@ -302,6 +344,16 @@ describe("StringField", () => {
 
       expect(node.querySelectorAll(".field [type=date]"))
         .to.have.length.of(1);
+    });
+
+    it("should handle a onBlur event for the date field", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date",
+      }, uiSchema, onBlur});
+      Simulate.blur(node.querySelector(".field [type=date]"));
+      expect(onBlur.calledOnce);
     });
 
     it("should assign a default value", () => {
@@ -458,6 +510,17 @@ describe("StringField", () => {
       Simulate.change(node.querySelector("#root_second"), {target: {value: 3}});
 
       expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
+    });
+
+    it("should handle an onBlurEvent in the dateTimefield", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date-time",
+      }, uiSchema, onBlur});
+      Simulate.blur(node.querySelector(".field select"));
+
+      expect(onBlur.calledOnce).to.be.true;
     });
 
     it("should fill field with data", () => {
@@ -650,6 +713,18 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("2012-10-02");
     });
 
+    it("should onBlur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "date",
+      }, uiSchema, onBlur});
+
+      Simulate.blur(node.querySelector("#root_year"));
+
+      expect(onBlur.calledOnce).to.be.true;
+    });
+
     it("should fill field with data", () => {
       const datetime = "2012-12-12";
       const {comp} = createFormComponent({schema: {
@@ -835,6 +910,17 @@ describe("StringField", () => {
         .eql(newDatetime);
     });
 
+    it("should handle onBlur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "email",
+      },onBlur});
+
+      Simulate.blur(node.querySelector("[type=email]"));
+
+      expect(onBlur.calledOnce).to.be.true;
+    });
     it("should fill field with data", () => {
       const email = "foo@bar.baz";
       const {comp} = createFormComponent({schema: {
@@ -942,6 +1028,18 @@ describe("StringField", () => {
       expect(node.querySelector("[type=url]").value).eql(newDatetime);
     });
 
+    it("should handle onBlur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "uri",
+      }, onBlur});
+
+      Simulate.blur(node.querySelector("[type=url]"));
+
+      expect(onBlur.calledOnce).to.be.true;
+    });
+
     it("should fill field with data", () => {
       const url = "http://foo.bar/baz";
       const {comp} = createFormComponent({schema: {
@@ -1029,6 +1127,22 @@ describe("StringField", () => {
 
       expect(node.querySelector("[type=color]").value)
         .eql(newColor);
+    });
+
+    it("should handle onBlur Event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "color",
+      }, uiSchema, onBlur});
+
+      const newColor = "#654321";
+
+      Simulate.blur(node.querySelector("[type=color]"), {
+        target: {value: newColor}
+      });
+
+      expect(onBlur.calledOnce).to.be.true;
     });
 
     it("should fill field with data", () => {
@@ -1125,6 +1239,20 @@ describe("StringField", () => {
           "data:text/plain;name=file1.txt;base64,x="));
     });
 
+    it("should handle onBlur", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+        type: "string",
+        format: "data-url",
+      },onBlur});
+
+      Simulate.blur(node.querySelector("[type=file]"), {
+        target: {files: [{name: "file1.txt", size: 1, type: "type"}]}
+      });
+
+      expect(onBlur.calledOnce).to.be.true;
+    });
+
     it("should render the widget with the expected id", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
@@ -1199,6 +1327,18 @@ describe("StringField", () => {
       };
       const {node} = createFormComponent({schema, widgets, uiSchema});
       expect(node.querySelector("#label-")).to.not.be.null;
+    });
+  });
+
+  describe("password",() => {
+    it("should handle a onBlur event", () => {
+      const onBlur = sandbox.spy();
+
+      const {node} = createFormComponent({schema: {type: "string"}, onBlur});
+
+      Simulate.blur(node.querySelector("input"));
+
+      expect(onBlur.calledOnce).to.be.true;
     });
   });
 });

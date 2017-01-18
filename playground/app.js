@@ -331,7 +331,8 @@ class App extends Component {
             <div className="col-sm-2">
               <Form schema={liveValidateSchema}
                     formData={liveValidate}
-                    onChange={this.setLiveValidate}><div/></Form>
+                    onChange={this.setLiveValidate}
+                    onBlur={(event)=> console.log("onBlur:", event)}><div/></Form>
             </div>
             <div className="col-sm-2">
               <ThemeSelector theme={theme} select={this.onThemeSelected} />
@@ -361,6 +362,7 @@ class App extends Component {
               uiSchema={uiSchema}
               formData={formData}
               onChange={this.onFormDataChange}
+              onBlur={x => console.log("onBlur", x)}
               fields={{geo: GeoPosition}}
               validate={validate}
               onError={log("errors")} />}

@@ -10,6 +10,7 @@ function CheckboxWidget({
   label,
   autofocus,
   onChange,
+  onBlur
 }) {
   return (
     <div className={`checkbox ${disabled ? "disabled" : ""}`}>
@@ -20,7 +21,12 @@ function CheckboxWidget({
           required={required}
           disabled={disabled}
           autoFocus={autofocus}
-          onChange={(event) => onChange(event.target.checked)}/>
+          onChange={(event) => onChange(event.target.checked)}
+          onBlur= {(event) => {
+            if (onBlur) {
+              return onBlur(event.target.checked);
+            }
+          }}/>
         <span>{label}</span>
       </label>
     </div>
@@ -39,6 +45,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 

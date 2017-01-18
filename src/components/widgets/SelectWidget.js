@@ -28,7 +28,8 @@ function SelectWidget({
   readonly,
   multiple,
   autofocus,
-  onChange
+  onChange,
+  onBlur
 }) {
   const {enumOptions} = options;
   return (
@@ -50,8 +51,13 @@ function SelectWidget({
           newValue = event.target.value;
         }
         onChange(processValue(schema, newValue));
-      }}>{
-      enumOptions.map(({value, label}, i) => {
+      }}
+      onBlur={(event) => {
+        if (onBlur){
+          onBlur(event);
+        }
+      }}>
+      {enumOptions.map(({value, label}, i) => {
         return <option key={i} value={value}>{label}</option>;
       })
     }</select>
@@ -74,6 +80,7 @@ if (process.env.NODE_ENV !== "production") {
     multiple: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 
