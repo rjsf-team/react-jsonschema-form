@@ -207,6 +207,21 @@ describe("NumberField", () => {
       expect(comp.state.formData).eql(2);
     });
 
+    it("should handle a onBlur event", () => {
+        const onBlur = sandbox.spy();
+        const {comp, node} = createFormComponent({schema: {
+            type: "number",
+            enum: [1, 2],
+        },onBlur});
+
+        Simulate.blur(node.querySelector("select"), {
+            target: {value: "2"}
+        });
+
+
+        expect(onBlur.calledOnce).to.be.true;
+    });
+
     it("should fill field with data", () => {
       const {comp} = createFormComponent({schema: {
         type: "number",
@@ -226,4 +241,44 @@ describe("NumberField", () => {
         .eql("root");
     });
   });
+
+  describe("radio",() =>{
+    it("should handle on Blur event", () => {
+      const onBlur = sandbox.spy();
+      const {node} = createFormComponent({schema: {
+          type: "number",
+      }, onBlur});
+
+      Simulate.blur(node.querySelector("input"));
+
+      expect(onBlur.calledOnce).to.be.true;
+    });
+  });
+
+  describe("range",() =>{
+      it("should handle on Blur event", () => {
+          const onBlur = sandbox.spy();
+          const {node} = createFormComponent({schema: {
+              type: "number",
+          }, onBlur});
+
+          Simulate.blur(node.querySelector("input"));
+
+          expect(onBlur.calledOnce).to.be.true;
+      });
+  });
+
+  describe("up down widget",() =>{
+      it("should handle on Blur event", () => {
+          const onBlur = sandbox.spy();
+          const {node} = createFormComponent({schema: {
+              type: "number",
+          }, onBlur});
+
+          Simulate.blur(node.querySelector("input"));
+
+          expect(onBlur.calledOnce).to.be.true;
+      });
+  });
+
 });

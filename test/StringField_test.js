@@ -6,7 +6,7 @@ import {parseDateString, toDateString} from "../src/utils";
 import {createFormComponent, createSandbox} from "./test_utils";
 
 
-describe.only("StringField", () => {
+describe("StringField", () => {
   let sandbox;
 
   const CustomWidget = () => <div id="custom"/>;
