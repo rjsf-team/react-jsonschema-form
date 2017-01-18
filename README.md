@@ -558,7 +558,7 @@ const uiSchema = {
 };
 ```
 
-In addition it is valid to maked an array as "required".  This means the user must select at least one items to add to the array.
+In addition it is valid to mark an array as "required".  This means the user must select at least one item to add to the array.
 
 See the "Arrays" section of the playground for cool demos.
 
