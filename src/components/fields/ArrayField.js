@@ -216,7 +216,7 @@ class ArrayField extends Component {
       if (event) {
         event.preventDefault();
       }
-      var items = this.state.items.filter((_, i) => i !== index);
+      const items = this.state.items.filter((_, i) => i !== index);
       this.asyncSetState({
         items: items.length > 0 ? items : undefined,
       }, {validate: true}); // refs #195
