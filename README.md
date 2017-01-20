@@ -547,7 +547,7 @@ const uiSchema = {
 };
 ```
 
-Unlike other types, array's do not support the `required` property.  You can however instead specify the minimum number of items the user must select with the `minItems` property.
+Care should be taken when using the `required` property with arrays.  An empty array is sufficient to pass that validation check.  If you wish to ensure the user populates the array, you can specify the minimum number of items the user must select with the `minItems` property.
 
 Example:
 
