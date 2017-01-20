@@ -78,9 +78,10 @@ describe("StringField", () => {
     });
 
     it("should handle an empty string change event", () => {
-      const {comp, node} = createFormComponent({schema: {
-        type: "string",
-      }});
+      const {comp, node} = createFormComponent({
+        schema: {type: "string"},
+        formData: "x",
+      });
 
       Simulate.change(node.querySelector("input"), {
         target: {value: ""}
@@ -217,11 +218,13 @@ describe("StringField", () => {
 
   describe("TextareaWidget", () => {
     it("should handle an empty string change event", () => {
-      const {comp, node} = createFormComponent({schema: {
-        type: "string",
-      }});
+      const {comp, node} = createFormComponent({
+        schema: {type: "string"},
+        uiSchema: {"ui:widget": "textarea"},
+        formData: "x",
+      });
 
-      Simulate.change(node.querySelector("input"), {
+      Simulate.change(node.querySelector("textarea"), {
         target: {value: ""}
       });
 
