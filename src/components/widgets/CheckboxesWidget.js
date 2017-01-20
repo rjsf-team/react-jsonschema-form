@@ -10,8 +10,7 @@ function selectValue(value, selected, all) {
 }
 
 function deselectValue(value, selected) {
-  const ret = selected.filter(v => v !== value);
-  return ret.length === 0 ? undefined : ret;
+  return selected.filter(v => v !== value);
 }
 
 function CheckboxesWidget(props) {
@@ -20,7 +19,7 @@ function CheckboxesWidget(props) {
   return (
     <div className="checkboxes" id={id}>{
       enumOptions.map((option, index) => {
-        const checked = value === undefined ? false : value.indexOf(option.value) !== -1;
+        const checked = value.indexOf(option.value) !== -1;
         const disabledCls = disabled ? "disabled" : "";
         const checkbox = (
           <span>
