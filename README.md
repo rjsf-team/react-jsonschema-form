@@ -547,6 +547,23 @@ const uiSchema = {
 };
 ```
 
+Care should be taken when using the `required` property with arrays.  An empty array is sufficient to pass that validation check.  If you wish to ensure the user populates the array, you can specify the minimum number of items the user must select with the `minItems` property.
+
+Example:
+
+```js
+const schema = {
+  type: "array",
+  minItems: 2,
+  title: "A multiple choices list",
+  items: {
+    type: "string",
+    enum: ["foo", "bar", "fuzz", "qux"],
+  },
+  uniqueItems: true
+};
+```
+
 By default, checkboxes are stacked but if you prefer them inline:
 
 ```js
