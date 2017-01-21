@@ -8,13 +8,15 @@ function BaseInput(props) {
     value,
     readonly,
     autofocus,
-    onChange,
     options,  // eslint-disable-line
     schema,   // eslint-disable-line
     formContext,  // eslint-disable-line
     registry, // eslint-disable-line
     ...inputProps
   } = props;
+  const _onChange = ({target: {value}}) => {
+    return props.onChange(value === "" ? undefined : value);
+  };
   return (
     <input
       {...inputProps}
@@ -22,7 +24,7 @@ function BaseInput(props) {
       readOnly={readonly}
       autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
-      onChange={(event) => onChange(event.target.value)}/>
+      onChange={_onChange} />
   );
 }
 
