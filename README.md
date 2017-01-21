@@ -1198,8 +1198,8 @@ render((
 ), document.getElementById("app"));
 ```
 
-Notes:
-- The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
+> Notes:
+> - The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
 
 ### Error List Display
 
