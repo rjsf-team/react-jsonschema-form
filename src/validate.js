@@ -97,6 +97,8 @@ function unwrapErrorHandler(errorHandler) {
  * will be used to add custom validation errors for each field.
  */
 export default function validateFormData(formData, schema, customValidate) {
+  formData = undefinedToNullRecursively(formData);
+  
   const {errors} = jsonValidate(formData, schema);
   const errorSchema = toErrorSchema(errors);
 
@@ -113,4 +115,18 @@ export default function validateFormData(formData, schema, customValidate) {
   const newErrors = toErrorList(newErrorSchema);
 
   return {errors: newErrors, errorSchema: newErrorSchema};
+}
+
+function undefinedToNullRecursively(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if(obj[key] === undefined) {
+        obj[key] = null;
+      }
+      else if(typeof obj[key] === 'object') {
+        obj[key] = undefinedToNullRecursively(obj[key]);
+      }
+    }
+  }
+  return obj;
 }
