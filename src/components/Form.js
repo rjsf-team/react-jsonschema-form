@@ -125,6 +125,7 @@ export default class Form extends Component {
     return {
       fields: {...fields, ...this.props.fields},
       widgets: {...widgets, ...this.props.widgets},
+      ArrayFieldTemplate: this.props.ArrayFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
       formContext: this.props.formContext || {},
@@ -191,6 +192,7 @@ if (process.env.NODE_ENV !== "production") {
       PropTypes.object,
     ])),
     fields: PropTypes.objectOf(PropTypes.func),
+    ArrayFieldTemplate: PropTypes.func,
     FieldTemplate: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,

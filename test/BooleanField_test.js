@@ -101,11 +101,9 @@ describe("BooleanField", () => {
       schema: {type: "boolean"},
       formData: true,
       uiSchema: {
-        "ui:widget": {
-          component: "radio",
-          options: {
-            inline: true
-          }
+        "ui:widget": "radio",
+        "ui:options": {
+          inline: true
         }
       }
     });

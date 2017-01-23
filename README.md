@@ -50,6 +50,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
+     - [Array field template](#array-field-template)
      - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)
@@ -551,6 +552,23 @@ const uiSchema = {
 };
 ```
 
+Care should be taken when using the `required` property with arrays.  An empty array is sufficient to pass that validation check.  If you wish to ensure the user populates the array, you can specify the minimum number of items the user must select with the `minItems` property.
+
+Example:
+
+```js
+const schema = {
+  type: "array",
+  minItems: 2,
+  title: "A multiple choices list",
+  items: {
+    type: "string",
+    enum: ["foo", "bar", "fuzz", "qux"],
+  },
+  uniqueItems: true
+};
+```
+
 By default, checkboxes are stacked but if you prefer them inline:
 
 ```js
@@ -704,6 +722,58 @@ The following props are passed to a custom field template component:
 - `formContext`: The `formContext` object that you passed to Form.
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
+
+### Array Field Template
+
+Similarly to the `FieldTemplate` you can use an `ArrayFieldTemplate` to customize how your
+arrays are rendered. This allows you to customize your array, and each element in the array.
+
+```jsx
+function ArrayFieldTemplate(props) {
+  return (
+    <div>
+      {props.items.map(element => element.children)}
+      {props.canAdd && <button onClick={props.onAddClick}></button>}
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema}
+        ArrayFieldTemplate={ArrayFieldTemplate} />,
+), document.getElementById("app"));
+```
+
+Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+
+The following props are passed to each `ArrayFieldTemplate`:
+
+- `DescriptionField`: The generated `DescriptionField` (if you wanted to utilize it)
+- `TitleField`: The generated `TitleField` (if you wanted to utilize it).
+- `canAdd`: A boolean value stating whether new elements can be added to the array.
+- `className`: The className string.
+- `disabled`: A boolean value stating if the array is disabled.
+- `idSchema`: Object
+- `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
+- `onAddClick: (event) => (event) => void`: Returns a function that adds a new item to the array.
+- `readonly`: A boolean value stating if the array is readonly.
+- `required`: A boolean value stating if the array is required.
+- `schema`: The schema object for this array.
+- `title`: A string value containing the title for the array.
+
+The following props are part of each element in `items`:
+
+- `children`: The html for the item's content.
+- `className`: The className string.
+- `disabled`: A boolean value stating if the array item is disabled.
+- `hasMoveDown`: A boolean value stating whether the array item can be moved down.
+- `hasMoveUp`: A boolean value stating whether the array item can be moved up.
+- `hasRemove`: A boolean value stating whether the array item can be removed.
+- `hasToolbar`: A boolean value stating whether the array item has a toolbar.
+- `index`: A number stating the index the array item occurs in `items`.
+- `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
+- `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
+- `readonly`: A boolean value stating if the array item is readonly.
 
 ### Custom widgets and fields
 

@@ -410,11 +410,9 @@ describe("ArrayField", () => {
         const {node} = createFormComponent({
           schema,
           uiSchema: {
-            "ui:widget": {
-              component: "checkboxes",
-              options: {
-                inline: true
-              }
+            "ui:widget": "checkboxes",
+            "ui:options": {
+              inline: true
             }
           }
         });

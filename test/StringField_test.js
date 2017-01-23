@@ -82,7 +82,6 @@ describe("StringField", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
       }, onBlur});
-
       const input = node.querySelector("input");
       Simulate.blur(input, {
         target: {value: "yo"}
@@ -90,6 +89,20 @@ describe("StringField", () => {
 
       expect(onBlur.calledWith(input.id, "yo")).to.be.true;
     });
+    
+    it("should handle an empty string change event", () => {
+      const {comp, node} = createFormComponent({
+        schema: {type: "string"},
+        formData: "x",
+      });
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: ""}
+      });
+
+      expect(comp.state.formData).eql(undefined);
+    });
+
     it("should fill field with data", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
@@ -213,6 +226,22 @@ describe("StringField", () => {
 
       expect(node.querySelector("#custom"))
         .to.exist;
+    });
+  });
+
+  describe("TextareaWidget", () => {
+    it("should handle an empty string change event", () => {
+      const {comp, node} = createFormComponent({
+        schema: {type: "string"},
+        uiSchema: {"ui:widget": "textarea"},
+        formData: "x",
+      });
+
+      Simulate.change(node.querySelector("textarea"), {
+        target: {value: ""}
+      });
+
+      expect(comp.state.formData).eql(undefined);
     });
   });
 

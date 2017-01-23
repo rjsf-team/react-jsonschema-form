@@ -13,6 +13,9 @@ function TextareaWidget({
   onChange,
   onBlur
 }) {
+  const _onChange = ({target: {value}}) => {
+    return onChange(value === "" ? undefined : value);
+  };  
   return (
     <textarea
       id={id}
@@ -24,7 +27,7 @@ function TextareaWidget({
       readOnly={readonly}
       autoFocus={autofocus}
       onBlur={(event) => onBlur(id, event.target.value)}
-      onChange={(event) => onChange(event.target.value)}/>
+      onChange={_onChange} />
   );
 }
 
