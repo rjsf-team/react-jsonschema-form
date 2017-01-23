@@ -26,7 +26,7 @@ function BaseInput(props) {
       autoFocus={autofocus}
       value={typeof value === "undefined" ? "" : value}
       onChange={_onChange}
-      onBlur={(event) => onBlur(inputProps.id, event.target.value)}/>
+      onBlur={onBlur ? (event) => onBlur(inputProps.id, event.target.value) : undefined}/>
   );
 }
 
