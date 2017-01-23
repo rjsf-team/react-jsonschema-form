@@ -487,7 +487,7 @@ class ArrayField extends Component {
           idSchema={itemIdSchema}
           required={this.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}
-            onBlur={onBlur}
+          onBlur={onBlur}
           registry={this.props.registry}
           disabled={this.props.disabled}
           readonly={this.props.readonly}
