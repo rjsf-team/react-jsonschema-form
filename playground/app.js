@@ -317,7 +317,8 @@ class App extends Component {
       validate,
       theme,
       editor,
-      ArrayFieldTemplate
+      ArrayFieldTemplate,
+      transformErrors
     } = this.state;
 
     return (
@@ -363,6 +364,7 @@ class App extends Component {
               onChange={this.onFormDataChange}
               fields={{geo: GeoPosition}}
               validate={validate}
+              transformErrors={transformErrors}
               onError={log("errors")} />}
         </div>
       </div>
