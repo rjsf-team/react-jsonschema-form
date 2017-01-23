@@ -532,7 +532,7 @@ if (process.env.NODE_ENV !== "production") {
     idSchema: PropTypes.object,
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
-    onBlur: PropTypes.func.isRequired,
+    onBlur: PropTypes.func,
     formData: PropTypes.array,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
