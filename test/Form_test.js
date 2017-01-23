@@ -1131,7 +1131,8 @@ describe("Form", () => {
       action: "/users/list",
       autocomplete: "off",
       enctype: "multipart/form-data",
-      acceptcharset: "ISO-8859-1"
+      acceptcharset: "ISO-8859-1",
+      noHtml5Validate: true
     };
 
     let node;
@@ -1174,6 +1175,10 @@ describe("Form", () => {
 
     it("should set attr acceptcharset of form", () => {
       expect(node.getAttribute("accept-charset")).eql(formProps.acceptcharset);
+    });
+
+    it("should set attr novalidate of form", () => {
+      expect(node.getAttribute("novalidate")).not.to.be.null;
     });
   });
 });

@@ -65,6 +65,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Custom descriptions](#custom-descriptions)
   - [Form data validation](#form-data-validation)
      - [Live validation](#live-validation)
+     - [HTML5 validation](#html5-validation)
      - [Custom validation](#custom-validation)
      - [Error List Display](#error-list-display)
   - [Styling your forms](#styling-your-forms)
@@ -1136,6 +1137,10 @@ You can enable live form data validation by passing a `liveValidate` prop to the
 Be warned that this is an expensive strategy, with possibly strong impact on performances.
 
 To disable validation entirely, you can set Form's `noValidate` prop to `true`.
+
+### HTML5 Validation
+
+By default, required field errors will cause the browser to display its standard HTML5 `required` attribute error messages and prevent form submission. If you would like to turn this off, you can set Form's `noHtml5Validate` prop to `true`, which will set `noValidate` on the `form` element.
 
 ### Custom validation
 
