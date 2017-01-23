@@ -67,6 +67,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Form data validation](#form-data-validation)
      - [Live validation](#live-validation)
      - [Custom validation](#custom-validation)
+     - [Custom error messages](#custom-error-messages)
      - [Error List Display](#error-list-display)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
@@ -1176,6 +1177,36 @@ render((
 > - The `validate()` function must **always** return the `errors` object
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
+
+### Custom error messages
+
+Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list. 
+
+```js
+function transformErrors(errors) {
+  return errors.map(error => {
+    if (error.name === "pattern") {
+      error.message = "Only digits are allowed"
+    }
+    return error;
+  });
+}
+
+const schema = {
+  type: "object",
+  properties: {
+    onlyNumbersString: {type: "string", pattern: "\d*"},
+  }
+};
+
+render((
+  <Form schema={schema}
+        transformErrors={transformErrors} />
+), document.getElementById("app"));
+```
+
+> Notes:
+> - The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
 
 ### Error List Display
 
