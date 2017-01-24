@@ -652,6 +652,8 @@ const uiSchema = {
 };
 ```
 
+![](http://i.imgur.com/MbHypKg.png)
+
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
 
 ```jsx
@@ -660,8 +662,6 @@ const uiSchema = {
   "ui:placeholder": "Choose an option"
 };
 ```
-
-![](http://i.imgur.com/MbHypKg.png)
 
 ### Form attributes
 
