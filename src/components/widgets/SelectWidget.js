@@ -7,7 +7,9 @@ import {asNumber} from "../../utils";
  * always retrieved as strings.
  */
 function processValue({type, items}, value) {
-  if (type === "array" && items && ["number", "integer"].includes(items.type)) {
+  if (value === "") {
+    return undefined;
+  } else if (type === "array" && items && ["number", "integer"].includes(items.type)) {
     return value.map(asNumber);
   } else if (type === "boolean") {
     return value === "true";
@@ -38,15 +40,17 @@ function SelectWidget({
   multiple,
   autofocus,
   onChange,
-  onBlur
+  onBlur,
+  placeholder
 }) {
   const {enumOptions} = options;
+  const emptyValue = multiple ? [] : "";
   return (
     <select
       id={id}
       multiple={multiple}
       className="form-control"
-      value={value}
+      value={typeof value === "undefined" ? emptyValue : value}
       required={required}
       disabled={disabled}
       readOnly={readonly}
@@ -58,11 +62,12 @@ function SelectWidget({
       onChange={(event) => {
         const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
-      }}>{
-      enumOptions.map(({value, label}, i) => {
+      }}>
+      {!multiple && !schema.default && <option value="">{placeholder}</option>}
+      {enumOptions.map(({value, label}, i) => {
         return <option key={i} value={value}>{label}</option>;
-      })
-    }</select>
+      })}
+    </select>
   );
 }
 

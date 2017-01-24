@@ -381,7 +381,7 @@ describe("Form", () => {
       const {node} = createFormComponent({schema});
 
       expect(node.querySelectorAll("option"))
-        .to.have.length.of(2);
+        .to.have.length.of(3);
     });
   });
 
