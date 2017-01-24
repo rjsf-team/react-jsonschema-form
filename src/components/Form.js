@@ -89,6 +89,12 @@ export default class Form extends Component {
     });
   };
 
+  onBlur = (...args) => {
+    if (this.props.onBlur) {
+      this.props.onBlur(...args);
+    }
+  }
+
   onSubmit = (event) => {
     event.preventDefault();
     this.setState({status: "submitted"});
@@ -167,6 +173,7 @@ export default class Form extends Component {
           idSchema={idSchema}
           formData={formData}
           onChange={this.onChange}
+          onBlur={this.onBlur}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}/>
         { children ? children :

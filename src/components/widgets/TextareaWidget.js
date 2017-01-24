@@ -10,7 +10,8 @@ function TextareaWidget({
   disabled,
   readonly,
   autofocus,
-  onChange
+  onChange,
+  onBlur
 }) {
   const _onChange = ({target: {value}}) => {
     return onChange(value === "" ? undefined : value);
@@ -25,6 +26,7 @@ function TextareaWidget({
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
+      onBlur={onBlur && (event => onBlur(id, event.target.value))}
       onChange={_onChange} />
   );
 }
@@ -42,6 +44,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 

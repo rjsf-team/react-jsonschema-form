@@ -2,7 +2,6 @@ import React, {PropTypes} from "react";
 
 import {asNumber} from "../../utils";
 
-
 /**
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
@@ -18,6 +17,16 @@ function processValue({type, items}, value) {
   return value;
 }
 
+function getValue(event, multiple) {
+  if (multiple) {
+    return [].slice.call(event.target.options)
+      .filter(o => o.selected)
+      .map(o => o.value);
+  } else {
+    return event.target.value;
+  }
+}
+
 function SelectWidget({
   schema,
   id,
@@ -28,7 +37,8 @@ function SelectWidget({
   readonly,
   multiple,
   autofocus,
-  onChange
+  onChange,
+  onBlur
 }) {
   const {enumOptions} = options;
   return (
@@ -41,14 +51,12 @@ function SelectWidget({
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
+      onBlur={onBlur && (event => {
+        const newValue = getValue(event, multiple);
+        onBlur(id, processValue(schema, newValue));
+      })}
       onChange={(event) => {
-        let newValue;
-        if (multiple) {
-          newValue = [].filter.call(
-            event.target.options, o => o.selected).map(o => o.value);
-        } else {
-          newValue = event.target.value;
-        }
+        const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
       }}>{
       enumOptions.map(({value, label}, i) => {
@@ -74,6 +82,7 @@ if (process.env.NODE_ENV !== "production") {
     multiple: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 
