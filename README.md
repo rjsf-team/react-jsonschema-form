@@ -46,6 +46,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Form action buttons](#form-action-buttons)
      - [Help texts](#help-texts)
      - [Auto focus](#auto-focus)
+     - [Textarea rows](#textarea-rows)
      - [Placeholders](#placeholders)
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
@@ -638,6 +639,18 @@ const schema = {type: "string"};
 const uiSchema = {
   "ui:widget": "textarea",
   "ui:autofocus": true
+}
+```
+
+### Textarea rows
+
+You can set initial height of a textarea widget by specifying a `ui:rows` uiSchema directive.
+
+```js
+const schema = {type: "string"};
+const uiSchema = {
+  "ui:widget": "textarea",
+  "ui:rows": 15
 }
 ```
 
