@@ -18,15 +18,13 @@ function processValue({type, items}, value) {
 }
 
 function getValue(event, multiple) {
-  let newValue;
   if (multiple) {
-    newValue = [].filter.call(
-      event.target.options, o => o.selected).map(o => o.value);
+    return [].slice.call(event.target.options)
+      .filter(o => o.selected)
+      .map(o => o.value);
   } else {
-    newValue = event.target.value;
+    return event.target.value;
   }
-
-  return newValue;
 }
 
 function SelectWidget({
@@ -53,10 +51,10 @@ function SelectWidget({
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
-      onBlur={onBlur ? (event) => {
+      onBlur={onBlur && (event => {
         const newValue = getValue(event, multiple);
         onBlur(id, processValue(schema, newValue));
-      } : undefined}
+      })}
       onChange={(event) => {
         const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
