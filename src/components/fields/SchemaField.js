@@ -162,6 +162,7 @@ function SchemaField(props) {
   const field = (
     <FieldComponent {...props}
       schema={schema}
+			// See #439: Don't pass consumed class names to child components
       uiSchema={{...uiSchema, classNames: undefined}}
       disabled={disabled}
       readonly={readonly}
