@@ -48,6 +48,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Auto focus](#auto-focus)
      - [Placeholders](#placeholders)
      - [Form attributes](#form-attributes)
+     - [Enum fields](#enum-fields)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array field template](#array-field-template)
@@ -680,6 +681,10 @@ Form component supports the following html attributes:
   acceptcharset="ISO-8859-1"
   schema={} />
 ```
+
+### Enum fields
+
+String fields that use `enum` and a `select` widget will have an empty option in the options list. When a user selects that option, the field will be set to `undefined` (similar to how regular `string` fields work if the field is empty). This also means that if you have an empty string in your `enum` array, selecting that option will cause the field to be set to `undefined`.
 
 ## Advanced customization
 

@@ -206,7 +206,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("foo");
     });
 
-    it("should reflect undefined into form state is empty option selected", () => {
+    it("should reflect undefined into form state if empty option selected", () => {
       const {comp, node} = createFormComponent({schema: {
         type: "string",
         enum: ["foo", "bar"],
