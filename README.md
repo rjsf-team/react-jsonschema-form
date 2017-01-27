@@ -48,7 +48,6 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Auto focus](#auto-focus)
      - [Placeholders](#placeholders)
      - [Form attributes](#form-attributes)
-     - [Enum fields](#enum-fields)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array field template](#array-field-template)
