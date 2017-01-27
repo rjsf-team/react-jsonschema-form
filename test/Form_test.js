@@ -313,6 +313,36 @@ describe("Form", () => {
         .eql("hello");
     });
 
+    it("should recursively handles referenced definitions", () => {
+      const schema = {
+        $ref: "#/definitions/node",
+        definitions: {
+          node: {
+            type: "object",
+            properties: {
+              name: {type: "string"},
+              children: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/node"
+                }
+              }
+            }
+          }
+        }
+      };
+
+      const {node} = createFormComponent({schema});
+
+      expect(node.querySelector("#root_children_0_name"))
+        .to.not.exists;
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector("#root_children_0_name"))
+        .to.exists;
+    });
+
     it("should priorize definition over schema type property", () => {
       // Refs bug #140
       const schema = {

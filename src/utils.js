@@ -395,9 +395,9 @@ export function toIdSchema(schema, id, definitions) {
   };
   if ("$ref" in schema) {
     const _schema = retrieveSchema(schema, definitions);
-    return toIdSchema(_schema, id, definitions);
+    return toIdSchema(_schema, id, definitions, schema.$ref);
   }
-  if ("items" in schema) {
+  if ("items" in schema && !schema.items.$ref) {
     return toIdSchema(schema.items, id, definitions);
   }
   if (schema.type !== "object") {
