@@ -313,7 +313,7 @@ describe("Form", () => {
         .eql("hello");
     });
 
-    it("should recursively handles referenced definitions", () => {
+    it("should recursively handle referenced definitions", () => {
       const schema = {
         $ref: "#/definitions/node",
         definitions: {
@@ -335,12 +335,12 @@ describe("Form", () => {
       const {node} = createFormComponent({schema});
 
       expect(node.querySelector("#root_children_0_name"))
-        .to.not.exists;
+        .to.not.exist;
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
       expect(node.querySelector("#root_children_0_name"))
-        .to.exists;
+        .to.exist;
     });
 
     it("should priorize definition over schema type property", () => {
