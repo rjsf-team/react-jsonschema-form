@@ -71,7 +71,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Custom validation](#custom-validation)
      - [Custom error messages](#custom-error-messages)
      - [Error List Display](#error-list-display)
-     - [Empty strings](#empty-strings)
+     - [The case of empty strings](#the-case-of-empty-strings)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [JSON Schema supporting status](#json-schema-supporting-status)
