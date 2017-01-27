@@ -1158,15 +1158,15 @@ describe("uiSchema", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
         expect(node.querySelectorAll("select option"))
-          .to.have.length.of(2);
+          .to.have.length.of(3);
       });
 
       it("should render boolean option labels", () => {
         const {node} = createFormComponent({schema, uiSchema});
 
-        expect(node.querySelectorAll("option")[0].textContent)
-          .eql("yes");
         expect(node.querySelectorAll("option")[1].textContent)
+          .eql("yes");
+        expect(node.querySelectorAll("option")[2].textContent)
           .eql("no");
       });
 

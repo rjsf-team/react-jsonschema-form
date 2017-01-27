@@ -3,8 +3,8 @@ import React, {Component, PropTypes} from "react";
 import {shouldRender, parseDateString, toDateString, pad} from "../../utils";
 
 
-function rangeOptions(type, start, stop) {
-  let options = [{value: -1, label: type}];
+function rangeOptions(start, stop) {
+  let options = [];
   for (let i=start; i<= stop; i++) {
     options.push({value: i, label: pad(i, 2)});
   }
@@ -24,7 +24,8 @@ function DateElement(props) {
       schema={{type: "integer"}}
       id={id}
       className="form-control"
-      options={{enumOptions: rangeOptions(type, range[0], range[1])}}
+      options={{enumOptions: rangeOptions(range[0], range[1])}}
+      placeholder={type}
       value={value}
       disabled={disabled}
       readonly={readonly}
@@ -56,7 +57,7 @@ class AltDateWidget extends Component {
   }
 
   onChange = (property, value) => {
-    this.setState({[property]: value}, () => {
+    this.setState({[property]: typeof value === "undefined" ? -1 : value}, () => {
       // Only propagate to parent state if we have a complete date{time}
       if (readyForChange(this.state)) {
         this.props.onChange(toDateString(this.state, this.props.time));

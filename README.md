@@ -70,6 +70,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Custom validation](#custom-validation)
      - [Custom error messages](#custom-error-messages)
      - [Error List Display](#error-list-display)
+     - [The case of empty strings](#the-case-of-empty-strings)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [JSON Schema supporting status](#json-schema-supporting-status)
@@ -654,6 +655,15 @@ const uiSchema = {
 
 ![](http://i.imgur.com/MbHypKg.png)
 
+Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
+
+```jsx
+const schema = {type: "string", enum: ["First", "Second"]};
+const uiSchema = {
+  "ui:placeholder": "Choose an option"
+};
+```
+
 ### Form attributes
 
 Form component supports the following html attributes:
@@ -1223,6 +1233,12 @@ render((
         showErrorList={false}/>
 ), document.getElementById("app"));
 ```
+
+### The case of empty strings
+
+When a text input is empty, the field in form data is set to `undefined`. String fields that use `enum` and a `select` widget work similarly and will have an empty option at the top of the options list that when selected will result in the field being `undefined`. 
+
+One consequence of this is that if you have an empty string in your `enum` array, selecting that option in the `select` input will cause the field to be set to `undefined`, not an empty string.
 
 ## Styling your forms
 
