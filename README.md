@@ -86,6 +86,10 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
 
 Requires React 15.0.0+.
 
+> Note: The `master` branch of the repository reflects ongoing development. Releases are published as [tags](https://github.com/mozilla-services/react-jsonschema-form/releases).
+>
+> You should never blindly install from `master`, but rather check what the available stable releases are.
+
 
 ### As a npm-based project dependency
 
@@ -1195,7 +1199,7 @@ render((
 
 ### Custom error messages
 
-Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list. 
+Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
 
 ```js
 function transformErrors(errors) {
@@ -1236,7 +1240,7 @@ render((
 
 ### The case of empty strings
 
-When a text input is empty, the field in form data is set to `undefined`. String fields that use `enum` and a `select` widget work similarly and will have an empty option at the top of the options list that when selected will result in the field being `undefined`. 
+When a text input is empty, the field in form data is set to `undefined`. String fields that use `enum` and a `select` widget work similarly and will have an empty option at the top of the options list that when selected will result in the field being `undefined`.
 
 One consequence of this is that if you have an empty string in your `enum` array, selecting that option in the `select` input will cause the field to be set to `undefined`, not an empty string.
 
