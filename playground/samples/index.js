@@ -12,6 +12,7 @@ import date from "./date";
 import validation from "./validation";
 import files from "./files";
 import single from "./single";
+import customArray from "./customArray";
 
 export const samples = {
   Simple: simple,
@@ -27,5 +28,6 @@ export const samples = {
   "Date & time": date,
   Validation: validation,
   Files: files,
-  Single: single
+  Single: single,
+  "Custom Array": customArray,
 };

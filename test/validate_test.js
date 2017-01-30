@@ -94,6 +94,32 @@ describe("Validation", () => {
         ]);
       });
     });
+
+    describe("transformErrors", () => {
+      const illFormedKey = "bar.'\"[]()=+*&^%$#@!";
+      const schema = {
+        type: "object",
+        properties: {foo: {type: "string"}, [illFormedKey]: {type: "string"}}
+      };
+      const newErrorMessage = "Better error message";
+      const transformErrors = (errors) => {
+        return [
+          Object.assign({}, errors[0], {message: newErrorMessage})
+        ];
+      };
+
+      let errors;
+
+      beforeEach(() => {
+        const result = validateFormData({foo: 42, [illFormedKey]: 41}, schema, undefined, transformErrors);
+        errors = result.errors;
+      });
+
+      it("should use transformErrors function", () => {
+        expect(errors).not.to.be.empty;
+        expect(errors[0].message).to.equal(newErrorMessage);
+      });
+    });
   });
 
   describe("Form integration", () => {

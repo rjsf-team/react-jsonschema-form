@@ -2,13 +2,14 @@ import React, {PropTypes} from "react";
 
 import {asNumber} from "../../utils";
 
-
 /**
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
  */
 function processValue({type, items}, value) {
-  if (type === "array" && items && ["number", "integer"].includes(items.type)) {
+  if (value === "") {
+    return undefined;
+  } else if (type === "array" && items && ["number", "integer"].includes(items.type)) {
     return value.map(asNumber);
   } else if (type === "boolean") {
     return value === "true";
@@ -16,6 +17,16 @@ function processValue({type, items}, value) {
     return asNumber(value);
   }
   return value;
+}
+
+function getValue(event, multiple) {
+  if (multiple) {
+    return [].slice.call(event.target.options)
+      .filter(o => o.selected)
+      .map(o => o.value);
+  } else {
+    return event.target.value;
+  }
 }
 
 function SelectWidget({
@@ -28,33 +39,35 @@ function SelectWidget({
   readonly,
   multiple,
   autofocus,
-  onChange
+  onChange,
+  onBlur,
+  placeholder
 }) {
   const {enumOptions} = options;
+  const emptyValue = multiple ? [] : "";
   return (
     <select
       id={id}
       multiple={multiple}
       className="form-control"
-      value={value}
+      value={typeof value === "undefined" ? emptyValue : value}
       required={required}
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
+      onBlur={onBlur && (event => {
+        const newValue = getValue(event, multiple);
+        onBlur(id, processValue(schema, newValue));
+      })}
       onChange={(event) => {
-        let newValue;
-        if (multiple) {
-          newValue = [].filter.call(
-            event.target.options, o => o.selected).map(o => o.value);
-        } else {
-          newValue = event.target.value;
-        }
+        const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
-      }}>{
-      enumOptions.map(({value, label}, i) => {
+      }}>
+      {!multiple && !schema.default && <option value="">{placeholder}</option>}
+      {enumOptions.map(({value, label}, i) => {
         return <option key={i} value={value}>{label}</option>;
-      })
-    }</select>
+      })}
+    </select>
   );
 }
 
@@ -74,6 +87,7 @@ if (process.env.NODE_ENV !== "production") {
     multiple: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 

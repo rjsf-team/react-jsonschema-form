@@ -30,6 +30,10 @@ module.exports = {
       choice10: {$ref: "#/definitions/largeEnum"},
     }
   },
-  uiSchema: {},
+  uiSchema: {
+    choice1: {
+      "ui:placeholder": "Choose one"
+    }
+  },
   formData: {}
 };
