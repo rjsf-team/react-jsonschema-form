@@ -29,12 +29,13 @@ function TextareaWidget({
       autoFocus={autofocus}
       rows={options.rows}
       onBlur={onBlur && (event => onBlur(id, event.target.value))}
-      onChange={_onChange} />
+      onChange={_onChange}/>
   );
 }
 
 TextareaWidget.defaultProps = {
-  autofocus: false
+  autofocus: false,
+  options: {}
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -43,9 +44,8 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     options: PropTypes.shape({
-      enumOptions: PropTypes.bool,
       rows: PropTypes.number
-    }).isRequired,
+    }),
     value: PropTypes.string,
     required: PropTypes.bool,
     autofocus: PropTypes.bool,
