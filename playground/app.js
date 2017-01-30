@@ -283,9 +283,11 @@ class App extends Component {
   }
 
   load = (data) => {
+    // Reset the ArrayFieldTemplate whenever you load new data
+    const { ArrayFieldTemplate } = data;
     // force resetting form component instance
     this.setState({form: false},
-      _ => this.setState({...data, form: true}));
+      _ => this.setState({...data, form: true, ArrayFieldTemplate}));
   };
 
   onSchemaEdited   = (schema) => this.setState({schema});
@@ -314,7 +316,9 @@ class App extends Component {
       liveValidate,
       validate,
       theme,
-      editor
+      editor,
+      ArrayFieldTemplate,
+      transformErrors
     } = this.state;
 
     return (
@@ -352,6 +356,7 @@ class App extends Component {
         <div className="col-sm-5">
           {!this.state.form ? null :
             <Form
+              ArrayFieldTemplate={ArrayFieldTemplate}
               liveValidate={liveValidate}
               schema={schema}
               uiSchema={uiSchema}
@@ -359,6 +364,8 @@ class App extends Component {
               onChange={this.onFormDataChange}
               fields={{geo: GeoPosition}}
               validate={validate}
+              onBlur={(id, value) => console.log(`Touched ${id} with value ${value}`)}
+              transformErrors={transformErrors}
               onError={log("errors")} />}
         </div>
       </div>

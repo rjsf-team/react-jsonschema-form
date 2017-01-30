@@ -116,9 +116,6 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
   } else if ("default" in schema) {
     // Use schema defaults for this node.
     defaults = schema.default;
-  } else if ("enum" in schema && Array.isArray(schema.enum)) {
-    // For enum with no defined default, select the first entry.
-    defaults = schema.enum[0];
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
@@ -400,7 +397,7 @@ export function toIdSchema(schema, id, definitions) {
     const _schema = retrieveSchema(schema, definitions);
     return toIdSchema(_schema, id, definitions);
   }
-  if ("items" in schema) {
+  if ("items" in schema && !schema.items.$ref) {
     return toIdSchema(schema.items, id, definitions);
   }
   if (schema.type !== "object") {

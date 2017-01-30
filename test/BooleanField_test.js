@@ -120,7 +120,7 @@ describe("BooleanField", () => {
 
     const labels = [].map.call(node.querySelectorAll(".field option"),
                                label => label.textContent);
-    expect(labels).eql(["Yes", "No"]);
+    expect(labels).eql(["", "Yes", "No"]);
   });
 
   it("should render the widget with the expected id", () => {

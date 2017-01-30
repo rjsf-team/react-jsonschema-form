@@ -91,7 +91,8 @@ class ObjectField extends Component {
       name,
       required,
       disabled,
-      readonly
+      readonly,
+      onBlur
     } = this.props;
     const {definitions, fields, formContext} = this.props.registry;
     const {SchemaField, TitleField, DescriptionField} = fields;
@@ -136,6 +137,7 @@ class ObjectField extends Component {
               idSchema={idSchema[name]}
               formData={this.state[name]}
               onChange={this.onPropertyChange(name)}
+              onBlur={onBlur}
               registry={this.props.registry}
               disabled={disabled}
               readonly={readonly}/>
