@@ -776,6 +776,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `required`: A boolean value stating if the array is required.
 - `schema`: The schema object for this array.
 - `title`: A string value containing the title for the array.
+- `formContext`: The `formContext` object that you passed to Form.
 
 The following props are part of each element in `items`:
 

@@ -66,7 +66,6 @@ describe("FormContext", () => {
     const {node} = createFormComponent({
       schema: {
         type: "object",
-        title: "A title",
         properties: {
           prop: {
             type:  "string"
@@ -74,6 +73,26 @@ describe("FormContext", () => {
         }
       },
       FieldTemplate: CustomTemplateField,
+      formContext
+    });
+
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
+  });
+
+  it("should be passed to ArrayTemplateField", () => {
+    function CustomArrayTemplateField({formContext}) {
+      return <div id={formContext.foo}/>;
+    }
+
+    const {node} = createFormComponent({
+      schema: {
+        type: "array",
+        items: {
+          type:  "string"
+        }
+      },
+      ArrayFieldTemplate: CustomArrayTemplateField,
       formContext
     });
 

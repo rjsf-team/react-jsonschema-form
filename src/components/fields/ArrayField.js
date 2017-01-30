@@ -283,6 +283,7 @@ class ArrayField extends Component {
       readonly,
       autofocus,
       registry,
+      formContext,
       onBlur
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
@@ -320,7 +321,8 @@ class ArrayField extends Component {
       required,
       schema,
       title,
-      TitleField
+      TitleField,
+      formContext
     };
 
     // Check if a custom render function was passed in
