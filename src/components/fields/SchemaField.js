@@ -162,7 +162,6 @@ function SchemaField(props) {
   }
 
   const {__errors, ...fieldErrorSchema} = errorSchema;
-  console.log(props);
   const field = (
     <FieldComponent {...props}
       schema={schema}

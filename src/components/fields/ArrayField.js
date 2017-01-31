@@ -193,7 +193,6 @@ class ArrayField extends Component {
     return formDataItems.map((item) => {
       const type = typeof item;
       const itemType = (type === "object" && Array.isArray(item)) ? "array" : type;
-      console.log(type, itemType);
       const schema = this.getAnyOfItemSchema(anyOfSchema, itemType);
 
       // If this schema is an array, we need to recursively add its contents
