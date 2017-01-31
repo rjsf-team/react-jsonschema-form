@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import Codemirror from "react-codemirror";
 import "codemirror/mode/javascript/javascript";
+import Perf from "react-addons-perf";
+window.Perf = Perf;
 
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";

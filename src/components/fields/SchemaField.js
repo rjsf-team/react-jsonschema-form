@@ -1,10 +1,11 @@
-import React, {PropTypes} from "react";
+import React, {Component,PropTypes} from "react";
 
 import {
   isMultiSelect,
   retrieveSchema,
   getDefaultRegistry,
-  isFilesArray
+  isFilesArray,
+  shouldRender
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
@@ -72,32 +73,38 @@ function ErrorList(props) {
   );
 }
 
-function DefaultTemplate(props) {
-  const {
-    id,
-    classNames,
-    label,
-    children,
-    errors,
-    help,
-    description,
-    hidden,
-    required,
-    displayLabel,
-  } = props;
-  if (hidden) {
-    return children;
+class DefaultTemplate extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
   }
 
-  return (
-    <div className={classNames}>
-      {displayLabel ? <Label label={label} required={required} id={id}/> : null}
-      {displayLabel && description ? description : null}
-      {children}
-      {errors}
-      {help}
-    </div>
-  );
+  render() {
+    const {
+      id,
+      classNames,
+      label,
+      children,
+      errors,
+      help,
+      description,
+      hidden,
+      required,
+      displayLabel,
+    } = this.props;
+    if (hidden) {
+      return children;
+    }
+
+    return (
+      <div className={classNames}>
+        {displayLabel ? <Label label={label} required={required} id={id}/> : null}
+        {displayLabel && description ? description : null}
+        {children}
+        {errors}
+        {help}
+      </div>
+    );
+  }
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -128,85 +135,92 @@ DefaultTemplate.defaultProps = {
   displayLabel: true,
 };
 
-function SchemaField(props) {
-  const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
-  const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
-  const schema = retrieveSchema(props.schema, definitions);
-  const FieldComponent = getFieldComponent(schema, uiSchema, fields);
-  const {DescriptionField} = fields;
-  const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
-  const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
-  const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
-
-  if (Object.keys(schema).length === 0) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div/>;
+class SchemaField extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
   }
 
-  let displayLabel = true;
-  if (schema.type === "array") {
-    displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
+  render() {
+    const {props} = this;
+    const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
+    const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
+    const schema = retrieveSchema(props.schema, definitions);
+    const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+    const {DescriptionField} = fields;
+    const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
+    const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
+    const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
+
+    if (Object.keys(schema).length === 0) {
+      // See #312: Ensure compatibility with old versions of React.
+      return <div/>;
+    }
+
+    let displayLabel = true;
+    if (schema.type === "array") {
+      displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
+    }
+    if (schema.type === "object") {
+      displayLabel = false;
+    }
+    if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
+      displayLabel = false;
+    }
+    if (uiSchema["ui:field"]) {
+      displayLabel = false;
+    }
+
+    const {__errors, ...fieldErrorSchema} = errorSchema;
+
+    const field = (
+      <FieldComponent {...props}
+        schema={schema}
+        disabled={disabled}
+        readonly={readonly}
+        autofocus={autofocus}
+        errorSchema={fieldErrorSchema}
+        formContext={formContext}/>
+    );
+
+    const {type} = schema;
+    const id = idSchema.$id;
+    const label = props.schema.title || schema.title || name;
+    const description = props.schema.description || schema.description;
+    const errors = __errors;
+    const help = uiSchema["ui:help"];
+    const hidden = uiSchema["ui:widget"] === "hidden";
+    const classNames = [
+      "form-group",
+      "field",
+      `field-${type}`,
+      errors && errors.length > 0 ? "field-error has-error" : "",
+      uiSchema.classNames,
+    ].join(" ").trim();
+
+    const fieldProps = {
+      description: <DescriptionField id={id + "__description"}
+                                     description={description}
+                                     formContext={formContext}/>,
+      rawDescription: description,
+      help: <Help help={help}/>,
+      rawHelp: typeof help === "string" ? help : undefined,
+      errors: <ErrorList errors={errors}/>,
+      rawErrors: errors,
+      id,
+      label,
+      hidden,
+      required,
+      readonly,
+      displayLabel,
+      classNames,
+      formContext,
+      fields,
+      schema,
+      uiSchema,
+    };
+
+    return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
   }
-  if (schema.type === "object") {
-    displayLabel = false;
-  }
-  if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
-    displayLabel = false;
-  }
-  if (uiSchema["ui:field"]) {
-    displayLabel = false;
-  }
-
-  const {__errors, ...fieldErrorSchema} = errorSchema;
-
-  const field = (
-    <FieldComponent {...props}
-      schema={schema}
-      disabled={disabled}
-      readonly={readonly}
-      autofocus={autofocus}
-      errorSchema={fieldErrorSchema}
-      formContext={formContext}/>
-  );
-
-  const {type} = schema;
-  const id = idSchema.$id;
-  const label = props.schema.title || schema.title || name;
-  const description = props.schema.description || schema.description;
-  const errors = __errors;
-  const help = uiSchema["ui:help"];
-  const hidden = uiSchema["ui:widget"] === "hidden";
-  const classNames = [
-    "form-group",
-    "field",
-    `field-${type}`,
-    errors && errors.length > 0 ? "field-error has-error" : "",
-    uiSchema.classNames,
-  ].join(" ").trim();
-
-  const fieldProps = {
-    description: <DescriptionField id={id + "__description"}
-                                   description={description}
-                                   formContext={formContext}/>,
-    rawDescription: description,
-    help: <Help help={help}/>,
-    rawHelp: typeof help === "string" ? help : undefined,
-    errors: <ErrorList errors={errors}/>,
-    rawErrors: errors,
-    id,
-    label,
-    hidden,
-    required,
-    readonly,
-    displayLabel,
-    classNames,
-    formContext,
-    fields,
-    schema,
-    uiSchema,
-  };
-
-  return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
 }
 
 SchemaField.defaultProps = {
