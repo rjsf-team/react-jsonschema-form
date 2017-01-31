@@ -322,6 +322,22 @@ describe("ArrayField", () => {
         expect(comp.state.formData).eql(["foo", "bar"]);
       });
 
+      it("should handle a blur event", () => {
+        const onBlur = sandbox.spy();
+        const {node} = createFormComponent({schema, onBlur});
+
+        const select = node.querySelector(".field select");
+        Simulate.blur(select, {
+          target: {options: [
+            {selected: true, value: "foo"},
+            {selected: true, value: "bar"},
+            {selected: false, value: "fuzz"},
+          ]}
+        });
+
+        expect(onBlur.calledWith(select.id, ["foo", "bar"])).to.be.true;
+      });
+
       it("should fill field with data", () => {
         const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
 
@@ -394,11 +410,9 @@ describe("ArrayField", () => {
         const {node} = createFormComponent({
           schema,
           uiSchema: {
-            "ui:widget": {
-              component: "checkboxes",
-              options: {
-                inline: true
-              }
+            "ui:widget": "checkboxes",
+            "ui:options": {
+              inline: true
             }
           }
         });

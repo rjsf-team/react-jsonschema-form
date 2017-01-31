@@ -43,6 +43,112 @@ function IconBtn(props) {
   );
 }
 
+// Used in the two templates
+function DefaultArrayItem(props) {
+  const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
+  return (
+    <div key={props.index} className={props.className}>
+
+      <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
+        {props.selectWidget}
+        {props.children}
+      </div>
+
+      {props.hasToolbar ?
+        <div className="col-xs-3 array-item-toolbox">
+          <div className="btn-group" style={{display: "flex", justifyContent: "space-around"}}>
+
+            {props.hasMoveUp || props.hasMoveDown ?
+              <IconBtn icon="arrow-up" className="array-item-move-up"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly || !props.hasMoveUp}
+                onClick={props.onReorderClick(props.index, props.index - 1)}/>
+            : null}
+
+            {props.hasMoveUp || props.hasMoveDown ?
+              <IconBtn icon="arrow-down" className="array-item-move-down"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly || !props.hasMoveDown}
+                onClick={props.onReorderClick(props.index, props.index + 1)}/>
+            : null}
+
+            {props.hasRemove ?
+              <IconBtn type="danger" icon="remove" className="array-item-remove"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly}
+                onClick={props.onDropIndexClick(props.index)}/>
+            : null}
+          </div>
+        </div>
+      : null}
+
+    </div>
+  );
+}
+
+function DefaultFixedArrayFieldTemplate(props) {
+  return (
+    <fieldset className={props.className}>
+
+      <ArrayFieldTitle
+          key={`array-field-title-${props.idSchema.$id}`}
+          TitleField={props.TitleField}
+          idSchema={props.idSchema}
+          title={props.title}
+          required={props.required}/>
+
+      {props.schema.description ? (
+        <div className="field-description" key={`field-description-${props.idSchema.$id}`}>
+          {props.schema.description}
+        </div>
+      ) : null}
+
+      <div className="row array-item-list"
+        key={`array-item-list-${props.idSchema.$id}`}>
+        {props.items && props.items.map(DefaultArrayItem)}
+      </div>
+
+      {props.canAdd ? <AddButton
+                        onClick={props.onAddClick}
+                        disabled={props.disabled || props.readonly}/> : null}
+    </fieldset>
+  );
+}
+
+function DefaultNormalArrayFieldTemplate(props) {
+  return (
+    <fieldset className={props.className}>
+
+      <ArrayFieldTitle
+        key={`array-field-title-${props.idSchema.$id}`}
+        TitleField={props.TitleField}
+        idSchema={props.idSchema}
+        title={props.title}
+        required={props.required}/>
+
+      {props.schema.description ? (
+        <ArrayFieldDescription
+          key={`array-field-description-${props.idSchema.$id}`}
+          DescriptionField={props.DescriptionField}
+          idSchema={props.idSchema}
+          description={props.schema.description}/>
+      ) : null}
+
+      <div className="row array-item-list"
+          key={`array-item-list-${props.idSchema.$id}`}>
+          {props.items && props.items.map(p => DefaultArrayItem(p))}
+      </div>
+
+      {props.canAdd ? <AddButton
+                        onClick={props.onAddClick}
+                        disabled={props.disabled || props.readonly}/> : null}
+    </fieldset>
+  );
+}
+
 class ArrayField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -59,7 +165,7 @@ class ArrayField extends Component {
     const formData = this.getStateFromProps(props);
     let anyOfItems = [];
     if (this.getAnyOfItemsSchema()) {
-      // We need to contruct the initial anyOfItems state, by searching for the props anyOf items
+      // We need to construct the initial anyOfItems state, by searching for the props anyOf items
       // in the available anyOf schema items
       anyOfItems = this.getAnyOfItemsFromProps(formData.items, props.schema.items.anyOf);
     }
@@ -159,7 +265,9 @@ class ArrayField extends Component {
 
   onDropIndexClick = (index) => {
     return (event) => {
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
       const {formData: {items}, anyOfItems} = this.state;
       const newItems = {
         items: items.filter((_, i) => i !== index)
@@ -173,8 +281,10 @@ class ArrayField extends Component {
 
   onReorderClick = (index, newIndex) => {
     return (event) => {
-      event.preventDefault();
-      event.target.blur();
+      if (event) {
+        event.preventDefault();
+        event.target.blur();
+      }
       const {formData: {items}, anyOfItems} = this.state;
 
       const reorder = (items, newIndex) =>
@@ -263,62 +373,64 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
+      registry,
+      formContext,
+      onBlur
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
-    const {formData: {items}, anyOfItems} = this.state;
-    const {definitions, fields} = this.props.registry;
+    const {formData: {items = []}, anyOfItems} = this.state;
+    const {ArrayFieldTemplate, definitions, fields} = registry;
     const {TitleField, DescriptionField} = fields;
     let itemsSchema = retrieveSchema(schema.items, definitions);
     const {addable=true} = getUiOptions(uiSchema);
     const anyOfItemsSchema = this.getAnyOfItemsSchema();
 
-    return (
-      <fieldset
-        className={`field field-array field-array-of-${itemsSchema.type}`}>
-        <ArrayFieldTitle
-          TitleField={TitleField}
-          idSchema={idSchema}
-          title={title}
-          required={required}/>
-        {schema.description ?
-          <ArrayFieldDescription
-            DescriptionField={DescriptionField}
-            idSchema={idSchema}
-            description={schema.description}/> : null}
-        <div className="row array-item-list">{
-          items.map((item, index) => {
-            if (anyOfItemsSchema) {
-              itemsSchema = anyOfItems[index];
-            }
-            const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-            const itemIdPrefix = idSchema.$id + "_" + index;
-            const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
-            return this.renderArrayFieldItem({
-              index,
-              canMoveUp: index > 0,
-              canMoveDown: index < items.length - 1,
-              itemSchema: itemsSchema,
-              itemIdSchema,
-              itemErrorSchema,
-              itemData: items[index],
-              itemUiSchema: uiSchema.items,
-              autofocus: autofocus && index === 0,
-              anyOfItemsSchema: anyOfItemsSchema,
-              selectWidgetValue: anyOfItems.length > 0 ? anyOfItems[index].type : ""
-            });
-          })
-        }</div>
-        {addable ? <AddButton
-                     onClick={this.onAddClick}
-                     disabled={disabled || readonly}/> : null}
-      </fieldset>
-    );
+    const arrayProps = {
+      canAdd: addable,
+      items: items.map((item, index) => {
+        const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+        const itemIdPrefix = idSchema.$id + "_" + index;
+        if (anyOfItemsSchema) {
+          itemsSchema = anyOfItems[index];
+        }
+        const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
+        return this.renderArrayFieldItem({
+          index,
+          canMoveUp: index > 0,
+          canMoveDown: index < items.length - 1,
+          itemSchema: itemsSchema,
+          itemIdSchema,
+          itemErrorSchema,
+          itemData: items[index],
+          itemUiSchema: uiSchema.items,
+          autofocus: autofocus && index === 0,
+          onBlur,
+          anyOfItemsSchema: anyOfItemsSchema,
+          selectWidgetValue: anyOfItems.length > 0 ? anyOfItems[index].type : ""
+        });
+      }),
+      className: `field field-array field-array-of-${itemsSchema.type}`,
+      DescriptionField,
+      disabled,
+      idSchema,
+      onAddClick: this.onAddClick,
+      readonly,
+      required,
+      schema,
+      title,
+      TitleField,
+      formContext
+    };
+
+    // Check if a custom render function was passed in
+    const renderFunction = ArrayFieldTemplate || DefaultNormalArrayFieldTemplate;
+    return renderFunction(arrayProps);
   }
 
   renderMultiSelect() {
-    const {schema, idSchema, uiSchema, disabled, readonly, autofocus} = this.props;
+    const {schema, idSchema, uiSchema, disabled, readonly, autofocus, onBlur} = this.props;
     const {items} = this.state.formData;
-    const {widgets, definitions} = this.props.registry;
+    const {widgets, definitions, formContext} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const enumOptions = optionsList(itemsSchema);
     const {widget="select", ...options} = {...getUiOptions(uiSchema), enumOptions};
@@ -328,20 +440,22 @@ class ArrayField extends Component {
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
+        onBlur={onBlur}
         options={options}
         schema={schema}
         value={items}
         disabled={disabled}
         readonly={readonly}
+        formContext={formContext}
         autofocus={autofocus}/>
     );
   }
 
   renderFiles() {
-    const {schema, uiSchema, idSchema, name, disabled, readonly, autofocus} = this.props;
+    const {schema, uiSchema, idSchema, name, disabled, readonly, autofocus, onBlur} = this.props;
     const title = schema.title || name;
     const {items} = this.state.formData;
-    const {widgets} = this.props.registry;
+    const {widgets, formContext} = this.props.registry;
     const {widget="files", ...options} = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
     return (
@@ -350,11 +464,13 @@ class ArrayField extends Component {
         id={idSchema && idSchema.$id}
         multiple
         onChange={this.onSelectChange}
+        onBlur={onBlur}
         schema={schema}
         title={title}
         value={items}
         disabled={disabled}
         readonly={readonly}
+        formContext={formContext}
         autofocus={autofocus}/>
     );
   }
@@ -370,10 +486,12 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
+      registry,
+      onBlur
     } = this.props;
     const title = schema.title || name;
     let {items} = this.state.formData;
-    const {definitions, fields} = this.props.registry;
+    const {ArrayFieldTemplate, definitions, fields} = registry;
     const {TitleField} = fields;
     const itemSchemas = schema.items.map(item =>
       retrieveSchema(item, definitions));
@@ -388,49 +506,49 @@ class ArrayField extends Component {
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
 
-    return (
-      <fieldset className="field field-array field-array-fixed-items">
-        <ArrayFieldTitle
-          TitleField={TitleField}
-          idSchema={idSchema}
-          title={title}
-          required={required}/>
-        {schema.description ?
-          <div className="field-description">{schema.description}</div> : null}
-        <div className="row array-item-list">{
-          items.map((item, index) => {
-            const additional = index >= itemSchemas.length;
-            const itemSchema = additional ?
-              additionalSchema : itemSchemas[index];
-            const itemIdPrefix = idSchema.$id + "_" + index;
-            const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
-            const itemUiSchema = additional ?
-              uiSchema.additionalItems || {} :
-              Array.isArray(uiSchema.items) ?
-                uiSchema.items[index] : uiSchema.items || {};
-            const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+    // These are the props passed into the render function
+    const arrayProps = {
+      canAdd,
+      className: "field field-array field-array-fixed-items",
+      disabled,
+      idSchema,
+      items: items.map((item, index) => {
+        const additional = index >= itemSchemas.length;
+        const itemSchema = additional ?
+          additionalSchema : itemSchemas[index];
+        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
+        const itemUiSchema = additional ?
+          uiSchema.additionalItems || {} :
+          Array.isArray(uiSchema.items) ?
+            uiSchema.items[index] : uiSchema.items || {};
+        const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
 
-            return this.renderArrayFieldItem({
-              index,
-              canRemove: additional,
-              canMoveUp: index >= itemSchemas.length + 1,
-              canMoveDown: additional && index < items.length - 1,
-              itemSchema,
-              itemData: item,
-              itemUiSchema,
-              itemIdSchema,
-              itemErrorSchema,
-              autofocus: autofocus && index === 0
-            });
-          })
-        }</div>
-        {
-          canAdd ? <AddButton
-                               onClick={this.onAddClick}
-                               disabled={disabled || readonly}/> : null
-        }
-      </fieldset>
-    );
+        return this.renderArrayFieldItem({
+          index,
+          canRemove: additional,
+          canMoveUp: index >= itemSchemas.length + 1,
+          canMoveDown: additional && index < items.length - 1,
+          itemSchema,
+          itemData: item,
+          itemUiSchema,
+          itemIdSchema,
+          itemErrorSchema,
+          autofocus: autofocus && index === 0,
+          onBlur
+        });
+      }),
+      onAddClick: this.onAddClick,
+      readonly,
+      required,
+      schema,
+      title,
+      TitleField
+    };
+
+    // Check if a custom template template was passed in
+    const renderFunction = ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
+    return renderFunction(arrayProps);
   }
 
   renderArrayFieldItem({
@@ -444,10 +562,12 @@ class ArrayField extends Component {
     itemIdSchema,
     itemErrorSchema,
     autofocus,
+    onBlur,
     anyOfItemsSchema,
     selectWidgetValue
   }) {
     const {SchemaField} = this.props.registry.fields;
+    const {SelectWidget} = this.props.registry.widgets;
     const {disabled, readonly, uiSchema} = this.props;
     const {orderable, removable} = {
       orderable: true,
@@ -460,66 +580,47 @@ class ArrayField extends Component {
       remove: removable && canRemove
     };
     has.toolbar = Object.keys(has).some(key => has[key]);
-    const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
-    const {SelectWidget} = this.props.registry.widgets;
 
-    return (
-      <div key={index} className="array-item">
-        <div className={has.toolbar ? "col-xs-9" : "col-xs-12"}>
-          {anyOfItemsSchema ? (
-            <div className="form-group" style={{width: 120}}>
-              <SelectWidget
-                schema={{type: "integer"}}
-                id="test"
-                options={{enumOptions: this.anyOfOptions(anyOfItemsSchema)}}
-                value={selectWidgetValue}
-                onChange={(value) => this.setWidgetType(index, value)}/>
-            </div>
-          ) : null}
-          <SchemaField
-            schema={itemSchema}
-            uiSchema={itemUiSchema}
-            formData={itemData}
-            errorSchema={itemErrorSchema}
-            idSchema={itemIdSchema}
-            required={this.isItemRequired(itemSchema)}
-            onChange={this.onChangeForIndex(index)}
-            registry={this.props.registry}
-            disabled={this.props.disabled}
-            readonly={this.props.readonly}
-            autofocus={autofocus}/>
-        </div>
-        {
-          has.toolbar ?
-            <div className="col-xs-3 array-item-toolbox">
-              <div className="btn-group" style={{display: "flex", justifyContent: "space-around"}}>
-                {has.moveUp || has.moveDown ?
-                  <IconBtn icon="arrow-up" className="array-item-move-up"
-                          tabIndex="-1"
-                          style={btnStyle}
-                          disabled={disabled || readonly || !has.moveUp}
-                          onClick={this.onReorderClick(index, index - 1)}/>
-                  : null}
-                {has.moveUp || has.moveDown ?
-                  <IconBtn icon="arrow-down" className="array-item-move-down"
-                          tabIndex="-1"
-                          style={btnStyle}
-                          disabled={disabled || readonly || !has.moveDown}
-                          onClick={this.onReorderClick(index, index + 1)}/>
-                  : null}
-                {has.remove ?
-                  <IconBtn type="danger" icon="remove" className="array-item-remove"
-                          tabIndex="-1"
-                          style={btnStyle}
-                          disabled={disabled || readonly}
-                          onClick={this.onDropIndexClick(index)}/>
-                  : null}
-              </div>
-            </div>
-          : null
-        }
+    const selectWidget = anyOfItemsSchema ? (
+      <div className="form-group" style={{width: 120}}>
+        <SelectWidget
+          schema={{type: "integer", default: selectWidgetValue}}
+          id="select-widget-id"
+          options={{enumOptions: this.anyOfOptions(anyOfItemsSchema)}}
+          value={selectWidgetValue}
+          onChange={(value) => this.setWidgetType(index, value)}/>
       </div>
-    );
+    ) : null;
+    return {
+      children: (
+        <SchemaField
+          schema={itemSchema}
+          uiSchema={itemUiSchema}
+          formData={itemData}
+          errorSchema={itemErrorSchema}
+          idSchema={itemIdSchema}
+          required={this.isItemRequired(itemSchema)}
+          onChange={this.onChangeForIndex(index)}
+          onBlur={onBlur}
+          registry={this.props.registry}
+          disabled={this.props.disabled}
+          readonly={this.props.readonly}
+          autofocus={autofocus}/>
+      ),
+      selectWidget: selectWidget,
+      className: "array-item",
+      disabled,
+      hasToolbar: has.toolbar,
+      hasMoveUp: has.moveUp,
+      hasMoveDown: has.moveDown,
+      hasRemove: has.remove,
+      index,
+      onDropIndexClick: this.onDropIndexClick,
+      onReorderClick: this.onReorderClick,
+      readonly,
+      anyOfItemsSchema,
+      selectWidgetValue
+    };
   }
 }
 
@@ -548,6 +649,7 @@ if (process.env.NODE_ENV !== "production") {
     idSchema: PropTypes.object,
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func,
     formData: PropTypes.array,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

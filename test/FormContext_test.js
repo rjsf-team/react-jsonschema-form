@@ -66,7 +66,6 @@ describe("FormContext", () => {
     const {node} = createFormComponent({
       schema: {
         type: "object",
-        title: "A title",
         properties: {
           prop: {
             type:  "string"
@@ -74,6 +73,26 @@ describe("FormContext", () => {
         }
       },
       FieldTemplate: CustomTemplateField,
+      formContext
+    });
+
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
+  });
+
+  it("should be passed to ArrayTemplateField", () => {
+    function CustomArrayTemplateField({formContext}) {
+      return <div id={formContext.foo}/>;
+    }
+
+    const {node} = createFormComponent({
+      schema: {
+        type: "array",
+        items: {
+          type:  "string"
+        }
+      },
+      ArrayFieldTemplate: CustomArrayTemplateField,
       formContext
     });
 
@@ -108,6 +127,45 @@ describe("FormContext", () => {
     const {node} = createFormComponent({
       schema: {type: "string", description: "A description"},
       fields,
+      formContext
+    });
+
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
+  });
+
+
+  it("should be passed to multiselect", () => {
+    const widgets = {SelectWidget: CustomComponent};
+    const {node} = createFormComponent({
+      schema: {
+        type: "array",
+        items: {
+          type: "string",
+          enum: ["foo"],
+          enumNames: ["bar"]
+        },
+        uniqueItems: true
+      },
+      widgets,
+      formContext
+    });
+
+    expect(node.querySelector("#" + formContext.foo))
+      .to.exist;
+  });
+
+  it("should be passed to files array", () => {
+    const widgets = {FileWidget: CustomComponent};
+    const {node} = createFormComponent({
+      schema: {
+        type: "array",
+        items: {
+          type: "string",
+          format: "data-url"
+        }
+      },
+      widgets,
       formContext
     });
 

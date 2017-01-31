@@ -5,6 +5,17 @@ function validate({pass1, pass2}, errors) {
   return errors;
 }
 
+function transformErrors(errors) {
+  return errors.map(error => {
+    if (error.name === "minimum" && error.property === "instance.age") {
+      return Object.assign({}, error, {
+        message: "You need to be 18 because of some legal thing"
+      });
+    }
+    return error;
+  });
+}
+
 module.exports = {
   schema:  {
     title: "Custom validation",
@@ -21,6 +32,11 @@ module.exports = {
         type: "string",
         minLength: 3
       },
+      age: {
+        title: "Age",
+        type: "number",
+        minimum: 18
+      }
     }
   },
   uiSchema: {
@@ -28,5 +44,6 @@ module.exports = {
     pass2: {"ui:widget": "password"},
   },
   formData: {},
-  validate
+  validate,
+  transformErrors
 };

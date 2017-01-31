@@ -50,6 +50,7 @@ describe("Rendering performance optimizations", () => {
 
   describe("ArrayField", () => {
     const onChange = () => {};
+    const onBlur = () => {};
     const schema = {type: "array", items: {type: "string"}};
     const uiSchema = {};
     const registry = getDefaultRegistry();
@@ -60,6 +61,7 @@ describe("Rendering performance optimizations", () => {
         schema,
         uiSchema,
         onChange,
+        onBlur
       });
       sandbox.stub(comp, "render").returns(<div/>);
 
@@ -76,6 +78,7 @@ describe("Rendering performance optimizations", () => {
         schema,
         formData,
         onChange,
+        onBlur
       });
       sandbox.stub(comp, "render").returns(<div/>);
 
@@ -87,6 +90,7 @@ describe("Rendering performance optimizations", () => {
 
   describe("ObjectField", () => {
     const onChange = () => {};
+    const onBlur = () => {};
     const registry = getDefaultRegistry();
     const uiSchema = {};
     const schema = {
@@ -104,6 +108,7 @@ describe("Rendering performance optimizations", () => {
         uiSchema,
         onChange,
         idSchema,
+        onBlur
       });
       sandbox.stub(comp, "render").returns(<div/>);
 
@@ -121,6 +126,7 @@ describe("Rendering performance optimizations", () => {
         formData,
         onChange,
         idSchema,
+        onBlur
       });
       sandbox.stub(comp, "render").returns(<div/>);
 

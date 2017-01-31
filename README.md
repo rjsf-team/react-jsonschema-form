@@ -20,6 +20,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Form submission](#form-submission)
         - [Form error event handler](#form-error-event-handler)
         - [Form data changes](#form-data-changes)
+        - [Form field blur events](#form-field-blur-events)
   - [Form customization](#form-customization)
      - [The uiSchema object](#the-uischema-object)
      - [Alternative widgets](#alternative-widgets)
@@ -49,6 +50,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
+     - [Array field template](#array-field-template)
      - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)
@@ -64,8 +66,11 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Custom descriptions](#custom-descriptions)
   - [Form data validation](#form-data-validation)
      - [Live validation](#live-validation)
+     - [HTML5 validation](#html5-validation)
      - [Custom validation](#custom-validation)
+     - [Custom error messages](#custom-error-messages)
      - [Error List Display](#error-list-display)
+     - [The case of empty strings](#the-case-of-empty-strings)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [JSON Schema supporting status](#json-schema-supporting-status)
@@ -80,6 +85,10 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
 ## Installation
 
 Requires React 15.0.0+.
+
+> Note: The `master` branch of the repository reflects ongoing development. Releases are published as [tags](https://github.com/mozilla-services/react-jsonschema-form/releases).
+>
+> You should never blindly install from `master`, but rather check what the available stable releases are.
 
 
 ### As a npm-based project dependency
@@ -191,6 +200,10 @@ render((
 #### Form data changes
 
 If you plan on being notified everytime the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
+
+#### Form field blur events
+
+Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass an `onBlur` handler, which will receive the id of the input that was blurred and the field value.
 
 ## Form customization
 
@@ -546,6 +559,23 @@ const uiSchema = {
 };
 ```
 
+Care should be taken when using the `required` property with arrays.  An empty array is sufficient to pass that validation check.  If you wish to ensure the user populates the array, you can specify the minimum number of items the user must select with the `minItems` property.
+
+Example:
+
+```js
+const schema = {
+  type: "array",
+  minItems: 2,
+  title: "A multiple choices list",
+  items: {
+    type: "string",
+    enum: ["foo", "bar", "fuzz", "qux"],
+  },
+  uniqueItems: true
+};
+```
+
 By default, checkboxes are stacked but if you prefer them inline:
 
 ```js
@@ -580,7 +610,7 @@ render((
   <Form schema={schema}>
     <div>
       <button type="submit">Submit</button>
-      <button>Cancel</button>
+      <button type="button">Cancel</button>
     </div>
   </Form>
 ), document.getElementById("app"));
@@ -628,6 +658,15 @@ const uiSchema = {
 ```
 
 ![](http://i.imgur.com/MbHypKg.png)
+
+Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
+
+```jsx
+const schema = {type: "string", enum: ["First", "Second"]};
+const uiSchema = {
+  "ui:placeholder": "Choose an option"
+};
+```
 
 ### Form attributes
 
@@ -700,6 +739,59 @@ The following props are passed to a custom field template component:
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
 
+### Array Field Template
+
+Similarly to the `FieldTemplate` you can use an `ArrayFieldTemplate` to customize how your
+arrays are rendered. This allows you to customize your array, and each element in the array.
+
+```jsx
+function ArrayFieldTemplate(props) {
+  return (
+    <div>
+      {props.items.map(element => element.children)}
+      {props.canAdd && <button onClick={props.onAddClick}></button>}
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema}
+        ArrayFieldTemplate={ArrayFieldTemplate} />,
+), document.getElementById("app"));
+```
+
+Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+
+The following props are passed to each `ArrayFieldTemplate`:
+
+- `DescriptionField`: The generated `DescriptionField` (if you wanted to utilize it)
+- `TitleField`: The generated `TitleField` (if you wanted to utilize it).
+- `canAdd`: A boolean value stating whether new elements can be added to the array.
+- `className`: The className string.
+- `disabled`: A boolean value stating if the array is disabled.
+- `idSchema`: Object
+- `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
+- `onAddClick: (event) => (event) => void`: Returns a function that adds a new item to the array.
+- `readonly`: A boolean value stating if the array is readonly.
+- `required`: A boolean value stating if the array is required.
+- `schema`: The schema object for this array.
+- `title`: A string value containing the title for the array.
+- `formContext`: The `formContext` object that you passed to Form.
+
+The following props are part of each element in `items`:
+
+- `children`: The html for the item's content.
+- `className`: The className string.
+- `disabled`: A boolean value stating if the array item is disabled.
+- `hasMoveDown`: A boolean value stating whether the array item can be moved down.
+- `hasMoveUp`: A boolean value stating whether the array item can be moved up.
+- `hasRemove`: A boolean value stating whether the array item can be removed.
+- `hasToolbar`: A boolean value stating whether the array item has a toolbar.
+- `index`: A number stating the index the array item occurs in `items`.
+- `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
+- `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
+- `readonly`: A boolean value stating if the array item is readonly.
+
 ### Custom widgets and fields
 
 The API allows to specify your own custom *widget* and *field* components:
@@ -741,12 +833,14 @@ render((
 
 The following props are passed to custom widget components:
 
+- `id`: The generated id for this field;
 - `schema`: The JSONSchema subschema object for this field;
 - `value`: The current value for this field;
 - `required`: The required status of this field;
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
+- `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `formContext`: The `formContext` object that you passed to Form.
 
@@ -1067,6 +1161,10 @@ Be warned that this is an expensive strategy, with possibly strong impact on per
 
 To disable validation entirely, you can set Form's `noValidate` prop to `true`.
 
+### HTML5 Validation
+
+By default, required field errors will cause the browser to display its standard HTML5 `required` attribute error messages and prevent form submission. If you would like to turn this off, you can set Form's `noHtml5Validate` prop to `true`, which will set `noValidate` on the `form` element.
+
 ### Custom validation
 
 Form data is always validated against the JSON schema.
@@ -1100,6 +1198,36 @@ render((
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
 
+### Custom error messages
+
+Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
+
+```js
+function transformErrors(errors) {
+  return errors.map(error => {
+    if (error.name === "pattern") {
+      error.message = "Only digits are allowed"
+    }
+    return error;
+  });
+}
+
+const schema = {
+  type: "object",
+  properties: {
+    onlyNumbersString: {type: "string", pattern: "\d*"},
+  }
+};
+
+render((
+  <Form schema={schema}
+        transformErrors={transformErrors} />
+), document.getElementById("app"));
+```
+
+> Notes:
+> - The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
+
 ### Error List Display
 
 To disable rendering of the error list at the top of the form, you can set the `showErrorList` prop to `false`. Doing so will still validate the form, but only the inline display will show.
@@ -1110,6 +1238,12 @@ render((
         showErrorList={false}/>
 ), document.getElementById("app"));
 ```
+
+### The case of empty strings
+
+When a text input is empty, the field in form data is set to `undefined`. String fields that use `enum` and a `select` widget work similarly and will have an empty option at the top of the options list that when selected will result in the field being `undefined`.
+
+One consequence of this is that if you have an empty string in your `enum` array, selecting that option in the `select` input will cause the field to be set to `undefined`, not an empty string.
 
 ## Styling your forms
 

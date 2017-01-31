@@ -12,6 +12,7 @@ import date from "./date";
 import validation from "./validation";
 import files from "./files";
 import single from "./single";
+import customArray from "./customArray";
 import anyOf from "./anyOf";
 
 export const samples = {
@@ -29,5 +30,6 @@ export const samples = {
   Validation: validation,
   Files: files,
   Single: single,
+  "Custom Array": customArray,
   "Any of": anyOf
 };

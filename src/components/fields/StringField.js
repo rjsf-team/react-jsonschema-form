@@ -21,7 +21,8 @@ function StringField(props) {
     readonly,
     autofocus,
     registry,
-    onChange
+    onChange,
+    onBlur
   } = props;
   const {title, format} = schema;
   const {widgets, formContext} = registry;
@@ -37,6 +38,7 @@ function StringField(props) {
     label={title === undefined ? name : title}
     value={defaultFieldValue(formData, schema)}
     onChange={onChange}
+    onBlur={onBlur}
     required={required}
     disabled={disabled}
     readonly={readonly}
@@ -52,6 +54,7 @@ if (process.env.NODE_ENV !== "production") {
     uiSchema: PropTypes.object.isRequired,
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func.isRequired,
     formData: PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.number,
