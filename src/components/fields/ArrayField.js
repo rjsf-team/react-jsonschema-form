@@ -320,6 +320,7 @@ class ArrayField extends Component {
       readonly,
       required,
       schema,
+      uiSchema,
       title,
       TitleField,
       formContext
