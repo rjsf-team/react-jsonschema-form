@@ -1296,7 +1296,7 @@ describe("StringField", () => {
   });
 
   describe("Label", () => {
-    const Widget = props => <div id={`label-${props.label}`} />;
+    const Widget = props => <div id={`label-${props.label}`}/>;
 
     const widgets = {Widget};
 
