@@ -6,7 +6,6 @@ import {
   deepEquals,
   getDefaultFormState,
   isMultiSelect,
-  mergeObjects,
   pad,
   parseDateString,
   retrieveSchema,
@@ -261,77 +260,6 @@ describe("utils", () => {
     it("should be false if schema items enum is not an array", () => {
       const schema = {items: {}, uniqueItems: true};
       expect(isMultiSelect(schema)).to.be.false;
-    });
-  });
-
-  describe("mergeObjects()", () => {
-    it("should't mutate the provided objects", () => {
-      const obj1 = {a: 1};
-      mergeObjects(obj1, {b: 2});
-      expect(obj1).eql({a: 1});
-    });
-
-    it("should merge two one-level deep objects", () => {
-      expect(mergeObjects({a: 1}, {b: 2})).eql({a: 1, b: 2});
-    });
-
-    it("should override the first object with the values from the second", () => {
-      expect(mergeObjects({a: 1}, {a: 2})).eql({a: 2});
-    });
-
-    it("should recursively merge deeply nested objects", () => {
-      const obj1 = {
-        a: 1,
-        b: {
-          c: 3,
-          d: [1, 2, 3],
-          e: {f: {g: 1}}
-        },
-        c: 2
-      };
-      const obj2 = {
-        a: 1,
-        b: {
-          d: [3, 2, 1],
-          e: {f: {h: 2}},
-          g: 1
-        },
-        c: 3
-      };
-      const expected = {
-        a: 1,
-        b: {
-          c: 3,
-          d: [3, 2, 1],
-          e: {f: {g: 1, h: 2}},
-          g: 1
-        },
-        c: 3
-      };
-      expect(mergeObjects(obj1, obj2)).eql(expected);
-    });
-
-    describe("concatArrays option", () => {
-      it("should not concat arrays by default", () => {
-        const obj1 = {a: [1]};
-        const obj2 = {a: [2]};
-
-        expect(mergeObjects(obj1, obj2)).eql({a: [2]});
-      });
-
-      it("should concat arrays when concatArrays is true", () => {
-        const obj1 = {a: [1]};
-        const obj2 = {a: [2]};
-
-        expect(mergeObjects(obj1, obj2, true)).eql({a: [1, 2]});
-      });
-
-      it("should concat nested arrays when concatArrays is true", () => {
-        const obj1 = {a: {b: [1]}};
-        const obj2 = {a: {b: [2]}};
-
-        expect(mergeObjects(obj1, obj2, true)).eql({a: {b: [1, 2]}});
-      });
     });
   });
 

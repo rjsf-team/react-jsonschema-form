@@ -31,6 +31,7 @@
   "dependencies": {
     "jsonschema": "^1.0.2",
     "lodash.topath": "^4.5.2",
+    "lodash.merge": "^4.5.2",
     "setimmediate": "^1.0.5"
   },
   "devDependencies": {

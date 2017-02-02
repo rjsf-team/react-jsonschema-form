@@ -18,7 +18,7 @@ export default class Form extends Component {
     liveValidate: false,
     safeRenderCompletion: false,
     noHtml5Validate: false
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -93,7 +93,7 @@ export default class Form extends Component {
     if (this.props.onBlur) {
       this.props.onBlur(...args);
     }
-  }
+  };
 
   onSubmit = (event) => {
     event.preventDefault();

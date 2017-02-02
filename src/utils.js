@@ -1,6 +1,6 @@
+import merge from "lodash.merge";
 import React from "react";
 import "setimmediate";
-
 
 const widgetMap = {
   boolean: {
@@ -112,7 +112,7 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
   if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
-    defaults = mergeObjects(defaults, schema.default);
+    defaults = merge(defaults, schema.default);
   } else if ("default" in schema) {
     // Use schema defaults for this node.
     defaults = schema.default;
@@ -129,6 +129,10 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
   }
   // We need to recur for object schema inner default values.
   if (schema.type === "object") {
+    if(!schema.properties){
+      return defaults;
+    }
+
     return Object.keys(schema.properties).reduce((acc, key) => {
       // Compute the defaults for this node, with the parent defaults we might
       // have from a previous run: defaults[key].
@@ -150,7 +154,7 @@ export function getDefaultFormState(_schema, formData, definitions={}) {
     return defaults;
   }
   if (isObject(formData)) { // Override schema defaults with form data.
-    return mergeObjects(defaults, formData);
+    return merge(defaults, formData);
   }
   return formData || defaults;
 }
@@ -175,21 +179,21 @@ export function isObject(thing) {
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
-export function mergeObjects(obj1, obj2, concatArrays = false) {
-  // Recursively merge deeply nested objects.
-  var acc = Object.assign({}, obj1); // Prevent mutation of source object.
-  return Object.keys(obj2).reduce((acc, key) =>{
-    const left = obj1[key], right = obj2[key];
-    if (obj1.hasOwnProperty(key) && isObject(right)) {
-      acc[key] = mergeObjects(left, right, concatArrays);
-    } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
-      acc[key] = left.concat(right);
-    } else {
-      acc[key] = right;
-    }
-    return acc;
-  }, acc);
-}
+// export function mergeObjects(obj1, obj2, concatArrays = false) {
+//   // Recursively merge deeply nested objects.
+//   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
+//   return Object.keys(obj2).reduce((acc, key) =>{
+//     const left = obj1[key], right = obj2[key];
+//     if (obj1.hasOwnProperty(key) && isObject(right)) {
+//       acc[key] = mergeObjects(left, right, concatArrays);
+//     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
+//       acc[key] = left.concat(right);
+//     } else {
+//       acc[key] = right;
+//     }
+//     return acc;
+//   }, acc);
+// }
 
 export function asNumber(value) {
   if (value === "") {

@@ -21,10 +21,7 @@ function objectKeysHaveChanged(formData, state) {
     return true;
   }
   // deep check on sorted keys
-  if (!deepEquals(newKeys.sort(), oldKeys.sort())) {
-    return true;
-  }
-  return false;
+  return !deepEquals(newKeys.sort(), oldKeys.sort());
 }
 
 class ObjectField extends Component {
@@ -36,7 +33,7 @@ class ObjectField extends Component {
     required: false,
     disabled: false,
     readonly: false,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -84,67 +81,124 @@ class ObjectField extends Component {
   };
 
   render() {
-    const {
-      uiSchema,
-      errorSchema,
-      idSchema,
-      name,
-      required,
-      disabled,
-      readonly,
-      onBlur
-    } = this.props;
-    const {definitions, fields, formContext} = this.props.registry;
-    const {SchemaField, TitleField, DescriptionField} = fields;
+    const {name} = this.props;
+    const {definitions} = this.props.registry;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = (schema.title === undefined) ? name : schema.title;
-    let orderedProperties;
-    try {
-      const properties = Object.keys(schema.properties);
-      orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
-    } catch (err) {
-      return (
-        <div>
-          <p className="config-error" style={{color: "red"}}>
-            Invalid {name || "root"} object field configuration:
-            <em>{err.message}</em>.
-          </p>
-          <pre>{JSON.stringify(schema)}</pre>
-        </div>
-      );
+    if("additionalProperties" in schema){
+        return this.renderAdditionalProperties(schema, title);
     }
-    return (
-      <fieldset>
-        {title ? <TitleField
-                   id={`${idSchema.$id}__title`}
-                   title={title}
-                   required={required}
-                   formContext={formContext}/> : null}
-        {schema.description ?
-          <DescriptionField
-            id={`${idSchema.$id}__description`}
-            description={schema.description}
-            formContext={formContext}/> : null}
-        {
-        orderedProperties.map((name, index) => {
+
+    return this.renderProperties(schema, title);
+  }
+
+  renderProperties(schema, title){
+      const {
+          uiSchema,
+          errorSchema,
+          idSchema,
+          name,
+          required,
+          disabled,
+          readonly,
+          onBlur
+      } = this.props;
+      const {fields, formContext} = this.props.registry;
+      const {SchemaField, TitleField, DescriptionField} = fields;
+
+      let orderedProperties;
+      try {
+          const properties = Object.keys(schema.properties);
+          orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
+      } catch (err) {
           return (
-            <SchemaField key={index}
-              name={name}
-              required={this.isRequired(name)}
-              schema={schema.properties[name]}
-              uiSchema={uiSchema[name]}
-              errorSchema={errorSchema[name]}
-              idSchema={idSchema[name]}
-              formData={this.state[name]}
-              onChange={this.onPropertyChange(name)}
-              onBlur={onBlur}
-              registry={this.props.registry}
-              disabled={disabled}
-              readonly={readonly}/>
+              <div>
+                  <p className="config-error" style={{color: "red"}}>
+                      Invalid {name || "root"} object field configuration:
+                      <em>{err.message}</em>.
+                  </p>
+                  <pre>{JSON.stringify(schema)}</pre>
+              </div>
           );
-        })
-      }</fieldset>
-    );
+      }
+      return (
+          <fieldset>
+              {title ? <TitleField
+                      id={`${idSchema.$id}__title`}
+                      title={title}
+                      required={required}
+                      formContext={formContext}/> : null}
+              {schema.description ?
+                  <DescriptionField
+                      id={`${idSchema.$id}__description`}
+                      description={schema.description}
+                      formContext={formContext}/> : null}
+              {orderedProperties.map((name, index) => {
+                  return (
+                      <SchemaField key={index}
+                                   name={name}
+                                   required={this.isRequired(name)}
+                                   schema={schema.properties[name]}
+                                   uiSchema={uiSchema[name]}
+                                   errorSchema={errorSchema[name]}
+                                   idSchema={idSchema[name]}
+                                   formData={this.state[name]}
+                                   onChange={this.onPropertyChange(name)}
+                                   onBlur={onBlur}
+                                   registry={this.props.registry}
+                                   disabled={disabled}
+                                   readonly={readonly}/>
+                  );
+              })}
+          </fieldset>
+      );
+  }
+
+  renderAdditionalProperties(schema, title){
+      const {
+          uiSchema,
+          errorSchema,
+          idSchema,
+          required,
+          disabled,
+          readonly,
+          onBlur
+      } = this.props;
+      const {fields, formContext} = this.props.registry;
+      const {SchemaField, TitleField, DescriptionField} = fields;
+
+      return (
+          <fieldset>
+              {title ? <TitleField
+                      id={`${idSchema.$id}__title`}
+                      title={title}
+                      required={required}
+                      formContext={formContext}/> : null}
+              {schema.description ?
+                  <DescriptionField
+                      id={`${idSchema.$id}__description`}
+                      description={schema.description}
+                      formContext={formContext}/> : null}
+              {Object.keys(this.state).map((name, index) => {
+                  const childIdSchema = {'$id': `${idSchema.$id}__${name}`};
+                  return (
+                      <SchemaField key={index}
+                                   name={name}
+                                   required={this.isRequired(name)}
+                                   schema={schema.additionalProperties}
+                                   uiSchema={uiSchema[name]}
+                                   errorSchema={errorSchema[name]}
+                                   idSchema={childIdSchema}
+                                   formData={this.state[name]}
+                                   onChange={this.onPropertyChange(name)}
+                                   onBlur={onBlur}
+                                   registry={this.props.registry}
+                                   disabled={disabled}
+                                   readonly={readonly}/>
+                  );
+              })}
+          </fieldset>
+      );
   }
 }
 
