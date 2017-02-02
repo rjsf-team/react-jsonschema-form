@@ -85,15 +85,15 @@ class ObjectField extends Component {
     const {definitions} = this.props.registry;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = (schema.title === undefined) ? name : schema.title;
-    if("additionalProperties" in schema){
-        return this.renderAdditionalProperties(schema, title);
+    if ("additionalProperties" in schema){
+      return this.renderAdditionalProperties(schema, title);
     }
 
     return this.renderProperties(schema, title);
   }
 
   renderProperties(schema, title){
-      const {
+    const {
           uiSchema,
           errorSchema,
           idSchema,
@@ -103,15 +103,15 @@ class ObjectField extends Component {
           readonly,
           onBlur
       } = this.props;
-      const {fields, formContext} = this.props.registry;
-      const {SchemaField, TitleField, DescriptionField} = fields;
+    const {fields, formContext} = this.props.registry;
+    const {SchemaField, TitleField, DescriptionField} = fields;
 
-      let orderedProperties;
-      try {
-          const properties = Object.keys(schema.properties);
-          orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
-      } catch (err) {
-          return (
+    let orderedProperties;
+    try {
+      const properties = Object.keys(schema.properties);
+      orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
+    } catch (err) {
+      return (
               <div>
                   <p className="config-error" style={{color: "red"}}>
                       Invalid {name || "root"} object field configuration:
@@ -120,8 +120,8 @@ class ObjectField extends Component {
                   <pre>{JSON.stringify(schema)}</pre>
               </div>
           );
-      }
-      return (
+    }
+    return (
           <fieldset>
               {title ? <TitleField
                       id={`${idSchema.$id}__title`}
@@ -134,7 +134,7 @@ class ObjectField extends Component {
                       description={schema.description}
                       formContext={formContext}/> : null}
               {orderedProperties.map((name, index) => {
-                  return (
+                return (
                       <SchemaField key={index}
                                    name={name}
                                    required={this.isRequired(name)}
@@ -155,7 +155,7 @@ class ObjectField extends Component {
   }
 
   renderAdditionalProperties(schema, title){
-      const {
+    const {
           uiSchema,
           errorSchema,
           idSchema,
@@ -164,10 +164,10 @@ class ObjectField extends Component {
           readonly,
           onBlur
       } = this.props;
-      const {fields, formContext} = this.props.registry;
-      const {SchemaField, TitleField, DescriptionField} = fields;
+    const {fields, formContext} = this.props.registry;
+    const {SchemaField, TitleField, DescriptionField} = fields;
 
-      return (
+    return (
           <fieldset>
               {title ? <TitleField
                       id={`${idSchema.$id}__title`}
@@ -180,8 +180,8 @@ class ObjectField extends Component {
                       description={schema.description}
                       formContext={formContext}/> : null}
               {Object.keys(this.state).map((name, index) => {
-                  const childIdSchema = {'$id': `${idSchema.$id}__${name}`};
-                  return (
+                const childIdSchema = {"$id": `${idSchema.$id}__${name}`};
+                return (
                       <SchemaField key={index}
                                    name={name}
                                    required={this.isRequired(name)}

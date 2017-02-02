@@ -1,8 +1,7 @@
-import merge from "lodash.merge";
 import toPath from "lodash.topath";
 import {validate as jsonValidate} from "jsonschema";
 
-import {isObject} from "./utils";
+import {isObject, mergeObjects} from "./utils";
 
 function toErrorSchema(errors) {
   // Transforms a jsonschema validation errors list:
@@ -110,7 +109,7 @@ export default function validateFormData(formData, schema, customValidate, trans
 
   const errorHandler = customValidate(formData, createErrorHandler(formData));
   const userErrorSchema = unwrapErrorHandler(errorHandler);
-  const newErrorSchema = merge(errorSchema, userErrorSchema);
+  const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
   // XXX: The errors list produced is not fully compliant with the format
   // exposed by the jsonschema lib, which contains full field paths and other
   // properties.
