@@ -2,16 +2,9 @@ import React, { PropTypes } from "react";
 
 import StringField from "./StringField";
 
-class Double {
-  constructor(string) {
-    this._bsontype = 'Double';
-    this.string = string;
-    this.value = Number(string);
-  }
-  toString() {
-    return this.string;
-  }
-}
+import bson from 'bson';
+
+const Double = bson.Double;
 
 function convert (value) {
   const notNumber = value === '' || isNaN(value);
