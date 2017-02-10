@@ -138,6 +138,29 @@ describe("SchemaField", () => {
       expect(node.querySelectorAll("#custom"))
         .to.have.length.of(1);
     });
+
+    it("should not pass classNames to child component", () => {
+      const CustomSchemaField = function(props) {
+        return (
+          <SchemaField
+            {...props}
+            uiSchema={{...props.uiSchema, "ui:field": undefined}}/>
+        );
+      };
+
+      const schema = {
+        type: "string"
+      };
+      const uiSchema = {
+        "ui:field": "customSchemaField",
+        classNames: "foo"};
+      const fields = {"customSchemaField": CustomSchemaField};
+
+      const {node} = createFormComponent({schema, uiSchema, fields});
+
+      expect(node.querySelectorAll(".foo"))
+        .to.have.length.of(1);
+    });
   });
 
   describe("description support", () => {
