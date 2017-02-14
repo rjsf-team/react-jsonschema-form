@@ -5,7 +5,7 @@ import BaseInput from "./BaseInput";
 
 function ColorWidget(props) {
   if (props.readonly) {
-    let {disabled, ...colorProps} = props;
+    let {...colorProps} = props;
     colorProps.disabled = true;
     return <BaseInput type="color" {...colorProps}/>;
   } else {
