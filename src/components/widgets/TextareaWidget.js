@@ -1,5 +1,7 @@
 import React, {PropTypes} from "react";
 
+import ClearableWidget from "./ClearableWidget";
+
 
 function TextareaWidget({
   schema,
@@ -16,12 +18,8 @@ function TextareaWidget({
   const _onChange = ({target: {value}}) => {
     return onChange(value);
   };
-  const _onClear = (event) => {
-    event.preventDefault();
-    return onChange(undefined);
-  };
   return (
-    <div className="input-group">
+    <ClearableWidget onChange={onChange}>
       <textarea
         id={id}
         className="form-control"
@@ -33,11 +31,7 @@ function TextareaWidget({
         autoFocus={autofocus}
         onBlur={onBlur && (event => onBlur(id, event.target.value))}
         onChange={_onChange}/>
-      <a href="#" className="input-group-addon clear-btn" title="Clear field"
-        onClick={_onClear}>
-        <i className="glyphicon glyphicon-remove"/>
-      </a>
-    </div>
+    </ClearableWidget>
   );
 }
 

@@ -1,5 +1,7 @@
 import React, {PropTypes} from "react";
 
+import ClearableWidget from "./ClearableWidget";
+
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
@@ -18,25 +20,17 @@ function BaseInput(props) {
   const _onChange = ({target: {value}}) => {
     return props.onChange(value);
   };
-  const _onClear = (event) => {
-    event.preventDefault();
-    return props.onChange(undefined);
-  };
   return (
-    <div className="input-group">
+    <ClearableWidget onChange={props.onChange}>
       <input
-        {...inputProps}
-        className="form-control"
-        readOnly={readonly}
-        autoFocus={autofocus}
-        value={typeof value === "undefined" ? "" : value}
-        onChange={_onChange}
-        onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}/>
-      <a href="#" className="input-group-addon clear-btn" title="Clear field"
-        onClick={_onClear}>
-        <i className="glyphicon glyphicon-remove"/>
-      </a>
-    </div>
+      {...inputProps}
+      className="form-control"
+      readOnly={readonly}
+      autoFocus={autofocus}
+      value={typeof value === "undefined" ? "" : value}
+      onChange={_onChange}
+      onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}/>
+    </ClearableWidget>
   );
 }
 

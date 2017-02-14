@@ -1,6 +1,8 @@
 import React, {PropTypes} from "react";
 
+import ClearableWidget from "./ClearableWidget";
 import {asNumber} from "../../utils";
+
 
 /**
  * This is a silly limitation in the DOM where option change event values are
@@ -49,12 +51,8 @@ function SelectWidget({
     const newValue = getValue(event, multiple);
     onChange(processValue(schema, newValue));
   };
-  const _onClear = (event) => {
-    event.preventDefault();
-    return onChange(undefined);
-  };
   return (
-    <div className="input-group">
+    <ClearableWidget onChange={onChange}>
       <select
         id={id}
         multiple={multiple}
@@ -74,11 +72,7 @@ function SelectWidget({
           return <option key={i} value={value}>{label}</option>;
         })}
       </select>
-      <a href="#" className="input-group-addon clear-btn" title="Clear field"
-        onClick={_onClear}>
-        <i className="glyphicon glyphicon-remove"/>
-      </a>
-    </div>
+    </ClearableWidget>
   );
 }
 
