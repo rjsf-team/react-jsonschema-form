@@ -415,6 +415,23 @@ describe("Form", () => {
     });
   });
 
+  describe("Default value handling when clearing fields", () => {
+    const schema = {
+      type: "string",
+      default: "foo",
+    };
+
+    it("should not set default when a text field is cleared", () => {
+      const {node} = createFormComponent({schema, formData: "bar"});
+
+      Simulate.change(node.querySelector("input"), {
+        target: {value: ""}
+      });
+
+      expect(node.querySelector("input").value).eql("");
+    });
+  });
+
   describe("Defaults array items default propagation", () => {
     const schema = {
       type: "object",

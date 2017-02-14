@@ -16,17 +16,27 @@ function BaseInput(props) {
     ...inputProps
   } = props;
   const _onChange = ({target: {value}}) => {
-    return props.onChange(value === "" ? undefined : value);
+    return props.onChange(value);
+  };
+  const _onClear = (event) => {
+    event.preventDefault();
+    return props.onChange(undefined);
   };
   return (
-    <input
-      {...inputProps}
-      className="form-control"
-      readOnly={readonly}
-      autoFocus={autofocus}
-      value={typeof value === "undefined" ? "" : value}
-      onChange={_onChange}
-      onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}/>
+    <div className="input-group">
+      <input
+        {...inputProps}
+        className="form-control"
+        readOnly={readonly}
+        autoFocus={autofocus}
+        value={typeof value === "undefined" ? "" : value}
+        onChange={_onChange}
+        onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}/>
+      <a href="#" className="input-group-addon input-clear-btn" title="Clear field"
+        onClick={_onClear}>
+        <i className="glyphicon glyphicon-remove"/>
+      </a>
+    </div>
   );
 }
 

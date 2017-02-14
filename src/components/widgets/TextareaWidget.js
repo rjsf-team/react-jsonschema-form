@@ -14,20 +14,30 @@ function TextareaWidget({
   onBlur
 }) {
   const _onChange = ({target: {value}}) => {
-    return onChange(value === "" ? undefined : value);
+    return onChange(value);
+  };
+  const _onClear = (event) => {
+    event.preventDefault();
+    return onChange(undefined);
   };
   return (
-    <textarea
-      id={id}
-      className="form-control"
-      value={typeof value === "undefined" ? "" : value}
-      placeholder={placeholder}
-      required={required}
-      disabled={disabled}
-      readOnly={readonly}
-      autoFocus={autofocus}
-      onBlur={onBlur && (event => onBlur(id, event.target.value))}
-      onChange={_onChange}/>
+    <div className="input-group">
+      <textarea
+        id={id}
+        className="form-control"
+        value={typeof value === "undefined" ? "" : value}
+        placeholder={placeholder}
+        required={required}
+        disabled={disabled}
+        readOnly={readonly}
+        autoFocus={autofocus}
+        onBlur={onBlur && (event => onBlur(id, event.target.value))}
+        onChange={_onChange}/>
+      <a href="#" className="input-group-addon input-clear-btn" title="Clear field"
+        onClick={_onClear}>
+        <i className="glyphicon glyphicon-remove"/>
+      </a>
+    </div>
   );
 }
 

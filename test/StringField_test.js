@@ -89,7 +89,7 @@ describe("StringField", () => {
 
       expect(onBlur.calledWith(input.id, "yo")).to.be.true;
     });
-    
+
     it("should handle an empty string change event", () => {
       const {comp, node} = createFormComponent({
         schema: {type: "string"},
@@ -100,7 +100,7 @@ describe("StringField", () => {
         target: {value: ""}
       });
 
-      expect(comp.state.formData).eql(undefined);
+      expect(comp.state.formData).eql("");
     });
 
     it("should fill field with data", () => {
