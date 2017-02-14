@@ -52,8 +52,7 @@ function SelectWidget({
       className="form-control"
       value={typeof value === "undefined" ? emptyValue : value}
       required={required}
-      disabled={disabled}
-      readOnly={readonly}
+      disabled={disabled || readonly}
       autoFocus={autofocus}
       onBlur={onBlur && (event => {
         const newValue = getValue(event, multiple);
@@ -84,6 +83,8 @@ if (process.env.NODE_ENV !== "production") {
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     multiple: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
