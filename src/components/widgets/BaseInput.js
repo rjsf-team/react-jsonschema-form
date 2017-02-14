@@ -8,6 +8,7 @@ function BaseInput(props) {
   // exclude the "options" and "schema" ones here.
   const {
     value,
+    disabled,
     readonly,
     autofocus,
     onBlur,
@@ -22,7 +23,11 @@ function BaseInput(props) {
     return onChange(value);
   };
   return (
-    <ClearableWidget onChange={onChange} value={value}>
+    <ClearableWidget
+      onChange={onChange}
+      disabled={disabled}
+      readonly={readonly}
+      value={value}>
       <input
         {...inputProps}
         className="form-control"

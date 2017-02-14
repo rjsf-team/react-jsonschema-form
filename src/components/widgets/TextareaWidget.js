@@ -19,7 +19,11 @@ function TextareaWidget({
     return onChange(value);
   };
   return (
-    <ClearableWidget onChange={onChange} value={value}>
+    <ClearableWidget
+      onChange={onChange}
+      disabled={disabled}
+      readonly={readonly}
+      value={value}>
       <textarea
         id={id}
         className="form-control"

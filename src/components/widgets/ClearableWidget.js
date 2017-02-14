@@ -1,7 +1,7 @@
 import React, {PropTypes} from "react";
 
 
-function ClearableWidget({onChange, value, children}) {
+function ClearableWidget({onChange, disabled, readonly, value, children}) {
   const _onClear = (event) => {
     event.preventDefault();
     if (typeof value !== "undefined") {
@@ -16,7 +16,7 @@ function ClearableWidget({onChange, value, children}) {
     cursor: cleared ? "no-drop" : "pointer",
     color: cleared ? "#aaa" : "#888",
   };
-  return (
+  return disabled || readonly ? children : (
     <div className="input-group">
       {children}
       <div className="input-group-addon">
@@ -28,11 +28,17 @@ function ClearableWidget({onChange, value, children}) {
 }
 
 ClearableWidget.defaultProps = {
+  disabled: false,
+  readonly: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
   ClearableWidget.propTypes = {
+    children: React.PropTypes.element.isRequired,
     onChange: PropTypes.func,
+    value: PropTypes.any,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
   };
 }
 
