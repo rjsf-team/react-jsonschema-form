@@ -21,7 +21,8 @@ function StringField(props) {
     readonly,
     autofocus,
     registry,
-    onChange
+    onChange,
+    onBlur
   } = props;
   const {title, format} = schema;
   const {widgets, formContext} = registry;
@@ -29,8 +30,13 @@ function StringField(props) {
   const defaultWidget = format || (enumOptions ? "select" : "text");
   const {widget=defaultWidget, placeholder="", ...options} = getUiOptions(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
+  const inputProps = {};
+  if (onBlur) {
+    inputProps.onBlur = onBlur;
+  }
 
   return <Widget
+    {...inputProps}
     options={{...options, enumOptions}}
     schema={schema}
     id={idSchema && idSchema.$id}
@@ -52,6 +58,7 @@ if (process.env.NODE_ENV !== "production") {
     uiSchema: PropTypes.object.isRequired,
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func,
     formData: PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.number,

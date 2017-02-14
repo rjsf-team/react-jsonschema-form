@@ -16,10 +16,15 @@ function convert (value) {
   return new Double(value);
 }
 
+function round (value) {
+  return parseFloat(value).toFixed(2);
+}
+
 function DoubleField(props) {
   return (
     <StringField {...props}
-      onChange={(value) => props.onChange(convert(value))} />
+      onChange={(value) => props.onChange(convert(value))} 
+      onBlur={(event) => props.onChange(convert(round(event.target.value)))} />
   );
 }
 
@@ -29,6 +34,7 @@ if (process.env.NODE_ENV !== "production") {
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func,
     formData: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string,
