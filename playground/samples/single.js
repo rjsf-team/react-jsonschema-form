@@ -3,5 +3,6 @@ module.exports = {
     title: "A single-field form",
     type: "string",
   },
-  formData: "initial value"
+  formData: "initial value",
+  uiSchema: {}
 };
