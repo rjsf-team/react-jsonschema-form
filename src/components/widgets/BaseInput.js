@@ -32,7 +32,7 @@ function BaseInput(props) {
         value={typeof value === "undefined" ? "" : value}
         onChange={_onChange}
         onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}/>
-      <a href="#" className="input-group-addon input-clear-btn" title="Clear field"
+      <a href="#" className="input-group-addon clear-btn" title="Clear field"
         onClick={_onClear}>
         <i className="glyphicon glyphicon-remove"/>
       </a>

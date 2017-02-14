@@ -33,7 +33,7 @@ function TextareaWidget({
         autoFocus={autofocus}
         onBlur={onBlur && (event => onBlur(id, event.target.value))}
         onChange={_onChange}/>
-      <a href="#" className="input-group-addon input-clear-btn" title="Clear field"
+      <a href="#" className="input-group-addon clear-btn" title="Clear field"
         onClick={_onClear}>
         <i className="glyphicon glyphicon-remove"/>
       </a>

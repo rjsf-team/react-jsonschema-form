@@ -103,6 +103,17 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("");
     });
 
+    it("should allow clearing the field", () => {
+      const {comp, node} = createFormComponent({
+        schema: {type: "string"},
+        formData: "x",
+      });
+
+      Simulate.click(node.querySelector(".clear-btn"));
+
+      expect(comp.state.formData).eql(undefined);
+    });
+
     it("should fill field with data", () => {
       const {node} = createFormComponent({schema: {
         type: "string",
@@ -281,16 +292,28 @@ describe("StringField", () => {
   });
 
   describe("TextareaWidget", () => {
-    it("should handle an empty string change event", () => {
-      const {comp, node} = createFormComponent({
+    let comp, node;
+
+    beforeEach(() => {
+      const res = createFormComponent({
         schema: {type: "string"},
         uiSchema: {"ui:widget": "textarea"},
         formData: "x",
       });
+      node = res.node;
+      comp = res.comp;
+    });
 
+    it("should handle an empty string change event", () => {
       Simulate.change(node.querySelector("textarea"), {
         target: {value: ""}
       });
+
+      expect(comp.state.formData).eql("");
+    });
+
+    it("should allow clearing the field", () => {
+      Simulate.click(node.querySelector(".clear-btn"));
 
       expect(comp.state.formData).eql(undefined);
     });
