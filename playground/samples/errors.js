@@ -7,7 +7,8 @@ module.exports = {
         type: "string",
         title: "First name",
         minLength: 8,
-        pattern: "\\d+"
+        pattern: "\\d+",
+        "description": "Note: this field isn't required, but will be validated for length and pattern as soon as a value is entered.",
       },
       active: {
         type: "boolean",

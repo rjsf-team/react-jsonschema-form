@@ -8,7 +8,7 @@ function ClearableWidget({onChange, disabled, readonly, value, children}) {
       return onChange(undefined);
     }
   };
-  const cleared = value === "" || value === undefined;
+  const cleared = typeof value === "undefined";
   const clearBtnCls = "glyphicon glyphicon-remove-sign clear-btn";
   const clearBtnStyles = {
     pointerEvents: "auto",
