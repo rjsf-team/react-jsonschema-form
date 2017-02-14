@@ -1,5 +1,7 @@
 import React, {PropTypes} from "react";
 
+import ClearableWidget from "./ClearableWidget";
+
 
 function RadioWidget({
   schema,
@@ -7,6 +9,7 @@ function RadioWidget({
   value,
   required,
   disabled,
+  readonly,
   autofocus,
   onChange
 }) {
@@ -16,37 +19,43 @@ function RadioWidget({
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
   return (
-    <div className="field-radio-group">{
-      enumOptions.map((option, i) => {
-        const checked = option.value === value;
-        const disabledCls = disabled ? "disabled" : "";
-        const radio = (
-          <span>
-            <input type="radio"
-              checked={checked}
-              name={name}
-              required={required}
-              value={option.value}
-              disabled={disabled}
-              autoFocus={autofocus && i === 0}
-              onChange={_ => onChange(option.value)}/>
-            <span>{option.label}</span>
-          </span>
-        );
+    <ClearableWidget
+      onChange={onChange}
+      disabled={disabled}
+      readonly={readonly}
+      value={value}>
+      <div className="field-radio-group form-control" style={{float: "none"}}>{
+        enumOptions.map((option, i) => {
+          const checked = option.value === value;
+          const disabledCls = disabled ? "disabled" : "";
+          const radio = (
+            <span>
+              <input type="radio"
+                checked={checked}
+                name={name}
+                required={required}
+                value={option.value}
+                disabled={disabled}
+                autoFocus={autofocus && i === 0}
+                onChange={_ => onChange(option.value)}/>
+              <span>{option.label}</span>
+            </span>
+          );
 
-        return inline ? (
-          <label key={i} className={`radio-inline ${disabledCls}`}>
-            {radio}
-          </label>
-        ) : (
-          <div key={i} className={`radio ${disabledCls}`}>
-            <label>
+          return inline ? (
+            <label key={i} className={`radio-inline ${disabledCls}`}>
               {radio}
             </label>
-          </div>
-        );
-      })
-    }</div>
+          ) : (
+            <div key={i} className={`radio ${disabledCls}`} style={{margin: "inherit"}}>
+              <label>
+                {radio}
+              </label>
+            </div>
+          );
+        })
+      }</div>
+    </ClearableWidget>
   );
 }
 
