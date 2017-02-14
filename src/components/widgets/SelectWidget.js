@@ -36,6 +36,7 @@ function SelectWidget({
   id,
   options,
   value,
+  clearable,
   required,
   disabled,
   readonly,
@@ -51,37 +52,41 @@ function SelectWidget({
     const newValue = getValue(event, multiple);
     onChange(processValue(schema, newValue));
   };
-  return (
+  const select = (
+    <select
+      id={id}
+      multiple={multiple}
+      className="form-control"
+      value={typeof value === "undefined" ? emptyValue : value}
+      required={required}
+      disabled={disabled}
+      readOnly={readonly}
+      autoFocus={autofocus}
+      onBlur={onBlur && (event => {
+        const newValue = getValue(event, multiple);
+        onBlur(id, processValue(schema, newValue));
+      })}
+      onChange={_onChange}>
+      {!multiple && !schema.default && <option value="">{placeholder}</option>}
+      {enumOptions.map(({value, label}, i) => {
+        return <option key={i} value={value}>{label}</option>;
+      })}
+    </select>
+  );
+  return !clearable ? select : (
     <ClearableWidget
       onChange={onChange}
       disabled={disabled}
       readonly={readonly}
       value={value}>
-      <select
-        id={id}
-        multiple={multiple}
-        className="form-control"
-        value={typeof value === "undefined" ? emptyValue : value}
-        required={required}
-        disabled={disabled}
-        readOnly={readonly}
-        autoFocus={autofocus}
-        onBlur={onBlur && (event => {
-          const newValue = getValue(event, multiple);
-          onBlur(id, processValue(schema, newValue));
-        })}
-        onChange={_onChange}>
-        {!multiple && !schema.default && <option value="">{placeholder}</option>}
-        {enumOptions.map(({value, label}, i) => {
-          return <option key={i} value={value}>{label}</option>;
-        })}
-      </select>
+      {select}
     </ClearableWidget>
   );
 }
 
 SelectWidget.defaultProps = {
   autofocus: false,
+  clearable: true,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -92,6 +97,7 @@ if (process.env.NODE_ENV !== "production") {
       enumOptions: PropTypes.array,
     }).isRequired,
     value: PropTypes.any,
+    clearable: PropTypes.bool,
     required: PropTypes.bool,
     multiple: PropTypes.bool,
     autofocus: PropTypes.bool,

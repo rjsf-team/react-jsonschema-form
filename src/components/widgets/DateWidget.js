@@ -5,10 +5,12 @@ import BaseInput from "./BaseInput";
 
 function DateWidget(props) {
   const {onChange} = props;
+  // Note: native HTML date widgets are already clearable.
   return (
     <BaseInput
       type="date"
       {...props}
+      clearable={false}
       onChange={(value) => onChange(value || undefined)}/>
   );
 }

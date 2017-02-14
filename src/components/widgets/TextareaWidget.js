@@ -18,6 +18,7 @@ function TextareaWidget({
   const _onChange = ({target: {value}}) => {
     return onChange(value);
   };
+  // Note: Textareas are always clearable.
   return (
     <ClearableWidget
       onChange={onChange}
