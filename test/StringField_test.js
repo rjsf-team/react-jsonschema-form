@@ -289,6 +289,20 @@ describe("StringField", () => {
       expect(node.querySelector("#custom"))
         .to.exist;
     });
+
+    it("should allow clearing the field", () => {
+      const {comp, node} = createFormComponent({
+        schema: {
+          type: "string",
+          enum: ["a", "b"],
+        },
+        formData: "a",
+      });
+
+      Simulate.click(node.querySelector(".clear-btn"));
+
+      expect(comp.state.formData).eql(undefined);
+    });
   });
 
   describe("TextareaWidget", () => {

@@ -45,29 +45,40 @@ function SelectWidget({
 }) {
   const {enumOptions} = options;
   const emptyValue = multiple ? [] : "";
+  const _onChange = (event) => {
+    const newValue = getValue(event, multiple);
+    onChange(processValue(schema, newValue));
+  };
+  const _onClear = (event) => {
+    event.preventDefault();
+    return onChange(undefined);
+  };
   return (
-    <select
-      id={id}
-      multiple={multiple}
-      className="form-control"
-      value={typeof value === "undefined" ? emptyValue : value}
-      required={required}
-      disabled={disabled}
-      readOnly={readonly}
-      autoFocus={autofocus}
-      onBlur={onBlur && (event => {
-        const newValue = getValue(event, multiple);
-        onBlur(id, processValue(schema, newValue));
-      })}
-      onChange={(event) => {
-        const newValue = getValue(event, multiple);
-        onChange(processValue(schema, newValue));
-      }}>
-      {!multiple && !schema.default && <option value="">{placeholder}</option>}
-      {enumOptions.map(({value, label}, i) => {
-        return <option key={i} value={value}>{label}</option>;
-      })}
-    </select>
+    <div className="input-group">
+      <select
+        id={id}
+        multiple={multiple}
+        className="form-control"
+        value={typeof value === "undefined" ? emptyValue : value}
+        required={required}
+        disabled={disabled}
+        readOnly={readonly}
+        autoFocus={autofocus}
+        onBlur={onBlur && (event => {
+          const newValue = getValue(event, multiple);
+          onBlur(id, processValue(schema, newValue));
+        })}
+        onChange={_onChange}>
+        {!multiple && !schema.default && <option value="">{placeholder}</option>}
+        {enumOptions.map(({value, label}, i) => {
+          return <option key={i} value={value}>{label}</option>;
+        })}
+      </select>
+      <a href="#" className="input-group-addon clear-btn" title="Clear field"
+        onClick={_onClear}>
+        <i className="glyphicon glyphicon-remove"/>
+      </a>
+    </div>
   );
 }
 
