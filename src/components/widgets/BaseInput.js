@@ -15,21 +15,22 @@ function BaseInput(props) {
     schema,   // eslint-disable-line
     formContext,  // eslint-disable-line
     registry, // eslint-disable-line
+    onChange,
     ...inputProps
   } = props;
   const _onChange = ({target: {value}}) => {
-    return props.onChange(value);
+    return onChange(value);
   };
   return (
-    <ClearableWidget onChange={props.onChange}>
+    <ClearableWidget onChange={onChange} value={value}>
       <input
-      {...inputProps}
-      className="form-control"
-      readOnly={readonly}
-      autoFocus={autofocus}
-      value={typeof value === "undefined" ? "" : value}
-      onChange={_onChange}
-      onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}/>
+        {...inputProps}
+        className="form-control"
+        readOnly={readonly}
+        autoFocus={autofocus}
+        value={typeof value === "undefined" ? "" : value}
+        onChange={_onChange}
+        onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}/>
     </ClearableWidget>
   );
 }

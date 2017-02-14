@@ -1,18 +1,28 @@
 import React, {PropTypes} from "react";
 
 
-function ClearableWidget({onChange, children}) {
+function ClearableWidget({onChange, value, children}) {
   const _onClear = (event) => {
     event.preventDefault();
-    return onChange(undefined);
+    if (typeof value !== "undefined") {
+      return onChange(undefined);
+    }
+  };
+  const cleared = value === "" || value === undefined;
+  const clearBtnCls = "glyphicon glyphicon-remove-sign clear-btn";
+  const clearBtnStyles = {
+    pointerEvents: "auto",
+    textDecoration: "none",
+    cursor: cleared ? "no-drop" : "pointer",
+    color: cleared ? "#aaa" : "#888",
   };
   return (
     <div className="input-group">
-    {children}
-      <a href="#" className="input-group-addon clear-btn" title="Clear field"
-        onClick={_onClear}>
-        <i className="glyphicon glyphicon-remove"/>
-      </a>
+      {children}
+      <div className="input-group-addon">
+        <a className={clearBtnCls} onClick={_onClear} style={clearBtnStyles}
+          title="Reset field value"/>
+      </div>
     </div>
   );
 }

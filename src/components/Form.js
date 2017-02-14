@@ -154,7 +154,7 @@ export default class Form extends Component {
     const _SchemaField = registry.fields.SchemaField;
 
     return (
-      <form className={className ? className : "rjsf"}
+      <form className={`${className ? className : "rjsf"} has-feedback`}
         id={id}
         name={name}
         method={method}

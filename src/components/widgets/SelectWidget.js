@@ -52,7 +52,7 @@ function SelectWidget({
     onChange(processValue(schema, newValue));
   };
   return (
-    <ClearableWidget onChange={onChange}>
+    <ClearableWidget onChange={onChange} value={value}>
       <select
         id={id}
         multiple={multiple}
