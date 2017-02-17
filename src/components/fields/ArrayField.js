@@ -243,11 +243,13 @@ class ArrayField extends Component {
     };
   };
 
-  onChangeForIndex = (index, fixed) => {
+  onChangeForIndex = (index) => {
     return (value) => {
       this.asyncSetState({
         items: this.state.items
           .map((item, i) => {
+            // We need to treat undefined items as nulls to have validation.
+            // See https://github.com/tdegrunt/jsonschema/issues/206
             const jsonValue = typeof value === "undefined" ? null : value;
             return index === i ? jsonValue : item;
           })
@@ -431,7 +433,6 @@ class ArrayField extends Component {
 
         return this.renderArrayFieldItem({
           index,
-          fixed: true,
           canRemove: additional,
           canMoveUp: index >= itemSchemas.length + 1,
           canMoveDown: additional && index < items.length - 1,
@@ -459,7 +460,6 @@ class ArrayField extends Component {
 
   renderArrayFieldItem({
     index,
-    fixed,
     canRemove=true,
     canMoveUp=true,
     canMoveDown=true,
@@ -494,7 +494,7 @@ class ArrayField extends Component {
           errorSchema={itemErrorSchema}
           idSchema={itemIdSchema}
           required={this.isItemRequired(itemSchema)}
-          onChange={this.onChangeForIndex(index, fixed)}
+          onChange={this.onChangeForIndex(index)}
           onBlur={onBlur}
           registry={this.props.registry}
           disabled={this.props.disabled}
