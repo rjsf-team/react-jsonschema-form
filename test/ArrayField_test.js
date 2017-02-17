@@ -229,6 +229,26 @@ describe("ArrayField", () => {
         .to.have.length.of(0);
     });
 
+    it("should handle cleared field values in the array", () => {
+      const schema = {
+        type: "array",
+        items: {type: "integer"},
+      };
+      const formData = [1, 2, 3];
+      const {comp, node} = createFormComponent({
+        liveValidate: true,
+        schema,
+        formData,
+      });
+
+      Simulate.change(node.querySelector("#root_1"), {
+        target: {value: ""}
+      });
+
+      expect(comp.state.formData).eql([1, null, 3]);
+      expect(comp.state.errors).to.have.length.of(1);
+    });
+
     it("should render the input widgets with the expected ids", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
 

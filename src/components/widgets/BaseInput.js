@@ -24,7 +24,7 @@ function BaseInput(props) {
       className="form-control"
       readOnly={readonly}
       autoFocus={autofocus}
-      value={typeof value === "undefined" ? "" : value}
+      value={value == null ? "" : value}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}/>
   );
