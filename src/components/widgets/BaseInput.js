@@ -1,29 +1,51 @@
 import React, {PropTypes} from "react";
+import _ from "lodash";
 
+const debouncedHandleFormOnChange = _.debounce((self, value) => {
+  self.props.onChange(value);
+}, 500);
 
-function BaseInput(props) {
-  // Note: since React 15.2.0 we can't forward unknown element attributes, so we
-  // exclude the "options" and "schema" ones here.
-  const {
-    value,
-    readonly,
-    autofocus,
-    onChange,
-    options,  // eslint-disable-line
-    schema,   // eslint-disable-line
-    formContext,  // eslint-disable-line
-    registry, // eslint-disable-line
-    ...inputProps
-  } = props;
-  return (
-    <input
+class BaseInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      delayedValue: this.props.value,
+    };
+  }
+
+  componentWillReceiveProps(nextProps){
+    const {value} = nextProps;
+    this.setState({delayedValue: value});
+  }
+
+  handleOnChange(e) {
+    const {value} = e.target;
+    this.setState({delayedValue: value});
+    debouncedHandleFormOnChange(this, value);
+  }
+
+  render() {
+    const {
+      readonly,
+      autofocus,
+      options,  // eslint-disable-line
+      schema,   // eslint-disable-line
+      formContext,  // eslint-disable-line
+      registry, // eslint-disable-line
+      ...inputProps
+    } = this.props;
+    const {delayedValue} = this.state;
+
+    return (
+      <input
       {...inputProps}
       className="form-control"
       readOnly={readonly}
       autoFocus={autofocus}
-      value={typeof value === "undefined" ? "" : value}
-      onChange={(event) => onChange(event.target.value)}/>
-  );
+      value={typeof delayedValue === "undefined" ? "" : delayedValue}
+      onChange={(e) => this.handleOnChange(e)}/>
+    );
+  }
 }
 
 BaseInput.defaultProps = {
