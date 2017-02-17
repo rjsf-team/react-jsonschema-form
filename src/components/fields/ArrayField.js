@@ -243,12 +243,14 @@ class ArrayField extends Component {
     };
   };
 
-  onChangeForIndex = (index) => {
+  onChangeForIndex = (index, fixed) => {
     return (value) => {
       this.asyncSetState({
-        items: this.state.items.map((item, i) => {
-          return index === i ? value : item;
-        })
+        items: this.state.items
+          .map((item, i) => {
+            const jsonValue = typeof value === "undefined" ? null : value;
+            return index === i ? jsonValue : item;
+          })
       });
     };
   };
@@ -429,6 +431,7 @@ class ArrayField extends Component {
 
         return this.renderArrayFieldItem({
           index,
+          fixed: true,
           canRemove: additional,
           canMoveUp: index >= itemSchemas.length + 1,
           canMoveDown: additional && index < items.length - 1,
@@ -456,6 +459,7 @@ class ArrayField extends Component {
 
   renderArrayFieldItem({
     index,
+    fixed,
     canRemove=true,
     canMoveUp=true,
     canMoveDown=true,
@@ -490,7 +494,7 @@ class ArrayField extends Component {
           errorSchema={itemErrorSchema}
           idSchema={itemIdSchema}
           required={this.isItemRequired(itemSchema)}
-          onChange={this.onChangeForIndex(index)}
+          onChange={this.onChangeForIndex(index, fixed)}
           onBlur={onBlur}
           registry={this.props.registry}
           disabled={this.props.disabled}

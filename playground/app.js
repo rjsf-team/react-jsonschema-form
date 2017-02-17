@@ -362,6 +362,7 @@ class App extends Component {
               uiSchema={uiSchema}
               formData={formData}
               onChange={this.onFormDataChange}
+              onSubmit={({formData}) => console.log(formData)}
               fields={{geo: GeoPosition}}
               validate={validate}
               onBlur={(id, value) => console.log(`Touched ${id} with value ${value}`)}
