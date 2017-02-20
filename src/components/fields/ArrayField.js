@@ -12,8 +12,7 @@ import {
   retrieveSchema,
   toIdSchema,
   shouldRender,
-  getDefaultRegistry,
-  setState
+  getDefaultRegistry
 } from "../../utils";
 
 function ArrayFieldTitle({TitleField, idSchema, title, required}) {
@@ -151,6 +150,7 @@ function DefaultNormalArrayFieldTemplate(props) {
 class ArrayField extends Component {
   static defaultProps = {
     uiSchema: {},
+    formData: [],
     idSchema: {},
     registry: getDefaultRegistry(),
     required: false,
@@ -161,19 +161,6 @@ class ArrayField extends Component {
 
   constructor(props) {
     super(props);
-    this.state = this.getStateFromProps(props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
-  }
-
-  getStateFromProps(props) {
-    const formData = Array.isArray(props.formData) ? props.formData : null;
-    const {definitions} = this.props.registry;
-    return {
-      items: getDefaultFormState(props.schema, formData, definitions) || []
-    };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -189,26 +176,18 @@ class ArrayField extends Component {
     return itemsSchema.type === "string" && itemsSchema.minLength > 0;
   }
 
-  asyncSetState(state, options={validate: false}) {
-    setState(this, state, () => {
-      this.props.onChange(this.state.items, options);
-    });
-  }
-
   onAddClick = (event) => {
     event.preventDefault();
-    const {items} = this.state;
-    const {schema, registry} = this.props;
+    const {schema, registry, formData} = this.props;
     const {definitions} = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    this.asyncSetState({
-      items: items.concat([
-        getDefaultFormState(itemSchema, undefined, definitions)
-      ])
-    });
+    this.props.onChange([
+      ...formData,
+      getDefaultFormState(itemSchema, undefined, definitions)
+    ], {validate: false});
   };
 
   onDropIndexClick = (index) => {
@@ -216,9 +195,10 @@ class ArrayField extends Component {
       if (event) {
         event.preventDefault();
       }
-      this.asyncSetState({
-        items: this.state.items.filter((_, i) => i !== index)
-      }, {validate: true}); // refs #195
+      this.props.onChange(
+        this.props.formData.filter((_, i)=> i !== index),
+        {validate: true} // refs #195
+      );
     };
   };
 
@@ -228,9 +208,9 @@ class ArrayField extends Component {
         event.preventDefault();
         event.target.blur();
       }
-      const {items} = this.state;
-      this.asyncSetState({
-        items: items.map((item, i) => {
+      const items = this.props.formData;
+      this.props.onChange(
+        items.map((item, i) => {
           if (i === newIndex) {
             return items[index];
           } else if (i === index) {
@@ -238,23 +218,25 @@ class ArrayField extends Component {
           } else {
             return item;
           }
-        })
-      }, {validate: true});
+        }),
+        {validate: true}
+      );
     };
   };
 
   onChangeForIndex = (index) => {
     return (value) => {
-      this.asyncSetState({
-        items: this.state.items.map((item, i) => {
+      this.props.onChange(
+        this.props.formData.map((item, i) => {
           return index === i ? value : item;
-        })
-      });
+        }),
+        {validate: false}
+      );
     };
   };
 
   onSelectChange = (value) => {
-    this.asyncSetState({items: value});
+    this.props.onChange(value, {validate: false});
   };
 
   render() {
@@ -287,7 +269,7 @@ class ArrayField extends Component {
       onBlur
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
-    const {items = []} = this.state;
+    const items = this.props.formData;
     const {ArrayFieldTemplate, definitions, fields} = registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
@@ -332,7 +314,7 @@ class ArrayField extends Component {
 
   renderMultiSelect() {
     const {schema, idSchema, uiSchema, disabled, readonly, autofocus, onBlur} = this.props;
-    const {items} = this.state;
+    const items = this.props.formData;
     const {widgets, definitions, formContext} = this.props.registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const enumOptions = optionsList(itemsSchema);
@@ -357,7 +339,7 @@ class ArrayField extends Component {
   renderFiles() {
     const {schema, uiSchema, idSchema, name, disabled, readonly, autofocus, onBlur} = this.props;
     const title = schema.title || name;
-    const {items} = this.state;
+    const items = this.props.formData;
     const {widgets, formContext} = this.props.registry;
     const {widget="files", ...options} = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
@@ -393,7 +375,7 @@ class ArrayField extends Component {
       onBlur
     } = this.props;
     const title = schema.title || name;
-    let {items} = this.state;
+    let items = this.props.formData;
     const {ArrayFieldTemplate, definitions, fields} = registry;
     const {TitleField} = fields;
     const itemSchemas = schema.items.map(item =>
