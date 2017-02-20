@@ -189,9 +189,9 @@ class ArrayField extends Component {
     return itemsSchema.type === "string" && itemsSchema.minLength > 0;
   }
 
-  asyncSetState(state, options={validate: false}) {
+  asyncSetState(state) {
     setState(this, state, () => {
-      this.props.onChange(this.state.items, options);
+      this.props.onChange(this.state.items);
     });
   }
 
@@ -218,7 +218,7 @@ class ArrayField extends Component {
       }
       this.asyncSetState({
         items: this.state.items.filter((_, i) => i !== index)
-      }, {validate: true}); // refs #195
+      });
     };
   };
 
@@ -239,7 +239,7 @@ class ArrayField extends Component {
             return item;
           }
         })
-      }, {validate: true});
+      });
     };
   };
 

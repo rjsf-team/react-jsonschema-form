@@ -210,6 +210,7 @@ describe("ArrayField", () => {
           items: {...schema.items, minLength: 4}
         },
         formData: ["foo", "bar!"],
+        liveValidate: true
       });
 
       try {
