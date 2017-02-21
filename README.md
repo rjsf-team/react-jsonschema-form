@@ -244,12 +244,12 @@ const uiSchema = {
     bar: {
       "ui:widget": "textarea"
     },
-    baz: {
-      // note the "items" for an array
-      items: {
-        description: {
-          "ui:widget": "textarea"
-        }
+  },
+  baz: {
+    // note the "items" for an array
+    items: {
+      description: {
+        "ui:widget": "textarea"
       }
     }
   }
