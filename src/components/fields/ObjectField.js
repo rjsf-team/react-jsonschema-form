@@ -10,6 +10,7 @@ import {
 class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {},
+    formData: {},
     errorSchema: {},
     idSchema: {},
     registry: getDefaultRegistry(),
