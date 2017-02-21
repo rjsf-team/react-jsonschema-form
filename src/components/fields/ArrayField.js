@@ -159,10 +159,6 @@ class ArrayField extends Component {
     autofocus: false,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
@@ -196,7 +192,7 @@ class ArrayField extends Component {
         event.preventDefault();
       }
       this.props.onChange(
-        this.props.formData.filter((_, i)=> i !== index),
+        this.props.formData.filter((_, i) => i !== index),
         {validate: true} // refs #195
       );
     };
@@ -257,6 +253,7 @@ class ArrayField extends Component {
     const {
       schema,
       uiSchema,
+      formData,
       errorSchema,
       idSchema,
       name,
@@ -269,7 +266,6 @@ class ArrayField extends Component {
       onBlur
     } = this.props;
     const title = (schema.title === undefined) ? name : schema.title;
-    const items = this.props.formData;
     const {ArrayFieldTemplate, definitions, fields} = registry;
     const {TitleField, DescriptionField} = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
@@ -277,18 +273,18 @@ class ArrayField extends Component {
 
     const arrayProps = {
       canAdd: addable,
-      items: items.map((item, index) => {
+      items: formData.map((item, index) => {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
         const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
         return this.renderArrayFieldItem({
           index,
           canMoveUp: index > 0,
-          canMoveDown: index < items.length - 1,
+          canMoveDown: index < formData.length - 1,
           itemSchema: itemsSchema,
           itemIdSchema,
           itemErrorSchema,
-          itemData: items[index],
+          itemData: formData[index],
           itemUiSchema: uiSchema.items,
           autofocus: autofocus && index === 0,
           onBlur

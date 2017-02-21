@@ -19,10 +19,6 @@ class ObjectField extends Component {
     readonly: false,
   }
 
-  constructor(props) {
-    super(props);
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
@@ -35,11 +31,7 @@ class ObjectField extends Component {
 
   onPropertyChange = (name) => {
     return (value, options) => {
-      const newFormData = Object.assign(
-        {},
-        this.props.formData,
-        {[name]: value}
-      );
+      const newFormData = {...this.props.formData, [name]: value};
       this.props.onChange(newFormData, options);
     };
   };
