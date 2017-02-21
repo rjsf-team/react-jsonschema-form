@@ -1,6 +1,5 @@
 import sinon from "sinon";
 import React from "react";
-import ReactDOM from "react-dom";
 
 import {getDefaultRegistry} from "../src/utils";
 import ArrayField from "../src/components/fields/ArrayField";
