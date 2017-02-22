@@ -1,5 +1,7 @@
 import React, {PropTypes} from "react";
 
+import ClearableWidget from "./ClearableWidget";
+
 
 function TextareaWidget({
   schema,
@@ -14,20 +16,27 @@ function TextareaWidget({
   onBlur
 }) {
   const _onChange = ({target: {value}}) => {
-    return onChange(value === "" ? undefined : value);
+    return onChange(value);
   };
+  // Note: Textareas are always clearable.
   return (
-    <textarea
-      id={id}
-      className="form-control"
-      value={typeof value === "undefined" ? "" : value}
-      placeholder={placeholder}
-      required={required}
+    <ClearableWidget
+      onChange={onChange}
       disabled={disabled}
-      readOnly={readonly}
-      autoFocus={autofocus}
-      onBlur={onBlur && (event => onBlur(id, event.target.value))}
-      onChange={_onChange}/>
+      readonly={readonly}
+      value={value}>
+      <textarea
+        id={id}
+        className="form-control"
+        value={typeof value === "undefined" ? "" : value}
+        placeholder={placeholder}
+        required={required}
+        disabled={disabled}
+        readOnly={readonly}
+        autoFocus={autofocus}
+        onBlur={onBlur && (event => onBlur(id, event.target.value))}
+        onChange={_onChange}/>
+    </ClearableWidget>
   );
 }
 

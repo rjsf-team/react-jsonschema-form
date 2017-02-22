@@ -21,6 +21,7 @@ function DateElement(props) {
   const {SelectWidget} = registry.widgets;
   return (
     <SelectWidget
+      clearable={false}
       schema={{type: "integer"}}
       id={id}
       className="form-control"

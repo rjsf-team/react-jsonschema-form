@@ -1,5 +1,7 @@
 import React, {PropTypes} from "react";
 
+import ClearableWidget from "./ClearableWidget";
+
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -14,44 +16,51 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const {id, disabled, options, value, autofocus, onChange} = props;
+  const {id, disabled, readonly, options, value, autofocus, onChange} = props;
   const {enumOptions, inline} = options;
   return (
-    <div className="checkboxes" id={id}>{
-      enumOptions.map((option, index) => {
-        const checked = value.indexOf(option.value) !== -1;
-        const disabledCls = disabled ? "disabled" : "";
-        const checkbox = (
-          <span>
-            <input type="checkbox"
-              id={`${id}_${index}`}
-              checked={checked}
-              disabled={disabled}
-              autoFocus={autofocus && index === 0}
-              onChange={(event) => {
-                const all = enumOptions.map(({value}) => value);
-                if (event.target.checked) {
-                  onChange(selectValue(option.value, value, all));
-                } else {
-                  onChange(deselectValue(option.value, value));
-                }
-              }}/>
-            <span>{option.label}</span>
-          </span>
-        );
-        return inline ? (
-          <label key={index} className={`checkbox-inline ${disabledCls}`}>
-            {checkbox}
-          </label>
-        ) : (
-          <div key={index} className={`checkbox ${disabledCls}`}>
-            <label>
+    <ClearableWidget
+      onChange={onChange}
+      disabled={disabled}
+      readonly={readonly}
+      value={value}>
+      <div id={id} className="checkboxes form-control"
+        style={{paddingTop: 0, paddingBottom: 0, float: "none"}}>{
+        enumOptions.map((option, index) => {
+          const checked = value.indexOf(option.value) !== -1;
+          const disabledCls = disabled ? "disabled" : "";
+          const checkbox = (
+            <span>
+              <input type="checkbox"
+                id={`${id}_${index}`}
+                checked={checked}
+                disabled={disabled}
+                autoFocus={autofocus && index === 0}
+                onChange={(event) => {
+                  const all = enumOptions.map(({value}) => value);
+                  if (event.target.checked) {
+                    onChange(selectValue(option.value, value, all));
+                  } else {
+                    onChange(deselectValue(option.value, value));
+                  }
+                }}/>
+              <span>{option.label}</span>
+            </span>
+          );
+          return inline ? (
+            <label key={index} className={`checkbox-inline ${disabledCls}`}>
               {checkbox}
             </label>
-          </div>
-        );
-      })
-    }</div>
+          ) : (
+            <div key={index} className={`checkbox ${disabledCls}`}>
+              <label>
+                {checkbox}
+              </label>
+            </div>
+          );
+        })
+      }</div>
+    </ClearableWidget>
   );
 }
 

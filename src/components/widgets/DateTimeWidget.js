@@ -15,10 +15,12 @@ function toJSONDate(dateString) {
 
 function DateTimeWidget(props) {
   const {value, onChange} = props;
+  // Note: native HTML date widgets are already clearable.
   return (
     <BaseInput
       type="datetime-local"
       {...props}
+      clearable={false}
       value={fromJSONDate(value)}
       onChange={(value) => onChange(toJSONDate(value))}/>
   );
