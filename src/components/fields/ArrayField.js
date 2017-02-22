@@ -419,7 +419,6 @@ class ArrayField extends Component {
           itemIdSchema,
           itemErrorSchema,
           autofocus: autofocus && index === 0,
-          required: this.isItemRequired(itemSchema),
           onBlur
         });
       }),
