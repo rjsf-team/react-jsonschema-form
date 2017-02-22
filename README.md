@@ -244,12 +244,12 @@ const uiSchema = {
     bar: {
       "ui:widget": "textarea"
     },
-    baz: {
-      // note the "items" for an array
-      items: {
-        description: {
-          "ui:widget": "textarea"
-        }
+  },
+  baz: {
+    // note the "items" for an array
+    items: {
+      description: {
+        "ui:widget": "textarea"
       }
     }
   }
@@ -1010,14 +1010,14 @@ You can provide a `formContext` object to the Form, which is passed down to all 
 
 ### Custom array field buttons
 
-The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use Bootstrap yet still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
+The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use glyphicons but still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
 
 ```css
-.btn-plus > i {
-  display: none;
-}
-.btn-plus::after {
-  content: "Add";
+i.glyphicon { display: none; }
+.btn-add::after { content: 'Add'; }
+.array-item-move-up::after { content: 'Move Up'; }
+.array-item-move-down::after { content: 'Move Down'; }
+.array-item-remove::after { content: 'Remove'; }
 }
 ```
 

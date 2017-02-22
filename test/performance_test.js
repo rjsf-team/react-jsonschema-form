@@ -7,7 +7,8 @@ import ObjectField from "../src/components/fields/ObjectField";
 import {
   createComponent,
   createFormComponent,
-  createSandbox
+  createSandbox,
+  setProps
 } from "./test_utils";
 
 
@@ -56,33 +57,35 @@ describe("Rendering performance optimizations", () => {
     const registry = getDefaultRegistry();
 
     it("should not render if next props are equivalent", () => {
-      const {comp} = createComponent(ArrayField, {
+      const props = {
         registry,
         schema,
         uiSchema,
         onChange,
         onBlur
-      });
+      };
+
+      const {comp} = createComponent(ArrayField, props);
       sandbox.stub(comp, "render").returns(<div/>);
 
-      comp.componentWillReceiveProps({schema});
+      setProps(comp, props);
 
       sinon.assert.notCalled(comp.render);
     });
 
     it("should not render if next formData are equivalent", () => {
-      const formData = ["a", "b"];
-
-      const {comp} = createComponent(ArrayField, {
+      const props = {
         registry,
         schema,
-        formData,
+        formData: ["a", "b"],
         onChange,
         onBlur
-      });
+      };
+
+      const {comp} = createComponent(ArrayField, props);
       sandbox.stub(comp, "render").returns(<div/>);
 
-      comp.componentWillReceiveProps({schema, formData});
+      setProps(comp, {...props, formData: ["a", "b"]});
 
       sinon.assert.notCalled(comp.render);
     });
@@ -102,35 +105,37 @@ describe("Rendering performance optimizations", () => {
     const idSchema = {$id: "root", foo: {$id: "root_plop"}};
 
     it("should not render if next props are equivalent", () => {
-      const {comp} = createComponent(ObjectField, {
+      const props = {
         registry,
         schema,
         uiSchema,
         onChange,
         idSchema,
         onBlur
-      });
+      };
+
+      const {comp} = createComponent(ObjectField, props);
       sandbox.stub(comp, "render").returns(<div/>);
 
-      comp.componentWillReceiveProps({schema, registry});
+      setProps(comp, props);
 
       sinon.assert.notCalled(comp.render);
     });
 
     it("should not render if next formData are equivalent", () => {
-      const formData = {foo: "blah"};
-
-      const {comp} = createComponent(ObjectField, {
+      const props = {
         registry,
         schema,
-        formData,
+        formData: {foo: "blah"},
         onChange,
         idSchema,
         onBlur
-      });
+      };
+
+      const {comp} = createComponent(ObjectField, props);
       sandbox.stub(comp, "render").returns(<div/>);
 
-      comp.componentWillReceiveProps({schema, formData, registry});
+      setProps(comp, {...props, formData: {foo: "blah"}});
 
       sinon.assert.notCalled(comp.render);
     });
