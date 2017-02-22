@@ -111,6 +111,15 @@ describe("ArrayField", () => {
         .to.have.length.of(1);
     });
 
+    it("should mark a non-null array item widget as required", () => {
+      const {node} = createFormComponent({schema});
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector(".field-string input[type=text]").required)
+        .eql(true);
+    });
+
     it("should fill an array field with data", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
       const inputs = node.querySelectorAll(".field-string input[type=text]");
@@ -608,6 +617,16 @@ describe("ArrayField", () => {
           node.querySelector("fieldset .field-number input[type=text]");
       expect(strInput.id).eql("root_0");
       expect(numInput.id).eql("root_1");
+    });
+
+    it("should mark non-null item widgets as required", () => {
+      const {node} = createFormComponent({schema});
+      const strInput =
+          node.querySelector("fieldset .field-string input[type=text]");
+      const numInput =
+          node.querySelector("fieldset .field-number input[type=text]");
+      expect(strInput.required).eql(true);
+      expect(numInput.required).eql(true);
     });
 
     it("should fill fields with data", () => {

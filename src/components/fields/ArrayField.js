@@ -168,8 +168,14 @@ class ArrayField extends Component {
     return schema.items.title || schema.items.description || "Item";
   }
 
-  isItemRequired(itemsSchema) {
-    return itemsSchema.type === "string" && itemsSchema.minLength > 0;
+  isItemRequired(itemSchema) {
+    if (Array.isArray(itemSchema.type)) {
+      // While we don't yet support composite/nullable jsonschema types, it's
+      // future-proof to check for requirement against these.
+      return !itemSchema.type.includes("null");
+    }
+    // All non-null array item types are inherently required by design
+    return itemSchema.type !== "null";
   }
 
   onAddClick = (event) => {
@@ -413,6 +419,7 @@ class ArrayField extends Component {
           itemIdSchema,
           itemErrorSchema,
           autofocus: autofocus && index === 0,
+          required: this.isItemRequired(itemSchema),
           onBlur
         });
       }),
