@@ -111,6 +111,15 @@ describe("ArrayField", () => {
         .to.have.length.of(1);
     });
 
+    it("should mark a non-null array item widget as required", () => {
+      const {node} = createFormComponent({schema});
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector(".field-string input[type=text]").required)
+        .eql(true);
+    });
+
     it("should fill an array field with data", () => {
       const {node} = createFormComponent({schema, formData: ["foo", "bar"]});
       const inputs = node.querySelectorAll(".field-string input[type=text]");
@@ -227,6 +236,26 @@ describe("ArrayField", () => {
 
       expect(node.querySelectorAll(".has-error .error-detail"))
         .to.have.length.of(0);
+    });
+
+    it("should handle cleared field values in the array", () => {
+      const schema = {
+        type: "array",
+        items: {type: "integer"},
+      };
+      const formData = [1, 2, 3];
+      const {comp, node} = createFormComponent({
+        liveValidate: true,
+        schema,
+        formData,
+      });
+
+      Simulate.change(node.querySelector("#root_1"), {
+        target: {value: ""}
+      });
+
+      expect(comp.state.formData).eql([1, null, 3]);
+      expect(comp.state.errors).to.have.length.of(1);
     });
 
     it("should render the input widgets with the expected ids", () => {
@@ -588,6 +617,16 @@ describe("ArrayField", () => {
           node.querySelector("fieldset .field-number input[type=text]");
       expect(strInput.id).eql("root_0");
       expect(numInput.id).eql("root_1");
+    });
+
+    it("should mark non-null item widgets as required", () => {
+      const {node} = createFormComponent({schema});
+      const strInput =
+          node.querySelector("fieldset .field-string input[type=text]");
+      const numInput =
+          node.querySelector("fieldset .field-number input[type=text]");
+      expect(strInput.required).eql(true);
+      expect(numInput.required).eql(true);
     });
 
     it("should fill fields with data", () => {

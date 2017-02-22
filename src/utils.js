@@ -64,10 +64,6 @@ export function getDefaultRegistry() {
   return defaultRegistry;
 }
 
-export function defaultFieldValue(formData, schema) {
-  return typeof formData === "undefined" ? schema.default : formData;
-}
-
 export function getWidget(schema, widget, registeredWidgets={}) {
   const {type} = schema;
 

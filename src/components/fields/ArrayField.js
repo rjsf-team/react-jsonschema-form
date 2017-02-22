@@ -168,8 +168,14 @@ class ArrayField extends Component {
     return schema.items.title || schema.items.description || "Item";
   }
 
-  isItemRequired(itemsSchema) {
-    return itemsSchema.type === "string" && itemsSchema.minLength > 0;
+  isItemRequired(itemSchema) {
+    if (Array.isArray(itemSchema.type)) {
+      // While we don't yet support composite/nullable jsonschema types, it's
+      // future-proof to check for requirement against these.
+      return !itemSchema.type.includes("null");
+    }
+    // All non-null array item types are inherently required by design
+    return itemSchema.type !== "null";
   }
 
   onAddClick = (event) => {
@@ -191,10 +197,9 @@ class ArrayField extends Component {
       if (event) {
         event.preventDefault();
       }
-      this.props.onChange(
-        this.props.formData.filter((_, i) => i !== index),
-        {validate: true} // refs #195
-      );
+      const {formData, onChange} = this.props;
+      // refs #195: revalidate to ensure properly reindexing errors
+      onChange(formData.filter((_, i) => i !== index), {validate: true});
     };
   };
 
@@ -204,30 +209,28 @@ class ArrayField extends Component {
         event.preventDefault();
         event.target.blur();
       }
-      const items = this.props.formData;
-      this.props.onChange(
-        items.map((item, i) => {
-          if (i === newIndex) {
-            return items[index];
-          } else if (i === index) {
-            return items[newIndex];
-          } else {
-            return item;
-          }
-        }),
-        {validate: true}
-      );
+      const {formData, onChange} = this.props;
+      onChange(formData.map((item, i) => {
+        if (i === newIndex) {
+          return formData[index];
+        } else if (i === index) {
+          return formData[newIndex];
+        } else {
+          return item;
+        }
+      }), {validate: true});
     };
   };
 
   onChangeForIndex = (index) => {
     return (value) => {
-      this.props.onChange(
-        this.props.formData.map((item, i) => {
-          return index === i ? value : item;
-        }),
-        {validate: false}
-      );
+      const {formData, onChange} = this.props;
+      onChange(formData.map((item, i) => {
+        // We need to treat undefined items as nulls to have validation.
+        // See https://github.com/tdegrunt/jsonschema/issues/206
+        const jsonValue = typeof value === "undefined" ? null : value;
+        return index === i ? jsonValue : item;
+      }), {validate: false});
     };
   };
 
