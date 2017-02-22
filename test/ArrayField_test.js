@@ -295,6 +295,25 @@ describe("ArrayField", () => {
       expect(inputs[2].id).eql("root_foo_1_bar");
       expect(inputs[3].id).eql("root_foo_1_baz");
     });
+
+    it("should render enough inputs to match minItems in schema when no formData is set", () => {
+      const complexSchema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "array",
+            minItems: 4,
+            items: {
+              type: "string"
+            }
+          }
+        }
+      };
+      const {node} = createFormComponent({schema: complexSchema, formData: { }});
+
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs.length).eql(4);
+    });
   });
 
   describe("Multiple choices list", () => {
