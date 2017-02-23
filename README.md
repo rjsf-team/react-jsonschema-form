@@ -46,7 +46,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Form action buttons](#form-action-buttons)
      - [Help texts](#help-texts)
      - [Auto focus](#auto-focus)
-     - [Textarea rows](#textarea-rows)
+     - [Textarea rows option](#textarea-rows-option)
      - [Placeholders](#placeholders)
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
