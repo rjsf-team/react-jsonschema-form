@@ -75,6 +75,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [JSON Schema supporting status](#json-schema-supporting-status)
+  - [Tips and tricks](#tips-and-tricks)
   - [Contributing](#contributing)
      - [Development server](#development-server)
      - [Tests](#tests)
@@ -1312,6 +1313,17 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 * `additionalItems` keyword for arrays
     This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
 
+## Tips and tricks
+
+ - Custom field template : https://jsfiddle.net/hdp1kgn6/1/
+ - Multi-step wizard : https://jsfiddle.net/sn4bnw9h/1/
+ - Using classNames with uiSchema : https://jsfiddle.net/gfwp25we/1/
+ - Conditionnal fields : https://jsfiddle.net/69z2wepo/68259/
+ - Use radio list for enums : https://jsfiddle.net/f2y3fq7L/2/
+ - Reading file input data : https://jsfiddle.net/f9vcb6pL/1/
+ 
+ 
+ 
 ## Contributing
 
 ### Development server
