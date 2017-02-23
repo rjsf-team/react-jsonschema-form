@@ -642,15 +642,17 @@ const uiSchema = {
 }
 ```
 
-### Textarea rows
+### Textarea `rows` option
 
-You can set initial height of a textarea widget by specifying a `ui:rows` uiSchema directive.
+You can set initial height of a textarea widget by specifying `rows` option.
 
 ```js
 const schema = {type: "string"};
 const uiSchema = {
   "ui:widget": "textarea",
-  "ui:rows": 15
+  "ui:options": {
+    rows: 15
+  }
 }
 ```
 
@@ -1198,7 +1200,7 @@ render((
 
 ### Custom error messages
 
-Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list. 
+Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
 
 ```js
 function transformErrors(errors) {

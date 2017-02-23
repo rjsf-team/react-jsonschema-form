@@ -247,7 +247,10 @@ describe("StringField", () => {
     it("should render a textarea field with rows", () => {
       const {node} = createFormComponent({
         schema: {type: "string"},
-        uiSchema: {"ui:widget": "textarea", "ui:rows": 20},
+        uiSchema: {
+          "ui:widget": "textarea",
+          "ui:options": {rows: 20}
+        },
         formData: "x",
       });
 
