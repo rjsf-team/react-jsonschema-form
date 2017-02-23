@@ -326,7 +326,7 @@ describe("ArrayField", () => {
       expect(inputs[1].value).eql("Default name");
 
       // whenever a value is set, honor it!
-      form = createFormComponent({schema: complexSchema, formData: { foo: [] }});
+      form = createFormComponent({schema: complexSchema, formData: {foo: []}});
       inputs = form.node.querySelectorAll("input[type=text]");
       expect(inputs.length).eql(0);
     });
