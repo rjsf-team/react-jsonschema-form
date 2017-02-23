@@ -89,7 +89,7 @@ describe("StringField", () => {
 
       expect(onBlur.calledWith(input.id, "yo")).to.be.true;
     });
-    
+
     it("should handle an empty string change event", () => {
       const {comp, node} = createFormComponent({
         schema: {type: "string"},
@@ -293,6 +293,19 @@ describe("StringField", () => {
       });
 
       expect(comp.state.formData).eql(undefined);
+    });
+
+    it("should render a textarea field with rows", () => {
+      const {node} = createFormComponent({
+        schema: {type: "string"},
+        uiSchema: {
+          "ui:widget": "textarea",
+          "ui:options": {rows: 20}
+        },
+        formData: "x",
+      });
+
+      expect(node.querySelector("textarea").getAttribute("rows")).eql("20");
     });
   });
 

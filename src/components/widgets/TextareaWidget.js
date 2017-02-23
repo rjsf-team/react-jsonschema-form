@@ -4,6 +4,7 @@ import React, {PropTypes} from "react";
 function TextareaWidget({
   schema,
   id,
+  options,
   placeholder,
   value,
   required,
@@ -26,13 +27,15 @@ function TextareaWidget({
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
+      rows={options.rows}
       onBlur={onBlur && (event => onBlur(id, event.target.value))}
       onChange={_onChange}/>
   );
 }
 
 TextareaWidget.defaultProps = {
-  autofocus: false
+  autofocus: false,
+  options: {}
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -40,6 +43,9 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
+    options: PropTypes.shape({
+      rows: PropTypes.number
+    }),
     value: PropTypes.string,
     required: PropTypes.bool,
     autofocus: PropTypes.bool,

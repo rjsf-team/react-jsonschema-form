@@ -95,7 +95,10 @@ module.exports = {
     },
     string: {
       textarea: {
-        "ui:widget": "textarea"
+        "ui:widget": "textarea",
+        "ui:options": {
+          rows: 5
+        }
       },
       color: {
         "ui:widget": "color"
