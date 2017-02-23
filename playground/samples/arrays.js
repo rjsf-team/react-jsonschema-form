@@ -1,5 +1,16 @@
 module.exports = {
   schema: {
+    definitions: {
+      Thing: {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+            default: "Default name"
+          }
+        }
+      }
+    },
     type: "object",
     properties: {
       listOfStrings: {
@@ -15,7 +26,7 @@ module.exports = {
         title: "A multiple choices list",
         items: {
           type: "string",
-          enum: ["foo", "bar", "fuzz", "qux"],
+          enum: ["foo", "bar", "fuzz", "qux"]
         },
         uniqueItems: true
       },
@@ -36,6 +47,14 @@ module.exports = {
         additionalItems: {
           title: "Additional item",
           type: "number"
+        }
+      },
+      minItemsList: {
+        type: "array",
+        title: "A list with a minimal number of items",
+        minItems: 3,
+        items: {
+          $ref: "#/definitions/Thing"
         }
       },
       nestedList: {

@@ -296,23 +296,39 @@ describe("ArrayField", () => {
       expect(inputs[3].id).eql("root_foo_1_baz");
     });
 
-    it("should render enough inputs to match minItems in schema when no formData is set", () => {
+    it("should render enough inputs with proper defaults to match minItems in schema when no formData is set", () => {
       const complexSchema = {
         type: "object",
+        definitions: {
+          Thing: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                default: "Default name"
+              }
+            }
+          }
+        },
         properties: {
           foo: {
             type: "array",
-            minItems: 4,
+            minItems: 2,
             items: {
-              type: "string"
+              $ref: "#/definitions/Thing"
             }
           }
         }
       };
-      const {node} = createFormComponent({schema: complexSchema, formData: { }});
+      let form = createFormComponent({schema: complexSchema, formData: { }});
+      let inputs = form.node.querySelectorAll("input[type=text]");
+      expect(inputs[0].value).eql("Default name");
+      expect(inputs[1].value).eql("Default name");
 
-      const inputs = node.querySelectorAll("input[type=text]");
-      expect(inputs.length).eql(4);
+      // whenever a value is set, honor it!
+      form = createFormComponent({schema: complexSchema, formData: { foo: [] }});
+      inputs = form.node.querySelectorAll("input[type=text]");
+      expect(inputs.length).eql(0);
     });
   });
 

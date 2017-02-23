@@ -137,7 +137,7 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
 
     case "array":
       if (schema.minItems) {
-        return new Array(schema.minItems).fill(schema.items.default);
+        return new Array(schema.minItems).fill(computeDefaults(schema.items, defaults, definitions));
       }
       return defaults || [];
   }
