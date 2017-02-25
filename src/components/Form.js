@@ -26,7 +26,7 @@ export default class Form extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    this.state = {...this.state, ...this.getStateFromProps(nextProps)};
   }
 
   getStateFromProps(props) {
@@ -82,11 +82,18 @@ export default class Form extends Component {
       const {errors, errorSchema} = this.validate(formData);
       state = {...state, errors, errorSchema};
     }
-    setState(this, state, () => {
+
+    if ("formData" in this.props) {
       if (this.props.onChange) {
-        this.props.onChange(this.state);
+        this.props.onChange(state);
       }
-    });
+    } else {
+      setState(this, state, () => {
+        if (this.props.onChange) {
+          this.props.onChange(this.state);
+        }
+      });
+    }
   };
 
   onBlur = (...args) => {
