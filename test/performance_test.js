@@ -2,8 +2,7 @@ import sinon from "sinon";
 import React from "react";
 
 import {getDefaultRegistry} from "../src/utils";
-import ArrayField from "../src/components/fields/ArrayField";
-import ObjectField from "../src/components/fields/ObjectField";
+import SchemaField from "../src/components/fields/SchemaField";
 import {
   createComponent,
   createFormComponent,
@@ -49,49 +48,7 @@ describe("Rendering performance optimizations", () => {
     });
   });
 
-  describe("ArrayField", () => {
-    const onChange = () => {};
-    const onBlur = () => {};
-    const schema = {type: "array", items: {type: "string"}};
-    const uiSchema = {};
-    const registry = getDefaultRegistry();
-
-    it("should not render if next props are equivalent", () => {
-      const props = {
-        registry,
-        schema,
-        uiSchema,
-        onChange,
-        onBlur
-      };
-
-      const {comp} = createComponent(ArrayField, props);
-      sandbox.stub(comp, "render").returns(<div/>);
-
-      setProps(comp, props);
-
-      sinon.assert.notCalled(comp.render);
-    });
-
-    it("should not render if next formData are equivalent", () => {
-      const props = {
-        registry,
-        schema,
-        formData: ["a", "b"],
-        onChange,
-        onBlur
-      };
-
-      const {comp} = createComponent(ArrayField, props);
-      sandbox.stub(comp, "render").returns(<div/>);
-
-      setProps(comp, {...props, formData: ["a", "b"]});
-
-      sinon.assert.notCalled(comp.render);
-    });
-  });
-
-  describe("ObjectField", () => {
+  describe("SchemaField", () => {
     const onChange = () => {};
     const onBlur = () => {};
     const registry = getDefaultRegistry();
@@ -114,7 +71,7 @@ describe("Rendering performance optimizations", () => {
         onBlur
       };
 
-      const {comp} = createComponent(ObjectField, props);
+      const {comp} = createComponent(SchemaField, props);
       sandbox.stub(comp, "render").returns(<div/>);
 
       setProps(comp, props);
@@ -132,7 +89,7 @@ describe("Rendering performance optimizations", () => {
         onBlur
       };
 
-      const {comp} = createComponent(ObjectField, props);
+      const {comp} = createComponent(SchemaField, props);
       sandbox.stub(comp, "render").returns(<div/>);
 
       setProps(comp, {...props, formData: {foo: "blah"}});
