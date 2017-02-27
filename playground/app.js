@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
+import React, {Component} from "react";
+import {render} from "react-dom";
 import Codemirror from "react-codemirror";
 import "codemirror/mode/javascript/javascript";
 
-import { shouldRender } from "../src/utils";
-import { samples } from "./samples";
+import {shouldRender} from "../src/utils";
+import {samples} from "./samples";
 import Form from "../src";
 
 // Import a few CodeMirror themes; these are used to match alternative
@@ -148,12 +148,12 @@ class GeoPosition extends Component {
           <div className="col-sm-6">
             <label>Latitude</label>
             <input className="form-control" type="number" value={lat} step="0.00001"
-              onChange={this.onChange("lat")} />
+              onChange={this.onChange("lat")}/>
           </div>
           <div className="col-sm-6">
             <label>Longitude</label>
             <input className="form-control" type="number" value={lon} step="0.00001"
-              onChange={this.onChange("lon")} />
+              onChange={this.onChange("lon")}/>
           </div>
         </div>
       </div>
@@ -180,7 +180,7 @@ class Editor extends Component {
     setImmediate(() => {
       try {
         this.props.onChange(fromJson(this.state.code));
-      } catch(err) {
+      } catch (err) {
         console.error(err);
         this.setState({valid: false, code});
       }
@@ -194,13 +194,13 @@ class Editor extends Component {
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
-          <span className={`${cls} glyphicon glyphicon-${icon}`} />
+          <span className={`${cls} glyphicon glyphicon-${icon}`}/>
           {" " + title}
         </div>
         <Codemirror
           value={this.state.code}
           onChange={this.onCodeChange}
-          options={Object.assign({}, cmOptions, {theme})} />
+          options={Object.assign({}, cmOptions, {theme})}/>
       </div>
     );
   }
@@ -284,7 +284,7 @@ class App extends Component {
 
   load = (data) => {
     // Reset the ArrayFieldTemplate whenever you load new data
-    const { ArrayFieldTemplate } = data;
+    const {ArrayFieldTemplate} = data;
     // force resetting form component instance
     this.setState({form: false},
       _ => this.setState({...data, form: true, ArrayFieldTemplate}));
@@ -327,7 +327,7 @@ class App extends Component {
           <h1>react-jsonschema-form</h1>
           <div className="row">
             <div className="col-sm-8">
-              <Selector onSelected={this.load} />
+              <Selector onSelected={this.load}/>
             </div>
             <div className="col-sm-2">
               <Form schema={liveValidateSchema}
@@ -335,21 +335,21 @@ class App extends Component {
                     onChange={this.setLiveValidate}><div/></Form>
             </div>
             <div className="col-sm-2">
-              <ThemeSelector theme={theme} select={this.onThemeSelected} />
+              <ThemeSelector theme={theme} select={this.onThemeSelected}/>
             </div>
           </div>
         </div>
         <div className="col-sm-7">
           <Editor title="JSONSchema" theme={editor} code={toJson(schema)}
-            onChange={this.onSchemaEdited} />
+            onChange={this.onSchemaEdited}/>
           <div className="row">
             <div className="col-sm-6">
               <Editor title="UISchema" theme={editor} code={toJson(uiSchema)}
-                onChange={this.onUISchemaEdited} />
+                onChange={this.onUISchemaEdited}/>
             </div>
             <div className="col-sm-6">
               <Editor title="formData" theme={editor} code={toJson(formData)}
-                onChange={this.onFormDataEdited} />
+                onChange={this.onFormDataEdited}/>
             </div>
           </div>
         </div>
@@ -367,11 +367,11 @@ class App extends Component {
               validate={validate}
               onBlur={(id, value) => console.log(`Touched ${id} with value ${value}`)}
               transformErrors={transformErrors}
-              onError={log("errors")} />}
+              onError={log("errors")}/>}
         </div>
       </div>
     );
   }
 }
 
-render(<App />, document.getElementById("app"));
+render(<App/>, document.getElementById("app"));
