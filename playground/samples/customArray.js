@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 function ArrayFieldTemplate(props) {
   return (
@@ -12,7 +12,7 @@ function ArrayFieldTemplate(props) {
           {element.hasMoveUp &&
             <button onClick={element.onReorderClick(element.index, element.index - 1)}>Up</button>}
           <button onClick={element.onDropIndexClick(element.index)}>Delete</button>
-          <hr />
+          <hr/>
         </div>
       ))}
 
