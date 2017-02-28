@@ -1321,7 +1321,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - Conditional fields: https://jsfiddle.net/69z2wepo/68259/
  - Use radio list for enums: https://jsfiddle.net/f2y3fq7L/2/
  - Reading file input data: https://jsfiddle.net/f9vcb6pL/1/
- 
+ - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
  
  
 ## Contributing
