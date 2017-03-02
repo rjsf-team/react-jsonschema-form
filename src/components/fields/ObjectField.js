@@ -3,7 +3,6 @@ import React, {Component, PropTypes} from "react";
 import {
   orderProperties,
   retrieveSchema,
-  shouldRender,
   getDefaultRegistry
 } from "../../utils";
 
@@ -17,10 +16,6 @@ class ObjectField extends Component {
     required: false,
     disabled: false,
     readonly: false,
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shouldRender(this, nextProps, nextState);
   }
 
   isRequired(name) {

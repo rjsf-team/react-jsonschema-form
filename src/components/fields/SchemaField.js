@@ -4,7 +4,8 @@ import {
   isMultiSelect,
   retrieveSchema,
   getDefaultRegistry,
-  isFilesArray
+  isFilesArray,
+  deepEquals
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
@@ -128,7 +129,7 @@ DefaultTemplate.defaultProps = {
   displayLabel: true,
 };
 
-function SchemaField(props) {
+function SchemaFieldRender(props) {
   const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
   const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
@@ -209,6 +210,21 @@ function SchemaField(props) {
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
+}
+
+class SchemaField extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    // if schemas are equal idSchemas will be equal as well,
+    // so it is not necessary to compare
+    return !deepEquals(
+      {...this.props, idSchema: undefined},
+      {...nextProps,  idSchema: undefined}
+    );
+  }
+
+  render() {
+    return SchemaFieldRender(this.props);
+  }
 }
 
 SchemaField.defaultProps = {

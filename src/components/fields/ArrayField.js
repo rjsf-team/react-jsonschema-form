@@ -11,7 +11,6 @@ import {
   optionsList,
   retrieveSchema,
   toIdSchema,
-  shouldRender,
   getDefaultRegistry
 } from "../../utils";
 
@@ -158,10 +157,6 @@ class ArrayField extends Component {
     readonly: false,
     autofocus: false,
   };
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shouldRender(this, nextProps, nextState);
-  }
 
   get itemTitle() {
     const {schema} = this.props;
