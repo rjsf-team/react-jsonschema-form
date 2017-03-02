@@ -7,6 +7,7 @@ function BaseInput(props) {
   const {
     value,
     readonly,
+    disabled,
     autofocus,
     onBlur,
     options,  // eslint-disable-line
@@ -23,6 +24,7 @@ function BaseInput(props) {
       {...inputProps}
       className="form-control"
       readOnly={readonly}
+      disabled={disabled}
       autoFocus={autofocus}
       value={value == null ? "" : value}
       onChange={_onChange}
