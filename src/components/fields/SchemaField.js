@@ -183,7 +183,7 @@ function SchemaFieldRender(props) {
     "form-group",
     "field",
     `field-${type}`,
-    errors && errors.length > 0 ? "field-error has-error" : "",
+    errors && errors.length > 0 ? "field-error has-error has-danger" : "",
     uiSchema.classNames,
   ].join(" ").trim();
 

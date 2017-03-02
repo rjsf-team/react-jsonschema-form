@@ -120,7 +120,7 @@ module.exports = {
           <input className="form-control"
             onChange={(event) => onChange(event.target.value)}
             style={{backgroundColor}}
-            value={value} />
+            value={value}/>
         );
       },
       "ui:options": {
