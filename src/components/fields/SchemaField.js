@@ -131,13 +131,12 @@ DefaultTemplate.defaultProps = {
 
 class SchemaField extends Component {
   shouldComponentUpdate(nextProps, nextState) {
-    let _props = {...this.props};
-    let _nextProps = {...nextProps};
-    // if schema and formData are the equal
-    // idSchema and errorSchema will be equal
-    delete _props.idSchema;
-    delete _nextProps.idSchema;
-    return !deepEquals(_props, _nextProps);
+    // if schemas are equal idSchemas will be equal as well,
+    // so it is not necessary to compare
+    return !deepEquals(
+      {...this.props, idSchema: undefined},
+      {...nextProps,  idSchema: undefined}
+    );
   }
 
   render() {

@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import React from "react";
-
+import {scryRenderedComponentsWithType} from "react-addons-test-utils";
 import {getDefaultRegistry} from "../src/utils";
 import SchemaField from "../src/components/fields/SchemaField";
 import {
@@ -45,6 +45,58 @@ describe("Rendering performance optimizations", () => {
       comp.componentWillReceiveProps({formData});
 
       sinon.assert.notCalled(comp.render);
+    });
+
+    it("should only render changed object properties", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          const: {type: "string"},
+          var: {type: "string"}
+        }
+      };
+
+      const {comp} = createFormComponent({
+        schema,
+        formData: {const: "0", var: "0"}
+      });
+
+      const fields = scryRenderedComponentsWithType(comp, SchemaField)
+              .reduce( (fields, fieldComp) => {
+                sandbox.stub(fieldComp, "render").returns(<div/>);
+                fields[fieldComp.props.idSchema.$id] = fieldComp;
+                return fields;
+              });
+
+      setProps(comp, {schema, formData: {const: "0", var: "1"}});
+
+      sinon.assert.notCalled(fields.root_const.render);
+      sinon.assert.calledOnce(fields.root_var.render);
+    });
+
+    it("should only render changed array items", () => {
+      const schema = {
+        type: "array",
+        items: {type: "string"}
+      };
+
+      const {comp} = createFormComponent({
+        schema,
+        formData: ["const", "var0"]
+      });
+
+      const fields = scryRenderedComponentsWithType(comp, SchemaField)
+              .reduce( (fields, fieldComp) => {
+                sandbox.stub(fieldComp, "render").returns(<div/>);
+                fields[fieldComp.props.idSchema.$id] = fieldComp;
+                return fields;
+              });
+
+      setProps(comp, {schema, formData: ["const", "var1"]});
+
+      sinon.assert.notCalled(fields.root_0.render);
+      sinon.assert.calledOnce(fields.root_1.render);
+
     });
   });
 
