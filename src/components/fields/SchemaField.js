@@ -212,7 +212,7 @@ function SchemaFieldRender(props) {
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
 }
 
-class SchemaField extends React.Component{
+class SchemaField extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     // if schemas are equal idSchemas will be equal as well,
     // so it is not necessary to compare
@@ -222,7 +222,7 @@ class SchemaField extends React.Component{
     );
   }
 
-  render(){
+  render() {
     return SchemaFieldRender(this.props);
   }
 }
