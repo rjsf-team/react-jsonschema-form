@@ -184,7 +184,7 @@ class ArrayField extends Component {
     this.props.onChange([
       ...formData,
       getDefaultFormState(itemSchema, undefined, definitions)
-    ], {validate: false});
+    ]);
   };
 
   onDropIndexClick = (index) => {
@@ -194,7 +194,24 @@ class ArrayField extends Component {
       }
       const {formData, onChange} = this.props;
       // refs #195: revalidate to ensure properly reindexing errors
-      onChange(formData.filter((_, i) => i !== index), {validate: true});
+      onChange(
+        formData.filter((_, i) => i !== index),
+        errorSchema => {
+          if (!errorSchema) {
+            return errorSchema;
+          }
+          let newErrorSchema = {};
+          for (let i in errorSchema) {
+            i = parseInt(i);
+            if (i < index) {
+              newErrorSchema[i] = errorSchema[i];
+            } else if (i > index) {
+              newErrorSchema[i-1] = errorSchema[i];
+            }
+          }
+          return newErrorSchema;
+        }
+      );
     };
   };
 
@@ -213,24 +230,41 @@ class ArrayField extends Component {
         } else {
           return item;
         }
-      }), {validate: true});
+      }), errorSchema => {
+        let newErrorSchema = {};
+        for (let i in errorSchema) {
+          if (i == index) {
+            newErrorSchema[newIndex] = errorSchema[index];
+          } else if (i == newIndex) {
+            newErrorSchema[index] = errorSchema[newIndex];
+          } else {
+            newErrorSchema[i] = errorSchema[i];
+          }
+        }
+        return newErrorSchema;
+      });
     };
   };
 
   onChangeForIndex = (index) => {
-    return (value) => {
+    return (value, errorSchemaUpdater) => {
       const {formData, onChange} = this.props;
       onChange(formData.map((item, i) => {
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
         const jsonValue = typeof value === "undefined" ? null : value;
         return index === i ? jsonValue : item;
-      }), {validate: false});
+      }), errorSchemaUpdater && (errorSchema => (
+        errorSchema && {
+          ...errorSchema,
+          [index]: errorSchemaUpdater(errorSchema[index])
+        }
+      )));
     };
   };
 
   onSelectChange = (value) => {
-    this.props.onChange(value, {validate: false});
+    this.props.onChange(value);
   };
 
   render() {

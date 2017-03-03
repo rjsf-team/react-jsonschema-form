@@ -8,7 +8,7 @@ import {
   setState,
   getDefaultRegistry,
 } from "../utils";
-import validateFormData from "../validate";
+import validateFormData, {toErrorList} from "../validate";
 
 
 export default class Form extends Component {
@@ -75,12 +75,15 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange = (formData, options={validate: false}) => {
-    const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
+  onChange = (formData, errorSchemaUpdater) => {
+    const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = {status: "editing", formData};
     if (mustValidate) {
       const {errors, errorSchema} = this.validate(formData);
       state = {...state, errors, errorSchema};
+    } else if (!this.props.noValidate && errorSchemaUpdater) {
+      const errorSchema = errorSchemaUpdater(this.state.errorSchema);
+      state = {...state, errorSchema, errors: toErrorList(errorSchema)};
     }
     setState(this, state, () => {
       if (this.props.onChange) {
