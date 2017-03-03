@@ -75,15 +75,18 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange = (formData, errorSchemaUpdater) => {
+  onChange = (formData, newErrorSchema) => {
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = {status: "editing", formData};
     if (mustValidate) {
       const {errors, errorSchema} = this.validate(formData);
       state = {...state, errors, errorSchema};
-    } else if (!this.props.noValidate && errorSchemaUpdater) {
-      const errorSchema = errorSchemaUpdater(this.state.errorSchema);
-      state = {...state, errorSchema, errors: toErrorList(errorSchema)};
+    } else if (!this.props.noValidate && newErrorSchema) {
+      state = {
+        ...state,
+        errorSchema: newErrorSchema,
+        errors: toErrorList(newErrorSchema)
+      };
     }
     setState(this, state, () => {
       if (this.props.onChange) {

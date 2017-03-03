@@ -194,23 +194,22 @@ class ArrayField extends Component {
       }
       const {formData, onChange} = this.props;
       // refs #195: revalidate to ensure properly reindexing errors
+      let newErrorSchema;
+      if (this.props.errorSchema) {
+        newErrorSchema = {};
+        const errorSchema = this.props.errorSchema;
+        for (let i in errorSchema) {
+          i = parseInt(i);
+          if (i < index) {
+            newErrorSchema[i] = errorSchema[i];
+          } else if (i > index) {
+            newErrorSchema[i-1] = errorSchema[i];
+          }
+        }
+      }
       onChange(
         formData.filter((_, i) => i !== index),
-        errorSchema => {
-          if (!errorSchema) {
-            return errorSchema;
-          }
-          let newErrorSchema = {};
-          for (let i in errorSchema) {
-            i = parseInt(i);
-            if (i < index) {
-              newErrorSchema[i] = errorSchema[i];
-            } else if (i > index) {
-              newErrorSchema[i-1] = errorSchema[i];
-            }
-          }
-          return newErrorSchema;
-        }
+        newErrorSchema
       );
     };
   };
@@ -222,6 +221,20 @@ class ArrayField extends Component {
         event.target.blur();
       }
       const {formData, onChange} = this.props;
+      let newErrorSchema;
+      if (this.props.errorSchema) {
+        newErrorSchema = {};
+        const errorSchema = this.props.errorSchema;
+        for (let i in errorSchema) {
+          if (i == index) {
+            newErrorSchema[newIndex] = errorSchema[index];
+          } else if (i == newIndex) {
+            newErrorSchema[index] = errorSchema[newIndex];
+          } else {
+            newErrorSchema[i] = errorSchema[i];
+          }
+        }
+      }
       onChange(formData.map((item, i) => {
         // i is string, index and newIndex are numbers,
         // so using "==" to compare
@@ -232,36 +245,22 @@ class ArrayField extends Component {
         } else {
           return item;
         }
-      }), errorSchema => {
-        let newErrorSchema = {};
-        for (let i in errorSchema) {
-          if (i == index) {
-            newErrorSchema[newIndex] = errorSchema[index];
-          } else if (i == newIndex) {
-            newErrorSchema[index] = errorSchema[newIndex];
-          } else {
-            newErrorSchema[i] = errorSchema[i];
-          }
-        }
-        return newErrorSchema;
-      });
+      }), newErrorSchema);
     };
   };
 
   onChangeForIndex = (index) => {
-    return (value, errorSchemaUpdater) => {
+    return (value, errorSchema) => {
       const {formData, onChange} = this.props;
       onChange(formData.map((item, i) => {
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
         const jsonValue = typeof value === "undefined" ? null : value;
         return index === i ? jsonValue : item;
-      }), errorSchemaUpdater && (errorSchema => (
-        errorSchema && {
-          ...errorSchema,
-          [index]: errorSchemaUpdater(errorSchema[index])
-        }
-      )));
+      }), errorSchema && this.props.errorSchema && {
+        ...this.props.errorSchema,
+        [index]: errorSchema
+      });
     };
   };
 
