@@ -13,10 +13,7 @@ function CheckboxWidget({
 }) {
   return (
     <div className={`checkbox ${disabled ? "disabled" : ""}`}>
-      { schema.description
-        ? <DescriptionField description={ schema.description }/>
-        : null
-      }
+      { schema.description && <DescriptionField description={ schema.description }/> }
       <label>
         <input type="checkbox"
           id={id}
@@ -24,7 +21,6 @@ function CheckboxWidget({
           required={required}
           disabled={disabled}
           autoFocus={autofocus}
-          title={schema.description}
           onChange={(event) => onChange(event.target.checked)}/>
         <span>{label}</span>
       </label>

@@ -47,6 +47,16 @@ describe("BooleanField", () => {
       .to.have.length.of(1);
   });
 
+  it("should render a description", () => {
+    const {node} = createFormComponent({schema: {
+      type: "boolean",
+      description: "my description"
+    }});
+
+    const description = node.querySelector(".field-description");
+    expect(description.textContent).eql("my description");
+  });
+
   it("should assign a default value", () => {
     const {node} = createFormComponent({schema: {
       type: "boolean",
