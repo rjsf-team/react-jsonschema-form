@@ -223,9 +223,11 @@ class ArrayField extends Component {
       }
       const {formData, onChange} = this.props;
       onChange(formData.map((item, i) => {
-        if (i === newIndex) {
+        // i is string, index and newIndex are numbers,
+        // so using "==" to compare
+        if (i == newIndex) {
           return formData[index];
-        } else if (i === index) {
+        } else if (i == index) {
           return formData[newIndex];
         } else {
           return item;
