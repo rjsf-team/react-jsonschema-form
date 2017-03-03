@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-
+import DescriptionField from "../fields/DescriptionField.js";
 
 function CheckboxWidget({
   schema,
@@ -13,6 +13,7 @@ function CheckboxWidget({
 }) {
   return (
     <div className={`checkbox ${disabled ? "disabled" : ""}`}>
+      { schema.description && <DescriptionField description={ schema.description }/> }
       <label>
         <input type="checkbox"
           id={id}

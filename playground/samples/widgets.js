@@ -26,15 +26,18 @@ module.exports = {
         properties: {
           default: {
             type: "boolean",
-            title: "checkbox (default)"
+            title: "checkbox (default)",
+            description: "This is the checkbox-description"
           },
           radio: {
             type: "boolean",
-            title: "radio buttons"
+            title: "radio buttons",
+            description: "This is the radio-description"
           },
           select: {
             type: "boolean",
-            title: "select box"
+            title: "select box",
+            description: "This is the select-description"
           }
         }
       },
