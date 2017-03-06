@@ -91,7 +91,7 @@ function DefaultTemplate(props) {
   }
 
   return (
-    <div className={classNames}>
+    <div id={id} className={classNames}>
       {displayLabel ? <Label label={label} required={required} id={id}/> : null}
       {displayLabel && description ? description : null}
       {children}
