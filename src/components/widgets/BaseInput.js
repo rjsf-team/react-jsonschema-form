@@ -9,10 +9,10 @@ function BaseInput(props) {
     readonly,
     autofocus,
     onBlur,
-    options,  // eslint-disable-line
-    schema,   // eslint-disable-line
-    formContext,  // eslint-disable-line
-    registry, // eslint-disable-line
+    options,
+    schema,
+    formContext,
+    registry,
     ...inputProps
   } = props;
   const _onChange = ({target: {value}}) => {
