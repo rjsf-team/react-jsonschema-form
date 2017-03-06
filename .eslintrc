@@ -13,7 +13,11 @@
         "linebreak-style": [2, "unix"],
         "semi": [2, "always"],
         "comma-dangle": [0],
-        "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+        "no-unused-vars": [2, {
+          "vars": "all",
+          "args": "none",
+          "ignoreRestSiblings": true
+        }],
         "no-console": [0],
         "object-curly-spacing": [2, "never"],
         "keyword-spacing": ["error"]
