@@ -6,7 +6,6 @@
         "react/react-in-jsx-scope": 2,
         "react/jsx-space-before-closing": [1, "always"],
         "curly": [2],
-        "quotes": [2, "double"],
         "linebreak-style": [2, "unix"],
         "semi": [2, "always"],
         "comma-dangle": [0],
