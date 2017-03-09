@@ -29,5 +29,5 @@ export const samples = {
   Validation: validation,
   Files: files,
   Single: single,
-  "Custom Array": customArray,
+  "Custom Array": customArray
 };

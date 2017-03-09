@@ -1,4 +1,4 @@
-function validate({pass1, pass2}, errors) {
+function validate({ pass1, pass2 }, errors) {
   if (pass1 !== pass2) {
     errors.pass2.addError("Passwords don't match.");
   }
@@ -17,7 +17,7 @@ function transformErrors(errors) {
 }
 
 module.exports = {
-  schema:  {
+  schema: {
     title: "Custom validation",
     description: "This form defines custom validation rules checking that the two passwords match.",
     type: "object",
@@ -40,8 +40,8 @@ module.exports = {
     }
   },
   uiSchema: {
-    pass1: {"ui:widget": "password"},
-    pass2: {"ui:widget": "password"},
+    pass1: { "ui:widget": "password" },
+    pass2: { "ui:widget": "password" }
   },
   formData: {},
   validate,

@@ -1,21 +1,21 @@
-import React, {PropTypes} from "react";
+import React, { PropTypes } from "react";
 
 import BaseInput from "./BaseInput";
 
-
 function DateWidget(props) {
-  const {onChange} = props;
+  const { onChange } = props;
   return (
     <BaseInput
       type="date"
       {...props}
-      onChange={(value) => onChange(value || undefined)}/>
+      onChange={value => onChange(value || undefined)}
+    />
   );
 }
 
 if (process.env.NODE_ENV !== "production") {
   DateWidget.propTypes = {
-    value: PropTypes.string,
+    value: PropTypes.string
   };
 }
 

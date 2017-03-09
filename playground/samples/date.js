@@ -8,11 +8,11 @@ module.exports = {
         description: "May not work on some browsers, notably Firefox Desktop and IE.",
         type: "object",
         properties: {
-          "datetime": {
+          datetime: {
             type: "string",
             format: "date-time"
           },
-          "date": {
+          date: {
             type: "string",
             format: "date"
           }

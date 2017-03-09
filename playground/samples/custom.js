@@ -5,10 +5,10 @@ module.exports = {
     required: ["lat", "lon"],
     properties: {
       lat: {
-        type: "number",
+        type: "number"
       },
       lon: {
-        type: "number",
+        type: "number"
       }
     }
   },

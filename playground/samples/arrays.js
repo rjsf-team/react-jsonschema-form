@@ -121,10 +121,7 @@ module.exports = {
       "ui:widget": "checkboxes"
     },
     fixedItemsList: {
-      items: [
-        {"ui:widget": "textarea"},
-        {"ui:widget": "select"}
-      ],
+      items: [{ "ui:widget": "textarea" }, { "ui:widget": "select" }],
       additionalItems: {
         "ui:widget": "updown"
       }

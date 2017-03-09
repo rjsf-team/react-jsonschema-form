@@ -1,12 +1,14 @@
-import React, {PropTypes} from "react";
+import React, { PropTypes } from "react";
 
-import {asNumber} from "../../utils";
+import { asNumber } from "../../utils";
 
 function NumberField(props) {
-  const {StringField} = props.registry.fields;
+  const { StringField } = props.registry.fields;
   return (
-    <StringField {...props}
-      onChange={(value) => props.onChange(asNumber(value))}/>
+    <StringField
+      {...props}
+      onChange={value => props.onChange(asNumber(value))}
+    />
   );
 }
 
@@ -18,7 +20,7 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func.isRequired,
     formData: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     required: PropTypes.bool,
-    formContext: PropTypes.object.isRequired,
+    formContext: PropTypes.object.isRequired
   };
 }
 

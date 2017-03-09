@@ -6,6 +6,7 @@ node_js:
 env:
 - ACTION=test
 - ACTION="run lint"
+- ACTION="run cs-check"
 - ACTION="run dist"
 script:
 - npm $ACTION

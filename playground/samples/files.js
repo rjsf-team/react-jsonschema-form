@@ -6,14 +6,14 @@ module.exports = {
       file: {
         type: "string",
         format: "data-url",
-        title: "Single file",
+        title: "Single file"
       },
       files: {
         type: "array",
         title: "Multiple files",
         items: {
           type: "string",
-          format: "data-url",
+          format: "data-url"
         }
       }
     }

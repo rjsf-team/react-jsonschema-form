@@ -1,6 +1,5 @@
 import React from "react";
 
-
 module.exports = {
   schema: {
     title: "Widgets",
@@ -77,13 +76,13 @@ module.exports = {
       widgetOptions: {
         title: "Custom widget with options",
         type: "string",
-        default: "I am yellow",
+        default: "I am yellow"
       },
       selectWidgetOptions: {
         title: "Custom select widget with options",
         type: "string",
         enum: ["foo", "bar"],
-        enumNames: ["Foo", "Bar"],
+        enumNames: ["Foo", "Bar"]
       }
     }
   },
@@ -117,13 +116,15 @@ module.exports = {
       "ui:readonly": true
     },
     widgetOptions: {
-      "ui:widget": ({value, onChange, options}) => {
-        const {backgroundColor} = options;
+      "ui:widget": ({ value, onChange, options }) => {
+        const { backgroundColor } = options;
         return (
-          <input className="form-control"
-            onChange={(event) => onChange(event.target.value)}
-            style={{backgroundColor}}
-            value={value}/>
+          <input
+            className="form-control"
+            onChange={event => onChange(event.target.value)}
+            style={{ backgroundColor }}
+            value={value}
+          />
         );
       },
       "ui:options": {
@@ -131,28 +132,29 @@ module.exports = {
       }
     },
     selectWidgetOptions: {
-      "ui:widget": ({value, onChange, options}) => {
-        const {enumOptions, backgroundColor} = options;
+      "ui:widget": ({ value, onChange, options }) => {
+        const { enumOptions, backgroundColor } = options;
         return (
-          <select className="form-control"
-            style={{backgroundColor}}
+          <select
+            className="form-control"
+            style={{ backgroundColor }}
             value={value}
-            onChange={(event) => onChange(event.target.value)}>{
-            enumOptions.map(({label, value}, i) => {
+            onChange={event => onChange(event.target.value)}>
+            {enumOptions.map(({ label, value }, i) => {
               return <option key={i} value={value}>{label}</option>;
-            })
-          }</select>
+            })}
+          </select>
         );
       },
       "ui:options": {
         backgroundColor: "pink"
       }
-    },
+    }
   },
   formData: {
     stringFormats: {
       email: "chuck@norris.net",
-      uri: "http://chucknorris.com/",
+      uri: "http://chucknorris.com/"
     },
     boolean: {
       default: true,

@@ -17,7 +17,6 @@ import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
 
-
 export default {
   PasswordWidget,
   RadioWidget,
@@ -36,5 +35,5 @@ export default {
   ColorWidget,
   FileWidget,
   CheckboxWidget,
-  CheckboxesWidget,
+  CheckboxesWidget
 };

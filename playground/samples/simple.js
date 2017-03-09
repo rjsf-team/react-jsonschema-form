@@ -7,11 +7,11 @@ module.exports = {
     properties: {
       firstName: {
         type: "string",
-        title: "First name",
+        title: "First name"
       },
       lastName: {
         type: "string",
-        title: "Last name",
+        title: "Last name"
       },
       age: {
         type: "integer",
@@ -19,7 +19,7 @@ module.exports = {
       },
       bio: {
         type: "string",
-        title: "Bio",
+        title: "Bio"
       },
       password: {
         type: "string",

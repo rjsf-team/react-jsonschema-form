@@ -1,12 +1,11 @@
-import React, {Component, PropTypes} from "react";
+import React, { Component, PropTypes } from "react";
 
-import {shouldRender, parseDateString, toDateString, pad} from "../../utils";
-
+import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
 
 function rangeOptions(start, stop) {
   let options = [];
-  for (let i=start; i<= stop; i++) {
-    options.push({value: i, label: pad(i, 2)});
+  for (let i = start; i <= stop; i++) {
+    options.push({ value: i, label: pad(i, 2) });
   }
   return options;
 }
@@ -16,22 +15,34 @@ function readyForChange(state) {
 }
 
 function DateElement(props) {
-  const {type, range, value, select, rootId, disabled, readonly, autofocus, registry, onBlur} = props;
+  const {
+    type,
+    range,
+    value,
+    select,
+    rootId,
+    disabled,
+    readonly,
+    autofocus,
+    registry,
+    onBlur
+  } = props;
   const id = rootId + "_" + type;
-  const {SelectWidget} = registry.widgets;
+  const { SelectWidget } = registry.widgets;
   return (
     <SelectWidget
-      schema={{type: "integer"}}
+      schema={{ type: "integer" }}
       id={id}
       className="form-control"
-      options={{enumOptions: rangeOptions(range[0], range[1])}}
+      options={{ enumOptions: rangeOptions(range[0], range[1]) }}
       placeholder={type}
       value={value}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={(value) => select(type, value)}
-      onBlur={onBlur}/>
+      onChange={value => select(type, value)}
+      onBlur={onBlur}
+    />
   );
 }
 
@@ -57,17 +68,20 @@ class AltDateWidget extends Component {
   }
 
   onChange = (property, value) => {
-    this.setState({[property]: typeof value === "undefined" ? -1 : value}, () => {
-      // Only propagate to parent state if we have a complete date{time}
-      if (readyForChange(this.state)) {
-        this.props.onChange(toDateString(this.state, this.props.time));
+    this.setState(
+      { [property]: typeof value === "undefined" ? -1 : value },
+      () => {
+        // Only propagate to parent state if we have a complete date{time}
+        if (readyForChange(this.state)) {
+          this.props.onChange(toDateString(this.state, this.props.time));
+        }
       }
-    });
+    );
   };
 
-  setNow = (event) => {
+  setNow = event => {
     event.preventDefault();
-    const {time, disabled, readonly, onChange} = this.props;
+    const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
       return;
     }
@@ -75,9 +89,9 @@ class AltDateWidget extends Component {
     this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
   };
 
-  clear = (event) => {
+  clear = event => {
     event.preventDefault();
-    const {time, disabled, readonly, onChange} = this.props;
+    const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
       return;
     }
@@ -85,48 +99,53 @@ class AltDateWidget extends Component {
   };
 
   get dateElementProps() {
-    const {time} = this.props;
-    const {year, month, day, hour, minute, second} = this.state;
+    const { time } = this.props;
+    const { year, month, day, hour, minute, second } = this.state;
     const data = [
-      {type: "year", range: [1900, 2020], value: year},
-      {type: "month", range: [1, 12], value: month},
-      {type: "day", range: [1, 31], value: day},
+      { type: "year", range: [1900, 2020], value: year },
+      { type: "month", range: [1, 12], value: month },
+      { type: "day", range: [1, 31], value: day }
     ];
     if (time) {
       data.push(
-        {type: "hour", range: [0, 23], value: hour},
-        {type: "minute", range: [0, 59], value: minute},
-        {type: "second", range: [0, 59], value: second}
+        { type: "hour", range: [0, 23], value: hour },
+        { type: "minute", range: [0, 59], value: minute },
+        { type: "second", range: [0, 59], value: second }
       );
     }
     return data;
   }
 
   render() {
-    const {id, disabled, readonly, autofocus, registry, onBlur} = this.props;
+    const { id, disabled, readonly, autofocus, registry, onBlur } = this.props;
     return (
-      <ul className="list-inline">{
-        this.dateElementProps.map((elemProps, i) => (
+      <ul className="list-inline">
+        {this.dateElementProps.map((elemProps, i) => (
           <li key={i}>
             <DateElement
               rootId={id}
               select={this.onChange}
               {...elemProps}
-              disabled= {disabled}
+              disabled={disabled}
               readonly={readonly}
               registry={registry}
               onBlur={onBlur}
-              autofocus={autofocus && i === 0}/>
+              autofocus={autofocus && i === 0}
+            />
           </li>
-        ))
-      }
+        ))}
         <li>
-          <a href="#" className="btn btn-info btn-now"
-             onClick={this.setNow}>Now</a>
+          <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
+            Now
+          </a>
         </li>
         <li>
-          <a href="#" className="btn btn-warning btn-clear"
-             onClick={this.clear}>Clear</a>
+          <a
+            href="#"
+            className="btn btn-warning btn-clear"
+            onClick={this.clear}>
+            Clear
+          </a>
         </li>
       </ul>
     );
@@ -144,7 +163,7 @@ if (process.env.NODE_ENV !== "production") {
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
-    time: PropTypes.bool,
+    time: PropTypes.bool
   };
 }
 
