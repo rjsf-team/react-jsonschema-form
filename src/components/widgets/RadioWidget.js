@@ -1,16 +1,7 @@
 import React, { PropTypes } from "react";
 
-function RadioWidget(
-  {
-    schema,
-    options,
-    value,
-    required,
-    disabled,
-    autofocus,
-    onChange
-  }
-) {
+function RadioWidget(props) {
+  const { options, value, required, disabled, autofocus, onChange } = props;
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   const { enumOptions, inline } = options;

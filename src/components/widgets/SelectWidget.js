@@ -32,8 +32,8 @@ function getValue(event, multiple) {
   }
 }
 
-function SelectWidget(
-  {
+function SelectWidget(props) {
+  const {
     schema,
     id,
     options,
@@ -46,8 +46,7 @@ function SelectWidget(
     onChange,
     onBlur,
     placeholder
-  }
-) {
+  } = props;
   const { enumOptions } = options;
   const emptyValue = multiple ? [] : "";
   return (

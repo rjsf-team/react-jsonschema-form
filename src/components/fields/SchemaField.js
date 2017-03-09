@@ -92,9 +92,7 @@ function DefaultTemplate(props) {
 
   return (
     <div className={classNames}>
-      {displayLabel
-        ? <Label label={label} required={required} id={id} />
-        : null}
+      {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}
       {errors}
@@ -167,11 +165,11 @@ function SchemaFieldRender(props) {
 
   const { __errors, ...fieldErrorSchema } = errorSchema;
 
+  // See #439: uiSchema: Don't pass consumed class names to child components
   const field = (
     <FieldComponent
       {...props}
       schema={schema}
-      // See #439: Don't pass consumed class names to child components
       uiSchema={{ ...uiSchema, classNames: undefined }}
       disabled={disabled}
       readonly={readonly}

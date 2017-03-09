@@ -59,52 +59,46 @@ function DefaultArrayItem(props) {
         {props.children}
       </div>
 
-      {props.hasToolbar
-        ? <div className="col-xs-3 array-item-toolbox">
-            <div
-              className="btn-group"
-              style={{ display: "flex", justifyContent: "space-around" }}>
+      {props.hasToolbar &&
+        <div className="col-xs-3 array-item-toolbox">
+          <div
+            className="btn-group"
+            style={{ display: "flex", justifyContent: "space-around" }}>
 
-              {props.hasMoveUp || props.hasMoveDown
-                ? <IconBtn
-                    icon="arrow-up"
-                    className="array-item-move-up"
-                    tabIndex="-1"
-                    style={btnStyle}
-                    disabled={
-                      props.disabled || props.readonly || !props.hasMoveUp
-                    }
-                    onClick={props.onReorderClick(props.index, props.index - 1)}
-                  />
-                : null}
+            {(props.hasMoveUp || props.hasMoveDown) &&
+              <IconBtn
+                icon="arrow-up"
+                className="array-item-move-up"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly || !props.hasMoveUp}
+                onClick={props.onReorderClick(props.index, props.index - 1)}
+              />}
 
-              {props.hasMoveUp || props.hasMoveDown
-                ? <IconBtn
-                    icon="arrow-down"
-                    className="array-item-move-down"
-                    tabIndex="-1"
-                    style={btnStyle}
-                    disabled={
-                      props.disabled || props.readonly || !props.hasMoveDown
-                    }
-                    onClick={props.onReorderClick(props.index, props.index + 1)}
-                  />
-                : null}
+            {(props.hasMoveUp || props.hasMoveDown) &&
+              <IconBtn
+                icon="arrow-down"
+                className="array-item-move-down"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={
+                  props.disabled || props.readonly || !props.hasMoveDown
+                }
+                onClick={props.onReorderClick(props.index, props.index + 1)}
+              />}
 
-              {props.hasRemove
-                ? <IconBtn
-                    type="danger"
-                    icon="remove"
-                    className="array-item-remove"
-                    tabIndex="-1"
-                    style={btnStyle}
-                    disabled={props.disabled || props.readonly}
-                    onClick={props.onDropIndexClick(props.index)}
-                  />
-                : null}
-            </div>
+            {props.hasRemove &&
+              <IconBtn
+                type="danger"
+                icon="remove"
+                className="array-item-remove"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly}
+                onClick={props.onDropIndexClick(props.index)}
+              />}
           </div>
-        : null}
+        </div>}
 
     </div>
   );
@@ -122,13 +116,12 @@ function DefaultFixedArrayFieldTemplate(props) {
         required={props.required}
       />
 
-      {props.schema.description
-        ? <div
-            className="field-description"
-            key={`field-description-${props.idSchema.$id}`}>
-            {props.schema.description}
-          </div>
-        : null}
+      {props.schema.description &&
+        <div
+          className="field-description"
+          key={`field-description-${props.idSchema.$id}`}>
+          {props.schema.description}
+        </div>}
 
       <div
         className="row array-item-list"
@@ -136,12 +129,11 @@ function DefaultFixedArrayFieldTemplate(props) {
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 
-      {props.canAdd
-        ? <AddButton
-            onClick={props.onAddClick}
-            disabled={props.disabled || props.readonly}
-          />
-        : null}
+      {props.canAdd &&
+        <AddButton
+          onClick={props.onAddClick}
+          disabled={props.disabled || props.readonly}
+        />}
     </fieldset>
   );
 }
@@ -158,14 +150,13 @@ function DefaultNormalArrayFieldTemplate(props) {
         required={props.required}
       />
 
-      {props.schema.description
-        ? <ArrayFieldDescription
-            key={`array-field-description-${props.idSchema.$id}`}
-            DescriptionField={props.DescriptionField}
-            idSchema={props.idSchema}
-            description={props.schema.description}
-          />
-        : null}
+      {props.schema.description &&
+        <ArrayFieldDescription
+          key={`array-field-description-${props.idSchema.$id}`}
+          DescriptionField={props.DescriptionField}
+          idSchema={props.idSchema}
+          description={props.schema.description}
+        />}
 
       <div
         className="row array-item-list"
@@ -173,12 +164,11 @@ function DefaultNormalArrayFieldTemplate(props) {
         {props.items && props.items.map(p => DefaultArrayItem(p))}
       </div>
 
-      {props.canAdd
-        ? <AddButton
-            onClick={props.onAddClick}
-            disabled={props.disabled || props.readonly}
-          />
-        : null}
+      {props.canAdd &&
+        <AddButton
+          onClick={props.onAddClick}
+          disabled={props.disabled || props.readonly}
+        />}
     </fieldset>
   );
 }
@@ -260,15 +250,13 @@ class ArrayField extends Component {
   onChangeForIndex = index => {
     return value => {
       const { formData, onChange } = this.props;
-      onChange(
-        formData.map((item, i) => {
-          // We need to treat undefined items as nulls to have validation.
-          // See https://github.com/tdegrunt/jsonschema/issues/206
-          const jsonValue = typeof value === "undefined" ? null : value;
-          return index === i ? jsonValue : item;
-        }),
-        { validate: false }
-      );
+      const newFormData = formData.map((item, i) => {
+        // We need to treat undefined items as nulls to have validation.
+        // See https://github.com/tdegrunt/jsonschema/issues/206
+        const jsonValue = typeof value === "undefined" ? null : value;
+        return index === i ? jsonValue : item;
+      });
+      onChange(newFormData, { validate: false });
     };
   };
 
@@ -497,8 +485,8 @@ class ArrayField extends Component {
     return renderFunction(arrayProps);
   }
 
-  renderArrayFieldItem(
-    {
+  renderArrayFieldItem(props) {
+    const {
       index,
       canRemove = true,
       canMoveUp = true,
@@ -510,8 +498,7 @@ class ArrayField extends Component {
       itemErrorSchema,
       autofocus,
       onBlur
-    }
-  ) {
+    } = props;
     const { SchemaField } = this.props.registry.fields;
     const { disabled, readonly, uiSchema } = this.props;
     const { orderable, removable } = {

@@ -64,21 +64,19 @@ class ObjectField extends Component {
     }
     return (
       <fieldset>
-        {title
-          ? <TitleField
-              id={`${idSchema.$id}__title`}
-              title={title}
-              required={required}
-              formContext={formContext}
-            />
-          : null}
-        {schema.description
-          ? <DescriptionField
-              id={`${idSchema.$id}__description`}
-              description={schema.description}
-              formContext={formContext}
-            />
-          : null}
+        {title &&
+          <TitleField
+            id={`${idSchema.$id}__title`}
+            title={title}
+            required={required}
+            formContext={formContext}
+          />}
+        {schema.description &&
+          <DescriptionField
+            id={`${idSchema.$id}__description`}
+            description={schema.description}
+            formContext={formContext}
+          />}
         {orderedProperties.map((name, index) => {
           return (
             <SchemaField

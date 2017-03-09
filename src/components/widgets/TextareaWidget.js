@@ -1,8 +1,7 @@
 import React, { PropTypes } from "react";
 
-function TextareaWidget(
-  {
-    schema,
+function TextareaWidget(props) {
+  const {
     id,
     options,
     placeholder,
@@ -13,8 +12,7 @@ function TextareaWidget(
     autofocus,
     onChange,
     onBlur
-  }
-) {
+  } = props;
   const _onChange = ({ target: { value } }) => {
     return onChange(value === "" ? undefined : value);
   };
