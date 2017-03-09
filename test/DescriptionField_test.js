@@ -1,8 +1,8 @@
 import React from "react";
-import {expect} from "chai";
+import { expect } from "chai";
 
 import DescriptionField from "../src/components/fields/DescriptionField";
-import {createSandbox, createComponent} from "./test_utils";
+import { createSandbox, createComponent } from "./test_utils";
 
 describe("DescriptionField", () => {
   let sandbox;
@@ -22,24 +22,24 @@ describe("DescriptionField", () => {
       super(props);
     }
     render() {
-      return <DescriptionField {...this.props}/>;
+      return <DescriptionField {...this.props} />;
     }
   }
 
   it("should return a div for a custom component", () => {
     const props = {
-      description: <em>description</em>,
+      description: <em>description</em>
     };
-    const {node} = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionFieldWrapper, props);
 
     expect(node.tagName).to.equal("DIV");
   });
 
   it("should return a p for a description text", () => {
     const props = {
-      description: "description",
+      description: "description"
     };
-    const {node} = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionFieldWrapper, props);
 
     expect(node.tagName).to.equal("P");
   });
@@ -49,7 +49,7 @@ describe("DescriptionField", () => {
       description: "Field description",
       id: "sample_id"
     };
-    const {node} = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionFieldWrapper, props);
 
     expect(node.id).to.equal("sample_id");
   });

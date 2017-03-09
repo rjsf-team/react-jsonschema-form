@@ -1,9 +1,8 @@
-import React, {PropTypes} from "react";
-
+import React, { PropTypes } from "react";
 
 function AltDateTimeWidget(props) {
-  const {AltDateWidget} = props.registry.widgets;
-  return <AltDateWidget time {...props}/>;
+  const { AltDateWidget } = props.registry.widgets;
+  return <AltDateWidget time {...props} />;
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -12,7 +11,7 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     value: React.PropTypes.string,
     required: PropTypes.bool,
-    onChange: PropTypes.func,
+    onChange: PropTypes.func
   };
 }
 

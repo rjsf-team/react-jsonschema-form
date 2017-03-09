@@ -10,20 +10,20 @@ module.exports = {
       },
       lastName: {
         type: "string",
-        title: "Last name",
+        title: "Last name"
       },
       bio: {
         type: "string",
-        title: "Bio",
+        title: "Bio"
       },
       firstName: {
         type: "string",
-        title: "First name",
+        title: "First name"
       },
       age: {
         type: "integer",
         title: "Age"
-      },
+      }
     }
   },
   uiSchema: {
@@ -43,6 +43,6 @@ module.exports = {
     lastName: "Norris",
     age: 75,
     bio: "Roundhouse kicking asses since 1940",
-    password: "noneed",
+    password: "noneed"
   }
 };

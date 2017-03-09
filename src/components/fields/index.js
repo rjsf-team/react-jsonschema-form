@@ -8,7 +8,6 @@ import StringField from "./StringField";
 import TitleField from "./TitleField";
 import UnsupportedField from "./UnsupportedField";
 
-
 export default {
   ArrayField,
   BooleanField,
@@ -18,5 +17,5 @@ export default {
   SchemaField,
   StringField,
   TitleField,
-  UnsupportedField,
+  UnsupportedField
 };

@@ -25,14 +25,14 @@ module.exports = {
         title: "Integer range",
         type: "integer",
         minimum: 42,
-        maximum: 100,
+        maximum: 100
       },
       integerRangeSteps: {
         title: "Integer range (by 10)",
         type: "integer",
         minimum: 50,
         maximum: 100,
-        multipleOf: 10,
+        multipleOf: 10
       }
     }
   },
@@ -58,6 +58,6 @@ module.exports = {
     integer: 42,
     numberEnum: 2,
     integerRange: 42,
-    integerRangeSteps: 80,
+    integerRangeSteps: 80
   }
 };

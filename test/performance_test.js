@@ -1,7 +1,7 @@
 import sinon from "sinon";
 import React from "react";
-import {scryRenderedComponentsWithType} from "react-addons-test-utils";
-import {getDefaultRegistry} from "../src/utils";
+import { scryRenderedComponentsWithType } from "react-addons-test-utils";
+import { getDefaultRegistry } from "../src/utils";
 import SchemaField from "../src/components/fields/SchemaField";
 import {
   createComponent,
@@ -9,7 +9,6 @@ import {
   createSandbox,
   setProps
 } from "./test_utils";
-
 
 describe("Rendering performance optimizations", () => {
   var sandbox;
@@ -24,25 +23,25 @@ describe("Rendering performance optimizations", () => {
 
   describe("Form", () => {
     it("should not render if next props are equivalent", () => {
-      const schema = {type: "string"};
+      const schema = { type: "string" };
       const uiSchema = {};
 
-      const {comp} = createFormComponent({schema, uiSchema});
-      sandbox.stub(comp, "render").returns(<div/>);
+      const { comp } = createFormComponent({ schema, uiSchema });
+      sandbox.stub(comp, "render").returns(<div />);
 
-      comp.componentWillReceiveProps({schema});
+      comp.componentWillReceiveProps({ schema });
 
       sinon.assert.notCalled(comp.render);
     });
 
     it("should not render if next formData are equivalent", () => {
-      const schema = {type: "string"};
+      const schema = { type: "string" };
       const formData = "foo";
 
-      const {comp} = createFormComponent({schema, formData});
-      sandbox.stub(comp, "render").returns(<div/>);
+      const { comp } = createFormComponent({ schema, formData });
+      sandbox.stub(comp, "render").returns(<div />);
 
-      comp.componentWillReceiveProps({formData});
+      comp.componentWillReceiveProps({ formData });
 
       sinon.assert.notCalled(comp.render);
     });
@@ -51,24 +50,26 @@ describe("Rendering performance optimizations", () => {
       const schema = {
         type: "object",
         properties: {
-          const: {type: "string"},
-          var: {type: "string"}
+          const: { type: "string" },
+          var: { type: "string" }
         }
       };
 
-      const {comp} = createFormComponent({
+      const { comp } = createFormComponent({
         schema,
-        formData: {const: "0", var: "0"}
+        formData: { const: "0", var: "0" }
       });
 
-      const fields = scryRenderedComponentsWithType(comp, SchemaField)
-        .reduce( (fields, fieldComp) => {
-          sandbox.stub(fieldComp, "render").returns(<div/>);
-          fields[fieldComp.props.idSchema.$id] = fieldComp;
-          return fields;
-        });
+      const fields = scryRenderedComponentsWithType(
+        comp,
+        SchemaField
+      ).reduce((fields, fieldComp) => {
+        sandbox.stub(fieldComp, "render").returns(<div />);
+        fields[fieldComp.props.idSchema.$id] = fieldComp;
+        return fields;
+      });
 
-      setProps(comp, {schema, formData: {const: "0", var: "1"}});
+      setProps(comp, { schema, formData: { const: "0", var: "1" } });
 
       sinon.assert.notCalled(fields.root_const.render);
       sinon.assert.calledOnce(fields.root_var.render);
@@ -77,26 +78,27 @@ describe("Rendering performance optimizations", () => {
     it("should only render changed array items", () => {
       const schema = {
         type: "array",
-        items: {type: "string"}
+        items: { type: "string" }
       };
 
-      const {comp} = createFormComponent({
+      const { comp } = createFormComponent({
         schema,
         formData: ["const", "var0"]
       });
 
-      const fields = scryRenderedComponentsWithType(comp, SchemaField)
-        .reduce( (fields, fieldComp) => {
-          sandbox.stub(fieldComp, "render").returns(<div/>);
-          fields[fieldComp.props.idSchema.$id] = fieldComp;
-          return fields;
-        });
+      const fields = scryRenderedComponentsWithType(
+        comp,
+        SchemaField
+      ).reduce((fields, fieldComp) => {
+        sandbox.stub(fieldComp, "render").returns(<div />);
+        fields[fieldComp.props.idSchema.$id] = fieldComp;
+        return fields;
+      });
 
-      setProps(comp, {schema, formData: ["const", "var1"]});
+      setProps(comp, { schema, formData: ["const", "var1"] });
 
       sinon.assert.notCalled(fields.root_0.render);
       sinon.assert.calledOnce(fields.root_1.render);
-
     });
   });
 
@@ -108,10 +110,10 @@ describe("Rendering performance optimizations", () => {
     const schema = {
       type: "object",
       properties: {
-        foo: {type: "string"}
+        foo: { type: "string" }
       }
     };
-    const idSchema = {$id: "root", foo: {$id: "root_plop"}};
+    const idSchema = { $id: "root", foo: { $id: "root_plop" } };
 
     it("should not render if next props are equivalent", () => {
       const props = {
@@ -123,8 +125,8 @@ describe("Rendering performance optimizations", () => {
         onBlur
       };
 
-      const {comp} = createComponent(SchemaField, props);
-      sandbox.stub(comp, "render").returns(<div/>);
+      const { comp } = createComponent(SchemaField, props);
+      sandbox.stub(comp, "render").returns(<div />);
 
       setProps(comp, props);
 
@@ -135,16 +137,16 @@ describe("Rendering performance optimizations", () => {
       const props = {
         registry,
         schema,
-        formData: {foo: "blah"},
+        formData: { foo: "blah" },
         onChange,
         idSchema,
         onBlur
       };
 
-      const {comp} = createComponent(SchemaField, props);
-      sandbox.stub(comp, "render").returns(<div/>);
+      const { comp } = createComponent(SchemaField, props);
+      sandbox.stub(comp, "render").returns(<div />);
 
-      setProps(comp, {...props, formData: {foo: "blah"}});
+      setProps(comp, { ...props, formData: { foo: "blah" } });
 
       sinon.assert.notCalled(comp.render);
     });

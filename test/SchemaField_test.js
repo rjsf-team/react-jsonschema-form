@@ -1,14 +1,13 @@
 import React from "react";
-import {expect} from "chai";
-import {Simulate} from "react-addons-test-utils";
+import { expect } from "chai";
+import { Simulate } from "react-addons-test-utils";
 
 import SchemaField from "../src/components/fields/SchemaField";
 import TitleField from "../src/components/fields/TitleField";
 import DescriptionField from "../src/components/fields/DescriptionField";
 
-import {createFormComponent, createSandbox} from "./test_utils";
-import {getDefaultRegistry} from "../src/utils";
-
+import { createFormComponent, createSandbox } from "./test_utils";
+import { getDefaultRegistry } from "../src/utils";
 
 describe("SchemaField", () => {
   let sandbox;
@@ -23,18 +22,19 @@ describe("SchemaField", () => {
 
   describe("Custom SchemaField component", () => {
     const CustomSchemaField = function(props) {
-      return (<div id="custom"><SchemaField {...props}/></div>);
+      return <div id="custom"><SchemaField {...props} /></div>;
     };
 
     it("should use the specified custom SchemaType property", () => {
-      const fields = {SchemaField: CustomSchemaField};
-      const {node} = createFormComponent({
-        schema: {type: "string"},
+      const fields = { SchemaField: CustomSchemaField };
+      const { node } = createFormComponent({
+        schema: { type: "string" },
         fields
       });
 
-      expect(node.querySelectorAll("#custom > .field input[type=text]"))
-        .to.have.length.of(1);
+      expect(
+        node.querySelectorAll("#custom > .field input[type=text]")
+      ).to.have.length.of(1);
     });
   });
 
@@ -45,60 +45,60 @@ describe("SchemaField", () => {
       }
 
       render() {
-        return <div id="custom"/>;
+        return <div id="custom" />;
       }
     }
 
     const schema = {
       type: "object",
       properties: {
-        foo: {type: "string"},
-        bar: {type: "string"}
+        foo: { type: "string" },
+        bar: { type: "string" }
       }
     };
 
     it("should use provided direct custom component for object", () => {
-      const uiSchema = {"ui:field": MyObject};
+      const uiSchema = { "ui:field": MyObject };
 
-      const {node} = createFormComponent({schema, uiSchema});
+      const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelectorAll("#custom"))
-        .to.have.length.of(1);
+      expect(node.querySelectorAll("#custom")).to.have.length.of(1);
 
       expect(node.querySelectorAll("label")).to.have.length.of(0);
     });
 
     it("should use provided direct custom component for specific property", () => {
       const uiSchema = {
-        foo: {"ui:field": MyObject}
+        foo: { "ui:field": MyObject }
       };
 
-      const {node} = createFormComponent({schema, uiSchema});
+      const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelectorAll("#custom"))
-        .to.have.length.of(1);
+      expect(node.querySelectorAll("#custom")).to.have.length.of(1);
 
-      expect(node.querySelectorAll("input"))
-        .to.have.length.of(1);
+      expect(node.querySelectorAll("input")).to.have.length.of(1);
 
       expect(node.querySelectorAll("label")).to.have.length.of(1);
     });
 
     it("should provide custom field the expected fields", () => {
       let receivedProps;
-      createFormComponent({schema, uiSchema: {
-        "ui:field": class extends React.Component {
-          constructor(props) {
-            super(props);
-            receivedProps = props;
-          }
-          render() {
-            return <div/>;
+      createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:field": class extends React.Component {
+            constructor(props) {
+              super(props);
+              receivedProps = props;
+            }
+            render() {
+              return <div />;
+            }
           }
         }
-      }});
+      });
 
-      const {registry} = receivedProps;
+      const { registry } = receivedProps;
       expect(registry.widgets).eql(getDefaultRegistry().widgets);
       expect(registry.definitions).eql({});
       expect(registry.fields).to.be.an("object");
@@ -108,13 +108,12 @@ describe("SchemaField", () => {
     });
 
     it("should use registered custom component for object", () => {
-      const uiSchema = {"ui:field": "myobject"};
-      const fields = {"myobject": MyObject};
+      const uiSchema = { "ui:field": "myobject" };
+      const fields = { myobject: MyObject };
 
-      const {node} = createFormComponent({schema, uiSchema, fields});
+      const { node } = createFormComponent({ schema, uiSchema, fields });
 
-      expect(node.querySelectorAll("#custom"))
-        .to.have.length.of(1);
+      expect(node.querySelectorAll("#custom")).to.have.length.of(1);
     });
 
     it("should handle referenced schema definitions", () => {
@@ -123,20 +122,19 @@ describe("SchemaField", () => {
           foobar: {
             type: "object",
             properties: {
-              foo: {type: "string"},
-              bar: {type: "string"}
+              foo: { type: "string" },
+              bar: { type: "string" }
             }
           }
         },
         $ref: "#/definitions/foobar"
       };
-      const uiSchema = {"ui:field": "myobject"};
-      const fields = {"myobject": MyObject};
+      const uiSchema = { "ui:field": "myobject" };
+      const fields = { myobject: MyObject };
 
-      const {node} = createFormComponent({schema, uiSchema, fields});
+      const { node } = createFormComponent({ schema, uiSchema, fields });
 
-      expect(node.querySelectorAll("#custom"))
-        .to.have.length.of(1);
+      expect(node.querySelectorAll("#custom")).to.have.length.of(1);
     });
 
     it("should not pass classNames to child component", () => {
@@ -144,7 +142,8 @@ describe("SchemaField", () => {
         return (
           <SchemaField
             {...props}
-            uiSchema={{...props.uiSchema, "ui:field": undefined}}/>
+            uiSchema={{ ...props.uiSchema, "ui:field": undefined }}
+          />
         );
       };
 
@@ -153,13 +152,13 @@ describe("SchemaField", () => {
       };
       const uiSchema = {
         "ui:field": "customSchemaField",
-        classNames: "foo"};
-      const fields = {"customSchemaField": CustomSchemaField};
+        classNames: "foo"
+      };
+      const fields = { customSchemaField: CustomSchemaField };
 
-      const {node} = createFormComponent({schema, uiSchema, fields});
+      const { node } = createFormComponent({ schema, uiSchema, fields });
 
-      expect(node.querySelectorAll(".foo"))
-        .to.have.length.of(1);
+      expect(node.querySelectorAll(".foo")).to.have.length.of(1);
     });
   });
 
@@ -167,16 +166,17 @@ describe("SchemaField", () => {
     const schema = {
       type: "object",
       properties: {
-        foo: {type: "string", description:"A Foo field"},
-        bar: {type: "string"}
+        foo: { type: "string", description: "A Foo field" },
+        bar: { type: "string" }
       }
     };
 
     it("should render description if available from the schema", () => {
-      const {node} = createFormComponent({schema});
+      const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("#root_foo__description"))
-        .to.have.length.of(1);
+      expect(node.querySelectorAll("#root_foo__description")).to.have.length.of(
+        1
+      );
     });
 
     it("should render description if available from a referenced schema", () => {
@@ -184,8 +184,8 @@ describe("SchemaField", () => {
       const schemaWithReference = {
         type: "object",
         properties: {
-          foo: {$ref: "#/definitions/foo"},
-          bar: {type: "string"}
+          foo: { $ref: "#/definitions/foo" },
+          bar: { type: "string" }
         },
         definitions: {
           foo: {
@@ -194,7 +194,7 @@ describe("SchemaField", () => {
           }
         }
       };
-      const {node} = createFormComponent({schema: schemaWithReference});
+      const { node } = createFormComponent({ schema: schemaWithReference });
 
       const matches = node.querySelectorAll("#root_foo__description");
       expect(matches).to.have.length.of(1);
@@ -202,21 +202,26 @@ describe("SchemaField", () => {
     });
 
     it("should not render description if not available from schema", () => {
-      const {node} = createFormComponent({schema});
+      const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("#root_bar__description"))
-        .to.have.length.of(0);
+      expect(node.querySelectorAll("#root_bar__description")).to.have.length.of(
+        0
+      );
     });
 
     it("should render a customized description field", () => {
-      const CustomDescriptionField = ({description}) => <div id="custom">{description}</div>;
+      const CustomDescriptionField = ({ description }) => (
+        <div id="custom">{description}</div>
+      );
 
-      const {node} = createFormComponent({schema, fields: {
-        DescriptionField: CustomDescriptionField}
+      const { node } = createFormComponent({
+        schema,
+        fields: {
+          DescriptionField: CustomDescriptionField
+        }
       });
 
-      expect(node.querySelector("#custom").textContent)
-        .to.eql("A Foo field");
+      expect(node.querySelector("#custom").textContent).to.eql("A Foo field");
     });
   });
 
@@ -224,14 +229,14 @@ describe("SchemaField", () => {
     const schema = {
       type: "object",
       properties: {
-        foo: {type: "string"}
+        foo: { type: "string" }
       }
     };
 
     const uiSchema = {
-      "ui:field": (props) => {
-        const {uiSchema, ...fieldProps} = props; //eslint-disable-line
-        return <SchemaField {...fieldProps}/>;
+      "ui:field": props => {
+        const { uiSchema, ...fieldProps } = props; //eslint-disable-line
+        return <SchemaField {...fieldProps} />;
       }
     };
 
@@ -250,19 +255,23 @@ describe("SchemaField", () => {
     }
 
     it("should render it's own errors", () => {
-      const {node} = createFormComponent({schema, uiSchema, validate});
+      const { node } = createFormComponent({ schema, uiSchema, validate });
       submit(node);
 
-      const matches = node.querySelectorAll("form > .form-group > div > .error-detail .text-danger");
+      const matches = node.querySelectorAll(
+        "form > .form-group > div > .error-detail .text-danger"
+      );
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.eql("container");
     });
 
     it("should pass errors to child component", () => {
-      const {node} = createFormComponent({schema, uiSchema, validate});
+      const { node } = createFormComponent({ schema, uiSchema, validate });
       submit(node);
 
-      const matches = node.querySelectorAll("form .form-group .form-group .text-danger");
+      const matches = node.querySelectorAll(
+        "form .form-group .form-group .text-danger"
+      );
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.contain("test");
     });

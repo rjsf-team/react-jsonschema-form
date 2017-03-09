@@ -4,16 +4,16 @@ module.exports = {
       address: {
         type: "object",
         properties: {
-          street_address: {type: "string"},
-          city:           {type: "string"},
-          state:          {type: "string"}
+          street_address: { type: "string" },
+          city: { type: "string" },
+          state: { type: "string" }
         },
         required: ["street_address", "city", "state"]
       },
       node: {
         type: "object",
         properties: {
-          name: {type: "string"},
+          name: { type: "string" },
           children: {
             type: "array",
             items: {
@@ -55,9 +55,7 @@ module.exports = {
     },
     tree: {
       name: "root",
-      children: [
-         {name: "leaf"}
-      ]
+      children: [{ name: "leaf" }]
     }
   }
 };
