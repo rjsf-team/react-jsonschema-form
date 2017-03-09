@@ -9,7 +9,6 @@ import {
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
-const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   array:   "ArrayField",
   boolean: "BooleanField",
@@ -38,8 +37,8 @@ function Label(props) {
     return <div/>;
   }
   return (
-    <label className="control-label" htmlFor={id}>
-      {required ? label + REQUIRED_FIELD_SYMBOL : label}
+    <label className={required ? "control-label control-label-required":"control-label"} htmlFor={id}>
+      {label}
     </label>
   );
 }

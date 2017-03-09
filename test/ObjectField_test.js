@@ -107,8 +107,8 @@ describe("ObjectField", () => {
       // Required field is <input type="text" required="">
       expect(node.querySelector("input[type=text]").getAttribute("required"))
         .eql("");
-      expect(node.querySelector(".field-string label").textContent)
-        .eql("Foo*");
+      expect(node.querySelector(".control-label-required").textContent)
+        .eql("Foo");
     });
 
     it("should fill fields with form data", () => {

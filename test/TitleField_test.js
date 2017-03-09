@@ -47,23 +47,22 @@ describe("TitleField", () => {
     expect(node.id).to.equal("sample_id");
   });
 
-  it("should include only title, when field is not required", () => {
+  it("should not add 'legend-required' class to the title, when field is not required", () => {
     const props = {
       title: "Field title",
       required: false
     };
     const {node} = createComponent(TitleFieldWrapper, props);
 
-    expect(node.textContent).to.equal(props.title);
+    expect(node.className).not.to.equal("legend-required");
   });
 
-  it("should add an asterisk to the title, when field is required", () => {
+  it("should add 'legend-required' class to the title, when field is required", () => {
     const props = {
       title: "Field title",
       required: true
     };
     const {node} = createComponent(TitleFieldWrapper, props);
-
-    expect(node.textContent).to.equal(props.title + "*");
+    expect(node.className).to.equal("legend-required");
   });
 });
