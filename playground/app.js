@@ -386,24 +386,23 @@ class App extends Component {
           </div>
         </div>
         <div className="col-sm-5">
-          {!this.state.form
-            ? null
-            : <Form
-                ArrayFieldTemplate={ArrayFieldTemplate}
-                liveValidate={liveValidate}
-                schema={schema}
-                uiSchema={uiSchema}
-                formData={formData}
-                onChange={this.onFormDataChange}
-                onSubmit={({ formData }) =>
-                  console.log("submitted formData", formData)}
-                fields={{ geo: GeoPosition }}
-                validate={validate}
-                onBlur={(id, value) =>
-                  console.log(`Touched ${id} with value ${value}`)}
-                transformErrors={transformErrors}
-                onError={log("errors")}
-              />}
+          {this.state.form &&
+            <Form
+              ArrayFieldTemplate={ArrayFieldTemplate}
+              liveValidate={liveValidate}
+              schema={schema}
+              uiSchema={uiSchema}
+              formData={formData}
+              onChange={this.onFormDataChange}
+              onSubmit={({ formData }) =>
+                console.log("submitted formData", formData)}
+              fields={{ geo: GeoPosition }}
+              validate={validate}
+              onBlur={(id, value) =>
+                console.log(`Touched ${id} with value ${value}`)}
+              transformErrors={transformErrors}
+              onError={log("errors")}
+            />}
         </div>
       </div>
     );
