@@ -1322,9 +1322,23 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - Use radio list for enums: https://jsfiddle.net/f2y3fq7L/2/
  - Reading file input data: https://jsfiddle.net/f9vcb6pL/1/
  - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
- 
- 
+
+
 ## Contributing
+
+### Coding style
+
+All the JavaScript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style. A command is provided to ensure your code is always formatted accordingly:
+
+```
+$ npm run cs-format
+```
+
+The `cs-check` command ensures all files conform to that style:
+
+```
+$ npm run cs-check
+```
 
 ### Development server
 
