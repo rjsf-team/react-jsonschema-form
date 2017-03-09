@@ -77,6 +77,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [JSON Schema supporting status](#json-schema-supporting-status)
   - [Tips and tricks](#tips-and-tricks)
   - [Contributing](#contributing)
+     - [Coding style](#coding-style)
      - [Development server](#development-server)
      - [Tests](#tests)
         - [TDD](#tdd)
