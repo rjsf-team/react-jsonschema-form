@@ -52,6 +52,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array Field Template](#array-field-template)
+     - [Error list Template](#error-list-template)
      - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)
@@ -809,6 +810,38 @@ The following props are part of each element in `items`:
 - `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is readonly.
 
+### Error List template
+
+To take control over how the form errors are displayed, you can define an *error list template* for your form. This list is the form global error list that appears at the top of your forms.
+
+An error list template is basically a React stateless component being passed errors as props so you can render them as you like:
+
+```jsx
+function ErrorListTemplate(props) {
+  const {errors} = props;
+  return (
+    <div>
+      {errors.map((error, i) => {
+        return (
+          <li key={i}>
+            {error.stack}
+          </li>
+        );
+      })}
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema}
+        showErrorList={true}
+        ErrorList={ErrorListTemplate} />,
+), document.getElementById("app"));
+```
+
+> Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
+
+
 ### Custom widgets and fields
 
 The API allows to specify your own custom *widget* and *field* components:
@@ -1255,6 +1288,8 @@ render((
         showErrorList={false}/>
 ), document.getElementById("app"));
 ```
+
+> Note: you can also use your own [ErrorList](#error-list-template)
 
 ### The case of empty strings
 

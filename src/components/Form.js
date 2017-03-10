@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 
-import ErrorList from "./ErrorList";
+import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
   shouldRender,
@@ -17,6 +17,7 @@ export default class Form extends Component {
     liveValidate: false,
     safeRenderCompletion: false,
     noHtml5Validate: false,
+    ErrorList: DefaultErrorList,
   };
 
   constructor(props) {
@@ -76,7 +77,7 @@ export default class Form extends Component {
 
   renderErrors() {
     const { status, errors } = this.state;
-    const { showErrorList } = this.props;
+    const { ErrorList, showErrorList } = this.props;
     if (status !== "editing" && errors.length && showErrorList != false) {
       return <ErrorList errors={errors} />;
     }
@@ -208,6 +209,7 @@ if (process.env.NODE_ENV !== "production") {
     fields: PropTypes.objectOf(PropTypes.func),
     ArrayFieldTemplate: PropTypes.func,
     FieldTemplate: PropTypes.func,
+    ErrorList: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,
     showErrorList: PropTypes.bool,
