@@ -1,3 +1,4 @@
+import React from "react";
 import { expect } from "chai";
 import sinon from "sinon";
 import { Simulate } from "react-addons-test-utils";
@@ -443,6 +444,33 @@ describe("Validation", () => {
             })
           );
         });
+      });
+    });
+
+    describe("Custom ErrorList", () => {
+      const schema = {
+        type: "string",
+        required: true,
+        minLength: 1
+      };
+
+      const formData = 0;
+
+      const CustomErrorList = ({ errors }) => (
+        <div className="CustomErrorList">{errors.length} custom</div>
+      );
+
+      it("should use CustomErrorList", () => {
+        const { node } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData,
+          ErrorList: CustomErrorList
+        });
+        expect(node.querySelectorAll(".CustomErrorList")).to.have.length.of(1);
+        expect(node.querySelector(".CustomErrorList").textContent).eql(
+          "1 custom"
+        );
       });
     });
   });
