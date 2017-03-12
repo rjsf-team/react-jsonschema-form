@@ -5,18 +5,18 @@ module.exports = {
     required: ["lat", "lon"],
     properties: {
       lat: {
-        type: "number"
+        type: "number",
       },
       lon: {
-        type: "number"
-      }
-    }
+        type: "number",
+      },
+    },
   },
   uiSchema: {
-    "ui:field": "geo"
+    "ui:field": "geo",
   },
   formData: {
     lat: 0,
-    lon: 0
-  }
+    lon: 0,
+  },
 };

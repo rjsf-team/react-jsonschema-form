@@ -47,9 +47,9 @@ module.exports = {
     title: "Custom array of strings",
     type: "array",
     items: {
-      type: "string"
-    }
+      type: "string",
+    },
   },
   formData: ["react", "jsonschema", "form"],
-  ArrayFieldTemplate
+  ArrayFieldTemplate,
 };

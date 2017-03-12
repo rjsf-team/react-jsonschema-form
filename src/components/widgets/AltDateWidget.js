@@ -25,7 +25,7 @@ function DateElement(props) {
     readonly,
     autofocus,
     registry,
-    onBlur
+    onBlur,
   } = props;
   const id = rootId + "_" + type;
   const { SelectWidget } = registry.widgets;
@@ -51,7 +51,7 @@ class AltDateWidget extends Component {
     time: false,
     disabled: false,
     readonly: false,
-    autofocus: false
+    autofocus: false,
   };
 
   constructor(props) {
@@ -104,7 +104,7 @@ class AltDateWidget extends Component {
     const data = [
       { type: "year", range: [1900, 2020], value: year },
       { type: "month", range: [1, 12], value: month },
-      { type: "day", range: [1, 31], value: day }
+      { type: "day", range: [1, 31], value: day },
     ];
     if (time) {
       data.push(
@@ -163,7 +163,7 @@ if (process.env.NODE_ENV !== "production") {
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
-    time: PropTypes.bool
+    time: PropTypes.bool,
   };
 }
 

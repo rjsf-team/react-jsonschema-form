@@ -11,13 +11,13 @@ module.exports = {
         properties: {
           email: {
             type: "string",
-            format: "email"
+            format: "email",
           },
           uri: {
             type: "string",
-            format: "uri"
-          }
-        }
+            format: "uri",
+          },
+        },
       },
       boolean: {
         type: "object",
@@ -26,19 +26,19 @@ module.exports = {
           default: {
             type: "boolean",
             title: "checkbox (default)",
-            description: "This is the checkbox-description"
+            description: "This is the checkbox-description",
           },
           radio: {
             type: "boolean",
             title: "radio buttons",
-            description: "This is the radio-description"
+            description: "This is the radio-description",
           },
           select: {
             type: "boolean",
             title: "select box",
-            description: "This is the select-description"
-          }
-        }
+            description: "This is the select-description",
+          },
+        },
       },
       string: {
         type: "object",
@@ -46,74 +46,74 @@ module.exports = {
         properties: {
           default: {
             type: "string",
-            title: "text input (default)"
+            title: "text input (default)",
           },
           textarea: {
             type: "string",
-            title: "textarea"
+            title: "textarea",
           },
           color: {
             type: "string",
             title: "color picker",
-            default: "#151ce6"
-          }
-        }
+            default: "#151ce6",
+          },
+        },
       },
       secret: {
         type: "string",
-        default: "I'm a hidden string."
+        default: "I'm a hidden string.",
       },
       disabled: {
         type: "string",
         title: "A disabled field",
-        default: "I am disabled."
+        default: "I am disabled.",
       },
       readonly: {
         type: "string",
         title: "A readonly field",
-        default: "I am read-only."
+        default: "I am read-only.",
       },
       widgetOptions: {
         title: "Custom widget with options",
         type: "string",
-        default: "I am yellow"
+        default: "I am yellow",
       },
       selectWidgetOptions: {
         title: "Custom select widget with options",
         type: "string",
         enum: ["foo", "bar"],
-        enumNames: ["Foo", "Bar"]
-      }
-    }
+        enumNames: ["Foo", "Bar"],
+      },
+    },
   },
   uiSchema: {
     boolean: {
       radio: {
-        "ui:widget": "radio"
+        "ui:widget": "radio",
       },
       select: {
-        "ui:widget": "select"
-      }
+        "ui:widget": "select",
+      },
     },
     string: {
       textarea: {
         "ui:widget": "textarea",
         "ui:options": {
-          rows: 5
-        }
+          rows: 5,
+        },
       },
       color: {
-        "ui:widget": "color"
-      }
+        "ui:widget": "color",
+      },
     },
     secret: {
-      "ui:widget": "hidden"
+      "ui:widget": "hidden",
     },
     disabled: {
-      "ui:disabled": true
+      "ui:disabled": true,
     },
     readonly: {
-      "ui:readonly": true
+      "ui:readonly": true,
     },
     widgetOptions: {
       "ui:widget": ({ value, onChange, options }) => {
@@ -128,8 +128,8 @@ module.exports = {
         );
       },
       "ui:options": {
-        backgroundColor: "yellow"
-      }
+        backgroundColor: "yellow",
+      },
     },
     selectWidgetOptions: {
       "ui:widget": ({ value, onChange, options }) => {
@@ -147,24 +147,24 @@ module.exports = {
         );
       },
       "ui:options": {
-        backgroundColor: "pink"
-      }
-    }
+        backgroundColor: "pink",
+      },
+    },
   },
   formData: {
     stringFormats: {
       email: "chuck@norris.net",
-      uri: "http://chucknorris.com/"
+      uri: "http://chucknorris.com/",
     },
     boolean: {
       default: true,
       radio: true,
-      select: true
+      select: true,
     },
     string: {
       default: "Hello...",
-      textarea: "... World"
+      textarea: "... World",
     },
-    secret: "I'm a hidden string."
-  }
+    secret: "I'm a hidden string.",
+  },
 };

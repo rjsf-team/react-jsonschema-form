@@ -6,7 +6,7 @@ const widgetMap = {
     checkbox: "CheckboxWidget",
     radio: "RadioWidget",
     select: "SelectWidget",
-    hidden: "HiddenWidget"
+    hidden: "HiddenWidget",
   },
   string: {
     text: "TextWidget",
@@ -27,7 +27,7 @@ const widgetMap = {
     "alt-date": "AltDateWidget",
     "alt-datetime": "AltDateTimeWidget",
     color: "ColorWidget",
-    file: "FileWidget"
+    file: "FileWidget",
   },
   number: {
     text: "TextWidget",
@@ -35,7 +35,7 @@ const widgetMap = {
     updown: "UpDownWidget",
     range: "RangeWidget",
     radio: "RadioWidget",
-    hidden: "HiddenWidget"
+    hidden: "HiddenWidget",
   },
   integer: {
     text: "TextWidget",
@@ -43,20 +43,20 @@ const widgetMap = {
     updown: "UpDownWidget",
     range: "RangeWidget",
     radio: "RadioWidget",
-    hidden: "HiddenWidget"
+    hidden: "HiddenWidget",
   },
   array: {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
-    files: "FileWidget"
-  }
+    files: "FileWidget",
+  },
 };
 
 const defaultRegistry = {
   fields: require("./components/fields").default,
   widgets: require("./components/widgets").default,
   definitions: {},
-  formContext: {}
+  formContext: {},
 };
 
 export function getDefaultRegistry() {
@@ -423,7 +423,7 @@ export function shouldRender(comp, nextProps, nextState) {
 
 export function toIdSchema(schema, id, definitions) {
   const idSchema = {
-    $id: id || "root"
+    $id: id || "root",
   };
   if ("$ref" in schema) {
     const _schema = retrieveSchema(schema, definitions);
@@ -451,7 +451,7 @@ export function parseDateString(dateString, includeTime = true) {
       day: -1,
       hour: includeTime ? -1 : 0,
       minute: includeTime ? -1 : 0,
-      second: includeTime ? -1 : 0
+      second: includeTime ? -1 : 0,
     };
   }
   const date = new Date(dateString);
@@ -464,7 +464,7 @@ export function parseDateString(dateString, includeTime = true) {
     day: date.getUTCDate(),
     hour: includeTime ? date.getUTCHours() : 0,
     minute: includeTime ? date.getUTCMinutes() : 0,
-    second: includeTime ? date.getUTCSeconds() : 0
+    second: includeTime ? date.getUTCSeconds() : 0,
   };
 }
 
@@ -475,7 +475,7 @@ export function toDateString(
     day,
     hour = 0,
     minute = 0,
-    second = 0
+    second = 0,
   },
   time = true
 ) {

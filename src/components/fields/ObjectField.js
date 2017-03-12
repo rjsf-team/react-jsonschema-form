@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from "react";
 import {
   orderProperties,
   retrieveSchema,
-  getDefaultRegistry
+  getDefaultRegistry,
 } from "../../utils";
 
 class ObjectField extends Component {
@@ -15,7 +15,7 @@ class ObjectField extends Component {
     registry: getDefaultRegistry(),
     required: false,
     disabled: false,
-    readonly: false
+    readonly: false,
   };
 
   isRequired(name) {
@@ -41,7 +41,7 @@ class ObjectField extends Component {
       required,
       disabled,
       readonly,
-      onBlur
+      onBlur,
     } = this.props;
     const { definitions, fields, formContext } = this.props.registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
@@ -118,8 +118,8 @@ if (process.env.NODE_ENV !== "production") {
       ).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired
-    })
+      formContext: PropTypes.object.isRequired,
+    }),
   };
 }
 

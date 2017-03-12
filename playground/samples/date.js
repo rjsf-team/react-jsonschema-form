@@ -10,13 +10,13 @@ module.exports = {
         properties: {
           datetime: {
             type: "string",
-            format: "date-time"
+            format: "date-time",
           },
           date: {
             type: "string",
-            format: "date"
-          }
-        }
+            format: "date",
+          },
+        },
       },
       alternative: {
         title: "Alternative",
@@ -25,25 +25,25 @@ module.exports = {
         properties: {
           "alt-datetime": {
             type: "string",
-            format: "date-time"
+            format: "date-time",
           },
           "alt-date": {
             type: "string",
-            format: "date"
-          }
-        }
-      }
-    }
+            format: "date",
+          },
+        },
+      },
+    },
   },
   uiSchema: {
     alternative: {
       "alt-datetime": {
-        "ui:widget": "alt-datetime"
+        "ui:widget": "alt-datetime",
       },
       "alt-date": {
-        "ui:widget": "alt-date"
-      }
-    }
+        "ui:widget": "alt-date",
+      },
+    },
   },
-  formData: {}
+  formData: {},
 };

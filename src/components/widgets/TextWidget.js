@@ -8,7 +8,10 @@ function TextWidget(props) {
 
 if (process.env.NODE_ENV !== "production") {
   TextWidget.propTypes = {
-    value: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
+    value: PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number,
+    ]),
   };
 }
 

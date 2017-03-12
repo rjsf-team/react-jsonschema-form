@@ -8,7 +8,7 @@ function URLWidget(props) {
 
 if (process.env.NODE_ENV !== "production") {
   URLWidget.propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string,
   };
 }
 

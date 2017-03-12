@@ -43,7 +43,7 @@ function RadioWidget(props) {
 }
 
 RadioWidget.defaultProps = {
-  autofocus: false
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -52,12 +52,12 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     options: PropTypes.shape({
       enumOptions: PropTypes.array,
-      inline: PropTypes.bool
+      inline: PropTypes.bool,
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
     autofocus: PropTypes.bool,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
   };
 }
 export default RadioWidget;

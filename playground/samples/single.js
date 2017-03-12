@@ -1,8 +1,8 @@
 module.exports = {
   schema: {
     title: "A single-field form",
-    type: "string"
+    type: "string",
   },
   formData: "initial value",
-  uiSchema: {}
+  uiSchema: {},
 };

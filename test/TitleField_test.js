@@ -29,7 +29,7 @@ describe("TitleField", () => {
   it("should return a legend", () => {
     const props = {
       title: "Field title",
-      required: true
+      required: true,
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
@@ -40,7 +40,7 @@ describe("TitleField", () => {
     const props = {
       title: "Field title",
       required: true,
-      id: "sample_id"
+      id: "sample_id",
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
@@ -50,7 +50,7 @@ describe("TitleField", () => {
   it("should include only title, when field is not required", () => {
     const props = {
       title: "Field title",
-      required: false
+      required: false,
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
@@ -60,7 +60,7 @@ describe("TitleField", () => {
   it("should add an asterisk to the title, when field is required", () => {
     const props = {
       title: "Field title",
-      required: true
+      required: true,
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 

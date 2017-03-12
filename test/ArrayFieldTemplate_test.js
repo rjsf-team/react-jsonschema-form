@@ -42,7 +42,7 @@ describe("ArrayFieldTemplate", () => {
         type: "array",
         title: "my list",
         description: "my description",
-        items: { type: "string" }
+        items: { type: "string" },
       };
 
       let node;
@@ -50,7 +50,7 @@ describe("ArrayFieldTemplate", () => {
         node = createFormComponent({
           ArrayFieldTemplate,
           formData,
-          schema
+          schema,
         }).node;
       });
 
@@ -92,7 +92,7 @@ describe("ArrayFieldTemplate", () => {
         type: "array",
         title: "my list",
         description: "my description",
-        items: [{ type: "string" }, { type: "string" }, { type: "string" }]
+        items: [{ type: "string" }, { type: "string" }, { type: "string" }],
       };
 
       let node;
@@ -100,7 +100,7 @@ describe("ArrayFieldTemplate", () => {
         node = createFormComponent({
           ArrayFieldTemplate,
           formData,
-          schema
+          schema,
         }).node;
       });
 

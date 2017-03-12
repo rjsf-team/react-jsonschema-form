@@ -4,7 +4,7 @@ import {
   getWidget,
   getUiOptions,
   optionsList,
-  getDefaultRegistry
+  getDefaultRegistry,
 } from "../../utils";
 
 function StringField(props) {
@@ -20,7 +20,7 @@ function StringField(props) {
     autofocus,
     registry,
     onChange,
-    onBlur
+    onBlur,
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -60,7 +60,7 @@ if (process.env.NODE_ENV !== "production") {
     onBlur: PropTypes.func.isRequired,
     formData: PropTypes.oneOfType([
       React.PropTypes.string,
-      React.PropTypes.number
+      React.PropTypes.number,
     ]),
     registry: PropTypes.shape({
       widgets: PropTypes.objectOf(
@@ -68,13 +68,13 @@ if (process.env.NODE_ENV !== "production") {
       ).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired
+      formContext: PropTypes.object.isRequired,
     }),
     formContext: PropTypes.object.isRequired,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
-    autofocus: PropTypes.bool
+    autofocus: PropTypes.bool,
   };
 }
 
@@ -83,7 +83,7 @@ StringField.defaultProps = {
   registry: getDefaultRegistry(),
   disabled: false,
   readonly: false,
-  autofocus: false
+  autofocus: false,
 };
 
 export default StringField;

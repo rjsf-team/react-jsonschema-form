@@ -17,5 +17,5 @@ export default {
   SchemaField,
   StringField,
   TitleField,
-  UnsupportedField
+  UnsupportedField,
 };
