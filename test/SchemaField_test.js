@@ -29,7 +29,7 @@ describe("SchemaField", () => {
       const fields = { SchemaField: CustomSchemaField };
       const { node } = createFormComponent({
         schema: { type: "string" },
-        fields
+        fields,
       });
 
       expect(
@@ -53,8 +53,8 @@ describe("SchemaField", () => {
       type: "object",
       properties: {
         foo: { type: "string" },
-        bar: { type: "string" }
-      }
+        bar: { type: "string" },
+      },
     };
 
     it("should use provided direct custom component for object", () => {
@@ -69,7 +69,7 @@ describe("SchemaField", () => {
 
     it("should use provided direct custom component for specific property", () => {
       const uiSchema = {
-        foo: { "ui:field": MyObject }
+        foo: { "ui:field": MyObject },
       };
 
       const { node } = createFormComponent({ schema, uiSchema });
@@ -94,8 +94,8 @@ describe("SchemaField", () => {
             render() {
               return <div />;
             }
-          }
-        }
+          },
+        },
       });
 
       const { registry } = receivedProps;
@@ -123,11 +123,11 @@ describe("SchemaField", () => {
             type: "object",
             properties: {
               foo: { type: "string" },
-              bar: { type: "string" }
-            }
-          }
+              bar: { type: "string" },
+            },
+          },
         },
-        $ref: "#/definitions/foobar"
+        $ref: "#/definitions/foobar",
       };
       const uiSchema = { "ui:field": "myobject" };
       const fields = { myobject: MyObject };
@@ -148,11 +148,11 @@ describe("SchemaField", () => {
       };
 
       const schema = {
-        type: "string"
+        type: "string",
       };
       const uiSchema = {
         "ui:field": "customSchemaField",
-        classNames: "foo"
+        classNames: "foo",
       };
       const fields = { customSchemaField: CustomSchemaField };
 
@@ -167,8 +167,8 @@ describe("SchemaField", () => {
       type: "object",
       properties: {
         foo: { type: "string", description: "A Foo field" },
-        bar: { type: "string" }
-      }
+        bar: { type: "string" },
+      },
     };
 
     it("should render description if available from the schema", () => {
@@ -185,14 +185,14 @@ describe("SchemaField", () => {
         type: "object",
         properties: {
           foo: { $ref: "#/definitions/foo" },
-          bar: { type: "string" }
+          bar: { type: "string" },
         },
         definitions: {
           foo: {
             type: "string",
-            description: "A Foo field"
-          }
-        }
+            description: "A Foo field",
+          },
+        },
       };
       const { node } = createFormComponent({ schema: schemaWithReference });
 
@@ -217,8 +217,8 @@ describe("SchemaField", () => {
       const { node } = createFormComponent({
         schema,
         fields: {
-          DescriptionField: CustomDescriptionField
-        }
+          DescriptionField: CustomDescriptionField,
+        },
       });
 
       expect(node.querySelector("#custom").textContent).to.eql("A Foo field");
@@ -229,15 +229,15 @@ describe("SchemaField", () => {
     const schema = {
       type: "object",
       properties: {
-        foo: { type: "string" }
-      }
+        foo: { type: "string" },
+      },
     };
 
     const uiSchema = {
       "ui:field": props => {
         const { uiSchema, ...fieldProps } = props; //eslint-disable-line
         return <SchemaField {...fieldProps} />;
-      }
+      },
     };
 
     function validate(formData, errors) {

@@ -11,7 +11,7 @@ import {
   optionsList,
   retrieveSchema,
   toIdSchema,
-  getDefaultRegistry
+  getDefaultRegistry,
 } from "../../utils";
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
@@ -50,7 +50,7 @@ function DefaultArrayItem(props) {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: "bold"
+    fontWeight: "bold",
   };
   return (
     <div key={props.index} className={props.className}>
@@ -182,7 +182,7 @@ class ArrayField extends Component {
     required: false,
     disabled: false,
     readonly: false,
-    autofocus: false
+    autofocus: false,
   };
 
   get itemTitle() {
@@ -292,7 +292,7 @@ class ArrayField extends Component {
       autofocus,
       registry,
       formContext,
-      onBlur
+      onBlur,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
     const { ArrayFieldTemplate, definitions, fields } = registry;
@@ -316,7 +316,7 @@ class ArrayField extends Component {
           itemData: formData[index],
           itemUiSchema: uiSchema.items,
           autofocus: autofocus && index === 0,
-          onBlur
+          onBlur,
         });
       }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
@@ -329,7 +329,7 @@ class ArrayField extends Component {
       schema,
       title,
       TitleField,
-      formContext
+      formContext,
     };
 
     // Check if a custom render function was passed in
@@ -346,7 +346,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
-      onBlur
+      onBlur,
     } = this.props;
     const items = this.props.formData;
     const { widgets, definitions, formContext } = this.props.registry;
@@ -354,7 +354,7 @@ class ArrayField extends Component {
     const enumOptions = optionsList(itemsSchema);
     const { widget = "select", ...options } = {
       ...getUiOptions(uiSchema),
-      enumOptions
+      enumOptions,
     };
     const Widget = getWidget(schema, widget, widgets);
     return (
@@ -383,7 +383,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
-      onBlur
+      onBlur,
     } = this.props;
     const title = schema.title || name;
     const items = this.props.formData;
@@ -420,7 +420,7 @@ class ArrayField extends Component {
       readonly,
       autofocus,
       registry,
-      onBlur
+      onBlur,
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
@@ -469,7 +469,7 @@ class ArrayField extends Component {
           itemIdSchema,
           itemErrorSchema,
           autofocus: autofocus && index === 0,
-          onBlur
+          onBlur,
         });
       }),
       onAddClick: this.onAddClick,
@@ -477,7 +477,7 @@ class ArrayField extends Component {
       required,
       schema,
       title,
-      TitleField
+      TitleField,
     };
 
     // Check if a custom template template was passed in
@@ -497,19 +497,19 @@ class ArrayField extends Component {
       itemIdSchema,
       itemErrorSchema,
       autofocus,
-      onBlur
+      onBlur,
     } = props;
     const { SchemaField } = this.props.registry.fields;
     const { disabled, readonly, uiSchema } = this.props;
     const { orderable, removable } = {
       orderable: true,
       removable: true,
-      ...uiSchema["ui:options"]
+      ...uiSchema["ui:options"],
     };
     const has = {
       moveUp: orderable && canMoveUp,
       moveDown: orderable && canMoveDown,
-      remove: removable && canRemove
+      remove: removable && canRemove,
     };
     has.toolbar = Object.keys(has).some(key => has[key]);
 
@@ -539,7 +539,7 @@ class ArrayField extends Component {
       index,
       onDropIndexClick: this.onDropIndexClick,
       onReorderClick: this.onReorderClick,
-      readonly
+      readonly,
     };
   }
 }
@@ -568,8 +568,8 @@ if (process.env.NODE_ENV !== "production") {
       "ui:options": PropTypes.shape({
         addable: PropTypes.bool,
         orderable: PropTypes.bool,
-        removable: PropTypes.bool
-      })
+        removable: PropTypes.bool,
+      }),
     }),
     idSchema: PropTypes.object,
     errorSchema: PropTypes.object,
@@ -586,8 +586,8 @@ if (process.env.NODE_ENV !== "production") {
       ).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired
-    })
+      formContext: PropTypes.object.isRequired,
+    }),
   };
 }
 

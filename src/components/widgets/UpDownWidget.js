@@ -9,7 +9,7 @@ function UpDownWidget(props) {
 
 if (process.env.NODE_ENV !== "production") {
   UpDownWidget.propTypes = {
-    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   };
 }
 

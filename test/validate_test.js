@@ -13,8 +13,8 @@ describe("Validation", () => {
         type: "object",
         properties: {
           foo: { type: "string" },
-          [illFormedKey]: { type: "string" }
-        }
+          [illFormedKey]: { type: "string" },
+        },
       };
 
       let errors, errorSchema;
@@ -52,8 +52,8 @@ describe("Validation", () => {
         required: ["pass1", "pass2"],
         properties: {
           pass1: { type: "string" },
-          pass2: { type: "string" }
-        }
+          pass2: { type: "string" },
+        },
       };
 
       beforeEach(() => {
@@ -87,19 +87,19 @@ describe("Validation", () => {
             __errors: ["err1", "err2"],
             a: {
               b: {
-                __errors: ["err3", "err4"]
-              }
+                __errors: ["err3", "err4"],
+              },
             },
             c: {
-              __errors: ["err5"]
-            }
+              __errors: ["err5"],
+            },
           })
         ).eql([
           { stack: "root: err1" },
           { stack: "root: err2" },
           { stack: "b: err3" },
           { stack: "b: err4" },
-          { stack: "c: err5" }
+          { stack: "c: err5" },
         ]);
       });
     });
@@ -110,8 +110,8 @@ describe("Validation", () => {
         type: "object",
         properties: {
           foo: { type: "string" },
-          [illFormedKey]: { type: "string" }
-        }
+          [illFormedKey]: { type: "string" },
+        },
       };
       const newErrorMessage = "Better error message";
       const transformErrors = errors => {
@@ -155,8 +155,8 @@ describe("Validation", () => {
           required: ["foo"],
           properties: {
             foo: { type: "string" },
-            bar: { type: "string" }
-          }
+            bar: { type: "string" },
+          },
         };
 
         var comp, node, onError;
@@ -166,9 +166,9 @@ describe("Validation", () => {
           const compInfo = createFormComponent({
             schema,
             formData: {
-              foo: undefined
+              foo: undefined,
             },
-            onError
+            onError,
           });
           comp = compInfo.comp;
           node = compInfo.node;
@@ -205,9 +205,9 @@ describe("Validation", () => {
           properties: {
             foo: {
               type: "string",
-              minLength: 10
-            }
-          }
+              minLength: 10,
+            },
+          },
         };
 
         var comp, node, onError;
@@ -217,9 +217,9 @@ describe("Validation", () => {
           const compInfo = createFormComponent({
             schema,
             formData: {
-              foo: "123456789"
+              foo: "123456789",
             },
-            onError
+            onError,
           });
           comp = compInfo.comp;
           node = compInfo.node;
@@ -267,12 +267,12 @@ describe("Validation", () => {
         const { comp } = createFormComponent({
           schema,
           validate,
-          liveValidate: true
+          liveValidate: true,
         });
         comp.componentWillReceiveProps({ formData });
 
         expect(comp.state.errorSchema).eql({
-          __errors: ["Invalid"]
+          __errors: ["Invalid"],
         });
       });
 
@@ -292,7 +292,7 @@ describe("Validation", () => {
           schema,
           formData,
           validate,
-          onSubmit
+          onSubmit,
         });
 
         Simulate.submit(node);
@@ -318,7 +318,7 @@ describe("Validation", () => {
           formData,
           validate,
           onSubmit,
-          onError
+          onError,
         });
 
         Simulate.submit(node);
@@ -332,8 +332,8 @@ describe("Validation", () => {
           type: "object",
           properties: {
             pass1: { type: "string", minLength: 3 },
-            pass2: { type: "string", minLength: 3 }
-          }
+            pass2: { type: "string", minLength: 3 },
+          },
         };
 
         const formData = { pass1: "aaa", pass2: "b" };
@@ -349,21 +349,21 @@ describe("Validation", () => {
         const { comp } = createFormComponent({
           schema,
           validate,
-          liveValidate: true
+          liveValidate: true,
         });
         comp.componentWillReceiveProps({ formData });
 
         expect(comp.state.errorSchema).eql({
           __errors: [],
           pass1: {
-            __errors: []
+            __errors: [],
           },
           pass2: {
             __errors: [
               "does not meet minimum length of 3",
-              "Passwords don't match"
-            ]
-          }
+              "Passwords don't match",
+            ],
+          },
         });
       });
 
@@ -371,8 +371,8 @@ describe("Validation", () => {
         const schema = {
           type: "array",
           items: {
-            type: "string"
-          }
+            type: "string",
+          },
         };
 
         const formData = ["aaa", "bbb", "ccc"];
@@ -387,12 +387,12 @@ describe("Validation", () => {
         const { comp } = createFormComponent({
           schema,
           validate,
-          liveValidate: true
+          liveValidate: true,
         });
         comp.componentWillReceiveProps({ formData });
 
         expect(comp.state.errorSchema).eql({
-          __errors: ["Forbidden value: bbb"]
+          __errors: ["Forbidden value: bbb"],
         });
       });
     });
@@ -404,8 +404,8 @@ describe("Validation", () => {
           required: ["foo"],
           properties: {
             foo: { type: "string" },
-            bar: { type: "string" }
-          }
+            bar: { type: "string" },
+          },
         };
 
         var comp, node, onError;
@@ -415,10 +415,10 @@ describe("Validation", () => {
           const compInfo = createFormComponent({
             schema,
             formData: {
-              foo: undefined
+              foo: undefined,
             },
             onError,
-            showErrorList: false
+            showErrorList: false,
           });
           comp = compInfo.comp;
           node = compInfo.node;

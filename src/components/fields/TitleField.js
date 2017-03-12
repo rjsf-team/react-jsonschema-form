@@ -12,7 +12,7 @@ if (process.env.NODE_ENV !== "production") {
   TitleField.propTypes = {
     id: PropTypes.string,
     title: PropTypes.string,
-    required: PropTypes.bool
+    required: PropTypes.bool,
   };
 }
 

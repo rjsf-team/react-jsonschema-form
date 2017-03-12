@@ -35,5 +35,5 @@ export default {
   ColorWidget,
   FileWidget,
   CheckboxWidget,
-  CheckboxesWidget
+  CheckboxesWidget,
 };

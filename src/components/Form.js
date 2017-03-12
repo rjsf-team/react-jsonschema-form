@@ -6,7 +6,7 @@ import {
   shouldRender,
   toIdSchema,
   setState,
-  getDefaultRegistry
+  getDefaultRegistry,
 } from "../utils";
 import validateFormData from "../validate";
 
@@ -16,7 +16,7 @@ export default class Form extends Component {
     noValidate: false,
     liveValidate: false,
     safeRenderCompletion: false,
-    noHtml5Validate: false
+    noHtml5Validate: false,
   };
 
   constructor(props) {
@@ -41,7 +41,7 @@ export default class Form extends Component {
       ? this.validate(formData, schema)
       : {
           errors: state.errors || [],
-          errorSchema: state.errorSchema || {}
+          errorSchema: state.errorSchema || {},
         };
     const idSchema = toIdSchema(
       schema,
@@ -56,7 +56,7 @@ export default class Form extends Component {
       formData,
       edit,
       errors,
-      errorSchema
+      errorSchema,
     };
   }
 
@@ -138,7 +138,7 @@ export default class Form extends Component {
       ArrayFieldTemplate: this.props.ArrayFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
-      formContext: this.props.formContext || {}
+      formContext: this.props.formContext || {},
     };
   }
 
@@ -155,7 +155,7 @@ export default class Form extends Component {
       autocomplete,
       enctype,
       acceptcharset,
-      noHtml5Validate
+      noHtml5Validate,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
@@ -227,6 +227,6 @@ if (process.env.NODE_ENV !== "production") {
     validate: PropTypes.func,
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
-    formContext: PropTypes.object
+    formContext: PropTypes.object,
   };
 }

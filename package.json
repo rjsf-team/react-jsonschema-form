@@ -7,15 +7,24 @@
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
     "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js --optimize-minimize && cp playground/index.prod.html build/index.html",
-    "cs-check": "prettier-check --jsx-bracket-same-line '{playground,src,test}/**/*.js'",
-    "cs-format": "prettier --jsx-bracket-same-line '{playground,src,test}/**/*.js' --write",
+    "cs-check": "prettier-check $npm_package_prettierOptions '{playground,src,test}/**/*.js'",
+    "cs-format": "prettier $npm_package_prettierOptions '{playground,src,test}/**/*.js' --write",
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test playground",
+    "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
     "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
     "start": "node devServer.js",
     "tdd": "cross-env NODE_ENV=test  mocha --compilers js:babel-register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
     "test": " cross-env NODE_ENV=test   mocha --compilers js:babel-register --require ./test/setup-jsdom.js test/**/*_test.js"
+  },
+  "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5",
+  "lint-staged": {
+    "{playground,src,test}/**/*.js": [
+      "npm run lint",
+      "npm run cs-format",
+      "git add"
+    ]
   },
   "main": "lib/index.js",
   "files": [
@@ -59,7 +68,9 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "gh-pages": "^0.11.0",
     "html": "0.0.10",
+    "husky": "^0.13.2",
     "jsdom": "^8.3.0",
+    "lint-staged": "^3.3.1",
     "mocha": "^2.5.3",
     "prettier": "^0.22.0",
     "prettier-check": "^1.0.0",

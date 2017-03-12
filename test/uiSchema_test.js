@@ -20,13 +20,13 @@ describe("uiSchema", () => {
       type: "object",
       properties: {
         foo: { type: "string" },
-        bar: { type: "string" }
-      }
+        bar: { type: "string" },
+      },
     };
 
     const uiSchema = {
       foo: { classNames: "class-for-foo" },
-      bar: { classNames: "class-for-bar another-for-bar" }
+      bar: { classNames: "class-for-bar another-for-bar" },
     };
 
     it("should apply custom class names to target widgets", () => {
@@ -42,7 +42,7 @@ describe("uiSchema", () => {
   describe("custom widget", () => {
     describe("root widget", () => {
       const schema = {
-        type: "string"
+        type: "string",
       };
 
       const uiSchema = {
@@ -57,7 +57,7 @@ describe("uiSchema", () => {
               onChange={event => props.onChange(event.target.value)}
             />
           );
-        }
+        },
       };
 
       it("should render a root custom widget", () => {
@@ -75,7 +75,7 @@ describe("uiSchema", () => {
 
         widget = ({ label, options }) => <div id={label} style={options} />;
         widget.defaultProps = {
-          options: { background: "yellow", color: "green" }
+          options: { background: "yellow", color: "green" },
         };
 
         widgets = { widget };
@@ -88,8 +88,8 @@ describe("uiSchema", () => {
             funcAll: { type: "string" },
             funcNone: { type: "string" },
             stringAll: { type: "string" },
-            stringNone: { type: "string" }
-          }
+            stringNone: { type: "string" },
+          },
         };
 
         uiSchema = {
@@ -98,16 +98,16 @@ describe("uiSchema", () => {
             "ui:widget": {
               component: widget,
               options: {
-                background: "purple"
-              }
+                background: "purple",
+              },
             },
             "ui:options": {
-              margin: "7px"
+              margin: "7px",
             },
-            "ui:padding": "42px"
+            "ui:padding": "42px",
           },
           funcNone: {
-            "ui:widget": widget
+            "ui:widget": widget,
           },
 
           // pass widget as string
@@ -115,17 +115,17 @@ describe("uiSchema", () => {
             "ui:widget": {
               component: "widget",
               options: {
-                background: "blue"
-              }
+                background: "blue",
+              },
             },
             "ui:options": {
-              margin: "19px"
+              margin: "19px",
             },
-            "ui:padding": "41px"
+            "ui:padding": "41px",
           },
           stringNone: {
-            "ui:widget": "widget"
-          }
+            "ui:widget": "widget",
+          },
         };
       });
 
@@ -133,7 +133,7 @@ describe("uiSchema", () => {
         createFormComponent({
           schema: { type: "string" },
           uiSchema: { "ui:widget": { component: "widget" } },
-          widgets
+          widgets,
         });
         expect(
           console.warn.calledWithMatch(/ui:widget object is deprecated/)
@@ -145,14 +145,14 @@ describe("uiSchema", () => {
         createFormComponent({
           schema: { type: "string" },
           uiSchema: { "ui:widget": "widget" },
-          widgets
+          widgets,
         });
         const cached = widget.MergedWidget;
         expect(cached).to.be.ok;
         createFormComponent({
           schema: { type: "string" },
           uiSchema: { "ui:widget": "widget" },
-          widgets
+          widgets,
         });
         expect(widget.MergedWidget).to.equal(cached);
       });
@@ -203,15 +203,15 @@ describe("uiSchema", () => {
         type: "object",
         properties: {
           field: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       };
 
       const uiSchema = {
         field: {
-          "ui:widget": "custom"
-        }
+          "ui:widget": "custom",
+        },
       };
 
       const CustomWidget = props => {
@@ -228,7 +228,7 @@ describe("uiSchema", () => {
       };
 
       const widgets = {
-        custom: CustomWidget
+        custom: CustomWidget,
       };
 
       it("should render a nested custom widget", () => {
@@ -243,9 +243,9 @@ describe("uiSchema", () => {
         type: "object",
         properties: {
           field: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       };
 
       const CustomWidget = props => {
@@ -260,9 +260,9 @@ describe("uiSchema", () => {
           field: {
             "ui:widget": CustomWidget,
             "ui:options": {
-              className: "custom"
-            }
-          }
+              className: "custom",
+            },
+          },
         };
 
         it("should render a custom widget with options", () => {
@@ -277,13 +277,13 @@ describe("uiSchema", () => {
           field: {
             "ui:widget": "custom",
             "ui:options": {
-              className: "custom"
-            }
-          }
+              className: "custom",
+            },
+          },
         };
 
         const widgets = {
-          custom: CustomWidget
+          custom: CustomWidget,
         };
 
         it("should render a custom widget with options", () => {
@@ -300,9 +300,9 @@ describe("uiSchema", () => {
         properties: {
           field: {
             type: "string",
-            enum: ["foo", "bar"]
-          }
-        }
+            enum: ["foo", "bar"],
+          },
+        },
       };
 
       const CustomWidget = props => {
@@ -321,9 +321,9 @@ describe("uiSchema", () => {
         field: {
           "ui:widget": CustomWidget,
           "ui:options": {
-            className: "custom"
-          }
-        }
+            className: "custom",
+          },
+        },
       };
 
       it("should merge enumOptions with custom options", () => {
@@ -495,7 +495,7 @@ describe("uiSchema", () => {
           {
             type: "array",
             items: { type: "string", enum: ["foo", "bar"] },
-            uniqueItems: true
+            uniqueItems: true,
           },
           { "ui:widget": "checkboxes", "ui:autofocus": true },
           "input",
@@ -531,16 +531,16 @@ describe("uiSchema", () => {
       type: "object",
       properties: {
         foo: {
-          type: "string"
-        }
-      }
+          type: "string",
+        },
+      },
     };
 
     describe("file", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "file"
-        }
+          "ui:widget": "file",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -554,8 +554,8 @@ describe("uiSchema", () => {
       const uiSchema = {
         foo: {
           "ui:widget": "textarea",
-          "ui:placeholder": "sample"
-        }
+          "ui:placeholder": "sample",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -569,8 +569,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "a"
-          }
+            foo: "a",
+          },
         });
 
         expect(node.querySelector("textarea").value).eql("a");
@@ -581,12 +581,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "a"
-          }
+            foo: "a",
+          },
         });
 
         Simulate.change(node.querySelector("textarea"), {
-          target: { value: "b" }
+          target: { value: "b" },
         });
 
         expect(comp.state.formData).eql({ foo: "b" });
@@ -603,8 +603,8 @@ describe("uiSchema", () => {
       const uiSchema = {
         foo: {
           "ui:widget": "password",
-          "ui:placeholder": "sample"
-        }
+          "ui:placeholder": "sample",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -618,8 +618,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "a"
-          }
+            foo: "a",
+          },
         });
 
         expect(node.querySelector("[type=password]").value).eql("a");
@@ -630,12 +630,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "a"
-          }
+            foo: "a",
+          },
         });
 
         Simulate.change(node.querySelector("[type=password]"), {
-          target: { value: "b" }
+          target: { value: "b" },
         });
 
         expect(comp.state.formData).eql({ foo: "b" });
@@ -651,8 +651,8 @@ describe("uiSchema", () => {
     describe("color", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "color"
-        }
+          "ui:widget": "color",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -666,8 +666,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "#151ce6"
-          }
+            foo: "#151ce6",
+          },
         });
 
         expect(node.querySelector("[type=color]").value).eql("#151ce6");
@@ -678,12 +678,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "#151ce6"
-          }
+            foo: "#151ce6",
+          },
         });
 
         Simulate.change(node.querySelector("[type=color]"), {
-          target: { value: "#001122" }
+          target: { value: "#001122" },
         });
 
         expect(comp.state.formData).eql({ foo: "#001122" });
@@ -693,8 +693,8 @@ describe("uiSchema", () => {
     describe("hidden", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "hidden"
-        }
+          "ui:widget": "hidden",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -708,8 +708,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "a"
-          }
+            foo: "a",
+          },
         });
 
         expect(node.querySelector("[type=hidden]").value).eql("a");
@@ -720,8 +720,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "a"
-          }
+            foo: "a",
+          },
         });
 
         expect(comp.state.formData.foo).eql("a");
@@ -735,16 +735,16 @@ describe("uiSchema", () => {
       properties: {
         foo: {
           type: "string",
-          enum: ["a", "b"]
-        }
-      }
+          enum: ["a", "b"],
+        },
+      },
     };
 
     describe("radio", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "radio"
-        }
+          "ui:widget": "radio",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -758,8 +758,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "b"
-          }
+            foo: "b",
+          },
         });
 
         expect(node.querySelectorAll("[type=radio]")[1].checked).eql(true);
@@ -770,12 +770,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: "a"
-          }
+            foo: "a",
+          },
         });
 
         Simulate.change(node.querySelectorAll("[type=radio]")[1], {
-          target: { checked: true }
+          target: { checked: true },
         });
 
         expect(comp.state.formData).eql({ foo: "b" });
@@ -791,16 +791,16 @@ describe("uiSchema", () => {
           type: "number",
           multipleOf: 1,
           minimum: 10,
-          maximum: 100
-        }
-      }
+          maximum: 100,
+        },
+      },
     };
 
     describe("updown", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "updown"
-        }
+          "ui:widget": "updown",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -814,8 +814,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3.14
-          }
+            foo: 3.14,
+          },
         });
 
         expect(node.querySelector("[type=number]").value).eql("3.14");
@@ -826,12 +826,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3.14
-          }
+            foo: 3.14,
+          },
         });
 
         Simulate.change(node.querySelector("[type=number]"), {
-          target: { value: "6.28" }
+          target: { value: "6.28" },
         });
 
         expect(comp.state.formData).eql({ foo: 6.28 });
@@ -857,7 +857,7 @@ describe("uiSchema", () => {
           const schema = {
             type: "number",
             minimum: 0,
-            maximum: 0
+            maximum: 0,
           };
           const uiSchema = { "ui:widget": "updown" };
           const { node } = createFormComponent({ schema, uiSchema });
@@ -876,8 +876,8 @@ describe("uiSchema", () => {
     describe("range", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "range"
-        }
+          "ui:widget": "range",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -891,8 +891,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3.14
-          }
+            foo: 3.14,
+          },
         });
 
         expect(node.querySelector("[type=range]").value).eql("3.14");
@@ -903,12 +903,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3.14
-          }
+            foo: 3.14,
+          },
         });
 
         Simulate.change(node.querySelector("[type=range]"), {
-          target: { value: "6.28" }
+          target: { value: "6.28" },
         });
 
         expect(comp.state.formData).eql({ foo: 6.28 });
@@ -934,7 +934,7 @@ describe("uiSchema", () => {
           const schema = {
             type: "number",
             minimum: 0,
-            maximum: 0
+            maximum: 0,
           };
           const uiSchema = { "ui:widget": "range" };
           const { node } = createFormComponent({ schema, uiSchema });
@@ -956,15 +956,15 @@ describe("uiSchema", () => {
         properties: {
           foo: {
             type: "number",
-            enum: [3.14159, 2.718, 1.4142]
-          }
-        }
+            enum: [3.14159, 2.718, 1.4142],
+          },
+        },
       };
 
       const uiSchema = {
         foo: {
-          "ui:widget": "radio"
-        }
+          "ui:widget": "radio",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -978,8 +978,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 2.718
-          }
+            foo: 2.718,
+          },
         });
 
         expect(node.querySelectorAll("[type=radio]")[1].checked).eql(true);
@@ -990,12 +990,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 1.4142
-          }
+            foo: 1.4142,
+          },
         });
 
         Simulate.change(node.querySelectorAll("[type=radio]")[2], {
-          target: { checked: true }
+          target: { checked: true },
         });
 
         expect(comp.state.formData).eql({ foo: 1.4142 });
@@ -1005,8 +1005,8 @@ describe("uiSchema", () => {
     describe("hidden", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "hidden"
-        }
+          "ui:widget": "hidden",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -1020,8 +1020,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 42
-          }
+            foo: 42,
+          },
         });
 
         expect(node.querySelector("[type=hidden]").value).eql("42");
@@ -1032,8 +1032,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 42
-          }
+            foo: 42,
+          },
         });
 
         expect(comp.state.formData.foo).eql(42);
@@ -1046,16 +1046,16 @@ describe("uiSchema", () => {
       type: "object",
       properties: {
         foo: {
-          type: "integer"
-        }
-      }
+          type: "integer",
+        },
+      },
     };
 
     describe("updown", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "updown"
-        }
+          "ui:widget": "updown",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -1069,8 +1069,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3
-          }
+            foo: 3,
+          },
         });
 
         expect(node.querySelector("[type=number]").value).eql("3");
@@ -1081,12 +1081,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3
-          }
+            foo: 3,
+          },
         });
 
         Simulate.change(node.querySelector("[type=number]"), {
-          target: { value: "6" }
+          target: { value: "6" },
         });
 
         expect(comp.state.formData).eql({ foo: 6 });
@@ -1096,8 +1096,8 @@ describe("uiSchema", () => {
     describe("range", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "range"
-        }
+          "ui:widget": "range",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -1111,8 +1111,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3
-          }
+            foo: 3,
+          },
         });
 
         expect(node.querySelector("[type=range]").value).eql("3");
@@ -1123,12 +1123,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3
-          }
+            foo: 3,
+          },
         });
 
         Simulate.change(node.querySelector("[type=range]"), {
-          target: { value: "6" }
+          target: { value: "6" },
         });
 
         expect(comp.state.formData).eql({ foo: 6 });
@@ -1141,15 +1141,15 @@ describe("uiSchema", () => {
         properties: {
           foo: {
             type: "integer",
-            enum: [1, 2]
-          }
-        }
+            enum: [1, 2],
+          },
+        },
       };
 
       const uiSchema = {
         foo: {
-          "ui:widget": "radio"
-        }
+          "ui:widget": "radio",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -1163,8 +1163,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 2
-          }
+            foo: 2,
+          },
         });
 
         expect(node.querySelectorAll("[type=radio]")[1].checked).eql(true);
@@ -1175,12 +1175,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 1
-          }
+            foo: 1,
+          },
         });
 
         Simulate.change(node.querySelectorAll("[type=radio]")[1], {
-          target: { checked: true }
+          target: { checked: true },
         });
 
         expect(comp.state.formData).eql({ foo: 2 });
@@ -1190,8 +1190,8 @@ describe("uiSchema", () => {
     describe("hidden", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "hidden"
-        }
+          "ui:widget": "hidden",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -1205,8 +1205,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 42
-          }
+            foo: 42,
+          },
         });
 
         expect(node.querySelector("[type=hidden]").value).eql("42");
@@ -1217,8 +1217,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 42
-          }
+            foo: 42,
+          },
         });
 
         expect(comp.state.formData.foo).eql(42);
@@ -1231,16 +1231,16 @@ describe("uiSchema", () => {
       type: "object",
       properties: {
         foo: {
-          type: "boolean"
-        }
-      }
+          type: "boolean",
+        },
+      },
     };
 
     describe("radio", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "radio"
-        }
+          "ui:widget": "radio",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -1266,8 +1266,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: false
-          }
+            foo: false,
+          },
         });
 
         expect(node.querySelectorAll("[type=radio]")[1].checked).eql(true);
@@ -1278,12 +1278,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: true
-          }
+            foo: true,
+          },
         });
 
         Simulate.change(node.querySelectorAll("[type=radio]")[1], {
-          target: { checked: true }
+          target: { checked: true },
         });
 
         expect(comp.state.formData).eql({ foo: false });
@@ -1294,12 +1294,12 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: false
-          }
+            foo: false,
+          },
         });
 
         Simulate.change(node.querySelectorAll("[type=radio]")[0], {
-          target: { checked: true }
+          target: { checked: true },
         });
 
         expect(comp.state.formData).eql({ foo: true });
@@ -1309,8 +1309,8 @@ describe("uiSchema", () => {
     describe("select", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "select"
-        }
+          "ui:widget": "select",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -1331,13 +1331,13 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: false
-          }
+            foo: false,
+          },
         });
 
         Simulate.change(node.querySelector("select"), {
           // DOM option change events always return strings
-          target: { value: "true" }
+          target: { value: "true" },
         });
 
         expect(comp.state.formData).eql({ foo: true });
@@ -1348,13 +1348,13 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: false
-          }
+            foo: false,
+          },
         });
 
         Simulate.change(node.querySelector("select"), {
           // DOM option change events always return strings
-          target: { value: "false" }
+          target: { value: "false" },
         });
 
         expect(comp.state.formData).eql({ foo: false });
@@ -1364,8 +1364,8 @@ describe("uiSchema", () => {
     describe("hidden", () => {
       const uiSchema = {
         foo: {
-          "ui:widget": "hidden"
-        }
+          "ui:widget": "hidden",
+        },
       };
 
       it("should accept a uiSchema object", () => {
@@ -1379,8 +1379,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: true
-          }
+            foo: true,
+          },
         });
 
         expect(node.querySelector("[type=hidden]").value).eql("true");
@@ -1391,8 +1391,8 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: true
-          }
+            foo: true,
+          },
         });
 
         expect(comp.state.formData.foo).eql(true);
@@ -1406,8 +1406,8 @@ describe("uiSchema", () => {
         type: "object",
         properties: {
           foo: { type: "string" },
-          bar: { type: "string" }
-        }
+          bar: { type: "string" },
+        },
       };
       const uiSchema = { "ui:rootFieldId": "myform" };
       const { node } = createFormComponent({ schema, uiSchema });
@@ -1422,13 +1422,13 @@ describe("uiSchema", () => {
     it("should use a custom root field id for arrays", () => {
       const schema = {
         type: "array",
-        items: { type: "string" }
+        items: { type: "string" },
       };
       const uiSchema = { "ui:rootFieldId": "myform" };
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        formData: ["foo", "bar"]
+        formData: ["foo", "bar"],
       });
 
       const ids = [].map.call(
@@ -1445,15 +1445,15 @@ describe("uiSchema", () => {
           type: "object",
           properties: {
             foo: { type: "string" },
-            bar: { type: "string" }
-          }
-        }
+            bar: { type: "string" },
+          },
+        },
       };
       const uiSchema = { "ui:rootFieldId": "myform" };
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        formData: [{ foo: "foo1", bar: "bar1" }, { foo: "foo2", bar: "bar2" }]
+        formData: [{ foo: "foo1", bar: "bar1" }, { foo: "foo2", bar: "bar2" }],
       });
 
       const ids = [].map.call(
@@ -1464,7 +1464,7 @@ describe("uiSchema", () => {
         "myform_0_foo",
         "myform_0_bar",
         "myform_1_foo",
-        "myform_1_bar"
+        "myform_1_bar",
       ]);
     });
   });
@@ -1510,8 +1510,8 @@ describe("uiSchema", () => {
             type: "object",
             properties: {
               foo: { type: "string" },
-              bar: { type: "string" }
-            }
+              bar: { type: "string" },
+            },
           };
           const uiSchema = { "ui:disabled": true };
 
@@ -1546,7 +1546,7 @@ describe("uiSchema", () => {
       it("should disabled a file widget", () => {
         const { node } = createFormComponent({
           schema: { type: "string", format: "data-url" },
-          uiSchema: { "ui:disabled": true }
+          uiSchema: { "ui:disabled": true },
         });
         expect(
           node.querySelector("input[type=file]").hasAttribute("disabled")
@@ -1652,7 +1652,7 @@ describe("uiSchema", () => {
       it("should disable an alternative date widget", () => {
         const { node } = createFormComponent({
           schema: { type: "string", format: "date" },
-          uiSchema: { "ui:disabled": true, "ui:widget": "alt-date" }
+          uiSchema: { "ui:disabled": true, "ui:widget": "alt-date" },
         });
 
         const disabled = [].map.call(
@@ -1665,7 +1665,7 @@ describe("uiSchema", () => {
       it("should disable an alternative datetime widget", () => {
         const { node } = createFormComponent({
           schema: { type: "string", format: "date-time" },
-          uiSchema: { "ui:disabled": true, "ui:widget": "alt-datetime" }
+          uiSchema: { "ui:disabled": true, "ui:widget": "alt-datetime" },
         });
 
         const disabled = [].map.call(
@@ -1718,8 +1718,8 @@ describe("uiSchema", () => {
             type: "object",
             properties: {
               foo: { type: "string" },
-              bar: { type: "string" }
-            }
+              bar: { type: "string" },
+            },
           };
           const uiSchema = { "ui:readonly": true };
 
@@ -1755,7 +1755,7 @@ describe("uiSchema", () => {
         // We mark a file widget as readonly by disabling it.
         const { node } = createFormComponent({
           schema: { type: "string", format: "data-url" },
-          uiSchema: { "ui:readonly": true }
+          uiSchema: { "ui:readonly": true },
         });
         expect(
           node.querySelector("input[type=file]").hasAttribute("disabled")
@@ -1853,7 +1853,7 @@ describe("uiSchema", () => {
       it("should mark as readonly an alternative date widget", () => {
         const { node } = createFormComponent({
           schema: { type: "string", format: "date" },
-          uiSchema: { "ui:readonly": true, "ui:widget": "alt-date" }
+          uiSchema: { "ui:readonly": true, "ui:widget": "alt-date" },
         });
 
         const readonly = [].map.call(node.querySelectorAll("select"), node =>
@@ -1864,7 +1864,7 @@ describe("uiSchema", () => {
       it("should mark as readonly an alternative datetime widget", () => {
         const { node } = createFormComponent({
           schema: { type: "string", format: "date-time" },
-          uiSchema: { "ui:readonly": true, "ui:widget": "alt-datetime" }
+          uiSchema: { "ui:readonly": true, "ui:widget": "alt-datetime" },
         });
 
         const readonly = [].map.call(node.querySelectorAll("select"), node =>

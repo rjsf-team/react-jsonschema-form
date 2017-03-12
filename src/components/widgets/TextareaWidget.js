@@ -11,7 +11,7 @@ function TextareaWidget(props) {
     readonly,
     autofocus,
     onChange,
-    onBlur
+    onBlur,
   } = props;
   const _onChange = ({ target: { value } }) => {
     return onChange(value === "" ? undefined : value);
@@ -35,7 +35,7 @@ function TextareaWidget(props) {
 
 TextareaWidget.defaultProps = {
   autofocus: false,
-  options: {}
+  options: {},
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -44,13 +44,13 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     options: PropTypes.shape({
-      rows: PropTypes.number
+      rows: PropTypes.number,
     }),
     value: PropTypes.string,
     required: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
-    onBlur: PropTypes.func
+    onBlur: PropTypes.func,
   };
 }
 
