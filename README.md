@@ -1358,7 +1358,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - Use radio list for enums: https://jsfiddle.net/f2y3fq7L/2/
  - Reading file input data: https://jsfiddle.net/f9vcb6pL/1/
  - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
-
+ - 2 columns form with CSS and FieldTemplate : https://jsfiddle.net/n1k0/bw0ffnz4/1/
 
 ## Contributing
 
