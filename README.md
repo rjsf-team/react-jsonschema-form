@@ -165,7 +165,7 @@ const formData = {
 
 render((
   <Form schema={schema}
-        formData={formData}
+        formData={formData} />
 ), document.getElementById("app"));
 ```
 
@@ -1285,7 +1285,7 @@ To disable rendering of the error list at the top of the form, you can set the `
 ```js
 render((
   <Form schema={schema}
-        showErrorList={false}/>
+        showErrorList={false} />
 ), document.getElementById("app"));
 ```
 
