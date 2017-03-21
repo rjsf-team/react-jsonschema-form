@@ -1,10 +1,12 @@
-import React from "react";
+import React, { PureComponent } from "react";
 
 import { expect } from "chai";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("ArrayFieldTemplate", () => {
   let sandbox;
+
+  const formData = ["one", "two", "three"];
 
   beforeEach(() => {
     sandbox = createSandbox();
@@ -35,7 +37,23 @@ describe("ArrayFieldTemplate", () => {
       );
     }
 
-    const formData = ["one", "two", "three"];
+    describe("Statefull ArrayFieldTemplate", () => {
+      class ArrayFieldTemplate extends PureComponent {
+        render() {
+          return <div>{this.props.items.map(item => item.element)}</div>;
+        }
+      }
+
+      it("should render a stateful custom component", () => {
+        const { node } = createFormComponent({
+          schema: { type: "array", items: { type: "string" } },
+          formData,
+          ArrayFieldTemplate,
+        });
+
+        expect(node.querySelectorAll(".field-array div")).to.have.length.of(3);
+      });
+    });
 
     describe("not fixed items", () => {
       const schema = {
@@ -46,6 +64,7 @@ describe("ArrayFieldTemplate", () => {
       };
 
       let node;
+
       beforeEach(() => {
         node = createFormComponent({
           ArrayFieldTemplate,
