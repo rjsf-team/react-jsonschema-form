@@ -48,6 +48,8 @@ if (process.env.NODE_ENV !== "production") {
     }),
     value: PropTypes.string,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,

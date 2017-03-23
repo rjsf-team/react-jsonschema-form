@@ -8,12 +8,13 @@ function CheckboxWidget(props) {
     value,
     required,
     disabled,
+    readonly,
     label,
     autofocus,
     onChange,
   } = props;
   return (
-    <div className={`checkbox ${disabled ? "disabled" : ""}`}>
+    <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description &&
         <DescriptionField description={schema.description} />}
       <label>
@@ -22,7 +23,7 @@ function CheckboxWidget(props) {
           id={id}
           checked={typeof value === "undefined" ? false : value}
           required={required}
-          disabled={disabled}
+          disabled={disabled || readonly}
           autoFocus={autofocus}
           onChange={event => onChange(event.target.checked)}
         />
@@ -42,6 +43,8 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string.isRequired,
     value: PropTypes.bool,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };

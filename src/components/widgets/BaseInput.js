@@ -6,6 +6,7 @@ function BaseInput(props) {
   const {
     value,
     readonly,
+    disabled,
     autofocus,
     onBlur,
     options,
@@ -22,6 +23,7 @@ function BaseInput(props) {
       {...inputProps}
       className="form-control"
       readOnly={readonly}
+      disabled={disabled}
       autoFocus={autofocus}
       value={value == null ? "" : value}
       onChange={_onChange}
