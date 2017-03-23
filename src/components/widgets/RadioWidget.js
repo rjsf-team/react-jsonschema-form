@@ -1,17 +1,15 @@
 import React, { PropTypes } from "react";
 
-function RadioWidget(
-  {
-    schema,
+function RadioWidget(props) {
+  const {
     options,
     value,
     required,
-    readonly,
     disabled,
+    readonly,
     autofocus,
     onChange,
-  }
-) {
+  } = props;
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   const { enumOptions, inline } = options;
@@ -28,6 +26,7 @@ function RadioWidget(
               type="radio"
               checked={checked}
               name={name}
+              required={required}
               value={option.value}
               disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
@@ -65,6 +64,7 @@ if (process.env.NODE_ENV !== "production") {
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,

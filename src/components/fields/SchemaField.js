@@ -5,6 +5,7 @@ import {
   retrieveSchema,
   getDefaultRegistry,
   isFilesArray,
+  deepEquals,
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
@@ -91,9 +92,7 @@ function DefaultTemplate(props) {
 
   return (
     <div className={classNames}>
-      {displayLabel
-        ? <Label label={label} required={required} id={id} />
-        : null}
+      {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}
       {errors}
@@ -130,7 +129,7 @@ DefaultTemplate.defaultProps = {
   displayLabel: true,
 };
 
-function SchemaField(props) {
+function SchemaFieldRender(props) {
   const { uiSchema, errorSchema, idSchema, name, required, registry } = props;
   const {
     definitions,
@@ -166,11 +165,11 @@ function SchemaField(props) {
 
   const { __errors, ...fieldErrorSchema } = errorSchema;
 
+  // See #439: uiSchema: Don't pass consumed class names to child components
   const field = (
     <FieldComponent
       {...props}
       schema={schema}
-      // See #439: Don't pass consumed class names to child components
       uiSchema={{ ...uiSchema, classNames: undefined }}
       disabled={disabled}
       readonly={readonly}
@@ -191,7 +190,7 @@ function SchemaField(props) {
     "form-group",
     "field",
     `field-${type}`,
-    errors && errors.length > 0 ? "field-error has-error" : "",
+    errors && errors.length > 0 ? "field-error has-error has-danger" : "",
     uiSchema.classNames,
   ]
     .join(" ")
@@ -224,6 +223,21 @@ function SchemaField(props) {
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
+}
+
+class SchemaField extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    // if schemas are equal idSchemas will be equal as well,
+    // so it is not necessary to compare
+    return !deepEquals(
+      { ...this.props, idSchema: undefined },
+      { ...nextProps, idSchema: undefined }
+    );
+  }
+
+  render() {
+    return SchemaFieldRender(this.props);
+  }
 }
 
 SchemaField.defaultProps = {

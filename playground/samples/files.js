@@ -14,10 +14,10 @@ module.exports = {
         items: {
           type: "string",
           format: "data-url",
-        }
-      }
-    }
+        },
+      },
+    },
   },
   uiSchema: {},
-  formData: {}
+  formData: {},
 };

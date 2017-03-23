@@ -6,7 +6,7 @@ module.exports = {
     properties: {
       password: {
         type: "string",
-        title: "Password"
+        title: "Password",
       },
       lastName: {
         type: "string",
@@ -22,21 +22,21 @@ module.exports = {
       },
       age: {
         type: "integer",
-        title: "Age"
+        title: "Age",
       },
-    }
+    },
   },
   uiSchema: {
     "ui:order": ["firstName", "lastName", "*", "password"],
     age: {
-      "ui:widget": "updown"
+      "ui:widget": "updown",
     },
     bio: {
-      "ui:widget": "textarea"
+      "ui:widget": "textarea",
     },
     password: {
-      "ui:widget": "password"
-    }
+      "ui:widget": "password",
+    },
   },
   formData: {
     firstName: "Chuck",
@@ -44,5 +44,5 @@ module.exports = {
     age: 75,
     bio: "Roundhouse kicking asses since 1940",
     password: "noneed",
-  }
+  },
 };

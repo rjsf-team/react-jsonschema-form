@@ -7,18 +7,18 @@ module.exports = {
         type: "string",
         title: "First name",
         minLength: 8,
-        pattern: "\\d+"
+        pattern: "\\d+",
       },
       active: {
         type: "boolean",
-        title: "Active"
+        title: "Active",
       },
       skills: {
         type: "array",
         items: {
           type: "string",
-          minLength: 5
-        }
+          minLength: 5,
+        },
       },
       multipleChoicesList: {
         type: "array",
@@ -27,16 +27,16 @@ module.exports = {
         maxItems: 2,
         items: {
           type: "string",
-          enum: ["foo", "bar", "fuzz"]
-        }
-      }
-    }
+          enum: ["foo", "bar", "fuzz"],
+        },
+      },
+    },
   },
   uiSchema: {},
   formData: {
     firstName: "Chuck",
     active: "wrong",
     skills: ["karate", "budo", "aikido"],
-    multipleChoicesList: ["foo", "bar", "fuzz"]
-  }
+    multipleChoicesList: ["foo", "bar", "fuzz"],
+  },
 };

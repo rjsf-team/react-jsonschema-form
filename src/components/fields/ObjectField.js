@@ -1,33 +1,15 @@
 import React, { Component, PropTypes } from "react";
 
-import { deepEquals } from "../../utils";
-
 import {
-  getDefaultFormState,
   orderProperties,
   retrieveSchema,
-  shouldRender,
   getDefaultRegistry,
-  setState,
 } from "../../utils";
-
-function objectKeysHaveChanged(formData, state) {
-  // for performance, first check for lengths
-  const newKeys = Object.keys(formData);
-  const oldKeys = Object.keys(state);
-  if (newKeys.length < oldKeys.length) {
-    return true;
-  }
-  // deep check on sorted keys
-  if (!deepEquals(newKeys.sort(), oldKeys.sort())) {
-    return true;
-  }
-  return false;
-}
 
 class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {},
+    formData: {},
     errorSchema: {},
     idSchema: {},
     registry: getDefaultRegistry(),
@@ -36,54 +18,23 @@ class ObjectField extends Component {
     readonly: false,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = this.getStateFromProps(props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const state = this.getStateFromProps(nextProps);
-    const { formData } = nextProps;
-    if (formData && objectKeysHaveChanged(formData, this.state)) {
-      // We *need* to replace state entirely here has we have received formData
-      // holding different keys (so with some removed).
-      this.state = state;
-      this.forceUpdate();
-    } else {
-      this.setState(state);
-    }
-  }
-
-  getStateFromProps(props) {
-    const { schema, formData, registry } = props;
-    return getDefaultFormState(schema, formData, registry.definitions) || {};
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shouldRender(this, nextProps, nextState);
-  }
-
   isRequired(name) {
     const schema = this.props.schema;
     return Array.isArray(schema.required) &&
       schema.required.indexOf(name) !== -1;
   }
 
-  asyncSetState(state, options = { validate: false }) {
-    setState(this, state, () => {
-      this.props.onChange(this.state, options);
-    });
-  }
-
   onPropertyChange = name => {
     return (value, options) => {
-      this.asyncSetState({ [name]: value }, options);
+      const newFormData = { ...this.props.formData, [name]: value };
+      this.props.onChange(newFormData, options);
     };
   };
 
   render() {
     const {
       uiSchema,
+      formData,
       errorSchema,
       idSchema,
       name,
@@ -113,21 +64,19 @@ class ObjectField extends Component {
     }
     return (
       <fieldset>
-        {title
-          ? <TitleField
-              id={`${idSchema.$id}__title`}
-              title={title}
-              required={required}
-              formContext={formContext}
-            />
-          : null}
-        {schema.description
-          ? <DescriptionField
-              id={`${idSchema.$id}__description`}
-              description={schema.description}
-              formContext={formContext}
-            />
-          : null}
+        {title &&
+          <TitleField
+            id={`${idSchema.$id}__title`}
+            title={title}
+            required={required}
+            formContext={formContext}
+          />}
+        {schema.description &&
+          <DescriptionField
+            id={`${idSchema.$id}__description`}
+            description={schema.description}
+            formContext={formContext}
+          />}
         {orderedProperties.map((name, index) => {
           return (
             <SchemaField
@@ -138,7 +87,7 @@ class ObjectField extends Component {
               uiSchema={uiSchema[name]}
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
-              formData={this.state[name]}
+              formData={formData[name]}
               onChange={this.onPropertyChange(name)}
               onBlur={onBlur}
               registry={this.props.registry}

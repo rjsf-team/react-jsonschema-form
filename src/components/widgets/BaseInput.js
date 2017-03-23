@@ -9,10 +9,10 @@ function BaseInput(props) {
     disabled,
     autofocus,
     onBlur,
-    options, // eslint-disable-line
-    schema, // eslint-disable-line
-    formContext, // eslint-disable-line
-    registry, // eslint-disable-line
+    options,
+    schema,
+    formContext,
+    registry,
     ...inputProps
   } = props;
   const _onChange = ({ target: { value } }) => {
@@ -25,7 +25,7 @@ function BaseInput(props) {
       readOnly={readonly}
       disabled={disabled}
       autoFocus={autofocus}
-      value={typeof value === "undefined" ? "" : value}
+      value={value == null ? "" : value}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
     />

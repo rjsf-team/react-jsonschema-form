@@ -63,10 +63,6 @@ export function getDefaultRegistry() {
   return defaultRegistry;
 }
 
-export function defaultFieldValue(formData, schema) {
-  return typeof formData === "undefined" ? schema.default : formData;
-}
-
 export function getWidget(schema, widget, registeredWidgets = {}) {
   const { type } = schema;
 
@@ -129,21 +125,30 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   if (typeof defaults === "undefined") {
     defaults = schema.default;
   }
-  // We need to recur for object schema inner default values.
-  if (schema.type === "object") {
-    return Object.keys(schema.properties).reduce(
-      (acc, key) => {
-        // Compute the defaults for this node, with the parent defaults we might
-        // have from a previous run: defaults[key].
-        acc[key] = computeDefaults(
-          schema.properties[key],
-          (defaults || {})[key],
-          definitions
+
+  switch (schema.type) {
+    // We need to recur for object schema inner default values.
+    case "object":
+      return Object.keys(schema.properties).reduce(
+        (acc, key) => {
+          // Compute the defaults for this node, with the parent defaults we might
+          // have from a previous run: defaults[key].
+          acc[key] = computeDefaults(
+            schema.properties[key],
+            (defaults || {})[key],
+            definitions
+          );
+          return acc;
+        },
+        {}
+      );
+
+    case "array":
+      if (schema.minItems) {
+        return new Array(schema.minItems).fill(
+          computeDefaults(schema.items, defaults, definitions)
         );
-        return acc;
-      },
-      {}
-    );
+      }
   }
   return defaults;
 }
@@ -327,7 +332,7 @@ export function retrieveSchema(schema, definitions = {}) {
   // Retrieve the referenced schema definition.
   const $refSchema = findSchemaDefinition(schema.$ref, definitions);
   // Drop the $ref property of the source schema.
-  const { $ref, ...localSchema } = schema; // eslint-disable-line no-unused-vars
+  const { $ref, ...localSchema } = schema;
   // Update referenced schema definition with local schema properties.
   return { ...$refSchema, ...localSchema };
 }

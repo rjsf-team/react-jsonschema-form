@@ -7,7 +7,7 @@ A simple [React](http://facebook.github.io/react/) component capable of building
 
 A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) is hosted on gh-pages.
 
-![](http://i.imgur.com/bmQ3HlO.png)
+![](http://i.imgur.com/M8ZCES5.gif)
 
 ## Table of Contents
 
@@ -46,11 +46,13 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Form action buttons](#form-action-buttons)
      - [Help texts](#help-texts)
      - [Auto focus](#auto-focus)
+     - [Textarea rows option](#textarea-rows-option)
      - [Placeholders](#placeholders)
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array Field Template](#array-field-template)
+     - [Error list Template](#error-list-template)
      - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)
@@ -74,7 +76,9 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [JSON Schema supporting status](#json-schema-supporting-status)
+  - [Tips and tricks](#tips-and-tricks)
   - [Contributing](#contributing)
+     - [Coding style](#coding-style)
      - [Development server](#development-server)
      - [Tests](#tests)
         - [TDD](#tdd)
@@ -161,7 +165,7 @@ const formData = {
 
 render((
   <Form schema={schema}
-        formData={formData}
+        formData={formData} />
 ), document.getElementById("app"));
 ```
 
@@ -244,12 +248,12 @@ const uiSchema = {
     bar: {
       "ui:widget": "textarea"
     },
-    baz: {
-      // note the "items" for an array
-      items: {
-        description: {
-          "ui:widget": "textarea"
-        }
+  },
+  baz: {
+    // note the "items" for an array
+    items: {
+      description: {
+        "ui:widget": "textarea"
       }
     }
   }
@@ -646,6 +650,20 @@ const uiSchema = {
 }
 ```
 
+### Textarea `rows` option
+
+You can set initial height of a textarea widget by specifying `rows` option.
+
+```js
+const schema = {type: "string"};
+const uiSchema = {
+  "ui:widget": "textarea",
+  "ui:options": {
+    rows: 15
+  }
+}
+```
+
 ### Placeholders
 
 Text fields can benefit from placeholders by using the `ui:placeholder` uiSchema directive:
@@ -791,6 +809,38 @@ The following props are part of each element in `items`:
 - `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is readonly.
+
+### Error List template
+
+To take control over how the form errors are displayed, you can define an *error list template* for your form. This list is the form global error list that appears at the top of your forms.
+
+An error list template is basically a React stateless component being passed errors as props so you can render them as you like:
+
+```jsx
+function ErrorListTemplate(props) {
+  const {errors} = props;
+  return (
+    <div>
+      {errors.map((error, i) => {
+        return (
+          <li key={i}>
+            {error.stack}
+          </li>
+        );
+      })}
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema}
+        showErrorList={true}
+        ErrorList={ErrorListTemplate} />,
+), document.getElementById("app"));
+```
+
+> Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
+
 
 ### Custom widgets and fields
 
@@ -1010,14 +1060,14 @@ You can provide a `formContext` object to the Form, which is passed down to all 
 
 ### Custom array field buttons
 
-The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use Bootstrap yet still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
+The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use glyphicons but still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
 
 ```css
-.btn-plus > i {
-  display: none;
-}
-.btn-plus::after {
-  content: "Add";
+i.glyphicon { display: none; }
+.btn-add::after { content: 'Add'; }
+.array-item-move-up::after { content: 'Move Up'; }
+.array-item-move-down::after { content: 'Move Down'; }
+.array-item-remove::after { content: 'Remove'; }
 }
 ```
 
@@ -1235,9 +1285,11 @@ To disable rendering of the error list at the top of the form, you can set the `
 ```js
 render((
   <Form schema={schema}
-        showErrorList={false}/>
+        showErrorList={false} />
 ), document.getElementById("app"));
 ```
+
+> Note: you can also use your own [ErrorList](#error-list-template)
 
 ### The case of empty strings
 
@@ -1297,7 +1349,32 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 * `additionalItems` keyword for arrays
     This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
 
+## Tips and tricks
+
+ - Custom field template: https://jsfiddle.net/hdp1kgn6/1/
+ - Multi-step wizard: https://jsfiddle.net/sn4bnw9h/1/
+ - Using classNames with uiSchema: https://jsfiddle.net/gfwp25we/1/
+ - Conditional fields: https://jsfiddle.net/69z2wepo/68259/
+ - Use radio list for enums: https://jsfiddle.net/f2y3fq7L/2/
+ - Reading file input data: https://jsfiddle.net/f9vcb6pL/1/
+ - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
+ - 2 columns form with CSS and FieldTemplate : https://jsfiddle.net/n1k0/bw0ffnz4/1/
+
 ## Contributing
+
+### Coding style
+
+All the JavaScript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style. A command is provided to ensure your code is always formatted accordingly:
+
+```
+$ npm run cs-format
+```
+
+The `cs-check` command ensures all files conform to that style:
+
+```
+$ npm run cs-check
+```
 
 ### Development server
 
