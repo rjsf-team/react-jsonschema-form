@@ -1,5 +1,4 @@
-import React, {PropTypes} from "react";
-
+import React, { PropTypes } from "react";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -14,51 +13,51 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const {id, disabled, options, value, autofocus, readonly, onChange} = props;
-  const {enumOptions, inline} = options;
+  const { id, disabled, options, value, autofocus, readonly, onChange } = props;
+  const { enumOptions, inline } = options;
   return (
-    <div className="checkboxes" id={id}>{
-      enumOptions.map((option, index) => {
+    <div className="checkboxes" id={id}>
+      {enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         const disabledCls = disabled || readonly ? "disabled" : "";
         const checkbox = (
           <span>
-            <input type="checkbox"
+            <input
+              type="checkbox"
               id={`${id}_${index}`}
               checked={checked}
               disabled={disabled || readonly}
               autoFocus={autofocus && index === 0}
-              onChange={(event) => {
-                const all = enumOptions.map(({value}) => value);
+              onChange={event => {
+                const all = enumOptions.map(({ value }) => value);
                 if (event.target.checked) {
                   onChange(selectValue(option.value, value, all));
                 } else {
                   onChange(deselectValue(option.value, value));
                 }
-              }}/>
+              }}
+            />
             <span>{option.label}</span>
           </span>
         );
-        return inline ? (
-          <label key={index} className={`checkbox-inline ${disabledCls}`}>
-            {checkbox}
-          </label>
-        ) : (
-          <div key={index} className={`checkbox ${disabledCls}`}>
-            <label>
+        return inline
+          ? <label key={index} className={`checkbox-inline ${disabledCls}`}>
               {checkbox}
             </label>
-          </div>
-        );
-      })
-    }</div>
+          : <div key={index} className={`checkbox ${disabledCls}`}>
+              <label>
+                {checkbox}
+              </label>
+            </div>;
+      })}
+    </div>
   );
 }
 
 CheckboxesWidget.defaultProps = {
   autofocus: false,
   options: {
-    inline: false
+    inline: false,
   },
 };
 

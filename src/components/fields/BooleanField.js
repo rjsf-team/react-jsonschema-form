@@ -1,11 +1,11 @@
-import React, {PropTypes} from "react";
+import React, { PropTypes } from "react";
 
 import {
   defaultFieldValue,
   getWidget,
   getUiOptions,
   optionsList,
-  getDefaultRegistry
+  getDefaultRegistry,
 } from "../../utils";
 
 function BooleanField(props) {
@@ -20,29 +20,32 @@ function BooleanField(props) {
     disabled,
     readonly,
     autofocus,
-    onChange
+    onChange,
   } = props;
-  const {title} = schema;
-  const {widgets, formContext} = registry;
-  const {widget="checkbox", ...options} = getUiOptions(uiSchema);
+  const { title } = schema;
+  const { widgets, formContext } = registry;
+  const { widget = "checkbox", ...options } = getUiOptions(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
   const enumOptions = optionsList({
     enum: [true, false],
-    enumNames: schema.enumNames || ["yes", "no"]
+    enumNames: schema.enumNames || ["yes", "no"],
   });
-  return <Widget
-    options={{...options, enumOptions}}
-    schema={schema}
-    id={idSchema && idSchema.$id}
-    onChange={onChange}
-    label={title === undefined ? name : title}
-    value={defaultFieldValue(formData, schema)}
-    required={required}
-    disabled={disabled}
-    readonly={readonly}
-    registry={registry}
-    formContext={formContext}
-    autofocus={autofocus}/>;
+  return (
+    <Widget
+      options={{ ...options, enumOptions }}
+      schema={schema}
+      id={idSchema && idSchema.$id}
+      onChange={onChange}
+      label={title === undefined ? name : title}
+      value={defaultFieldValue(formData, schema)}
+      required={required}
+      disabled={disabled}
+      readonly={readonly}
+      registry={registry}
+      formContext={formContext}
+      autofocus={autofocus}
+    />
+  );
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -57,14 +60,13 @@ if (process.env.NODE_ENV !== "production") {
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.object,
-      ])).isRequired,
+      widgets: PropTypes.objectOf(
+        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+      ).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
       formContext: PropTypes.object.isRequired,
-    })
+    }),
   };
 }
 

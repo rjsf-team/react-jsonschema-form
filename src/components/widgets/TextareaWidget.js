@@ -1,19 +1,20 @@
-import React, {PropTypes} from "react";
+import React, { PropTypes } from "react";
 
-
-function TextareaWidget({
-  schema,
-  id,
-  placeholder,
-  value,
-  required,
-  disabled,
-  readonly,
-  autofocus,
-  onChange,
-  onBlur
-}) {
-  const _onChange = ({target: {value}}) => {
+function TextareaWidget(
+  {
+    schema,
+    id,
+    placeholder,
+    value,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onBlur,
+  }
+) {
+  const _onChange = ({ target: { value } }) => {
     return onChange(value === "" ? undefined : value);
   };
   return (
@@ -27,12 +28,13 @@ function TextareaWidget({
       readOnly={readonly}
       autoFocus={autofocus}
       onBlur={onBlur && (event => onBlur(id, event.target.value))}
-      onChange={_onChange}/>
+      onChange={_onChange}
+    />
   );
 }
 
 TextareaWidget.defaultProps = {
-  autofocus: false
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {

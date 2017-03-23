@@ -1,27 +1,30 @@
-import React, {PropTypes} from "react";
+import React, { PropTypes } from "react";
 
-
-function CheckboxWidget({
-  schema,
-  id,
-  value,
-  required,
-  disabled,
-  readonly,
-  label,
-  autofocus,
-  onChange,
-}) {
+function CheckboxWidget(
+  {
+    schema,
+    id,
+    value,
+    required,
+    disabled,
+    readonly,
+    label,
+    autofocus,
+    onChange,
+  }
+) {
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       <label>
-        <input type="checkbox"
+        <input
+          type="checkbox"
           id={id}
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
-          onChange={(event) => onChange(event.target.checked)}/>
+          onChange={event => onChange(event.target.checked)}
+        />
         <span>{label}</span>
       </label>
     </div>
