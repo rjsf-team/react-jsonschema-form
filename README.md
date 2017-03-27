@@ -1115,7 +1115,7 @@ You can override any default field and widget, including the internal widgets li
 
 const CustomCheckbox = function(props) {
   return (
-    <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={props.onChange(!props.value)}>
+    <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
     	{props.value}
     </button>
   );
