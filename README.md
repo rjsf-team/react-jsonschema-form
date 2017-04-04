@@ -52,7 +52,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array Field Template](#array-field-template)
-     - [Error list Template](#error-list-template)
+     - [Error List template](#error-list-template)
      - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)

@@ -195,7 +195,6 @@ class Editor extends Component {
       try {
         this.props.onChange(fromJson(this.state.code));
       } catch (err) {
-        console.error(err);
         this.setState({ valid: false, code });
       }
     });
@@ -274,6 +273,42 @@ function ThemeSelector({ theme, select }) {
   );
 }
 
+class CopyLink extends Component {
+  onCopyClick = event => {
+    this.input.select();
+    document.execCommand("copy");
+  };
+
+  render() {
+    const { shareURL, onShare } = this.props;
+    if (!shareURL) {
+      return (
+        <button className="btn btn-default" type="button" onClick={onShare}>
+          Share
+        </button>
+      );
+    }
+    return (
+      <div className="input-group">
+        <input
+          type="text"
+          ref={input => this.input = input}
+          className="form-control"
+          defaultValue={shareURL}
+        />
+        <span className="input-group-btn">
+          <button
+            className="btn btn-default"
+            type="button"
+            onClick={this.onCopyClick}>
+            <i className="glyphicon glyphicon-copy" />
+          </button>
+        </span>
+      </div>
+    );
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -288,11 +323,21 @@ class App extends Component {
       editor: "default",
       theme: "default",
       liveValidate: true,
+      shareURL: null,
     };
   }
 
   componentDidMount() {
-    this.load(samples.Simple);
+    const hash = document.location.hash.match(/#(.*)/);
+    if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
+      try {
+        this.load(JSON.parse(atob(hash[1])));
+      } catch (err) {
+        alert("Unable to load form setup data.");
+      }
+    } else {
+      this.load(samples.Simple);
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -307,11 +352,11 @@ class App extends Component {
       this.setState({ ...data, form: true, ArrayFieldTemplate }));
   };
 
-  onSchemaEdited = schema => this.setState({ schema });
+  onSchemaEdited = schema => this.setState({ schema, shareURL: null });
 
-  onUISchemaEdited = uiSchema => this.setState({ uiSchema });
+  onUISchemaEdited = uiSchema => this.setState({ uiSchema, shareURL: null });
 
-  onFormDataEdited = formData => this.setState({ formData });
+  onFormDataEdited = formData => this.setState({ formData, shareURL: null });
 
   onThemeSelected = (theme, { stylesheet, editor }) => {
     this.setState({ theme, editor: editor ? editor : "default" });
@@ -323,7 +368,19 @@ class App extends Component {
 
   setLiveValidate = ({ formData }) => this.setState({ liveValidate: formData });
 
-  onFormDataChange = ({ formData }) => this.setState({ formData });
+  onFormDataChange = ({ formData }) =>
+    this.setState({ formData, shareURL: null });
+
+  onShare = () => {
+    const { formData, schema, uiSchema } = this.state;
+    const { location: { origin, pathname } } = document;
+    try {
+      const hash = btoa(JSON.stringify({ formData, schema, uiSchema }));
+      this.setState({ shareURL: `${origin}${pathname}#${hash}` });
+    } catch (err) {
+      this.setState({ shareURL: null });
+    }
+  };
 
   render() {
     const {
@@ -401,8 +458,21 @@ class App extends Component {
               onBlur={(id, value) =>
                 console.log(`Touched ${id} with value ${value}`)}
               transformErrors={transformErrors}
-              onError={log("errors")}
-            />}
+              onError={log("errors")}>
+              <div className="row">
+                <div className="col-sm-3">
+                  <button className="btn btn-primary" type="submit">
+                    Submit
+                  </button>
+                </div>
+                <div className="col-sm-9 text-right">
+                  <CopyLink
+                    shareURL={this.state.shareURL}
+                    onShare={this.onShare}
+                  />
+                </div>
+              </div>
+            </Form>}
         </div>
       </div>
     );
