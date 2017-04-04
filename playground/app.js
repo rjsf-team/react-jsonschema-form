@@ -273,6 +273,42 @@ function ThemeSelector({ theme, select }) {
   );
 }
 
+class CopyLink extends Component {
+  onCopyClick = event => {
+    this.input.select();
+    document.execCommand("copy");
+  };
+
+  render() {
+    const { shareURL, onShare } = this.props;
+    if (!shareURL) {
+      return (
+        <button className="btn btn-default" type="button" onClick={onShare}>
+          Share
+        </button>
+      );
+    }
+    return (
+      <div className="input-group">
+        <input
+          type="text"
+          ref={input => this.input = input}
+          className="form-control"
+          defaultValue={shareURL}
+        />
+        <span className="input-group-btn">
+          <button
+            className="btn btn-default"
+            type="button"
+            onClick={this.onCopyClick}>
+            <i className="glyphicon glyphicon-copy" />
+          </button>
+        </span>
+      </div>
+    );
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -339,7 +375,7 @@ class App extends Component {
     const { formData, schema, uiSchema } = this.state;
     try {
       const hash = btoa(JSON.stringify({ formData, schema, uiSchema }));
-      this.setState({ shareURL: "#" + hash });
+      this.setState({ shareURL: `${document.location.origin}/#${hash}` });
     } catch (err) {
       this.setState({ shareURL: null });
     }
@@ -422,22 +458,19 @@ class App extends Component {
                 console.log(`Touched ${id} with value ${value}`)}
               transformErrors={transformErrors}
               onError={log("errors")}>
-              <button className="btn btn-primary" type="submit">Submit</button>
-              {" "}
-              <button
-                className="btn btn-default"
-                type="button"
-                onClick={this.onShare}>
-                Share
-              </button>
-              {" "}
-              {this.state.shareURL &&
-                <a
-                  href={this.state.shareURL}
-                  onClick={event => event.preventDefault()}
-                  title="Right-click, copy link">
-                  Share link
-                </a>}
+              <div className="row">
+                <div className="col-sm-3">
+                  <button className="btn btn-primary" type="submit">
+                    Submit
+                  </button>
+                </div>
+                <div className="col-sm-9 text-right">
+                  <CopyLink
+                    shareURL={this.state.shareURL}
+                    onShare={this.onShare}
+                  />
+                </div>
+              </div>
             </Form>}
         </div>
       </div>
