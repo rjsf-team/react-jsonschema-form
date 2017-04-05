@@ -323,6 +323,7 @@ class ArrayField extends Component {
       DescriptionField,
       disabled,
       idSchema,
+      uiSchema,
       onAddClick: this.onAddClick,
       readonly,
       required,
@@ -475,13 +476,14 @@ class ArrayField extends Component {
       readonly,
       required,
       schema,
+      uiSchema,
       title,
       TitleField,
     };
 
     // Check if a custom template template was passed in
-    const renderFunction = ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
-    return renderFunction(arrayProps);
+    const Template = ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
+    return <Template {...arrayProps} />;
   }
 
   renderArrayFieldItem(props) {

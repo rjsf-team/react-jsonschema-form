@@ -793,6 +793,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `readonly`: A boolean value stating if the array is readonly.
 - `required`: A boolean value stating if the array is required.
 - `schema`: The schema object for this array.
+- `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
 - `formContext`: The `formContext` object that you passed to Form.
 
