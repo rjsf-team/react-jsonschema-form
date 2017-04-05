@@ -19,7 +19,7 @@ describe("ArrayFieldTemplate", () => {
   describe("Custom ArrayFieldTemplate of string array", () => {
     function ArrayFieldTemplate(props) {
       return (
-        <div className="custom-array">
+        <div className={props.uiSchema.classNames}>
           {props.canAdd && <button className="custom-array-add" />}
           {props.items.map(element => {
             return (
@@ -63,6 +63,10 @@ describe("ArrayFieldTemplate", () => {
         items: { type: "string" },
       };
 
+      const uiSchema = {
+        classNames: "custom-array",
+      };
+
       let node;
 
       beforeEach(() => {
@@ -70,6 +74,7 @@ describe("ArrayFieldTemplate", () => {
           ArrayFieldTemplate,
           formData,
           schema,
+          uiSchema,
         }).node;
       });
 
@@ -114,12 +119,18 @@ describe("ArrayFieldTemplate", () => {
         items: [{ type: "string" }, { type: "string" }, { type: "string" }],
       };
 
+      const uiSchema = {
+        classNames: "custom-array",
+      };
+
       let node;
+
       beforeEach(() => {
         node = createFormComponent({
           ArrayFieldTemplate,
           formData,
           schema,
+          uiSchema,
         }).node;
       });
 
