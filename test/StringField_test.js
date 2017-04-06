@@ -110,7 +110,7 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).eql(undefined);
+      expect(comp.state.formData).eql("");
     });
 
     it("should fill field with data", () => {
