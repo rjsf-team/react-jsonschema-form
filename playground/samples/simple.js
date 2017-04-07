@@ -31,6 +31,7 @@ module.exports = {
   uiSchema: {
     firstName: {
       "ui:autofocus": true,
+      "ui:defaultValue": "",
     },
     age: {
       "ui:widget": "updown",

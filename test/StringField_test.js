@@ -110,7 +110,21 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).eql("");
+      expect(comp.state.formData).eql(undefined);
+    });
+
+    it("should handle an empty string change event with custom ui:defaultValue", () => {
+      const { comp, node } = createFormComponent({
+        schema: { type: "string" },
+        uiSchema: { "ui:defaultValue": "default" },
+        formData: "x",
+      });
+
+      Simulate.change(node.querySelector("input"), {
+        target: { value: "" },
+      });
+
+      expect(comp.state.formData).eql("default");
     });
 
     it("should fill field with data", () => {
@@ -323,6 +337,20 @@ describe("StringField", () => {
       });
 
       expect(comp.state.formData).eql(undefined);
+    });
+
+    it("should handle an empty string change event with custom ui:defaultValue", () => {
+      const { comp, node } = createFormComponent({
+        schema: { type: "string" },
+        uiSchema: { "ui:widget": "textarea", "ui:defaultValue": "default" },
+        formData: "x",
+      });
+
+      Simulate.change(node.querySelector("textarea"), {
+        target: { value: "" },
+      });
+
+      expect(comp.state.formData).eql("default");
     });
 
     it("should render a textarea field with rows", () => {

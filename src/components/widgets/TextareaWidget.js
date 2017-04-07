@@ -14,7 +14,7 @@ function TextareaWidget(props) {
     onBlur,
   } = props;
   const _onChange = ({ target: { value } }) => {
-    return onChange(value === "" ? undefined : value);
+    return onChange(value === "" ? options.defaultValue : value);
   };
   return (
     <textarea
