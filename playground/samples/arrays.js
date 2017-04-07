@@ -117,6 +117,9 @@ module.exports = {
     },
   },
   uiSchema: {
+    listOfStrings: {
+      items: { "ui:emptyValue": "" },
+    },
     multipleChoicesList: {
       "ui:widget": "checkboxes",
     },

@@ -16,7 +16,7 @@ function BaseInput(props) {
     ...inputProps
   } = props;
   const _onChange = ({ target: { value } }) => {
-    return props.onChange(value === "" ? undefined : value);
+    return props.onChange(value === "" ? options.emptyValue : value);
   };
   return (
     <input
