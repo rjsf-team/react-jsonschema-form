@@ -116,7 +116,7 @@ describe("StringField", () => {
     it("should handle an empty string change event with custom ui:defaultValue", () => {
       const { comp, node } = createFormComponent({
         schema: { type: "string" },
-        uiSchema: { "ui:defaultValue": "default" },
+        uiSchema: { "ui:emptyValue": "default" },
         formData: "x",
       });
 
@@ -342,7 +342,7 @@ describe("StringField", () => {
     it("should handle an empty string change event with custom ui:defaultValue", () => {
       const { comp, node } = createFormComponent({
         schema: { type: "string" },
-        uiSchema: { "ui:widget": "textarea", "ui:defaultValue": "default" },
+        uiSchema: { "ui:widget": "textarea", "ui:emptyValue": "default" },
         formData: "x",
       });
 

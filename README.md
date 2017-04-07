@@ -1294,9 +1294,11 @@ render((
 
 ### The case of empty strings
 
-When a text input is empty, the field in form data is set to empty string. String fields that use `enum` and a `select` widget will have an empty option at the top of the options list that when selected will result in the field being `undefined`.
+When a text input is empty, the field in form data is set to `undefined`. String fields that use `enum` and a `select` widget will have an empty option at the top of the options list that when selected will result in the field being `undefined`.
 
 One consequence of this is that if you have an empty string in your `enum` array, selecting that option in the `select` input will cause the field to be set to `undefined`, not an empty string.
+
+If you want to have the field set to a default value when empty you can provide a `ui:emptyValue` field in the `uiSchema` object.
 
 ## Styling your forms
 
