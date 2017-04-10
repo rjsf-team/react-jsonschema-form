@@ -202,26 +202,45 @@ class ArrayField extends Component {
 
   onAddClick = event => {
     event.preventDefault();
-    const { schema, registry, formData } = this.props;
+    const { schema, registry, required } = this.props;
     const { definitions } = registry;
+    let formData = this.props.formData;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
+
     this.props.onChange(
-      [...formData, getDefaultFormState(itemSchema, undefined, definitions)],
+      [
+        ...formData,
+        getDefaultFormState(itemSchema, undefined, definitions, required),
+      ],
       { validate: false }
     );
   };
 
   onDropIndexClick = index => {
+    console.log("DROP INDEX");
     return event => {
       if (event) {
         event.preventDefault();
       }
-      const { formData, onChange } = this.props;
+      const { onChange, required } = this.props;
+      let formData = this.props.formData;
+
+      // if field isn't required and doesn't contain any entries
+      // remove the whole property from formData to guarantee correct validation
+      if (!required) {
+        formData = formData.filter(item => {
+          return item !== null && item !== undefined;
+        });
+
+        formData = formData.length ? formData : undefined;
+      }
       // refs #195: revalidate to ensure properly reindexing errors
-      onChange(formData.filter((_, i) => i !== index), { validate: true });
+
+      formData = formData ? formData.filter((_, i) => i !== index) : formData;
+      onChange(formData, { validate: true });
     };
   };
 
@@ -250,12 +269,13 @@ class ArrayField extends Component {
   onChangeForIndex = index => {
     return value => {
       const { formData, onChange } = this.props;
-      const newFormData = formData.map((item, i) => {
+      let newFormData = formData.map((item, i) => {
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
         const jsonValue = typeof value === "undefined" ? null : value;
         return index === i ? jsonValue : item;
       });
+
       onChange(newFormData, { validate: false });
     };
   };
@@ -576,7 +596,7 @@ if (process.env.NODE_ENV !== "production") {
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func,
-    formData: PropTypes.array,
+    //formData: PropTypes.array,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,

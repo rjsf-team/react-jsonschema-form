@@ -26,9 +26,34 @@ class ObjectField extends Component {
 
   onPropertyChange = name => {
     return (value, options) => {
-      const newFormData = { ...this.props.formData, [name]: value };
+      const newFormData = this.getCleanFormDataFromValues({
+        ...this.props.formData,
+        [name]: value,
+      });
       this.props.onChange(newFormData, options);
     };
+  };
+
+  getCleanFormDataFromValues = values => {
+    const { required } = this.props;
+
+    if (required) {
+      return values;
+    }
+
+    const cleanValues = [];
+
+    for (let key in values) {
+      if (values.hasOwnProperty(key) && typeof values[key] !== "undefined") {
+        cleanValues.push(values[key]);
+      }
+    }
+
+    if (!cleanValues.length) {
+      values = undefined;
+    }
+
+    return values;
   };
 
   render() {

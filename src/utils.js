@@ -103,7 +103,12 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
-function computeDefaults(schema, parentDefaults, definitions = {}) {
+function computeDefaults(
+  schema,
+  parentDefaults,
+  definitions = {},
+  required = false
+) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
@@ -126,6 +131,10 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
     defaults = schema.default;
   }
 
+  if (!required) {
+    return defaults;
+  }
+
   switch (schema.type) {
     // We need to recur for object schema inner default values.
     case "object":
@@ -136,7 +145,8 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
           acc[key] = computeDefaults(
             schema.properties[key],
             (defaults || {})[key],
-            definitions
+            definitions,
+            schema.required && schema.required.indexOf(key) > -1
           );
           return acc;
         },
@@ -153,12 +163,22 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   return defaults;
 }
 
-export function getDefaultFormState(_schema, formData, definitions = {}) {
+export function getDefaultFormState(
+  _schema,
+  formData,
+  definitions = {},
+  required = false
+) {
   if (!isObject(_schema)) {
     throw new Error("Invalid schema: " + _schema);
   }
   const schema = retrieveSchema(_schema, definitions);
-  const defaults = computeDefaults(schema, _schema.default, definitions);
+  const defaults = computeDefaults(
+    schema,
+    _schema.default,
+    definitions,
+    required
+  );
   if (typeof formData === "undefined") {
     // No form data? Use schema defaults.
     return defaults;
@@ -197,6 +217,8 @@ export function isObject(thing) {
 
 export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
+  obj1 = obj1 || {};
+  obj2 = obj2 || {};
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce(
     (acc, key) => {
