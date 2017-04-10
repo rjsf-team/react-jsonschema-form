@@ -43,7 +43,7 @@ describe("utils", () => {
         ).to.eql({ string: "foo" });
       });
 
-      it("should recursively map schema object default to form state", () => {
+      it("should recursively map schema object default to form state if required", () => {
         expect(
           getDefaultFormState({
             type: "object",
@@ -58,6 +58,7 @@ describe("utils", () => {
                 },
               },
             },
+            required: ["object"],
           })
         ).to.eql({ object: { string: "foo" } });
       });
@@ -77,6 +78,40 @@ describe("utils", () => {
             },
           })
         ).to.eql({ array: ["foo", "bar"] });
+      });
+
+      it("should map schema array to undefined when no data and no defaults provided", () => {
+        expect(
+          getDefaultFormState({
+            type: "object",
+            properties: {
+              array: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          })
+        ).to.eql({ array: undefined });
+      });
+
+      it("should map schema to undefined when not required and every property is undefined data and no defaults provided", () => {
+        expect(
+          getDefaultFormState({
+            type: "object",
+            properties: {
+              object: {
+                type: "object",
+                properties: {
+                  string: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          })
+        ).to.eql({ object: undefined });
       });
 
       it("should recursively map schema array default to form state", () => {
@@ -161,7 +196,7 @@ describe("utils", () => {
         });
       });
 
-      it("should use parent defaults for ArrayFields", () => {
+      it("should use parent defaults for ArrayFields if required", () => {
         const schema = {
           type: "object",
           properties: {

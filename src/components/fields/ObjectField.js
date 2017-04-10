@@ -4,6 +4,7 @@ import {
   orderProperties,
   retrieveSchema,
   getDefaultRegistry,
+  cleanUpNonRequiredObject,
 } from "../../utils";
 
 class ObjectField extends Component {
@@ -26,34 +27,16 @@ class ObjectField extends Component {
 
   onPropertyChange = name => {
     return (value, options) => {
-      const newFormData = this.getCleanFormDataFromValues({
-        ...this.props.formData,
-        [name]: value,
-      });
+      const { required } = this.props;
+
+      let newFormData = { ...this.props.formData, [name]: value };
+
+      if (!required) {
+        newFormData = cleanUpNonRequiredObject(newFormData);
+      }
+
       this.props.onChange(newFormData, options);
     };
-  };
-
-  getCleanFormDataFromValues = values => {
-    const { required } = this.props;
-
-    if (required) {
-      return values;
-    }
-
-    const cleanValues = [];
-
-    for (let key in values) {
-      if (values.hasOwnProperty(key) && typeof values[key] !== "undefined") {
-        cleanValues.push(values[key]);
-      }
-    }
-
-    if (!cleanValues.length) {
-      values = undefined;
-    }
-
-    return values;
   };
 
   render() {

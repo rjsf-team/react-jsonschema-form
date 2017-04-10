@@ -121,18 +121,14 @@ function computeDefaults(
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
-    return computeDefaults(refSchema, defaults, definitions);
+    return computeDefaults(refSchema, defaults, definitions, required);
   } else if (isFixedItems(schema)) {
     defaults = schema.items.map(itemSchema =>
-      computeDefaults(itemSchema, undefined, definitions));
+      computeDefaults(itemSchema, undefined, definitions, required));
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof defaults === "undefined") {
     defaults = schema.default;
-  }
-
-  if (!required) {
-    return defaults;
   }
 
   switch (schema.type) {
@@ -142,36 +138,69 @@ function computeDefaults(
         (acc, key) => {
           // Compute the defaults for this node, with the parent defaults we might
           // have from a previous run: defaults[key].
-          acc[key] = computeDefaults(
-            schema.properties[key],
-            (defaults || {})[key],
-            definitions,
-            schema.required && schema.required.indexOf(key) > -1
-          );
+          if (acc) {
+            acc[key] = computeDefaults(
+              schema.properties[key],
+              (defaults || {})[key],
+              definitions,
+              schema.required && schema.required.indexOf(key) > -1
+            );
+
+            if (!required) {
+              acc = cleanUpNonRequiredObject(acc);
+            }
+          }
           return acc;
         },
         {}
       );
 
     case "array":
-      if (schema.minItems) {
+      if (required && schema.minItems) {
         return new Array(schema.minItems).fill(
-          computeDefaults(schema.items, defaults, definitions)
+          computeDefaults(schema.items, defaults, definitions, required)
         );
       }
   }
   return defaults;
 }
 
+export function cleanUpNonRequiredObject(values) {
+  const cleanValues = [];
+
+  for (let key in values) {
+    if (values.hasOwnProperty(key) && typeof values[key] !== "undefined") {
+      cleanValues.push(values[key]);
+    }
+  }
+
+  if (!cleanValues.length) {
+    values = undefined;
+  }
+
+  return values;
+}
+
+export function cleanUpNonRequiredArray(values) {
+  values = values.filter(item => {
+    return item !== null && item !== undefined;
+  });
+
+  values = values.length ? values : undefined;
+
+  return values;
+}
+
 export function getDefaultFormState(
   _schema,
   formData,
   definitions = {},
-  required = false
+  required = true
 ) {
   if (!isObject(_schema)) {
     throw new Error("Invalid schema: " + _schema);
   }
+
   const schema = retrieveSchema(_schema, definitions);
   const defaults = computeDefaults(
     schema,

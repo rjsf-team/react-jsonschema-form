@@ -330,7 +330,40 @@ describe("ArrayField", () => {
       expect(inputs[3].id).eql("root_foo_1_baz");
     });
 
-    it("should render enough inputs with proper defaults to match minItems in schema when no formData is set", () => {
+    it("should render enough inputs with proper defaults when required to match minItems in schema when no formData is set", () => {
+      const complexSchema = {
+        type: "object",
+        definitions: {
+          Thing: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                default: "Default name",
+              },
+            },
+          },
+        },
+        properties: {
+          foo: {
+            type: "array",
+            minItems: 2,
+            items: {
+              $ref: "#/definitions/Thing",
+            },
+          },
+        },
+        required: ["foo"],
+      };
+      let form = createFormComponent({ schema: complexSchema, formData: {} });
+      let inputs = form.node.querySelectorAll("input[type=text]");
+      console.log(0, inputs[0].value);
+      console.log(1, inputs[1].value);
+      expect(inputs[0].value).eql("Default name");
+      expect(inputs[1].value).eql("Default name");
+    });
+
+    it("should not render inputs with defaults when not required to match minItems in schema when no formData is set", () => {
       const complexSchema = {
         type: "object",
         definitions: {
@@ -356,8 +389,7 @@ describe("ArrayField", () => {
       };
       let form = createFormComponent({ schema: complexSchema, formData: {} });
       let inputs = form.node.querySelectorAll("input[type=text]");
-      expect(inputs[0].value).eql("Default name");
-      expect(inputs[1].value).eql("Default name");
+      expect(inputs.length).eql(0);
     });
 
     it("should honor given formData, even when it does not meet ths minItems-requirement", () => {

@@ -12,6 +12,7 @@ import {
   retrieveSchema,
   toIdSchema,
   getDefaultRegistry,
+  cleanUpNonRequiredArray,
 } from "../../utils";
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
@@ -220,7 +221,6 @@ class ArrayField extends Component {
   };
 
   onDropIndexClick = index => {
-    console.log("DROP INDEX");
     return event => {
       if (event) {
         event.preventDefault();
@@ -231,11 +231,7 @@ class ArrayField extends Component {
       // if field isn't required and doesn't contain any entries
       // remove the whole property from formData to guarantee correct validation
       if (!required) {
-        formData = formData.filter(item => {
-          return item !== null && item !== undefined;
-        });
-
-        formData = formData.length ? formData : undefined;
+        formData = cleanUpNonRequiredArray(formData);
       }
       // refs #195: revalidate to ensure properly reindexing errors
 

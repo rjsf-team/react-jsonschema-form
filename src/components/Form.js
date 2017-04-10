@@ -37,12 +37,7 @@ export default class Form extends Component {
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const { definitions } = schema;
-    const formData = getDefaultFormState(
-      schema,
-      props.formData,
-      definitions,
-      true
-    );
+    const formData = getDefaultFormState(schema, props.formData, definitions);
     const { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema)
       : {
