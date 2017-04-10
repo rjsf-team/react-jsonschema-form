@@ -592,7 +592,7 @@ if (process.env.NODE_ENV !== "production") {
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func,
-    //formData: PropTypes.array,
+    formData: PropTypes.array,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
