@@ -895,7 +895,9 @@ The following props are passed to custom widget components:
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `formContext`: The `formContext` object that you passed to Form.
 
-> Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
+> Notes: 
+> * Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
+> * If your custom widget only calls `onChange` when the user is blurring the field (maybe to keep RJSF from updating the model for every key stroke) there is an edge case where users on devices with less processing power could potentially submit stale `formData` when focused in an input field while submitting the form due to [RJSF util setState](https://github.com/mozilla-services/react-jsonschema-form/blob/master/src/utils.js#L495) not using the React `setState` callback unless we set the `safeRenderCompletion` prop to `true` on the `<Form>`component.
 
 #### Custom component registration
 
