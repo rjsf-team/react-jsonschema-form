@@ -1505,7 +1505,8 @@ describe("StringField", () => {
       return new Promise(setImmediate).then(() =>
         expect(comp.state.formData).eql(
           "data:text/plain;name=file1.txt;base64,x="
-        ));
+        )
+      );
     });
 
     it("should render the widget with the expected id", () => {

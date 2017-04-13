@@ -135,9 +135,8 @@ describe("uiSchema", () => {
           uiSchema: { "ui:widget": { component: "widget" } },
           widgets,
         });
-        expect(
-          console.warn.calledWithMatch(/ui:widget object is deprecated/)
-        ).to.be.true;
+        expect(console.warn.calledWithMatch(/ui:widget object is deprecated/))
+          .to.be.true;
       });
 
       it("should cache MergedWidget instance", () => {
@@ -1861,7 +1860,8 @@ describe("uiSchema", () => {
         });
 
         const readonly = [].map.call(node.querySelectorAll("select"), node =>
-          node.hasAttribute("disabled"));
+          node.hasAttribute("disabled")
+        );
         expect(readonly).eql([true, true, true]);
       });
 
@@ -1872,7 +1872,8 @@ describe("uiSchema", () => {
         });
 
         const readonly = [].map.call(node.querySelectorAll("select"), node =>
-          node.hasAttribute("disabled"));
+          node.hasAttribute("disabled")
+        );
         expect(readonly).eql([true, true, true, true, true, true]);
       });
     });

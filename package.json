@@ -18,7 +18,7 @@
     "tdd": "cross-env NODE_ENV=test  mocha --compilers js:babel-register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
     "test": " cross-env NODE_ENV=test   mocha --compilers js:babel-register --require ./test/setup-jsdom.js test/**/*_test.js"
   },
-  "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5",
+  "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi",
   "lint-staged": {
     "{playground,src,test}/**/*.js": [
       "npm run lint",
@@ -72,7 +72,7 @@
     "jsdom": "^8.3.0",
     "lint-staged": "^3.3.1",
     "mocha": "^2.5.3",
-    "prettier": "^0.22.0",
+    "prettier": "^1.0.0",
     "prettier-check": "^1.0.0",
     "react": "^15.0.0",
     "react-addons-test-utils": "^15.3.2",

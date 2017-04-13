@@ -420,9 +420,8 @@ describe("ArrayField", () => {
       it("should render a select widget with multiple attribute", () => {
         const { node } = createFormComponent({ schema });
 
-        expect(
-          node.querySelector(".field select").getAttribute("multiple")
-        ).not.to.be.null;
+        expect(node.querySelector(".field select").getAttribute("multiple")).not
+          .to.be.null;
       });
 
       it("should render options", () => {
@@ -580,9 +579,8 @@ describe("ArrayField", () => {
     it("should render a file widget with multiple attribute", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(
-        node.querySelector(".field [type=file]").getAttribute("multiple")
-      ).not.to.be.null;
+      expect(node.querySelector(".field [type=file]").getAttribute("multiple"))
+        .not.to.be.null;
     });
 
     it("should handle a change event", () => {
@@ -608,7 +606,8 @@ describe("ArrayField", () => {
         expect(comp.state.formData).eql([
           "data:text/plain;name=file1.txt;base64,x=",
           "data:text/plain;name=file2.txt;base64,x=",
-        ]));
+        ])
+      );
     });
 
     it("should fill field with data", () => {

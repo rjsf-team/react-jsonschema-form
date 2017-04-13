@@ -462,21 +462,18 @@ describe("Form", () => {
       Simulate.submit(node);
 
       // For some reason this may take some time to render, hence the safe wait.
-      setTimeout(
-        () => {
-          expect(comp.state.formData).eql({
-            object: {
-              array: [
-                {
-                  bool: true,
-                },
-              ],
-            },
-          });
-          done();
-        },
-        250
-      );
+      setTimeout(() => {
+        expect(comp.state.formData).eql({
+          object: {
+            array: [
+              {
+                bool: true,
+              },
+            ],
+          },
+        });
+        done();
+      }, 250);
     });
   });
 
@@ -845,8 +842,10 @@ describe("Form", () => {
         sinon.assert.calledWithMatch(
           onError,
           sinon.match(value => {
-            return value.length === 1 &&
-              value[0].message === "does not meet minimum length of 8";
+            return (
+              value.length === 1 &&
+              value[0].message === "does not meet minimum length of 8"
+            );
           })
         );
       });
