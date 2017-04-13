@@ -349,7 +349,8 @@ class App extends Component {
     const { ArrayFieldTemplate } = data;
     // force resetting form component instance
     this.setState({ form: false }, _ =>
-      this.setState({ ...data, form: true, ArrayFieldTemplate }));
+      this.setState({ ...data, form: true, ArrayFieldTemplate })
+    );
   };
 
   onSchemaEdited = schema => this.setState({ schema, shareURL: null });

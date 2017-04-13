@@ -22,29 +22,26 @@ function toErrorSchema(errors) {
   if (!errors.length) {
     return {};
   }
-  return errors.reduce(
-    (errorSchema, error) => {
-      const { property, message } = error;
-      const path = toPath(property);
-      let parent = errorSchema;
-      for (const segment of path.slice(1)) {
-        if (!(segment in parent)) {
-          parent[segment] = {};
-        }
-        parent = parent[segment];
+  return errors.reduce((errorSchema, error) => {
+    const { property, message } = error;
+    const path = toPath(property);
+    let parent = errorSchema;
+    for (const segment of path.slice(1)) {
+      if (!(segment in parent)) {
+        parent[segment] = {};
       }
-      if (Array.isArray(parent.__errors)) {
-        // We store the list of errors for this node in a property named __errors
-        // to avoid name collision with a possible sub schema field named
-        // "errors" (see `validate.createErrorHandler`).
-        parent.__errors = parent.__errors.concat(message);
-      } else {
-        parent.__errors = [message];
-      }
-      return errorSchema;
-    },
-    {}
-  );
+      parent = parent[segment];
+    }
+    if (Array.isArray(parent.__errors)) {
+      // We store the list of errors for this node in a property named __errors
+      // to avoid name collision with a possible sub schema field named
+      // "errors" (see `validate.createErrorHandler`).
+      parent.__errors = parent.__errors.concat(message);
+    } else {
+      parent.__errors = [message];
+    }
+    return errorSchema;
+  }, {});
 }
 
 export function toErrorList(errorSchema, fieldName = "root") {
@@ -59,15 +56,12 @@ export function toErrorList(errorSchema, fieldName = "root") {
       })
     );
   }
-  return Object.keys(errorSchema).reduce(
-    (acc, key) => {
-      if (key !== "__errors") {
-        acc = acc.concat(toErrorList(errorSchema[key], key));
-      }
-      return acc;
-    },
-    errorList
-  );
+  return Object.keys(errorSchema).reduce((acc, key) => {
+    if (key !== "__errors") {
+      acc = acc.concat(toErrorList(errorSchema[key], key));
+    }
+    return acc;
+  }, errorList);
 }
 
 function createErrorHandler(formData) {
@@ -81,36 +75,27 @@ function createErrorHandler(formData) {
     },
   };
   if (isObject(formData)) {
-    return Object.keys(formData).reduce(
-      (acc, key) => {
-        return { ...acc, [key]: createErrorHandler(formData[key]) };
-      },
-      handler
-    );
+    return Object.keys(formData).reduce((acc, key) => {
+      return { ...acc, [key]: createErrorHandler(formData[key]) };
+    }, handler);
   }
   if (Array.isArray(formData)) {
-    return formData.reduce(
-      (acc, value, key) => {
-        return { ...acc, [key]: createErrorHandler(value) };
-      },
-      handler
-    );
+    return formData.reduce((acc, value, key) => {
+      return { ...acc, [key]: createErrorHandler(value) };
+    }, handler);
   }
   return handler;
 }
 
 function unwrapErrorHandler(errorHandler) {
-  return Object.keys(errorHandler).reduce(
-    (acc, key) => {
-      if (key === "addError") {
-        return acc;
-      } else if (key === "__errors") {
-        return { ...acc, [key]: errorHandler[key] };
-      }
-      return { ...acc, [key]: unwrapErrorHandler(errorHandler[key]) };
-    },
-    {}
-  );
+  return Object.keys(errorHandler).reduce((acc, key) => {
+    if (key === "addError") {
+      return acc;
+    } else if (key === "__errors") {
+      return { ...acc, [key]: errorHandler[key] };
+    }
+    return { ...acc, [key]: unwrapErrorHandler(errorHandler[key]) };
+  }, {});
 }
 
 /**

@@ -119,7 +119,8 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
     return computeDefaults(refSchema, defaults, definitions);
   } else if (isFixedItems(schema)) {
     defaults = schema.items.map(itemSchema =>
-      computeDefaults(itemSchema, undefined, definitions));
+      computeDefaults(itemSchema, undefined, definitions)
+    );
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof defaults === "undefined") {
@@ -129,19 +130,16 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   switch (schema.type) {
     // We need to recur for object schema inner default values.
     case "object":
-      return Object.keys(schema.properties).reduce(
-        (acc, key) => {
-          // Compute the defaults for this node, with the parent defaults we might
-          // have from a previous run: defaults[key].
-          acc[key] = computeDefaults(
-            schema.properties[key],
-            (defaults || {})[key],
-            definitions
-          );
-          return acc;
-        },
-        {}
-      );
+      return Object.keys(schema.properties).reduce((acc, key) => {
+        // Compute the defaults for this node, with the parent defaults we might
+        // have from a previous run: defaults[key].
+        acc[key] = computeDefaults(
+          schema.properties[key],
+          (defaults || {})[key],
+          definitions
+        );
+        return acc;
+      }, {});
 
     case "array":
       if (schema.minItems) {
@@ -172,23 +170,26 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
 
 export function getUiOptions(uiSchema) {
   // get all passed options from ui:widget, ui:options, and ui:<optionName>
-  return Object.keys(uiSchema).filter(key => key.indexOf("ui:") === 0).reduce((
-    options,
-    key
-  ) => {
-    const value = uiSchema[key];
+  return Object.keys(uiSchema)
+    .filter(key => key.indexOf("ui:") === 0)
+    .reduce((options, key) => {
+      const value = uiSchema[key];
 
-    if (key === "ui:widget" && isObject(value)) {
-      console.warn(
-        "Setting options via ui:widget object is deprecated, use ui:options instead"
-      );
-      return { ...options, ...(value.options || {}), widget: value.component };
-    }
-    if (key === "ui:options" && isObject(value)) {
-      return { ...options, ...value };
-    }
-    return { ...options, [key.substring(3)]: value };
-  }, {});
+      if (key === "ui:widget" && isObject(value)) {
+        console.warn(
+          "Setting options via ui:widget object is deprecated, use ui:options instead"
+        );
+        return {
+          ...options,
+          ...(value.options || {}),
+          widget: value.component,
+        };
+      }
+      if (key === "ui:options" && isObject(value)) {
+        return { ...options, ...value };
+      }
+      return { ...options, [key.substring(3)]: value };
+    }, {});
 }
 
 export function isObject(thing) {
@@ -198,20 +199,17 @@ export function isObject(thing) {
 export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
-  return Object.keys(obj2).reduce(
-    (acc, key) => {
-      const left = obj1[key], right = obj2[key];
-      if (obj1.hasOwnProperty(key) && isObject(right)) {
-        acc[key] = mergeObjects(left, right, concatArrays);
-      } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
-        acc[key] = left.concat(right);
-      } else {
-        acc[key] = right;
-      }
-      return acc;
-    },
-    acc
-  );
+  return Object.keys(obj2).reduce((acc, key) => {
+    const left = obj1[key], right = obj2[key];
+    if (obj1.hasOwnProperty(key) && isObject(right)) {
+      acc[key] = mergeObjects(left, right, concatArrays);
+    } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
+      acc[key] = left.concat(right);
+    } else {
+      acc[key] = right;
+    }
+    return acc;
+  }, acc);
 }
 
 export function asNumber(value) {
@@ -246,17 +244,14 @@ export function orderProperties(properties, order) {
   }
 
   const arrayToHash = arr =>
-    arr.reduce(
-      (prev, curr) => {
-        prev[curr] = true;
-        return prev;
-      },
-      {}
-    );
+    arr.reduce((prev, curr) => {
+      prev[curr] = true;
+      return prev;
+    }, {});
   const errorPropList = arr =>
-    arr.length > 1
+    (arr.length > 1
       ? `properties '${arr.join("', '")}'`
-      : `property '${arr[0]}'`;
+      : `property '${arr[0]}'`);
   const propertyHash = arrayToHash(properties);
   const orderHash = arrayToHash(order);
   const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
@@ -289,15 +284,18 @@ export function isMultiSelect(schema) {
 }
 
 export function isFilesArray(schema, uiSchema) {
-  return (schema.items.type === "string" &&
-    schema.items.format === "data-url") ||
-    uiSchema["ui:widget"] === "files";
+  return (
+    (schema.items.type === "string" && schema.items.format === "data-url") ||
+    uiSchema["ui:widget"] === "files"
+  );
 }
 
 export function isFixedItems(schema) {
-  return Array.isArray(schema.items) &&
+  return (
+    Array.isArray(schema.items) &&
     schema.items.length > 0 &&
-    schema.items.every(item => isObject(item));
+    schema.items.every(item => isObject(item))
+  );
 }
 
 export function allowAdditionalItems(schema) {
@@ -358,11 +356,13 @@ export function deepEquals(a, b, ca = [], cb = []) {
   } else if (a instanceof Date && b instanceof Date) {
     return a.getTime() === b.getTime();
   } else if (a instanceof RegExp && b instanceof RegExp) {
-    return a.source === b.source &&
+    return (
+      a.source === b.source &&
       a.global === b.global &&
       a.multiline === b.multiline &&
       a.lastIndex === b.lastIndex &&
-      a.ignoreCase === b.ignoreCase;
+      a.ignoreCase === b.ignoreCase
+    );
   } else if (isArguments(a) || isArguments(b)) {
     if (!(isArguments(a) && isArguments(b))) {
       return false;
@@ -469,14 +469,7 @@ export function parseDateString(dateString, includeTime = true) {
 }
 
 export function toDateString(
-  {
-    year,
-    month,
-    day,
-    hour = 0,
-    minute = 0,
-    second = 0,
-  },
+  { year, month, day, hour = 0, minute = 0, second = 0 },
   time = true
 ) {
   const utcTime = Date.UTC(year, month - 1, day, hour, minute, second);

@@ -20,8 +20,9 @@ class ObjectField extends Component {
 
   isRequired(name) {
     const schema = this.props.schema;
-    return Array.isArray(schema.required) &&
-      schema.required.indexOf(name) !== -1;
+    return (
+      Array.isArray(schema.required) && schema.required.indexOf(name) !== -1
+    );
   }
 
   onPropertyChange = name => {
