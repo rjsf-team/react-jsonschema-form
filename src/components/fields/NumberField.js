@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import Proptypes from "prop-types";
 
 import { asNumber } from "../../utils";
 
