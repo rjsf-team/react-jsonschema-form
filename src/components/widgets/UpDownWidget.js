@@ -1,5 +1,5 @@
 import React from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 
 import { rangeSpec } from "../../utils";
 import BaseInput from "./BaseInput";

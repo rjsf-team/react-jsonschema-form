@@ -1,5 +1,5 @@
 import React from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);

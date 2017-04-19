@@ -1,5 +1,5 @@
 import React from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
