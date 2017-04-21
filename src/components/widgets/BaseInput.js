@@ -20,12 +20,12 @@ function BaseInput(props) {
   };
   return (
     <input
-      {...inputProps}
       className="form-control"
       readOnly={readonly}
       disabled={disabled}
       autoFocus={autofocus}
       value={value == null ? "" : value}
+      {...inputProps}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
     />
