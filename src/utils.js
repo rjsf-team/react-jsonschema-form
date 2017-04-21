@@ -314,10 +314,21 @@ export function optionsList(schema) {
 
 function findSchemaDefinition($ref, definitions = {}) {
   // Extract and use the referenced definition if we have it.
-  const match = /#\/definitions\/(.*)$/.exec($ref);
-  if (match && match[1] && definitions.hasOwnProperty(match[1])) {
-    return definitions[match[1]];
+  const match = /^#\/definitions\/(.*)$/.exec($ref);
+  if (match && match[1]) {
+    const parts = match[1].split("/");
+    let current = definitions;
+    for (const part of parts) {
+      if (current.hasOwnProperty(part)) {
+        current = current[part];
+      } else {
+        // No matching definition found, that's an error (bogus schema?)
+        throw new Error(`Could not find a definition for ${$ref}.`);
+      }
+    }
+    return current;
   }
+
   // No matching definition found, that's an error (bogus schema?)
   throw new Error(`Could not find a definition for ${$ref}.`);
 }
