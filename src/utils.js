@@ -130,16 +130,30 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   switch (schema.type) {
     // We need to recur for object schema inner default values.
     case "object":
-      return Object.keys(schema.properties).reduce((acc, key) => {
-        // Compute the defaults for this node, with the parent defaults we might
-        // have from a previous run: defaults[key].
-        acc[key] = computeDefaults(
-          schema.properties[key],
-          (defaults || {})[key],
-          definitions
-        );
-        return acc;
-      }, {});
+      return new Proxy(
+        {},
+        {
+          get(obj, key) {
+            if (!(key in obj) && key in schema.properties) {
+              obj[key] = computeDefaults(
+                schema.properties[key],
+                (defaults || {})[key],
+                definitions
+              );
+            }
+
+            return obj[key];
+          },
+
+          has(obj, key) {
+            return key in schema.properties;
+          },
+
+          ownKeys(obj) {
+            return Object.keys(schema.properties);
+          },
+        }
+      );
 
     case "array":
       if (schema.minItems) {
@@ -157,15 +171,39 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
   }
   const schema = retrieveSchema(_schema, definitions);
   const defaults = computeDefaults(schema, _schema.default, definitions);
+  return getDefault(formData, defaults);
+}
+
+function getDefault(formData, defaults) {
   if (typeof formData === "undefined") {
     // No form data? Use schema defaults.
     return defaults;
   }
   if (isObject(formData)) {
     // Override schema defaults with form data.
-    return mergeObjects(defaults, formData);
+    for (const key in formData) {
+      formData[key] = getDefault(formData[key], defaults[key]);
+    }
+
+    return new Proxy(formData, {
+      get(obj, key) {
+        if (!(key in obj) && key in defaults) {
+          obj[key] = defaults[key];
+        }
+
+        return obj[key];
+      },
+
+      has(obj, key) {
+        return key in defaults;
+      },
+
+      ownKeys(obj) {
+        return Object.keys(defaults);
+      },
+    });
   }
-  return formData || defaults;
+  return formData;
 }
 
 export function getUiOptions(uiSchema) {
