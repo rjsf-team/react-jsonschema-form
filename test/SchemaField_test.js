@@ -162,6 +162,38 @@ describe("SchemaField", () => {
     });
   });
 
+  describe("label support", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+      },
+    };
+
+    it("should render label by default", () => {
+      const { node } = createFormComponent({ schema });
+      expect(node.querySelectorAll("label")).to.have.length.of(1);
+    });
+
+    it("should render label if ui:options label is set to true", () => {
+      const uiSchema = {
+        foo: { "ui:options": { label: true } },
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelectorAll("label")).to.have.length.of(1);
+    });
+
+    it("should not render label if ui:options label is set to false", () => {
+      const uiSchema = {
+        foo: { "ui:options": { label: false } },
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelectorAll("label")).to.have.length.of(0);
+    });
+  });
+
   describe("description support", () => {
     const schema = {
       type: "object",
