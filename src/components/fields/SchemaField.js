@@ -151,7 +151,7 @@ function SchemaFieldRender(props) {
   }
 
   const uiOptions = getUiOptions(uiSchema);
-  let { label: displayLabel } = uiOptions;
+  let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
     displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
   }
