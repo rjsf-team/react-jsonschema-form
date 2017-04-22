@@ -4,6 +4,7 @@ import {
   isMultiSelect,
   retrieveSchema,
   getDefaultRegistry,
+  getUiOptions,
   isFilesArray,
   deepEquals,
 } from "../../utils";
@@ -149,7 +150,8 @@ function SchemaFieldRender(props) {
     return <div />;
   }
 
-  let displayLabel = true;
+  const uiOptions = getUiOptions(uiSchema);
+  let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
     displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
   }
