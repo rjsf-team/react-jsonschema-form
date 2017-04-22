@@ -48,6 +48,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Auto focus](#auto-focus)
      - [Textarea rows option](#textarea-rows-option)
      - [Placeholders](#placeholders)
+     - [Field labels](#field-labels)
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
@@ -683,6 +684,19 @@ Fields using `enum` can also use `ui:placeholder`. The value will be used as the
 const schema = {type: "string", enum: ["First", "Second"]};
 const uiSchema = {
   "ui:placeholder": "Choose an option"
+};
+```
+
+### Field labels
+
+Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` from `ui:options` uiSchema directive.
+
+```jsx
+const schema = {type: "string"};
+const uiSchema = {
+  "ui:options": {
+    label: false
+  }
 };
 ```
 
