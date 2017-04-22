@@ -250,6 +250,45 @@ describe("Form", () => {
       expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
     });
 
+    it("should follow recursive references", () => {
+      const schema = {
+        definitions: {
+          bar: { $ref: "#/definitions/qux" },
+          qux: { type: "string" },
+        },
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/bar" },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
+    it("should follow recursive references to deep schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: { $ref: "#/definitions/bar" },
+          bar: {
+            type: "object",
+            properties: {
+              qux: { type: "string" },
+            },
+          },
+        },
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/testdef/properties/qux" },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
     it("should handle referenced definitions for array items", () => {
       const schema = {
         definitions: {

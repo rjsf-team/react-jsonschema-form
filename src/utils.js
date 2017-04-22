@@ -335,16 +335,18 @@ function findSchemaDefinition($ref, definitions = {}) {
 }
 
 export function retrieveSchema(schema, definitions = {}) {
-  // No $ref attribute found, returning the original schema.
-  if (!schema.hasOwnProperty("$ref")) {
-    return schema;
+  let current = schema;
+  while (current.hasOwnProperty("$ref")) {
+    // Retrieve the referenced schema definition.
+    const $refSchema = findSchemaDefinition(current.$ref, definitions);
+    // Drop the $ref property of the source schema.
+    const { $ref, ...localSchema } = current;
+    // Update referenced schema definition with local schema properties.
+    current = { ...$refSchema, ...localSchema };
   }
-  // Retrieve the referenced schema definition.
-  const $refSchema = findSchemaDefinition(schema.$ref, definitions);
-  // Drop the $ref property of the source schema.
-  const { $ref, ...localSchema } = schema;
-  // Update referenced schema definition with local schema properties.
-  return { ...$refSchema, ...localSchema };
+
+  // No $ref attribute found, returning the original schema.
+  return current;
 }
 
 function isArguments(object) {
