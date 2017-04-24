@@ -75,7 +75,7 @@
     "prettier": "^1.0.0",
     "prettier-check": "^1.0.0",
     "prop-types": "^15.5.8",
-    "react": "^15.0.0",
+    "react": "^15.5.0",
     "react-addons-test-utils": "^15.3.2",
     "react-codemirror": "^0.2.3",
     "react-dom": "^15.3.2",
