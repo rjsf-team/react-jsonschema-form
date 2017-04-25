@@ -166,6 +166,7 @@ describe("SchemaField", () => {
   describe("label support", () => {
     const schema = {
       type: "object",
+      required: ["foo"],
       properties: {
         foo: { type: "string" },
       },

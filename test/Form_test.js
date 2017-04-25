@@ -237,12 +237,14 @@ describe("Form", () => {
         definitions: {
           testdef: {
             type: "object",
+            required: ["bar"],
             properties: {
               bar: { type: "string" },
             },
           },
         },
         type: "object",
+        required: ["foo"],
         properties: {
           foo: { $ref: "#/definitions/testdef/properties/bar" },
         },
