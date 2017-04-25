@@ -18,6 +18,7 @@ describe("uiSchema", () => {
   describe("custom classNames", () => {
     const schema = {
       type: "object",
+      required: ["foo", "bar"],
       properties: {
         foo: { type: "string" },
         bar: { type: "string" },
@@ -84,6 +85,7 @@ describe("uiSchema", () => {
         // instance of a widget are persistent across all instances
         schema = {
           type: "object",
+          required: ["funcAll", "funcNone", "stringAll", "stringNone"],
           properties: {
             funcAll: { type: "string" },
             funcNone: { type: "string" },
@@ -200,6 +202,7 @@ describe("uiSchema", () => {
     describe("nested widget", () => {
       const schema = {
         type: "object",
+        required: ["field"],
         properties: {
           field: {
             type: "string",
@@ -240,6 +243,7 @@ describe("uiSchema", () => {
     describe("options", () => {
       const schema = {
         type: "object",
+        required: ["field"],
         properties: {
           field: {
             type: "string",
@@ -296,6 +300,7 @@ describe("uiSchema", () => {
     describe("enum fields native options", () => {
       const schema = {
         type: "object",
+        required: ["field"],
         properties: {
           field: {
             type: "string",
@@ -528,6 +533,7 @@ describe("uiSchema", () => {
   describe("string", () => {
     const schema = {
       type: "object",
+      required: ["foo"],
       properties: {
         foo: {
           type: "string",
@@ -731,6 +737,7 @@ describe("uiSchema", () => {
   describe("string (enum)", () => {
     const schema = {
       type: "object",
+      required: ["foo"],
       properties: {
         foo: {
           type: "string",
@@ -785,6 +792,7 @@ describe("uiSchema", () => {
   describe("number", () => {
     const schema = {
       type: "object",
+      required: ["foo"],
       properties: {
         foo: {
           type: "number",
@@ -952,6 +960,7 @@ describe("uiSchema", () => {
     describe("radio", () => {
       const schema = {
         type: "object",
+        required: ["foo"],
         properties: {
           foo: {
             type: "number",
@@ -1043,6 +1052,7 @@ describe("uiSchema", () => {
   describe("integer", () => {
     const schema = {
       type: "object",
+      required: ["foo"],
       properties: {
         foo: {
           type: "integer",
@@ -1137,6 +1147,7 @@ describe("uiSchema", () => {
     describe("radio", () => {
       const schema = {
         type: "object",
+        required: ["foo"],
         properties: {
           foo: {
             type: "integer",
@@ -1228,6 +1239,7 @@ describe("uiSchema", () => {
   describe("boolean", () => {
     const schema = {
       type: "object",
+      required: ["foo"],
       properties: {
         foo: {
           type: "boolean",
@@ -1403,6 +1415,7 @@ describe("uiSchema", () => {
     it("should use a custom root field id for objects", () => {
       const schema = {
         type: "object",
+        required: ["foo", "bar"],
         properties: {
           foo: { type: "string" },
           bar: { type: "string" },
@@ -1507,6 +1520,7 @@ describe("uiSchema", () => {
         beforeEach(() => {
           const schema = {
             type: "object",
+            required: ["foo", "bar"],
             properties: {
               foo: { type: "string" },
               bar: { type: "string" },
@@ -1715,6 +1729,7 @@ describe("uiSchema", () => {
         beforeEach(() => {
           const schema = {
             type: "object",
+            required: ["foo", "bar"],
             properties: {
               foo: { type: "string" },
               bar: { type: "string" },

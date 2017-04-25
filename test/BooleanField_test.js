@@ -186,6 +186,7 @@ describe("BooleanField", () => {
     it("should pass field name to widget if there is no title", () => {
       const schema = {
         type: "object",
+        required: ["boolean"],
         properties: {
           boolean: {
             type: "boolean",

@@ -45,7 +45,7 @@ class ObjectField extends Component {
       onBlur,
     } = this.props;
     const { definitions, fields, formContext } = this.props.registry;
-    const { SchemaField, TitleField, DescriptionField } = fields;
+    const { ObjectPropertyField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = schema.title === undefined ? name : schema.title;
     let orderedProperties;
@@ -79,8 +79,12 @@ class ObjectField extends Component {
             formContext={formContext}
           />}
         {orderedProperties.map((name, index) => {
+          const isDefault =
+            !(name in formData) ||
+            typeof Object.getOwnPropertyDescriptor(formData, name).get ===
+              "function";
           return (
-            <SchemaField
+            <ObjectPropertyField
               key={index}
               name={name}
               required={this.isRequired(name)}
@@ -94,6 +98,7 @@ class ObjectField extends Component {
               registry={this.props.registry}
               disabled={disabled}
               readonly={readonly}
+              isDefault={isDefault}
             />
           );
         })}

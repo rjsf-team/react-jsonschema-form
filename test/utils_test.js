@@ -481,9 +481,11 @@ describe("utils", () => {
     it("should return an idSchema for nested objects", () => {
       const schema = {
         type: "object",
+        required: ["level1"],
         properties: {
           level1: {
             type: "object",
+            required: ["level2"],
             properties: {
               level2: { type: "string" },
             },
@@ -503,9 +505,11 @@ describe("utils", () => {
     it("should return an idSchema for multiple nested objects", () => {
       const schema = {
         type: "object",
+        required: ["level1a", "level1b"],
         properties: {
           level1a: {
             type: "object",
+            required: ["level1a2a", "level1a2b"],
             properties: {
               level1a2a: { type: "string" },
               level1a2b: { type: "string" },
@@ -513,6 +517,7 @@ describe("utils", () => {
           },
           level1b: {
             type: "object",
+            required: ["level1b2a", "level1b2b"],
             properties: {
               level1b2a: { type: "string" },
               level1b2b: { type: "string" },
@@ -539,6 +544,7 @@ describe("utils", () => {
     it("schema with an id property must not corrupt the idSchema", () => {
       const schema = {
         type: "object",
+        required: ["metadata"],
         properties: {
           metadata: {
             type: "object",
@@ -565,6 +571,7 @@ describe("utils", () => {
         type: "array",
         items: {
           type: "object",
+          required: ["foo"],
           properties: {
             foo: { type: "string" },
           },
@@ -582,6 +589,7 @@ describe("utils", () => {
         definitions: {
           testdef: {
             type: "object",
+            required: ["foo", "bar"],
             properties: {
               foo: { type: "string" },
               bar: { type: "string" },

@@ -20,7 +20,7 @@ describe("ObjectField", () => {
       type: "object",
       title: "my object",
       description: "my description",
-      required: ["foo"],
+      required: ["foo", "bar"],
       default: {
         foo: "hey",
         bar: true,
@@ -168,6 +168,7 @@ describe("ObjectField", () => {
   describe("fields ordering", () => {
     const schema = {
       type: "object",
+      required: ["foo", "bar", "baz", "qux"],
       properties: {
         foo: { type: "string" },
         bar: { type: "string" },
@@ -188,7 +189,7 @@ describe("ObjectField", () => {
         l => l.textContent
       );
 
-      expect(labels).eql(["baz", "qux", "bar", "foo"]);
+      expect(labels).eql(["baz*", "qux*", "bar*", "foo*"]);
     });
 
     it("should insert unordered properties at wildcard position", () => {
@@ -203,7 +204,7 @@ describe("ObjectField", () => {
         l => l.textContent
       );
 
-      expect(labels).eql(["baz", "bar", "qux", "foo"]);
+      expect(labels).eql(["baz*", "bar*", "qux*", "foo*"]);
     });
 
     it("should throw when order list contains an extraneous property", () => {
@@ -251,6 +252,7 @@ describe("ObjectField", () => {
           testdef: { type: "string" },
         },
         type: "object",
+        required: ["foo", "bar"],
         properties: {
           foo: { $ref: "#/definitions/testdef" },
           bar: { $ref: "#/definitions/testdef" },
@@ -268,7 +270,7 @@ describe("ObjectField", () => {
         l => l.textContent
       );
 
-      expect(labels).eql(["bar", "foo"]);
+      expect(labels).eql(["bar*", "foo*"]);
     });
 
     it("should order referenced object schema definition properties", () => {
@@ -276,6 +278,7 @@ describe("ObjectField", () => {
         definitions: {
           testdef: {
             type: "object",
+            required: ["foo", "bar"],
             properties: {
               foo: { type: "string" },
               bar: { type: "string" },
@@ -283,6 +286,7 @@ describe("ObjectField", () => {
           },
         },
         type: "object",
+        required: ["root"],
         properties: {
           root: { $ref: "#/definitions/testdef" },
         },
@@ -301,12 +305,13 @@ describe("ObjectField", () => {
         l => l.textContent
       );
 
-      expect(labels).eql(["bar", "foo"]);
+      expect(labels).eql(["bar*", "foo*"]);
     });
 
     it("should render the widget with the expected id", () => {
       const schema = {
         type: "object",
+        required: ["foo", "bar"],
         properties: {
           foo: { type: "string" },
           bar: { type: "string" },
@@ -336,6 +341,7 @@ describe("ObjectField", () => {
     it("should pass field name to TitleField if there is no title", () => {
       const schema = {
         type: "object",
+        required: ["object"],
         properties: {
           object: {
             type: "object",

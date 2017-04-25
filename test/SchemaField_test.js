@@ -51,6 +51,7 @@ describe("SchemaField", () => {
 
     const schema = {
       type: "object",
+      required: ["foo", "bar"],
       properties: {
         foo: { type: "string" },
         bar: { type: "string" },
@@ -197,6 +198,7 @@ describe("SchemaField", () => {
   describe("description support", () => {
     const schema = {
       type: "object",
+      required: ["foo", "bar"],
       properties: {
         foo: { type: "string", description: "A Foo field" },
         bar: { type: "string" },
@@ -215,6 +217,7 @@ describe("SchemaField", () => {
       // Overriding.
       const schemaWithReference = {
         type: "object",
+        required: ["foo", "bar"],
         properties: {
           foo: { $ref: "#/definitions/foo" },
           bar: { type: "string" },
@@ -260,6 +263,7 @@ describe("SchemaField", () => {
   describe("errors", () => {
     const schema = {
       type: "object",
+      required: ["foo"],
       properties: {
         foo: { type: "string" },
       },
@@ -293,8 +297,8 @@ describe("SchemaField", () => {
       const matches = node.querySelectorAll(
         "form > .form-group > div > .error-detail .text-danger"
       );
-      expect(matches).to.have.length.of(1);
-      expect(matches[0].textContent).to.eql("container");
+      expect(matches).to.have.length.of(2);
+      expect(matches[1].textContent).to.eql("container");
     });
 
     it("should pass errors to child component", () => {

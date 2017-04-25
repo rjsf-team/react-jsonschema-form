@@ -1543,6 +1543,7 @@ describe("StringField", () => {
     it("should pass field name to widget if there is no title", () => {
       const schema = {
         type: "object",
+        required: ["string"],
         properties: {
           string: {
             type: "string",

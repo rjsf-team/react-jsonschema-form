@@ -333,9 +333,11 @@ describe("ArrayField", () => {
     it("should render enough inputs with proper defaults to match minItems in schema when no formData is set", () => {
       const complexSchema = {
         type: "object",
+        required: ["foo"],
         definitions: {
           Thing: {
             type: "object",
+            required: ["name"],
             properties: {
               name: {
                 type: "string",
@@ -870,6 +872,7 @@ describe("ArrayField", () => {
     it("should pass field name to TitleField if there is no title", () => {
       const schema = {
         type: "object",
+        required: ["array"],
         properties: {
           array: {
             type: "array",

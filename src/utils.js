@@ -506,12 +506,35 @@ export function toIdSchema(schema, id, definitions) {
   if (schema.type !== "object") {
     return idSchema;
   }
-  for (const name in schema.properties || {}) {
-    const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
-    idSchema[name] = toIdSchema(field, fieldId, definitions);
-  }
-  return idSchema;
+  return new Proxy(idSchema, {
+    get(idSchema, name) {
+      if (!(name in idSchema) && name in schema.properties) {
+        const field = schema.properties[name];
+        const fieldId = idSchema.$id + "_" + name;
+        idSchema[name] = toIdSchema(field, fieldId, definitions);
+      }
+
+      return idSchema[name];
+    },
+
+    has(idSchema, name) {
+      return name === "$id" || name in schema.properties;
+    },
+
+    ownKeys(idSchema) {
+      return ["$id"].concat(Object.keys(schema.properties));
+    },
+
+    getOwnPropertyDescriptor(idSchema, name) {
+      return this.has(idSchema, name)
+        ? {
+            configurable: true,
+            enumerable: true,
+            get: this.get.bind(this, idSchema, name),
+          }
+        : void 0;
+    },
+  });
 }
 
 export function parseDateString(dateString, includeTime = true) {

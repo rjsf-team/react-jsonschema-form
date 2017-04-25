@@ -197,6 +197,7 @@ describe("Form", () => {
           testdef: { type: "string" },
         },
         type: "object",
+        required: ["foo", "bar"],
         properties: {
           foo: { $ref: "#/definitions/testdef" },
           bar: { $ref: "#/definitions/testdef" },
@@ -214,9 +215,11 @@ describe("Form", () => {
           testdef: { type: "string" },
         },
         type: "object",
+        required: ["foo"],
         properties: {
           foo: {
             type: "object",
+            required: ["bar"],
             properties: {
               bar: { $ref: "#/definitions/testdef" },
             },
@@ -257,6 +260,7 @@ describe("Form", () => {
           qux: { type: "string" },
         },
         type: "object",
+        required: ["foo"],
         properties: {
           foo: { $ref: "#/definitions/bar" },
         },
@@ -273,12 +277,14 @@ describe("Form", () => {
           testdef: { $ref: "#/definitions/bar" },
           bar: {
             type: "object",
+            required: ["qux"],
             properties: {
               qux: { type: "string" },
             },
           },
         },
         type: "object",
+        required: ["foo"],
         properties: {
           foo: { $ref: "#/definitions/testdef/properties/qux" },
         },
@@ -287,6 +293,33 @@ describe("Form", () => {
       const { node } = createFormComponent({ schema });
 
       expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
+    it("should cope with circular schema", () => {
+      const schema = {
+        definitions: {
+          bar: {
+            type: "object",
+            properties: {
+              qux: { $ref: "#/definitions/baz" },
+            },
+          },
+          baz: {
+            type: "object",
+            properties: {
+              quz: { $ref: "#/definitions/bar" },
+            },
+          },
+        },
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/bar" },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input")).to.have.length.of(0);
     });
 
     it("should handle referenced definitions for array items", () => {
@@ -346,6 +379,7 @@ describe("Form", () => {
           testdef: { type: "string", default: "hello" },
         },
         type: "object",
+        required: ["foo"],
         properties: {
           foo: { $ref: "#/definitions/testdef" },
         },
@@ -380,6 +414,7 @@ describe("Form", () => {
         definitions: {
           node: {
             type: "object",
+            required: ["name", "children"],
             properties: {
               name: { type: "string" },
               children: {
@@ -406,6 +441,7 @@ describe("Form", () => {
       // Refs bug #140
       const schema = {
         type: "object",
+        required: ["name", "childObj"],
         properties: {
           name: { type: "string" },
           childObj: {
@@ -416,6 +452,7 @@ describe("Form", () => {
         definitions: {
           childObj: {
             type: "object",
+            required: ["otherName"],
             properties: {
               otherName: { type: "string" },
             },
@@ -432,6 +469,7 @@ describe("Form", () => {
       // Refs bug #140
       const schema = {
         type: "object",
+        required: ["foo"],
         properties: {
           foo: {
             title: "custom title",
@@ -441,6 +479,7 @@ describe("Form", () => {
         definitions: {
           objectDef: {
             type: "object",
+            required: ["field"],
             title: "definition title",
             properties: {
               field: { type: "string" },
@@ -451,7 +490,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector("legend").textContent).eql("custom title");
+      expect(node.querySelector("legend").textContent).eql("custom title*");
     });
 
     it("should propagate and handle a resolved schema definition", () => {
@@ -460,6 +499,7 @@ describe("Form", () => {
           enumDef: { type: "string", enum: ["a", "b"] },
         },
         type: "object",
+        required: ["name"],
         properties: {
           name: { $ref: "#/definitions/enumDef" },
         },
@@ -491,16 +531,19 @@ describe("Form", () => {
   describe("Defaults array items default propagation", () => {
     const schema = {
       type: "object",
+      required: ["object"],
       title: "lvl 1 obj",
       properties: {
         object: {
           type: "object",
+          required: ["array"],
           title: "lvl 2 obj",
           properties: {
             array: {
               type: "array",
               items: {
                 type: "object",
+                required: ["bool"],
                 title: "lvl 3 obj",
                 properties: {
                   bool: {
