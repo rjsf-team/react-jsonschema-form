@@ -152,6 +152,16 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
           ownKeys(obj) {
             return Object.keys(schema.properties);
           },
+
+          getOwnPropertyDescriptor(obj, key) {
+            return this.has(obj, key)
+              ? {
+                  configurable: true,
+                  enumerable: true,
+                  get: this.get.bind(this, obj, key),
+                }
+              : void 0;
+          },
         }
       );
 
@@ -181,11 +191,12 @@ function getDefault(formData, defaults) {
   }
   if (isObject(formData)) {
     // Override schema defaults with form data.
-    for (const key in formData) {
-      formData[key] = getDefault(formData[key], defaults[key]);
-    }
+    let copyObj = {};
+    Object.keys(formData).forEach(key => {
+      copyObj[key] = getDefault(formData[key], defaults[key]);
+    });
 
-    return new Proxy(formData, {
+    return new Proxy(copyObj, {
       get(obj, key) {
         if (!(key in obj) && key in defaults) {
           obj[key] = defaults[key];
@@ -200,6 +211,13 @@ function getDefault(formData, defaults) {
 
       ownKeys(obj) {
         return Object.keys(defaults);
+      },
+
+      getOwnPropertyDescriptor(obj, key) {
+        return Object.getOwnPropertyDescriptor(
+          key in obj ? obj : defaults,
+          key
+        );
       },
     });
   }
@@ -358,6 +376,7 @@ function findSchemaDefinition($ref, definitions = {}) {
     let current = definitions;
     for (let part of parts) {
       part = part.replace(/~1/g, "/").replace(/~0/g, "~");
+      current = retrieveSchema(current, definitions);
       if (current.hasOwnProperty(part)) {
         current = current[part];
       } else {
