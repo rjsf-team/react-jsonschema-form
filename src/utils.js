@@ -318,7 +318,8 @@ function findSchemaDefinition($ref, definitions = {}) {
   if (match && match[1]) {
     const parts = match[1].split("/");
     let current = definitions;
-    for (const part of parts) {
+    for (let part of parts) {
+      part = part.replace(/~1/g, "/").replace(/~0/g, "~");
       if (current.hasOwnProperty(part)) {
         current = current[part];
       } else {
