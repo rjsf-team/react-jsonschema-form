@@ -365,6 +365,14 @@ describe("utils", () => {
       expect(retrieveSchema(schema, definitions)).eql(address);
     });
 
+    it("should 'resolve' escaped JSON Pointers", () => {
+      const schema = { $ref: "#/definitions/a~0complex~1name" };
+      const address = { type: "string" };
+      const definitions = { "a~complex/name": address };
+
+      expect(retrieveSchema(schema, definitions)).eql(address);
+    });
+
     it("should priorize local definitions over foreign ones", () => {
       const schema = {
         $ref: "#/definitions/address",

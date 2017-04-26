@@ -229,6 +229,27 @@ describe("Form", () => {
       expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
     });
 
+    it("should handle references to deep schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/testdef/properties/bar" },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
     it("should handle referenced definitions for array items", () => {
       const schema = {
         definitions: {
