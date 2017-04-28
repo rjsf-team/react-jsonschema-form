@@ -139,6 +139,8 @@ function DefaultFixedArrayFieldTemplate(props) {
 }
 
 function DefaultNormalArrayFieldTemplate(props) {
+  const canDelete =
+    !("minItems" in props.schema) || props.items.length > props.schema.minItems;
   return (
     <fieldset className={props.className}>
 
@@ -161,7 +163,14 @@ function DefaultNormalArrayFieldTemplate(props) {
       <div
         className="row array-item-list"
         key={`array-item-list-${props.idSchema.$id}`}>
-        {props.items && props.items.map(p => DefaultArrayItem(p))}
+        {props.items &&
+          props.items.map(p => {
+            const { hasRemove, ...ps } = p;
+            if (canDelete) {
+              ps.hasRemove = hasRemove;
+            }
+            return DefaultArrayItem(ps);
+          })}
       </div>
 
       {props.canAdd &&
@@ -301,7 +310,8 @@ class ArrayField extends Component {
     const { addable = true } = getUiOptions(uiSchema);
 
     const arrayProps = {
-      canAdd: addable,
+      canAdd: addable &&
+        (!("maxItems" in schema) || formData.length < schema.maxItems),
       items: formData.map((item, index) => {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
