@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import { dataURItoBlob, shouldRender, setState } from "../../utils";
 
@@ -98,7 +99,7 @@ class FileWidget extends Component {
       <div>
         <p>
           <input
-            ref={ref => (this.inputRef = ref)}
+            ref={ref => this.inputRef = ref}
             id={id}
             type="file"
             disabled={readonly || disabled}
