@@ -11,9 +11,7 @@ function processValue({ type, items }, value) {
   if (value === "") {
     return undefined;
   } else if (
-    type === "array" &&
-    items &&
-    ["number", "integer"].includes(items.type)
+    type === "array" && items && ["number", "integer"].includes(items.type)
   ) {
     return value.map(asNumber);
   } else if (type === "boolean") {

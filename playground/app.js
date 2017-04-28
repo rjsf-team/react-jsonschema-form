@@ -292,7 +292,7 @@ class CopyLink extends Component {
       <div className="input-group">
         <input
           type="text"
-          ref={input => (this.input = input)}
+          ref={input => this.input = input}
           className="form-control"
           defaultValue={shareURL}
         />
