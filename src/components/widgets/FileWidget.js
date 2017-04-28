@@ -99,7 +99,7 @@ class FileWidget extends Component {
       <div>
         <p>
           <input
-            ref={ref => this.inputRef = ref}
+            ref={ref => (this.inputRef = ref)}
             id={id}
             type="file"
             disabled={readonly || disabled}
