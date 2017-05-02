@@ -42,6 +42,7 @@
   "dependencies": {
     "jsonschema": "^1.0.2",
     "lodash.topath": "^4.5.2",
+    "prop-types": "^15.5.8",
     "setimmediate": "^1.0.5"
   },
   "devDependencies": {
@@ -74,7 +75,6 @@
     "mocha": "^2.5.3",
     "prettier": "^1.2.2",
     "prettier-check": "^1.0.0",
-    "prop-types": "^15.5.8",
     "react": "^15.5.0",
     "react-addons-test-utils": "^15.3.2",
     "react-codemirror": "^0.2.3",

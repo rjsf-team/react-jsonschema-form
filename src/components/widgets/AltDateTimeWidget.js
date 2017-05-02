@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== "production") {
   AltDateTimeWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    value: React.PropTypes.string,
+    value: PropTypes.string,
     required: PropTypes.bool,
     onChange: PropTypes.func,
   };
