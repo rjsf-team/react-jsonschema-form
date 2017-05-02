@@ -157,7 +157,7 @@ if (process.env.NODE_ENV !== "production") {
   AltDateWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    value: React.PropTypes.string,
+    value: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
