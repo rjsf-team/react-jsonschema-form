@@ -16,6 +16,8 @@ function BaseInput(props) {
     registry,
     ...inputProps
   } = props;
+
+  inputProps.type = options.inputType || inputProps.type || "text";
   const _onChange = ({ target: { value } }) => {
     return props.onChange(value === "" ? options.emptyValue : value);
   };

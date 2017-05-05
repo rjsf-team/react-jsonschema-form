@@ -249,9 +249,9 @@ export function orderProperties(properties, order) {
       return prev;
     }, {});
   const errorPropList = arr =>
-    (arr.length > 1
+    arr.length > 1
       ? `properties '${arr.join("', '")}'`
-      : `property '${arr[0]}'`);
+      : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
   const orderHash = arrayToHash(order);
   const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
