@@ -19,9 +19,9 @@ function StringField(props) {
     disabled,
     readonly,
     autofocus,
-    registry,
     onChange,
     onBlur,
+    registry = getDefaultRegistry(),
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -78,7 +78,7 @@ if (process.env.NODE_ENV !== "production") {
 
 StringField.defaultProps = {
   uiSchema: {},
-  registry: getDefaultRegistry(),
+  registry: null,
   disabled: false,
   readonly: false,
   autofocus: false,
