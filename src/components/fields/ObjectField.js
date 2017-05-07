@@ -13,7 +13,6 @@ class ObjectField extends Component {
     formData: {},
     errorSchema: {},
     idSchema: {},
-    registry: null,
     required: false,
     disabled: false,
     readonly: false,

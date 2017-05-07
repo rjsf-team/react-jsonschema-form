@@ -72,7 +72,6 @@ if (process.env.NODE_ENV !== "production") {
 
 BooleanField.defaultProps = {
   uiSchema: {},
-  registry: null,
   disabled: false,
   readonly: false,
   autofocus: false,

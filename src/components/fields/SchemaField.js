@@ -254,7 +254,6 @@ SchemaField.defaultProps = {
   uiSchema: {},
   errorSchema: {},
   idSchema: {},
-  registry: null,
   disabled: false,
   readonly: false,
   autofocus: false,
