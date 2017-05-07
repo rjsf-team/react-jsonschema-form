@@ -179,7 +179,6 @@ class ArrayField extends Component {
     uiSchema: {},
     formData: [],
     idSchema: {},
-    registry: null,
     required: false,
     disabled: false,
     readonly: false,

@@ -58,7 +58,7 @@ if (process.env.NODE_ENV !== "production") {
     uiSchema: PropTypes.object.isRequired,
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
-    onBlur: PropTypes.func.isRequired,
+    onBlur: PropTypes.func,
     formData: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     registry: PropTypes.shape({
       widgets: PropTypes.objectOf(
@@ -78,7 +78,6 @@ if (process.env.NODE_ENV !== "production") {
 
 StringField.defaultProps = {
   uiSchema: {},
-  registry: null,
   disabled: false,
   readonly: false,
   autofocus: false,
