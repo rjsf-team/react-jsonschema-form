@@ -132,7 +132,14 @@ DefaultTemplate.defaultProps = {
 };
 
 function SchemaFieldRender(props) {
-  const { uiSchema, errorSchema, idSchema, name, required, registry } = props;
+  const {
+    uiSchema,
+    errorSchema,
+    idSchema,
+    name,
+    required,
+    registry = getDefaultRegistry(),
+  } = props;
   const {
     definitions,
     fields,
@@ -247,7 +254,7 @@ SchemaField.defaultProps = {
   uiSchema: {},
   errorSchema: {},
   idSchema: {},
-  registry: getDefaultRegistry(),
+  registry: null,
   disabled: false,
   readonly: false,
   autofocus: false,

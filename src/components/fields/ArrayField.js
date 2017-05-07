@@ -179,7 +179,7 @@ class ArrayField extends Component {
     uiSchema: {},
     formData: [],
     idSchema: {},
-    registry: getDefaultRegistry(),
+    registry: null,
     required: false,
     disabled: false,
     readonly: false,
@@ -203,7 +203,7 @@ class ArrayField extends Component {
 
   onAddClick = event => {
     event.preventDefault();
-    const { schema, registry, formData } = this.props;
+    const { schema, formData, registry = getDefaultRegistry() } = this.props;
     const { definitions } = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
@@ -291,7 +291,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
-      registry,
+      registry = getDefaultRegistry(),
       formContext,
       onBlur,
     } = this.props;
@@ -348,9 +348,10 @@ class ArrayField extends Component {
       readonly,
       autofocus,
       onBlur,
+      registry = getDefaultRegistry(),
     } = this.props;
     const items = this.props.formData;
-    const { widgets, definitions, formContext } = this.props.registry;
+    const { widgets, definitions, formContext } = registry;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const enumOptions = optionsList(itemsSchema);
     const { widget = "select", ...options } = {
@@ -385,10 +386,11 @@ class ArrayField extends Component {
       readonly,
       autofocus,
       onBlur,
+      registry = getDefaultRegistry(),
     } = this.props;
     const title = schema.title || name;
     const items = this.props.formData;
-    const { widgets, formContext } = this.props.registry;
+    const { widgets, formContext } = registry;
     const { widget = "files", ...options } = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
     return (
@@ -420,7 +422,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
-      registry,
+      registry = getDefaultRegistry(),
       onBlur,
     } = this.props;
     const title = schema.title || name;
@@ -502,8 +504,13 @@ class ArrayField extends Component {
       autofocus,
       onBlur,
     } = props;
-    const { SchemaField } = this.props.registry.fields;
-    const { disabled, readonly, uiSchema } = this.props;
+    const {
+      disabled,
+      readonly,
+      uiSchema,
+      registry = getDefaultRegistry(),
+    } = this.props;
+    const { fields: { SchemaField } } = registry;
     const { orderable, removable } = {
       orderable: true,
       removable: true,
