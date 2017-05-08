@@ -89,6 +89,7 @@ describe("uiSchema", () => {
             funcNone: { type: "string" },
             stringAll: { type: "string" },
             stringNone: { type: "string" },
+            stringTel: { type: "string" },
           },
         };
 
@@ -125,6 +126,11 @@ describe("uiSchema", () => {
           },
           stringNone: {
             "ui:widget": "widget",
+          },
+          stringTel: {
+            "ui:options": {
+              inputType: "tel",
+            },
           },
         };
       });
@@ -194,6 +200,12 @@ describe("uiSchema", () => {
         expect(widget.style.color).to.equal("green");
         expect(widget.style.margin).to.equal("");
         expect(widget.style.padding).to.equal("");
+      });
+
+      it("should ui:option inputType for html5 input types", () => {
+        const { node } = createFormComponent({ schema, uiSchema, widgets });
+        const widget = node.querySelector("input[type='tel']");
+        expect(widget).to.not.be.null;
       });
     });
 

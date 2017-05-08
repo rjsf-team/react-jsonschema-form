@@ -49,6 +49,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Textarea rows option](#textarea-rows-option)
      - [Placeholders](#placeholders)
      - [Field labels](#field-labels)
+     - [HTML5 Input Types](#html5-input-types)
      - [Form attributes](#form-attributes)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
@@ -696,6 +697,19 @@ const schema = {type: "string"};
 const uiSchema = {
   "ui:options": {
     label: false
+  }
+};
+```
+
+### HTML5 Input Types
+
+If all you need to do is change the input type (for using things like input type="tel") you can specify the `inputType` from `ui:options` uiSchema directive.
+
+```jsx
+const schema = {type: "string"};
+const uiSchema = {
+  "ui:options": {
+    inputType: 'tel'
   }
 };
 ```
