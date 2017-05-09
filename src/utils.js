@@ -277,8 +277,12 @@ export function orderProperties(properties, order) {
   return complete;
 }
 
-export function isMultiSelect(schema) {
-  return Array.isArray(schema.items.enum) && schema.uniqueItems;
+export function isMultiSelect(schema, uiSchema={}) {
+  return (
+    Array.isArray(schema.items.enum) &&
+    schema.uniqueItems &&
+    (!isObject(uiSchema.items) || (isObject(uiSchema.items) && uiSchema.items["ui:widget"] === undefined))
+  );
 }
 
 export function isFilesArray(schema, uiSchema) {
