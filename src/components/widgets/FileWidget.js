@@ -1,17 +1,17 @@
-import React, {Component, PropTypes} from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import {dataURItoBlob, shouldRender, setState} from "../../utils";
-
+import { dataURItoBlob, shouldRender, setState } from "../../utils";
 
 function addNameToDataURL(dataURL, name) {
   return dataURL.replace(";base64", `;name=${name};base64`);
 }
 
 function processFile(file) {
-  const {name, size, type} = file;
+  const { name, size, type } = file;
   return new Promise((resolve, reject) => {
     const reader = new window.FileReader();
-    reader.onload = (event) => {
+    reader.onload = event => {
       resolve({
         dataURL: addNameToDataURL(event.target.result, name),
         name,
@@ -28,21 +28,21 @@ function processFiles(files) {
 }
 
 function FilesInfo(props) {
-  const {filesInfo} = props;
+  const { filesInfo } = props;
   if (filesInfo.length === 0) {
     return null;
   }
   return (
-    <ul className="file-info">{
-      filesInfo.map((fileInfo, key) => {
-        const {name, size, type} = fileInfo;
+    <ul className="file-info">
+      {filesInfo.map((fileInfo, key) => {
+        const { name, size, type } = fileInfo;
         return (
           <li key={key}>
             <strong>{name}</strong> ({type}, {size} bytes)
           </li>
         );
-      })
-    }</ul>
+      })}
+    </ul>
   );
 }
 
@@ -50,7 +50,7 @@ function extractFileInfo(dataURLs) {
   return dataURLs
     .filter(dataURL => typeof dataURL !== "undefined")
     .map(dataURL => {
-      const {blob, name} = dataURItoBlob(dataURL);
+      const { blob, name } = dataURItoBlob(dataURL);
       return {
         name: name,
         size: blob.size,
@@ -61,55 +61,55 @@ function extractFileInfo(dataURLs) {
 
 class FileWidget extends Component {
   defaultProps = {
-    multiple: false
+    multiple: false,
   };
 
   constructor(props) {
     super(props);
-    const {value} = props;
+    const { value } = props;
     const values = Array.isArray(value) ? value : [value];
-    this.state = {values, filesInfo: extractFileInfo(values)};
+    this.state = { values, filesInfo: extractFileInfo(values) };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onChange = (event) => {
-    const {multiple, onChange} = this.props;
-    processFiles(event.target.files)
-      .then((filesInfo) => {
-        const state = {
-          values: filesInfo.map(fileInfo => fileInfo.dataURL),
-          filesInfo
-        };
-        setState(this, state, () => {
-          if (multiple) {
-            onChange(state.values);
-          } else {
-            onChange(state.values[0]);
-          }
-        });
+  onChange = event => {
+    const { multiple, onChange } = this.props;
+    processFiles(event.target.files).then(filesInfo => {
+      const state = {
+        values: filesInfo.map(fileInfo => fileInfo.dataURL),
+        filesInfo,
+      };
+      setState(this, state, () => {
+        if (multiple) {
+          onChange(state.values);
+        } else {
+          onChange(state.values[0]);
+        }
       });
+    });
   };
 
   render() {
-    const {multiple, id, readonly, disabled, autofocus} = this.props;
-    const {filesInfo} = this.state;
+    const { multiple, id, readonly, disabled, autofocus } = this.props;
+    const { filesInfo } = this.state;
     return (
       <div>
         <p>
           <input
-            ref={ref => this.inputRef = ref}
+            ref={ref => (this.inputRef = ref)}
             id={id}
             type="file"
             disabled={readonly || disabled}
             onChange={this.onChange}
             defaultValue=""
             autoFocus={autofocus}
-            multiple={multiple}/>
+            multiple={multiple}
+          />
         </p>
-        <FilesInfo filesInfo={filesInfo}/>
+        <FilesInfo filesInfo={filesInfo} />
       </div>
     );
   }
@@ -124,7 +124,7 @@ if (process.env.NODE_ENV !== "production") {
     multiple: PropTypes.bool,
     value: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.arrayOf(PropTypes.string)
+      PropTypes.arrayOf(PropTypes.string),
     ]),
     autofocus: PropTypes.bool,
   };

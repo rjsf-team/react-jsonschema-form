@@ -1,12 +1,15 @@
-import React, {PropTypes} from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
-import {asNumber} from "../../utils";
+import { asNumber } from "../../utils";
 
 function NumberField(props) {
-  const {StringField} = props.registry.fields;
+  const { StringField } = props.registry.fields;
   return (
-    <StringField {...props}
-      onChange={(value) => props.onChange(asNumber(value))}/>
+    <StringField
+      {...props}
+      onChange={value => props.onChange(asNumber(value))}
+    />
   );
 }
 
@@ -23,7 +26,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 NumberField.defaultProps = {
-  uiSchema: {}
+  uiSchema: {},
 };
 
 export default NumberField;

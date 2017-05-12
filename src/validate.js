@@ -1,7 +1,7 @@
 import toPath from "lodash.topath";
-import {validate as jsonValidate} from "jsonschema";
+import { validate as jsonValidate } from "jsonschema";
 
-import {isObject, mergeObjects} from "./utils";
+import { isObject, mergeObjects } from "./utils";
 
 function toErrorSchema(errors) {
   // Transforms a jsonschema validation errors list:
@@ -23,7 +23,7 @@ function toErrorSchema(errors) {
     return {};
   }
   return errors.reduce((errorSchema, error) => {
-    const {property, message} = error;
+    const { property, message } = error;
     const path = toPath(property);
     let parent = errorSchema;
     for (const segment of path.slice(1)) {
@@ -48,11 +48,13 @@ export function toErrorList(errorSchema, fieldName = "root") {
   // XXX: We should transform fieldName as a full field path string.
   let errorList = [];
   if ("__errors" in errorSchema) {
-    errorList = errorList.concat(errorSchema.__errors.map(stack => {
-      return {
-        stack: `${fieldName}: ${stack}`
-      };
-    }));
+    errorList = errorList.concat(
+      errorSchema.__errors.map(stack => {
+        return {
+          stack: `${fieldName}: ${stack}`,
+        };
+      })
+    );
   }
   return Object.keys(errorSchema).reduce((acc, key) => {
     if (key !== "__errors") {
@@ -74,7 +76,12 @@ function createErrorHandler(formData) {
   };
   if (isObject(formData)) {
     return Object.keys(formData).reduce((acc, key) => {
-      return {...acc, [key]: createErrorHandler(formData[key])};
+      return { ...acc, [key]: createErrorHandler(formData[key]) };
+    }, handler);
+  }
+  if (Array.isArray(formData)) {
+    return formData.reduce((acc, value, key) => {
+      return { ...acc, [key]: createErrorHandler(value) };
     }, handler);
   }
   return handler;
@@ -85,9 +92,9 @@ function unwrapErrorHandler(errorHandler) {
     if (key === "addError") {
       return acc;
     } else if (key === "__errors") {
-      return {...acc, [key]: errorHandler[key]};
+      return { ...acc, [key]: errorHandler[key] };
     }
-    return {...acc, [key]: unwrapErrorHandler(errorHandler[key])};
+    return { ...acc, [key]: unwrapErrorHandler(errorHandler[key]) };
   }, {});
 }
 
@@ -96,12 +103,20 @@ function unwrapErrorHandler(errorHandler) {
  * function, which receives the form data and an `errorHandler` object that
  * will be used to add custom validation errors for each field.
  */
-export default function validateFormData(formData, schema, customValidate) {
-  const {errors} = jsonValidate(formData, schema);
+export default function validateFormData(
+  formData,
+  schema,
+  customValidate,
+  transformErrors
+) {
+  let { errors } = jsonValidate(formData, schema);
+  if (typeof transformErrors === "function") {
+    errors = transformErrors(errors);
+  }
   const errorSchema = toErrorSchema(errors);
 
   if (typeof customValidate !== "function") {
-    return {errors, errorSchema};
+    return { errors, errorSchema };
   }
 
   const errorHandler = customValidate(formData, createErrorHandler(formData));
@@ -112,5 +127,5 @@ export default function validateFormData(formData, schema, customValidate) {
   // properties.
   const newErrors = toErrorList(newErrorSchema);
 
-  return {errors: newErrors, errorSchema: newErrorSchema};
+  return { errors: newErrors, errorSchema: newErrorSchema };
 }

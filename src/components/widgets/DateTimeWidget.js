@@ -1,7 +1,7 @@
-import React, {PropTypes} from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 import BaseInput from "./BaseInput";
-
 
 function fromJSONDate(jsonDate) {
   return jsonDate ? jsonDate.slice(0, 19) : "";
@@ -14,13 +14,14 @@ function toJSONDate(dateString) {
 }
 
 function DateTimeWidget(props) {
-  const {value, onChange} = props;
+  const { value, onChange } = props;
   return (
     <BaseInput
       type="datetime-local"
       {...props}
       value={fromJSONDate(value)}
-      onChange={(value) => onChange(toJSONDate(value))}/>
+      onChange={value => onChange(toJSONDate(value))}
+    />
   );
 }
 

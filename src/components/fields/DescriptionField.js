@@ -1,10 +1,11 @@
-import React, {PropTypes} from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 function DescriptionField(props) {
-  const {id, description} = props;
+  const { id, description } = props;
   if (!description) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div/>;
+    return <div />;
   }
   if (typeof description === "string") {
     return <p id={id} className="field-description">{description}</p>;
@@ -16,10 +17,7 @@ function DescriptionField(props) {
 if (process.env.NODE_ENV !== "production") {
   DescriptionField.propTypes = {
     id: PropTypes.string,
-    description: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.element,
-    ])
+    description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   };
 }
 

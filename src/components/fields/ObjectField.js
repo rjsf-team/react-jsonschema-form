@@ -1,102 +1,54 @@
-import React, {Component, PropTypes} from "react";
-
-import {deepEquals} from "../../utils";
-
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import {
-  getDefaultFormState,
   orderProperties,
   retrieveSchema,
-  shouldRender,
   getDefaultRegistry,
-  setState
 } from "../../utils";
-
-
-function objectKeysHaveChanged(formData, state) {
-  // for performance, first check for lengths
-  const newKeys = Object.keys(formData);
-  const oldKeys = Object.keys(state);
-  if (newKeys.length < oldKeys.length) {
-    return true;
-  }
-  // deep check on sorted keys
-  if (!deepEquals(newKeys.sort(), oldKeys.sort())) {
-    return true;
-  }
-  return false;
-}
 
 class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {},
+    formData: {},
     errorSchema: {},
     idSchema: {},
-    registry: getDefaultRegistry(),
     required: false,
     disabled: false,
     readonly: false,
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = this.getStateFromProps(props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const state = this.getStateFromProps(nextProps);
-    const {formData} = nextProps;
-    if (formData && objectKeysHaveChanged(formData, this.state)) {
-      // We *need* to replace state entirely here has we have received formData
-      // holding different keys (so with some removed).
-      this.state = state;
-      this.forceUpdate();
-    } else {
-      this.setState(state);
-    }
-  }
-
-  getStateFromProps(props) {
-    const {schema, formData, registry} = props;
-    return getDefaultFormState(schema, formData, registry.definitions) || {};
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shouldRender(this, nextProps, nextState);
-  }
+  };
 
   isRequired(name) {
     const schema = this.props.schema;
-    return Array.isArray(schema.required) &&
-      schema.required.indexOf(name) !== -1;
+    return (
+      Array.isArray(schema.required) && schema.required.indexOf(name) !== -1
+    );
   }
 
-  asyncSetState(state, options={validate: false}) {
-    setState(this, state, () => {
-      this.props.onChange(this.state, options);
-    });
-  }
-
-  onPropertyChange = (name) => {
+  onPropertyChange = name => {
     return (value, options) => {
-      this.asyncSetState({[name]: value}, options);
+      const newFormData = { ...this.props.formData, [name]: value };
+      this.props.onChange(newFormData, options);
     };
   };
 
   render() {
     const {
       uiSchema,
+      formData,
       errorSchema,
       idSchema,
       name,
       required,
       disabled,
-      readonly
+      readonly,
+      onBlur,
+      registry = getDefaultRegistry(),
     } = this.props;
-    const {definitions, fields, formContext} = this.props.registry;
-    const {SchemaField, TitleField, DescriptionField} = fields;
+    const { definitions, fields, formContext } = registry;
+    const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
-    const title = (schema.title === undefined) ? name : schema.title;
+    const title = schema.title === undefined ? name : schema.title;
     let orderedProperties;
     try {
       const properties = Object.keys(schema.properties);
@@ -104,7 +56,7 @@ class ObjectField extends Component {
     } catch (err) {
       return (
         <div>
-          <p className="config-error" style={{color: "red"}}>
+          <p className="config-error" style={{ color: "red" }}>
             Invalid {name || "root"} object field configuration:
             <em>{err.message}</em>.
           </p>
@@ -114,34 +66,39 @@ class ObjectField extends Component {
     }
     return (
       <fieldset>
-        {title ? <TitleField
-                   id={`${idSchema.$id}__title`}
-                   title={title}
-                   required={required}
-                   formContext={formContext}/> : null}
-        {schema.description ?
+        {title &&
+          <TitleField
+            id={`${idSchema.$id}__title`}
+            title={title}
+            required={required}
+            formContext={formContext}
+          />}
+        {schema.description &&
           <DescriptionField
             id={`${idSchema.$id}__description`}
             description={schema.description}
-            formContext={formContext}/> : null}
-        {
-        orderedProperties.map((name, index) => {
+            formContext={formContext}
+          />}
+        {orderedProperties.map((name, index) => {
           return (
-            <SchemaField key={index}
+            <SchemaField
+              key={index}
               name={name}
               required={this.isRequired(name)}
               schema={schema.properties[name]}
               uiSchema={uiSchema[name]}
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
-              formData={this.state[name]}
+              formData={formData[name]}
               onChange={this.onPropertyChange(name)}
-              registry={this.props.registry}
+              onBlur={onBlur}
+              registry={registry}
               disabled={disabled}
-              readonly={readonly}/>
+              readonly={readonly}
+            />
           );
-        })
-      }</fieldset>
+        })}
+      </fieldset>
     );
   }
 }
@@ -158,14 +115,13 @@ if (process.env.NODE_ENV !== "production") {
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.object,
-      ])).isRequired,
+      widgets: PropTypes.objectOf(
+        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+      ).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
       formContext: PropTypes.object.isRequired,
-    })
+    }),
   };
 }
 

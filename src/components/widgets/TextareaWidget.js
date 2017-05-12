@@ -1,17 +1,22 @@
-import React, {PropTypes} from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
-
-function TextareaWidget({
-  schema,
-  id,
-  placeholder,
-  value,
-  required,
-  disabled,
-  readonly,
-  autofocus,
-  onChange
-}) {
+function TextareaWidget(props) {
+  const {
+    id,
+    options,
+    placeholder,
+    value,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onBlur,
+  } = props;
+  const _onChange = ({ target: { value } }) => {
+    return onChange(value === "" ? options.emptyValue : value);
+  };
   return (
     <textarea
       id={id}
@@ -22,12 +27,16 @@ function TextareaWidget({
       disabled={disabled}
       readOnly={readonly}
       autoFocus={autofocus}
-      onChange={(event) => onChange(event.target.value)}/>
+      rows={options.rows}
+      onBlur={onBlur && (event => onBlur(id, event.target.value))}
+      onChange={_onChange}
+    />
   );
 }
 
 TextareaWidget.defaultProps = {
-  autofocus: false
+  autofocus: false,
+  options: {},
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -35,10 +44,16 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
+    options: PropTypes.shape({
+      rows: PropTypes.number,
+    }),
     value: PropTypes.string,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 }
 

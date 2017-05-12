@@ -1,21 +1,24 @@
-import React, {PropTypes} from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 import {
   isMultiSelect,
   retrieveSchema,
   getDefaultRegistry,
-  isFilesArray
+  getUiOptions,
+  isFilesArray,
+  deepEquals,
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
-  array:   "ArrayField",
+  array: "ArrayField",
   boolean: "BooleanField",
   integer: "NumberField",
-  number:  "NumberField",
-  object:  "ObjectField",
-  string:  "StringField",
+  number: "NumberField",
+  object: "ObjectField",
+  string: "StringField",
 };
 
 function getFieldComponent(schema, uiSchema, fields) {
@@ -31,10 +34,10 @@ function getFieldComponent(schema, uiSchema, fields) {
 }
 
 function Label(props) {
-  const {label, required, id} = props;
+  const { label, required, id } = props;
   if (!label) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div/>;
+    return <div />;
   }
   return (
     <label className="control-label" htmlFor={id}>
@@ -44,10 +47,10 @@ function Label(props) {
 }
 
 function Help(props) {
-  const {help} = props;
+  const { help } = props;
   if (!help) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div/>;
+    return <div />;
   }
   if (typeof help === "string") {
     return <p className="help-block">{help}</p>;
@@ -56,18 +59,18 @@ function Help(props) {
 }
 
 function ErrorList(props) {
-  const {errors = []} = props;
+  const { errors = [] } = props;
   if (errors.length === 0) {
-    return <div/>;
+    return <div />;
   }
   return (
     <div>
-      <p/>
-      <ul className="error-detail bs-callout bs-callout-info">{
-        errors.map((error, index) => {
+      <p />
+      <ul className="error-detail bs-callout bs-callout-info">
+        {errors.map((error, index) => {
           return <li className="text-danger" key={index}>{error}</li>;
-        })
-      }</ul>
+        })}
+      </ul>
     </div>
   );
 }
@@ -91,7 +94,7 @@ function DefaultTemplate(props) {
 
   return (
     <div className={classNames}>
-      {displayLabel ? <Label label={label} required={required} id={id}/> : null}
+      {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}
       {errors}
@@ -128,22 +131,35 @@ DefaultTemplate.defaultProps = {
   displayLabel: true,
 };
 
-function SchemaField(props) {
-  const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
-  const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
+function SchemaFieldRender(props) {
+  const {
+    uiSchema,
+    errorSchema,
+    idSchema,
+    name,
+    required,
+    registry = getDefaultRegistry(),
+  } = props;
+  const {
+    definitions,
+    fields,
+    formContext,
+    FieldTemplate = DefaultTemplate,
+  } = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
-  const {DescriptionField} = fields;
+  const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
 
   if (Object.keys(schema).length === 0) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div/>;
+    return <div />;
   }
 
-  let displayLabel = true;
+  const uiOptions = getUiOptions(uiSchema);
+  let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
     displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
   }
@@ -157,19 +173,23 @@ function SchemaField(props) {
     displayLabel = false;
   }
 
-  const {__errors, ...fieldErrorSchema} = errorSchema;
+  const { __errors, ...fieldErrorSchema } = errorSchema;
 
+  // See #439: uiSchema: Don't pass consumed class names to child components
   const field = (
-    <FieldComponent {...props}
+    <FieldComponent
+      {...props}
       schema={schema}
+      uiSchema={{ ...uiSchema, classNames: undefined }}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
       errorSchema={fieldErrorSchema}
-      formContext={formContext}/>
+      formContext={formContext}
+    />
   );
 
-  const {type} = schema;
+  const { type } = schema;
   const id = idSchema.$id;
   const label = props.schema.title || schema.title || name;
   const description = props.schema.description || schema.description;
@@ -180,18 +200,24 @@ function SchemaField(props) {
     "form-group",
     "field",
     `field-${type}`,
-    errors && errors.length > 0 ? "field-error has-error" : "",
+    errors && errors.length > 0 ? "field-error has-error has-danger" : "",
     uiSchema.classNames,
-  ].join(" ").trim();
+  ]
+    .join(" ")
+    .trim();
 
   const fieldProps = {
-    description: <DescriptionField id={id + "__description"}
-                                   description={description}
-                                   formContext={formContext}/>,
+    description: (
+      <DescriptionField
+        id={id + "__description"}
+        description={description}
+        formContext={formContext}
+      />
+    ),
     rawDescription: description,
-    help: <Help help={help}/>,
+    help: <Help help={help} />,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: <ErrorList errors={errors}/>,
+    errors: <ErrorList errors={errors} />,
     rawErrors: errors,
     id,
     label,
@@ -209,11 +235,25 @@ function SchemaField(props) {
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
 }
 
+class SchemaField extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    // if schemas are equal idSchemas will be equal as well,
+    // so it is not necessary to compare
+    return !deepEquals(
+      { ...this.props, idSchema: undefined },
+      { ...nextProps, idSchema: undefined }
+    );
+  }
+
+  render() {
+    return SchemaFieldRender(this.props);
+  }
+}
+
 SchemaField.defaultProps = {
   uiSchema: {},
   errorSchema: {},
   idSchema: {},
-  registry: getDefaultRegistry(),
   disabled: false,
   readonly: false,
   autofocus: false,
@@ -227,15 +267,15 @@ if (process.env.NODE_ENV !== "production") {
     formData: PropTypes.any,
     errorSchema: PropTypes.object,
     registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.object,
-      ])).isRequired,
+      widgets: PropTypes.objectOf(
+        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+      ).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
+      ArrayFieldTemplate: PropTypes.func,
       FieldTemplate: PropTypes.func,
       formContext: PropTypes.object.isRequired,
-    })
+    }),
   };
 }
 

@@ -4,18 +4,18 @@
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": 2,
         "react/react-in-jsx-scope": 2,
-        "react/jsx-space-before-closing": [1, "never"],
-        "react/jsx-closing-bracket-location": [1, "after-props"],
-
+        "react/jsx-space-before-closing": [1, "always"],
         "curly": [2],
-        "indent": [2, 2, {"SwitchCase": 1}],
-        "quotes": [2, "double"],
         "linebreak-style": [2, "unix"],
         "semi": [2, "always"],
         "comma-dangle": [0],
-        "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+        "no-unused-vars": [2, {
+          "vars": "all",
+          "args": "none",
+          "ignoreRestSiblings": true
+        }],
         "no-console": [0],
-        "object-curly-spacing": [2, "never"],
+        "object-curly-spacing": [2, "always"],
         "keyword-spacing": ["error"]
     },
     "env": {

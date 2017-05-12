@@ -1,10 +1,10 @@
-import React, {PropTypes} from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 import BaseInput from "./BaseInput";
 
-
 function PasswordWidget(props) {
-  return <BaseInput type="password" {...props}/>;
+  return <BaseInput type="password" {...props} />;
 }
 
 if (process.env.NODE_ENV !== "production") {

@@ -5,21 +5,21 @@ module.exports = {
     properties: {
       number: {
         title: "Number",
-        type: "number"
+        type: "number",
       },
       integer: {
         title: "Integer",
-        type: "integer"
+        type: "integer",
       },
       numberEnum: {
         type: "number",
         title: "Number enum",
-        enum: [1, 2, 3]
+        enum: [1, 2, 3],
       },
       numberEnumRadio: {
         type: "number",
         title: "Number enum",
-        enum: [1, 2, 3]
+        enum: [1, 2, 3],
       },
       integerRange: {
         title: "Integer range",
@@ -33,25 +33,25 @@ module.exports = {
         minimum: 50,
         maximum: 100,
         multipleOf: 10,
-      }
-    }
+      },
+    },
   },
   uiSchema: {
     integer: {
-      "ui:widget": "updown"
+      "ui:widget": "updown",
     },
     numberEnumRadio: {
       "ui:widget": "radio",
       "ui:options": {
-        inline: true
-      }
+        inline: true,
+      },
     },
     integerRange: {
-      "ui:widget": "range"
+      "ui:widget": "range",
     },
     integerRangeSteps: {
-      "ui:widget": "range"
-    }
+      "ui:widget": "range",
+    },
   },
   formData: {
     number: 3.14,
@@ -59,5 +59,5 @@ module.exports = {
     numberEnum: 2,
     integerRange: 42,
     integerRangeSteps: 80,
-  }
+  },
 };

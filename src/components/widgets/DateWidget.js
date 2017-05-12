@@ -1,15 +1,16 @@
-import React, {PropTypes} from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 import BaseInput from "./BaseInput";
 
-
 function DateWidget(props) {
-  const {onChange} = props;
+  const { onChange } = props;
   return (
     <BaseInput
       type="date"
       {...props}
-      onChange={(value) => onChange(value || undefined)}/>
+      onChange={value => onChange(value || undefined)}
+    />
   );
 }
 

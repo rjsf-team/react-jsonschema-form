@@ -9,14 +9,14 @@ module.exports = {
       },
       lon: {
         type: "number",
-      }
-    }
+      },
+    },
   },
   uiSchema: {
-    "ui:field": "geo"
+    "ui:field": "geo",
   },
   formData: {
     lat: 0,
-    lon: 0
-  }
+    lon: 0,
+  },
 };

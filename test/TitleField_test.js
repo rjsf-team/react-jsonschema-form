@@ -1,8 +1,8 @@
 import React from "react";
-import {expect} from "chai";
+import { expect } from "chai";
 
 import TitleField from "../src/components/fields/TitleField";
-import {createSandbox, createComponent} from "./test_utils";
+import { createSandbox, createComponent } from "./test_utils";
 
 describe("TitleField", () => {
   let sandbox;
@@ -22,16 +22,16 @@ describe("TitleField", () => {
       super(props);
     }
     render() {
-      return <TitleField {...this.props}/>;
+      return <TitleField {...this.props} />;
     }
   }
 
   it("should return a legend", () => {
     const props = {
       title: "Field title",
-      required: true
+      required: true,
     };
-    const {node} = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleFieldWrapper, props);
 
     expect(node.tagName).to.equal("LEGEND");
   });
@@ -40,9 +40,9 @@ describe("TitleField", () => {
     const props = {
       title: "Field title",
       required: true,
-      id: "sample_id"
+      id: "sample_id",
     };
-    const {node} = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleFieldWrapper, props);
 
     expect(node.id).to.equal("sample_id");
   });
@@ -50,9 +50,9 @@ describe("TitleField", () => {
   it("should include only title, when field is not required", () => {
     const props = {
       title: "Field title",
-      required: false
+      required: false,
     };
-    const {node} = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleFieldWrapper, props);
 
     expect(node.textContent).to.equal(props.title);
   });
@@ -60,9 +60,9 @@ describe("TitleField", () => {
   it("should add an asterisk to the title, when field is required", () => {
     const props = {
       title: "Field title",
-      required: true
+      required: true,
     };
-    const {node} = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleFieldWrapper, props);
 
     expect(node.textContent).to.equal(props.title + "*");
   });
