@@ -160,7 +160,9 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
         });
       }
       case "object": {
-        return Object.keys(schema.properties).reduce((acc, key) => {
+        const defaultFilled = Object.keys(
+          schema.properties
+        ).reduce((acc, key) => {
           let propSchema = schema.properties[key];
 
           let propParentDefault = undefined;
@@ -182,6 +184,7 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
           );
           return acc;
         }, {});
+        return formData ? mergeObjects(formData, defaultFilled) : defaultFilled;
       }
       default: {
         if (formData !== undefined) {
