@@ -124,22 +124,12 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
               Array.isArray(schema.items) ? schema.items.length : 0
             );
         return new Array(length).fill(undefined).map((_, i) => {
-          let childSchema = schema.items;
-          if (
-            Array.isArray(schema.items) &&
+          let childSchema = Array.isArray(schema.items) &&
             schema.items.length >= i &&
             schema.items[i] &&
             "type" in schema.items[i]
-          ) {
-            if ("$ref" in schema.items[i]) {
-              childSchema = findSchemaDefinition(
-                schema.items[i].$ref,
-                definitions
-              );
-            } else {
-              childSchema = schema.items[i];
-            }
-          }
+            ? schema.items[i]
+            : schema.items;
 
           let defaultItem = undefined;
           if (
@@ -172,12 +162,6 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
       case "object": {
         return Object.keys(schema.properties).reduce((acc, key) => {
           let propSchema = schema.properties[key];
-          if ("$ref" in schema.properties[key]) {
-            propSchema = findSchemaDefinition(
-              schema.properties[key].$ref,
-              definitions
-            );
-          }
 
           let propParentDefault = undefined;
           if (schema.default && key in schema.default) {
