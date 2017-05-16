@@ -101,69 +101,119 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
-function computeDefaults(schema, parentDefaults, definitions = {}) {
-  // Compute the defaults recursively: give highest priority to deepest nodes.
-  let defaults = parentDefaults;
-  if (isObject(defaults) && isObject(schema.default)) {
-    // For object defaults, only override parent defaults that are defined in
-    // schema.default.
-    defaults = mergeObjects(defaults, schema.default);
-  } else if ("default" in schema) {
-    // Use schema defaults for this node.
-    defaults = schema.default;
-  } else if ("$ref" in schema) {
-    // Use referenced schema defaults for this node.
-    const refSchema = findSchemaDefinition(schema.$ref, definitions);
-    return computeDefaults(refSchema, defaults, definitions);
-  } else if (isFixedItems(schema)) {
-    defaults = schema.items.map(itemSchema =>
-      computeDefaults(itemSchema, undefined, definitions)
+function computeDefaults(schema, parentDefaults, formData, definitions) {
+  if ("$ref" in schema) {
+    const refParentDefaults = parentDefaults !== undefined
+      ? parentDefaults
+      : schema.default;
+    return computeDefaults(
+      findSchemaDefinition(schema.$ref, definitions),
+      refParentDefaults,
+      formData,
+      definitions
     );
-  }
-  // Not defaults defined for this node, fallback to generic typed ones.
-  if (typeof defaults === "undefined") {
-    defaults = schema.default;
-  }
+  } else {
+    switch (schema.type) {
+      case "array": {
+        let length = Array.isArray(formData)
+          ? formData.length
+          : Math.max(
+              (schema.default || []).length,
+              (parentDefaults || []).length,
+              schema.minItems || 0,
+              Array.isArray(schema.items) ? schema.items.length : 0
+            );
+        return new Array(length).fill(undefined).map((_, i) => {
+          let childSchema = schema.items;
+          if (
+            Array.isArray(schema.items) &&
+            schema.items.length >= i &&
+            schema.items[i] &&
+            "type" in schema.items[i]
+          ) {
+            if ("$ref" in schema.items[i]) {
+              childSchema = findSchemaDefinition(
+                schema.items[i].$ref,
+                definitions
+              );
+            } else {
+              childSchema = schema.items[i];
+            }
+          }
 
-  switch (schema.type) {
-    // We need to recur for object schema inner default values.
-    case "object":
-      return Object.keys(schema.properties).reduce((acc, key) => {
-        // Compute the defaults for this node, with the parent defaults we might
-        // have from a previous run: defaults[key].
-        acc[key] = computeDefaults(
-          schema.properties[key],
-          (defaults || {})[key],
-          definitions
-        );
-        return acc;
-      }, {});
+          let defaultItem = undefined;
+          if (
+            Array.isArray(schema.items) &&
+            schema.items.length >= i &&
+            schema.items[i] &&
+            "default" in schema.items[i]
+          ) {
+            defaultItem = schema.items[i].default;
+          } else if ("default" in schema.items) {
+            defaultItem = schema.items.default;
+          } else if ("default" in schema && schema.default.length >= i - 1) {
+            defaultItem = schema.default[i];
+          } else if (parentDefaults && parentDefaults.length >= i) {
+            defaultItem = parentDefaults[i];
+          }
 
-    case "array":
-      if (schema.minItems) {
-        return new Array(schema.minItems).fill(
-          computeDefaults(schema.items, defaults, definitions)
-        );
+          let childFormData = formData && formData.length >= i
+            ? formData[i]
+            : undefined;
+
+          return computeDefaults(
+            childSchema,
+            defaultItem,
+            childFormData,
+            definitions
+          );
+        });
       }
+      case "object": {
+        return Object.keys(schema.properties).reduce((acc, key) => {
+          let propSchema = schema.properties[key];
+          if ("$ref" in schema.properties[key]) {
+            propSchema = findSchemaDefinition(
+              schema.properties[key].$ref,
+              definitions
+            );
+          }
+
+          let propParentDefault = undefined;
+          if (schema.default && key in schema.default) {
+            propParentDefault = schema.default[key];
+          } else if (parentDefaults && key in parentDefaults) {
+            propParentDefault = parentDefaults[key];
+          }
+
+          const propFormData = formData && key in formData
+            ? formData[key]
+            : undefined;
+
+          acc[key] = computeDefaults(
+            propSchema,
+            propParentDefault,
+            propFormData,
+            definitions
+          );
+          return acc;
+        }, {});
+      }
+      default: {
+        if (formData !== undefined) {
+          return formData;
+        } else if ("default" in schema) {
+          return schema.default;
+        } else if (parentDefaults !== undefined) {
+          return parentDefaults;
+        }
+      }
+    }
   }
-  return defaults;
 }
 
-export function getDefaultFormState(_schema, formData, definitions = {}) {
-  if (!isObject(_schema)) {
-    throw new Error("Invalid schema: " + _schema);
-  }
-  const schema = retrieveSchema(_schema, definitions);
-  const defaults = computeDefaults(schema, _schema.default, definitions);
-  if (typeof formData === "undefined") {
-    // No form data? Use schema defaults.
-    return defaults;
-  }
-  if (isObject(formData)) {
-    // Override schema defaults with form data.
-    return mergeObjects(defaults, formData);
-  }
-  return formData || defaults;
+export function getDefaultFormState(schema, formData, definitions = {}) {
+  return computeDefaults(schema, undefined, formData, definitions);
 }
 
 export function getUiOptions(uiSchema) {

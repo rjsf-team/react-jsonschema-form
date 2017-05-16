@@ -231,6 +231,57 @@ describe("utils", () => {
         });
       });
     });
+
+    it("should work for nested array", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          arr: {
+            type: "array",
+            items: {
+              type: "boolean",
+              default: false,
+            },
+          },
+        },
+      };
+
+      expect(
+        getDefaultFormState(schema, {
+          arr: [undefined],
+        })
+      ).eql({
+        arr: [false],
+      });
+    });
+
+    it("should work for arrays of objects with defaults", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          arr: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                defaultFilled: {
+                  type: "boolean",
+                  default: true,
+                },
+              },
+            },
+          },
+        },
+      };
+
+      expect(
+        getDefaultFormState(schema, {
+          arr: [{}],
+        })
+      ).eql({
+        arr: [{ defaultFilled: true }],
+      });
+    });
   });
 
   describe("asNumber()", () => {
