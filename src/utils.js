@@ -298,18 +298,22 @@ export function toConstant(schema) {
   }
 }
 
-export function isMultiSelect(schema, definitions = {}) {
-  if (!schema.uniqueItems || !schema.items) {
-    return false;
-  }
-  const itemsSchema = retrieveSchema(schema.items, definitions);
-  const altSchemas = itemsSchema.oneOf || itemsSchema.anyOf;
-  if (Array.isArray(itemsSchema.enum)) {
+export function isSelect(_schema, definitions = {}) {
+  const schema = retrieveSchema(_schema, definitions);
+  const altSchemas = schema.oneOf || schema.anyOf;
+  if (Array.isArray(schema.enum)) {
     return true;
   } else if (Array.isArray(altSchemas)) {
     return altSchemas.every(altSchemas => isConstant(altSchemas));
   }
   return false;
+}
+
+export function isMultiSelect(schema, definitions = {}) {
+  if (!schema.uniqueItems || !schema.items) {
+    return false;
+  }
+  return isSelect(schema.items, definitions);
 }
 
 export function isFilesArray(schema, uiSchema, definitions = {}) {
