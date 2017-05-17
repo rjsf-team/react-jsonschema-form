@@ -270,33 +270,58 @@ describe("utils", () => {
   });
 
   describe("isMultiSelect()", () => {
-    it("should be true if schema items enum is an array and uniqueItems is true", () => {
-      let schema = { items: { enum: ["foo", "bar"] }, uniqueItems: true };
-      expect(isMultiSelect(schema)).to.be.true;
-    });
+    describe("uniqueItems is true", () => {
+      describe("schema items enum is an array", () => {
+        it("should be true", () => {
+          let schema = { items: { enum: ["foo", "bar"] }, uniqueItems: true };
+          expect(isMultiSelect(schema)).to.be.true;
+        });
+      });
 
-    it("should be false if items is undefined", () => {
-      const schema = {};
-      expect(isMultiSelect(schema)).to.be.false;
+      it("should be false if items is undefined", () => {
+        const schema = {};
+        expect(isMultiSelect(schema)).to.be.false;
+      });
+
+      describe("schema items enum is not an array", () => {
+        const constantSchema = { type: "string", enum: ["Foo"] };
+        const notConstantSchema = { type: "string" };
+
+        it("should be false if oneOf/anyOf is not in items schema", () => {
+          const schema = { items: {}, uniqueItems: true };
+          expect(isMultiSelect(schema)).to.be.false;
+        });
+
+        it("should be false if oneOf/anyOf schemas are not all constants", () => {
+          const schema = {
+            items: { oneOf: [constantSchema, notConstantSchema] },
+            uniqueItems: true,
+          };
+          expect(isMultiSelect(schema)).to.be.false;
+        });
+
+        it("should be true if oneOf/anyOf schemas are all constants", () => {
+          const schema = {
+            items: { oneOf: [constantSchema, constantSchema] },
+            uniqueItems: true,
+          };
+          expect(isMultiSelect(schema)).to.be.true;
+        });
+      });
+
+      it("should retrieve reference schema definitions", () => {
+        const schema = {
+          items: { $ref: "#/definitions/FooItem" },
+          uniqueItems: true,
+        };
+        const definitions = { FooItem: { type: "string", enum: ["foo"] } };
+        expect(isMultiSelect(schema, definitions)).to.be.true;
+      });
     });
 
     it("should be false if uniqueItems is false", () => {
       const schema = { items: { enum: ["foo", "bar"] }, uniqueItems: false };
       expect(isMultiSelect(schema)).to.be.false;
-    });
-
-    it("should be false if schema items enum is not an array", () => {
-      const schema = { items: {}, uniqueItems: true };
-      expect(isMultiSelect(schema)).to.be.false;
-    });
-
-    it("should retrieve reference schema definitions", () => {
-      const schema = {
-        items: { $ref: "#/definitions/FooItem" },
-        uniqueItems: true,
-      };
-      const definitions = { FooItem: { type: "string", enum: ["foo"] } };
-      expect(isMultiSelect(schema, definitions)).to.be.true;
     });
   });
 
@@ -614,7 +639,7 @@ describe("utils", () => {
       });
     });
 
-    it("should retrieve reference schema definitions", () => {
+    it("should retrieve referenced schema definitions", () => {
       const schema = {
         definitions: {
           testdef: {
