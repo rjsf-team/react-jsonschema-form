@@ -277,19 +277,22 @@ export function orderProperties(properties, order) {
   return complete;
 }
 
-export function isMultiSelect(schema) {
-  return schema.items
-    ? Array.isArray(schema.items.enum) && schema.uniqueItems
-    : false;
-}
+export function isMultiSelect(schema, definitions = {}) {
+  if (!schema.uniqueItems || !schema.items) {
+    return false;
+  }
+  const itemsSchema = retrieveSchema(schema.items, definitions);
+  return Array.isArray(itemsSchema.enum);
+  }
 
-export function isFilesArray(schema, uiSchema) {
-  return (
-    (schema.items &&
-      schema.items.type === "string" &&
-      schema.items.format === "data-url") ||
-    uiSchema["ui:widget"] === "files"
-  );
+export function isFilesArray(schema, uiSchema, definitions = {}) {
+  if (uiSchema["ui:widget"] === "files") {
+    return true;
+  } else if (schema.items) {
+    const itemsSchema = retrieveSchema(schema.items, definitions);
+    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
+  }
+  return false;
 }
 
 export function isFixedItems(schema) {

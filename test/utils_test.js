@@ -289,6 +289,15 @@ describe("utils", () => {
       const schema = { items: {}, uniqueItems: true };
       expect(isMultiSelect(schema)).to.be.false;
     });
+
+    it("should retrieve reference schema definitions", () => {
+      const schema = {
+        items: { $ref: "#/definitions/FooItem" },
+        uniqueItems: true,
+      };
+      const definitions = { FooItem: { type: "string", enum: ["foo"] } };
+      expect(isMultiSelect(schema, definitions)).to.be.true;
+    });
   });
 
   describe("isFilesArray()", () => {

@@ -265,14 +265,15 @@ class ArrayField extends Component {
   };
 
   render() {
-    const { schema, uiSchema } = this.props;
-    if (isFilesArray(schema, uiSchema)) {
-      return this.renderFiles();
-    }
+    const { schema, uiSchema, registry = getDefaultRegistry() } = this.props;
+    const { definitions } = registry;
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
-    if (isMultiSelect(schema)) {
+    if (isFilesArray(schema, uiSchema, definitions)) {
+      return this.renderFiles();
+    }
+    if (isMultiSelect(schema, definitions)) {
       return this.renderMultiSelect();
     }
     return this.renderNormalArray();
