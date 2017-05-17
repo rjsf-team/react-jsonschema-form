@@ -6,6 +6,8 @@ import {
   deepEquals,
   getDefaultFormState,
   isFilesArray,
+  isConstant,
+  toConstant,
   isMultiSelect,
   mergeObjects,
   pad,
@@ -266,6 +268,49 @@ describe("utils", () => {
 
     it("should return undefined if the input is empty", () => {
       expect(asNumber("")).eql(undefined);
+    });
+  });
+
+  describe("isConstant", () => {
+    it("should return false when neither enum nor const is defined", () => {
+      const schema = {};
+      expect(isConstant(schema)).to.be.false;
+    });
+
+    it("should return true when schema enum is an array of one item", () => {
+      const schema = { enum: ["foo"] };
+      expect(isConstant(schema)).to.be.true;
+    });
+
+    it("should return false when schema enum contains several items", () => {
+      const schema = { enum: ["foo", "bar", "baz"] };
+      expect(isConstant(schema)).to.be.false;
+    });
+
+    it("should return true when schema const is defined", () => {
+      const schema = { const: "foo" };
+      expect(isConstant(schema)).to.be.true;
+    });
+  });
+
+  describe("toConstant()", () => {
+    describe("schema contains an enum array", () => {
+      it("should return its first value when it contains a unique element", () => {
+        const schema = { enum: ["foo"] };
+        expect(toConstant(schema)).eql("foo");
+      });
+
+      it("should return schema const value when it exists", () => {
+        const schema = { const: "bar" };
+        expect(toConstant(schema)).eql("bar");
+      });
+
+      it("should throw when it contains more than one element", () => {
+        const schema = { enum: ["foo", "bar"] };
+        expect(() => {
+          toConstant(schema);
+        }).to.Throw(Error, "cannot be inferred");
+      });
     });
   });
 
