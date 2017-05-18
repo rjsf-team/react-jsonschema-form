@@ -306,7 +306,10 @@ export function allowAdditionalItems(schema) {
 export function optionsList(schema) {
   return schema.enum.map((value, i) => {
     const label = (schema.enumNames && schema.enumNames[i]) || String(value);
-    return { label, value };
+    const disabled =
+      (schema.enumDisabled && schema.enumDisabled.indexOf(value) != -1) ||
+      false;
+    return { label, value, disabled };
   });
 }
 
