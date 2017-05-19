@@ -183,7 +183,7 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
             definitions
           );
           return acc;
-        }, {});
+        }, schema.default || {});
         return formData ? mergeObjects(formData, defaultFilled) : defaultFilled;
       }
       default: {
