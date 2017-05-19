@@ -282,18 +282,6 @@ describe("utils", () => {
         arr: [{ defaultFilled: true }],
       });
     });
-
-    it("should work for object default", () => {
-      const schema = {
-        type: "object",
-        properties: {},
-        default: {
-          foo: "bar",
-        },
-      };
-
-      expect(getDefaultFormState(schema, {})).eql({ foo: "bar" });
-    });
   });
 
   describe("asNumber()", () => {
