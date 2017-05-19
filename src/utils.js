@@ -125,7 +125,7 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
             );
         return new Array(length).fill(undefined).map((_, i) => {
           let childSchema = Array.isArray(schema.items) &&
-            schema.items.length >= i &&
+            schema.items.length > i &&
             schema.items[i] &&
             "type" in schema.items[i]
             ? schema.items[i]
@@ -134,20 +134,20 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
           let defaultItem = undefined;
           if (
             Array.isArray(schema.items) &&
-            schema.items.length >= i &&
+            schema.items.length > i &&
             schema.items[i] &&
             "default" in schema.items[i]
           ) {
             defaultItem = schema.items[i].default;
           } else if ("default" in schema.items) {
             defaultItem = schema.items.default;
-          } else if ("default" in schema && schema.default.length >= i - 1) {
+          } else if ("default" in schema && schema.default.length > i) {
             defaultItem = schema.default[i];
-          } else if (parentDefaults && parentDefaults.length >= i) {
+          } else if (parentDefaults && parentDefaults.length > i) {
             defaultItem = parentDefaults[i];
           }
 
-          let childFormData = formData && formData.length >= i
+          let childFormData = formData && formData.length > i
             ? formData[i]
             : undefined;
 
