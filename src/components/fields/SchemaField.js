@@ -191,8 +191,12 @@ function SchemaFieldRender(props) {
 
   const { type } = schema;
   const id = idSchema.$id;
-  const label = props.schema.title || schema.title || name;
-  const description = props.schema.description || schema.description;
+  const label =
+    uiSchema["ui:title"] || props.schema.title || schema.title || name;
+  const description =
+    uiSchema["ui:description"] ||
+    props.schema.description ||
+    schema.description;
   const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
