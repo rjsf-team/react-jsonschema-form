@@ -43,6 +43,14 @@ describe("utils", () => {
         ).to.eql({ string: "foo" });
       });
 
+      it("should default to empty object if no properties are defined", () => {
+        expect(
+          getDefaultFormState({
+            type: "object",
+          })
+        ).to.eql({});
+      });
+
       it("should recursively map schema object default to form state", () => {
         expect(
           getDefaultFormState({
