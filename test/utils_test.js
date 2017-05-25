@@ -5,6 +5,7 @@ import {
   dataURItoBlob,
   deepEquals,
   getDefaultFormState,
+  isFilesArray,
   isMultiSelect,
   mergeObjects,
   pad,
@@ -266,6 +267,11 @@ describe("utils", () => {
       expect(isMultiSelect(schema)).to.be.true;
     });
 
+    it("should be false if items is undefined", () => {
+      const schema = {};
+      expect(isMultiSelect(schema)).to.be.false;
+    });
+
     it("should be false if uniqueItems is false", () => {
       const schema = { items: { enum: ["foo", "bar"] }, uniqueItems: false };
       expect(isMultiSelect(schema)).to.be.false;
@@ -274,6 +280,20 @@ describe("utils", () => {
     it("should be false if schema items enum is not an array", () => {
       const schema = { items: {}, uniqueItems: true };
       expect(isMultiSelect(schema)).to.be.false;
+    });
+  });
+
+  describe("isFilesArray()", () => {
+    it("should be true if items have data-url format", () => {
+      const schema = { items: { type: "string", format: "data-url" } };
+      const uiSchema = {};
+      expect(isFilesArray(schema, uiSchema)).to.be.true;
+    });
+
+    it("should be false if items is undefined", () => {
+      const schema = {};
+      const uiSchema = {};
+      expect(isFilesArray(schema, uiSchema)).to.be.false;
     });
   });
 
