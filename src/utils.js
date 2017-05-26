@@ -128,16 +128,20 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   switch (schema.type) {
     // We need to recur for object schema inner default values.
     case "object":
-      return Object.keys(schema.properties || {}).reduce((acc, key) => {
-        // Compute the defaults for this node, with the parent defaults we might
-        // have from a previous run: defaults[key].
-        acc[key] = computeDefaults(
-          schema.properties[key],
-          (defaults || {})[key],
-          definitions
-        );
-        return acc;
-      }, {});
+      if (schema.properties) {
+        return Object.keys(schema.properties || {}).reduce((acc, key) => {
+          // Compute the defaults for this node, with the parent defaults we might
+          // have from a previous run: defaults[key].
+          acc[key] = computeDefaults(
+            schema.properties[key],
+            (defaults || {})[key],
+            definitions
+          );
+          return acc;
+        }, {});
+      } else {
+        return {};
+      }
 
     case "array":
       if (schema.minItems) {

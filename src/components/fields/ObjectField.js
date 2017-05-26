@@ -32,6 +32,15 @@ class ObjectField extends Component {
     };
   };
 
+  onTextValueChange = ({ target: { value } }) => {
+    try {
+      const newFormData = JSON.parse(value);
+      this.props.onChange(newFormData);
+    } catch (error) {
+      this.props.onChange(value);
+    }
+  };
+
   render() {
     const {
       uiSchema,
@@ -50,6 +59,33 @@ class ObjectField extends Component {
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = schema.title === undefined ? name : schema.title;
     let orderedProperties;
+
+    if (!schema.properties) {
+      return (
+        <fieldset>
+          {title &&
+            <TitleField
+              id={`${idSchema.$id}__title`}
+              title={title}
+              required={required}
+              formContext={formContext}
+            />}
+          {schema.description &&
+            <DescriptionField
+              id={`${idSchema.$id}__description`}
+              description={schema.description}
+              formContext={formContext}
+            />}
+          <textarea
+            className="form-control"
+            onChange={this.onTextValueChange}
+            value={
+              typeof formData === "object" ? JSON.stringify(formData) : formData
+            }
+          />
+        </fieldset>
+      );
+    }
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);

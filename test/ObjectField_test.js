@@ -101,6 +101,18 @@ describe("ObjectField", () => {
       ).to.have.length.of(1);
     });
 
+    it("should render a textarea for undefined properties", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "object",
+          title: "my object",
+          description: "my description",
+        },
+      });
+
+      expect(node.querySelectorAll(".field textarea")).to.have.length.of(1);
+    });
+
     it("should handle a default object value", () => {
       const { node } = createFormComponent({ schema });
 

@@ -31,6 +31,10 @@ module.exports = {
         title: "Telephone",
         minLength: 10,
       },
+      address: {
+        type: "object",
+        title: "Address",
+      },
     },
   },
   uiSchema: {
