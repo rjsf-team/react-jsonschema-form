@@ -84,6 +84,11 @@ function createErrorHandler(formData) {
       return { ...acc, [key]: createErrorHandler(value) };
     }, handler);
   }
+  if(Array.isArray(formData)){
+    return Object.assign([],formData.reduce((acc, item, index) => {
+      return {...acc, [index]: createErrorHandler(item)};
+    }, handler));
+  }
   return handler;
 }
 
