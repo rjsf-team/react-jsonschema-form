@@ -107,7 +107,7 @@ if (process.env.NODE_ENV !== "production") {
   DefaultTemplate.propTypes = {
     id: PropTypes.string,
     classNames: PropTypes.string,
-    label: PropTypes.string,
+    label: PropTypes.node,
     children: PropTypes.node.isRequired,
     errors: PropTypes.element,
     rawErrors: PropTypes.arrayOf(PropTypes.string),
