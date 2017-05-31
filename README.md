@@ -1395,6 +1395,98 @@ This library partially supports [inline schema definition dereferencing]( http:/
 }
 ```
 
+The library partially supports `$id` for any object placed within the `definitions` property. A property within the form can refer to a definition using a `$id` field like this:
+
+```json
+{
+  "title": "A registration form",
+    "description": "A simple form example.",
+    "type": "object",
+    "required": [
+      "firstName",
+    "lastName"
+    ],
+    "definitions": {
+      "firstName": {
+        "$id": "#firstName",
+        "type": "string",
+        "title": "First name"
+      },
+      "lastName": {
+        "$id": "#lastName",
+        "type": "string",
+        "title": "Last name"
+      },
+      "age": {
+        "$id": "#age",
+        "type": "integer",
+        "title": "Age"
+      },
+      "bio": {
+        "$id": "#bio",
+        "type": "string",
+        "title": "Bio"
+      },
+      "password": {
+        "$id": "#password",
+        "type": "string",
+        "title": "Password",
+        "minLength": 3
+      }
+    },
+    "properties": {
+      "firstName": {
+        "$ref": "#firstName"
+      },
+      "lastName": {
+        "$ref": "#lastName"
+      },
+      "age": {
+        "$ref": "#age"
+      },
+      "bio": {
+        "$ref": "#bio"
+      },
+      "password": {
+        "$ref": "#password"
+      }
+    }
+}
+```
+
+Sometimes normalizing a deep nested schema can result in a subschema which is accessed by a reference and has references of its own. Such references will be followed unless the subschema refers to itself or has a circular reference between two items, then the form will throw an Error due to the malformed schema.
+
+Self referencing schema:
+
+```json
+{
+  "definitions": {
+    "object": {
+      "$id": "#object",
+      "$ref": "#object"
+    }
+  }
+}
+```
+
+Circular reference within the schema:
+
+```json
+{
+  "definitions": {
+    "object1": {
+      "$id": "#object1",
+        "$ref": "#object2"
+    },
+
+    "object2": {
+        "$id": "#object2",
+        "$ref": "#object1"
+    }
+  }
+}
+```
+
 *(Sample schema courtesy of the [Space Telescope Science Institute](http://spacetelescope.github.io/understanding-json-schema/structuring.html))*
 
 Note that it only supports local definition referencing, we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
