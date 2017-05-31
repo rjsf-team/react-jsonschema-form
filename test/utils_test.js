@@ -393,6 +393,82 @@ describe("utils", () => {
       expect(retrieveSchema(schema, definitions)).eql(address);
     });
 
+    it("should 'resolve' a schema which references $ids within definitions", () => {
+      const schema = { $ref: "#address" };
+      const address = {
+        $id: "#address",
+        type: "object",
+        properties: {
+          street_address: { type: "string" },
+          city: { type: "string" },
+          state: { type: "string" },
+          postcode: { type: "number" },
+        },
+        required: ["street_address", "city", "state", "postcode"],
+      };
+      const definitions = {
+        address,
+      };
+      expect(retrieveSchema(schema, definitions)).eql(address);
+    });
+
+    it("should 'resolve' a schema which has references that are normalized", () => {
+      const schema = { $ref: "#address" };
+      const address = {
+        $id: "#address",
+        type: "object",
+        properties: {
+          street_address: { $ref: "#street_address" },
+          city: { $ref: "#city" },
+          state: { $ref: "#state" },
+          postcode: { $ref: "#postcode" },
+        },
+        required: ["street_address", "city", "state", "postcode"],
+      };
+      const definitions = {
+        street_address: { $id: "#street_address", type: "string" },
+        city: { $id: "#city", type: "string" },
+        state: { $id: "#state", type: "string" },
+        postcode: { $id: "#postcode", type: "number" },
+        address,
+      };
+
+      expect(retrieveSchema(schema, definitions)).eql(address);
+    });
+
+    it("should throw an error if an id is self referencing", () => {
+      const schema = { $ref: "#object" };
+      const definitions = {
+        object: {
+          type: "string",
+          $id: "#object",
+          $ref: "#object",
+        },
+      };
+      expect(() => retrieveSchema(schema, definitions)).to.throw(
+        `Circular or self reference detected when reading schema for #object`
+      );
+    });
+
+    it("should throw an error if two ids have circular references", () => {
+      const schema = { $ref: "#object1" };
+
+      const definitions = {
+        object1: {
+          $id: "#object1",
+          $ref: "#object2",
+        },
+
+        object2: {
+          $id: "#object2",
+          $ref: "#object1",
+        },
+      };
+      expect(() => retrieveSchema(schema, definitions)).to.throw(
+        `Circular or self reference detected when reading schema for #object1`
+      );
+    });
+
     it("should 'resolve' escaped JSON Pointers", () => {
       const schema = { $ref: "#/definitions/a~0complex~1name" };
       const address = { type: "string" };

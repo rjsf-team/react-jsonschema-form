@@ -314,26 +314,84 @@ export function optionsList(schema) {
   });
 }
 
-function findSchemaDefinition($ref, definitions = {}) {
-  // Extract and use the referenced definition if we have it.
-  const match = /^#\/definitions\/(.*)$/.exec($ref);
-  if (match && match[1]) {
-    const parts = match[1].split("/");
-    let current = definitions;
-    for (let part of parts) {
-      part = part.replace(/~1/g, "/").replace(/~0/g, "~");
-      if (current.hasOwnProperty(part)) {
-        current = current[part];
-      } else {
-        // No matching definition found, that's an error (bogus schema?)
-        throw new Error(`Could not find a definition for ${$ref}.`);
-      }
-    }
-    return current;
-  }
+function is$id($ref) {
+  const regex = /^#[A-Za-z]{1}[A-Za-z0-9-_:.]*$/;
+  return regex.test($ref);
+}
 
-  // No matching definition found, that's an error (bogus schema?)
-  throw new Error(`Could not find a definition for ${$ref}.`);
+function isJSONPointer($ref) {
+  const regex = /^#\/definitions\/(.*)$/;
+  return regex.test($ref);
+}
+
+function has$id($id, defs) {
+  let $idsWithFalsyValues = Object.keys(defs).map(key => defs[key].$id);
+  let $ids = compact($idsWithFalsyValues);
+  return $ids.includes($id);
+}
+
+function compact(array) {
+  let index = -1;
+  let length = array == null ? 0 : array.length;
+  let resIndex = 0;
+  let result = [];
+
+  while (++index < length) {
+    var value = array[index];
+    if (value) {
+      result[resIndex++] = value;
+    }
+  }
+  return result;
+}
+
+function findSchemaDefinition($ref, definitions = {}, processedIds = []) {
+  // Extract and use the referenced definition if we have it.
+  if (isJSONPointer($ref)) {
+    const match = /^#\/definitions\/(.*)$/.exec($ref);
+    if (match && match[1]) {
+      const parts = match[1].split("/");
+      let current = definitions;
+      for (let part of parts) {
+        part = part.replace(/~1/g, "/").replace(/~0/g, "~");
+        if (current.hasOwnProperty(part)) {
+          current = current[part];
+        } else {
+          // No matching definition found, that's an error (bogus schema?)
+          throw new Error(`Could not find a definition for ${$ref}.`);
+        }
+      }
+      return current;
+    }
+  } else if (is$id($ref)) {
+    if (has$id($ref, definitions)) {
+      let keys = Object.keys(definitions);
+      for (let key of keys) {
+        let { $id: key$id } = definitions[key];
+        if (key$id === $ref) {
+          let current = definitions[key];
+          if (current.hasOwnProperty("$ref") && is$id(current.$ref)) {
+            processedIds = processedIds.concat($ref);
+            //One question refers to itself or to another question inside it, used for object and array schemas
+            if (processedIds.includes(current.$ref)) {
+              throw new Error(
+                `Circular or self reference detected when reading schema for ${current.$ref}`
+              );
+            }
+            return findSchemaDefinition(
+              current.$ref,
+              definitions,
+              processedIds
+            );
+          }
+          return current;
+        }
+      }
+    } else {
+      // No matching definition found, that's an error (bogus schema?)
+      throw new Error(`Could not find a definition for ${$ref}.`);
+    }
+  }
 }
 
 export function retrieveSchema(schema, definitions = {}) {
