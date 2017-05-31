@@ -1395,6 +1395,8 @@ This library partially supports [inline schema definition dereferencing]( http:/
 }
 ```
 
+*(Sample schema courtesy of the [Space Telescope Science Institute](http://spacetelescope.github.io/understanding-json-schema/structuring.html))*
+
 The library partially supports `$id` for any object placed within the `definitions` property. A property within the form can refer to a definition using a `$id` field like this:
 
 ```json
@@ -1404,7 +1406,7 @@ The library partially supports `$id` for any object placed within the `definitio
     "type": "object",
     "required": [
       "firstName",
-    "lastName"
+      "lastName"
     ],
     "definitions": {
       "firstName": {
@@ -1454,7 +1456,7 @@ The library partially supports `$id` for any object placed within the `definitio
 }
 ```
 
-Sometimes normalizing a deep nested schema can result in a subschema which is accessed by a reference and has references of its own. Such references will be followed unless the subschema refers to itself or has a circular reference between two items, then the form will throw an Error due to the malformed schema.
+Subschemas can reference other subschemas, which can reference other subschemas and so on. This chain of references will be followed, but if it appears to be infinite or circular, an error will be thrown.
 
 Self referencing schema:
 
@@ -1487,7 +1489,6 @@ Circular reference within the schema:
 }
 ```
 
-*(Sample schema courtesy of the [Space Telescope Science Institute](http://spacetelescope.github.io/understanding-json-schema/structuring.html))*
 
 Note that it only supports local definition referencing, we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
 

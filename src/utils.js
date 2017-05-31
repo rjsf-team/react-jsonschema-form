@@ -325,27 +325,15 @@ function isJSONPointer($ref) {
 }
 
 function has$id($id, defs) {
-  let $idsWithFalsyValues = Object.keys(defs).map(key => defs[key].$id);
-  let $ids = compact($idsWithFalsyValues);
+  const keys = Object.keys(defs).filter(key => {
+    const { $id } = defs[key];
+    return $id != null && typeof $id === "string" && is$id($id);
+  });
+  const $ids = keys.map(key => defs[key].$id);
   return $ids.includes($id);
 }
 
-function compact(array) {
-  let index = -1;
-  let length = array == null ? 0 : array.length;
-  let resIndex = 0;
-  let result = [];
-
-  while (++index < length) {
-    var value = array[index];
-    if (value) {
-      result[resIndex++] = value;
-    }
-  }
-  return result;
-}
-
-function findSchemaDefinition($ref, definitions = {}, processedIds = []) {
+function findSchemaDefinition($ref, definitions = {}, processedRefs = []) {
   // Extract and use the referenced definition if we have it.
   if (isJSONPointer($ref)) {
     const match = /^#\/definitions\/(.*)$/.exec($ref);
@@ -361,6 +349,15 @@ function findSchemaDefinition($ref, definitions = {}, processedIds = []) {
           throw new Error(`Could not find a definition for ${$ref}.`);
         }
       }
+      processedRefs.push($ref);
+      if (current.hasOwnProperty("$ref")) {
+        if (processedRefs.includes(current.$ref)) {
+          throw new Error(
+            `Circular or self reference detected when reading schema for ${current.$ref}`
+          );
+        }
+        return findSchemaDefinition(current.$ref, definitions, processedRefs);
+      }
       return current;
     }
   } else if (is$id($ref)) {
@@ -370,10 +367,9 @@ function findSchemaDefinition($ref, definitions = {}, processedIds = []) {
         let { $id: key$id } = definitions[key];
         if (key$id === $ref) {
           let current = definitions[key];
-          if (current.hasOwnProperty("$ref") && is$id(current.$ref)) {
-            processedIds = processedIds.concat($ref);
-            //One question refers to itself or to another question inside it, used for object and array schemas
-            if (processedIds.includes(current.$ref)) {
+          if (current.hasOwnProperty("$ref")) {
+            processedRefs.push($ref);
+            if (processedRefs.includes(current.$ref)) {
               throw new Error(
                 `Circular or self reference detected when reading schema for ${current.$ref}`
               );
@@ -381,7 +377,7 @@ function findSchemaDefinition($ref, definitions = {}, processedIds = []) {
             return findSchemaDefinition(
               current.$ref,
               definitions,
-              processedIds
+              processedRefs
             );
           }
           return current;
