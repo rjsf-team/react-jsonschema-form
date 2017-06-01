@@ -298,8 +298,14 @@ class ArrayField extends Component {
     const { ArrayFieldTemplate, definitions, fields } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    const { addable = true } = getUiOptions(uiSchema);
-
+    let { addable } = getUiOptions(uiSchema);
+    if (addable !== false) {
+      if (schema.maxItems !== undefined) {
+        addable = formData.length < schema.maxItems;
+      } else {
+        addable = true;
+      }
+    }
     const arrayProps = {
       canAdd: addable,
       items: formData.map((item, index) => {
