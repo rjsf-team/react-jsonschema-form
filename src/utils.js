@@ -161,7 +161,7 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
       }
       case "object": {
         const defaultFilled = Object.keys(
-          schema.properties
+          schema.properties || {}
         ).reduce((acc, key) => {
           let propSchema = schema.properties[key];
 
@@ -315,12 +315,16 @@ export function orderProperties(properties, order) {
 }
 
 export function isMultiSelect(schema) {
-  return Array.isArray(schema.items.enum) && schema.uniqueItems;
+  return schema.items
+    ? Array.isArray(schema.items.enum) && schema.uniqueItems
+    : false;
 }
 
 export function isFilesArray(schema, uiSchema) {
   return (
-    (schema.items.type === "string" && schema.items.format === "data-url") ||
+    (schema.items &&
+      schema.items.type === "string" &&
+      schema.items.format === "data-url") ||
     uiSchema["ui:widget"] === "files"
   );
 }

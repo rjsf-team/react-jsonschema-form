@@ -355,6 +355,28 @@ describe("uiSchema", () => {
     });
   });
 
+  describe("ui:title", () => {
+    it("should render the provided title text", () => {
+      const schema = { type: "string" };
+      const uiSchema = { "ui:title": "plop" };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      expect(node.querySelector("label.control-label").textContent).eql("plop");
+    });
+  });
+
+  describe("ui:description", () => {
+    it("should render the provided description text", () => {
+      const schema = { type: "string" };
+      const uiSchema = { "ui:description": "plop" };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      expect(node.querySelector("p.field-description").textContent).eql("plop");
+    });
+  });
+
   it("should accept a react element as help", () => {
     const schema = { type: "string" };
     const uiSchema = { "ui:help": <b>plop</b> };
