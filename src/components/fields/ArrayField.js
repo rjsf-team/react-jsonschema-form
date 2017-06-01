@@ -440,14 +440,21 @@ class ArrayField extends Component {
     const additionalSchema = allowAdditionalItems(schema)
       ? retrieveSchema(schema.additionalItems, definitions)
       : null;
-    const { addable = true } = getUiOptions(uiSchema);
-    const canAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
       // to make sure at least all fixed items are generated
       items = items || [];
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
+    let { addable } = getUiOptions(uiSchema);
+    if (addable !== false) {
+      if (schema.maxItems !== undefined) {
+        addable = items.length < schema.maxItems;
+      } else {
+        addable = true;
+      }
+    }
+    const canAdd = addable && additionalSchema;
 
     // These are the props passed into the render function
     const arrayProps = {

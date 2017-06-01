@@ -843,6 +843,65 @@ describe("ArrayField", () => {
       expect(node.querySelector(".array-item-add button")).to.be.null;
     });
 
+    it("[fixed-noadditional] should not provide an add button regardless maxItems", () => {
+      const maxItemsSchema = Object.assign({ maxItems: 3 }, schema);
+      const { node } = createFormComponent({ schema: maxItemsSchema });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("[fixed] should not provide an add button if length equals maxItems", () => {
+      const maxItemsSchemaAdditional = Object.assign(
+        { maxItems: 2 },
+        schemaAdditional
+      );
+      const { node } = createFormComponent({
+        schema: maxItemsSchemaAdditional,
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("[fixed] should provide an add button if length is lesser than maxItems", () => {
+      const maxItemsSchemaAdditional = Object.assign(
+        { maxItems: 3 },
+        schemaAdditional
+      );
+      const { node } = createFormComponent({
+        schema: maxItemsSchemaAdditional,
+      });
+
+      expect(node.querySelector(".array-item-add button")).not.to.be.null;
+    });
+
+    it("[fixed] should not provide an add button if addable is expliclty false regardless maxItems value", () => {
+      const maxItemsSchemaAdditional = Object.assign({ maxItems: 3 }, schema);
+      const { node } = createFormComponent({
+        schema: maxItemsSchemaAdditional,
+        uiSchema: {
+          "ui:options": {
+            addable: false,
+          },
+        },
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("[fixed] should ignore addable value if maxItems constraint is not satisfied", () => {
+      const maxItemsSchemaAdditional = Object.assign({ maxItems: 2 }, schema);
+      const { node } = createFormComponent({
+        schema: maxItemsSchemaAdditional,
+        uiSchema: {
+          "ui:options": {
+            addable: true,
+          },
+        },
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
     describe("operations for additional items", () => {
       const { comp, node } = createFormComponent({
         schema: schemaAdditional,
