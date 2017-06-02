@@ -821,7 +821,7 @@ function ArrayFieldTemplate(props) {
   return (
     <div>
       {props.items.map(element => element.children)}
-      {props.canAdd && <button onClick={props.onAddClick}></button>}
+      {props.canAdd && <button type="button" onClick={props.onAddClick}></button>}
     </div>
   );
 }
