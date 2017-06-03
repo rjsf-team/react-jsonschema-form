@@ -63,10 +63,10 @@ function SelectWidget(props) {
       autoFocus={autofocus}
       onBlur={
         onBlur &&
-          (event => {
-            const newValue = getValue(event, multiple);
-            onBlur(id, processValue(schema, newValue));
-          })
+        (event => {
+          const newValue = getValue(event, multiple);
+          onBlur(id, processValue(schema, newValue));
+        })
       }
       onChange={event => {
         const newValue = getValue(event, multiple);

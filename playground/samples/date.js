@@ -5,7 +5,8 @@ module.exports = {
     properties: {
       native: {
         title: "Native",
-        description: "May not work on some browsers, notably Firefox Desktop and IE.",
+        description:
+          "May not work on some browsers, notably Firefox Desktop and IE.",
         type: "object",
         properties: {
           datetime: {

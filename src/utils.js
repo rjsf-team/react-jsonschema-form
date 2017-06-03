@@ -67,11 +67,10 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   function mergeOptions(Widget) {
     // cache return value as property of widget for proper react reconciliation
     if (!Widget.MergedWidget) {
-      const defaultOptions = (Widget.defaultProps &&
-        Widget.defaultProps.options) || {};
-      Widget.MergedWidget = ({ options = {}, ...props }) => (
-        <Widget options={{ ...defaultOptions, ...options }} {...props} />
-      );
+      const defaultOptions =
+        (Widget.defaultProps && Widget.defaultProps.options) || {};
+      Widget.MergedWidget = ({ options = {}, ...props }) =>
+        <Widget options={{ ...defaultOptions, ...options }} {...props} />;
     }
     return Widget.MergedWidget;
   }
@@ -198,7 +197,8 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1[key], right = obj2[key];
+    const left = obj1[key],
+      right = obj2[key];
     if (obj1.hasOwnProperty(key) && isObject(right)) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {

@@ -95,9 +95,9 @@ describe("Form", () => {
           </span>
           {rawErrors
             ? <ul>
-                {rawErrors.map((error, i) => (
+                {rawErrors.map((error, i) =>
                   <li key={i} className="raw-error">{error}</li>
-                ))}
+                )}
               </ul>
             : null}
         </div>
@@ -906,7 +906,7 @@ describe("Form", () => {
         schema: {
           type: "string",
           minLength: 8,
-          pattern: "\d+",
+          pattern: "d+",
         },
         formData: "short",
       };
@@ -916,7 +916,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           __errors: [
             "does not meet minimum length of 8",
-            'does not match pattern "\d+"',
+            'does not match pattern "d+"',
           ],
         });
       });
@@ -929,7 +929,7 @@ describe("Form", () => {
 
         expect(errors).eql([
           "does not meet minimum length of 8",
-          'does not match pattern "\d+"',
+          'does not match pattern "d+"',
         ]);
       });
     });
