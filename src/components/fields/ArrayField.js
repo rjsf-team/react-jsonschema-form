@@ -200,6 +200,21 @@ class ArrayField extends Component {
     return itemSchema.type !== "null";
   }
 
+  canAddItem(formItems) {
+    const { schema, uiSchema } = this.props;
+    let { addable } = getUiOptions(uiSchema);
+    if (addable !== false) {
+      // if ui:options.addable was not explicitly set to false, we can add
+      // another item if we have not exceeded maxItems yet
+      if (schema.maxItems !== undefined) {
+        addable = formItems.length < schema.maxItems;
+      } else {
+        addable = true;
+      }
+    }
+    return addable;
+  }
+
   onAddClick = event => {
     event.preventDefault();
     const { schema, formData, registry = getDefaultRegistry() } = this.props;
@@ -298,16 +313,8 @@ class ArrayField extends Component {
     const { ArrayFieldTemplate, definitions, fields } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    let { addable } = getUiOptions(uiSchema);
-    if (addable !== false) {
-      if (schema.maxItems !== undefined) {
-        addable = formData.length < schema.maxItems;
-      } else {
-        addable = true;
-      }
-    }
     const arrayProps = {
-      canAdd: addable,
+      canAdd: this.canAddItem(formData),
       items: formData.map((item, index) => {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
@@ -446,19 +453,10 @@ class ArrayField extends Component {
       items = items || [];
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
-    let { addable } = getUiOptions(uiSchema);
-    if (addable !== false) {
-      if (schema.maxItems !== undefined) {
-        addable = items.length < schema.maxItems;
-      } else {
-        addable = true;
-      }
-    }
-    const canAdd = addable && additionalSchema;
 
     // These are the props passed into the render function
     const arrayProps = {
-      canAdd,
+      canAdd: this.canAddItem(items) && additionalSchema,
       className: "field field-array field-array-fixed-items",
       disabled,
       idSchema,
