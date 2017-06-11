@@ -118,9 +118,8 @@ describe("ArrayField", () => {
     });
 
     it("should not provide an add button if length equals maxItems", () => {
-      const maxItemsSchema = Object.assign({ maxItems: 2 }, schema);
       const { node } = createFormComponent({
-        schema: maxItemsSchema,
+        schema: { maxItems: 2, ...schema },
         formData: ["foo", "bar"],
       });
 
@@ -128,9 +127,8 @@ describe("ArrayField", () => {
     });
 
     it("should provide an add button if length is lesser than maxItems", () => {
-      const maxItemsSchema = Object.assign({ maxItems: 2 }, schema);
       const { node } = createFormComponent({
-        schema: maxItemsSchema,
+        schema: { maxItems: 2, ...schema },
         formData: ["foo"],
       });
 
@@ -138,9 +136,8 @@ describe("ArrayField", () => {
     });
 
     it("should not provide an add button if addable is expliclty false regardless maxItems value", () => {
-      const maxItemsSchema = Object.assign({ maxItems: 2 }, schema);
       const { node } = createFormComponent({
-        schema: maxItemsSchema,
+        schema: { maxItems: 2, ...schema },
         formData: ["foo"],
         uiSchema: {
           "ui:options": {
@@ -153,9 +150,8 @@ describe("ArrayField", () => {
     });
 
     it("should ignore addable value if maxItems constraint is not satisfied", () => {
-      const maxItemsSchema = Object.assign({ maxItems: 2 }, schema);
       const { node } = createFormComponent({
-        schema: maxItemsSchema,
+        schema: { maxItems: 2, ...schema },
         formData: ["foo", "bar"],
         uiSchema: {
           "ui:options": {
@@ -844,40 +840,32 @@ describe("ArrayField", () => {
     });
 
     it("[fixed-noadditional] should not provide an add button regardless maxItems", () => {
-      const maxItemsSchema = Object.assign({ maxItems: 3 }, schema);
-      const { node } = createFormComponent({ schema: maxItemsSchema });
+      const { node } = createFormComponent({
+        schema: { maxItems: 3, ...schema },
+      });
 
       expect(node.querySelector(".array-item-add button")).to.be.null;
     });
 
     it("[fixed] should not provide an add button if length equals maxItems", () => {
-      const maxItemsSchemaAdditional = Object.assign(
-        { maxItems: 2 },
-        schemaAdditional
-      );
       const { node } = createFormComponent({
-        schema: maxItemsSchemaAdditional,
+        schema: { maxItems: 2, ...schemaAdditional },
       });
 
       expect(node.querySelector(".array-item-add button")).to.be.null;
     });
 
     it("[fixed] should provide an add button if length is lesser than maxItems", () => {
-      const maxItemsSchemaAdditional = Object.assign(
-        { maxItems: 3 },
-        schemaAdditional
-      );
       const { node } = createFormComponent({
-        schema: maxItemsSchemaAdditional,
+        schema: { maxItems: 3, ...schemaAdditional },
       });
 
       expect(node.querySelector(".array-item-add button")).not.to.be.null;
     });
 
     it("[fixed] should not provide an add button if addable is expliclty false regardless maxItems value", () => {
-      const maxItemsSchemaAdditional = Object.assign({ maxItems: 3 }, schema);
       const { node } = createFormComponent({
-        schema: maxItemsSchemaAdditional,
+        schema: { maxItems: 2, ...schema },
         uiSchema: {
           "ui:options": {
             addable: false,
@@ -889,9 +877,8 @@ describe("ArrayField", () => {
     });
 
     it("[fixed] should ignore addable value if maxItems constraint is not satisfied", () => {
-      const maxItemsSchemaAdditional = Object.assign({ maxItems: 2 }, schema);
       const { node } = createFormComponent({
-        schema: maxItemsSchemaAdditional,
+        schema: { maxItems: 2, ...schema },
         uiSchema: {
           "ui:options": {
             addable: true,
