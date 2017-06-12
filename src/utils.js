@@ -277,19 +277,53 @@ export function orderProperties(properties, order) {
   return complete;
 }
 
-export function isMultiSelect(schema) {
-  return schema.items
-    ? Array.isArray(schema.items.enum) && schema.uniqueItems
-    : false;
+/**
+ * This function checks if the given schema matches a single
+ * constant value.
+ */
+export function isConstant(schema) {
+  return (
+    (Array.isArray(schema.enum) && schema.enum.length === 1) ||
+    schema.hasOwnProperty("const")
+  );
 }
 
-export function isFilesArray(schema, uiSchema) {
-  return (
-    (schema.items &&
-      schema.items.type === "string" &&
-      schema.items.format === "data-url") ||
-    uiSchema["ui:widget"] === "files"
-  );
+export function toConstant(schema) {
+  if (Array.isArray(schema.enum) && schema.enum.length === 1) {
+    return schema.enum[0];
+  } else if (schema.hasOwnProperty("const")) {
+    return schema.const;
+  } else {
+    throw new Error("schema cannot be inferred as a constant");
+  }
+}
+
+export function isSelect(_schema, definitions = {}) {
+  const schema = retrieveSchema(_schema, definitions);
+  const altSchemas = schema.oneOf || schema.anyOf;
+  if (Array.isArray(schema.enum)) {
+    return true;
+  } else if (Array.isArray(altSchemas)) {
+    return altSchemas.every(altSchemas => isConstant(altSchemas));
+  }
+  return false;
+}
+
+export function isMultiSelect(schema, definitions = {}) {
+  if (!schema.uniqueItems || !schema.items) {
+    return false;
+  }
+  return isSelect(schema.items, definitions);
+}
+
+export function isFilesArray(schema, uiSchema, definitions = {}) {
+  if (uiSchema["ui:widget"] === "files") {
+    return true;
+  } else if (schema.items) {
+    const itemsSchema = retrieveSchema(schema.items, definitions);
+    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
+  }
+  return false;
 }
 
 export function isFixedItems(schema) {
@@ -308,10 +342,19 @@ export function allowAdditionalItems(schema) {
 }
 
 export function optionsList(schema) {
-  return schema.enum.map((value, i) => {
-    const label = (schema.enumNames && schema.enumNames[i]) || String(value);
-    return { label, value };
-  });
+  if (schema.enum) {
+    return schema.enum.map((value, i) => {
+      const label = (schema.enumNames && schema.enumNames[i]) || String(value);
+      return { label, value };
+    });
+  } else {
+    const altSchemas = schema.oneOf || schema.anyOf;
+    return altSchemas.map((schema, i) => {
+      const value = toConstant(schema);
+      const label = schema.title || String(value);
+      return { label, value };
+    });
+  }
 }
 
 function findSchemaDefinition($ref, definitions = {}) {
