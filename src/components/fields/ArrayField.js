@@ -200,6 +200,21 @@ class ArrayField extends Component {
     return itemSchema.type !== "null";
   }
 
+  canAddItem(formItems) {
+    const { schema, uiSchema } = this.props;
+    let { addable } = getUiOptions(uiSchema);
+    if (addable !== false) {
+      // if ui:options.addable was not explicitly set to false, we can add
+      // another item if we have not exceeded maxItems yet
+      if (schema.maxItems !== undefined) {
+        addable = formItems.length < schema.maxItems;
+      } else {
+        addable = true;
+      }
+    }
+    return addable;
+  }
+
   onAddClick = event => {
     event.preventDefault();
     const { schema, formData, registry = getDefaultRegistry() } = this.props;
@@ -298,10 +313,8 @@ class ArrayField extends Component {
     const { ArrayFieldTemplate, definitions, fields } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    const { addable = true } = getUiOptions(uiSchema);
-
     const arrayProps = {
-      canAdd: addable,
+      canAdd: this.canAddItem(formData),
       items: formData.map((item, index) => {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
@@ -434,8 +447,6 @@ class ArrayField extends Component {
     const additionalSchema = allowAdditionalItems(schema)
       ? retrieveSchema(schema.additionalItems, definitions)
       : null;
-    const { addable = true } = getUiOptions(uiSchema);
-    const canAdd = addable && additionalSchema;
 
     if (!items || items.length < itemSchemas.length) {
       // to make sure at least all fixed items are generated
@@ -445,7 +456,7 @@ class ArrayField extends Component {
 
     // These are the props passed into the render function
     const arrayProps = {
-      canAdd,
+      canAdd: this.canAddItem(items) && additionalSchema,
       className: "field field-array field-array-fixed-items",
       disabled,
       idSchema,

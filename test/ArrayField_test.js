@@ -116,6 +116,52 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
     });
 
+    it("should not provide an add button if length equals maxItems", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 2, ...schema },
+        formData: ["foo", "bar"],
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("should provide an add button if length is lesser than maxItems", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 2, ...schema },
+        formData: ["foo"],
+      });
+
+      expect(node.querySelector(".array-item-add button")).not.eql(null);
+    });
+
+    it("should not provide an add button if addable is expliclty false regardless maxItems value", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 2, ...schema },
+        formData: ["foo"],
+        uiSchema: {
+          "ui:options": {
+            addable: false,
+          },
+        },
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("should ignore addable value if maxItems constraint is not satisfied", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 2, ...schema },
+        formData: ["foo", "bar"],
+        uiSchema: {
+          "ui:options": {
+            addable: true,
+          },
+        },
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
     it("should mark a non-null array item widget as required", () => {
       const { node } = createFormComponent({ schema });
 
@@ -789,6 +835,56 @@ describe("ArrayField", () => {
         schema,
         uiSchema: { "ui:options": { addable: false } },
       });
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("[fixed-noadditional] should not provide an add button regardless maxItems", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 3, ...schema },
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("[fixed] should not provide an add button if length equals maxItems", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 2, ...schemaAdditional },
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("[fixed] should provide an add button if length is lesser than maxItems", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 3, ...schemaAdditional },
+      });
+
+      expect(node.querySelector(".array-item-add button")).not.to.be.null;
+    });
+
+    it("[fixed] should not provide an add button if addable is expliclty false regardless maxItems value", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 2, ...schema },
+        uiSchema: {
+          "ui:options": {
+            addable: false,
+          },
+        },
+      });
+
+      expect(node.querySelector(".array-item-add button")).to.be.null;
+    });
+
+    it("[fixed] should ignore addable value if maxItems constraint is not satisfied", () => {
+      const { node } = createFormComponent({
+        schema: { maxItems: 2, ...schema },
+        uiSchema: {
+          "ui:options": {
+            addable: true,
+          },
+        },
+      });
+
       expect(node.querySelector(".array-item-add button")).to.be.null;
     });
 
