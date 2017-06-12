@@ -40,9 +40,11 @@
     "react": "^15.0.0"
   },
   "dependencies": {
+    "codemirror": "^5.26.0",
     "jsonschema": "^1.0.2",
     "lodash.topath": "^4.5.2",
     "prop-types": "^15.5.8",
+    "react-codemirror": "^0.2.6",
     "setimmediate": "^1.0.5"
   },
   "devDependencies": {

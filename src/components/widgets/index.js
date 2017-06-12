@@ -16,6 +16,7 @@ import TextareaWidget from "./TextareaWidget";
 import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
+import CodeWidget from "./CodeWidget";
 
 export default {
   PasswordWidget,
@@ -24,6 +25,7 @@ export default {
   RangeWidget,
   SelectWidget,
   TextWidget,
+  CodeWidget,
   DateWidget,
   DateTimeWidget,
   AltDateWidget,
