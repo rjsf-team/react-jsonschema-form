@@ -67,10 +67,11 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   function mergeOptions(Widget) {
     // cache return value as property of widget for proper react reconciliation
     if (!Widget.MergedWidget) {
-      const defaultOptions =
-        (Widget.defaultProps && Widget.defaultProps.options) || {};
-      Widget.MergedWidget = ({ options = {}, ...props }) =>
-        <Widget options={{ ...defaultOptions, ...options }} {...props} />;
+      const defaultOptions = (Widget.defaultProps &&
+        Widget.defaultProps.options) || {};
+      Widget.MergedWidget = ({ options = {}, ...props }) => (
+        <Widget options={{ ...defaultOptions, ...options }} {...props} />
+      );
     }
     return Widget.MergedWidget;
   }
@@ -127,6 +128,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   switch (schema.type) {
     // We need to recur for object schema inner default values.
     case "object":
+    case "bootstrap":
       return Object.keys(schema.properties || {}).reduce((acc, key) => {
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
@@ -193,12 +195,15 @@ export function isObject(thing) {
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
+function notTypeObjectOrBootstrap(a) {
+  a !== "object" && a !== "bootstrap";
+}
+
 export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1[key],
-      right = obj2[key];
+    const left = obj1[key], right = obj2[key];
     if (obj1.hasOwnProperty(key) && isObject(right)) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
@@ -489,7 +494,7 @@ export function toIdSchema(schema, id, definitions) {
   if ("items" in schema && !schema.items.$ref) {
     return toIdSchema(schema.items, id, definitions);
   }
-  if (schema.type !== "object") {
+  if (notTypeObjectOrBootstrap(schema.type)) {
     return idSchema;
   }
   for (const name in schema.properties || {}) {

@@ -4,7 +4,7 @@ import { Simulate } from "react-addons-test-utils";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 
-describe("ObjectField", () => {
+describe("BootstrapObjectField", () => {
   let sandbox;
 
   beforeEach(() => {
@@ -17,7 +17,7 @@ describe("ObjectField", () => {
 
   describe("schema", () => {
     const schema = {
-      type: "object",
+      type: "bootstrap",
       title: "my object",
       description: "my description",
       required: ["foo"],
@@ -36,10 +36,37 @@ describe("ObjectField", () => {
       },
     };
 
+    const uiSchema = {
+      foo: { classNames: "col-xs-4" },
+      bar: { classNames: "col-md-12" },
+    };
+
     it("should render a fieldset", () => {
       const { node } = createFormComponent({ schema });
 
       expect(node.querySelectorAll("fieldset")).to.have.length.of(1);
+    });
+
+    it("should wrap all children in a row", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("fieldset > .row")).to.have.length.of(1);
+    });
+
+    it("should add a default col-xs-12 to any classes that don't have a col-xs", () => {
+      var { node } = createFormComponent({ schema });
+
+      expect(
+        node.querySelectorAll("fieldset > .row > .col-xs-12")
+      ).to.have.length.of(2);
+    });
+
+    it("should skip adding default col-xs-12 to any classes that have a col-xs", () => {
+      var { node } = createFormComponent({ schema, uiSchema });
+
+      expect(
+        node.querySelectorAll("fieldset > .row > .col-xs-12")
+      ).to.have.length.of(1);
     });
 
     it("should render a fieldset legend", () => {

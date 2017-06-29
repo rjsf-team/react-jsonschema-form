@@ -95,9 +95,9 @@ describe("Form", () => {
           </span>
           {rawErrors
             ? <ul>
-                {rawErrors.map((error, i) =>
+                {rawErrors.map((error, i) => (
                   <li key={i} className="raw-error">{error}</li>
-                )}
+                ))}
               </ul>
             : null}
         </div>

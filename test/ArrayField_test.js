@@ -62,8 +62,9 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized description", () => {
-      const CustomDescriptionField = ({ description }) =>
-        <div id="custom">{description}</div>;
+      const CustomDescriptionField = ({ description }) => (
+        <div id="custom">{description}</div>
+      );
 
       const { node } = createFormComponent({
         schema,
