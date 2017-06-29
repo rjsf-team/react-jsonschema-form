@@ -15,7 +15,7 @@ function BooleanField(props) {
     uiSchema,
     idSchema,
     formData,
-    registry,
+    registry = getDefaultRegistry(),
     required,
     disabled,
     readonly,
@@ -72,7 +72,6 @@ if (process.env.NODE_ENV !== "production") {
 
 BooleanField.defaultProps = {
   uiSchema: {},
-  registry: getDefaultRegistry(),
   disabled: false,
   readonly: false,
   autofocus: false,

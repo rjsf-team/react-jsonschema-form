@@ -5,6 +5,9 @@ import {
   dataURItoBlob,
   deepEquals,
   getDefaultFormState,
+  isFilesArray,
+  isConstant,
+  toConstant,
   isMultiSelect,
   mergeObjects,
   pad,
@@ -41,6 +44,14 @@ describe("utils", () => {
             },
           })
         ).to.eql({ string: "foo" });
+      });
+
+      it("should default to empty object if no properties are defined", () => {
+        expect(
+          getDefaultFormState({
+            type: "object",
+          })
+        ).to.eql({});
       });
 
       it("should recursively map schema object default to form state", () => {
@@ -260,20 +271,116 @@ describe("utils", () => {
     });
   });
 
+  describe("isConstant", () => {
+    it("should return false when neither enum nor const is defined", () => {
+      const schema = {};
+      expect(isConstant(schema)).to.be.false;
+    });
+
+    it("should return true when schema enum is an array of one item", () => {
+      const schema = { enum: ["foo"] };
+      expect(isConstant(schema)).to.be.true;
+    });
+
+    it("should return false when schema enum contains several items", () => {
+      const schema = { enum: ["foo", "bar", "baz"] };
+      expect(isConstant(schema)).to.be.false;
+    });
+
+    it("should return true when schema const is defined", () => {
+      const schema = { const: "foo" };
+      expect(isConstant(schema)).to.be.true;
+    });
+  });
+
+  describe("toConstant()", () => {
+    describe("schema contains an enum array", () => {
+      it("should return its first value when it contains a unique element", () => {
+        const schema = { enum: ["foo"] };
+        expect(toConstant(schema)).eql("foo");
+      });
+
+      it("should return schema const value when it exists", () => {
+        const schema = { const: "bar" };
+        expect(toConstant(schema)).eql("bar");
+      });
+
+      it("should throw when it contains more than one element", () => {
+        const schema = { enum: ["foo", "bar"] };
+        expect(() => {
+          toConstant(schema);
+        }).to.Throw(Error, "cannot be inferred");
+      });
+    });
+  });
+
   describe("isMultiSelect()", () => {
-    it("should be true if schema items enum is an array and uniqueItems is true", () => {
-      let schema = { items: { enum: ["foo", "bar"] }, uniqueItems: true };
-      expect(isMultiSelect(schema)).to.be.true;
+    describe("uniqueItems is true", () => {
+      describe("schema items enum is an array", () => {
+        it("should be true", () => {
+          let schema = { items: { enum: ["foo", "bar"] }, uniqueItems: true };
+          expect(isMultiSelect(schema)).to.be.true;
+        });
+      });
+
+      it("should be false if items is undefined", () => {
+        const schema = {};
+        expect(isMultiSelect(schema)).to.be.false;
+      });
+
+      describe("schema items enum is not an array", () => {
+        const constantSchema = { type: "string", enum: ["Foo"] };
+        const notConstantSchema = { type: "string" };
+
+        it("should be false if oneOf/anyOf is not in items schema", () => {
+          const schema = { items: {}, uniqueItems: true };
+          expect(isMultiSelect(schema)).to.be.false;
+        });
+
+        it("should be false if oneOf/anyOf schemas are not all constants", () => {
+          const schema = {
+            items: { oneOf: [constantSchema, notConstantSchema] },
+            uniqueItems: true,
+          };
+          expect(isMultiSelect(schema)).to.be.false;
+        });
+
+        it("should be true if oneOf/anyOf schemas are all constants", () => {
+          const schema = {
+            items: { oneOf: [constantSchema, constantSchema] },
+            uniqueItems: true,
+          };
+          expect(isMultiSelect(schema)).to.be.true;
+        });
+      });
+
+      it("should retrieve reference schema definitions", () => {
+        const schema = {
+          items: { $ref: "#/definitions/FooItem" },
+          uniqueItems: true,
+        };
+        const definitions = { FooItem: { type: "string", enum: ["foo"] } };
+        expect(isMultiSelect(schema, definitions)).to.be.true;
+      });
     });
 
     it("should be false if uniqueItems is false", () => {
       const schema = { items: { enum: ["foo", "bar"] }, uniqueItems: false };
       expect(isMultiSelect(schema)).to.be.false;
     });
+  });
 
-    it("should be false if schema items enum is not an array", () => {
-      const schema = { items: {}, uniqueItems: true };
-      expect(isMultiSelect(schema)).to.be.false;
+  describe("isFilesArray()", () => {
+    it("should be true if items have data-url format", () => {
+      const schema = { items: { type: "string", format: "data-url" } };
+      const uiSchema = {};
+      expect(isFilesArray(schema, uiSchema)).to.be.true;
+    });
+
+    it("should be false if items is undefined", () => {
+      const schema = {};
+      const uiSchema = {};
+      expect(isFilesArray(schema, uiSchema)).to.be.false;
     });
   });
 
@@ -577,7 +684,7 @@ describe("utils", () => {
       });
     });
 
-    it("should retrieve reference schema definitions", () => {
+    it("should retrieve referenced schema definitions", () => {
       const schema = {
         definitions: {
           testdef: {

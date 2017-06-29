@@ -321,9 +321,9 @@ describe("uiSchema", () => {
         const { enumOptions, className } = options;
         return (
           <select className={className}>
-            {enumOptions.map(({ label, value }, i) => (
+            {enumOptions.map(({ label, value }, i) =>
               <option key={i}>{value}</option>
-            ))}
+            )}
           </select>
         );
       };
@@ -352,6 +352,28 @@ describe("uiSchema", () => {
       const { node } = createFormComponent({ schema, uiSchema });
 
       expect(node.querySelector("p.help-block").textContent).eql("plop");
+    });
+  });
+
+  describe("ui:title", () => {
+    it("should render the provided title text", () => {
+      const schema = { type: "string" };
+      const uiSchema = { "ui:title": "plop" };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      expect(node.querySelector("label.control-label").textContent).eql("plop");
+    });
+  });
+
+  describe("ui:description", () => {
+    it("should render the provided description text", () => {
+      const schema = { type: "string" };
+      const uiSchema = { "ui:description": "plop" };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      expect(node.querySelector("p.field-description").textContent).eql("plop");
     });
   });
 

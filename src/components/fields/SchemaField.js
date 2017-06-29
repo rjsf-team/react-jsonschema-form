@@ -132,7 +132,14 @@ DefaultTemplate.defaultProps = {
 };
 
 function SchemaFieldRender(props) {
-  const { uiSchema, errorSchema, idSchema, name, required, registry } = props;
+  const {
+    uiSchema,
+    errorSchema,
+    idSchema,
+    name,
+    required,
+    registry = getDefaultRegistry(),
+  } = props;
   const {
     definitions,
     fields,
@@ -154,7 +161,9 @@ function SchemaFieldRender(props) {
   const uiOptions = getUiOptions(uiSchema);
   let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
-    displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
+    displayLabel =
+      isMultiSelect(schema, definitions) ||
+      isFilesArray(schema, uiSchema, definitions);
   }
   if (schema.type === "object") {
     displayLabel = false;
@@ -184,8 +193,12 @@ function SchemaFieldRender(props) {
 
   const { type } = schema;
   const id = idSchema.$id;
-  const label = props.schema.title || schema.title || name;
-  const description = props.schema.description || schema.description;
+  const label =
+    uiSchema["ui:title"] || props.schema.title || schema.title || name;
+  const description =
+    uiSchema["ui:description"] ||
+    props.schema.description ||
+    schema.description;
   const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
@@ -247,7 +260,6 @@ SchemaField.defaultProps = {
   uiSchema: {},
   errorSchema: {},
   idSchema: {},
-  registry: getDefaultRegistry(),
   disabled: false,
   readonly: false,
   autofocus: false,
