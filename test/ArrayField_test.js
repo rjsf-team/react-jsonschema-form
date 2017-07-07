@@ -50,7 +50,10 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized title", () => {
-      const CustomTitleField = ({ title }) => <div id="custom">{title}</div>;
+      const CustomTitleField = ({ title }) =>
+        <div id="custom">
+          {title}
+        </div>;
 
       const { node } = createFormComponent({
         schema,
@@ -63,7 +66,9 @@ describe("ArrayField", () => {
 
     it("should render a customized description", () => {
       const CustomDescriptionField = ({ description }) =>
-        <div id="custom">{description}</div>;
+        <div id="custom">
+          {description}
+        </div>;
 
       const { node } = createFormComponent({
         schema,

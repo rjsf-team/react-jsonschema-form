@@ -141,7 +141,11 @@ module.exports = {
             value={value}
             onChange={event => onChange(event.target.value)}>
             {enumOptions.map(({ label, value }, i) => {
-              return <option key={i} value={value}>{label}</option>;
+              return (
+                <option key={i} value={value}>
+                  {label}
+                </option>
+              );
             })}
           </select>
         );
