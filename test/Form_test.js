@@ -82,7 +82,10 @@ describe("Form", () => {
       } = props;
       return (
         <div className={"my-template " + classNames}>
-          <label htmlFor={id}>{label}{required ? "*" : null}</label>
+          <label htmlFor={id}>
+            {label}
+            {required ? "*" : null}
+          </label>
           {description}
           {children}
           {errors}
@@ -96,7 +99,9 @@ describe("Form", () => {
           {rawErrors
             ? <ul>
                 {rawErrors.map((error, i) =>
-                  <li key={i} className="raw-error">{error}</li>
+                  <li key={i} className="raw-error">
+                    {error}
+                  </li>
                 )}
               </ul>
             : null}
