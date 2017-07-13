@@ -2,6 +2,7 @@ import React from "react";
 import { expect } from "chai";
 import sinon from "sinon";
 import { Simulate } from "react-addons-test-utils";
+import { Validator as JsonValidator } from "jsonschema";
 
 import validateFormData, { toErrorList } from "../src/validate";
 import { createFormComponent } from "./test_utils";
@@ -78,6 +79,36 @@ describe("Validation", () => {
       it("should return an errorSchema", () => {
         expect(errorSchema.pass2.__errors).to.have.length.of(1);
         expect(errorSchema.pass2.__errors[0]).eql("passwords don't match.");
+      });
+    });
+
+    describe("Custom json validator", () => {
+      const v = new JsonValidator();
+      v.attributes.example = function validateExample(instance, schema) {
+        if (schema.example && instance === "bad") {
+          return "bad example";
+        }
+      };
+
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string", example: true },
+        },
+      };
+
+      const formData = { foo: "bad" };
+      const result = validateFormData(
+        formData,
+        schema,
+        undefined,
+        undefined,
+        v
+      );
+
+      it("should detect bad value", () => {
+        expect(result.errors).to.have.length.of(1);
+        expect(result.errors[0].stack).eql("instance.foo bad example");
       });
     });
 
@@ -453,6 +484,37 @@ describe("Validation", () => {
           1: { __errors: [] },
           2: { __errors: [] },
           __errors: ["Forbidden value: bbb"],
+        });
+      });
+
+      it("should use custom json validator", () => {
+        const v = new JsonValidator();
+        v.attributes.example = function validateExample(instance, schema) {
+          if (schema.example && instance === "bad") {
+            return "bad example";
+          }
+        };
+
+        const schema = {
+          type: "object",
+          properties: {
+            foo: { type: "string", example: true },
+          },
+        };
+
+        const formData = { foo: "bad" };
+
+        const { comp } = createFormComponent({
+          schema,
+          jsonValidator: v,
+          liveValidate: true,
+        });
+        comp.componentWillReceiveProps({ formData });
+
+        expect(comp.state.errorSchema).eql({
+          foo: {
+            __errors: ["bad example"],
+          },
         });
       });
     });

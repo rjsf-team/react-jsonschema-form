@@ -1303,6 +1303,33 @@ render((
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
 
+
+You can also provide a JSON schema validator, for more information see the [jsonschema docs](https://github.com/tdegrunt/jsonschema)
+
+```js
+const validator = Validator();
+
+validator.attributes.contains = function validateContains(instance, schema, options, ctx) {
+  if(typeof instance!='string') return;
+  if(typeof schema.contains!='string') throw new jsonschema.SchemaError('"contains" expects a string', schema);
+  if(instance.indexOf(schema.contains)<0){
+    return 'does not contain the string ' + JSON.stringify(schema.contains);
+  }
+}
+
+const schema = {
+  type: "object",
+  properties: {
+    foo: { type: "string", contains: "i am" },
+  }
+};
+
+render((
+  <Form schema={schema}
+        jsonValidator={validator} />
+), document.getElementById("app"));
+```
+
 ### Custom error messages
 
 Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.

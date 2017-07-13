@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Validator as JsonValidator } from "jsonschema";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
@@ -67,12 +68,13 @@ export default class Form extends Component {
   }
 
   validate(formData, schema) {
-    const { validate, transformErrors } = this.props;
+    const { validate, transformErrors, jsonValidator } = this.props;
     return validateFormData(
       formData,
       schema || this.props.schema,
       validate,
-      transformErrors
+      transformErrors,
+      jsonValidator
     );
   }
 
@@ -231,6 +233,7 @@ if (process.env.NODE_ENV !== "production") {
     noHtml5Validate: PropTypes.bool,
     liveValidate: PropTypes.bool,
     validate: PropTypes.func,
+    jsonValidator: PropTypes.instanceOf(JsonValidator),
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,

@@ -1,5 +1,5 @@
 import toPath from "lodash.topath";
-import { validate as jsonValidate } from "jsonschema";
+import { Validator as JsonValidator } from "jsonschema";
 
 import { isObject, mergeObjects } from "./utils";
 
@@ -107,9 +107,12 @@ export default function validateFormData(
   formData,
   schema,
   customValidate,
-  transformErrors
+  transformErrors,
+  customJsonValidator
 ) {
-  let { errors } = jsonValidate(formData, schema);
+  const validator = customJsonValidator || new JsonValidator();
+
+  let { errors } = validator.validate(formData, schema);
   if (typeof transformErrors === "function") {
     errors = transformErrors(errors);
   }
