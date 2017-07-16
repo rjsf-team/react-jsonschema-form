@@ -1321,7 +1321,7 @@ function transformErrors(errors) {
 const schema = {
   type: "object",
   properties: {
-    onlyNumbersString: {type: "string", pattern: "\d*"},
+    onlyNumbersString: {type: "string", pattern: "^\\d*$"},
   }
 };
 

@@ -515,9 +515,10 @@ describe("Validation", () => {
 
       const formData = 0;
 
-      const CustomErrorList = ({ errors }) => (
-        <div className="CustomErrorList">{errors.length} custom</div>
-      );
+      const CustomErrorList = ({ errors }) =>
+        <div className="CustomErrorList">
+          {errors.length} custom
+        </div>;
 
       it("should use CustomErrorList", () => {
         const { node } = createFormComponent({

@@ -28,7 +28,9 @@ function CheckboxWidget(props) {
           autoFocus={autofocus}
           onChange={event => onChange(event.target.checked)}
         />
-        <span>{label}</span>
+        <span>
+          {label}
+        </span>
       </label>
     </div>
   );
