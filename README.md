@@ -1411,7 +1411,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - Custom field template: https://jsfiddle.net/hdp1kgn6/1/
  - Multi-step wizard: https://jsfiddle.net/sn4bnw9h/1/
  - Using classNames with uiSchema: https://jsfiddle.net/gfwp25we/1/
- - Conditional fields: https://jsfiddle.net/69z2wepo/68259/
+ - Conditional fields: https://jsfiddle.net/69z2wepo/83018/
  - Use radio list for enums: https://jsfiddle.net/f2y3fq7L/2/
  - Reading file input data: https://jsfiddle.net/f9vcb6pL/1/
  - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
