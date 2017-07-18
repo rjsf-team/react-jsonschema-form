@@ -27,7 +27,10 @@ class ObjectField extends Component {
 
   onPropertyChange = name => {
     return (value, options) => {
-      const newFormData = { ...this.props.formData, [name]: value };
+      const { formData, registry = getDefaultRegistry() } = this.props;
+      const { allowMutation } = registry.formContext;
+      const newFormData = allowMutation === true ? formData : { ...formData };
+      newFormData[name] = value;
       this.props.onChange(newFormData, options);
     };
   };

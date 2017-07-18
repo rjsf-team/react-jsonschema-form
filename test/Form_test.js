@@ -1297,4 +1297,60 @@ describe("Form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
     });
   });
+
+  describe("Should pass formData when using allowMutation", () => {
+    it("should allow object mutation when specified", () => {
+      const formData = { s: "test" };
+      const schema = {
+        type: "object",
+        properties: {
+          s: {
+            type: "string",
+          },
+        },
+      };
+
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+        formContext: {
+          allowMutation: true,
+        },
+      });
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "TEST" },
+      });
+
+      expect(comp.state.formData === formData).eql(true);
+      expect(comp.state.formData).eql({ s: "TEST" });
+    });
+
+    it("should allow array mutation when specified", () => {
+      const formData = ["test"];
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+          default: "bazinga",
+        },
+      };
+
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+        formContext: {
+          allowMutation: true,
+        },
+      });
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "TEST" },
+      });
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(comp.state.formData === formData).eql(true);
+      expect(comp.state.formData).eql(["TEST", "bazinga"]);
+    });
+  });
 });

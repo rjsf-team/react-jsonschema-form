@@ -213,15 +213,17 @@ class ArrayField extends Component {
   onAddClick = event => {
     event.preventDefault();
     const { schema, formData, registry = getDefaultRegistry() } = this.props;
-    const { definitions } = registry;
+    const { definitions, formContext } = registry;
+    const { allowMutation } = formContext;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    this.props.onChange(
-      [...formData, getDefaultFormState(itemSchema, undefined, definitions)],
-      { validate: false }
-    );
+
+    const newFormData = allowMutation === true ? formData : formData.slice();
+    newFormData.push(getDefaultFormState(itemSchema, undefined, definitions));
+
+    this.props.onChange(newFormData, { validate: false });
   };
 
   onDropIndexClick = index => {
@@ -259,13 +261,19 @@ class ArrayField extends Component {
 
   onChangeForIndex = index => {
     return value => {
-      const { formData, onChange } = this.props;
-      const newFormData = formData.map((item, i) => {
-        // We need to treat undefined items as nulls to have validation.
-        // See https://github.com/tdegrunt/jsonschema/issues/206
-        const jsonValue = typeof value === "undefined" ? null : value;
-        return index === i ? jsonValue : item;
-      });
+      const {
+        formData,
+        onChange,
+        registry = getDefaultRegistry(),
+      } = this.props;
+      const { allowMutation } = registry.formContext;
+      const newFormData = allowMutation === true ? formData : formData.slice();
+
+      // We need to treat undefined items as nulls to have validation.
+      // See https://github.com/tdegrunt/jsonschema/issues/206
+      const jsonValue = typeof value === "undefined" ? null : value;
+      newFormData[index] = jsonValue;
+
       onChange(newFormData, { validate: false });
     };
   };
