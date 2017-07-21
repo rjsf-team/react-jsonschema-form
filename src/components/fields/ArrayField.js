@@ -231,9 +231,18 @@ class ArrayField extends Component {
       if (event) {
         event.preventDefault();
       }
-      const { formData, onChange } = this.props;
+      const {
+        formData,
+        onChange,
+        registry = getDefaultRegistry(),
+      } = this.props;
+      const { allowMutation } = registry.formContext;
+
+      const newFormData = allowMutation === true ? formData : formData.slice();
+      newFormData.splice(index, 1);
+
       // refs #195: revalidate to ensure properly reindexing errors
-      onChange(formData.filter((_, i) => i !== index), { validate: true });
+      onChange(newFormData, { validate: true });
     };
   };
 
@@ -243,19 +252,18 @@ class ArrayField extends Component {
         event.preventDefault();
         event.target.blur();
       }
-      const { formData, onChange } = this.props;
-      onChange(
-        formData.map((item, i) => {
-          if (i === newIndex) {
-            return formData[index];
-          } else if (i === index) {
-            return formData[newIndex];
-          } else {
-            return item;
-          }
-        }),
-        { validate: true }
-      );
+      const {
+        formData,
+        onChange,
+        registry = getDefaultRegistry(),
+      } = this.props;
+      const { allowMutation } = registry.formContext;
+
+      const newFormData = allowMutation === true ? formData : formData.slice();
+      const removedItems = newFormData.splice(index, 1, newFormData[newIndex]);
+      newFormData[newIndex] = removedItems[0];
+
+      onChange(newFormData, { validate: true });
     };
   };
 

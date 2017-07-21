@@ -1326,7 +1326,7 @@ describe("Form", () => {
       expect(comp.state.formData).eql({ s: "TEST" });
     });
 
-    it("should allow array mutation when specified", () => {
+    it("should allow array mutation when specified - edit", () => {
       const formData = ["test"];
       const schema = {
         type: "array",
@@ -1347,10 +1347,83 @@ describe("Form", () => {
       Simulate.change(node.querySelector("input[type=text]"), {
         target: { value: "TEST" },
       });
+
+      expect(comp.state.formData === formData).eql(true);
+      expect(comp.state.formData).eql(["TEST"]);
+    });
+
+    it("should allow array mutation when specified - add", () => {
+      const formData = ["test"];
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+          default: "bazinga",
+        },
+      };
+
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+        formContext: {
+          allowMutation: true,
+        },
+      });
+
       Simulate.click(node.querySelector(".array-item-add button"));
 
       expect(comp.state.formData === formData).eql(true);
-      expect(comp.state.formData).eql(["TEST", "bazinga"]);
+      expect(comp.state.formData).eql(["test", "bazinga"]);
+    });
+
+    it("should allow array mutation when specified - remove", () => {
+      const formData = ["first", "last"];
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+          default: "bazinga",
+        },
+      };
+
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+        formContext: {
+          allowMutation: true,
+        },
+      });
+
+      const dropBtns = node.querySelectorAll(".array-item-remove");
+      Simulate.click(dropBtns[0]);
+
+      expect(comp.state.formData === formData).eql(true);
+      expect(comp.state.formData).eql(["last"]);
+    });
+
+    it("should allow array mutation when specified - move", () => {
+      const formData = ["first", "last"];
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+          default: "bazinga",
+        },
+      };
+
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+        formContext: {
+          allowMutation: true,
+        },
+      });
+
+      const moveDownBtns = node.querySelectorAll(".array-item-move-down");
+      Simulate.click(moveDownBtns[0]);
+
+      expect(comp.state.formData === formData).eql(true);
+      expect(comp.state.formData).eql(["last", "first"]);
     });
   });
 });
