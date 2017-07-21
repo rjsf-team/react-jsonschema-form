@@ -340,6 +340,7 @@ class ArrayField extends Component {
       title,
       TitleField,
       formContext,
+      formData,
     };
 
     // Check if a custom render function was passed in
