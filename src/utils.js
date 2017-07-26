@@ -148,7 +148,12 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   return defaults;
 }
 
-export function getDefaultFormState(_schema, formData, definitions = {}) {
+export function getDefaultFormState(
+  _schema,
+  formData,
+  definitions = {},
+  allowMutation = false
+) {
   if (!isObject(_schema)) {
     throw new Error("Invalid schema: " + _schema);
   }
@@ -160,7 +165,7 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
   }
   if (isObject(formData)) {
     // Override schema defaults with form data.
-    return mergeObjects(defaults, formData);
+    return mergeObjects(defaults, formData, false, allowMutation);
   }
   return formData || defaults;
 }
@@ -193,21 +198,43 @@ export function isObject(thing) {
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
-export function mergeObjects(obj1, obj2, concatArrays = false) {
+export function mergeObjects(
+  obj1,
+  obj2,
+  concatArrays = false,
+  allowMutation = false
+) {
   // Recursively merge deeply nested objects.
-  var acc = Object.assign({}, obj1); // Prevent mutation of source object.
-  return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1[key],
-      right = obj2[key];
-    if (obj1.hasOwnProperty(key) && isObject(right)) {
-      acc[key] = mergeObjects(left, right, concatArrays);
-    } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
-      acc[key] = left.concat(right);
-    } else {
-      acc[key] = right;
-    }
-    return acc;
-  }, acc);
+  // if allowMutation==true then the objects will be mutated, otherwise
+  // a new object is returned, leaving the original objects untouched
+  if (allowMutation) {
+    Object.keys(obj1).forEach(key => {
+      const left = obj1[key],
+        right = obj2[key];
+      if (obj2.hasOwnProperty(key) && isObject(left)) {
+        mergeObjects(left, right, concatArrays, allowMutation);
+      } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
+        right.splice(0, 0, ...left);
+      } else if (!obj2.hasOwnProperty(key)) {
+        obj2[key] = left;
+      }
+    });
+    return obj2;
+  } else {
+    const acc = Object.assign({}, obj1); // Prevent mutation of source object.
+    return Object.keys(obj2).reduce((acc, key) => {
+      const left = obj1[key],
+        right = obj2[key];
+      if (obj1.hasOwnProperty(key) && isObject(right)) {
+        acc[key] = mergeObjects(left, right, concatArrays);
+      } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
+        acc[key] = left.concat(right);
+      } else {
+        acc[key] = right;
+      }
+      return acc;
+    }, acc);
+  }
 }
 
 export function asNumber(value) {

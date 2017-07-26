@@ -1113,6 +1113,8 @@ The registry is passed down the component tree, so you can access it from your c
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets (including [TitleField](#custom-titles) and [DescriptionField](#custom-descriptions)). Useful for implementing context aware fields and widgets.
 
+The `formContext` object has a special property 'allowMutation', when set to `true` the initially provided `formData` will we changed on updates. Normally all changehandlers receive a new `formData` object at each invocation.
+
 ### Custom array field buttons
 
 The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use glyphicons but still want to provide your own icons or texts for these buttons, you can easily do so using CSS:

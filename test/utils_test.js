@@ -391,12 +391,30 @@ describe("utils", () => {
       expect(obj1).eql({ a: 1 });
     });
 
+    it("should mutate the provided objects if explicitly asked for", () => {
+      const obj2 = { b: 2 };
+      mergeObjects({ a: 1 }, obj2, false, true);
+      expect(obj2).eql({ a: 1, b: 2 });
+    });
+
     it("should merge two one-level deep objects", () => {
-      expect(mergeObjects({ a: 1 }, { b: 2 })).eql({ a: 1, b: 2 });
+      const obj1 = { a: 1 };
+      const obj2 = { b: 2 };
+      const expected = { a: 1, b: 2 };
+
+      expect(mergeObjects(obj1, obj2)).eql(expected);
+      mergeObjects(obj1, obj2, false, true);
+      expect(obj2).eql(expected);
     });
 
     it("should override the first object with the values from the second", () => {
-      expect(mergeObjects({ a: 1 }, { a: 2 })).eql({ a: 2 });
+      const obj1 = { a: 1 };
+      const obj2 = { a: 2 };
+      const expected = { a: 2 };
+
+      expect(mergeObjects(obj1, obj2)).eql(expected);
+      mergeObjects(obj1, obj2, false, true);
+      expect(obj2).eql(expected);
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -428,29 +446,41 @@ describe("utils", () => {
         },
         c: 3,
       };
+
       expect(mergeObjects(obj1, obj2)).eql(expected);
+      mergeObjects(obj1, obj2, false, true);
+      expect(obj2).eql(expected);
     });
 
     describe("concatArrays option", () => {
       it("should not concat arrays by default", () => {
         const obj1 = { a: [1] };
         const obj2 = { a: [2] };
+        const expected = { a: [2] };
 
-        expect(mergeObjects(obj1, obj2)).eql({ a: [2] });
+        expect(mergeObjects(obj1, obj2)).eql(expected);
+        mergeObjects(obj1, obj2, false, true);
+        expect(obj2).eql(expected);
       });
 
       it("should concat arrays when concatArrays is true", () => {
         const obj1 = { a: [1] };
         const obj2 = { a: [2] };
+        const expected = { a: [1, 2] };
 
-        expect(mergeObjects(obj1, obj2, true)).eql({ a: [1, 2] });
+        expect(mergeObjects(obj1, obj2, true)).eql(expected);
+        mergeObjects(obj1, obj2, true, true);
+        expect(obj2).eql(expected);
       });
 
       it("should concat nested arrays when concatArrays is true", () => {
         const obj1 = { a: { b: [1] } };
         const obj2 = { a: { b: [2] } };
+        const expected = { a: { b: [1, 2] } };
 
-        expect(mergeObjects(obj1, obj2, true)).eql({ a: { b: [1, 2] } });
+        expect(mergeObjects(obj1, obj2, true)).eql(expected);
+        mergeObjects(obj1, obj2, true, true);
+        expect(obj2).eql(expected);
       });
     });
   });
