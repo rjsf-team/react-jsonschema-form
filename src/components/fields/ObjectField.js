@@ -7,6 +7,28 @@ import {
   getDefaultRegistry,
 } from "../../utils";
 
+function DefaultObjectFieldTemplate(props) {
+  const { TitleField, DescriptionField } = props;
+  return (
+    <fieldset>
+      {(props.uiSchema["ui:title"] || props.title) &&
+        <TitleField
+          id={`${props.idSchema.$id}__title`}
+          title={props.title || props.uiSchema["ui:title"]}
+          required={props.required}
+          formContext={props.formContext}
+        />}
+      {props.description &&
+        <DescriptionField
+          id={`${props.idSchema.$id}__description`}
+          description={props.description}
+          formContext={props.formContext}
+        />}
+      {props.properties}
+    </fieldset>
+  );
+}
+
 class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -66,42 +88,43 @@ class ObjectField extends Component {
         </div>
       );
     }
-    return (
-      <fieldset>
-        {(uiSchema["ui:title"] || title) &&
-          <TitleField
-            id={`${idSchema.$id}__title`}
-            title={title || uiSchema["ui:title"]}
-            required={required}
-            formContext={formContext}
-          />}
-        {(uiSchema["ui:description"] || schema.description) &&
-          <DescriptionField
-            id={`${idSchema.$id}__description`}
-            description={uiSchema["ui:description"] || schema.description}
-            formContext={formContext}
-          />}
-        {orderedProperties.map((name, index) => {
-          return (
-            <SchemaField
-              key={index}
-              name={name}
-              required={this.isRequired(name)}
-              schema={schema.properties[name]}
-              uiSchema={uiSchema[name]}
-              errorSchema={errorSchema[name]}
-              idSchema={idSchema[name]}
-              formData={formData[name]}
-              onChange={this.onPropertyChange(name)}
-              onBlur={onBlur}
-              registry={registry}
-              disabled={disabled}
-              readonly={readonly}
-            />
-          );
-        })}
-      </fieldset>
-    );
+
+    const description = uiSchema["ui:description"] || schema.description;
+
+    const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
+
+    const templateProps = {
+      title: title,
+      description,
+      TitleField,
+      DescriptionField,
+      properties: orderedProperties.map((name, index) => {
+        return (
+          <SchemaField
+            key={index}
+            name={name}
+            required={this.isRequired(name)}
+            schema={schema.properties[name]}
+            uiSchema={uiSchema[name]}
+            errorSchema={errorSchema[name]}
+            idSchema={idSchema[name]}
+            formData={formData[name]}
+            onChange={this.onPropertyChange(name)}
+            onBlur={onBlur}
+            registry={registry}
+            disabled={disabled}
+            readonly={readonly}
+          />
+        );
+      }),
+      required,
+      idSchema,
+      uiSchema,
+      schema,
+      formData,
+      formContext,
+    };
+    return <Template {...templateProps} />;
   }
 }
 

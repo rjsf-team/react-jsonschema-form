@@ -37,7 +37,7 @@ describe("ArrayFieldTemplate", () => {
       );
     }
 
-    describe("Statefull ArrayFieldTemplate", () => {
+    describe("Stateful ArrayFieldTemplate", () => {
       class ArrayFieldTemplate extends PureComponent {
         render() {
           return (
