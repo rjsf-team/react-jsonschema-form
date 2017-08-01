@@ -291,6 +291,35 @@ describe("utils", () => {
         arr: [{ defaultFilled: true }],
       });
     });
+
+    it("should use additionalItems defaults for items not specified in items", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          arr: {
+            type: "array",
+            items: [
+              {
+                type: "boolean",
+                default: false,
+              },
+            ],
+            additionalItems: {
+              type: "string",
+              default: "foobar",
+            },
+          },
+        },
+      };
+
+      expect(
+        getDefaultFormState(schema, {
+          arr: [undefined, undefined],
+        })
+      ).eql({
+        arr: [false, "foobar"],
+      });
+    });
   });
 
   describe("asNumber()", () => {

@@ -67,11 +67,10 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   function mergeOptions(Widget) {
     // cache return value as property of widget for proper react reconciliation
     if (!Widget.MergedWidget) {
-      const defaultOptions = (Widget.defaultProps &&
-        Widget.defaultProps.options) || {};
-      Widget.MergedWidget = ({ options = {}, ...props }) => (
-        <Widget options={{ ...defaultOptions, ...options }} {...props} />
-      );
+      const defaultOptions =
+        (Widget.defaultProps && Widget.defaultProps.options) || {};
+      Widget.MergedWidget = ({ options = {}, ...props }) =>
+        <Widget options={{ ...defaultOptions, ...options }} {...props} />;
     }
     return Widget.MergedWidget;
   }
@@ -103,9 +102,8 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
 
 function computeDefaults(schema, parentDefaults, formData, definitions) {
   if ("$ref" in schema) {
-    const refParentDefaults = parentDefaults !== undefined
-      ? parentDefaults
-      : schema.default;
+    const refParentDefaults =
+      parentDefaults !== undefined ? parentDefaults : schema.default;
     return computeDefaults(
       findSchemaDefinition(schema.$ref, definitions),
       refParentDefaults,
@@ -124,12 +122,17 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
               Array.isArray(schema.items) ? schema.items.length : 0
             );
         return new Array(length).fill(undefined).map((_, i) => {
-          let childSchema = Array.isArray(schema.items) &&
-            schema.items.length > i &&
-            schema.items[i] &&
-            "type" in schema.items[i]
-            ? schema.items[i]
-            : schema.items;
+          let childSchema = undefined;
+
+          if (Array.isArray(schema.items)) {
+            if (schema.items.length > i && schema.items[i]) {
+              childSchema = schema.items[i];
+            } else {
+              childSchema = schema.additionalItems;
+            }
+          } else {
+            childSchema = schema.items;
+          }
 
           let defaultItem = undefined;
           if (
@@ -147,9 +150,8 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
             defaultItem = parentDefaults[i];
           }
 
-          let childFormData = formData && formData.length > i
-            ? formData[i]
-            : undefined;
+          let childFormData =
+            formData && formData.length > i ? formData[i] : undefined;
 
           return computeDefaults(
             childSchema,
@@ -172,9 +174,8 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
             propParentDefault = parentDefaults[key];
           }
 
-          const propFormData = formData && key in formData
-            ? formData[key]
-            : undefined;
+          const propFormData =
+            formData && key in formData ? formData[key] : undefined;
 
           acc[key] = computeDefaults(
             propSchema,
@@ -235,7 +236,8 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1[key], right = obj2[key];
+    const left = obj1[key],
+      right = obj2[key];
     if (obj1.hasOwnProperty(key) && isObject(right)) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
