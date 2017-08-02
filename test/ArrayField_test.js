@@ -364,7 +364,7 @@ describe("ArrayField", () => {
       expect(inputs[1].value).eql("Default name");
     });
 
-    it("should honor given formData, even when it does not meet ths minItems-requirement", () => {
+    it("should honor given formData, even when it does not meet the minItems-requirement", () => {
       const complexSchema = {
         type: "object",
         definitions: {
