@@ -105,7 +105,7 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
     const refParentDefaults =
       parentDefaults !== undefined ? parentDefaults : schema.default;
     return computeDefaults(
-      findSchemaDefinition(schema.$ref, definitions),
+      retrieveSchema(schema, definitions),
       refParentDefaults,
       formData,
       definitions

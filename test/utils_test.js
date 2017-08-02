@@ -241,6 +241,26 @@ describe("utils", () => {
       });
     });
 
+    it("should use local default in favor of ref default for object", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            type: "object",
+            properties: {
+              foo: { type: "number" },
+            },
+            default: { foo: 1 },
+          },
+        },
+        $ref: "#/definitions/testdef",
+        default: { foo: 42 },
+      };
+
+      expect(getDefaultFormState(schema, undefined, schema.definitions)).eql({
+        foo: 42,
+      });
+    });
+
     it("should work for nested array", () => {
       const schema = {
         type: "object",
@@ -364,6 +384,26 @@ describe("utils", () => {
 
       expect(getDefaultFormState(schema, [undefined], schema.definitions)).eql([
         1,
+      ]);
+    });
+
+    it("should use local default in favor of ref default for array", () => {
+      const schema = {
+        type: "array",
+        items: {
+          $ref: "#/definitions/def",
+          default: 0,
+        },
+        definitions: {
+          def: {
+            type: "number",
+            default: 1,
+          },
+        },
+      };
+
+      expect(getDefaultFormState(schema, [undefined], schema.definitions)).eql([
+        0,
       ]);
     });
   });
