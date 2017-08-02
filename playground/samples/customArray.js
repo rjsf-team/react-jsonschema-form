@@ -3,11 +3,12 @@ import React from "react";
 function ArrayFieldTemplate(props) {
   return (
     <div className={props.className}>
-
       {props.items &&
-        props.items.map(element => (
+        props.items.map(element =>
           <div key={element.index}>
-            <div>{element.children}</div>
+            <div>
+              {element.children}
+            </div>
             {element.hasMoveDown &&
               <button
                 onClick={element.onReorderClick(
@@ -29,15 +30,16 @@ function ArrayFieldTemplate(props) {
             </button>
             <hr />
           </div>
-        ))}
+        )}
 
       {props.canAdd &&
         <div className="row">
           <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
-            <button onClick={props.onAddClick} type="button">Custom +</button>
+            <button onClick={props.onAddClick} type="button">
+              Custom +
+            </button>
           </p>
         </div>}
-
     </div>
   );
 }

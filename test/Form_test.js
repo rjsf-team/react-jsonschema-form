@@ -82,7 +82,10 @@ describe("Form", () => {
       } = props;
       return (
         <div className={"my-template " + classNames}>
-          <label htmlFor={id}>{label}{required ? "*" : null}</label>
+          <label htmlFor={id}>
+            {label}
+            {required ? "*" : null}
+          </label>
           {description}
           {children}
           {errors}
@@ -95,9 +98,11 @@ describe("Form", () => {
           </span>
           {rawErrors
             ? <ul>
-                {rawErrors.map((error, i) => (
-                  <li key={i} className="raw-error">{error}</li>
-                ))}
+                {rawErrors.map((error, i) =>
+                  <li key={i} className="raw-error">
+                    {error}
+                  </li>
+                )}
               </ul>
             : null}
         </div>
@@ -906,7 +911,7 @@ describe("Form", () => {
         schema: {
           type: "string",
           minLength: 8,
-          pattern: "\d+",
+          pattern: "d+",
         },
         formData: "short",
       };
@@ -916,7 +921,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           __errors: [
             "does not meet minimum length of 8",
-            'does not match pattern "\d+"',
+            'does not match pattern "d+"',
           ],
         });
       });
@@ -929,7 +934,7 @@ describe("Form", () => {
 
         expect(errors).eql([
           "does not meet minimum length of 8",
-          'does not match pattern "\d+"',
+          'does not match pattern "d+"',
         ]);
       });
     });

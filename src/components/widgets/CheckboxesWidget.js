@@ -38,7 +38,9 @@ function CheckboxesWidget(props) {
                 }
               }}
             />
-            <span>{option.label}</span>
+            <span>
+              {option.label}
+            </span>
           </span>
         );
         return inline

@@ -63,18 +63,26 @@ function SelectWidget(props) {
       autoFocus={autofocus}
       onBlur={
         onBlur &&
-          (event => {
-            const newValue = getValue(event, multiple);
-            onBlur(id, processValue(schema, newValue));
-          })
+        (event => {
+          const newValue = getValue(event, multiple);
+          onBlur(id, processValue(schema, newValue));
+        })
       }
       onChange={event => {
         const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
       }}>
-      {!multiple && !schema.default && <option value="">{placeholder}</option>}
+      {!multiple &&
+        !schema.default &&
+        <option value="">
+          {placeholder}
+        </option>}
       {enumOptions.map(({ value, label }, i) => {
-        return <option key={i} value={value}>{label}</option>;
+        return (
+          <option key={i} value={value}>
+            {label}
+          </option>
+        );
       })}
     </select>
   );

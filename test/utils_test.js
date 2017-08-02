@@ -320,6 +320,52 @@ describe("utils", () => {
         arr: [false, "foobar"],
       });
     });
+
+    it("should use array items default in favor of array default", () => {
+      const schema = {
+        type: "array",
+        default: [1, 2],
+        items: {
+          type: "number",
+          default: 3,
+        },
+      };
+
+      expect(getDefaultFormState(schema, [0, undefined])).eql([0, 3]);
+    });
+
+    it("should fill defaults to an array with less items than minItems", () => {
+      const schema = {
+        type: "array",
+        minItems: 2,
+        items: {
+          type: "number",
+          default: 0,
+        },
+      };
+
+      expect(getDefaultFormState(schema, [1])).eql([1, 0]);
+    });
+
+    it("should use array item ref default in favor of array default", () => {
+      const schema = {
+        type: "array",
+        default: [0],
+        items: {
+          $ref: "#/definitions/def",
+        },
+        definitions: {
+          def: {
+            type: "number",
+            default: 1,
+          },
+        },
+      };
+
+      expect(getDefaultFormState(schema, [undefined], schema.definitions)).eql([
+        1,
+      ]);
+    });
   });
 
   describe("asNumber()", () => {

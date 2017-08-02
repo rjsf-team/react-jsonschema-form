@@ -60,7 +60,9 @@ class ObjectField extends Component {
             Invalid {name || "root"} object field configuration:
             <em>{err.message}</em>.
           </p>
-          <pre>{JSON.stringify(schema)}</pre>
+          <pre>
+            {JSON.stringify(schema)}
+          </pre>
         </div>
       );
     }

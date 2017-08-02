@@ -33,7 +33,9 @@ function RadioWidget(props) {
               autoFocus={autofocus && i === 0}
               onChange={_ => onChange(option.value)}
             />
-            <span>{option.label}</span>
+            <span>
+              {option.label}
+            </span>
           </span>
         );
 

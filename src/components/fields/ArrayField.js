@@ -55,7 +55,6 @@ function DefaultArrayItem(props) {
   };
   return (
     <div key={props.index} className={props.className}>
-
       <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
         {props.children}
       </div>
@@ -65,7 +64,6 @@ function DefaultArrayItem(props) {
           <div
             className="btn-group"
             style={{ display: "flex", justifyContent: "space-around" }}>
-
             {(props.hasMoveUp || props.hasMoveDown) &&
               <IconBtn
                 icon="arrow-up"
@@ -100,7 +98,6 @@ function DefaultArrayItem(props) {
               />}
           </div>
         </div>}
-
     </div>
   );
 }
@@ -108,7 +105,6 @@ function DefaultArrayItem(props) {
 function DefaultFixedArrayFieldTemplate(props) {
   return (
     <fieldset className={props.className}>
-
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -142,7 +138,6 @@ function DefaultFixedArrayFieldTemplate(props) {
 function DefaultNormalArrayFieldTemplate(props) {
   return (
     <fieldset className={props.className}>
-
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -457,8 +452,8 @@ class ArrayField extends Component {
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}
           : Array.isArray(uiSchema.items)
-              ? uiSchema.items[index]
-              : uiSchema.items || {};
+            ? uiSchema.items[index]
+            : uiSchema.items || {};
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
 
         return this.renderArrayFieldItem({

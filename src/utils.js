@@ -113,12 +113,13 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
   } else {
     switch (schema.type) {
       case "array": {
+        const minItemsLength = schema.minItems || 0;
         let length = Array.isArray(formData)
-          ? formData.length
+          ? Math.max(formData.length, minItemsLength)
           : Math.max(
               (schema.default || []).length,
               (parentDefaults || []).length,
-              schema.minItems || 0,
+              minItemsLength,
               Array.isArray(schema.items) ? schema.items.length : 0
             );
         return new Array(length).fill(undefined).map((_, i) => {
