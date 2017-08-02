@@ -5,7 +5,6 @@ import { Simulate } from "react-addons-test-utils";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 
-
 describe("ArrayField", () => {
   let sandbox;
   const CustomComponent = () => <div id="custom" />;
