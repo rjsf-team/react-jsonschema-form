@@ -24,7 +24,7 @@ function DefaultObjectFieldTemplate(props) {
           description={props.description}
           formContext={props.formContext}
         />}
-      {props.properties}
+      {props.properties.map(prop => prop.children)}
     </fieldset>
   );
 }
@@ -99,23 +99,30 @@ class ObjectField extends Component {
       TitleField,
       DescriptionField,
       properties: orderedProperties.map((name, index) => {
-        return (
-          <SchemaField
-            key={index}
-            name={name}
-            required={this.isRequired(name)}
-            schema={schema.properties[name]}
-            uiSchema={uiSchema[name]}
-            errorSchema={errorSchema[name]}
-            idSchema={idSchema[name]}
-            formData={formData[name]}
-            onChange={this.onPropertyChange(name)}
-            onBlur={onBlur}
-            registry={registry}
-            disabled={disabled}
-            readonly={readonly}
-          />
-        );
+        return {
+          children: (
+            <SchemaField
+              key={index}
+              name={name}
+              required={this.isRequired(name)}
+              schema={schema.properties[name]}
+              uiSchema={uiSchema[name]}
+              errorSchema={errorSchema[name]}
+              idSchema={idSchema[name]}
+              formData={formData[name]}
+              onChange={this.onPropertyChange(name)}
+              onBlur={onBlur}
+              registry={registry}
+              disabled={disabled}
+              readonly={readonly}
+            />
+          ),
+          name,
+          index,
+          readonly,
+          disabled,
+          required,
+        };
       }),
       required,
       idSchema,

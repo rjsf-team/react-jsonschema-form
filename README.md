@@ -877,7 +877,7 @@ function ObjectFieldTemplate(props) {
     <div>
       {props.title}
       {props.description}
-      {props.properties.map(element => <div className="property-wrapper">element</div>)}
+      {props.properties.map(element => <div className="property-wrapper">{element.children}</div>)}
     </div>
   );
 }
@@ -896,7 +896,7 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `TitleField`: The generated `TitleField` (if you wanted to utilize it).
 - `title`: A string value containing the title for the object.
 - `description`: A string value containing the description for the object.
-- `properties`: An array of React components representing the object properties, ordered by `ui:order`.
+- `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
 - `required`: A boolean value stating if the object is required.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
@@ -904,6 +904,13 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `formData`: The form data for the object.
 - `formContext`: The `formContext` object that you passed to Form.
 
+The following props are part of each element in `items`:
+
+- `children`: The html for the property's content.
+- `name`: A string representing the property name.
+- `disabled`: A boolean value stating if the object property is disabled.
+- `index`: A number stating the index the property occurs in the `properties`.
+- `readonly`: A boolean value stating if the property is readonly.
 ### Error List template
 
 To take control over how the form errors are displayed, you can define an *error list template* for your form. This list is the form global error list that appears at the top of your forms.
