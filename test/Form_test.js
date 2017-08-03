@@ -606,6 +606,31 @@ describe("Form", () => {
     });
   });
 
+  describe("Focus handler", () => {
+    it("should call provided focus handler on form input focus event", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+          },
+        },
+      };
+      const formData = {
+        foo: "",
+      };
+      const onFocus = sandbox.spy();
+      const { node } = createFormComponent({ schema, formData, onFocus });
+
+      const input = node.querySelector("[type=text]");
+      Simulate.focus(input, {
+        target: { value: "new" },
+      });
+
+      sinon.assert.calledWithMatch(onFocus, input.id, "new");
+    });
+  });
+
   describe("Error handler", () => {
     it("should call provided error handler on validation errors", () => {
       const schema = {

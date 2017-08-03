@@ -97,6 +97,24 @@ describe("NumberField", () => {
 
       expect(onBlur.calledWith(input.id, 2));
     });
+
+    it("should handle a focus event", () => {
+      const onFocus = sandbox.spy();
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+        },
+        onFocus,
+      });
+
+      const input = node.querySelector("input");
+      Simulate.focus(input, {
+        target: { value: "2" },
+      });
+
+      expect(onFocus.calledWith(input.id, 2));
+    });
+
     it("should fill field with data", () => {
       const { node } = createFormComponent({
         schema: {
