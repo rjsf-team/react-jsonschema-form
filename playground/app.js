@@ -478,7 +478,7 @@ class App extends Component {
               onBlur={(id, value) =>
                 console.log(`Touched ${id} with value ${value}`)}
               onFocus={(id, value) =>
-                console.log(`Focus!!!! ${id} with value ${value}`)}
+                console.log(`Focused ${id} with value ${value}`)}
               transformErrors={transformErrors}
               onError={log("errors")}>
               <div className="row">

@@ -48,6 +48,7 @@ function SelectWidget(props) {
     autofocus,
     onChange,
     onBlur,
+    onFocus,
     placeholder,
   } = props;
   const { enumOptions } = options;
@@ -66,6 +67,13 @@ function SelectWidget(props) {
         (event => {
           const newValue = getValue(event, multiple);
           onBlur(id, processValue(schema, newValue));
+        })
+      }
+      onFocus={
+        onFocus &&
+        (event => {
+          const newValue = getValue(event, multiple);
+          onFocus(id, processValue(schema, newValue));
         })
       }
       onChange={event => {
@@ -107,6 +115,7 @@ if (process.env.NODE_ENV !== "production") {
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
   };
 }
 
