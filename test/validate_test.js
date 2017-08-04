@@ -515,8 +515,8 @@ describe("Validation", () => {
 
       const formData = 0;
 
-      const CustomErrorList = ({ errors }) =>
-        <div className="CustomErrorList">
+      const CustomErrorList = ({ errors, formContext: { className } }) =>
+        <div className={`CustomErrorList ${className}`}>
           {errors.length} custom
         </div>;
 
@@ -526,11 +526,13 @@ describe("Validation", () => {
           liveValidate: true,
           formData,
           ErrorList: CustomErrorList,
+          formContext: { className: "foo" },
         });
         expect(node.querySelectorAll(".CustomErrorList")).to.have.length.of(1);
         expect(node.querySelector(".CustomErrorList").textContent).eql(
           "1 custom"
         );
+        expect(node.querySelectorAll(".foo")).to.have.length.of(1);
       });
     });
   });
