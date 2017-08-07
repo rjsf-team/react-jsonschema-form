@@ -515,9 +515,19 @@ describe("Validation", () => {
 
       const formData = 0;
 
-      const CustomErrorList = ({ errors, formContext: { className } }) =>
-        <div className={`CustomErrorList ${className}`}>
-          {errors.length} custom
+      const CustomErrorList = ({
+        errors,
+        errorSchema,
+        formContext: { className },
+      }) =>
+        <div>
+          <div className="CustomErrorList">
+            {errors.length} custom
+          </div>
+          <div className={"ErrorSchema"}>
+            {errorSchema.__errors[0]}
+          </div>
+          <div className={className} />
         </div>;
 
       it("should use CustomErrorList", () => {
@@ -531,6 +541,10 @@ describe("Validation", () => {
         expect(node.querySelectorAll(".CustomErrorList")).to.have.length.of(1);
         expect(node.querySelector(".CustomErrorList").textContent).eql(
           "1 custom"
+        );
+        expect(node.querySelectorAll(".ErrorSchema")).to.have.length.of(1);
+        expect(node.querySelector(".ErrorSchema").textContent).eql(
+          "is required"
         );
         expect(node.querySelectorAll(".foo")).to.have.length.of(1);
       });

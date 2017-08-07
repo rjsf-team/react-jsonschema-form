@@ -899,6 +899,7 @@ render((
 The following props are passed to `ErrorList`
 
 - `errors`: An array of the errors.
+- `errorSchema`: The errorSchema constructed by `Form`.
 - `formContext`: The `formContext` object that you passed to Form.
 
 ### Custom widgets and fields
