@@ -77,11 +77,19 @@ export default class Form extends Component {
   }
 
   renderErrors() {
-    const { status, errors } = this.state;
-    const { ErrorList, showErrorList } = this.props;
+    const { status, errors, errorSchema, schema, uiSchema } = this.state;
+    const { ErrorList, showErrorList, formContext } = this.props;
 
     if (status !== "editing" && errors.length && showErrorList != false) {
-      return <ErrorList errors={errors} />;
+      return (
+        <ErrorList
+          errors={errors}
+          errorSchema={errorSchema}
+          schema={schema}
+          uiSchema={uiSchema}
+          formContext={formContext}
+        />
+      );
     }
     return null;
   }

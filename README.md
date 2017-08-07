@@ -896,6 +896,13 @@ render((
 
 > Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
 
+The following props are passed to `ErrorList`
+
+- `errors`: An array of the errors.
+- `errorSchema`: The errorSchema constructed by `Form`.
+- `schema`: The schema that was passed to `Form`.
+- `uiSchema`: The uiSchema that was passed to `Form`.
+- `formContext`: The `formContext` object that you passed to Form.
 
 ### Custom widgets and fields
 
