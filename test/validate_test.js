@@ -513,11 +513,17 @@ describe("Validation", () => {
         minLength: 1,
       };
 
+      const uiSchema = {
+        foo: "bar",
+      };
+
       const formData = 0;
 
       const CustomErrorList = ({
         errors,
         errorSchema,
+        schema,
+        uiSchema,
         formContext: { className },
       }) =>
         <div>
@@ -527,12 +533,19 @@ describe("Validation", () => {
           <div className={"ErrorSchema"}>
             {errorSchema.__errors[0]}
           </div>
+          <div className={"Schema"}>
+            {schema.type}
+          </div>
+          <div className={"UiSchema"}>
+            {uiSchema.foo}
+          </div>
           <div className={className} />
         </div>;
 
       it("should use CustomErrorList", () => {
         const { node } = createFormComponent({
           schema,
+          uiSchema,
           liveValidate: true,
           formData,
           ErrorList: CustomErrorList,
@@ -546,6 +559,10 @@ describe("Validation", () => {
         expect(node.querySelector(".ErrorSchema").textContent).eql(
           "is required"
         );
+        expect(node.querySelectorAll(".Schema")).to.have.length.of(1);
+        expect(node.querySelector(".Schema").textContent).eql("string");
+        expect(node.querySelectorAll(".UiSchema")).to.have.length.of(1);
+        expect(node.querySelector(".UiSchema").textContent).eql("bar");
         expect(node.querySelectorAll(".foo")).to.have.length.of(1);
       });
     });
