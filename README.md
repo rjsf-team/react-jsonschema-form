@@ -850,6 +850,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
 - `formContext`: The `formContext` object that you passed to Form.
+- `formData`: The formData for this array.
 
 The following props are part of each element in `items`:
 
