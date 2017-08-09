@@ -140,9 +140,13 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
 
     case "array":
       if (schema.minItems) {
-        return new Array(schema.minItems).fill(
-          computeDefaults(schema.items, defaults, definitions)
-        );
+        if (!isMultiSelect(schema, definitions)) {
+          return new Array(schema.minItems).fill(
+            computeDefaults(schema.items, defaults, definitions)
+          );
+        } else {
+          return [];
+        }
       }
   }
   return defaults;

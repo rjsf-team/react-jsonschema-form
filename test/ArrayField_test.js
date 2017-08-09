@@ -410,6 +410,40 @@ describe("ArrayField", () => {
       expect(inputs[1].value).eql("Default name");
     });
 
+    it("should not add minItems extra formData entries when schema item is a multiselect", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          multipleChoicesList: {
+            type: "array",
+            minItems: 3,
+            uniqueItems: true,
+            items: {
+              type: "string",
+              enum: ["Aramis", "Athos", "Porthos", "d'Artagnan"],
+            },
+          },
+        },
+      };
+      const uiSchema = {
+        multipleChoicesList: {
+          "ui:widget": "checkboxes",
+        },
+      };
+      const form = createFormComponent({
+        schema: schema,
+        uiSchema: uiSchema,
+        formData: {},
+        liveValidate: true,
+      }).comp;
+
+      expect(form.state.formData).to.have.property("multipleChoicesList");
+      expect(form.state.formData.multipleChoicesList).to.be.empty;
+      expect(form.state.errors.length).to.equal(1);
+      expect(form.state.errors[0].name).to.equal("minItems");
+      expect(form.state.errors[0].argument).to.equal(3);
+    });
+
     it("should honor given formData, even when it does not meet ths minItems-requirement", () => {
       const complexSchema = {
         type: "object",
