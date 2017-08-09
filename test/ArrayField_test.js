@@ -410,6 +410,76 @@ describe("ArrayField", () => {
       expect(inputs[1].value).eql("Default name");
     });
 
+    it("should render an input for each default value, even when this is greater than minItems", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          turtles: {
+            type: "array",
+            minItems: 2,
+            default: ["Raphael", "Michaelangelo", "Donatello", "Leonardo"],
+            items: {
+              type: "string",
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema: schema });
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs.length).to.eql(4);
+      expect(inputs[0].value).to.eql("Raphael");
+      expect(inputs[1].value).to.eql("Michaelangelo");
+      expect(inputs[2].value).to.eql("Donatello");
+      expect(inputs[3].value).to.eql("Leonardo");
+    });
+
+    it("should render enough input to match minItems, populating the first with default values, and the rest empty", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          turtles: {
+            type: "array",
+            minItems: 4,
+            default: ["Raphael", "Michaelangelo"],
+            items: {
+              type: "string",
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs.length).to.eql(4);
+      expect(inputs[0].value).to.eql("Raphael");
+      expect(inputs[1].value).to.eql("Michaelangelo");
+      expect(inputs[2].value).to.eql("");
+      expect(inputs[3].value).to.eql("");
+    });
+
+    it("should render enough input to match minItems, populating the first with default values, and the rest with the item default", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          turtles: {
+            type: "array",
+            minItems: 4,
+            default: ["Raphael", "Michaelangelo"],
+            items: {
+              type: "string",
+              default: "Unknown",
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs.length).to.eql(4);
+      expect(inputs[0].value).to.eql("Raphael");
+      expect(inputs[1].value).to.eql("Michaelangelo");
+      expect(inputs[2].value).to.eql("Unknown");
+      expect(inputs[3].value).to.eql("Unknown");
+    });
+
     it("should not add minItems extra formData entries when schema item is a multiselect", () => {
       const schema = {
         type: "object",
