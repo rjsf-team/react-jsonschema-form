@@ -51,7 +51,6 @@ export default class Form extends Component {
       definitions
     );
     return {
-      status: "initial",
       schema,
       uiSchema,
       idSchema,
@@ -77,10 +76,10 @@ export default class Form extends Component {
   }
 
   renderErrors() {
-    const { status, errors, errorSchema, schema, uiSchema } = this.state;
+    const { errors, errorSchema, schema, uiSchema } = this.state;
     const { ErrorList, showErrorList, formContext } = this.props;
 
-    if (status !== "editing" && errors.length && showErrorList != false) {
+    if (errors.length && showErrorList != false) {
       return (
         <ErrorList
           errors={errors}
@@ -97,7 +96,7 @@ export default class Form extends Component {
   onChange = (formData, options = { validate: false }) => {
     const mustValidate =
       !this.props.noValidate && (this.props.liveValidate || options.validate);
-    let state = { status: "editing", formData };
+    let state = { formData };
     if (mustValidate) {
       const { errors, errorSchema } = this.validate(formData);
       state = { ...state, errors, errorSchema };
@@ -117,7 +116,6 @@ export default class Form extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    this.setState({ status: "submitted" });
 
     if (!this.props.noValidate) {
       const { errors, errorSchema } = this.validate(this.state.formData);
@@ -136,7 +134,7 @@ export default class Form extends Component {
     if (this.props.onSubmit) {
       this.props.onSubmit(this.state);
     }
-    this.setState({ status: "initial", errors: [], errorSchema: {} });
+    this.setState({ errors: [], errorSchema: {} });
   };
 
   getRegistry() {
