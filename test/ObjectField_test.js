@@ -161,6 +161,18 @@ describe("ObjectField", () => {
       expect(onBlur.calledWith(input.id, "changed")).to.be.true;
     });
 
+    it("should handle object fields with focus events", () => {
+      const onFocus = sandbox.spy();
+      const { node } = createFormComponent({ schema, onFocus });
+
+      const input = node.querySelector("input[type=text]");
+      Simulate.focus(input, {
+        target: { value: "changed" },
+      });
+
+      expect(onFocus.calledWith(input.id, "changed")).to.be.true;
+    });
+
     it("should render the widget with the expected id", () => {
       const { node } = createFormComponent({ schema });
 

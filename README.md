@@ -213,6 +213,10 @@ If you plan on being notified everytime the form data are updated, you can pass 
 
 Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass an `onBlur` handler, which will receive the id of the input that was blurred and the field value.
 
+#### Form field focus events
+
+Sometimes you may want to trigger events or modify external state when a field has been focused, so you can pass an `onFocus` handler, which will receive the id of the input that is focused and the field value.
+
 ## Form customization
 
 ### The `uiSchema` object
@@ -954,6 +958,7 @@ The following props are passed to custom widget components:
 - `readonly`: `true` if the widget is read-only;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
+- `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `formContext`: The `formContext` object that you passed to Form.
 

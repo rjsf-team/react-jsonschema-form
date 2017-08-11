@@ -22,6 +22,7 @@ function StringField(props) {
     autofocus,
     onChange,
     onBlur,
+    onFocus,
     registry = getDefaultRegistry(),
   } = props;
   const { title, format } = schema;
@@ -42,6 +43,7 @@ function StringField(props) {
       value={formData}
       onChange={onChange}
       onBlur={onBlur}
+      onFocus={onFocus}
       required={required}
       disabled={disabled}
       readonly={readonly}
@@ -60,6 +62,7 @@ if (process.env.NODE_ENV !== "production") {
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
     formData: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     registry: PropTypes.shape({
       widgets: PropTypes.objectOf(

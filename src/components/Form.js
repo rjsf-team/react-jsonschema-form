@@ -115,6 +115,12 @@ export default class Form extends Component {
     }
   };
 
+  onFocus = (...args) => {
+    if (this.props.onFocus) {
+      this.props.onFocus(...args);
+    }
+  };
+
   onSubmit = event => {
     event.preventDefault();
     this.setState({ status: "submitted" });
@@ -195,6 +201,7 @@ export default class Form extends Component {
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}
+          onFocus={this.onFocus}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
         />

@@ -105,6 +105,7 @@ describe("Rendering performance optimizations", () => {
   describe("SchemaField", () => {
     const onChange = () => {};
     const onBlur = () => {};
+    const onFocus = () => {};
     const registry = getDefaultRegistry();
     const uiSchema = {};
     const schema = {
@@ -123,6 +124,7 @@ describe("Rendering performance optimizations", () => {
         onChange,
         idSchema,
         onBlur,
+        onFocus,
       };
 
       const { comp } = createComponent(SchemaField, props);

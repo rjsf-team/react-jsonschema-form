@@ -304,6 +304,7 @@ class ArrayField extends Component {
       registry = getDefaultRegistry(),
       formContext,
       onBlur,
+      onFocus,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
     const { ArrayFieldTemplate, definitions, fields } = registry;
@@ -326,6 +327,7 @@ class ArrayField extends Component {
           itemUiSchema: uiSchema.items,
           autofocus: autofocus && index === 0,
           onBlur,
+          onFocus,
         });
       }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
@@ -357,6 +359,7 @@ class ArrayField extends Component {
       readonly,
       autofocus,
       onBlur,
+      onFocus,
       registry = getDefaultRegistry(),
     } = this.props;
     const items = this.props.formData;
@@ -374,6 +377,7 @@ class ArrayField extends Component {
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
+        onFocus={onFocus}
         options={options}
         schema={schema}
         value={items}
@@ -395,6 +399,7 @@ class ArrayField extends Component {
       readonly,
       autofocus,
       onBlur,
+      onFocus,
       registry = getDefaultRegistry(),
     } = this.props;
     const title = schema.title || name;
@@ -409,6 +414,7 @@ class ArrayField extends Component {
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
+        onFocus={onFocus}
         schema={schema}
         title={title}
         value={items}
@@ -433,6 +439,7 @@ class ArrayField extends Component {
       autofocus,
       registry = getDefaultRegistry(),
       onBlur,
+      onFocus,
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
@@ -481,6 +488,7 @@ class ArrayField extends Component {
           itemErrorSchema,
           autofocus: autofocus && index === 0,
           onBlur,
+          onFocus,
         });
       }),
       onAddClick: this.onAddClick,
@@ -510,6 +518,7 @@ class ArrayField extends Component {
       itemErrorSchema,
       autofocus,
       onBlur,
+      onFocus,
     } = props;
     const {
       disabled,
@@ -541,6 +550,7 @@ class ArrayField extends Component {
           required={this.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}
           onBlur={onBlur}
+          onFocus={onFocus}
           registry={this.props.registry}
           disabled={this.props.disabled}
           readonly={this.props.readonly}
@@ -592,6 +602,7 @@ if (process.env.NODE_ENV !== "production") {
     errorSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
     formData: PropTypes.array,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

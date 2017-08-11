@@ -10,6 +10,7 @@ function BaseInput(props) {
     disabled,
     autofocus,
     onBlur,
+    onFocus,
     options,
     schema,
     formContext,
@@ -31,6 +32,7 @@ function BaseInput(props) {
       {...inputProps}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
+      onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
     />
   );
 }
@@ -54,6 +56,7 @@ if (process.env.NODE_ENV !== "production") {
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
   };
 }
 

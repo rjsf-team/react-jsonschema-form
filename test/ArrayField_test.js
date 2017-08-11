@@ -618,6 +618,24 @@ describe("ArrayField", () => {
         expect(onBlur.calledWith(select.id, ["foo", "bar"])).to.be.true;
       });
 
+      it("should handle a focus event", () => {
+        const onFocus = sandbox.spy();
+        const { node } = createFormComponent({ schema, onFocus });
+
+        const select = node.querySelector(".field select");
+        Simulate.focus(select, {
+          target: {
+            options: [
+              { selected: true, value: "foo" },
+              { selected: true, value: "bar" },
+              { selected: false, value: "fuzz" },
+            ],
+          },
+        });
+
+        expect(onFocus.calledWith(select.id, ["foo", "bar"])).to.be.true;
+      });
+
       it("should fill field with data", () => {
         const { node } = createFormComponent({
           schema,
