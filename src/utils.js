@@ -114,14 +114,17 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
     switch (schema.type) {
       case "array": {
         const minItemsLength = schema.minItems || 0;
-        let length = Array.isArray(formData)
-          ? Math.max(formData.length, minItemsLength)
-          : Math.max(
-              (schema.default || []).length,
-              (parentDefaults || []).length,
-              minItemsLength,
-              Array.isArray(schema.items) ? schema.items.length : 0
-            );
+        let length =
+          minItemsLength && isMultiSelect(schema, definitions)
+            ? 0
+            : Array.isArray(formData)
+              ? Math.max(formData.length, minItemsLength)
+              : Math.max(
+                  (schema.default || []).length,
+                  (parentDefaults || []).length,
+                  minItemsLength,
+                  Array.isArray(schema.items) ? schema.items.length : 0
+                );
         return new Array(length).fill(undefined).map((_, i) => {
           let childSchema = undefined;
 
@@ -136,19 +139,19 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
           }
 
           let defaultItem = undefined;
-          if (
+          if (parentDefaults && parentDefaults.length > i) {
+            defaultItem = parentDefaults[i];
+          } else if ("default" in schema && schema.default.length > i) {
+            defaultItem = schema.default[i];
+          } else if ("default" in schema.items) {
+            defaultItem = schema.items.default;
+          } else if (
             Array.isArray(schema.items) &&
             schema.items.length > i &&
             schema.items[i] &&
             "default" in schema.items[i]
           ) {
             defaultItem = schema.items[i].default;
-          } else if ("default" in schema.items) {
-            defaultItem = schema.items.default;
-          } else if ("default" in schema && schema.default.length > i) {
-            defaultItem = schema.default[i];
-          } else if (parentDefaults && parentDefaults.length > i) {
-            defaultItem = parentDefaults[i];
           }
 
           let childFormData =
@@ -169,10 +172,10 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
           let propSchema = schema.properties[key];
 
           let propParentDefault = undefined;
-          if (schema.default && key in schema.default) {
-            propParentDefault = schema.default[key];
-          } else if (parentDefaults && key in parentDefaults) {
+          if (parentDefaults && key in parentDefaults) {
             propParentDefault = parentDefaults[key];
+          } else if (schema.default && key in schema.default) {
+            propParentDefault = schema.default[key];
           }
 
           const propFormData =
@@ -191,10 +194,10 @@ function computeDefaults(schema, parentDefaults, formData, definitions) {
       default: {
         if (formData !== undefined) {
           return formData;
-        } else if ("default" in schema) {
-          return schema.default;
         } else if (parentDefaults !== undefined) {
           return parentDefaults;
+        } else if ("default" in schema) {
+          return schema.default;
         }
       }
     }
@@ -317,19 +320,53 @@ export function orderProperties(properties, order) {
   return complete;
 }
 
-export function isMultiSelect(schema) {
-  return schema.items
-    ? Array.isArray(schema.items.enum) && schema.uniqueItems
-    : false;
+/**
+ * This function checks if the given schema matches a single
+ * constant value.
+ */
+export function isConstant(schema) {
+  return (
+    (Array.isArray(schema.enum) && schema.enum.length === 1) ||
+    schema.hasOwnProperty("const")
+  );
 }
 
-export function isFilesArray(schema, uiSchema) {
-  return (
-    (schema.items &&
-      schema.items.type === "string" &&
-      schema.items.format === "data-url") ||
-    uiSchema["ui:widget"] === "files"
-  );
+export function toConstant(schema) {
+  if (Array.isArray(schema.enum) && schema.enum.length === 1) {
+    return schema.enum[0];
+  } else if (schema.hasOwnProperty("const")) {
+    return schema.const;
+  } else {
+    throw new Error("schema cannot be inferred as a constant");
+  }
+}
+
+export function isSelect(_schema, definitions = {}) {
+  const schema = retrieveSchema(_schema, definitions);
+  const altSchemas = schema.oneOf || schema.anyOf;
+  if (Array.isArray(schema.enum)) {
+    return true;
+  } else if (Array.isArray(altSchemas)) {
+    return altSchemas.every(altSchemas => isConstant(altSchemas));
+  }
+  return false;
+}
+
+export function isMultiSelect(schema, definitions = {}) {
+  if (!schema.uniqueItems || !schema.items) {
+    return false;
+  }
+  return isSelect(schema.items, definitions);
+}
+
+export function isFilesArray(schema, uiSchema, definitions = {}) {
+  if (uiSchema["ui:widget"] === "files") {
+    return true;
+  } else if (schema.items) {
+    const itemsSchema = retrieveSchema(schema.items, definitions);
+    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
+  }
+  return false;
 }
 
 export function isFixedItems(schema) {
@@ -348,10 +385,19 @@ export function allowAdditionalItems(schema) {
 }
 
 export function optionsList(schema) {
-  return schema.enum.map((value, i) => {
-    const label = (schema.enumNames && schema.enumNames[i]) || String(value);
-    return { label, value };
-  });
+  if (schema.enum) {
+    return schema.enum.map((value, i) => {
+      const label = (schema.enumNames && schema.enumNames[i]) || String(value);
+      return { label, value };
+    });
+  } else {
+    const altSchemas = schema.oneOf || schema.anyOf;
+    return altSchemas.map((schema, i) => {
+      const value = toConstant(schema);
+      const label = schema.title || String(value);
+      return { label, value };
+    });
+  }
 }
 
 function findSchemaDefinition($ref, definitions = {}) {

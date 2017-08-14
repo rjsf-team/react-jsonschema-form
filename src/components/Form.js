@@ -77,11 +77,19 @@ export default class Form extends Component {
   }
 
   renderErrors() {
-    const { status, errors } = this.state;
-    const { ErrorList, showErrorList } = this.props;
+    const { status, errors, errorSchema, schema, uiSchema } = this.state;
+    const { ErrorList, showErrorList, formContext } = this.props;
 
     if (status !== "editing" && errors.length && showErrorList != false) {
-      return <ErrorList errors={errors} />;
+      return (
+        <ErrorList
+          errors={errors}
+          errorSchema={errorSchema}
+          schema={schema}
+          uiSchema={uiSchema}
+          formContext={formContext}
+        />
+      );
     }
     return null;
   }
@@ -104,6 +112,12 @@ export default class Form extends Component {
   onBlur = (...args) => {
     if (this.props.onBlur) {
       this.props.onBlur(...args);
+    }
+  };
+
+  onFocus = (...args) => {
+    if (this.props.onFocus) {
+      this.props.onFocus(...args);
     }
   };
 
@@ -187,6 +201,7 @@ export default class Form extends Component {
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}
+          onFocus={this.onFocus}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
         />

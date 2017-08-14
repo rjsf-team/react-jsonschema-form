@@ -13,6 +13,7 @@ import validation from "./validation";
 import files from "./files";
 import single from "./single";
 import customArray from "./customArray";
+import alternatives from "./alternatives";
 
 export const samples = {
   Simple: simple,
@@ -30,4 +31,5 @@ export const samples = {
   Files: files,
   Single: single,
   "Custom Array": customArray,
+  Alternatives: alternatives,
 };
