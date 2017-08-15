@@ -62,7 +62,10 @@ export function getDefaultRegistry() {
 }
 
 export function getWidget(schema, widget, registeredWidgets = {}) {
-  const { type } = schema;
+  let { type } = schema;
+  if (!type && schema.enum) {
+    type = "string";
+  }
 
   function mergeOptions(Widget) {
     // cache return value as property of widget for proper react reconciliation
