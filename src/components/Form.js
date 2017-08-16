@@ -132,7 +132,7 @@ export default class Form extends Component {
     }
 
     if (this.props.onSubmit) {
-      this.props.onSubmit(this.state);
+      this.props.onSubmit({ ...this.state, status: "submitted" });
     }
     this.setState({ errors: [], errorSchema: {} });
   };
