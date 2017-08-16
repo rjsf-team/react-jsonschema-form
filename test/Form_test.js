@@ -523,7 +523,7 @@ describe("Form", () => {
 
       Simulate.submit(node);
 
-      sinon.assert.calledWithExactly(onSubmit, comp.state);
+      sinon.assert.calledWithMatch(onSubmit, comp.state);
     });
 
     it("should not call provided submit handler on validation errors", () => {
