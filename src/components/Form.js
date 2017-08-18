@@ -128,7 +128,7 @@ export default class Form extends Component {
       if (Object.keys(errors).length > 0) {
         setState(this, { errors, errorSchema }, () => {
           if (this.props.onError) {
-            this.props.onError(errors);
+            this.props.onError(errors, errorSchema);
           } else {
             console.error("Form validation failed", errors);
           }
