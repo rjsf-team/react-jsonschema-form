@@ -72,7 +72,7 @@ class ObjectField extends Component {
         {(uiSchema["ui:title"] || title) &&
           <TitleField
             id={`${idSchema.$id}__title`}
-            title={title || uiSchema["ui:title"]}
+            title={uiSchema["ui:title"] || title}
             required={required}
             formContext={formContext}
           />}
