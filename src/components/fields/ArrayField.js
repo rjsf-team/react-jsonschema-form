@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import UnsupportedField from "./UnsupportedField";
 import {
   getWidget,
   getDefaultFormState,
@@ -275,8 +276,22 @@ class ArrayField extends Component {
   };
 
   render() {
-    const { schema, uiSchema, registry = getDefaultRegistry() } = this.props;
+    const {
+      schema,
+      uiSchema,
+      idSchema,
+      registry = getDefaultRegistry(),
+    } = this.props;
     const { definitions } = registry;
+    if (!schema.hasOwnProperty("items")) {
+      return (
+        <UnsupportedField
+          schema={schema}
+          idSchema={idSchema}
+          reason="Missing items definition"
+        />
+      );
+    }
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
