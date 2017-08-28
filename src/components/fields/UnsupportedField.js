@@ -5,16 +5,15 @@ function UnsupportedField({ schema, idSchema, reason }) {
   return (
     <div className="unsupported-field">
       <p>
-        Unsupported field schema{idSchema && idSchema.$id
-          ? <span>
-              for field <code>{idSchema.$id}</code>
-            </span>
-          : null}
-        {reason
-          ? <em>
-              : {reason}
-            </em>
-          : null}.
+        Unsupported field schema{idSchema &&
+          idSchema.$id &&
+          <span>
+            {" for"} field <code>{idSchema.$id}</code>
+          </span>}
+        {reason &&
+          <em>
+            : {reason}
+          </em>}.
       </p>
       {schema &&
         <pre>
