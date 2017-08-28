@@ -17,6 +17,16 @@ describe("ArrayField", () => {
     sandbox.restore();
   });
 
+  describe("Unsupported array schema", () => {
+    it("should warn on missing items descriptor", () => {
+      const { node } = createFormComponent({ schema: { type: "array" } });
+
+      expect(
+        node.querySelectorAll(".field-array > .unsupported-field")
+      ).to.have.length.of(1);
+    });
+  });
+
   describe("List of inputs", () => {
     const schema = {
       type: "array",
