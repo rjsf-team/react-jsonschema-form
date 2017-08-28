@@ -276,10 +276,21 @@ class ArrayField extends Component {
   };
 
   render() {
-    const { schema, uiSchema, registry = getDefaultRegistry() } = this.props;
+    const {
+      schema,
+      uiSchema,
+      idSchema,
+      registry = getDefaultRegistry(),
+    } = this.props;
     const { definitions } = registry;
     if (!schema.hasOwnProperty("items")) {
-      return <UnsupportedField />;
+      return (
+        <UnsupportedField
+          schema={schema}
+          idSchema={idSchema}
+          reason="Missing items definition"
+        />
+      );
     }
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
