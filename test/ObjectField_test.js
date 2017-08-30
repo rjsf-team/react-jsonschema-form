@@ -172,8 +172,8 @@ describe("ObjectField", () => {
     it("should render the widget with the expected id", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector("input[type=text]").id).eql("root_foo");
-      expect(node.querySelector("input[type=checkbox]").id).eql("root_bar");
+      expect(node.querySelector("input[type=text]").id).eql("root__foo");
+      expect(node.querySelector("input[type=checkbox]").id).eql("root__bar");
     });
   });
 
@@ -336,7 +336,7 @@ describe("ObjectField", () => {
         node.querySelectorAll("input[type=text]"),
         node => node.id
       );
-      expect(ids).eql(["root_bar", "root_foo"]);
+      expect(ids).eql(["root__bar", "root__foo"]);
     });
   });
 

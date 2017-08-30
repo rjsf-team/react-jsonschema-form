@@ -71,8 +71,8 @@ describe("Rendering performance optimizations", () => {
 
       setProps(comp, { schema, formData: { const: "0", var: "1" } });
 
-      sinon.assert.notCalled(fields.root_const.render);
-      sinon.assert.calledOnce(fields.root_var.render);
+      sinon.assert.notCalled(fields.root__const.render);
+      sinon.assert.calledOnce(fields.root__var.render);
     });
 
     it("should only render changed array items", () => {
@@ -97,8 +97,8 @@ describe("Rendering performance optimizations", () => {
 
       setProps(comp, { schema, formData: ["const", "var1"] });
 
-      sinon.assert.notCalled(fields.root_0.render);
-      sinon.assert.calledOnce(fields.root_1.render);
+      sinon.assert.notCalled(fields.root__0.render);
+      sinon.assert.calledOnce(fields.root__1.render);
     });
   });
 
@@ -114,7 +114,7 @@ describe("Rendering performance optimizations", () => {
         foo: { type: "string" },
       },
     };
-    const idSchema = { $id: "root", foo: { $id: "root_plop" } };
+    const idSchema = { $id: "root", foo: { $id: "root__plop" } };
 
     it("should not render if next props are equivalent", () => {
       const props = {

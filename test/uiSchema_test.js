@@ -1449,7 +1449,7 @@ describe("uiSchema", () => {
         node.querySelectorAll("input[type=text]"),
         node => node.id
       );
-      expect(ids).eql(["myform_foo", "myform_bar"]);
+      expect(ids).eql(["myform__foo", "myform__bar"]);
     });
 
     it("should use a custom root field id for arrays", () => {
@@ -1468,7 +1468,7 @@ describe("uiSchema", () => {
         node.querySelectorAll("input[type=text]"),
         node => node.id
       );
-      expect(ids).eql(["myform_0", "myform_1"]);
+      expect(ids).eql(["myform__0", "myform__1"]);
     });
 
     it("should use a custom root field id for array of objects", () => {
@@ -1494,10 +1494,10 @@ describe("uiSchema", () => {
         node => node.id
       );
       expect(ids).eql([
-        "myform_0_foo",
-        "myform_0_bar",
-        "myform_1_foo",
-        "myform_1_bar",
+        "myform__0__foo",
+        "myform__0__bar",
+        "myform__1__foo",
+        "myform__1__bar",
       ]);
     });
   });

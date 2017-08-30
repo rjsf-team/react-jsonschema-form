@@ -220,9 +220,9 @@ describe("SchemaField", () => {
     it("should render description if available from the schema", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("#root_foo__description")).to.have.length.of(
-        1
-      );
+      expect(
+        node.querySelectorAll("#root__foo__description")
+      ).to.have.length.of(1);
     });
 
     it("should render description if available from a referenced schema", () => {
@@ -242,7 +242,7 @@ describe("SchemaField", () => {
       };
       const { node } = createFormComponent({ schema: schemaWithReference });
 
-      const matches = node.querySelectorAll("#root_foo__description");
+      const matches = node.querySelectorAll("#root__foo__description");
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.equal("A Foo field");
     });
@@ -250,9 +250,9 @@ describe("SchemaField", () => {
     it("should not render description if not available from schema", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("#root_bar__description")).to.have.length.of(
-        0
-      );
+      expect(
+        node.querySelectorAll("#root__bar__description")
+      ).to.have.length.of(0);
     });
 
     it("should render a customized description field", () => {

@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
+import {
+  shouldRender,
+  parseDateString,
+  toDateString,
+  pad,
+  FIELD_SEPARATOR,
+} from "../../utils";
 
 function rangeOptions(start, stop) {
   let options = [];
@@ -28,7 +34,7 @@ function DateElement(props) {
     registry,
     onBlur,
   } = props;
-  const id = rootId + "_" + type;
+  const id = rootId + FIELD_SEPARATOR + type;
   const { SelectWidget } = registry.widgets;
   return (
     <SelectWidget

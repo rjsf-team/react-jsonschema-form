@@ -14,6 +14,7 @@ import {
   retrieveSchema,
   toIdSchema,
   getDefaultRegistry,
+  FIELD_SEPARATOR,
 } from "../../utils";
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
@@ -339,7 +340,7 @@ class ArrayField extends Component {
       canAdd: this.canAddItem(formData),
       items: formData.map((item, index) => {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.$id + FIELD_SEPARATOR + index;
         const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
         return this.renderArrayFieldItem({
           index,
@@ -492,7 +493,7 @@ class ArrayField extends Component {
       items: items.map((item, index) => {
         const additional = index >= itemSchemas.length;
         const itemSchema = additional ? additionalSchema : itemSchemas[index];
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.$id + FIELD_SEPARATOR + index;
         const itemIdSchema = toIdSchema(itemSchema, itemIdPrefix, definitions);
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}

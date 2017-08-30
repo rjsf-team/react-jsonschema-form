@@ -135,7 +135,7 @@ describe("Form", () => {
     });
 
     it("should pass description as the provided React element", () => {
-      expect(node.querySelector("#root_foo__description").textContent).eql(
+      expect(node.querySelector("#root__foo__description").textContent).eql(
         "this is description"
       );
     });
@@ -361,11 +361,11 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector("#root_children_0_name")).to.not.exist;
+      expect(node.querySelector("#root__children__0__name")).to.not.exist;
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
-      expect(node.querySelector("#root_children_0_name")).to.exist;
+      expect(node.querySelector("#root__children__0__name")).to.exist;
     });
 
     it("should priorize definition over schema type property", () => {
@@ -1232,7 +1232,7 @@ describe("Form", () => {
         formData: { bar: "bar" },
       });
 
-      Simulate.change(node.querySelector("#root_bar"), {
+      Simulate.change(node.querySelector("#root__bar"), {
         target: { value: "baz" },
       });
 
@@ -1253,7 +1253,7 @@ describe("Form", () => {
         formData: { foo: "foo", baz: "bar" },
       });
 
-      Simulate.change(node.querySelector("#root_baz"), {
+      Simulate.change(node.querySelector("#root__baz"), {
         target: { value: "baz" },
       });
 

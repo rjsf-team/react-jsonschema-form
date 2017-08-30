@@ -337,7 +337,7 @@ describe("ArrayField", () => {
         formData,
       });
 
-      Simulate.change(node.querySelector("#root_1"), {
+      Simulate.change(node.querySelector("#root__1"), {
         target: { value: "" },
       });
 
@@ -352,8 +352,8 @@ describe("ArrayField", () => {
       });
 
       const inputs = node.querySelectorAll("input[type=text]");
-      expect(inputs[0].id).eql("root_0");
-      expect(inputs[1].id).eql("root_1");
+      expect(inputs[0].id).eql("root__0");
+      expect(inputs[1].id).eql("root__1");
     });
 
     it("should render nested input widgets with the expected ids", () => {
@@ -380,10 +380,10 @@ describe("ArrayField", () => {
       });
 
       const inputs = node.querySelectorAll("input[type=text]");
-      expect(inputs[0].id).eql("root_foo_0_bar");
-      expect(inputs[1].id).eql("root_foo_0_baz");
-      expect(inputs[2].id).eql("root_foo_1_bar");
-      expect(inputs[3].id).eql("root_foo_1_baz");
+      expect(inputs[0].id).eql("root__foo__0__bar");
+      expect(inputs[1].id).eql("root__foo__0__baz");
+      expect(inputs[2].id).eql("root__foo__1__bar");
+      expect(inputs[3].id).eql("root__foo__1__baz");
     });
 
     it("should render enough inputs with proper defaults to match minItems in schema when no formData is set", () => {
@@ -898,8 +898,8 @@ describe("ArrayField", () => {
       const numInput = node.querySelector(
         "fieldset .field-number input[type=text]"
       );
-      expect(strInput.id).eql("root_0");
-      expect(numInput.id).eql("root_1");
+      expect(strInput.id).eql("root__0");
+      expect(numInput.id).eql("root__1");
     });
 
     it("should mark non-null item widgets as required", () => {
@@ -949,7 +949,7 @@ describe("ArrayField", () => {
       const addInput = node.querySelector(
         "fieldset .field-string input[type=text]"
       );
-      expect(addInput.id).eql("root_2");
+      expect(addInput.id).eql("root__2");
       expect(addInput.value).eql("bar");
     });
 

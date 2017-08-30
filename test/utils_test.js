@@ -601,8 +601,8 @@ describe("utils", () => {
       expect(toIdSchema(schema)).eql({
         $id: "root",
         level1: {
-          $id: "root_level1",
-          level2: { $id: "root_level1_level2" },
+          $id: "root__level1",
+          level2: { $id: "root__level1__level2" },
         },
       });
     });
@@ -631,14 +631,14 @@ describe("utils", () => {
       expect(toIdSchema(schema)).eql({
         $id: "root",
         level1a: {
-          $id: "root_level1a",
-          level1a2a: { $id: "root_level1a_level1a2a" },
-          level1a2b: { $id: "root_level1a_level1a2b" },
+          $id: "root__level1a",
+          level1a2a: { $id: "root__level1a__level1a2a" },
+          level1a2b: { $id: "root__level1a__level1a2b" },
         },
         level1b: {
-          $id: "root_level1b",
-          level1b2a: { $id: "root_level1b_level1b2a" },
-          level1b2b: { $id: "root_level1b_level1b2b" },
+          $id: "root__level1b",
+          level1b2a: { $id: "root__level1b__level1b2a" },
+          level1b2b: { $id: "root__level1b__level1b2b" },
         },
       });
     });
@@ -661,8 +661,8 @@ describe("utils", () => {
       expect(toIdSchema(schema)).eql({
         $id: "root",
         metadata: {
-          $id: "root_metadata",
-          id: { $id: "root_metadata_id" },
+          $id: "root__metadata",
+          id: { $id: "root__metadata__id" },
         },
       });
     });
@@ -680,7 +680,7 @@ describe("utils", () => {
 
       expect(toIdSchema(schema)).eql({
         $id: "root",
-        foo: { $id: "root_foo" },
+        foo: { $id: "root__foo" },
       });
     });
 
@@ -700,8 +700,8 @@ describe("utils", () => {
 
       expect(toIdSchema(schema, undefined, schema.definitions)).eql({
         $id: "root",
-        foo: { $id: "root_foo" },
-        bar: { $id: "root_bar" },
+        foo: { $id: "root__foo" },
+        bar: { $id: "root__bar" },
       });
     });
   });

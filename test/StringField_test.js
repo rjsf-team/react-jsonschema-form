@@ -677,22 +677,22 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      Simulate.change(node.querySelector("#root_year"), {
+      Simulate.change(node.querySelector("#root__year"), {
         target: { value: 2012 },
       });
-      Simulate.change(node.querySelector("#root_month"), {
+      Simulate.change(node.querySelector("#root__month"), {
         target: { value: 10 },
       });
-      Simulate.change(node.querySelector("#root_day"), {
+      Simulate.change(node.querySelector("#root__day"), {
         target: { value: 2 },
       });
-      Simulate.change(node.querySelector("#root_hour"), {
+      Simulate.change(node.querySelector("#root__hour"), {
         target: { value: 1 },
       });
-      Simulate.change(node.querySelector("#root_minute"), {
+      Simulate.change(node.querySelector("#root__minute"), {
         target: { value: 2 },
       });
-      Simulate.change(node.querySelector("#root_second"), {
+      Simulate.change(node.querySelector("#root__second"), {
         target: { value: 3 },
       });
 
@@ -724,12 +724,12 @@ describe("StringField", () => {
       const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
 
       expect(ids).eql([
-        "root_year",
-        "root_month",
-        "root_day",
-        "root_hour",
-        "root_minute",
-        "root_second",
+        "root__year",
+        "root__month",
+        "root__day",
+        "root__hour",
+        "root__minute",
+        "root__second",
       ]);
     });
 
@@ -755,7 +755,7 @@ describe("StringField", () => {
         60 + 1,
         60 + 1,
       ]);
-      const monthOptions = node.querySelectorAll("select#root_month option");
+      const monthOptions = node.querySelectorAll("select#root__month option");
       const monthOptionsValues = [].map.call(monthOptions, o => o.value);
       expect(monthOptionsValues).eql([
         "",
@@ -783,7 +783,7 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      const monthOptions = node.querySelectorAll("select#root_month option");
+      const monthOptions = node.querySelectorAll("select#root__month option");
       const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
       expect(monthOptionsLabels).eql([
         "month",
@@ -938,13 +938,13 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      Simulate.change(node.querySelector("#root_year"), {
+      Simulate.change(node.querySelector("#root__year"), {
         target: { value: 2012 },
       });
-      Simulate.change(node.querySelector("#root_month"), {
+      Simulate.change(node.querySelector("#root__month"), {
         target: { value: 10 },
       });
-      Simulate.change(node.querySelector("#root_day"), {
+      Simulate.change(node.querySelector("#root__day"), {
         target: { value: 2 },
       });
 
@@ -976,7 +976,7 @@ describe("StringField", () => {
 
       const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
 
-      expect(ids).eql(["root_year", "root_month", "root_day"]);
+      expect(ids).eql(["root__year", "root__month", "root__day"]);
     });
 
     it("should render the widgets with the expected options' values", () => {
@@ -998,7 +998,7 @@ describe("StringField", () => {
         12 + 1,
         31 + 1,
       ]);
-      const monthOptions = node.querySelectorAll("select#root_month option");
+      const monthOptions = node.querySelectorAll("select#root__month option");
       const monthOptionsValues = [].map.call(monthOptions, o => o.value);
       expect(monthOptionsValues).eql([
         "",
@@ -1026,7 +1026,7 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      const monthOptions = node.querySelectorAll("select#root_month option");
+      const monthOptions = node.querySelectorAll("select#root__month option");
       const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
       expect(monthOptionsLabels).eql([
         "month",

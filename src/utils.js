@@ -1,6 +1,8 @@
 import React from "react";
 import "setimmediate";
 
+export const FIELD_SEPARATOR = "__";
+
 const widgetMap = {
   boolean: {
     checkbox: "CheckboxWidget",
@@ -509,7 +511,7 @@ export function toIdSchema(schema, id, definitions) {
   }
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
+    const fieldId = idSchema.$id + FIELD_SEPARATOR + name;
     idSchema[name] = toIdSchema(field, fieldId, definitions);
   }
   return idSchema;
