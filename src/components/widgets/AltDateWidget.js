@@ -121,7 +121,7 @@ class AltDateWidget extends Component {
     const { id, disabled, readonly, autofocus, registry, onBlur } = this.props;
     return (
       <ul className="list-inline">
-        {this.dateElementProps.map((elemProps, i) =>
+        {this.dateElementProps.map((elemProps, i) => (
           <li key={i}>
             <DateElement
               rootId={id}
@@ -134,7 +134,7 @@ class AltDateWidget extends Component {
               autofocus={autofocus && i === 0}
             />
           </li>
-        )}
+        ))}
         <li>
           <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
             Now

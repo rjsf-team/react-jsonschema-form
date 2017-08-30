@@ -15,6 +15,7 @@ const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   array: "ArrayField",
   boolean: "BooleanField",
+  bootstrap: "BootstrapObjectField",
   integer: "NumberField",
   number: "NumberField",
   object: "ObjectField",

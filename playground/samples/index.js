@@ -1,4 +1,5 @@
 import arrays from "./arrays";
+import bootstrap from "./bootstrap";
 import nested from "./nested";
 import numbers from "./numbers";
 import simple from "./simple";
@@ -17,6 +18,7 @@ import alternatives from "./alternatives";
 
 export const samples = {
   Simple: simple,
+  bootstrap: bootstrap,
   Nested: nested,
   Arrays: arrays,
   Numbers: numbers,
