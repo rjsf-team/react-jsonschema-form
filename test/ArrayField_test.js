@@ -27,7 +27,6 @@ describe("ArrayField", () => {
 
     it("should render a fieldset", () => {
       const { node } = createFormComponent({ schema });
-
       expect(node.querySelectorAll("fieldset")).to.have.length.of(1);
     });
 
