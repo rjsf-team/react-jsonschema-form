@@ -463,7 +463,7 @@ class App extends Component {
           </div>
         </div>
         <div className="col-sm-5">
-          {this.state.form &&
+          {this.state.form && (
             <Form
               ArrayFieldTemplate={ArrayFieldTemplate}
               liveValidate={liveValidate}
@@ -494,7 +494,8 @@ class App extends Component {
                   />
                 </div>
               </div>
-            </Form>}
+            </Form>
+          )}
         </div>
       </div>
     );

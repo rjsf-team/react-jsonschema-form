@@ -61,27 +61,27 @@ class ObjectField extends Component {
             Invalid {name || "root"} object field configuration:
             <em>{err.message}</em>.
           </p>
-          <pre>
-            {JSON.stringify(schema)}
-          </pre>
+          <pre>{JSON.stringify(schema)}</pre>
         </div>
       );
     }
     return (
       <fieldset>
-        {(uiSchema["ui:title"] || title) &&
+        {(uiSchema["ui:title"] || title) && (
           <TitleField
             id={`${idSchema.$id}__title`}
             title={uiSchema["ui:title"] || title}
             required={required}
             formContext={formContext}
-          />}
-        {(uiSchema["ui:description"] || schema.description) &&
+          />
+        )}
+        {(uiSchema["ui:description"] || schema.description) && (
           <DescriptionField
             id={`${idSchema.$id}__description`}
             description={uiSchema["ui:description"] || schema.description}
             formContext={formContext}
-          />}
+          />
+        )}
         {orderedProperties.map((name, index) => {
           return (
             <SchemaField

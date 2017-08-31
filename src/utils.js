@@ -69,8 +69,9 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     if (!Widget.MergedWidget) {
       const defaultOptions =
         (Widget.defaultProps && Widget.defaultProps.options) || {};
-      Widget.MergedWidget = ({ options = {}, ...props }) =>
-        <Widget options={{ ...defaultOptions, ...options }} {...props} />;
+      Widget.MergedWidget = ({ options = {}, ...props }) => (
+        <Widget options={{ ...defaultOptions, ...options }} {...props} />
+      );
     }
     return Widget.MergedWidget;
   }

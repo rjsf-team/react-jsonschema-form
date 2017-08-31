@@ -80,11 +80,7 @@ function SelectWidget(props) {
         const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
       }}>
-      {!multiple &&
-        !schema.default &&
-        <option value="">
-          {placeholder}
-        </option>}
+      {!multiple && !schema.default && <option value="">{placeholder}</option>}
       {enumOptions.map(({ value, label }, i) => {
         return (
           <option key={i} value={value}>

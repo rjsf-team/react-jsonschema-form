@@ -203,13 +203,15 @@ export default class Form extends Component {
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
         />
-        {children
-          ? children
-          : <p>
-              <button type="submit" className="btn btn-info">
-                Submit
-              </button>
-            </p>}
+        {children ? (
+          children
+        ) : (
+          <p>
+            <button type="submit" className="btn btn-info">
+              Submit
+            </button>
+          </p>
+        )}
       </form>
     );
   }

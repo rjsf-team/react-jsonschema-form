@@ -96,15 +96,15 @@ describe("Form", () => {
           <span className="raw-description">
             {`${rawDescription} rendered from the raw format`}
           </span>
-          {rawErrors
-            ? <ul>
-                {rawErrors.map((error, i) =>
-                  <li key={i} className="raw-error">
-                    {error}
-                  </li>
-                )}
-              </ul>
-            : null}
+          {rawErrors ? (
+            <ul>
+              {rawErrors.map((error, i) => (
+                <li key={i} className="raw-error">
+                  {error}
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       );
     }

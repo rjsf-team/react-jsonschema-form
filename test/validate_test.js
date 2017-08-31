@@ -525,22 +525,15 @@ describe("Validation", () => {
         schema,
         uiSchema,
         formContext: { className },
-      }) =>
+      }) => (
         <div>
-          <div className="CustomErrorList">
-            {errors.length} custom
-          </div>
-          <div className={"ErrorSchema"}>
-            {errorSchema.__errors[0]}
-          </div>
-          <div className={"Schema"}>
-            {schema.type}
-          </div>
-          <div className={"UiSchema"}>
-            {uiSchema.foo}
-          </div>
+          <div className="CustomErrorList">{errors.length} custom</div>
+          <div className={"ErrorSchema"}>{errorSchema.__errors[0]}</div>
+          <div className={"Schema"}>{schema.type}</div>
+          <div className={"UiSchema"}>{uiSchema.foo}</div>
           <div className={className} />
-        </div>;
+        </div>
+      );
 
       it("should use CustomErrorList", () => {
         const { node } = createFormComponent({
