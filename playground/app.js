@@ -6,6 +6,7 @@ import "codemirror/mode/javascript/javascript";
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
+import withLayout from "../src/components/FormLayout";
 
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
@@ -253,7 +254,7 @@ class Selector extends Component {
     return event => {
       event.preventDefault();
       this.setState({ current: label });
-      setImmediate(() => this.props.onSelected(samples[label]));
+      setImmediate(() => this.props.onSelected(samples[label], label));
     };
   };
 
@@ -363,12 +364,17 @@ class App extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  load = data => {
+  load = (data, label) => {
     // Reset the ArrayFieldTemplate whenever you load new data
     const { ArrayFieldTemplate } = data;
     // force resetting form component instance
     this.setState({ form: false }, _ =>
-      this.setState({ ...data, form: true, ArrayFieldTemplate })
+      this.setState({
+        ...data,
+        form: true,
+        ArrayFieldTemplate,
+        pageLabel: label,
+      })
     );
   };
 
@@ -414,6 +420,12 @@ class App extends Component {
       ArrayFieldTemplate,
       transformErrors,
     } = this.state;
+
+    let FinForm = Form;
+    console.info(this.state);
+    if (!this.state.pageLabel || this.state.pageLabel === "Simple") {
+      FinForm = withLayout(Form, [[{ firstName: 6 }, { lastName: 6 }]]);
+    }
 
     return (
       <div className="container-fluid">
@@ -464,7 +476,7 @@ class App extends Component {
         </div>
         <div className="col-sm-5">
           {this.state.form && (
-            <Form
+            <FinForm
               ArrayFieldTemplate={ArrayFieldTemplate}
               liveValidate={liveValidate}
               schema={schema}
@@ -494,7 +506,7 @@ class App extends Component {
                   />
                 </div>
               </div>
-            </Form>
+            </FinForm>
           )}
         </div>
       </div>
