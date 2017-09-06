@@ -7,7 +7,7 @@ import {
   getDefaultRegistry,
   getUiOptions,
   isFilesArray,
-  deepEquals
+  deepEquals,
 } from "../../utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -17,7 +17,7 @@ const COMPONENT_TYPES = {
   integer: "NumberField",
   number: "NumberField",
   object: "ObjectField",
-  string: "StringField"
+  string: "StringField",
 };
 
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
@@ -100,7 +100,7 @@ function DefaultTemplate(props) {
     description,
     hidden,
     required,
-    displayLabel
+    displayLabel,
   } = props;
   if (hidden) {
     return children;
@@ -134,7 +134,7 @@ if (process.env.NODE_ENV !== "production") {
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
     fields: PropTypes.object,
-    formContext: PropTypes.object
+    formContext: PropTypes.object,
   };
 }
 
@@ -142,7 +142,7 @@ DefaultTemplate.defaultProps = {
   hidden: false,
   readonly: false,
   required: false,
-  displayLabel: true
+  displayLabel: true,
 };
 
 function SchemaFieldRender(props) {
@@ -152,13 +152,13 @@ function SchemaFieldRender(props) {
     idSchema,
     name,
     required,
-    registry = getDefaultRegistry()
+    registry = getDefaultRegistry(),
   } = props;
   const {
     definitions,
     fields,
     formContext,
-    FieldTemplate = DefaultTemplate
+    FieldTemplate = DefaultTemplate,
   } = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
@@ -221,7 +221,7 @@ function SchemaFieldRender(props) {
     "field",
     `field-${type}`,
     errors && errors.length > 0 ? "field-error has-error has-danger" : "",
-    uiSchema.classNames
+    uiSchema.classNames,
   ]
     .join(" ")
     .trim();
@@ -249,7 +249,7 @@ function SchemaFieldRender(props) {
     formContext,
     fields,
     schema,
-    uiSchema
+    uiSchema,
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
@@ -276,7 +276,7 @@ SchemaField.defaultProps = {
   idSchema: {},
   disabled: false,
   readonly: false,
-  autofocus: false
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -294,8 +294,8 @@ if (process.env.NODE_ENV !== "production") {
       definitions: PropTypes.object.isRequired,
       ArrayFieldTemplate: PropTypes.func,
       FieldTemplate: PropTypes.func,
-      formContext: PropTypes.object.isRequired
-    })
+      formContext: PropTypes.object.isRequired,
+    }),
   };
 }
 
