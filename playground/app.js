@@ -5,8 +5,7 @@ import "codemirror/mode/javascript/javascript";
 
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
-import Form from "../src";
-import withLayout from "../src/components/FormLayout";
+import Form, { withLayout } from "../src";
 
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
@@ -345,6 +344,7 @@ class App extends Component {
       liveValidate: true,
       shareURL: null,
     };
+    this.FinForm = Form;
   }
 
   componentDidMount() {
@@ -364,9 +364,15 @@ class App extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  load = (data, label) => {
+  load = (data, label = "Simple") => {
     // Reset the ArrayFieldTemplate whenever you load new data
     const { ArrayFieldTemplate } = data;
+    if (label === "Layout form") {
+      this.FinForm = withLayout(Form);
+    } else {
+      this.FinForm = Form;
+    }
+
     // force resetting form component instance
     this.setState({ form: false }, _ =>
       this.setState({
@@ -421,11 +427,7 @@ class App extends Component {
       transformErrors,
     } = this.state;
 
-    let FinForm = Form;
-    console.info(this.state);
-    if (!this.state.pageLabel || this.state.pageLabel === "Simple") {
-      FinForm = withLayout(Form, [[{ firstName: 6 }, { lastName: 6 }]]);
-    }
+    const FinForm = this.FinForm;
 
     return (
       <div className="container-fluid">
