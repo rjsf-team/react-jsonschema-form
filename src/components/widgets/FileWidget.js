@@ -35,9 +35,10 @@ function FilesInfo(props) {
   return (
     <ul className="file-info">
       {filesInfo.map((fileInfo, key) => {
-        const { name, size, type } = fileInfo;
+        const { name, size, type, dataURL } = fileInfo;
         return (
           <li key={key}>
+            {type.indexOf("image") !== -1 && <img src={dataURL} className="file-image" />}
             <strong>{name}</strong> ({type}, {size} bytes)
           </li>
         );
