@@ -11,19 +11,21 @@ function DefaultObjectFieldTemplate(props) {
   const { TitleField, DescriptionField } = props;
   return (
     <fieldset>
-      {(props.uiSchema["ui:title"] || props.title) &&
-        <TitleField
-          id={`${props.idSchema.$id}__title`}
-          title={props.title || props.uiSchema["ui:title"]}
-          required={props.required}
-          formContext={props.formContext}
-        />}
-      {props.description &&
+      {(props.uiSchema["ui:title"] || props.title) && (
+          <TitleField
+            id={`${props.idSchema.$id}__title`}
+            title={props.title || props.uiSchema["ui:title"]}
+            required={props.required}
+            formContext={props.formContext}
+          />
+        )}
+      {props.description && (
         <DescriptionField
           id={`${props.idSchema.$id}__description`}
           description={props.description}
           formContext={props.formContext}
-        />}
+        />
+      )}
       {props.properties.map(prop => prop.children)}
     </fieldset>
   );
@@ -65,13 +67,16 @@ class ObjectField extends Component {
       disabled,
       readonly,
       onBlur,
+      onFocus,
       registry = getDefaultRegistry(),
     } = this.props;
     const { definitions, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = schema.title === undefined ? name : schema.title;
+    const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
+
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
@@ -82,19 +87,15 @@ class ObjectField extends Component {
             Invalid {name || "root"} object field configuration:
             <em>{err.message}</em>.
           </p>
-          <pre>
-            {JSON.stringify(schema)}
-          </pre>
+          <pre>{JSON.stringify(schema)}</pre>
         </div>
       );
     }
 
-    const description = uiSchema["ui:description"] || schema.description;
-
     const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
 
     const templateProps = {
-      title: title,
+      title: uiSchema["ui:title"] || title,
       description,
       TitleField,
       DescriptionField,
@@ -112,6 +113,7 @@ class ObjectField extends Component {
               formData={formData[name]}
               onChange={this.onPropertyChange(name)}
               onBlur={onBlur}
+              onFocus={onFocus}
               registry={registry}
               disabled={disabled}
               readonly={readonly}

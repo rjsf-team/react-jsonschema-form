@@ -214,6 +214,10 @@ If you plan on being notified everytime the form data are updated, you can pass 
 
 Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass an `onBlur` handler, which will receive the id of the input that was blurred and the field value.
 
+#### Form field focus events
+
+Sometimes you may want to trigger events or modify external state when a field has been focused, so you can pass an `onFocus` handler, which will receive the id of the input that is focused and the field value.
+
 ## Form customization
 
 ### The `uiSchema` object
@@ -333,7 +337,7 @@ Please note that while standardized, `datetime-local` and `date` input elements 
   * `radio`: a radio button group with enum values. **can only be used when `enum` values are specified for this input**
   * by default, a regular `input[type=text]` element is used.
 
-> Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximium` and `multipleOf` values when they're defined.
+> Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximum` and `multipleOf` values when they're defined.
 
 #### Disabled fields
 
@@ -851,6 +855,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
 - `formContext`: The `formContext` object that you passed to Form.
+- `formData`: The formData for this array.
 
 The following props are part of each element in `items`:
 
@@ -942,6 +947,13 @@ render((
 
 > Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
 
+The following props are passed to `ErrorList`
+
+- `errors`: An array of the errors.
+- `errorSchema`: The errorSchema constructed by `Form`.
+- `schema`: The schema that was passed to `Form`.
+- `uiSchema`: The uiSchema that was passed to `Form`.
+- `formContext`: The `formContext` object that you passed to Form.
 
 ### Custom widgets and fields
 
@@ -992,6 +1004,7 @@ The following props are passed to custom widget components:
 - `readonly`: `true` if the widget is read-only;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
+- `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `formContext`: The `formContext` object that you passed to Form.
 
@@ -1505,6 +1518,17 @@ $ npm test
 
 ```
 $ npm run tdd
+```
+
+### Releasing
+
+```
+$ npm run dist
+$ edit package.json # update version number
+$ git commit -m "Bump version $VERSION"
+$ git tag v$VERSION
+$ npm publish
+$ git push --tags origin
 ```
 
 ## License

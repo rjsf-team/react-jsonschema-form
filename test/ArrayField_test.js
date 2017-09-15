@@ -17,6 +17,16 @@ describe("ArrayField", () => {
     sandbox.restore();
   });
 
+  describe("Unsupported array schema", () => {
+    it("should warn on missing items descriptor", () => {
+      const { node } = createFormComponent({ schema: { type: "array" } });
+
+      expect(
+        node.querySelector(".field-array > .unsupported-field").textContent
+      ).to.contain("Missing items definition");
+    });
+  });
+
   describe("List of inputs", () => {
     const schema = {
       type: "array",
@@ -50,10 +60,7 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized title", () => {
-      const CustomTitleField = ({ title }) =>
-        <div id="custom">
-          {title}
-        </div>;
+      const CustomTitleField = ({ title }) => <div id="custom">{title}</div>;
 
       const { node } = createFormComponent({
         schema,
@@ -65,10 +72,9 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized description", () => {
-      const CustomDescriptionField = ({ description }) =>
-        <div id="custom">
-          {description}
-        </div>;
+      const CustomDescriptionField = ({ description }) => (
+        <div id="custom">{description}</div>
+      );
 
       const { node } = createFormComponent({
         schema,
@@ -410,6 +416,110 @@ describe("ArrayField", () => {
       expect(inputs[1].value).eql("Default name");
     });
 
+    it("should render an input for each default value, even when this is greater than minItems", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          turtles: {
+            type: "array",
+            minItems: 2,
+            default: ["Raphael", "Michaelangelo", "Donatello", "Leonardo"],
+            items: {
+              type: "string",
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema: schema });
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs.length).to.eql(4);
+      expect(inputs[0].value).to.eql("Raphael");
+      expect(inputs[1].value).to.eql("Michaelangelo");
+      expect(inputs[2].value).to.eql("Donatello");
+      expect(inputs[3].value).to.eql("Leonardo");
+    });
+
+    it("should render enough input to match minItems, populating the first with default values, and the rest empty", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          turtles: {
+            type: "array",
+            minItems: 4,
+            default: ["Raphael", "Michaelangelo"],
+            items: {
+              type: "string",
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs.length).to.eql(4);
+      expect(inputs[0].value).to.eql("Raphael");
+      expect(inputs[1].value).to.eql("Michaelangelo");
+      expect(inputs[2].value).to.eql("");
+      expect(inputs[3].value).to.eql("");
+    });
+
+    it("should render enough input to match minItems, populating the first with default values, and the rest with the item default", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          turtles: {
+            type: "array",
+            minItems: 4,
+            default: ["Raphael", "Michaelangelo"],
+            items: {
+              type: "string",
+              default: "Unknown",
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs.length).to.eql(4);
+      expect(inputs[0].value).to.eql("Raphael");
+      expect(inputs[1].value).to.eql("Michaelangelo");
+      expect(inputs[2].value).to.eql("Unknown");
+      expect(inputs[3].value).to.eql("Unknown");
+    });
+
+    it("should not add minItems extra formData entries when schema item is a multiselect", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          multipleChoicesList: {
+            type: "array",
+            minItems: 3,
+            uniqueItems: true,
+            items: {
+              type: "string",
+              enum: ["Aramis", "Athos", "Porthos", "d'Artagnan"],
+            },
+          },
+        },
+      };
+      const uiSchema = {
+        multipleChoicesList: {
+          "ui:widget": "checkboxes",
+        },
+      };
+      const form = createFormComponent({
+        schema: schema,
+        uiSchema: uiSchema,
+        formData: {},
+        liveValidate: true,
+      }).comp;
+
+      expect(form.state.formData).to.have.property("multipleChoicesList");
+      expect(form.state.formData.multipleChoicesList).to.be.empty;
+      expect(form.state.errors.length).to.equal(1);
+      expect(form.state.errors[0].name).to.equal("minItems");
+      expect(form.state.errors[0].argument).to.equal(3);
+    });
+
     it("should honor given formData, even when it does not meet ths minItems-requirement", () => {
       const complexSchema = {
         type: "object",
@@ -512,6 +622,24 @@ describe("ArrayField", () => {
         });
 
         expect(onBlur.calledWith(select.id, ["foo", "bar"])).to.be.true;
+      });
+
+      it("should handle a focus event", () => {
+        const onFocus = sandbox.spy();
+        const { node } = createFormComponent({ schema, onFocus });
+
+        const select = node.querySelector(".field select");
+        Simulate.focus(select, {
+          target: {
+            options: [
+              { selected: true, value: "foo" },
+              { selected: true, value: "bar" },
+              { selected: false, value: "fuzz" },
+            ],
+          },
+        });
+
+        expect(onFocus.calledWith(select.id, ["foo", "bar"])).to.be.true;
       });
 
       it("should fill field with data", () => {

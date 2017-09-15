@@ -21,7 +21,7 @@ const COMPONENT_TYPES = {
   string: "StringField",
 };
 
-function getFieldComponent(schema, uiSchema, fields) {
+function getFieldComponent(schema, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -30,7 +30,17 @@ function getFieldComponent(schema, uiSchema, fields) {
     return fields[field];
   }
   const componentName = COMPONENT_TYPES[schema.type];
-  return componentName in fields ? fields[componentName] : UnsupportedField;
+  return componentName in fields
+    ? fields[componentName]
+    : () => {
+        return (
+          <UnsupportedField
+            schema={schema}
+            idSchema={idSchema}
+            reason={`Unknown field type ${schema.type}`}
+          />
+        );
+      };
 }
 
 function Label(props) {
@@ -53,17 +63,9 @@ function Help(props) {
     return <div />;
   }
   if (typeof help === "string") {
-    return (
-      <p className="help-block">
-        {help}
-      </p>
-    );
+    return <p className="help-block">{help}</p>;
   }
-  return (
-    <div className="help-block">
-      {help}
-    </div>
-  );
+  return <div className="help-block">{help}</div>;
 }
 
 function ErrorList(props) {
@@ -159,7 +161,7 @@ function SchemaFieldRender(props) {
     FieldTemplate = DefaultTemplate,
   } = registry;
   const schema = retrieveSchema(props.schema, definitions);
-  const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+  const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
@@ -250,11 +252,7 @@ function SchemaFieldRender(props) {
     uiSchema,
   };
 
-  return (
-    <FieldTemplate {...fieldProps}>
-      {field}
-    </FieldTemplate>
-  );
+  return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
 }
 
 class SchemaField extends React.Component {

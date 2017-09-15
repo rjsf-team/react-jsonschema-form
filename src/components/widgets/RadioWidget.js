@@ -33,21 +33,19 @@ function RadioWidget(props) {
               autoFocus={autofocus && i === 0}
               onChange={_ => onChange(option.value)}
             />
-            <span>
-              {option.label}
-            </span>
+            <span>{option.label}</span>
           </span>
         );
 
-        return inline
-          ? <label key={i} className={`radio-inline ${disabledCls}`}>
-              {radio}
-            </label>
-          : <div key={i} className={`radio ${disabledCls}`}>
-              <label>
-                {radio}
-              </label>
-            </div>;
+        return inline ? (
+          <label key={i} className={`radio-inline ${disabledCls}`}>
+            {radio}
+          </label>
+        ) : (
+          <div key={i} className={`radio ${disabledCls}`}>
+            <label>{radio}</label>
+          </div>
+        );
       })}
     </div>
   );

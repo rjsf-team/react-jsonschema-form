@@ -69,8 +69,9 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     if (!Widget.MergedWidget) {
       const defaultOptions =
         (Widget.defaultProps && Widget.defaultProps.options) || {};
-      Widget.MergedWidget = ({ options = {}, ...props }) =>
-        <Widget options={{ ...defaultOptions, ...options }} {...props} />;
+      Widget.MergedWidget = ({ options = {}, ...props }) => (
+        <Widget options={{ ...defaultOptions, ...options }} {...props} />
+      );
     }
     return Widget.MergedWidget;
   }
@@ -140,9 +141,23 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
 
     case "array":
       if (schema.minItems) {
-        return new Array(schema.minItems).fill(
-          computeDefaults(schema.items, defaults, definitions)
-        );
+        if (!isMultiSelect(schema, definitions)) {
+          const defaultsLength = defaults ? defaults.length : 0;
+          if (schema.minItems > defaultsLength) {
+            const defaultEntries = defaults || [];
+            // populate the array with the defaults
+            const fillerEntries = new Array(
+              schema.minItems - defaultsLength
+            ).fill(
+              computeDefaults(schema.items, schema.items.defaults, definitions)
+            );
+            // then fill up the rest with either the item default or empty, up to minItems
+
+            return defaultEntries.concat(fillerEntries);
+          }
+        } else {
+          return [];
+        }
       }
   }
   return defaults;

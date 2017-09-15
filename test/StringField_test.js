@@ -100,6 +100,22 @@ describe("StringField", () => {
       expect(onBlur.calledWith(input.id, "yo")).to.be.true;
     });
 
+    it("should handle a focus event", () => {
+      const onFocus = sandbox.spy();
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+        },
+        onFocus,
+      });
+      const input = node.querySelector("input");
+      Simulate.focus(input, {
+        target: { value: "yo" },
+      });
+
+      expect(onFocus.calledWith(input.id, "yo")).to.be.true;
+    });
+
     it("should handle an empty string change event", () => {
       const { comp, node } = createFormComponent({
         schema: { type: "string" },

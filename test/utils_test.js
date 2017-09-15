@@ -796,8 +796,12 @@ describe("utils", () => {
         "data:image/png;name=test.png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("test.png");
-      expect(blob).to.have.property("size").eql(8);
-      expect(blob).to.have.property("type").eql("image/png");
+      expect(blob)
+        .to.have.property("size")
+        .eql(8);
+      expect(blob)
+        .to.have.property("type")
+        .eql("image/png");
     });
 
     it("should return unknown if name is not provided", () => {
@@ -805,8 +809,12 @@ describe("utils", () => {
         "data:image/png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("unknown");
-      expect(blob).to.have.property("size").eql(8);
-      expect(blob).to.have.property("type").eql("image/png");
+      expect(blob)
+        .to.have.property("size")
+        .eql(8);
+      expect(blob)
+        .to.have.property("type")
+        .eql("image/png");
     });
 
     it("should return ignore unsupported parameters", () => {
@@ -814,8 +822,12 @@ describe("utils", () => {
         "data:image/png;unknown=foobar;name=test.png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("test.png");
-      expect(blob).to.have.property("size").eql(8);
-      expect(blob).to.have.property("type").eql("image/png");
+      expect(blob)
+        .to.have.property("size")
+        .eql(8);
+      expect(blob)
+        .to.have.property("type")
+        .eql("image/png");
     });
   });
 
