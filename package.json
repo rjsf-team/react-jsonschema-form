@@ -42,6 +42,7 @@
   "dependencies": {
     "jsonschema": "^1.2.0",
     "lodash.topath": "^4.5.2",
+    "material-ui": "^0.19.2",
     "prop-types": "^15.5.8",
     "setimmediate": "^1.0.5"
   },
