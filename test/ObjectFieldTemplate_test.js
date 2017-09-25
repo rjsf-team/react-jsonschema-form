@@ -30,11 +30,11 @@ describe("ObjectFieldTemplate", () => {
           <TitleField title={title} />
           <DescriptionField description={description} />
           <div>
-            {properties.map(({ content, index }) =>
+            {properties.map(({ content, index }) => (
               <div key={index} className="property">
                 {content}
               </div>
-            )}
+            ))}
           </div>
         </div>
       );
