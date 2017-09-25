@@ -909,13 +909,14 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `formData`: The form data for the object.
 - `formContext`: The `formContext` object that you passed to Form.
 
-The following props are part of each element in `items`:
+The following props are part of each element in `properties`:
 
-- `children`: The html for the property's content.
+- `content`: The html for the property's content.
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `index`: A number stating the index the property occurs in the `properties`.
 - `readonly`: A boolean value stating if the property is readonly.
+
 ### Error List template
 
 To take control over how the form errors are displayed, you can define an *error list template* for your form. This list is the form global error list that appears at the top of your forms.

@@ -11,22 +11,20 @@ function DefaultObjectFieldTemplate(props) {
   const { TitleField, DescriptionField } = props;
   return (
     <fieldset>
-      {(props.uiSchema["ui:title"] || props.title) && (
-          <TitleField
-            id={`${props.idSchema.$id}__title`}
-            title={props.title || props.uiSchema["ui:title"]}
-            required={props.required}
-            formContext={props.formContext}
-          />
-        )}
-      {props.description && (
+      {(props.uiSchema["ui:title"] || props.title) &&
+        <TitleField
+          id={`${props.idSchema.$id}__title`}
+          title={props.title || props.uiSchema["ui:title"]}
+          required={props.required}
+          formContext={props.formContext}
+        />}
+      {props.description &&
         <DescriptionField
           id={`${props.idSchema.$id}__description`}
           description={props.description}
           formContext={props.formContext}
-        />
-      )}
-      {props.properties.map(prop => prop.children)}
+        />}
+      {props.properties.map(prop => prop.content)}
     </fieldset>
   );
 }
@@ -87,7 +85,9 @@ class ObjectField extends Component {
             Invalid {name || "root"} object field configuration:
             <em>{err.message}</em>.
           </p>
-          <pre>{JSON.stringify(schema)}</pre>
+          <pre>
+            {JSON.stringify(schema)}
+          </pre>
         </div>
       );
     }
@@ -101,7 +101,7 @@ class ObjectField extends Component {
       DescriptionField,
       properties: orderedProperties.map((name, index) => {
         return {
-          children: (
+          content: (
             <SchemaField
               key={index}
               name={name}
