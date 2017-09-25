@@ -61,6 +61,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Custom widget components](#custom-widget-components)
         - [Custom component registration](#custom-component-registration)
         - [Custom widget options](#custom-widget-options)
+        - [Customizing widgets' text input](#customizing-widgets-text-input)
      - [Custom field components](#custom-field-components)
         - [Field props](#field-props)
         - [The registry object](#the-registry-object)
@@ -1037,6 +1038,10 @@ render((
 > Note: This also applies to [registered custom components](#custom-component-registration).
 
 > Note: Since v0.41.0, the `ui:widget` object API, where a widget and options were specified with `"ui:widget": {component, options}` shape, is deprecated. It will be removed in a future release.
+
+#### Customizing widgets' text input
+
+All the widgets that render a text input use the `BaseInput` component internally. If you need to customize all text inputs without customizing all widgets individially, you can provide a `BaseInput` component in the `widgets` property of `Form` (see [Custom component registration](#custom-component-registration).
 
 ### Custom field components
 
