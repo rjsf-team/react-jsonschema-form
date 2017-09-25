@@ -841,8 +841,8 @@ Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema
 
 The following props are passed to each `ArrayFieldTemplate`:
 
-- `DescriptionField`: The generated `DescriptionField` (if you wanted to utilize it)
-- `TitleField`: The generated `TitleField` (if you wanted to utilize it).
+- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
+- `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
@@ -897,8 +897,8 @@ Please see [customObject.js](https://github.com/mozilla-services/react-jsonschem
 
 The following props are passed to each `ObjectFieldTemplate`:
 
-- `DescriptionField`: The generated `DescriptionField` (if you wanted to utilize it)
-- `TitleField`: The generated `TitleField` (if you wanted to utilize it).
+- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
+- `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
 - `title`: A string value containing the title for the object.
 - `description`: A string value containing the description for the object.
 - `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
