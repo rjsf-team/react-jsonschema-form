@@ -16,8 +16,9 @@ function CheckboxWidget(props) {
   } = props;
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
-      {schema.description &&
-        <DescriptionField description={schema.description} />}
+      {schema.description && (
+        <DescriptionField description={schema.description} />
+      )}
       <label>
         <input
           type="checkbox"

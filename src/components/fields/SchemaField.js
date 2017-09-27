@@ -21,7 +21,7 @@ const COMPONENT_TYPES = {
   string: "StringField",
 };
 
-function getFieldComponent(schema, uiSchema, fields) {
+function getFieldComponent(schema, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -30,7 +30,17 @@ function getFieldComponent(schema, uiSchema, fields) {
     return fields[field];
   }
   const componentName = COMPONENT_TYPES[schema.type];
-  return componentName in fields ? fields[componentName] : UnsupportedField;
+  return componentName in fields
+    ? fields[componentName]
+    : () => {
+        return (
+          <UnsupportedField
+            schema={schema}
+            idSchema={idSchema}
+            reason={`Unknown field type ${schema.type}`}
+          />
+        );
+      };
 }
 
 function Label(props) {
@@ -68,7 +78,11 @@ function ErrorList(props) {
       <p />
       <ul className="error-detail bs-callout bs-callout-info">
         {errors.map((error, index) => {
-          return <li className="text-danger" key={index}>{error}</li>;
+          return (
+            <li className="text-danger" key={index}>
+              {error}
+            </li>
+          );
         })}
       </ul>
     </div>
@@ -147,7 +161,7 @@ function SchemaFieldRender(props) {
     FieldTemplate = DefaultTemplate,
   } = registry;
   const schema = retrieveSchema(props.schema, definitions);
-  const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+  const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
@@ -161,7 +175,9 @@ function SchemaFieldRender(props) {
   const uiOptions = getUiOptions(uiSchema);
   let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
-    displayLabel = isMultiSelect(schema) || isFilesArray(schema, uiSchema);
+    displayLabel =
+      isMultiSelect(schema, definitions) ||
+      isFilesArray(schema, uiSchema, definitions);
   }
   if (schema.type === "object") {
     displayLabel = false;
@@ -191,8 +207,12 @@ function SchemaFieldRender(props) {
 
   const { type } = schema;
   const id = idSchema.$id;
-  const label = props.schema.title || schema.title || name;
-  const description = props.schema.description || schema.description;
+  const label =
+    uiSchema["ui:title"] || props.schema.title || schema.title || name;
+  const description =
+    uiSchema["ui:description"] ||
+    props.schema.description ||
+    schema.description;
   const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";

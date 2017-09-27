@@ -43,6 +43,7 @@ class ObjectField extends Component {
       disabled,
       readonly,
       onBlur,
+      onFocus,
       registry = getDefaultRegistry(),
     } = this.props;
     const { definitions, fields, formContext } = registry;
@@ -66,19 +67,21 @@ class ObjectField extends Component {
     }
     return (
       <fieldset>
-        {title &&
+        {(uiSchema["ui:title"] || title) && (
           <TitleField
             id={`${idSchema.$id}__title`}
-            title={title}
+            title={uiSchema["ui:title"] || title}
             required={required}
             formContext={formContext}
-          />}
-        {schema.description &&
+          />
+        )}
+        {(uiSchema["ui:description"] || schema.description) && (
           <DescriptionField
             id={`${idSchema.$id}__description`}
-            description={schema.description}
+            description={uiSchema["ui:description"] || schema.description}
             formContext={formContext}
-          />}
+          />
+        )}
         {orderedProperties.map((name, index) => {
           return (
             <SchemaField
@@ -92,6 +95,7 @@ class ObjectField extends Component {
               formData={formData[name]}
               onChange={this.onPropertyChange(name)}
               onBlur={onBlur}
+              onFocus={onFocus}
               registry={registry}
               disabled={disabled}
               readonly={readonly}

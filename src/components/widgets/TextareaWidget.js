@@ -13,6 +13,7 @@ function TextareaWidget(props) {
     autofocus,
     onChange,
     onBlur,
+    onFocus,
   } = props;
   const _onChange = ({ target: { value } }) => {
     return onChange(value === "" ? options.emptyValue : value);
@@ -29,6 +30,7 @@ function TextareaWidget(props) {
       autoFocus={autofocus}
       rows={options.rows}
       onBlur={onBlur && (event => onBlur(id, event.target.value))}
+      onFocus={onFocus && (event => onFocus(id, event.target.value))}
       onChange={_onChange}
     />
   );
@@ -54,6 +56,7 @@ if (process.env.NODE_ENV !== "production") {
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
   };
 }
 

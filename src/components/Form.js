@@ -51,7 +51,6 @@ export default class Form extends Component {
       definitions
     );
     return {
-      status: "initial",
       schema,
       uiSchema,
       idSchema,
@@ -77,11 +76,19 @@ export default class Form extends Component {
   }
 
   renderErrors() {
-    const { status, errors } = this.state;
-    const { ErrorList, showErrorList } = this.props;
+    const { errors, errorSchema, schema, uiSchema } = this.state;
+    const { ErrorList, showErrorList, formContext } = this.props;
 
-    if (status !== "editing" && errors.length && showErrorList != false) {
-      return <ErrorList errors={errors} />;
+    if (errors.length && showErrorList != false) {
+      return (
+        <ErrorList
+          errors={errors}
+          errorSchema={errorSchema}
+          schema={schema}
+          uiSchema={uiSchema}
+          formContext={formContext}
+        />
+      );
     }
     return null;
   }
@@ -89,7 +96,7 @@ export default class Form extends Component {
   onChange = (formData, options = { validate: false }) => {
     const mustValidate =
       !this.props.noValidate && (this.props.liveValidate || options.validate);
-    let state = { status: "editing", formData };
+    let state = { formData };
     if (mustValidate) {
       const { errors, errorSchema } = this.validate(formData);
       state = { ...state, errors, errorSchema };
@@ -107,9 +114,14 @@ export default class Form extends Component {
     }
   };
 
+  onFocus = (...args) => {
+    if (this.props.onFocus) {
+      this.props.onFocus(...args);
+    }
+  };
+
   onSubmit = event => {
     event.preventDefault();
-    this.setState({ status: "submitted" });
 
     if (!this.props.noValidate) {
       const { errors, errorSchema } = this.validate(this.state.formData);
@@ -126,9 +138,9 @@ export default class Form extends Component {
     }
 
     if (this.props.onSubmit) {
-      this.props.onSubmit(this.state);
+      this.props.onSubmit({ ...this.state, status: "submitted" });
     }
-    this.setState({ status: "initial", errors: [], errorSchema: {} });
+    this.setState({ errors: [], errorSchema: {} });
   };
 
   getRegistry() {
@@ -187,14 +199,19 @@ export default class Form extends Component {
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}
+          onFocus={this.onFocus}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
         />
-        {children
-          ? children
-          : <p>
-              <button type="submit" className="btn btn-info">Submit</button>
-            </p>}
+        {children ? (
+          children
+        ) : (
+          <p>
+            <button type="submit" className="btn btn-info">
+              Submit
+            </button>
+          </p>
+        )}
       </form>
     );
   }

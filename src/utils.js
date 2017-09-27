@@ -67,8 +67,8 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   function mergeOptions(Widget) {
     // cache return value as property of widget for proper react reconciliation
     if (!Widget.MergedWidget) {
-      const defaultOptions = (Widget.defaultProps &&
-        Widget.defaultProps.options) || {};
+      const defaultOptions =
+        (Widget.defaultProps && Widget.defaultProps.options) || {};
       Widget.MergedWidget = ({ options = {}, ...props }) => (
         <Widget options={{ ...defaultOptions, ...options }} {...props} />
       );
@@ -128,7 +128,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   switch (schema.type) {
     // We need to recur for object schema inner default values.
     case "object":
-      return Object.keys(schema.properties).reduce((acc, key) => {
+      return Object.keys(schema.properties || {}).reduce((acc, key) => {
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
         acc[key] = computeDefaults(
@@ -141,9 +141,23 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
 
     case "array":
       if (schema.minItems) {
-        return new Array(schema.minItems).fill(
-          computeDefaults(schema.items, defaults, definitions)
-        );
+        if (!isMultiSelect(schema, definitions)) {
+          const defaultsLength = defaults ? defaults.length : 0;
+          if (schema.minItems > defaultsLength) {
+            const defaultEntries = defaults || [];
+            // populate the array with the defaults
+            const fillerEntries = new Array(
+              schema.minItems - defaultsLength
+            ).fill(
+              computeDefaults(schema.items, schema.items.defaults, definitions)
+            );
+            // then fill up the rest with either the item default or empty, up to minItems
+
+            return defaultEntries.concat(fillerEntries);
+          }
+        } else {
+          return [];
+        }
       }
   }
   return defaults;
@@ -198,7 +212,8 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1[key], right = obj2[key];
+    const left = obj1[key],
+      right = obj2[key];
     if (obj1.hasOwnProperty(key) && isObject(right)) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
@@ -277,15 +292,53 @@ export function orderProperties(properties, order) {
   return complete;
 }
 
-export function isMultiSelect(schema) {
-  return Array.isArray(schema.items.enum) && schema.uniqueItems;
+/**
+ * This function checks if the given schema matches a single
+ * constant value.
+ */
+export function isConstant(schema) {
+  return (
+    (Array.isArray(schema.enum) && schema.enum.length === 1) ||
+    schema.hasOwnProperty("const")
+  );
 }
 
-export function isFilesArray(schema, uiSchema) {
-  return (
-    (schema.items.type === "string" && schema.items.format === "data-url") ||
-    uiSchema["ui:widget"] === "files"
-  );
+export function toConstant(schema) {
+  if (Array.isArray(schema.enum) && schema.enum.length === 1) {
+    return schema.enum[0];
+  } else if (schema.hasOwnProperty("const")) {
+    return schema.const;
+  } else {
+    throw new Error("schema cannot be inferred as a constant");
+  }
+}
+
+export function isSelect(_schema, definitions = {}) {
+  const schema = retrieveSchema(_schema, definitions);
+  const altSchemas = schema.oneOf || schema.anyOf;
+  if (Array.isArray(schema.enum)) {
+    return true;
+  } else if (Array.isArray(altSchemas)) {
+    return altSchemas.every(altSchemas => isConstant(altSchemas));
+  }
+  return false;
+}
+
+export function isMultiSelect(schema, definitions = {}) {
+  if (!schema.uniqueItems || !schema.items) {
+    return false;
+  }
+  return isSelect(schema.items, definitions);
+}
+
+export function isFilesArray(schema, uiSchema, definitions = {}) {
+  if (uiSchema["ui:widget"] === "files") {
+    return true;
+  } else if (schema.items) {
+    const itemsSchema = retrieveSchema(schema.items, definitions);
+    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
+  }
+  return false;
 }
 
 export function isFixedItems(schema) {
