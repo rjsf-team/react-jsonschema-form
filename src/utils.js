@@ -357,19 +357,13 @@ export function allowAdditionalItems(schema) {
 }
 
 export function optionsList(schema) {
-  if (schema.enum) {
-    return schema.enum.map((value, i) => {
-      const label = (schema.enumNames && schema.enumNames[i]) || String(value);
-      return { label, value };
-    });
-  } else {
-    const altSchemas = schema.oneOf || schema.anyOf;
-    return altSchemas.map((schema, i) => {
-      const value = toConstant(schema);
-      const label = schema.title || String(value);
-      return { label, value };
-    });
-  }
+  return schema.enum.map((value, i) => {
+    const label = (schema.enumNames && schema.enumNames[i]) || String(value);
+    const disabled =
+      (schema.enumDisabled && schema.enumDisabled.indexOf(value) != -1) ||
+      false;
+    return { label, value, disabled };
+  });
 }
 
 function findSchemaDefinition($ref, definitions = {}) {

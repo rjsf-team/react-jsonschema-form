@@ -83,6 +83,7 @@ module.exports = {
         type: "string",
         enum: ["foo", "bar"],
         enumNames: ["Foo", "Bar"],
+        enumDisabled: ["bar"],
       },
     },
   },
@@ -140,9 +141,9 @@ module.exports = {
             style={{ backgroundColor }}
             value={value}
             onChange={event => onChange(event.target.value)}>
-            {enumOptions.map(({ label, value }, i) => {
+            {enumOptions.map(({ label, value, disabled }, i) => {
               return (
-                <option key={i} value={value}>
+                <option key={i} value={value} disabled={disabled}>
                   {label}
                 </option>
               );
