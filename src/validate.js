@@ -122,10 +122,6 @@ function transformAjvErrors(errors = []) {
       const { dataPath, keyword, message } = e;
       let property = `instance${dataPath}`;
 
-      if (keyword === "oneOf" || keyword === "enum") {
-        return;
-      }
-
       // put data in expected format
       return {
         name: keyword,
