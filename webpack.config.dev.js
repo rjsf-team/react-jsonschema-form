@@ -35,6 +35,15 @@ module.exports = {
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules"),
         ],
+      },
+      {
+        test: /\.json$/,
+        loader:"json-loader",
+        include: [
+          path.join(__dirname, "css"),
+          path.join(__dirname, "playground"),
+          path.join(__dirname, "node_modules"),
+        ],
       }
     ]
   }
