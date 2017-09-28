@@ -1,5 +1,12 @@
 import toPath from "lodash.topath";
-import { validate as jsonValidate } from "jsonschema";
+import Ajv from "ajv";
+const ajv = new Ajv({ errorDataPath: "property" });
+ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-04.json"));
+// custom format used by this lib
+ajv.addFormat(
+  "data-url",
+  /^\s*data:([a-z]+\/[a-z0-9\-\+]+(;[a-z\-]+\=[a-z0-9\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i
+);
 
 import { isObject, mergeObjects } from "./utils";
 
@@ -51,7 +58,7 @@ export function toErrorList(errorSchema, fieldName = "root") {
     errorList = errorList.concat(
       errorSchema.__errors.map(stack => {
         return {
-          stack: `${fieldName}: ${stack}`,
+          stack: `${fieldName}: ${stack}`
         };
       })
     );
@@ -72,7 +79,7 @@ function createErrorHandler(formData) {
     __errors: [],
     addError(message) {
       this.__errors.push(message);
-    },
+    }
   };
   if (isObject(formData)) {
     return Object.keys(formData).reduce((acc, key) => {
@@ -99,6 +106,37 @@ function unwrapErrorHandler(errorHandler) {
 }
 
 /**
+ * Transforming the error output from ajv to expected format from previous
+ * json schema validation library.
+ * @param {*} errors 
+ */
+function transformAjvErrors(errors = []) {
+  if (errors === null) {
+    return [];
+  }
+
+  // filtering out oneOf and enum. Not sure how to handle those in UI
+  return errors
+    .filter(e => e.keyword !== "oneOf" && e.keyword !== "enum")
+    .map(e => {
+      const { dataPath, keyword, message } = e;
+      let property = `instance${dataPath}`;
+
+      if (keyword === "oneOf" || keyword === "enum") {
+        return;
+      }
+
+      // put data in expected format
+      return {
+        name: keyword,
+        property,
+        message,
+        stack: `${dataPath} ${message}`
+      };
+    });
+}
+
+/**
  * This function processes the formData with a user `validate` contributed
  * function, which receives the form data and an `errorHandler` object that
  * will be used to add custom validation errors for each field.
@@ -109,7 +147,11 @@ export default function validateFormData(
   customValidate,
   transformErrors
 ) {
-  let { errors } = jsonValidate(formData, schema);
+  let errors = [];
+
+  ajv.validate(schema, formData);
+  errors = transformAjvErrors(ajv.errors);
+
   if (typeof transformErrors === "function") {
     errors = transformErrors(errors);
   }
