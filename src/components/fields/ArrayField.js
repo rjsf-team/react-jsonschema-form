@@ -66,28 +66,30 @@ function DefaultArrayItem(props) {
             className="btn-group"
             style={{ display: "flex", justifyContent: "space-around" }}>
             {(props.hasMoveUp || props.hasMoveDown) && (
-              <IconBtn
-                icon="arrow-up"
-                className="array-item-move-up"
-                tabIndex="-1"
-                style={btnStyle}
-                disabled={props.disabled || props.readonly || !props.hasMoveUp}
-                onClick={props.onReorderClick(props.index, props.index - 1)}
-              />
-            )}
+                <IconBtn
+                  icon="arrow-up"
+                  className="array-item-move-up"
+                  tabIndex="-1"
+                  style={btnStyle}
+                  disabled={
+                    props.disabled || props.readonly || !props.hasMoveUp
+                  }
+                  onClick={props.onReorderClick(props.index, props.index - 1)}
+                />
+              )}
 
             {(props.hasMoveUp || props.hasMoveDown) && (
-              <IconBtn
-                icon="arrow-down"
-                className="array-item-move-down"
-                tabIndex="-1"
-                style={btnStyle}
-                disabled={
-                  props.disabled || props.readonly || !props.hasMoveDown
-                }
-                onClick={props.onReorderClick(props.index, props.index + 1)}
-              />
-            )}
+                <IconBtn
+                  icon="arrow-down"
+                  className="array-item-move-down"
+                  tabIndex="-1"
+                  style={btnStyle}
+                  disabled={
+                    props.disabled || props.readonly || !props.hasMoveDown
+                  }
+                  onClick={props.onReorderClick(props.index, props.index + 1)}
+                />
+              )}
 
             {props.hasRemove && (
               <IconBtn
@@ -119,12 +121,12 @@ function DefaultFixedArrayFieldTemplate(props) {
       />
 
       {(props.uiSchema["ui:description"] || props.schema.description) && (
-        <div
-          className="field-description"
-          key={`field-description-${props.idSchema.$id}`}>
-          {props.uiSchema["ui:description"] || props.schema.description}
-        </div>
-      )}
+          <div
+            className="field-description"
+            key={`field-description-${props.idSchema.$id}`}>
+            {props.uiSchema["ui:description"] || props.schema.description}
+          </div>
+        )}
 
       <div
         className="row array-item-list"
@@ -154,15 +156,15 @@ function DefaultNormalArrayFieldTemplate(props) {
       />
 
       {(props.uiSchema["ui:description"] || props.schema.description) && (
-        <ArrayFieldDescription
-          key={`array-field-description-${props.idSchema.$id}`}
-          DescriptionField={props.DescriptionField}
-          idSchema={props.idSchema}
-          description={
-            props.uiSchema["ui:description"] || props.schema.description
-          }
-        />
-      )}
+          <ArrayFieldDescription
+            key={`array-field-description-${props.idSchema.$id}`}
+            DescriptionField={props.DescriptionField}
+            idSchema={props.idSchema}
+            description={
+              props.uiSchema["ui:description"] || props.schema.description
+            }
+          />
+        )}
 
       <div
         className="row array-item-list"

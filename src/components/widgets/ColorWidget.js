@@ -1,10 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import BaseInput from "./BaseInput";
-
 function ColorWidget(props) {
-  const { disabled, readonly } = props;
+  const { disabled, readonly, registry: { widgets: { BaseInput } } } = props;
   return <BaseInput type="color" {...props} disabled={disabled || readonly} />;
 }
 
