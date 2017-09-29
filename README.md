@@ -11,6 +11,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
 
 ## Table of Contents
 
+  - [Philosophy](#philosophy)
   - [Installation](#installation)
      - [As a npm-based project dependency](#as-a-npm-based-project-dependency)
      - [As a script served from a CDN](#as-a-script-served-from-a-cdn)
@@ -87,9 +88,16 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Development server](#development-server)
      - [Tests](#tests)
         - [TDD](#tdd)
+  - [FAQ](#faq)
   - [License](#license)
 
 ---
+
+## Philosophy
+
+react-jsonschema-form is meant to automatically generate a React form based on a [JSON Schema](http://json-schema.org/). It is a major component in the [kinto-admin](https://github.com/Kinto/kinto-admin/). If you want to generate a form for any data, sight unseen, simply given a JSON schema, react-jsonschema-form may be for you. If you have a priori knowledge of your data and want a toolkit for generating forms for it, you might look elsewhere.
+
+react-jsonschema-form validates that the data conforms to the given schema, but doesn't prevent the user from inputing data that doesn't fit (for example, stripping non-numbers from a number field, or not letting the user add values to an array that is already "full".
 
 ## Installation
 
@@ -1423,6 +1431,8 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 
 * `additionalItems` keyword for arrays
     This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
+* `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`
+    Nobody yet has come up with a PR that adds this feature with a simple and easy-to-understand UX.
 
 ## Tips and tricks
 
@@ -1489,6 +1499,16 @@ $ git tag v$VERSION
 $ npm publish
 $ git push --tags origin
 ```
+
+## FAQ
+
+### Q: Does rjsf support `oneOf`, `anyOf`, multiple types in an array, etc.?
+
+A: Not yet, but perhaps you will be the person whose PR will finally add the feature in a way that gets merged. For inspiration, see [#329](https://github.com/mozilla-services/react-jsonschema-form/pull/329) or [#417](https://github.com/mozilla-services/react-jsonschema-form/pull/417). See also: [#52](https://github.com/mozilla-services/react-jsonschema-form/issues/52), [#151](https://github.com/mozilla-services/react-jsonschema-form/issues/151), [#171](https://github.com/mozilla-services/react-jsonschema-form/issues/171), [#200](https://github.com/mozilla-services/react-jsonschema-form/issues/200), [#282](https://github.com/mozilla-services/react-jsonschema-form/issues/282), [#302](https://github.com/mozilla-services/react-jsonschema-form/pull/302), [#330](https://github.com/mozilla-services/react-jsonschema-form/issues/330), [#430](https://github.com/mozilla-services/react-jsonschema-form/issues/430), [#522](https://github.com/mozilla-services/react-jsonschema-form/issues/522), [#538](https://github.com/mozilla-services/react-jsonschema-form/issues/538), [#551](https://github.com/mozilla-services/react-jsonschema-form/issues/551), [#552](https://github.com/mozilla-services/react-jsonschema-form/issues/552), or [#648](https://github.com/mozilla-services/react-jsonschema-form/issues/648).
+
+### Q: Will react-jsonschema-form support Material, Ant-Design, Foundation, or [some other specific widget library or frontend style]?
+
+A: Probably not. We use Bootstrap v3 and it works fine for our needs. We would like for react-jsonschema-form to support other frameworks, we just don't want to support them ourselves. Ideally, these frontend styles could be added to react-jsonschema-form with a third-party library. If there is a technical limitation preventing this, please consider opening a PR. See also: [#91](https://github.com/mozilla-services/react-jsonschema-form/issues/91), [#99](https://github.com/mozilla-services/react-jsonschema-form/issues/99), [#125](https://github.com/mozilla-services/react-jsonschema-form/issues/125), [#237](https://github.com/mozilla-services/react-jsonschema-form/issues/237), [#287](https://github.com/mozilla-services/react-jsonschema-form/issues/287), [#299](https://github.com/mozilla-services/react-jsonschema-form/issues/299), [#440](https://github.com/mozilla-services/react-jsonschema-form/issues/440), [#461](https://github.com/mozilla-services/react-jsonschema-form/issues/461), [#546](https://github.com/mozilla-services/react-jsonschema-form/issues/546), [#555](https://github.com/mozilla-services/react-jsonschema-form/issues/555), [#626](https://github.com/mozilla-services/react-jsonschema-form/issues/626), and [#623](https://github.com/mozilla-services/react-jsonschema-form/pull/623).
 
 ## License
 
