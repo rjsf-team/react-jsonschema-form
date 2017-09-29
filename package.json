@@ -73,7 +73,7 @@
     "jsdom": "^8.3.0",
     "lint-staged": "^3.3.1",
     "mocha": "^2.5.3",
-    "prettier": "^1.6.1",
+    "prettier": "^1.7.2",
     "react": "^15.5.0",
     "react-addons-test-utils": "^15.3.2",
     "react-codemirror": "^0.2.3",
