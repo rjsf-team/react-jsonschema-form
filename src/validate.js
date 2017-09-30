@@ -1,12 +1,13 @@
 import toPath from "lodash.topath";
 import Ajv from "ajv";
-const ajv = new Ajv({ errorDataPath: "property" });
-ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-04.json"));
-// custom format used by this lib
-ajv.addFormat(
-  "data-url",
-  /^\s*data:([a-z]+\/[a-z0-9\-\+]+(;[a-z\-]+\=[a-z0-9\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i
-);
+const ajv = new Ajv({
+  errorDataPath: "property",
+  allErrors: true,
+  messages: true
+});
+// add custom formats
+ajv.addFormat("data-url", /^(data:)([\w\/\+]+);(name=[\w-]+|base64).*,(.*)/gi);
+ajv.addFormat("color", /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/);
 
 import { isObject, mergeObjects } from "./utils";
 
@@ -115,21 +116,21 @@ function transformAjvErrors(errors = []) {
     return [];
   }
 
-  // filtering out oneOf and enum. Not sure how to handle those in UI
-  return errors
-    .filter(e => e.keyword !== "oneOf" && e.keyword !== "enum")
-    .map(e => {
-      const { dataPath, keyword, message } = e;
-      let property = `instance${dataPath}`;
+  return errors.map(e => {
+    const { dataPath, keyword, message, params } = e;
+    // not having 'instance' in the property name breaks things further down the line
+    // than I'm wiling to dig at the moment.
+    let property = `instance${dataPath}`;
 
-      // put data in expected format
-      return {
-        name: keyword,
-        property,
-        message,
-        stack: `${dataPath} ${message}`
-      };
-    });
+    // put data in expected format
+    return {
+      name: keyword,
+      property,
+      message,
+      params, // specific to ajv
+      stack: `${property} ${message}`
+    };
+  });
 }
 
 /**
@@ -143,10 +144,9 @@ export default function validateFormData(
   customValidate,
   transformErrors
 ) {
-  let errors = [];
-
   ajv.validate(schema, formData);
-  errors = transformAjvErrors(ajv.errors);
+
+  let errors = transformAjvErrors(ajv.errors);
 
   if (typeof transformErrors === "function") {
     errors = transformErrors(errors);
