@@ -509,7 +509,6 @@ describe("Validation", () => {
     describe("Custom ErrorList", () => {
       const schema = {
         type: "string",
-        required: true,
         minLength: 1
       };
 
@@ -550,7 +549,7 @@ describe("Validation", () => {
         );
         expect(node.querySelectorAll(".ErrorSchema")).to.have.length.of(1);
         expect(node.querySelector(".ErrorSchema").textContent).eql(
-          "is required"
+          "should be string"
         );
         expect(node.querySelectorAll(".Schema")).to.have.length.of(1);
         expect(node.querySelector(".Schema").textContent).eql("string");
