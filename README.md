@@ -543,6 +543,31 @@ This will be rendered using a select box that way:
 
 Note that string representations of numbers will be cast back and reflected as actual numbers into form state.
 
+### Disabled attribute for `enum` fields
+
+This library supports the 'disbaled' property for `enum` fields, which allows disabling 'enum' fields.This feature is a part of uiSchema.
+
+```js
+const schema = {
+  type: "string",
+  enum: ["one", "two", "three"],
+};
+
+const uiSchema={
+  "ui:enumDisabled":['two'],
+}
+```
+
+This will be rendered using a select box that way:
+
+```html
+<select>
+  <option value="1">one</option>
+  <option value="2" disabled>two</option>
+  <option value="3">three</option>
+</select>
+```
+
 ### Multiple choices list
 
 The default behavior for array fields is a list of text inputs with add/remove buttons. Though there are two alternative simpler widgets for common situations like picking elements against a list of choices; typically this maps to a schema having:
