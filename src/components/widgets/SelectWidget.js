@@ -51,7 +51,7 @@ function SelectWidget(props) {
     onFocus,
     placeholder,
   } = props;
-  const { enumOptions } = options;
+  const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
   return (
     <select
@@ -82,8 +82,9 @@ function SelectWidget(props) {
       }}>
       {!multiple && !schema.default && <option value="">{placeholder}</option>}
       {enumOptions.map(({ value, label }, i) => {
+        const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
         return (
-          <option key={i} value={value}>
+          <option key={i} value={value} disabled={disabled}>
             {label}
           </option>
         );

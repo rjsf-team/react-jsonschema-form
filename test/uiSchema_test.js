@@ -342,6 +342,46 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll(".custom option")).to.have.length.of(2);
       });
     });
+    describe("enum fields disbaled options", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          field: {
+            type: "string",
+            enum: ["foo", "bar"],
+          },
+        },
+      };
+      const CustomWidget = props => {
+        const { value, options } = props;
+        const { enumOptions, className, enumDisabled = [] } = options;
+        return (
+          <select className={className}>
+            {enumOptions.map(({ label, value }, i) => (
+              <option key={i} disabled={enumDisabled.indexOf(value) != -1}>
+                {value}
+              </option>
+            ))}
+          </select>
+        );
+      };
+      const uiSchema = {
+        field: {
+          "ui:widget": CustomWidget,
+          "ui:options": {
+            className: "custom",
+          },
+          "ui:enumDisabled": ["foo"],
+        },
+      };
+      it("should have atleast one option disbaled", () => {
+        const { node } = createFormComponent({ schema, uiSchema });
+        const disabledOptionsLen = uiSchema.field["ui:enumDisabled"].length;
+        expect(
+          node.querySelectorAll(".custom option:disabled")
+        ).to.have.length.of(disabledOptionsLen);
+      });
+    });
   });
 
   describe("ui:help", () => {
