@@ -99,11 +99,11 @@ class ObjectField extends Component {
       description,
       TitleField,
       DescriptionField,
-      properties: orderedProperties.map((name, index) => {
+      properties: orderedProperties.map(name => {
         return {
           content: (
             <SchemaField
-              key={index}
+              key={name}
               name={name}
               required={this.isRequired(name)}
               schema={schema.properties[name]}
@@ -120,7 +120,6 @@ class ObjectField extends Component {
             />
           ),
           name,
-          index,
           readonly,
           disabled,
           required,

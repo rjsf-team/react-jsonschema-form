@@ -914,7 +914,6 @@ The following props are part of each element in `properties`:
 - `content`: The html for the property's content.
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
-- `index`: A number stating the index the property occurs in the `properties`.
 - `readonly`: A boolean value stating if the property is readonly.
 
 ### Error List template
