@@ -2,12 +2,17 @@ import toPath from "lodash.topath";
 import Ajv from "ajv";
 const ajv = new Ajv({
   errorDataPath: "property",
-  allErrors: true,
-  messages: true
+  allErrors: true
 });
 // add custom formats
-ajv.addFormat("data-url", /^(data:)([\w\/\+]+);(name=[\w-]+|base64).*,(.*)/gi);
-ajv.addFormat("color", /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/);
+ajv.addFormat(
+  "data-url",
+  /^data:([a-z]+\/[a-z0-9-+.]+)?;name=(.*);base64,(.*)$/
+);
+ajv.addFormat(
+  "color",
+  /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
+);
 
 import { isObject, mergeObjects } from "./utils";
 
@@ -107,9 +112,8 @@ function unwrapErrorHandler(errorHandler) {
 }
 
 /**
- * Transforming the error output from ajv to expected format from previous
- * json schema validation library.
- * @param {*} errors 
+ * Transforming the error output from ajv to format used by jsonschema.
+ * At some point, components should be updated to support ajv.
  */
 function transformAjvErrors(errors = []) {
   if (errors === null) {
@@ -118,8 +122,7 @@ function transformAjvErrors(errors = []) {
 
   return errors.map(e => {
     const { dataPath, keyword, message, params } = e;
-    // not having 'instance' in the property name breaks things further down the line
-    // than I'm wiling to dig at the moment.
+    // not having 'instance' in the property name breaks things further down the line.
     let property = `instance${dataPath}`;
 
     // put data in expected format
