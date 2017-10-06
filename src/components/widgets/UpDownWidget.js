@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { rangeSpec } from "../../utils";
-import BaseInput from "./BaseInput";
 
 function UpDownWidget(props) {
   const { registry: { widgets: { BaseInput } } } = props;
