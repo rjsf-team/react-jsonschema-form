@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
 import { parseDateString, toDateString } from "../src/utils";
+import { fromJSONDate } from "../src/components/widgets/DateTimeWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("StringField", () => {
@@ -424,9 +425,9 @@ describe("StringField", () => {
         target: { value: newDatetime },
       });
 
-      expect(node.querySelector("[type=datetime-local]").value)
-        // XXX import and use conversion helper
-        .eql(newDatetime.slice(0, 19));
+      expect(node.querySelector("[type=datetime-local]").value).eql(
+        fromJSONDate(newDatetime)
+      );
     });
 
     it("should fill field with data", () => {

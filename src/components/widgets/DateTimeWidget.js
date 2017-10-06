@@ -1,11 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { pad } from "../../utils";
 
-function pad(p, n) {
-  return String(n).padStart(p, 0);
-}
-
-function fromJSONDate(jsonDate) {
+export function fromJSONDate(jsonDate) {
   if (!jsonDate) {
     return "";
   }
@@ -14,15 +11,15 @@ function fromJSONDate(jsonDate) {
   // https://html.spec.whatwg.org/multipage/input.html#local-date-and-time-state-(type%3Ddatetime-local)
   // > should be a _valid local date and time string_ (not GMT)
 
-  const date = Date.parse(jsonDate);
+  const date = new Date(jsonDate);
 
-  const yyyy = pad(4, date.getFullYear());
-  const MM = pad(2, date.getMonth() + 1);
-  const dd = pad(2, date.getDate());
-  const hh = pad(2, date.getHours());
-  const mm = pad(2, date.getMinutes());
-  const ss = pad(2, date.getSeconds());
-  const SSS = pad(3, date.getMilliseconds());
+  const yyyy = date.getFullYear();
+  const MM = pad(date.getMonth() + 1, 2);
+  const dd = pad(date.getDate(), 2);
+  const hh = pad(date.getHours(), 2);
+  const mm = pad(date.getMinutes(), 2);
+  const ss = pad(date.getSeconds(), 2);
+  const SSS = pad(date.getMilliseconds(), 3);
 
   return `${yyyy}-${MM}-${dd}T${hh}:${mm}:${ss}.${SSS}`;
 }
