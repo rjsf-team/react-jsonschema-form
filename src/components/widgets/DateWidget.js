@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import BaseInput from "./BaseInput";
-
 function DateWidget(props) {
   const { onChange, registry: { widgets: { BaseInput } } } = props;
   return (
