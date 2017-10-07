@@ -183,7 +183,7 @@ describe("Validation", () => {
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            "instance.foo is a required property"
+            ".foo is a required property"
           );
         });
 
@@ -236,7 +236,7 @@ describe("Validation", () => {
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            "instance.foo should NOT be shorter than 10 characters"
+            ".foo should NOT be shorter than 10 characters"
           );
         });
 

@@ -678,7 +678,7 @@ describe("Form", () => {
         });
 
         expect(comp.state.errors).to.have.length.of(1);
-        expect(comp.state.errors[0].stack).to.eql("instance should be number");
+        expect(comp.state.errors[0].stack).to.eql("should be number");
       });
     });
 
