@@ -13,7 +13,7 @@ export function fromJSONDate(jsonDate) {
 
   const date = new Date(jsonDate);
 
-  const yyyy = date.getFullYear();
+  const yyyy = pad(date.getFullYear(), 4);
   const MM = pad(date.getMonth() + 1, 2);
   const dd = pad(date.getDate(), 2);
   const hh = pad(date.getHours(), 2);
