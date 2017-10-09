@@ -39,7 +39,7 @@ describe("ArrayFieldTemplate", () => {
       );
     }
 
-    describe("Statefull ArrayFieldTemplate", () => {
+    describe("Stateful ArrayFieldTemplate", () => {
       class ArrayFieldTemplate extends PureComponent {
         render() {
           return <div>{this.props.items.map(item => item.element)}</div>;

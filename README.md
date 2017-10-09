@@ -57,6 +57,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array Field Template](#array-field-template)
+     - [Object Field Template](#object-field-template)
      - [Error List template](#error-list-template)
      - [Custom widgets and fields](#custom-widgets-and-fields)
      - [Custom widget components](#custom-widget-components)
@@ -867,8 +868,8 @@ Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema
 
 The following props are passed to each `ArrayFieldTemplate`:
 
-- `DescriptionField`: The generated `DescriptionField` (if you wanted to utilize it)
-- `TitleField`: The generated `TitleField` (if you wanted to utilize it).
+- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
+- `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
@@ -896,6 +897,51 @@ The following props are part of each element in `items`:
 - `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is readonly.
+
+### Object Field Template
+
+Similarly to the `FieldTemplate` you can use an `ObjectFieldTemplate` to customize how your
+objects are rendered.
+
+```jsx
+function ObjectFieldTemplate(props) {
+  return (
+    <div>
+      {props.title}
+      {props.description}
+      {props.properties.map(element => <div className="property-wrapper">{element.children}</div>)}
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema}
+        ObjectFieldTemplate={ObjectFieldTemplate} />,
+), document.getElementById("app"));
+```
+
+Please see [customObject.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customObject.js) for a better example.
+
+The following props are passed to each `ObjectFieldTemplate`:
+
+- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
+- `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
+- `title`: A string value containing the title for the object.
+- `description`: A string value containing the description for the object.
+- `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
+- `required`: A boolean value stating if the object is required.
+- `schema`: The schema object for this object.
+- `uiSchema`: The uiSchema object for this object field.
+- `idSchema`: An object containing the id for this object & ids for it's properties.
+- `formData`: The form data for the object.
+- `formContext`: The `formContext` object that you passed to Form.
+
+The following props are part of each element in `properties`:
+
+- `content`: The html for the property's content.
+- `name`: A string representing the property name.
+- `disabled`: A boolean value stating if the object property is disabled.
+- `readonly`: A boolean value stating if the property is readonly.
 
 ### Error List template
 

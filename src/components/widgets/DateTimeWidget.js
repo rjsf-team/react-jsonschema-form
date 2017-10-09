@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import BaseInput from "./BaseInput";
-
 function fromJSONDate(jsonDate) {
   return jsonDate ? jsonDate.slice(0, 19) : "";
 }
