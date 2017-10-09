@@ -1528,10 +1528,10 @@ $ npm run tdd
 ### Releasing
 
 ```
-$ npm run dist
 $ edit package.json # update version number
 $ git commit -m "Bump version $VERSION"
 $ git tag v$VERSION
+$ npm run dist
 $ npm publish
 $ git push --tags origin
 ```
