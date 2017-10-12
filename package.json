@@ -26,7 +26,7 @@
       "git add"
     ]
   },
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "files": [
     "dist",
     "lib"
