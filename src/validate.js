@@ -1,14 +1,27 @@
 import toPath from "lodash.topath";
-import { validate as jsonValidate } from "jsonschema";
+import Ajv from "ajv";
+const ajv = new Ajv({
+  errorDataPath: "property",
+  allErrors: true,
+});
+// add custom formats
+ajv.addFormat(
+  "data-url",
+  /^data:([a-z]+\/[a-z0-9-+.]+)?;name=(.*);base64,(.*)$/
+);
+ajv.addFormat(
+  "color",
+  /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
+);
 
 import { isObject, mergeObjects } from "./utils";
 
 function toErrorSchema(errors) {
-  // Transforms a jsonschema validation errors list:
+  // Transforms a ajv validation errors list:
   // [
-  //   {property: "instance.level1.level2[2].level3", message: "err a"},
-  //   {property: "instance.level1.level2[2].level3", message: "err b"},
-  //   {property: "instance.level1.level2[4].level3", message: "err b"},
+  //   {property: ".level1.level2[2].level3", message: "err a"},
+  //   {property: ".level1.level2[2].level3", message: "err b"},
+  //   {property: ".level1.level2[4].level3", message: "err b"},
   // ]
   // Into an error tree:
   // {
@@ -26,7 +39,14 @@ function toErrorSchema(errors) {
     const { property, message } = error;
     const path = toPath(property);
     let parent = errorSchema;
-    for (const segment of path.slice(1)) {
+
+    // If the property is at the root (.level1) then toPath creates
+    // an empty array element at the first index. Remove it.
+    if (path.length > 0 && path[0] === "") {
+      path.splice(0, 1);
+    }
+
+    for (const segment of path.slice(0)) {
       if (!(segment in parent)) {
         parent[segment] = {};
       }
@@ -99,6 +119,30 @@ function unwrapErrorHandler(errorHandler) {
 }
 
 /**
+ * Transforming the error output from ajv to format used by jsonschema.
+ * At some point, components should be updated to support ajv.
+ */
+function transformAjvErrors(errors = []) {
+  if (errors === null) {
+    return [];
+  }
+
+  return errors.map(e => {
+    const { dataPath, keyword, message, params } = e;
+    let property = `${dataPath}`;
+
+    // put data in expected format
+    return {
+      name: keyword,
+      property,
+      message,
+      params, // specific to ajv
+      stack: `${property} ${message}`.trim(),
+    };
+  });
+}
+
+/**
  * This function processes the formData with a user `validate` contributed
  * function, which receives the form data and an `errorHandler` object that
  * will be used to add custom validation errors for each field.
@@ -109,7 +153,10 @@ export default function validateFormData(
   customValidate,
   transformErrors
 ) {
-  let { errors } = jsonValidate(formData, schema);
+  ajv.validate(schema, formData);
+
+  let errors = transformAjvErrors(ajv.errors);
+
   if (typeof transformErrors === "function") {
     errors = transformErrors(errors);
   }
