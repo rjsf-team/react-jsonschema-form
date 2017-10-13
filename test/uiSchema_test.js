@@ -395,7 +395,7 @@ describe("uiSchema", () => {
           "ui:options": {
             className: "custom",
           },
-          "ui:enumDisabled": ["foo", "bar"],
+          "ui:enumDisabled": ["foo"],
         },
       };
       it("should have atleast one option disabled", () => {
@@ -403,6 +403,10 @@ describe("uiSchema", () => {
         const disabledOptionsLen = uiSchema.field["ui:enumDisabled"].length;
         expect(node.querySelectorAll("option:disabled")).to.have.length.of(
           disabledOptionsLen
+        );
+        expect(node.querySelectorAll("option:enabled")).to.have.length.of(
+          // Two options, one disabled, plus the placeholder
+          2 - disabledOptionsLen + 1
         );
       });
     });
