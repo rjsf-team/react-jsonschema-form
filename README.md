@@ -196,7 +196,7 @@ render((
 
 #### Form error event handler
 
-To react to when submitted form data are invalid, pass an `onError` handler, which is passed the list of encoutered errors:
+To react to when submitted form data are invalid, pass an `onError` handler, which is passed the list of encountered errors:
 
 ```js
 const onError = (errors) => console.log("I have", errors.length, "errors to fix");
@@ -209,7 +209,7 @@ render((
 
 #### Form data changes
 
-If you plan on being notified everytime the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
+If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
 
 #### Form field blur events
 
@@ -324,7 +324,7 @@ The built-in string field also supports the JSONSchema `format` property, and wi
 
 ![](http://i.imgur.com/xqu6Lcp.png)
 
-Please note that while standardized, `datetime-local` and `date` input elements are not yet supported by Firefox and IE. If you plan on targetting these platforms, two alternative widgets are available:
+Please note that while standardized, `datetime-local` and `date` input elements are not yet supported by Firefox and IE. If you plan on targeting these platforms, two alternative widgets are available:
 
 - `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
 - `alt-date`: Three `select` elements are used to select the year, month and the day.
@@ -444,7 +444,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-If a guarenteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
+If a guaranteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
 
 ```js
 const uiSchema = {
@@ -796,7 +796,7 @@ If you want to handle the rendering of each element yourself, you can use the pr
 
 The following props are passed to a custom field template component:
 
-- `id`: The id of the field in the hierarchy. You can use it to render a label targetting the wrapped widget.
+- `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
 - `classNames`: A string containing the base bootstrap CSS classes merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
 - `label`: The computed label for this field, as a string.
 - `description`: A component instance rendering the field description, if any defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined).
@@ -850,7 +850,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `idSchema`: Object
 - `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
 - `onAddClick: (event) => (event) => void`: Returns a function that adds a new item to the array.
-- `readonly`: A boolean value stating if the array is readonly.
+- `readonly`: A boolean value stating if the array is read-only.
 - `required`: A boolean value stating if the array is required.
 - `schema`: The schema object for this array.
 - `uiSchema`: The uiSchema object for this array field.
@@ -870,7 +870,7 @@ The following props are part of each element in `items`:
 - `index`: A number stating the index the array item occurs in `items`.
 - `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
-- `readonly`: A boolean value stating if the array item is readonly.
+- `readonly`: A boolean value stating if the array item is read-only.
 
 ### Object Field Template
 
@@ -915,7 +915,7 @@ The following props are part of each element in `properties`:
 - `content`: The html for the property's content.
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
-- `readonly`: A boolean value stating if the property is readonly.
+- `readonly`: A boolean value stating if the property is read-only.
 
 ### Error List template
 
