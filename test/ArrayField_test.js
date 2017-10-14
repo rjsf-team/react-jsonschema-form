@@ -517,7 +517,7 @@ describe("ArrayField", () => {
       expect(form.state.formData.multipleChoicesList).to.be.empty;
       expect(form.state.errors.length).to.equal(1);
       expect(form.state.errors[0].name).to.equal("minItems");
-      expect(form.state.errors[0].argument).to.equal(3);
+      expect(form.state.errors[0].params.limit).to.equal(3);
     });
 
     it("should honor given formData, even when it does not meet ths minItems-requirement", () => {

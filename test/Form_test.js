@@ -678,9 +678,7 @@ describe("Form", () => {
         });
 
         expect(comp.state.errors).to.have.length.of(1);
-        expect(comp.state.errors[0].stack).to.eql(
-          "instance is not of a type(s) number"
-        );
+        expect(comp.state.errors[0].stack).to.eql("should be number");
       });
     });
 
@@ -808,7 +806,7 @@ describe("Form", () => {
           });
 
           expect(comp.state.errorSchema).eql({
-            __errors: ["does not meet minimum length of 8"],
+            __errors: ["should NOT be shorter than 8 characters"],
           });
         });
 
@@ -822,7 +820,7 @@ describe("Form", () => {
           expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
           expect(
             node.querySelector(".field-string .error-detail").textContent
-          ).eql("does not meet minimum length of 8");
+          ).eql("should NOT be shorter than 8 characters");
         });
       });
 
@@ -877,7 +875,7 @@ describe("Form", () => {
         Simulate.submit(node);
 
         expect(comp.state.errorSchema).eql({
-          __errors: ["does not meet minimum length of 8"],
+          __errors: ["should NOT be shorter than 8 characters"],
         });
       });
 
@@ -895,7 +893,7 @@ describe("Form", () => {
           sinon.match(value => {
             return (
               value.length === 1 &&
-              value[0].message === "does not meet minimum length of 8"
+              value[0].message === "should NOT be shorter than 8 characters"
             );
           })
         );
@@ -916,7 +914,7 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
-          __errors: ["does not meet minimum length of 8"],
+          __errors: ["should NOT be shorter than 8 characters"],
         });
       });
 
@@ -926,7 +924,7 @@ describe("Form", () => {
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(
           node.querySelector(".field-string .error-detail").textContent
-        ).eql("does not meet minimum length of 8");
+        ).eql("should NOT be shorter than 8 characters");
       });
     });
 
@@ -945,8 +943,8 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
         expect(comp.state.errorSchema).eql({
           __errors: [
-            "does not meet minimum length of 8",
-            'does not match pattern "d+"',
+            "should NOT be shorter than 8 characters",
+            'should match pattern "d+"',
           ],
         });
       });
@@ -958,8 +956,8 @@ describe("Form", () => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(errors).eql([
-          "does not meet minimum length of 8",
-          'does not match pattern "d+"',
+          "should NOT be shorter than 8 characters",
+          'should match pattern "d+"',
         ]);
       });
     });
@@ -996,7 +994,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           level1: {
             level2: {
-              __errors: ["does not meet minimum length of 8"],
+              __errors: ["should NOT be shorter than 8 characters"],
             },
           },
         });
@@ -1010,7 +1008,7 @@ describe("Form", () => {
 
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(errorDetail.textContent).eql(
-          "does not meet minimum length of 8"
+          "should NOT be shorter than 8 characters"
         );
       });
     });
@@ -1034,7 +1032,7 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
-          1: { __errors: ["does not meet minimum length of 4"] },
+          1: { __errors: ["should NOT be shorter than 4 characters"] },
         });
       });
 
@@ -1048,7 +1046,7 @@ describe("Form", () => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors).eql(["does not meet minimum length of 4"]);
+        expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
 
       it("should not denote errors on non impacted fields", () => {
@@ -1086,8 +1084,8 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({
           level1: {
-            1: { __errors: ["does not meet minimum length of 4"] },
-            3: { __errors: ["does not meet minimum length of 4"] },
+            1: { __errors: ["should NOT be shorter than 4 characters"] },
+            3: { __errors: ["should NOT be shorter than 4 characters"] },
           },
         });
       });
@@ -1103,7 +1101,7 @@ describe("Form", () => {
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
         const errors = [].map.call(liNodes, li => li.textContent);
 
-        expect(errors).eql(["does not meet minimum length of 4"]);
+        expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
     });
 
@@ -1136,10 +1134,10 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           outer: {
             0: {
-              1: { __errors: ["does not meet minimum length of 4"] },
+              1: { __errors: ["should NOT be shorter than 4 characters"] },
             },
             1: {
-              0: { __errors: ["does not meet minimum length of 4"] },
+              0: { __errors: ["should NOT be shorter than 4 characters"] },
             },
           },
         });
@@ -1155,8 +1153,8 @@ describe("Form", () => {
 
         expect(errors).eql([
           null,
-          "does not meet minimum length of 4",
-          "does not meet minimum length of 4",
+          "should NOT be shorter than 4 characters",
+          "should NOT be shorter than 4 characters",
           null,
         ]);
       });
@@ -1188,7 +1186,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           1: {
             foo: {
-              __errors: ["does not meet minimum length of 4"],
+              __errors: ["should NOT be shorter than 4 characters"],
             },
           },
         });
@@ -1204,7 +1202,7 @@ describe("Form", () => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors).eql(["does not meet minimum length of 4"]);
+        expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
     });
   });

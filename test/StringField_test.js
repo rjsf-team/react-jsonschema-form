@@ -482,6 +482,20 @@ describe("StringField", () => {
 
       expect(node.querySelector("#custom")).to.exist;
     });
+
+    it("should allow overriding of BaseInput", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+        widgets: {
+          BaseInput: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
   });
 
   describe("DateWidget", () => {
@@ -593,24 +607,6 @@ describe("StringField", () => {
       expect(comp.state.errors).to.have.length.of(1);
     });
 
-    it("should properly reset field value when null is selected", () => {
-      const { comp, node } = createFormComponent({
-        schema: {
-          type: "string",
-          format: "date",
-        },
-        uiSchema,
-        liveValidate: true,
-      });
-
-      Simulate.change(node.querySelector("[type=date]"), {
-        target: { value: null },
-      });
-
-      expect(comp.state.formData).to.be.a("undefined");
-      expect(comp.state.errors).to.have.length.of(0);
-    });
-
     it("should render customized DateWidget", () => {
       const { node } = createFormComponent({
         schema: {
@@ -619,6 +615,20 @@ describe("StringField", () => {
         },
         widgets: {
           DateWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+
+    it("should allow overriding of BaseInput", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date",
+        },
+        widgets: {
+          BaseInput: CustomWidget,
         },
       });
 
@@ -1544,6 +1554,22 @@ describe("StringField", () => {
         },
         widgets: {
           FileWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+  });
+
+  describe("UpDownWidget", () => {
+    it("should allow overriding of BaseInput", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+          format: "updown",
+        },
+        widgets: {
+          BaseInput: CustomWidget,
         },
       });
 
