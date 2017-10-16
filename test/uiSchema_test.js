@@ -379,7 +379,8 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll(".custom option")).to.have.length.of(2);
       });
     });
-    describe("enum fields disbaled options", () => {
+
+    describe("enum fields disabled options", () => {
       const schema = {
         type: "object",
         properties: {
