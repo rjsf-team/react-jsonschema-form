@@ -4,7 +4,9 @@
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": 2,
         "react/react-in-jsx-scope": 2,
-        "react/jsx-space-before-closing": [1, "always"],
+        "react/jsx-tag-spacing": [1, {
+          "beforeSelfClosing": "always"
+        }],
         "curly": [2],
         "linebreak-style": [2, "unix"],
         "semi": [2, "always"],
@@ -30,6 +32,7 @@
         "experimentalObjectRestSpread": true
     },
     "plugins": [
+        "jsx-a11y",
         "react"
     ]
 }
