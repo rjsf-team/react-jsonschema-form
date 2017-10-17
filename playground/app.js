@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
-import Codemirror from "react-codemirror";
+import CodeMirror from "react-codemirror2";
 import "codemirror/mode/javascript/javascript";
 
 import { shouldRender } from "../src/utils";
@@ -17,25 +17,6 @@ import "codemirror/theme/ttcn.css";
 import "codemirror/theme/solarized.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/eclipse.css";
-
-// Patching CodeMirror#componentWillReceiveProps so it's executed synchronously
-// Ref https://github.com/mozilla-services/react-jsonschema-form/issues/174
-Codemirror.prototype.componentWillReceiveProps = function(nextProps) {
-  if (
-    this.codeMirror &&
-    nextProps.value !== undefined &&
-    this.codeMirror.getValue() != nextProps.value
-  ) {
-    this.codeMirror.setValue(nextProps.value);
-  }
-  if (typeof nextProps.options === "object") {
-    for (var optionName in nextProps.options) {
-      if (nextProps.options.hasOwnProperty(optionName)) {
-        this.codeMirror.setOption(optionName, nextProps.options[optionName]);
-      }
-    }
-  }
-};
 
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
@@ -208,7 +189,7 @@ class Editor extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onCodeChange = code => {
+  onCodeChange = (editor, metadata, code) => {
     this.setState({ valid: true, code });
     setImmediate(() => {
       try {
@@ -229,7 +210,7 @@ class Editor extends Component {
           <span className={`${cls} glyphicon glyphicon-${icon}`} />
           {" " + title}
         </div>
-        <Codemirror
+        <CodeMirror
           value={this.state.code}
           onChange={this.onCodeChange}
           options={Object.assign({}, cmOptions, { theme })}
