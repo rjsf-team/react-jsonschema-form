@@ -39,7 +39,9 @@ function RadioWidget(props) {
         );
 
         return inline ? (
-          <label key={i} className={`radio-inline ${disabledCls} ${checkedCls}`}>
+          <label
+            key={i}
+            className={`radio-inline ${disabledCls} ${checkedCls}`}>
             {radio}
           </label>
         ) : (
