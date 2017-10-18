@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
 import { parseDateString, toDateString } from "../src/utils";
-import { fromJSONDate } from "../src/components/widgets/DateTimeWidget";
+import { utcToLocal } from "../src/components/widgets/DateTimeWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("StringField", () => {
@@ -426,7 +426,7 @@ describe("StringField", () => {
       });
 
       expect(node.querySelector("[type=datetime-local]").value).eql(
-        fromJSONDate(newDatetime)
+        utcToLocal(newDatetime)
       );
     });
 
