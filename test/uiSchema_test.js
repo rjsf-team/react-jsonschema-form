@@ -354,7 +354,7 @@ describe("uiSchema", () => {
       };
 
       const CustomWidget = props => {
-        const { value, options } = props;
+        const { options } = props;
         const { enumOptions, className } = options;
         return (
           <select className={className}>
