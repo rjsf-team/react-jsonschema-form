@@ -83,6 +83,12 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [The case of empty strings](#the-case-of-empty-strings)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
+  - [Property dependencies](#property-dependencies)
+    - [Unidirectional](#unidirectional)
+    - [Bidirectional](#bidirectional)
+  - [Schema dependencies](#schema-depdencies)
+    - [Conditional](#conditional)
+    - [Dynamic](#dynamic)
   - [JSON Schema supporting status](#json-schema-supporting-status)
   - [Tips and tricks](#tips-and-tricks)
   - [Contributing](#contributing)
@@ -1496,6 +1502,160 @@ This library partially supports [inline schema definition dereferencing]( http:/
 *(Sample schema courtesy of the [Space Telescope Science Institute](http://spacetelescope.github.io/understanding-json-schema/structuring.html))*
 
 Note that it only supports local definition referencing, we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
+
+## Property dependencies
+
+This library supports conditionally making fields required based on the presence of other fields.
+
+### Unidirectional
+
+In the following example the `billing_address` field will be required if `credit_card` is defined.
+
+```json
+{
+  "type": "object",
+
+  "properties": {
+    "name": { "type": "string" },
+    "credit_card": { "type": "number" },
+    "billing_address": { "type": "string" }
+  },
+
+  "required": ["name"],
+
+  "dependencies": {
+    "credit_card": ["billing_address"]
+  }
+}
+```
+
+### Bidirectional
+
+In the following example the `billing_address` field will be required if `credit_card` is defined and the `credit_card`
+field will be required if `billing_address` is defined making them both required if either is defined.
+
+```json
+{
+  "type": "object",
+
+  "properties": {
+    "name": { "type": "string" },
+    "credit_card": { "type": "number" },
+    "billing_address": { "type": "string" }
+  },
+
+  "required": ["name"],
+
+  "dependencies": {
+    "credit_card": ["billing_address"],
+    "billing_address": ["credit_card"]
+  }
+}
+```
+
+*(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#property-dependencies))*
+
+## Schema dependencies
+
+This library also supports modifying portions of a schema based on form data.
+
+### Conditional
+
+```json
+{
+  "type": "object",
+
+  "properties": {
+    "name": { "type": "string" },
+    "credit_card": { "type": "number" }
+  },
+
+  "required": ["name"],
+
+  "dependencies": {
+    "credit_card": {
+      "properties": {
+        "billing_address": { "type": "string" }
+      },
+      "required": ["billing_address"]
+    }
+  }
+}
+```
+
+In this example the `billing_address` field will be displayed in the form if `credit_card` is defined.
+
+*(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#schema-dependencies))*
+
+### Dynamic
+
+```json
+{
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "Do you have any pets?": {
+      "type": "string",
+      "enum": [
+        "No",
+        "Yes: One",
+        "Yes: More than one"
+      ],
+      "default": "No"
+    }
+  },
+  "required": [
+    "Do you have any pets?"
+  ],
+  "dependencies": {
+    "Do you have any pets?": {
+      "oneOf": [
+        {
+          "properties": {
+            "Do you have any pets?": {
+              "enum": [
+                "No"
+              ]
+            }
+          }
+        },
+        {
+          "properties": {
+            "Do you have any pets?": {
+              "enum": [
+                "Yes: One"
+              ]
+            },
+            "How old is your pet?": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "How old is your pet?"
+          ]
+        },
+        {
+          "properties": {
+            "Do you have any pets?": {
+              "enum": [
+                "Yes: More than one"
+              ]
+            },
+            "Do you want to get rid of any?": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "Do you want to get rid of any?"
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+In this example the user is prompted with different follow-up questions dynamically based on their answer to the first question.
 
 ## JSON Schema supporting status
 

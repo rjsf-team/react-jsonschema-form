@@ -48,7 +48,8 @@ export default class Form extends Component {
     const idSchema = toIdSchema(
       schema,
       uiSchema["ui:rootFieldId"],
-      definitions
+      definitions,
+      formData
     );
     return {
       schema,
