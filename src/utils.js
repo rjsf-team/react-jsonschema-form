@@ -458,11 +458,12 @@ function withDependentSchema(
   dependencyKey,
   dependencyValue
 ) {
-  let { oneOf, ...dependentSchema } = dependencyValue;
-  schema = mergeSchemas(
-    schema,
-    retrieveSchema(dependentSchema, definitions, formData)
+  let { oneOf, ...dependentSchema } = retrieveSchema(
+    dependencyValue,
+    definitions,
+    formData
   );
+  schema = mergeSchemas(schema, dependentSchema);
   return oneOf === undefined
     ? schema
     : withExactlyOneSubschema(
