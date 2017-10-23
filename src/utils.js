@@ -482,10 +482,9 @@ function withExactlyOneSubschema(
   oneOf
 ) {
   if (!Array.isArray(oneOf)) {
-    console.warn(
-      `ignoring oneOf because it is some some ${typeof oneOf} instead of an array`
+    throw new Error(
+      `invalid oneOf: it is some ${typeof oneOf} instead of an array`
     );
-    return schema;
   }
   const validSubschemas = oneOf.filter(subschema => {
     if (!subschema.properties) {
