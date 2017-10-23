@@ -1,5 +1,6 @@
 import React from "react";
 import "setimmediate";
+import validateFormData from "./validate";
 
 const widgetMap = {
   boolean: {
@@ -167,7 +168,7 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
   if (!isObject(_schema)) {
     throw new Error("Invalid schema: " + _schema);
   }
-  const schema = retrieveSchema(_schema, definitions);
+  const schema = retrieveSchema(_schema, definitions, formData);
   const defaults = computeDefaults(schema, _schema.default, definitions);
   if (typeof formData === "undefined") {
     // No form data? Use schema defaults.
@@ -394,17 +395,134 @@ function findSchemaDefinition($ref, definitions = {}) {
   throw new Error(`Could not find a definition for ${$ref}.`);
 }
 
-export function retrieveSchema(schema, definitions = {}) {
-  // No $ref attribute found, returning the original schema.
-  if (!schema.hasOwnProperty("$ref")) {
+export function retrieveSchema(schema, definitions = {}, formData = {}) {
+  if (schema.hasOwnProperty("$ref")) {
+    // Retrieve the referenced schema definition.
+    const $refSchema = findSchemaDefinition(schema.$ref, definitions);
+    // Drop the $ref property of the source schema.
+    const { $ref, ...localSchema } = schema;
+    // Update referenced schema definition with local schema properties.
+    return retrieveSchema(
+      { ...$refSchema, ...localSchema },
+      definitions,
+      formData
+    );
+  } else if (schema.hasOwnProperty("dependencies")) {
+    const resolvedSchema = resolveDependencies(schema, definitions, formData);
+    return retrieveSchema(resolvedSchema, definitions, formData);
+  } else {
+    // No $ref or dependencies attribute found, returning the original schema.
     return schema;
   }
-  // Retrieve the referenced schema definition.
-  const $refSchema = findSchemaDefinition(schema.$ref, definitions);
-  // Drop the $ref property of the source schema.
-  const { $ref, ...localSchema } = schema;
-  // Update referenced schema definition with local schema properties.
-  return { ...$refSchema, ...localSchema };
+}
+
+function resolveDependencies(schema, definitions, formData) {
+  // Drop the dependencies from the source schema.
+  let { dependencies = {}, ...resolvedSchema } = schema;
+  // Process dependencies updating the local schema properties as appropriate.
+  for (const dependencyKey in dependencies) {
+    // Skip this dependency if its trigger property is not present.
+    if (!formData.hasOwnProperty(dependencyKey)) {
+      continue;
+    }
+    const dependencyValue = dependencies[dependencyKey];
+    if (Array.isArray(dependencyValue)) {
+      resolvedSchema = withDependentProperties(resolvedSchema, dependencyValue);
+    } else if (isObject(dependencyValue)) {
+      resolvedSchema = withDependentSchema(
+        resolvedSchema,
+        definitions,
+        formData,
+        dependencyKey,
+        dependencyValue
+      );
+    }
+  }
+  return resolvedSchema;
+}
+
+function withDependentProperties(schema, additionallyRequired) {
+  if (!additionallyRequired) {
+    return schema;
+  }
+  const required = Array.isArray(schema.required)
+    ? Array.from(new Set([...schema.required, ...additionallyRequired]))
+    : additionallyRequired;
+  return { ...schema, required: required };
+}
+
+function withDependentSchema(
+  schema,
+  definitions,
+  formData,
+  dependencyKey,
+  dependencyValue
+) {
+  let { oneOf, ...dependentSchema } = retrieveSchema(
+    dependencyValue,
+    definitions,
+    formData
+  );
+  schema = mergeSchemas(schema, dependentSchema);
+  return oneOf === undefined
+    ? schema
+    : withExactlyOneSubschema(
+        schema,
+        definitions,
+        formData,
+        dependencyKey,
+        oneOf
+      );
+}
+
+function withExactlyOneSubschema(
+  schema,
+  definitions,
+  formData,
+  dependencyKey,
+  oneOf
+) {
+  if (!Array.isArray(oneOf)) {
+    throw new Error(
+      `invalid oneOf: it is some ${typeof oneOf} instead of an array`
+    );
+  }
+  const validSubschemas = oneOf.filter(subschema => {
+    if (!subschema.properties) {
+      return false;
+    }
+    const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
+    if (conditionPropertySchema) {
+      const conditionSchema = {
+        type: "object",
+        properties: {
+          [dependencyKey]: conditionPropertySchema,
+        },
+      };
+      const { errors } = validateFormData(formData, conditionSchema);
+      return errors.length === 0;
+    }
+  });
+  if (validSubschemas.length !== 1) {
+    console.warn(
+      "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid"
+    );
+    return schema;
+  }
+  const subschema = validSubschemas[0];
+  const {
+    [dependencyKey]: conditionPropertySchema,
+    ...dependentSubschema
+  } = subschema.properties;
+  const dependentSchema = { ...subschema, properties: dependentSubschema };
+  return mergeSchemas(
+    schema,
+    retrieveSchema(dependentSchema, definitions, formData)
+  );
+}
+
+function mergeSchemas(schema1, schema2) {
+  return mergeObjects(schema1, schema2, true);
 }
 
 function isArguments(object) {
@@ -493,16 +611,16 @@ export function shouldRender(comp, nextProps, nextState) {
   return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
 }
 
-export function toIdSchema(schema, id, definitions) {
+export function toIdSchema(schema, id, definitions, formData = {}) {
   const idSchema = {
     $id: id || "root",
   };
   if ("$ref" in schema) {
-    const _schema = retrieveSchema(schema, definitions);
-    return toIdSchema(_schema, id, definitions);
+    const _schema = retrieveSchema(schema, definitions, formData);
+    return toIdSchema(_schema, id, definitions, formData);
   }
   if ("items" in schema && !schema.items.$ref) {
-    return toIdSchema(schema.items, id, definitions);
+    return toIdSchema(schema.items, id, definitions, formData);
   }
   if (schema.type !== "object") {
     return idSchema;
@@ -510,7 +628,7 @@ export function toIdSchema(schema, id, definitions) {
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
     const fieldId = idSchema.$id + "_" + name;
-    idSchema[name] = toIdSchema(field, fieldId, definitions);
+    idSchema[name] = toIdSchema(field, fieldId, definitions, formData[name]);
   }
   return idSchema;
 }

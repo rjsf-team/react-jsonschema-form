@@ -15,6 +15,8 @@ import single from "./single";
 import customArray from "./customArray";
 import customObject from "./customObject";
 import alternatives from "./alternatives";
+import propertyDependencies from "./propertyDependencies";
+import schemaDependencies from "./schemaDependencies";
 
 export const samples = {
   Simple: simple,
@@ -34,4 +36,6 @@ export const samples = {
   "Custom Array": customArray,
   "Custom Object": customObject,
   Alternatives: alternatives,
+  "Property dependencies": propertyDependencies,
+  "Schema dependencies": schemaDependencies,
 };

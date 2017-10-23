@@ -83,6 +83,12 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [The case of empty strings](#the-case-of-empty-strings)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
+  - [Property dependencies](#property-dependencies)
+    - [Unidirectional](#unidirectional)
+    - [Bidirectional](#bidirectional)
+  - [Schema dependencies](#schema-depdencies)
+    - [Conditional](#conditional)
+    - [Dynamic](#dynamic)
   - [JSON Schema supporting status](#json-schema-supporting-status)
   - [Tips and tricks](#tips-and-tricks)
   - [Contributing](#contributing)
@@ -1497,6 +1503,166 @@ This library partially supports [inline schema definition dereferencing]( http:/
 
 Note that it only supports local definition referencing, we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
 
+## Property dependencies
+
+This library supports conditionally making fields required based on the presence of other fields.
+
+### Unidirectional
+
+In the following example the `billing_address` field will be required if `credit_card` is defined.
+
+```json
+{
+  "type": "object",
+
+  "properties": {
+    "name": { "type": "string" },
+    "credit_card": { "type": "number" },
+    "billing_address": { "type": "string" }
+  },
+
+  "required": ["name"],
+
+  "dependencies": {
+    "credit_card": ["billing_address"]
+  }
+}
+```
+
+### Bidirectional
+
+In the following example the `billing_address` field will be required if `credit_card` is defined and the `credit_card`
+field will be required if `billing_address` is defined making them both required if either is defined.
+
+```json
+{
+  "type": "object",
+
+  "properties": {
+    "name": { "type": "string" },
+    "credit_card": { "type": "number" },
+    "billing_address": { "type": "string" }
+  },
+
+  "required": ["name"],
+
+  "dependencies": {
+    "credit_card": ["billing_address"],
+    "billing_address": ["credit_card"]
+  }
+}
+```
+
+*(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#property-dependencies))*
+
+## Schema dependencies
+
+This library also supports modifying portions of a schema based on form data.
+
+### Conditional
+
+```json
+{
+  "type": "object",
+
+  "properties": {
+    "name": { "type": "string" },
+    "credit_card": { "type": "number" }
+  },
+
+  "required": ["name"],
+
+  "dependencies": {
+    "credit_card": {
+      "properties": {
+        "billing_address": { "type": "string" }
+      },
+      "required": ["billing_address"]
+    }
+  }
+}
+```
+
+In this example the `billing_address` field will be displayed in the form if `credit_card` is defined.
+
+*(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#schema-dependencies))*
+
+### Dynamic
+
+The JSON Schema standard says that the dependency is triggered if the property is present. However, sometimes it's useful to have more sophisticated rules guiding the application of the dependency. For example, maybe you have three possible values for a field, and each one should lead to adding a different question. For this, we support a very restricted use of the `oneOf` keyword.
+
+```json
+{
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "Do you have any pets?": {
+      "type": "string",
+      "enum": [
+        "No",
+        "Yes: One",
+        "Yes: More than one"
+      ],
+      "default": "No"
+    }
+  },
+  "required": [
+    "Do you have any pets?"
+  ],
+  "dependencies": {
+    "Do you have any pets?": {
+      "oneOf": [
+        {
+          "properties": {
+            "Do you have any pets?": {
+              "enum": [
+                "No"
+              ]
+            }
+          }
+        },
+        {
+          "properties": {
+            "Do you have any pets?": {
+              "enum": [
+                "Yes: One"
+              ]
+            },
+            "How old is your pet?": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "How old is your pet?"
+          ]
+        },
+        {
+          "properties": {
+            "Do you have any pets?": {
+              "enum": [
+                "Yes: More than one"
+              ]
+            },
+            "Do you want to get rid of any?": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "Do you want to get rid of any?"
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+In this example the user is prompted with different follow-up questions dynamically based on their answer to the first question.
+
+Note that this is quite far from complete `oneOf` support!
+
+In these examples, the "Do you have any pets?" question is validated against the corresponding property in each schema in the `oneOf` array. If exactly one matches, the rest of that schema is merged with the existing schema.
+
 ## JSON Schema supporting status
 
 This component follows [JSON Schema](http://json-schema.org/documentation.html) specs. Due to the limitation of form widgets, there are some exceptions as follows:
@@ -1505,6 +1671,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
     This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
 * `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`
     Nobody yet has come up with a PR that adds this feature with a simple and easy-to-understand UX.
+    You can use `oneOf` with [schema dependencies](#schema-depdencies) to dynamically add schema properties based on input data but this feature does not bring general support for `oneOf` elsewhere in a schema.
 
 ## Tips and tricks
 
@@ -1576,7 +1743,7 @@ $ git push --tags origin
 
 ### Q: Does rjsf support `oneOf`, `anyOf`, multiple types in an array, etc.?
 
-A: Not yet, but perhaps you will be the person whose PR will finally add the feature in a way that gets merged. For inspiration, see [#329](https://github.com/mozilla-services/react-jsonschema-form/pull/329) or [#417](https://github.com/mozilla-services/react-jsonschema-form/pull/417). See also: [#52](https://github.com/mozilla-services/react-jsonschema-form/issues/52), [#151](https://github.com/mozilla-services/react-jsonschema-form/issues/151), [#171](https://github.com/mozilla-services/react-jsonschema-form/issues/171), [#200](https://github.com/mozilla-services/react-jsonschema-form/issues/200), [#282](https://github.com/mozilla-services/react-jsonschema-form/issues/282), [#302](https://github.com/mozilla-services/react-jsonschema-form/pull/302), [#330](https://github.com/mozilla-services/react-jsonschema-form/issues/330), [#430](https://github.com/mozilla-services/react-jsonschema-form/issues/430), [#522](https://github.com/mozilla-services/react-jsonschema-form/issues/522), [#538](https://github.com/mozilla-services/react-jsonschema-form/issues/538), [#551](https://github.com/mozilla-services/react-jsonschema-form/issues/551), [#552](https://github.com/mozilla-services/react-jsonschema-form/issues/552), or [#648](https://github.com/mozilla-services/react-jsonschema-form/issues/648).
+A: Not yet (except for a special case where you can use `oneOf` in [schema dependencies](#schema-depdencies)), but perhaps you will be the person whose PR will finally add the feature in a way that gets merged. For inspiration, see [#329](https://github.com/mozilla-services/react-jsonschema-form/pull/329) or [#417](https://github.com/mozilla-services/react-jsonschema-form/pull/417). See also: [#52](https://github.com/mozilla-services/react-jsonschema-form/issues/52), [#151](https://github.com/mozilla-services/react-jsonschema-form/issues/151), [#171](https://github.com/mozilla-services/react-jsonschema-form/issues/171), [#200](https://github.com/mozilla-services/react-jsonschema-form/issues/200), [#282](https://github.com/mozilla-services/react-jsonschema-form/issues/282), [#302](https://github.com/mozilla-services/react-jsonschema-form/pull/302), [#330](https://github.com/mozilla-services/react-jsonschema-form/issues/330), [#430](https://github.com/mozilla-services/react-jsonschema-form/issues/430), [#522](https://github.com/mozilla-services/react-jsonschema-form/issues/522), [#538](https://github.com/mozilla-services/react-jsonschema-form/issues/538), [#551](https://github.com/mozilla-services/react-jsonschema-form/issues/551), [#552](https://github.com/mozilla-services/react-jsonschema-form/issues/552), or [#648](https://github.com/mozilla-services/react-jsonschema-form/issues/648).
 
 ### Q: Will react-jsonschema-form support Material, Ant-Design, Foundation, or [some other specific widget library or frontend style]?
 
