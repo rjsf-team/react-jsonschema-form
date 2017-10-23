@@ -1589,6 +1589,8 @@ In this example the `billing_address` field will be displayed in the form if `cr
 
 ### Dynamic
 
+The JSON Schema standard says that the dependency is triggered if the property is present. However, sometimes it's useful to have more sophisticated rules guiding the application of the dependency. For example, maybe you have three possible values for a field, and each one should lead to adding a different question. For this, we support a very restricted use of the `oneOf` keyword.
+
 ```json
 {
   "title": "Person",
@@ -1656,6 +1658,10 @@ In this example the `billing_address` field will be displayed in the form if `cr
 ```
 
 In this example the user is prompted with different follow-up questions dynamically based on their answer to the first question.
+
+Note that this is quite far from complete `oneOf` support!
+
+In these examples, the "Do you have any pets?" question is validated against the corresponding property in each schema in the `oneOf` array. If exactly one matches, the rest of that schema is merged with the existing schema.
 
 ## JSON Schema supporting status
 
