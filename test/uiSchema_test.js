@@ -354,11 +354,11 @@ describe("uiSchema", () => {
       };
 
       const CustomWidget = props => {
-        const { value, options } = props;
+        const { options } = props;
         const { enumOptions, className } = options;
         return (
           <select className={className}>
-            {enumOptions.map(({ label, value }, i) => (
+            {enumOptions.map(({ value }, i) => (
               <option key={i}>{value}</option>
             ))}
           </select>
@@ -379,7 +379,8 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll(".custom option")).to.have.length.of(2);
       });
     });
-    describe("enum fields disbaled options", () => {
+
+    describe("enum fields disabled options", () => {
       const schema = {
         type: "object",
         properties: {
