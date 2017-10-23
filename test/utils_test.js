@@ -632,6 +632,37 @@ describe("utils", () => {
             });
           });
         });
+
+        describe("with $ref in dependency", () => {
+          it("should retrieve referenced schema", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { type: "string" },
+              },
+              dependencies: {
+                a: {
+                  $ref: "#/definitions/needsB",
+                },
+              },
+            };
+            const definitions = {
+              needsB: {
+                properties: {
+                  b: { type: "integer" },
+                },
+              },
+            };
+            const formData = { a: "1" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { type: "string" },
+                b: { type: "integer" },
+              },
+            });
+          });
+        });
       });
 
       describe("dynamic", () => {
@@ -735,6 +766,48 @@ describe("utils", () => {
               },
             };
             const definitions = {};
+            const formData = { a: "bool" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { type: "string", enum: ["int", "bool"] },
+                b: { type: "boolean" },
+              },
+            });
+          });
+        });
+
+        describe("with $ref in dependency", () => {
+          it("should retrieve the referenced schema", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { type: "string", enum: ["int", "bool"] },
+              },
+              dependencies: {
+                a: {
+                  $ref: "#/definitions/typedInput",
+                },
+              },
+            };
+            const definitions = {
+              typedInput: {
+                oneOf: [
+                  {
+                    properties: {
+                      a: { enum: ["int"] },
+                      b: { type: "integer" },
+                    },
+                  },
+                  {
+                    properties: {
+                      a: { enum: ["bool"] },
+                      b: { type: "boolean" },
+                    },
+                  },
+                ],
+              },
+            };
             const formData = { a: "bool" };
             expect(retrieveSchema(schema, definitions, formData)).eql({
               type: "object",
