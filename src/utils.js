@@ -422,7 +422,7 @@ function resolveDependencies(schema, definitions, formData) {
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     // Skip this dependency if its trigger property is not present.
-    if (!formData.hasOwnProperty(dependencyKey)) {
+    if (formData[dependencyKey] === undefined) {
       continue;
     }
     const dependencyValue = dependencies[dependencyKey];
