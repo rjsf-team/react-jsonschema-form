@@ -244,6 +244,7 @@ function SchemaFieldRender(props) {
     label,
     hidden,
     required,
+    disabled,
     readonly,
     displayLabel,
     classNames,
