@@ -125,6 +125,13 @@ if (process.env.NODE_ENV !== "production") {
     children: PropTypes.node.isRequired,
     errors: PropTypes.element,
     rawErrors: PropTypes.arrayOf(PropTypes.string),
+    errorInfos: PropTypes.arrayOf(
+      PropTypes.shape({
+        message: PropTypes.string,
+        name: PropTypes.string,
+        params: PropTypes.object,
+      })
+    ),
     help: PropTypes.element,
     rawHelp: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     description: PropTypes.element,
@@ -190,7 +197,7 @@ function SchemaFieldRender(props) {
     displayLabel = false;
   }
 
-  const { __errors, ...fieldErrorSchema } = errorSchema;
+  const { __errors, __errorInfos, ...fieldErrorSchema } = errorSchema;
 
   // See #439: uiSchema: Don't pass consumed class names to child components
   const field = (
@@ -215,6 +222,7 @@ function SchemaFieldRender(props) {
     props.schema.description ||
     schema.description;
   const errors = __errors;
+  const errorInfos = __errorInfos;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
   const classNames = [
@@ -240,6 +248,7 @@ function SchemaFieldRender(props) {
     rawHelp: typeof help === "string" ? help : undefined,
     errors: <ErrorList errors={errors} />,
     rawErrors: errors,
+    errorInfos,
     id,
     label,
     hidden,
