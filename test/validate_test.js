@@ -274,6 +274,7 @@ describe("Validation", () => {
 
         expect(comp.state.errorSchema).eql({
           __errors: ["Invalid"],
+          __errorInfos: [{ message: "Invalid", name: "custom", params: {} }],
         });
       });
 
@@ -356,13 +357,29 @@ describe("Validation", () => {
 
         expect(comp.state.errorSchema).eql({
           __errors: [],
+          __errorInfos: [],
           pass1: {
             __errors: [],
+            __errorInfos: [],
           },
           pass2: {
             __errors: [
               "should NOT be shorter than 3 characters",
               "Passwords don't match",
+            ],
+            __errorInfos: [
+              {
+                message: "should NOT be shorter than 3 characters",
+                name: "minLength",
+                params: {
+                  limit: 3,
+                },
+              },
+              {
+                message: "Passwords don't match",
+                name: "custom",
+                params: {},
+              },
             ],
           },
         });
@@ -405,22 +422,35 @@ describe("Validation", () => {
           0: {
             pass1: {
               __errors: [],
+              __errorInfos: [],
             },
             pass2: {
               __errors: ["Passwords don't match"],
+              __errorInfos: [
+                {
+                  name: "custom",
+                  message: "Passwords don't match",
+                  params: {},
+                },
+              ],
             },
             __errors: [],
+            __errorInfos: [],
           },
           1: {
             pass1: {
               __errors: [],
+              __errorInfos: [],
             },
             pass2: {
               __errors: [],
+              __errorInfos: [],
             },
             __errors: [],
+            __errorInfos: [],
           },
           __errors: [],
+          __errorInfos: [],
         });
       });
 
@@ -449,10 +479,13 @@ describe("Validation", () => {
         comp.componentWillReceiveProps({ formData });
 
         expect(comp.state.errorSchema).eql({
-          0: { __errors: [] },
-          1: { __errors: [] },
-          2: { __errors: [] },
+          0: { __errors: [], __errorInfos: [] },
+          1: { __errors: [], __errorInfos: [] },
+          2: { __errors: [], __errorInfos: [] },
           __errors: ["Forbidden value: bbb"],
+          __errorInfos: [
+            { message: "Forbidden value: bbb", name: "custom", params: {} },
+          ],
         });
       });
     });

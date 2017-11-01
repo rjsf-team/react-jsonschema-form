@@ -16,6 +16,11 @@ ajv.addFormat(
 
 import { isObject, mergeObjects } from "./utils";
 
+function toErrorInfo(error) {
+  const { message, name, params } = error;
+  return { message, name, params };
+}
+
 function toErrorSchema(errors) {
   // Transforms a ajv validation errors list:
   // [
@@ -60,6 +65,13 @@ function toErrorSchema(errors) {
     } else {
       parent.__errors = [message];
     }
+    const errorInfo = toErrorInfo(error);
+    // we also store the original ajvErrors as they contain potentially useful information
+    if (Array.isArray(parent.__errorInfos)) {
+      parent.__errorInfos = parent.__errorInfos.concat(errorInfo);
+    } else {
+      parent.__errorInfos = [errorInfo];
+    }
     return errorSchema;
   }, {});
 }
@@ -77,7 +89,7 @@ export function toErrorList(errorSchema, fieldName = "root") {
     );
   }
   return Object.keys(errorSchema).reduce((acc, key) => {
-    if (key !== "__errors") {
+    if (key !== "__errors" && key !== "__errorInfos") {
       acc = acc.concat(toErrorList(errorSchema[key], key));
     }
     return acc;
@@ -90,8 +102,10 @@ function createErrorHandler(formData) {
     // to avoid name collision with a possible sub schema field named
     // "errors" (see `toErrorSchema`).
     __errors: [],
+    __errorInfos: [],
     addError(message) {
       this.__errors.push(message);
+      this.__errorInfos.push({ message, name: "custom", params: {} });
     },
   };
   if (isObject(formData)) {
@@ -112,6 +126,8 @@ function unwrapErrorHandler(errorHandler) {
     if (key === "addError") {
       return acc;
     } else if (key === "__errors") {
+      return { ...acc, [key]: errorHandler[key] };
+    } else if (key === "__errorInfos") {
       return { ...acc, [key]: errorHandler[key] };
     }
     return { ...acc, [key]: unwrapErrorHandler(errorHandler[key]) };

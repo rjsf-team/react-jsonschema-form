@@ -807,6 +807,13 @@ describe("Form", () => {
 
           expect(comp.state.errorSchema).eql({
             __errors: ["should NOT be shorter than 8 characters"],
+            __errorInfos: [
+              {
+                message: "should NOT be shorter than 8 characters",
+                name: "minLength",
+                params: { limit: 8 },
+              },
+            ],
           });
         });
 
@@ -876,6 +883,15 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({
           __errors: ["should NOT be shorter than 8 characters"],
+          __errorInfos: [
+            {
+              message: "should NOT be shorter than 8 characters",
+              name: "minLength",
+              params: {
+                limit: 8,
+              },
+            },
+          ],
         });
       });
 
@@ -915,6 +931,13 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({
           __errors: ["should NOT be shorter than 8 characters"],
+          __errorInfos: [
+            {
+              message: "should NOT be shorter than 8 characters",
+              name: "minLength",
+              params: { limit: 8 },
+            },
+          ],
         });
       });
 
@@ -945,6 +968,18 @@ describe("Form", () => {
           __errors: [
             "should NOT be shorter than 8 characters",
             'should match pattern "d+"',
+          ],
+          __errorInfos: [
+            {
+              message: "should NOT be shorter than 8 characters",
+              name: "minLength",
+              params: { limit: 8 },
+            },
+            {
+              message: 'should match pattern "d+"',
+              name: "pattern",
+              params: { pattern: "d+" },
+            },
           ],
         });
       });
@@ -995,6 +1030,13 @@ describe("Form", () => {
           level1: {
             level2: {
               __errors: ["should NOT be shorter than 8 characters"],
+              __errorInfos: [
+                {
+                  message: "should NOT be shorter than 8 characters",
+                  name: "minLength",
+                  params: { limit: 8 },
+                },
+              ],
             },
           },
         });
@@ -1032,7 +1074,16 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
-          1: { __errors: ["should NOT be shorter than 4 characters"] },
+          1: {
+            __errors: ["should NOT be shorter than 4 characters"],
+            __errorInfos: [
+              {
+                message: "should NOT be shorter than 4 characters",
+                name: "minLength",
+                params: { limit: 4 },
+              },
+            ],
+          },
         });
       });
 
@@ -1084,8 +1135,26 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({
           level1: {
-            1: { __errors: ["should NOT be shorter than 4 characters"] },
-            3: { __errors: ["should NOT be shorter than 4 characters"] },
+            1: {
+              __errors: ["should NOT be shorter than 4 characters"],
+              __errorInfos: [
+                {
+                  message: "should NOT be shorter than 4 characters",
+                  name: "minLength",
+                  params: { limit: 4 },
+                },
+              ],
+            },
+            3: {
+              __errors: ["should NOT be shorter than 4 characters"],
+              __errorInfos: [
+                {
+                  message: "should NOT be shorter than 4 characters",
+                  name: "minLength",
+                  params: { limit: 4 },
+                },
+              ],
+            },
           },
         });
       });
@@ -1134,10 +1203,28 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           outer: {
             0: {
-              1: { __errors: ["should NOT be shorter than 4 characters"] },
+              1: {
+                __errors: ["should NOT be shorter than 4 characters"],
+                __errorInfos: [
+                  {
+                    message: "should NOT be shorter than 4 characters",
+                    name: "minLength",
+                    params: { limit: 4 },
+                  },
+                ],
+              },
             },
             1: {
-              0: { __errors: ["should NOT be shorter than 4 characters"] },
+              0: {
+                __errors: ["should NOT be shorter than 4 characters"],
+                __errorInfos: [
+                  {
+                    message: "should NOT be shorter than 4 characters",
+                    name: "minLength",
+                    params: { limit: 4 },
+                  },
+                ],
+              },
             },
           },
         });
@@ -1187,6 +1274,13 @@ describe("Form", () => {
           1: {
             foo: {
               __errors: ["should NOT be shorter than 4 characters"],
+              __errorInfos: [
+                {
+                  message: "should NOT be shorter than 4 characters",
+                  name: "minLength",
+                  params: { limit: 4 },
+                },
+              ],
             },
           },
         });
