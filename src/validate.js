@@ -27,8 +27,8 @@ function toErrorSchema(errors) {
   // {
   //   level1: {
   //     level2: {
-  //       2: {level3: {errors: ["err a", "err b"]}},
-  //       4: {level3: {errors: ["err b"]}},
+  //       2: {level3: {__errors: ["err a", "err b"]}},
+  //       4: {level3: {__errors: ["err b"]}},
   //     }
   //   }
   // };
@@ -88,7 +88,7 @@ function createErrorHandler(formData) {
   const handler = {
     // We store the list of errors for this node in a property named __errors
     // to avoid name collision with a possible sub schema field named
-    // "errors" (see `utils.toErrorSchema`).
+    // "errors" (see `toErrorSchema`).
     __errors: [],
     addError(message) {
       this.__errors.push(message);
