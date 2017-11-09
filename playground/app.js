@@ -460,13 +460,16 @@ class App extends Component {
               formData={formData}
               onChange={this.onFormDataChange}
               onSubmit={({ formData }) =>
-                console.log("submitted formData", formData)}
+                console.log("submitted formData", formData)
+              }
               fields={{ geo: GeoPosition }}
               validate={validate}
               onBlur={(id, value) =>
-                console.log(`Touched ${id} with value ${value}`)}
+                console.log(`Touched ${id} with value ${value}`)
+              }
               onFocus={(id, value) =>
-                console.log(`Focused ${id} with value ${value}`)}
+                console.log(`Focused ${id} with value ${value}`)
+              }
               transformErrors={transformErrors}
               onError={log("errors")}>
               <div className="row">
