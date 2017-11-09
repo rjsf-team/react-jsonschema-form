@@ -201,7 +201,7 @@ WARNING: If you have situations where your parent component can re-render, make 
 You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after:
 
 ```js
-const onSubmit = ({formData}) => console.log("yay I'm valid!");
+const onSubmit = ({form}) => console.log("Data submitted: "+form.formData);
 
 render((
   <Form schema={schema}
