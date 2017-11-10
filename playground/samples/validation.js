@@ -1,8 +1,12 @@
 function validate({ pass1, pass2 }, errors) {
-  if (pass1 !== pass2) {
-    errors.pass2.addError("Passwords don't match.");
-  }
-  return errors;
+  return new Promise(resolve => {
+    setTimeout(() => {
+      if (pass1 !== pass2) {
+        errors.pass2.addError("Passwords don't match.");
+      }
+      resolve(errors);
+    }, 1000);
+  });
 }
 
 function transformErrors(errors) {
