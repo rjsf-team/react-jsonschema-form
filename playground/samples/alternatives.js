@@ -54,7 +54,11 @@ module.exports = {
       },
     },
   },
-  uiSchema: {},
+  uiSchema: {
+    blendMode: {
+      "ui:enumDisabled": ["multiply"],
+    },
+  },
   formData: {
     currentColor: "#00ff00",
     colorMask: ["#0000ff"],

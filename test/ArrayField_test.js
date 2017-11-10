@@ -17,6 +17,16 @@ describe("ArrayField", () => {
     sandbox.restore();
   });
 
+  describe("Unsupported array schema", () => {
+    it("should warn on missing items descriptor", () => {
+      const { node } = createFormComponent({ schema: { type: "array" } });
+
+      expect(
+        node.querySelector(".field-array > .unsupported-field").textContent
+      ).to.contain("Missing items definition");
+    });
+  });
+
   describe("List of inputs", () => {
     const schema = {
       type: "array",
@@ -50,10 +60,7 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized title", () => {
-      const CustomTitleField = ({ title }) =>
-        <div id="custom">
-          {title}
-        </div>;
+      const CustomTitleField = ({ title }) => <div id="custom">{title}</div>;
 
       const { node } = createFormComponent({
         schema,
@@ -65,10 +72,9 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized description", () => {
-      const CustomDescriptionField = ({ description }) =>
-        <div id="custom">
-          {description}
-        </div>;
+      const CustomDescriptionField = ({ description }) => (
+        <div id="custom">{description}</div>
+      );
 
       const { node } = createFormComponent({
         schema,
@@ -511,7 +517,7 @@ describe("ArrayField", () => {
       expect(form.state.formData.multipleChoicesList).to.be.empty;
       expect(form.state.errors.length).to.equal(1);
       expect(form.state.errors[0].name).to.equal("minItems");
-      expect(form.state.errors[0].argument).to.equal(3);
+      expect(form.state.errors[0].params.limit).to.equal(3);
     });
   });
 

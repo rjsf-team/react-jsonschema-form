@@ -31,17 +31,15 @@ describe("Validation", () => {
 
       it("should return an error list", () => {
         expect(errors).to.have.length.of(2);
-        expect(errors[0].message).eql("is not of a type(s) string");
-        expect(errors[1].message).eql("is not of a type(s) string");
+        expect(errors[0].message).eql("should be string");
+        expect(errors[1].message).eql("should be string");
       });
 
       it("should return an errorSchema", () => {
         expect(errorSchema.foo.__errors).to.have.length.of(1);
-        expect(errorSchema.foo.__errors[0]).eql("is not of a type(s) string");
+        expect(errorSchema.foo.__errors[0]).eql("should be string");
         expect(errorSchema[illFormedKey].__errors).to.have.length.of(1);
-        expect(errorSchema[illFormedKey].__errors[0]).eql(
-          "is not of a type(s) string"
-        );
+        expect(errorSchema[illFormedKey].__errors[0]).eql("should be string");
       });
     });
 
@@ -179,13 +177,13 @@ describe("Validation", () => {
 
         it("should validate a required field", () => {
           expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql('requires property "foo"');
+          expect(comp.state.errors[0].message).eql("is a required property");
         });
 
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            'instance requires property "foo"'
+            ".foo is a required property"
           );
         });
 
@@ -193,7 +191,7 @@ describe("Validation", () => {
           sinon.assert.calledWith(
             onError,
             sinon.match(errors => {
-              return errors[0].message === 'requires property "foo"';
+              return errors[0].message === "is a required property";
             })
           );
         });
@@ -231,14 +229,14 @@ describe("Validation", () => {
         it("should validate a minLength field", () => {
           expect(comp.state.errors).to.have.length.of(1);
           expect(comp.state.errors[0].message).eql(
-            "does not meet minimum length of 10"
+            "should NOT be shorter than 10 characters"
           );
         });
 
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            "instance.foo does not meet minimum length of 10"
+            ".foo should NOT be shorter than 10 characters"
           );
         });
 
@@ -246,7 +244,9 @@ describe("Validation", () => {
           sinon.assert.calledWith(
             onError,
             sinon.match(errors => {
-              return errors[0].message === "does not meet minimum length of 10";
+              return (
+                errors[0].message === "should NOT be shorter than 10 characters"
+              );
             })
           );
         });
@@ -361,7 +361,7 @@ describe("Validation", () => {
           },
           pass2: {
             __errors: [
-              "does not meet minimum length of 3",
+              "should NOT be shorter than 3 characters",
               "Passwords don't match",
             ],
           },
@@ -488,7 +488,7 @@ describe("Validation", () => {
 
         it("should validate a required field", () => {
           expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql('requires property "foo"');
+          expect(comp.state.errors[0].message).eql("is a required property");
         });
 
         it("should not render error list if showErrorList prop true", () => {
@@ -499,7 +499,7 @@ describe("Validation", () => {
           sinon.assert.calledWith(
             onError,
             sinon.match(errors => {
-              return errors[0].message === 'requires property "foo"';
+              return errors[0].message === "is a required property";
             })
           );
         });
@@ -509,7 +509,6 @@ describe("Validation", () => {
     describe("Custom ErrorList", () => {
       const schema = {
         type: "string",
-        required: true,
         minLength: 1,
       };
 
@@ -525,22 +524,15 @@ describe("Validation", () => {
         schema,
         uiSchema,
         formContext: { className },
-      }) =>
+      }) => (
         <div>
-          <div className="CustomErrorList">
-            {errors.length} custom
-          </div>
-          <div className={"ErrorSchema"}>
-            {errorSchema.__errors[0]}
-          </div>
-          <div className={"Schema"}>
-            {schema.type}
-          </div>
-          <div className={"UiSchema"}>
-            {uiSchema.foo}
-          </div>
+          <div className="CustomErrorList">{errors.length} custom</div>
+          <div className={"ErrorSchema"}>{errorSchema.__errors[0]}</div>
+          <div className={"Schema"}>{schema.type}</div>
+          <div className={"UiSchema"}>{uiSchema.foo}</div>
           <div className={className} />
-        </div>;
+        </div>
+      );
 
       it("should use CustomErrorList", () => {
         const { node } = createFormComponent({
@@ -557,7 +549,7 @@ describe("Validation", () => {
         );
         expect(node.querySelectorAll(".ErrorSchema")).to.have.length.of(1);
         expect(node.querySelector(".ErrorSchema").textContent).eql(
-          "is not of a type(s) string"
+          "should be string"
         );
         expect(node.querySelectorAll(".Schema")).to.have.length.of(1);
         expect(node.querySelector(".Schema").textContent).eql("string");

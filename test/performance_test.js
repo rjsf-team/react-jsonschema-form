@@ -60,14 +60,13 @@ describe("Rendering performance optimizations", () => {
         formData: { const: "0", var: "0" },
       });
 
-      const fields = scryRenderedComponentsWithType(
-        comp,
-        SchemaField
-      ).reduce((fields, fieldComp) => {
-        sandbox.stub(fieldComp, "render").returns(<div />);
-        fields[fieldComp.props.idSchema.$id] = fieldComp;
-        return fields;
-      });
+      const fields = scryRenderedComponentsWithType(comp, SchemaField).reduce(
+        (fields, fieldComp) => {
+          sandbox.stub(fieldComp, "render").returns(<div />);
+          fields[fieldComp.props.idSchema.$id] = fieldComp;
+          return fields;
+        }
+      );
 
       setProps(comp, { schema, formData: { const: "0", var: "1" } });
 
@@ -86,14 +85,13 @@ describe("Rendering performance optimizations", () => {
         formData: ["const", "var0"],
       });
 
-      const fields = scryRenderedComponentsWithType(
-        comp,
-        SchemaField
-      ).reduce((fields, fieldComp) => {
-        sandbox.stub(fieldComp, "render").returns(<div />);
-        fields[fieldComp.props.idSchema.$id] = fieldComp;
-        return fields;
-      });
+      const fields = scryRenderedComponentsWithType(comp, SchemaField).reduce(
+        (fields, fieldComp) => {
+          sandbox.stub(fieldComp, "render").returns(<div />);
+          fields[fieldComp.props.idSchema.$id] = fieldComp;
+          return fields;
+        }
+      );
 
       setProps(comp, { schema, formData: ["const", "var1"] });
 

@@ -1,6 +1,6 @@
 {
   "name": "react-jsonschema-form",
-  "version": "0.49.0",
+  "version": "1.0.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build:readme": "toctoc README.md -w",
@@ -15,8 +15,8 @@
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
     "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
     "start": "node devServer.js",
-    "tdd": "cross-env NODE_ENV=test  mocha --compilers js:babel-register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test": " cross-env NODE_ENV=test   mocha --compilers js:babel-register --require ./test/setup-jsdom.js test/**/*_test.js"
+    "tdd": "cross-env NODE_ENV=test mocha --compilers js:babel-register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
+    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --require ./test/setup-jsdom.js test/**/*_test.js"
   },
   "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi",
   "lint-staged": {
@@ -37,10 +37,10 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "react": "^15.0.0"
+    "react": ">=15"
   },
   "dependencies": {
-    "jsonschema": "^1.0.2",
+    "ajv": "^5.2.3",
     "lodash.topath": "^4.5.2",
     "prop-types": "^15.5.8",
     "setimmediate": "^1.0.5"
@@ -49,7 +49,7 @@
     "atob": "^2.0.3",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
-    "babel-eslint": "^6.1.2",
+    "babel-eslint": "^7.2.3",
     "babel-loader": "^6.2.7",
     "babel-plugin-react-transform": "^2.0.2",
     "babel-plugin-transform-class-properties": "^6.18.0",
@@ -58,11 +58,15 @@
     "babel-preset-react": "^6.16.0",
     "babel-register": "^6.18.0",
     "chai": "^3.3.0",
-    "codemirror": "^5.20.2",
+    "codemirror": "^5.30.0",
     "cross-env": "^2.0.1",
     "css-loader": "^0.23.1",
-    "eslint": "^3.15.0",
-    "eslint-plugin-react": "^4.2.3",
+    "eslint": "^4.9.0",
+    "eslint-config-react-app": "^2.0.1",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.4.0",
     "estraverse": "^4.2.0",
     "estraverse-fb": "^1.3.1",
     "express": "^4.14.0",
@@ -71,12 +75,13 @@
     "html": "0.0.10",
     "husky": "^0.13.2",
     "jsdom": "^8.3.0",
+    "json-loader": "^0.5.7",
     "lint-staged": "^3.3.1",
     "mocha": "^2.5.3",
-    "prettier": "^1.5.2",
+    "prettier": "^1.8.2",
     "react": "^15.5.0",
     "react-addons-test-utils": "^15.3.2",
-    "react-codemirror": "^0.2.3",
+    "react-codemirror2": "^2.0.2",
     "react-dom": "^15.3.2",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",

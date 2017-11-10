@@ -48,10 +48,10 @@ export default class Form extends Component {
     const idSchema = toIdSchema(
       schema,
       uiSchema["ui:rootFieldId"],
-      definitions
+      definitions,
+      formData
     );
     return {
-      status: "initial",
       schema,
       uiSchema,
       idSchema,
@@ -77,10 +77,10 @@ export default class Form extends Component {
   }
 
   renderErrors() {
-    const { status, errors, errorSchema, schema, uiSchema } = this.state;
+    const { errors, errorSchema, schema, uiSchema } = this.state;
     const { ErrorList, showErrorList, formContext } = this.props;
 
-    if (status !== "editing" && errors.length && showErrorList != false) {
+    if (errors.length && showErrorList != false) {
       return (
         <ErrorList
           errors={errors}
@@ -97,7 +97,7 @@ export default class Form extends Component {
   onChange = (formData, options = { validate: false }) => {
     const mustValidate =
       !this.props.noValidate && (this.props.liveValidate || options.validate);
-    let state = { status: "editing", formData };
+    let state = { formData };
     if (mustValidate) {
       const { errors, errorSchema } = this.validate(formData);
       state = { ...state, errors, errorSchema };
@@ -123,7 +123,6 @@ export default class Form extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    this.setState({ status: "submitted" });
 
     if (!this.props.noValidate) {
       const { errors, errorSchema } = this.validate(this.state.formData);
@@ -140,9 +139,9 @@ export default class Form extends Component {
     }
 
     if (this.props.onSubmit) {
-      this.props.onSubmit(this.state);
+      this.props.onSubmit({ ...this.state, status: "submitted" });
     }
-    this.setState({ status: "initial", errors: [], errorSchema: {} });
+    this.setState({ errors: [], errorSchema: {} });
   };
 
   getRegistry() {
@@ -153,6 +152,7 @@ export default class Form extends Component {
       fields: { ...fields, ...this.props.fields },
       widgets: { ...widgets, ...this.props.widgets },
       ArrayFieldTemplate: this.props.ArrayFieldTemplate,
+      ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
       formContext: this.props.formContext || {},
@@ -205,13 +205,15 @@ export default class Form extends Component {
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
         />
-        {children
-          ? children
-          : <p>
-              <button type="submit" className="btn btn-info">
-                Submit
-              </button>
-            </p>}
+        {children ? (
+          children
+        ) : (
+          <p>
+            <button type="submit" className="btn btn-info">
+              Submit
+            </button>
+          </p>
+        )}
       </form>
     );
   }
@@ -227,6 +229,7 @@ if (process.env.NODE_ENV !== "production") {
     ),
     fields: PropTypes.objectOf(PropTypes.func),
     ArrayFieldTemplate: PropTypes.func,
+    ObjectFieldTemplate: PropTypes.func,
     FieldTemplate: PropTypes.func,
     ErrorList: PropTypes.func,
     onChange: PropTypes.func,
