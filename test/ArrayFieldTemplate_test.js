@@ -3,7 +3,7 @@ import React, { PureComponent } from "react";
 import { expect } from "chai";
 import { createFormComponent, createSandbox } from "./test_utils";
 
-describe("ArrayFieldTemplate", () => {
+describe("arrayFieldTemplate", () => {
   let sandbox;
 
   const formData = ["one", "two", "three"];
@@ -16,8 +16,8 @@ describe("ArrayFieldTemplate", () => {
     sandbox.restore();
   });
 
-  describe("Custom ArrayFieldTemplate of string array", () => {
-    function ArrayFieldTemplate(props) {
+  describe("Custom arrayFieldTemplate of string array", () => {
+    function arrayFieldTemplate(props) {
       return (
         <div className={props.uiSchema.classNames}>
           {props.canAdd && <button className="custom-array-add" />}
@@ -39,8 +39,8 @@ describe("ArrayFieldTemplate", () => {
       );
     }
 
-    describe("Stateful ArrayFieldTemplate", () => {
-      class ArrayFieldTemplate extends PureComponent {
+    describe("Stateful arrayFieldTemplate", () => {
+      class arrayFieldTemplate extends PureComponent {
         render() {
           return <div>{this.props.items.map(item => item.element)}</div>;
         }
@@ -50,7 +50,7 @@ describe("ArrayFieldTemplate", () => {
         const { node } = createFormComponent({
           schema: { type: "array", items: { type: "string" } },
           formData,
-          ArrayFieldTemplate,
+          arrayFieldTemplate,
         });
 
         expect(node.querySelectorAll(".field-array div")).to.have.length.of(3);
@@ -73,7 +73,7 @@ describe("ArrayFieldTemplate", () => {
 
       beforeEach(() => {
         node = createFormComponent({
-          ArrayFieldTemplate,
+          arrayFieldTemplate,
           formData,
           schema,
           uiSchema,
@@ -129,7 +129,7 @@ describe("ArrayFieldTemplate", () => {
 
       beforeEach(() => {
         node = createFormComponent({
-          ArrayFieldTemplate,
+          arrayFieldTemplate,
           formData,
           schema,
           uiSchema,

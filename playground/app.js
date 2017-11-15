@@ -345,14 +345,14 @@ class App extends Component {
   }
 
   load = data => {
-    // Reset the ArrayFieldTemplate whenever you load new data
-    const { ArrayFieldTemplate, ObjectFieldTemplate } = data;
+    // Reset the arrayFieldTemplate whenever you load new data
+    const { arrayFieldTemplate, ObjectFieldTemplate } = data;
     // force resetting form component instance
     this.setState({ form: false }, _ =>
       this.setState({
         ...data,
         form: true,
-        ArrayFieldTemplate,
+        arrayFieldTemplate,
         ObjectFieldTemplate,
       })
     );
@@ -397,7 +397,7 @@ class App extends Component {
       validate,
       theme,
       editor,
-      ArrayFieldTemplate,
+      arrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
@@ -452,7 +452,7 @@ class App extends Component {
         <div className="col-sm-5">
           {this.state.form && (
             <Form
-              ArrayFieldTemplate={ArrayFieldTemplate}
+              arrayFieldTemplate={arrayFieldTemplate}
               ObjectFieldTemplate={ObjectFieldTemplate}
               liveValidate={liveValidate}
               schema={schema}

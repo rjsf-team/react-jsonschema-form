@@ -332,7 +332,7 @@ class ArrayField extends Component {
       onFocus,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
-    const { ArrayFieldTemplate, definitions, fields } = registry;
+    const { arrayFieldTemplate, definitions, fields } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const arrayProps = {
@@ -377,7 +377,7 @@ class ArrayField extends Component {
     };
 
     // Check if a custom render function was passed in
-    const Component = ArrayFieldTemplate || DefaultNormalArrayFieldTemplate;
+    const Component = arrayFieldTemplate || DefaultNormalArrayFieldTemplate;
     return <Component {...arrayProps} />;
   }
 
@@ -476,7 +476,7 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
-    const { ArrayFieldTemplate, definitions, fields } = registry;
+    const { arrayFieldTemplate, definitions, fields } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
       retrieveSchema(item, definitions, formData[index])
@@ -542,7 +542,7 @@ class ArrayField extends Component {
     };
 
     // Check if a custom template template was passed in
-    const Template = ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
+    const Template = arrayFieldTemplate || DefaultFixedArrayFieldTemplate;
     return <Template {...arrayProps} />;
   }
 

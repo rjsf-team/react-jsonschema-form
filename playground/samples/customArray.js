@@ -1,6 +1,6 @@
 import React from "react";
 
-function ArrayFieldTemplate(props) {
+function arrayFieldTemplate(props) {
   return (
     <div className={props.className}>
       {props.items &&
@@ -54,5 +54,5 @@ module.exports = {
     },
   },
   formData: ["react", "jsonschema", "form"],
-  ArrayFieldTemplate,
+  arrayFieldTemplate,
 };

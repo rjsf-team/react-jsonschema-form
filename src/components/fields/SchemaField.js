@@ -294,7 +294,7 @@ if (process.env.NODE_ENV !== "production") {
       ).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-      ArrayFieldTemplate: PropTypes.func,
+      arrayFieldTemplate: PropTypes.func,
       ObjectFieldTemplate: PropTypes.func,
       FieldTemplate: PropTypes.func,
       formContext: PropTypes.object.isRequired,

@@ -89,7 +89,7 @@ describe("FormContext", () => {
           type: "string",
         },
       },
-      ArrayFieldTemplate: CustomArrayTemplateField,
+      arrayFieldTemplate: CustomArrayTemplateField,
       formContext,
     });
 

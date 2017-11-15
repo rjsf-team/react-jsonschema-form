@@ -860,11 +860,11 @@ The following props are passed to a custom field template component:
 
 ### Array Field Template
 
-Similarly to the `FieldTemplate` you can use an `ArrayFieldTemplate` to customize how your
+Similarly to the `FieldTemplate` you can use an `arrayFieldTemplate` to customize how your
 arrays are rendered. This allows you to customize your array, and each element in the array.
 
 ```jsx
-function ArrayFieldTemplate(props) {
+function arrayFieldTemplate(props) {
   return (
     <div>
       {props.items.map(element => element.children)}
@@ -875,13 +875,13 @@ function ArrayFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ArrayFieldTemplate={ArrayFieldTemplate} />,
+        arrayFieldTemplate={arrayFieldTemplate} />,
 ), document.getElementById("app"));
 ```
 
 Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
 
-The following props are passed to each `ArrayFieldTemplate`:
+The following props are passed to each `arrayFieldTemplate`:
 
 - `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
 - `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
