@@ -230,7 +230,7 @@ if (process.env.NODE_ENV !== "production") {
     fields: PropTypes.objectOf(PropTypes.func),
     arrayFieldTemplate: PropTypes.func,
     objectFieldTemplate: PropTypes.func,
-    FieldTemplate: PropTypes.func,
+    fieldTemplate: PropTypes.func,
     ErrorList: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,

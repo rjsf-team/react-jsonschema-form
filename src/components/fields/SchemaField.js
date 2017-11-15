@@ -296,7 +296,7 @@ if (process.env.NODE_ENV !== "production") {
       definitions: PropTypes.object.isRequired,
       arrayFieldTemplate: PropTypes.func,
       objectFieldTemplate: PropTypes.func,
-      FieldTemplate: PropTypes.func,
+      fieldTemplate: PropTypes.func,
       formContext: PropTypes.object.isRequired,
     }),
   };
