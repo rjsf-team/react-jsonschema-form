@@ -18,7 +18,7 @@ export default class Form extends Component {
     liveValidate: false,
     safeRenderCompletion: false,
     noHtml5Validate: false,
-    ErrorList: DefaultErrorList,
+    errorList: DefaultErrorList,
   };
 
   constructor(props) {
@@ -78,7 +78,8 @@ export default class Form extends Component {
 
   renderErrors() {
     const { errors, errorSchema, schema, uiSchema } = this.state;
-    const { ErrorList, showErrorList, formContext } = this.props;
+    const { errorList, showErrorList, formContext } = this.props;
+    const ErrorList = errorList;
 
     if (errors.length && showErrorList != false) {
       return (
@@ -231,7 +232,7 @@ if (process.env.NODE_ENV !== "production") {
     arrayFieldTemplate: PropTypes.func,
     objectFieldTemplate: PropTypes.func,
     fieldTemplate: PropTypes.func,
-    ErrorList: PropTypes.func,
+    errorList: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,
     showErrorList: PropTypes.bool,

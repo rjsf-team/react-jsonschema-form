@@ -983,13 +983,13 @@ function ErrorListTemplate(props) {
 render((
   <Form schema={schema}
         showErrorList={true}
-        ErrorList={ErrorListTemplate} />,
+        errorList={ErrorListTemplate} />,
 ), document.getElementById("app"));
 ```
 
 > Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
 
-The following props are passed to `ErrorList`
+The following props are passed to `errorList`
 
 - `errors`: An array of the errors.
 - `errorSchema`: The errorSchema constructed by `Form`.
