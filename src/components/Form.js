@@ -61,7 +61,6 @@ export default class Form extends Component {
       this.propsForPromise = props;
       this.validate(formData, schema).then(state => {
         this.propsForPromise === props && this.setState(state);
-        this.setState(state);
       });
     } else {
       nextState.errors = state.errors || [];
