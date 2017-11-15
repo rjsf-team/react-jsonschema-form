@@ -828,7 +828,7 @@ function CustomFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        FieldTemplate={CustomFieldTemplate} />,
+        fieldTemplate={CustomFieldTemplate} />,
 ), document.getElementById("app"));
 ```
 
@@ -860,7 +860,7 @@ The following props are passed to a custom field template component:
 
 ### Array Field Template
 
-Similarly to the `FieldTemplate` you can use an `arrayFieldTemplate` to customize how your
+Similarly to the `fieldTemplate` you can use an `arrayFieldTemplate` to customize how your
 arrays are rendered. This allows you to customize your array, and each element in the array.
 
 ```jsx
@@ -915,7 +915,7 @@ The following props are part of each element in `items`:
 
 ### Object Field Template
 
-Similarly to the `FieldTemplate` you can use an `objectFieldTemplate` to customize how your
+Similarly to the `fieldTemplate` you can use an `objectFieldTemplate` to customize how your
 objects are rendered.
 
 ```jsx
@@ -987,7 +987,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-> Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
+> Note: Your custom `errorList` template will only render when `showErrorList` is `true`.
 
 The following props are passed to `errorList`
 
@@ -1449,7 +1449,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-> Note: you can also use your own [ErrorList](#error-list-template)
+> Note: you can also use your own [errorList](#error-list-template)
 
 ### The case of empty strings
 
@@ -1684,7 +1684,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - Use radio list for enums: https://jsfiddle.net/f2y3fq7L/2/
  - Reading file input data: https://jsfiddle.net/f9vcb6pL/1/
  - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
- - 2 columns form with CSS and FieldTemplate : https://jsfiddle.net/n1k0/bw0ffnz4/1/
+ - 2 columns form with CSS and fieldTemplate : https://jsfiddle.net/n1k0/bw0ffnz4/1/
  - Validate and submit form from external control : https://jsfiddle.net/spacebaboon/g5a1re63/
 
 ## Contributing
