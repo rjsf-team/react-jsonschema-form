@@ -208,11 +208,11 @@ export default class Form extends Component {
         {children ? (
           children
         ) : (
-          <p>
+          <div>
             <button type="submit" className="btn btn-info">
               Submit
             </button>
-          </p>
+          </div>
         )}
       </form>
     );
