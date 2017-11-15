@@ -3,7 +3,7 @@ import React, { PureComponent } from "react";
 import { expect } from "chai";
 import { createFormComponent, createSandbox } from "./test_utils";
 
-describe("ObjectFieldTemplate", () => {
+describe("objectFieldTemplate", () => {
   let sandbox;
 
   const formData = { foo: "bar", bar: "foo" };
@@ -16,7 +16,7 @@ describe("ObjectFieldTemplate", () => {
     sandbox.restore();
   });
 
-  class ObjectFieldTemplate extends PureComponent {
+  class objectFieldTemplate extends PureComponent {
     render() {
       const {
         TitleField,
@@ -52,7 +52,7 @@ describe("ObjectFieldTemplate", () => {
     },
     uiSchema: { "ui:description": "foobar" },
     formData,
-    ObjectFieldTemplate,
+    objectFieldTemplate,
     fields: {
       TitleField,
       DescriptionField,

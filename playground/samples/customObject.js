@@ -1,6 +1,6 @@
 import React from "react";
 
-function ObjectFieldTemplate({ TitleField, properties, title, description }) {
+function objectFieldTemplate({ TitleField, properties, title, description }) {
   return (
     <div>
       <TitleField title={title} />
@@ -61,5 +61,5 @@ module.exports = {
     bio: "Roundhouse kicking asses since 1940",
     password: "noneed",
   },
-  ObjectFieldTemplate,
+  objectFieldTemplate,
 };

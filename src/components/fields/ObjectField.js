@@ -92,7 +92,7 @@ class ObjectField extends Component {
       );
     }
 
-    const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
+    const Template = registry.objectFieldTemplate || DefaultObjectFieldTemplate;
 
     const templateProps = {
       title: uiSchema["ui:title"] || title,

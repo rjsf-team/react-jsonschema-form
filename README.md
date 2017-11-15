@@ -915,11 +915,11 @@ The following props are part of each element in `items`:
 
 ### Object Field Template
 
-Similarly to the `FieldTemplate` you can use an `ObjectFieldTemplate` to customize how your
+Similarly to the `FieldTemplate` you can use an `objectFieldTemplate` to customize how your
 objects are rendered.
 
 ```jsx
-function ObjectFieldTemplate(props) {
+function objectFieldTemplate(props) {
   return (
     <div>
       {props.title}
@@ -931,13 +931,13 @@ function ObjectFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ObjectFieldTemplate={ObjectFieldTemplate} />,
+        objectFieldTemplate={objectFieldTemplate} />,
 ), document.getElementById("app"));
 ```
 
 Please see [customObject.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customObject.js) for a better example.
 
-The following props are passed to each `ObjectFieldTemplate`:
+The following props are passed to each `objectFieldTemplate`:
 
 - `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
 - `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
