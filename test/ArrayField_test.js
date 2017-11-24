@@ -296,6 +296,34 @@ describe("ArrayField", () => {
       expect(dropBtn).to.be.null;
     });
 
+    it("should not show remove button if minRemovable is false and items length is not greater than minItems", () => {
+      const { node } = createFormComponent({
+        schema: {
+          ...schema,
+          minItems: 2,
+        },
+        formData: ["foo", "bar"],
+        uiSchema: { "ui:options": { minRemovable: false } },
+      });
+      const dropBtn = node.querySelector(".array-item-remove");
+
+      expect(dropBtn).to.be.null;
+    });
+
+    it("should show remove button if minRemovable is false and items length is greater than minItems", () => {
+      const { node } = createFormComponent({
+        schema: {
+          ...schema,
+          minItems: 1,
+        },
+        formData: ["foo", "bar"],
+        uiSchema: { "ui:options": { minRemovable: false } },
+      });
+      const dropBtn = node.querySelector(".array-item-remove");
+
+      expect(dropBtn).to.not.be.null;
+    });
+
     it("should force revalidation when a field is removed", () => {
       // refs #195
       const { node } = createFormComponent({

@@ -139,6 +139,11 @@ module.exports = {
         "ui:widget": "updown",
       },
     },
+    minItemsList: {
+      "ui:options": {
+        minRemovable: false,
+      },
+    },
     unorderable: {
       "ui:options": {
         orderable: false,

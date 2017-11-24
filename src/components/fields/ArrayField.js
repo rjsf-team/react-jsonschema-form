@@ -335,6 +335,7 @@ class ArrayField extends Component {
     const { ArrayFieldTemplate, definitions, fields } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
+    const { minRemovable } = { minRemovable: true, ...uiSchema["ui:options"] };
     const arrayProps = {
       canAdd: this.canAddItem(formData),
       items: formData.map((item, index) => {
@@ -349,6 +350,7 @@ class ArrayField extends Component {
         );
         return this.renderArrayFieldItem({
           index,
+          canRemove: minRemovable || formData.length > schema.minItems,
           canMoveUp: index > 0,
           canMoveDown: index < formData.length - 1,
           itemSchema: itemSchema,
@@ -491,6 +493,8 @@ class ArrayField extends Component {
       items = items.concat(new Array(itemSchemas.length - items.length));
     }
 
+    const { minRemovable } = { minRemovable: true, ...uiSchema["ui:options"] };
+
     // These are the props passed into the render function
     const arrayProps = {
       canAdd: this.canAddItem(items) && additionalSchema,
@@ -519,7 +523,8 @@ class ArrayField extends Component {
 
         return this.renderArrayFieldItem({
           index,
-          canRemove: additional,
+          canRemove:
+            additional && (minRemovable || formData.length > schema.minItems),
           canMoveUp: index >= itemSchemas.length + 1,
           canMoveDown: additional && index < items.length - 1,
           itemSchema,
