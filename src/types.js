@@ -9,5 +9,5 @@ export const registryShape = shape({
   formContext: object.isRequired,
   ArrayFieldTemplate: func,
   ObjectFieldTemplate: func,
-  FieldTemplate: func
+  FieldTemplate: func,
 });

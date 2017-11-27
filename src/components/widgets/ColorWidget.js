@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { registryShape } from "../../types";
+
 function ColorWidget(props) {
   const { disabled, readonly, registry: { widgets: { BaseInput } } } = props;
   return <BaseInput type="color" {...props} disabled={disabled || readonly} />;
@@ -8,6 +10,7 @@ function ColorWidget(props) {
 
 if (process.env.NODE_ENV !== "production") {
   ColorWidget.propTypes = {
+    registry: registryShape.isRequired,
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     value: PropTypes.string,

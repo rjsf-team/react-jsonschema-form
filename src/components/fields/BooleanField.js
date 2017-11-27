@@ -7,6 +7,7 @@ import {
   optionsList,
   getDefaultRegistry,
 } from "../../utils";
+import { registryShape } from "../../types";
 
 function BooleanField(props) {
   const {
@@ -59,14 +60,7 @@ if (process.env.NODE_ENV !== "production") {
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired,
-    }),
+    registry: registryShape,
   };
 }
 

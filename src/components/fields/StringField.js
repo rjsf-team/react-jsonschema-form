@@ -8,6 +8,7 @@ import {
   optionsList,
   getDefaultRegistry,
 } from "../../utils";
+import { registryShape } from "../../types";
 
 function StringField(props) {
   const {
@@ -64,14 +65,7 @@ if (process.env.NODE_ENV !== "production") {
     onBlur: PropTypes.func,
     onFocus: PropTypes.func,
     formData: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired,
-    }),
+    registry: registryShape,
     formContext: PropTypes.object.isRequired,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

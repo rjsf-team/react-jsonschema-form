@@ -6,6 +6,7 @@ import {
   retrieveSchema,
   getDefaultRegistry,
 } from "../../utils";
+import { registryShape } from "../../types";
 
 function DefaultObjectFieldTemplate(props) {
   const { TitleField, DescriptionField } = props;
@@ -147,14 +148,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired,
-    }),
+    registry: registryShape,
   };
 }
 

@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import { pad } from "../../utils";
+import { registryShape } from "../../types";
 
 export function utcToLocal(jsonDate) {
   if (!jsonDate) {
@@ -46,6 +48,7 @@ function DateTimeWidget(props) {
 
 if (process.env.NODE_ENV !== "production") {
   DateTimeWidget.propTypes = {
+    registry: registryShape.isRequired,
     value: PropTypes.string,
   };
 }

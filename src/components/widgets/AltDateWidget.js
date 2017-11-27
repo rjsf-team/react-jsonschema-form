@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
+import { registryShape } from "../../types";
 
 function rangeOptions(start, stop) {
   let options = [];
@@ -155,6 +156,7 @@ class AltDateWidget extends Component {
 
 if (process.env.NODE_ENV !== "production") {
   AltDateWidget.propTypes = {
+    registry: registryShape.isRequired,
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     value: PropTypes.string,
