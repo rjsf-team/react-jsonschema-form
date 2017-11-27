@@ -103,108 +103,110 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
 }
 
 function computeDefaults(schema, parentDefaults, formData, definitions) {
-  if ("$ref" in schema) {
-    const refParentDefaults =
-      parentDefaults !== undefined ? parentDefaults : schema.default;
-    return computeDefaults(
-      retrieveSchema(schema, definitions, formData),
-      refParentDefaults,
-      formData,
-      definitions
-    );
-  } else {
-    switch (schema.type) {
-      case "array": {
-        const minItemsLength = schema.minItems || 0;
-        let length =
-          minItemsLength && isMultiSelect(schema, definitions)
-            ? 0
-            : Array.isArray(formData)
-              ? Math.max(formData.length, minItemsLength)
-              : Math.max(
-                  (schema.default || []).length,
-                  (parentDefaults || []).length,
-                  minItemsLength,
-                  Array.isArray(schema.items) ? schema.items.length : 0
-                );
-        return new Array(length).fill(undefined).map((_, i) => {
-          let childSchema = undefined;
+  let computed = undefined;
+  switch (schema.type) {
+    case "array": {
+      const minItemsLength = schema.minItems || 0;
+      let length =
+        minItemsLength && isMultiSelect(schema, definitions)
+          ? 0
+          : Array.isArray(formData)
+            ? Math.max(formData.length, minItemsLength)
+            : Math.max(
+                (schema.default || []).length,
+                (parentDefaults || []).length,
+                minItemsLength,
+                Array.isArray(schema.items) ? schema.items.length : 0
+              );
+      computed = new Array(length).fill(undefined).map((_, i) => {
+        let childSchema = undefined;
 
-          if (Array.isArray(schema.items)) {
-            if (schema.items.length > i && schema.items[i]) {
-              childSchema = schema.items[i];
-            } else {
-              childSchema = schema.additionalItems;
-            }
+        if (Array.isArray(schema.items)) {
+          if (schema.items.length > i && schema.items[i]) {
+            childSchema = schema.items[i];
           } else {
-            childSchema = schema.items;
+            childSchema = schema.additionalItems;
+          }
+        } else {
+          childSchema = schema.items;
+        }
+
+        let defaultItem = undefined;
+        if (parentDefaults && parentDefaults.length > i) {
+          defaultItem = parentDefaults[i];
+        } else if ("default" in schema && schema.default.length > i) {
+          defaultItem = schema.default[i];
+        } else if ("default" in schema.items) {
+          defaultItem = schema.items.default;
+        } else if (
+          Array.isArray(schema.items) &&
+          schema.items.length > i &&
+          schema.items[i] &&
+          "default" in schema.items[i]
+        ) {
+          defaultItem = schema.items[i].default;
+        }
+
+        let childFormData =
+          formData && formData.length > i ? formData[i] : undefined;
+
+        return computeDefaults(
+          childSchema,
+          defaultItem,
+          childFormData,
+          definitions
+        );
+      });
+      break;
+    }
+    case "object": {
+      const defaultFilled = Object.keys(schema.properties || {}).reduce(
+        (acc, key) => {
+          let propSchema = schema.properties[key];
+
+          let propParentDefault = undefined;
+          if (parentDefaults && key in parentDefaults) {
+            propParentDefault = parentDefaults[key];
+          } else if (schema.default && key in schema.default) {
+            propParentDefault = schema.default[key];
           }
 
-          let defaultItem = undefined;
-          if (parentDefaults && parentDefaults.length > i) {
-            defaultItem = parentDefaults[i];
-          } else if ("default" in schema && schema.default.length > i) {
-            defaultItem = schema.default[i];
-          } else if ("default" in schema.items) {
-            defaultItem = schema.items.default;
-          } else if (
-            Array.isArray(schema.items) &&
-            schema.items.length > i &&
-            schema.items[i] &&
-            "default" in schema.items[i]
-          ) {
-            defaultItem = schema.items[i].default;
-          }
+          const propFormData =
+            formData && key in formData ? formData[key] : undefined;
 
-          let childFormData =
-            formData && formData.length > i ? formData[i] : undefined;
-
-          return computeDefaults(
-            childSchema,
-            defaultItem,
-            childFormData,
+          acc[key] = computeDefaults(
+            propSchema,
+            propParentDefault,
+            propFormData,
             definitions
           );
-        });
-      }
-      case "object": {
-        const defaultFilled = Object.keys(schema.properties || {}).reduce(
-          (acc, key) => {
-            let propSchema = schema.properties[key];
-
-            let propParentDefault = undefined;
-            if (parentDefaults && key in parentDefaults) {
-              propParentDefault = parentDefaults[key];
-            } else if (schema.default && key in schema.default) {
-              propParentDefault = schema.default[key];
-            }
-
-            const propFormData =
-              formData && key in formData ? formData[key] : undefined;
-
-            acc[key] = computeDefaults(
-              propSchema,
-              propParentDefault,
-              propFormData,
-              definitions
-            );
-            return acc;
-          },
-          {}
-        );
-        return formData ? mergeObjects(formData, defaultFilled) : defaultFilled;
-      }
-      default: {
-        if (formData !== undefined) {
-          return formData;
-        } else if (parentDefaults !== undefined) {
-          return parentDefaults;
-        } else if ("default" in schema) {
-          return schema.default;
-        }
+          return acc;
+        },
+        {}
+      );
+      computed = formData
+        ? mergeObjects(formData, defaultFilled)
+        : defaultFilled;
+      break;
+    }
+    default: {
+      if (formData !== undefined) {
+        computed = formData;
+      } else if (parentDefaults !== undefined) {
+        computed = parentDefaults;
+      } else if ("default" in schema) {
+        computed = schema.default;
       }
     }
   }
+  return schema.dependencies
+    ? computeDefaults(
+        retrieveSchema(schema, definitions, computed),
+        undefined,
+        computed,
+        definitions
+      )
+    : computed;
 }
 
 export function getDefaultFormState(schema, formData, definitions = {}) {

@@ -408,6 +408,41 @@ describe("utils", () => {
         0,
       ]);
     });
+
+    it("should compute defaults for schema with dependencies with default property", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          "Do you have a pet?": {
+            type: "string",
+            enum: ["Yes: One"],
+            default: "Yes",
+          },
+        },
+        dependencies: {
+          "Do you have a pet?": {
+            oneOf: [
+              {
+                properties: {
+                  "Do you have a pet?": {
+                    enum: ["Yes"],
+                  },
+                  "Does it bite?": {
+                    type: "boolean",
+                    default: true,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      expect(getDefaultFormState(schema, undefined)).eql({
+        "Do you have a pet?": "Yes",
+        "Does it bite?": true,
+      });
+    });
   });
 
   describe("asNumber()", () => {
