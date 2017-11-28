@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
+  retrieveSchema,
   shouldRender,
   toIdSchema,
   setState,
@@ -39,6 +40,10 @@ export default class Form extends Component {
     const mustValidate = edit && !props.noValidate && liveValidate;
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
+
+    //create a retrievedSchema object here to get new idSchema
+    const retrievedSchema = retrieveSchema(schema, definitions, formData);
+
     const { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema)
       : {
@@ -46,7 +51,7 @@ export default class Form extends Component {
           errorSchema: state.errorSchema || {},
         };
     const idSchema = toIdSchema(
-      schema,
+      retrievedSchema,
       uiSchema["ui:rootFieldId"],
       definitions,
       formData

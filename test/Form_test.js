@@ -1259,6 +1259,102 @@ describe("Form", () => {
     });
   });
 
+  describe("idSchema updates based on formData", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        a: { type: "string", enum: ["int", "bool"] },
+      },
+      dependencies: {
+        a: {
+          oneOf: [
+            {
+              properties: {
+                a: { enum: ["int"] },
+              },
+            },
+            {
+              properties: {
+                a: { enum: ["bool"] },
+                b: { type: "boolean" },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    it("should not update idSchema for a falsey value", () => {
+      const formData = { a: "int" };
+      const { comp } = createFormComponent({ schema, formData });
+      comp.componentWillReceiveProps({
+        schema: {
+          type: "object",
+          properties: {
+            a: { type: "string", enum: ["int", "bool"] },
+          },
+          dependencies: {
+            a: {
+              oneOf: [
+                {
+                  properties: {
+                    a: { enum: ["int"] },
+                  },
+                },
+                {
+                  properties: {
+                    a: { enum: ["bool"] },
+                    b: { type: "boolean" },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        formData: { a: "int" },
+      });
+      expect(comp.state.idSchema).eql({ $id: "root", a: { $id: "root_a" } });
+    });
+
+    it("should update idSchema based on truthy value", () => {
+      const formData = {
+        a: "int",
+      };
+      const { comp } = createFormComponent({ schema, formData });
+      comp.componentWillReceiveProps({
+        schema: {
+          type: "object",
+          properties: {
+            a: { type: "string", enum: ["int", "bool"] },
+          },
+          dependencies: {
+            a: {
+              oneOf: [
+                {
+                  properties: {
+                    a: { enum: ["int"] },
+                  },
+                },
+                {
+                  properties: {
+                    a: { enum: ["bool"] },
+                    b: { type: "boolean" },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        formData: { a: "bool" },
+      });
+      expect(comp.state.idSchema).eql({
+        $id: "root",
+        a: { $id: "root_a" },
+        b: { $id: "root_b" },
+      });
+    });
+  });
+
   describe("Attributes", () => {
     const formProps = {
       schema: {},
