@@ -61,19 +61,25 @@ export function getDefaultRegistry() {
   };
 }
 
-export function getWidget(schema, widget, registeredWidgets = {}) {
+export function getSchemaType(schema) {
   let { type } = schema;
   if (!type && schema.enum) {
     type = "string";
   }
+  return type;
+}
+
+export function getWidget(schema, widget, registeredWidgets = {}) {
+  const type = getSchemaType(schema);
 
   function mergeOptions(Widget) {
     // cache return value as property of widget for proper react reconciliation
     if (!Widget.MergedWidget) {
       const defaultOptions =
         (Widget.defaultProps && Widget.defaultProps.options) || {};
-      Widget.MergedWidget = ({ options = {}, ...props }) =>
-        <Widget options={{ ...defaultOptions, ...options }} {...props} />;
+      Widget.MergedWidget = ({ options = {}, ...props }) => (
+        <Widget options={{ ...defaultOptions, ...options }} {...props} />
+      );
     }
     return Widget.MergedWidget;
   }

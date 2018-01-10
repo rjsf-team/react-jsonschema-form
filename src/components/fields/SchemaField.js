@@ -8,6 +8,7 @@ import {
   getUiOptions,
   isFilesArray,
   deepEquals,
+  getSchemaType,
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
@@ -30,10 +31,7 @@ function getFieldComponent(schema, uiSchema, fields) {
     return fields[field];
   }
 
-  if (!schema.type && schema.enum) {
-    return fields[COMPONENT_TYPES["string"]];
-  }
-  const componentName = COMPONENT_TYPES[schema.type];
+  const componentName = COMPONENT_TYPES[getSchemaType(schema)];
   return componentName in fields ? fields[componentName] : UnsupportedField;
 }
 
@@ -57,17 +55,9 @@ function Help(props) {
     return <div />;
   }
   if (typeof help === "string") {
-    return (
-      <p className="help-block">
-        {help}
-      </p>
-    );
+    return <p className="help-block">{help}</p>;
   }
-  return (
-    <div className="help-block">
-      {help}
-    </div>
-  );
+  return <div className="help-block">{help}</div>;
 }
 
 function ErrorList(props) {
@@ -254,11 +244,7 @@ function SchemaFieldRender(props) {
     uiSchema,
   };
 
-  return (
-    <FieldTemplate {...fieldProps}>
-      {field}
-    </FieldTemplate>
-  );
+  return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
 }
 
 class SchemaField extends React.Component {
