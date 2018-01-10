@@ -1228,7 +1228,6 @@ i.glyphicon { display: none; }
 .array-item-move-up::after { content: 'Move Up'; }
 .array-item-move-down::after { content: 'Move Down'; }
 .array-item-remove::after { content: 'Remove'; }
-}
 ```
 
 ### Custom SchemaField
