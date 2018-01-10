@@ -8,6 +8,7 @@ import {
   getUiOptions,
   isFilesArray,
   deepEquals,
+  getSchemaType,
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
@@ -29,7 +30,8 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   if (typeof field === "string" && field in fields) {
     return fields[field];
   }
-  const componentName = COMPONENT_TYPES[schema.type];
+
+  const componentName = COMPONENT_TYPES[getSchemaType(schema)];
   return componentName in fields
     ? fields[componentName]
     : () => {
