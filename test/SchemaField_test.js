@@ -20,6 +20,16 @@ describe("SchemaField", () => {
     sandbox.restore();
   });
 
+  describe("Unsupported field", () => {
+    it("should warn on invalid field type", () => {
+      const { node } = createFormComponent({ schema: { type: "invalid" } });
+
+      expect(node.querySelector(".unsupported-field").textContent).to.contain(
+        "Unknown field type invalid"
+      );
+    });
+  });
+
   describe("Custom SchemaField component", () => {
     const CustomSchemaField = function(props) {
       return (
@@ -246,10 +256,9 @@ describe("SchemaField", () => {
     });
 
     it("should render a customized description field", () => {
-      const CustomDescriptionField = ({ description }) =>
-        <div id="custom">
-          {description}
-        </div>;
+      const CustomDescriptionField = ({ description }) => (
+        <div id="custom">{description}</div>
+      );
 
       const { node } = createFormComponent({
         schema,

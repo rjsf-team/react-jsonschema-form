@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
-import Codemirror from "react-codemirror";
+import CodeMirror from "react-codemirror2";
 import "codemirror/mode/javascript/javascript";
 
 import { shouldRender } from "../src/utils";
@@ -17,25 +17,6 @@ import "codemirror/theme/ttcn.css";
 import "codemirror/theme/solarized.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/eclipse.css";
-
-// Patching CodeMirror#componentWillReceiveProps so it's executed synchronously
-// Ref https://github.com/mozilla-services/react-jsonschema-form/issues/174
-Codemirror.prototype.componentWillReceiveProps = function(nextProps) {
-  if (
-    this.codeMirror &&
-    nextProps.value !== undefined &&
-    this.codeMirror.getValue() != nextProps.value
-  ) {
-    this.codeMirror.setValue(nextProps.value);
-  }
-  if (typeof nextProps.options === "object") {
-    for (var optionName in nextProps.options) {
-      if (nextProps.options.hasOwnProperty(optionName)) {
-        this.codeMirror.setOption(optionName, nextProps.options[optionName]);
-      }
-    }
-  }
-};
 
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
@@ -208,7 +189,7 @@ class Editor extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onCodeChange = code => {
+  onCodeChange = (editor, metadata, code) => {
     this.setState({ valid: true, code });
     setImmediate(() => {
       try {
@@ -229,7 +210,7 @@ class Editor extends Component {
           <span className={`${cls} glyphicon glyphicon-${icon}`} />
           {" " + title}
         </div>
-        <Codemirror
+        <CodeMirror
           value={this.state.code}
           onChange={this.onCodeChange}
           options={Object.assign({}, cmOptions, { theme })}
@@ -365,10 +346,15 @@ class App extends Component {
 
   load = data => {
     // Reset the ArrayFieldTemplate whenever you load new data
-    const { ArrayFieldTemplate } = data;
+    const { ArrayFieldTemplate, ObjectFieldTemplate } = data;
     // force resetting form component instance
     this.setState({ form: false }, _ =>
-      this.setState({ ...data, form: true, ArrayFieldTemplate })
+      this.setState({
+        ...data,
+        form: true,
+        ArrayFieldTemplate,
+        ObjectFieldTemplate,
+      })
     );
   };
 
@@ -412,6 +398,7 @@ class App extends Component {
       theme,
       editor,
       ArrayFieldTemplate,
+      ObjectFieldTemplate,
       transformErrors,
     } = this.state;
 
@@ -463,22 +450,26 @@ class App extends Component {
           </div>
         </div>
         <div className="col-sm-5">
-          {this.state.form &&
+          {this.state.form && (
             <Form
               ArrayFieldTemplate={ArrayFieldTemplate}
+              ObjectFieldTemplate={ObjectFieldTemplate}
               liveValidate={liveValidate}
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
               onChange={this.onFormDataChange}
               onSubmit={({ formData }) =>
-                console.log("submitted formData", formData)}
+                console.log("submitted formData", formData)
+              }
               fields={{ geo: GeoPosition }}
               validate={validate}
               onBlur={(id, value) =>
-                console.log(`Touched ${id} with value ${value}`)}
+                console.log(`Touched ${id} with value ${value}`)
+              }
               onFocus={(id, value) =>
-                console.log(`Focused ${id} with value ${value}`)}
+                console.log(`Focused ${id} with value ${value}`)
+              }
               transformErrors={transformErrors}
               onError={log("errors")}>
               <div className="row">
@@ -494,7 +485,8 @@ class App extends Component {
                   />
                 </div>
               </div>
-            </Form>}
+            </Form>
+          )}
         </div>
       </div>
     );

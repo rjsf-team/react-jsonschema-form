@@ -7,6 +7,30 @@ import {
   getDefaultRegistry,
 } from "../../utils";
 
+function DefaultObjectFieldTemplate(props) {
+  const { TitleField, DescriptionField } = props;
+  return (
+    <fieldset>
+      {(props.uiSchema["ui:title"] || props.title) && (
+        <TitleField
+          id={`${props.idSchema.$id}__title`}
+          title={props.title || props.uiSchema["ui:title"]}
+          required={props.required}
+          formContext={props.formContext}
+        />
+      )}
+      {props.description && (
+        <DescriptionField
+          id={`${props.idSchema.$id}__description`}
+          description={props.description}
+          formContext={props.formContext}
+        />
+      )}
+      {props.properties.map(prop => prop.content)}
+    </fieldset>
+  );
+}
+
 class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -48,9 +72,11 @@ class ObjectField extends Component {
     } = this.props;
     const { definitions, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
-    const schema = retrieveSchema(this.props.schema, definitions);
+    const schema = retrieveSchema(this.props.schema, definitions, formData);
     const title = schema.title === undefined ? name : schema.title;
+    const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
+
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
@@ -61,31 +87,23 @@ class ObjectField extends Component {
             Invalid {name || "root"} object field configuration:
             <em>{err.message}</em>.
           </p>
-          <pre>
-            {JSON.stringify(schema)}
-          </pre>
+          <pre>{JSON.stringify(schema)}</pre>
         </div>
       );
     }
-    return (
-      <fieldset>
-        {(uiSchema["ui:title"] || title) &&
-          <TitleField
-            id={`${idSchema.$id}__title`}
-            title={title || uiSchema["ui:title"]}
-            required={required}
-            formContext={formContext}
-          />}
-        {(uiSchema["ui:description"] || schema.description) &&
-          <DescriptionField
-            id={`${idSchema.$id}__description`}
-            description={uiSchema["ui:description"] || schema.description}
-            formContext={formContext}
-          />}
-        {orderedProperties.map((name, index) => {
-          return (
+
+    const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
+
+    const templateProps = {
+      title: uiSchema["ui:title"] || title,
+      description,
+      TitleField,
+      DescriptionField,
+      properties: orderedProperties.map(name => {
+        return {
+          content: (
             <SchemaField
-              key={index}
+              key={name}
               name={name}
               required={this.isRequired(name)}
               schema={schema.properties[name]}
@@ -100,10 +118,21 @@ class ObjectField extends Component {
               disabled={disabled}
               readonly={readonly}
             />
-          );
-        })}
-      </fieldset>
-    );
+          ),
+          name,
+          readonly,
+          disabled,
+          required,
+        };
+      }),
+      required,
+      idSchema,
+      uiSchema,
+      schema,
+      formData,
+      formContext,
+    };
+    return <Template {...templateProps} />;
   }
 }
 

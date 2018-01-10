@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
 import { parseDateString, toDateString } from "../src/utils";
+import { utcToLocal } from "../src/components/widgets/DateTimeWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("StringField", () => {
@@ -434,9 +435,9 @@ describe("StringField", () => {
         target: { value: newDatetime },
       });
 
-      expect(node.querySelector("[type=datetime-local]").value)
-        // XXX import and use conversion helper
-        .eql(newDatetime.slice(0, 19));
+      expect(node.querySelector("[type=datetime-local]").value).eql(
+        utcToLocal(newDatetime)
+      );
     });
 
     it("should fill field with data", () => {
@@ -487,6 +488,20 @@ describe("StringField", () => {
         },
         widgets: {
           DateTimeWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+
+    it("should allow overriding of BaseInput", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+        widgets: {
+          BaseInput: CustomWidget,
         },
       });
 
@@ -603,24 +618,6 @@ describe("StringField", () => {
       expect(comp.state.errors).to.have.length.of(1);
     });
 
-    it("should properly reset field value when null is selected", () => {
-      const { comp, node } = createFormComponent({
-        schema: {
-          type: "string",
-          format: "date",
-        },
-        uiSchema,
-        liveValidate: true,
-      });
-
-      Simulate.change(node.querySelector("[type=date]"), {
-        target: { value: null },
-      });
-
-      expect(comp.state.formData).to.be.a("undefined");
-      expect(comp.state.errors).to.have.length.of(0);
-    });
-
     it("should render customized DateWidget", () => {
       const { node } = createFormComponent({
         schema: {
@@ -629,6 +626,20 @@ describe("StringField", () => {
         },
         widgets: {
           DateWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+
+    it("should allow overriding of BaseInput", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date",
+        },
+        widgets: {
+          BaseInput: CustomWidget,
         },
       });
 
@@ -1554,6 +1565,22 @@ describe("StringField", () => {
         },
         widgets: {
           FileWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+  });
+
+  describe("UpDownWidget", () => {
+    it("should allow overriding of BaseInput", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+          format: "updown",
+        },
+        widgets: {
+          BaseInput: CustomWidget,
         },
       });
 

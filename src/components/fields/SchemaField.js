@@ -22,7 +22,7 @@ const COMPONENT_TYPES = {
   string: "StringField",
 };
 
-function getFieldComponent(schema, uiSchema, fields) {
+function getFieldComponent(schema, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -32,7 +32,17 @@ function getFieldComponent(schema, uiSchema, fields) {
   }
 
   const componentName = COMPONENT_TYPES[getSchemaType(schema)];
-  return componentName in fields ? fields[componentName] : UnsupportedField;
+  return componentName in fields
+    ? fields[componentName]
+    : () => {
+        return (
+          <UnsupportedField
+            schema={schema}
+            idSchema={idSchema}
+            reason={`Unknown field type ${schema.type}`}
+          />
+        );
+      };
 }
 
 function Label(props) {
@@ -140,6 +150,7 @@ DefaultTemplate.defaultProps = {
 function SchemaFieldRender(props) {
   const {
     uiSchema,
+    formData,
     errorSchema,
     idSchema,
     name,
@@ -152,8 +163,8 @@ function SchemaFieldRender(props) {
     formContext,
     FieldTemplate = DefaultTemplate,
   } = registry;
-  const schema = retrieveSchema(props.schema, definitions);
-  const FieldComponent = getFieldComponent(schema, uiSchema, fields);
+  const schema = retrieveSchema(props.schema, definitions, formData);
+  const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
@@ -235,6 +246,7 @@ function SchemaFieldRender(props) {
     label,
     hidden,
     required,
+    disabled,
     readonly,
     displayLabel,
     classNames,
@@ -285,6 +297,7 @@ if (process.env.NODE_ENV !== "production") {
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
       ArrayFieldTemplate: PropTypes.func,
+      ObjectFieldTemplate: PropTypes.func,
       FieldTemplate: PropTypes.func,
       formContext: PropTypes.object.isRequired,
     }),

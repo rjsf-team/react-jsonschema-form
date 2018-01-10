@@ -24,10 +24,12 @@ describe("ArrayFieldTemplate", () => {
           {props.items.map(element => {
             return (
               <div className="custom-array-item" key={element.index}>
-                {element.hasMoveUp &&
-                  <button className="custom-array-item-move-up" />}
-                {element.hasMoveDown &&
-                  <button className="custom-array-item-move-down" />}
+                {element.hasMoveUp && (
+                  <button className="custom-array-item-move-up" />
+                )}
+                {element.hasMoveDown && (
+                  <button className="custom-array-item-move-down" />
+                )}
 
                 {element.children}
               </div>
@@ -37,14 +39,10 @@ describe("ArrayFieldTemplate", () => {
       );
     }
 
-    describe("Statefull ArrayFieldTemplate", () => {
+    describe("Stateful ArrayFieldTemplate", () => {
       class ArrayFieldTemplate extends PureComponent {
         render() {
-          return (
-            <div>
-              {this.props.items.map(item => item.element)}
-            </div>
-          );
+          return <div>{this.props.items.map(item => item.element)}</div>;
         }
       }
 
