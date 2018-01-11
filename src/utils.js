@@ -218,6 +218,8 @@ export function isObject(thing) {
 }
 
 export function mergeObjects(obj1, obj2, concatArrays = false) {
+  obj1 = obj1 instanceof Object ? obj1 : {};
+  obj2 = obj2 instanceof Object ? obj2 : {};
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
