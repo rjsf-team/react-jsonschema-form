@@ -40,8 +40,6 @@ export default class Form extends Component {
     const mustValidate = edit && !props.noValidate && liveValidate;
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
-
-    //create a retrievedSchema object here to get new idSchema
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
 
     const { errors, errorSchema } = mustValidate
