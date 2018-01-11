@@ -52,7 +52,8 @@ export default class Form extends Component {
       retrievedSchema,
       uiSchema["ui:rootFieldId"],
       definitions,
-      formData
+      formData,
+      props.idPrefix
     );
     return {
       schema,

@@ -1028,6 +1028,29 @@ describe("utils", () => {
         bar: { $id: "root_bar" },
       });
     });
+
+    it("should handle idPrefix parameter", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            type: "object",
+            properties: {
+              foo: { type: "string" },
+              bar: { type: "string" },
+            },
+          },
+        },
+        $ref: "#/definitions/testdef",
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions, {}, "rjsf")).eql(
+        {
+          $id: "rjsf",
+          foo: { $id: "rjsf_foo" },
+          bar: { $id: "rjsf_bar" },
+        }
+      );
+    });
   });
 
   describe("parseDateString()", () => {
