@@ -237,7 +237,6 @@ describe("StringField", () => {
         },
       });
 
-      console.log(node.querySelectorAll(".field option")[0].innerHTML);
       expect(node.querySelectorAll(".field option")[0].textContent).eql("Test");
     });
 

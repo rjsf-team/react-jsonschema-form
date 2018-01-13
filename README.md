@@ -997,6 +997,19 @@ The following props are passed to `ErrorList`
 - `uiSchema`: The uiSchema that was passed to `Form`.
 - `formContext`: The `formContext` object that you passed to Form.
 
+### Id prefix
+
+To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
+
+```jsx
+render((
+  <Form schema={schema}
+        idPrefix={"rjsf_prefix"}/>,
+), document.getElementById("app"));
+```
+
+This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key">`
+
 ### Custom widgets and fields
 
 The API allows to specify your own custom *widget* and *field* components:
