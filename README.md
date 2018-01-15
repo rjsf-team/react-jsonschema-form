@@ -561,7 +561,7 @@ Note that string representations of numbers will be cast back and reflected as a
 
 ### Disabled attribute for `enum` fields
 
-This library supports the 'disbaled' attribute for `enum` options.Enum disabled allows disabling options for 'enum' fields.This attribute can be added as a part of uiSchema.
+This library supports the 'disabled' attribute for `enum` options. Enum disabled allows disabling options for 'enum' fields.This attribute can be added as a part of uiSchema.
 
 ```js
 const schema = {
