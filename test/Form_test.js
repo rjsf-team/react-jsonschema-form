@@ -44,6 +44,30 @@ describe("Form", () => {
     });
   });
 
+  describe("Option idPrefix", function() {
+    it("should change the rendered ids", function() {
+      const schema = {
+        type: "object",
+        title: "root object",
+        required: ["foo"],
+        properties: {
+          count: {
+            type: "number",
+          },
+        },
+      };
+      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["rjsf_count"]);
+    });
+  });
+
   describe("Custom field template", () => {
     const schema = {
       type: "object",

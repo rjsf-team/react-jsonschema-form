@@ -201,7 +201,7 @@ WARNING: If you have situations where your parent component can re-render, make 
 You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after:
 
 ```js
-const onSubmit = ({form}) => console.log("Data submitted: "+form.formData);
+const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
 
 render((
   <Form schema={schema}
@@ -890,7 +890,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `disabled`: A boolean value stating if the array is disabled.
 - `idSchema`: Object
 - `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
-- `onAddClick: (event) => (event) => void`: Returns a function that adds a new item to the array.
+- `onAddClick: (event) => void`: A function that adds a new item to the array.
 - `readonly`: A boolean value stating if the array is read-only.
 - `required`: A boolean value stating if the array is required.
 - `schema`: The schema object for this array.
@@ -996,6 +996,19 @@ The following props are passed to `ErrorList`
 - `schema`: The schema that was passed to `Form`.
 - `uiSchema`: The uiSchema that was passed to `Form`.
 - `formContext`: The `formContext` object that you passed to Form.
+
+### Id prefix
+
+To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
+
+```jsx
+render((
+  <Form schema={schema}
+        idPrefix={"rjsf_prefix"}/>,
+), document.getElementById("app"));
+```
+
+This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key">`
 
 ### Custom widgets and fields
 
@@ -1228,7 +1241,6 @@ i.glyphicon { display: none; }
 .array-item-move-up::after { content: 'Move Up'; }
 .array-item-move-down::after { content: 'Move Down'; }
 .array-item-remove::after { content: 'Remove'; }
-}
 ```
 
 ### Custom SchemaField

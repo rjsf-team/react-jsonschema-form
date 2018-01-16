@@ -191,6 +191,16 @@ describe("StringField", () => {
       expect(node.querySelectorAll(".field select")).to.have.length.of(1);
     });
 
+    it("should render a string field for an enum without a type", () => {
+      const { node } = createFormComponent({
+        schema: {
+          enum: ["foo", "bar"],
+        },
+      });
+
+      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+    });
+
     it("should render a string field with a label", () => {
       const { node } = createFormComponent({
         schema: {
@@ -227,7 +237,6 @@ describe("StringField", () => {
         },
       });
 
-      console.log(node.querySelectorAll(".field option")[0].innerHTML);
       expect(node.querySelectorAll(".field option")[0].textContent).eql("Test");
     });
 
