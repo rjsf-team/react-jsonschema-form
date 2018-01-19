@@ -204,6 +204,13 @@ class Editor extends Component {
     const { title, theme } = this.props;
     const icon = this.state.valid ? "ok" : "remove";
     const cls = this.state.valid ? "valid" : "invalid";
+    const uuid =
+      Math.random()
+        .toString(36)
+        .substring(2, 15) +
+      Math.random()
+        .toString(36)
+        .substring(2, 15);
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
@@ -211,6 +218,7 @@ class Editor extends Component {
           {" " + title}
         </div>
         <CodeMirror
+          key={uuid}
           value={this.state.code}
           onChange={this.onCodeChange}
           options={Object.assign({}, cmOptions, { theme })}
