@@ -218,6 +218,22 @@ describe("ObjectField", () => {
       expect(labels).eql(["baz", "bar", "qux", "foo"]);
     });
 
+    it("should use provided order also if order list contains extraneous properties", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:order": ["baz", "qux", "bar", "wut?", "foo", "huh?"],
+        },
+      });
+
+      const labels = [].map.call(
+        node.querySelectorAll(".field > label"),
+        l => l.textContent
+      );
+
+      expect(labels).eql(["baz", "qux", "bar", "foo"]);
+    });
+
     it("should throw when order list misses an existing property", () => {
       const { node } = createFormComponent({
         schema,
