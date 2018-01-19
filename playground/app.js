@@ -374,8 +374,9 @@ class App extends Component {
 
   setLiveValidate = ({ formData }) => this.setState({ liveValidate: formData });
 
-  onFormDataChange = ({ formData }) =>
+  onFormDataChange = ({ formData }) => {
     this.setState({ formData, shareURL: null });
+  };
 
   onShare = () => {
     const { formData, schema, uiSchema } = this.state;

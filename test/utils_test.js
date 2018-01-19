@@ -606,7 +606,7 @@ describe("utils", () => {
           });
         });
 
-        describe("true condition", () => {
+        describe.only("true condition", () => {
           it("should add properties", () => {
             const schema = {
               type: "object",
@@ -628,6 +628,41 @@ describe("utils", () => {
               properties: {
                 a: { type: "string" },
                 b: { type: "integer" },
+              },
+            });
+          });
+
+          it("should add properties for nested JSON objects as well", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                simple: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string" },
+                    credit_card: { type: "number" },
+                  },
+                  dependencies: {
+                    credit_card: {
+                      properties: {
+                        billing_address: { type: "string" },
+                      },
+                    },
+                  },
+                },
+              },
+            };
+            const definitions = {};
+            const formData = { simple: { name: "Randy", credit_card: 1 } };
+            console.log(retrieveSchema(schema, definitions, formData));
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                simple: {
+                  name: { type: "string" },
+                  credit_card: { type: "number" },
+                  billing_address: { type: "string" },
+                },
               },
             });
           });
