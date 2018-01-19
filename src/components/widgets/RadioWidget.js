@@ -21,6 +21,7 @@ function RadioWidget(props) {
       {enumOptions.map((option, i) => {
         const checked = option.value === value;
         const disabledCls = disabled || readonly ? "disabled" : "";
+        const checkedCls = checked ? "checked" : "";
         const radio = (
           <span>
             <input
@@ -38,11 +39,13 @@ function RadioWidget(props) {
         );
 
         return inline ? (
-          <label key={i} className={`radio-inline ${disabledCls}`}>
+          <label
+            key={i}
+            className={`radio-inline ${disabledCls} ${checkedCls}`}>
             {radio}
           </label>
         ) : (
-          <div key={i} className={`radio ${disabledCls}`}>
+          <div key={i} className={`radio ${disabledCls} ${checkedCls}`}>
             <label>{radio}</label>
           </div>
         );
