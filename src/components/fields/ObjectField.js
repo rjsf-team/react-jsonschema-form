@@ -74,14 +74,13 @@ class ObjectField extends Component {
     const { definitions, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, definitions, formData);
-    const newIdSchema = toIdSchema(schema, null, definitions, idSchema["$id"]);
-    console.group("ObjectField");
-    console.log("name", name);
-    console.log("schema", schema);
-    console.log("uiSchema", uiSchema);
-    console.log("idSchema", newIdSchema);
-    console.log("formData", formData);
-    console.groupEnd();
+    const objectIdSchema = toIdSchema(
+      schema,
+      null,
+      definitions,
+      formData,
+      idSchema["$id"]
+    );
     const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
@@ -118,7 +117,7 @@ class ObjectField extends Component {
               schema={schema.properties[name]}
               uiSchema={uiSchema[name]}
               errorSchema={errorSchema[name]}
-              idSchema={newIdSchema[name]}
+              idSchema={objectIdSchema[name]}
               formData={formData[name]}
               onChange={this.onPropertyChange(name)}
               onBlur={onBlur}

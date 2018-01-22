@@ -55,7 +55,6 @@ export default class Form extends Component {
       formData,
       props.idPrefix
     );
-    console.log("Final idSchema", idSchema);
     return {
       schema,
       uiSchema,
@@ -181,25 +180,6 @@ export default class Form extends Component {
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
-    const retrievedSchema = retrieveSchema(
-      schema,
-      schema.definitions,
-      formData
-    );
-    const newIdSchema = toIdSchema(
-      retrievedSchema,
-      null,
-      schema.definitions,
-      formData,
-      idSchema["$id"]
-    );
-    console.group("Form");
-    console.log("schema", schema);
-    console.log("retrievedSchema", retrievedSchema);
-    console.log("uiSchema", uiSchema);
-    console.log("idSchema", newIdSchema);
-    console.log("formData", formData);
-    console.groupEnd();
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
 
