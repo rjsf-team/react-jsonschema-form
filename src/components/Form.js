@@ -10,7 +10,7 @@ import {
   setState,
   getDefaultRegistry,
 } from "../utils";
-import validateFormData from "../validate";
+import validateFormData, { toErrorList } from "../validate";
 
 export default class Form extends Component {
   static defaultProps = {
@@ -98,13 +98,18 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange = (formData, options = { validate: false }) => {
-    const mustValidate =
-      !this.props.noValidate && (this.props.liveValidate || options.validate);
+  onChange = (formData, newErrorSchema) => {
+    const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = { formData };
     if (mustValidate) {
       const { errors, errorSchema } = this.validate(formData);
       state = { ...state, errors, errorSchema };
+    } else if (!this.props.noValidate && newErrorSchema) {
+      state = {
+        ...state,
+        errorSchema: newErrorSchema,
+        errors: toErrorList(newErrorSchema),
+      };
     }
     setState(this, state, () => {
       if (this.props.onChange) {

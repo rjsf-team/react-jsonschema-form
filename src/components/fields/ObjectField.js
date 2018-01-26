@@ -50,9 +50,16 @@ class ObjectField extends Component {
   }
 
   onPropertyChange = name => {
-    return (value, options) => {
+    return (value, errorSchema) => {
       const newFormData = { ...this.props.formData, [name]: value };
-      this.props.onChange(newFormData, options);
+      this.props.onChange(
+        newFormData,
+        errorSchema &&
+          this.props.errorSchema && {
+            ...this.props.errorSchema,
+            [name]: errorSchema,
+          }
+      );
     };
   };
 
