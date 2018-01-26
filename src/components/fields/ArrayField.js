@@ -229,10 +229,10 @@ class ArrayField extends Component {
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    this.props.onChange(
-      [...formData, getDefaultFormState(itemSchema, undefined, definitions)],
-      { validate: false }
-    );
+    this.props.onChange([
+      ...formData,
+      getDefaultFormState(itemSchema, undefined, definitions),
+    ]);
   };
 
   onDropIndexClick = index => {
@@ -242,7 +242,20 @@ class ArrayField extends Component {
       }
       const { formData, onChange } = this.props;
       // refs #195: revalidate to ensure properly reindexing errors
-      onChange(formData.filter((_, i) => i !== index), { validate: true });
+      let newErrorSchema;
+      if (this.props.errorSchema) {
+        newErrorSchema = {};
+        const errorSchema = this.props.errorSchema;
+        for (let i in errorSchema) {
+          i = parseInt(i);
+          if (i < index) {
+            newErrorSchema[i] = errorSchema[i];
+          } else if (i > index) {
+            newErrorSchema[i - 1] = errorSchema[i];
+          }
+        }
+      }
+      onChange(formData.filter((_, i) => i !== index), newErrorSchema);
     };
   };
 
@@ -253,23 +266,39 @@ class ArrayField extends Component {
         event.target.blur();
       }
       const { formData, onChange } = this.props;
+      let newErrorSchema;
+      if (this.props.errorSchema) {
+        newErrorSchema = {};
+        const errorSchema = this.props.errorSchema;
+        for (let i in errorSchema) {
+          if (i == index) {
+            newErrorSchema[newIndex] = errorSchema[index];
+          } else if (i == newIndex) {
+            newErrorSchema[index] = errorSchema[newIndex];
+          } else {
+            newErrorSchema[i] = errorSchema[i];
+          }
+        }
+      }
       onChange(
         formData.map((item, i) => {
-          if (i === newIndex) {
+          // i is string, index and newIndex are numbers,
+          // so using "==" to compare
+          if (i == newIndex) {
             return formData[index];
-          } else if (i === index) {
+          } else if (i == index) {
             return formData[newIndex];
           } else {
             return item;
           }
         }),
-        { validate: true }
+        newErrorSchema
       );
     };
   };
 
   onChangeForIndex = index => {
-    return value => {
+    return (value, errorSchema) => {
       const { formData, onChange } = this.props;
       const newFormData = formData.map((item, i) => {
         // We need to treat undefined items as nulls to have validation.
@@ -277,12 +306,19 @@ class ArrayField extends Component {
         const jsonValue = typeof value === "undefined" ? null : value;
         return index === i ? jsonValue : item;
       });
-      onChange(newFormData, { validate: false });
+      onChange(
+        newFormData,
+        errorSchema &&
+          this.props.errorSchema && {
+            ...this.props.errorSchema,
+            [index]: errorSchema,
+          }
+      );
     };
   };
 
   onSelectChange = value => {
-    this.props.onChange(value, { validate: false });
+    this.props.onChange(value);
   };
 
   render() {
