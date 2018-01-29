@@ -6,7 +6,7 @@ import {
   getUiOptions,
   isSelect,
   optionsList,
-  getDefaultRegistry,
+  getDefaultRegistry
 } from "../../utils";
 
 function StringField(props) {
@@ -24,6 +24,7 @@ function StringField(props) {
     onBlur,
     onFocus,
     registry = getDefaultRegistry(),
+    rawErrors
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -51,6 +52,7 @@ function StringField(props) {
       autofocus={autofocus}
       registry={registry}
       placeholder={placeholder}
+      rawErrors={rawErrors}
     />
   );
 }
@@ -70,13 +72,14 @@ if (process.env.NODE_ENV !== "production") {
       ).isRequired,
       fields: PropTypes.objectOf(PropTypes.func).isRequired,
       definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired,
+      formContext: PropTypes.object.isRequired
     }),
     formContext: PropTypes.object.isRequired,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
+    rawErrors: PropTypes.arrayOf(PropTypes.string)
   };
 }
 
@@ -84,7 +87,7 @@ StringField.defaultProps = {
   uiSchema: {},
   disabled: false,
   readonly: false,
-  autofocus: false,
+  autofocus: false
 };
 
 export default StringField;
