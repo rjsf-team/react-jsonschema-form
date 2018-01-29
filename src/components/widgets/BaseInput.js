@@ -46,7 +46,7 @@ BaseInput.defaultProps = {
   required: false,
   disabled: false,
   readonly: false,
-  autofocus: false
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -60,7 +60,7 @@ if (process.env.NODE_ENV !== "production") {
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
-    onFocus: PropTypes.func
+    onFocus: PropTypes.func,
   };
 }
 
