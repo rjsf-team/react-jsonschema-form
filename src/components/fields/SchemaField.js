@@ -8,7 +8,7 @@ import {
   getUiOptions,
   isFilesArray,
   deepEquals,
-  getSchemaType,
+  getSchemaType
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
@@ -19,7 +19,7 @@ const COMPONENT_TYPES = {
   integer: "NumberField",
   number: "NumberField",
   object: "ObjectField",
-  string: "StringField",
+  string: "StringField"
 };
 
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
@@ -103,7 +103,7 @@ function DefaultTemplate(props) {
     description,
     hidden,
     required,
-    displayLabel,
+    displayLabel
   } = props;
   if (hidden) {
     return children;
@@ -113,9 +113,7 @@ function DefaultTemplate(props) {
     <div className={classNames}>
       {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
-      {React.Children.map(children, child => {
-        return React.cloneElement(child, { rawErrors: props.rawErrors });
-      })}
+      {children}
       {errors}
       {help}
     </div>
@@ -139,7 +137,7 @@ if (process.env.NODE_ENV !== "production") {
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
     fields: PropTypes.object,
-    formContext: PropTypes.object,
+    formContext: PropTypes.object
   };
 }
 
@@ -147,7 +145,7 @@ DefaultTemplate.defaultProps = {
   hidden: false,
   readonly: false,
   required: false,
-  displayLabel: true,
+  displayLabel: true
 };
 
 function SchemaFieldRender(props) {
@@ -158,13 +156,13 @@ function SchemaFieldRender(props) {
     idSchema,
     name,
     required,
-    registry = getDefaultRegistry(),
+    registry = getDefaultRegistry()
   } = props;
   const {
     definitions,
     fields,
     formContext,
-    FieldTemplate = DefaultTemplate,
+    FieldTemplate = DefaultTemplate
   } = registry;
   const schema = retrieveSchema(props.schema, definitions, formData);
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
@@ -208,6 +206,7 @@ function SchemaFieldRender(props) {
       autofocus={autofocus}
       errorSchema={fieldErrorSchema}
       formContext={formContext}
+      rawErrors={__errors}
     />
   );
 
@@ -227,7 +226,7 @@ function SchemaFieldRender(props) {
     "field",
     `field-${type}`,
     errors && errors.length > 0 ? "field-error has-error has-danger" : "",
-    uiSchema.classNames,
+    uiSchema.classNames
   ]
     .join(" ")
     .trim();
@@ -256,7 +255,7 @@ function SchemaFieldRender(props) {
     formContext,
     fields,
     schema,
-    uiSchema,
+    uiSchema
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
@@ -283,7 +282,7 @@ SchemaField.defaultProps = {
   idSchema: {},
   disabled: false,
   readonly: false,
-  autofocus: false,
+  autofocus: false
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -302,8 +301,8 @@ if (process.env.NODE_ENV !== "production") {
       ArrayFieldTemplate: PropTypes.func,
       ObjectFieldTemplate: PropTypes.func,
       FieldTemplate: PropTypes.func,
-      formContext: PropTypes.object.isRequired,
-    }),
+      formContext: PropTypes.object.isRequired
+    })
   };
 }
 
