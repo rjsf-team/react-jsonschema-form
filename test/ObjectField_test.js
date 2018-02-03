@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
 import { createFormComponent, createSandbox } from "./test_utils";
+import { retrieveSchema, toIdSchema } from "../src/utils";
 
 describe("ObjectField", () => {
   let sandbox;
@@ -379,6 +380,78 @@ describe("ObjectField", () => {
       };
       const { node } = createFormComponent({ schema, fields });
       expect(node.querySelector("#title-")).to.be.null;
+    });
+  });
+
+  describe.only("schema generation for dependencies", () => {
+    it("should generate a schema for a single level JSON object with dependencies", () => {
+      const schema = {
+        title: "Single Level JSON Object",
+        type: "object",
+        properties: {
+          a: { type: "string" },
+        },
+        dependencies: {
+          a: {
+            properties: {
+              b: { type: "number" },
+            },
+          },
+        },
+      };
+      const definitions = {};
+      const formData = { a: "A string" };
+      let result = retrieveSchema(schema, definitions, formData);
+      console.log(toIdSchema(result, null, definitions, formData));
+      expect(retrieveSchema(schema, definitions, formData)).eql({
+        title: "Single Level JSON Object",
+        type: "object",
+        properties: {
+          a: { type: "string" },
+          b: { type: "number" },
+        },
+      });
+    });
+
+    it("should generate a schema for a nested JSON object with dependencies", () => {
+      const schema = {
+        title: "Multi Level JSON Object",
+        type: "object",
+        properties: {
+          a: {
+            type: "object",
+            properties: {
+              b: { type: "string" },
+              c: { type: "number" },
+            },
+            dependencies: {
+              c: {
+                properties: {
+                  d: { type: "number" },
+                },
+              },
+            },
+          },
+        },
+      };
+      const definitions = {};
+      const formData = { a: { c: 1234 } };
+      let result = retrieveSchema(schema, definitions, formData);
+      console.log(toIdSchema(result, null, definitions, formData));
+      expect(retrieveSchema(schema, definitions, formData)).eql({
+        title: "Multi Level JSON Object",
+        type: "object",
+        properties: {
+          a: {
+            type: "object",
+            properties: {
+              b: { type: "string" },
+              c: { type: "number" },
+              d: { type: "number" },
+            },
+          },
+        },
+      });
     });
   });
 });
