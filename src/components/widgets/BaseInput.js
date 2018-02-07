@@ -22,6 +22,9 @@ function BaseInput(props) {
   const _onChange = ({ target: { value } }) => {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
+
+  const { rawErrors, ...cleanProps } = inputProps;
+
   return (
     <input
       className="form-control"
@@ -29,7 +32,7 @@ function BaseInput(props) {
       disabled={disabled}
       autoFocus={autofocus}
       value={value == null ? "" : value}
-      {...inputProps}
+      {...cleanProps}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
       onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}

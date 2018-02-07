@@ -321,5 +321,25 @@ describe("SchemaField", () => {
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.contain("test");
     });
+
+    describe("Custom error rendering", () => {
+      const customStringWidget = props => {
+        return <div className="custom-text-widget">{props.rawErrors}</div>;
+      };
+
+      it("should pass rawErrors down to custom widgets", () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          validate,
+          widgets: { BaseInput: customStringWidget },
+        });
+        submit(node);
+
+        const matches = node.querySelectorAll(".custom-text-widget");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.eql("test");
+      });
+    });
   });
 });
