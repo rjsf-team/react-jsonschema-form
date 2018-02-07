@@ -466,21 +466,32 @@ function withDependentSchema(
   dependencyKey,
   dependencyValue
 ) {
-  let { oneOf, ...dependentSchema } = retrieveSchema(
+  let { oneOf, allOf, ...dependentSchema } = retrieveSchema(
     dependencyValue,
     definitions,
     formData
   );
   schema = mergeSchemas(schema, dependentSchema);
-  return oneOf === undefined
-    ? schema
-    : withExactlyOneSubschema(
-        schema,
-        definitions,
-        formData,
-        dependencyKey,
-        oneOf
-      );
+
+  if (oneOf !== undefined) {
+    return withExactlyOneSubschema(
+      schema,
+      definitions,
+      formData,
+      dependencyKey,
+      oneOf
+    );
+  } else if (allOf !== undefined) {
+    return withMultipleSubschemas(
+      schema,
+      definitions,
+      formData,
+      dependencyKey,
+      allOf
+    );
+  } else {
+    return schema;
+  }
 }
 
 function withExactlyOneSubschema(
@@ -495,29 +506,14 @@ function withExactlyOneSubschema(
       `invalid oneOf: it is some ${typeof oneOf} instead of an array`
     );
   }
-  const validSubschemas = oneOf.filter(subschema => {
-    if (!subschema.properties) {
-      return false;
-    }
-    const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
-    if (conditionPropertySchema) {
-      const conditionSchema = {
-        type: "object",
-        properties: {
-          [dependencyKey]: conditionPropertySchema,
-        },
-      };
-      const { errors } = validateFormData(formData, conditionSchema);
-      return errors.length === 0;
-    }
-  });
-  if (validSubschemas.length !== 1) {
+  const subschemas = validSubschemas(oneOf, formData, dependencyKey);
+  if (subschemas.length !== 1) {
     console.warn(
       "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid"
     );
     return schema;
   }
-  const subschema = validSubschemas[0];
+  const subschema = subschemas[0];
   const {
     [dependencyKey]: conditionPropertySchema,
     ...dependentSubschema
@@ -527,6 +523,64 @@ function withExactlyOneSubschema(
     schema,
     retrieveSchema(dependentSchema, definitions, formData)
   );
+}
+
+function withMultipleSubschemas(
+  schema,
+  definitions,
+  formData,
+  dependencyKey,
+  allOf
+) {
+  if (!Array.isArray(allOf)) {
+    throw new Error(
+      `invalid allOf: it is some ${typeof allOf} instead of an array`
+    );
+  }
+  const subschemas = validSubschemas(allOf, formData, dependencyKey);
+  if (subschemas.length !== allOf.length) {
+    console.warn(
+      "ignoring allOf in dependencies because not all subschemas are valid"
+    );
+    return schema;
+  }
+  const reducer = (schema, subschema) => {
+    const {
+      [dependencyKey]: conditionPropertySchema,
+      ...dependentSubschema
+    } = subschema.properties;
+    const dependentSchema = { ...subschema, properties: dependentSubschema };
+    return mergeSchemas(
+      schema,
+      retrieveSchema(dependentSchema, definitions, formData)
+    );
+  };
+  return subschemas.reduce(reducer, schema);
+}
+
+function validSubschemas(dependencies, formData, dependencyKey) {
+  return dependencies
+    .map(subschema => {
+      return subschema.oneOf
+        ? validSubschemas(subschema.oneOf, formData, dependencyKey)[0]
+        : subschema;
+    })
+    .filter(subschema => {
+      if (!subschema.properties) {
+        return false;
+      }
+      const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
+      if (conditionPropertySchema) {
+        const conditionSchema = {
+          type: "object",
+          properties: {
+            [dependencyKey]: conditionPropertySchema,
+          },
+        };
+        const { errors } = validateFormData(formData, conditionSchema);
+        return errors.length === 0;
+      }
+    });
 }
 
 function mergeSchemas(schema1, schema2) {

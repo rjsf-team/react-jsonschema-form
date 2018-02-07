@@ -777,6 +777,129 @@ describe("utils", () => {
           });
         });
 
+        describe("multiple conditions", () => {
+          it("should add 'first' properties given 'first' data", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: {
+                  type: "array",
+                  items: { type: "string", enum: ["int", "bool"] },
+                },
+              },
+              dependencies: {
+                a: {
+                  allOf: [
+                    {
+                      oneOf: [
+                        {
+                          properties: {
+                            a: { not: { contains: { enum: ["int"] } } },
+                          },
+                        },
+                        {
+                          properties: {
+                            a: { contains: { enum: ["int"] } },
+                            b: { type: "integer" },
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      oneOf: [
+                        {
+                          properties: {
+                            a: { not: { contains: { enum: ["bool"] } } },
+                          },
+                        },
+                        {
+                          properties: {
+                            a: { contains: { enum: ["bool"] } },
+                            c: { type: "boolean" },
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            };
+            const definitions = {};
+            const formData = { a: ["int"] };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: {
+                  type: "array",
+                  items: { type: "string", enum: ["int", "bool"] },
+                },
+                b: { type: "integer" },
+              },
+            });
+          });
+
+          it("should add 'first' and 'second' properties given 'first' and 'second' data", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: {
+                  type: "array",
+                  items: { type: "string", enum: ["int", "bool"] },
+                },
+              },
+              dependencies: {
+                a: {
+                  allOf: [
+                    {
+                      oneOf: [
+                        {
+                          properties: {
+                            a: { not: { contains: { enum: ["int"] } } },
+                          },
+                        },
+                        {
+                          properties: {
+                            a: { contains: { enum: ["int"] } },
+                            b: { type: "integer" },
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      oneOf: [
+                        {
+                          properties: {
+                            a: { not: { contains: { enum: ["bool"] } } },
+                          },
+                        },
+                        {
+                          properties: {
+                            a: { contains: { enum: ["bool"] } },
+                            c: { type: "boolean" },
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            };
+            const definitions = {};
+            const formData = { a: ["bool", "int"] };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: {
+                  type: "array",
+                  items: { type: "string", enum: ["int", "bool"] },
+                },
+                b: { type: "integer" },
+                c: { type: "boolean" },
+              },
+            });
+          });
+        });
+
         describe("with $ref in dependency", () => {
           it("should retrieve the referenced schema", () => {
             const schema = {
