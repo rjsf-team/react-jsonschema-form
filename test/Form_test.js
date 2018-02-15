@@ -922,6 +922,30 @@ describe("Form", () => {
           })
         );
       });
+
+      it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          onError: () => {},
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "short" },
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({
+          __errors: ["should NOT be shorter than 8 characters"],
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "long enough" },
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({});
+        expect(comp.state.errors).eql([]);
+      });
     });
 
     describe("root level", () => {
