@@ -29,100 +29,100 @@ const cmOptions = {
   mode: {
     name: "javascript",
     json: true,
-    statementIndent: 2
+    statementIndent: 2,
   },
   lineNumbers: true,
   lineWrapping: true,
   indentWithTabs: false,
-  tabSize: 2
+  tabSize: 2,
 };
 const themes = {
   default: {
     stylesheet:
-      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
   },
   cerulean: {
     stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cerulean/bootstrap.min.css"
+      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cerulean/bootstrap.min.css",
   },
   cosmo: {
     stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cosmo/bootstrap.min.css"
+      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cosmo/bootstrap.min.css",
   },
   cyborg: {
     stylesheet:
       "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cyborg/bootstrap.min.css",
-    editor: "blackboard"
+    editor: "blackboard",
   },
   darkly: {
     stylesheet:
       "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/darkly/bootstrap.min.css",
-    editor: "mbo"
+    editor: "mbo",
   },
   flatly: {
     stylesheet:
       "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/flatly/bootstrap.min.css",
-    editor: "ttcn"
+    editor: "ttcn",
   },
   journal: {
     stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/journal/bootstrap.min.css"
+      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/journal/bootstrap.min.css",
   },
   lumen: {
     stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/lumen/bootstrap.min.css"
+      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/lumen/bootstrap.min.css",
   },
   paper: {
     stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/paper/bootstrap.min.css"
+      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/paper/bootstrap.min.css",
   },
   readable: {
     stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/readable/bootstrap.min.css"
+      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/readable/bootstrap.min.css",
   },
   sandstone: {
     stylesheet:
       "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/sandstone/bootstrap.min.css",
-    editor: "solarized"
+    editor: "solarized",
   },
   simplex: {
     stylesheet:
       "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/simplex/bootstrap.min.css",
-    editor: "ttcn"
+    editor: "ttcn",
   },
   slate: {
     stylesheet:
       "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/slate/bootstrap.min.css",
-    editor: "monokai"
+    editor: "monokai",
   },
   spacelab: {
     stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/spacelab/bootstrap.min.css"
+      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/spacelab/bootstrap.min.css",
   },
   "solarized-dark": {
     stylesheet:
       "//cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-dark.css",
-    editor: "dracula"
+    editor: "dracula",
   },
   "solarized-light": {
     stylesheet:
       "//cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-light.css",
-    editor: "solarized"
+    editor: "solarized",
   },
   superhero: {
     stylesheet:
       "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/superhero/bootstrap.min.css",
-    editor: "dracula"
+    editor: "dracula",
   },
   united: {
     stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/united/bootstrap.min.css"
+      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/united/bootstrap.min.css",
   },
   yeti: {
     stylesheet:
       "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/yeti/bootstrap.min.css",
-    editor: "eclipse"
-  }
+    editor: "eclipse",
+  },
 };
 
 class GeoPosition extends Component {
@@ -246,8 +246,7 @@ class Selector extends Component {
             <li
               key={i}
               role="presentation"
-              className={this.state.current === label ? "active" : ""}
-            >
+              className={this.state.current === label ? "active" : ""}>
               <a href="#" onClick={this.onLabelClick(label)}>
                 {label}
               </a>
@@ -262,14 +261,13 @@ class Selector extends Component {
 function ThemeSelector({ theme, select }) {
   const themeSchema = {
     type: "string",
-    enum: Object.keys(themes)
+    enum: Object.keys(themes),
   };
   return (
     <Form
       schema={themeSchema}
       formData={theme}
-      onChange={({ formData }) => select(formData, themes[formData])}
-    >
+      onChange={({ formData }) => select(formData, themes[formData])}>
       <div />
     </Form>
   );
@@ -302,8 +300,7 @@ class CopyLink extends Component {
           <button
             className="btn btn-default"
             type="button"
-            onClick={this.onCopyClick}
-          >
+            onClick={this.onCopyClick}>
             <i className="glyphicon glyphicon-copy" />
           </button>
         </span>
@@ -326,7 +323,7 @@ class App extends Component {
       editor: "default",
       theme: "default",
       liveValidate: true,
-      shareURL: null
+      shareURL: null,
     };
   }
 
@@ -356,7 +353,7 @@ class App extends Component {
         ...data,
         form: true,
         ArrayFieldTemplate,
-        ObjectFieldTemplate
+        ObjectFieldTemplate,
       })
     );
   };
@@ -403,7 +400,7 @@ class App extends Component {
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
-      localize = "en"
+      localize = "en",
     } = this.state;
 
     return (
@@ -418,8 +415,7 @@ class App extends Component {
               <Form
                 schema={liveValidateSchema}
                 formData={liveValidate}
-                onChange={this.setLiveValidate}
-              >
+                onChange={this.setLiveValidate}>
                 <div />
               </Form>
             </div>
@@ -477,8 +473,7 @@ class App extends Component {
               }
               transformErrors={transformErrors}
               onError={log("errors")}
-              localize={localize}
-            >
+              localize={localize}>
               <div className="row">
                 <div className="col-sm-3">
                   <button className="btn btn-primary" type="submit">

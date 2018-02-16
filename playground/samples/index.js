@@ -39,5 +39,5 @@ export const samples = {
   Alternatives: alternatives,
   "Property dependencies": propertyDependencies,
   "Schema dependencies": schemaDependencies,
-  Localize: localize
+  Localize: localize,
 };

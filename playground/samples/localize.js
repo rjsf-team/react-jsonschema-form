@@ -5,13 +5,13 @@ module.exports = {
     properties: {
       active: {
         type: "boolean",
-        title: "Active"
-      }
-    }
+        title: "Active",
+      },
+    },
   },
   formData: {
-    active: "wrong"
+    active: "wrong",
   },
   uiSchema: {},
-  localize: "es"
+  localize: "es",
 };
