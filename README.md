@@ -81,6 +81,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Custom error messages](#custom-error-messages)
      - [Error List Display](#error-list-display)
      - [The case of empty strings](#the-case-of-empty-strings)
+  - [Localize default messages](#localize-default-messages)
   - [Styling your forms](#styling-your-forms)
   - [Schema definitions and references](#schema-definitions-and-references)
   - [Property dependencies](#property-dependencies)
@@ -1470,6 +1471,21 @@ When a text input is empty, the field in form data is set to `undefined`. String
 One consequence of this is that if you have an empty string in your `enum` array, selecting that option in the `select` input will cause the field to be set to `undefined`, not an empty string.
 
 If you want to have the field set to a default value when empty you can provide a `ui:emptyValue` field in the `uiSchema` object.
+
+## Localize default messages
+
+You can change localize to default messages errors.
+ 
+Here are some examples from the [playground](http://mozilla-services.github.io/react-jsonschema-form/).
+ 
+Here list of languages support [ajv-i18n](https://github.com/epoberezkin/ajv-i18n).
+
+```jsx
+render((
+  <Form schema={schema}
+        localize="es" />
+), document.getElementById("app"));
+```
 
 ## Styling your forms
 
