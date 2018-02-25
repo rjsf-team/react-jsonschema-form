@@ -117,7 +117,7 @@ describe("BooleanField", () => {
     });
 
     const labels = [].map.call(
-      node.querySelectorAll(".field-radio-group label"),
+      node.querySelectorAll(".form-check label"),
       label => label.textContent
     );
     expect(labels).eql(["Yes", "No"]);
@@ -135,7 +135,9 @@ describe("BooleanField", () => {
       },
     });
 
-    expect(node.querySelectorAll(".radio-inline")).to.have.length.of(2);
+    expect(node.querySelectorAll(".form-check-inline input")).to.have.length.of(
+      2
+    );
   });
 
   it("should support enumNames for select", () => {

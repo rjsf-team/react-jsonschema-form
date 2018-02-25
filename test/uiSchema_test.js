@@ -1501,7 +1501,7 @@ describe("uiSchema", () => {
       it("should render boolean option labels", () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const labels = [].map.call(
-          node.querySelectorAll(".field-radio-group label"),
+          node.querySelectorAll(".form-check label"),
           node => node.textContent
         );
 
