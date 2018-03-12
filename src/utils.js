@@ -217,16 +217,32 @@ export function isObject(thing) {
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
-export function mergeObjects(obj1, obj2, concatArrays = false) {
+export function mergeObjects(obj1, obj2, concatArrays = false, dependencyKey) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1[key],
       right = obj2[key];
     if (obj1.hasOwnProperty(key) && isObject(right)) {
-      acc[key] = mergeObjects(left, right, concatArrays);
+      acc[key] = mergeObjects(left, right, concatArrays, dependencyKey);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
       acc[key] = left.concat(right);
+    } else if (
+      dependencyKey !== undefined &&
+      obj1.hasOwnProperty(dependencyKey)
+    ) {
+      let index = Object.keys(obj1).indexOf(dependencyKey);
+      let tempObj = {};
+      Object.keys(obj1).forEach((property, i) => {
+        if (i > index) {
+          tempObj[property] = acc[property];
+          delete acc[property];
+        }
+      });
+      acc[key] = right;
+      Object.keys(tempObj).forEach(property => {
+        acc[property] = tempObj[property];
+      });
     } else {
       acc[key] = right;
     }
@@ -525,12 +541,13 @@ function withExactlyOneSubschema(
   const dependentSchema = { ...subschema, properties: dependentSubschema };
   return mergeSchemas(
     schema,
-    retrieveSchema(dependentSchema, definitions, formData)
+    retrieveSchema(dependentSchema, definitions, formData),
+    dependencyKey
   );
 }
 
-function mergeSchemas(schema1, schema2) {
-  return mergeObjects(schema1, schema2, true);
+function mergeSchemas(schema1, schema2, dependencyKey) {
+  return mergeObjects(schema1, schema2, true, dependencyKey);
 }
 
 function isArguments(object) {
