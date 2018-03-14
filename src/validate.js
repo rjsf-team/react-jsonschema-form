@@ -155,8 +155,14 @@ export default function validateFormData(
   transformErrors,
   local
 ) {
-  ajv.validate(schema, formData);
-  localize[local] && localize[local](ajv.errors);
+  try {
+    ajv.validate(schema, formData);
+    localize[local] && localize[local](ajv.errors);
+  } catch (e) {
+    // swallow errors thrown in ajv due to invalid schemas, these
+    // still get displayed
+  }
+
   let errors = transformAjvErrors(ajv.errors);
 
   if (typeof transformErrors === "function") {

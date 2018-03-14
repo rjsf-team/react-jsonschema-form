@@ -134,6 +134,42 @@ describe("Validation", () => {
         expect(errors[0].message).to.equal(newErrorMessage);
       });
     });
+
+    describe("Invalid schema", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            required: "invalid_type_non_array",
+          },
+        },
+      };
+
+      let errors, errorSchema;
+
+      beforeEach(() => {
+        const result = validateFormData({ foo: 42 }, schema);
+        errors = result.errors;
+        errorSchema = result.errorSchema;
+      });
+
+      it("should return an error list", () => {
+        expect(errors).to.have.length.of(1);
+        expect(errors[0].name).eql("type");
+        expect(errors[0].property).eql(".properties['foo'].required");
+        expect(errors[0].message).eql("should be array");
+      });
+
+      it("should return an errorSchema", () => {
+        expect(errorSchema.properties.foo.required.__errors).to.have.length.of(
+          1
+        );
+        expect(errorSchema.properties.foo.required.__errors[0]).eql(
+          "should be array"
+        );
+      });
+    });
   });
 
   describe("Form integration", () => {
