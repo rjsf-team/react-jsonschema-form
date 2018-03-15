@@ -240,6 +240,9 @@ export function mergeObjects(obj1, obj2, concatArrays = false, dependencyKey) {
         }
       });
       acc[key] = right;
+      acc[key].dependsOn = Object.assign({}, acc[key].dependsOn, {
+        [dependencyKey]: true,
+      });
       Object.keys(tempObj).forEach(property => {
         acc[property] = tempObj[property];
       });
@@ -248,6 +251,20 @@ export function mergeObjects(obj1, obj2, concatArrays = false, dependencyKey) {
     }
     return acc;
   }, acc);
+}
+
+export function clearDependencies(formData = {}, schema, name) {
+  let clearedFormData = Object.assign({}, formData);
+  let properties = schema.properties;
+  Object.keys(properties).forEach(property => {
+    if (
+      properties[property].hasOwnProperty("dependsOn") &&
+      properties[property].dependsOn.hasOwnProperty(name)
+    ) {
+      delete clearedFormData[property];
+    }
+  });
+  return clearedFormData;
 }
 
 export function asNumber(value) {
