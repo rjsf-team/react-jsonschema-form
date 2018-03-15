@@ -5,6 +5,7 @@ import {
   orderProperties,
   retrieveSchema,
   getDefaultRegistry,
+  clearDependencies,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
@@ -51,8 +52,14 @@ class ObjectField extends Component {
 
   onPropertyChange = name => {
     return (value, errorSchema) => {
-      const newFormData = { ...this.props.formData, [name]: value };
-      this.props.onChange(
+      const { formData, schema, onChange } = this.props;
+      let clearedFormData = clearDependencies(
+        formData,
+        retrieveSchema(schema, undefined, formData),
+        name
+      );
+      const newFormData = { ...clearedFormData, [name]: value };
+      onChange(
         newFormData,
         errorSchema &&
           this.props.errorSchema && {
