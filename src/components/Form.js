@@ -45,8 +45,10 @@ export default class Form extends Component {
     const { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema)
       : {
-          errors: state.errors || [],
-          errorSchema: state.errorSchema || {},
+          errors: props.errorSchema
+            ? toErrorList(props.errorSchema)
+            : state.errors || [],
+          errorSchema: props.errorSchema || state.errorSchema || {},
         };
     const idSchema = toIdSchema(
       retrievedSchema,
@@ -72,12 +74,18 @@ export default class Form extends Component {
 
   validate(formData, schema) {
     const { validate, transformErrors } = this.props;
-    return validateFormData(
+    const { errors, errorSchema } = validateFormData(
       formData,
       schema || this.props.schema,
       validate,
       transformErrors
     );
+
+    if (this.props.onValidate) {
+      this.props.onValidate(errorSchema);
+    }
+
+    return { errors, errorSchema };
   }
 
   renderErrors() {
@@ -232,6 +240,7 @@ if (process.env.NODE_ENV !== "production") {
   Form.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    errorSchema: PropTypes.object,
     formData: PropTypes.any,
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
@@ -243,6 +252,7 @@ if (process.env.NODE_ENV !== "production") {
     ErrorList: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,
+    onValidate: PropTypes.func,
     showErrorList: PropTypes.bool,
     onSubmit: PropTypes.func,
     id: PropTypes.string,
