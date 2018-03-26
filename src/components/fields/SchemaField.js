@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import ReactTooltip from "react-tooltip";
+import shortid from "shortid";
 
 import {
   isMultiSelect,
@@ -46,29 +48,48 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
 }
 
 function Label(props) {
-  const { label, required, id } = props;
+  const { label, required, id, help, helpTooltip } = props;
   if (!label) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
+  let tooltipHelp = helpTooltip ? help : null;
   return (
     <label className="control-label" htmlFor={id}>
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
+      {tooltipHelp}
     </label>
   );
 }
 
 function Help(props) {
-  const { help } = props;
+  const { help, isTooltip } = props;
   if (!help) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
-  if (typeof help === "string") {
-    return <p className="help-block">{help}</p>;
+  if (isTooltip) {
+    const tooltipId = shortid.generate();
+    return (
+      <span>
+        <i
+          data-tip
+          data-for={tooltipId}
+          className="help-tooltip glyphicon glyphicon-info-sign"
+          style={{ "padding-left": "3px" }}
+        />
+        <ReactTooltip id={tooltipId} place="top" type="light" effect="solid">
+          {help}
+        </ReactTooltip>
+      </span>
+    );
+  } else {
+    if (typeof help === "string") {
+      return <p className="help-block">{help}</p>;
+    }
+    return <div className="help-block">{help}</div>;
   }
-  return <div className="help-block">{help}</div>;
 }
 
 function ErrorList(props) {
@@ -100,6 +121,7 @@ function DefaultTemplate(props) {
     children,
     errors,
     help,
+    helpTooltip,
     description,
     hidden,
     required,
@@ -108,14 +130,22 @@ function DefaultTemplate(props) {
   if (hidden) {
     return children;
   }
-
+  let defaultHelp = helpTooltip ? null : help;
   return (
     <div className={classNames}>
-      {displayLabel && <Label label={label} required={required} id={id} />}
+      {displayLabel && (
+        <Label
+          label={label}
+          required={required}
+          id={id}
+          help={help}
+          helpTooltip={helpTooltip}
+        />
+      )}
       {displayLabel && description ? description : null}
       {children}
       {errors}
-      {help}
+      {defaultHelp}
     </div>
   );
 }
@@ -136,6 +166,7 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
+    helpTooltip: PropTypes.bool,
     fields: PropTypes.object,
     formContext: PropTypes.object,
   };
@@ -146,6 +177,7 @@ DefaultTemplate.defaultProps = {
   readonly: false,
   required: false,
   displayLabel: true,
+  helpTooltip: false,
 };
 
 function SchemaFieldRender(props) {
@@ -177,7 +209,7 @@ function SchemaFieldRender(props) {
   }
 
   const uiOptions = getUiOptions(uiSchema);
-  let { label: displayLabel = true } = uiOptions;
+  let { label: displayLabel = true, tooltip: helpTooltip = false } = uiOptions;
   if (schema.type === "array") {
     displayLabel =
       isMultiSelect(schema, definitions) ||
@@ -240,7 +272,7 @@ function SchemaFieldRender(props) {
       />
     ),
     rawDescription: description,
-    help: <Help help={help} />,
+    help: <Help help={help} isTooltip={helpTooltip} />,
     rawHelp: typeof help === "string" ? help : undefined,
     errors: <ErrorList errors={errors} />,
     rawErrors: errors,
@@ -251,6 +283,7 @@ function SchemaFieldRender(props) {
     disabled,
     readonly,
     displayLabel,
+    helpTooltip,
     classNames,
     formContext,
     fields,
