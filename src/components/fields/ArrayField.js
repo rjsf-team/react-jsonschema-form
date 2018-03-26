@@ -366,6 +366,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       idPrefix,
+      rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
     const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
@@ -411,6 +412,7 @@ class ArrayField extends Component {
       TitleField,
       formContext,
       formData,
+      rawErrors,
     };
 
     // Check if a custom render function was passed in
@@ -430,6 +432,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
+      rawErrors,
     } = this.props;
     const items = this.props.formData;
     const { widgets, definitions, formContext } = registry;
@@ -454,6 +457,7 @@ class ArrayField extends Component {
         readonly={readonly}
         formContext={formContext}
         autofocus={autofocus}
+        rawErrors={rawErrors}
       />
     );
   }
@@ -470,6 +474,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
+      rawErrors,
     } = this.props;
     const title = schema.title || name;
     const items = this.props.formData;
@@ -491,6 +496,7 @@ class ArrayField extends Component {
         readonly={readonly}
         formContext={formContext}
         autofocus={autofocus}
+        rawErrors={rawErrors}
       />
     );
   }
@@ -511,6 +517,7 @@ class ArrayField extends Component {
       registry = getDefaultRegistry(),
       onBlur,
       onFocus,
+      rawErrors,
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
@@ -579,6 +586,7 @@ class ArrayField extends Component {
       title,
       TitleField,
       formContext,
+      rawErrors,
     };
 
     // Check if a custom template template was passed in
@@ -600,6 +608,7 @@ class ArrayField extends Component {
       autofocus,
       onBlur,
       onFocus,
+      rawErrors,
     } = props;
     const {
       disabled,
@@ -636,6 +645,7 @@ class ArrayField extends Component {
           disabled={this.props.disabled}
           readonly={this.props.readonly}
           autofocus={autofocus}
+          rawErrors={rawErrors}
         />
       ),
       className: "array-item",
