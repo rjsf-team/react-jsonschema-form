@@ -1,4 +1,6 @@
-import React, {Component, PropTypes} from "react";
+/* This file has been modified from the original forked source code */
+import PropTypes from "prop-types";
+import React, {Component} from "react";
 
 import {
   getWidget,

@@ -1,4 +1,6 @@
-import React, {PropTypes} from "react";
+/* This file has been modified from the original forked source code */
+import PropTypes from "prop-types";
+import React from "react";
 
 import BaseInput from "./BaseInput";
 
@@ -10,8 +12,8 @@ function TextWidget(props) {
 if (process.env.NODE_ENV !== "production") {
   TextWidget.propTypes = {
     value: PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
+      PropTypes.string,
+      PropTypes.number,
     ]),
   };
 }

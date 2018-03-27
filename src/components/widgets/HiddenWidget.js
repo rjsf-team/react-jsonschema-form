@@ -1,4 +1,6 @@
-import React, {PropTypes} from "react";
+/* This file has been modified from the original forked source code */
+import PropTypes from "prop-types";
+import React from "react";
 
 
 function HiddenWidget({id, value}) {
@@ -11,9 +13,9 @@ if (process.env.NODE_ENV !== "production") {
   HiddenWidget.propTypes = {
     id: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
-      React.PropTypes.bool,
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.bool,
     ]),
   };
 }

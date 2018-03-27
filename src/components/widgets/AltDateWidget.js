@@ -1,4 +1,6 @@
-import React, {Component, PropTypes} from "react";
+/* This file has been modified from the original forked source code */
+import PropTypes from "prop-types";
+import React, {Component} from "react";
 
 import {shouldRender, parseDateString, toDateString, pad} from "../../utils";
 
@@ -137,7 +139,7 @@ if (process.env.NODE_ENV !== "production") {
   AltDateWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    value: React.PropTypes.string,
+    value: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
