@@ -1,12 +1,37 @@
+/* This file has been modified from the original forked source code */
 /* Utils for tests. */
 
 import React from "react";
 import sinon from "sinon";
-import {renderIntoDocument} from "react-addons-test-utils";
+import {renderIntoDocument, findRenderedComponentWithType} from "react-addons-test-utils";
 import {findDOMNode, render} from "react-dom";
 
 import Form from "../src";
 
+// Since we're not setting the state in onChange, we need to
+// handle it in an external component
+class FormDataStateWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {formData: props.formProps.formData};
+  }
+  onChange(state) {
+    this.setState({formData: state.formData}, () => {
+      if (this.props.formProps.onChange) {
+        this.props.formProps.onChange(state);
+      }
+    });
+  }
+  render() {
+    return (
+      <Form
+        onChange={state => this.onChange(state)}
+        {...this.props.formProps}
+        safeRenderCompletion
+        formData={this.state.formData}/>
+    );
+  }
+}
 
 export function createComponent(Component, props) {
   const comp = renderIntoDocument(<Component {...props}/>);
@@ -15,7 +40,10 @@ export function createComponent(Component, props) {
 }
 
 export function createFormComponent(props) {
-  return createComponent(Form, {...props, safeRenderCompletion: true});
+  const {comp} = createComponent(FormDataStateWrapper, {formProps: props});
+  const formComp = findRenderedComponentWithType(comp, Form);
+  const formNode = findDOMNode(formComp);
+  return {comp: formComp, node: formNode};
 }
 
 export function createSandbox() {

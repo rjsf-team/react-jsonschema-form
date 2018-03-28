@@ -77,18 +77,8 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange = (formData, options={validate: false}) => {
-    const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
-    let state = {status: "editing", formData};
-    if (mustValidate) {
-      const {errors, errorSchema} = this.validate(formData);
-      state = {...state, errors, errorSchema};
-    }
-    setState(this, state, () => {
-      if (this.props.onChange) {
-        this.props.onChange(this.state);
-      }
-    });
+  onChange = (formData) => {
+    this.props.onChange({...this.state, formData});
   };
 
   onBlur = (...args) => {
@@ -199,7 +189,7 @@ if (process.env.NODE_ENV !== "production") {
     fields: PropTypes.objectOf(PropTypes.func),
     ArrayFieldTemplate: PropTypes.func,
     FieldTemplate: PropTypes.func,
-    onChange: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
     onError: PropTypes.func,
     showErrorList: PropTypes.bool,
     onSubmit: PropTypes.func,

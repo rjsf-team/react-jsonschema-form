@@ -1,3 +1,4 @@
+/* This file has been modified from the original forked source code */
 import {expect} from "chai";
 import sinon from "sinon";
 import React from "react";
@@ -33,7 +34,7 @@ describe("Form", () => {
     });
 
     it("should render children buttons", () => {
-      const props = {schema: {}};
+      const props = {schema: {}, onChange: f => f};
       const comp = renderIntoDocument(
         <Form {...props}>
           <button type="submit">Submit</button>
@@ -161,7 +162,7 @@ describe("Form", () => {
     it("should submit the form when clicked", () => {
       const onSubmit = sandbox.spy();
       const comp = renderIntoDocument(
-        <Form onSubmit={ onSubmit } schema={ {} }>
+        <Form onSubmit={ onSubmit } onChange={f => f} schema={ {} }>
           <button type="submit">Submit</button>
           <button type="submit">Another submit</button>
         </Form>
@@ -412,23 +413,6 @@ describe("Form", () => {
 
       expect(node.querySelectorAll("option"))
         .to.have.length.of(3);
-    });
-  });
-
-  describe("Default value handling on clear", () => {
-    const schema = {
-      type: "string",
-      default: "foo",
-    };
-
-    it("should not set default when a text field is cleared", () => {
-      const {node} = createFormComponent({schema, formData: "bar"});
-
-      Simulate.change(node.querySelector("input"), {
-        target: {value: ""}
-      });
-
-      expect(node.querySelector("input").value).eql("");
     });
   });
 
@@ -1136,58 +1120,6 @@ describe("Form", () => {
         expect(errors)
           .eql(["does not meet minimum length of 4"]);
       });
-    });
-  });
-
-  describe("Schema and formData updates", () => {
-    // https://github.com/mozilla-services/react-jsonschema-form/issues/231
-    const schema = {
-      type: "object",
-      properties: {
-        foo: {type: "string"},
-        bar: {type: "string"},
-      }
-    };
-
-    it("should replace state when formData have keys removed", () => {
-      const formData = {foo: "foo", bar: "bar"};
-      const {comp, node} = createFormComponent({schema, formData});
-      comp.componentWillReceiveProps({
-        schema: {
-          type: "object",
-          properties: {
-            bar: {type: "string"},
-          }
-        },
-        formData: {bar: "bar"},
-      });
-
-      Simulate.change(node.querySelector("#root_bar"), {
-        target: {value: "baz"}
-      });
-
-      expect(comp.state.formData).eql({bar: "baz"});
-    });
-
-    it("should replace state when formData keys have changed", () => {
-      const formData = {foo: "foo", bar: "bar"};
-      const {comp, node} = createFormComponent({schema, formData});
-      comp.componentWillReceiveProps({
-        schema: {
-          type: "object",
-          properties: {
-            foo: {type: "string"},
-            baz: {type: "string"},
-          }
-        },
-        formData: {foo: "foo", baz: "bar"},
-      });
-
-      Simulate.change(node.querySelector("#root_baz"), {
-        target: {value: "baz"}
-      });
-
-      expect(comp.state.formData).eql({foo: "foo", baz: "baz"});
     });
   });
 

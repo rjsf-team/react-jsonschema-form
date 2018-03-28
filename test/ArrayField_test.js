@@ -1,3 +1,4 @@
+/* This file has been modified from the original forked source code */
 import React from "react";
 
 import {expect} from "chai";
@@ -219,6 +220,7 @@ describe("ArrayField", () => {
           items: {...schema.items, minLength: 4}
         },
         formData: ["foo", "bar!"],
+        liveValidate: true
       });
 
       try {

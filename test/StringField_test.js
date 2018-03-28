@@ -1,3 +1,4 @@
+/* This file has been modified from the original forked source code */
 import React from "react";
 import {expect} from "chai";
 import {Simulate} from "react-addons-test-utils";
@@ -356,14 +357,10 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered datetime", () => {
-      const {comp, node} = createFormComponent({schema: {
+      const {comp} = createFormComponent({schema: {
         type: "string",
         format: "date-time",
-      }, liveValidate: true});
-
-      Simulate.change(node.querySelector("[type=datetime-local]"), {
-        target: {value: "invalid"}
-      });
+      }, liveValidate: true, formData: "invalid"});
 
       expect(comp.state.errors).to.have.length.of(1);
     });
