@@ -70,11 +70,13 @@ export default class Form extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  validate(formData, schema) {
+  validate(formData, schema = this.props.schema) {
     const { validate, transformErrors } = this.props;
+    const { definitions } = this.getRegistry();
+    const resolvedSchema = retrieveSchema(schema, definitions, formData);
     return validateFormData(
       formData,
-      schema || this.props.schema,
+      resolvedSchema,
       validate,
       transformErrors
     );
