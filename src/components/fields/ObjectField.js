@@ -73,6 +73,7 @@ class ObjectField extends Component {
       required,
       disabled,
       readonly,
+      idPrefix,
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
@@ -117,6 +118,7 @@ class ObjectField extends Component {
               uiSchema={uiSchema[name]}
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
+              idPrefix={idPrefix}
               formData={formData[name]}
               onChange={this.onPropertyChange(name)}
               onBlur={onBlur}

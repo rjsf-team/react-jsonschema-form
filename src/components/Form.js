@@ -173,6 +173,7 @@ export default class Form extends Component {
       children,
       safeRenderCompletion,
       id,
+      idPrefix,
       className,
       name,
       method,
@@ -207,6 +208,7 @@ export default class Form extends Component {
           uiSchema={uiSchema}
           errorSchema={errorSchema}
           idSchema={idSchema}
+          idPrefix={idPrefix}
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}

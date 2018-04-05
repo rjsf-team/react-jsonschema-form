@@ -64,7 +64,10 @@ function DefaultArrayItem(props) {
         <div className="col-xs-3 array-item-toolbox">
           <div
             className="btn-group"
-            style={{ display: "flex", justifyContent: "space-around" }}>
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+            }}>
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconBtn
                 icon="arrow-up"
