@@ -1229,6 +1229,103 @@ describe("Form", () => {
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
     });
+
+    describe("schema dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          branch: {
+            type: "number",
+            enum: [1, 2, 3],
+            default: 1,
+          },
+        },
+        required: ["branch"],
+        dependencies: {
+          branch: {
+            oneOf: [
+              {
+                properties: {
+                  branch: {
+                    enum: [1],
+                  },
+                  field1: {
+                    type: "number",
+                  },
+                },
+                required: ["field1"],
+              },
+              {
+                properties: {
+                  branch: {
+                    enum: [2],
+                  },
+                  field1: {
+                    type: "number",
+                  },
+                  field2: {
+                    type: "number",
+                  },
+                },
+                required: ["field1", "field2"],
+              },
+            ],
+          },
+        },
+      };
+
+      it("should only show error for property in selected branch", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "not a number" },
+        });
+
+        expect(comp.state.errorSchema).eql({
+          field1: {
+            __errors: ["should be number"],
+          },
+        });
+      });
+
+      it("should only show errors for properties in selected branch", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData: { branch: 2 },
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "not a number" },
+        });
+
+        expect(comp.state.errorSchema).eql({
+          field1: {
+            __errors: ["should be number"],
+          },
+          field2: {
+            __errors: ["is a required property"],
+          },
+        });
+      });
+
+      it("should not show any errors when branch is empty", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData: { branch: 3 },
+        });
+
+        Simulate.change(node.querySelector("select"), {
+          target: { value: 3 },
+        });
+
+        expect(comp.state.errorSchema).eql({});
+      });
+    });
   });
 
   describe("Schema and formData updates", () => {
