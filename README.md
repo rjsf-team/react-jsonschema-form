@@ -3,7 +3,7 @@ react-jsonschema-form
 
 [![Build Status](https://travis-ci.org/mozilla-services/react-jsonschema-form.svg)](https://travis-ci.org/mozilla-services/react-jsonschema-form)
 
-A simple [React](http://facebook.github.io/react/) component capable of building HTML forms out of a [JSON schema](http://jsonschema.net/) and using [Bootstrap](http://getbootstrap.com/) semantics by default.
+A simple [React](http://facebook.github.io/react/) component capable of building HTML forms out of a [JSON schema](http://json-schema.org/) and using [Bootstrap](http://getbootstrap.com/) semantics by default.
 
 A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) is hosted on gh-pages.
 
@@ -558,6 +558,51 @@ This will be rendered using a select box that way:
 ```
 
 Note that string representations of numbers will be cast back and reflected as actual numbers into form state.
+
+#### Alternative JSON-Schema compliant approach
+
+The JSON Schema team concluded an alternative approach instead of enumNames and react-jsonschema-form supports it as well.
+
+```js
+const schema = {
+  "type": "number",
+  "anyOf": [
+    {
+      "type": "number",
+      "title": "one",
+      "enum": [
+        1
+      ]
+    },
+    {
+      "type": "number",
+      "title": "two",
+      "enum": [
+        2
+      ]
+    },
+    {
+      "type": "number",
+      "title": "three",
+      "enum": [
+        3
+      ]
+    }
+  ]
+};
+```
+
+As above this will be rendered using a select box as so:
+
+```html
+<select>
+  <option value="1">one</option>
+  <option value="2">two</option>
+  <option value="3">three</option>
+</select>
+```
+
+A live example of both approaches side-by-side can be found in the **Alternatives** playground preset.
 
 ### Disabled attribute for `enum` fields
 
