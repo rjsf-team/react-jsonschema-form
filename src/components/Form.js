@@ -50,6 +50,11 @@ export default class Form extends Component {
             : state.errors || [],
           errorSchema: props.errorSchema || state.errorSchema || {},
         };
+
+    if (mustValidate && props.onValidate) {
+      props.onValidate(errorSchema);
+    }
+
     const idSchema = toIdSchema(
       retrievedSchema,
       uiSchema["ui:rootFieldId"],
@@ -76,18 +81,12 @@ export default class Form extends Component {
     const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
     const resolvedSchema = retrieveSchema(schema, definitions, formData);
-    const { errors, errorSchema } = validateFormData(
+    return validateFormData(
       formData,
       resolvedSchema,
       validate,
       transformErrors
     );
-
-    if (this.props.onValidate) {
-      this.props.onValidate(errorSchema);
-    }
-
-    return { errors, errorSchema };
   }
 
   renderErrors() {
@@ -147,6 +146,9 @@ export default class Form extends Component {
       const { errors, errorSchema } = this.validate(this.state.formData);
       if (Object.keys(errors).length > 0) {
         setState(this, { errors, errorSchema }, () => {
+          if (this.props.onValidate) {
+            this.props.onValidate(errorSchema);
+          }
           if (this.props.onError) {
             this.props.onError(errors);
           } else {
