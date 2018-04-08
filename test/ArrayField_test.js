@@ -7,7 +7,9 @@ import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("ArrayField", () => {
   let sandbox;
-  const CustomComponent = () => <div id="custom" />;
+  const CustomComponent = props => {
+    return <div id="custom">{props.rawErrors}</div>;
+  };
 
   beforeEach(() => {
     sandbox = createSandbox();
@@ -96,6 +98,29 @@ describe("ArrayField", () => {
         widgets: { FileWidget: CustomComponent },
       });
       expect(node.querySelector("#custom")).to.exist;
+    });
+
+    it("should pass rawErrors down to custom array field templates", () => {
+      const schema = {
+        type: "array",
+        title: "my list",
+        description: "my description",
+        items: { type: "string" },
+        minItems: 2,
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        ArrayFieldTemplate: CustomComponent,
+        formData: [1],
+        liveValidate: true,
+      });
+
+      const matches = node.querySelectorAll("#custom");
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.eql(
+        "should NOT have less than 2 items"
+      );
     });
 
     it("should contain no field in the list by default", () => {
@@ -660,6 +685,23 @@ describe("ArrayField", () => {
 
         expect(node.querySelector("select").id).eql("root");
       });
+
+      it("should pass rawErrors down to custom widgets", () => {
+        const { node } = createFormComponent({
+          schema,
+          widgets: {
+            SelectWidget: CustomComponent,
+          },
+          formData: ["foo", "foo"],
+          liveValidate: true,
+        });
+
+        const matches = node.querySelectorAll("#custom");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.eql(
+          "should NOT have duplicate items (items ## 0 and 1 are identical)"
+        );
+      });
     });
 
     describe("CheckboxesWidget", () => {
@@ -728,6 +770,35 @@ describe("ArrayField", () => {
         });
 
         expect(node.querySelectorAll(".checkbox-inline")).to.have.length.of(3);
+      });
+
+      it("should pass rawErrors down to custom widgets", () => {
+        const schema = {
+          type: "array",
+          title: "My field",
+          items: {
+            enum: ["foo", "bar", "fuzz"],
+            type: "string",
+          },
+          minItems: 3,
+          uniqueItems: true,
+        };
+
+        const { node } = createFormComponent({
+          schema,
+          widgets: {
+            CheckboxesWidget: CustomComponent,
+          },
+          uiSchema,
+          formData: [],
+          liveValidate: true,
+        });
+
+        const matches = node.querySelectorAll("#custom");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.eql(
+          "should NOT have less than 3 items"
+        );
       });
     });
   });
@@ -809,6 +880,33 @@ describe("ArrayField", () => {
 
       expect(node.querySelector("input[type=file]").id).eql("root");
     });
+
+    it("should pass rawErrors down to custom widgets", () => {
+      const schema = {
+        type: "array",
+        title: "My field",
+        items: {
+          type: "string",
+          format: "data-url",
+        },
+        minItems: 5,
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        widgets: {
+          FileWidget: CustomComponent,
+        },
+        formData: [],
+        liveValidate: true,
+      });
+
+      const matches = node.querySelectorAll("#custom");
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.eql(
+        "should NOT have less than 5 items"
+      );
+    });
   });
 
   describe("Nested lists", () => {
@@ -839,6 +937,51 @@ describe("ArrayField", () => {
       Simulate.click(node.querySelector(".array-item-add button"));
 
       expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(1);
+    });
+
+    it("should pass rawErrors down to every level of custom widgets", () => {
+      const CustomItem = props => <div id="custom-item">{props.children}</div>;
+      const CustomTemplate = props => {
+        return (
+          <div id="custom">
+            {props.items &&
+              props.items.map((p, i) => <CustomItem key={i} {...p} />)}
+            <div id="custom-error">
+              {props.rawErrors && props.rawErrors.join(", ")}
+            </div>
+          </div>
+        );
+      };
+
+      const schema = {
+        type: "array",
+        title: "A list of arrays",
+        items: {
+          type: "array",
+          title: "A list of numbers",
+          items: {
+            type: "number",
+          },
+          minItems: 3,
+        },
+        minItems: 2,
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        ArrayFieldTemplate: CustomTemplate,
+        formData: [[]],
+        liveValidate: true,
+      });
+
+      const matches = node.querySelectorAll("#custom-error");
+      expect(matches).to.have.length.of(2);
+      expect(matches[0].textContent).to.eql(
+        "should NOT have less than 3 items"
+      );
+      expect(matches[1].textContent).to.eql(
+        "should NOT have less than 2 items"
+      );
     });
   });
 
