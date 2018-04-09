@@ -2376,4 +2376,272 @@ describe("uiSchema", () => {
       });
     });
   });
+
+  describe("Readonly in schema", () => {
+    describe("Fields", () => {
+      describe("ArrayField", () => {
+        let node;
+
+        beforeEach(() => {
+          const schema = {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            readOnly: true,
+          };
+          const uiSchema = {};
+          const formData = ["a", "b"];
+
+          let rendered = createFormComponent({ schema, uiSchema, formData });
+          node = rendered.node;
+        });
+
+        it("should mark as readonly an ArrayField", () => {
+          const disabled = [].map.call(
+            node.querySelectorAll("[type=text]"),
+            node => node.hasAttribute("readonly")
+          );
+          expect(disabled).eql([true, true]);
+        });
+
+        it("should disable the Add button", () => {
+          expect(node.querySelector(".array-item-add button").disabled).eql(
+            true
+          );
+        });
+
+        it("should disable the Delete button", () => {
+          expect(node.querySelector(".array-item-remove").disabled).eql(true);
+        });
+      });
+
+      describe("ObjectField", () => {
+        let node;
+
+        beforeEach(() => {
+          const schema = {
+            type: "object",
+            properties: {
+              foo: {
+                type: "string",
+              },
+              bar: {
+                type: "string",
+              },
+            },
+            readOnly: true,
+          };
+          const uiSchema = {};
+
+          let rendered = createFormComponent({ schema, uiSchema });
+          node = rendered.node;
+        });
+
+        it("should mark as readonly an ObjectField", () => {
+          const disabled = [].map.call(
+            node.querySelectorAll("[type=text]"),
+            node => node.hasAttribute("readonly")
+          );
+          expect(disabled).eql([true, true]);
+        });
+      });
+    });
+
+    describe("Widgets", () => {
+      function shouldBeReadonly(selector, schema, uiSchema) {
+        const { node } = createFormComponent({ schema, uiSchema });
+        expect(node.querySelector(selector).hasAttribute("readonly")).eql(true);
+      }
+      function shouldBeDisabled(selector, schema, uiSchema) {
+        const { node } = createFormComponent({ schema, uiSchema });
+        expect(node.querySelector(selector).disabled).eql(true);
+      }
+
+      it("should mark as readonly a text widget", () => {
+        shouldBeReadonly(
+          "input[type=text]",
+          {
+            type: "string",
+            readOnly: true,
+          },
+          {}
+        );
+      });
+
+      it("should mark as readonly a file widget", () => {
+        // We mark a file widget as readonly by disabling it.
+        const { node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "data-url",
+            readOnly: true,
+          },
+          uiSchema: {},
+        });
+        expect(
+          node.querySelector("input[type=file]").hasAttribute("disabled")
+        ).eql(true);
+      });
+
+      it("should mark as readonly a textarea widget", () => {
+        shouldBeReadonly(
+          "textarea",
+          {
+            type: "string",
+            readOnly: true,
+          },
+          {
+            "ui:widget": "textarea",
+          }
+        );
+      });
+
+      it("should mark as readonly a number text widget", () => {
+        shouldBeReadonly(
+          "input[type=text]",
+          {
+            type: "number",
+            readOnly: true,
+          },
+          {}
+        );
+      });
+
+      it("should mark as readonly a number widget", () => {
+        shouldBeReadonly(
+          "input[type=number]",
+          {
+            type: "number",
+            readOnly: true,
+          },
+          {
+            "ui:widget": "updown",
+          }
+        );
+      });
+
+      it("should mark as readonly a range widget", () => {
+        shouldBeReadonly(
+          "input[type=range]",
+          {
+            type: "number",
+            readOnly: true,
+          },
+          {
+            "ui:widget": "range",
+          }
+        );
+      });
+
+      it("should mark readonly as disabled on a select widget", () => {
+        shouldBeDisabled(
+          "select",
+          {
+            type: "string",
+            enum: ["a", "b"],
+            readOnly: true,
+          },
+          {}
+        );
+      });
+
+      it("should mark as readonly a color widget", () => {
+        shouldBeReadonly(
+          "input[type=color]",
+          {
+            type: "string",
+            format: "color",
+            readOnly: true,
+          },
+          {}
+        );
+      });
+
+      it("should mark as readonly a password widget", () => {
+        shouldBeReadonly(
+          "input[type=password]",
+          {
+            type: "string",
+            readOnly: true,
+          },
+          {
+            "ui:widget": "password",
+          }
+        );
+      });
+
+      it("should mark as readonly a url widget", () => {
+        shouldBeReadonly(
+          "input[type=url]",
+          {
+            type: "string",
+            format: "uri",
+            readOnly: true,
+          },
+          {}
+        );
+      });
+
+      it("should mark as readonly an email widget", () => {
+        shouldBeReadonly("input[type=email]", {
+          type: "string",
+          format: "email",
+          readOnly: true,
+        });
+      });
+
+      it("should mark as readonly a date widget", () => {
+        shouldBeReadonly("input[type=date]", {
+          type: "string",
+          format: "date",
+          readOnly: true,
+        });
+      });
+
+      it("should mark as readonly a datetime widget", () => {
+        shouldBeReadonly("input[type=datetime-local]", {
+          type: "string",
+          format: "date-time",
+          readOnly: true,
+        });
+      });
+
+      it("should mark readonly as disabled on an alternative date widget", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "date",
+            readOnly: true,
+          },
+          uiSchema: {
+            "ui:widget": "alt-date",
+          },
+        });
+
+        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+          node.hasAttribute("disabled")
+        );
+        expect(readonly).eql([true, true, true]);
+      });
+
+      it("should mark readonly as disabled on an alternative datetime widget", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "date-time",
+            readOnly: true,
+          },
+          uiSchema: {
+            "ui:widget": "alt-datetime",
+          },
+        });
+
+        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+          node.hasAttribute("disabled")
+        );
+        expect(readonly).eql([true, true, true, true, true, true]);
+      });
+    });
+  });
 });

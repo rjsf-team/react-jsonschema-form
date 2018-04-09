@@ -251,7 +251,9 @@ function SchemaFieldRender(props) {
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
-  const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
+  const readonly = Boolean(
+    props.readonly || uiSchema["ui:readonly"] || schema["readOnly"]
+  );
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
   if (Object.keys(schema).length === 0) {
     return null;
