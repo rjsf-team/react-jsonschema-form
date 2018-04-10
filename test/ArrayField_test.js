@@ -435,7 +435,10 @@ describe("ArrayField", () => {
           },
         },
       };
-      let form = createFormComponent({ schema: complexSchema, formData: {} });
+      let form = createFormComponent({
+        schema: complexSchema,
+        formData: {},
+      });
       let inputs = form.node.querySelectorAll("input[type=text]");
       expect(inputs[0].value).eql("Default name");
       expect(inputs[1].value).eql("Default name");
@@ -726,7 +729,10 @@ describe("ArrayField", () => {
       });
 
       it("should handle a change event", () => {
-        const { comp, node } = createFormComponent({ schema, uiSchema });
+        const { comp, node } = createFormComponent({
+          schema,
+          uiSchema,
+        });
 
         Simulate.change(node.querySelectorAll("[type=checkbox]")[0], {
           target: { checked: true },
@@ -1058,7 +1064,10 @@ describe("ArrayField", () => {
     });
 
     it("should fill fields with data", () => {
-      const { node } = createFormComponent({ schema, formData: ["foo", 42] });
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", 42],
+      });
       const strInput = node.querySelector(
         "fieldset .field-string input[type=text]"
       );

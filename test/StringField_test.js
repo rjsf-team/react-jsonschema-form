@@ -66,7 +66,9 @@ describe("StringField", () => {
     });
 
     it("should default state value to undefined", () => {
-      const { comp } = createFormComponent({ schema: { type: "string" } });
+      const { comp } = createFormComponent({
+        schema: { type: "string" },
+      });
 
       expect(comp.state.formData).eql(undefined);
     });
@@ -368,7 +370,10 @@ describe("StringField", () => {
     it("should handle an empty string change event with custom ui:defaultValue", () => {
       const { comp, node } = createFormComponent({
         schema: { type: "string" },
-        uiSchema: { "ui:widget": "textarea", "ui:emptyValue": "default" },
+        uiSchema: {
+          "ui:widget": "textarea",
+          "ui:emptyValue": "default",
+        },
         formData: "x",
       });
 
@@ -1535,7 +1540,9 @@ describe("StringField", () => {
       });
 
       Simulate.change(node.querySelector("[type=file]"), {
-        target: { files: [{ name: "file1.txt", size: 1, type: "type" }] },
+        target: {
+          files: [{ name: "file1.txt", size: 1, type: "type" }],
+        },
       });
 
       return new Promise(setImmediate).then(() =>

@@ -68,6 +68,85 @@ describe("Form", () => {
     });
   });
 
+  describe("Changing idPrefix", function() {
+    it("should work with simple example", function() {
+      const schema = {
+        type: "object",
+        title: "root object",
+        required: ["foo"],
+        properties: {
+          count: {
+            type: "number",
+          },
+        },
+      };
+      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["rjsf_count"]);
+    });
+
+    it("should work with oneOf", function() {
+      const schema = {
+        $schema: "http://json-schema.org/draft-06/schema#",
+        type: "object",
+        properties: {
+          connector: {
+            type: "string",
+            enum: ["aws", "gcp"],
+            title: "Provider",
+            default: "aws",
+          },
+        },
+        dependencies: {
+          connector: {
+            oneOf: [
+              {
+                type: "object",
+                properties: {
+                  connector: {
+                    type: "string",
+                    enum: ["aws"],
+                  },
+                  key_aws: {
+                    type: "string",
+                  },
+                },
+              },
+              {
+                type: "object",
+                properties: {
+                  connector: {
+                    type: "string",
+                    enum: ["gcp"],
+                  },
+                  key_gcp: {
+                    type: "string",
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["rjsf_key_aws"]);
+    });
+  });
+
   describe("Custom field template", () => {
     const schema = {
       type: "object",
@@ -592,7 +671,11 @@ describe("Form", () => {
         foo: "",
       };
       const onChange = sandbox.spy();
-      const { node } = createFormComponent({ schema, formData, onChange });
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        onChange,
+      });
 
       Simulate.change(node.querySelector("[type=text]"), {
         target: { value: "new" },
@@ -835,7 +918,10 @@ describe("Form", () => {
         });
 
         it("should denote the new error in the field", () => {
-          const { node } = createFormComponent({ schema, liveValidate: true });
+          const { node } = createFormComponent({
+            schema,
+            liveValidate: true,
+          });
 
           Simulate.change(node.querySelector("input[type=text]"), {
             target: { value: "short" },
@@ -1056,7 +1142,9 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
-          1: { __errors: ["should NOT be shorter than 4 characters"] },
+          1: {
+            __errors: ["should NOT be shorter than 4 characters"],
+          },
         });
       });
 
@@ -1108,8 +1196,12 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({
           level1: {
-            1: { __errors: ["should NOT be shorter than 4 characters"] },
-            3: { __errors: ["should NOT be shorter than 4 characters"] },
+            1: {
+              __errors: ["should NOT be shorter than 4 characters"],
+            },
+            3: {
+              __errors: ["should NOT be shorter than 4 characters"],
+            },
           },
         });
       });
@@ -1158,10 +1250,14 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           outer: {
             0: {
-              1: { __errors: ["should NOT be shorter than 4 characters"] },
+              1: {
+                __errors: ["should NOT be shorter than 4 characters"],
+              },
             },
             1: {
-              0: { __errors: ["should NOT be shorter than 4 characters"] },
+              0: {
+                __errors: ["should NOT be shorter than 4 characters"],
+              },
             },
           },
         });
