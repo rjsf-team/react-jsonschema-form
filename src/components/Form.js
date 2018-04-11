@@ -8,7 +8,7 @@ import {
   shouldRender,
   toIdSchema,
   setState,
-  getDefaultRegistry
+  getDefaultRegistry,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -19,7 +19,7 @@ export default class Form extends Component {
     liveValidate: false,
     safeRenderCompletion: false,
     noHtml5Validate: false,
-    ErrorList: DefaultErrorList
+    ErrorList: DefaultErrorList,
   };
 
   constructor(props) {
@@ -46,7 +46,7 @@ export default class Form extends Component {
       ? this.validate(formData, schema)
       : {
           errors: state.errors || [],
-          errorSchema: state.errorSchema || {}
+          errorSchema: state.errorSchema || {},
         };
     const idSchema = toIdSchema(
       retrievedSchema,
@@ -62,7 +62,7 @@ export default class Form extends Component {
       formData,
       edit,
       errors,
-      errorSchema
+      errorSchema,
     };
   }
 
@@ -110,7 +110,7 @@ export default class Form extends Component {
       state = {
         ...state,
         errorSchema: newErrorSchema,
-        errors: toErrorList(newErrorSchema)
+        errors: toErrorList(newErrorSchema),
       };
     }
     setState(this, state, () => {
@@ -167,7 +167,7 @@ export default class Form extends Component {
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
-      formContext: this.props.formContext || {}
+      formContext: this.props.formContext || {},
     };
   }
 
@@ -176,6 +176,7 @@ export default class Form extends Component {
       children,
       safeRenderCompletion,
       id,
+      idPrefix,
       className,
       name,
       method,
@@ -184,7 +185,7 @@ export default class Form extends Component {
       autocomplete,
       enctype,
       acceptcharset,
-      noHtml5Validate
+      noHtml5Validate,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
@@ -203,14 +204,14 @@ export default class Form extends Component {
         encType={enctype}
         acceptCharset={acceptcharset}
         noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}
-      >
+        onSubmit={this.onSubmit}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
           uiSchema={uiSchema}
           errorSchema={errorSchema}
           idSchema={idSchema}
+          idPrefix={idPrefix}
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}
@@ -264,6 +265,6 @@ if (process.env.NODE_ENV !== "production") {
     validate: PropTypes.func,
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
-    formContext: PropTypes.object
+    formContext: PropTypes.object,
   };
 }

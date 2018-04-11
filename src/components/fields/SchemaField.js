@@ -4,7 +4,9 @@ import PropTypes from "prop-types";
 import {
   isMultiSelect,
   retrieveSchema,
+  toIdSchema,
   getDefaultRegistry,
+  mergeObjects,
   getUiOptions,
   isFilesArray,
   deepEquals,
@@ -153,7 +155,7 @@ function SchemaFieldRender(props) {
     uiSchema,
     formData,
     errorSchema,
-    idSchema,
+    idPrefix,
     name,
     required,
     registry = getDefaultRegistry(),
@@ -164,7 +166,12 @@ function SchemaFieldRender(props) {
     formContext,
     FieldTemplate = DefaultTemplate,
   } = registry;
+  let idSchema = props.idSchema;
   const schema = retrieveSchema(props.schema, definitions, formData);
+  idSchema = mergeObjects(
+    toIdSchema(schema, null, definitions, formData, idPrefix),
+    idSchema
+  );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
@@ -199,6 +206,7 @@ function SchemaFieldRender(props) {
   const field = (
     <FieldComponent
       {...props}
+      idSchema={idSchema}
       schema={schema}
       uiSchema={{ ...uiSchema, classNames: undefined }}
       disabled={disabled}
