@@ -19,8 +19,8 @@ describe("NumberField", () => {
     it("should render a string field", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "number",
-        },
+          type: "number"
+        }
       });
 
       expect(
@@ -28,12 +28,23 @@ describe("NumberField", () => {
       ).to.have.length.of(1);
     });
 
+    it("should render unknown formats using TextWidget", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+          format: "x-custom-format"
+        }
+      });
+
+      expect(node.querySelectorAll(".field [type=text]")).to.have.length.of(1);
+    });
+
     it("should render a string field with a label", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          title: "foo",
-        },
+          title: "foo"
+        }
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -43,8 +54,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          description: "bar",
-        },
+          description: "bar"
+        }
       });
 
       expect(node.querySelector(".field-description").textContent).eql("bar");
@@ -60,8 +71,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          default: 2,
-        },
+          default: 2
+        }
       });
 
       expect(node.querySelector(".field input").value).eql("2");
@@ -70,12 +81,12 @@ describe("NumberField", () => {
     it("should handle a change event", () => {
       const { comp, node } = createFormComponent({
         schema: {
-          type: "number",
-        },
+          type: "number"
+        }
       });
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "2" },
+        target: { value: "2" }
       });
 
       expect(comp.state.formData).eql(2);
@@ -85,14 +96,14 @@ describe("NumberField", () => {
       const onBlur = sandbox.spy();
       const { node } = createFormComponent({
         schema: {
-          type: "number",
+          type: "number"
         },
-        onBlur,
+        onBlur
       });
 
       const input = node.querySelector("input");
       Simulate.blur(input, {
-        target: { value: "2" },
+        target: { value: "2" }
       });
 
       expect(onBlur.calledWith(input.id, 2));
@@ -102,14 +113,14 @@ describe("NumberField", () => {
       const onFocus = sandbox.spy();
       const { node } = createFormComponent({
         schema: {
-          type: "number",
+          type: "number"
         },
-        onFocus,
+        onFocus
       });
 
       const input = node.querySelector("input");
       Simulate.focus(input, {
-        target: { value: "2" },
+        target: { value: "2" }
       });
 
       expect(onFocus.calledWith(input.id, 2));
@@ -118,9 +129,9 @@ describe("NumberField", () => {
     it("should fill field with data", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "number",
+          type: "number"
         },
-        formData: 2,
+        formData: 2
       });
 
       expect(node.querySelector(".field input").value).eql("2");
@@ -129,12 +140,12 @@ describe("NumberField", () => {
     it("should not cast the input as a number if it ends with a dot", () => {
       const { comp, node } = createFormComponent({
         schema: {
-          type: "number",
-        },
+          type: "number"
+        }
       });
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "2." },
+        target: { value: "2." }
       });
 
       expect(comp.state.formData).eql("2.");
@@ -143,8 +154,8 @@ describe("NumberField", () => {
     it("should render the widget with the expected id", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "number",
-        },
+          type: "number"
+        }
       });
 
       expect(node.querySelector("input[type=text]").id).eql("root");
@@ -153,27 +164,27 @@ describe("NumberField", () => {
     it("should render with trailing zeroes", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "number",
-        },
+          type: "number"
+        }
       });
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "2." },
+        target: { value: "2." }
       });
       expect(node.querySelector(".field input").value).eql("2.");
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "2.0" },
+        target: { value: "2.0" }
       });
       expect(node.querySelector(".field input").value).eql("2.0");
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "2.00" },
+        target: { value: "2.00" }
       });
       expect(node.querySelector(".field input").value).eql("2.00");
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "2.000" },
+        target: { value: "2.000" }
       });
       expect(node.querySelector(".field input").value).eql("2.000");
     });
@@ -183,11 +194,11 @@ describe("NumberField", () => {
 
       const { node } = createFormComponent({
         schema: {
-          type: "number",
+          type: "number"
         },
         fields: {
-          StringField: CustomStringField,
-        },
+          StringField: CustomStringField
+        }
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -199,8 +210,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          enum: [1, 2],
-        },
+          enum: [1, 2]
+        }
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(1);
@@ -211,8 +222,8 @@ describe("NumberField", () => {
         schema: {
           type: "number",
           enum: [1, 2],
-          title: "foo",
-        },
+          title: "foo"
+        }
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -223,8 +234,8 @@ describe("NumberField", () => {
         schema: {
           type: "number",
           enum: [1, 2],
-          default: 1,
-        },
+          default: 1
+        }
       });
 
       expect(comp.state.formData).eql(1);
@@ -234,12 +245,12 @@ describe("NumberField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "number",
-          enum: [1, 2],
-        },
+          enum: [1, 2]
+        }
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "2" },
+        target: { value: "2" }
       });
 
       expect(comp.state.formData).eql(2);
@@ -249,9 +260,9 @@ describe("NumberField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "number",
-          enum: [1, 2],
+          enum: [1, 2]
         },
-        formData: 2,
+        formData: 2
       });
 
       expect(comp.state.formData).eql(2);
@@ -261,8 +272,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          enum: [1, 2],
-        },
+          enum: [1, 2]
+        }
       });
 
       expect(node.querySelector("select").id).eql("root");

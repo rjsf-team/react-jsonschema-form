@@ -20,8 +20,21 @@ describe("BooleanField", () => {
   it("should render a boolean field", () => {
     const { node } = createFormComponent({
       schema: {
+        type: "boolean"
+      }
+    });
+
+    expect(
+      node.querySelectorAll(".field input[type=checkbox]")
+    ).to.have.length.of(1);
+  });
+
+  it("should render unknown formats using CheckboxWidget", () => {
+    const { node } = createFormComponent({
+      schema: {
         type: "boolean",
-      },
+        format: "x-custom-format"
+      }
     });
 
     expect(
@@ -33,8 +46,8 @@ describe("BooleanField", () => {
     const { node } = createFormComponent({
       schema: {
         type: "boolean",
-        title: "foo",
-      },
+        title: "foo"
+      }
     });
 
     expect(node.querySelector(".field label span").textContent).eql("foo");
@@ -44,8 +57,8 @@ describe("BooleanField", () => {
     const { node } = createFormComponent({
       schema: {
         type: "boolean",
-        title: "foo",
-      },
+        title: "foo"
+      }
     });
 
     expect(node.querySelectorAll(".field label")).to.have.length.of(1);
@@ -55,8 +68,8 @@ describe("BooleanField", () => {
     const { node } = createFormComponent({
       schema: {
         type: "boolean",
-        description: "my description",
-      },
+        description: "my description"
+      }
     });
 
     const description = node.querySelector(".field-description");
@@ -67,8 +80,8 @@ describe("BooleanField", () => {
     const { node } = createFormComponent({
       schema: {
         type: "boolean",
-        default: true,
-      },
+        default: true
+      }
     });
 
     expect(node.querySelector(".field input").checked).eql(true);
@@ -84,12 +97,12 @@ describe("BooleanField", () => {
     const { comp, node } = createFormComponent({
       schema: {
         type: "boolean",
-        default: false,
-      },
+        default: false
+      }
     });
 
     Simulate.change(node.querySelector("input"), {
-      target: { checked: true },
+      target: { checked: true }
     });
 
     expect(comp.state.formData).eql(true);
@@ -98,9 +111,9 @@ describe("BooleanField", () => {
   it("should fill field with data", () => {
     const { node } = createFormComponent({
       schema: {
-        type: "boolean",
+        type: "boolean"
       },
-      formData: true,
+      formData: true
     });
 
     expect(node.querySelector(".field input").checked).eql(true);
@@ -110,10 +123,10 @@ describe("BooleanField", () => {
     const { node } = createFormComponent({
       schema: {
         type: "boolean",
-        enumNames: ["Yes", "No"],
+        enumNames: ["Yes", "No"]
       },
       formData: true,
-      uiSchema: { "ui:widget": "radio" },
+      uiSchema: { "ui:widget": "radio" }
     });
 
     const labels = [].map.call(
@@ -130,9 +143,9 @@ describe("BooleanField", () => {
       uiSchema: {
         "ui:widget": "radio",
         "ui:options": {
-          inline: true,
-        },
-      },
+          inline: true
+        }
+      }
     });
 
     expect(node.querySelectorAll(".radio-inline")).to.have.length.of(2);
@@ -142,10 +155,10 @@ describe("BooleanField", () => {
     const { node } = createFormComponent({
       schema: {
         type: "boolean",
-        enumNames: ["Yes", "No"],
+        enumNames: ["Yes", "No"]
       },
       formData: true,
-      uiSchema: { "ui:widget": "select" },
+      uiSchema: { "ui:widget": "select" }
     });
 
     const labels = [].map.call(
@@ -158,8 +171,8 @@ describe("BooleanField", () => {
   it("should render the widget with the expected id", () => {
     const { node } = createFormComponent({
       schema: {
-        type: "boolean",
-      },
+        type: "boolean"
+      }
     });
 
     expect(node.querySelector("input[type=checkbox]").id).eql("root");
@@ -168,11 +181,11 @@ describe("BooleanField", () => {
   it("should render customized checkbox", () => {
     const { node } = createFormComponent({
       schema: {
-        type: "boolean",
+        type: "boolean"
       },
       widgets: {
-        CheckboxWidget: CustomWidget,
-      },
+        CheckboxWidget: CustomWidget
+      }
     });
 
     expect(node.querySelector("#custom")).to.exist;
@@ -188,14 +201,14 @@ describe("BooleanField", () => {
         type: "object",
         properties: {
           boolean: {
-            type: "boolean",
-          },
-        },
+            type: "boolean"
+          }
+        }
       };
       const uiSchema = {
         boolean: {
-          "ui:widget": "Widget",
-        },
+          "ui:widget": "Widget"
+        }
       };
 
       const { node } = createFormComponent({ schema, widgets, uiSchema });
@@ -205,10 +218,10 @@ describe("BooleanField", () => {
     it("should pass schema title to widget", () => {
       const schema = {
         type: "boolean",
-        title: "test",
+        title: "test"
       };
       const uiSchema = {
-        "ui:widget": "Widget",
+        "ui:widget": "Widget"
       };
 
       const { node } = createFormComponent({ schema, widgets, uiSchema });
@@ -218,10 +231,10 @@ describe("BooleanField", () => {
     it("should pass empty schema title to widget", () => {
       const schema = {
         type: "boolean",
-        title: "",
+        title: ""
       };
       const uiSchema = {
-        "ui:widget": "Widget",
+        "ui:widget": "Widget"
       };
       const { node } = createFormComponent({ schema, widgets, uiSchema });
       expect(node.querySelector("#label-")).to.not.be.null;

@@ -3,6 +3,7 @@ import Ajv from "ajv";
 const ajv = new Ajv({
   errorDataPath: "property",
   allErrors: true,
+  unknownFormats: true
 });
 // add custom formats
 ajv.addFormat(
@@ -71,7 +72,7 @@ export function toErrorList(errorSchema, fieldName = "root") {
     errorList = errorList.concat(
       errorSchema.__errors.map(stack => {
         return {
-          stack: `${fieldName}: ${stack}`,
+          stack: `${fieldName}: ${stack}`
         };
       })
     );
@@ -92,7 +93,7 @@ function createErrorHandler(formData) {
     __errors: [],
     addError(message) {
       this.__errors.push(message);
-    },
+    }
   };
   if (isObject(formData)) {
     return Object.keys(formData).reduce((acc, key) => {
@@ -137,7 +138,7 @@ function transformAjvErrors(errors = []) {
       property,
       message,
       params, // specific to ajv
-      stack: `${property} ${message}`.trim(),
+      stack: `${property} ${message}`.trim()
     };
   });
 }
