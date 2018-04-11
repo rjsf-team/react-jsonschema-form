@@ -396,6 +396,7 @@ describe("StringField", () => {
           "ui:widget": "textarea",
           "ui:emptyValue": "default",
         },
+        formData: "x",
       });
 
       Simulate.change(node.querySelector("textarea"), {
