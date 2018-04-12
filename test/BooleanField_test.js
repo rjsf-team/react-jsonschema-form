@@ -29,6 +29,19 @@ describe("BooleanField", () => {
     ).to.have.length.of(1);
   });
 
+  it("should render unknown formats using CheckboxWidget", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        format: "x-custom-format",
+      },
+    });
+
+    expect(
+      node.querySelectorAll(".field input[type=checkbox]")
+    ).to.have.length.of(1);
+  });
+
   it("should render a boolean field with a label", () => {
     const { node } = createFormComponent({
       schema: {

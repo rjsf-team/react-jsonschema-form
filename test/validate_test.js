@@ -233,6 +233,25 @@ describe("Validation", () => {
         });
       });
 
+      describe("allow custom formats", () => {
+        const schema = {
+          type: "object",
+          format: "x-custom-format",
+          required: ["foo"],
+          properties: {
+            foo: { format: "x-custom-format", type: "string" },
+          },
+        };
+        let errors;
+        beforeEach(() => {
+          const result = validateFormData({ foo: 42 }, schema);
+          errors = result.errors;
+        });
+        it("should not trigger onError handler", () => {
+          expect(errors).to.have.length.of(0);
+        });
+      });
+
       describe("Min length", () => {
         const schema = {
           type: "object",

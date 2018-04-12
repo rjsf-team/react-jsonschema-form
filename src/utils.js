@@ -4,52 +4,67 @@ import validateFormData from "./validate";
 
 const widgetMap = {
   boolean: {
-    checkbox: "CheckboxWidget",
-    radio: "RadioWidget",
-    select: "SelectWidget",
-    hidden: "HiddenWidget",
+    default: "CheckboxWidget",
+    all: {
+      checkbox: "CheckboxWidget",
+      radio: "RadioWidget",
+      select: "SelectWidget",
+      hidden: "HiddenWidget",
+    },
   },
   string: {
-    text: "TextWidget",
-    password: "PasswordWidget",
-    email: "EmailWidget",
-    hostname: "TextWidget",
-    ipv4: "TextWidget",
-    ipv6: "TextWidget",
-    uri: "URLWidget",
-    "data-url": "FileWidget",
-    radio: "RadioWidget",
-    select: "SelectWidget",
-    textarea: "TextareaWidget",
-    hidden: "HiddenWidget",
-    date: "DateWidget",
-    datetime: "DateTimeWidget",
-    "date-time": "DateTimeWidget",
-    "alt-date": "AltDateWidget",
-    "alt-datetime": "AltDateTimeWidget",
-    color: "ColorWidget",
-    file: "FileWidget",
+    default: "TextWidget",
+    all: {
+      text: "TextWidget",
+      password: "PasswordWidget",
+      email: "EmailWidget",
+      hostname: "TextWidget",
+      ipv4: "TextWidget",
+      ipv6: "TextWidget",
+      uri: "URLWidget",
+      "data-url": "FileWidget",
+      radio: "RadioWidget",
+      select: "SelectWidget",
+      textarea: "TextareaWidget",
+      hidden: "HiddenWidget",
+      date: "DateWidget",
+      datetime: "DateTimeWidget",
+      "date-time": "DateTimeWidget",
+      "alt-date": "AltDateWidget",
+      "alt-datetime": "AltDateTimeWidget",
+      color: "ColorWidget",
+      file: "FileWidget",
+    },
   },
   number: {
-    text: "TextWidget",
-    select: "SelectWidget",
-    updown: "UpDownWidget",
-    range: "RangeWidget",
-    radio: "RadioWidget",
-    hidden: "HiddenWidget",
+    default: "TextWidget",
+    all: {
+      text: "TextWidget",
+      select: "SelectWidget",
+      updown: "UpDownWidget",
+      range: "RangeWidget",
+      radio: "RadioWidget",
+      hidden: "HiddenWidget",
+    },
   },
   integer: {
-    text: "TextWidget",
-    select: "SelectWidget",
-    updown: "UpDownWidget",
-    range: "RangeWidget",
-    radio: "RadioWidget",
-    hidden: "HiddenWidget",
+    default: "TextWidget",
+    all: {
+      text: "TextWidget",
+      select: "SelectWidget",
+      updown: "UpDownWidget",
+      range: "RangeWidget",
+      radio: "RadioWidget",
+      hidden: "HiddenWidget",
+    },
   },
   array: {
-    select: "SelectWidget",
-    checkboxes: "CheckboxesWidget",
-    files: "FileWidget",
+    default: "SelectWidget",
+    all: {
+      select: "SelectWidget",
+      checkboxes: "CheckboxesWidget",
+      files: "FileWidget",
+    },
   },
 };
 
@@ -59,6 +74,7 @@ export function getDefaultRegistry() {
     widgets: require("./components/widgets").default,
     definitions: {},
     formContext: {},
+    widgetMap,
   };
 }
 
@@ -102,12 +118,13 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     throw new Error(`No widget for type "${type}"`);
   }
 
-  if (widgetMap[type].hasOwnProperty(widget)) {
-    const registeredWidget = registeredWidgets[widgetMap[type][widget]];
+  if (widgetMap[type].all.hasOwnProperty(widget)) {
+    const registeredWidget = registeredWidgets[widgetMap[type].all[widget]];
     return getWidget(schema, registeredWidget, registeredWidgets);
+  } else {
+    const defaultWidget = registeredWidgets[widgetMap[type].default];
+    return getWidget(schema, defaultWidget, registeredWidgets);
   }
-
-  throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
 function computeDefaults(schema, parentDefaults, definitions = {}) {

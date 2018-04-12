@@ -32,6 +32,28 @@ describe("StringField", () => {
       ).to.have.length.of(1);
     });
 
+    it("should render unknown formats using TextWidget if type was string", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "x-custom-format",
+        },
+      });
+
+      expect(node.querySelectorAll(".field [type=text]")).to.have.length.of(1);
+    });
+
+    it("should render unknown formats using TextWidget if type was integer", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "integer",
+          format: "x-custom-format",
+        },
+      });
+
+      expect(node.querySelectorAll(".field [type=text]")).to.have.length.of(1);
+    });
+
     it("should render a string field with a label", () => {
       const { node } = createFormComponent({
         schema: {

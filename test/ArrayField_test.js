@@ -29,6 +29,29 @@ describe("ArrayField", () => {
     });
   });
 
+  it("should render array ui even if array has unknown format", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "array",
+        items: { type: "string" },
+        format: "x-custom-format",
+      },
+    });
+    Simulate.click(node.querySelector(".array-item-add button"));
+    expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+  });
+
+  it("should render array ui even if items schema has unknown format", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "array",
+        items: { type: "string", format: "x-custom-format" },
+      },
+    });
+    Simulate.click(node.querySelector(".array-item-add button"));
+    expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+  });
+
   describe("List of inputs", () => {
     const schema = {
       type: "array",

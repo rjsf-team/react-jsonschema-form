@@ -441,7 +441,7 @@ class ArrayField extends Component {
     const { widgets, definitions, formContext } = registry;
     const itemsSchema = retrieveSchema(schema.items, definitions, formData);
     const enumOptions = optionsList(itemsSchema);
-    const { widget = "select", ...options } = {
+    const { widget = registry.widgetMap.array.default, ...options } = {
       ...getUiOptions(uiSchema),
       enumOptions,
     };
@@ -482,7 +482,10 @@ class ArrayField extends Component {
     const title = schema.title || name;
     const items = this.props.formData;
     const { widgets, formContext } = registry;
-    const { widget = "files", ...options } = getUiOptions(uiSchema);
+    const {
+      widget = registry.widgetMap.array.all.files,
+      ...options
+    } = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget

@@ -28,6 +28,17 @@ describe("NumberField", () => {
       ).to.have.length.of(1);
     });
 
+    it("should render unknown formats using TextWidget", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+          format: "x-custom-format",
+        },
+      });
+
+      expect(node.querySelectorAll(".field [type=text]")).to.have.length.of(1);
+    });
+
     it("should render a string field with a label", () => {
       const { node } = createFormComponent({
         schema: {
