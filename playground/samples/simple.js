@@ -45,10 +45,14 @@ module.exports = {
     },
     bio: {
       "ui:widget": "textarea",
+      "ui:help": "Hint: Make it strong!",
     },
     password: {
       "ui:widget": "password",
-      "ui:help": "Hint: Make it strong!",
+      "ui:help": "Hint: Make it strong in tooltip!",
+      "ui:options": {
+        tooltip: true,
+      },
     },
     date: {
       "ui:widget": "alt-datetime",

@@ -725,13 +725,16 @@ render((
 
 ### Help texts
 
-Sometimes it's convenient to add some text next to a field to guide the end user filling it; this is the purpose of the `ui:help` uiSchema directive:
+Sometimes it's convenient to add some text next to a field to guide the end user filling it; this is the purpose of the `ui:help` uiSchema directive. By default the help is under the field but you can put it in a tooltip next to the label: 
 
 ```js
 const schema = {type: "string"};
 const uiSchema = {
   "ui:widget": "password",
-  "ui:help": "Hint: Make it strong!"
+  "ui:help": "Hint: Make it strong!",
+  "ui:options": {
+    tooltip: true
+  }
 };
 ```
 
