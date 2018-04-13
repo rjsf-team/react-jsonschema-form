@@ -23,7 +23,16 @@ export function utcToLocal(jsonDate) {
   const ss = pad(date.getSeconds(), 2);
   const SSS = pad(date.getMilliseconds(), 3);
 
-  return `${yyyy}-${MM}-${dd}T${hh}:${mm}:${ss}.${SSS}`;
+  // Users can specify precision using step attribute otherwise (some) browsers automatically trim off when 0
+  // and this value difference breaks the cursor position from ambiguity in the change diff
+  // For example if an existing value is set and user focuses into the year field and types 1957, they
+  // go from 0001 and inbetween the 1 and the 9 the field renders current value in a format browser changes and
+  // so react sees the values as diff and resets cursor resulting in 0009 and then 0005 instead of the intended 1957.
+  return SSS === "000"
+    ? ss === "00"
+      ? `${yyyy}-${MM}-${dd}T${hh}:${mm}`
+      : `${yyyy}-${MM}-${dd}T${hh}:${mm}:${ss}`
+    : `${yyyy}-${MM}-${dd}T${hh}:${mm}:${ss}.${SSS}`;
 }
 
 export function localToUTC(dateString) {
