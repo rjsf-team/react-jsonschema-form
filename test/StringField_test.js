@@ -508,6 +508,135 @@ describe("StringField", () => {
     });
   });
 
+  describe("TimeWidget", () => {
+    it("should render a time field", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+      });
+
+      expect(node.querySelectorAll(".field [type=time]")).to.have.length.of(1);
+    });
+
+    it("should assign a default value", () => {
+      const datetime = "04:30";
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+          default: datetime,
+        },
+      });
+
+      expect(comp.state.formData).eql(datetime);
+      expect(node.querySelector("[type=time]").value).eql(datetime);
+    });
+
+    it("should reflect the change into the dom", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+      });
+
+      const newTime = "13:36:10.123";
+
+      Simulate.change(node.querySelector("[type=time]"), {
+        target: { value: newTime },
+      });
+
+      expect(node.querySelector("[type=time]").value).eql("13:36:10.123");
+    });
+
+    it("should pass step along", () => {
+      const { node } = createFormComponent({
+        uiSchema: {
+          "ui:options": {
+            step: 0.1,
+          },
+        },
+        schema: {
+          type: "string",
+          format: "time",
+        },
+      });
+
+      expect(node.querySelector("[type=time]").getAttribute("step")).eql("0.1");
+    });
+
+    it("should fill field with data", () => {
+      const datetime = "04:20";
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        formData: datetime,
+      });
+
+      expect(comp.state.formData).eql(datetime);
+      expect(node.querySelector("[type=time]").value).eql(datetime);
+    });
+
+    it("should render the widget with the expected id", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+      });
+
+      expect(node.querySelector("[type=time]").id).eql("root");
+    });
+
+    it("should reject an invalid entered datetime", () => {
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        liveValidate: true,
+      });
+
+      Simulate.change(node.querySelector("[type=time]"), {
+        target: { value: "invalid" },
+      });
+
+      expect(comp.state.errors).to.have.length.of(1);
+    });
+
+    it("should render customized TimeWidget", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        widgets: {
+          TimeWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+
+    it("should allow overriding of BaseInput", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        widgets: {
+          BaseInput: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+  });
+
   describe("DateWidget", () => {
     const uiSchema = { "ui:widget": "date" };
 

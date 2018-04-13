@@ -336,6 +336,8 @@ The built-in string field also supports the JSONSchema `format` property, and wi
 - `data-url`: By default, an `input[type=file]` element is used; in case the string is part of an array, multiple files will be handled automatically (see [File widgets](#file-widgets)).
 - `date`: By default, an `input[type=date]` element is used;
 - `date-time`: By default, an `input[type=datetime-local]` element is used.
+- `time`: By default, an `input[type=time]` element is used.
+
 
 ![](http://i.imgur.com/xqu6Lcp.png)
 

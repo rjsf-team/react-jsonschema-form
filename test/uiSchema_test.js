@@ -632,6 +632,16 @@ describe("uiSchema", () => {
         );
       });
 
+      it("should focus on time input", () => {
+        shouldFocus(
+          {
+            type: "string",
+            format: "time",
+          },
+          { "ui:autofocus": true }
+        );
+      });
+
       it("should focus on alt-date input", () => {
         shouldFocus(
           {
@@ -1993,6 +2003,17 @@ describe("uiSchema", () => {
         );
       });
 
+      it("should disable a time widget", () => {
+        shouldBeDisabled(
+          "input[type=time]",
+          {
+            type: "string",
+            format: "time",
+          },
+          { "ui:disabled": true }
+        );
+      });
+
       it("should disable an alternative date widget", () => {
         const { node } = createFormComponent({
           schema: {
@@ -2265,6 +2286,17 @@ describe("uiSchema", () => {
           {
             type: "string",
             format: "date-time",
+          },
+          { "ui:readonly": true }
+        );
+      });
+
+      it("should mark as readonly a time widget", () => {
+        shouldBeReadonly(
+          "input[type=time]",
+          {
+            type: "string",
+            format: "time",
           },
           { "ui:readonly": true }
         );

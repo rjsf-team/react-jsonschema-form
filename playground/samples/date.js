@@ -17,6 +17,15 @@ module.exports = {
             type: "string",
             format: "date",
           },
+          time: {
+            type: "string",
+            format: "time",
+          },
+          time_with_step: {
+            title: "Time with Step attribute",
+            type: "string",
+            format: "time",
+          },
         },
       },
       alternative: {
@@ -37,6 +46,13 @@ module.exports = {
     },
   },
   uiSchema: {
+    native: {
+      time_with_step: {
+        "ui:options": {
+          step: 1,
+        },
+      },
+    },
     alternative: {
       "alt-datetime": {
         "ui:widget": "alt-datetime",
