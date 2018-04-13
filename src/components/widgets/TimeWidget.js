@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { pad } from "../../utils";
 
-export const isHHMMFormat = /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]$/;
 export const is24HourFormatWithMilli = /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9](?::[0-5][0-9](?:.[0-9][0-9][0-9])?)?$/;
 
 /**
@@ -65,10 +64,6 @@ export function ensureSecondsArePresentInTimeFormat(time) {
   if (!time) {
     return "";
   }
-
-  // if (!time.match(isHHMMFormat)) {
-  //   return time;
-  // }
 
   const timeVers = new Date("1970-01-01T" + time);
   return (
