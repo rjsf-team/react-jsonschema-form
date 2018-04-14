@@ -44,7 +44,9 @@ export function sanitizeValueForBrowserInput(jsonDate) {
   // state will quickly go to 1:10:00.000 and when diffed with "1:10" will accept next keypress as 1:05 instead of
   // the intended 1:15
   return SSS === "000"
-    ? ss === "00" ? `${hh}:${mm}` : `${hh}:${mm}:${ss}`
+    ? ss === "00"
+      ? `${hh}:${mm}`
+      : `${hh}:${mm}:${ss}`
     : `${hh}:${mm}:${ss}.${SSS}`;
 }
 
@@ -81,7 +83,9 @@ function TimeWidget(props) {
   const {
     value,
     onChange,
-    registry: { widgets: { BaseInput } },
+    registry: {
+      widgets: { BaseInput },
+    },
     options: { step },
   } = props;
   return (
