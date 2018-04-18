@@ -269,8 +269,15 @@ describe("Form", () => {
   });
 
   describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", () => {
-      const onSubmit = sandbox.spy();
+    it("should submit the form when clicked", done => {
+      let submitCount = 0;
+      const onSubmit = () => {
+        submitCount++;
+        if (submitCount === 2) {
+          done();
+        }
+      };
+
       const comp = renderIntoDocument(
         <Form onSubmit={onSubmit} schema={{}}>
           <button type="submit">Submit</button>
@@ -281,7 +288,6 @@ describe("Form", () => {
       const buttons = node.querySelectorAll("button[type=submit]");
       buttons[0].click();
       buttons[1].click();
-      sinon.assert.calledTwice(onSubmit);
     });
   });
 
@@ -1007,6 +1013,34 @@ describe("Form", () => {
             );
           })
         );
+      });
+
+      it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
+        const onError = sandbox.spy();
+        const { comp, node } = createFormComponent({
+          schema,
+          onError,
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "short" },
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({
+          __errors: ["should NOT be shorter than 8 characters"],
+        });
+        expect(comp.state.errors.length).eql(1);
+        sinon.assert.calledOnce(onError);
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "long enough" },
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({});
+        expect(comp.state.errors).eql([]);
+        sinon.assert.calledOnce(onError);
       });
     });
 
