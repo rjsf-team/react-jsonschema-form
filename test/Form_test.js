@@ -930,9 +930,10 @@ describe("Form", () => {
       });
 
       it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
+        const onError = sandbox.spy();
         const { comp, node } = createFormComponent({
           schema,
-          onError: () => {},
+          onError,
         });
 
         Simulate.change(node.querySelector("input[type=text]"), {
@@ -943,6 +944,8 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           __errors: ["should NOT be shorter than 8 characters"],
         });
+        expect(comp.state.errors.length).eql(1);
+        sinon.assert.calledOnce(onError);
 
         Simulate.change(node.querySelector("input[type=text]"), {
           target: { value: "long enough" },
@@ -951,6 +954,7 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({});
         expect(comp.state.errors).eql([]);
+        sinon.assert.calledOnce(onError);
       });
     });
 
