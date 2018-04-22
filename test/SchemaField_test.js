@@ -22,7 +22,9 @@ describe("SchemaField", () => {
 
   describe("Unsupported field", () => {
     it("should warn on invalid field type", () => {
-      const { node } = createFormComponent({ schema: { type: "invalid" } });
+      const { node } = createFormComponent({
+        schema: { type: "invalid" },
+      });
 
       expect(node.querySelector(".unsupported-field").textContent).to.contain(
         "Unknown field type invalid"
@@ -240,7 +242,9 @@ describe("SchemaField", () => {
           },
         },
       };
-      const { node } = createFormComponent({ schema: schemaWithReference });
+      const { node } = createFormComponent({
+        schema: schemaWithReference,
+      });
 
       const matches = node.querySelectorAll("#root_foo__description");
       expect(matches).to.have.length.of(1);
@@ -301,7 +305,11 @@ describe("SchemaField", () => {
     }
 
     it("should render it's own errors", () => {
-      const { node } = createFormComponent({ schema, uiSchema, validate });
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        validate,
+      });
       submit(node);
 
       const matches = node.querySelectorAll(
@@ -312,7 +320,11 @@ describe("SchemaField", () => {
     });
 
     it("should pass errors to child component", () => {
-      const { node } = createFormComponent({ schema, uiSchema, validate });
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        validate,
+      });
       submit(node);
 
       const matches = node.querySelectorAll(
@@ -320,6 +332,26 @@ describe("SchemaField", () => {
       );
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.contain("test");
+    });
+
+    describe("Custom error rendering", () => {
+      const customStringWidget = props => {
+        return <div className="custom-text-widget">{props.rawErrors}</div>;
+      };
+
+      it("should pass rawErrors down to custom widgets", () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          validate,
+          widgets: { BaseInput: customStringWidget },
+        });
+        submit(node);
+
+        const matches = node.querySelectorAll(".custom-text-widget");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.eql("test");
+      });
     });
   });
 });

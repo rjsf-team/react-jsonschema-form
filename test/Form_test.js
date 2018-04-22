@@ -44,6 +44,109 @@ describe("Form", () => {
     });
   });
 
+  describe("Option idPrefix", function() {
+    it("should change the rendered ids", function() {
+      const schema = {
+        type: "object",
+        title: "root object",
+        required: ["foo"],
+        properties: {
+          count: {
+            type: "number",
+          },
+        },
+      };
+      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["rjsf_count"]);
+    });
+  });
+
+  describe("Changing idPrefix", function() {
+    it("should work with simple example", function() {
+      const schema = {
+        type: "object",
+        title: "root object",
+        required: ["foo"],
+        properties: {
+          count: {
+            type: "number",
+          },
+        },
+      };
+      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["rjsf_count"]);
+    });
+
+    it("should work with oneOf", function() {
+      const schema = {
+        $schema: "http://json-schema.org/draft-06/schema#",
+        type: "object",
+        properties: {
+          connector: {
+            type: "string",
+            enum: ["aws", "gcp"],
+            title: "Provider",
+            default: "aws",
+          },
+        },
+        dependencies: {
+          connector: {
+            oneOf: [
+              {
+                type: "object",
+                properties: {
+                  connector: {
+                    type: "string",
+                    enum: ["aws"],
+                  },
+                  key_aws: {
+                    type: "string",
+                  },
+                },
+              },
+              {
+                type: "object",
+                properties: {
+                  connector: {
+                    type: "string",
+                    enum: ["gcp"],
+                  },
+                  key_gcp: {
+                    type: "string",
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["rjsf_key_aws"]);
+    });
+  });
+
   describe("Custom field template", () => {
     const schema = {
       type: "object",
@@ -166,8 +269,15 @@ describe("Form", () => {
   });
 
   describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", () => {
-      const onSubmit = sandbox.spy();
+    it("should submit the form when clicked", done => {
+      let submitCount = 0;
+      const onSubmit = () => {
+        submitCount++;
+        if (submitCount === 2) {
+          done();
+        }
+      };
+
       const comp = renderIntoDocument(
         <Form onSubmit={onSubmit} schema={{}}>
           <button type="submit">Submit</button>
@@ -178,7 +288,6 @@ describe("Form", () => {
       const buttons = node.querySelectorAll("button[type=submit]");
       buttons[0].click();
       buttons[1].click();
-      sinon.assert.calledTwice(onSubmit);
     });
   });
 
@@ -568,7 +677,11 @@ describe("Form", () => {
         foo: "",
       };
       const onChange = sandbox.spy();
-      const { node } = createFormComponent({ schema, formData, onChange });
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        onChange,
+      });
 
       Simulate.change(node.querySelector("[type=text]"), {
         target: { value: "new" },
@@ -811,7 +924,10 @@ describe("Form", () => {
         });
 
         it("should denote the new error in the field", () => {
-          const { node } = createFormComponent({ schema, liveValidate: true });
+          const { node } = createFormComponent({
+            schema,
+            liveValidate: true,
+          });
 
           Simulate.change(node.querySelector("input[type=text]"), {
             target: { value: "short" },
@@ -897,6 +1013,34 @@ describe("Form", () => {
             );
           })
         );
+      });
+
+      it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
+        const onError = sandbox.spy();
+        const { comp, node } = createFormComponent({
+          schema,
+          onError,
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "short" },
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({
+          __errors: ["should NOT be shorter than 8 characters"],
+        });
+        expect(comp.state.errors.length).eql(1);
+        sinon.assert.calledOnce(onError);
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "long enough" },
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({});
+        expect(comp.state.errors).eql([]);
+        sinon.assert.calledOnce(onError);
       });
     });
 
@@ -1032,7 +1176,9 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
-          1: { __errors: ["should NOT be shorter than 4 characters"] },
+          1: {
+            __errors: ["should NOT be shorter than 4 characters"],
+          },
         });
       });
 
@@ -1084,8 +1230,12 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({
           level1: {
-            1: { __errors: ["should NOT be shorter than 4 characters"] },
-            3: { __errors: ["should NOT be shorter than 4 characters"] },
+            1: {
+              __errors: ["should NOT be shorter than 4 characters"],
+            },
+            3: {
+              __errors: ["should NOT be shorter than 4 characters"],
+            },
           },
         });
       });
@@ -1134,10 +1284,14 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           outer: {
             0: {
-              1: { __errors: ["should NOT be shorter than 4 characters"] },
+              1: {
+                __errors: ["should NOT be shorter than 4 characters"],
+              },
             },
             1: {
-              0: { __errors: ["should NOT be shorter than 4 characters"] },
+              0: {
+                __errors: ["should NOT be shorter than 4 characters"],
+              },
             },
           },
         });
@@ -1205,6 +1359,103 @@ describe("Form", () => {
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
     });
+
+    describe("schema dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          branch: {
+            type: "number",
+            enum: [1, 2, 3],
+            default: 1,
+          },
+        },
+        required: ["branch"],
+        dependencies: {
+          branch: {
+            oneOf: [
+              {
+                properties: {
+                  branch: {
+                    enum: [1],
+                  },
+                  field1: {
+                    type: "number",
+                  },
+                },
+                required: ["field1"],
+              },
+              {
+                properties: {
+                  branch: {
+                    enum: [2],
+                  },
+                  field1: {
+                    type: "number",
+                  },
+                  field2: {
+                    type: "number",
+                  },
+                },
+                required: ["field1", "field2"],
+              },
+            ],
+          },
+        },
+      };
+
+      it("should only show error for property in selected branch", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "not a number" },
+        });
+
+        expect(comp.state.errorSchema).eql({
+          field1: {
+            __errors: ["should be number"],
+          },
+        });
+      });
+
+      it("should only show errors for properties in selected branch", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData: { branch: 2 },
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "not a number" },
+        });
+
+        expect(comp.state.errorSchema).eql({
+          field1: {
+            __errors: ["should be number"],
+          },
+          field2: {
+            __errors: ["is a required property"],
+          },
+        });
+      });
+
+      it("should not show any errors when branch is empty", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData: { branch: 3 },
+        });
+
+        Simulate.change(node.querySelector("select"), {
+          target: { value: 3 },
+        });
+
+        expect(comp.state.errorSchema).eql({});
+      });
+    });
   });
 
   describe("Schema and formData updates", () => {
@@ -1256,6 +1507,102 @@ describe("Form", () => {
       });
 
       expect(comp.state.formData).eql({ foo: "foo", baz: "baz" });
+    });
+  });
+
+  describe("idSchema updates based on formData", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        a: { type: "string", enum: ["int", "bool"] },
+      },
+      dependencies: {
+        a: {
+          oneOf: [
+            {
+              properties: {
+                a: { enum: ["int"] },
+              },
+            },
+            {
+              properties: {
+                a: { enum: ["bool"] },
+                b: { type: "boolean" },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    it("should not update idSchema for a falsey value", () => {
+      const formData = { a: "int" };
+      const { comp } = createFormComponent({ schema, formData });
+      comp.componentWillReceiveProps({
+        schema: {
+          type: "object",
+          properties: {
+            a: { type: "string", enum: ["int", "bool"] },
+          },
+          dependencies: {
+            a: {
+              oneOf: [
+                {
+                  properties: {
+                    a: { enum: ["int"] },
+                  },
+                },
+                {
+                  properties: {
+                    a: { enum: ["bool"] },
+                    b: { type: "boolean" },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        formData: { a: "int" },
+      });
+      expect(comp.state.idSchema).eql({ $id: "root", a: { $id: "root_a" } });
+    });
+
+    it("should update idSchema based on truthy value", () => {
+      const formData = {
+        a: "int",
+      };
+      const { comp } = createFormComponent({ schema, formData });
+      comp.componentWillReceiveProps({
+        schema: {
+          type: "object",
+          properties: {
+            a: { type: "string", enum: ["int", "bool"] },
+          },
+          dependencies: {
+            a: {
+              oneOf: [
+                {
+                  properties: {
+                    a: { enum: ["int"] },
+                  },
+                },
+                {
+                  properties: {
+                    a: { enum: ["bool"] },
+                    b: { type: "boolean" },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        formData: { a: "bool" },
+      });
+      expect(comp.state.idSchema).eql({
+        $id: "root",
+        a: { $id: "root_a" },
+        b: { $id: "root_b" },
+      });
     });
   });
 

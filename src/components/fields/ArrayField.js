@@ -64,7 +64,10 @@ function DefaultArrayItem(props) {
         <div className="col-xs-3 array-item-toolbox">
           <div
             className="btn-group"
-            style={{ display: "flex", justifyContent: "space-around" }}>
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+            }}>
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconBtn
                 icon="arrow-up"
@@ -229,10 +232,10 @@ class ArrayField extends Component {
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    this.props.onChange(
-      [...formData, getDefaultFormState(itemSchema, undefined, definitions)],
-      { validate: false }
-    );
+    this.props.onChange([
+      ...formData,
+      getDefaultFormState(itemSchema, undefined, definitions),
+    ]);
   };
 
   onDropIndexClick = index => {
@@ -242,7 +245,20 @@ class ArrayField extends Component {
       }
       const { formData, onChange } = this.props;
       // refs #195: revalidate to ensure properly reindexing errors
-      onChange(formData.filter((_, i) => i !== index), { validate: true });
+      let newErrorSchema;
+      if (this.props.errorSchema) {
+        newErrorSchema = {};
+        const errorSchema = this.props.errorSchema;
+        for (let i in errorSchema) {
+          i = parseInt(i);
+          if (i < index) {
+            newErrorSchema[i] = errorSchema[i];
+          } else if (i > index) {
+            newErrorSchema[i - 1] = errorSchema[i];
+          }
+        }
+      }
+      onChange(formData.filter((_, i) => i !== index), newErrorSchema);
     };
   };
 
@@ -253,23 +269,39 @@ class ArrayField extends Component {
         event.target.blur();
       }
       const { formData, onChange } = this.props;
+      let newErrorSchema;
+      if (this.props.errorSchema) {
+        newErrorSchema = {};
+        const errorSchema = this.props.errorSchema;
+        for (let i in errorSchema) {
+          if (i == index) {
+            newErrorSchema[newIndex] = errorSchema[index];
+          } else if (i == newIndex) {
+            newErrorSchema[index] = errorSchema[newIndex];
+          } else {
+            newErrorSchema[i] = errorSchema[i];
+          }
+        }
+      }
       onChange(
         formData.map((item, i) => {
-          if (i === newIndex) {
+          // i is string, index and newIndex are numbers,
+          // so using "==" to compare
+          if (i == newIndex) {
             return formData[index];
-          } else if (i === index) {
+          } else if (i == index) {
             return formData[newIndex];
           } else {
             return item;
           }
         }),
-        { validate: true }
+        newErrorSchema
       );
     };
   };
 
   onChangeForIndex = index => {
-    return value => {
+    return (value, errorSchema) => {
       const { formData, onChange } = this.props;
       const newFormData = formData.map((item, i) => {
         // We need to treat undefined items as nulls to have validation.
@@ -277,12 +309,19 @@ class ArrayField extends Component {
         const jsonValue = typeof value === "undefined" ? null : value;
         return index === i ? jsonValue : item;
       });
-      onChange(newFormData, { validate: false });
+      onChange(
+        newFormData,
+        errorSchema &&
+          this.props.errorSchema && {
+            ...this.props.errorSchema,
+            [index]: errorSchema,
+          }
+      );
     };
   };
 
   onSelectChange = value => {
-    this.props.onChange(value, { validate: false });
+    this.props.onChange(value);
   };
 
   render() {
@@ -327,12 +366,13 @@ class ArrayField extends Component {
       readonly,
       autofocus,
       registry = getDefaultRegistry(),
-      formContext,
       onBlur,
       onFocus,
+      idPrefix,
+      rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
-    const { ArrayFieldTemplate, definitions, fields } = registry;
+    const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const arrayProps = {
@@ -345,7 +385,8 @@ class ArrayField extends Component {
           itemSchema,
           itemIdPrefix,
           definitions,
-          item
+          item,
+          idPrefix
         );
         return this.renderArrayFieldItem({
           index,
@@ -374,6 +415,7 @@ class ArrayField extends Component {
       TitleField,
       formContext,
       formData,
+      rawErrors,
     };
 
     // Check if a custom render function was passed in
@@ -393,6 +435,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
+      rawErrors,
     } = this.props;
     const items = this.props.formData;
     const { widgets, definitions, formContext } = registry;
@@ -417,6 +460,7 @@ class ArrayField extends Component {
         readonly={readonly}
         formContext={formContext}
         autofocus={autofocus}
+        rawErrors={rawErrors}
       />
     );
   }
@@ -433,6 +477,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
+      rawErrors,
     } = this.props;
     const title = schema.title || name;
     const items = this.props.formData;
@@ -454,6 +499,7 @@ class ArrayField extends Component {
         readonly={readonly}
         formContext={formContext}
         autofocus={autofocus}
+        rawErrors={rawErrors}
       />
     );
   }
@@ -464,6 +510,7 @@ class ArrayField extends Component {
       uiSchema,
       formData,
       errorSchema,
+      idPrefix,
       idSchema,
       name,
       required,
@@ -473,10 +520,11 @@ class ArrayField extends Component {
       registry = getDefaultRegistry(),
       onBlur,
       onFocus,
+      rawErrors,
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
-    const { ArrayFieldTemplate, definitions, fields } = registry;
+    const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
       retrieveSchema(item, definitions, formData[index])
@@ -508,7 +556,8 @@ class ArrayField extends Component {
           itemSchema,
           itemIdPrefix,
           definitions,
-          item
+          item,
+          idPrefix
         );
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}
@@ -539,6 +588,8 @@ class ArrayField extends Component {
       uiSchema,
       title,
       TitleField,
+      formContext,
+      rawErrors,
     };
 
     // Check if a custom template template was passed in
@@ -560,6 +611,7 @@ class ArrayField extends Component {
       autofocus,
       onBlur,
       onFocus,
+      rawErrors,
     } = props;
     const {
       disabled,
@@ -567,7 +619,9 @@ class ArrayField extends Component {
       uiSchema,
       registry = getDefaultRegistry(),
     } = this.props;
-    const { fields: { SchemaField } } = registry;
+    const {
+      fields: { SchemaField },
+    } = registry;
     const { orderable, removable } = {
       orderable: true,
       removable: true,
@@ -596,6 +650,7 @@ class ArrayField extends Component {
           disabled={this.props.disabled}
           readonly={this.props.readonly}
           autofocus={autofocus}
+          rawErrors={rawErrors}
         />
       ),
       className: "array-item",

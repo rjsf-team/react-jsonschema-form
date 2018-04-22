@@ -50,9 +50,16 @@ class ObjectField extends Component {
   }
 
   onPropertyChange = name => {
-    return (value, options) => {
+    return (value, errorSchema) => {
       const newFormData = { ...this.props.formData, [name]: value };
-      this.props.onChange(newFormData, options);
+      this.props.onChange(
+        newFormData,
+        errorSchema &&
+          this.props.errorSchema && {
+            ...this.props.errorSchema,
+            [name]: errorSchema,
+          }
+      );
     };
   };
 
@@ -66,6 +73,7 @@ class ObjectField extends Component {
       required,
       disabled,
       readonly,
+      idPrefix,
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
@@ -110,6 +118,7 @@ class ObjectField extends Component {
               uiSchema={uiSchema[name]}
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
+              idPrefix={idPrefix}
               formData={formData[name]}
               onChange={this.onPropertyChange(name)}
               onBlur={onBlur}

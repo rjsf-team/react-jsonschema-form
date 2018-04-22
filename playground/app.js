@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
-import CodeMirror from "react-codemirror2";
+import { UnControlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/javascript/javascript";
 
 import { shouldRender } from "../src/utils";
@@ -213,6 +213,7 @@ class Editor extends Component {
         <CodeMirror
           value={this.state.code}
           onChange={this.onCodeChange}
+          autoCursor={false}
           options={Object.assign({}, cmOptions, { theme })}
         />
       </div>
@@ -379,7 +380,9 @@ class App extends Component {
 
   onShare = () => {
     const { formData, schema, uiSchema } = this.state;
-    const { location: { origin, pathname } } = document;
+    const {
+      location: { origin, pathname },
+    } = document;
     try {
       const hash = btoa(JSON.stringify({ formData, schema, uiSchema }));
       this.setState({ shareURL: `${origin}${pathname}#${hash}` });

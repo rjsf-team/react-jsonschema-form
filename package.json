@@ -1,6 +1,6 @@
 {
   "name": "react-jsonschema-form",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build:readme": "toctoc README.md -w",
@@ -8,17 +8,18 @@
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
     "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js --optimize-minimize && cp playground/index.prod.html build/index.html",
     "cs-check": "prettier -l $npm_package_prettierOptions '{playground,src,test}/**/*.js'",
-    "cs-format": "prettier $npm_package_prettierOptions '{playground,src,test}/**/*.js' --write",
+    "cs-format": "prettier --jsx-bracket-same-line --trailing-comma es5 --use-tabs false --semi --tab-width 2 '{playground,src,test}/**/*.js' --write",
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test playground",
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
     "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
+    "preversion": "npm run build:playground && npm run dist && npm run build:readme && npm run cs-check && npm run lint",
     "start": "node devServer.js",
     "tdd": "cross-env NODE_ENV=test mocha --compilers js:babel-register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --require ./test/setup-jsdom.js test/**/*_test.js"
   },
-  "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi",
+  "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi --tab-width 2",
   "lint-staged": {
     "{playground,src,test}/**/*.js": [
       "npm run lint",
@@ -78,10 +79,10 @@
     "json-loader": "^0.5.7",
     "lint-staged": "^3.3.1",
     "mocha": "^2.5.3",
-    "prettier": "^1.8.2",
+    "prettier": "^1.12.0",
     "react": "^15.5.0",
     "react-addons-test-utils": "^15.3.2",
-    "react-codemirror2": "^2.0.2",
+    "react-codemirror2": "^4.1.0",
     "react-dom": "^15.3.2",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
