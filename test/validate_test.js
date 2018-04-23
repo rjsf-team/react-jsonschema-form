@@ -3,7 +3,10 @@ import { expect } from "chai";
 import sinon from "sinon";
 import { Simulate } from "react-addons-test-utils";
 
-import validateFormData, { toErrorList } from "../src/validate";
+import validateFormData, {
+  toErrorList,
+  flattenErrorSchema,
+} from "../src/validate";
 import { createFormComponent } from "./test_utils";
 
 describe("Validation", () => {
@@ -103,6 +106,47 @@ describe("Validation", () => {
       });
     });
 
+    describe("flattenErrorSchema()", () => {
+      it("should convert an errorSchema into a flat list", () => {
+        const expected = [
+          {
+            property: "",
+            message: "err1",
+          },
+          {
+            property: "",
+            message: "err2",
+          },
+          {
+            property: "a.b",
+            message: "err3",
+          },
+          {
+            property: "a.b",
+            message: "err4",
+          },
+          {
+            property: "c",
+            message: "err5",
+          },
+        ];
+
+        expect(
+          flattenErrorSchema({
+            __errors: ["err1", "err2"],
+            a: {
+              b: {
+                __errors: ["err3", "err4"],
+              },
+            },
+            c: {
+              __errors: ["err5"],
+            },
+          })
+        ).eql(expected);
+      });
+    });
+
     describe("transformErrors", () => {
       const illFormedKey = "bar.'\"[]()=+*&^%$#@!";
       const schema = {
@@ -112,14 +156,13 @@ describe("Validation", () => {
           [illFormedKey]: { type: "string" },
         },
       };
-      const newErrorMessage = "Better error message";
-      const transformErrors = errors => {
-        return [Object.assign({}, errors[0], { message: newErrorMessage })];
-      };
 
-      let errors;
-
-      beforeEach(() => {
+      it("should use transformErrors function", () => {
+        let errors;
+        const newErrorMessage = "Better error message";
+        const transformErrors = errors => {
+          return [Object.assign({}, errors[0], { message: newErrorMessage })];
+        };
         const result = validateFormData(
           { foo: 42, [illFormedKey]: 41 },
           schema,
@@ -127,48 +170,65 @@ describe("Validation", () => {
           transformErrors
         );
         errors = result.errors;
-      });
 
-      it("should use transformErrors function", () => {
         expect(errors).not.to.be.empty;
         expect(errors[0].message).to.equal(newErrorMessage);
       });
+
+      it("call after custom validations", () => {
+        let errors;
+        const transformErrors = errors => {
+          return errors.sort(a => (a.name === "custom" ? -1 : 1));
+        };
+        const validate = (formData, errors) => {
+          errors.foo.addError("custom");
+          return errors;
+        };
+        const result = validateFormData(
+          { foo: 42, [illFormedKey]: 41 },
+          schema,
+          validate,
+          transformErrors
+        );
+        errors = result.errors;
+
+        expect(errors).not.to.be.empty;
+        expect(errors[0].stack).to.equal("foo: custom");
+      });
+    });
+  });
+
+  describe("Invalid schema", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "string",
+          required: "invalid_type_non_array",
+        },
+      },
+    };
+
+    let errors, errorSchema;
+
+    beforeEach(() => {
+      const result = validateFormData({ foo: 42 }, schema);
+      errors = result.errors;
+      errorSchema = result.errorSchema;
     });
 
-    describe("Invalid schema", () => {
-      const schema = {
-        type: "object",
-        properties: {
-          foo: {
-            type: "string",
-            required: "invalid_type_non_array",
-          },
-        },
-      };
+    it("should return an error list", () => {
+      expect(errors).to.have.length.of(1);
+      expect(errors[0].name).eql("type");
+      expect(errors[0].property).eql(".properties['foo'].required");
+      expect(errors[0].message).eql("should be array");
+    });
 
-      let errors, errorSchema;
-
-      beforeEach(() => {
-        const result = validateFormData({ foo: 42 }, schema);
-        errors = result.errors;
-        errorSchema = result.errorSchema;
-      });
-
-      it("should return an error list", () => {
-        expect(errors).to.have.length.of(1);
-        expect(errors[0].name).eql("type");
-        expect(errors[0].property).eql(".properties['foo'].required");
-        expect(errors[0].message).eql("should be array");
-      });
-
-      it("should return an errorSchema", () => {
-        expect(errorSchema.properties.foo.required.__errors).to.have.length.of(
-          1
-        );
-        expect(errorSchema.properties.foo.required.__errors[0]).eql(
-          "should be array"
-        );
-      });
+    it("should return an errorSchema", () => {
+      expect(errorSchema.properties.foo.required.__errors).to.have.length.of(1);
+      expect(errorSchema.properties.foo.required.__errors[0]).eql(
+        "should be array"
+      );
     });
   });
 

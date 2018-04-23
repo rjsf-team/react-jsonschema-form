@@ -14,7 +14,7 @@ ajv.addFormat(
   /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
 );
 
-import { isObject, mergeObjects } from "./utils";
+import { isObject } from "./utils";
 
 function toErrorSchema(errors) {
   // Transforms a ajv validation errors list:
@@ -52,13 +52,13 @@ function toErrorSchema(errors) {
       }
       parent = parent[segment];
     }
-    if (Array.isArray(parent.__errors)) {
+    if (Array.isArray(parent.__errors) && message) {
       // We store the list of errors for this node in a property named __errors
       // to avoid name collision with a possible sub schema field named
       // "errors" (see `validate.createErrorHandler`).
       parent.__errors = parent.__errors.concat(message);
-    } else {
-      parent.__errors = [message];
+    } else if (!Array.isArray(parent.__errors)) {
+      parent.__errors = message ? [message] : [];
     }
     return errorSchema;
   }, {});
@@ -118,6 +118,49 @@ function unwrapErrorHandler(errorHandler) {
   }, {});
 }
 
+export function flattenErrorSchema(target) {
+  const output = [];
+
+  function step(object, path = "") {
+    Object.keys(object).forEach(key => {
+      const value = object[key];
+      const isIndex = !Number.isNaN(parseInt(key));
+
+      if (key === "__errors" && !value.length) {
+        // Include paths (without messages) to expand error arrays on unflatten
+        output.push({
+          property: path,
+        });
+      } else if (key === "__errors") {
+        value.forEach(message => {
+          output.push({
+            message,
+            property: path,
+          });
+        });
+      }
+
+      let newKey = key;
+      if (isIndex) {
+        newKey = `[${key}]`;
+      }
+      if (path && isIndex) {
+        newKey = `${path}${newKey}`;
+      }
+      if (path && !isIndex) {
+        newKey = `${path}.${newKey}`;
+      }
+      if (isObject(value) && Object.keys(value).length) {
+        return step(value, newKey);
+      }
+    });
+  }
+
+  step(target);
+
+  return output;
+}
+
 /**
  * Transforming the error output from ajv to format used by jsonschema.
  * At some point, components should be updated to support ajv.
@@ -162,22 +205,36 @@ export default function validateFormData(
 
   let errors = transformAjvErrors(ajv.errors);
 
-  if (typeof transformErrors === "function") {
+  if (
+    typeof transformErrors === "function" &&
+    typeof customValidate !== "function"
+  ) {
     errors = transformErrors(errors);
   }
-  const errorSchema = toErrorSchema(errors);
 
   if (typeof customValidate !== "function") {
+    const errorSchema = toErrorSchema(errors);
     return { errors, errorSchema };
   }
 
+  // Apply custom validations and allow transform of merged result
   const errorHandler = customValidate(formData, createErrorHandler(formData));
   const userErrorSchema = unwrapErrorHandler(errorHandler);
-  const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
+  const userErrors = flattenErrorSchema(userErrorSchema).map(error =>
+    Object.assign(error, { name: "custom" })
+  );
+  let mergedErrors = errors.concat(userErrors);
+
+  if (typeof transformErrors === "function") {
+    mergedErrors = transformErrors(mergedErrors);
+  }
+
+  const mergedErrorSchema = toErrorSchema(mergedErrors);
+
   // XXX: The errors list produced is not fully compliant with the format
   // exposed by the jsonschema lib, which contains full field paths and other
   // properties.
-  const newErrors = toErrorList(newErrorSchema);
+  const newErrors = toErrorList(mergedErrorSchema);
 
-  return { errors: newErrors, errorSchema: newErrorSchema };
+  return { errors: newErrors, errorSchema: mergedErrorSchema };
 }
