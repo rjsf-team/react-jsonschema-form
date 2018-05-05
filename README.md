@@ -1731,7 +1731,7 @@ In these examples, the "Do you have any pets?" question is validated against the
 
 ## `if`/`then`/`else`
 
-JSON Schema Draft 7 introduces support for `if`/`then`/`else as a more procedural-like alternative to schema dependencies:
+JSON Schema Draft 7 introduces support for `if`/`then`/`else` as a more procedural-like alternative to schema dependencies:
 
 ```json
 {
