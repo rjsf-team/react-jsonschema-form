@@ -957,6 +957,29 @@ describe("utils", () => {
         });
       });
     });
+
+    describe("not", () => {
+      describe("{}", () => {
+        it("should remove data", () => {
+          const schema = {
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+              b: { type: "integer", not: {} },
+            },
+          };
+          const formData = { a: 42, b: 12 };
+          expect(retrieveSchema(schema, {}, formData)).eql({
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+              b: { type: "integer" },
+            },
+          });
+          expect(formData).eql({ a: 42 });
+        });
+      });
+    });
   });
 
   describe("shouldRender", () => {
