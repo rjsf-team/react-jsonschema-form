@@ -1749,9 +1749,6 @@ JSON Schema Draft 7 introduces support for `if`/`then`/`else as a more procedura
     }
   },
   "if": {
-    "required": [
-      "referrer"
-    ],
     "properties": {
       "referrer": {
         "const": "Other (please specify)"
