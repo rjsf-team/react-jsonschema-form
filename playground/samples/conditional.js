@@ -9,8 +9,7 @@ module.exports = {
       },
     },
     if: {
-      required: ["referrer"],
-      properties: { referrer: { enum: ["Other (please specify)"] } },
+      properties: { referrer: { const: "Other (please specify)" } },
     },
     then: { properties: { referrerOther: { title: "Other", type: "string" } } },
     else: { properties: { referrerOther: { not: {} } } },
