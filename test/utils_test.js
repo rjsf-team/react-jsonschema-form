@@ -845,6 +845,118 @@ describe("utils", () => {
         });
       });
     });
+
+    describe("if/then/else", () => {
+      describe("true", () => {
+        it("should merge `then` schema properties", () => {
+          const schema = {
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+            },
+            if: {
+              properties: {
+                a: {
+                  minimum: 100,
+                },
+              },
+            },
+            then: {
+              required: ["a"],
+            },
+          };
+          const formData = { a: 100 };
+          expect(retrieveSchema(schema, {}, formData)).eql({
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+            },
+            required: ["a"],
+          });
+        });
+        it("should not merge `else` schema properties", () => {
+          const schema = {
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+            },
+            if: {
+              properties: {
+                a: {
+                  minimum: 100,
+                },
+              },
+            },
+            else: {
+              required: ["a"],
+            },
+          };
+          const formData = { a: 100 };
+          expect(retrieveSchema(schema, {}, formData)).eql({
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+            },
+          });
+        });
+      });
+      describe("false", () => {
+        it("should merge `else` schema properties", () => {
+          const schema = {
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+            },
+            if: {
+              properties: {
+                a: {
+                  minimum: 100,
+                },
+              },
+            },
+            then: {
+              multipleOf: 3,
+            },
+            else: {
+              required: ["a"],
+            },
+          };
+          const formData = { a: 99 };
+          expect(retrieveSchema(schema, {}, formData)).eql({
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+            },
+            required: ["a"],
+          });
+        });
+        it("should not merge `then` schema properties", () => {
+          const schema = {
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+            },
+            if: {
+              properties: {
+                a: {
+                  minimum: 100,
+                },
+              },
+            },
+            then: {
+              required: ["a"],
+            },
+          };
+          const formData = { a: 99 };
+          expect(retrieveSchema(schema, {}, formData)).eql({
+            type: "object",
+            properties: {
+              a: { type: "integer" },
+            },
+          });
+        });
+      });
+    });
   });
 
   describe("shouldRender", () => {

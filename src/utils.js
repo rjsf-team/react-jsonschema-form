@@ -418,8 +418,37 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return retrieveSchema(resolvedSchema, definitions, formData);
+  } else if (schema.if || schema.then || schema.else) {
+    const {
+      if: ifSchema,
+      then: thenSchema,
+      else: elseSchema,
+      ...remainingSchema
+    } = schema;
+    if (isObject(ifSchema)) {
+      const { errors } = validateFormData(formData, ifSchema);
+      const updatedSchema = mergeSchemas(
+        remainingSchema,
+        errors.length === 0 ? thenSchema || {} : elseSchema || {}
+      );
+      return retrieveSchema(updatedSchema, definitions, formData);
+    } else {
+      return retrieveSchema(remainingSchema, definitions, formData);
+    }
   } else {
-    // No $ref or dependencies attribute found, returning the original schema.
+    /* No $ref, dependencies, or if/then/else attribute found, returning the original schema. */
+    // deep clone the schema before possibly mutating it
+    schema = JSON.parse(JSON.stringify(schema));
+    if (schema.type === "object" && isObject(schema.properties)) {
+      // delete any properties in the formData if their schemas are not: {} and remove not from the property schema
+      for (const propertyKey of Object.keys(schema.properties)) {
+        const propertySchema = schema.properties[propertyKey];
+        if (deepEquals(propertySchema.not, {})) {
+          delete formData[propertyKey];
+        }
+        delete propertySchema.not;
+      }
+    }
     return schema;
   }
 }

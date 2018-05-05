@@ -92,6 +92,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
   - [Schema dependencies](#schema-dependencies)
      - [Conditional](#conditional)
      - [Dynamic](#dynamic)
+  - [`if`/`then`/`else`](#ifthenelse)
+  - [`not`](#not)
   - [JSON Schema supporting status](#json-schema-supporting-status)
   - [Tips and tricks](#tips-and-tricks)
   - [Contributing](#contributing)
@@ -1726,6 +1728,61 @@ In this example the user is prompted with different follow-up questions dynamica
 Note that this is quite far from complete `oneOf` support!
 
 In these examples, the "Do you have any pets?" question is validated against the corresponding property in each schema in the `oneOf` array. If exactly one matches, the rest of that schema is merged with the existing schema.
+
+## `if`/`then`/`else`
+
+JSON Schema Draft 7 introduces support for `if`/`then`/`else as a more procedural-like alternative to schema dependencies:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "referrer": {
+      "title": "How did you hear about us?",
+      "type": "string",
+      "enum": [
+        "Friends",
+        "Family",
+        "Internet",
+        "Other (please specify)"
+      ]
+    }
+  },
+  "if": {
+    "required": [
+      "referrer"
+    ],
+    "properties": {
+      "referrer": {
+        "const": "Other (please specify)"
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "referrerOther": {
+        "title": "Other",
+        "type": "string"
+      }
+    }
+  },
+  "else": {
+    "properties": {
+      "referrerOther": {
+        "not": {}
+      }
+    }
+  }
+}
+```
+
+If the form data validates against the `if` schema then the `then` schema is merged into the form schema and rendered. An `else` schema can optionally be specified to be applied if the form data does not validate against the `if` schema.
+
+In the above example the `else` schema causes any previous input for `reffererOther` to be deleted when not applicable. Ommiting `"not": {}` would retain the value. See [not](#not) for more details.
+
+## `not`
+
+Limited support is currently provided for the  `not` keyword. In some cases you may wish for form data to be deleted, this can be specified using `"not": {}`.
 
 ## JSON Schema supporting status
 
