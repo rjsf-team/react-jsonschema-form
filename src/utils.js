@@ -431,7 +431,7 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
       const { errors } = validateFormData(formData, ifSchema);
       // If the form data validates then use the `then` schema; otherwise the `else` schema
       const conditionalSchema = errors.length === 0 ? thenSchema : elseSchema;
-      // Merge the conditional schema (or and empty schema if undefined) with the remaining schema
+      // Merge the conditional schema (or an empty schema if undefined) with the remaining schema
       const updatedSchema = mergeSchemas(
         remainingSchema,
         conditionalSchema || {}

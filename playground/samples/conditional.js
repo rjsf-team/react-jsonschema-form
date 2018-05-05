@@ -2,18 +2,31 @@ module.exports = {
   schema: {
     type: "object",
     properties: {
-      referrer: {
-        title: "How did you hear about us?",
+      ownsCar: {
+        title: "Do you own a car?",
         type: "string",
-        enum: ["Friends", "Family", "Internet", "Other (please specify)"],
+        enum: ["Yes", "No"],
       },
     },
     if: {
-      properties: { referrer: { const: "Other (please specify)" } },
+      required: ["ownsCar"],
+      properties: { ownsCar: { const: "Yes" } },
     },
-    then: { properties: { referrerOther: { title: "Other", type: "string" } } },
-    else: { properties: { referrerOther: { not: {} } } },
+    then: {
+      properties: {
+        carColor: {
+          title: "What color is your car?",
+          type: "string",
+          default: "#ff0000",
+        },
+      },
+    },
+    else: { properties: { carColor: { not: {} } } },
   },
-  uiSchema: {},
+  uiSchema: {
+    carColor: {
+      "ui:widget": "color",
+    },
+  },
   formData: {},
 };

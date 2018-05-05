@@ -1737,35 +1737,37 @@ JSON Schema Draft 7 introduces support for `if`/`then`/`else as a more procedura
 {
   "type": "object",
   "properties": {
-    "referrer": {
-      "title": "How did you hear about us?",
+    "ownsCar": {
+      "title": "Do you own a car?",
       "type": "string",
       "enum": [
-        "Friends",
-        "Family",
-        "Internet",
-        "Other (please specify)"
+        "Yes",
+        "No"
       ]
     }
   },
   "if": {
+    "required": [
+      "ownsCar"
+    ],
     "properties": {
-      "referrer": {
-        "const": "Other (please specify)"
+      "ownsCar": {
+        "const": "Yes"
       }
     }
   },
   "then": {
     "properties": {
-      "referrerOther": {
-        "title": "Other",
-        "type": "string"
+      "carColor": {
+        "title": "What color is your car?",
+        "type": "string",
+        "default": "#ff0000"
       }
     }
   },
   "else": {
     "properties": {
-      "referrerOther": {
+      "carColor": {
         "not": {}
       }
     }
@@ -1775,11 +1777,11 @@ JSON Schema Draft 7 introduces support for `if`/`then`/`else as a more procedura
 
 If the form data validates against the `if` schema then the `then` schema is merged into the form schema and rendered. An `else` schema can optionally be specified to be applied if the form data does not validate against the `if` schema.
 
-In the above example the `else` schema causes any previous input for `reffererOther` to be deleted when not applicable. Ommiting `"not": {}` would retain the value. See [not](#not) for more details.
+In the above example the `else` schema causes any previous input for `carColor` to be deleted when not applicable. Ommiting `"not": {}` would retain the value. See [not](#not) for more details.
 
 ## `not`
 
-Limited support is currently provided for the  `not` keyword. In some cases you may wish for form data to be deleted, this can be specified using `"not": {}`.
+Limited support is currently provided for the  `not` keyword. In some cases you may wish for form data to be deleted, this can be specified using `"not": {}`. See [`if`/`then`/`else`](#ifthenelse) for an example.
 
 ## JSON Schema supporting status
 
