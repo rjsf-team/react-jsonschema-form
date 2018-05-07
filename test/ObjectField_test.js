@@ -218,7 +218,7 @@ describe("ObjectField", () => {
       expect(labels).eql(["baz", "bar", "qux", "foo"]);
     });
 
-    it("should throw when order list contains an extraneous property", () => {
+    it("should not throw when order list contains an extraneous property", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
@@ -226,12 +226,10 @@ describe("ObjectField", () => {
         },
       });
 
-      expect(node.querySelector(".config-error").textContent).to.match(
-        /contains extraneous properties 'wut\?', 'huh\?'/
-      );
+      expect(node.querySelector(".config-error")).to.eq(null);
     });
 
-    it("should throw when order list misses an existing property", () => {
+    it("should not throw when order list misses an existing property", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
@@ -239,9 +237,7 @@ describe("ObjectField", () => {
         },
       });
 
-      expect(node.querySelector(".config-error").textContent).to.match(
-        /does not contain properties 'foo', 'qux'/
-      );
+      expect(node.querySelector(".config-error")).to.eq(null);
     });
 
     it("should throw when more than one wildcard is present", () => {

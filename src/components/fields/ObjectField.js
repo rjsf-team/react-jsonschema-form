@@ -100,6 +100,11 @@ class ObjectField extends Component {
       );
     }
 
+    // filter out any property names that are not currently applicable
+    orderedProperties = orderedProperties.filter(name =>
+      schema.properties.hasOwnProperty(name)
+    );
+
     const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
 
     const templateProps = {
