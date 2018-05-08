@@ -9,8 +9,8 @@ module.exports = {
       },
     },
     if: {
-      required: ["ownsCar"],
       properties: { ownsCar: { const: "Yes" } },
+      required: ["ownsCar"],
     },
     then: {
       properties: {

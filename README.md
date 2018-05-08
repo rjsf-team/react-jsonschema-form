@@ -1747,14 +1747,14 @@ JSON Schema Draft 7 introduces support for `if`/`then`/`else` as a more procedur
     }
   },
   "if": {
-    "required": [
-      "ownsCar"
-    ],
     "properties": {
       "ownsCar": {
         "const": "Yes"
       }
-    }
+    },
+    "required": [
+      "ownsCar"
+    ]
   },
   "then": {
     "properties": {
