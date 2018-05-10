@@ -373,7 +373,7 @@ The `ui:readonly` uiSchema directive will mark all child widgets from a given fi
 
 #### Hidden widgets
 
-It's possible to use an hidden widget for a given field by setting the `ui:widget` uiSchema directive to `hidden` for this field:
+It's possible to use a hidden widget for a given field by setting the `ui:widget` uiSchema directive to `hidden` for this field:
 
 ```js
 const schema = {
@@ -391,7 +391,7 @@ const uiSchema = {
 > Notes
 >
 > - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
-> - An hidden widget takes its value from the `formData` prop.
+> - A hidden widget takes its value from the `formData` prop.
 
 #### File widgets
 
