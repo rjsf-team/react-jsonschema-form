@@ -187,7 +187,7 @@ class AltTimeWidget extends Component {
     );
   }
 }
-console.log("abc");
+
 if (process.env.NODE_ENV !== "production") {
   AltTimeWidget.propTypes = {
     schema: PropTypes.object.isRequired,
