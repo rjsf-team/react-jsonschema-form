@@ -352,6 +352,21 @@ Please note that while standardized, `datetime-local` and `date` input elements 
 
 ![](http://i.imgur.com/VF5tY60.png)
 
+You can customize the list of years displayed in the *year* select by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema:
+
+```jsx
+uiSchema: {
+  a_date: {
+    "alt-datetime": {
+      "ui:widget": "alt-datetime",
+      "ui:options": {
+        yearsRange: [1980, 2030],
+      },
+    },
+  },
+},
+```
+
 #### For `number` and `integer` fields
 
   * `updown`: an `input[type=number]` updown selector;
@@ -373,7 +388,7 @@ The `ui:readonly` uiSchema directive will mark all child widgets from a given fi
 
 #### Hidden widgets
 
-It's possible to use an hidden widget for a given field by setting the `ui:widget` uiSchema directive to `hidden` for this field:
+It's possible to use a hidden widget for a given field by setting the `ui:widget` uiSchema directive to `hidden` for this field:
 
 ```js
 const schema = {
@@ -391,7 +406,7 @@ const uiSchema = {
 > Notes
 >
 > - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
-> - An hidden widget takes its value from the `formData` prop.
+> - A hidden widget takes its value from the `formData` prop.
 
 #### File widgets
 
@@ -1812,6 +1827,10 @@ A: Not yet (except for a special case where you can use `oneOf` in [schema depen
 ### Q: Will react-jsonschema-form support Material, Ant-Design, Foundation, or [some other specific widget library or frontend style]?
 
 A: Probably not. We use Bootstrap v3 and it works fine for our needs. We would like for react-jsonschema-form to support other frameworks, we just don't want to support them ourselves. Ideally, these frontend styles could be added to react-jsonschema-form with a third-party library. If there is a technical limitation preventing this, please consider opening a PR. See also: [#91](https://github.com/mozilla-services/react-jsonschema-form/issues/91), [#99](https://github.com/mozilla-services/react-jsonschema-form/issues/99), [#125](https://github.com/mozilla-services/react-jsonschema-form/issues/125), [#237](https://github.com/mozilla-services/react-jsonschema-form/issues/237), [#287](https://github.com/mozilla-services/react-jsonschema-form/issues/287), [#299](https://github.com/mozilla-services/react-jsonschema-form/issues/299), [#440](https://github.com/mozilla-services/react-jsonschema-form/issues/440), [#461](https://github.com/mozilla-services/react-jsonschema-form/issues/461), [#546](https://github.com/mozilla-services/react-jsonschema-form/issues/546), [#555](https://github.com/mozilla-services/react-jsonschema-form/issues/555), [#626](https://github.com/mozilla-services/react-jsonschema-form/issues/626), and [#623](https://github.com/mozilla-services/react-jsonschema-form/pull/623).
+
+### Q: Is there a way to "collapse" fields, for instance to show/hide individual fields?
+
+A: There's no specific built-in way to do this, but you can write your own FieldTemplate that supports hiding/showing fields according to user input. We don't yet have an example of this use, but if you write one, please add it to the "tips and tricks" section, above. See also: [#268](https://github.com/mozilla-services/react-jsonschema-form/issues/268), [#304](https://github.com/mozilla-services/react-jsonschema-form/pull/304), [#598](https://github.com/mozilla-services/react-jsonschema-form/issues/598), [#920](https://github.com/mozilla-services/react-jsonschema-form/issues/920).
 
 ## License
 
