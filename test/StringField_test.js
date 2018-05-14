@@ -1219,7 +1219,7 @@ describe("StringField", () => {
     });
 
     it("should fill field with data", () => {
-      const datetime = '03:04:05.000';
+      const datetime = "03:04:05.000";
       const { comp } = createFormComponent({
         schema: {
           type: "string",
