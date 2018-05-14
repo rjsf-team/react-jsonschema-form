@@ -352,6 +352,21 @@ Please note that while standardized, `datetime-local` and `date` input elements 
 
 ![](http://i.imgur.com/VF5tY60.png)
 
+You can customize the list of years displayed in the *year* select by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema:
+
+```jsx
+uiSchema: {
+  a_date: {
+    "alt-datetime": {
+      "ui:widget": "alt-datetime",
+      "ui:options": {
+        yearsRange: [1980, 2030],
+      },
+    },
+  },
+},
+```
+
 #### For `number` and `integer` fields
 
   * `updown`: an `input[type=number]` updown selector;

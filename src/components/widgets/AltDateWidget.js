@@ -53,6 +53,9 @@ class AltDateWidget extends Component {
     disabled: false,
     readonly: false,
     autofocus: false,
+    options: {
+      yearsRange: [1900, new Date().getFullYear() + 2],
+    },
   };
 
   constructor(props) {
@@ -100,10 +103,14 @@ class AltDateWidget extends Component {
   };
 
   get dateElementProps() {
-    const { time } = this.props;
+    const { time, options } = this.props;
     const { year, month, day, hour, minute, second } = this.state;
     const data = [
-      { type: "year", range: [1900, 2020], value: year },
+      {
+        type: "year",
+        range: options.yearsRange,
+        value: year,
+      },
       { type: "month", range: [1, 12], value: month },
       { type: "day", range: [1, 31], value: day },
     ];
@@ -165,6 +172,7 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
     time: PropTypes.bool,
+    options: PropTypes.object,
   };
 }
 
