@@ -687,6 +687,20 @@ describe("uiSchema", () => {
           "select"
         );
       });
+
+      it("should focus on alt-time input", () => {
+        shouldFocus(
+          {
+            type: "string",
+            format: "time",
+          },
+          {
+            "ui:widget": "alt-time",
+            "ui:autofocus": true,
+          },
+          "select"
+        );
+      });
     });
 
     describe("array", () => {
@@ -2062,6 +2076,25 @@ describe("uiSchema", () => {
         );
         expect(disabled).eql([true, true, true, true, true, true]);
       });
+
+      it("should disable an alternative time widget", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "time",
+          },
+          uiSchema: {
+            "ui:disabled": true,
+            "ui:widget": "alt-time",
+          },
+        });
+
+        const disabled = [].map.call(
+          node.querySelectorAll("select"),
+          node => node.disabled
+        );
+        expect(disabled).eql([true, true, true]);
+      });
     });
   });
 
@@ -2340,6 +2373,24 @@ describe("uiSchema", () => {
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true, true, true, true]);
+      });
+
+      it("should mark readonly as disabled on an alternative time widget", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "time",
+          },
+          uiSchema: {
+            "ui:readonly": true,
+            "ui:widget": "alt-time",
+          },
+        });
+
+        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+          node.hasAttribute("disabled")
+        );
+        expect(readonly).eql([true, true, true]);
       });
     });
   });

@@ -32,6 +32,10 @@ module.exports = {
             type: "string",
             format: "date",
           },
+          "alt-time": {
+            type: "string",
+            format: "time",
+          },
         },
       },
     },
@@ -49,6 +53,9 @@ module.exports = {
         "ui:options": {
           yearsRange: [1980, 2030],
         },
+      },
+      "alt-time": {
+        "ui:widget": "alt-time",
       },
     },
   },

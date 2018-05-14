@@ -349,6 +349,7 @@ Please note that while standardized, `datetime-local` and `date` input elements 
 
 - `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
 - `alt-date`: Three `select` elements are used to select the year, month and the day.
+- `alt-time`: Two `select` elements are used to select the hour and minutes.
 
 ![](http://i.imgur.com/VF5tY60.png)
 

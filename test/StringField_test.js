@@ -2,7 +2,7 @@ import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { parseDateString, toDateString } from "../src/utils";
+import { parseDateString, toDateString, pad } from "../src/utils";
 import { utcToLocal } from "../src/components/widgets/DateTimeWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
@@ -1147,6 +1147,277 @@ describe("StringField", () => {
         },
         widgets: {
           AltDateWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+  });
+
+  describe("AltTimeWidget", () => {
+    const uiSchema = { "ui:widget": "alt-time" };
+
+    it("should render a time field", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        uiSchema,
+      });
+
+      expect(node.querySelectorAll(".field select")).to.have.length.of(3);
+    });
+
+    it("should render a string field with a main label", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+          title: "foo",
+        },
+        uiSchema,
+      });
+
+      expect(node.querySelector(".field label").textContent).eql("foo");
+    });
+
+    it("should assign a default value", () => {
+      const datetime = "02:03:04";
+      const { comp } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+          default: datetime,
+        },
+        uiSchema,
+      });
+
+      expect(comp.state.formData).eql(datetime);
+    });
+
+    it("should reflect the change into the dom", () => {
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        uiSchema,
+      });
+
+      Simulate.change(node.querySelector("#root_hour"), {
+        target: { value: 1 },
+      });
+      Simulate.change(node.querySelector("#root_minute"), {
+        target: { value: 2 },
+      });
+      Simulate.change(node.querySelector("#root_second"), {
+        target: { value: "3" },
+      });
+
+      expect(comp.state.formData).eql("01:02:03.000");
+    });
+
+    it("should fill field with data", () => {
+      const datetime = '03:04:05.000';
+      const { comp } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        uiSchema,
+        formData: datetime,
+      });
+
+      expect(comp.state.formData).eql(datetime);
+    });
+
+    it("should render the widgets with the expected ids", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        uiSchema,
+      });
+
+      const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
+
+      expect(ids).eql(["root_hour", "root_minute", "root_second"]);
+    });
+
+    it("should render the widgets with the expected options' values", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        uiSchema,
+      });
+
+      const lengths = [].map.call(
+        node.querySelectorAll("select"),
+        node => node.length
+      );
+
+      expect(lengths).eql([24 + 1, 60 + 1, 60 + 1]);
+      const monthOptions = node.querySelectorAll("select#root_hour option");
+      const monthOptionsValues = [].map.call(monthOptions, o => o.value);
+      expect(monthOptionsValues).eql([
+        "",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+      ]);
+    });
+
+    it("should render the widgets with the expected options' labels", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        uiSchema,
+      });
+
+      const monthOptions = node.querySelectorAll("select#root_hour option");
+      const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
+      expect(monthOptionsLabels).eql([
+        "hour",
+        "00",
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+      ]);
+    });
+
+    describe("Action buttons", () => {
+      it("should render action buttons", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "time",
+          },
+          uiSchema,
+        });
+
+        const buttonLabels = [].map.call(
+          node.querySelectorAll("a.btn"),
+          x => x.textContent
+        );
+        expect(buttonLabels).eql(["Now", "Clear"]);
+      });
+
+      it("should set current date when pressing the Now button", () => {
+        const { comp, node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "time",
+          },
+          uiSchema,
+        });
+
+        Simulate.click(node.querySelector("a.btn-now"));
+
+        // Test that the two DATETIMEs are within 1.5 second of each other.
+        const nowDate = new Date();
+        const now = nowDate.getTime();
+        const nowYMD =
+          pad(nowDate.getFullYear(), 4) +
+          "-" +
+          pad(nowDate.getMonth() + 1, 2) +
+          "-" +
+          pad(nowDate.getDate(), 2);
+        const timeDiff =
+          now - new Date(nowYMD + "T" + comp.state.formData + "Z").getTime();
+        expect(timeDiff).to.be.at.most(1500);
+      });
+
+      it("should clear current date when pressing the Clear button", () => {
+        const { comp, node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "time",
+          },
+          uiSchema,
+        });
+
+        Simulate.click(node.querySelector("a.btn-now"));
+        Simulate.click(node.querySelector("a.btn-clear"));
+
+        expect(comp.state.formData).eql(undefined);
+      });
+    });
+
+    it("should render customized AltDateWidget", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        uiSchema: {
+          "ui:widget": "alt-time",
+        },
+        widgets: {
+          AltTimeWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+
+    it("should render customized AltTimeWidget", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "time",
+        },
+        uiSchema: {
+          "ui:widget": "alt-time",
+        },
+        widgets: {
+          AltTimeWidget: CustomWidget,
         },
       });
 
