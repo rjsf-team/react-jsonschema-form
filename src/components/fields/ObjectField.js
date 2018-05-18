@@ -9,7 +9,11 @@ import {
   retrieveSchema,
   shouldRender,
   getDefaultRegistry,
-  setState
+  setState,
+  defaultFieldValue,
+  getWidget,
+  getUiOptions,
+  optionsList
 } from "../../utils";
 
 
@@ -91,12 +95,34 @@ class ObjectField extends Component {
       name,
       required,
       disabled,
-      readonly
+      readonly,
+      autofocus,
+      onChange,
+      formData
     } = this.props;
-    const {definitions, fields, formContext} = this.props.registry;
+    const {definitions, fields, formContext, widgets} = this.props.registry;
     const {SchemaField, TitleField, DescriptionField} = fields;
-    const schema = retrieveSchema(this.props.schema, definitions);
+    const schema = retrieveSchema(this.props.schema, definitions);    
     const title = (schema.title === undefined) ? name : schema.title;
+    if(schema.widget){
+      const enumOptions = Array.isArray(schema.enum) && optionsList(schema);    
+      const {widget=defaultWidget, placeholder="", ...options} = getUiOptions(uiSchema);
+      const Widget = getWidget(schema, widget, widgets);
+      return <Widget
+                options={{...options, enumOptions}}
+                schema={schema}
+                id={idSchema && idSchema.$id}
+                label={title === undefined ? name : title}
+                value={defaultFieldValue(formData, schema)}
+                onChange={onChange}
+                required={required}
+                disabled={disabled}
+                readonly={readonly}
+                formContext={formContext}
+                autofocus={autofocus}
+                registry={this.props.registry}
+                placeholder={placeholder}/>;
+    }
     let orderedProperties;
     try {
       const properties = Object.keys(schema.properties);

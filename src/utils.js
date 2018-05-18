@@ -109,6 +109,9 @@ export function getWidget(schema, widget, registeredWidgets={}) {
 function computeDefaults(schema, parentDefaults, definitions={}) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
+  if(schema.type === "object" && schema.widget){
+    return parentDefaults;
+  }
   if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
