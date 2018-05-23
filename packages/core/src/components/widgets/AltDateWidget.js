@@ -57,6 +57,12 @@ class AltDateWidget extends Component {
       yearsRange: [1900, new Date().getFullYear() + 2],
       now: "Now",
       clear: "Clear",
+      year: "year",
+      month: "month",
+      day: "day",
+      hour: "hour",
+      minute: "minute",
+      second: "second",
     },
   };
 
@@ -109,18 +115,18 @@ class AltDateWidget extends Component {
     const { year, month, day, hour, minute, second } = this.state;
     const data = [
       {
-        type: "year",
+        type: options.year,
         range: options.yearsRange,
         value: year,
       },
-      { type: "month", range: [1, 12], value: month },
-      { type: "day", range: [1, 31], value: day },
+      { type: options.month, range: [1, 12], value: month },
+      { type: options.day, range: [1, 31], value: day },
     ];
     if (time) {
       data.push(
-        { type: "hour", range: [0, 23], value: hour },
-        { type: "minute", range: [0, 59], value: minute },
-        { type: "second", range: [0, 59], value: second }
+        { type: options.hour, range: [0, 23], value: hour },
+        { type: options.minute, range: [0, 59], value: minute },
+        { type: options.second, range: [0, 59], value: second }
       );
     }
     return data;
