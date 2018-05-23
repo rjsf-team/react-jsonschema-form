@@ -55,6 +55,8 @@ class AltDateWidget extends Component {
     autofocus: false,
     options: {
       yearsRange: [1900, new Date().getFullYear() + 2],
+      now: "Now",
+      clear: "Clear",
     },
   };
 
@@ -155,7 +157,7 @@ class AltDateWidget extends Component {
           : true) && (
           <li>
             <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
-              Now
+              {options.now}
             </a>
           </li>
         )}
@@ -167,7 +169,7 @@ class AltDateWidget extends Component {
               href="#"
               className="btn btn-warning btn-clear"
               onClick={this.clear}>
-              Clear
+              {options.clear}
             </a>
           </li>
         )}
