@@ -18,6 +18,7 @@ function readyForChange(state) {
 function DateElement(props) {
   const {
     type,
+    placeholder,
     range,
     value,
     select,
@@ -36,7 +37,7 @@ function DateElement(props) {
       id={id}
       className="form-control"
       options={{ enumOptions: rangeOptions(range[0], range[1]) }}
-      placeholder={type}
+      placeholder={placeholder}
       value={value}
       disabled={disabled}
       readonly={readonly}
@@ -115,18 +116,39 @@ class AltDateWidget extends Component {
     const { year, month, day, hour, minute, second } = this.state;
     const data = [
       {
-        type: options.year,
+        type: "year",
+        placeholder: options.year,
         range: options.yearsRange,
         value: year,
       },
-      { type: options.month, range: [1, 12], value: month },
-      { type: options.day, range: [1, 31], value: day },
+      {
+        type: "month",
+        placeholder: options.month,
+        range: [1, 12],
+        value: month,
+      },
+      { type: "day", placeholder: options.day, range: [1, 31], value: day },
     ];
     if (time) {
       data.push(
-        { type: options.hour, range: [0, 23], value: hour },
-        { type: options.minute, range: [0, 59], value: minute },
-        { type: options.second, range: [0, 59], value: second }
+        {
+          type: "hour",
+          placeholder: options.hour,
+          range: [0, 23],
+          value: hour,
+        },
+        {
+          type: "minute",
+          placeholder: options.minute,
+          range: [0, 59],
+          value: minute,
+        },
+        {
+          type: "second",
+          placeholder: options.second,
+          range: [0, 59],
+          value: second,
+        }
       );
     }
     return data;
