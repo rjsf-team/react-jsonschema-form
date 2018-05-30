@@ -24,7 +24,7 @@ const COMPONENT_TYPES = {
   string: "StringField",
 };
 
-function getFieldComponent(schema, uiSchema, idSchema, fields) {
+function getFieldComponent(schema, name, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -172,7 +172,7 @@ function SchemaFieldRender(props) {
     toIdSchema(schema, null, definitions, formData, idPrefix),
     idSchema
   );
-  const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
+  const FieldComponent = getFieldComponent(schema, name, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);

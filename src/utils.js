@@ -66,6 +66,8 @@ export function getSchemaType(schema) {
   let { type } = schema;
   if (!type && schema.enum) {
     type = "string";
+  } else if (!type && schema.$ref) {
+    type = schema.$ref.split('/').pop();
   }
   return type;
 }
