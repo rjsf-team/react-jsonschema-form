@@ -644,9 +644,9 @@ This will be rendered using a select box that way:
 
 ```html
 <select>
-  <option value="1">one</option>
-  <option value="2" disabled>two</option>
-  <option value="3">three</option>
+  <option value="one">one</option>
+  <option value="two" disabled>two</option>
+  <option value="three">three</option>
 </select>
 ```
 
