@@ -1,55 +1,71 @@
 module.exports = {
   schema: {
-    "title": "Any of",
-    "type": "object",
-    "properties": {
-      "List of widgets": {
-        "type": "array",
-        "items": {
-          "anyOf": [
+    type: 'object',
+    definitions: {
+      option: {
+        type: 'object',
+        required: ['label', 'value'],
+        properties: {
+          label: {
+            type: 'string',
+          },
+          value: {
+            type: 'string',
+          },
+        },
+        default: { label: '', value: '' }
+      },
+      optGroup: {
+        type: 'object',
+        required: ['label', 'items'],
+        properties: {
+          label: {
+            type: 'string',
+          },
+          items: {
+            type: 'array',
+            items: {
+              $ref: '#/definitions/option',
+            },
+          },
+        },
+        default: {
+          label: '',
+          items: [],
+        },
+      },
+    },
+    properties: {
+      options: {
+        type: 'array',
+        title: 'Options',
+        items: {
+          anyOf: [
             {
-              "title": "string",
-              "type": "string",
-              "default": ""
+              $ref: '#/definitions/option',
+              title: 'option',
             },
             {
-              "title": "integer",
-              "type": "integer",
-              "default": 0
+              $ref: '#/definitions/optGroup',
+              title: 'optGroup',
             },
-            {
-              "title": "array",
-              "type": "array",
-              "items": {
-                "anyOf": [
-                  {
-                    "title": "string",
-                    "type": "string",
-                    "default": ""
-                  },
-                  {
-                    "title": "integer",
-                    "type": "integer",
-                    "default": 0
-                  }
-                ]
-              },
-              "default": [""],
-            }
-          ]
-        }
-      }
-    }
+          ],
+        },
+      },
+    },
   },
   uiSchema: {},
   formData: {
-    "List of widgets": [
-      27,
-      "Batman",
-      [
-        "Bruce",
-        "Wayne"
-      ]
+    options: [
+      { label: 'car', value: 'car' },
+      { label: 'house', value: 'house' },
+      {
+        label: 'fruit',
+        items: [
+          { label: 'apple', value: 'apple' },
+          { label: 'banana', value: 'banana' },
+        ],
+      },
     ]
-  }
+  },
 };

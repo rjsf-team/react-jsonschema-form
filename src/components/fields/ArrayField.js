@@ -22,17 +22,17 @@ function resolveSchemaRecursively(schema, definitions) {
   let unwrappedSchema = schema;
   if (schema.$ref) {
     unwrappedSchema = retrieveSchema(schema, definitions);
+  } else if (schema.anyOf) {
+    unwrappedSchema.anyOf.forEach((ele, index) => {
+      unwrappedSchema.anyOf[index] = resolveSchemaRecursively(unwrappedSchema.anyOf[index], definitions);
+    });
   }
 
   if (unwrappedSchema.properties) {
     Object.keys(unwrappedSchema.properties).forEach(p => {
       const prop = unwrappedSchema.properties[p];
       if (prop.type === "array") {
-        if (prop.items.anyOf) {
-          prop.items.anyOf.forEach((ele, index) => {
-            prop.items.anyOf[index] = resolveSchemaRecursively(prop.items[index], definitions);
-          });
-        } else if (prop.items.$ref) {
+        if (prop.items.anyOf || prop.items.$ref) {
           prop.items = resolveSchemaRecursively(prop.items, definitions);
         }
         // else: do nothing since there is no other type pointer
