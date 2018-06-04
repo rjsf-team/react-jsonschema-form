@@ -109,17 +109,15 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
 
 ## Philosophy
 
-react-jsonschema-form is meant to automatically generate a React form based on a [JSON Schema](http://json-schema.org/). It is a major component in the [kinto-admin](https://github.com/Kinto/kinto-admin/). If you want to generate a form for any data, sight unseen, simply given a JSON schema, react-jsonschema-form may be for you. If you have _a priori_ knowledge of your data and want a toolkit for generating forms for it, you might look elsewhere.
+react-jsonschema-form is meant to automatically generate a React form based on a [JSON Schema](http://json-schema.org/). It is a major component in the [kinto-admin](https://github.com/Kinto/kinto-admin/) project. If you want to generate a form for any data, sight unseen, simply given a JSON schema, react-jsonschema-form may be for you. If you have _a priori_ knowledge of your data and want a toolkit for generating forms for it, you might look elsewhere.
 
-react-jsonschema-form validates that the data conforms to the given schema, but doesn't prevent the user from inputing data that doesn't fit (for example, stripping non-numbers from a number field, or not letting the user add values to an array that is already "full".
+react-jsonschema-form validates that the data conforms to the given schema, but doesn't prevent the user from inputing data that doesn't fit (for example, stripping non-numbers from a number field, or adding values to an array that is already "full").
 
 ## Installation
 
 Requires React 15.0.0+.
 
-> Note: The `master` branch of the repository reflects ongoing development. Releases are published as [tags](https://github.com/mozilla-services/react-jsonschema-form/releases).
->
-> You should never blindly install from `master`, but rather check what the available stable releases are.
+> Note: The `master` branch of the repository reflects ongoing development. Releases are published as [tags](https://github.com/mozilla-services/react-jsonschema-form/releases). You should never blindly install from `master`, but rather check what the available stable releases are.
 
 
 ### As a npm-based project dependency
@@ -128,7 +126,7 @@ Requires React 15.0.0+.
 $ npm install react-jsonschema-form --save
 ```
 
-> Note: While the library renders [Bootstrap](http://getbootstrap.com/) HTML semantics, you have to build/load the Bootstrap styles on your own.
+> Note: While the library renders [Bootstrap](http://getbootstrap.com/) HTML semantics, you have to build and load the Bootstrap styles on your own.
 
 ### As a script served from a CDN
 
@@ -138,9 +136,9 @@ $ npm install react-jsonschema-form --save
 
 Source maps are available at [this url](https://unpkg.com/react-jsonschema-form/dist/react-jsonschema-form.js.map).
 
-> Note: The CDN version **does not** embed *react* nor *react-dom*.
->
-> You'll also need to alias the default export property to use the Form component:
+> Note: The CDN version **does not** embed `react` or `react-dom`.
+
+You'll also need to alias the default export property to use the Form component:
 
 ```jsx
 const Form = JSONSchemaForm.default;
@@ -176,7 +174,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-That should give something like this (if you took care of loading the standard [Bootstrap](http://getbootstrap.com/) stylesheet):
+This will generate a form like this (assuming you loaded the standard [Bootstrap](http://getbootstrap.com/) stylesheet):
 
 ![](http://i.imgur.com/DZQYPyu.png)
 
@@ -196,9 +194,9 @@ render((
 ), document.getElementById("app"));
 ```
 
-NOTE: If your form have a single field, pass a single value to `formData`. ex: `formData='Charlie'`
+> Note: If your form has a single field, pass a single value to `formData`. ex: `formData='Charlie'`
 
-WARNING: If you have situations where your parent component can re-render, make sure you listen to the `onChange` event and update the data you pass to the `formData` attribute.
+> WARNING: If you have situations where your parent component can re-render, make sure you listen to the `onChange` event and update the data you pass to the `formData` attribute.
 
 ### Form event handlers
 
@@ -217,7 +215,7 @@ render((
 
 #### Form error event handler
 
-To react to when submitted form data are invalid, pass an `onError` handler, which is passed the list of encountered errors:
+To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
 
 ```js
 const onError = (errors) => console.log("I have", errors.length, "errors to fix");
@@ -244,11 +242,11 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ### The `uiSchema` object
 
-JSONSchema is limited for describing how a given data type should be rendered as a form input component, that's why this lib introduces the concept of *UI schema*.
+JSONSchema is limited for describing how a given data type should be rendered as a form input component. That's why this lib introduces the concept of *UI schema*.
 
 A UI schema is basically an object literal providing information on **how** the form should be rendered, while the JSON schema tells **what**.
 
-The uiSchema object follows the tree structure of the form field hierarchy, and for each allows to define how it should be rendered:
+The uiSchema object follows the tree structure of the form field hierarchy, and defines how each property should be rendered:
 
 ```js
 const schema = {
@@ -298,7 +296,7 @@ render((
 
 ### Alternative widgets
 
-The uiSchema `ui:widget` property tells the form which UI widget should be used to render a certain field:
+The uiSchema `ui:widget` property tells the form which UI widget should be used to render a field. 
 
 Example:
 
@@ -345,14 +343,14 @@ The built-in string field also supports the JSONSchema `format` property, and wi
 
 ![](http://i.imgur.com/xqu6Lcp.png)
 
-Please note that while standardized, `datetime-local` and `date` input elements are not yet supported by Firefox and IE. If you plan on targeting these platforms, two alternative widgets are available:
+Please note that, even though they are standardized, `datetime-local` and `date` input elements are not yet supported by Firefox and IE. If you plan on targeting these platforms, two alternative widgets are available:
 
 - `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
 - `alt-date`: Three `select` elements are used to select the year, month and the day.
 
 ![](http://i.imgur.com/VF5tY60.png)
 
-You can customize the list of years displayed in the *year* select by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema:
+You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema:
 
 ```jsx
 uiSchema: {
@@ -371,10 +369,10 @@ uiSchema: {
 
   * `updown`: an `input[type=number]` updown selector;
   * `range`: an `input[type=range]` slider;
-  * `radio`: a radio button group with enum values. **can only be used when `enum` values are specified for this input**
-  * by default, a regular `input[type=text]` element is used.
+  * `radio`: a radio button group with enum values. This can only be used when `enum` values are specified for this input.
+  * By default, a regular `input[type=text]` element is used.
 
-> Note: for numbers, `min`, `max` and `step` input attributes values will be handled according to JSONSchema's `minimum`, `maximum` and `multipleOf` values when they're defined.
+> Note: If JSONSchema's `minimum`, `maximum` and `multipleOf` values are defined, the `min`, `max` and `step` input attributes values will take those values.
 
 #### Disabled fields
 
@@ -384,11 +382,11 @@ The `ui:disabled` uiSchema directive will disable all child widgets from a given
 
 The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only.
 
-> Note: if you're about the difference between a *disabled* field and a *readonly* one: marking a field as read-only will render it greyed but its text value will be selectable; disabling it will prevent its value to be selected at all.
+> Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
 #### Hidden widgets
 
-It's possible to use a hidden widget for a given field by setting the `ui:widget` uiSchema directive to `hidden` for this field:
+It's possible to use a hidden widget for a field by setting its `ui:widget` uiSchema directive to `hidden`:
 
 ```js
 const schema = {
@@ -403,19 +401,18 @@ const uiSchema = {
 };
 ```
 
-> Notes
->
-> - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
-> - A hidden widget takes its value from the `formData` prop.
+Notes:
+
+ - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
+ - A hidden widget takes its value from the `formData` prop.
 
 #### File widgets
 
 This library supports a limited form of `input[type=file]` widgets, in the sense that it will propagate file contents to form data state as [data-url](http://dataurl.net/#about)s.
 
-There are two ways to use file widgets:
+There are two ways to use file widgets.
 
-**By declaring a `string` json schema type along a `data-url` [format](#string-formats):**
-
+1. By declaring a `string` json schema type along a `data-url` [format](#string-formats):
 ```js
 const schema = {
   type: "string",
@@ -423,8 +420,7 @@ const schema = {
 };
 ```
 
-**By specifying a `ui:widget` field uiSchema directive as `file`:**
-
+2. By specifying a `ui:widget` field uiSchema directive as `file`:
 ```js
 const schema = {
   type: "string",
@@ -455,7 +451,7 @@ const schema = {
 
 The included `FileWidget` exposes a reference to the `<input type="file" />` element node as an `inputRef` component property.
 
-This allows you to programmatically trigger the browser's file selector which can be used in a custom file widget.
+This allows you to programmatically trigger the browser's file selector, which can be used in a custom file widget.
 
 ### Object fields ordering
 
@@ -568,7 +564,7 @@ const schema = {
 };
 ```
 
-This will be rendered using a select box that way:
+This will be rendered using a select box like this:
 
 ```html
 <select>
@@ -582,7 +578,7 @@ Note that string representations of numbers will be cast back and reflected as a
 
 #### Alternative JSON-Schema compliant approach
 
-The JSON Schema team concluded an alternative approach instead of enumNames and react-jsonschema-form supports it as well.
+JSON Schema has an alternative approach to enumerations; react-jsonschema-form supports it as well.
 
 ```js
 const schema = {
@@ -613,7 +609,7 @@ const schema = {
 };
 ```
 
-As above this will be rendered using a select box as so:
+This will be rendered as follows:
 
 ```html
 <select>
@@ -623,11 +619,11 @@ As above this will be rendered using a select box as so:
 </select>
 ```
 
-A live example of both approaches side-by-side can be found in the **Alternatives** playground preset.
+A live example of both approaches side-by-side can be found in the **Alternatives** tab of the [playground](https://mozilla-services.github.io/react-jsonschema-form/).
 
 ### Disabled attribute for `enum` fields
 
-This library supports the 'disabled' attribute for `enum` options. Enum disabled allows disabling options for 'enum' fields.This attribute can be added as a part of uiSchema.
+To disable an option, use the `enumDisabled` property in uiSchema.
 
 ```js
 const schema = {
@@ -640,29 +636,26 @@ const uiSchema={
 }
 ```
 
-This will be rendered using a select box that way:
+This will be rendered using a select box as follows:
 
 ```html
 <select>
-  <option value="1">one</option>
-  <option value="2" disabled>two</option>
-  <option value="3">three</option>
+  <option value="one">one</option>
+  <option value="two" disabled>two</option>
+  <option value="three">three</option>
 </select>
 ```
 
-### Multiple choices list
+### Multiple-choice list
 
-The default behavior for array fields is a list of text inputs with add/remove buttons. Though there are two alternative simpler widgets for common situations like picking elements against a list of choices; typically this maps to a schema having:
-
-- an `enum` list for the `items` property of an `array` field
-- with the `uniqueItems` property set to `true`
+The default behavior for array fields is a list of text inputs with add/remove buttons. There are two alternative widgets for picking multiple elements from a list of choices. Typically this applies when a schema has an `enum` list for the `items` property of an `array` field, and the `uniqueItems` property set to `true`.
 
 Example:
 
 ```js
 const schema = {
   type: "array",
-  title: "A multiple choices list",
+  title: "A multiple-choice list",
   items: {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
@@ -671,7 +664,7 @@ const schema = {
 };
 ```
 
-By default, this will automatically render a multiple select box. If you prefer a list of checkboxes, just set the uiSchema `ui:widget` directive to `"checkboxes"` for that field:
+By default, this will render a multiple select box. If you prefer a list of checkboxes, just set the uiSchema `ui:widget` directive to `checkboxes` for that field:
 
 ```js
 const uiSchema = {
@@ -679,7 +672,7 @@ const uiSchema = {
 };
 ```
 
-Care should be taken when using the `required` property with arrays.  An empty array is sufficient to pass that validation check.  If you wish to ensure the user populates the array, you can specify the minimum number of items the user must select with the `minItems` property.
+Note that when an array property is marked as `required`, an empty array is considered valid. If array needs to be populated, you can specify the minimum number of items using the `minItems` property.
 
 Example:
 
@@ -687,7 +680,7 @@ Example:
 const schema = {
   type: "array",
   minItems: 2,
-  title: "A multiple choices list",
+  title: "A multiple-choice list",
   items: {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
@@ -696,7 +689,7 @@ const schema = {
 };
 ```
 
-By default, checkboxes are stacked but if you prefer them inline:
+By default, checkboxes are stacked. If you prefer them inline, set the `inline` property to `true`:
 
 ```js
 const uiSchema = {
@@ -707,11 +700,11 @@ const uiSchema = {
 };
 ```
 
-See the "Arrays" section of the playground for cool demos.
+See the "Arrays" section of the [playground](https://mozilla-services.github.io/react-jsonschema-form/) for cool demos.
 
 ### Autogenerated widget ids
 
-By default, the lib will generate ids unique to the form for all rendered widgets. But if you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:
+By default, this library will generate ids unique to the form for all rendered widgets. If you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:
 
 ```js
 const uiSchema = {
@@ -723,7 +716,7 @@ So all widgets will have an id prefixed with `myform`.
 
 ### Form action buttons
 
-You can provide custom buttons to your form via the `Form` component's `children`. A default submit button will be rendered if you don't provide children to the `Form` component.
+You can provide custom buttons to your form via the `Form` component's `children`. Otherwise a default submit button will be rendered.
 
 ```jsx
 render((
@@ -736,11 +729,11 @@ render((
 ), document.getElementById("app"));
 ```
 
-**Warning:** there should be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
+> **Warning:** There needs to be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
 
-### Help texts
+### Help text
 
-Sometimes it's convenient to add some text next to a field to guide the end user filling it; this is the purpose of the `ui:help` uiSchema directive:
+Sometimes it's convenient to add text next to a field to guide the end user filling it. This is the purpose of the `ui:help` uiSchema directive:
 
 ```js
 const schema = {type: "string"};
@@ -752,11 +745,11 @@ const uiSchema = {
 
 ![](http://i.imgur.com/scJUuZo.png)
 
-Help texts work for any kind of field at any level, and will always be rendered immediately below the field component widget(s), but after contextualized errors, if any.
+Help texts work for any kind of field at any level, and will always be rendered immediately below the field component widget(s) (after contextualized errors, if any).
 
 ### Title texts
 
-Sometimes it's convenient to change title a field; this is the purpose of the `ui:title` uiSchema directive:
+Sometimes it's convenient to change a field's title. this is the purpose of the `ui:title` uiSchema directive:
 
 ```js
 const schema = {type: "string"};
@@ -768,7 +761,7 @@ const uiSchema = {
 
 ### Description texts
 
-Sometimes it's convenient to change description a field; this is the purpose of the `ui:description` uiSchema directive:
+Sometimes it's convenient to change description a field. This is the purpose of the `ui:description` uiSchema directive:
 
 ```js
 const schema = {type: "string"};
@@ -780,7 +773,7 @@ const uiSchema = {
 
 ### Auto focus
 
-If you want to focus on a text input or textarea input/on a widget automatically, just set `ui:autofocus` uiSchema directive to `true`.
+If you want to automatically focus on a text input or textarea input, set the `ui:autofocus` uiSchema directive to `true`.
 
 ```js
 const schema = {type: "string"};
@@ -792,7 +785,7 @@ const uiSchema = {
 
 ### Textarea `rows` option
 
-You can set initial height of a textarea widget by specifying `rows` option.
+You can set the initial height of a textarea widget by specifying `rows` option.
 
 ```js
 const schema = {type: "string"};
@@ -806,7 +799,7 @@ const uiSchema = {
 
 ### Placeholders
 
-Text fields can benefit from placeholders by using the `ui:placeholder` uiSchema directive:
+You can add placeholder texst to an input by using the `ui:placeholder` uiSchema directive:
 
 ```jsx
 const schema = {type: "string", format: "uri"};
@@ -828,7 +821,7 @@ const uiSchema = {
 
 ### Field labels
 
-Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` from `ui:options` uiSchema directive.
+Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```jsx
 const schema = {type: "string"};
@@ -841,7 +834,7 @@ const uiSchema = {
 
 ### HTML5 Input Types
 
-If all you need to do is change the input type (for using things like input type="tel") you can specify the `inputType` from `ui:options` uiSchema directive.
+To change the input type (for example, `tel` or `email`) you can specify the `inputType` in the `ui:options` uiSchema directive.
 
 ```jsx
 const schema = {type: "string"};
@@ -854,7 +847,7 @@ const uiSchema = {
 
 ### Form attributes
 
-Form component supports the following html attributes:
+The `Form` component supports the following html attributes:
 
 ```jsx
 <Form
@@ -876,7 +869,7 @@ Form component supports the following html attributes:
 
 To take control over the inner organization of each field (each form row), you can define a *field template* for your form.
 
-A field template is basically a React stateless component being passed field-related props so you can structure your form row as you like:
+A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
 ```jsx
 function CustomFieldTemplate(props) {
@@ -903,9 +896,9 @@ If you want to handle the rendering of each element yourself, you can use the pr
 The following props are passed to a custom field template component:
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
-- `classNames`: A string containing the base bootstrap CSS classes merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
+- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
 - `label`: The computed label for this field, as a string.
-- `description`: A component instance rendering the field description, if any defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined).
+- `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
 - `errors`: A component instance listing any encountered errors for this field.
