@@ -57,6 +57,7 @@ export function getDefaultRegistry() {
   return {
     fields: require("./components/fields").default,
     widgets: require("./components/widgets").default,
+    FieldTemplate: require("./components/templates/DefaultTemplate").default,
     definitions: {},
     formContext: {},
   };
