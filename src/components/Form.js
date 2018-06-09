@@ -40,7 +40,6 @@ export default class Form extends Component {
     const mustValidate = edit && !props.noValidate && liveValidate;
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
-    const retrievedSchema = retrieveSchema(schema, definitions, formData);
 
     const { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema)
@@ -49,11 +48,10 @@ export default class Form extends Component {
           errorSchema: state.errorSchema || {},
         };
     const idSchema = toIdSchema(
-      retrievedSchema,
-      uiSchema["ui:rootFieldId"],
+      schema,
+      uiSchema["ui:rootFieldId"] || props.idPrefix,
       definitions,
-      formData,
-      props.idPrefix
+      formData
     );
     return {
       schema,
@@ -102,7 +100,17 @@ export default class Form extends Component {
 
   onChange = (formData, newErrorSchema) => {
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
-    let state = { formData };
+    const { schema, uiSchema } = this.state;
+    const { definitions } = schema;
+    let state = {
+      formData,
+      idSchema: toIdSchema(
+        schema,
+        uiSchema["ui:rootFieldId"] || this.props.idPrefix,
+        definitions,
+        formData
+      ),
+    };
     if (mustValidate) {
       const { errors, errorSchema } = this.validate(formData);
       state = { ...state, errors, errorSchema };

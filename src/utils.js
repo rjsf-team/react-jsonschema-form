@@ -619,35 +619,58 @@ export function shouldRender(comp, nextProps, nextState) {
   return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
 }
 
-export function toIdSchema(
-  schema,
-  id,
-  definitions,
-  formData = {},
-  idPrefix = "root"
-) {
+export function toIdSchema(schema, id, definitions, formData, seperator = "_") {
   const idSchema = {
-    $id: id || idPrefix,
+    $id: id || "root",
   };
-  if ("$ref" in schema) {
+  if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
-    return toIdSchema(_schema, id, definitions, formData, idPrefix);
+    return toIdSchema(_schema, id, definitions, formData, seperator);
   }
-  if ("items" in schema && !schema.items.$ref) {
-    return toIdSchema(schema.items, id, definitions, formData, idPrefix);
+  if ("items" in schema) {
+    for (const i in formData) {
+      const itemId = idSchema.$id + seperator + i;
+      if (Array.isArray(schema.items)) {
+        if (i < schema.items.length) {
+          idSchema[i] = toIdSchema(
+            schema.items[i],
+            itemId,
+            definitions,
+            formData[i]
+          );
+        } else if (schema.additionalItems) {
+          idSchema[i] = toIdSchema(
+            schema.additionalItems,
+            itemId,
+            definitions,
+            formData[i]
+          );
+        }
+        // exception: formData is longer the the given length
+      } else {
+        idSchema[i] = toIdSchema(
+          schema.items,
+          itemId,
+          definitions,
+          formData[i]
+        );
+      }
+    }
+    return idSchema;
   }
   if (schema.type !== "object") {
     return idSchema;
   }
+  formData = formData || {};
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
+    const fieldId = idSchema.$id + seperator + name;
     idSchema[name] = toIdSchema(
       field,
       fieldId,
       definitions,
       formData[name],
-      idPrefix
+      seperator
     );
   }
   return idSchema;

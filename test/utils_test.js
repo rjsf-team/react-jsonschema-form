@@ -1027,9 +1027,15 @@ describe("utils", () => {
         },
       };
 
-      expect(toIdSchema(schema)).eql({
+      expect(
+        toIdSchema(schema, undefined, undefined, [
+          { foo: "foo 0" },
+          { foo: "foo 1" },
+        ])
+      ).eql({
         $id: "root",
-        foo: { $id: "root_foo" },
+        0: { $id: "root_0", foo: { $id: "root_0_foo" } },
+        1: { $id: "root_1", foo: { $id: "root_1_foo" } },
       });
     });
 
@@ -1068,13 +1074,11 @@ describe("utils", () => {
         $ref: "#/definitions/testdef",
       };
 
-      expect(toIdSchema(schema, undefined, schema.definitions, {}, "rjsf")).eql(
-        {
-          $id: "rjsf",
-          foo: { $id: "rjsf_foo" },
-          bar: { $id: "rjsf_bar" },
-        }
-      );
+      expect(toIdSchema(schema, "rjsf", schema.definitions, {})).eql({
+        $id: "rjsf",
+        foo: { $id: "rjsf_foo" },
+        bar: { $id: "rjsf_bar" },
+      });
     });
   });
 

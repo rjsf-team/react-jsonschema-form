@@ -12,7 +12,6 @@ import {
   allowAdditionalItems,
   optionsList,
   retrieveSchema,
-  toIdSchema,
   getDefaultRegistry,
 } from "../../utils";
 
@@ -368,7 +367,6 @@ class ArrayField extends Component {
       registry = getDefaultRegistry(),
       onBlur,
       onFocus,
-      idPrefix,
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
@@ -380,14 +378,7 @@ class ArrayField extends Component {
       items: formData.map((item, index) => {
         const itemSchema = retrieveSchema(schema.items, definitions, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-        const itemIdPrefix = idSchema.$id + "_" + index;
-        const itemIdSchema = toIdSchema(
-          itemSchema,
-          itemIdPrefix,
-          definitions,
-          item,
-          idPrefix
-        );
+        const itemIdSchema = idSchema[index];
         return this.renderArrayFieldItem({
           index,
           canMoveUp: index > 0,
@@ -510,7 +501,6 @@ class ArrayField extends Component {
       uiSchema,
       formData,
       errorSchema,
-      idPrefix,
       idSchema,
       name,
       required,
@@ -551,14 +541,7 @@ class ArrayField extends Component {
         const itemSchema = additional
           ? retrieveSchema(schema.additionalItems, definitions, item)
           : itemSchemas[index];
-        const itemIdPrefix = idSchema.$id + "_" + index;
-        const itemIdSchema = toIdSchema(
-          itemSchema,
-          itemIdPrefix,
-          definitions,
-          item,
-          idPrefix
-        );
+        const itemIdSchema = idSchema[index];
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}
           : Array.isArray(uiSchema.items)
@@ -592,7 +575,7 @@ class ArrayField extends Component {
       rawErrors,
     };
 
-    // Check if a custom template template was passed in
+    // check if a custom template template was passed in
     const Template = ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
     return <Template {...arrayProps} />;
   }
