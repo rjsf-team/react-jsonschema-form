@@ -383,7 +383,7 @@ export function optionsList(schema) {
 
 function findSchemaDefinition($ref, definitions = {}) {
   // Extract and use the referenced definition if we have it.
-  const match = /^#\/definitions\/(.*)$/.exec($ref);
+  const match = /^#(?:\/definitions)?\/(.*)$/.exec($ref);
   if (match && match[1]) {
     const parts = match[1].split("/");
     let current = definitions;

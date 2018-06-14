@@ -497,6 +497,22 @@ describe("utils", () => {
       expect(retrieveSchema(schema, definitions)).eql(address);
     });
 
+    it("should 'resolve' a schema which contains definitions not in `#/definitions`", () => {
+      const schema = { $ref: "#/components/schemas/address" };
+      const address = {
+        type: "object",
+        properties: {
+          street_address: { type: "string" },
+          city: { type: "string" },
+          state: { type: "string" },
+        },
+        required: ["street_address", "city", "state"],
+      };
+      const definitions = { components: { schemas: { address } } };
+
+      expect(retrieveSchema(schema, definitions)).eql(address);
+    });
+
     it("should 'resolve' escaped JSON Pointers", () => {
       const schema = { $ref: "#/definitions/a~0complex~1name" };
       const address = { type: "string" };
