@@ -1,1 +1,3 @@
 --timeout 5000
+--compilers js:babel-register
+--require ./test/setup-jsdom.js
