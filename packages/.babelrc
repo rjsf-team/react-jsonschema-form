@@ -1,0 +1,12 @@
+{
+  presets: ['react'],
+  env: {
+    babel: {
+      presets: [['env', { targets: { browsers: ['> 1%', 'last 2 versions'] } }]]
+    },
+    rollup: {
+      presets: [['env', { modules: false }]],
+      plugins: ['external-helpers']
+    }
+  }
+}

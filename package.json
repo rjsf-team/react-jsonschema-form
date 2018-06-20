@@ -1,113 +1,68 @@
 {
-  "name": "react-jsonschema-form",
-  "version": "1.0.3",
-  "description": "A simple React component capable of building HTML forms out of a JSON schema.",
+  "private": true,
+  "workspaces": [
+    "app",
+    "packages/*"
+  ],
+  "license": "MIT",
   "scripts": {
-    "build:readme": "toctoc README.md -w",
-    "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
-    "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
-    "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js --optimize-minimize && cp playground/index.prod.html build/index.html",
-    "cs-check": "prettier -l $npm_package_prettierOptions '{playground,src,test}/**/*.js'",
-    "cs-format": "prettier --jsx-bracket-same-line --trailing-comma es5 --use-tabs false --semi --tab-width 2 '{playground,src,test}/**/*.js' --write",
-    "dist": "npm run build:lib && npm run build:dist",
-    "lint": "eslint src test playground",
-    "precommit": "lint-staged",
-    "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
-    "preversion": "npm run build:playground && npm run dist && npm run build:readme && npm run cs-check && npm run lint",
-    "start": "node devServer.js",
-    "tdd": "cross-env NODE_ENV=test mocha --compilers js:babel-register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --require ./test/setup-jsdom.js test/**/*_test.js"
+    "format": "lerna exec --stream --parallel -- prettier-eslint --write \"**/*.js\"",
+    "clean:pkg": "lerna exec --stream --parallel --ignore app -- rimraf dist lib",
+    "babel:pkg": "cross-env BABEL_ENV=babel lerna exec --stream --parallel --ignore app -- babel src --out-dir lib",
+    "rollup:pkg": "cross-env BABEL_ENV=rollup lerna exec --stream --parallel --ignore app -- rollup -c ../rollup.config.js",
+    "build:pkg": "run-s clean:pkg babel:pkg rollup:pkg",
+    "build:app": "cd app && npm run build",
+    "build": "run-s build:pkg build:app",
+    "start": "cd app && npm start",
+    "test": "jest",
+    "tdd": "jest --watch"
   },
-  "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi --tab-width 2",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
-    "{playground,src,test}/**/*.js": [
-      "npm run lint",
-      "npm run cs-format",
+    "packages/**/{src,tests}/**/*.js": [
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "app/{src,tests}/**/*.js": [
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "tests/**/*.js": [
+      "prettier-eslint --write",
       "git add"
     ]
   },
-  "main": "lib/index.js",
-  "files": [
-    "dist",
-    "lib"
-  ],
-  "engineStrict": false,
   "engines": {
-    "npm": "^2.14.7",
-    "node": ">=6"
-  },
-  "peerDependencies": {
-    "react": ">=15"
-  },
-  "dependencies": {
-    "ajv": "^5.2.3",
-    "lodash.topath": "^4.5.2",
-    "prop-types": "^15.5.8",
-    "setimmediate": "^1.0.5"
+    "node": ">=6",
+    "yarn": ">=1"
   },
   "devDependencies": {
-    "atob": "^2.0.3",
-    "babel-cli": "^6.18.0",
-    "babel-core": "^6.18.2",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^6.2.7",
-    "babel-plugin-react-transform": "^2.0.2",
-    "babel-plugin-transform-class-properties": "^6.18.0",
-    "babel-plugin-transform-object-rest-spread": "^6.16.0",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-react": "^6.16.0",
-    "babel-register": "^6.18.0",
-    "chai": "^3.3.0",
-    "codemirror": "^5.30.0",
-    "cross-env": "^2.0.1",
-    "css-loader": "^0.23.1",
-    "eslint": "^4.9.0",
-    "eslint-config-react-app": "^2.0.1",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.4.0",
-    "estraverse": "^4.2.0",
-    "estraverse-fb": "^1.3.1",
-    "express": "^4.14.0",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "gh-pages": "^0.11.0",
-    "html": "0.0.10",
-    "husky": "^0.13.2",
-    "jsdom": "^8.3.0",
-    "json-loader": "^0.5.7",
-    "lint-staged": "^3.3.1",
-    "mocha": "^2.5.3",
-    "prettier": "^1.12.0",
-    "react": "^15.5.0",
-    "react-addons-test-utils": "^15.3.2",
-    "react-codemirror2": "^4.1.0",
-    "react-dom": "^15.3.2",
-    "react-transform-catch-errors": "^1.0.0",
-    "react-transform-hmr": "^1.0.1",
-    "redbox-react": "^1.3.3",
-    "rimraf": "^2.5.4",
-    "sinon": "^1.17.6",
-    "style-loader": "^0.13.1",
-    "toctoc": "^0.2.3",
-    "webpack": "^1.13.3",
-    "webpack-dev-middleware": "^1.8.4",
-    "webpack-hot-middleware": "^2.13.2"
-  },
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
-  },
-  "author": "Nicolas Perriault <nperriault@mozilla.com>",
-  "keywords": [
-    "react",
-    "form",
-    "json-schema"
-  ],
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme"
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.2.0",
+    "eslint": "^4.19.1",
+    "eslint-plugin-jest": "^21.17.0",
+    "eslint-plugin-react": "^7.9.1",
+    "husky": "^0.14.3",
+    "jest": "^23.1.0",
+    "lerna": "^2.11.0",
+    "lint-staged": "^7.2.0",
+    "npm-run-all": "^4.1.3",
+    "prettier-eslint-cli": "^4.7.1",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.60.7",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  }
 }
