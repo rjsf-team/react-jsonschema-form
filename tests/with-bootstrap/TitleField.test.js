@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 
-import TitleField from '../../packages/react-jsonschema-form/src/components/fields/TitleField';
+import TitleField from 'react-jsonschema-form/src/components/fields/TitleField';
 import { createSandbox, createComponent } from './test_utils';
 
 describe('TitleField', () => {

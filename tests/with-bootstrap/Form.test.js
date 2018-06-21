@@ -4,7 +4,7 @@ import React from 'react';
 import { renderIntoDocument, Simulate } from 'react-addons-test-utils';
 import { findDOMNode } from 'react-dom';
 
-import Form from '../../packages/react-jsonschema-form/src';
+import Form from 'react-jsonschema-form/src';
 import { createFormComponent, createSandbox } from './test_utils';
 
 describe('Form', () => {

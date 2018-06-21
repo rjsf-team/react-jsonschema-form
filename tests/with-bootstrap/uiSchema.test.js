@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import React from 'react';
 import { Simulate } from 'react-addons-test-utils';
-import SelectWidget from '../../packages/react-jsonschema-form/src/components/widgets/SelectWidget';
+import SelectWidget from 'react-jsonschema-form/src/components/widgets/SelectWidget';
 import { createFormComponent, createSandbox } from './test_utils';
 
 describe('uiSchema', () => {

@@ -2,12 +2,12 @@ import React from 'react';
 import { expect } from 'chai';
 import { Simulate } from 'react-addons-test-utils';
 
-import SchemaField from '../../packages/react-jsonschema-form/src/components/fields/SchemaField';
-import TitleField from '../../packages/react-jsonschema-form/src/components/fields/TitleField';
-import DescriptionField from '../../packages/react-jsonschema-form/src/components/fields/DescriptionField';
+import SchemaField from 'react-jsonschema-form/src/components/fields/SchemaField';
+import TitleField from 'react-jsonschema-form/src/components/fields/TitleField';
+import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField';
 
 import { createFormComponent, createSandbox } from './test_utils';
-import { getDefaultRegistry } from '../../packages/react-jsonschema-form/src/utils';
+import { getDefaultRegistry } from 'react-jsonschema-form/src/utils';
 
 describe('SchemaField', () => {
   let sandbox;

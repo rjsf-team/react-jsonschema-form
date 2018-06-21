@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 
-import DescriptionField from '../../packages/react-jsonschema-form/src/components/fields/DescriptionField';
+import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField';
 import { createSandbox, createComponent } from './test_utils';
 
 describe('DescriptionField', () => {

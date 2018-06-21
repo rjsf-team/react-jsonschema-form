@@ -2,11 +2,8 @@ import React from 'react';
 import { expect } from 'chai';
 import { Simulate } from 'react-addons-test-utils';
 
-import {
-  parseDateString,
-  toDateString
-} from '../../packages/react-jsonschema-form/src/utils';
-import { utcToLocal } from '../../packages/react-jsonschema-form/src/components/widgets/DateTimeWidget';
+import { parseDateString, toDateString } from 'react-jsonschema-form/src/utils';
+import { utcToLocal } from 'react-jsonschema-form/src/components/widgets/DateTimeWidget';
 import { createFormComponent, createSandbox } from './test_utils';
 
 describe('StringField', () => {

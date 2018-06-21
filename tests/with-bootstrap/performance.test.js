@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import React from 'react';
 import { scryRenderedComponentsWithType } from 'react-addons-test-utils';
-import { getDefaultRegistry } from '../../packages/react-jsonschema-form/src/utils';
-import SchemaField from '../../packages/react-jsonschema-form/src/components/fields/SchemaField';
+import { getDefaultRegistry } from 'react-jsonschema-form/src/utils';
+import SchemaField from 'react-jsonschema-form/src/components/fields/SchemaField';
 import {
   createComponent,
   createFormComponent,

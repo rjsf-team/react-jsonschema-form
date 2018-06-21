@@ -16,7 +16,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema
-} from '../../packages/react-jsonschema-form/src/utils';
+} from 'react-jsonschema-form/src/utils';
 
 describe('utils', () => {
   describe('getDefaultFormState()', () => {

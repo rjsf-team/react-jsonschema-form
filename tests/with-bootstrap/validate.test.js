@@ -5,7 +5,7 @@ import { Simulate } from 'react-addons-test-utils';
 
 import validateFormData, {
   toErrorList
-} from '../../packages/react-jsonschema-form/src/validate';
+} from 'react-jsonschema-form/src/validate';
 import { createFormComponent } from './test_utils';
 
 describe('Validation', () => {
