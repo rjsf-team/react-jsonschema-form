@@ -15,8 +15,8 @@
     "build:playground": "cd playground && npm run build",
     "build": "run-s build:pkg build:playground",
     "start": "cd playground && npm start",
-    "test": "jest",
-    "tdd": "jest --watch"
+    "test": "jest --env=jsdom",
+    "tdd": "jest --env=jsdom --watch"
   },
   "husky": {
     "hooks": {
