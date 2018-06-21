@@ -1,19 +1,19 @@
 {
   "private": true,
   "workspaces": [
-    "app",
+    "playground",
     "packages/*"
   ],
   "license": "MIT",
   "scripts": {
     "format": "lerna exec --stream --parallel -- prettier-eslint --write \"**/*.js\"",
-    "clean:pkg": "lerna exec --stream --parallel --ignore app -- rimraf dist lib",
-    "babel:pkg": "cross-env BABEL_ENV=babel lerna exec --stream --parallel --ignore app -- babel src --out-dir lib",
-    "rollup:pkg": "cross-env BABEL_ENV=rollup lerna exec --stream --parallel --ignore app -- rollup -c ../rollup.config.js",
-    "build:pkg": "run-s clean:pkg babel:pkg rollup:pkg",
-    "build:app": "cd app && npm run build",
-    "build": "run-s build:pkg build:app",
-    "start": "cd app && npm start",
+    "clean:pkg": "lerna exec --stream --parallel --ignore playground -- rimraf dist lib",
+    "babel:pkg": "lerna exec --stream --parallel --ignore playground -- babel src --out-dir lib",
+    "webpack:pkg": "lerna exec --stream --parallel --ignore playground -- webpack --config ../webpack.config.js",
+    "build:pkg": "run-s clean:pkg babel:pkg webpack:pkg",
+    "build:playground": "cd playground && npm run build",
+    "build": "run-s build:pkg build:playground",
+    "start": "cd playground && npm start",
     "test": "jest",
     "tdd": "jest --watch"
   },
@@ -25,14 +25,17 @@
   "lint-staged": {
     "packages/**/{src,tests}/**/*.js": [
       "prettier-eslint --write",
+      "eslint",
       "git add"
     ],
-    "app/{src,tests}/**/*.js": [
+    "playground/{src,tests}/**/*.js": [
       "prettier-eslint --write",
+      "eslint",
       "git add"
     ],
     "tests/**/*.js": [
       "prettier-eslint --write",
+      "eslint",
       "git add"
     ]
   },
@@ -44,9 +47,13 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.4",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "babel-runtime": "^6.26.0",
     "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
     "eslint-plugin-jest": "^21.17.0",
@@ -60,9 +67,8 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "rimraf": "^2.6.2",
-    "rollup": "^0.60.7",
-    "rollup-plugin-babel": "^3.0.4",
-    "rollup-plugin-commonjs": "^9.1.3",
-    "rollup-plugin-node-resolve": "^3.3.0"
+    "webpack": "^4.12.0",
+    "webpack-command": "^0.2.1",
+    "webpack-node-externals": "^1.7.2"
   }
 }
