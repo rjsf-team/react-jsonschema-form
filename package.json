@@ -14,8 +14,8 @@
     "build:playground": "cd playground && npm run build",
     "build": "run-s build:pkg build:playground",
     "start": "cd playground && npm start",
-    "test": "jest",
-    "tdd": "jest --watch"
+    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --require ./tests/with-bootstrap/setup-jsdom.js tests/with-bootstrap/**/*_test.js",
+    "tdd": "cross-env NODE_ENV=test mocha --compilers js:babel-register --watch --require ./tests/with-bootstrap/setup-jsdom.js tests/with-bootstrap/**/*_test.js"
   },
   "husky": {
     "hooks": {
@@ -52,18 +52,24 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.18.0",
+    "chai": "^3.3.0",
+    "cross-env": "^2.0.1",
     "eslint": "^4.19.1",
     "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-react": "^7.9.1",
     "husky": "^1.0.0-rc.9",
-    "jest": "^23.1.0",
+    "jsdom": "^8.3.0",
     "lerna": "^2.11.0",
     "lint-staged": "^7.2.0",
+    "mocha": "^2.5.3",
     "npm-run-all": "^4.1.3",
     "prettier-eslint-cli": "^4.7.1",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^15.5.0",
+    "react-addons-test-utils": "^15.3.2",
+    "react-dom": "^15.3.2",
     "rimraf": "^2.6.2",
+    "sinon": "^1.17.6",
     "webpack": "^4.12.0",
     "webpack-command": "^0.2.1",
     "webpack-node-externals": "^1.7.2"

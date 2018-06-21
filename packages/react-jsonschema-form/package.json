@@ -17,15 +17,15 @@
   "main": "dist/main.js",
   "source": "src/index.js",
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=15"
   },
   "dependencies": {
-    "ajv": "^6.5.1",
-    "lodash-es": "^4.17.10",
+    "ajv": "^5.2.3",
+    "lodash.topath": "^4.5.2",
     "prop-types": "^15.6.2",
     "setimmediate": "^1.0.5"
   },
   "devDependencies": {
-    "react": "^16.4.1"
+    "react": "^15.5.0"
   }
 }

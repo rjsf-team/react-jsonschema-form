@@ -10,8 +10,8 @@
   "dependencies": {
     "codemirror": "^5.30.0",
     "react-codemirror2": "^4.1.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^15.5.0",
+    "react-dom": "^15.3.2",
     "react-jsonschema-form": "^2.0.0",
     "react-jsonschema-form-bootstrap": "^1.0.0"
   },
