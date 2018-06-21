@@ -1,5 +1,5 @@
 import toPath from 'lodash-es/topath';
-import * as Ajv from 'ajv';
+import Ajv from 'ajv';
 const ajv = new Ajv({
   errorDataPath: 'property',
   allErrors: true
