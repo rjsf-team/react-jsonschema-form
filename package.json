@@ -66,6 +66,7 @@
     "prettier-eslint-cli": "^4.7.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-testing-library": "^4.0.1",
     "rimraf": "^2.6.2",
     "webpack": "^4.12.0",
     "webpack-command": "^0.2.1",
