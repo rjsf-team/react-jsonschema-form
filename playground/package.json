@@ -1,0 +1,21 @@
+{
+  "name": "playground",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "parcel src/index.html --no-cache",
+    "build": "parcel build src/index.html"
+  },
+  "dependencies": {
+    "codemirror": "^5.30.0",
+    "react-codemirror2": "^4.1.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-jsonschema-form": "^2.0.0",
+    "react-jsonschema-form-bootstrap": "^1.0.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.9.2"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "react-jsonschema-form-bootstrap",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "source": "src/index.js",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "devDependencies": {
+    "react": "^16.4.1"
+  }
+}
