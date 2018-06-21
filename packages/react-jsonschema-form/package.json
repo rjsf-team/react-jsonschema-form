@@ -26,6 +26,7 @@
     "setimmediate": "^1.0.5"
   },
   "devDependencies": {
+    "atob": "^2.0.3",
     "react": "^15.5.0"
   }
 }
