@@ -4,6 +4,7 @@ lib
 
 .cache
 
+npm-debug.log
 lerna-debug.log
 package-lock.json
 yarn.lock
