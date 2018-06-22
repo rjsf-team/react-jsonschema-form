@@ -1,19 +1,8 @@
 import React from 'react';
-import { expect } from 'chai';
 
-import { createFormComponent, createSandbox } from './test_utils';
+import { createFormComponent } from './test_utils';
 
 describe('FormContext', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   const schema = { type: 'string' };
 
   const formContext = { foo: 'bar' };
@@ -23,11 +12,11 @@ describe('FormContext', () => {
   };
 
   it('should be passed to Form', () => {
-    const { comp } = createFormComponent({
+    const { getInstance } = createFormComponent({
       schema: schema,
       formContext
     });
-    expect(comp.props.formContext).eq(formContext);
+    expect(getInstance().props.formContext).toEqual(formContext);
   });
 
   it('should be passed to custom field', () => {
@@ -40,7 +29,7 @@ describe('FormContext', () => {
       formContext
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector('#' + formContext.foo)).toBeDefined();
   });
 
   it('should be passed to custom widget', () => {
@@ -53,7 +42,7 @@ describe('FormContext', () => {
       formContext
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector('#' + formContext.foo)).toBeDefined();
   });
 
   it('should be passed to TemplateField', () => {
@@ -74,7 +63,7 @@ describe('FormContext', () => {
       formContext
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector('#' + formContext.foo)).toBeDefined();
   });
 
   it('should be passed to ArrayTemplateField', () => {
@@ -93,7 +82,7 @@ describe('FormContext', () => {
       formContext
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector('#' + formContext.foo)).toBeDefined();
   });
 
   it('should be passed to custom TitleField', () => {
@@ -113,7 +102,7 @@ describe('FormContext', () => {
       formContext
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector('#' + formContext.foo)).toBeDefined();
   });
 
   it('should be passed to custom DescriptionField', () => {
@@ -125,7 +114,7 @@ describe('FormContext', () => {
       formContext
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector('#' + formContext.foo)).toBeDefined();
   });
 
   it('should be passed to multiselect', () => {
@@ -144,7 +133,7 @@ describe('FormContext', () => {
       formContext
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector('#' + formContext.foo)).toBeDefined();
   });
 
   it('should be passed to files array', () => {
@@ -161,6 +150,6 @@ describe('FormContext', () => {
       formContext
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector('#' + formContext.foo)).toBeDefined();
   });
 });
