@@ -873,8 +873,6 @@ describe('Form', () => {
           const field2 = getByLabelText('Field 2');
 
           function submit(node) {
-            // Validation is expected to fail and call console.error, which is
-            // stubbed to actually throw in createSandbox().
             suppressLogs('error', () => {
               fireEvent.submit(node);
             });
