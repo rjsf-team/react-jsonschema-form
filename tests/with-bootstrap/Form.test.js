@@ -1,5 +1,4 @@
 import React from 'react';
-import lolex from 'lolex';
 import { render, cleanup, fireEvent, wait } from 'react-testing-library';
 
 import Form from 'react-jsonschema-form/src';
@@ -236,7 +235,7 @@ describe('Form', () => {
   });
 
   describe('Custom submit buttons', () => {
-    it('should submit the form when clicked', () => {
+    it('should submit the form when clicked', async () => {
       const onSubmit = jest.fn();
       const { getByText } = render(
         <Form onSubmit={onSubmit} schema={{}}>
@@ -247,15 +246,13 @@ describe('Form', () => {
 
       /**
        * From some of the reason this doesn't work with wait()
-       * so we use lolex instead
        */
-      const clock = lolex.install();
       fireEvent.click(getByText('Submit'));
       fireEvent.click(getByText('Another submit'));
-      clock.tick();
+
+      await new Promise(setImmediate);
 
       expect(onSubmit).toHaveBeenCalledTimes(2);
-      clock.uninstall();
     });
   });
 
