@@ -112,44 +112,7 @@ function DefaultArrayItem(props) {
   );
 }
 
-function DefaultFixedArrayFieldTemplate(props) {
-  return (
-    <fieldset className={props.className}>
-      <ArrayFieldTitle
-        key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
-        idSchema={props.idSchema}
-        title={props.uiSchema['ui:title'] || props.title}
-        required={props.required}
-      />
-
-      {(props.uiSchema['ui:description'] || props.schema.description) && (
-        <div
-          className="field-description"
-          key={`field-description-${props.idSchema.$id}`}
-        >
-          {props.uiSchema['ui:description'] || props.schema.description}
-        </div>
-      )}
-
-      <div
-        className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}
-      >
-        {props.items && props.items.map(DefaultArrayItem)}
-      </div>
-
-      {props.canAdd && (
-        <AddButton
-          onClick={props.onAddClick}
-          disabled={props.disabled || props.readonly}
-        />
-      )}
-    </fieldset>
-  );
-}
-
-function DefaultNormalArrayFieldTemplate(props) {
+function DefaultArrayFieldTemplate(props) {
   return (
     <fieldset className={props.className}>
       <ArrayFieldTitle
@@ -419,7 +382,7 @@ class ArrayField extends Component {
     };
 
     // Check if a custom render function was passed in
-    const Component = ArrayFieldTemplate || DefaultNormalArrayFieldTemplate;
+    const Component = ArrayFieldTemplate || DefaultArrayFieldTemplate;
     return <Component {...arrayProps} />;
   }
 
@@ -593,7 +556,7 @@ class ArrayField extends Component {
     };
 
     // Check if a custom template template was passed in
-    const Template = ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
+    const Template = ArrayFieldTemplate || DefaultArrayFieldTemplate;
     return <Template {...arrayProps} />;
   }
 
