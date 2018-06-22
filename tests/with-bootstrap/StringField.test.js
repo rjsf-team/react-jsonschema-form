@@ -3,7 +3,7 @@ import { Simulate } from 'react-dom/test-utils';
 import { fireEvent, cleanup } from 'react-testing-library';
 
 import { parseDateString, toDateString } from 'react-jsonschema-form/src/utils';
-import { utcToLocal } from 'react-jsonschema-form/src/components/widgets/DateTimeWidget';
+import { utcToLocal } from 'react-jsonschema-form-bootstrap/src/components/widgets/DateTimeWidget';
 
 import { createFormComponent } from './test_utils';
 

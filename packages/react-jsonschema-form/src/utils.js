@@ -53,15 +53,6 @@ const widgetMap = {
   }
 };
 
-export function getDefaultRegistry() {
-  return {
-    fields: require('./components/fields').default,
-    widgets: require('./components/widgets').default,
-    definitions: {},
-    formContext: {}
-  };
-}
-
 export function getSchemaType(schema) {
   let { type } = schema;
   if (!type && schema.enum) {
@@ -522,9 +513,7 @@ function withExactlyOneSubschema(
     return schema;
   }
   const subschema = validSubschemas[0];
-  const {
-    ...dependentSubschema
-  } = subschema.properties;
+  const { ...dependentSubschema } = subschema.properties;
   const dependentSchema = { ...subschema, properties: dependentSubschema };
   return mergeSchemas(
     schema,

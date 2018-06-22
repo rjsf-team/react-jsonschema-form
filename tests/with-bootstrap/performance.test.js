@@ -1,6 +1,7 @@
 import { scryRenderedComponentsWithType } from 'react-dom/test-utils';
-import { getDefaultRegistry } from 'react-jsonschema-form/src/utils';
 
+import fields from 'react-jsonschema-form/src/components/fields';
+import widgets from 'react-jsonschema-form-bootstrap/src/components/widgets';
 import SchemaField from 'react-jsonschema-form/src/components/fields/SchemaField';
 
 import { createComponent, createFormComponent } from './test_utils';
@@ -119,7 +120,12 @@ describe('Rendering performance optimizations', () => {
     const onChange = () => {};
     const onBlur = () => {};
     const onFocus = () => {};
-    const registry = getDefaultRegistry();
+    const registry = {
+      fields,
+      widgets,
+      definitions: {},
+      formContext: {}
+    };
     const uiSchema = {};
     const schema = {
       type: 'object',

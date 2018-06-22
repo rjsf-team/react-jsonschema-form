@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  orderProperties,
-  retrieveSchema,
-  getDefaultRegistry
-} from '../../utils';
+import { orderProperties, retrieveSchema } from '../../utils';
 
 function DefaultObjectFieldTemplate(props) {
   const { TitleField, DescriptionField } = props;
@@ -76,7 +72,7 @@ class ObjectField extends Component {
       idPrefix,
       onBlur,
       onFocus,
-      registry = getDefaultRegistry()
+      registry
     } = this.props;
     const { definitions, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;

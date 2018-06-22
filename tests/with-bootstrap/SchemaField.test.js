@@ -4,7 +4,7 @@ import { fireEvent } from 'react-testing-library';
 import SchemaField from 'react-jsonschema-form/src/components/fields/SchemaField';
 import TitleField from 'react-jsonschema-form/src/components/fields/TitleField';
 import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField';
-import { getDefaultRegistry } from 'react-jsonschema-form/src/utils';
+import widgets from 'react-jsonschema-form-bootstrap/src/components/widgets';
 
 import { createFormComponent, suppressLogs } from './test_utils';
 
@@ -108,9 +108,7 @@ describe('SchemaField', () => {
        * I know that Object.keys doesn't guarantee the exact order of keys
        * but it works here. Maybe we can create custom matcher. ;)
        */
-      expect(Object.keys(registry.widgets)).toEqual(
-        Object.keys(getDefaultRegistry().widgets)
-      );
+      expect(Object.keys(registry.widgets)).toEqual(Object.keys(widgets));
       expect(registry.definitions).toEqual({});
       expect(typeof registry.fields).toBe('object');
       expect(registry.fields.SchemaField).toEqual(SchemaField);

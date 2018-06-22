@@ -12,8 +12,7 @@ import {
   allowAdditionalItems,
   optionsList,
   retrieveSchema,
-  toIdSchema,
-  getDefaultRegistry
+  toIdSchema
 } from '../../utils';
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
@@ -232,7 +231,7 @@ class ArrayField extends Component {
 
   onAddClick = event => {
     event.preventDefault();
-    const { schema, formData, registry = getDefaultRegistry() } = this.props;
+    const { schema, formData, registry } = this.props;
     const { definitions } = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
@@ -331,12 +330,7 @@ class ArrayField extends Component {
   };
 
   render() {
-    const {
-      schema,
-      uiSchema,
-      idSchema,
-      registry = getDefaultRegistry()
-    } = this.props;
+    const { schema, uiSchema, idSchema, registry } = this.props;
     const { definitions } = registry;
     if (!schema.hasOwnProperty('items')) {
       return (
@@ -371,7 +365,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
-      registry = getDefaultRegistry(),
+      registry,
       onBlur,
       onFocus,
       idPrefix,
@@ -440,7 +434,7 @@ class ArrayField extends Component {
       autofocus,
       onBlur,
       onFocus,
-      registry = getDefaultRegistry(),
+      registry,
       rawErrors
     } = this.props;
     const items = this.props.formData;
@@ -482,7 +476,7 @@ class ArrayField extends Component {
       autofocus,
       onBlur,
       onFocus,
-      registry = getDefaultRegistry(),
+      registry,
       rawErrors
     } = this.props;
     const title = schema.title || name;
@@ -523,7 +517,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
-      registry = getDefaultRegistry(),
+      registry,
       onBlur,
       onFocus,
       rawErrors
@@ -619,12 +613,7 @@ class ArrayField extends Component {
       onFocus,
       rawErrors
     } = props;
-    const {
-      disabled,
-      readonly,
-      uiSchema,
-      registry = getDefaultRegistry()
-    } = this.props;
+    const { disabled, readonly, uiSchema, registry } = this.props;
     const {
       fields: { SchemaField }
     } = registry;

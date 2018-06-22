@@ -5,7 +5,6 @@ import {
   isMultiSelect,
   retrieveSchema,
   toIdSchema,
-  getDefaultRegistry,
   mergeObjects,
   getUiOptions,
   isFilesArray,
@@ -158,7 +157,7 @@ function SchemaFieldRender(props) {
     idPrefix,
     name,
     required,
-    registry = getDefaultRegistry()
+    registry
   } = props;
   const {
     definitions,
