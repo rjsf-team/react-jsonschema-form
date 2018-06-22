@@ -6,7 +6,7 @@ import TitleField from 'react-jsonschema-form/src/components/fields/TitleField';
 import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField';
 import { getDefaultRegistry } from 'react-jsonschema-form/src/utils';
 
-import { createFormComponent } from './test_utils';
+import { createFormComponent, suppressLogs } from './test_utils';
 
 describe('SchemaField', () => {
   describe('Unsupported field', () => {
@@ -281,13 +281,10 @@ describe('SchemaField', () => {
       return errors;
     }
 
-    function submit(node) {
-      try {
+    const submit = node =>
+      suppressLogs('error', () => {
         fireEvent.submit(node);
-      } catch (e) {
-        // Silencing error thrown as failure is expected here
-      }
-    }
+      });
 
     it('should render it\'s own errors', () => {
       const { node } = createFormComponent({
