@@ -1,7 +1,5 @@
 import React from 'react';
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { Simulate } from 'react-addons-test-utils';
+import { Simulate } from 'react-dom/test-utils';
 
 import validateFormData, {
   toErrorList
@@ -32,16 +30,18 @@ describe('Validation', () => {
       });
 
       it('should return an error list', () => {
-        expect(errors).to.have.length.of(2);
-        expect(errors[0].message).eql('should be string');
-        expect(errors[1].message).eql('should be string');
+        expect(errors).toHaveLength(2);
+        expect(errors[0].message).toEqual('should be string');
+        expect(errors[1].message).toEqual('should be string');
       });
 
       it('should return an errorSchema', () => {
-        expect(errorSchema.foo.__errors).to.have.length.of(1);
-        expect(errorSchema.foo.__errors[0]).eql('should be string');
-        expect(errorSchema[illFormedKey].__errors).to.have.length.of(1);
-        expect(errorSchema[illFormedKey].__errors[0]).eql('should be string');
+        expect(errorSchema.foo.__errors).toHaveLength(1);
+        expect(errorSchema.foo.__errors[0]).toEqual('should be string');
+        expect(errorSchema[illFormedKey].__errors).toHaveLength(1);
+        expect(errorSchema[illFormedKey].__errors[0]).toEqual(
+          'should be string'
+        );
       });
     });
 
@@ -71,13 +71,13 @@ describe('Validation', () => {
       });
 
       it('should return an error list', () => {
-        expect(errors).to.have.length.of(1);
-        expect(errors[0].stack).eql('pass2: passwords don\'t match.');
+        expect(errors).toHaveLength(1);
+        expect(errors[0].stack).toEqual('pass2: passwords don\'t match.');
       });
 
       it('should return an errorSchema', () => {
-        expect(errorSchema.pass2.__errors).to.have.length.of(1);
-        expect(errorSchema.pass2.__errors[0]).eql('passwords don\'t match.');
+        expect(errorSchema.pass2.__errors).toHaveLength(1);
+        expect(errorSchema.pass2.__errors[0]).toEqual('passwords don\'t match.');
       });
     });
 
@@ -95,7 +95,7 @@ describe('Validation', () => {
               __errors: ['err5']
             }
           })
-        ).eql([
+        ).toEqual([
           { stack: 'root: err1' },
           { stack: 'root: err2' },
           { stack: 'b: err3' },
@@ -106,34 +106,29 @@ describe('Validation', () => {
     });
 
     describe('transformErrors', () => {
-      const illFormedKey = 'bar.\'"[]()=+*&^%$#@!';
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-          [illFormedKey]: { type: 'string' }
-        }
-      };
-      const newErrorMessage = 'Better error message';
-      const transformErrors = errors => {
-        return [Object.assign({}, errors[0], { message: newErrorMessage })];
-      };
-
-      let errors;
-
-      beforeEach(() => {
+      it('should use transformErrors function', () => {
+        const illFormedKey = 'bar.\'"[]()=+*&^%$#@!';
+        const schema = {
+          type: 'object',
+          properties: {
+            foo: { type: 'string' },
+            [illFormedKey]: { type: 'string' }
+          }
+        };
+        const newErrorMessage = 'Better error message';
+        const transformErrors = errors => {
+          return [Object.assign({}, errors[0], { message: newErrorMessage })];
+        };
         const result = validateFormData(
           { foo: 42, [illFormedKey]: 41 },
           schema,
           undefined,
           transformErrors
         );
-        errors = result.errors;
-      });
+        const errors = result.errors;
 
-      it('should use transformErrors function', () => {
-        expect(errors).not.to.be.empty;
-        expect(errors[0].message).to.equal(newErrorMessage);
+        expect(Object.keys(errors)).not.toHaveLength(0);
+        expect(errors[0].message).toBe(newErrorMessage);
       });
     });
 
@@ -157,17 +152,15 @@ describe('Validation', () => {
       });
 
       it('should return an error list', () => {
-        expect(errors).to.have.length.of(1);
-        expect(errors[0].name).eql('type');
-        expect(errors[0].property).eql('.properties[\'foo\'].required');
-        expect(errors[0].message).eql('should be array');
+        expect(errors).toHaveLength(1);
+        expect(errors[0].name).toEqual('type');
+        expect(errors[0].property).toEqual('.properties[\'foo\'].required');
+        expect(errors[0].message).toEqual('should be array');
       });
 
       it('should return an errorSchema', () => {
-        expect(errorSchema.properties.foo.required.__errors).to.have.length.of(
-          1
-        );
-        expect(errorSchema.properties.foo.required.__errors[0]).eql(
+        expect(errorSchema.properties.foo.required.__errors).toHaveLength(1);
+        expect(errorSchema.properties.foo.required.__errors[0]).toEqual(
           'should be array'
         );
       });
@@ -175,16 +168,6 @@ describe('Validation', () => {
   });
 
   describe('Form integration', () => {
-    let sandbox;
-
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-
-    afterEach(() => {
-      sandbox.restore();
-    });
-
     describe('JSONSchema validation', () => {
       describe('Required fields', () => {
         const schema = {
@@ -196,10 +179,10 @@ describe('Validation', () => {
           }
         };
 
-        var comp, node, onError;
+        var getInstance, node, onError;
 
         beforeEach(() => {
-          onError = sandbox.spy();
+          onError = jest.fn();
           const compInfo = createFormComponent({
             schema,
             formData: {
@@ -207,31 +190,30 @@ describe('Validation', () => {
             },
             onError
           });
-          comp = compInfo.comp;
+          getInstance = compInfo.getInstance;
           node = compInfo.node;
 
           Simulate.submit(node);
         });
 
         it('should validate a required field', () => {
-          expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql('is a required property');
+          expect(getInstance().state.errors).toHaveLength(1);
+          expect(getInstance().state.errors[0].message).toEqual(
+            'is a required property'
+          );
         });
 
         it('should render errors', () => {
-          expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql(
+          expect(node.querySelectorAll('.errors li')).toHaveLength(1);
+          expect(node.querySelector('.errors li').textContent).toEqual(
             '.foo is a required property'
           );
         });
 
         it('should trigger the onError handler', () => {
-          sinon.assert.calledWith(
-            onError,
-            sinon.match(errors => {
-              return errors[0].message === 'is a required property';
-            })
-          );
+          expect(onError).toHaveBeenCalledWith([
+            expect.objectContaining({ message: 'is a required property' })
+          ]);
         });
       });
 
@@ -247,10 +229,10 @@ describe('Validation', () => {
           }
         };
 
-        var comp, node, onError;
+        var getInstance, node, onError;
 
         beforeEach(() => {
-          onError = sandbox.spy();
+          onError = jest.fn();
           const compInfo = createFormComponent({
             schema,
             formData: {
@@ -258,35 +240,32 @@ describe('Validation', () => {
             },
             onError
           });
-          comp = compInfo.comp;
+          getInstance = compInfo.getInstance;
           node = compInfo.node;
 
           Simulate.submit(node);
         });
 
         it('should validate a minLength field', () => {
-          expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql(
+          expect(getInstance().state.errors).toHaveLength(1);
+          expect(getInstance().state.errors[0].message).toEqual(
             'should NOT be shorter than 10 characters'
           );
         });
 
         it('should render errors', () => {
-          expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql(
+          expect(node.querySelectorAll('.errors li')).toHaveLength(1);
+          expect(node.querySelector('.errors li').textContent).toEqual(
             '.foo should NOT be shorter than 10 characters'
           );
         });
 
         it('should trigger the onError handler', () => {
-          sinon.assert.calledWith(
-            onError,
-            sinon.match(errors => {
-              return (
-                errors[0].message === 'should NOT be shorter than 10 characters'
-              );
+          expect(onError).toHaveBeenCalledWith([
+            expect.objectContaining({
+              message: 'should NOT be shorter than 10 characters'
             })
-          );
+          ]);
         });
       });
     });
@@ -303,14 +282,14 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { comp } = createFormComponent({
+        const { getInstance } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        comp.componentWillReceiveProps({ formData });
+        getInstance().componentWillReceiveProps({ formData });
 
-        expect(comp.state.errorSchema).eql({
+        expect(getInstance().state.errorSchema).toEqual({
           __errors: ['Invalid']
         });
       });
@@ -318,7 +297,7 @@ describe('Validation', () => {
       it('should submit form on valid data', () => {
         const schema = { type: 'string' };
         const formData = 'hello';
-        const onSubmit = sandbox.spy();
+        const onSubmit = jest.fn();
 
         function validate(formData, errors) {
           if (formData !== 'hello') {
@@ -336,14 +315,14 @@ describe('Validation', () => {
 
         Simulate.submit(node);
 
-        sinon.assert.called(onSubmit);
+        expect(onSubmit).toHaveBeenCalled();
       });
 
       it('should prevent form submission on invalid data', () => {
         const schema = { type: 'string' };
         const formData = 'a';
-        const onSubmit = sandbox.spy();
-        const onError = sandbox.spy();
+        const onSubmit = jest.fn();
+        const onError = jest.fn();
 
         function validate(formData, errors) {
           if (formData !== 'hello') {
@@ -362,8 +341,8 @@ describe('Validation', () => {
 
         Simulate.submit(node);
 
-        sinon.assert.notCalled(onSubmit);
-        sinon.assert.called(onError);
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(onError).toHaveBeenCalled();
       });
 
       it('should validate a simple object', () => {
@@ -385,14 +364,14 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { comp } = createFormComponent({
+        const { getInstance } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        comp.componentWillReceiveProps({ formData });
+        getInstance().componentWillReceiveProps({ formData });
 
-        expect(comp.state.errorSchema).eql({
+        expect(getInstance().state.errorSchema).toEqual({
           __errors: [],
           pass1: {
             __errors: []
@@ -432,14 +411,14 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { comp } = createFormComponent({
+        const { getInstance } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        comp.componentWillReceiveProps({ formData });
+        getInstance().componentWillReceiveProps({ formData });
 
-        expect(comp.state.errorSchema).eql({
+        expect(getInstance().state.errorSchema).toEqual({
           0: {
             pass1: {
               __errors: []
@@ -479,14 +458,14 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { comp } = createFormComponent({
+        const { getInstance } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        comp.componentWillReceiveProps({ formData });
+        getInstance().componentWillReceiveProps({ formData });
 
-        expect(comp.state.errorSchema).eql({
+        expect(getInstance().state.errorSchema).toEqual({
           0: { __errors: [] },
           1: { __errors: [] },
           2: { __errors: [] },
@@ -506,10 +485,10 @@ describe('Validation', () => {
           }
         };
 
-        var comp, node, onError;
+        var getInstance, node, onError;
 
         beforeEach(() => {
-          onError = sandbox.spy();
+          onError = jest.fn();
           const compInfo = createFormComponent({
             schema,
             formData: {
@@ -518,28 +497,29 @@ describe('Validation', () => {
             onError,
             showErrorList: false
           });
-          comp = compInfo.comp;
+          getInstance = compInfo.getInstance;
           node = compInfo.node;
 
           Simulate.submit(node);
         });
 
         it('should validate a required field', () => {
-          expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql('is a required property');
+          expect(getInstance().state.errors).toHaveLength(1);
+          expect(getInstance().state.errors[0].message).toEqual(
+            'is a required property'
+          );
         });
 
         it('should not render error list if showErrorList prop true', () => {
-          expect(node.querySelectorAll('.errors li')).to.have.length.of(0);
+          expect(node.querySelectorAll('.errors li')).toHaveLength(0);
         });
 
         it('should trigger the onError handler', () => {
-          sinon.assert.calledWith(
-            onError,
-            sinon.match(errors => {
-              return errors[0].message === 'is a required property';
+          expect(onError).toHaveBeenCalledWith([
+            expect.objectContaining({
+              message: 'is a required property'
             })
-          );
+          ]);
         });
       });
     });
@@ -581,19 +561,19 @@ describe('Validation', () => {
           ErrorList: CustomErrorList,
           formContext: { className: 'foo' }
         });
-        expect(node.querySelectorAll('.CustomErrorList')).to.have.length.of(1);
-        expect(node.querySelector('.CustomErrorList').textContent).eql(
+        expect(node.querySelectorAll('.CustomErrorList')).toHaveLength(1);
+        expect(node.querySelector('.CustomErrorList').textContent).toEqual(
           '1 custom'
         );
-        expect(node.querySelectorAll('.ErrorSchema')).to.have.length.of(1);
-        expect(node.querySelector('.ErrorSchema').textContent).eql(
+        expect(node.querySelectorAll('.ErrorSchema')).toHaveLength(1);
+        expect(node.querySelector('.ErrorSchema').textContent).toEqual(
           'should be string'
         );
-        expect(node.querySelectorAll('.Schema')).to.have.length.of(1);
-        expect(node.querySelector('.Schema').textContent).eql('string');
-        expect(node.querySelectorAll('.UiSchema')).to.have.length.of(1);
-        expect(node.querySelector('.UiSchema').textContent).eql('bar');
-        expect(node.querySelectorAll('.foo')).to.have.length.of(1);
+        expect(node.querySelectorAll('.Schema')).toHaveLength(1);
+        expect(node.querySelector('.Schema').textContent).toEqual('string');
+        expect(node.querySelectorAll('.UiSchema')).toHaveLength(1);
+        expect(node.querySelector('.UiSchema').textContent).toEqual('bar');
+        expect(node.querySelectorAll('.foo')).toHaveLength(1);
       });
     });
   });
