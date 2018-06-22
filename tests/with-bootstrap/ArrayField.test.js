@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, cleanup } from 'react-testing-library';
 
-import { createFormComponent } from './test_utils';
+import { createFormComponent, suppressLogs } from './test_utils';
 
 describe('ArrayField', () => {
   afterEach(cleanup);
@@ -320,11 +320,9 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar!']
       });
 
-      try {
+      suppressLogs('error', () => {
         fireEvent.submit(node);
-      } catch (e) {
-        // Silencing error thrown as failure is expected here
-      }
+      });
 
       expect(node.querySelectorAll('.has-error .error-detail')).toHaveLength(1);
 
