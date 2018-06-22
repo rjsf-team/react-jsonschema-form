@@ -1,19 +1,12 @@
 import React from 'react';
-import { expect } from 'chai';
+import { cleanup } from 'react-testing-library';
 
 import TitleField from 'react-jsonschema-form/src/components/fields/TitleField';
-import { createSandbox, createComponent } from './test_utils';
+
+import { createComponent } from './test_utils';
 
 describe('TitleField', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
+  afterEach(cleanup);
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
@@ -33,7 +26,7 @@ describe('TitleField', () => {
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
-    expect(node.tagName).to.equal('LEGEND');
+    expect(node.tagName).toBe('LEGEND');
   });
 
   it('should have the expected id', () => {
@@ -44,7 +37,7 @@ describe('TitleField', () => {
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
-    expect(node.id).to.equal('sample_id');
+    expect(node.id).toBe('sample_id');
   });
 
   it('should include only title, when field is not required', () => {
@@ -54,7 +47,7 @@ describe('TitleField', () => {
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
-    expect(node.textContent).to.equal(props.title);
+    expect(node.textContent).toBe(props.title);
   });
 
   it('should add an asterisk to the title, when field is required', () => {
@@ -64,6 +57,6 @@ describe('TitleField', () => {
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
-    expect(node.textContent).to.equal(props.title + '*');
+    expect(node.textContent).toBe(props.title + '*');
   });
 });
