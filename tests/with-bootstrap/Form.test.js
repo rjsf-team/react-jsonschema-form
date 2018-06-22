@@ -6,6 +6,8 @@ import Form from 'react-jsonschema-form/src';
 import { createFormComponent, suppressLogs } from './test_utils';
 
 describe('Form', () => {
+  /*eslint-disable-next-line*/
+  // console.warn = jest.fn();
   /**
    * We need cleanup after each render()
    * until this issue https://github.com/facebook/react/issues/2043 will be solved.
@@ -1439,17 +1441,19 @@ describe('Form', () => {
       });
 
       it('should not show any errors when branch is empty', () => {
-        const { getInstance, node } = createFormComponent({
-          schema,
-          liveValidate: true,
-          formData: { branch: 3 }
-        });
+        suppressLogs('warn', () => {
+          const { getInstance, node } = createFormComponent({
+            schema,
+            liveValidate: true,
+            formData: { branch: 3 }
+          });
+          const select = node.querySelector('select');
 
-        fireEvent.change(node.querySelector('select'), {
-          target: { value: 3 }
-        });
+          select.value = 3;
+          fireEvent.change(select);
 
-        expect(getInstance().state.errorSchema).toEqual({});
+          expect(getInstance().state.errorSchema).toEqual({});
+        });
       });
     });
   });
