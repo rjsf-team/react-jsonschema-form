@@ -112,7 +112,7 @@ function DefaultTemplate(props) {
   }
 
   return (
-    <div className={classNames}>
+    <div className={classNames} data-testid={id}>
       {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}

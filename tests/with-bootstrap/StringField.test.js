@@ -1,26 +1,16 @@
 import React from 'react';
-import { expect } from 'chai';
-import { Simulate } from 'react-addons-test-utils';
+import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, cleanup } from 'react-testing-library';
 
-import {
-  parseDateString,
-  toDateString
-} from '../../packages/react-jsonschema-form/src/utils';
-import { utcToLocal } from '../../packages/react-jsonschema-form/src/components/widgets/DateTimeWidget';
-import { createFormComponent, createSandbox } from './test_utils';
+import { parseDateString, toDateString } from 'react-jsonschema-form/src/utils';
+import { utcToLocal } from 'react-jsonschema-form/src/components/widgets/DateTimeWidget';
+
+import { createFormComponent } from './test_utils';
 
 describe('StringField', () => {
-  let sandbox;
-
   const CustomWidget = () => <div id="custom" />;
 
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
+  afterEach(cleanup);
 
   describe('TextWidget', () => {
     it('should render a string field', () => {
@@ -30,9 +20,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(
-        node.querySelectorAll('.field input[type=text]')
-      ).to.have.length.of(1);
+      expect(node.querySelectorAll('.field input[type=text]')).toHaveLength(1);
     });
 
     it('should render a string field with a label', () => {
@@ -43,7 +31,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.field label').textContent).toEqual('foo');
     });
 
     it('should render a string field with a description', () => {
@@ -54,7 +42,9 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('.field-description').textContent).eql('bar');
+      expect(node.querySelector('.field-description').textContent).toEqual(
+        'bar'
+      );
     });
 
     it('should assign a default value', () => {
@@ -65,33 +55,33 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('.field input').value).eql('plop');
+      expect(node.querySelector('.field input').value).toEqual('plop');
     });
 
     it('should default state value to undefined', () => {
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: { type: 'string' }
       });
 
-      expect(comp.state.formData).eql(undefined);
+      expect(getInstance().state.formData).toEqual(undefined);
     });
 
     it('should handle a change event', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string'
         }
       });
+      const input = node.querySelector('input');
 
-      Simulate.change(node.querySelector('input'), {
-        target: { value: 'yo' }
-      });
+      input.value = 'yo';
+      fireEvent.change(input);
 
-      expect(comp.state.formData).eql('yo');
+      expect(getInstance().state.formData).toEqual('yo');
     });
 
     it('should handle a blur event', () => {
-      const onBlur = sandbox.spy();
+      const onBlur = jest.fn();
       const { node } = createFormComponent({
         schema: {
           type: 'string'
@@ -99,15 +89,15 @@ describe('StringField', () => {
         onBlur
       });
       const input = node.querySelector('input');
-      Simulate.blur(input, {
-        target: { value: 'yo' }
-      });
 
-      expect(onBlur.calledWith(input.id, 'yo')).to.be.true;
+      input.value = 'yo';
+      fireEvent.blur(input);
+
+      expect(onBlur).toHaveBeenCalledWith(input.id, 'yo');
     });
 
     it('should handle a focus event', () => {
-      const onFocus = sandbox.spy();
+      const onFocus = jest.fn();
       const { node } = createFormComponent({
         schema: {
           type: 'string'
@@ -115,38 +105,38 @@ describe('StringField', () => {
         onFocus
       });
       const input = node.querySelector('input');
-      Simulate.focus(input, {
-        target: { value: 'yo' }
-      });
 
-      expect(onFocus.calledWith(input.id, 'yo')).to.be.true;
+      input.value = 'yo';
+      fireEvent.focus(input);
+
+      expect(onFocus).toHaveBeenCalledWith(input.id, 'yo');
     });
 
     it('should handle an empty string change event', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: { type: 'string' },
         formData: 'x'
       });
+      const input = node.querySelector('input');
 
-      Simulate.change(node.querySelector('input'), {
-        target: { value: '' }
-      });
+      input.value = '';
+      fireEvent.change(input);
 
-      expect(comp.state.formData).eql(undefined);
+      expect(getInstance().state.formData).toEqual(undefined);
     });
 
     it('should handle an empty string change event with custom ui:defaultValue', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:emptyValue': 'default' },
         formData: 'x'
       });
+      const input = node.querySelector('input');
 
-      Simulate.change(node.querySelector('input'), {
-        target: { value: '' }
-      });
+      input.value = '';
+      fireEvent.change(input);
 
-      expect(comp.state.formData).eql('default');
+      expect(getInstance().state.formData).toEqual('default');
     });
 
     it('should fill field with data', () => {
@@ -157,7 +147,7 @@ describe('StringField', () => {
         formData: 'plip'
       });
 
-      expect(node.querySelector('.field input').value).eql('plip');
+      expect(node.querySelector('.field input').value).toEqual('plip');
     });
 
     it('should render the widget with the expected id', () => {
@@ -167,7 +157,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('input[type=text]').id).eql('root');
+      expect(node.querySelector('input[type=text]').id).toEqual('root');
     });
 
     it('should render customized TextWidget', () => {
@@ -180,7 +170,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -193,7 +183,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(1);
+      expect(node.querySelectorAll('.field select')).toHaveLength(1);
     });
 
     it('should render a string field for an enum without a type', () => {
@@ -203,7 +193,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(1);
+      expect(node.querySelectorAll('.field select')).toHaveLength(1);
     });
 
     it('should render a string field with a label', () => {
@@ -215,7 +205,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.field label').textContent).toEqual('foo');
     });
 
     it('should render empty option', () => {
@@ -226,7 +216,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelectorAll('.field option')[0].value).eql('');
+      expect(node.querySelectorAll('.field option')[0].value).toEqual('');
     });
 
     it('should render empty option with placeholder text', () => {
@@ -242,11 +232,13 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelectorAll('.field option')[0].textContent).eql('Test');
+      expect(node.querySelectorAll('.field option')[0].textContent).toEqual(
+        'Test'
+      );
     });
 
     it('should assign a default value', () => {
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           enum: ['foo', 'bar'],
@@ -254,37 +246,37 @@ describe('StringField', () => {
         }
       });
 
-      expect(comp.state.formData).eql('bar');
+      expect(getInstance().state.formData).toEqual('bar');
     });
 
     it('should reflect the change into the form state', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           enum: ['foo', 'bar']
         }
       });
+      const select = node.querySelector('select');
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: 'foo' }
-      });
+      select.value = 'foo';
+      fireEvent.change(select);
 
-      expect(comp.state.formData).eql('foo');
+      expect(getInstance().state.formData).toEqual('foo');
     });
 
     it('should reflect undefined into form state if empty option selected', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           enum: ['foo', 'bar']
         }
       });
+      const select = node.querySelector('select');
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: '' }
-      });
+      select.value = '';
+      fireEvent.change(select);
 
-      expect(comp.state.formData).to.be.undefined;
+      expect(getInstance().state.formData).toBeUndefined();
     });
 
     it('should reflect the change into the dom', () => {
@@ -294,12 +286,12 @@ describe('StringField', () => {
           enum: ['foo', 'bar']
         }
       });
+      const select = node.querySelector('select');
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: 'foo' }
-      });
+      select.value = 'foo';
+      fireEvent.change(select);
 
-      expect(node.querySelector('select').value).eql('foo');
+      expect(select.value).toEqual('foo');
     });
 
     it('should reflect undefined value into the dom as empty option', () => {
@@ -309,16 +301,16 @@ describe('StringField', () => {
           enum: ['foo', 'bar']
         }
       });
+      const select = node.querySelector('select');
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: '' }
-      });
+      select.value = '';
+      fireEvent.change(select);
 
-      expect(node.querySelector('select').value).eql('');
+      expect(select.value).toEqual('');
     });
 
     it('should fill field with data', () => {
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           enum: ['foo', 'bar']
@@ -326,7 +318,7 @@ describe('StringField', () => {
         formData: 'bar'
       });
 
-      expect(comp.state.formData).eql('bar');
+      expect(getInstance().state.formData).toEqual('bar');
     });
 
     it('should render the widget with the expected id', () => {
@@ -337,7 +329,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('select').id).eql('root');
+      expect(node.querySelector('select').id).toEqual('root');
     });
 
     it('should render customized SelectWidget', () => {
@@ -351,27 +343,27 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
   describe('TextareaWidget', () => {
     it('should handle an empty string change event', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:widget': 'textarea' },
         formData: 'x'
       });
+      const textarea = node.querySelector('textarea');
 
-      Simulate.change(node.querySelector('textarea'), {
-        target: { value: '' }
-      });
+      textarea.value = '';
+      fireEvent.change(textarea);
 
-      expect(comp.state.formData).eql(undefined);
+      expect(getInstance().state.formData).toEqual(undefined);
     });
 
     it('should handle an empty string change event with custom ui:defaultValue', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: {
           'ui:widget': 'textarea',
@@ -379,12 +371,12 @@ describe('StringField', () => {
         },
         formData: 'x'
       });
+      const textarea = node.querySelector('textarea');
 
-      Simulate.change(node.querySelector('textarea'), {
-        target: { value: '' }
-      });
+      textarea.value = '';
+      fireEvent.change(textarea);
 
-      expect(comp.state.formData).eql('default');
+      expect(getInstance().state.formData).toEqual('default');
     });
 
     it('should render a textarea field with rows', () => {
@@ -397,7 +389,7 @@ describe('StringField', () => {
         formData: 'x'
       });
 
-      expect(node.querySelector('textarea').getAttribute('rows')).eql('20');
+      expect(node.querySelector('textarea').getAttribute('rows')).toEqual('20');
     });
   });
 
@@ -412,12 +404,12 @@ describe('StringField', () => {
 
       expect(
         node.querySelectorAll('.field [type=datetime-local]')
-      ).to.have.length.of(1);
+      ).toHaveLength(1);
     });
 
     it('should assign a default value', () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date-time',
@@ -425,7 +417,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(comp.state.formData).eql(datetime);
+      expect(getInstance().state.formData).toEqual(datetime);
     });
 
     it('should reflect the change into the dom', () => {
@@ -436,20 +428,20 @@ describe('StringField', () => {
         }
       });
 
+      /**
+       * I don't know how to write this with fireEvent(),
+       * because it doesn't work as usual input.
+       */
+      const datetime = node.querySelector('[type=datetime-local]');
       const newDatetime = new Date().toJSON();
+      Simulate.change(datetime, { target: { value: newDatetime } });
 
-      Simulate.change(node.querySelector('[type=datetime-local]'), {
-        target: { value: newDatetime }
-      });
-
-      expect(node.querySelector('[type=datetime-local]').value).eql(
-        utcToLocal(newDatetime)
-      );
+      expect(datetime.value).toEqual(utcToLocal(newDatetime));
     });
 
     it('should fill field with data', () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date-time'
@@ -457,7 +449,7 @@ describe('StringField', () => {
         formData: datetime
       });
 
-      expect(comp.state.formData).eql(datetime);
+      expect(getInstance().state.formData).toEqual(datetime);
     });
 
     it('should render the widget with the expected id', () => {
@@ -468,11 +460,11 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('[type=datetime-local]').id).eql('root');
+      expect(node.querySelector('[type=datetime-local]').id).toEqual('root');
     });
 
     it('should reject an invalid entered datetime', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date-time'
@@ -480,11 +472,11 @@ describe('StringField', () => {
         liveValidate: true
       });
 
-      Simulate.change(node.querySelector('[type=datetime-local]'), {
+      fireEvent.change(node.querySelector('[type=datetime-local]'), {
         target: { value: 'invalid' }
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(getInstance().state.errors).toHaveLength(1);
     });
 
     it('should render customized DateTimeWidget', () => {
@@ -498,7 +490,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
 
     it('should allow overriding of BaseInput', () => {
@@ -512,7 +504,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -528,12 +520,12 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(node.querySelectorAll('.field [type=date]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.field [type=date]')).toHaveLength(1);
     });
 
     it('should assign a default value', () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date',
@@ -542,7 +534,7 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(comp.state.formData).eql(datetime);
+      expect(getInstance().state.formData).toEqual(datetime);
     });
 
     it('should reflect the change into the dom', () => {
@@ -560,14 +552,15 @@ describe('StringField', () => {
         target: { value: newDatetime }
       });
 
-      expect(node.querySelector('[type=date]').value)
-        // XXX import and use conversion helper
-        .eql(newDatetime.slice(0, 10));
+      // XXX import and use conversion helper
+      expect(node.querySelector('[type=date]').value).toEqual(
+        newDatetime.slice(0, 10)
+      );
     });
 
     it('should fill field with data', () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date'
@@ -575,7 +568,7 @@ describe('StringField', () => {
         formData: datetime
       });
 
-      expect(comp.state.formData).eql(datetime);
+      expect(getInstance().state.formData).toEqual(datetime);
     });
 
     it('should render the widget with the expected id', () => {
@@ -587,11 +580,11 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(node.querySelector('[type=date]').id).eql('root');
+      expect(node.querySelector('[type=date]').id).toEqual('root');
     });
 
     it('should accept a valid entered date', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date'
@@ -604,12 +597,12 @@ describe('StringField', () => {
         target: { value: '2012-12-12' }
       });
 
-      expect(comp.state.errors).to.have.length.of(0);
-      expect(comp.state.formData).eql('2012-12-12');
+      expect(getInstance().state.errors).toHaveLength(0);
+      expect(getInstance().state.formData).toEqual('2012-12-12');
     });
 
     it('should reject an invalid entered date', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date'
@@ -618,11 +611,11 @@ describe('StringField', () => {
         liveValidate: true
       });
 
-      Simulate.change(node.querySelector('[type=date]'), {
+      fireEvent.change(node.querySelector('[type=date]'), {
         target: { value: 'invalid' }
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(getInstance().state.errors).toHaveLength(1);
     });
 
     it('should render customized DateWidget', () => {
@@ -636,7 +629,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
 
     it('should allow overriding of BaseInput', () => {
@@ -650,7 +643,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -666,7 +659,7 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(6);
+      expect(node.querySelectorAll('.field select')).toHaveLength(6);
     });
 
     it('should render a string field with a main label', () => {
@@ -679,12 +672,12 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.field label').textContent).toEqual('foo');
     });
 
     it('should assign a default value', () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date-time',
@@ -693,11 +686,11 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(comp.state.formData).eql(datetime);
+      expect(getInstance().state.formData).toEqual(datetime);
     });
 
     it('should reflect the change into the dom', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date-time'
@@ -724,12 +717,12 @@ describe('StringField', () => {
         target: { value: 3 }
       });
 
-      expect(comp.state.formData).eql('2012-10-02T01:02:03.000Z');
+      expect(getInstance().state.formData).toEqual('2012-10-02T01:02:03.000Z');
     });
 
     it('should fill field with data', () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date-time'
@@ -737,7 +730,7 @@ describe('StringField', () => {
         formData: datetime
       });
 
-      expect(comp.state.formData).eql(datetime);
+      expect(getInstance().state.formData).toEqual(datetime);
     });
 
     it('should render the widgets with the expected ids', () => {
@@ -751,7 +744,7 @@ describe('StringField', () => {
 
       const ids = [].map.call(node.querySelectorAll('select'), node => node.id);
 
-      expect(ids).eql([
+      expect(ids).toEqual([
         'root_year',
         'root_month',
         'root_day',
@@ -775,7 +768,7 @@ describe('StringField', () => {
         node => node.length
       );
 
-      expect(lengths).eql([
+      expect(lengths).toEqual([
         121 + 1, // from 1900 to 2020 + undefined
         12 + 1,
         31 + 1,
@@ -785,7 +778,7 @@ describe('StringField', () => {
       ]);
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsValues = [].map.call(monthOptions, o => o.value);
-      expect(monthOptionsValues).eql([
+      expect(monthOptionsValues).toEqual([
         '',
         '1',
         '2',
@@ -813,7 +806,7 @@ describe('StringField', () => {
 
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
-      expect(monthOptionsLabels).eql([
+      expect(monthOptionsLabels).toEqual([
         'month',
         '01',
         '02',
@@ -844,11 +837,11 @@ describe('StringField', () => {
           node.querySelectorAll('a.btn'),
           x => x.textContent
         );
-        expect(buttonLabels).eql(['Now', 'Clear']);
+        expect(buttonLabels).toEqual(['Now', 'Clear']);
       });
 
       it('should set current date when pressing the Now button', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema: {
             type: 'string',
             format: 'date-time'
@@ -856,16 +849,16 @@ describe('StringField', () => {
           uiSchema
         });
 
-        Simulate.click(node.querySelector('a.btn-now'));
+        fireEvent.click(node.querySelector('a.btn-now'));
 
         // Test that the two DATETIMEs are within 5 seconds of each other.
         const now = new Date().getTime();
-        const timeDiff = now - new Date(comp.state.formData).getTime();
-        expect(timeDiff).to.be.at.most(5000);
+        const timeDiff = now - new Date(getInstance().state.formData).getTime();
+        expect(timeDiff).toBeLessThanOrEqual(5000);
       });
 
       it('should clear current date when pressing the Clear button', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema: {
             type: 'string',
             format: 'date-time'
@@ -873,10 +866,10 @@ describe('StringField', () => {
           uiSchema
         });
 
-        Simulate.click(node.querySelector('a.btn-now'));
-        Simulate.click(node.querySelector('a.btn-clear'));
+        fireEvent.click(node.querySelector('a.btn-now'));
+        fireEvent.click(node.querySelector('a.btn-clear'));
 
-        expect(comp.state.formData).eql(undefined);
+        expect(getInstance().state.formData).toEqual(undefined);
       });
     });
 
@@ -894,7 +887,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
 
     it('should render customized AltDateTimeWidget', () => {
@@ -911,7 +904,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -927,7 +920,7 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(3);
+      expect(node.querySelectorAll('.field select')).toHaveLength(3);
     });
 
     it('should render a string field with a main label', () => {
@@ -940,12 +933,12 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.field label').textContent).toEqual('foo');
     });
 
     it('should assign a default value', () => {
       const datetime = '2012-12-12';
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date',
@@ -954,11 +947,11 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(comp.state.formData).eql(datetime);
+      expect(getInstance().state.formData).toEqual(datetime);
     });
 
     it('should reflect the change into the dom', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date'
@@ -976,12 +969,12 @@ describe('StringField', () => {
         target: { value: 2 }
       });
 
-      expect(comp.state.formData).eql('2012-10-02');
+      expect(getInstance().state.formData).toEqual('2012-10-02');
     });
 
     it('should fill field with data', () => {
       const datetime = '2012-12-12';
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date'
@@ -990,7 +983,7 @@ describe('StringField', () => {
         formData: datetime
       });
 
-      expect(comp.state.formData).eql(datetime);
+      expect(getInstance().state.formData).toEqual(datetime);
     });
 
     it('should render the widgets with the expected ids', () => {
@@ -1004,7 +997,7 @@ describe('StringField', () => {
 
       const ids = [].map.call(node.querySelectorAll('select'), node => node.id);
 
-      expect(ids).eql(['root_year', 'root_month', 'root_day']);
+      expect(ids).toEqual(['root_year', 'root_month', 'root_day']);
     });
 
     it('should render the widgets with the expected options\' values', () => {
@@ -1021,14 +1014,14 @@ describe('StringField', () => {
         node => node.length
       );
 
-      expect(lengths).eql([
+      expect(lengths).toEqual([
         121 + 1, // from 1900 to 2020 + undefined
         12 + 1,
         31 + 1
       ]);
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsValues = [].map.call(monthOptions, o => o.value);
-      expect(monthOptionsValues).eql([
+      expect(monthOptionsValues).toEqual([
         '',
         '1',
         '2',
@@ -1056,7 +1049,7 @@ describe('StringField', () => {
 
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
-      expect(monthOptionsLabels).eql([
+      expect(monthOptionsLabels).toEqual([
         'month',
         '01',
         '02',
@@ -1074,7 +1067,7 @@ describe('StringField', () => {
     });
 
     it('should accept a valid date', () => {
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date'
@@ -1083,9 +1076,9 @@ describe('StringField', () => {
         liveValidate: true
       });
 
-      comp.componentWillReceiveProps({ formData: '2012-12-12' });
+      getInstance().componentWillReceiveProps({ formData: '2012-12-12' });
 
-      expect(comp.state.errors).to.have.length.of(0);
+      expect(getInstance().state.errors).toHaveLength(0);
     });
 
     describe('Action buttons', () => {
@@ -1102,11 +1095,11 @@ describe('StringField', () => {
           node.querySelectorAll('a.btn'),
           x => x.textContent
         );
-        expect(buttonLabels).eql(['Now', 'Clear']);
+        expect(buttonLabels).toEqual(['Now', 'Clear']);
       });
 
       it('should set current date when pressing the Now button', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema: {
             type: 'string',
             format: 'date'
@@ -1114,17 +1107,17 @@ describe('StringField', () => {
           uiSchema
         });
 
-        Simulate.click(node.querySelector('a.btn-now'));
+        fireEvent.click(node.querySelector('a.btn-now'));
 
         const expected = toDateString(
           parseDateString(new Date().toJSON()),
           false
         );
-        expect(comp.state.formData).eql(expected);
+        expect(getInstance().state.formData).toEqual(expected);
       });
 
       it('should clear current date when pressing the Clear button', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema: {
             type: 'string',
             format: 'date'
@@ -1132,10 +1125,10 @@ describe('StringField', () => {
           uiSchema
         });
 
-        Simulate.click(node.querySelector('a.btn-now'));
-        Simulate.click(node.querySelector('a.btn-clear'));
+        fireEvent.click(node.querySelector('a.btn-now'));
+        fireEvent.click(node.querySelector('a.btn-clear'));
 
-        expect(comp.state.formData).eql(undefined);
+        expect(getInstance().state.formData).toEqual(undefined);
       });
     });
 
@@ -1153,7 +1146,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -1166,7 +1159,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelectorAll('.field [type=email]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.field [type=email]')).toHaveLength(1);
     });
 
     it('should render a string field with a label', () => {
@@ -1178,7 +1171,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.field label').textContent).toEqual('foo');
     });
 
     it('should render a select field with a description', () => {
@@ -1190,12 +1183,14 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('.field-description').textContent).eql('baz');
+      expect(node.querySelector('.field-description').textContent).toEqual(
+        'baz'
+      );
     });
 
     it('should assign a default value', () => {
       const email = 'foo@bar.baz';
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'email',
@@ -1203,7 +1198,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(comp.state.formData).eql(email);
+      expect(getInstance().state.formData).toEqual(email);
     });
 
     it('should reflect the change into the dom', () => {
@@ -1220,12 +1215,12 @@ describe('StringField', () => {
         target: { value: newDatetime }
       });
 
-      expect(node.querySelector('[type=email]').value).eql(newDatetime);
+      expect(node.querySelector('[type=email]').value).toEqual(newDatetime);
     });
 
     it('should fill field with data', () => {
       const email = 'foo@bar.baz';
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'email'
@@ -1233,7 +1228,7 @@ describe('StringField', () => {
         formData: email
       });
 
-      expect(comp.state.formData).eql(email);
+      expect(getInstance().state.formData).toEqual(email);
     });
 
     it('should render the widget with the expected id', () => {
@@ -1244,11 +1239,11 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('[type=email]').id).eql('root');
+      expect(node.querySelector('[type=email]').id).toEqual('root');
     });
 
     it('should reject an invalid entered email', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'email'
@@ -1256,11 +1251,11 @@ describe('StringField', () => {
         liveValidate: true
       });
 
-      Simulate.change(node.querySelector('[type=email]'), {
+      fireEvent.change(node.querySelector('[type=email]'), {
         target: { value: 'invalid' }
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(getInstance().state.errors).toHaveLength(1);
     });
 
     it('should render customized EmailWidget', () => {
@@ -1274,7 +1269,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -1287,7 +1282,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelectorAll('.field [type=url]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.field [type=url]')).toHaveLength(1);
     });
 
     it('should render a string field with a label', () => {
@@ -1299,7 +1294,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.field label').textContent).toEqual('foo');
     });
 
     it('should render a select field with a placeholder', () => {
@@ -1311,12 +1306,14 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('.field-description').textContent).eql('baz');
+      expect(node.querySelector('.field-description').textContent).toEqual(
+        'baz'
+      );
     });
 
     it('should assign a default value', () => {
       const url = 'http://foo.bar/baz';
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'uri',
@@ -1324,7 +1321,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(comp.state.formData).eql(url);
+      expect(getInstance().state.formData).toEqual(url);
     });
 
     it('should reflect the change into the dom', () => {
@@ -1340,12 +1337,12 @@ describe('StringField', () => {
         target: { value: newDatetime }
       });
 
-      expect(node.querySelector('[type=url]').value).eql(newDatetime);
+      expect(node.querySelector('[type=url]').value).toEqual(newDatetime);
     });
 
     it('should fill field with data', () => {
       const url = 'http://foo.bar/baz';
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'uri'
@@ -1353,7 +1350,7 @@ describe('StringField', () => {
         formData: url
       });
 
-      expect(comp.state.formData).eql(url);
+      expect(getInstance().state.formData).toEqual(url);
     });
 
     it('should render the widget with the expected id', () => {
@@ -1364,11 +1361,11 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('[type=url]').id).eql('root');
+      expect(node.querySelector('[type=url]').id).toEqual('root');
     });
 
     it('should reject an invalid entered url', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'uri'
@@ -1376,11 +1373,11 @@ describe('StringField', () => {
         liveValidate: true
       });
 
-      Simulate.change(node.querySelector('[type=url]'), {
+      fireEvent.change(node.querySelector('[type=url]'), {
         target: { value: 'invalid' }
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(getInstance().state.errors).toHaveLength(1);
     });
 
     it('should render customized URLWidget', () => {
@@ -1394,7 +1391,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -1411,11 +1408,11 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(node.querySelectorAll('.field [type=color]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.field [type=color]')).toHaveLength(1);
     });
 
     it('should assign a default value', () => {
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'color',
@@ -1424,7 +1421,7 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(comp.state.formData).eql(color);
+      expect(getInstance().state.formData).toEqual(color);
     });
 
     it('should reflect the change into the dom', () => {
@@ -1442,11 +1439,11 @@ describe('StringField', () => {
         target: { value: newColor }
       });
 
-      expect(node.querySelector('[type=color]').value).eql(newColor);
+      expect(node.querySelector('[type=color]').value).toEqual(newColor);
     });
 
     it('should fill field with data', () => {
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'color'
@@ -1454,7 +1451,7 @@ describe('StringField', () => {
         formData: color
       });
 
-      expect(comp.state.formData).eql(color);
+      expect(getInstance().state.formData).toEqual(color);
     });
 
     it('should render the widget with the expected id', () => {
@@ -1466,11 +1463,11 @@ describe('StringField', () => {
         uiSchema
       });
 
-      expect(node.querySelector('[type=color]').id).eql('root');
+      expect(node.querySelector('[type=color]').id).toEqual('root');
     });
 
     it('should reject an invalid entered color', () => {
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'color'
@@ -1483,7 +1480,7 @@ describe('StringField', () => {
         target: { value: 'invalid' }
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(getInstance().state.errors).toHaveLength(1);
     });
 
     it('should render customized ColorWidget', () => {
@@ -1497,7 +1494,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -1512,11 +1509,11 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelectorAll('.field [type=file]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.field [type=file]')).toHaveLength(1);
     });
 
     it('should assign a default value', () => {
-      const { comp } = createFormComponent({
+      const { getInstance } = createFormComponent({
         schema: {
           type: 'string',
           format: 'color',
@@ -1524,18 +1521,18 @@ describe('StringField', () => {
         }
       });
 
-      expect(comp.state.formData).eql(initialValue);
+      expect(getInstance().state.formData).toEqual(initialValue);
     });
 
-    it('should reflect the change into the dom', () => {
-      sandbox.stub(window, 'FileReader').returns({
+    it('should reflect the change into the dom', async () => {
+      window.FileReader = jest.fn(() => ({
         set onload(fn) {
           fn({ target: { result: 'data:text/plain;base64,x=' } });
         },
         readAsDataUrl() {}
-      });
+      }));
 
-      const { comp, node } = createFormComponent({
+      const { getInstance, node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'data-url'
@@ -1548,10 +1545,10 @@ describe('StringField', () => {
         }
       });
 
-      return new Promise(setImmediate).then(() =>
-        expect(comp.state.formData).eql(
-          'data:text/plain;name=file1.txt;base64,x='
-        )
+      await new Promise(setImmediate);
+
+      expect(getInstance().state.formData).toEqual(
+        'data:text/plain;name=file1.txt;base64,x='
       );
     });
 
@@ -1563,7 +1560,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('[type=file]').id).eql('root');
+      expect(node.querySelector('[type=file]').id).toEqual('root');
     });
 
     it('should render customized FileWidget', () => {
@@ -1577,7 +1574,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -1593,7 +1590,7 @@ describe('StringField', () => {
         }
       });
 
-      expect(node.querySelector('#custom')).to.exist;
+      expect(node.querySelector('#custom')).toBeDefined();
     });
   });
 
@@ -1618,7 +1615,7 @@ describe('StringField', () => {
       };
 
       const { node } = createFormComponent({ schema, widgets, uiSchema });
-      expect(node.querySelector('#label-string')).to.not.be.null;
+      expect(node.querySelector('#label-string')).not.toBeNull();
     });
 
     it('should pass schema title to widget', () => {
@@ -1631,7 +1628,7 @@ describe('StringField', () => {
       };
 
       const { node } = createFormComponent({ schema, widgets, uiSchema });
-      expect(node.querySelector('#label-test')).to.not.be.null;
+      expect(node.querySelector('#label-test')).not.toBeNull();
     });
 
     it('should pass empty schema title to widget', () => {
@@ -1643,7 +1640,7 @@ describe('StringField', () => {
         'ui:widget': 'Widget'
       };
       const { node } = createFormComponent({ schema, widgets, uiSchema });
-      expect(node.querySelector('#label-')).to.not.be.null;
+      expect(node.querySelector('#label-')).not.toBeNull();
     });
   });
 });

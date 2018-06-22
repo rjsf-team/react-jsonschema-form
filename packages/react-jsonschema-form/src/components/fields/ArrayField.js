@@ -103,6 +103,7 @@ function DefaultArrayItem(props) {
                 style={btnStyle}
                 disabled={props.disabled || props.readonly}
                 onClick={props.onDropIndexClick(props.index)}
+                data-testid="remove-array-item"
               />
             )}
           </div>
@@ -683,6 +684,7 @@ function AddButton({ onClick, disabled }) {
           tabIndex="0"
           onClick={onClick}
           disabled={disabled}
+          data-testid="add-array-item"
         />
       </p>
     </div>

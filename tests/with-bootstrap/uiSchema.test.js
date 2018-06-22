@@ -1,19 +1,13 @@
-import { expect } from 'chai';
 import React from 'react';
-import { Simulate } from 'react-addons-test-utils';
-import SelectWidget from '../../packages/react-jsonschema-form/src/components/widgets/SelectWidget';
-import { createFormComponent, createSandbox } from './test_utils';
+import { Simulate } from 'react-dom/test-utils';
+import { cleanup } from 'react-testing-library';
+
+import SelectWidget from 'react-jsonschema-form/src/components/widgets/SelectWidget';
+
+import { createFormComponent } from './test_utils';
 
 describe('uiSchema', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
+  afterEach(cleanup);
 
   describe('custom classNames', () => {
     const schema = {
@@ -41,9 +35,9 @@ describe('uiSchema', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const [foo, bar] = node.querySelectorAll('.field-string');
 
-      expect(foo.classList.contains('class-for-foo')).eql(true);
-      expect(bar.classList.contains('class-for-bar')).eql(true);
-      expect(bar.classList.contains('another-for-bar')).eql(true);
+      expect(foo.classList.contains('class-for-foo')).toEqual(true);
+      expect(bar.classList.contains('class-for-bar')).toEqual(true);
+      expect(bar.classList.contains('another-for-bar')).toEqual(true);
     });
   });
 
@@ -71,7 +65,7 @@ describe('uiSchema', () => {
       it('should render a root custom widget', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('.custom')).to.have.length.of(1);
+        expect(node.querySelectorAll('.custom')).toHaveLength(1);
       });
     });
 
@@ -79,8 +73,8 @@ describe('uiSchema', () => {
       let widget, widgets, schema, uiSchema;
 
       beforeEach(() => {
-        sandbox.stub(console, 'warn');
-
+        /*eslint-disable-next-line*/
+        console.warn = jest.fn();
         widget = ({ label, options }) => <div id={label} style={options} />;
         widget.defaultProps = {
           options: {
@@ -171,12 +165,13 @@ describe('uiSchema', () => {
           widgets
         });
         /*eslint-disable-next-line*/
-        expect(console.warn.calledWithMatch(/ui:widget object is deprecated/))
-          .to.be.true;
+        expect(console.warn).toHaveBeenCalledWith(
+          expect.stringMatching(/ui:widget object is deprecated/)
+        );
       });
 
       it('should cache MergedWidget instance', () => {
-        expect(widget.MergedWidget).not.to.be.ok;
+        expect(widget.MergedWidget).not.toBeTruthy();
         createFormComponent({
           schema: {
             type: 'string'
@@ -187,7 +182,7 @@ describe('uiSchema', () => {
           widgets
         });
         const cached = widget.MergedWidget;
-        expect(cached).to.be.ok;
+        expect(cached).toBeTruthy();
         createFormComponent({
           schema: {
             type: 'string'
@@ -197,7 +192,7 @@ describe('uiSchema', () => {
           },
           widgets
         });
-        expect(widget.MergedWidget).to.equal(cached);
+        expect(widget.MergedWidget).toBe(cached);
       });
 
       it('should render merged ui:widget options for widget referenced as function', () => {
@@ -208,10 +203,10 @@ describe('uiSchema', () => {
         });
         const widget = node.querySelector('#funcAll');
 
-        expect(widget.style.background).to.equal('purple');
-        expect(widget.style.color).to.equal('green');
-        expect(widget.style.margin).to.equal('7px');
-        expect(widget.style.padding).to.equal('42px');
+        expect(widget.style.background).toBe('purple');
+        expect(widget.style.color).toBe('green');
+        expect(widget.style.margin).toBe('7px');
+        expect(widget.style.padding).toBe('42px');
       });
 
       it('should render ui:widget default options for widget referenced as function', () => {
@@ -222,10 +217,10 @@ describe('uiSchema', () => {
         });
         const widget = node.querySelector('#funcNone');
 
-        expect(widget.style.background).to.equal('yellow');
-        expect(widget.style.color).to.equal('green');
-        expect(widget.style.margin).to.equal('');
-        expect(widget.style.padding).to.equal('');
+        expect(widget.style.background).toBe('yellow');
+        expect(widget.style.color).toBe('green');
+        expect(widget.style.margin).toBe('');
+        expect(widget.style.padding).toBe('');
       });
 
       it('should render merged ui:widget options for widget referenced as string', () => {
@@ -236,10 +231,10 @@ describe('uiSchema', () => {
         });
         const widget = node.querySelector('#stringAll');
 
-        expect(widget.style.background).to.equal('blue');
-        expect(widget.style.color).to.equal('green');
-        expect(widget.style.margin).to.equal('19px');
-        expect(widget.style.padding).to.equal('41px');
+        expect(widget.style.background).toBe('blue');
+        expect(widget.style.color).toBe('green');
+        expect(widget.style.margin).toBe('19px');
+        expect(widget.style.padding).toBe('41px');
       });
 
       it('should render ui:widget default options for widget referenced as string', () => {
@@ -250,10 +245,10 @@ describe('uiSchema', () => {
         });
         const widget = node.querySelector('#stringNone');
 
-        expect(widget.style.background).to.equal('yellow');
-        expect(widget.style.color).to.equal('green');
-        expect(widget.style.margin).to.equal('');
-        expect(widget.style.padding).to.equal('');
+        expect(widget.style.background).toBe('yellow');
+        expect(widget.style.color).toBe('green');
+        expect(widget.style.margin).toBe('');
+        expect(widget.style.padding).toBe('');
       });
 
       it('should ui:option inputType for html5 input types', () => {
@@ -263,7 +258,7 @@ describe('uiSchema', () => {
           widgets
         });
         const widget = node.querySelector('input[type=\'tel\']');
-        expect(widget).to.not.be.null;
+        expect(widget).not.toBeNull();
       });
     });
 
@@ -307,7 +302,7 @@ describe('uiSchema', () => {
           widgets
         });
 
-        expect(node.querySelectorAll('.custom')).to.have.length.of(1);
+        expect(node.querySelectorAll('.custom')).toHaveLength(1);
       });
     });
 
@@ -341,7 +336,7 @@ describe('uiSchema', () => {
         it('should render a custom widget with options', () => {
           const { node } = createFormComponent({ schema, uiSchema });
 
-          expect(node.querySelectorAll('.custom')).to.have.length.of(1);
+          expect(node.querySelectorAll('.custom')).toHaveLength(1);
         });
       });
 
@@ -366,7 +361,7 @@ describe('uiSchema', () => {
             widgets
           });
 
-          expect(node.querySelectorAll('.custom')).to.have.length.of(1);
+          expect(node.querySelectorAll('.custom')).toHaveLength(1);
         });
       });
     });
@@ -405,7 +400,7 @@ describe('uiSchema', () => {
 
       it('should merge enumOptions with custom options', () => {
         const { node } = createFormComponent({ schema, uiSchema });
-        expect(node.querySelectorAll('.custom option')).to.have.length.of(2);
+        expect(node.querySelectorAll('.custom option')).toHaveLength(2);
       });
     });
 
@@ -431,10 +426,10 @@ describe('uiSchema', () => {
       it('should have atleast one option disabled', () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const disabledOptionsLen = uiSchema.field['ui:enumDisabled'].length;
-        expect(node.querySelectorAll('option:disabled')).to.have.length.of(
+        expect(node.querySelectorAll('option:disabled')).toHaveLength(
           disabledOptionsLen
         );
-        expect(node.querySelectorAll('option:enabled')).to.have.length.of(
+        expect(node.querySelectorAll('option:enabled')).toHaveLength(
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen + 1
         );
@@ -453,7 +448,7 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('p.help-block').textContent).eql('plop');
+      expect(node.querySelector('p.help-block').textContent).toEqual('plop');
     });
   });
 
@@ -468,7 +463,9 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('label.control-label').textContent).eql('plop');
+      expect(node.querySelector('label.control-label').textContent).toEqual(
+        'plop'
+      );
     });
   });
 
@@ -483,7 +480,9 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('p.field-description').textContent).eql('plop');
+      expect(node.querySelector('p.field-description').textContent).toEqual(
+        'plop'
+      );
     });
   });
 
@@ -497,7 +496,7 @@ describe('uiSchema', () => {
 
     const { node } = createFormComponent({ schema, uiSchema });
 
-    expect(node.querySelector('div.help-block').textContent).eql('plop');
+    expect(node.querySelector('div.help-block').textContent).toEqual('plop');
   });
 
   describe('ui:focus', () => {
@@ -511,7 +510,7 @@ describe('uiSchema', () => {
       }
 
       const { node } = createFormComponent(props);
-      expect(node.querySelector(selector)).eql(document.activeElement);
+      expect(node.querySelector(selector)).toEqual(document.activeElement);
     };
 
     describe('number', () => {
@@ -798,7 +797,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('input[type=file]')).to.have.length.of(1);
+        expect(node.querySelectorAll('input[type=file]')).toHaveLength(1);
       });
     });
 
@@ -813,7 +812,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('textarea')).to.have.length.of(1);
+        expect(node.querySelectorAll('textarea')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -825,11 +824,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('textarea').value).eql('a');
+        expect(node.querySelector('textarea').value).toEqual('a');
       });
 
       it('should update state when text is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -843,13 +842,13 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 'b' });
+        expect(getInstance().state.formData).toEqual({ foo: 'b' });
       });
 
       it('should set a placeholder value', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelector('textarea').placeholder).eql('sample');
+        expect(node.querySelector('textarea').placeholder).toEqual('sample');
       });
     });
 
@@ -864,7 +863,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=password]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=password]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -876,11 +875,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=password]').value).eql('a');
+        expect(node.querySelector('[type=password]').value).toEqual('a');
       });
 
       it('should update state when text is updated is checked', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -894,13 +893,15 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 'b' });
+        expect(getInstance().state.formData).toEqual({ foo: 'b' });
       });
 
       it('should set a placeholder value', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelector('[type=password]').placeholder).eql('sample');
+        expect(node.querySelector('[type=password]').placeholder).toEqual(
+          'sample'
+        );
       });
     });
 
@@ -914,7 +915,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=color]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=color]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -926,11 +927,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=color]').value).eql('#151ce6');
+        expect(node.querySelector('[type=color]').value).toEqual('#151ce6');
       });
 
       it('should update state when text is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -944,7 +945,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: '#001122' });
+        expect(getInstance().state.formData).toEqual({ foo: '#001122' });
       });
     });
 
@@ -958,7 +959,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=hidden]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=hidden]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -970,11 +971,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=hidden]').value).eql('a');
+        expect(node.querySelector('[type=hidden]').value).toEqual('a');
       });
 
       it('should map widget value to a typed state one', () => {
-        const { comp } = createFormComponent({
+        const { getInstance } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -982,7 +983,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData.foo).eql('a');
+        expect(getInstance().state.formData.foo).toEqual('a');
       });
     });
   });
@@ -1008,7 +1009,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=radio]')).to.have.length.of(2);
+        expect(node.querySelectorAll('[type=radio]')).toHaveLength(2);
       });
 
       it('should support formData', () => {
@@ -1020,11 +1021,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelectorAll('[type=radio]')[1].checked).eql(true);
+        expect(node.querySelectorAll('[type=radio]')[1].checked).toEqual(true);
       });
 
       it('should update state when value is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1038,7 +1039,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 'b' });
+        expect(getInstance().state.formData).toEqual({ foo: 'b' });
       });
     });
   });
@@ -1066,7 +1067,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=number]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=number]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -1078,11 +1079,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=number]').value).eql('3.14');
+        expect(node.querySelector('[type=number]').value).toEqual('3.14');
       });
 
       it('should update state when value is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1096,7 +1097,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 6.28 });
+        expect(getInstance().state.formData).toEqual({ foo: 6.28 });
       });
 
       describe('Constraint attributes', () => {
@@ -1108,11 +1109,11 @@ describe('uiSchema', () => {
         });
 
         it('should support the minimum constraint', () => {
-          expect(input.getAttribute('min')).eql('10');
+          expect(input.getAttribute('min')).toEqual('10');
         });
 
         it('should support maximum constraint', () => {
-          expect(input.getAttribute('max')).eql('100');
+          expect(input.getAttribute('max')).toEqual('100');
         });
 
         it('should support \'0\' as minimum and maximum constraints', () => {
@@ -1127,12 +1128,12 @@ describe('uiSchema', () => {
           const { node } = createFormComponent({ schema, uiSchema });
           input = node.querySelector('[type=number]');
 
-          expect(input.getAttribute('min')).eql('0');
-          expect(input.getAttribute('max')).eql('0');
+          expect(input.getAttribute('min')).toEqual('0');
+          expect(input.getAttribute('max')).toEqual('0');
         });
 
         it('should support the multipleOf constraint', () => {
-          expect(input.getAttribute('step')).eql('1');
+          expect(input.getAttribute('step')).toEqual('1');
         });
       });
     });
@@ -1147,7 +1148,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=range]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=range]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -1159,11 +1160,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=range]').value).eql('3.14');
+        expect(node.querySelector('[type=range]').value).toEqual('3.14');
       });
 
       it('should update state when value is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1177,7 +1178,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 6.28 });
+        expect(getInstance().state.formData).toEqual({ foo: 6.28 });
       });
 
       describe('Constraint attributes', () => {
@@ -1189,11 +1190,11 @@ describe('uiSchema', () => {
         });
 
         it('should support the minimum constraint', () => {
-          expect(input.getAttribute('min')).eql('10');
+          expect(input.getAttribute('min')).toEqual('10');
         });
 
         it('should support maximum constraint', () => {
-          expect(input.getAttribute('max')).eql('100');
+          expect(input.getAttribute('max')).toEqual('100');
         });
 
         it('should support \'0\' as minimum and maximum constraints', () => {
@@ -1208,12 +1209,12 @@ describe('uiSchema', () => {
           const { node } = createFormComponent({ schema, uiSchema });
           input = node.querySelector('[type=range]');
 
-          expect(input.getAttribute('min')).eql('0');
-          expect(input.getAttribute('max')).eql('0');
+          expect(input.getAttribute('min')).toEqual('0');
+          expect(input.getAttribute('max')).toEqual('0');
         });
 
         it('should support the multipleOf constraint', () => {
-          expect(input.getAttribute('step')).eql('1');
+          expect(input.getAttribute('step')).toEqual('1');
         });
       });
     });
@@ -1238,7 +1239,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=radio]')).to.have.length.of(3);
+        expect(node.querySelectorAll('[type=radio]')).toHaveLength(3);
       });
 
       it('should support formData', () => {
@@ -1250,11 +1251,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelectorAll('[type=radio]')[1].checked).eql(true);
+        expect(node.querySelectorAll('[type=radio]')[1].checked).toEqual(true);
       });
 
       it('should update state when value is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1268,7 +1269,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 1.4142 });
+        expect(getInstance().state.formData).toEqual({ foo: 1.4142 });
       });
     });
 
@@ -1282,7 +1283,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=hidden]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=hidden]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -1294,11 +1295,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=hidden]').value).eql('42');
+        expect(node.querySelector('[type=hidden]').value).toEqual('42');
       });
 
       it('should map widget value to a typed state one', () => {
-        const { comp } = createFormComponent({
+        const { getInstance } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1306,7 +1307,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData.foo).eql(42);
+        expect(getInstance().state.formData.foo).toEqual(42);
       });
     });
   });
@@ -1331,7 +1332,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=number]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=number]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -1343,11 +1344,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=number]').value).eql('3');
+        expect(node.querySelector('[type=number]').value).toEqual('3');
       });
 
       it('should update state when value is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1361,7 +1362,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 6 });
+        expect(getInstance().state.formData).toEqual({ foo: 6 });
       });
     });
 
@@ -1375,7 +1376,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=range]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=range]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -1387,11 +1388,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=range]').value).eql('3');
+        expect(node.querySelector('[type=range]').value).toEqual('3');
       });
 
       it('should update state when value is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1405,7 +1406,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 6 });
+        expect(getInstance().state.formData).toEqual({ foo: 6 });
       });
     });
 
@@ -1429,7 +1430,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=radio]')).to.have.length.of(2);
+        expect(node.querySelectorAll('[type=radio]')).toHaveLength(2);
       });
 
       it('should support formData', () => {
@@ -1441,11 +1442,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelectorAll('[type=radio]')[1].checked).eql(true);
+        expect(node.querySelectorAll('[type=radio]')[1].checked).toEqual(true);
       });
 
       it('should update state when value is updated', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1459,7 +1460,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: 2 });
+        expect(getInstance().state.formData).toEqual({ foo: 2 });
       });
     });
 
@@ -1473,7 +1474,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=hidden]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=hidden]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -1485,11 +1486,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=hidden]').value).eql('42');
+        expect(node.querySelector('[type=hidden]').value).toEqual('42');
       });
 
       it('should map widget value to a typed state one', () => {
-        const { comp } = createFormComponent({
+        const { getInstance } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1497,7 +1498,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData.foo).eql(42);
+        expect(getInstance().state.formData.foo).toEqual(42);
       });
     });
   });
@@ -1522,9 +1523,9 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=radio]')).to.have.length.of(2);
-        expect(node.querySelectorAll('[type=radio]')[0]).not.eql(null);
-        expect(node.querySelectorAll('[type=radio]')[1]).not.eql(null);
+        expect(node.querySelectorAll('[type=radio]')).toHaveLength(2);
+        expect(node.querySelectorAll('[type=radio]')[0]).not.toEqual(null);
+        expect(node.querySelectorAll('[type=radio]')[1]).not.toEqual(null);
       });
 
       it('should render boolean option labels', () => {
@@ -1534,7 +1535,7 @@ describe('uiSchema', () => {
           node => node.textContent
         );
 
-        expect(labels).eql(['yes', 'no']);
+        expect(labels).toEqual(['yes', 'no']);
       });
 
       it('should support formData', () => {
@@ -1546,11 +1547,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelectorAll('[type=radio]')[1].checked).eql(true);
+        expect(node.querySelectorAll('[type=radio]')[1].checked).toEqual(true);
       });
 
       it('should update state when false is checked', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1564,11 +1565,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: false });
+        expect(getInstance().state.formData).toEqual({ foo: false });
       });
 
       it('should update state when true is checked', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1582,7 +1583,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: true });
+        expect(getInstance().state.formData).toEqual({ foo: true });
       });
     });
 
@@ -1596,18 +1597,18 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('select option')).to.have.length.of(3);
+        expect(node.querySelectorAll('select option')).toHaveLength(3);
       });
 
       it('should render boolean option labels', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('option')[1].textContent).eql('yes');
-        expect(node.querySelectorAll('option')[2].textContent).eql('no');
+        expect(node.querySelectorAll('option')[1].textContent).toEqual('yes');
+        expect(node.querySelectorAll('option')[2].textContent).toEqual('no');
       });
 
       it('should update state when true is selected', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1622,11 +1623,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: true });
+        expect(getInstance().state.formData).toEqual({ foo: true });
       });
 
       it('should update state when false is selected', () => {
-        const { comp, node } = createFormComponent({
+        const { getInstance, node } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1641,7 +1642,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData).eql({ foo: false });
+        expect(getInstance().state.formData).toEqual({ foo: false });
       });
     });
 
@@ -1655,7 +1656,7 @@ describe('uiSchema', () => {
       it('should accept a uiSchema object', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll('[type=hidden]')).to.have.length.of(1);
+        expect(node.querySelectorAll('[type=hidden]')).toHaveLength(1);
       });
 
       it('should support formData', () => {
@@ -1667,11 +1668,11 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(node.querySelector('[type=hidden]').value).eql('true');
+        expect(node.querySelector('[type=hidden]').value).toEqual('true');
       });
 
       it('should map widget value to a typed state one', () => {
-        const { comp } = createFormComponent({
+        const { getInstance } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1679,7 +1680,7 @@ describe('uiSchema', () => {
           }
         });
 
-        expect(comp.state.formData.foo).eql(true);
+        expect(getInstance().state.formData.foo).toEqual(true);
       });
     });
   });
@@ -1706,7 +1707,7 @@ describe('uiSchema', () => {
         node.querySelectorAll('input[type=text]'),
         node => node.id
       );
-      expect(ids).eql(['myform_foo', 'myform_bar']);
+      expect(ids).toEqual(['myform_foo', 'myform_bar']);
     });
 
     it('should use a custom root field id for arrays', () => {
@@ -1729,7 +1730,7 @@ describe('uiSchema', () => {
         node.querySelectorAll('input[type=text]'),
         node => node.id
       );
-      expect(ids).eql(['myform_0', 'myform_1']);
+      expect(ids).toEqual(['myform_0', 'myform_1']);
     });
 
     it('should use a custom root field id for array of objects', () => {
@@ -1769,7 +1770,7 @@ describe('uiSchema', () => {
         node.querySelectorAll('input[type=text]'),
         node => node.id
       );
-      expect(ids).eql([
+      expect(ids).toEqual([
         'myform_0_foo',
         'myform_0_bar',
         'myform_1_foo',
@@ -1808,17 +1809,19 @@ describe('uiSchema', () => {
             node.querySelectorAll('[type=text]'),
             node => node.disabled
           );
-          expect(disabled).eql([true, true]);
+          expect(disabled).toEqual([true, true]);
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.array-item-add button').disabled).eql(
+          expect(node.querySelector('.array-item-add button').disabled).toEqual(
             true
           );
         });
 
         it('should disable the Delete button', () => {
-          expect(node.querySelector('.array-item-remove').disabled).eql(true);
+          expect(node.querySelector('.array-item-remove').disabled).toEqual(
+            true
+          );
         });
       });
 
@@ -1850,7 +1853,7 @@ describe('uiSchema', () => {
             node.querySelectorAll('[type=text]'),
             node => node.disabled
           );
-          expect(disabled).eql([true, true]);
+          expect(disabled).toEqual([true, true]);
         });
       });
     });
@@ -1858,7 +1861,7 @@ describe('uiSchema', () => {
     describe('Widgets', () => {
       function shouldBeDisabled(selector, schema, uiSchema) {
         const { node } = createFormComponent({ schema, uiSchema });
-        expect(node.querySelector(selector).disabled).eql(true);
+        expect(node.querySelector(selector).disabled).toEqual(true);
       }
 
       it('should disable a text widget', () => {
@@ -1883,7 +1886,7 @@ describe('uiSchema', () => {
         });
         expect(
           node.querySelector('input[type=file]').hasAttribute('disabled')
-        ).eql(true);
+        ).toEqual(true);
       });
 
       it('should disable a textarea widget', () => {
@@ -2042,7 +2045,7 @@ describe('uiSchema', () => {
           node.querySelectorAll('select'),
           node => node.disabled
         );
-        expect(disabled).eql([true, true, true]);
+        expect(disabled).toEqual([true, true, true]);
       });
 
       it('should disable an alternative datetime widget', () => {
@@ -2061,7 +2064,7 @@ describe('uiSchema', () => {
           node.querySelectorAll('select'),
           node => node.disabled
         );
-        expect(disabled).eql([true, true, true, true, true, true]);
+        expect(disabled).toEqual([true, true, true, true, true, true]);
       });
     });
   });
@@ -2096,17 +2099,19 @@ describe('uiSchema', () => {
             node.querySelectorAll('[type=text]'),
             node => node.hasAttribute('readonly')
           );
-          expect(disabled).eql([true, true]);
+          expect(disabled).toEqual([true, true]);
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.array-item-add button').disabled).eql(
+          expect(node.querySelector('.array-item-add button').disabled).toEqual(
             true
           );
         });
 
         it('should disable the Delete button', () => {
-          expect(node.querySelector('.array-item-remove').disabled).eql(true);
+          expect(node.querySelector('.array-item-remove').disabled).toEqual(
+            true
+          );
         });
       });
 
@@ -2138,7 +2143,7 @@ describe('uiSchema', () => {
             node.querySelectorAll('[type=text]'),
             node => node.hasAttribute('readonly')
           );
-          expect(disabled).eql([true, true]);
+          expect(disabled).toEqual([true, true]);
         });
       });
     });
@@ -2146,11 +2151,13 @@ describe('uiSchema', () => {
     describe('Widgets', () => {
       function shouldBeReadonly(selector, schema, uiSchema) {
         const { node } = createFormComponent({ schema, uiSchema });
-        expect(node.querySelector(selector).hasAttribute('readonly')).eql(true);
+        expect(node.querySelector(selector).hasAttribute('readonly')).toEqual(
+          true
+        );
       }
       function shouldBeDisabled(selector, schema, uiSchema) {
         const { node } = createFormComponent({ schema, uiSchema });
-        expect(node.querySelector(selector).disabled).eql(true);
+        expect(node.querySelector(selector).disabled).toEqual(true);
       }
 
       it('should mark as readonly a text widget', () => {
@@ -2176,7 +2183,7 @@ describe('uiSchema', () => {
         });
         expect(
           node.querySelector('input[type=file]').hasAttribute('disabled')
-        ).eql(true);
+        ).toEqual(true);
       });
 
       it('should mark as readonly a textarea widget', () => {
@@ -2322,7 +2329,7 @@ describe('uiSchema', () => {
         const readonly = [].map.call(node.querySelectorAll('select'), node =>
           node.hasAttribute('disabled')
         );
-        expect(readonly).eql([true, true, true]);
+        expect(readonly).toEqual([true, true, true]);
       });
 
       it('should mark readonly as disabled on an alternative datetime widget', () => {
@@ -2340,7 +2347,7 @@ describe('uiSchema', () => {
         const readonly = [].map.call(node.querySelectorAll('select'), node =>
           node.hasAttribute('disabled')
         );
-        expect(readonly).eql([true, true, true, true, true, true]);
+        expect(readonly).toEqual([true, true, true, true, true, true]);
       });
     });
   });

@@ -20,13 +20,13 @@
     "react": ">=15"
   },
   "dependencies": {
-    "ajv": "^5.2.3",
+    "ajv": "^6.5.1",
     "lodash.topath": "^4.5.2",
     "prop-types": "^15.5.8",
     "setimmediate": "^1.0.5"
   },
   "devDependencies": {
     "atob": "^2.0.3",
-    "react": "^15.5.0"
+    "react": "^16.4.1"
   }
 }

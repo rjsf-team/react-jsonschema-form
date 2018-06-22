@@ -1,19 +1,10 @@
 import React from 'react';
-import { expect } from 'chai';
-import { Simulate } from 'react-addons-test-utils';
+import { fireEvent, cleanup } from 'react-testing-library';
 
-import { createFormComponent, createSandbox } from './test_utils';
+import { createFormComponent } from './test_utils';
 
 describe('ObjectField', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
+  afterEach(cleanup);
 
   describe('schema', () => {
     const schema = {
@@ -39,7 +30,7 @@ describe('ObjectField', () => {
     it('should render a fieldset', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll('fieldset')).to.have.length.of(1);
+      expect(node.querySelectorAll('fieldset')).toHaveLength(1);
     });
 
     it('should render a fieldset legend', () => {
@@ -47,8 +38,8 @@ describe('ObjectField', () => {
 
       const legend = node.querySelector('fieldset > legend');
 
-      expect(legend.textContent).eql('my object');
-      expect(legend.id).eql('root__title');
+      expect(legend.textContent).toEqual('my object');
+      expect(legend.id).toEqual('root__title');
     });
 
     it('should render a customized title', () => {
@@ -60,7 +51,7 @@ describe('ObjectField', () => {
           TitleField: CustomTitleField
         }
       });
-      expect(node.querySelector('fieldset > #custom').textContent).to.eql(
+      expect(node.querySelector('fieldset > #custom').textContent).toEqual(
         'my object'
       );
     });
@@ -74,7 +65,7 @@ describe('ObjectField', () => {
         schema,
         fields: { DescriptionField: CustomDescriptionField }
       });
-      expect(node.querySelector('fieldset > #custom').textContent).to.eql(
+      expect(node.querySelector('fieldset > #custom').textContent).toEqual(
         'my description'
       );
     });
@@ -82,30 +73,32 @@ describe('ObjectField', () => {
     it('should render a default property label', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.field-boolean label').textContent).eql('bar');
+      expect(node.querySelector('.field-boolean label').textContent).toEqual(
+        'bar'
+      );
     });
 
     it('should render a string property', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(
-        node.querySelectorAll('.field input[type=text]')
-      ).to.have.length.of(1);
+      expect(node.querySelectorAll('.field input[type=text]')).toHaveLength(1);
     });
 
     it('should render a boolean property', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(
-        node.querySelectorAll('.field input[type=checkbox]')
-      ).to.have.length.of(1);
+      expect(node.querySelectorAll('.field input[type=checkbox]')).toHaveLength(
+        1
+      );
     });
 
     it('should handle a default object value', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.field input[type=text]').value).eql('hey');
-      expect(node.querySelector('.field input[type=checkbox]').checked).eql(
+      expect(node.querySelector('.field input[type=text]').value).toEqual(
+        'hey'
+      );
+      expect(node.querySelector('.field input[type=checkbox]').checked).toEqual(
         true
       );
     });
@@ -116,8 +109,10 @@ describe('ObjectField', () => {
       // Required field is <input type="text" required="">
       expect(
         node.querySelector('input[type=text]').getAttribute('required')
-      ).eql('');
-      expect(node.querySelector('.field-string label').textContent).eql('Foo*');
+      ).toEqual('');
+      expect(node.querySelector('.field-string label').textContent).toEqual(
+        'Foo*'
+      );
     });
 
     it('should fill fields with form data', () => {
@@ -129,51 +124,51 @@ describe('ObjectField', () => {
         }
       });
 
-      expect(node.querySelector('.field input[type=text]').value).eql('hey');
-      expect(node.querySelector('.field input[type=checkbox]').checked).eql(
+      expect(node.querySelector('.field input[type=text]').value).toEqual(
+        'hey'
+      );
+      expect(node.querySelector('.field input[type=checkbox]').checked).toEqual(
         true
       );
     });
 
     it('should handle object fields change events', () => {
-      const { comp, node } = createFormComponent({ schema });
+      const { getInstance, node } = createFormComponent({ schema });
+      const input = node.querySelector('input[type=text]');
 
-      Simulate.change(node.querySelector('input[type=text]'), {
-        target: { value: 'changed' }
-      });
+      input.value = 'changed';
+      fireEvent.change(input);
 
-      expect(comp.state.formData.foo).eql('changed');
+      expect(getInstance().state.formData.foo).toEqual('changed');
     });
 
     it('should handle object fields with blur events', () => {
-      const onBlur = sandbox.spy();
+      const onBlur = jest.fn();
       const { node } = createFormComponent({ schema, onBlur });
-
       const input = node.querySelector('input[type=text]');
-      Simulate.blur(input, {
-        target: { value: 'changed' }
-      });
 
-      expect(onBlur.calledWith(input.id, 'changed')).to.be.true;
+      input.value = 'changed';
+      fireEvent.blur(input);
+
+      expect(onBlur).toHaveBeenCalledWith(input.id, 'changed');
     });
 
     it('should handle object fields with focus events', () => {
-      const onFocus = sandbox.spy();
+      const onFocus = jest.fn();
       const { node } = createFormComponent({ schema, onFocus });
-
       const input = node.querySelector('input[type=text]');
-      Simulate.focus(input, {
-        target: { value: 'changed' }
-      });
 
-      expect(onFocus.calledWith(input.id, 'changed')).to.be.true;
+      input.value = 'changed';
+      fireEvent.focus(input);
+
+      expect(onFocus).toHaveBeenCalledWith(input.id, 'changed');
     });
 
     it('should render the widget with the expected id', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('input[type=text]').id).eql('root_foo');
-      expect(node.querySelector('input[type=checkbox]').id).eql('root_bar');
+      expect(node.querySelector('input[type=text]').id).toEqual('root_foo');
+      expect(node.querySelector('input[type=checkbox]').id).toEqual('root_bar');
     });
   });
 
@@ -200,7 +195,7 @@ describe('ObjectField', () => {
         l => l.textContent
       );
 
-      expect(labels).eql(['baz', 'qux', 'bar', 'foo']);
+      expect(labels).toEqual(['baz', 'qux', 'bar', 'foo']);
     });
 
     it('should insert unordered properties at wildcard position', () => {
@@ -215,7 +210,7 @@ describe('ObjectField', () => {
         l => l.textContent
       );
 
-      expect(labels).eql(['baz', 'bar', 'qux', 'foo']);
+      expect(labels).toEqual(['baz', 'bar', 'qux', 'foo']);
     });
 
     it('should throw when order list contains an extraneous property', () => {
@@ -226,7 +221,7 @@ describe('ObjectField', () => {
         }
       });
 
-      expect(node.querySelector('.config-error').textContent).to.match(
+      expect(node.querySelector('.config-error').textContent).toMatch(
         /contains extraneous properties 'wut\?', 'huh\?'/
       );
     });
@@ -239,7 +234,7 @@ describe('ObjectField', () => {
         }
       });
 
-      expect(node.querySelector('.config-error').textContent).to.match(
+      expect(node.querySelector('.config-error').textContent).toMatch(
         /does not contain properties 'foo', 'qux'/
       );
     });
@@ -252,7 +247,7 @@ describe('ObjectField', () => {
         }
       });
 
-      expect(node.querySelector('.config-error').textContent).to.match(
+      expect(node.querySelector('.config-error').textContent).toMatch(
         /contains more than one wildcard/
       );
     });
@@ -280,7 +275,7 @@ describe('ObjectField', () => {
         l => l.textContent
       );
 
-      expect(labels).eql(['bar', 'foo']);
+      expect(labels).toEqual(['bar', 'foo']);
     });
 
     it('should order referenced object schema definition properties', () => {
@@ -313,7 +308,7 @@ describe('ObjectField', () => {
         l => l.textContent
       );
 
-      expect(labels).eql(['bar', 'foo']);
+      expect(labels).toEqual(['bar', 'foo']);
     });
 
     it('should render the widget with the expected id', () => {
@@ -336,7 +331,7 @@ describe('ObjectField', () => {
         node.querySelectorAll('input[type=text]'),
         node => node.id
       );
-      expect(ids).eql(['root_bar', 'root_foo']);
+      expect(ids).toEqual(['root_bar', 'root_foo']);
     });
   });
 
@@ -357,7 +352,7 @@ describe('ObjectField', () => {
       };
 
       const { node } = createFormComponent({ schema, fields });
-      expect(node.querySelector('#title-object')).to.not.be.null;
+      expect(node.querySelector('#title-object')).not.toBeNull();
     });
 
     it('should pass schema title to TitleField', () => {
@@ -368,7 +363,7 @@ describe('ObjectField', () => {
       };
 
       const { node } = createFormComponent({ schema, fields });
-      expect(node.querySelector('#title-test')).to.not.be.null;
+      expect(node.querySelector('#title-test')).not.toBeNull();
     });
 
     it('should pass empty schema title to TitleField', () => {
@@ -378,7 +373,7 @@ describe('ObjectField', () => {
         title: ''
       };
       const { node } = createFormComponent({ schema, fields });
-      expect(node.querySelector('#title-')).to.be.null;
+      expect(node.querySelector('#title-')).toBeNull();
     });
   });
 });
