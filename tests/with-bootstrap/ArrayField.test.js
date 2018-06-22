@@ -1,4 +1,5 @@
 import React from 'react';
+import { Simulate } from 'react-dom/test-utils';
 import { fireEvent, cleanup } from 'react-testing-library';
 
 import { createFormComponent, suppressLogs } from './test_utils';
@@ -814,28 +815,31 @@ describe('ArrayField', () => {
       ).not.toBeNull();
     });
 
-    it.skip('should handle a change event', async () => {
-      // sandbox.stub(window, 'FileReader').returns({
-      //   set onload(fn) {
-      //     fn({ target: { result: 'data:text/plain;base64,x=' } });
-      //   },
-      //   readAsDataUrl() {}
-      // });
-      // const { getInstance, node } = createFormComponent({ schema });
-      // fireEvent.change(node.querySelector('.field input[type=file]'), {
-      //   target: {
-      //     files: [
-      //       { name: 'file1.txt', size: 1, type: 'type' },
-      //       { name: 'file2.txt', size: 2, type: 'type' }
-      //     ]
-      //   }
-      // });
-      // return new Promise(setImmediate).then(() =>
-      //   expect(getInstance().state.formData).toEqual([
-      //     'data:text/plain;name=file1.txt;base64,x=',
-      //     'data:text/plain;name=file2.txt;base64,x='
-      //   ])
-      // );
+    it('should handle a change event', async () => {
+      window.FileReader = jest.fn(() => ({
+        set onload(fn) {
+          fn({ target: { result: 'data:text/plain;base64,x=' } });
+        },
+        readAsDataUrl() {}
+      }));
+
+      const { getInstance, node } = createFormComponent({ schema });
+
+      Simulate.change(node.querySelector('.field input[type=file]'), {
+        target: {
+          files: [
+            { name: 'file1.txt', size: 1, type: 'type' },
+            { name: 'file2.txt', size: 2, type: 'type' }
+          ]
+        }
+      });
+
+      await new Promise(setImmediate);
+
+      expect(getInstance().state.formData).toEqual([
+        'data:text/plain;name=file1.txt;base64,x=',
+        'data:text/plain;name=file2.txt;base64,x='
+      ]);
     });
 
     it('should fill field with data', () => {
