@@ -5,10 +5,14 @@ import { render } from 'react-testing-library';
 import 'jest-dom/extend-expect';
 
 import Form from 'react-jsonschema-form/src';
+import FormContainer from 'react-jsonschema-form/src/components/FormContainer';
+import theme from 'react-jsonschema-form-bootstrap/src';
 
-export function createComponent(Component, props) {
+export function createComponent(Component, props, spy) {
   const idPrefix = props.idPrefix || 'root';
-  const spy = jest.spyOn(Component.prototype, 'render');
+  if (!spy) {
+    spy = jest.spyOn(Component.prototype, 'render');
+  }
   const utils = render(<Component {...props} />);
   const node = utils.container.firstChild;
   return { ...utils, queryByModel, getInstance, rerender, node };
@@ -35,7 +39,12 @@ export function createComponent(Component, props) {
 }
 
 export function createFormComponent(props) {
-  return createComponent(Form, { ...props, safeRenderCompletion: true });
+  const spy = jest.spyOn(FormContainer.prototype, 'render');
+  return createComponent(
+    Form,
+    { theme, ...props, safeRenderCompletion: true },
+    spy
+  );
 }
 
 export function suppressLogs(type = 'error', fn) {

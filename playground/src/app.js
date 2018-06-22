@@ -6,7 +6,8 @@ import 'codemirror/mode/javascript/javascript';
 
 import { shouldRender } from 'react-jsonschema-form/src/utils';
 import { samples } from './samples';
-import Form from 'react-jsonschema-form';
+import BaseForm from 'react-jsonschema-form';
+import theme from 'react-jsonschema-form-bootstrap';
 
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
@@ -19,6 +20,7 @@ import 'codemirror/theme/solarized.css';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/theme/eclipse.css';
 
+const Form = props => <BaseForm theme={theme} {...props} />;
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
 const toJson = val => JSON.stringify(val, null, 2);

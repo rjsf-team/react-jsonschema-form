@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DescriptionField from '../fields/DescriptionField.js';
+import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField.js';
 
 function CheckboxWidget(props) {
   const {

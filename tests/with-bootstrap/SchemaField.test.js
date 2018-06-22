@@ -104,7 +104,13 @@ describe('SchemaField', () => {
       });
 
       const { registry } = receivedProps;
-      expect(registry.widgets).toEqual(getDefaultRegistry().widgets);
+      /**
+       * I know that Object.keys doesn't guarantee the exact order of keys
+       * but it works here. Maybe we can create custom matcher. ;)
+       */
+      expect(Object.keys(registry.widgets)).toEqual(
+        Object.keys(getDefaultRegistry().widgets)
+      );
       expect(registry.definitions).toEqual({});
       expect(typeof registry.fields).toBe('object');
       expect(registry.fields.SchemaField).toEqual(SchemaField);

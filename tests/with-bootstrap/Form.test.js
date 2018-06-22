@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, cleanup, fireEvent, wait } from 'react-testing-library';
 
-import Form from 'react-jsonschema-form/src';
+import BaseForm from 'react-jsonschema-form/src';
+import theme from 'react-jsonschema-form-bootstrap/src';
 import { createFormComponent, suppressLogs } from './test_utils';
 
 describe('Form', () => {
-  /*eslint-disable-next-line*/
-  // console.warn = jest.fn();
+  const Form = props => <BaseForm theme={theme} {...props} />;
   /**
    * We need cleanup after each render()
    * until this issue https://github.com/facebook/react/issues/2043 will be solved.

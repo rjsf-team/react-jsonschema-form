@@ -1067,7 +1067,7 @@ describe('StringField', () => {
     });
 
     it('should accept a valid date', () => {
-      const { getInstance } = createFormComponent({
+      const { getInstance, rerender } = createFormComponent({
         schema: {
           type: 'string',
           format: 'date'
@@ -1076,7 +1076,7 @@ describe('StringField', () => {
         liveValidate: true
       });
 
-      getInstance().componentWillReceiveProps({ formData: '2012-12-12' });
+      rerender({ formData: '2012-12-12' });
 
       expect(getInstance().state.errors).toHaveLength(0);
     });

@@ -282,12 +282,13 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { getInstance } = createFormComponent({
+        const { getInstance, rerender } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        getInstance().componentWillReceiveProps({ formData });
+
+        rerender({ formData });
 
         expect(getInstance().state.errorSchema).toEqual({
           __errors: ['Invalid']
@@ -364,12 +365,13 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { getInstance } = createFormComponent({
+        const { getInstance, rerender } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        getInstance().componentWillReceiveProps({ formData });
+
+        rerender({ formData });
 
         expect(getInstance().state.errorSchema).toEqual({
           __errors: [],
@@ -411,12 +413,13 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { getInstance } = createFormComponent({
+        const { getInstance, rerender } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        getInstance().componentWillReceiveProps({ formData });
+
+        rerender({ formData });
 
         expect(getInstance().state.errorSchema).toEqual({
           0: {
@@ -458,12 +461,13 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { getInstance } = createFormComponent({
+        const { getInstance, rerender } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        getInstance().componentWillReceiveProps({ formData });
+
+        rerender({ formData });
 
         expect(getInstance().state.errorSchema).toEqual({
           0: { __errors: [] },
