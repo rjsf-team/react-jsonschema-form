@@ -1,6 +1,6 @@
 {
   "name": "react-jsonschema-form-bootstrap",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "dist/main.js",
   "source": "src/index.js",
   "license": "MIT",

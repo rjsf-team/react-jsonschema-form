@@ -13,7 +13,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-jsonschema-form": "^2.0.0",
-    "react-jsonschema-form-bootstrap": "^1.0.0"
+    "react-jsonschema-form-bootstrap": "^2.0.0"
   },
   "devDependencies": {
     "parcel-bundler": "^1.9.2"
