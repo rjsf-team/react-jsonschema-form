@@ -159,10 +159,10 @@ export default class FormContainer extends Component {
   getRegistry() {
     return {
       fields: this.props.fields,
+      templates: this.props.templates,
       widgets: this.props.widgets,
       ArrayFieldTemplate: this.props.ArrayFieldTemplate,
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
-      FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
       formContext: this.props.formContext || {}
     };
@@ -236,6 +236,9 @@ if (process.env.NODE_ENV !== 'production') {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     formData: PropTypes.any,
+    templates: PropTypes.objectOf(
+      PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+    ),
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
     ),

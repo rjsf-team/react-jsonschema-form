@@ -59,7 +59,7 @@ describe('FormContext', () => {
           }
         }
       },
-      FieldTemplate: CustomTemplateField,
+      templates: { FieldTemplate: CustomTemplateField },
       formContext
     });
 
