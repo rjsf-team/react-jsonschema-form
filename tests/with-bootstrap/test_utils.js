@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { render } from 'react-testing-library';
-import 'dom-testing-library/extend-expect';
+import 'jest-dom/extend-expect';
 
 import Form from 'react-jsonschema-form/src';
 
