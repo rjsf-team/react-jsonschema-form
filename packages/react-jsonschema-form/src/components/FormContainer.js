@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { default as DefaultErrorList } from './ErrorList';
 import {
   getDefaultFormState,
   retrieveSchema,
@@ -17,8 +16,7 @@ export default class FormContainer extends Component {
     noValidate: false,
     liveValidate: false,
     safeRenderCompletion: false,
-    noHtml5Validate: false,
-    ErrorList: DefaultErrorList
+    noHtml5Validate: false
   };
 
   constructor(props) {
@@ -81,13 +79,13 @@ export default class FormContainer extends Component {
     );
   }
 
-  renderErrors() {
+  renderErrors(ErrorListTemplate) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
-    const { ErrorList, showErrorList, formContext } = this.props;
+    const { showErrorList, formContext } = this.props;
 
     if (errors.length && showErrorList != false) {
       return (
-        <ErrorList
+        <ErrorListTemplate
           errors={errors}
           errorSchema={errorSchema}
           schema={schema}
@@ -188,6 +186,7 @@ export default class FormContainer extends Component {
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
+    const { ErrorListTemplate } = registry.templates;
 
     return (
       <form
@@ -203,7 +202,7 @@ export default class FormContainer extends Component {
         noValidate={noHtml5Validate}
         onSubmit={this.onSubmit}
       >
-        {this.renderErrors()}
+        {this.renderErrors(ErrorListTemplate)}
         <_SchemaField
           schema={schema}
           uiSchema={uiSchema}

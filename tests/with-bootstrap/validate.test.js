@@ -540,7 +540,7 @@ describe('Validation', () => {
 
       const formData = 0;
 
-      const CustomErrorList = ({
+      const CustomErrorListTemplate = ({
         errors,
         errorSchema,
         schema,
@@ -562,7 +562,7 @@ describe('Validation', () => {
           uiSchema,
           liveValidate: true,
           formData,
-          ErrorList: CustomErrorList,
+          templates: { ErrorListTemplate: CustomErrorListTemplate },
           formContext: { className: 'foo' }
         });
         expect(node.querySelectorAll('.CustomErrorList')).toHaveLength(1);

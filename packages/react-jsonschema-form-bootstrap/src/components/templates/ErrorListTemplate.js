@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ErrorList(props) {
+function ErrorListTemplate(props) {
   const { errors } = props;
   return (
     <div className="panel panel-danger errors">
@@ -19,3 +19,9 @@ export default function ErrorList(props) {
     </div>
   );
 }
+
+/**
+ * TODO: PropTypes
+ */
+
+export default ErrorListTemplate;
