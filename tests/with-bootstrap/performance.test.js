@@ -1,24 +1,13 @@
-import sinon from 'sinon';
-import React from 'react';
-import { scryRenderedComponentsWithType } from 'react-addons-test-utils';
+import { scryRenderedComponentsWithType } from 'react-dom/test-utils';
 import { getDefaultRegistry } from 'react-jsonschema-form/src/utils';
+
 import SchemaField from 'react-jsonschema-form/src/components/fields/SchemaField';
-import {
-  createComponent,
-  createFormComponent,
-  createSandbox,
-  setProps
-} from './test_utils';
+
+import { createComponent, createFormComponent } from './test_utils';
 
 describe('Rendering performance optimizations', () => {
-  var sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    jest.restoreAllMocks();
   });
 
   describe('Form', () => {
@@ -26,24 +15,40 @@ describe('Rendering performance optimizations', () => {
       const schema = { type: 'string' };
       const uiSchema = {};
 
-      const { comp } = createFormComponent({ schema, uiSchema });
-      sandbox.stub(comp, 'render').returns(<div />);
+      const { rerender, getInstance } = createFormComponent({
+        schema,
+        uiSchema
+      });
 
-      comp.componentWillReceiveProps({ schema });
+      /**
+       * This spy gets the access to the existing mock
+       * so it knows about the first render of component.
+       */
+      const spy = jest.spyOn(getInstance(), 'render');
 
-      sinon.assert.notCalled(comp.render);
+      rerender({ schema });
+
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should not render if next formData are equivalent', () => {
       const schema = { type: 'string' };
       const formData = 'foo';
 
-      const { comp } = createFormComponent({ schema, formData });
-      sandbox.stub(comp, 'render').returns(<div />);
+      const { rerender, getInstance } = createFormComponent({
+        schema,
+        formData
+      });
 
-      comp.componentWillReceiveProps({ formData });
+      /**
+       * This spy gets the access to the existing mock
+       * so it knows about the first render of component.
+       */
+      const spy = jest.spyOn(getInstance(), 'render');
 
-      sinon.assert.notCalled(comp.render);
+      rerender({ formData });
+
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should only render changed object properties', () => {
@@ -55,23 +60,28 @@ describe('Rendering performance optimizations', () => {
         }
       };
 
-      const { comp } = createFormComponent({
+      const { getInstance, rerender } = createFormComponent({
         schema,
         formData: { const: '0', var: '0' }
       });
 
-      const fields = scryRenderedComponentsWithType(comp, SchemaField).reduce(
-        (fields, fieldComp) => {
-          sandbox.stub(fieldComp, 'render').returns(<div />);
-          fields[fieldComp.props.idSchema.$id] = fieldComp;
-          return fields;
-        }
-      );
+      const fields = scryRenderedComponentsWithType(
+        getInstance(),
+        SchemaField
+      ).reduce((fields, fieldComp) => {
+        /**
+         * These spies are totally new
+         * so they don't know about the first render
+         */
+        const spy = jest.spyOn(fieldComp, 'render');
+        fields[fieldComp.props.idSchema.$id] = spy;
+        return fields;
+      });
 
-      setProps(comp, { schema, formData: { const: '0', var: '1' } });
+      rerender({ schema, formData: { const: '0', var: '1' } });
 
-      sinon.assert.notCalled(fields.root_const.render);
-      sinon.assert.calledOnce(fields.root_var.render);
+      expect(fields.root_const).toHaveBeenCalledTimes(0);
+      expect(fields.root_var).toHaveBeenCalledTimes(1);
     });
 
     it('should only render changed array items', () => {
@@ -80,23 +90,28 @@ describe('Rendering performance optimizations', () => {
         items: { type: 'string' }
       };
 
-      const { comp } = createFormComponent({
+      const { getInstance, rerender } = createFormComponent({
         schema,
         formData: ['const', 'var0']
       });
 
-      const fields = scryRenderedComponentsWithType(comp, SchemaField).reduce(
-        (fields, fieldComp) => {
-          sandbox.stub(fieldComp, 'render').returns(<div />);
-          fields[fieldComp.props.idSchema.$id] = fieldComp;
-          return fields;
-        }
-      );
+      const fields = scryRenderedComponentsWithType(
+        getInstance(),
+        SchemaField
+      ).reduce((fields, fieldComp) => {
+        /**
+         * These spies are totally new
+         * so they don't know about the first render
+         */
+        const spy = jest.spyOn(fieldComp, 'render');
+        fields[fieldComp.props.idSchema.$id] = spy;
+        return fields;
+      });
 
-      setProps(comp, { schema, formData: ['const', 'var1'] });
+      rerender({ schema, formData: ['const', 'var1'] });
 
-      sinon.assert.notCalled(fields.root_0.render);
-      sinon.assert.calledOnce(fields.root_1.render);
+      expect(fields.root_0).toHaveBeenCalledTimes(0);
+      expect(fields.root_1).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -125,12 +140,17 @@ describe('Rendering performance optimizations', () => {
         onFocus
       };
 
-      const { comp } = createComponent(SchemaField, props);
-      sandbox.stub(comp, 'render').returns(<div />);
+      const { getInstance, rerender } = createComponent(SchemaField, props);
 
-      setProps(comp, props);
+      /**
+       * It should be already called two times because once was called
+       * for the root object and the other was for property foo.
+       */
+      const spy = jest.spyOn(getInstance(), 'render');
 
-      sinon.assert.notCalled(comp.render);
+      rerender(props);
+
+      expect(spy).toHaveBeenCalledTimes(2);
     });
 
     it('should not render if next formData are equivalent', () => {
@@ -143,12 +163,17 @@ describe('Rendering performance optimizations', () => {
         onBlur
       };
 
-      const { comp } = createComponent(SchemaField, props);
-      sandbox.stub(comp, 'render').returns(<div />);
+      const { getInstance, rerender } = createComponent(SchemaField, props);
 
-      setProps(comp, { ...props, formData: { foo: 'blah' } });
+      /**
+       * It should be already called two times because once was called
+       * for the root object and the other was for property foo.
+       */
+      const spy = jest.spyOn(getInstance(), 'render');
 
-      sinon.assert.notCalled(comp.render);
+      rerender({ ...props, formData: { foo: 'blah' } });
+
+      expect(spy).toHaveBeenCalledTimes(2);
     });
   });
 });
