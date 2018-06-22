@@ -24,4 +24,8 @@ function ObjectFieldTemplate(props) {
   );
 }
 
+/**
+ * TODO: PropTypes
+ */
+
 export default ObjectFieldTemplate;
