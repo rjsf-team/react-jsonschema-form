@@ -103,7 +103,7 @@ describe('ArrayField', () => {
 
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomComponent,
+        templates: { ArrayFieldTemplate: CustomComponent },
         formData: [1],
         liveValidate: true
       });
@@ -950,7 +950,7 @@ describe('ArrayField', () => {
 
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomTemplate,
+        templates: { ArrayFieldTemplate: CustomTemplate },
         formData: [[]],
         liveValidate: true
       });
