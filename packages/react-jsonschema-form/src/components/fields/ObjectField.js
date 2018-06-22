@@ -3,30 +3,6 @@ import PropTypes from 'prop-types';
 
 import { orderProperties, retrieveSchema } from '../../utils';
 
-function DefaultObjectFieldTemplate(props) {
-  const { TitleField, DescriptionField } = props;
-  return (
-    <fieldset>
-      {(props.uiSchema['ui:title'] || props.title) && (
-        <TitleField
-          id={`${props.idSchema.$id}__title`}
-          title={props.title || props.uiSchema['ui:title']}
-          required={props.required}
-          formContext={props.formContext}
-        />
-      )}
-      {props.description && (
-        <DescriptionField
-          id={`${props.idSchema.$id}__description`}
-          description={props.description}
-          formContext={props.formContext}
-        />
-      )}
-      {props.properties.map(prop => prop.content)}
-    </fieldset>
-  );
-}
-
 class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -96,7 +72,7 @@ class ObjectField extends Component {
       );
     }
 
-    const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
+    const Template = registry.templates.ObjectFieldTemplate;
 
     const templateProps = {
       title: uiSchema['ui:title'] || title,

@@ -356,7 +356,8 @@ class App extends Component {
     this.setState({ form: false }, () =>
       this.setState({
         ...data,
-        form: true
+        form: true,
+        templates: data.templates
       })
     );
   };

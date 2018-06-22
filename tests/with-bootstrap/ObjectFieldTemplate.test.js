@@ -44,7 +44,7 @@ describe('ObjectFieldTemplate', () => {
     },
     uiSchema: { 'ui:description': 'foobar' },
     formData,
-    ObjectFieldTemplate,
+    templates: { ObjectFieldTemplate },
     fields: {
       TitleField,
       DescriptionField
