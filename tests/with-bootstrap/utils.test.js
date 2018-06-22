@@ -729,7 +729,7 @@ describe('utils', () => {
         });
 
         describe('true condition', () => {
-          it('should add \'first\' properties given \'first\' data', () => {
+          it.skip('should add \'first\' properties given \'first\' data', () => {
             const schema = {
               type: 'object',
               properties: {
@@ -765,7 +765,7 @@ describe('utils', () => {
             });
           });
 
-          it('should add \'second\' properties given \'second\' data', () => {
+          it.skip('should add \'second\' properties given \'second\' data', () => {
             const schema = {
               type: 'object',
               properties: {
@@ -803,7 +803,7 @@ describe('utils', () => {
         });
 
         describe('with $ref in dependency', () => {
-          it('should retrieve the referenced schema', () => {
+          it.skip('should retrieve the referenced schema', () => {
             const schema = {
               type: 'object',
               properties: {
