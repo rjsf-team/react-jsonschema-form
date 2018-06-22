@@ -1,19 +1,12 @@
 import React from 'react';
-import { expect } from 'chai';
+import { cleanup } from 'react-testing-library';
 
 import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField';
-import { createSandbox, createComponent } from './test_utils';
+
+import { createComponent } from './test_utils';
 
 describe('DescriptionField', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
+  afterEach(cleanup);
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
@@ -32,7 +25,7 @@ describe('DescriptionField', () => {
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
-    expect(node.tagName).to.equal('DIV');
+    expect(node.tagName).toBe('DIV');
   });
 
   it('should return a p for a description text', () => {
@@ -41,7 +34,7 @@ describe('DescriptionField', () => {
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
-    expect(node.tagName).to.equal('P');
+    expect(node.tagName).toBe('P');
   });
 
   it('should have the expected id', () => {
@@ -51,6 +44,6 @@ describe('DescriptionField', () => {
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
-    expect(node.id).to.equal('sample_id');
+    expect(node.id).toBe('sample_id');
   });
 });
