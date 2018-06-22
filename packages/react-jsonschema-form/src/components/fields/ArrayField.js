@@ -199,9 +199,12 @@ class ArrayField extends Component {
       rawErrors
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
-    const { definitions, fields, templates, formContext } = registry;
-    const { ArrayFieldTemplate } = templates;
-    const { TitleField, DescriptionField } = fields;
+    const { definitions, templates, formContext } = registry;
+    const {
+      ArrayFieldTemplate,
+      TitleTemplate,
+      DescriptionTemplate
+    } = templates;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const arrayProps = {
       canAdd: this.canAddItem(formData),
@@ -231,7 +234,7 @@ class ArrayField extends Component {
         });
       }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
-      DescriptionField,
+      DescriptionTemplate,
       disabled,
       idSchema,
       uiSchema,
@@ -240,7 +243,7 @@ class ArrayField extends Component {
       required,
       schema,
       title,
-      TitleField,
+      TitleTemplate,
       formContext,
       formData,
       rawErrors
@@ -352,9 +355,8 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
-    const { definitions, fields, templates, formContext } = registry;
-    const { ArrayFieldTemplate } = templates;
-    const { TitleField } = fields;
+    const { definitions, templates, formContext } = registry;
+    const { ArrayFieldTemplate: Template, TitleTemplate } = templates;
     const itemSchemas = schema.items.map((item, index) =>
       retrieveSchema(item, definitions, formData[index])
     );
@@ -416,13 +418,11 @@ class ArrayField extends Component {
       schema,
       uiSchema,
       title,
-      TitleField,
+      TitleTemplate,
       formContext,
       rawErrors
     };
 
-    // Check if a custom template template was passed in
-    const Template = ArrayFieldTemplate;
     return <Template {...arrayProps} />;
   }
 

@@ -11,16 +11,16 @@ describe('ObjectFieldTemplate', () => {
   class ObjectFieldTemplate extends PureComponent {
     render() {
       const {
-        TitleField,
-        DescriptionField,
+        TitleTemplate,
+        DescriptionTemplate,
         properties,
         title,
         description
       } = this.props;
       return (
         <div className="root">
-          <TitleField title={title} />
-          <DescriptionField description={description} />
+          <TitleTemplate title={title} />
+          <DescriptionTemplate description={description} />
           <div>
             {properties.map(({ content }, index) => (
               <div key={index} className="property">
@@ -33,8 +33,8 @@ describe('ObjectFieldTemplate', () => {
     }
   }
 
-  const TitleField = () => <div className="title-field" />;
-  const DescriptionField = ({ description }) =>
+  const TitleTemplate = () => <div className="title-field" />;
+  const DescriptionTemplate = ({ description }) =>
     description ? <div className="description-field" /> : null;
 
   const { node } = createFormComponent({
@@ -44,10 +44,10 @@ describe('ObjectFieldTemplate', () => {
     },
     uiSchema: { 'ui:description': 'foobar' },
     formData,
-    templates: { ObjectFieldTemplate },
-    fields: {
-      TitleField,
-      DescriptionField
+    templates: {
+      ObjectFieldTemplate,
+      TitleTemplate,
+      DescriptionTemplate
     }
   });
 

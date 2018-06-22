@@ -1,11 +1,11 @@
 import React from 'react';
 import { cleanup } from 'react-testing-library';
 
-import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField';
+import DescriptionTemplate from 'react-jsonschema-form-bootstrap/src/components/templates/DescriptionTemplate';
 
 import { createComponent } from './test_utils';
 
-describe('DescriptionField', () => {
+describe('DescriptionTemplate', () => {
   afterEach(cleanup);
 
   // For some reason, stateless components needs to be wrapped into a stateful
@@ -15,7 +15,7 @@ describe('DescriptionField', () => {
       super(props);
     }
     render() {
-      return <DescriptionField {...this.props} />;
+      return <DescriptionTemplate {...this.props} />;
     }
   }
 

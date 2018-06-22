@@ -1,11 +1,11 @@
 import React from 'react';
 
 function ObjectFieldTemplate(props) {
-  const { TitleField, DescriptionField } = props;
+  const { TitleTemplate, DescriptionTemplate } = props;
   return (
     <fieldset>
       {(props.uiSchema['ui:title'] || props.title) && (
-        <TitleField
+        <TitleTemplate
           id={`${props.idSchema.$id}__title`}
           title={props.title || props.uiSchema['ui:title']}
           required={props.required}
@@ -13,7 +13,7 @@ function ObjectFieldTemplate(props) {
         />
       )}
       {props.description && (
-        <DescriptionField
+        <DescriptionTemplate
           id={`${props.idSchema.$id}__description`}
           description={props.description}
           formContext={props.formContext}

@@ -63,8 +63,7 @@ function SchemaFieldRender(props) {
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
-  const { FieldTemplate } = templates;
-  const { DescriptionField } = fields;
+  const { FieldTemplate, DescriptionTemplate } = templates;
   const disabled = Boolean(props.disabled || uiSchema['ui:disabled']);
   const readonly = Boolean(props.readonly || uiSchema['ui:readonly']);
   const autofocus = Boolean(props.autofocus || uiSchema['ui:autofocus']);
@@ -132,7 +131,7 @@ function SchemaFieldRender(props) {
 
   const fieldProps = {
     description: (
-      <DescriptionField
+      <DescriptionTemplate
         id={id + '__description'}
         description={description}
         formContext={formContext}

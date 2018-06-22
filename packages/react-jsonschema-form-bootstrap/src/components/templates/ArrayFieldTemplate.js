@@ -1,21 +1,21 @@
 import React from 'react';
 
-function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
+function ArrayFieldTitle({ TitleTemplate, idSchema, title, required }) {
   if (!title) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
   const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} required={required} />;
+  return <TitleTemplate id={id} title={title} required={required} />;
 }
 
-function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
+function ArrayFieldDescription({ DescriptionTemplate, idSchema, description }) {
   if (!description) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
   const id = `${idSchema.$id}__description`;
-  return <DescriptionField id={id} description={description} />;
+  return <DescriptionTemplate id={id} description={description} />;
 }
 
 function IconBtn(props) {
@@ -120,7 +120,7 @@ function ArrayFieldTemplate(props) {
     <fieldset className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
+        TitleTemplate={props.TitleTemplate}
         idSchema={props.idSchema}
         title={props.uiSchema['ui:title'] || props.title}
         required={props.required}
@@ -129,7 +129,7 @@ function ArrayFieldTemplate(props) {
       {(props.uiSchema['ui:description'] || props.schema.description) && (
         <ArrayFieldDescription
           key={`array-field-description-${props.idSchema.$id}`}
-          DescriptionField={props.DescriptionField}
+          DescriptionTemplate={props.DescriptionTemplate}
           idSchema={props.idSchema}
           description={
             props.uiSchema['ui:description'] || props.schema.description

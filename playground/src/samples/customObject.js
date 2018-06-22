@@ -1,9 +1,14 @@
 import React from 'react';
 
-function ObjectFieldTemplate({ TitleField, properties, title, description }) {
+function ObjectFieldTemplate({
+  TitleTemplate,
+  properties,
+  title,
+  description
+}) {
   return (
     <div>
-      <TitleField title={title} />
+      <TitleTemplate title={title} />
       <div className="row">
         {properties.map(prop => (
           <div

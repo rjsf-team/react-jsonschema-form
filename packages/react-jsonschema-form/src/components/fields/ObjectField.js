@@ -50,8 +50,13 @@ class ObjectField extends Component {
       onFocus,
       registry
     } = this.props;
-    const { definitions, fields, formContext } = registry;
-    const { SchemaField, TitleField, DescriptionField } = fields;
+    const { definitions, fields, templates, formContext } = registry;
+    const { SchemaField } = fields;
+    const {
+      ObjectFieldTemplate: Template,
+      TitleTemplate,
+      DescriptionTemplate
+    } = templates;
     const schema = retrieveSchema(this.props.schema, definitions, formData);
     const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema['ui:description'] || schema.description;
@@ -72,13 +77,11 @@ class ObjectField extends Component {
       );
     }
 
-    const Template = registry.templates.ObjectFieldTemplate;
-
     const templateProps = {
       title: uiSchema['ui:title'] || title,
       description,
-      TitleField,
-      DescriptionField,
+      TitleTemplate,
+      DescriptionTemplate,
       properties: orderedProperties.map(name => {
         return {
           content: (
