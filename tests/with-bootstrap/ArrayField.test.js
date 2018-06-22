@@ -1196,7 +1196,7 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('.field-string')).toHaveLength(1);
         expect(getInstance().state.formData).toEqual([1, 2, undefined]);
 
-        dropBtns = node.querySelectorAll('.array-item-remove');
+        dropBtns = queryAllByTestId('remove-array-item');
         fireEvent.click(dropBtns[0]);
 
         expect(node.querySelectorAll('.field-string')).toHaveLength(0);
