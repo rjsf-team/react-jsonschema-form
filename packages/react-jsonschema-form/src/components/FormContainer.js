@@ -186,7 +186,7 @@ export default class FormContainer extends Component {
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
-    const { ErrorListTemplate } = registry.templates;
+    const { ErrorListTemplate, SubmitTemplate } = registry.templates;
 
     return (
       <form
@@ -216,15 +216,7 @@ export default class FormContainer extends Component {
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
         />
-        {children ? (
-          children
-        ) : (
-          <p>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </p>
-        )}
+        {children ? children : <SubmitTemplate />}
       </form>
     );
   }
