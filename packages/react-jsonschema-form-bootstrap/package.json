@@ -1,5 +1,6 @@
 {
   "name": "react-jsonschema-form-bootstrap",
+  "description": "Bootstrap 4 UI components for React JSON Schema Form",
   "version": "2.0.0",
   "main": "dist/main.js",
   "source": "src/index.js",
