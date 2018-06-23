@@ -10,7 +10,7 @@ describe('DescriptionTemplate', () => {
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
-  class DescriptionFieldWrapper extends React.Component {
+  class DescriptionTemplateWrapper extends React.Component {
     constructor(props) {
       super(props);
     }
@@ -23,7 +23,7 @@ describe('DescriptionTemplate', () => {
     const props = {
       description: <em>description</em>
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.tagName).toBe('DIV');
   });
@@ -32,7 +32,7 @@ describe('DescriptionTemplate', () => {
     const props = {
       description: 'description'
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.tagName).toBe('P');
   });
@@ -42,7 +42,7 @@ describe('DescriptionTemplate', () => {
       description: 'Field description',
       id: 'sample_id'
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.id).toBe('sample_id');
   });
