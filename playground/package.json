@@ -1,0 +1,26 @@
+{
+  "name": "playground",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "parcel src/index.html --no-cache",
+    "build": "parcel build src/index.html",
+    "icons": "svgr --out-dir src/components/icons svg --icon"
+  },
+  "dependencies": {
+    "codemirror": "^5.30.0",
+    "react-codemirror2": "^5.0.4",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-jsonschema-form": "^2.0.0",
+    "react-jsonschema-form-bootstrap": "^2.0.0"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^2.0.0",
+    "parcel-bundler": "^1.9.2"
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}
