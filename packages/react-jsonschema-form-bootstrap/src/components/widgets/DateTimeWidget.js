@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { pad } from '../../utils';
+import { pad } from 'react-jsonschema-form/src/utils';
 
 export function utcToLocal(jsonDate) {
   if (!jsonDate) {

@@ -6,7 +6,8 @@ import 'codemirror/mode/javascript/javascript';
 
 import { shouldRender } from 'react-jsonschema-form/src/utils';
 import { samples } from './samples';
-import Form from 'react-jsonschema-form';
+import BaseForm from 'react-jsonschema-form';
+import theme from 'react-jsonschema-form-bootstrap';
 
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
@@ -19,6 +20,7 @@ import 'codemirror/theme/solarized.css';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/theme/eclipse.css';
 
+const Form = props => <BaseForm theme={theme} {...props} />;
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
 const toJson = val => JSON.stringify(val, null, 2);
@@ -350,15 +352,12 @@ class App extends Component {
   }
 
   load = data => {
-    // Reset the ArrayFieldTemplate whenever you load new data
-    const { ArrayFieldTemplate, ObjectFieldTemplate } = data;
     // force resetting form component instance
     this.setState({ form: false }, () =>
       this.setState({
         ...data,
         form: true,
-        ArrayFieldTemplate,
-        ObjectFieldTemplate
+        templates: data.templates
       })
     );
   };
@@ -404,8 +403,7 @@ class App extends Component {
       validate,
       theme,
       editor,
-      ArrayFieldTemplate,
-      ObjectFieldTemplate,
+      templates,
       transformErrors
     } = this.state;
 
@@ -460,8 +458,6 @@ class App extends Component {
         <div className="col-sm-5">
           {this.state.form && (
             <Form
-              ArrayFieldTemplate={ArrayFieldTemplate}
-              ObjectFieldTemplate={ObjectFieldTemplate}
               liveValidate={liveValidate}
               schema={schema}
               uiSchema={uiSchema}
@@ -471,6 +467,7 @@ class App extends Component {
                 console.log('submitted formData', formData)
               }
               fields={{ geo: GeoPosition }}
+              templates={templates}
               validate={validate}
               onBlur={(id, value) =>
                 console.log(`Touched ${id} with value ${value}`)

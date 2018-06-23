@@ -2,9 +2,9 @@ import React from 'react';
 import { fireEvent } from 'react-testing-library';
 
 import SchemaField from 'react-jsonschema-form/src/components/fields/SchemaField';
-import TitleField from 'react-jsonschema-form/src/components/fields/TitleField';
-import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField';
-import { getDefaultRegistry } from 'react-jsonschema-form/src/utils';
+import TitleTemplate from 'react-jsonschema-form-bootstrap/src/components/templates/TitleTemplate';
+import DescriptionTemplate from 'react-jsonschema-form-bootstrap/src/components/templates/DescriptionTemplate';
+import widgets from 'react-jsonschema-form-bootstrap/src/components/widgets';
 
 import { createFormComponent, suppressLogs } from './test_utils';
 
@@ -104,12 +104,18 @@ describe('SchemaField', () => {
       });
 
       const { registry } = receivedProps;
-      expect(registry.widgets).toEqual(getDefaultRegistry().widgets);
+      /**
+       * I know that Object.keys doesn't guarantee the exact order of keys
+       * but it works here. Maybe we can create custom matcher. ;)
+       */
+      expect(Object.keys(registry.widgets)).toEqual(Object.keys(widgets));
       expect(registry.definitions).toEqual({});
       expect(typeof registry.fields).toBe('object');
       expect(registry.fields.SchemaField).toEqual(SchemaField);
-      expect(registry.fields.TitleField).toEqual(TitleField);
-      expect(registry.fields.DescriptionField).toEqual(DescriptionField);
+      expect(registry.templates.TitleTemplate).toEqual(TitleTemplate);
+      expect(registry.templates.DescriptionTemplate).toEqual(
+        DescriptionTemplate
+      );
     });
 
     it('should use registered custom component for object', () => {
@@ -245,14 +251,14 @@ describe('SchemaField', () => {
     });
 
     it('should render a customized description field', () => {
-      const CustomDescriptionField = ({ description }) => (
+      const CustomDescriptionTemplate = ({ description }) => (
         <div id="custom">{description}</div>
       );
 
       const { node } = createFormComponent({
         schema,
-        fields: {
-          DescriptionField: CustomDescriptionField
+        templates: {
+          DescriptionTemplate: CustomDescriptionTemplate
         }
       });
 

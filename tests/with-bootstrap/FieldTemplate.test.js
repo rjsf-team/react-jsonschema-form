@@ -15,7 +15,7 @@ describe('FieldTemplate', () => {
       const { node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:disabled': true },
-        FieldTemplate
+        templates: { FieldTemplate }
       });
       expect(node.querySelectorAll('.disabled')).toHaveLength(1);
     });
@@ -24,7 +24,7 @@ describe('FieldTemplate', () => {
       const { node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:disabled': false },
-        FieldTemplate
+        templates: { FieldTemplate }
       });
       expect(node.querySelectorAll('.disabled')).toHaveLength(0);
     });

@@ -1,13 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  getWidget,
-  getUiOptions,
-  isSelect,
-  optionsList,
-  getDefaultRegistry
-} from '../../utils';
+import { getWidget, getUiOptions, isSelect, optionsList } from '../../utils';
 
 function StringField(props) {
   const {
@@ -23,7 +17,7 @@ function StringField(props) {
     onChange,
     onBlur,
     onFocus,
-    registry = getDefaultRegistry(),
+    registry,
     rawErrors
   } = props;
   const { title, format } = schema;

@@ -1,21 +1,21 @@
 import React from 'react';
 import { cleanup } from 'react-testing-library';
 
-import DescriptionField from 'react-jsonschema-form/src/components/fields/DescriptionField';
+import DescriptionTemplate from 'react-jsonschema-form-bootstrap/src/components/templates/DescriptionTemplate';
 
 import { createComponent } from './test_utils';
 
-describe('DescriptionField', () => {
+describe('DescriptionTemplate', () => {
   afterEach(cleanup);
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
-  class DescriptionFieldWrapper extends React.Component {
+  class DescriptionTemplateWrapper extends React.Component {
     constructor(props) {
       super(props);
     }
     render() {
-      return <DescriptionField {...this.props} />;
+      return <DescriptionTemplate {...this.props} />;
     }
   }
 
@@ -23,7 +23,7 @@ describe('DescriptionField', () => {
     const props = {
       description: <em>description</em>
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.tagName).toBe('DIV');
   });
@@ -32,7 +32,7 @@ describe('DescriptionField', () => {
     const props = {
       description: 'description'
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.tagName).toBe('P');
   });
@@ -42,7 +42,7 @@ describe('DescriptionField', () => {
       description: 'Field description',
       id: 'sample_id'
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.id).toBe('sample_id');
   });

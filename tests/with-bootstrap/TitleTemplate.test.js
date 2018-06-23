@@ -1,21 +1,21 @@
 import React from 'react';
 import { cleanup } from 'react-testing-library';
 
-import TitleField from 'react-jsonschema-form/src/components/fields/TitleField';
+import TitleTemplate from 'react-jsonschema-form-bootstrap/src/components/templates/TitleTemplate';
 
 import { createComponent } from './test_utils';
 
-describe('TitleField', () => {
+describe('TitleTemplate', () => {
   afterEach(cleanup);
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
-  class TitleFieldWrapper extends React.Component {
+  class TitleTemplateWrapper extends React.Component {
     constructor(props) {
       super(props);
     }
     render() {
-      return <TitleField {...this.props} />;
+      return <TitleTemplate {...this.props} />;
     }
   }
 
@@ -24,7 +24,7 @@ describe('TitleField', () => {
       title: 'Field title',
       required: true
     };
-    const { node } = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleTemplateWrapper, props);
 
     expect(node.tagName).toBe('LEGEND');
   });
@@ -35,7 +35,7 @@ describe('TitleField', () => {
       required: true,
       id: 'sample_id'
     };
-    const { node } = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleTemplateWrapper, props);
 
     expect(node.id).toBe('sample_id');
   });
@@ -45,7 +45,7 @@ describe('TitleField', () => {
       title: 'Field title',
       required: false
     };
-    const { node } = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleTemplateWrapper, props);
 
     expect(node.textContent).toBe(props.title);
   });
@@ -55,7 +55,7 @@ describe('TitleField', () => {
       title: 'Field title',
       required: true
     };
-    const { node } = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleTemplateWrapper, props);
 
     expect(node.textContent).toBe(props.title + '*');
   });

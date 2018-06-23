@@ -5,7 +5,6 @@ import {
   isMultiSelect,
   retrieveSchema,
   toIdSchema,
-  getDefaultRegistry,
   mergeObjects,
   getUiOptions,
   isFilesArray,
@@ -14,7 +13,6 @@ import {
 } from '../../utils';
 import UnsupportedField from './UnsupportedField';
 
-const REQUIRED_FIELD_SYMBOL = '*';
 const COMPONENT_TYPES = {
   array: 'ArrayField',
   boolean: 'BooleanField',
@@ -47,109 +45,6 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
     };
 }
 
-function Label(props) {
-  const { label, required, id } = props;
-  if (!label) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
-  }
-  return (
-    <label className="control-label" htmlFor={id}>
-      {label}
-      {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
-    </label>
-  );
-}
-
-function Help(props) {
-  const { help } = props;
-  if (!help) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
-  }
-  if (typeof help === 'string') {
-    return <p className="help-block">{help}</p>;
-  }
-  return <div className="help-block">{help}</div>;
-}
-
-function ErrorList(props) {
-  const { errors = [] } = props;
-  if (errors.length === 0) {
-    return <div />;
-  }
-  return (
-    <div>
-      <p />
-      <ul className="error-detail bs-callout bs-callout-info">
-        {errors.map((error, index) => {
-          return (
-            <li className="text-danger" key={index}>
-              {error}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
-
-function DefaultTemplate(props) {
-  const {
-    id,
-    classNames,
-    label,
-    children,
-    errors,
-    help,
-    description,
-    hidden,
-    required,
-    displayLabel
-  } = props;
-  if (hidden) {
-    return children;
-  }
-
-  return (
-    <div className={classNames} data-testid={id}>
-      {displayLabel && <Label label={label} required={required} id={id} />}
-      {displayLabel && description ? description : null}
-      {children}
-      {errors}
-      {help}
-    </div>
-  );
-}
-
-if (process.env.NODE_ENV !== 'production') {
-  DefaultTemplate.propTypes = {
-    id: PropTypes.string,
-    classNames: PropTypes.string,
-    label: PropTypes.string,
-    children: PropTypes.node.isRequired,
-    errors: PropTypes.element,
-    rawErrors: PropTypes.arrayOf(PropTypes.string),
-    help: PropTypes.element,
-    rawHelp: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    description: PropTypes.element,
-    rawDescription: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    hidden: PropTypes.bool,
-    required: PropTypes.bool,
-    readonly: PropTypes.bool,
-    displayLabel: PropTypes.bool,
-    fields: PropTypes.object,
-    formContext: PropTypes.object
-  };
-}
-
-DefaultTemplate.defaultProps = {
-  hidden: false,
-  readonly: false,
-  required: false,
-  displayLabel: true
-};
-
 function SchemaFieldRender(props) {
   const {
     uiSchema,
@@ -158,14 +53,9 @@ function SchemaFieldRender(props) {
     idPrefix,
     name,
     required,
-    registry = getDefaultRegistry()
+    registry
   } = props;
-  const {
-    definitions,
-    fields,
-    formContext,
-    FieldTemplate = DefaultTemplate
-  } = registry;
+  const { definitions, formContext, fields, templates } = registry;
   let idSchema = props.idSchema;
   const schema = retrieveSchema(props.schema, definitions, formData);
   idSchema = mergeObjects(
@@ -173,7 +63,7 @@ function SchemaFieldRender(props) {
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
-  const { DescriptionField } = fields;
+  const { FieldTemplate, DescriptionTemplate } = templates;
   const disabled = Boolean(props.disabled || uiSchema['ui:disabled']);
   const readonly = Boolean(props.readonly || uiSchema['ui:readonly']);
   const autofocus = Boolean(props.autofocus || uiSchema['ui:autofocus']);
@@ -241,17 +131,15 @@ function SchemaFieldRender(props) {
 
   const fieldProps = {
     description: (
-      <DescriptionField
+      <DescriptionTemplate
         id={id + '__description'}
         description={description}
         formContext={formContext}
       />
     ),
     rawDescription: description,
-    help: <Help help={help} />,
-    rawHelp: typeof help === 'string' ? help : undefined,
-    errors: <ErrorList errors={errors} />,
-    rawErrors: errors,
+    help,
+    errors,
     id,
     label,
     hidden,

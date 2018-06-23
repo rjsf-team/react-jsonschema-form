@@ -282,12 +282,13 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { getInstance } = createFormComponent({
+        const { getInstance, rerender } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        getInstance().componentWillReceiveProps({ formData });
+
+        rerender({ formData });
 
         expect(getInstance().state.errorSchema).toEqual({
           __errors: ['Invalid']
@@ -364,12 +365,13 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { getInstance } = createFormComponent({
+        const { getInstance, rerender } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        getInstance().componentWillReceiveProps({ formData });
+
+        rerender({ formData });
 
         expect(getInstance().state.errorSchema).toEqual({
           __errors: [],
@@ -411,12 +413,13 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { getInstance } = createFormComponent({
+        const { getInstance, rerender } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        getInstance().componentWillReceiveProps({ formData });
+
+        rerender({ formData });
 
         expect(getInstance().state.errorSchema).toEqual({
           0: {
@@ -458,12 +461,13 @@ describe('Validation', () => {
           return errors;
         }
 
-        const { getInstance } = createFormComponent({
+        const { getInstance, rerender } = createFormComponent({
           schema,
           validate,
           liveValidate: true
         });
-        getInstance().componentWillReceiveProps({ formData });
+
+        rerender({ formData });
 
         expect(getInstance().state.errorSchema).toEqual({
           0: { __errors: [] },
@@ -536,7 +540,7 @@ describe('Validation', () => {
 
       const formData = 0;
 
-      const CustomErrorList = ({
+      const CustomErrorListTemplate = ({
         errors,
         errorSchema,
         schema,
@@ -558,7 +562,7 @@ describe('Validation', () => {
           uiSchema,
           liveValidate: true,
           formData,
-          ErrorList: CustomErrorList,
+          templates: { ErrorListTemplate: CustomErrorListTemplate },
           formContext: { className: 'foo' }
         });
         expect(node.querySelectorAll('.CustomErrorList')).toHaveLength(1);

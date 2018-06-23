@@ -42,7 +42,7 @@ describe('ArrayFieldTemplate', () => {
         const { node } = createFormComponent({
           schema: { type: 'array', items: { type: 'string' } },
           formData,
-          ArrayFieldTemplate
+          templates: { ArrayFieldTemplate }
         });
 
         expect(node.querySelectorAll('.field-array div')).toHaveLength(3);
@@ -65,7 +65,7 @@ describe('ArrayFieldTemplate', () => {
 
       beforeEach(() => {
         node = createFormComponent({
-          ArrayFieldTemplate,
+          templates: { ArrayFieldTemplate },
           formData,
           schema,
           uiSchema
@@ -121,7 +121,7 @@ describe('ArrayFieldTemplate', () => {
 
       beforeEach(() => {
         node = createFormComponent({
-          ArrayFieldTemplate,
+          templates: { ArrayFieldTemplate },
           formData,
           schema,
           uiSchema

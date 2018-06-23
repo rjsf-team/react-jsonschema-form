@@ -2,7 +2,7 @@ import React from 'react';
 import { Simulate } from 'react-dom/test-utils';
 import { cleanup } from 'react-testing-library';
 
-import SelectWidget from 'react-jsonschema-form/src/components/widgets/SelectWidget';
+import SelectWidget from 'react-jsonschema-form-bootstrap/src/components/widgets/SelectWidget';
 
 import { createFormComponent } from './test_utils';
 

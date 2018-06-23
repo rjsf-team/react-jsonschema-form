@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, cleanup, fireEvent, wait } from 'react-testing-library';
 
-import Form from 'react-jsonschema-form/src';
+import BaseForm from 'react-jsonschema-form/src';
+import theme from 'react-jsonschema-form-bootstrap/src';
 import { createFormComponent, suppressLogs } from './test_utils';
 
 describe('Form', () => {
-  /*eslint-disable-next-line*/
-  // console.warn = jest.fn();
+  const Form = props => <BaseForm theme={theme} {...props} />;
   /**
    * We need cleanup after each render()
    * until this issue https://github.com/facebook/react/issues/2043 will be solved.
@@ -143,12 +143,10 @@ describe('Form', () => {
         classNames,
         label,
         help,
-        rawHelp,
         required,
         description,
         rawDescription,
         errors,
-        rawErrors,
         children
       } = props;
       return (
@@ -159,18 +157,14 @@ describe('Form', () => {
           </label>
           {description}
           {children}
-          {errors}
-          {help}
-          <span data-testid="raw-help">
-            {`${rawHelp} rendered from the raw format`}
-          </span>
+          <span data-testid="help">{help}</span>
           <span data-testid="raw-description">
             {`${rawDescription} rendered from the raw format`}
           </span>
-          {rawErrors ? (
+          {errors ? (
             <ul>
-              {rawErrors.map((error, i) => (
-                <li key={i} data-testid="raw-error">
+              {errors.map((error, i) => (
+                <li key={i} data-testid="error">
                   {error}
                 </li>
               ))}
@@ -184,7 +178,7 @@ describe('Form', () => {
         schema,
         uiSchema,
         formData,
-        FieldTemplate,
+        templates: { FieldTemplate },
         liveValidate: true
       });
 
@@ -211,26 +205,14 @@ describe('Form', () => {
       expect(queryByTestId('raw-description')).toBeInTheDOM();
     });
 
-    it('should pass errors as the provided React component', () => {
-      const { node } = renderForm();
-      expect(node.querySelectorAll('.error-detail li')).toHaveLength(1);
-    });
-
     it('should pass rawErrors as an array of strings', () => {
       const { queryAllByTestId } = renderForm();
-      expect(queryAllByTestId('raw-error')).toHaveLength(1);
+      expect(queryAllByTestId('error')).toHaveLength(1);
     });
 
     it('should pass help as the string', () => {
       const { getByText } = renderForm();
       expect(getByText('this is help')).toBeInTheDOM();
-    });
-
-    it('should pass rawHelp as a string', () => {
-      const { getByText } = renderForm();
-      expect(
-        getByText('this is help rendered from the raw format')
-      ).toHaveAttribute('data-testid', 'raw-help');
     });
   });
 

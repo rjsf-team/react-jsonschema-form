@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { dataURItoBlob, shouldRender, setState } from '../../utils';
+import {
+  dataURItoBlob,
+  shouldRender,
+  setState
+} from 'react-jsonschema-form/src/utils';
 
 function addNameToDataURL(dataURL, name) {
   return dataURL.replace(';base64', `;name=${name};base64`);
@@ -9,7 +13,7 @@ function addNameToDataURL(dataURL, name) {
 
 function processFile(file) {
   const { name, size, type } = file;
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const reader = new window.FileReader();
     reader.onload = event => {
       resolve({

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { shouldRender, parseDateString, toDateString, pad } from '../../utils';
+import {
+  shouldRender,
+  parseDateString,
+  toDateString,
+  pad
+} from 'react-jsonschema-form/src/utils';
 
 function rangeOptions(start, stop) {
   let options = [];
