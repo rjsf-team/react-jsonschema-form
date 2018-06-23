@@ -21,11 +21,18 @@ function CheckboxesWidget(props) {
       {enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         const disabledCls = disabled || readonly ? 'disabled' : '';
-        const checkbox = (
-          <span>
+        const inlineCls = inline ? ' form-check-inline' : '';
+        const id = `${id}_${index}`;
+        const classNames = ['form-check', disabledCls, inlineCls]
+          .join(' ')
+          .trim();
+        const testId = inline ? 'checkboxes-inline' : 'checkboxes';
+
+        return (
+          <div key={index} className={classNames} data-testid={testId}>
             <input
               type="checkbox"
-              id={`${id}_${index}`}
+              id={id}
               checked={checked}
               disabled={disabled || readonly}
               autoFocus={autofocus && index === 0}
@@ -37,17 +44,11 @@ function CheckboxesWidget(props) {
                   onChange(deselectValue(option.value, value));
                 }
               }}
+              className="form-check-input"
             />
-            <span>{option.label}</span>
-          </span>
-        );
-        return inline ? (
-          <label key={index} className={`checkbox-inline ${disabledCls}`}>
-            {checkbox}
-          </label>
-        ) : (
-          <div key={index} className={`checkbox ${disabledCls}`}>
-            <label>{checkbox}</label>
+            <label htmlFor={id} className="form-check-label">
+              {option.label}
+            </label>
           </div>
         );
       })}

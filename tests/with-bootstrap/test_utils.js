@@ -15,18 +15,25 @@ export function createComponent(Component, props, spy) {
   }
   const utils = render(<Component {...props} />);
   const node = utils.container.firstChild;
-  return { ...utils, queryByModel, getInstance, rerender, node };
+  return { ...utils, queryById, queryByTitle, getInstance, rerender, node };
 
   /**
    * It converts model to data-testid and uses queryByTestId
    ```
-   queryByModel('foo.bar') => queryByTestId('root_foo_bar')
+   queryById('foo.bar') => queryByTestId('root_foo_bar')
    ```
    * @param {string} model - JSON Schema model (path with dot)
    */
-  function queryByModel(model) {
-    const id = `${idPrefix}_${model.replace(/\./g, '_')}`;
-    return utils.queryByTestId(id);
+  function queryById(model) {
+    const id = model ? `${idPrefix}_${model.replace(/\./g, '_')}` : idPrefix;
+    return utils.queryByTestId(new RegExp(id));
+  }
+
+  /**
+   * You need unique title of field so you don't get some unrelated element
+   */
+  function queryByTitle(title) {
+    return utils.queryByText(title).parentElement;
   }
 
   function getInstance() {

@@ -313,7 +313,7 @@ describe('ArrayField', () => {
 
     it('should force revalidation when a field is removed', () => {
       // refs #195
-      const { node } = createFormComponent({
+      const { node, queryAllByTestId } = createFormComponent({
         schema: {
           ...schema,
           items: { ...schema.items, minLength: 4 }
@@ -325,13 +325,13 @@ describe('ArrayField', () => {
         fireEvent.submit(node);
       });
 
-      expect(node.querySelectorAll('.has-error .error-detail')).toHaveLength(1);
+      expect(queryAllByTestId(/error-detail__item/)).toHaveLength(1);
 
-      const dropBtns = node.querySelectorAll('.array-item-remove');
+      const dropBtns = queryAllByTestId('remove-array-item');
 
       fireEvent.click(dropBtns[0]);
 
-      expect(node.querySelectorAll('.has-error .error-detail')).toHaveLength(0);
+      expect(queryAllByTestId(/error-detail__item/)).toHaveLength(0);
     });
 
     it('should handle cleared field values in the array', () => {
@@ -697,13 +697,11 @@ describe('ArrayField', () => {
       });
 
       it('should render the expected labels', () => {
-        const { node } = createFormComponent({ schema, uiSchema });
+        const { queryByLabelText } = createFormComponent({ schema, uiSchema });
 
-        const labels = [].map.call(
-          node.querySelectorAll('.checkbox label'),
-          node => node.textContent
-        );
-        expect(labels).toEqual(['foo', 'bar', 'fuzz']);
+        expect(queryByLabelText('foo')).toBeInTheDOM();
+        expect(queryByLabelText('bar')).toBeInTheDOM();
+        expect(queryByLabelText('fuzz')).toBeInTheDOM();
       });
 
       it('should handle a change event', () => {
@@ -741,7 +739,7 @@ describe('ArrayField', () => {
       });
 
       it('should support inline checkboxes', () => {
-        const { node } = createFormComponent({
+        const { queryAllByTestId } = createFormComponent({
           schema,
           uiSchema: {
             'ui:widget': 'checkboxes',
@@ -751,7 +749,7 @@ describe('ArrayField', () => {
           }
         });
 
-        expect(node.querySelectorAll('.checkbox-inline')).toHaveLength(3);
+        expect(queryAllByTestId('checkboxes-inline')).toHaveLength(3);
       });
 
       it('should pass rawErrors down to custom widgets', () => {

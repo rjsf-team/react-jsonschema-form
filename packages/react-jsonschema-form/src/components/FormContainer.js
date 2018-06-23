@@ -149,7 +149,10 @@ export default class FormContainer extends Component {
 
     setState(this, { errors: [], errorSchema: {} }, () => {
       if (this.props.onSubmit) {
-        this.props.onSubmit({ ...this.state, status: 'submitted' });
+        this.props.onSubmit({
+          ...this.state,
+          status: 'submitted'
+        });
       }
     });
   };
@@ -172,7 +175,7 @@ export default class FormContainer extends Component {
       safeRenderCompletion,
       id,
       idPrefix,
-      className,
+      className = 'rjsf',
       name,
       method,
       target,
@@ -190,7 +193,7 @@ export default class FormContainer extends Component {
 
     return (
       <form
-        className={className ? className : 'rjsf'}
+        className={className}
         id={id}
         name={name}
         method={method}

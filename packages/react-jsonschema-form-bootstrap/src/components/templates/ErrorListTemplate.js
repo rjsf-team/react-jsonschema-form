@@ -3,11 +3,9 @@ import React from 'react';
 function ErrorListTemplate(props) {
   const { errors } = props;
   return (
-    <div className="panel panel-danger errors">
-      <div className="panel-heading">
-        <h3 className="panel-title">Errors</h3>
-      </div>
-      <ul className="list-group">
+    <div className="card text-white bg-danger errors">
+      <div className="card-header">Errors</div>
+      <ul className="list-group list-group-flush">
         {errors.map((error, i) => {
           return (
             <li key={i} className="list-group-item text-danger">
