@@ -15,21 +15,26 @@ function CheckboxWidget(props) {
     onChange
   } = props;
   return (
-    <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
+    <div
+      className={`form-group form-check${
+        disabled || readonly ? ' disabled' : ''
+      }`}
+    >
       {schema.description && (
         <DescriptionTemplate description={schema.description} />
       )}
-      <label>
-        <input
-          type="checkbox"
-          id={id}
-          checked={typeof value === 'undefined' ? false : value}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          onChange={event => onChange(event.target.checked)}
-        />
-        <span>{label}</span>
+      <input
+        type="checkbox"
+        id={id}
+        checked={typeof value === 'undefined' ? false : value}
+        required={required}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        onChange={event => onChange(event.target.checked)}
+        className="form-check-input"
+      />
+      <label className="form-check-label" htmlFor={id}>
+        {label}
       </label>
     </div>
   );

@@ -1,5 +1,10 @@
 import React from 'react';
 
+import ArrowUp from '../icons/ArrowUp';
+import ArrowDown from '../icons/ArrowDown';
+import Cross from '../icons/Cross';
+import Plus from '../icons/Plus';
+
 function ArrayFieldTitle({ TitleTemplate, idSchema, title, required }) {
   if (!title) {
     // See #312: Ensure compatibility with old versions of React.
@@ -19,34 +24,35 @@ function ArrayFieldDescription({ DescriptionTemplate, idSchema, description }) {
 }
 
 function IconBtn(props) {
-  const { type = 'default', icon, className, ...otherProps } = props;
+  const { type = 'secondary', icon: Icon, className, ...otherProps } = props;
   return (
     <button
       type="button"
       className={`btn btn-${type} ${className}`}
       {...otherProps}
     >
-      <i className={`glyphicon glyphicon-${icon}`} />
+      <Icon />
     </button>
   );
 }
 
-// Used in the two templates
-function DefaultArrayItem(props) {
+function ArrayItem(props) {
   const btnStyle = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
     fontWeight: 'bold'
   };
+  const classNames = [props.className, 'row'].join(' ').trim();
+
   return (
-    <div key={props.index} className={props.className}>
-      <div className={props.hasToolbar ? 'col-xs-9' : 'col-xs-12'}>
+    <div key={props.index} className={classNames}>
+      <div className={props.hasToolbar ? 'col-md-9' : 'col-md-12'}>
         {props.children}
       </div>
 
       {props.hasToolbar && (
-        <div className="col-xs-3 array-item-toolbox">
+        <div className="col-md-3 array-item-toolbox">
           <div
             className="btn-group"
             style={{
@@ -56,7 +62,7 @@ function DefaultArrayItem(props) {
           >
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconBtn
-                icon="arrow-up"
+                icon={ArrowUp}
                 className="array-item-move-up"
                 tabIndex="-1"
                 style={btnStyle}
@@ -67,7 +73,7 @@ function DefaultArrayItem(props) {
 
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconBtn
-                icon="arrow-down"
+                icon={ArrowDown}
                 className="array-item-move-down"
                 tabIndex="-1"
                 style={btnStyle}
@@ -81,7 +87,7 @@ function DefaultArrayItem(props) {
             {props.hasRemove && (
               <IconBtn
                 type="danger"
-                icon="remove"
+                icon={Cross}
                 className="array-item-remove"
                 tabIndex="-1"
                 style={btnStyle}
@@ -100,11 +106,11 @@ function DefaultArrayItem(props) {
 function AddButton({ onClick, disabled }) {
   return (
     <div className="row">
-      <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
+      <p className="col-md-3 col-md-offset-9 array-item-add text-right">
         <IconBtn
           type="info"
-          icon="plus"
-          className="btn-add col-xs-12"
+          icon={Plus}
+          className="btn-add col-md-12"
           tabIndex="0"
           onClick={onClick}
           disabled={disabled}
@@ -138,10 +144,10 @@ function ArrayFieldTemplate(props) {
       )}
 
       <div
-        className="row array-item-list"
+        className="array-item-list"
         key={`array-item-list-${props.idSchema.$id}`}
       >
-        {props.items && props.items.map(p => DefaultArrayItem(p))}
+        {props.items && props.items.map(p => ArrayItem(p))}
       </div>
 
       {props.canAdd && (

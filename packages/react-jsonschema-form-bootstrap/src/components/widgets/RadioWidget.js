@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 function RadioWidget(props) {
@@ -17,12 +17,12 @@ function RadioWidget(props) {
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
   return (
-    <div className="field-radio-group">
+    <div className="field-radio-group form-group">
       {enumOptions.map((option, i) => {
         const checked = option.value === value;
         const disabledCls = disabled || readonly ? 'disabled' : '';
         const radio = (
-          <span>
+          <Fragment>
             <input
               type="radio"
               checked={checked}
@@ -33,8 +33,8 @@ function RadioWidget(props) {
               autoFocus={autofocus && i === 0}
               onChange={() => onChange(option.value)}
             />
-            <span>{option.label}</span>
-          </span>
+            {option.label}
+          </Fragment>
         );
 
         return inline ? (

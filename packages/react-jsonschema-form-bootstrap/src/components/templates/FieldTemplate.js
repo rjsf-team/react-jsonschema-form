@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 export const REQUIRED_FIELD_SYMBOL = '*';
@@ -10,7 +10,7 @@ function Label(props) {
     return <div />;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <label className="col-form-label" htmlFor={id}>
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
@@ -24,9 +24,17 @@ function Help(props) {
     return <div />;
   }
   if (typeof help === 'string') {
-    return <p className="help-block">{help}</p>;
+    return (
+      <p className="text-muted" data-testid="help-text">
+        <small>{help}</small>
+      </p>
+    );
   }
-  return <div className="help-block">{help}</div>;
+  return (
+    <div className="form-text" data-testid="help-block">
+      {help}
+    </div>
+  );
 }
 
 function ErrorList(props) {
@@ -35,25 +43,26 @@ function ErrorList(props) {
     return <div />;
   }
   return (
-    <div>
-      <p />
-      <ul className="error-detail bs-callout bs-callout-info">
-        {errors.map((error, index) => {
-          return (
-            <li className="text-danger" key={index}>
-              {error}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <Fragment>
+      {errors.map((error, index) => {
+        return (
+          <div
+            className="invalid-feedback d-block"
+            key={index}
+            data-testid="error-detail__item"
+          >
+            {error}
+          </div>
+        );
+      })}
+    </Fragment>
   );
 }
 
 function FieldTemplate(props) {
   const {
     id,
-    classNames,
+    testId,
     label,
     children,
     errors,
@@ -66,9 +75,10 @@ function FieldTemplate(props) {
   if (hidden) {
     return children;
   }
+  const classNames = [props.classNames, 'form-group'].join(' ').trim();
 
   return (
-    <div className={classNames} data-testid={id}>
+    <div className={classNames} data-testid={testId}>
       {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}

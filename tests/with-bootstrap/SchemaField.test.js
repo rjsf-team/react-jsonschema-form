@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent } from 'react-testing-library';
+import { fireEvent, within, cleanup } from 'react-testing-library';
 
 import SchemaField from 'react-jsonschema-form/src/components/fields/SchemaField';
 import TitleTemplate from 'react-jsonschema-form-bootstrap/src/components/templates/TitleTemplate';
@@ -9,6 +9,8 @@ import widgets from 'react-jsonschema-form-bootstrap/src/components/widgets';
 import { createFormComponent, suppressLogs } from './test_utils';
 
 describe('SchemaField', () => {
+  afterEach(cleanup);
+
   describe('Unsupported field', () => {
     it('should warn on invalid field type', () => {
       const { node } = createFormComponent({
@@ -293,33 +295,31 @@ describe('SchemaField', () => {
       });
 
     it('should render it\'s own errors', () => {
-      const { node } = createFormComponent({
+      const { node, queryByText } = createFormComponent({
         schema,
         uiSchema,
         validate
       });
+
       submit(node);
 
-      const matches = node.querySelectorAll(
-        'form > .form-group > div > .error-detail .text-danger'
-      );
-      expect(matches).toHaveLength(1);
-      expect(matches[0].textContent).toEqual('container');
+      expect(queryByText('container')).toBeInTheDOM();
     });
 
     it('should pass errors to child component', () => {
-      const { node } = createFormComponent({
+      const { node, queryById } = createFormComponent({
         schema,
         uiSchema,
         validate
       });
+      const fooField = queryById('foo');
+
       submit(node);
 
-      const matches = node.querySelectorAll(
-        'form .form-group .form-group .text-danger'
-      );
-      expect(matches).toHaveLength(1);
-      expect(matches[0]).toHaveTextContent('test');
+      expect(
+        within(fooField).queryAllByTestId('error-detail__item')
+      ).toHaveLength(1);
+      expect(within(fooField).queryByText('test')).toBeInTheDOM();
     });
 
     describe('Custom error rendering', () => {

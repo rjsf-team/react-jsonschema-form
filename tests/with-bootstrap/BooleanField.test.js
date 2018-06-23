@@ -22,14 +22,14 @@ describe('BooleanField', () => {
   });
 
   it('should render a boolean field with a label', () => {
-    const { node } = createFormComponent({
+    const { queryByLabelText } = createFormComponent({
       schema: {
         type: 'boolean',
         title: 'foo'
       }
     });
 
-    expect(node.querySelector('.field label span').textContent).toEqual('foo');
+    expect(queryByLabelText('foo')).toBeInTheDOM();
   });
 
   it('should render a single label', () => {

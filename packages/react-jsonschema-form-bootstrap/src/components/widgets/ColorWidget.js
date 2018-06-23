@@ -9,7 +9,18 @@ function ColorWidget(props) {
       widgets: { BaseInput }
     }
   } = props;
-  return <BaseInput type="color" {...props} disabled={disabled || readonly} />;
+  const style = {
+    height: '2.4rem'
+  };
+
+  return (
+    <BaseInput
+      type="color"
+      style={style}
+      {...props}
+      disabled={disabled || readonly}
+    />
+  );
 }
 
 if (process.env.NODE_ENV !== 'production') {

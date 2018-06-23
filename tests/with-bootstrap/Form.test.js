@@ -1,5 +1,11 @@
 import React from 'react';
-import { render, cleanup, fireEvent, wait } from 'react-testing-library';
+import {
+  render,
+  cleanup,
+  fireEvent,
+  wait,
+  within
+} from 'react-testing-library';
 
 import BaseForm from 'react-jsonschema-form/src';
 import theme from 'react-jsonschema-form-bootstrap/src';
@@ -416,13 +422,13 @@ describe('Form', () => {
         }
       };
 
-      const { queryByModel, getByTestId } = createFormComponent({ schema });
+      const { queryById, getByTestId } = createFormComponent({ schema });
 
-      expect(queryByModel('children.0.name')).not.toBeInTheDOM();
+      expect(queryById('children.0.name')).not.toBeInTheDOM();
 
       fireEvent.click(getByTestId('add-array-item'));
 
-      expect(queryByModel('children.0.name')).toBeInTheDOM();
+      expect(queryById('children.0.name')).toBeInTheDOM();
     });
 
     it('should priorize definition over schema type property', () => {
@@ -895,7 +901,11 @@ describe('Form', () => {
         });
 
         it('should denote the new error in the field', () => {
-          const { getByLabelText, node } = createFormComponent({
+          const {
+            getByLabelText,
+            queryAllByTestId,
+            queryByText
+          } = createFormComponent({
             schema,
             liveValidate: true
           });
@@ -904,10 +914,10 @@ describe('Form', () => {
           input.value = 'short';
           fireEvent.change(input);
 
-          expect(node.querySelectorAll('.field-error')).toHaveLength(1);
+          expect(queryAllByTestId('error-detail__item')).toHaveLength(1);
           expect(
-            node.querySelector('.field-string .error-detail')
-          ).toHaveTextContent('should NOT be shorter than 8 characters');
+            queryByText('should NOT be shorter than 8 characters')
+          ).toBeInTheDOM();
         });
       });
 
@@ -1040,12 +1050,14 @@ describe('Form', () => {
       });
 
       it('should denote the error in the field', () => {
-        const { node } = createFormComponent(formProps);
+        const { queryByText, queryAllByTestId } = createFormComponent(
+          formProps
+        );
 
-        expect(node.querySelectorAll('.field-error')).toHaveLength(1);
+        expect(queryAllByTestId('error-detail__item')).toHaveLength(1);
         expect(
-          node.querySelector('.field-string .error-detail')
-        ).toHaveTextContent('should NOT be shorter than 8 characters');
+          queryByText('should NOT be shorter than 8 characters')
+        ).toBeInTheDOM();
       });
     });
 
@@ -1071,15 +1083,15 @@ describe('Form', () => {
       });
 
       it('should denote the error in the field', () => {
-        const { node } = createFormComponent(formProps);
+        const { queryByText, queryAllByTestId } = createFormComponent(
+          formProps
+        );
 
-        const liNodes = node.querySelectorAll('.field-string .error-detail li');
-        const errors = [].map.call(liNodes, li => li.textContent);
-
-        expect(errors).toEqual([
-          'should NOT be shorter than 8 characters',
-          'should match pattern "d+"'
-        ]);
+        expect(queryAllByTestId('error-detail__item')).toHaveLength(2);
+        expect(
+          queryByText('should NOT be shorter than 8 characters')
+        ).toBeInTheDOM();
+        expect(queryByText('should match pattern "d+"')).toBeInTheDOM();
       });
     });
 
@@ -1120,15 +1132,13 @@ describe('Form', () => {
       });
 
       it('should denote the error in the field', () => {
-        const { node } = createFormComponent(formProps);
-        const errorDetail = node.querySelector(
-          '.field-object .field-string .error-detail'
-        );
+        const { queryByTitle } = createFormComponent(formProps);
 
-        expect(node.querySelectorAll('.field-error')).toHaveLength(1);
-        expect(errorDetail).toHaveTextContent(
-          'should NOT be shorter than 8 characters'
-        );
+        expect(
+          within(queryByTitle('level2')).queryByText(
+            'should NOT be shorter than 8 characters'
+          )
+        ).toBeInTheDOM();
       });
     });
 
@@ -1158,16 +1168,13 @@ describe('Form', () => {
       });
 
       it('should denote the error in the item field in error', () => {
-        const { node } = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll('.field-string');
+        const { queryById } = createFormComponent(formProps);
 
-        const liNodes = fieldNodes[1].querySelectorAll(
-          '.field-string .error-detail li'
-        );
-        const errors = [].map.call(liNodes, li => li.textContent);
-
-        expect(fieldNodes[1]).toHaveClass('field-error');
-        expect(errors).toEqual(['should NOT be shorter than 4 characters']);
+        expect(
+          within(queryById('1')).queryByText(
+            'should NOT be shorter than 4 characters'
+          )
+        ).toBeInTheDOM();
       });
 
       it('should not denote errors on non impacted fields', () => {
@@ -1216,17 +1223,16 @@ describe('Form', () => {
       });
 
       it('should denote the error in the nested item field in error', () => {
-        const { node } = createFormComponent({
+        const { queryByText } = createFormComponent({
           ...formProps,
           formData: {
             level1: ['good', 'bad', 'good']
           }
         });
 
-        const liNodes = node.querySelectorAll('.field-string .error-detail li');
-        const errors = [].map.call(liNodes, li => li.textContent);
-
-        expect(errors).toEqual(['should NOT be shorter than 4 characters']);
+        expect(
+          queryByText('should NOT be shorter than 4 characters')
+        ).toBeInTheDOM();
       });
     });
 
@@ -1273,19 +1279,24 @@ describe('Form', () => {
       });
 
       it('should denote the error in the nested item field in error', () => {
-        const { node } = createFormComponent(formProps);
-        const fields = node.querySelectorAll('.field-string');
-        const errors = [].map.call(fields, field => {
-          const li = field.querySelector('.error-detail li');
-          return li && li.textContent;
-        });
+        const { queryById } = createFormComponent(formProps);
 
-        expect(errors).toEqual([
-          null,
-          'should NOT be shorter than 4 characters',
-          'should NOT be shorter than 4 characters',
-          null
-        ]);
+        expect(
+          within(queryById('outer.0.0')).queryByTestId('error-detail__item')
+        ).not.toBeInTheDOM();
+        expect(
+          within(queryById('outer.0.1')).queryByText(
+            'should NOT be shorter than 4 characters'
+          )
+        ).toBeInTheDOM();
+        expect(
+          within(queryById('outer.1.0')).queryByText(
+            'should NOT be shorter than 4 characters'
+          )
+        ).toBeInTheDOM();
+        expect(
+          within(queryById('outer.1.1')).queryByTestId('error-detail__item')
+        ).not.toBeInTheDOM();
       });
     });
 
@@ -1322,16 +1333,13 @@ describe('Form', () => {
       });
 
       it('should denote the error in the array nested item', () => {
-        const { node } = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll('.field-string');
+        const { queryById } = createFormComponent(formProps);
 
-        const liNodes = fieldNodes[1].querySelectorAll(
-          '.field-string .error-detail li'
-        );
-        const errors = [].map.call(liNodes, li => li.textContent);
-
-        expect(fieldNodes[1].classList.contains('field-error')).toEqual(true);
-        expect(errors).toEqual(['should NOT be shorter than 4 characters']);
+        expect(
+          within(queryById('1.foo')).queryByText(
+            'should NOT be shorter than 4 characters'
+          )
+        ).toBeInTheDOM();
       });
     });
 

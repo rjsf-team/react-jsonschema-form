@@ -132,9 +132,9 @@ class AltDateWidget extends Component {
   render() {
     const { id, disabled, readonly, autofocus, registry, onBlur } = this.props;
     return (
-      <ul className="list-inline">
+      <div className="form-inline">
         {this.dateElementProps.map((elemProps, i) => (
-          <li key={i}>
+          <div key={i} className="mr-sm-2">
             <DateElement
               rootId={id}
               select={this.onChange}
@@ -145,23 +145,15 @@ class AltDateWidget extends Component {
               onBlur={onBlur}
               autofocus={autofocus && i === 0}
             />
-          </li>
+          </div>
         ))}
-        <li>
-          <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
-            Now
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className="btn btn-warning btn-clear"
-            onClick={this.clear}
-          >
-            Clear
-          </a>
-        </li>
-      </ul>
+        <button className="mr-sm-2 btn btn-info btn-now" onClick={this.setNow}>
+          Now
+        </button>
+        <button className="btn btn-warning btn-clear" onClick={this.clear}>
+          Clear
+        </button>
+      </div>
     );
   }
 }

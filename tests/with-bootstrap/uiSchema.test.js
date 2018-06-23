@@ -446,9 +446,9 @@ describe('uiSchema', () => {
         'ui:help': 'plop'
       };
 
-      const { node } = createFormComponent({ schema, uiSchema });
+      const { queryByText } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('p.help-block').textContent).toEqual('plop');
+      expect(queryByText('plop')).toBeInTheDOM();
     });
   });
 
@@ -461,11 +461,9 @@ describe('uiSchema', () => {
         'ui:title': 'plop'
       };
 
-      const { node } = createFormComponent({ schema, uiSchema });
+      const { queryByLabelText } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('label.control-label').textContent).toEqual(
-        'plop'
-      );
+      expect(queryByLabelText('plop')).toBeInTheDOM();
     });
   });
 
@@ -494,9 +492,9 @@ describe('uiSchema', () => {
       'ui:help': <b>plop</b>
     };
 
-    const { node } = createFormComponent({ schema, uiSchema });
+    const { getByTestId } = createFormComponent({ schema, uiSchema });
 
-    expect(node.querySelector('div.help-block').textContent).toEqual('plop');
+    expect(getByTestId('help-block')).toHaveTextContent('plop');
   });
 
   describe('ui:focus', () => {
