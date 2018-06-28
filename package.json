@@ -34,7 +34,7 @@
   ],
   "engineStrict": false,
   "engines": {
-    "npm": "^2.14.7",
+    "npm": ">=2.14.7",
     "node": ">=6"
   },
   "peerDependencies": {
