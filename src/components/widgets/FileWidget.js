@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { dataURItoBlob, shouldRender, setState } from "../../utils";
 
 function addNameToDataURL(dataURL, name) {
+  name=encodeURIComponent(name)
   return dataURL.replace(";base64", `;name=${name};base64`);
 }
 
