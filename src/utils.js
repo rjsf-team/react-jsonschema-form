@@ -1,5 +1,4 @@
 import React from "react";
-import "setimmediate";
 import validateFormData from "./validate";
 import fill from "core-js/library/fn/array/fill";
 
