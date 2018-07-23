@@ -24,7 +24,7 @@ describe("NumberField", () => {
       });
 
       expect(
-        node.querySelectorAll(".field input[type=text]")
+        node.querySelectorAll(".field input[type=number]")
       ).to.have.length.of(1);
     });
 
@@ -149,7 +149,7 @@ describe("NumberField", () => {
         },
       });
 
-      expect(node.querySelector("input[type=text]").id).eql("root");
+      expect(node.querySelector("input[type=number]").id).eql("root");
     });
 
     it("should render with trailing zeroes", () => {

@@ -26,10 +26,11 @@ function StringField(props) {
     registry = getDefaultRegistry(),
     rawErrors,
   } = props;
-  const { title, format } = schema;
+  const { type, title, format } = schema;
   const { widgets, formContext } = registry;
   const enumOptions = isSelect(schema) && optionsList(schema);
-  const defaultWidget = format || (enumOptions ? "select" : "text");
+  const defaultWidget =
+    format || (enumOptions ? "select" : type == "number" ? "number" : "text");
   const { widget = defaultWidget, placeholder = "", ...options } = getUiOptions(
     uiSchema
   );

@@ -31,6 +31,7 @@ const widgetMap = {
     file: "FileWidget",
   },
   number: {
+    number: "NumberWidget",
     text: "TextWidget",
     select: "SelectWidget",
     updown: "UpDownWidget",
@@ -39,6 +40,7 @@ const widgetMap = {
     hidden: "HiddenWidget",
   },
   integer: {
+    number: "NumberWidget",
     text: "TextWidget",
     select: "SelectWidget",
     updown: "UpDownWidget",

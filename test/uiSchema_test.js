@@ -1860,11 +1860,11 @@ describe("uiSchema", () => {
         expect(node.querySelector(selector).disabled).eql(true);
       }
 
-      it("should disable a text widget", () => {
+      it("should disable a number widget", () => {
         shouldBeDisabled(
-          "input[type=text]",
+          "input[type=number]",
           {
-            type: "string",
+            type: "number",
           },
           { "ui:disabled": true }
         );
@@ -1900,7 +1900,7 @@ describe("uiSchema", () => {
 
       it("should disable a number text widget", () => {
         shouldBeDisabled(
-          "input[type=text]",
+          "input[type=number]",
           {
             type: "number",
           },
@@ -2191,9 +2191,9 @@ describe("uiSchema", () => {
         );
       });
 
-      it("should mark as readonly a number text widget", () => {
+      it("should mark as readonly a number widget", () => {
         shouldBeReadonly(
-          "input[type=text]",
+          "input[type=number]",
           {
             type: "number",
           },

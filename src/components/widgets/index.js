@@ -9,6 +9,7 @@ import DateTimeWidget from "./DateTimeWidget";
 import EmailWidget from "./EmailWidget";
 import FileWidget from "./FileWidget";
 import HiddenWidget from "./HiddenWidget";
+import NumberWidget from "./NumberWidget";
 import PasswordWidget from "./PasswordWidget";
 import RadioWidget from "./RadioWidget";
 import RangeWidget from "./RangeWidget";
@@ -21,6 +22,7 @@ import UpDownWidget from "./UpDownWidget";
 export default {
   BaseInput,
   PasswordWidget,
+  NumberWidget,
   RadioWidget,
   UpDownWidget,
   RangeWidget,
