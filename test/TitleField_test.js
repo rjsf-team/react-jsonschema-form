@@ -65,5 +65,7 @@ describe("TitleField", () => {
     const { node } = createComponent(TitleFieldWrapper, props);
 
     expect(node.textContent).to.equal(props.title + "*");
+
+    expect(node.querySelector("span.required").textContent).to.equal("*");
   });
 });

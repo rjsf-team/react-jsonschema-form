@@ -5,8 +5,12 @@ const REQUIRED_FIELD_SYMBOL = "*";
 
 function TitleField(props) {
   const { id, title, required } = props;
-  const legend = required ? title + REQUIRED_FIELD_SYMBOL : title;
-  return <legend id={id}>{legend}</legend>;
+  return (
+    <legend id={id}>
+      {title}
+      {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
+    </legend>
+  );
 }
 
 if (process.env.NODE_ENV !== "production") {
