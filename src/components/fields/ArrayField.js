@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import includes from "core-js/library/fn/array/includes";
 
 import UnsupportedField from "./UnsupportedField";
 import {
@@ -203,7 +204,7 @@ class ArrayField extends Component {
     if (Array.isArray(itemSchema.type)) {
       // While we don't yet support composite/nullable jsonschema types, it's
       // future-proof to check for requirement against these.
-      return !itemSchema.type.includes("null");
+      return !includes(itemSchema.type, "null");
     }
     // All non-null array item types are inherently required by design
     return itemSchema.type !== "null";

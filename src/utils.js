@@ -1,6 +1,6 @@
 import React from "react";
-import "setimmediate";
 import validateFormData from "./validate";
+import fill from "core-js/library/fn/array/fill";
 
 const widgetMap = {
   boolean: {
@@ -155,9 +155,8 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
           if (schema.minItems > defaultsLength) {
             const defaultEntries = defaults || [];
             // populate the array with the defaults
-            const fillerEntries = new Array(
-              schema.minItems - defaultsLength
-            ).fill(
+            const fillerEntries = fill(
+              new Array(schema.minItems - defaultsLength),
               computeDefaults(schema.items, schema.items.defaults, definitions)
             );
             // then fill up the rest with either the item default or empty, up to minItems

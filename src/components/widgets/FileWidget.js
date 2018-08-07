@@ -11,6 +11,7 @@ function processFile(file) {
   const { name, size, type } = file;
   return new Promise((resolve, reject) => {
     const reader = new window.FileReader();
+    reader.onerror = reject;
     reader.onload = event => {
       resolve({
         dataURL: addNameToDataURL(event.target.result, name),

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import { asNumber } from "../../utils";
 
+const nums = new Set(["number", "integer"]);
+
 /**
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
@@ -10,11 +12,7 @@ import { asNumber } from "../../utils";
 function processValue({ type, items }, value) {
   if (value === "") {
     return undefined;
-  } else if (
-    type === "array" &&
-    items &&
-    ["number", "integer"].includes(items.type)
-  ) {
+  } else if (type === "array" && items && nums.has(items.type)) {
     return value.map(asNumber);
   } else if (type === "boolean") {
     return value === "true";

@@ -19,6 +19,7 @@ function BaseInput(props) {
     schema,
     formContext,
     registry,
+    rawErrors,
     ...inputProps
   } = props;
 
@@ -27,8 +28,6 @@ function BaseInput(props) {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
 
-  const { rawErrors, ...cleanProps } = inputProps;
-
   return (
     <input
       className="form-control"
@@ -36,7 +35,7 @@ function BaseInput(props) {
       disabled={disabled}
       autoFocus={autofocus}
       value={value == null ? "" : value}
-      {...cleanProps}
+      {...inputProps}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
       onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
