@@ -799,7 +799,7 @@ const uiSchema = {
 
 ### Placeholders
 
-You can add placeholder texst to an input by using the `ui:placeholder` uiSchema directive:
+You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
 ```jsx
 const schema = {type: "string", format: "uri"};
