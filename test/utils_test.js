@@ -1054,6 +1054,31 @@ describe("utils", () => {
       });
     });
 
+    it("should return an idSchema for property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+        dependencies: {
+          foo: {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+      const formData = {
+        foo: "test",
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
+        $id: "root",
+        foo: { $id: "root_foo" },
+        bar: { $id: "root_bar" },
+      });
+    });
+
     it("should handle idPrefix parameter", () => {
       const schema = {
         definitions: {
