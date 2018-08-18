@@ -1760,6 +1760,15 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 
 ## Contributing
 
+[![0](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/images/0)](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/links/0)
+[![1](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/images/1)](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/links/1)
+[![2](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/images/2)](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/links/2)
+[![3](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/images/3)](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/links/3)
+[![4](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/images/4)](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/links/4)
+[![5](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/images/5)](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/links/5)
+[![6](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/images/6)](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/links/6)
+[![7](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/images/7)](https://sourcerer.io/fame/sergey48k/mozilla-services/react-jsonschema-form/links/7)
+
 ### Coding style
 
 All the JavaScript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style. A command is provided to ensure your code is always formatted accordingly:
