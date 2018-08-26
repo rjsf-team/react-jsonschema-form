@@ -266,6 +266,7 @@ function ThemeSelector({ theme, select }) {
   };
   return (
     <Form
+      idPrefix="theme-selector"
       schema={themeSchema}
       formData={theme}
       onChange={({ formData }) => select(formData, themes[formData])}>
@@ -411,6 +412,7 @@ class App extends Component {
             </div>
             <div className="col-sm-2">
               <Form
+                idPrefix="live-validate"
                 schema={liveValidateSchema}
                 formData={liveValidate}
                 onChange={this.setLiveValidate}>
