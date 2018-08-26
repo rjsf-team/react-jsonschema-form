@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
   retrieveSchema,
   shouldRender,
   toIdSchema,
   setState,
-  getDefaultRegistry,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -19,7 +17,6 @@ export default class Form extends Component {
     liveValidate: false,
     safeRenderCompletion: false,
     noHtml5Validate: false,
-    ErrorList: DefaultErrorList,
   };
 
   constructor(props) {
@@ -82,13 +79,13 @@ export default class Form extends Component {
     );
   }
 
-  renderErrors() {
+  renderErrors(ErrorListTemplate) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
-    const { ErrorList, showErrorList, formContext } = this.props;
+    const { showErrorList, formContext } = this.props;
 
     if (errors.length && showErrorList != false) {
       return (
-        <ErrorList
+        <ErrorListTemplate
           errors={errors}
           errorSchema={errorSchema}
           schema={schema}
@@ -157,15 +154,10 @@ export default class Form extends Component {
   };
 
   getRegistry() {
-    // For BC, accept passed SchemaField and TitleField props and pass them to
-    // the "fields" registry one.
-    const { fields, widgets } = getDefaultRegistry();
     return {
-      fields: { ...fields, ...this.props.fields },
-      widgets: { ...widgets, ...this.props.widgets },
-      ArrayFieldTemplate: this.props.ArrayFieldTemplate,
-      ObjectFieldTemplate: this.props.ObjectFieldTemplate,
-      FieldTemplate: this.props.FieldTemplate,
+      fields: this.props.fields,
+      widgets: this.props.widgets,
+      templates: this.props.templates,
       definitions: this.props.schema.definitions || {},
       formContext: this.props.formContext || {},
     };
@@ -190,7 +182,10 @@ export default class Form extends Component {
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
-    const _SchemaField = registry.fields.SchemaField;
+    const {
+      fields: { SchemaField },
+      templates: { SubmitTemplate, ErrorListTemplate },
+    } = registry;
 
     return (
       <form
@@ -205,8 +200,8 @@ export default class Form extends Component {
         acceptCharset={acceptcharset}
         noValidate={noHtml5Validate}
         onSubmit={this.onSubmit}>
-        {this.renderErrors()}
-        <_SchemaField
+        {this.renderErrors(ErrorListTemplate)}
+        <SchemaField
           schema={schema}
           uiSchema={uiSchema}
           errorSchema={errorSchema}
@@ -219,15 +214,7 @@ export default class Form extends Component {
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
         />
-        {children ? (
-          children
-        ) : (
-          <p>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </p>
-        )}
+        {children ? children : <SubmitTemplate />}
       </form>
     );
   }
@@ -240,12 +227,11 @@ if (process.env.NODE_ENV !== "production") {
     formData: PropTypes.any,
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-    ),
-    fields: PropTypes.objectOf(PropTypes.func),
-    ArrayFieldTemplate: PropTypes.func,
-    ObjectFieldTemplate: PropTypes.func,
-    FieldTemplate: PropTypes.func,
-    ErrorList: PropTypes.func,
+    ).isRequired,
+    templates: PropTypes.objectOf(
+      PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+    ).isRequired,
+    fields: PropTypes.objectOf(PropTypes.func).isRequired,
     onChange: PropTypes.func,
     onError: PropTypes.func,
     showErrorList: PropTypes.bool,

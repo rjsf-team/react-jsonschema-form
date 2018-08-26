@@ -70,7 +70,7 @@ describe("FormContext", () => {
           },
         },
       },
-      FieldTemplate: CustomTemplateField,
+      templates: { FieldTemplate: CustomTemplateField },
       formContext,
     });
 
@@ -89,15 +89,15 @@ describe("FormContext", () => {
           type: "string",
         },
       },
-      ArrayFieldTemplate: CustomArrayTemplateField,
+      templates: { ArrayFieldTemplate: CustomArrayTemplateField },
       formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
   });
 
-  it("should be passed to custom TitleField", () => {
-    const fields = { TitleField: CustomComponent };
+  it("should be passed to custom TitleTemplate", () => {
+    const templates = { TitleTemplate: CustomComponent };
 
     const { node } = createFormComponent({
       schema: {
@@ -109,19 +109,19 @@ describe("FormContext", () => {
           },
         },
       },
-      fields,
+      templates,
       formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
   });
 
-  it("should be passed to custom DescriptionField", () => {
-    const fields = { DescriptionField: CustomComponent };
+  it("should be passed to custom DescriptionTemplate", () => {
+    const templates = { DescriptionTemplate: CustomComponent };
 
     const { node } = createFormComponent({
       schema: { type: "string", description: "A description" },
-      fields,
+      templates,
       formContext,
     });
 

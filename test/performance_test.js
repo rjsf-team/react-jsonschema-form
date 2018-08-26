@@ -1,7 +1,7 @@
 import sinon from "sinon";
 import React from "react";
 import { scryRenderedComponentsWithType } from "react-addons-test-utils";
-import { getDefaultRegistry } from "../src/utils";
+import { fields, widgets, templates } from "../src";
 import SchemaField from "../src/components/fields/SchemaField";
 import {
   createComponent,
@@ -55,7 +55,7 @@ describe("Rendering performance optimizations", () => {
         },
       };
 
-      const { comp } = createFormComponent({
+      const { comp, withTheme } = createFormComponent({
         schema,
         formData: { const: "0", var: "0" },
       });
@@ -68,7 +68,7 @@ describe("Rendering performance optimizations", () => {
         }
       );
 
-      setProps(comp, { schema, formData: { const: "0", var: "1" } });
+      setProps(withTheme.comp, { schema, formData: { const: "0", var: "1" } });
 
       sinon.assert.notCalled(fields.root_const.render);
       sinon.assert.calledOnce(fields.root_var.render);
@@ -80,7 +80,7 @@ describe("Rendering performance optimizations", () => {
         items: { type: "string" },
       };
 
-      const { comp } = createFormComponent({
+      const { comp, withTheme } = createFormComponent({
         schema,
         formData: ["const", "var0"],
       });
@@ -93,7 +93,7 @@ describe("Rendering performance optimizations", () => {
         }
       );
 
-      setProps(comp, { schema, formData: ["const", "var1"] });
+      setProps(withTheme.comp, { schema, formData: ["const", "var1"] });
 
       sinon.assert.notCalled(fields.root_0.render);
       sinon.assert.calledOnce(fields.root_1.render);
@@ -104,7 +104,13 @@ describe("Rendering performance optimizations", () => {
     const onChange = () => {};
     const onBlur = () => {};
     const onFocus = () => {};
-    const registry = getDefaultRegistry();
+    const registry = {
+      fields,
+      widgets,
+      templates,
+      definitions: {},
+      formContext: {},
+    };
     const uiSchema = {};
     const schema = {
       type: "object",

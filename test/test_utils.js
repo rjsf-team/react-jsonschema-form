@@ -2,10 +2,14 @@
 
 import React from "react";
 import sinon from "sinon";
-import { renderIntoDocument } from "react-addons-test-utils";
+import {
+  renderIntoDocument,
+  findRenderedComponentWithType,
+  findRenderedDOMComponentWithTag,
+} from "react-addons-test-utils";
 import { findDOMNode, render } from "react-dom";
 
-import Form from "../src";
+import FormWithTheme, { Form } from "../src";
 
 export function createComponent(Component, props) {
   const comp = renderIntoDocument(<Component {...props} />);
@@ -14,7 +18,21 @@ export function createComponent(Component, props) {
 }
 
 export function createFormComponent(props) {
-  return createComponent(Form, { ...props, safeRenderCompletion: true });
+  const compWithTheme = renderIntoDocument(
+    <FormWithTheme {...props} safeRenderCompletion={true} />
+  );
+  const nodeWithTheme = findDOMNode(compWithTheme);
+  const compForm = findRenderedComponentWithType(compWithTheme, Form);
+  const nodeForm = findRenderedDOMComponentWithTag(compWithTheme, "form");
+
+  return {
+    comp: compForm,
+    node: nodeForm,
+    withTheme: {
+      comp: compWithTheme,
+      node: nodeWithTheme,
+    },
+  };
 }
 
 export function createSandbox() {

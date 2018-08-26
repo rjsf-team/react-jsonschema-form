@@ -1,57 +1,5 @@
 import React from "react";
 import validateFormData from "./validate";
-import fill from "core-js/library/fn/array/fill";
-
-const widgetMap = {
-  boolean: {
-    checkbox: "CheckboxWidget",
-    radio: "RadioWidget",
-    select: "SelectWidget",
-    hidden: "HiddenWidget",
-  },
-  string: {
-    text: "TextWidget",
-    password: "PasswordWidget",
-    email: "EmailWidget",
-    hostname: "TextWidget",
-    ipv4: "TextWidget",
-    ipv6: "TextWidget",
-    uri: "URLWidget",
-    "data-url": "FileWidget",
-    radio: "RadioWidget",
-    select: "SelectWidget",
-    textarea: "TextareaWidget",
-    hidden: "HiddenWidget",
-    date: "DateWidget",
-    datetime: "DateTimeWidget",
-    "date-time": "DateTimeWidget",
-    "alt-date": "AltDateWidget",
-    "alt-datetime": "AltDateTimeWidget",
-    color: "ColorWidget",
-    file: "FileWidget",
-  },
-  number: {
-    text: "TextWidget",
-    select: "SelectWidget",
-    updown: "UpDownWidget",
-    range: "RangeWidget",
-    radio: "RadioWidget",
-    hidden: "HiddenWidget",
-  },
-  integer: {
-    text: "TextWidget",
-    select: "SelectWidget",
-    updown: "UpDownWidget",
-    range: "RangeWidget",
-    radio: "RadioWidget",
-    hidden: "HiddenWidget",
-  },
-  array: {
-    select: "SelectWidget",
-    checkboxes: "CheckboxesWidget",
-    files: "FileWidget",
-  },
-};
 
 export function getDefaultRegistry() {
   return {
@@ -98,12 +46,13 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
-  if (!widgetMap.hasOwnProperty(type)) {
+  if (!registeredWidgets.__widgetMap.hasOwnProperty(type)) {
     throw new Error(`No widget for type "${type}"`);
   }
 
-  if (widgetMap[type].hasOwnProperty(widget)) {
-    const registeredWidget = registeredWidgets[widgetMap[type][widget]];
+  if (registeredWidgets.__widgetMap[type].hasOwnProperty(widget)) {
+    const registeredWidget =
+      registeredWidgets[registeredWidgets.__widgetMap[type][widget]];
     return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
@@ -155,6 +104,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
           if (schema.minItems > defaultsLength) {
             const defaultEntries = defaults || [];
             // populate the array with the defaults
+            /*eslint-disable-next-line*/
             const fillerEntries = fill(
               new Array(schema.minItems - defaultsLength),
               computeDefaults(schema.items, schema.items.defaults, definitions)

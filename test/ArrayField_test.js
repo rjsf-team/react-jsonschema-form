@@ -8,7 +8,7 @@ import { createFormComponent, createSandbox } from "./test_utils";
 describe("ArrayField", () => {
   let sandbox;
   const CustomComponent = props => {
-    return <div id="custom">{props.rawErrors}</div>;
+    return <div id="custom">{props.errors}</div>;
   };
 
   beforeEach(() => {
@@ -62,11 +62,11 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized title", () => {
-      const CustomTitleField = ({ title }) => <div id="custom">{title}</div>;
+      const CustomTitleTemplate = ({ title }) => <div id="custom">{title}</div>;
 
       const { node } = createFormComponent({
         schema,
-        fields: { TitleField: CustomTitleField },
+        templates: { TitleTemplate: CustomTitleTemplate },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
         "my list"
@@ -74,14 +74,14 @@ describe("ArrayField", () => {
     });
 
     it("should render a customized description", () => {
-      const CustomDescriptionField = ({ description }) => (
+      const CustomDescriptionTemplate = ({ description }) => (
         <div id="custom">{description}</div>
       );
 
       const { node } = createFormComponent({
         schema,
-        fields: {
-          DescriptionField: CustomDescriptionField,
+        templates: {
+          DescriptionTemplate: CustomDescriptionTemplate,
         },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
@@ -100,7 +100,7 @@ describe("ArrayField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
-    it("should pass rawErrors down to custom array field templates", () => {
+    it("should pass errors down to custom array field templates", () => {
       const schema = {
         type: "array",
         title: "my list",
@@ -111,7 +111,7 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomComponent,
+        templates: { ArrayFieldTemplate: CustomComponent },
         formData: [1],
         liveValidate: true,
       });
@@ -689,7 +689,7 @@ describe("ArrayField", () => {
         expect(node.querySelector("select").id).eql("root");
       });
 
-      it("should pass rawErrors down to custom widgets", () => {
+      it("should pass errors down to custom widgets", () => {
         const { node } = createFormComponent({
           schema,
           widgets: {
@@ -778,7 +778,7 @@ describe("ArrayField", () => {
         expect(node.querySelectorAll(".checkbox-inline")).to.have.length.of(3);
       });
 
-      it("should pass rawErrors down to custom widgets", () => {
+      it("should pass errors down to custom widgets", () => {
         const schema = {
           type: "array",
           title: "My field",
@@ -887,7 +887,7 @@ describe("ArrayField", () => {
       expect(node.querySelector("input[type=file]").id).eql("root");
     });
 
-    it("should pass rawErrors down to custom widgets", () => {
+    it("should pass errors down to custom widgets", () => {
       const schema = {
         type: "array",
         title: "My field",
@@ -945,7 +945,7 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(1);
     });
 
-    it("should pass rawErrors down to every level of custom widgets", () => {
+    it("should pass errors down to every level of custom widgets", () => {
       const CustomItem = props => <div id="custom-item">{props.children}</div>;
       const CustomTemplate = props => {
         return (
@@ -953,7 +953,7 @@ describe("ArrayField", () => {
             {props.items &&
               props.items.map((p, i) => <CustomItem key={i} {...p} />)}
             <div id="custom-error">
-              {props.rawErrors && props.rawErrors.join(", ")}
+              {props.errors && props.errors.join(", ")}
             </div>
           </div>
         );
@@ -975,7 +975,7 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomTemplate,
+        templates: { ArrayFieldTemplate: CustomTemplate },
         formData: [[]],
         liveValidate: true,
       });
@@ -1243,11 +1243,11 @@ describe("ArrayField", () => {
   });
 
   describe("Title", () => {
-    const TitleField = props => <div id={`title-${props.title}`} />;
+    const TitleTemplate = props => <div id={`title-${props.title}`} />;
 
-    const fields = { TitleField };
+    const templates = { TitleTemplate };
 
-    it("should pass field name to TitleField if there is no title", () => {
+    it("should pass field name to TitleTemplate if there is no title", () => {
       const schema = {
         type: "object",
         properties: {
@@ -1258,28 +1258,28 @@ describe("ArrayField", () => {
         },
       };
 
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-array")).to.not.be.null;
     });
 
-    it("should pass schema title to TitleField", () => {
+    it("should pass schema title to TitleTemplate", () => {
       const schema = {
         type: "array",
         title: "test",
         items: {},
       };
 
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-test")).to.not.be.null;
     });
 
-    it("should pass empty schema title to TitleField", () => {
+    it("should pass empty schema title to TitleTemplate", () => {
       const schema = {
         type: "array",
         title: "",
         items: {},
       };
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-")).to.be.null;
     });
   });

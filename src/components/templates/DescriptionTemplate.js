@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-function DescriptionField(props) {
+function DescriptionTemplate(props) {
   const { id, description } = props;
   if (!description) {
     // See #312: Ensure compatibility with old versions of React.
@@ -23,10 +23,10 @@ function DescriptionField(props) {
 }
 
 if (process.env.NODE_ENV !== "production") {
-  DescriptionField.propTypes = {
+  DescriptionTemplate.propTypes = {
     id: PropTypes.string,
     description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   };
 }
 
-export default DescriptionField;
+export default DescriptionTemplate;

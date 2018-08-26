@@ -865,6 +865,15 @@ The `Form` component supports the following html attributes:
 
 ## Advanced customization
 
+The core structure is based on registry object which contains the needed components which are in three groups:
+- fields: A _field_ usually wraps one or more widgets and most often handles internal field state; think of a field as a form row, including the labels.
+- widgets: A _widget_ represents a HTML tag for the user to enter data, eg. `input`, `select`, etc.
+- templates: Templates are used across the whole structure for everything related to the UI.
+The basic relationship between components is described below:
+
+![](diagram.svg)
+
+
 ### Field template
 
 To take control over the inner organization of each field (each form row), you can define a *field template* for your form.
@@ -874,37 +883,33 @@ A field template is basically a React stateless component being passed field-rel
 ```jsx
 function CustomFieldTemplate(props) {
   const {id, classNames, label, help, required, description, errors, children} = props;
+  const { DescriptionTemplate } = props.registry.templates;
   return (
     <div className={classNames}>
       <label htmlFor={id}>{label}{required ? "*" : null}</label>
-      {description}
+      <DescriptionTemplate id={id} description={description} />
       {children}
-      {errors}
-      {help}
+      <CustomErrorList errors={errors} />
+      <CustomHelp help={help} />
     </div>
   );
 }
 
 render((
   <Form schema={schema}
-        FieldTemplate={CustomFieldTemplate} />,
+        templates={{ FieldTemplate: CustomFieldTemplate }} />,
 ), document.getElementById("app"));
 ```
-
-If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`.
 
 The following props are passed to a custom field template component:
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
 - `label`: The computed label for this field, as a string.
-- `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined).
-- `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
+- `description`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
-- `errors`: A component instance listing any encountered errors for this field.
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field.
-- `help`: A component instance rendering any `ui:help` uiSchema directive defined.
-- `rawHelp`: A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed `ui:help` is a React component instead of a string.
+- `errors`: An array of strings listing all generated error messages from encountered errors for this field.
+- `help`: A string or element containing any `ui:help` uiSchema directive defined.
 - `hidden`: A boolean value stating if the field should be hidden.
 - `required`: A boolean value stating if the field is required.
 - `readonly`: A boolean value stating if the field is read-only.
@@ -914,6 +919,7 @@ The following props are passed to a custom field template component:
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
 - `formContext`: The `formContext` object that you passed to Form.
+- `registry`: A [registry](#the-registry-object) object.
 
 > Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
 
@@ -934,7 +940,7 @@ function ArrayFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ArrayFieldTemplate={ArrayFieldTemplate} />,
+        templates={{ ArrayFieldTemplate }} />,
 ), document.getElementById("app"));
 ```
 
@@ -942,8 +948,8 @@ Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema
 
 The following props are passed to each `ArrayFieldTemplate`:
 
-- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
-- `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
+- `DescriptionTemplate`: The `DescriptionTemplate` from the registry (in case you wanted to utilize it)
+- `TitleTemplate`: The `TitleTemplate` from the registry (in case you wanted to utilize it).
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
@@ -957,6 +963,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `title`: A string value containing the title for the array.
 - `formContext`: The `formContext` object that you passed to Form.
 - `formData`: The formData for this array.
+- `registry`: A [registry](#the-registry-object) object.
 
 The following props are part of each element in `items`:
 
@@ -979,10 +986,12 @@ objects are rendered.
 
 ```jsx
 function ObjectFieldTemplate(props) {
+  const { TitleTemplate, DescriptionTemplate } = props.registry.templates;
+
   return (
     <div>
-      {props.title}
-      {props.description}
+      <TitleTemplate title={props.title} />
+      <DescriptionTemplate id={props.id} description={props.description} />
       {props.properties.map(element => <div className="property-wrapper">{element.children}</div>)}
     </div>
   );
@@ -990,7 +999,7 @@ function ObjectFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ObjectFieldTemplate={ObjectFieldTemplate} />,
+        templates={{ ObjectFieldTemplate }} />,
 ), document.getElementById("app"));
 ```
 
@@ -998,8 +1007,6 @@ Please see [customObject.js](https://github.com/mozilla-services/react-jsonschem
 
 The following props are passed to each `ObjectFieldTemplate`:
 
-- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
-- `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
 - `title`: A string value containing the title for the object.
 - `description`: A string value containing the description for the object.
 - `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
@@ -1009,6 +1016,7 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `idSchema`: An object containing the id for this object & ids for it's properties.
 - `formData`: The form data for the object.
 - `formContext`: The `formContext` object that you passed to Form.
+- `registry`: A [registry](#the-registry-object) object.
 
 The following props are part of each element in `properties`:
 
@@ -1042,11 +1050,11 @@ function ErrorListTemplate(props) {
 render((
   <Form schema={schema}
         showErrorList={true}
-        ErrorList={ErrorListTemplate} />,
+        templates={{ ErrorListTemplate }} />,
 ), document.getElementById("app"));
 ```
 
-> Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
+> Note: `ErrorListTemplate` will only render when `showErrorList` is `true`.
 
 The following props are passed to `ErrorList`
 
@@ -1121,6 +1129,7 @@ The following props are passed to custom widget components:
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `formContext`: The `formContext` object that you passed to Form.
+- `registry`: A [registry](#the-registry-object) object.
 
 > Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
 
@@ -1279,8 +1288,23 @@ A field component will always be passed the following props:
 
 The `registry` is an object containing the registered custom fields and widgets as well as root schema definitions.
 
- - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField`, `TitleField` and `DescriptionField` components;
+ - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard:
+  -  `SchemaField`
+  -  `ArrayField`
+  -  `ObjectField`
+  -  `BooleanField`
+  -  `StringField`
+  -  `NumberField`
+  -  `UnsupportedField`
  - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
+ - `templates`: The UI components used across all the library
+  - `FieldTemplate`
+  - `ArrayFieldTemplate`
+  - `ObjectFieldTemplate`
+  - `ErrorListTemplate`
+  - `SubmitTemplate`
+  - `DescriptionTemplate`
+  - `TitleTemplate`
  - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
  - `formContext`: The [formContext](#the-formcontext-object) object.
 
@@ -1383,50 +1407,50 @@ render((
 
 ### Custom titles
 
-You can provide your own implementation of the `TitleField` base React component for rendering any title. This is useful when you want to augment how titles are handled.
+You can provide your own implementation of the `TitleTemplate` base React component for rendering any title. This is useful when you want to augment how titles are handled.
 
-Simply pass a `fields` object having a `TitleField` property to your `Form` component:
+Simply pass a `templates` object having a `TitleTemplate` property to your `Form` component:
 
 ```jsx
 
-const CustomTitleField = ({title, required}) => {
+const CustomTitleTemplate = ({title, required}) => {
   const legend = required ? title + '*' : title;
   return <div id="custom">{legend}</div>;
 };
 
-const fields = {
-  TitleField: CustomTitleField
+const templates = {
+  TitleTemplate: CustomTitleTemplate
 };
 
 render((
   <Form schema={schema}
         uiSchema={uiSchema}
         formData={formData}
-        fields={fields} />
+        templates={templates} />
 ), document.getElementById("app"));
 ```
 
 ### Custom descriptions
 
-You can provide your own implementation of the `DescriptionField` base React component for rendering any description.
+You can provide your own implementation of the `DescriptionTemplate` base React component for rendering any description.
 
-Simply pass a `fields` object having a `DescriptionField` property to your `Form` component:
+Simply pass a `templates` object having a `DescriptionTemplate` property to your `Form` component:
 
 ```jsx
 
-const CustomDescriptionField = ({id, description}) => {
+const CustomDescriptionTemplate = ({id, description}) => {
   return <div id={id}>{description}</div>;
 };
 
-const fields = {
-  DescriptionField: CustomDescriptionField
+const templates = {
+  DescriptionTemplate: CustomDescriptionTemplate
 };
 
 render((
   <Form schema={schema}
         uiSchema={uiSchema}
         formData={formData}
-        fields={fields} />
+        templates={templates} />
 ), document.getElementById("app"));
 ```
 
@@ -1544,7 +1568,7 @@ Here are some examples from the [playground](http://mozilla-services.github.io/r
 ![](http://i.imgur.com/IMFqMwK.png)
 ![](http://i.imgur.com/HOACwt5.png)
 
-Last, if you really really want to override the semantics generated by the lib, you can always create and use your own custom [widget](#custom-widget-components), [field](#custom-field-components) and/or [schema field](#custom-schemafield) components.
+Last, if you really really want to override the semantics generated by the lib, you can always create and use your own custom [widget](#custom-widget-components), templates, [field](#custom-field-components) and/or [schema field](#custom-schemafield) components.
 
 ## Schema definitions and references
 
@@ -1747,7 +1771,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 
 ## Tips and tricks
 
- - Custom field template: https://jsfiddle.net/hdp1kgn6/1/
+ - Custom field template: https://jsfiddle.net/hdp1kgn6/1/ (old example with react-jsonschema-form@v1)
  - Multi-step wizard: https://jsfiddle.net/sn4bnw9h/1/
  - Using classNames with uiSchema: https://jsfiddle.net/gfwp25we/1/
  - Conditional fields: https://jsfiddle.net/69z2wepo/88541/
@@ -1755,7 +1779,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - Use radio list for enums: https://jsfiddle.net/f2y3fq7L/2/
  - Reading file input data: https://jsfiddle.net/f9vcb6pL/1/
  - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
- - 2 columns form with CSS and FieldTemplate : https://jsfiddle.net/n1k0/bw0ffnz4/1/
+ - 2 columns form with CSS and FieldTemplate : https://jsfiddle.net/n1k0/bw0ffnz4/1/ (old example with react-jsonschema-form@v1)
  - Validate and submit form from external control : https://jsfiddle.net/spacebaboon/g5a1re63/
 
 ## Contributing
@@ -1819,11 +1843,17 @@ A: Not yet (except for a special case where you can use `oneOf` in [schema depen
 
 ### Q: Will react-jsonschema-form support Material, Ant-Design, Foundation, or [some other specific widget library or frontend style]?
 
-A: Probably not. We use Bootstrap v3 and it works fine for our needs. We would like for react-jsonschema-form to support other frameworks, we just don't want to support them ourselves. Ideally, these frontend styles could be added to react-jsonschema-form with a third-party library. If there is a technical limitation preventing this, please consider opening a PR. See also: [#91](https://github.com/mozilla-services/react-jsonschema-form/issues/91), [#99](https://github.com/mozilla-services/react-jsonschema-form/issues/99), [#125](https://github.com/mozilla-services/react-jsonschema-form/issues/125), [#237](https://github.com/mozilla-services/react-jsonschema-form/issues/237), [#287](https://github.com/mozilla-services/react-jsonschema-form/issues/287), [#299](https://github.com/mozilla-services/react-jsonschema-form/issues/299), [#440](https://github.com/mozilla-services/react-jsonschema-form/issues/440), [#461](https://github.com/mozilla-services/react-jsonschema-form/issues/461), [#546](https://github.com/mozilla-services/react-jsonschema-form/issues/546), [#555](https://github.com/mozilla-services/react-jsonschema-form/issues/555), [#626](https://github.com/mozilla-services/react-jsonschema-form/issues/626), and [#623](https://github.com/mozilla-services/react-jsonschema-form/pull/623).
+A: A `react-jsonschema-form` is internally UI agnostic so you can build a completely custom theme without including default Bootstrap components and use it like this:
+```js
+import withTheme from 'react-jsonschema-form/lib/components/withTheme';
 
-### Q: Is there a way to "collapse" fields, for instance to show/hide individual fields?
+import widgets from './my-theme/widgets';
+import templates from './my-theme/templates';
 
-A: There's no specific built-in way to do this, but you can write your own FieldTemplate that supports hiding/showing fields according to user input. We don't yet have an example of this use, but if you write one, please add it to the "tips and tricks" section, above. See also: [#268](https://github.com/mozilla-services/react-jsonschema-form/issues/268), [#304](https://github.com/mozilla-services/react-jsonschema-form/pull/304), [#598](https://github.com/mozilla-services/react-jsonschema-form/issues/598), [#920](https://github.com/mozilla-services/react-jsonschema-form/issues/920).
+const Form = withTheme('MyTheme', { widgets, templates });
+```
+If you don't know how to start then look into the [components folder](/src/components) on widgets and templates.
+
 
 ## License
 

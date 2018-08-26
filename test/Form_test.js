@@ -175,12 +175,9 @@ describe("Form", () => {
         classNames,
         label,
         help,
-        rawHelp,
         required,
         description,
-        rawDescription,
         errors,
-        rawErrors,
         children,
       } = props;
       return (
@@ -189,19 +186,16 @@ describe("Form", () => {
             {label}
             {required ? "*" : null}
           </label>
-          {description}
           {children}
-          {errors}
-          {help}
           <span className="raw-help">
-            {`${rawHelp} rendered from the raw format`}
+            {`${help} rendered from the raw format`}
           </span>
           <span className="raw-description">
-            {`${rawDescription} rendered from the raw format`}
+            {`${description} rendered from the raw format`}
           </span>
-          {rawErrors ? (
+          {errors ? (
             <ul>
-              {rawErrors.map((error, i) => (
+              {errors.map((error, i) => (
                 <li key={i} className="raw-error">
                   {error}
                 </li>
@@ -219,7 +213,7 @@ describe("Form", () => {
         schema,
         uiSchema,
         formData,
-        FieldTemplate,
+        templates: { FieldTemplate },
         liveValidate: true,
       }).node;
     });
@@ -237,31 +231,17 @@ describe("Form", () => {
       ).eql("foo*");
     });
 
-    it("should pass description as the provided React element", () => {
-      expect(node.querySelector("#root_foo__description").textContent).eql(
-        "this is description"
-      );
-    });
-
-    it("should pass rawDescription as a string", () => {
+    it("should pass description as a string", () => {
       expect(node.querySelector(".raw-description").textContent).eql(
         "this is description rendered from the raw format"
       );
     });
 
-    it("should pass errors as the provided React component", () => {
-      expect(node.querySelectorAll(".error-detail li")).to.have.length.of(1);
-    });
-
-    it("should pass rawErrors as an array of strings", () => {
+    it("should pass errors as an array of strings", () => {
       expect(node.querySelectorAll(".raw-error")).to.have.length.of(1);
     });
 
-    it("should pass help as a the provided React element", () => {
-      expect(node.querySelector(".help-block").textContent).eql("this is help");
-    });
-
-    it("should pass rawHelp as a string", () => {
+    it("should pass help as a string", () => {
       expect(node.querySelector(".raw-help").textContent).eql(
         "this is help rendered from the raw format"
       );
@@ -269,15 +249,8 @@ describe("Form", () => {
   });
 
   describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", done => {
-      let submitCount = 0;
-      const onSubmit = () => {
-        submitCount++;
-        if (submitCount === 2) {
-          done();
-        }
-      };
-
+    it("should submit the form when clicked", () => {
+      const onSubmit = sandbox.spy();
       const comp = renderIntoDocument(
         <Form onSubmit={onSubmit} schema={{}}>
           <button type="submit">Submit</button>
@@ -288,6 +261,7 @@ describe("Form", () => {
       const buttons = node.querySelectorAll("button[type=submit]");
       buttons[0].click();
       buttons[1].click();
+      sinon.assert.calledTwice(onSubmit);
     });
   });
 

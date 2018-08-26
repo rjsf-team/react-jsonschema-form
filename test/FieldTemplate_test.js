@@ -23,7 +23,7 @@ describe("FieldTemplate", () => {
       const { node } = createFormComponent({
         schema: { type: "string" },
         uiSchema: { "ui:disabled": true },
-        FieldTemplate,
+        templates: { FieldTemplate },
       });
       expect(node.querySelectorAll(".disabled")).to.have.length.of(1);
     });
@@ -32,7 +32,7 @@ describe("FieldTemplate", () => {
       const { node } = createFormComponent({
         schema: { type: "string" },
         uiSchema: { "ui:disabled": false },
-        FieldTemplate,
+        templates: { FieldTemplate },
       });
       expect(node.querySelectorAll(".disabled")).to.have.length.of(0);
     });

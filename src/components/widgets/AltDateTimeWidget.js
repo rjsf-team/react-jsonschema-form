@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import AltDateWidget from "./AltDateWidget";
 
 function AltDateTimeWidget(props) {
   const { AltDateWidget } = props.registry.widgets;
@@ -19,8 +18,15 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 AltDateTimeWidget.defaultProps = {
-  ...AltDateWidget.defaultProps,
+  schema: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  required: PropTypes.bool,
+  disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
+  autofocus: PropTypes.bool,
+  onChange: PropTypes.func,
+  onBlur: PropTypes.func,
   time: true,
 };
-
 export default AltDateTimeWidget;

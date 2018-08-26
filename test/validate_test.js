@@ -601,7 +601,7 @@ describe("Validation", () => {
           uiSchema,
           liveValidate: true,
           formData,
-          ErrorList: CustomErrorList,
+          templates: { ErrorListTemplate: CustomErrorList },
           formContext: { className: "foo" },
         });
         expect(node.querySelectorAll(".CustomErrorList")).to.have.length.of(1);

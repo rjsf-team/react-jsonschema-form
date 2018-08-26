@@ -24,7 +24,7 @@ function StringField(props) {
     onBlur,
     onFocus,
     registry = getDefaultRegistry(),
-    rawErrors,
+    errors,
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -52,7 +52,7 @@ function StringField(props) {
       autofocus={autofocus}
       registry={registry}
       placeholder={placeholder}
-      rawErrors={rawErrors}
+      errors={errors}
     />
   );
 }
@@ -79,7 +79,7 @@ if (process.env.NODE_ENV !== "production") {
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
-    rawErrors: PropTypes.arrayOf(PropTypes.string),
+    errors: PropTypes.arrayOf(PropTypes.string),
   };
 }
 

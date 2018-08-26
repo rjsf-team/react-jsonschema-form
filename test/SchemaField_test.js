@@ -3,8 +3,8 @@ import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
 import SchemaField from "../src/components/fields/SchemaField";
-import TitleField from "../src/components/fields/TitleField";
-import DescriptionField from "../src/components/fields/DescriptionField";
+import TitleTemplate from "../src/components/templates/TitleTemplate";
+import DescriptionTemplate from "../src/components/templates/DescriptionTemplate";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 import { getDefaultRegistry } from "../src/utils";
@@ -119,8 +119,8 @@ describe("SchemaField", () => {
       expect(registry.definitions).eql({});
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
-      expect(registry.fields.TitleField).eql(TitleField);
-      expect(registry.fields.DescriptionField).eql(DescriptionField);
+      expect(registry.templates.TitleTemplate).eql(TitleTemplate);
+      expect(registry.templates.DescriptionTemplate).eql(DescriptionTemplate);
     });
 
     it("should use registered custom component for object", () => {
@@ -260,14 +260,14 @@ describe("SchemaField", () => {
     });
 
     it("should render a customized description field", () => {
-      const CustomDescriptionField = ({ description }) => (
+      const CustomDescriptionTemplate = ({ description }) => (
         <div id="custom">{description}</div>
       );
 
       const { node } = createFormComponent({
         schema,
-        fields: {
-          DescriptionField: CustomDescriptionField,
+        templates: {
+          DescriptionTemplate: CustomDescriptionTemplate,
         },
       });
 
@@ -336,10 +336,10 @@ describe("SchemaField", () => {
 
     describe("Custom error rendering", () => {
       const customStringWidget = props => {
-        return <div className="custom-text-widget">{props.rawErrors}</div>;
+        return <div className="custom-text-widget">{props.errors}</div>;
       };
 
-      it("should pass rawErrors down to custom widgets", () => {
+      it("should pass errors down to custom widgets", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,

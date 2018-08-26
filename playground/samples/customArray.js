@@ -54,5 +54,5 @@ module.exports = {
     },
   },
   formData: ["react", "jsonschema", "form"],
-  ArrayFieldTemplate,
+  templates: { ArrayFieldTemplate },
 };

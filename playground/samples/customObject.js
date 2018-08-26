@@ -1,9 +1,10 @@
 import React from "react";
 
-function ObjectFieldTemplate({ TitleField, properties, title, description }) {
+function ObjectFieldTemplate({ registry, properties, title, description, id }) {
+  const { TitleTemplate, DescriptionTemplate } = registry.templates;
   return (
     <div>
-      <TitleField title={title} />
+      <TitleTemplate title={title} />
       <div className="row">
         {properties.map(prop => (
           <div
@@ -13,7 +14,10 @@ function ObjectFieldTemplate({ TitleField, properties, title, description }) {
           </div>
         ))}
       </div>
-      {description}
+      <DescriptionTemplate
+        id={`${id}__description`}
+        description={description}
+      />
     </div>
   );
 }
@@ -61,5 +65,5 @@ module.exports = {
     bio: "Roundhouse kicking asses since 1940",
     password: "noneed",
   },
-  ObjectFieldTemplate,
+  templates: { ObjectFieldTemplate },
 };

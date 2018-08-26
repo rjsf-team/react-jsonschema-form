@@ -19,16 +19,17 @@ describe("ObjectFieldTemplate", () => {
   class ObjectFieldTemplate extends PureComponent {
     render() {
       const {
-        TitleField,
-        DescriptionField,
         properties,
         title,
         description,
+        registry: {
+          templates: { TitleTemplate, DescriptionTemplate },
+        },
       } = this.props;
       return (
         <div className="root">
-          <TitleField title={title} />
-          <DescriptionField description={description} />
+          <TitleTemplate title={title} />
+          <DescriptionTemplate description={description} />
           <div>
             {properties.map(({ content }, index) => (
               <div key={index} className="property">
@@ -41,9 +42,9 @@ describe("ObjectFieldTemplate", () => {
     }
   }
 
-  const TitleField = () => <div className="title-field" />;
-  const DescriptionField = ({ description }) =>
-    description ? <div className="description-field" /> : null;
+  const TitleTemplate = () => <div className="title-template" />;
+  const DescriptionTemplate = ({ description }) =>
+    description ? <div className="description-template" /> : null;
 
   const { node } = createFormComponent({
     schema: {
@@ -52,11 +53,7 @@ describe("ObjectFieldTemplate", () => {
     },
     uiSchema: { "ui:description": "foobar" },
     formData,
-    ObjectFieldTemplate,
-    fields: {
-      TitleField,
-      DescriptionField,
-    },
+    templates: { ObjectFieldTemplate, TitleTemplate, DescriptionTemplate },
   });
 
   it("should render one root element", () => {
@@ -64,11 +61,11 @@ describe("ObjectFieldTemplate", () => {
   });
 
   it("should render one title", () => {
-    expect(node.querySelectorAll(".title-field")).to.have.length.of(1);
+    expect(node.querySelectorAll(".title-template")).to.have.length.of(1);
   });
 
   it("should render one description", () => {
-    expect(node.querySelectorAll(".description-field")).to.have.length.of(1);
+    expect(node.querySelectorAll(".description-template")).to.have.length.of(1);
   });
 
   it("should render two property containers", () => {

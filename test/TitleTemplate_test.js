@@ -1,10 +1,10 @@
 import React from "react";
 import { expect } from "chai";
 
-import TitleField from "../src/components/fields/TitleField";
+import TitleTemplate from "../src/components/templates/TitleTemplate";
 import { createSandbox, createComponent } from "./test_utils";
 
-describe("TitleField", () => {
+describe("TitleTemplate", () => {
   let sandbox;
 
   beforeEach(() => {
@@ -17,12 +17,12 @@ describe("TitleField", () => {
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
-  class TitleFieldWrapper extends React.Component {
+  class TitleTemplateWrapper extends React.Component {
     constructor(props) {
       super(props);
     }
     render() {
-      return <TitleField {...this.props} />;
+      return <TitleTemplate {...this.props} />;
     }
   }
 
@@ -31,7 +31,7 @@ describe("TitleField", () => {
       title: "Field title",
       required: true,
     };
-    const { node } = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleTemplateWrapper, props);
 
     expect(node.tagName).to.equal("LEGEND");
   });
@@ -42,7 +42,7 @@ describe("TitleField", () => {
       required: true,
       id: "sample_id",
     };
-    const { node } = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleTemplateWrapper, props);
 
     expect(node.id).to.equal("sample_id");
   });
@@ -52,7 +52,7 @@ describe("TitleField", () => {
       title: "Field title",
       required: false,
     };
-    const { node } = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleTemplateWrapper, props);
 
     expect(node.textContent).to.equal(props.title);
   });
@@ -62,7 +62,7 @@ describe("TitleField", () => {
       title: "Field title",
       required: true,
     };
-    const { node } = createComponent(TitleFieldWrapper, props);
+    const { node } = createComponent(TitleTemplateWrapper, props);
 
     expect(node.textContent).to.equal(props.title + "*");
   });

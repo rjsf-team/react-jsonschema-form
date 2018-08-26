@@ -1,10 +1,10 @@
 import React from "react";
 import { expect } from "chai";
 
-import DescriptionField from "../src/components/fields/DescriptionField";
+import DescriptionTemplate from "../src/components/templates/DescriptionTemplate";
 import { createSandbox, createComponent } from "./test_utils";
 
-describe("DescriptionField", () => {
+describe("DescriptionTemplate", () => {
   let sandbox;
 
   beforeEach(() => {
@@ -17,12 +17,12 @@ describe("DescriptionField", () => {
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
-  class DescriptionFieldWrapper extends React.Component {
+  class DescriptionTemplateWrapper extends React.Component {
     constructor(props) {
       super(props);
     }
     render() {
-      return <DescriptionField {...this.props} />;
+      return <DescriptionTemplate {...this.props} />;
     }
   }
 
@@ -30,7 +30,7 @@ describe("DescriptionField", () => {
     const props = {
       description: <em>description</em>,
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.tagName).to.equal("DIV");
   });
@@ -39,7 +39,7 @@ describe("DescriptionField", () => {
     const props = {
       description: "description",
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.tagName).to.equal("P");
   });
@@ -49,7 +49,7 @@ describe("DescriptionField", () => {
       description: "Field description",
       id: "sample_id",
     };
-    const { node } = createComponent(DescriptionFieldWrapper, props);
+    const { node } = createComponent(DescriptionTemplateWrapper, props);
 
     expect(node.id).to.equal("sample_id");
   });
