@@ -1,5 +1,6 @@
 import React from "react";
 import validateFormData from "./validate";
+import fill from "core-js/library/fn/array/fill";
 
 export function getDefaultRegistry() {
   return {
