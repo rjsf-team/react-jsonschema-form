@@ -18,15 +18,12 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 AltDateTimeWidget.defaultProps = {
-  schema: PropTypes.object.isRequired,
-  id: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  required: PropTypes.bool,
-  disabled: PropTypes.bool,
-  readonly: PropTypes.bool,
-  autofocus: PropTypes.bool,
-  onChange: PropTypes.func,
-  onBlur: PropTypes.func,
+  disabled: false,
+  readonly: false,
+  autofocus: false,
+  options: {
+    yearsRange: [1900, new Date().getFullYear() + 2],
+  },
   time: true,
 };
 export default AltDateTimeWidget;
