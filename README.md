@@ -871,7 +871,9 @@ The core structure is based on registry object which contains the needed compone
 
 The basic relationship between components is described in diagram:
 
-![](diagram.svg)
+![](diagram-form.svg)
+
+![](diagram-arrayfield.svg)
 
 
 ### Field template
