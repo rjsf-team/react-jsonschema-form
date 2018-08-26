@@ -868,7 +868,8 @@ The core structure is based on registry object which contains the needed compone
 - fields: A _field_ usually wraps one or more widgets and most often handles internal field state; think of a field as a form row, including the labels.
 - widgets: A _widget_ represents a HTML tag for the user to enter data, eg. `input`, `select`, etc.
 - templates: Templates are used across the whole structure for everything related to the UI.
-The basic relationship between components is described below:
+
+The basic relationship between components is described in diagram:
 
 ![](diagram.svg)
 
