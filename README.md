@@ -1744,6 +1744,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 * `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`
     Nobody yet has come up with a PR that adds this feature with a simple and easy-to-understand UX.
     You can use `oneOf` with [schema dependencies](#schema-dependencies) to dynamically add schema properties based on input data but this feature does not bring general support for `oneOf` elsewhere in a schema.
+* `"additionalProperties":false` when used with [schema dependencies](#schema-dependencies) will not remove the extra properties and produce invalid schemas. It is recommended to avoid setting `"additionalProperties":false`. See [#848](https://github.com/mozilla-services/react-jsonschema-form/issues/848) [#902](https://github.com/mozilla-services/react-jsonschema-form/issues/902) [#992](https://github.com/mozilla-services/react-jsonschema-form/issues/992)
 
 ## Tips and tricks
 
