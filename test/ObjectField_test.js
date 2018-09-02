@@ -381,4 +381,215 @@ describe("ObjectField", () => {
       expect(node.querySelector("#title-")).to.be.null;
     });
   });
+
+  describe("additionalProperties", () => {
+    const schema = {
+      type: "object",
+      additionalProperties: {
+        type: "string",
+      },
+    };
+
+    it("should automatically add a property field if in formData", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+    });
+
+    it("should still obey properties if additionalProperties is defined", () => {
+      const { node } = createFormComponent({
+        schema: {
+          ...schema,
+          properties: {
+            definedProperty: {
+              type: "string",
+            },
+          },
+        },
+      });
+
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+    });
+
+    it("should render a label for the additional property key", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first-key']").textContent).eql(
+        "first Key"
+      );
+    });
+
+    it("should render a text input for the additional property key", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("#root_first-key").value).eql("first");
+    });
+
+    it("should render a label for the additional property value", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first']").textContent).eql("first");
+    });
+
+    it("should render a text input for the additional property value", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("#root_first").value).eql("1");
+    });
+
+    it("should rename formData key if key input is renamed", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode, {
+        target: { value: "newFirst" },
+      });
+
+      expect(comp.state.formData.newFirst).eql(1);
+    });
+
+    it("should attach suffix to formData key if new key already exists when key input is renamed", () => {
+      const formData = {
+        first: 1,
+        second: 2,
+      };
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode, {
+        target: { value: "second" },
+      });
+
+      expect(comp.state.formData["second-1"]).eql(1);
+    });
+
+    it("should continue incrementing suffix to formData key until that key name is unique after a key input collision", () => {
+      const formData = {
+        first: 1,
+        second: 2,
+        "second-1": 2,
+        "second-2": 2,
+        "second-3": 2,
+        "second-4": 2,
+        "second-5": 2,
+        "second-6": 2,
+      };
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode, {
+        target: { value: "second" },
+      });
+
+      expect(comp.state.formData["second-7"]).eql(1);
+    });
+
+    it("should have an expand button", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector(".object-property-expand button")).not.eql(
+        null
+      );
+    });
+
+    it("should not have an expand button if expandable is false", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { "ui:options": { expandable: false } },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+
+    it("should add a new property when clicking the expand button", () => {
+      const { comp, node } = createFormComponent({ schema });
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      expect(comp.state.formData.newKey).eql("New Value");
+    });
+
+    it("should add a new property with suffix when clicking the expand button and 'newKey' already exists", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { newKey: 1 },
+      });
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      expect(comp.state.formData["newKey-1"]).eql("New Value");
+    });
+
+    it("should not provide an expand button if length equals maxProperties", () => {
+      const { node } = createFormComponent({
+        schema: { maxProperties: 1, ...schema },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+
+    it("should provide an expand button if length is less than maxProperties", () => {
+      const { node } = createFormComponent({
+        schema: { maxProperties: 2, ...schema },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).not.eql(
+        null
+      );
+    });
+
+    it("should not provide an expand button if expandable is expliclty false regardless of maxProperties value", () => {
+      const { node } = createFormComponent({
+        schema: { maxProperties: 2, ...schema },
+        formData: { first: 1 },
+        uiSchema: {
+          "ui:options": {
+            expandable: false,
+          },
+        },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+
+    it("should ignore expandable value if maxProperties constraint is not satisfied", () => {
+      const { node } = createFormComponent({
+        schema: { maxProperties: 1, ...schema },
+        formData: { first: 1 },
+        uiSchema: {
+          "ui:options": {
+            expandable: true,
+          },
+        },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+  });
 });
