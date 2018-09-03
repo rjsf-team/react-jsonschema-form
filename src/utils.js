@@ -453,26 +453,40 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
-export function retrieveSchema(schema, definitions = {}, formData = {}) {
+export function resolveSchema(schema, definitions = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
     // Retrieve the referenced schema definition.
     const $refSchema = findSchemaDefinition(schema.$ref, definitions);
     // Drop the $ref property of the source schema.
     const { $ref, ...localSchema } = schema;
     // Update referenced schema definition with local schema properties.
-    schema = retrieveSchema(
+    return retrieveSchema(
       { ...$refSchema, ...localSchema },
       definitions,
       formData
     );
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
-    schema = retrieveSchema(resolvedSchema, definitions, formData);
+    return retrieveSchema(resolvedSchema, definitions, formData);
+  } else {
+    // No $ref or dependencies attribute found, returning the original schema.
+    return schema;
   }
-  if (schema.hasOwnProperty("additionalProperties")) {
-    schema = stubExistingAdditionalProperties(schema, definitions, formData);
+}
+
+export function retrieveSchema(schema, definitions = {}, formData = {}) {
+  const resolvedSchema = resolveSchema(schema, definitions, formData);
+  const hasAdditionalProperties =
+    resolvedSchema.hasOwnProperty("additionalProperties") &&
+    resolvedSchema.hasAdditionalProperties !== false;
+  if (hasAdditionalProperties) {
+    return stubExistingAdditionalProperties(
+      resolvedSchema,
+      definitions,
+      formData
+    );
   }
-  return schema;
+  return resolvedSchema;
 }
 
 function resolveDependencies(schema, definitions, formData) {

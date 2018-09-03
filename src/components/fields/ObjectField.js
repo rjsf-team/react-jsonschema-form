@@ -15,15 +15,14 @@ function DefaultObjectFieldTemplate(props) {
     if (!schema.additionalProperties) {
       return false;
     }
-    let { expandable } = getUiOptions(uiSchema);
+    const { expandable } = getUiOptions(uiSchema);
     if (expandable !== false) {
       // if ui:options.expandable was not explicitly set to false, we can add
       // another property if we have not exceeded maxProperties yet
       if (schema.maxProperties !== undefined) {
-        expandable = Object.keys(formData).length < schema.maxProperties;
-      } else {
-        expandable = true;
+        return Object.keys(formData).length < schema.maxProperties;
       }
+      return true;
     }
     return expandable;
   };
@@ -69,12 +68,9 @@ class ObjectField extends Component {
     readonly: false,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      additionalProperties: {},
-    };
-  }
+  state = {
+    additionalProperties: {},
+  };
 
   isRequired(name) {
     const schema = this.props.schema;
@@ -144,15 +140,13 @@ class ObjectField extends Component {
     }
   }
 
-  handleAddClick = schema => {
-    return () => {
-      const type = schema.additionalProperties.type;
-      const newFormData = { ...this.props.formData };
-      newFormData[
-        this.getAvailableKey("newKey", newFormData)
-      ] = this.getDefaultValue(type);
-      this.props.onChange(newFormData);
-    };
+  handleAddClick = schema => () => {
+    const type = schema.additionalProperties.type;
+    const newFormData = { ...this.props.formData };
+    newFormData[
+      this.getAvailableKey("newKey", newFormData)
+    ] = this.getDefaultValue(type);
+    this.props.onChange(newFormData);
   };
 
   render() {
@@ -234,12 +228,7 @@ class ObjectField extends Component {
       formData,
       formContext,
     };
-    return (
-      <Template
-        {...templateProps}
-        onAddClick={this.handleAddClick.bind(this)}
-      />
-    );
+    return <Template {...templateProps} onAddClick={this.handleAddClick} />;
   }
 }
 
