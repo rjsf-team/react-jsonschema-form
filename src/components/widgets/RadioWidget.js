@@ -32,7 +32,7 @@ function RadioWidget(props) {
               name={name}
               required={required}
               value={option.value}
-              disabled={disabled || readonly}
+              disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && i === 0}
               onChange={_ => onChange(option.value)}
             />
