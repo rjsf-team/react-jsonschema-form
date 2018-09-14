@@ -490,6 +490,28 @@ describe("ArrayField", () => {
       expect(inputs[3].value).to.eql("");
     });
 
+    it("should render only the default when noFill is true, even when the default is less than minItems", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          turtles: {
+            type: "array",
+            minItems: 4,
+            default: ["Raphael", "Michaelangelo"],
+            noFill: true,
+            items: {
+              type: "string",
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs.length).to.eql(2);
+      expect(inputs[0].value).to.eql("Raphael");
+      expect(inputs[1].value).to.eql("Michaelangelo");
+    });
+
     it("should render enough input to match minItems, populating the first with default values, and the rest with the item default", () => {
       const schema = {
         type: "object",

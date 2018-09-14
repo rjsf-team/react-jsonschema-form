@@ -150,6 +150,9 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
 
     case "array":
       if (schema.minItems) {
+        if (schema.default && schema.noFill === true) {
+          return schema.default;
+        }
         if (!isMultiSelect(schema, definitions)) {
           const defaultsLength = defaults ? defaults.length : 0;
           if (schema.minItems > defaultsLength) {
