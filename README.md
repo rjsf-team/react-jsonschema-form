@@ -689,6 +689,26 @@ const schema = {
 };
 ```
 
+When `minItems` is used with an array of objects it will cause the form data to be filled with at least as many objects as its value. To override this behavior, and to not prefill an array with default objects, you can use the `noFill` property and define a custom `default` for the array. This can be useful if you want to validate that an array is not empty without filling it with empty versions of the object.
+
+Example:
+
+```js
+const schema = {
+  type: "array",
+  minItems: 2,
+  title: "An object list",
+  default: [],
+  noFill: true,
+  items: {
+    type: "object",
+    properties: {
+      id: {type: "string"}
+    },
+  }
+};
+```
+
 By default, checkboxes are stacked. If you prefer them inline, set the `inline` property to `true`:
 
 ```js
