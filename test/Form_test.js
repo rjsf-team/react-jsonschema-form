@@ -44,6 +44,39 @@ describe("Form", () => {
     });
   });
 
+  describe("componentDidMount", () => {
+    describe("when props.onchange is set", () => {
+      let comp;
+      let onChangeProp;
+
+      beforeEach(() => {
+        onChangeProp = sinon.spy();
+        const schema = {
+          type: "object",
+          title: "root object",
+          required: ["foo"],
+          properties: {
+            count: {
+              type: "number",
+              default: 789,
+            },
+          },
+        };
+        comp = renderIntoDocument(
+          <Form schema={schema} onChange={onChangeProp}>
+            <button type="submit">Submit</button>
+            <button type="submit">Another submit</button>
+          </Form>
+        );
+      });
+
+      it("should call props.onChange with current state", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+      });
+    });
+  });
+
   describe("Option idPrefix", function() {
     it("should change the rendered ids", function() {
       const schema = {
