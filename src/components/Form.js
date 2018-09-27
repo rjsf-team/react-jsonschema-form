@@ -35,7 +35,14 @@ export default class Form extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    const nextState = this.getStateFromProps(nextProps);
+    this.setState(nextState);
+    if (
+      !deepEquals(nextState.formData, nextProps.formData) &&
+      this.props.onChange
+    ) {
+      this.props.onChange(nextState);
+    }
   }
 
   getStateFromProps(props) {

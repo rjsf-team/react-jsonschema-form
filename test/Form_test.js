@@ -825,6 +825,88 @@ describe("Form", () => {
     });
   });
 
+  describe("Schema and external formData updates", () => {
+    let comp;
+    let onChangeProp;
+
+    beforeEach(() => {
+      onChangeProp = sinon.spy();
+      const formProps = {
+        schema: {
+          type: "string",
+          default: "foobar",
+        },
+        formData: "some value",
+        onChange: onChangeProp,
+      };
+      comp = createFormComponent(formProps).comp;
+    });
+
+    describe("when the form data is set to null", () => {
+      beforeEach(() => comp.componentWillReceiveProps({ formData: null }));
+
+      it("should call onChange", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+        expect(comp.state.formData).eql("foobar");
+      });
+    });
+
+    describe("when the schema default is changed but formData is not changed", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({
+          schema: newSchema,
+          formData: "some value",
+        }));
+
+      it("should not call onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
+        expect(comp.state.formData).eql("some value");
+        expect(comp.state.schema).deep.eql(newSchema);
+      });
+    });
+
+    describe("when the schema default is changed and formData is changed", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({
+          schema: newSchema,
+          formData: "something else",
+        }));
+
+      it("should not call onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
+        expect(comp.state.formData).eql("something else");
+        expect(comp.state.schema).deep.eql(newSchema);
+      });
+    });
+
+    describe("when the schema default is changed and formData is nulled", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({ schema: newSchema, formData: null }));
+
+      it("should call onChange", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+        expect(comp.state.formData).eql("the new default");
+      });
+    });
+  });
+
   describe("External formData updates", () => {
     describe("root level", () => {
       const formProps = {
