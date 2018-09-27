@@ -44,6 +44,64 @@ describe("Form", () => {
     });
   });
 
+  describe("on component creation", () => {
+    let comp;
+    let onChangeProp;
+    let formData;
+    let schema;
+
+    function createComponent() {
+      comp = renderIntoDocument(
+        <Form schema={schema} onChange={onChangeProp} formData={formData}>
+          <button type="submit">Submit</button>
+          <button type="submit">Another submit</button>
+        </Form>
+      );
+    }
+
+    beforeEach(() => {
+      onChangeProp = sinon.spy();
+      schema = {
+        type: "object",
+        title: "root object",
+        required: ["count"],
+        properties: {
+          count: {
+            type: "number",
+            default: 789,
+          },
+        },
+      };
+    });
+
+    describe("when props.formData does not equal the default values", () => {
+      beforeEach(() => {
+        formData = {
+          foo: 123,
+        };
+        createComponent();
+      });
+
+      it("should call props.onChange with current state", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+      });
+    });
+
+    describe("when props.formData equals the default values", () => {
+      beforeEach(() => {
+        formData = {
+          count: 789,
+        };
+        createComponent();
+      });
+
+      it("should not call props.onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
+      });
+    });
+  });
+
   describe("Option idPrefix", function() {
     it("should change the rendered ids", function() {
       const schema = {
@@ -764,6 +822,88 @@ describe("Form", () => {
       Simulate.submit(node);
 
       sinon.assert.calledOnce(onError);
+    });
+  });
+
+  describe("Schema and external formData updates", () => {
+    let comp;
+    let onChangeProp;
+
+    beforeEach(() => {
+      onChangeProp = sinon.spy();
+      const formProps = {
+        schema: {
+          type: "string",
+          default: "foobar",
+        },
+        formData: "some value",
+        onChange: onChangeProp,
+      };
+      comp = createFormComponent(formProps).comp;
+    });
+
+    describe("when the form data is set to null", () => {
+      beforeEach(() => comp.componentWillReceiveProps({ formData: null }));
+
+      it("should call onChange", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+        expect(comp.state.formData).eql("foobar");
+      });
+    });
+
+    describe("when the schema default is changed but formData is not changed", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({
+          schema: newSchema,
+          formData: "some value",
+        }));
+
+      it("should not call onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
+        expect(comp.state.formData).eql("some value");
+        expect(comp.state.schema).deep.eql(newSchema);
+      });
+    });
+
+    describe("when the schema default is changed and formData is changed", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({
+          schema: newSchema,
+          formData: "something else",
+        }));
+
+      it("should not call onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
+        expect(comp.state.formData).eql("something else");
+        expect(comp.state.schema).deep.eql(newSchema);
+      });
+    });
+
+    describe("when the schema default is changed and formData is nulled", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({ schema: newSchema, formData: null }));
+
+      it("should call onChange", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+        expect(comp.state.formData).eql("the new default");
+      });
     });
   });
 
