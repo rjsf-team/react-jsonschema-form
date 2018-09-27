@@ -9,6 +9,7 @@ import {
   toIdSchema,
   setState,
   getDefaultRegistry,
+  deepEquals,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -25,10 +26,10 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
-  }
-
-  componentDidMount() {
-    if (this.props.onChange) {
+    if (
+      this.props.onChange &&
+      !deepEquals(this.state.formData, this.props.formData)
+    ) {
       this.props.onChange(this.state);
     }
   }

@@ -44,35 +44,60 @@ describe("Form", () => {
     });
   });
 
-  describe("componentDidMount", () => {
-    describe("when props.onchange is set", () => {
-      let comp;
-      let onChangeProp;
+  describe("on component creation", () => {
+    let comp;
+    let onChangeProp;
+    let formData;
+    let schema;
 
-      beforeEach(() => {
-        onChangeProp = sinon.spy();
-        const schema = {
-          type: "object",
-          title: "root object",
-          required: ["foo"],
-          properties: {
-            count: {
-              type: "number",
-              default: 789,
-            },
+    function createComponent() {
+      comp = renderIntoDocument(
+        <Form schema={schema} onChange={onChangeProp} formData={formData}>
+          <button type="submit">Submit</button>
+          <button type="submit">Another submit</button>
+        </Form>
+      );
+    }
+
+    beforeEach(() => {
+      onChangeProp = sinon.spy();
+      schema = {
+        type: "object",
+        title: "root object",
+        required: ["count"],
+        properties: {
+          count: {
+            type: "number",
+            default: 789,
           },
+        },
+      };
+    });
+
+    describe("when props.formData does not equal the default values", () => {
+      beforeEach(() => {
+        formData = {
+          foo: 123,
         };
-        comp = renderIntoDocument(
-          <Form schema={schema} onChange={onChangeProp}>
-            <button type="submit">Submit</button>
-            <button type="submit">Another submit</button>
-          </Form>
-        );
+        createComponent();
       });
 
       it("should call props.onChange with current state", () => {
         sinon.assert.calledOnce(onChangeProp);
         sinon.assert.calledWith(onChangeProp, comp.state);
+      });
+    });
+
+    describe("when props.formData equals the default values", () => {
+      beforeEach(() => {
+        formData = {
+          count: 789,
+        };
+        createComponent();
+      });
+
+      it("should not call props.onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
       });
     });
   });
