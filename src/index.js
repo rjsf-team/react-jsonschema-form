@@ -1,3 +1,7 @@
 import Form from "./components/Form";
+import FormWithServerValidation from './components/FormWithServerValidation';
 
-export default Form;
+export {
+  Form,
+  FormWithServerValidation
+};
