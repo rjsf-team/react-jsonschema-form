@@ -93,7 +93,7 @@
     "sinon": "^1.17.6",
     "style-loader": "^0.13.1",
     "toctoc": "^0.2.3",
-    "webpack": "^1.13.3",
+    "webpack": "^3.10.0",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-hot-middleware": "^2.13.2"
   },
