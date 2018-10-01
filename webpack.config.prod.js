@@ -18,7 +18,7 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ["", ".js", ".jsx", ".css"]
+    extensions: [".js", ".jsx", ".css"]
   },
   module: {
     loaders: [
