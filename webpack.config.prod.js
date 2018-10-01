@@ -3,6 +3,7 @@ var webpack = require("webpack");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
+  mode: "production",
   entry: "./playground/app",
   output: {
     path: path.join(__dirname, "build"),
