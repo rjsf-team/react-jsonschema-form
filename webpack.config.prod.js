@@ -1,6 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: "./playground/app",
@@ -10,7 +10,7 @@ module.exports = {
     publicPath: "/static/"
   },
   plugins: [
-    new ExtractTextPlugin({filename: "styles.css", allChunks: true}),
+    new MiniCssExtractPlugin({filename: "styles.css", allChunks: true}),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("production")
@@ -35,9 +35,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          use: "css-loader",
-        }),
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          "css-loader",
+        ],
         include: [
           path.join(__dirname, "css"),
           path.join(__dirname, "playground"),
