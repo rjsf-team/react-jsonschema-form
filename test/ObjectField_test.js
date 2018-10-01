@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
 import { createFormComponent, createSandbox } from "./test_utils";
+import validateFormData from "../src/validate";
 
 describe("ObjectField", () => {
   let sandbox;
@@ -399,6 +400,39 @@ describe("ObjectField", () => {
       expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
     });
 
+    it("should pass through non-schema properties and not throw validation errors if additionalProperties is undefined", () => {
+      const undefinedAPSchema = {
+        ...schema,
+        properties: { second: { type: "string" } },
+      };
+      delete undefinedAPSchema.additionalProperties;
+      const { comp } = createFormComponent({
+        schema: undefinedAPSchema,
+        formData: { nonschema: 1 },
+      });
+
+      expect(comp.state.formData.nonschema).eql(1);
+
+      const result = validateFormData(comp.state.formData, comp.state.schema);
+      expect(result.errors).eql([]);
+    });
+
+    it("should pass through non-schema properties but throw a validation error if additionalProperties is false", () => {
+      const { comp } = createFormComponent({
+        schema: {
+          ...schema,
+          additionalProperties: false,
+          properties: { second: { type: "string" } },
+        },
+        formData: { nonschema: 1 },
+      });
+
+      expect(comp.state.formData.nonschema).eql(1);
+
+      const result = validateFormData(comp.state.formData, comp.state.schema);
+      expect(result.errors[0].name).eql("additionalProperties");
+    });
+
     it("should still obey properties if additionalProperties is defined", () => {
       const { node } = createFormComponent({
         schema: {
@@ -423,6 +457,26 @@ describe("ObjectField", () => {
       expect(node.querySelector("[for='root_first-key']").textContent).eql(
         "first Key"
       );
+    });
+
+    it("should render a label for the additional property key if additionalProperties is true", () => {
+      const { node } = createFormComponent({
+        schema: { ...schema, additionalProperties: true },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first-key']").textContent).eql(
+        "first Key"
+      );
+    });
+
+    it("should not render a label for the additional property key if additionalProperties is false", () => {
+      const { node } = createFormComponent({
+        schema: { ...schema, additionalProperties: false },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first-key']")).eql(null);
     });
 
     it("should render a text input for the additional property key", () => {

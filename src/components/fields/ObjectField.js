@@ -16,15 +16,15 @@ function DefaultObjectFieldTemplate(props) {
       return false;
     }
     const { expandable } = getUiOptions(uiSchema);
-    if (expandable !== false) {
-      // if ui:options.expandable was not explicitly set to false, we can add
-      // another property if we have not exceeded maxProperties yet
-      if (schema.maxProperties !== undefined) {
-        return Object.keys(formData).length < schema.maxProperties;
-      }
-      return true;
+    if (expandable === false) {
+      return expandable;
     }
-    return expandable;
+    // if ui:options.expandable was not explicitly set to false, we can add
+    // another property if we have not exceeded maxProperties yet
+    if (schema.maxProperties !== undefined) {
+      return Object.keys(formData).length < schema.maxProperties;
+    }
+    return true;
   };
 
   const { TitleField, DescriptionField } = props;
@@ -114,7 +114,7 @@ class ObjectField extends Component {
         errorSchema &&
           this.props.errorSchema && {
             ...this.props.errorSchema,
-            [name]: errorSchema,
+            [value]: errorSchema,
           }
       );
     };

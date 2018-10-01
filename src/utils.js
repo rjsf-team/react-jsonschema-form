@@ -478,7 +478,7 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
   const resolvedSchema = resolveSchema(schema, definitions, formData);
   const hasAdditionalProperties =
     resolvedSchema.hasOwnProperty("additionalProperties") &&
-    resolvedSchema.hasAdditionalProperties !== false;
+    resolvedSchema.additionalProperties !== false;
   if (hasAdditionalProperties) {
     return stubExistingAdditionalProperties(
       resolvedSchema,
