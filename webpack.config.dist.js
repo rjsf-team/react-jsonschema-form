@@ -29,24 +29,17 @@ module.exports = {
     }
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loaders: ["babel"],
+        use: [
+          "babel-loader",
+        ],
         exclude: [
           path.join(__dirname, "node_modules", "core-js"),
           path.join(__dirname, "node_modules", "babel-runtime"),
         ],
       },
-      {
-        test: /\.json$/,
-        loader:"json-loader",
-        include: [
-          path.join(__dirname, "css"),
-          path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
-        ],
-      }
     ]
   }
 };
