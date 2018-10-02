@@ -37,6 +37,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
            - [Multiple files](#multiple-files)
            - [File widget input ref](#file-widget-input-ref)
      - [Object fields ordering](#object-fields-ordering)
+     - [Object item options](#object-item-options)
+        - [expandable option](#expandable-option)
      - [Array item options](#array-item-options)
         - [orderable option](#orderable-option)
         - [addable option](#addable-option)
@@ -481,6 +483,20 @@ If a guaranteed fixed order is only important for some fields, you can insert a 
 ```js
 const uiSchema = {
   "ui:order": ["bar", "*"]
+};
+```
+
+### Object item options
+
+#### `expandable` option
+
+If `additionalProperties` contains a schema object, an add button for new properies is shown by default. You can turn this off with the `expandable` option in `uiSchema`:
+
+```jsx
+const uiSchema = {
+  "ui:options":  {
+    expandable: false
+  }
 };
 ```
 

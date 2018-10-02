@@ -1,3 +1,4 @@
+import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -61,6 +62,19 @@ function Label(props) {
   );
 }
 
+function LabelInput(props) {
+  const { id, label, onChange } = props;
+  return (
+    <input
+      className="form-control"
+      type="text"
+      id={id}
+      onBlur={event => onChange(event.target.value)}
+      defaultValue={label}
+    />
+  );
+}
+
 function Help(props) {
   const { help } = props;
   if (!help) {
@@ -106,13 +120,27 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
+    onKeyChange,
   } = props;
   if (hidden) {
     return children;
   }
+  const additional = props.schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const keyLabel = `${label} Key`;
 
   return (
     <div className={classNames}>
+      {additional && (
+        <div className="form-group">
+          <Label label={keyLabel} required={required} id={`${id}-key`} />
+          <LabelInput
+            label={label}
+            required={required}
+            id={`${id}-key`}
+            onChange={onKeyChange}
+          />
+        </div>
+      )}
       {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}
@@ -157,6 +185,7 @@ function SchemaFieldRender(props) {
     errorSchema,
     idPrefix,
     name,
+    onKeyChange,
     required,
     registry = getDefaultRegistry(),
   } = props;
@@ -255,6 +284,7 @@ function SchemaFieldRender(props) {
     id,
     label,
     hidden,
+    onKeyChange,
     required,
     disabled,
     readonly,
