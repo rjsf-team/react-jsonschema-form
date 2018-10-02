@@ -490,7 +490,9 @@ const uiSchema = {
 
 #### `expandable` option
 
-If `additionalProperties` contains a schema object, an add button for new properies is shown by default. You can turn this off with the `expandable` option in `uiSchema`:
+If `additionalProperties` contains a schema object, an add button for new properies is shown by default. The UX for editing properties whose names are user-defined is still experimental.
+
+You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
 
 ```jsx
 const uiSchema = {
