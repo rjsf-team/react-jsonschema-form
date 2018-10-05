@@ -694,7 +694,7 @@ export function toIdSchema(
   const idSchema = {
     $id: id || idPrefix,
   };
-  if ("$ref" in schema) {
+  if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toIdSchema(_schema, id, definitions, formData, idPrefix);
   }
