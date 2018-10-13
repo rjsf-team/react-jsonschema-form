@@ -478,6 +478,18 @@ function resolveReference(schema, definitions, formData) {
   );
 }
 
+export function resolveReferences(schema, definitions, formData) {
+  if (!Array.isArray(schema)) {
+    throw new Error(`invalid: it is some ${typeof schema} instead of an array`);
+  }
+  return schema.map(
+    subschema =>
+      subschema.hasOwnProperty("$ref")
+        ? resolveReference(subschema, definitions, formData)
+        : subschema
+  );
+}
+
 export function retrieveSchema(schema, definitions = {}, formData = {}) {
   const resolvedSchema = resolveSchema(schema, definitions, formData);
   const hasAdditionalProperties =
@@ -548,7 +560,7 @@ function withDependentSchema(
         definitions,
         formData,
         dependencyKey,
-        oneOf
+        resolveReferences(oneOf, definitions, formData)
       );
 }
 
@@ -559,11 +571,6 @@ function withExactlyOneSubschema(
   dependencyKey,
   oneOf
 ) {
-  if (!Array.isArray(oneOf)) {
-    throw new Error(
-      `invalid oneOf: it is some ${typeof oneOf} instead of an array`
-    );
-  }
   const validSubschemas = oneOf.filter(subschema => {
     if (!subschema.properties) {
       return false;
