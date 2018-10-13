@@ -12,6 +12,7 @@ import {
   mergeObjects,
   pad,
   parseDateString,
+  resolveReferences,
   retrieveSchema,
   shouldRender,
   toDateString,
@@ -686,6 +687,32 @@ describe("utils", () => {
                 b: { type: "integer" },
               },
             });
+          });
+        });
+
+        describe("with $ref in oneOf", () => {
+          it("should retrieve referenced schemas", () => {
+            const schema = [
+              { $ref: "#/definitions/needsA" },
+              { $ref: "#/definitions/needsB" },
+            ];
+            const definitions = {
+              needsA: {
+                properties: {
+                  a: { type: "string" },
+                },
+              },
+              needsB: {
+                properties: {
+                  b: { type: "integer" },
+                },
+              },
+            };
+            const formData = { a: "1" };
+            expect(resolveReferences(schema, definitions, formData)).eql([
+              definitions.needsA,
+              definitions.needsB,
+            ]);
           });
         });
       });
