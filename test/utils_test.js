@@ -692,26 +692,40 @@ describe("utils", () => {
         describe("with $ref in oneOf", () => {
           it("should retrieve referenced schemas", () => {
             const schema = {
-              oneOf: [
-                { $ref: "#/definitions/needsA" },
-                { $ref: "#/definitions/needsB" },
-              ],
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+              },
+              dependencies: {
+                a: {
+                  oneOf: [
+                    { $ref: "#/definitions/needsA" },
+                    { $ref: "#/definitions/needsB" },
+                  ],
+                },
+              },
             };
             const definitions = {
               needsA: {
                 properties: {
-                  a: { type: "string" },
+                  a: { enum: ["typeA"] },
+                  b: { type: "number" },
                 },
               },
               needsB: {
                 properties: {
-                  b: { type: "integer" },
+                  a: { enum: ["typeB"] },
+                  c: { type: "boolean" },
                 },
               },
             };
-            const formData = { a: "1" };
+            const formData = { a: "typeB" };
             expect(retrieveSchema(schema, definitions, formData)).eql({
-              oneOf: [definitions.needsA, definitions.needsB],
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+                c: { type: "boolean" },
+              },
             });
           });
         });

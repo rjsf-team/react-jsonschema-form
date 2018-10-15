@@ -454,28 +454,7 @@ export function stubExistingAdditionalProperties(
 }
 
 export function resolveSchema(schema, definitions = {}, formData = {}) {
-  if (schema.hasOwnProperty("oneOf")) {
-    const { oneOf } = schema;
-    if (!Array.isArray(oneOf)) {
-      throw new Error(
-        `invalid: it is some ${typeof oneOf} instead of an array`
-      );
-    }
-    // No oneOf with $ref found, returning the original schema.
-    if (oneOf.findIndex(item => item.$ref) === -1) {
-      return schema;
-    }
-    // Resolving $ref inside oneOf.
-    const resolvedOneOf = {
-      oneOf: oneOf.map(
-        subschema =>
-          subschema.hasOwnProperty("$ref")
-            ? resolveReference(subschema, definitions, formData)
-            : subschema
-      ),
-    };
-    return retrieveSchema(resolvedOneOf, definitions, formData);
-  } else if (schema.hasOwnProperty("$ref")) {
+  if (schema.hasOwnProperty("$ref")) {
     return resolveReference(schema, definitions, formData);
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
@@ -562,15 +541,26 @@ function withDependentSchema(
     formData
   );
   schema = mergeSchemas(schema, dependentSchema);
-  return oneOf === undefined
-    ? schema
-    : withExactlyOneSubschema(
-        schema,
-        definitions,
-        formData,
-        dependencyKey,
-        oneOf
-      );
+  // Since it does not contain oneOf, we return the original schema.
+  if (oneOf === undefined) {
+    return schema;
+  } else if (!Array.isArray(oneOf)) {
+    throw new Error(`invalid: it is some ${typeof oneOf} instead of an array`);
+  }
+  // Resolve $refs inside oneOf.
+  const resolvedOneOf = oneOf.map(
+    subschema =>
+      subschema.hasOwnProperty("$ref")
+        ? resolveReference(subschema, definitions, formData)
+        : subschema
+  );
+  return withExactlyOneSubschema(
+    schema,
+    definitions,
+    formData,
+    dependencyKey,
+    resolvedOneOf
+  );
 }
 
 function withExactlyOneSubschema(
