@@ -454,7 +454,28 @@ export function stubExistingAdditionalProperties(
 }
 
 export function resolveSchema(schema, definitions = {}, formData = {}) {
-  if (schema.hasOwnProperty("$ref")) {
+  if (schema.hasOwnProperty("oneOf")) {
+    const { oneOf } = schema;
+    if (!Array.isArray(oneOf)) {
+      throw new Error(
+        `invalid: it is some ${typeof oneOf} instead of an array`
+      );
+    }
+    // No oneOf with $ref found, returning the original schema.
+    if (oneOf.findIndex(item => item.$ref) === -1) {
+      return schema;
+    }
+    // Resolving $ref inside oneOf.
+    const resolvedOneOf = {
+      oneOf: oneOf.map(
+        subschema =>
+          subschema.hasOwnProperty("$ref")
+            ? resolveReference(subschema, definitions, formData)
+            : subschema
+      ),
+    };
+    return retrieveSchema(resolvedOneOf, definitions, formData);
+  } else if (schema.hasOwnProperty("$ref")) {
     return resolveReference(schema, definitions, formData);
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
@@ -475,18 +496,6 @@ function resolveReference(schema, definitions, formData) {
     { ...$refSchema, ...localSchema },
     definitions,
     formData
-  );
-}
-
-export function resolveReferences(schema, definitions, formData) {
-  if (!Array.isArray(schema)) {
-    throw new Error(`invalid: it is some ${typeof schema} instead of an array`);
-  }
-  return schema.map(
-    subschema =>
-      subschema.hasOwnProperty("$ref")
-        ? resolveReference(subschema, definitions, formData)
-        : subschema
   );
 }
 
@@ -560,7 +569,7 @@ function withDependentSchema(
         definitions,
         formData,
         dependencyKey,
-        resolveReferences(oneOf, definitions, formData)
+        oneOf
       );
 }
 

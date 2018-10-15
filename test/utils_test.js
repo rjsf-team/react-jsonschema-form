@@ -12,7 +12,6 @@ import {
   mergeObjects,
   pad,
   parseDateString,
-  resolveReferences,
   retrieveSchema,
   shouldRender,
   toDateString,
@@ -692,10 +691,12 @@ describe("utils", () => {
 
         describe("with $ref in oneOf", () => {
           it("should retrieve referenced schemas", () => {
-            const schema = [
-              { $ref: "#/definitions/needsA" },
-              { $ref: "#/definitions/needsB" },
-            ];
+            const schema = {
+              oneOf: [
+                { $ref: "#/definitions/needsA" },
+                { $ref: "#/definitions/needsB" },
+              ],
+            };
             const definitions = {
               needsA: {
                 properties: {
@@ -709,10 +710,9 @@ describe("utils", () => {
               },
             };
             const formData = { a: "1" };
-            expect(resolveReferences(schema, definitions, formData)).eql([
-              definitions.needsA,
-              definitions.needsB,
-            ]);
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              oneOf: [definitions.needsA, definitions.needsB],
+            });
           });
         });
       });
