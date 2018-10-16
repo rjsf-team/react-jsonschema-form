@@ -688,6 +688,47 @@ describe("utils", () => {
             });
           });
         });
+
+        describe("with $ref in oneOf", () => {
+          it("should retrieve referenced schemas", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+              },
+              dependencies: {
+                a: {
+                  oneOf: [
+                    { $ref: "#/definitions/needsA" },
+                    { $ref: "#/definitions/needsB" },
+                  ],
+                },
+              },
+            };
+            const definitions = {
+              needsA: {
+                properties: {
+                  a: { enum: ["typeA"] },
+                  b: { type: "number" },
+                },
+              },
+              needsB: {
+                properties: {
+                  a: { enum: ["typeB"] },
+                  c: { type: "boolean" },
+                },
+              },
+            };
+            const formData = { a: "typeB" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+                c: { type: "boolean" },
+              },
+            });
+          });
+        });
       });
 
       describe("dynamic", () => {
