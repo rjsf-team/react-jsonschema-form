@@ -369,7 +369,9 @@ export function allowAdditionalItems(schema) {
 export function optionsList(schema) {
   if (schema.enum) {
     return schema.enum.map((value, i) => {
-      const label = (schema.enumNames && schema.enumNames[i]) || String(value);
+      const label = (schema.enumNames && schema.enumNames[i]) || 
+                    (schema["x-enumNames"] && schema["x-enumNames"][i]) || 
+                    String(value);
       return { label, value };
     });
   } else {
