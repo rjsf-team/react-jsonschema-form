@@ -913,6 +913,15 @@ If you just want to disable some of the fields see the `ui:disabled` parameter i
 
 ## Advanced customization
 
+
+_ | Custom Field  | Custom Template | Custom Widget
+--|---------- | ------------- | ----
+What it does | Overrides all behaviour | Overrides just the layout | Overrides just the input box (not layout, labels, or help, or validation)
+Usage | Global or per-field | Only global | Global or per-field
+Global Example | `<Form fields={MyCustomFields} />` |  `<Form ArrayFieldTemplate={ArrayFieldTemplate} />` | `<Form widgets={MyCustomWidgets} />`
+Per-Field Example | `"ui:field": MyField` |  N/A | `"ui:widget":MyWidget`
+Documentation | [Field](#field-props) | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)
+
 ### Field template
 
 To take control over the inner organization of each field (each form row), you can define a *field template* for your form.
