@@ -33,6 +33,7 @@ export default class Form extends Component {
     ) {
       this.props.onChange(this.state);
     }
+    this.formElement = null;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -186,6 +187,12 @@ export default class Form extends Component {
     };
   }
 
+  submit() {
+    if (this.formElement) {
+      this.formElement.dispatchEvent(new Event("submit"));
+    }
+  }
+
   render() {
     const {
       children,
@@ -220,7 +227,10 @@ export default class Form extends Component {
         encType={enctype}
         acceptCharset={acceptcharset}
         noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}>
+        onSubmit={this.onSubmit}
+        ref={form => {
+          this.formElement = form;
+        }}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}

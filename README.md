@@ -23,6 +23,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Form data changes](#form-data-changes)
         - [Form field blur events](#form-field-blur-events)
         - [Form field focus events](#form-field-focus-events)
+     - [Submit form programmatically](#submit-form-programmatically)
   - [Form customization](#form-customization)
      - [The uiSchema object](#the-uischema-object)
      - [Alternative widgets](#alternative-widgets)
@@ -240,6 +241,22 @@ Sometimes you may want to trigger events or modify external state when a field h
 #### Form field focus events
 
 Sometimes you may want to trigger events or modify external state when a field has been focused, so you can pass an `onFocus` handler, which will receive the id of the input that is focused and the field value.
+
+### Submit form programmatically
+You can use the reference to get your `Form` component and call the `submit` method to submit the form programmatically without a submit button.
+This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
+
+```js
+const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
+let yourForm;
+
+render((
+  <Form schema={schema}
+        onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
+), document.getElementById("app"));
+
+yourForm.submit();
+```
 
 ## Form customization
 
