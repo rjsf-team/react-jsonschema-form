@@ -881,6 +881,18 @@ The `Form` component supports the following html attributes:
   schema={} />
 ```
 
+### Form disable
+
+Its possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down thru each field of the form. 
+
+```jsx
+<Form
+  disabled
+  schema={} />
+```
+
+If you just want to disable some of the fields see the `ui:disabled` parameter in the uiSchema directive. 
+
 ## Advanced customization
 
 ### Field template
