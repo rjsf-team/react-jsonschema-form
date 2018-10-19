@@ -59,6 +59,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Field labels](#field-labels)
      - [HTML5 Input Types](#html5-input-types)
      - [Form attributes](#form-attributes)
+     - [Form disable](#form-disable)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array Field Template](#array-field-template)
