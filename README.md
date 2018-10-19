@@ -1031,7 +1031,7 @@ function ObjectFieldTemplate(props) {
     <div>
       {props.title}
       {props.description}
-      {props.properties.map(element => <div className="property-wrapper">{element.children}</div>)}
+      {props.properties.map(element => <div className="property-wrapper">{element.content}</div>)}
     </div>
   );
 }
