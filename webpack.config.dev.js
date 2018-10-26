@@ -2,6 +2,7 @@ var path = require("path");
 var webpack = require("webpack");
 
 module.exports = {
+  mode: "development",
   devtool: "eval",
   entry: [
     "webpack-hot-middleware/client?reload=true",
@@ -14,13 +15,14 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: "babel",
+        use: [
+          "babel-loader",
+        ],
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
@@ -29,22 +31,16 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: "style!css",
+        use: [
+          "style-loader",
+          "css-loader",
+        ],
         include: [
           path.join(__dirname, "css"),
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules"),
         ],
       },
-      {
-        test: /\.json$/,
-        loader:"json-loader",
-        include: [
-          path.join(__dirname, "css"),
-          path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
-        ],
-      }
     ]
   }
 };
