@@ -2,11 +2,12 @@ var path = require("path");
 var webpack = require("webpack");
 
 module.exports = {
+  mode: "production",
   cache: true,
   context: __dirname + "/src",
   entry: "./index.js",
   output: {
-    path: "./dist",
+    path: path.join(__dirname, "dist"),
     publicPath: "/dist/",
     filename: "react-jsonschema-form.js",
     library: "JSONSchemaForm",
@@ -36,24 +37,17 @@ module.exports = {
     }
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loaders: ["babel"],
+        use: [
+          "babel-loader",
+        ],
         exclude: [
           path.join(__dirname, "node_modules", "core-js"),
           path.join(__dirname, "node_modules", "babel-runtime"),
         ],
       },
-      {
-        test: /\.json$/,
-        loader:"json-loader",
-        include: [
-          path.join(__dirname, "css"),
-          path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
-        ],
-      }
     ]
   }
 };
