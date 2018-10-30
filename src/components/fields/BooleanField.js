@@ -60,6 +60,8 @@ if (process.env.NODE_ENV !== "production") {
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
     formData: PropTypes.bool,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
