@@ -45,6 +45,9 @@ function DefaultArrayItem(props) {
     paddingRight: 6,
     fontWeight: "bold",
   };
+  const RemoveButton = props.RemoveButtonTemplate || IconButton;
+  const MoveDownButtonTemplate = props.MoveDownButtonTemplate || IconButton;
+  const MoveUpButtonTemplate = props.MoveUpButtonTemplate || IconButton;
   return (
     <div key={props.index} className={props.className}>
       <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
@@ -60,22 +63,22 @@ function DefaultArrayItem(props) {
               justifyContent: "space-around",
             }}>
             {(props.hasMoveUp || props.hasMoveDown) && (
-              <IconButton
-                icon="arrow-up"
+              <MoveUpButtonTemplate
+                icon={props.icon || "arrow-up"}
                 className="array-item-move-up"
                 tabIndex="-1"
-                style={btnStyle}
+                style={props.style || btnStyle}
                 disabled={props.disabled || props.readonly || !props.hasMoveUp}
                 onClick={props.onReorderClick(props.index, props.index - 1)}
               />
             )}
 
             {(props.hasMoveUp || props.hasMoveDown) && (
-              <IconButton
-                icon="arrow-down"
+              <MoveDownButtonTemplate
+                icon={props.icon || "arrow-down"}
                 className="array-item-move-down"
                 tabIndex="-1"
-                style={btnStyle}
+                style={props.style || btnStyle}
                 disabled={
                   props.disabled || props.readonly || !props.hasMoveDown
                 }
@@ -84,12 +87,12 @@ function DefaultArrayItem(props) {
             )}
 
             {props.hasRemove && (
-              <IconButton
-                type="danger"
-                icon="remove"
+              <RemoveButton
+                type={props.type || "danger"}
+                icon={props.icson || "remove"}
                 className="array-item-remove"
                 tabIndex="-1"
-                style={btnStyle}
+                style={props.style || btnStyle}
                 disabled={props.disabled || props.readonly}
                 onClick={props.onDropIndexClick(props.index)}
               />
@@ -142,7 +145,12 @@ function DefaultFixedArrayFieldTemplate(props) {
 }
 
 function DefaultNormalArrayFieldTemplate(props) {
-  const { AddButtonTemplate } = props;
+  const {
+    AddButtonTemplate,
+    RemoveButtonTemplate,
+    MoveUpButtonTemplate,
+    MoveDownButtonTemplate,
+  } = props;
   // Check if a custom render function was passed in
   const AddButtonComponent = AddButtonTemplate || AddButton;
   return (
@@ -169,7 +177,13 @@ function DefaultNormalArrayFieldTemplate(props) {
       <div
         className="row array-item-list"
         key={`array-item-list-${props.idSchema.$id}`}>
-        {props.items && props.items.map(p => DefaultArrayItem(p))}
+        {props.items &&
+          props.items.map(p => {
+            p.RemoveButtonTemplate = RemoveButtonTemplate;
+            p.MoveDownButtonTemplate = MoveDownButtonTemplate;
+            p.MoveUpButtonTemplate = MoveUpButtonTemplate;
+            return DefaultArrayItem(p);
+          })}
       </div>
 
       {props.canAdd && (
@@ -378,6 +392,9 @@ class ArrayField extends Component {
       fields,
       formContext,
       AddButtonTemplate,
+      RemoveButtonTemplate,
+      MoveUpButtonTemplate,
+      MoveDownButtonTemplate,
     } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
@@ -423,6 +440,9 @@ class ArrayField extends Component {
       formData,
       rawErrors,
       AddButtonTemplate,
+      RemoveButtonTemplate,
+      MoveUpButtonTemplate,
+      MoveDownButtonTemplate,
     };
 
     // Check if a custom render function was passed in
@@ -537,6 +557,9 @@ class ArrayField extends Component {
       fields,
       formContext,
       AddButtonTemplate,
+      RemoveButtonTemplate,
+      MoveUpButtonTemplate,
+      MoveDownButtonTemplate,
     } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
@@ -604,6 +627,9 @@ class ArrayField extends Component {
       formContext,
       rawErrors,
       AddButtonTemplate,
+      RemoveButtonTemplate,
+      MoveUpButtonTemplate,
+      MoveDownButtonTemplate,
     };
 
     // Check if a custom template template was passed in
