@@ -102,6 +102,10 @@ function DefaultArrayItem(props) {
 }
 
 function DefaultFixedArrayFieldTemplate(props) {
+  const { AddButtonTemplate } = props;
+  // Check if a custom render function was passed in
+  const AddButtonComponent = AddButtonTemplate || AddButton;
+
   return (
     <fieldset className={props.className}>
       <ArrayFieldTitle
@@ -127,8 +131,8 @@ function DefaultFixedArrayFieldTemplate(props) {
       </div>
 
       {props.canAdd && (
-        <AddButton
-          className="array-item-add"
+        <AddButtonComponent
+          className={props.className + " array-item-add"}
           onClick={props.onAddClick}
           disabled={props.disabled || props.readonly}
         />
@@ -138,6 +142,9 @@ function DefaultFixedArrayFieldTemplate(props) {
 }
 
 function DefaultNormalArrayFieldTemplate(props) {
+  const { AddButtonTemplate } = props;
+  // Check if a custom render function was passed in
+  const AddButtonComponent = AddButtonTemplate || AddButton;
   return (
     <fieldset className={props.className}>
       <ArrayFieldTitle
@@ -166,8 +173,8 @@ function DefaultNormalArrayFieldTemplate(props) {
       </div>
 
       {props.canAdd && (
-        <AddButton
-          className="array-item-add"
+        <AddButtonComponent
+          className={props.className + " array-item-add"}
           onClick={props.onAddClick}
           disabled={props.disabled || props.readonly}
         />
@@ -365,7 +372,13 @@ class ArrayField extends Component {
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
-    const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
+    const {
+      ArrayFieldTemplate,
+      definitions,
+      fields,
+      formContext,
+      AddButtonTemplate,
+    } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const arrayProps = {
@@ -409,6 +422,7 @@ class ArrayField extends Component {
       formContext,
       formData,
       rawErrors,
+      AddButtonTemplate,
     };
 
     // Check if a custom render function was passed in
@@ -517,7 +531,13 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
-    const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
+    const {
+      ArrayFieldTemplate,
+      definitions,
+      fields,
+      formContext,
+      AddButtonTemplate,
+    } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
       retrieveSchema(item, definitions, formData[index])
@@ -583,6 +603,7 @@ class ArrayField extends Component {
       TitleField,
       formContext,
       rawErrors,
+      AddButtonTemplate,
     };
 
     // Check if a custom template template was passed in
