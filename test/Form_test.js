@@ -862,7 +862,8 @@ describe("Form", () => {
         comp.componentWillReceiveProps({
           schema: newSchema,
           formData: "some value",
-        }));
+        })
+      );
 
       it("should not call onChange", () => {
         sinon.assert.notCalled(onChangeProp);
@@ -881,7 +882,8 @@ describe("Form", () => {
         comp.componentWillReceiveProps({
           schema: newSchema,
           formData: "something else",
-        }));
+        })
+      );
 
       it("should not call onChange", () => {
         sinon.assert.notCalled(onChangeProp);
@@ -897,7 +899,8 @@ describe("Form", () => {
       };
 
       beforeEach(() =>
-        comp.componentWillReceiveProps({ schema: newSchema, formData: null }));
+        comp.componentWillReceiveProps({ schema: newSchema, formData: null })
+      );
 
       it("should call onChange", () => {
         sinon.assert.calledOnce(onChangeProp);
