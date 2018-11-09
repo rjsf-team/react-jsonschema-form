@@ -11,6 +11,7 @@
     "cs-format": "prettier --jsx-bracket-same-line --trailing-comma es5 --use-tabs false --semi --tab-width 2 '{playground,src,test}/**/*.js' --write",
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test playground",
+    "prepare": "npm run dist",
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
     "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
