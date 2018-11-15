@@ -256,6 +256,121 @@ describe("utils", () => {
           foo: 42,
         });
       });
+
+      it("should use defaults from dependent fields", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              type: "string",
+              enum: [
+                "bar",
+                "baz",
+              ],
+              default: "bar",
+            },
+          },
+          required: ["foo"],
+          dependencies: {
+            foo: {
+              oneOf: [{
+                properties: {
+                  foo: {
+                    enum: [
+                      "bar",
+                    ],
+                  },
+                  extra: {
+                    type: "number",
+                    default: 42,
+                  },
+                },
+              }],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, undefined, undefined)).eql({
+          foo: "bar",
+          extra: 42,
+        });
+      });
+      it("should use defaults from dependent fields based on form data", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              type: "string",
+              enum: [
+                "bar",
+                "baz",
+              ],
+            },
+          },
+          required: ["foo"],
+          dependencies: {
+            foo: {
+              oneOf: [{
+                properties: {
+                  foo: {
+                    enum: [
+                      "bar",
+                    ],
+                  },
+                  extra: {
+                    type: "number",
+                    default: 42,
+                  },
+                },
+              }],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { foo: "bar" })).eql({
+          foo: "bar",
+          extra: 42,
+        });
+      });
+      it("should use defaults from nested dependent fields based on form data", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              type: "object",
+              properties: {
+                bar: {
+                  type: "string",
+                  enum: [
+                    "baz",
+                  ],
+                },
+              },
+              dependencies: {
+                bar: {
+                  oneOf: [{
+                    properties: {
+                      bar: {
+                        enum: [
+                          "baz",
+                        ],
+                      },
+                      extra: {
+                        type: "number",
+                        default: 42,
+                      },
+                    },
+                  }],
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { foo: { bar: "baz" } })).eql({
+          foo: {
+            bar: "baz",
+            extra: 42,
+          },
+        });
+      });
     });
   });
 

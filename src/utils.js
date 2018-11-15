@@ -1,6 +1,7 @@
 import React from "react";
 import validateFormData from "./validate";
 import fill from "core-js/library/fn/array/fill";
+import get from "lodash.get";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -459,6 +460,14 @@ export function resolveSchema(schema, definitions = {}, formData = {}) {
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return retrieveSchema(resolvedSchema, definitions, formData);
+  } else if (schema.type === "object" && schema.hasOwnProperty("properties")) {
+    // Resolve nested dependencies.
+    for (const key in schema.properties) {
+      const data = get(formData, [key]);
+      const resolvedSchema = resolveDependencies(schema.properties[key], definitions, data);
+      schema.properties[key] = retrieveSchema(resolvedSchema, definitions, data);
+    }
+    return schema;
   } else {
     // No $ref or dependencies attribute found, returning the original schema.
     return schema;
@@ -499,7 +508,7 @@ function resolveDependencies(schema, definitions, formData) {
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     // Skip this dependency if its trigger property is not present.
-    if (formData[dependencyKey] === undefined) {
+    if (formData[dependencyKey] === undefined && get(schema, ["properties", dependencyKey, "default"]) === undefined) {
       continue;
     }
     const dependencyValue = dependencies[dependencyKey];
