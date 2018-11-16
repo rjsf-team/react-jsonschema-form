@@ -370,7 +370,7 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 
 ![](http://i.imgur.com/VF5tY60.png)
 
-You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema:
+You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 ```jsx
 uiSchema: {
@@ -379,6 +379,8 @@ uiSchema: {
       "ui:widget": "alt-datetime",
       "ui:options": {
         yearsRange: [1980, 2030],
+        hideNowButton: true,
+        hideClearButton: true,
       },
     },
   },
