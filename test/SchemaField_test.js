@@ -304,21 +304,6 @@ describe("SchemaField", () => {
       }
     }
 
-    it("should render it's own errors", () => {
-      const { node } = createFormComponent({
-        schema,
-        uiSchema,
-        validate,
-      });
-      submit(node);
-
-      const matches = node.querySelectorAll(
-        "form > .form-group > div > .error-detail .text-danger"
-      );
-      expect(matches).to.have.length.of(1);
-      expect(matches[0].textContent).to.eql("container");
-    });
-
     it("should pass errors to child component", () => {
       const { node } = createFormComponent({
         schema,

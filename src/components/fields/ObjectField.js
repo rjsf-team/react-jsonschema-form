@@ -93,10 +93,21 @@ class ObjectField extends Component {
     };
   };
 
+  onDropIndexClick = index => {
+    return event => {
+      if (event) {
+        event.preventDefault();
+      }
+      const { onChange, formData } = this.props;
+      delete formData[index];
+      onChange(formData);
+    };
+  };
+
   getAvailableKey = (preferredKey, formData) => {
     var index = 0;
     var newKey = preferredKey;
-    while (this.props.formData.hasOwnProperty(newKey)) {
+    if (!newKey && !formData.hasOwnProperty(newKey)) {
       newKey = `${preferredKey}-${++index}`;
     }
     return newKey;
@@ -144,7 +155,7 @@ class ObjectField extends Component {
     const type = schema.additionalProperties.type;
     const newFormData = { ...this.props.formData };
     newFormData[
-      this.getAvailableKey("newKey", newFormData)
+      this.getAvailableKey("New Key", newFormData)
     ] = this.getDefaultValue(type);
     this.props.onChange(newFormData);
   };
@@ -213,6 +224,7 @@ class ObjectField extends Component {
               registry={registry}
               disabled={disabled}
               readonly={readonly}
+              onDropIndexClick={this.onDropIndexClick}
             />
           ),
           name,

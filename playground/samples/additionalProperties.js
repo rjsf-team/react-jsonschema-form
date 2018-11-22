@@ -27,6 +27,5 @@ module.exports = {
   formData: {
     firstName: "Chuck",
     lastName: "Norris",
-    assKickCount: "infinity",
   },
 };

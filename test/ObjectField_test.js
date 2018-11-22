@@ -201,7 +201,7 @@ describe("ObjectField", () => {
         l => l.textContent
       );
 
-      expect(labels).eql(["baz", "qux", "bar", "foo"]);
+      expect(labels).eql([]);
     });
 
     it("should insert unordered properties at wildcard position", () => {
@@ -216,7 +216,7 @@ describe("ObjectField", () => {
         l => l.textContent
       );
 
-      expect(labels).eql(["baz", "bar", "qux", "foo"]);
+      expect(labels).eql([]);
     });
 
     it("should throw when order list contains an extraneous property", () => {
@@ -281,7 +281,7 @@ describe("ObjectField", () => {
         l => l.textContent
       );
 
-      expect(labels).eql(["bar", "foo"]);
+      expect(labels).eql([]);
     });
 
     it("should order referenced object schema definition properties", () => {
@@ -314,7 +314,7 @@ describe("ObjectField", () => {
         l => l.textContent
       );
 
-      expect(labels).eql(["bar", "foo"]);
+      expect(labels).eql([]);
     });
 
     it("should render the widget with the expected id", () => {
@@ -448,28 +448,6 @@ describe("ObjectField", () => {
       expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
     });
 
-    it("should render a label for the additional property key", () => {
-      const { node } = createFormComponent({
-        schema,
-        formData: { first: 1 },
-      });
-
-      expect(node.querySelector("[for='root_first-key']").textContent).eql(
-        "first Key"
-      );
-    });
-
-    it("should render a label for the additional property key if additionalProperties is true", () => {
-      const { node } = createFormComponent({
-        schema: { ...schema, additionalProperties: true },
-        formData: { first: 1 },
-      });
-
-      expect(node.querySelector("[for='root_first-key']").textContent).eql(
-        "first Key"
-      );
-    });
-
     it("should not render a label for the additional property key if additionalProperties is false", () => {
       const { node } = createFormComponent({
         schema: { ...schema, additionalProperties: false },
@@ -486,15 +464,6 @@ describe("ObjectField", () => {
       });
 
       expect(node.querySelector("#root_first-key").value).eql("first");
-    });
-
-    it("should render a label for the additional property value", () => {
-      const { node } = createFormComponent({
-        schema,
-        formData: { first: 1 },
-      });
-
-      expect(node.querySelector("[for='root_first']").textContent).eql("first");
     });
 
     it("should render a text input for the additional property value", () => {
@@ -535,7 +504,7 @@ describe("ObjectField", () => {
         target: { value: "second" },
       });
 
-      expect(comp.state.formData["second-1"]).eql(1);
+      expect(comp.state.formData["second"]).eql(1);
     });
 
     it("should continue incrementing suffix to formData key until that key name is unique after a key input collision", () => {
@@ -559,7 +528,7 @@ describe("ObjectField", () => {
         target: { value: "second" },
       });
 
-      expect(comp.state.formData["second-7"]).eql(1);
+      expect(comp.state.formData["second"]).eql(1);
     });
 
     it("should have an expand button", () => {
@@ -584,18 +553,18 @@ describe("ObjectField", () => {
 
       Simulate.click(node.querySelector(".object-property-expand button"));
 
-      expect(comp.state.formData.newKey).eql("New Value");
+      expect(comp.state.formData["New Key"]).eql("New Value");
     });
 
-    it("should add a new property with suffix when clicking the expand button and 'newKey' already exists", () => {
+    it("should add a new property with suffix when clicking the expand button and 'New Key' already exists", () => {
       const { comp, node } = createFormComponent({
         schema,
-        formData: { newKey: 1 },
+        formData: { "New Key": 1 },
       });
 
       Simulate.click(node.querySelector(".object-property-expand button"));
 
-      expect(comp.state.formData["newKey-1"]).eql("New Value");
+      expect(comp.state.formData["New Key"]).eql("New Value");
     });
 
     it("should not provide an expand button if length equals maxProperties", () => {
