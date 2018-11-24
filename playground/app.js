@@ -7,6 +7,8 @@ import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
 
+import Button from "@material-ui/core/Button";
+
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
 import "codemirror/lib/codemirror.css";
@@ -290,9 +292,14 @@ class CopyLink extends Component {
     const { shareURL, onShare } = this.props;
     if (!shareURL) {
       return (
-        <button className="btn btn-default" type="button" onClick={onShare}>
-          Share
-        </button>
+        <div>
+          <button className="btn btn-default" type="button" onClick={onShare}>
+            Share
+          </button>
+          <Button variant="contained" color="primary">
+            Hello World
+          </Button>
+        </div>
       );
     }
     return (

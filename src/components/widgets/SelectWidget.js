@@ -1,6 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+
+const classes = PropTypes.object.isRequired;
+
 import { asNumber } from "../../utils";
 
 const nums = new Set(["number", "integer"]);
@@ -52,10 +57,15 @@ function SelectWidget(props) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
   return (
-    <select
+    <Select
       id={id}
       multiple={multiple}
-      className="form-control"
+      name="age"
+      inputProps={{
+        id: "age-required",
+      }}
+      className={classes.selectEmpty}
+      // className="form-control"
       value={typeof value === "undefined" ? emptyValue : value}
       required={required}
       disabled={disabled || readonly}
@@ -82,12 +92,15 @@ function SelectWidget(props) {
       {enumOptions.map(({ value, label }, i) => {
         const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
         return (
-          <option key={i} value={value} disabled={disabled}>
+          // <option key={i} value={value} disabled={disabled}>
+          //   {label}
+          // </option>
+          <MenuItem key={i} value={value} disabled={disabled}>
             {label}
-          </option>
+          </MenuItem>
         );
       })}
-    </select>
+    </Select>
   );
 }
 
