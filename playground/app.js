@@ -2,10 +2,13 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/javascript/javascript";
+import { createMuiTheme } from "@material-ui/core/styles";
 
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
+
+import Button from "@material-ui/core/Button";
 
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
@@ -18,10 +21,47 @@ import "codemirror/theme/solarized.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/eclipse.css";
 
+import orange from "@material-ui/core/colors/orange";
+import pink from "@material-ui/core/colors/pink";
+import red from "@material-ui/core/colors/red";
+
+const uiTheme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+  palette: {
+    primary: orange,
+    secondary: pink,
+    error: red,
+    // Used by `getContrastText()` to maximize the contrast between the background and
+    // the text.
+    contrastThreshold: 3,
+    // Used to shift a color's luminance by approximately
+    // two indexes within its tonal palette.
+    // E.g., shift from Red 500 to Red 300 or Red 700.
+    tonalOffset: 0.2,
+  },
+  overrides: {
+    MuiSelect: {
+      root: {
+        minWidth: "50px",
+        display: "inline-block",
+        position: "relative",
+      },
+    },
+  },
+});
+
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
 const toJson = val => JSON.stringify(val, null, 2);
-const liveValidateSchema = { type: "boolean", title: "Live validation" };
+const liveSettingsSchema = {
+  type: "object",
+  properties: {
+    validate: { type: "boolean", title: "Live validation" },
+    disable: { type: "boolean", title: "Disable whole form" },
+  },
+};
 const cmOptions = {
   theme: "default",
   height: "auto",
@@ -266,7 +306,9 @@ function ThemeSelector({ theme, select }) {
   };
   return (
     <Form
+      uiTheme={uiTheme}
       schema={themeSchema}
+      uiTheme={uiTheme}
       formData={theme}
       onChange={({ formData }) => select(formData, themes[formData])}>
       <div />
@@ -284,9 +326,14 @@ class CopyLink extends Component {
     const { shareURL, onShare } = this.props;
     if (!shareURL) {
       return (
-        <button className="btn btn-default" type="button" onClick={onShare}>
-          Share
-        </button>
+        <div>
+          <button className="btn btn-default" type="button" onClick={onShare}>
+            Share
+          </button>
+          <Button variant="contained" color="primary">
+            Hello World
+          </Button>
+        </div>
       );
     }
     return (
@@ -323,7 +370,10 @@ class App extends Component {
       validate,
       editor: "default",
       theme: "default",
-      liveValidate: true,
+      liveSettings: {
+        validate: true,
+        disable: false,
+      },
       shareURL: null,
     };
   }
@@ -373,14 +423,16 @@ class App extends Component {
     });
   };
 
-  setLiveValidate = ({ formData }) => this.setState({ liveValidate: formData });
+  setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
   onFormDataChange = ({ formData }) =>
     this.setState({ formData, shareURL: null });
 
   onShare = () => {
     const { formData, schema, uiSchema } = this.state;
-    const { location: { origin, pathname } } = document;
+    const {
+      location: { origin, pathname },
+    } = document;
     try {
       const hash = btoa(JSON.stringify({ formData, schema, uiSchema }));
       this.setState({ shareURL: `${origin}${pathname}#${hash}` });
@@ -394,7 +446,7 @@ class App extends Component {
       schema,
       uiSchema,
       formData,
-      liveValidate,
+      liveSettings,
       validate,
       theme,
       editor,
@@ -413,9 +465,10 @@ class App extends Component {
             </div>
             <div className="col-sm-2">
               <Form
-                schema={liveValidateSchema}
-                formData={liveValidate}
-                onChange={this.setLiveValidate}>
+                uiTheme={uiTheme}
+                schema={liveSettingsSchema}
+                formData={liveSettings}
+                onChange={this.setLiveSettings}>
                 <div />
               </Form>
             </div>
@@ -453,9 +506,11 @@ class App extends Component {
         <div className="col-sm-5">
           {this.state.form && (
             <Form
+              uiTheme={uiTheme}
               ArrayFieldTemplate={ArrayFieldTemplate}
               ObjectFieldTemplate={ObjectFieldTemplate}
-              liveValidate={liveValidate}
+              liveValidate={liveSettings.validate}
+              disabled={liveSettings.disable}
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}

@@ -688,6 +688,47 @@ describe("utils", () => {
             });
           });
         });
+
+        describe("with $ref in oneOf", () => {
+          it("should retrieve referenced schemas", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+              },
+              dependencies: {
+                a: {
+                  oneOf: [
+                    { $ref: "#/definitions/needsA" },
+                    { $ref: "#/definitions/needsB" },
+                  ],
+                },
+              },
+            };
+            const definitions = {
+              needsA: {
+                properties: {
+                  a: { enum: ["typeA"] },
+                  b: { type: "number" },
+                },
+              },
+              needsB: {
+                properties: {
+                  a: { enum: ["typeB"] },
+                  c: { type: "boolean" },
+                },
+              },
+            };
+            const formData = { a: "typeB" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+                c: { type: "boolean" },
+              },
+            });
+          });
+        });
       });
 
       describe("dynamic", () => {
@@ -1048,6 +1089,31 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions)).eql({
+        $id: "root",
+        foo: { $id: "root_foo" },
+        bar: { $id: "root_bar" },
+      });
+    });
+
+    it("should return an idSchema for property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+        dependencies: {
+          foo: {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+      const formData = {
+        foo: "test",
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
         $id: "root",
         foo: { $id: "root_foo" },
         bar: { $id: "root_bar" },

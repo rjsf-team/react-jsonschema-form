@@ -2,6 +2,7 @@ import { expect } from "chai";
 import React from "react";
 import { Simulate } from "react-addons-test-utils";
 import SelectWidget from "../src/components/widgets/SelectWidget";
+import RadioWidget from "../src/components/widgets/RadioWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("uiSchema", () => {
@@ -436,6 +437,38 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll("option:enabled")).to.have.length.of(
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen + 1
+        );
+      });
+    });
+
+    describe("enum fields disabled radio options", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          field: {
+            type: "string",
+            enum: ["foo", "bar"],
+          },
+        },
+      };
+      const uiSchema = {
+        field: {
+          "ui:widget": RadioWidget,
+          "ui:options": {
+            className: "custom",
+          },
+          "ui:enumDisabled": ["foo"],
+        },
+      };
+      it("should have atleast one radio option disabled", () => {
+        const { node } = createFormComponent({ schema, uiSchema });
+        const disabledOptionsLen = uiSchema.field["ui:enumDisabled"].length;
+        expect(node.querySelectorAll("input:disabled")).to.have.length.of(
+          disabledOptionsLen
+        );
+        expect(node.querySelectorAll("input:enabled")).to.have.length.of(
+          // Two options, one disabled, plus the placeholder
+          2 - disabledOptionsLen
         );
       });
     });

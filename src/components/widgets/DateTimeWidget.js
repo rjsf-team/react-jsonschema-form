@@ -33,7 +33,13 @@ export function localToUTC(dateString) {
 }
 
 function DateTimeWidget(props) {
-  const { value, onChange, registry: { widgets: { BaseInput } } } = props;
+  const {
+    value,
+    onChange,
+    registry: {
+      widgets: { BaseInput },
+    },
+  } = props;
   return (
     <BaseInput
       type="datetime-local"

@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import TextField from "@material-ui/core/TextField";
+const classes = PropTypes.object.isRequired;
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
@@ -19,6 +21,7 @@ function BaseInput(props) {
     schema,
     formContext,
     registry,
+    rawErrors,
     ...inputProps
   } = props;
 
@@ -27,16 +30,15 @@ function BaseInput(props) {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
 
-  const { rawErrors, ...cleanProps } = inputProps;
-
   return (
-    <input
-      className="form-control"
+    <TextField
+      className={classes.textField}
+      margin="normal"
       readOnly={readonly}
       disabled={disabled}
       autoFocus={autofocus}
       value={value == null ? "" : value}
-      {...cleanProps}
+      {...inputProps}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
       onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}

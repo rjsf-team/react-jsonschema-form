@@ -1,5 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 function RadioWidget(props) {
   const {
@@ -13,27 +16,32 @@ function RadioWidget(props) {
   } = props;
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const { enumOptions, inline } = options;
+  const { enumOptions, enumDisabled, inline } = options;
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
   return (
-    <div className="field-radio-group">
+    <RadioGroup name={name} className="field-radio-group">
       {enumOptions.map((option, i) => {
         const checked = option.value === value;
-        const disabledCls = disabled || readonly ? "disabled" : "";
+        const itemDisabled =
+          enumDisabled && enumDisabled.indexOf(option.value) != -1;
+        const disabledCls =
+          disabled || itemDisabled || readonly ? "disabled" : "";
         const radio = (
           <span>
-            <input
+            <FormControlLabel
               type="radio"
+              control={<Radio color="primary" />}
+              label={option.label}
               checked={checked}
               name={name}
               required={required}
               value={option.value}
-              disabled={disabled || readonly}
+              disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && i === 0}
               onChange={_ => onChange(option.value)}
             />
-            <span>{option.label}</span>
+            {/* <span>{option.label}</span> */}
           </span>
         );
 
@@ -47,7 +55,7 @@ function RadioWidget(props) {
           </div>
         );
       })}
-    </div>
+    </RadioGroup>
   );
 }
 

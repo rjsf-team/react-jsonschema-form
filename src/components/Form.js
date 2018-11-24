@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
@@ -9,6 +9,7 @@ import {
   toIdSchema,
   setState,
   getDefaultRegistry,
+  deepEquals,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -17,6 +18,7 @@ export default class Form extends Component {
     uiSchema: {},
     noValidate: false,
     liveValidate: false,
+    disabled: false,
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
@@ -25,10 +27,24 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
+    if (
+      this.props.onChange &&
+      !deepEquals(this.state.formData, this.props.formData)
+    ) {
+      this.props.onChange(this.state);
+    }
+    this.formElement = null;
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    const nextState = this.getStateFromProps(nextProps);
+    this.setState(nextState);
+    if (
+      !deepEquals(nextState.formData, nextProps.formData) &&
+      this.props.onChange
+    ) {
+      this.props.onChange(nextState);
+    }
   }
 
   getStateFromProps(props) {
@@ -149,10 +165,11 @@ export default class Form extends Component {
       }
     }
 
-    if (this.props.onSubmit) {
-      this.props.onSubmit({ ...this.state, status: "submitted" });
-    }
-    this.setState({ errors: [], errorSchema: {} });
+    this.setState({ errors: [], errorSchema: {} }, () => {
+      if (this.props.onSubmit) {
+        this.props.onSubmit({ ...this.state, status: "submitted" });
+      }
+    });
   };
 
   getRegistry() {
@@ -170,6 +187,12 @@ export default class Form extends Component {
     };
   }
 
+  submit() {
+    if (this.formElement) {
+      this.formElement.dispatchEvent(new Event("submit", { cancelable: true }));
+    }
+  }
+
   render() {
     const {
       children,
@@ -185,6 +208,7 @@ export default class Form extends Component {
       enctype,
       acceptcharset,
       noHtml5Validate,
+      disabled,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
@@ -192,42 +216,48 @@ export default class Form extends Component {
     const _SchemaField = registry.fields.SchemaField;
 
     return (
-      <form
-        className={className ? className : "rjsf"}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autocomplete}
-        encType={enctype}
-        acceptCharset={acceptcharset}
-        noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}>
-        {this.renderErrors()}
-        <_SchemaField
-          schema={schema}
-          uiSchema={uiSchema}
-          errorSchema={errorSchema}
-          idSchema={idSchema}
-          idPrefix={idPrefix}
-          formData={formData}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          registry={registry}
-          safeRenderCompletion={safeRenderCompletion}
-        />
-        {children ? (
-          children
-        ) : (
-          <p>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </p>
-        )}
-      </form>
+      <MuiThemeProvider theme={this.props.uiTheme}>
+        <form
+          className={className ? className : "rjsf"}
+          id={id}
+          name={name}
+          method={method}
+          target={target}
+          action={action}
+          autoComplete={autocomplete}
+          encType={enctype}
+          acceptCharset={acceptcharset}
+          noValidate={noHtml5Validate}
+          onSubmit={this.onSubmit}
+          ref={form => {
+            this.formElement = form;
+          }}>
+          {this.renderErrors()}
+          <_SchemaField
+            schema={schema}
+            uiSchema={uiSchema}
+            errorSchema={errorSchema}
+            idSchema={idSchema}
+            idPrefix={idPrefix}
+            formData={formData}
+            onChange={this.onChange}
+            onBlur={this.onBlur}
+            onFocus={this.onFocus}
+            registry={registry}
+            safeRenderCompletion={safeRenderCompletion}
+            disabled={disabled}
+          />
+          {children ? (
+            children
+          ) : (
+            <p>
+              <button type="submit" className="btn btn-info">
+                Submit
+              </button>
+            </p>
+          )}
+        </form>
+      </MuiThemeProvider>
     );
   }
 }
