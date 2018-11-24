@@ -46,6 +46,7 @@ module.exports = {
         exclude: [
           path.join(__dirname, "node_modules", "core-js"),
           path.join(__dirname, "node_modules", "babel-runtime"),
+          path.join(__dirname, "node_modules")
         ],
       },
     ]

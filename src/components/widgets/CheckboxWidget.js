@@ -23,7 +23,6 @@ function CheckboxWidget(props) {
       <label>
         <Checkbox
           type="checkbox"
-          animated={true}
           id={id}
           checked={typeof value === "undefined" ? false : value}
           required={required}

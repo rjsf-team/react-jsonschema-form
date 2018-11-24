@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
@@ -216,46 +216,48 @@ export default class Form extends Component {
     const _SchemaField = registry.fields.SchemaField;
 
     return (
-      <form
-        className={className ? className : "rjsf"}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autocomplete}
-        encType={enctype}
-        acceptCharset={acceptcharset}
-        noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}
-        ref={form => {
-          this.formElement = form;
-        }}>
-        {this.renderErrors()}
-        <_SchemaField
-          schema={schema}
-          uiSchema={uiSchema}
-          errorSchema={errorSchema}
-          idSchema={idSchema}
-          idPrefix={idPrefix}
-          formData={formData}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          registry={registry}
-          safeRenderCompletion={safeRenderCompletion}
-          disabled={disabled}
-        />
-        {children ? (
-          children
-        ) : (
-          <p>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </p>
-        )}
-      </form>
+      <MuiThemeProvider theme={this.props.uiTheme}>
+        <form
+          className={className ? className : "rjsf"}
+          id={id}
+          name={name}
+          method={method}
+          target={target}
+          action={action}
+          autoComplete={autocomplete}
+          encType={enctype}
+          acceptCharset={acceptcharset}
+          noValidate={noHtml5Validate}
+          onSubmit={this.onSubmit}
+          ref={form => {
+            this.formElement = form;
+          }}>
+          {this.renderErrors()}
+          <_SchemaField
+            schema={schema}
+            uiSchema={uiSchema}
+            errorSchema={errorSchema}
+            idSchema={idSchema}
+            idPrefix={idPrefix}
+            formData={formData}
+            onChange={this.onChange}
+            onBlur={this.onBlur}
+            onFocus={this.onFocus}
+            registry={registry}
+            safeRenderCompletion={safeRenderCompletion}
+            disabled={disabled}
+          />
+          {children ? (
+            children
+          ) : (
+            <p>
+              <button type="submit" className="btn btn-info">
+                Submit
+              </button>
+            </p>
+          )}
+        </form>
+      </MuiThemeProvider>
     );
   }
 }

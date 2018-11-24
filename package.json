@@ -1,7 +1,7 @@
 {
-  "name": "react-jsonschema-form",
-  "version": "1.0.6",
-  "description": "A simple React component capable of building HTML forms out of a JSON schema.",
+  "name": "react-jsonschema-materialui-forms",
+  "version": "0.0.3",
+  "description": "A simple React component capable of building HTML forms out of a JSON schema based on the Material UI React library. Special credit goes to initial author Nicolas Perriault.",
   "scripts": {
     "build:readme": "toctoc README.md -w",
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
@@ -39,7 +39,8 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "react": ">=15"
+    "react": ">=16.6.3",
+    "react-dom": ">=16.6.3"
   },
   "dependencies": {
     "@material-ui/core": "^3.5.1",
@@ -48,7 +49,9 @@
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.7",
     "lodash.topath": "^4.5.2",
-    "prop-types": "^15.5.8"
+    "prop-types": "^15.5.8",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
   },
   "devDependencies": {
     "atob": "^2.0.3",
@@ -106,14 +109,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
+    "url": "git+https://github.com/pankaz/react-jsonschema-materialui-forms.git"
   },
-  "author": "Nicolas Perriault <nperriault@mozilla.com>",
+  "author": "Pankaj Lagu <pankaj.lagu@gmail.com>",
   "keywords": [
     "react",
     "form",
-    "json-schema"
+    "json-schema",
+    "material-ui"
   ],
   "license": "Apache-2.0",
-  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme"
+  "homepage": "https://github.com/pankaz/react-jsonschema-materialui-forms#readme"
 }
