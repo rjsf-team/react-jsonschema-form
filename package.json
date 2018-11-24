@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^3.5.1",
+    "@material-ui/icons": "^3.0.1",
     "ajv": "^5.2.3",
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.7",

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import DescriptionField from "../fields/DescriptionField.js";
+import Checkbox from "@material-ui/core/Checkbox";
 
 function CheckboxWidget(props) {
   const {
@@ -20,8 +21,9 @@ function CheckboxWidget(props) {
         <DescriptionField description={schema.description} />
       )}
       <label>
-        <input
+        <Checkbox
           type="checkbox"
+          animated={true}
           id={id}
           checked={typeof value === "undefined" ? false : value}
           required={required}

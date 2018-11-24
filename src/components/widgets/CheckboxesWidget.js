@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Checkbox from "@material-ui/core/Checkbox";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -26,7 +27,7 @@ function CheckboxesWidget(props) {
           disabled || itemDisabled || readonly ? "disabled" : "";
         const checkbox = (
           <span>
-            <input
+            <Checkbox
               type="checkbox"
               id={`${id}_${index}`}
               checked={checked}
