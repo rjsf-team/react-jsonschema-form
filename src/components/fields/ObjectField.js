@@ -221,6 +221,8 @@ class ObjectField extends Component {
           required,
         };
       }),
+      readonly,
+      disabled,
       required,
       idSchema,
       uiSchema,
