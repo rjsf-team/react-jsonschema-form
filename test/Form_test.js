@@ -5,7 +5,11 @@ import { renderIntoDocument, Simulate } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createFormComponent, createSandbox } from "./test_utils";
+import {
+  createComponent,
+  createFormComponent,
+  createSandbox,
+} from "./test_utils";
 
 describe("Form", () => {
   let sandbox;
@@ -906,6 +910,54 @@ describe("Form", () => {
         sinon.assert.calledOnce(onChangeProp);
         sinon.assert.calledWith(onChangeProp, comp.state);
         expect(comp.state.formData).eql("the new default");
+      });
+    });
+
+    describe("when the onChange prop sets formData to a falsey value", () => {
+      class TestForm extends React.Component {
+        constructor() {
+          super();
+
+          this.state = {
+            formData: {},
+          };
+        }
+
+        onChange = () => {
+          this.setState({ formData: this.props.falseyValue });
+        };
+
+        render() {
+          const schema = {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          };
+          return (
+            <Form
+              onChange={this.onChange}
+              schema={schema}
+              formData={this.state.formData}
+            />
+          );
+        }
+      }
+
+      const falseyValues = [0, false, null, undefined, NaN];
+
+      falseyValues.forEach(falseyValue => {
+        it("Should not crash due to 'Maximum call stack size exceeded...'", () => {
+          // It is expected that this will throw an error due to non-matching propTypes,
+          // so the error message needs to be inspected
+          try {
+            createComponent(TestForm, { falseyValue });
+          } catch (e) {
+            expect(e.message).to.not.equal("Maximum call stack size exceeded");
+          }
+        });
       });
     });
   });
