@@ -125,7 +125,15 @@ class AltDateWidget extends Component {
   }
 
   render() {
-    const { id, disabled, readonly, autofocus, registry, onBlur } = this.props;
+    const {
+      id,
+      disabled,
+      readonly,
+      autofocus,
+      registry,
+      onBlur,
+      options,
+    } = this.props;
     return (
       <ul className="list-inline">
         {this.dateElementProps.map((elemProps, i) => (
@@ -142,19 +150,27 @@ class AltDateWidget extends Component {
             />
           </li>
         ))}
-        <li>
-          <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
-            Now
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className="btn btn-warning btn-clear"
-            onClick={this.clear}>
-            Clear
-          </a>
-        </li>
+        {(options.hideNowButton !== "undefined"
+          ? !options.hideNowButton
+          : true) && (
+          <li>
+            <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
+              Now
+            </a>
+          </li>
+        )}
+        {(options.hideClearButton !== "undefined"
+          ? !options.hideClearButton
+          : true) && (
+          <li>
+            <a
+              href="#"
+              className="btn btn-warning btn-clear"
+              onClick={this.clear}>
+              Clear
+            </a>
+          </li>
+        )}
       </ul>
     );
   }

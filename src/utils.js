@@ -548,11 +548,10 @@ function withDependentSchema(
     throw new Error(`invalid: it is some ${typeof oneOf} instead of an array`);
   }
   // Resolve $refs inside oneOf.
-  const resolvedOneOf = oneOf.map(
-    subschema =>
-      subschema.hasOwnProperty("$ref")
-        ? resolveReference(subschema, definitions, formData)
-        : subschema
+  const resolvedOneOf = oneOf.map(subschema =>
+    subschema.hasOwnProperty("$ref")
+      ? resolveReference(subschema, definitions, formData)
+      : subschema
   );
   return withExactlyOneSubschema(
     schema,
