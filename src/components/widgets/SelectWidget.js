@@ -27,17 +27,6 @@ function processValue({ type, items }, value) {
   return value;
 }
 
-function getValue(event, multiple) {
-  if (multiple) {
-    return [].slice
-      .call(event.target.options)
-      .filter(o => o.selected)
-      .map(o => o.value);
-  } else {
-    return event.target.value;
-  }
-}
-
 function SelectWidget(props) {
   const {
     schema,
@@ -59,11 +48,7 @@ function SelectWidget(props) {
   return (
     <Select
       id={id}
-      multiple={multiple}
-      name="age"
-      inputProps={{
-        id: "age-required",
-      }}
+      multiple={typeof multiple === "undefined" ? false : multiple}
       className={classes.selectEmpty}
       // className="form-control"
       value={typeof value === "undefined" ? emptyValue : value}
@@ -73,20 +58,17 @@ function SelectWidget(props) {
       onBlur={
         onBlur &&
         (event => {
-          const newValue = getValue(event, multiple);
-          onBlur(id, processValue(schema, newValue));
+          onBlur(id, processValue(schema, event.target.value));
         })
       }
       onFocus={
         onFocus &&
         (event => {
-          const newValue = getValue(event, multiple);
-          onFocus(id, processValue(schema, newValue));
+          onFocus(id, processValue(schema, event.target.value));
         })
       }
       onChange={event => {
-        const newValue = getValue(event, multiple);
-        onChange(processValue(schema, newValue));
+        onChange(processValue(schema, event.target.value));
       }}>
       {!multiple && !schema.default && (
         <MenuItem value="">{placeholder ? placeholder : "Select"}</MenuItem>

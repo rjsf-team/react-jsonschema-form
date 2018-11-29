@@ -21,6 +21,15 @@ module.exports = {
           default: "bazinga",
         },
       },
+      multipleChoicesCheckboxes: {
+        type: "array",
+        title: "A multiple choices list",
+        items: {
+          type: "string",
+          enum: ["foo", "bar", "fuzz", "qux"],
+        },
+        uniqueItems: true,
+      },
       multipleChoicesList: {
         type: "array",
         title: "A multiple choices list",
@@ -130,8 +139,11 @@ module.exports = {
     listOfStrings: {
       items: { "ui:emptyValue": "" },
     },
-    multipleChoicesList: {
+    multipleChoicesCheckboxes: {
       "ui:widget": "checkboxes",
+    },
+    multipleChoicesList: {
+      "ui:widget": "select",
     },
     fixedItemsList: {
       items: [{ "ui:widget": "textarea" }, { "ui:widget": "select" }],
@@ -166,6 +178,7 @@ module.exports = {
   },
   formData: {
     listOfStrings: ["foo", "bar"],
+    multipleChoicesCheckboxes: ["foo", "bar"],
     multipleChoicesList: ["foo", "bar"],
     fixedItemsList: ["Some text", true, 123],
     nestedList: [["lorem", "ipsum"], ["dolor"]],
