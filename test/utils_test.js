@@ -183,6 +183,41 @@ describe("utils", () => {
         });
       });
 
+      it("should support nested values in formData", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            level1: {
+              type: "object",
+              properties: {
+                level2: {
+                  oneOf: [
+                    {
+                      type: "object",
+                      properties: {
+                        leaf1: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        const formData = {
+          level1: {
+            level2: {
+              leaf1: "a",
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, formData)).eql({
+          level1: { level2: { leaf1: "a" } },
+        });
+      });
+
       it("should use parent defaults for ArrayFields", () => {
         const schema = {
           type: "object",
@@ -420,6 +455,12 @@ describe("utils", () => {
 
     it("should override the first object with the values from the second", () => {
       expect(mergeObjects({ a: 1 }, { a: 2 })).eql({ a: 2 });
+    });
+
+    it("should override non-existing values of the first object with the values from the second", () => {
+      expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
     });
 
     it("should recursively merge deeply nested objects", () => {
