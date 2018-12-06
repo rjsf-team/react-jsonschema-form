@@ -406,7 +406,7 @@ function findSchemaDefinition($ref, definitions = {}) {
 
 // In the case where we have to implicitly create a schema, it is useful to know what type to use
 //  based on the data we are defining
-const guessType = function guessType(value) {
+export const guessType = function guessType(value) {
   if (Array.isArray(value)) {
     return "array";
   } else if (typeof value === "string") {
