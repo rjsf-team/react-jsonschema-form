@@ -132,7 +132,7 @@ function DefaultTemplate(props) {
     <div className={classNames}>
       {additional && (
         <div className="form-group">
-          <Label label={keyLabel} required={required} id={`${id}-key`} />
+          <Label label={keyLabel} required={required} />
           <LabelInput
             label={label}
             required={required}

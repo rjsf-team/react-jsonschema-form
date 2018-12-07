@@ -106,11 +106,14 @@ class ObjectField extends Component {
     return (value, errorSchema) => {
       value = this.getAvailableKey(value, this.props.formData);
       const newFormData = { ...this.props.formData };
-      const property = newFormData[oldValue];
-      delete newFormData[oldValue];
-      newFormData[value] = property;
+      const newKeys = { [oldValue]: value };
+      const keyValues = Object.keys(newFormData).map(key => {
+        const newKey = newKeys[key] || key;
+        return { [newKey]: newFormData[key] };
+      });
+      const renamedObj = Object.assign({}, ...keyValues);
       this.props.onChange(
-        newFormData,
+        renamedObj,
         errorSchema &&
           this.props.errorSchema && {
             ...this.props.errorSchema,
