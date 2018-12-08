@@ -183,6 +183,41 @@ describe("utils", () => {
         });
       });
 
+      it("should support nested values in formData", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            level1: {
+              type: "object",
+              properties: {
+                level2: {
+                  oneOf: [
+                    {
+                      type: "object",
+                      properties: {
+                        leaf1: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        const formData = {
+          level1: {
+            level2: {
+              leaf1: "a",
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, formData)).eql({
+          level1: { level2: { leaf1: "a" } },
+        });
+      });
+
       it("should use parent defaults for ArrayFields", () => {
         const schema = {
           type: "object",
@@ -420,6 +455,12 @@ describe("utils", () => {
 
     it("should override the first object with the values from the second", () => {
       expect(mergeObjects({ a: 1 }, { a: 2 })).eql({ a: 2 });
+    });
+
+    it("should override non-existing values of the first object with the values from the second", () => {
+      expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -684,6 +725,47 @@ describe("utils", () => {
               properties: {
                 a: { type: "string" },
                 b: { type: "integer" },
+              },
+            });
+          });
+        });
+
+        describe("with $ref in oneOf", () => {
+          it("should retrieve referenced schemas", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+              },
+              dependencies: {
+                a: {
+                  oneOf: [
+                    { $ref: "#/definitions/needsA" },
+                    { $ref: "#/definitions/needsB" },
+                  ],
+                },
+              },
+            };
+            const definitions = {
+              needsA: {
+                properties: {
+                  a: { enum: ["typeA"] },
+                  b: { type: "number" },
+                },
+              },
+              needsB: {
+                properties: {
+                  a: { enum: ["typeB"] },
+                  c: { type: "boolean" },
+                },
+              },
+            };
+            const formData = { a: "typeB" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+                c: { type: "boolean" },
               },
             });
           });
@@ -1048,6 +1130,31 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions)).eql({
+        $id: "root",
+        foo: { $id: "root_foo" },
+        bar: { $id: "root_bar" },
+      });
+    });
+
+    it("should return an idSchema for property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+        dependencies: {
+          foo: {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+      const formData = {
+        foo: "test",
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
         $id: "root",
         foo: { $id: "root_foo" },
         bar: { $id: "root_bar" },

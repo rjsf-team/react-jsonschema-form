@@ -9,6 +9,7 @@ import {
   toIdSchema,
   setState,
   getDefaultRegistry,
+  deepEquals,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -17,6 +18,7 @@ export default class Form extends Component {
     uiSchema: {},
     noValidate: false,
     liveValidate: false,
+    disabled: false,
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
@@ -25,10 +27,25 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
+    if (
+      this.props.onChange &&
+      !deepEquals(this.state.formData, this.props.formData)
+    ) {
+      this.props.onChange(this.state);
+    }
+    this.formElement = null;
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    const nextState = this.getStateFromProps(nextProps);
+    if (
+      !deepEquals(nextState.formData, nextProps.formData) &&
+      !deepEquals(nextState.formData, this.state.formData) &&
+      this.props.onChange
+    ) {
+      this.props.onChange(nextState);
+    }
+    this.setState(nextState);
   }
 
   getStateFromProps(props) {
@@ -149,7 +166,7 @@ export default class Form extends Component {
       }
     }
 
-    setState(this, { errors: [], errorSchema: {} }, () => {
+    this.setState({ errors: [], errorSchema: {} }, () => {
       if (this.props.onSubmit) {
         this.props.onSubmit({ ...this.state, status: "submitted" });
       }
@@ -171,6 +188,12 @@ export default class Form extends Component {
     };
   }
 
+  submit() {
+    if (this.formElement) {
+      this.formElement.dispatchEvent(new Event("submit", { cancelable: true }));
+    }
+  }
+
   render() {
     const {
       children,
@@ -186,6 +209,7 @@ export default class Form extends Component {
       enctype,
       acceptcharset,
       noHtml5Validate,
+      disabled,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
@@ -204,7 +228,10 @@ export default class Form extends Component {
         encType={enctype}
         acceptCharset={acceptcharset}
         noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}>
+        onSubmit={this.onSubmit}
+        ref={form => {
+          this.formElement = form;
+        }}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
@@ -218,6 +245,7 @@ export default class Form extends Component {
           onFocus={this.onFocus}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
+          disabled={disabled}
         />
         {children ? (
           children
