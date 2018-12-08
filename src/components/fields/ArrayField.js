@@ -103,7 +103,7 @@ function DefaultArrayItem(props) {
 
 function DefaultFixedArrayFieldTemplate(props) {
   return (
-    <fieldset className={props.className}>
+    <fieldset className={props.className} id={props.idSchema.$id}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -139,7 +139,7 @@ function DefaultFixedArrayFieldTemplate(props) {
 
 function DefaultNormalArrayFieldTemplate(props) {
   return (
-    <fieldset className={props.className}>
+    <fieldset className={props.className} id={props.idSchema.$id}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}

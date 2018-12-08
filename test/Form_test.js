@@ -127,6 +127,7 @@ describe("Form", () => {
         ids.push(input.getAttribute("id"));
       }
       expect(ids).to.eql(["rjsf_count"]);
+      expect(node.querySelector("fieldset").id).to.eql("rjsf");
     });
   });
 
@@ -151,6 +152,7 @@ describe("Form", () => {
         ids.push(input.getAttribute("id"));
       }
       expect(ids).to.eql(["rjsf_count"]);
+      expect(node.querySelector("fieldset").id).to.eql("rjsf");
     });
 
     it("should work with oneOf", function() {

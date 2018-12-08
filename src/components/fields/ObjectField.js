@@ -29,7 +29,7 @@ function DefaultObjectFieldTemplate(props) {
 
   const { TitleField, DescriptionField } = props;
   return (
-    <fieldset>
+    <fieldset id={props.idSchema.$id}>
       {(props.uiSchema["ui:title"] || props.title) && (
         <TitleField
           id={`${props.idSchema.$id}__title`}
