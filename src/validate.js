@@ -4,6 +4,7 @@ import localize from "ajv-i18n";
 const ajv = new Ajv({
   errorDataPath: "property",
   allErrors: true,
+  multipleOfPrecision: 8,
 });
 // add custom formats
 ajv.addFormat(

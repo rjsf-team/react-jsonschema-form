@@ -2,11 +2,12 @@ var path = require("path");
 var webpack = require("webpack");
 
 module.exports = {
+  mode: "production",
   cache: true,
   context: __dirname + "/src",
   entry: "./index.js",
   output: {
-    path: "./dist",
+    path: path.join(__dirname, "dist"),
     publicPath: "/dist/",
     filename: "react-jsonschema-form.js",
     library: "JSONSchemaForm",
@@ -26,23 +27,27 @@ module.exports = {
       commonjs: "react",
       commonjs2: "react",
       amd: "react"
+    },
+    'react-dom': {
+      root: "ReactDOM",
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+      umd: 'react-dom',
     }
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loaders: ["babel"],
-      },
-      {
-        test: /\.json$/,
-        loader:"json-loader",
-        include: [
-          path.join(__dirname, "css"),
-          path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
+        use: [
+          "babel-loader",
         ],
-      }
+        exclude: [
+          path.join(__dirname, "node_modules", "core-js"),
+          path.join(__dirname, "node_modules", "babel-runtime"),
+        ],
+      },
     ]
   }
 };

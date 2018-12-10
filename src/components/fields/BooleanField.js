@@ -21,6 +21,8 @@ function BooleanField(props) {
     readonly,
     autofocus,
     onChange,
+    onFocus,
+    onBlur,
     rawErrors,
   } = props;
   const { title } = schema;
@@ -37,6 +39,8 @@ function BooleanField(props) {
       schema={schema}
       id={idSchema && idSchema.$id}
       onChange={onChange}
+      onFocus={onFocus}
+      onBlur={onBlur}
       label={title === undefined ? name : title}
       value={formData}
       required={required}
@@ -56,6 +60,8 @@ if (process.env.NODE_ENV !== "production") {
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
     formData: PropTypes.bool,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

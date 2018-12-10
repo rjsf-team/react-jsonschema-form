@@ -1,6 +1,8 @@
 import React from "react";
-import "setimmediate";
 import validateFormData from "./validate";
+import fill from "core-js/library/fn/array/fill";
+
+export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
 const widgetMap = {
   boolean: {
@@ -155,9 +157,8 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
           if (schema.minItems > defaultsLength) {
             const defaultEntries = defaults || [];
             // populate the array with the defaults
-            const fillerEntries = new Array(
-              schema.minItems - defaultsLength
-            ).fill(
+            const fillerEntries = fill(
+              new Array(schema.minItems - defaultsLength),
               computeDefaults(schema.items, schema.items.defaults, definitions)
             );
             // then fill up the rest with either the item default or empty, up to minItems
@@ -221,9 +222,9 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1[key],
+    const left = obj1 ? obj1[key] : {},
       right = obj2[key];
-    if (obj1.hasOwnProperty(key) && isObject(right)) {
+    if (obj1 && obj1.hasOwnProperty(key) && isObject(right)) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
       acc[key] = left.concat(right);
@@ -403,18 +404,58 @@ function findSchemaDefinition($ref, definitions = {}) {
   throw new Error(`Could not find a definition for ${$ref}.`);
 }
 
-export function retrieveSchema(schema, definitions = {}, formData = {}) {
+// In the case where we have to implicitly create a schema, it is useful to know what type to use
+//  based on the data we are defining
+const guessType = function guessType(value) {
+  if (Array.isArray(value)) {
+    return "array";
+  } else if (typeof value === "string") {
+    return "string";
+  } else if (value == null) {
+    return "null";
+  } else if (typeof value === "boolean") {
+    return "boolean";
+  } else if (!isNaN(value)) {
+    return "number";
+  } else if (typeof value === "object") {
+    return "object";
+  }
+  // Default to string if we can't figure it out
+  return "string";
+};
+
+// This function will create new "properties" items for each key in our formData
+export function stubExistingAdditionalProperties(
+  schema,
+  definitions = {},
+  formData = {}
+) {
+  // Clone the schema so we don't ruin the consumer's original
+  schema = {
+    ...schema,
+    properties: { ...schema.properties },
+  };
+  Object.keys(formData).forEach(key => {
+    if (schema.properties.hasOwnProperty(key)) {
+      // No need to stub, our schema already has the property
+      return;
+    }
+    const additionalProperties = schema.additionalProperties.hasOwnProperty(
+      "type"
+    )
+      ? { ...schema.additionalProperties }
+      : { type: guessType(formData[key]) };
+    // The type of our new key should match the additionalProperties value;
+    schema.properties[key] = additionalProperties;
+    // Set our additional property flag so we know it was dynamically added
+    schema.properties[key][ADDITIONAL_PROPERTY_FLAG] = true;
+  });
+  return schema;
+}
+
+export function resolveSchema(schema, definitions = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
-    // Retrieve the referenced schema definition.
-    const $refSchema = findSchemaDefinition(schema.$ref, definitions);
-    // Drop the $ref property of the source schema.
-    const { $ref, ...localSchema } = schema;
-    // Update referenced schema definition with local schema properties.
-    return retrieveSchema(
-      { ...$refSchema, ...localSchema },
-      definitions,
-      formData
-    );
+    return resolveReference(schema, definitions, formData);
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return retrieveSchema(resolvedSchema, definitions, formData);
@@ -422,6 +463,34 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
     // No $ref or dependencies attribute found, returning the original schema.
     return schema;
   }
+}
+
+function resolveReference(schema, definitions, formData) {
+  // Retrieve the referenced schema definition.
+  const $refSchema = findSchemaDefinition(schema.$ref, definitions);
+  // Drop the $ref property of the source schema.
+  const { $ref, ...localSchema } = schema;
+  // Update referenced schema definition with local schema properties.
+  return retrieveSchema(
+    { ...$refSchema, ...localSchema },
+    definitions,
+    formData
+  );
+}
+
+export function retrieveSchema(schema, definitions = {}, formData = {}) {
+  const resolvedSchema = resolveSchema(schema, definitions, formData);
+  const hasAdditionalProperties =
+    resolvedSchema.hasOwnProperty("additionalProperties") &&
+    resolvedSchema.additionalProperties !== false;
+  if (hasAdditionalProperties) {
+    return stubExistingAdditionalProperties(
+      resolvedSchema,
+      definitions,
+      formData
+    );
+  }
+  return resolvedSchema;
 }
 
 function resolveDependencies(schema, definitions, formData) {
@@ -472,15 +541,25 @@ function withDependentSchema(
     formData
   );
   schema = mergeSchemas(schema, dependentSchema);
-  return oneOf === undefined
-    ? schema
-    : withExactlyOneSubschema(
-        schema,
-        definitions,
-        formData,
-        dependencyKey,
-        oneOf
-      );
+  // Since it does not contain oneOf, we return the original schema.
+  if (oneOf === undefined) {
+    return schema;
+  } else if (!Array.isArray(oneOf)) {
+    throw new Error(`invalid: it is some ${typeof oneOf} instead of an array`);
+  }
+  // Resolve $refs inside oneOf.
+  const resolvedOneOf = oneOf.map(subschema =>
+    subschema.hasOwnProperty("$ref")
+      ? resolveReference(subschema, definitions, formData)
+      : subschema
+  );
+  return withExactlyOneSubschema(
+    schema,
+    definitions,
+    formData,
+    dependencyKey,
+    resolvedOneOf
+  );
 }
 
 function withExactlyOneSubschema(
@@ -490,11 +569,6 @@ function withExactlyOneSubschema(
   dependencyKey,
   oneOf
 ) {
-  if (!Array.isArray(oneOf)) {
-    throw new Error(
-      `invalid oneOf: it is some ${typeof oneOf} instead of an array`
-    );
-  }
   const validSubschemas = oneOf.filter(subschema => {
     if (!subschema.properties) {
       return false;
@@ -629,7 +703,7 @@ export function toIdSchema(
   const idSchema = {
     $id: id || idPrefix,
   };
-  if ("$ref" in schema) {
+  if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toIdSchema(_schema, id, definitions, formData, idPrefix);
   }

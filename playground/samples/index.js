@@ -18,6 +18,7 @@ import alternatives from "./alternatives";
 import propertyDependencies from "./propertyDependencies";
 import schemaDependencies from "./schemaDependencies";
 import localize from "./localize";
+import additionalProperties from "./additionalProperties";
 
 export const samples = {
   Simple: simple,
@@ -40,4 +41,5 @@ export const samples = {
   "Property dependencies": propertyDependencies,
   "Schema dependencies": schemaDependencies,
   Localize: localize,
+  "Additional Properties": additionalProperties,
 };

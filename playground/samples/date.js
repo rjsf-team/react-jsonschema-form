@@ -40,9 +40,15 @@ module.exports = {
     alternative: {
       "alt-datetime": {
         "ui:widget": "alt-datetime",
+        "ui:options": {
+          yearsRange: [1980, 2030],
+        },
       },
       "alt-date": {
         "ui:widget": "alt-date",
+        "ui:options": {
+          yearsRange: [1980, 2030],
+        },
       },
     },
   },

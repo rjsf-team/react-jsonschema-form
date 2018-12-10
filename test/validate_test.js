@@ -43,6 +43,31 @@ describe("Validation", () => {
       });
     });
 
+    describe("Validating multipleOf with a float", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          price: {
+            title: "Price per task ($)",
+            type: "number",
+            multipleOf: 0.01,
+            minimum: 0,
+          },
+        },
+      };
+
+      let errors;
+
+      beforeEach(() => {
+        const result = validateFormData({ price: 0.14 }, schema);
+        errors = result.errors;
+      });
+
+      it("should not return an error", () => {
+        expect(errors).to.have.length.of(0);
+      });
+    });
+
     describe("Custom validate function", () => {
       let errors, errorSchema;
 
