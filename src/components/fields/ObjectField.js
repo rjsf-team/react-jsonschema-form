@@ -1,3 +1,4 @@
+import AddButton from "../AddButton";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
@@ -5,9 +6,27 @@ import {
   orderProperties,
   retrieveSchema,
   getDefaultRegistry,
+  getUiOptions,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
+  const canExpand = function canExpand() {
+    const { formData, schema, uiSchema } = props;
+    if (!schema.additionalProperties) {
+      return false;
+    }
+    const { expandable } = getUiOptions(uiSchema);
+    if (expandable === false) {
+      return expandable;
+    }
+    // if ui:options.expandable was not explicitly set to false, we can add
+    // another property if we have not exceeded maxProperties yet
+    if (schema.maxProperties !== undefined) {
+      return Object.keys(formData).length < schema.maxProperties;
+    }
+    return true;
+  };
+
   const { TitleField, DescriptionField } = props;
   return (
     <fieldset>
@@ -27,6 +46,13 @@ function DefaultObjectFieldTemplate(props) {
         />
       )}
       {props.properties.map(prop => prop.content)}
+      {canExpand() && (
+        <AddButton
+          className="object-property-expand"
+          onClick={props.onAddClick(props.schema)}
+          disabled={props.disabled || props.readonly}
+        />
+      )}
     </fieldset>
   );
 }
@@ -40,6 +66,10 @@ class ObjectField extends Component {
     required: false,
     disabled: false,
     readonly: false,
+  };
+
+  state = {
+    additionalProperties: {},
   };
 
   isRequired(name) {
@@ -61,6 +91,62 @@ class ObjectField extends Component {
           }
       );
     };
+  };
+
+  getAvailableKey = (preferredKey, formData) => {
+    var index = 0;
+    var newKey = preferredKey;
+    while (this.props.formData.hasOwnProperty(newKey)) {
+      newKey = `${preferredKey}-${++index}`;
+    }
+    return newKey;
+  };
+
+  onKeyChange = oldValue => {
+    return (value, errorSchema) => {
+      value = this.getAvailableKey(value, this.props.formData);
+      const newFormData = { ...this.props.formData };
+      const property = newFormData[oldValue];
+      delete newFormData[oldValue];
+      newFormData[value] = property;
+      this.props.onChange(
+        newFormData,
+        errorSchema &&
+          this.props.errorSchema && {
+            ...this.props.errorSchema,
+            [value]: errorSchema,
+          }
+      );
+    };
+  };
+
+  getDefaultValue(type) {
+    switch (type) {
+      case "string":
+        return "New Value";
+      case "array":
+        return [];
+      case "boolean":
+        return false;
+      case "null":
+        return null;
+      case "number":
+        return 0;
+      case "object":
+        return {};
+      default:
+        // We don't have a datatype for some reason (perhaps additionalProperties was true)
+        return "New Value";
+    }
+  }
+
+  handleAddClick = schema => () => {
+    const type = schema.additionalProperties.type;
+    const newFormData = { ...this.props.formData };
+    newFormData[
+      this.getAvailableKey("newKey", newFormData)
+    ] = this.getDefaultValue(type);
+    this.props.onChange(newFormData);
   };
 
   render() {
@@ -120,6 +206,7 @@ class ObjectField extends Component {
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
               formData={formData[name]}
+              onKeyChange={this.onKeyChange(name)}
               onChange={this.onPropertyChange(name)}
               onBlur={onBlur}
               onFocus={onFocus}
@@ -141,7 +228,7 @@ class ObjectField extends Component {
       formData,
       formContext,
     };
-    return <Template {...templateProps} />;
+    return <Template {...templateProps} onAddClick={this.handleAddClick} />;
   }
 }
 

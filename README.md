@@ -23,6 +23,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
         - [Form data changes](#form-data-changes)
         - [Form field blur events](#form-field-blur-events)
         - [Form field focus events](#form-field-focus-events)
+     - [Submit form programmatically](#submit-form-programmatically)
   - [Form customization](#form-customization)
      - [The uiSchema object](#the-uischema-object)
      - [Alternative widgets](#alternative-widgets)
@@ -37,6 +38,8 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
            - [Multiple files](#multiple-files)
            - [File widget input ref](#file-widget-input-ref)
      - [Object fields ordering](#object-fields-ordering)
+     - [Object item options](#object-item-options)
+        - [expandable option](#expandable-option)
      - [Array item options](#array-item-options)
         - [orderable option](#orderable-option)
         - [addable option](#addable-option)
@@ -57,6 +60,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Field labels](#field-labels)
      - [HTML5 Input Types](#html5-input-types)
      - [Form attributes](#form-attributes)
+     - [Form disable](#form-disable)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array Field Template](#array-field-template)
@@ -238,6 +242,22 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 Sometimes you may want to trigger events or modify external state when a field has been focused, so you can pass an `onFocus` handler, which will receive the id of the input that is focused and the field value.
 
+### Submit form programmatically
+You can use the reference to get your `Form` component and call the `submit` method to submit the form programmatically without a submit button.
+This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
+
+```js
+const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
+let yourForm;
+
+render((
+  <Form schema={schema}
+        onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
+), document.getElementById("app"));
+
+yourForm.submit();
+```
+
 ## Form customization
 
 ### The `uiSchema` object
@@ -350,7 +370,7 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 
 ![](http://i.imgur.com/VF5tY60.png)
 
-You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema:
+You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 ```jsx
 uiSchema: {
@@ -359,6 +379,8 @@ uiSchema: {
       "ui:widget": "alt-datetime",
       "ui:options": {
         yearsRange: [1980, 2030],
+        hideNowButton: true,
+        hideClearButton: true,
       },
     },
   },
@@ -481,6 +503,22 @@ If a guaranteed fixed order is only important for some fields, you can insert a 
 ```js
 const uiSchema = {
   "ui:order": ["bar", "*"]
+};
+```
+
+### Object item options
+
+#### `expandable` option
+
+If `additionalProperties` contains a schema object, an add button for new properies is shown by default. The UX for editing properties whose names are user-defined is still experimental.
+
+You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
+
+```jsx
+const uiSchema = {
+  "ui:options":  {
+    expandable: false
+  }
 };
 ```
 
@@ -799,7 +837,7 @@ const uiSchema = {
 
 ### Placeholders
 
-You can add placeholder texst to an input by using the `ui:placeholder` uiSchema directive:
+You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
 ```jsx
 const schema = {type: "string", format: "uri"};
@@ -863,7 +901,28 @@ The `Form` component supports the following html attributes:
   schema={} />
 ```
 
+### Form disable
+
+Its possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down thru each field of the form. 
+
+```jsx
+<Form
+  disabled
+  schema={} />
+```
+
+If you just want to disable some of the fields see the `ui:disabled` parameter in the uiSchema directive. 
+
 ## Advanced customization
+
+
+_ | Custom Field  | Custom Template | Custom Widget
+--|---------- | ------------- | ----
+What it does | Overrides all behaviour | Overrides just the layout | Overrides just the input box (not layout, labels, or help, or validation)
+Usage | Global or per-field | Only global | Global or per-field
+Global Example | `<Form fields={MyCustomFields} />` |  `<Form ArrayFieldTemplate={ArrayFieldTemplate} />` | `<Form widgets={MyCustomWidgets} />`
+Per-Field Example | `"ui:field": MyField` |  N/A | `"ui:widget":MyWidget`
+Documentation | [Field](#field-props) | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)
 
 ### Field template
 
@@ -983,7 +1042,7 @@ function ObjectFieldTemplate(props) {
     <div>
       {props.title}
       {props.description}
-      {props.properties.map(element => <div className="property-wrapper">{element.children}</div>)}
+      {props.properties.map(element => <div className="property-wrapper">{element.content}</div>)}
     </div>
   );
 }
