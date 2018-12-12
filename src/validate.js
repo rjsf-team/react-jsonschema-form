@@ -155,7 +155,7 @@ export default function validateFormData(
   transformErrors
 ) {
   try {
-    ajv.errors = null;
+    ajv.errors = null; // Clear old errors to prevent presisting errors, see #1104
     ajv.validate(schema, formData);
   } catch (e) {
     // swallow errors thrown in ajv due to invalid schemas, these
