@@ -1,6 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
+import sinon from "sinon";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 
@@ -225,6 +226,84 @@ describe("BooleanField", () => {
       };
       const { node } = createFormComponent({ schema, widgets, uiSchema });
       expect(node.querySelector("#label-")).to.not.be.null;
+    });
+  });
+
+  describe("SelectWidget", () => {
+    it("should render a field that contains an enum of booleans", () => {
+      const { node } = createFormComponent({
+        schema: {
+          enum: [true, false],
+        },
+      });
+
+      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+    });
+
+    it("should infer the value from an enum on change", () => {
+      const spy = sinon.spy();
+      const { node } = createFormComponent({
+        schema: {
+          enum: [true, false],
+        },
+        onChange: spy,
+      });
+
+      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      const $select = node.querySelector(".field select");
+      expect($select.value).eql("");
+
+      Simulate.change($select, {
+        target: { value: "true" },
+      });
+      expect($select.value).eql("true");
+      expect(spy.lastCall.args[0].formData).eql(true);
+    });
+
+    it("should render a string field with a label", () => {
+      const { node } = createFormComponent({
+        schema: {
+          enum: [true, false],
+          title: "foo",
+        },
+      });
+
+      expect(node.querySelector(".field label").textContent).eql("foo");
+    });
+
+    it("should assign a default value", () => {
+      const { comp } = createFormComponent({
+        schema: {
+          enum: [true, false],
+          default: true,
+        },
+      });
+
+      expect(comp.state.formData).eql(true);
+    });
+
+    it("should handle a change event", () => {
+      const { comp, node } = createFormComponent({
+        schema: {
+          enum: [true, false],
+        },
+      });
+
+      Simulate.change(node.querySelector("select"), {
+        target: { value: "false" },
+      });
+
+      expect(comp.state.formData).eql(false);
+    });
+
+    it("should render the widget with the expected id", () => {
+      const { node } = createFormComponent({
+        schema: {
+          enum: [true, false],
+        },
+      });
+
+      expect(node.querySelector("select").id).eql("root");
     });
   });
 });
