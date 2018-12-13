@@ -16,6 +16,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema,
+  guessType,
 } from "../src/utils";
 
 describe("utils", () => {
@@ -1320,6 +1321,32 @@ describe("utils", () => {
       expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).eql(
         true
       );
+    });
+  });
+
+  describe("guessType()", () => {
+    it("should guess the type of array values", () => {
+      expect(guessType([1, 2, 3])).eql("array");
+    });
+
+    it("should guess the type of string values", () => {
+      expect(guessType("foobar")).eql("string");
+    });
+
+    it("should guess the type of null values", () => {
+      expect(guessType(null)).eql("null");
+    });
+
+    it("should treat undefined values as null values", () => {
+      expect(guessType()).eql("null");
+    });
+
+    it("should guess the type of boolean values", () => {
+      expect(guessType(true)).eql("boolean");
+    });
+
+    it("should guess the type of object values", () => {
+      expect(guessType({})).eql("object");
     });
   });
 });
