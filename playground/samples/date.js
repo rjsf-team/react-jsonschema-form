@@ -5,8 +5,7 @@ module.exports = {
     properties: {
       native: {
         title: "Native",
-        description:
-          "May not work on some browsers, notably Firefox Desktop and IE.",
+        description: "Material UI datetime and date pickers.",
         type: "object",
         properties: {
           datetime: {
@@ -19,35 +18,32 @@ module.exports = {
           },
         },
       },
-      alternative: {
-        title: "Alternative",
-        description: "These work on most platforms.",
-        type: "object",
-        properties: {
-          "alt-datetime": {
-            type: "string",
-            format: "date-time",
-          },
-          "alt-date": {
-            type: "string",
-            format: "date",
-          },
-        },
-      },
     },
   },
   uiSchema: {
-    alternative: {
-      "alt-datetime": {
-        "ui:widget": "alt-datetime",
+    native: {
+      datetime: {
         "ui:options": {
-          yearsRange: [1980, 2030],
+          disableFuture: true,
+          clearable: true,
+          keyboard: true,
+          formatPattern: "MM/DD/YYYY HH:mm",
+          format: "date-time",
+          placeholder: "10/10/2018 22:10",
+          disableOpenOnEnter: true,
+          animateYearScrolling: false,
         },
       },
-      "alt-date": {
-        "ui:widget": "alt-date",
+      date: {
         "ui:options": {
-          yearsRange: [1980, 2030],
+          disableFuture: true,
+          clearable: true,
+          keyboard: true,
+          formatPattern: "MM/DD/YYYY",
+          format: "date",
+          placeholder: "10/10/2018",
+          disableOpenOnEnter: true,
+          animateYearScrolling: false,
         },
       },
     },

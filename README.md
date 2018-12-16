@@ -1,13 +1,7 @@
 react-jsonschema-form
 =====================
 
-[![Build Status](https://travis-ci.org/mozilla-services/react-jsonschema-form.svg)](https://travis-ci.org/mozilla-services/react-jsonschema-form)
-
-A simple [React](http://facebook.github.io/react/) component capable of building HTML forms out of a [JSON schema](http://json-schema.org/) and using [Bootstrap](http://getbootstrap.com/) semantics by default.
-
 A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) is hosted on gh-pages.
-
-![](http://i.imgur.com/M8ZCES5.gif)
 
 ## Table of Contents
 
@@ -321,7 +315,7 @@ The uiSchema `ui:widget` property tells the form which UI widget should be used 
 Example:
 
 ```jsx
-const uiSchema =  {
+const uiSchema =  {
   done: {
     "ui:widget": "radio" // could also be "select"
   }
@@ -1593,7 +1587,7 @@ If you want to have the field set to a default value when empty you can provide 
 
 This library renders form fields and widgets leveraging the [Bootstrap](http://getbootstrap.com/) semantics. That means your forms will be beautiful by default if you're loading its stylesheet in your page.
 
-You're not necessarily forced to use Bootstrap; while it uses its semantics, it also provides a bunch of other class names so you can bring new styles or override default ones quite easily in your own personalized stylesheet. That's just HTML after all :)
+You're not necessarily forced to use Bootstrap; while it uses its semantics, it also provides a bunch of other class names so you can bring new styles or override default ones quite easily in your own personalized stylesheet. That's just HTML after all :)
 
 If you're okay with using styles from the Bootstrap ecosystem though, then the good news is that you have access to many themes for it, which are compatible with our generated forms!
 
@@ -1803,86 +1797,6 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 * `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`
     Nobody yet has come up with a PR that adds this feature with a simple and easy-to-understand UX.
     You can use `oneOf` with [schema dependencies](#schema-dependencies) to dynamically add schema properties based on input data but this feature does not bring general support for `oneOf` elsewhere in a schema.
-
-## Tips and tricks
-
- - Custom field template: https://jsfiddle.net/hdp1kgn6/1/
- - Multi-step wizard: https://jsfiddle.net/sn4bnw9h/1/
- - Using classNames with uiSchema: https://jsfiddle.net/gfwp25we/1/
- - Conditional fields: https://jsfiddle.net/69z2wepo/88541/
- - Advanced conditional fields: https://jsfiddle.net/cowbellerina/zbfh96b1/
- - Use radio list for enums: https://jsfiddle.net/f2y3fq7L/2/
- - Reading file input data: https://jsfiddle.net/f9vcb6pL/1/
- - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
- - 2 columns form with CSS and FieldTemplate : https://jsfiddle.net/n1k0/bw0ffnz4/1/
- - Validate and submit form from external control : https://jsfiddle.net/spacebaboon/g5a1re63/
-
-## Contributing
-
-### Coding style
-
-All the JavaScript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style. A command is provided to ensure your code is always formatted accordingly:
-
-```
-$ npm run cs-format
-```
-
-The `cs-check` command ensures all files conform to that style:
-
-```
-$ npm run cs-check
-```
-
-### Development server
-
-```
-$ npm start
-```
-
-A live development server showcasing components with hot reload enabled is available at [localhost:8080](http://localhost:8080).
-
-If you want the development server to listen on another host or port, you can use the RJSF_DEV_SERVER env variable:
-
-```
-$ RJSF_DEV_SERVER=0.0.0.0:8000 npm start
-```
-
-### Tests
-
-```
-$ npm test
-```
-
-#### TDD
-
-```
-$ npm run tdd
-```
-
-### Releasing
-
-```
-$ edit package.json # update version number
-$ git commit -m "Bump version $VERSION"
-$ git tag v$VERSION
-$ npm run dist
-$ npm publish
-$ git push --tags origin
-```
-
-## FAQ
-
-### Q: Does rjsf support `oneOf`, `anyOf`, multiple types in an array, etc.?
-
-A: Not yet (except for a special case where you can use `oneOf` in [schema dependencies](#schema-dependencies)), but perhaps you will be the person whose PR will finally add the feature in a way that gets merged. For inspiration, see [#329](https://github.com/mozilla-services/react-jsonschema-form/pull/329) or [#417](https://github.com/mozilla-services/react-jsonschema-form/pull/417). See also: [#52](https://github.com/mozilla-services/react-jsonschema-form/issues/52), [#151](https://github.com/mozilla-services/react-jsonschema-form/issues/151), [#171](https://github.com/mozilla-services/react-jsonschema-form/issues/171), [#200](https://github.com/mozilla-services/react-jsonschema-form/issues/200), [#282](https://github.com/mozilla-services/react-jsonschema-form/issues/282), [#302](https://github.com/mozilla-services/react-jsonschema-form/pull/302), [#330](https://github.com/mozilla-services/react-jsonschema-form/issues/330), [#430](https://github.com/mozilla-services/react-jsonschema-form/issues/430), [#522](https://github.com/mozilla-services/react-jsonschema-form/issues/522), [#538](https://github.com/mozilla-services/react-jsonschema-form/issues/538), [#551](https://github.com/mozilla-services/react-jsonschema-form/issues/551), [#552](https://github.com/mozilla-services/react-jsonschema-form/issues/552), or [#648](https://github.com/mozilla-services/react-jsonschema-form/issues/648).
-
-### Q: Will react-jsonschema-form support Material, Ant-Design, Foundation, or [some other specific widget library or frontend style]?
-
-A: Probably not. We use Bootstrap v3 and it works fine for our needs. We would like for react-jsonschema-form to support other frameworks, we just don't want to support them ourselves. Ideally, these frontend styles could be added to react-jsonschema-form with a third-party library. If there is a technical limitation preventing this, please consider opening a PR. See also: [#91](https://github.com/mozilla-services/react-jsonschema-form/issues/91), [#99](https://github.com/mozilla-services/react-jsonschema-form/issues/99), [#125](https://github.com/mozilla-services/react-jsonschema-form/issues/125), [#237](https://github.com/mozilla-services/react-jsonschema-form/issues/237), [#287](https://github.com/mozilla-services/react-jsonschema-form/issues/287), [#299](https://github.com/mozilla-services/react-jsonschema-form/issues/299), [#440](https://github.com/mozilla-services/react-jsonschema-form/issues/440), [#461](https://github.com/mozilla-services/react-jsonschema-form/issues/461), [#546](https://github.com/mozilla-services/react-jsonschema-form/issues/546), [#555](https://github.com/mozilla-services/react-jsonschema-form/issues/555), [#626](https://github.com/mozilla-services/react-jsonschema-form/issues/626), and [#623](https://github.com/mozilla-services/react-jsonschema-form/pull/623).
-
-### Q: Is there a way to "collapse" fields, for instance to show/hide individual fields?
-
-A: There's no specific built-in way to do this, but you can write your own FieldTemplate that supports hiding/showing fields according to user input. We don't yet have an example of this use, but if you write one, please add it to the "tips and tricks" section, above. See also: [#268](https://github.com/mozilla-services/react-jsonschema-form/issues/268), [#304](https://github.com/mozilla-services/react-jsonschema-form/pull/304), [#598](https://github.com/mozilla-services/react-jsonschema-form/issues/598), [#920](https://github.com/mozilla-services/react-jsonschema-form/issues/920).
 
 ## License
 

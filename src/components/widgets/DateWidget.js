@@ -1,19 +1,28 @@
 import React from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
+import MomentUtils from "@date-io/moment";
+import { DatePicker, MuiPickersUtilsProvider } from "material-ui-pickers";
 
 function DateWidget(props) {
-  const {
-    onChange,
-    registry: {
-      widgets: { BaseInput },
-    },
-  } = props;
+  const { value, options, onChange } = props;
   return (
-    <BaseInput
-      type="date"
-      {...props}
-      onChange={value => onChange(value || undefined)}
-    />
+    <MuiPickersUtilsProvider
+      utils={MomentUtils}
+      locale={props.selectedLocale}
+      moment={moment}>
+      <div className="picker">
+        <DatePicker
+          {...props}
+          {...options}
+          format={options.formatPattern}
+          value={value ? moment(value) : value}
+          onChange={date =>
+            onChange(date ? moment(date).format("YYYY-MM-DD") : "")
+          }
+        />
+      </div>
+    </MuiPickersUtilsProvider>
   );
 }
 
