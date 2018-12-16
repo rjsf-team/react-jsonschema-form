@@ -1,7 +1,9 @@
-react-jsonschema-form
-=====================
+react-jsonschema-materialui-forms
+=================================
 
-A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) is hosted on gh-pages.
+A [live playground](https://pankaz.github.io/react-jsonschema-materialui-forms/) is hosted on gh-pages.
+
+![](library-demo.gif)
 
 ## Table of Contents
 
