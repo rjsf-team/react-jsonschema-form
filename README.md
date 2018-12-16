@@ -1,9 +1,18 @@
 react-jsonschema-materialui-forms
 =================================
 
+A simple React component capable of building HTML forms out of a JSON schema based on the Material UI React library. Special credit goes to initial author Nicolas Perriault.
+
 A [live playground](https://pankaz.github.io/react-jsonschema-materialui-forms/) is hosted on gh-pages.
 
 ![](library-demo.gif)
+
+The following components have been ported to the MUI react library components:
+ - Text input
+ - Radio button
+ - Select dropdown
+ - Multiselect dropdown
+ - Date / time picker (uses moment.js internally
 
 ## Table of Contents
 
