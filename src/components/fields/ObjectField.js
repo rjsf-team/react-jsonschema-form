@@ -29,7 +29,7 @@ function DefaultObjectFieldTemplate(props) {
 
   const { TitleField, DescriptionField } = props;
   return (
-    <fieldset>
+    <React.Fragment>
       {(props.uiSchema["ui:title"] || props.title) && (
         <TitleField
           id={`${props.idSchema.$id}__title`}
@@ -53,7 +53,7 @@ function DefaultObjectFieldTemplate(props) {
           disabled={props.disabled || props.readonly}
         />
       )}
-    </fieldset>
+    </React.Fragment>
   );
 }
 
