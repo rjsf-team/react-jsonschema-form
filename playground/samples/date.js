@@ -12,6 +12,10 @@ module.exports = {
             type: "string",
             format: "date-time",
           },
+          DateTimePickerAsDatePicker: {
+            type: "string",
+            format: "date-time",
+          },
           date: {
             type: "string",
             format: "date",
@@ -34,6 +38,19 @@ module.exports = {
           animateYearScrolling: false,
         },
       },
+      DateTimePickerAsDatePicker: {
+        "ui:options": {
+          disableFuture: true,
+          clearable: true,
+          keyboard: true,
+          formatPattern: "MM/DD/YYYY",
+          format: "date",
+          placeholder: "10/10/2018",
+          disableOpenOnEnter: true,
+          animateYearScrolling: false,
+          renderDateTimePickerAsDatePicker: true,
+        },
+      },
       date: {
         "ui:options": {
           disableFuture: true,
@@ -44,6 +61,7 @@ module.exports = {
           placeholder: "10/10/2018",
           disableOpenOnEnter: true,
           animateYearScrolling: false,
+          renderDateTimePickerAsDatePicker: false,
         },
       },
     },
