@@ -1086,15 +1086,13 @@ An error list template is basically a React stateless component being passed err
 function ErrorListTemplate(props) {
   const {errors} = props;
   return (
-    <div>
-      {errors.map((error, i) => {
-        return (
-          <li key={i}>
+    <ul>
+      {errors.map(error => (
+          <li key={error.stack}>
             {error.stack}
           </li>
-        );
-      })}
-    </div>
+        ))}
+    </ul>
   );
 }
 
