@@ -520,6 +520,24 @@ describe("ObjectField", () => {
       expect(comp.state.formData.newFirst).eql(1);
     });
 
+    it("should keep order of renamed key-value pairs while renaming key", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { first: 1, second: 2, third: 3 },
+      });
+
+      const textNode = node.querySelector("#root_second-key");
+      Simulate.blur(textNode, {
+        target: { value: "newSecond" },
+      });
+
+      expect(Object.keys(comp.state.formData)).eql([
+        "first",
+        "newSecond",
+        "third",
+      ]);
+    });
+
     it("should attach suffix to formData key if new key already exists when key input is renamed", () => {
       const formData = {
         first: 1,
@@ -536,6 +554,21 @@ describe("ObjectField", () => {
       });
 
       expect(comp.state.formData["second-1"]).eql(1);
+    });
+
+    it("should not attach suffix when input is only clicked", () => {
+      const formData = {
+        first: 1,
+      };
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode);
+
+      expect(comp.state.formData.hasOwnProperty("first")).to.be.true;
     });
 
     it("should continue incrementing suffix to formData key until that key name is unique after a key input collision", () => {

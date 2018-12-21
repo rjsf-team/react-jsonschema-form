@@ -96,7 +96,7 @@ class ObjectField extends Component {
   getAvailableKey = (preferredKey, formData) => {
     var index = 0;
     var newKey = preferredKey;
-    while (this.props.formData.hasOwnProperty(newKey)) {
+    while (formData.hasOwnProperty(newKey)) {
       newKey = `${preferredKey}-${++index}`;
     }
     return newKey;
@@ -104,13 +104,19 @@ class ObjectField extends Component {
 
   onKeyChange = oldValue => {
     return (value, errorSchema) => {
+      if (oldValue === value) {
+        return;
+      }
       value = this.getAvailableKey(value, this.props.formData);
       const newFormData = { ...this.props.formData };
-      const property = newFormData[oldValue];
-      delete newFormData[oldValue];
-      newFormData[value] = property;
+      const newKeys = { [oldValue]: value };
+      const keyValues = Object.keys(newFormData).map(key => {
+        const newKey = newKeys[key] || key;
+        return { [newKey]: newFormData[key] };
+      });
+      const renamedObj = Object.assign({}, ...keyValues);
       this.props.onChange(
-        newFormData,
+        renamedObj,
         errorSchema &&
           this.props.errorSchema && {
             ...this.props.errorSchema,
