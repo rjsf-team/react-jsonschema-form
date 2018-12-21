@@ -22,25 +22,26 @@ function DateTimeWidget(props) {
             {...props}
             {...options}
             format={options.formatPattern}
-            value={value ? moment(value) : value}
+            value={value !== undefined ? moment(value) : value}
             onChange={date =>
               onChange(
                 date
                   ? moment(date)
-                      .utc()
                       .startOf("day")
                       .toJSON()
                   : ""
               )
             }
+            // onChange={date => onChange(date ? moment(date).startOf("day").format("MM-DD-YYYY HH:MM:SS") : "")}
           />
         ) : (
           <DateTimePicker
             {...props}
             {...options}
             format={options.formatPattern}
-            value={value ? moment(value) : value}
-            onChange={date => onChange(date ? date.toJSON() : "")}
+            value={value !== undefined ? moment(value) : value}
+            onChange={date => onChange(date ? moment(date).toJSON() : "")}
+            // onChange={date => onChange(date ? moment(date).startOf("day").format("MM-DD-YYYY HH:MM:SS") : "")}
           />
         )}
       </div>
