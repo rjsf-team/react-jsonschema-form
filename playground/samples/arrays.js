@@ -144,9 +144,16 @@ module.exports = {
     },
     multipleChoicesList: {
       "ui:widget": "select",
+      "ui:options": { shortLabel: "multiple choices list", label: false },
     },
     fixedItemsList: {
-      items: [{ "ui:widget": "textarea" }, { "ui:widget": "select" }],
+      items: [
+        { "ui:widget": "textarea" },
+        {
+          "ui:widget": "select",
+          "ui:options": { shortLabel: "fixed items list", label: false },
+        },
+      ],
       additionalItems: {
         "ui:widget": "updown",
       },

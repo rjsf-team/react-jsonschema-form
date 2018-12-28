@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Input from "@material-ui/core/Input";
 
 const classes = PropTypes.object.isRequired;
 
@@ -46,42 +49,49 @@ function SelectWidget(props) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
   return (
-    <Select
-      id={id}
-      multiple={typeof multiple === "undefined" ? false : multiple}
-      className={classes.selectEmpty}
-      // className="form-control"
-      value={typeof value === "undefined" ? emptyValue : value}
-      required={required}
-      disabled={disabled || readonly}
-      autoFocus={autofocus}
-      onBlur={
-        onBlur &&
-        (event => {
-          onBlur(id, processValue(schema, event.target.value));
-        })
-      }
-      onFocus={
-        onFocus &&
-        (event => {
-          onFocus(id, processValue(schema, event.target.value));
-        })
-      }
-      onChange={event => {
-        onChange(processValue(schema, event.target.value));
-      }}>
-      {!multiple && !schema.default && (
-        <MenuItem value="">{placeholder ? placeholder : "Select"}</MenuItem>
+    <FormControl>
+      {options.shortLabel && (
+        <InputLabel htmlFor={id + "-select"}>{options.shortLabel}</InputLabel>
       )}
-      {enumOptions.map(({ value, label }, i) => {
-        const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
-        return (
-          <MenuItem key={i} value={value} disabled={disabled}>
-            {label}
-          </MenuItem>
-        );
-      })}
-    </Select>
+
+      <Select
+        id={id}
+        multiple={typeof multiple === "undefined" ? false : multiple}
+        className={classes.selectEmpty}
+        // className="form-control"
+        value={typeof value === "undefined" ? emptyValue : value}
+        required={required}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        input={<Input id={id + "-select"} />}
+        onBlur={
+          onBlur &&
+          (event => {
+            onBlur(id, processValue(schema, event.target.value));
+          })
+        }
+        onFocus={
+          onFocus &&
+          (event => {
+            onFocus(id, processValue(schema, event.target.value));
+          })
+        }
+        onChange={event => {
+          onChange(processValue(schema, event.target.value));
+        }}>
+        {!multiple && !schema.default && (
+          <MenuItem value="">{placeholder ? placeholder : "Select"}</MenuItem>
+        )}
+        {enumOptions.map(({ value, label }, i) => {
+          const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
+          return (
+            <MenuItem key={i} value={value} disabled={disabled}>
+              {label}
+            </MenuItem>
+          );
+        })}
+      </Select>
+    </FormControl>
   );
 }
 

@@ -93,6 +93,7 @@ module.exports = {
       },
       select: {
         "ui:widget": "select",
+        "ui:options": { shortLabel: "select dropdown", label: false },
       },
     },
     string: {
