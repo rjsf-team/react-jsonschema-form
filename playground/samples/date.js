@@ -36,6 +36,7 @@ module.exports = {
           placeholder: "10-10-2018 22:10",
           disableOpenOnEnter: true,
           animateYearScrolling: false,
+          invalidLabel: " ",
         },
       },
       DateTimePickerAsDatePicker: {
@@ -49,6 +50,7 @@ module.exports = {
           disableOpenOnEnter: true,
           animateYearScrolling: false,
           renderDateTimePickerAsDatePicker: true,
+          invalidLabel: " ",
         },
       },
       date: {
@@ -62,6 +64,7 @@ module.exports = {
           disableOpenOnEnter: true,
           animateYearScrolling: false,
           renderDateTimePickerAsDatePicker: false,
+          invalidLabel: " ",
         },
       },
     },

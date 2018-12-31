@@ -11,6 +11,7 @@ import {
 
 function DateTimeWidget(props) {
   const { value, options, onChange } = props;
+
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
@@ -22,7 +23,7 @@ function DateTimeWidget(props) {
             {...props}
             {...options}
             format={options.formatPattern}
-            value={value !== undefined ? moment(value) : value}
+            value={value !== undefined ? moment(value) : null}
             onChange={date =>
               onChange(
                 date
@@ -39,7 +40,7 @@ function DateTimeWidget(props) {
             {...props}
             {...options}
             format={options.formatPattern}
-            value={value !== undefined ? moment(value) : value}
+            value={value !== undefined ? moment(value) : null}
             onChange={date => onChange(date ? moment(date).toJSON() : "")}
             // onChange={date => onChange(date ? moment(date).startOf("day").format("MM-DD-YYYY HH:MM:SS") : "")}
           />
