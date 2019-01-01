@@ -14,6 +14,9 @@ function DateTimeWidget(props) {
   const minDate = options.minDate
     ? moment(options.minDate)
     : moment().subtract(100, "years");
+  const maxDate = options.maxDate
+    ? moment(options.maxDate)
+    : moment().add(100, "years");
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
@@ -26,6 +29,7 @@ function DateTimeWidget(props) {
             {...options}
             format={options.formatPattern}
             minDate={minDate}
+            maxDate={maxDate}
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
               // console.log("on change DatePicker val ", date);
@@ -45,6 +49,7 @@ function DateTimeWidget(props) {
             {...options}
             format={options.formatPattern}
             minDate={minDate}
+            maxDate={maxDate}
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
               // console.log("on change DateTimePicker val ", date);
