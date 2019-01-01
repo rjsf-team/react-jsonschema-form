@@ -11,7 +11,9 @@ import {
 
 function DateTimeWidget(props) {
   const { value, options, onChange } = props;
-
+  const minDate = options.minDate
+    ? moment(options.minDate)
+    : moment().subtract(100, "years");
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
@@ -23,16 +25,18 @@ function DateTimeWidget(props) {
             {...props}
             {...options}
             format={options.formatPattern}
+            minDate={minDate}
             value={value !== undefined ? moment(value) : null}
-            onChange={date =>
-              onChange(
+            onChange={date => {
+              // console.log("on change DatePicker val ", date);
+              return onChange(
                 date
                   ? moment(date)
                       .startOf("day")
                       .toJSON()
                   : ""
-              )
-            }
+              );
+            }}
             // onChange={date => onChange(date ? moment(date).startOf("day").format("MM-DD-YYYY HH:MM:SS") : "")}
           />
         ) : (
@@ -40,8 +44,18 @@ function DateTimeWidget(props) {
             {...props}
             {...options}
             format={options.formatPattern}
+            minDate={minDate}
             value={value !== undefined ? moment(value) : null}
-            onChange={date => onChange(date ? moment(date).toJSON() : "")}
+            onChange={date => {
+              // console.log("on change DateTimePicker val ", date);
+              onChange(
+                date
+                  ? moment(date)
+                      .startOf("minute")
+                      .toJSON()
+                  : ""
+              );
+            }}
             // onChange={date => onChange(date ? moment(date).startOf("day").format("MM-DD-YYYY HH:MM:SS") : "")}
           />
         )}
