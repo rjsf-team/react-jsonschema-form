@@ -135,7 +135,7 @@ function DefaultTemplate(props) {
     height: "34px",
   };
   const additional = props.schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
-  // const keyLabel = `Key`;
+  const keyLabel = `${label} Key`;
 
   const contentStyle = additional
     ? {
@@ -154,7 +154,7 @@ function DefaultTemplate(props) {
             padding: 0,
           }}>
           <div className="form-group">
-            {/* <Label label={keyLabel} required={required} id={`${id}-key`} /> */}
+            <Label label={keyLabel} required={required} id={`${id}-key`} />
             <LabelInput
               label={label}
               required={required}

@@ -130,6 +130,7 @@ export default class Form extends Component {
         errors: toErrorList(newErrorSchema),
       };
     }
+
     setState(this, state, () => {
       if (this.props.onChange) {
         this.props.onChange(this.state);
