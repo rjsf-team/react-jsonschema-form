@@ -1,4 +1,5 @@
 import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
+import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -121,31 +122,68 @@ function DefaultTemplate(props) {
     required,
     displayLabel,
     onKeyChange,
+    onDropIndexClick,
   } = props;
   if (hidden) {
     return children;
   }
+  const btnStyle = {
+    flex: 1,
+    paddingLeft: 10,
+    paddingRight: 10,
+    fontWeight: "bold",
+    height: "34px",
+  };
   const additional = props.schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
-  const keyLabel = `${label} Key`;
+  // const keyLabel = `Key`;
+
+  const contentStyle = additional
+    ? {
+        clear: "both",
+        display: "flex",
+        marginBottom: 0,
+      }
+    : {};
 
   return (
-    <div className={classNames}>
+    <div className={classNames} style={contentStyle}>
       {additional && (
-        <div className="form-group">
-          <Label label={keyLabel} required={required} id={`${id}-key`} />
-          <LabelInput
-            label={label}
-            required={required}
-            id={`${id}-key`}
-            onChange={onKeyChange}
-          />
+        <div
+          className="col-lg-6"
+          style={{
+            padding: 0,
+          }}>
+          <div className="form-group">
+            {/* <Label label={keyLabel} required={required} id={`${id}-key`} /> */}
+            <LabelInput
+              label={label}
+              required={required}
+              id={`${id}-key`}
+              onChange={onKeyChange}
+            />
+          </div>
         </div>
       )}
-      {displayLabel && <Label label={label} required={required} id={id} />}
-      {displayLabel && description ? description : null}
-      {children}
-      {errors}
-      {help}
+      <div className={additional ? "col-lg-6" : ""}>
+        {displayLabel && (
+          <Label label={additional ? "" : label} required={required} id={id} />
+        )}
+        {displayLabel && description ? description : null}
+        {children}
+        {errors}
+        {help}
+      </div>
+      {additional && (
+        <IconButton
+          type="danger"
+          icon="remove"
+          className="array-item-remove"
+          tabIndex="-1"
+          style={btnStyle}
+          disabled={props.disabled || props.readonly}
+          onClick={onDropIndexClick(props.label)}
+        />
+      )}
     </div>
   );
 }
@@ -186,6 +224,7 @@ function SchemaFieldRender(props) {
     idPrefix,
     name,
     onKeyChange,
+    onDropIndexClick,
     required,
     registry = getDefaultRegistry(),
   } = props;
@@ -285,6 +324,7 @@ function SchemaFieldRender(props) {
     label,
     hidden,
     onKeyChange,
+    onDropIndexClick,
     required,
     disabled,
     readonly,

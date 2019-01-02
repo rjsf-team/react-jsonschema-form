@@ -82,6 +82,10 @@ class ObjectField extends Component {
   onPropertyChange = name => {
     return (value, errorSchema) => {
       const newFormData = { ...this.props.formData, [name]: value };
+      console.group();
+      console.log(this.props.newFormData);
+      console.log({ [name]: value });
+      console.groupEnd();
       this.props.onChange(
         newFormData,
         errorSchema &&
@@ -90,6 +94,17 @@ class ObjectField extends Component {
             [name]: errorSchema,
           }
       );
+    };
+  };
+
+  onDropIndexClick = index => {
+    return event => {
+      if (event) {
+        event.preventDefault();
+      }
+      const { onChange, formData } = this.props;
+      delete formData[index];
+      onChange(formData);
     };
   };
 
@@ -219,6 +234,7 @@ class ObjectField extends Component {
               registry={registry}
               disabled={disabled}
               readonly={readonly}
+              onDropIndexClick={this.onDropIndexClick}
             />
           ),
           name,
