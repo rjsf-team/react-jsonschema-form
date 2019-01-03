@@ -81,7 +81,10 @@ class ObjectField extends Component {
 
   onPropertyChange = name => {
     return (value, errorSchema) => {
-      const newFormData = { ...this.props.formData, [name]: value || "" };
+      const newFormData = {
+        ...this.props.formData,
+        [name]: value,
+      };
       this.props.onChange(
         newFormData,
         errorSchema &&
@@ -137,6 +140,7 @@ class ObjectField extends Component {
       );
     };
   };
+
   getDefaultValue(type) {
     switch (type) {
       case "string":
@@ -187,7 +191,6 @@ class ObjectField extends Component {
     const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
-
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
