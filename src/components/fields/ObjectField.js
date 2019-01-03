@@ -81,7 +81,7 @@ class ObjectField extends Component {
 
   onPropertyChange = name => {
     return (value, errorSchema) => {
-      const newFormData = { ...this.props.formData, [name]: value };
+      const newFormData = { ...this.props.formData, [name]: value || "" };
       this.props.onChange(
         newFormData,
         errorSchema &&
@@ -99,8 +99,9 @@ class ObjectField extends Component {
         event.preventDefault();
       }
       const { onChange, formData } = this.props;
-      delete formData[index];
-      onChange(formData);
+      const copiedFormData = { ...formData };
+      delete copiedFormData[index];
+      onChange(copiedFormData);
     };
   };
 
@@ -136,7 +137,6 @@ class ObjectField extends Component {
       );
     };
   };
-
   getDefaultValue(type) {
     switch (type) {
       case "string":
@@ -204,6 +204,7 @@ class ObjectField extends Component {
     }
 
     const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
+
     const templateProps = {
       title: uiSchema["ui:title"] || title,
       description,
