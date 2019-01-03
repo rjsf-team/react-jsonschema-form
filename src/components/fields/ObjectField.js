@@ -28,6 +28,7 @@ function DefaultObjectFieldTemplate(props) {
   };
 
   const { TitleField, DescriptionField } = props;
+  console.log(props.properties);
   return (
     <fieldset>
       {(props.uiSchema["ui:title"] || props.title) && (
@@ -81,6 +82,10 @@ class ObjectField extends Component {
 
   onPropertyChange = name => {
     return (value, errorSchema) => {
+      console.group();
+      console.log(name);
+      console.log(value);
+      console.groupEnd();
       const newFormData = { ...this.props.formData, [name]: value };
       this.props.onChange(
         newFormData,

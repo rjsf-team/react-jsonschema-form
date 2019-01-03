@@ -53,7 +53,7 @@ describe("ArrayFieldTemplate", () => {
           ArrayFieldTemplate,
         });
 
-        expect(node.querySelectorAll(".field-array div")).to.have.length.of(3);
+        expect(node.querySelectorAll(".field-array div")).to.have.length.of(4);
       });
     });
 

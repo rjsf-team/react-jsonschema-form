@@ -108,7 +108,6 @@ function ErrorList(props) {
     </div>
   );
 }
-
 function DefaultTemplate(props) {
   const {
     id,
@@ -164,10 +163,9 @@ function DefaultTemplate(props) {
           </div>
         </div>
       )}
+
       <div className={additional ? "col-lg-6" : ""}>
-        {displayLabel && (
-          <Label label={additional ? "" : label} required={required} id={id} />
-        )}
+        {displayLabel && <Label label={label} required={required} id={id} />}
         {displayLabel && description ? description : null}
         {children}
         {errors}
@@ -187,7 +185,6 @@ function DefaultTemplate(props) {
     </div>
   );
 }
-
 if (process.env.NODE_ENV !== "production") {
   DefaultTemplate.propTypes = {
     id: PropTypes.string,

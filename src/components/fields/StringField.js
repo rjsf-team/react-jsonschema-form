@@ -34,7 +34,6 @@ function StringField(props) {
     uiSchema
   );
   const Widget = getWidget(schema, widget, widgets);
-
   return (
     <Widget
       options={{ ...options, enumOptions }}

@@ -197,7 +197,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > label"),
         l => l.textContent
       );
 
@@ -212,7 +212,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > label"),
         l => l.textContent
       );
 
@@ -277,7 +277,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > label"),
         l => l.textContent
       );
 
@@ -310,7 +310,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > label"),
         l => l.textContent
       );
 
