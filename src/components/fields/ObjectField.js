@@ -7,6 +7,7 @@ import {
   retrieveSchema,
   getDefaultRegistry,
   getUiOptions,
+  ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
@@ -79,12 +80,21 @@ class ObjectField extends Component {
     );
   }
 
-  onPropertyChange = name => {
+  onPropertyChange = (name, additionalProperties = false) => {
     return (value, errorSchema) => {
-      const newFormData = {
-        ...this.props.formData,
-        [name]: value,
-      };
+      let newFormData;
+      if (!value && additionalProperties) {
+        newFormData = {
+          ...this.props.formData,
+          [name]: "",
+        };
+      } else {
+        newFormData = {
+          ...this.props.formData,
+          [name]: value,
+        };
+      }
+
       this.props.onChange(
         newFormData,
         errorSchema &&
@@ -214,6 +224,9 @@ class ObjectField extends Component {
       TitleField,
       DescriptionField,
       properties: orderedProperties.map(name => {
+        const additionalPropertyFlag = schema.properties[name].hasOwnProperty(
+          ADDITIONAL_PROPERTY_FLAG
+        );
         return {
           content: (
             <SchemaField
@@ -227,7 +240,7 @@ class ObjectField extends Component {
               idPrefix={idPrefix}
               formData={formData[name]}
               onKeyChange={this.onKeyChange(name)}
-              onChange={this.onPropertyChange(name)}
+              onChange={this.onPropertyChange(name, additionalPropertyFlag)}
               onBlur={onBlur}
               onFocus={onFocus}
               registry={registry}

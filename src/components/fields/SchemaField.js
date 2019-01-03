@@ -152,7 +152,7 @@ function DefaultTemplate(props) {
           style={{
             padding: 0,
           }}>
-          <div className="form-group">
+          <div className="form-group form-additional">
             <Label label={keyLabel} required={required} id={`${id}-key`} />
             <LabelInput
               label={label}
