@@ -18,8 +18,7 @@
     "preversion": "npm run build:playground && npm run dist && npm run build:readme && npm run cs-check && npm run lint",
     "start": "node devServer.js",
     "tdd": "cross-env NODE_ENV=test mocha --require babel-register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test": "cross-env NODE_ENV=test mocha --require babel-register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "temp": "cross-env NODE_ENV=test mocha --require babel-register --watch --require ./test/setup-jsdom.js test/ObjectField_test.js"
+    "test": "cross-env NODE_ENV=test mocha --require babel-register --require ./test/setup-jsdom.js test/**/*_test.js"
   },
   "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi --tab-width 2",
   "lint-staged": {
