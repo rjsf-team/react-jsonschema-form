@@ -678,5 +678,60 @@ describe("ObjectField", () => {
 
       expect(node.querySelector(".object-property-expand button")).to.be.null;
     });
+
+    it("should not have delete button if expand button has not been clicked", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector(".form-group > .btn-danger")).eql(null);
+    });
+
+    it("should have delete button if expand button has been clicked", () => {
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(node.querySelector(".form-group > .btn-danger")).eql(null);
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      expect(node.querySelector(".form-group > .btn-danger")).to.not.be.null;
+    });
+
+    it("delete button should delete key-value pair", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+      expect(node.querySelector("#root_first-key").value).to.eql("first");
+      Simulate.click(node.querySelector(".form-group > .btn-danger"));
+      expect(node.querySelector("#root_first-key")).to.not.exist;
+    });
+
+    it("delete button should delete correct pair", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1, second: 2, third: 3 },
+      });
+      expect(node.querySelectorAll(".form-group > .btn-danger").length).to.eql(
+        3
+      );
+      Simulate.click(node.querySelectorAll(".form-group > .btn-danger")[1]);
+      expect(node.querySelector("#root_second-key")).to.not.exist;
+      expect(node.querySelectorAll(".form-group > .btn-danger").length).to.eql(
+        2
+      );
+    });
+
+    it("deleting content of value input should not delete pair", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      Simulate.change(node.querySelector("#root_first"), {
+        target: { value: "" },
+      });
+      expect(comp.state.formData["first"]).eql("");
+    });
   });
 });

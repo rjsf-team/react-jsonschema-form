@@ -12,10 +12,12 @@ const webpackConfig = require("./webpack.config." + env);
 const compiler = webpack(webpackConfig);
 const app = express();
 
-app.use(require("webpack-dev-middleware")(compiler, {
-  publicPath: webpackConfig.output.publicPath,
-  noInfo: true
-}));
+app.use(
+  require("webpack-dev-middleware")(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    noInfo: true,
+  }),
+);
 
 app.use(require("webpack-hot-middleware")(compiler));
 
