@@ -164,7 +164,7 @@ function DefaultTemplate(props) {
         </div>
       )}
 
-      <div className={additional ? "col-lg-6" : ""}>
+      <div className={additional ? "col-lg-6 form-additional" : ""}>
         {displayLabel && <Label label={label} required={required} id={id} />}
         {displayLabel && description ? description : null}
         {children}
