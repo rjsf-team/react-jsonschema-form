@@ -277,16 +277,16 @@ class ArrayField extends Component {
         }
       }
       onChange(
-        function() {
+        (function() {
           // Copy item
-           let newFormData = formData.slice();
- 
-           // Moves item from index to newIndex
-           newFormData.splice(index, 1);
-           newFormData.splice(newIndex, 0, formData[index]);
- 
-           return newFormData
-         }(),
+          let newFormData = formData.slice();
+
+          // Moves item from index to newIndex
+          newFormData.splice(index, 1);
+          newFormData.splice(newIndex, 0, formData[index]);
+
+          return newFormData;
+        })(),
         newErrorSchema
       );
     };
