@@ -28,7 +28,7 @@ describe("StringField", () => {
       });
 
       expect(
-        node.querySelectorAll(".field input[type=text]"),
+        node.querySelectorAll(".field input[type=text]")
       ).to.have.length.of(1);
     });
 
@@ -408,7 +408,7 @@ describe("StringField", () => {
       });
 
       expect(
-        node.querySelectorAll(".field [type=datetime-local]"),
+        node.querySelectorAll(".field [type=datetime-local]")
       ).to.have.length.of(1);
     });
 
@@ -440,7 +440,7 @@ describe("StringField", () => {
       });
 
       expect(node.querySelector("[type=datetime-local]").value).eql(
-        utcToLocal(newDatetime),
+        utcToLocal(newDatetime)
       );
     });
 
@@ -769,7 +769,7 @@ describe("StringField", () => {
 
       const lengths = [].map.call(
         node.querySelectorAll("select"),
-        node => node.length,
+        node => node.length
       );
 
       expect(lengths).eql([
@@ -840,7 +840,7 @@ describe("StringField", () => {
 
         const buttonLabels = [].map.call(
           node.querySelectorAll("a.btn"),
-          x => x.textContent,
+          x => x.textContent
         );
         expect(buttonLabels).eql(["Now", "Clear"]);
       });
@@ -1016,7 +1016,7 @@ describe("StringField", () => {
 
       const lengths = [].map.call(
         node.querySelectorAll("select"),
-        node => node.length,
+        node => node.length
       );
 
       expect(lengths).eql([
@@ -1099,7 +1099,7 @@ describe("StringField", () => {
 
         const buttonLabels = [].map.call(
           node.querySelectorAll("a.btn"),
-          x => x.textContent,
+          x => x.textContent
         );
         expect(buttonLabels).eql(["Now", "Clear"]);
       });
@@ -1117,7 +1117,7 @@ describe("StringField", () => {
 
         const expected = toDateString(
           parseDateString(new Date().toJSON()),
-          false,
+          false
         );
         expect(comp.state.formData).eql(expected);
       });
@@ -1549,8 +1549,8 @@ describe("StringField", () => {
 
       return new Promise(setImmediate).then(() =>
         expect(comp.state.formData).eql(
-          "data:text/plain;name=file1.txt;base64,x=",
-        ),
+          "data:text/plain;name=file1.txt;base64,x="
+        )
       );
     });
 
