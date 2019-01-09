@@ -446,6 +446,9 @@ class App extends Component {
                   <button className="btn btn-primary" type="submit">
                     Submit
                   </button>
+                  <button className="btn btn-secondary" type="reset">
+                    RESET
+                  </button>
                 </div>
                 <div className="col-sm-9 text-right">
                   <CopyLink
