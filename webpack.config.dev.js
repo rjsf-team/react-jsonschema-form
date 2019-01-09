@@ -34,12 +34,7 @@ module.exports = {
         use: [
           "style-loader",
           "css-loader",
-        ],
-        include: [
-          path.join(__dirname, "css"),
-          path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
-        ],
+        ]
       },
     ]
   }

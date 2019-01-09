@@ -17,6 +17,7 @@ import TextareaWidget from "./TextareaWidget";
 import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
+import DocumentWidget from "./DocumentWidget";
 
 export default {
   BaseInput,
@@ -36,6 +37,7 @@ export default {
   HiddenWidget,
   ColorWidget,
   FileWidget,
+  DocumentWidget,
   CheckboxWidget,
   CheckboxesWidget,
 };
