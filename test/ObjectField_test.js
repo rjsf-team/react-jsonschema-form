@@ -197,7 +197,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -212,7 +212,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > label"),
+        node.querySelectorAll(".field > div > div> label"),
         l => l.textContent
       );
 
@@ -277,7 +277,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -310,7 +310,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -690,11 +690,14 @@ describe("ObjectField", () => {
         schema,
       });
 
-      expect(node.querySelector(".form-group > .btn-danger")).eql(null);
+      expect(
+        node.querySelector(".form-group > .row > .col-xs-2 .btn-danger")
+      ).eql(null);
 
       Simulate.click(node.querySelector(".object-property-expand button"));
 
-      expect(node.querySelector(".form-group > .btn-danger")).to.not.be.null;
+      expect(node.querySelector(".form-group > .row > .col-xs-2 > .btn-danger"))
+        .to.not.be.null;
     });
 
     it("delete button should delete key-value pair", () => {
@@ -703,7 +706,9 @@ describe("ObjectField", () => {
         formData: { first: 1 },
       });
       expect(node.querySelector("#root_first-key").value).to.eql("first");
-      Simulate.click(node.querySelector(".form-group > .btn-danger"));
+      Simulate.click(
+        node.querySelector(".form-group > .row > .col-xs-2 > .btn-danger")
+      );
       expect(node.querySelector("#root_first-key")).to.not.exist;
     });
 
@@ -712,14 +717,11 @@ describe("ObjectField", () => {
         schema,
         formData: { first: 1, second: 2, third: 3 },
       });
-      expect(node.querySelectorAll(".form-group > .btn-danger").length).to.eql(
-        3
-      );
-      Simulate.click(node.querySelectorAll(".form-group > .btn-danger")[1]);
+      const selector = ".form-group > .row > .col-xs-2 > .btn-danger";
+      expect(node.querySelectorAll(selector).length).to.eql(3);
+      Simulate.click(node.querySelectorAll(selector)[1]);
       expect(node.querySelector("#root_second-key")).to.not.exist;
-      expect(node.querySelectorAll(".form-group > .btn-danger").length).to.eql(
-        2
-      );
+      expect(node.querySelectorAll(selector).length).to.eql(2);
     });
 
     it("deleting content of value input should not delete pair", () => {

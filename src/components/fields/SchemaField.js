@@ -126,62 +126,49 @@ function DefaultTemplate(props) {
   if (hidden) {
     return children;
   }
-  const btnStyle = {
-    flex: 1,
-    paddingLeft: 10,
-    paddingRight: 10,
-    fontWeight: "bold",
-    height: "34px",
-  };
+
   const additional = props.schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
   const keyLabel = `${label} Key`;
 
-  const contentStyle = additional
-    ? {
-        clear: "both",
-        display: "flex",
-        marginBottom: 0,
-      }
-    : {};
-
   return (
-    <div className={classNames} style={contentStyle}>
-      {additional && (
-        <div
-          className="col-lg-6"
-          style={{
-            padding: 0,
-          }}>
-          <div className="form-group form-additional">
-            <Label label={keyLabel} required={required} id={`${id}-key`} />
-            <LabelInput
-              label={label}
-              required={required}
-              id={`${id}-key`}
-              onChange={onKeyChange}
-            />
+    <div className={classNames}>
+      <div className={additional ? "row" : ""}>
+        {additional && (
+          <div className="col-xs-5 form-additional">
+            <div className="form-group">
+              <Label label={keyLabel} required={required} id={`${id}-key`} />
+              <LabelInput
+                label={label}
+                required={required}
+                id={`${id}-key`}
+                onChange={onKeyChange}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className={additional ? "col-lg-6 form-additional" : ""}>
-        {displayLabel && <Label label={label} required={required} id={id} />}
-        {displayLabel && description ? description : null}
-        {children}
-        {errors}
-        {help}
+        <div
+          className={additional ? "form-additional form-group col-xs-5" : ""}>
+          {displayLabel && <Label label={label} required={required} id={id} />}
+          {displayLabel && description ? description : null}
+          {children}
+          {errors}
+          {help}
+        </div>
+        <div className="col-xs-2">
+          {additional && (
+            <IconButton
+              type="danger"
+              icon="remove"
+              className="array-item-remove btn-block"
+              tabIndex="-1"
+              style={{ border: "0" }}
+              disabled={props.disabled || props.readonly}
+              onClick={onDropIndexClick(props.label)}
+            />
+          )}
+        </div>
       </div>
-      {additional && (
-        <IconButton
-          type="danger"
-          icon="remove"
-          className="array-item-remove"
-          tabIndex="-1"
-          style={btnStyle}
-          disabled={props.disabled || props.readonly}
-          onClick={onDropIndexClick(props.label)}
-        />
-      )}
     </div>
   );
 }

@@ -80,10 +80,13 @@ class ObjectField extends Component {
     );
   }
 
-  onPropertyChange = (name, additionalProperties = false) => {
+  onPropertyChange = (name, addedByAdditionalProperties = false) => {
     return (value, errorSchema) => {
       let newFormData;
-      if (!value && additionalProperties) {
+      //section below sets zero value of input field to empty string
+      //instead of undefined, so that value input in additionalProperties
+      //doesn't disappear when emptied
+      if (!value && addedByAdditionalProperties) {
         newFormData = {
           ...this.props.formData,
           [name]: "",
@@ -106,14 +109,12 @@ class ObjectField extends Component {
     };
   };
 
-  onDropIndexClick = index => {
+  onDropIndexClick = key => {
     return event => {
-      if (event) {
-        event.preventDefault();
-      }
+      event.preventDefault();
       const { onChange, formData } = this.props;
       const copiedFormData = { ...formData };
-      delete copiedFormData[index];
+      delete copiedFormData[key];
       onChange(copiedFormData);
     };
   };
@@ -224,9 +225,9 @@ class ObjectField extends Component {
       TitleField,
       DescriptionField,
       properties: orderedProperties.map(name => {
-        const additionalPropertyFlag = schema.properties[name].hasOwnProperty(
-          ADDITIONAL_PROPERTY_FLAG
-        );
+        const addedByAdditionalProperties = schema.properties[
+          name
+        ].hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
         return {
           content: (
             <SchemaField
@@ -240,7 +241,10 @@ class ObjectField extends Component {
               idPrefix={idPrefix}
               formData={formData[name]}
               onKeyChange={this.onKeyChange(name)}
-              onChange={this.onPropertyChange(name, additionalPropertyFlag)}
+              onChange={this.onPropertyChange(
+                name,
+                addedByAdditionalProperties
+              )}
               onBlur={onBlur}
               onFocus={onFocus}
               registry={registry}

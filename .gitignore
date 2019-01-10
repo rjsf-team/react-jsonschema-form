@@ -4,4 +4,3 @@ build
 dist
 lib
 yarn.lock
-.vscode

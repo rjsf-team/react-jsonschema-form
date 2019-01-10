@@ -24,7 +24,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({ schema: { type: "array" } });
 
       expect(
-        node.querySelector(".field-array > div > .unsupported-field")
+        node.querySelector(".field-array > div > div > .unsupported-field")
           .textContent
       ).to.contain("Missing items definition");
     });
