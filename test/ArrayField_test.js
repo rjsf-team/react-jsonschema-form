@@ -41,7 +41,9 @@ describe("ArrayField", () => {
     it("should render a fieldset", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("fieldset")).to.have.length.of(1);
+      const fieldset = node.querySelectorAll("fieldset");
+      expect(fieldset).to.have.length.of(1);
+      expect(fieldset[0].id).eql("root");
     });
 
     it("should render a fieldset legend", () => {
