@@ -50,8 +50,10 @@ function SelectWidget(props) {
   const emptyValue = multiple ? [] : "";
   return (
     <FormControl>
-      {options.shortLabel && (
-        <InputLabel htmlFor={id + "-select"}>{options.shortLabel}</InputLabel>
+      {(options.shortLabel || placeholder) && (
+        <InputLabel htmlFor={id + "-select"}>
+          {placeholder ? placeholder : options.shortLabel}
+        </InputLabel>
       )}
 
       <Select

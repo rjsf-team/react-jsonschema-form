@@ -29,22 +29,20 @@ module.exports = {
       datetime: {
         "ui:options": {
           disableFuture: true,
-          clearable: true,
-          keyboard: true,
+          minDate: "2019-01-01",
           formatPattern: "MM-DD-YYYY hh:mm",
           format: "date-time",
           placeholder: "10-10-2018 22:10",
           disableOpenOnEnter: true,
           animateYearScrolling: false,
           invalidLabel: "",
-          invalidDateMessage: false,
+          invalidDateMessage: false
         },
       },
       DateTimePickerAsDatePicker: {
         "ui:options": {
           disableFuture: true,
-          clearable: true,
-          keyboard: true,
+          minDate: "2018-12-01",
           formatPattern: "MM-DD-YYYY",
           format: "date",
           placeholder: "10-10-2018",
@@ -52,14 +50,12 @@ module.exports = {
           animateYearScrolling: false,
           renderDateTimePickerAsDatePicker: true,
           invalidLabel: "",
-          invalidDateMessage: false,
+          invalidDateMessage: false
         },
       },
       date: {
         "ui:options": {
           disableFuture: true,
-          clearable: true,
-          keyboard: true,
           formatPattern: "MM-DD-YYYY",
           format: "date",
           placeholder: "10-10-2018",
@@ -67,7 +63,7 @@ module.exports = {
           animateYearScrolling: false,
           renderDateTimePickerAsDatePicker: false,
           invalidLabel: "",
-          invalidDateMessage: false,
+          invalidDateMessage: false
         },
       },
     },
