@@ -1063,7 +1063,9 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
 - `title`: A string value containing the title for the object.
 - `description`: A string value containing the description for the object.
+- `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
+- `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object is required.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
