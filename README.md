@@ -1869,7 +1869,7 @@ $ git commit -m "Bump version $VERSION"
 $ git tag v$VERSION
 $ npm run dist
 $ npm publish
-$ git push --tags origin
+$ git push --tags origin master
 ```
 
 ## FAQ
