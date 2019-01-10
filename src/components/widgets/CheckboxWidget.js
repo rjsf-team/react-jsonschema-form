@@ -14,6 +14,7 @@ function CheckboxWidget(props) {
     label,
     autofocus,
     onChange,
+    options,
   } = props;
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
@@ -23,6 +24,7 @@ function CheckboxWidget(props) {
       <label>
         <Checkbox
           type="checkbox"
+          {...options}
           id={id}
           checked={typeof value === "undefined" ? false : value}
           required={required}

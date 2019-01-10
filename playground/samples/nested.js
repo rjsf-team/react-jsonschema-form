@@ -41,6 +41,11 @@ module.exports = {
         details: {
           "ui:widget": "textarea",
         },
+        done: {
+          "ui:options": {
+            color: "primary",
+          },
+        },
       },
     },
   },

@@ -32,7 +32,6 @@ function DateTimeWidget(props) {
             maxDate={maxDate}
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
-              // console.log("on change DatePicker val ", date);
               return onChange(
                 date
                   ? moment(date)
