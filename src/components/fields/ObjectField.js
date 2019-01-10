@@ -7,6 +7,7 @@ import {
   retrieveSchema,
   getDefaultRegistry,
   getUiOptions,
+  ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
@@ -79,9 +80,24 @@ class ObjectField extends Component {
     );
   }
 
-  onPropertyChange = name => {
+  onPropertyChange = (name, addedByAdditionalProperties = false) => {
     return (value, errorSchema) => {
-      const newFormData = { ...this.props.formData, [name]: value };
+      let newFormData;
+      //section below sets zero value of input field to empty string
+      //instead of undefined, so that value input in additionalProperties
+      //doesn't disappear when emptied
+      if (!value && addedByAdditionalProperties) {
+        newFormData = {
+          ...this.props.formData,
+          [name]: "",
+        };
+      } else {
+        newFormData = {
+          ...this.props.formData,
+          [name]: value,
+        };
+      }
+
       this.props.onChange(
         newFormData,
         errorSchema &&
@@ -90,6 +106,16 @@ class ObjectField extends Component {
             [name]: errorSchema,
           }
       );
+    };
+  };
+
+  onDropIndexClick = key => {
+    return event => {
+      event.preventDefault();
+      const { onChange, formData } = this.props;
+      const copiedFormData = { ...formData };
+      delete copiedFormData[key];
+      onChange(copiedFormData);
     };
   };
 
@@ -176,7 +202,6 @@ class ObjectField extends Component {
     const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
-
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
@@ -200,6 +225,9 @@ class ObjectField extends Component {
       TitleField,
       DescriptionField,
       properties: orderedProperties.map(name => {
+        const addedByAdditionalProperties = schema.properties[
+          name
+        ].hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
         return {
           content: (
             <SchemaField
@@ -213,12 +241,16 @@ class ObjectField extends Component {
               idPrefix={idPrefix}
               formData={formData[name]}
               onKeyChange={this.onKeyChange(name)}
-              onChange={this.onPropertyChange(name)}
+              onChange={this.onPropertyChange(
+                name,
+                addedByAdditionalProperties
+              )}
               onBlur={onBlur}
               onFocus={onFocus}
               registry={registry}
               disabled={disabled}
               readonly={readonly}
+              onDropIndexClick={this.onDropIndexClick}
             />
           ),
           name,
