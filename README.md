@@ -1259,7 +1259,7 @@ render((
 
 #### Customizing widgets text input
 
-All the widgets that render a text input use the `BaseInput` component internally. If you need to customize all text inputs without customizing all widgets individially, you can provide a `BaseInput` component in the `widgets` property of `Form` (see [Custom component registration](#custom-component-registration).
+All the widgets that render a text input use the `BaseInput` component internally. If you need to customize all text inputs without customizing all widgets individually, you can provide a `BaseInput` component in the `widgets` property of `Form` (see [Custom component registration](#custom-component-registration).
 
 ### Custom field components
 
