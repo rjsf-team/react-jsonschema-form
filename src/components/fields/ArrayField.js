@@ -276,19 +276,19 @@ class ArrayField extends Component {
           }
         }
       }
-      onChange(
-        (function() {
-          // Copy item
-          let newFormData = formData.slice();
 
-          // Moves item from index to newIndex
-          newFormData.splice(index, 1);
-          newFormData.splice(newIndex, 0, formData[index]);
+      function reOrderArray() {
+        // Copy item
+        let newFormData = formData.slice();
 
-          return newFormData;
-        })(),
-        newErrorSchema
-      );
+        // Moves item from index to newIndex
+        newFormData.splice(index, 1);
+        newFormData.splice(newIndex, 0, formData[index]);
+
+        return newFormData;
+      }
+
+      onChange(reOrderArray(), newErrorSchema);
     };
   };
 
