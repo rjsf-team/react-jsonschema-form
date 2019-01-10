@@ -16,7 +16,7 @@ function deselectValue(value, selected) {
 
 function CheckboxesWidget(props) {
   const { id, disabled, options, value, autofocus, readonly, onChange } = props;
-  const { enumOptions, enumDisabled, inline } = options;
+  const { enumOptions, enumDisabled, inline, color } = options;
   return (
     <div className="checkboxes" id={id}>
       {enumOptions.map((option, index) => {
@@ -29,6 +29,7 @@ function CheckboxesWidget(props) {
           <span>
             <Checkbox
               type="checkbox"
+              color={color}
               id={`${id}_${index}`}
               checked={checked}
               disabled={disabled || itemDisabled || readonly}

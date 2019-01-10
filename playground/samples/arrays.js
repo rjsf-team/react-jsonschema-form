@@ -141,6 +141,9 @@ module.exports = {
     },
     multipleChoicesCheckboxes: {
       "ui:widget": "checkboxes",
+      "ui:options": {
+        color: "primary",
+      },
     },
     multipleChoicesList: {
       "ui:widget": "select",

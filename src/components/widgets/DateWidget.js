@@ -16,7 +16,7 @@ function DateWidget(props) {
           {...props}
           {...options}
           format={options.formatPattern}
-          value={value !== undefined ? moment(value) : value}
+          value={value !== undefined ? moment(value) : null}
           onChange={date =>
             onChange(date ? moment(date).format("YYYY-MM-DD") : "")
           }
