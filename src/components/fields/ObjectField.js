@@ -109,7 +109,7 @@ class ObjectField extends Component {
     };
   };
 
-  onDropIndexClick = key => {
+  onDropPropertyClick = key => {
     return event => {
       event.preventDefault();
       const { onChange, formData } = this.props;
@@ -250,7 +250,7 @@ class ObjectField extends Component {
               registry={registry}
               disabled={disabled}
               readonly={readonly}
-              onDropIndexClick={this.onDropIndexClick}
+              onDropPropertyClick={this.onDropPropertyClick}
             />
           ),
           name,

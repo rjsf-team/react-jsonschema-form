@@ -121,7 +121,7 @@ function DefaultTemplate(props) {
     required,
     displayLabel,
     onKeyChange,
-    onDropIndexClick,
+    onDropPropertyClick,
   } = props;
   if (hidden) {
     return children;
@@ -164,7 +164,7 @@ function DefaultTemplate(props) {
               tabIndex="-1"
               style={{ border: "0" }}
               disabled={props.disabled || props.readonly}
-              onClick={onDropIndexClick(props.label)}
+              onClick={onDropPropertyClick(props.label)}
             />
           )}
         </div>
@@ -208,7 +208,7 @@ function SchemaFieldRender(props) {
     idPrefix,
     name,
     onKeyChange,
-    onDropIndexClick,
+    onDropPropertyClick,
     required,
     registry = getDefaultRegistry(),
   } = props;
@@ -308,7 +308,7 @@ function SchemaFieldRender(props) {
     label,
     hidden,
     onKeyChange,
-    onDropIndexClick,
+    onDropPropertyClick,
     required,
     disabled,
     readonly,
