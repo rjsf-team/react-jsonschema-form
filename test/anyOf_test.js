@@ -2,7 +2,7 @@ import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, setProps } from "./test_utils";
 
 describe("anyOf", () => {
   let sandbox;
@@ -238,5 +238,65 @@ describe("anyOf", () => {
     });
 
     expect(node.querySelectorAll("#custom-anyof-field")).to.have.length(1);
+  });
+
+  it("should select the correct field when the form is rendered from existing data", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        userId: {
+          anyOf: [
+            {
+              type: "number",
+            },
+            {
+              type: "string",
+            },
+          ],
+        },
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData: {
+        userId: "foobarbaz",
+      },
+    });
+
+    expect(node.querySelector("select").value).eql("1");
+  });
+
+  it("should select the correct field when the formData property is updated", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        userId: {
+          anyOf: [
+            {
+              type: "number",
+            },
+            {
+              type: "string",
+            },
+          ],
+        },
+      },
+    };
+
+    const { comp, node } = createFormComponent({
+      schema,
+    });
+
+    expect(node.querySelector("select").value).eql("0");
+
+    setProps(comp, {
+      schema,
+      formData: {
+        userId: "foobarbaz",
+      },
+    });
+
+    expect(node.querySelector("select").value).eql("1");
   });
 });

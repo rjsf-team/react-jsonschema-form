@@ -1,14 +1,41 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { guessType } from "../../utils";
+import { isValid } from "../../validate";
 
 class AnyOfField extends Component {
   constructor(props) {
     super(props);
 
+    const { formData, schema } = this.props;
+
     this.state = {
-      selectedOption: 0,
+      selectedOption: this.getMatchingOption(formData, schema.anyOf),
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const matchingOption = this.getMatchingOption(
+      nextProps.formData,
+      nextProps.schema.anyOf
+    );
+
+    if (matchingOption === this.state.selectedOption) {
+      return;
+    }
+
+    this.setState({ selectedOption: matchingOption });
+  }
+
+  getMatchingOption(formData, options) {
+    for (let i = 0; i < options.length; i++) {
+      if (isValid(options[i], formData)) {
+        return i;
+      }
+    }
+
+    // If the form data matches none of the options, use the first option
+    return 0;
   }
 
   onOptionChange = event => {
@@ -58,6 +85,7 @@ class AnyOfField extends Component {
       safeRenderCompletion,
       uiSchema,
     } = this.props;
+
     const _SchemaField = registry.fields.SchemaField;
     const { selectedOption } = this.state;
 
