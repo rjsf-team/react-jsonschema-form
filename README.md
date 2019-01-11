@@ -1803,7 +1803,12 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 * `additionalItems` keyword for arrays
     This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
 * `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`
-    Nobody yet has come up with a PR that adds this feature with a simple and easy-to-understand UX.
+    The `anyOf` keyword is supported but has the following caveats:
+    - The `anyOf` keyword is not supported when used inside the `items` keyword
+      for arrays.
+    - Properties declared inside the `anyOf` should not overlap with properties
+      "outside" of the `anyOf`.
+
     You can use `oneOf` with [schema dependencies](#schema-dependencies) to dynamically add schema properties based on input data but this feature does not bring general support for `oneOf` elsewhere in a schema.
 
 ## Tips and tricks
