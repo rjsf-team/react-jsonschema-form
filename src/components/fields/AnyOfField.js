@@ -63,6 +63,16 @@ class AnyOfField extends Component {
 
     const baseType = schema.type;
     const options = schema.anyOf || [];
+    const option = options[selectedOption] || null;
+    let optionSchema;
+
+    if (option) {
+      // If the subschema doesn't declare a type, infer the type from the
+      // parent schema
+      optionSchema = option.type
+        ? option
+        : Object.assign({}, option, { type: baseType });
+    }
 
     return (
       <div className="panel panel-default panel-body">
@@ -82,35 +92,22 @@ class AnyOfField extends Component {
           </select>
         </div>
 
-        {options.map((option, index) => {
-          if (index !== selectedOption) {
-            return null;
-          }
-
-          // If the subschema doesn't declare a type, infer the type from the
-          // parent schema
-          const optionSchema = option.type
-            ? option
-            : Object.assign({}, option, { type: baseType });
-
-          return (
-            <_SchemaField
-              key={index}
-              schema={optionSchema}
-              uiSchema={uiSchema}
-              errorSchema={errorSchema}
-              idSchema={idSchema}
-              idPrefix={idPrefix}
-              formData={formData}
-              onChange={onChange}
-              onBlur={onBlur}
-              onFocus={onFocus}
-              registry={registry}
-              safeRenderCompletion={safeRenderCompletion}
-              disabled={disabled}
-            />
-          );
-        })}
+        {option !== null && (
+          <_SchemaField
+            schema={optionSchema}
+            uiSchema={uiSchema}
+            errorSchema={errorSchema}
+            idSchema={idSchema}
+            idPrefix={idPrefix}
+            formData={formData}
+            onChange={onChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            registry={registry}
+            safeRenderCompletion={safeRenderCompletion}
+            disabled={disabled}
+          />
+        )}
       </div>
     );
   }
