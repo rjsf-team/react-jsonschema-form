@@ -1,6 +1,6 @@
 import AddButton from "../AddButton";
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as types from "../../types";
 
 import {
   orderProperties,
@@ -198,7 +198,7 @@ class ObjectField extends Component {
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
     try {
-      const properties = Object.keys(schema.properties);
+      const properties = Object.keys(schema.properties || {});
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
     } catch (err) {
       return (
@@ -268,25 +268,7 @@ class ObjectField extends Component {
 }
 
 if (process.env.NODE_ENV !== "production") {
-  ObjectField.propTypes = {
-    schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.object,
-    errorSchema: PropTypes.object,
-    idSchema: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    formData: PropTypes.object,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired,
-    }),
-  };
+  ObjectField.propTypes = types.fieldProps;
 }
 
 export default ObjectField;

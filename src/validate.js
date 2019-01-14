@@ -184,3 +184,16 @@ export default function validateFormData(
 
   return { errors: newErrors, errorSchema: newErrorSchema };
 }
+
+/**
+ * Validates data against a schema, returning true if the data is valid, or
+ * false otherwise. If the schema is invalid, then this function will return
+ * false.
+ */
+export function isValid(schema, data) {
+  try {
+    return ajv.validate(schema, data);
+  } catch (e) {
+    return false;
+  }
+}

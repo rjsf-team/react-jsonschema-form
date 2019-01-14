@@ -1,4 +1,5 @@
 import arrays from "./arrays";
+import anyOf from "./anyOf";
 import nested from "./nested";
 import numbers from "./numbers";
 import simple from "./simple";
@@ -40,4 +41,5 @@ export const samples = {
   "Property dependencies": propertyDependencies,
   "Schema dependencies": schemaDependencies,
   "Additional Properties": additionalProperties,
+  "Optional Forms": anyOf,
 };

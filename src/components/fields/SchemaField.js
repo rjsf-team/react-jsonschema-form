@@ -2,9 +2,11 @@ import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
 import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
+import * as types from "../../types";
 
 import {
   isMultiSelect,
+  isSelect,
   retrieveSchema,
   toIdSchema,
   getDefaultRegistry,
@@ -36,6 +38,13 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   }
 
   const componentName = COMPONENT_TYPES[getSchemaType(schema)];
+
+  // If the type is not defined and the schema uses 'anyOf', don't render
+  // a field and let the AnyOfField component handle the form display
+  if (!componentName && schema.anyOf) {
+    return () => null;
+  }
+
   return componentName in fields
     ? fields[componentName]
     : () => {
@@ -124,7 +133,7 @@ function DefaultTemplate(props) {
     onDropPropertyClick,
   } = props;
   if (hidden) {
-    return children;
+    return <div className="hidden">{children}</div>;
   }
 
   const additional = props.schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
@@ -320,7 +329,35 @@ function SchemaFieldRender(props) {
     uiSchema,
   };
 
-  return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
+  const _AnyOfField = registry.fields.AnyOfField;
+
+  return (
+    <FieldTemplate {...fieldProps}>
+      {field}
+
+      {/*
+        If the schema `anyOf` can be rendered as a select control, don't
+        render the `anyOf` selection and let `StringField` component handle
+        rendering
+      */}
+      {schema.anyOf && !isSelect(schema) && (
+        <_AnyOfField
+          disabled={disabled}
+          errorSchema={errorSchema}
+          formData={formData}
+          idPrefix={idPrefix}
+          idSchema={idSchema}
+          onBlur={props.onBlur}
+          onChange={props.onChange}
+          onFocus={props.onFocus}
+          schema={schema}
+          registry={registry}
+          safeRenderCompletion={props.safeRenderCompletion}
+          uiSchema={uiSchema}
+        />
+      )}
+    </FieldTemplate>
+  );
 }
 
 class SchemaField extends React.Component {
@@ -354,17 +391,7 @@ if (process.env.NODE_ENV !== "production") {
     idSchema: PropTypes.object,
     formData: PropTypes.any,
     errorSchema: PropTypes.object,
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      ArrayFieldTemplate: PropTypes.func,
-      ObjectFieldTemplate: PropTypes.func,
-      FieldTemplate: PropTypes.func,
-      formContext: PropTypes.object.isRequired,
-    }),
+    registry: types.registry.isRequired,
   };
 }
 

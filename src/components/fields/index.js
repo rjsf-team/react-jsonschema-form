@@ -1,3 +1,4 @@
+import AnyOfField from "./AnyOfField";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import DescriptionField from "./DescriptionField";
@@ -9,6 +10,7 @@ import TitleField from "./TitleField";
 import UnsupportedField from "./UnsupportedField";
 
 export default {
+  AnyOfField,
   ArrayField,
   BooleanField,
   DescriptionField,
