@@ -276,20 +276,19 @@ class ArrayField extends Component {
           }
         }
       }
-      onChange(
-        formData.map((item, i) => {
-          // i is string, index and newIndex are numbers,
-          // so using "==" to compare
-          if (i == newIndex) {
-            return formData[index];
-          } else if (i == index) {
-            return formData[newIndex];
-          } else {
-            return item;
-          }
-        }),
-        newErrorSchema
-      );
+
+      function reOrderArray() {
+        // Copy item
+        let newFormData = formData.slice();
+
+        // Moves item from index to newIndex
+        newFormData.splice(index, 1);
+        newFormData.splice(newIndex, 0, formData[index]);
+
+        return newFormData;
+      }
+
+      onChange(reOrderArray(), newErrorSchema);
     };
   };
 
