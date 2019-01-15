@@ -1,22 +1,23 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
 import { UnControlled as CodeMirror } from "react-codemirror2";
-import "codemirror/mode/javascript/javascript";
 
-import { shouldRender } from "../src/utils";
+import { shouldRender } from "../utils";
 import { samples } from "./samples";
-import Form from "../src";
+import Form from "../components/Form";
 
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/dracula.css";
-import "codemirror/theme/blackboard.css";
-import "codemirror/theme/mbo.css";
-import "codemirror/theme/ttcn.css";
-import "codemirror/theme/solarized.css";
-import "codemirror/theme/monokai.css";
-import "codemirror/theme/eclipse.css";
+require ("codemirror")
+require ("codemirror/mode/javascript/javascript");
+
+require ("codemirror/lib/codemirror.css");
+require ("codemirror/theme/dracula.css");
+require ("codemirror/theme/blackboard.css");
+require ("codemirror/theme/mbo.css");
+require ("codemirror/theme/ttcn.css");
+require ("codemirror/theme/solarized.css");
+require ("codemirror/theme/monokai.css");
+require ("codemirror/theme/eclipse.css");
 
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
@@ -506,4 +507,4 @@ class App extends Component {
   }
 }
 
-render(<App />, document.getElementById("app"));
+export default App;

@@ -25,6 +25,7 @@ function StringField(props) {
     onFocus,
     registry = getDefaultRegistry(),
     rawErrors,
+    theme
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -53,6 +54,7 @@ function StringField(props) {
       registry={registry}
       placeholder={placeholder}
       rawErrors={rawErrors}
+      theme={theme}
     />
   );
 }

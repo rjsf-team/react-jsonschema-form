@@ -6,7 +6,7 @@ function largeEnum(n) {
   return list;
 }
 
-module.exports = {
+export default {
   schema: {
     definitions: {
       largeEnum: { type: "string", enum: largeEnum(100) },

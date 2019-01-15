@@ -1,6 +1,6 @@
 import React from "react";
 
-module.exports = {
+export default {
   schema: {
     title: "Schema dependencies",
     description: "These samples are best viewed without live validation.",

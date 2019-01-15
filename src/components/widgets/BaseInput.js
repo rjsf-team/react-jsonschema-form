@@ -1,5 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+
+const Input = styled.input`
+  border: 1px solid ${props => props.theme.borderColor}; 
+  &:hover, &:focus {
+    border-color: ${props => props.theme.activeColor};
+  };
+  display: block;
+  width: 100%;
+  height: 40px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none; 
+  border-radius: 0px;
+  outline: none;
+  `;
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
@@ -8,6 +27,7 @@ function BaseInput(props) {
     console.log("No id for", props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
+
   const {
     value,
     readonly,
@@ -29,7 +49,7 @@ function BaseInput(props) {
   };
 
   return (
-    <input
+    <Input
       className="form-control"
       readOnly={readonly}
       disabled={disabled}
@@ -48,7 +68,7 @@ BaseInput.defaultProps = {
   required: false,
   disabled: false,
   readonly: false,
-  autofocus: false,
+  autofocus: false
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -62,7 +82,7 @@ if (process.env.NODE_ENV !== "production") {
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
-    onFocus: PropTypes.func,
+    onFocus: PropTypes.func
   };
 }
 

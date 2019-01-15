@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { ThemeProvider } from "emotion-theming";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
@@ -9,7 +10,7 @@ import {
   toIdSchema,
   setState,
   getDefaultRegistry,
-  deepEquals,
+  deepEquals
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -22,6 +23,15 @@ export default class Form extends Component {
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
+    theme: {
+      primaryColor: "#31b057",
+      borderColor: "#c3c9d7",
+      fontSize: "16",
+      activeColor: "#1ad9f8",
+      labelColor: "#697b8c",
+      textTransform: "uppercase",
+      paddingBottom: "8"
+    }
   };
 
   constructor(props) {
@@ -58,12 +68,13 @@ export default class Form extends Component {
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
+    const theme = "theme" in props ? Object.assign(this.props.theme, props.theme) : this.props.theme;
 
     const { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema)
       : {
           errors: state.errors || [],
-          errorSchema: state.errorSchema || {},
+          errorSchema: state.errorSchema || {}
         };
     const idSchema = toIdSchema(
       retrievedSchema,
@@ -80,6 +91,7 @@ export default class Form extends Component {
       edit,
       errors,
       errorSchema,
+      theme
     };
   }
 
@@ -127,7 +139,7 @@ export default class Form extends Component {
       state = {
         ...state,
         errorSchema: newErrorSchema,
-        errors: toErrorList(newErrorSchema),
+        errors: toErrorList(newErrorSchema)
       };
     }
     setState(this, state, () => {
@@ -184,7 +196,7 @@ export default class Form extends Component {
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
-      formContext: this.props.formContext || {},
+      formContext: this.props.formContext || {}
     };
   }
 
@@ -209,54 +221,58 @@ export default class Form extends Component {
       enctype,
       acceptcharset,
       noHtml5Validate,
-      disabled,
+      disabled
     } = this.props;
 
-    const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
+    const { schema, uiSchema, formData, errorSchema, idSchema, theme } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
 
     return (
-      <form
-        className={className ? className : "rjsf"}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autocomplete}
-        encType={enctype}
-        acceptCharset={acceptcharset}
-        noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}
-        ref={form => {
-          this.formElement = form;
-        }}>
-        {this.renderErrors()}
-        <_SchemaField
-          schema={schema}
-          uiSchema={uiSchema}
-          errorSchema={errorSchema}
-          idSchema={idSchema}
-          idPrefix={idPrefix}
-          formData={formData}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          registry={registry}
-          safeRenderCompletion={safeRenderCompletion}
-          disabled={disabled}
-        />
-        {children ? (
-          children
-        ) : (
-          <p>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </p>
-        )}
-      </form>
+      <ThemeProvider theme={theme}>
+        <form
+          className={className ? className : "rjsf"}
+          id={id}
+          name={name}
+          method={method}
+          target={target}
+          action={action}
+          autoComplete={autocomplete}
+          encType={enctype}
+          acceptCharset={acceptcharset}
+          noValidate={noHtml5Validate}
+          onSubmit={this.onSubmit}
+          ref={form => {
+            this.formElement = form;
+          }}
+        >
+          {this.renderErrors()}
+          <_SchemaField
+            schema={schema}
+            uiSchema={uiSchema}
+            errorSchema={errorSchema}
+            idSchema={idSchema}
+            idPrefix={idPrefix}
+            formData={formData}
+            onChange={this.onChange}
+            onBlur={this.onBlur}
+            onFocus={this.onFocus}
+            registry={registry}
+            safeRenderCompletion={safeRenderCompletion}
+            disabled={disabled}
+            theme={theme}
+          />
+          {children ? (
+            children
+          ) : (
+            <p>
+              <button type="submit" className="btn btn-info">
+                Submit
+              </button>
+            </p>
+          )}
+        </form>
+      </ThemeProvider>
     );
   }
 }
@@ -293,6 +309,6 @@ if (process.env.NODE_ENV !== "production") {
     validate: PropTypes.func,
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
-    formContext: PropTypes.object,
+    formContext: PropTypes.object
   };
 }

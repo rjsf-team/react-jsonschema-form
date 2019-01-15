@@ -1,10 +1,13 @@
 import toPath from "lodash.topath";
 import Ajv from "ajv";
+import { isObject, mergeObjects } from "./utils";
 const ajv = new Ajv({
   errorDataPath: "property",
   allErrors: true,
   multipleOfPrecision: 8,
+  jsonPointers: true
 });
+
 // add custom formats
 ajv.addFormat(
   "data-url",
@@ -14,8 +17,6 @@ ajv.addFormat(
   "color",
   /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
 );
-
-import { isObject, mergeObjects } from "./utils";
 
 function toErrorSchema(errors) {
   // Transforms a ajv validation errors list:

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     title: "A registration form",
     description: "A simple form example.",
@@ -31,7 +31,7 @@ module.exports = {
         type: "string",
         title: "Telephone",
         minLength: 10,
-      },
+      }
     },
   },
   uiSchema: {

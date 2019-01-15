@@ -1,6 +1,7 @@
 import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
 import React from "react";
 import PropTypes from "prop-types";
+import style from "@emotion/styled";
 
 import {
   isMultiSelect,
@@ -11,7 +12,7 @@ import {
   getUiOptions,
   isFilesArray,
   deepEquals,
-  getSchemaType,
+  getSchemaType
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
@@ -22,7 +23,7 @@ const COMPONENT_TYPES = {
   integer: "NumberField",
   number: "NumberField",
   object: "ObjectField",
-  string: "StringField",
+  string: "StringField"
 };
 
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
@@ -54,11 +55,19 @@ function Label(props) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
+  const StLabel = style.label`
+    color: ${props => props.theme.labelColor};
+    display: block;
+    font-weight: 700;
+    letter-spacing: 1.25px;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+  `;
   return (
-    <label className="control-label" htmlFor={id}>
+    <StLabel htmlFor={id}>
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
-    </label>
+    </StLabel>
   );
 }
 
@@ -121,7 +130,9 @@ function DefaultTemplate(props) {
     required,
     displayLabel,
     onKeyChange,
+    theme
   } = props;
+
   if (hidden) {
     return children;
   }
@@ -132,7 +143,7 @@ function DefaultTemplate(props) {
     <div className={classNames}>
       {additional && (
         <div className="form-group">
-          <Label label={keyLabel} required={required} id={`${id}-key`} />
+          <Label label={keyLabel} required={required} id={`${id}-key`} theme={theme} />
           <LabelInput
             label={label}
             required={required}
@@ -167,7 +178,7 @@ if (process.env.NODE_ENV !== "production") {
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
     fields: PropTypes.object,
-    formContext: PropTypes.object,
+    formContext: PropTypes.object
   };
 }
 
@@ -175,7 +186,9 @@ DefaultTemplate.defaultProps = {
   hidden: false,
   readonly: false,
   required: false,
-  displayLabel: true,
+
+
+  displayLabel: true
 };
 
 function SchemaFieldRender(props) {
@@ -188,12 +201,14 @@ function SchemaFieldRender(props) {
     onKeyChange,
     required,
     registry = getDefaultRegistry(),
+    theme
   } = props;
+
   const {
     definitions,
     fields,
     formContext,
-    FieldTemplate = DefaultTemplate,
+    FieldTemplate = DefaultTemplate
   } = registry;
   let idSchema = props.idSchema;
   const schema = retrieveSchema(props.schema, definitions, formData);
@@ -244,6 +259,7 @@ function SchemaFieldRender(props) {
       errorSchema={fieldErrorSchema}
       formContext={formContext}
       rawErrors={__errors}
+      theme={theme}
     />
   );
 
@@ -258,12 +274,13 @@ function SchemaFieldRender(props) {
   const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
+
   const classNames = [
     "form-group",
     "field",
     `field-${type}`,
     errors && errors.length > 0 ? "field-error has-error has-danger" : "",
-    uiSchema.classNames,
+    uiSchema.classNames
   ]
     .join(" ")
     .trim();
@@ -294,6 +311,7 @@ function SchemaFieldRender(props) {
     fields,
     schema,
     uiSchema,
+    theme
   };
 
   return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
@@ -321,6 +339,7 @@ SchemaField.defaultProps = {
   disabled: false,
   readonly: false,
   autofocus: false,
+  theme: {}
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -339,8 +358,9 @@ if (process.env.NODE_ENV !== "production") {
       ArrayFieldTemplate: PropTypes.func,
       ObjectFieldTemplate: PropTypes.func,
       FieldTemplate: PropTypes.func,
-      formContext: PropTypes.object.isRequired,
+      formContext: PropTypes.object.isRequired
     }),
+    theme: PropTypes.object
   };
 }
 

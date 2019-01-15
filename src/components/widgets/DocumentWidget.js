@@ -1,5 +1,5 @@
 import React from "react";
-import "./DocumentWidget.css";
+import styled from "@emotion/styled";
 
 class DocumentWidget extends React.Component {
   constructor(props) {
@@ -7,8 +7,13 @@ class DocumentWidget extends React.Component {
   }
 
   render() {
+    const Button = styled.button`
+      color: turquoise;
+      `
+
     return (
       <div className="form-group document-form-group">
+        <Button>This my button component.</Button>)
         <input type="file" />
       </div>
     );

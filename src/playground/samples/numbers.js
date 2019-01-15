@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     type: "object",
     title: "Number fields & widgets",
