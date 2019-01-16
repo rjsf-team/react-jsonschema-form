@@ -32,6 +32,7 @@ const widgetMap = {
     color: "ColorWidget",
     file: "FileWidget",
     document: "DocumentWidget",
+    telephone: "TelephoneWidget"
   },
   number: {
     text: "TextWidget",

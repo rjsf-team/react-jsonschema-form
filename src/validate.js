@@ -1,11 +1,12 @@
 import toPath from "lodash.topath";
 import Ajv from "ajv";
 import { isObject, mergeObjects } from "./utils";
+
 const ajv = new Ajv({
   errorDataPath: "property",
   allErrors: true,
   multipleOfPrecision: 8,
-  jsonPointers: true
+  jsonPointers: false
 });
 
 // add custom formats
@@ -19,6 +20,7 @@ ajv.addFormat(
 );
 
 function toErrorSchema(errors) {
+  console.log(errors)
   // Transforms a ajv validation errors list:
   // [
   //   {property: ".level1.level2[2].level3", message: "err a"},

@@ -9,6 +9,8 @@ export default {
         type: "string",
         title: "First name",
         default: "Chuck",
+        maxLength: 5,
+        pattern: "[A-Za-z\s]"
       },
       lastName: {
         type: "string",
@@ -33,7 +35,17 @@ export default {
         minLength: 10,
       }
     },
+    errorMessage: {
+      properties: {
+        password: "Password should be longer than 3 characters",
+        firstName: {
+          maxLength: "Firstname should not be longer than 5 characters",
+          pattern: "Firstname should only contain alphabets and spaces"
+        }
+      }
+    }
   },
+
   uiSchema: {
     firstName: {
       "ui:autofocus": true,
@@ -58,6 +70,8 @@ export default {
       "ui:options": {
         inputType: "tel",
       },
+      "ui:widget": "telephone",
+      "ui:countryCode": "+65"
     },
   },
   formData: {
