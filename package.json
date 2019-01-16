@@ -43,7 +43,7 @@
     "react": ">=15"
   },
   "dependencies": {
-    "ajv": "^5.2.3",
+    "ajv": "^6.7.0",
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.7",
     "lodash.topath": "^4.5.2",

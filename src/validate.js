@@ -4,7 +4,11 @@ const ajv = new Ajv({
   errorDataPath: "property",
   allErrors: true,
   multipleOfPrecision: 8,
+  schemaId: "auto",
 });
+//add more schemas to validate against, draft-7 remains default
+ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-04.json"));
+ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-06.json"));
 // add custom formats
 ajv.addFormat(
   "data-url",
