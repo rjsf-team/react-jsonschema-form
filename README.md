@@ -512,7 +512,7 @@ const uiSchema = {
 
 #### `expandable` option
 
-If `additionalProperties` contains a schema object, an add button for new properies is shown by default. The UX for editing properties whose names are user-defined is still experimental.
+If `additionalProperties` contains a schema object, an add button for new properties is shown by default. The UX for editing properties whose names are user-defined is still experimental.
 
 You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
 
@@ -1334,7 +1334,7 @@ A field component will always be passed the following props:
  - `formData`: The data for this field;
  - `errorSchema`: The tree of errors for this field and its children;
  - `registry`: A [registry](#the-registry-object) object (read next).
- - `formContext`: A [formContext](#the-formcontext-object) object (read next next).
+ - `formContext`: A [formContext](#the-formcontext-object) object (read next).
 
 #### The `registry` object
 
