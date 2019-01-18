@@ -35,6 +35,7 @@ function DateTimeWidget(props) {
               return onChange(
                 date
                   ? moment(date)
+                      .utc()
                       .startOf("day")
                       .toJSON()
                   : ""
@@ -55,6 +56,7 @@ function DateTimeWidget(props) {
               onChange(
                 date
                   ? moment(date)
+                      .utc()
                       .startOf("minute")
                       .toJSON()
                   : ""

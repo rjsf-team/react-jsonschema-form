@@ -30,6 +30,7 @@ function DateWidget(props) {
             onChange(
               date
                 ? moment(date)
+                    .utc()
                     .startOf("day")
                     .format("YYYY-MM-DD")
                 : ""
