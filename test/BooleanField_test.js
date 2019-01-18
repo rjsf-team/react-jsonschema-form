@@ -124,6 +124,58 @@ describe("BooleanField", () => {
     expect(labels).eql(["Yes", "No"]);
   });
 
+  it("should support oneOf titles for radio widgets", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        oneOf: [
+          {
+            const: true,
+            title: "Yes",
+          },
+          {
+            const: false,
+            title: "No",
+          },
+        ],
+      },
+      formData: true,
+      uiSchema: { "ui:widget": "radio" },
+    });
+
+    const labels = [].map.call(
+      node.querySelectorAll(".field-radio-group label"),
+      label => label.textContent
+    );
+    expect(labels).eql(["Yes", "No"]);
+  });
+
+  it("should preserve oneOf option ordering for radio widgets", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        oneOf: [
+          {
+            const: false,
+            title: "No",
+          },
+          {
+            const: true,
+            title: "Yes",
+          },
+        ],
+      },
+      formData: true,
+      uiSchema: { "ui:widget": "radio" },
+    });
+
+    const labels = [].map.call(
+      node.querySelectorAll(".field-radio-group label"),
+      label => label.textContent
+    );
+    expect(labels).eql(["No", "Yes"]);
+  });
+
   it("should support inline radio widgets", () => {
     const { node } = createFormComponent({
       schema: { type: "boolean" },
