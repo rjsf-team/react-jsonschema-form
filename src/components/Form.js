@@ -10,6 +10,7 @@ import {
   setState,
   getDefaultRegistry,
   deepEquals,
+  removeEmptyFields,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -165,11 +166,18 @@ export default class Form extends Component {
       }
     }
 
-    this.setState({ errors: [], errorSchema: {} }, () => {
-      if (this.props.onSubmit) {
-        this.props.onSubmit({ ...this.state, status: "submitted" });
+    this.setState(
+      {
+        errors: [],
+        errorSchema: {},
+        formData: removeEmptyFields(this.state.formData),
+      },
+      () => {
+        if (this.props.onSubmit) {
+          this.props.onSubmit({ ...this.state, status: "submitted" });
+        }
       }
-    });
+    );
   };
 
   onReset = event => {
