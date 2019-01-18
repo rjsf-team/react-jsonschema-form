@@ -8,17 +8,17 @@ class AnyOfField extends Component {
   constructor(props) {
     super(props);
 
-    const { formData, schema } = this.props;
+    const { formData, options } = this.props;
 
     this.state = {
-      selectedOption: this.getMatchingOption(formData, schema.anyOf),
+      selectedOption: this.getMatchingOption(formData, options),
     };
   }
 
   componentWillReceiveProps(nextProps) {
     const matchingOption = this.getMatchingOption(
       nextProps.formData,
-      nextProps.schema.anyOf
+      nextProps.options
     );
 
     if (matchingOption === this.state.selectedOption) {
@@ -41,8 +41,7 @@ class AnyOfField extends Component {
 
   onOptionChange = event => {
     const selectedOption = parseInt(event.target.value, 10);
-    const { formData, onChange, schema } = this.props;
-    const options = schema.anyOf;
+    const { formData, onChange, options } = this.props;
 
     if (guessType(formData) === "object") {
       const newFormData = Object.assign({}, formData);
@@ -73,6 +72,7 @@ class AnyOfField extends Component {
 
   render() {
     const {
+      baseType,
       disabled,
       errorSchema,
       formData,
@@ -81,7 +81,7 @@ class AnyOfField extends Component {
       onBlur,
       onChange,
       onFocus,
-      schema,
+      options,
       registry,
       safeRenderCompletion,
       uiSchema,
@@ -90,8 +90,6 @@ class AnyOfField extends Component {
     const _SchemaField = registry.fields.SchemaField;
     const { selectedOption } = this.state;
 
-    const baseType = schema.type;
-    const options = schema.anyOf || [];
     const option = options[selectedOption] || null;
     let optionSchema;
 
@@ -151,7 +149,8 @@ AnyOfField.defaultProps = {
 
 if (process.env.NODE_ENV !== "production") {
   AnyOfField.propTypes = {
-    schema: PropTypes.object.isRequired,
+    options: PropTypes.arrayOf(PropTypes.object).isRequired,
+    baseType: PropTypes.string,
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,
     formData: PropTypes.any,

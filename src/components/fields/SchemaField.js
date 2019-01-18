@@ -39,9 +39,9 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
 
   const componentName = COMPONENT_TYPES[getSchemaType(schema)];
 
-  // If the type is not defined and the schema uses 'anyOf', don't render
-  // a field and let the AnyOfField component handle the form display
-  if (!componentName && schema.anyOf) {
+  // If the type is not defined and the schema uses 'anyOf' or 'oneOf', don't
+  // render a field and let the MultiSchemaField component handle the form display
+  if (!componentName && (schema.anyOf || schema.oneOf)) {
     return () => null;
   }
 
@@ -330,14 +330,15 @@ function SchemaFieldRender(props) {
   };
 
   const _AnyOfField = registry.fields.AnyOfField;
+  const _OneOfField = registry.fields.OneOfField;
 
   return (
     <FieldTemplate {...fieldProps}>
       {field}
 
       {/*
-        If the schema `anyOf` can be rendered as a select control, don't
-        render the `anyOf` selection and let `StringField` component handle
+        If the schema `anyOf` or 'oneOf' can be rendered as a select control, don't
+        render the selection and let `StringField` component handle
         rendering
       */}
       {schema.anyOf && !isSelect(schema) && (
@@ -350,7 +351,26 @@ function SchemaFieldRender(props) {
           onBlur={props.onBlur}
           onChange={props.onChange}
           onFocus={props.onFocus}
-          schema={schema}
+          options={schema.anyOf}
+          baseType={schema.type}
+          registry={registry}
+          safeRenderCompletion={props.safeRenderCompletion}
+          uiSchema={uiSchema}
+        />
+      )}
+
+      {schema.oneOf && !isSelect(schema) && (
+        <_OneOfField
+          disabled={disabled}
+          errorSchema={errorSchema}
+          formData={formData}
+          idPrefix={idPrefix}
+          idSchema={idSchema}
+          onBlur={props.onBlur}
+          onChange={props.onChange}
+          onFocus={props.onFocus}
+          options={schema.oneOf}
+          baseType={schema.type}
           registry={registry}
           safeRenderCompletion={props.safeRenderCompletion}
           uiSchema={uiSchema}
