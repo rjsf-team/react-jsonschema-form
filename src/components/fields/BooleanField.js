@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import * as types from "../../types";
 
 import {
   getWidget,
@@ -21,6 +21,8 @@ function BooleanField(props) {
     readonly,
     autofocus,
     onChange,
+    onFocus,
+    onBlur,
     rawErrors,
   } = props;
   const { title } = schema;
@@ -37,6 +39,8 @@ function BooleanField(props) {
       schema={schema}
       id={idSchema && idSchema.$id}
       onChange={onChange}
+      onFocus={onFocus}
+      onBlur={onBlur}
       label={title === undefined ? name : title}
       value={formData}
       required={required}
@@ -51,26 +55,7 @@ function BooleanField(props) {
 }
 
 if (process.env.NODE_ENV !== "production") {
-  BooleanField.propTypes = {
-    schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.object,
-    idSchema: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    formData: PropTypes.bool,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    autofocus: PropTypes.bool,
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired,
-    }),
-    rawErrors: PropTypes.arrayOf(PropTypes.string),
-  };
+  BooleanField.propTypes = types.fieldProps;
 }
 
 BooleanField.defaultProps = {

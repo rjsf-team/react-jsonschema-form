@@ -5,7 +5,11 @@ import { renderIntoDocument, Simulate } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createFormComponent, createSandbox } from "./test_utils";
+import {
+  createComponent,
+  createFormComponent,
+  createSandbox,
+} from "./test_utils";
 
 describe("Form", () => {
   let sandbox;
@@ -44,6 +48,64 @@ describe("Form", () => {
     });
   });
 
+  describe("on component creation", () => {
+    let comp;
+    let onChangeProp;
+    let formData;
+    let schema;
+
+    function createComponent() {
+      comp = renderIntoDocument(
+        <Form schema={schema} onChange={onChangeProp} formData={formData}>
+          <button type="submit">Submit</button>
+          <button type="submit">Another submit</button>
+        </Form>
+      );
+    }
+
+    beforeEach(() => {
+      onChangeProp = sinon.spy();
+      schema = {
+        type: "object",
+        title: "root object",
+        required: ["count"],
+        properties: {
+          count: {
+            type: "number",
+            default: 789,
+          },
+        },
+      };
+    });
+
+    describe("when props.formData does not equal the default values", () => {
+      beforeEach(() => {
+        formData = {
+          foo: 123,
+        };
+        createComponent();
+      });
+
+      it("should call props.onChange with current state", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+      });
+    });
+
+    describe("when props.formData equals the default values", () => {
+      beforeEach(() => {
+        formData = {
+          count: 789,
+        };
+        createComponent();
+      });
+
+      it("should not call props.onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
+      });
+    });
+  });
+
   describe("Option idPrefix", function() {
     it("should change the rendered ids", function() {
       const schema = {
@@ -65,6 +127,87 @@ describe("Form", () => {
         ids.push(input.getAttribute("id"));
       }
       expect(ids).to.eql(["rjsf_count"]);
+      expect(node.querySelector("fieldset").id).to.eql("rjsf");
+    });
+  });
+
+  describe("Changing idPrefix", function() {
+    it("should work with simple example", function() {
+      const schema = {
+        type: "object",
+        title: "root object",
+        required: ["foo"],
+        properties: {
+          count: {
+            type: "number",
+          },
+        },
+      };
+      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["rjsf_count"]);
+      expect(node.querySelector("fieldset").id).to.eql("rjsf");
+    });
+
+    it("should work with oneOf", function() {
+      const schema = {
+        $schema: "http://json-schema.org/draft-06/schema#",
+        type: "object",
+        properties: {
+          connector: {
+            type: "string",
+            enum: ["aws", "gcp"],
+            title: "Provider",
+            default: "aws",
+          },
+        },
+        dependencies: {
+          connector: {
+            oneOf: [
+              {
+                type: "object",
+                properties: {
+                  connector: {
+                    type: "string",
+                    enum: ["aws"],
+                  },
+                  key_aws: {
+                    type: "string",
+                  },
+                },
+              },
+              {
+                type: "object",
+                properties: {
+                  connector: {
+                    type: "string",
+                    enum: ["gcp"],
+                  },
+                  key_gcp: {
+                    type: "string",
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["rjsf_key_aws"]);
     });
   });
 
@@ -190,8 +333,15 @@ describe("Form", () => {
   });
 
   describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", () => {
-      const onSubmit = sandbox.spy();
+    it("should submit the form when clicked", done => {
+      let submitCount = 0;
+      const onSubmit = () => {
+        submitCount++;
+        if (submitCount === 2) {
+          done();
+        }
+      };
+
       const comp = renderIntoDocument(
         <Form onSubmit={onSubmit} schema={{}}>
           <button type="submit">Submit</button>
@@ -202,7 +352,6 @@ describe("Form", () => {
       const buttons = node.querySelectorAll("button[type=submit]");
       buttons[0].click();
       buttons[1].click();
-      sinon.assert.calledTwice(onSubmit);
     });
   });
 
@@ -592,7 +741,11 @@ describe("Form", () => {
         foo: "",
       };
       const onChange = sandbox.spy();
-      const { node } = createFormComponent({ schema, formData, onChange });
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        onChange,
+      });
 
       Simulate.change(node.querySelector("[type=text]"), {
         target: { value: "new" },
@@ -675,6 +828,139 @@ describe("Form", () => {
       Simulate.submit(node);
 
       sinon.assert.calledOnce(onError);
+    });
+  });
+
+  describe("Schema and external formData updates", () => {
+    let comp;
+    let onChangeProp;
+
+    beforeEach(() => {
+      onChangeProp = sinon.spy();
+      const formProps = {
+        schema: {
+          type: "string",
+          default: "foobar",
+        },
+        formData: "some value",
+        onChange: onChangeProp,
+      };
+      comp = createFormComponent(formProps).comp;
+    });
+
+    describe("when the form data is set to null", () => {
+      beforeEach(() => comp.componentWillReceiveProps({ formData: null }));
+
+      it("should call onChange", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+        expect(comp.state.formData).eql("foobar");
+      });
+    });
+
+    describe("when the schema default is changed but formData is not changed", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({
+          schema: newSchema,
+          formData: "some value",
+        })
+      );
+
+      it("should not call onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
+        expect(comp.state.formData).eql("some value");
+        expect(comp.state.schema).deep.eql(newSchema);
+      });
+    });
+
+    describe("when the schema default is changed and formData is changed", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({
+          schema: newSchema,
+          formData: "something else",
+        })
+      );
+
+      it("should not call onChange", () => {
+        sinon.assert.notCalled(onChangeProp);
+        expect(comp.state.formData).eql("something else");
+        expect(comp.state.schema).deep.eql(newSchema);
+      });
+    });
+
+    describe("when the schema default is changed and formData is nulled", () => {
+      const newSchema = {
+        type: "string",
+        default: "the new default",
+      };
+
+      beforeEach(() =>
+        comp.componentWillReceiveProps({ schema: newSchema, formData: null })
+      );
+
+      it("should call onChange", () => {
+        sinon.assert.calledOnce(onChangeProp);
+        sinon.assert.calledWith(onChangeProp, comp.state);
+        expect(comp.state.formData).eql("the new default");
+      });
+    });
+
+    describe("when the onChange prop sets formData to a falsey value", () => {
+      class TestForm extends React.Component {
+        constructor() {
+          super();
+
+          this.state = {
+            formData: {},
+          };
+        }
+
+        onChange = () => {
+          this.setState({ formData: this.props.falseyValue });
+        };
+
+        render() {
+          const schema = {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          };
+          return (
+            <Form
+              onChange={this.onChange}
+              schema={schema}
+              formData={this.state.formData}
+            />
+          );
+        }
+      }
+
+      const falseyValues = [0, false, null, undefined, NaN];
+
+      falseyValues.forEach(falseyValue => {
+        it("Should not crash due to 'Maximum call stack size exceeded...'", () => {
+          // It is expected that this will throw an error due to non-matching propTypes,
+          // so the error message needs to be inspected
+          try {
+            createComponent(TestForm, { falseyValue });
+          } catch (e) {
+            expect(e.message).to.not.equal("Maximum call stack size exceeded");
+          }
+        });
+      });
     });
   });
 
@@ -835,7 +1121,10 @@ describe("Form", () => {
         });
 
         it("should denote the new error in the field", () => {
-          const { node } = createFormComponent({ schema, liveValidate: true });
+          const { node } = createFormComponent({
+            schema,
+            liveValidate: true,
+          });
 
           Simulate.change(node.querySelector("input[type=text]"), {
             target: { value: "short" },
@@ -921,6 +1210,34 @@ describe("Form", () => {
             );
           })
         );
+      });
+
+      it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
+        const onError = sandbox.spy();
+        const { comp, node } = createFormComponent({
+          schema,
+          onError,
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "short" },
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({
+          __errors: ["should NOT be shorter than 8 characters"],
+        });
+        expect(comp.state.errors.length).eql(1);
+        sinon.assert.calledOnce(onError);
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "long enough" },
+        });
+        Simulate.submit(node);
+
+        expect(comp.state.errorSchema).eql({});
+        expect(comp.state.errors).eql([]);
+        sinon.assert.calledOnce(onError);
       });
     });
 
@@ -1056,7 +1373,9 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
-          1: { __errors: ["should NOT be shorter than 4 characters"] },
+          1: {
+            __errors: ["should NOT be shorter than 4 characters"],
+          },
         });
       });
 
@@ -1108,8 +1427,12 @@ describe("Form", () => {
 
         expect(comp.state.errorSchema).eql({
           level1: {
-            1: { __errors: ["should NOT be shorter than 4 characters"] },
-            3: { __errors: ["should NOT be shorter than 4 characters"] },
+            1: {
+              __errors: ["should NOT be shorter than 4 characters"],
+            },
+            3: {
+              __errors: ["should NOT be shorter than 4 characters"],
+            },
           },
         });
       });
@@ -1158,10 +1481,14 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           outer: {
             0: {
-              1: { __errors: ["should NOT be shorter than 4 characters"] },
+              1: {
+                __errors: ["should NOT be shorter than 4 characters"],
+              },
             },
             1: {
-              0: { __errors: ["should NOT be shorter than 4 characters"] },
+              0: {
+                __errors: ["should NOT be shorter than 4 characters"],
+              },
             },
           },
         });
@@ -1227,6 +1554,103 @@ describe("Form", () => {
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
+      });
+    });
+
+    describe("schema dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          branch: {
+            type: "number",
+            enum: [1, 2, 3],
+            default: 1,
+          },
+        },
+        required: ["branch"],
+        dependencies: {
+          branch: {
+            oneOf: [
+              {
+                properties: {
+                  branch: {
+                    enum: [1],
+                  },
+                  field1: {
+                    type: "number",
+                  },
+                },
+                required: ["field1"],
+              },
+              {
+                properties: {
+                  branch: {
+                    enum: [2],
+                  },
+                  field1: {
+                    type: "number",
+                  },
+                  field2: {
+                    type: "number",
+                  },
+                },
+                required: ["field1", "field2"],
+              },
+            ],
+          },
+        },
+      };
+
+      it("should only show error for property in selected branch", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "not a number" },
+        });
+
+        expect(comp.state.errorSchema).eql({
+          field1: {
+            __errors: ["should be number"],
+          },
+        });
+      });
+
+      it("should only show errors for properties in selected branch", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData: { branch: 2 },
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "not a number" },
+        });
+
+        expect(comp.state.errorSchema).eql({
+          field1: {
+            __errors: ["should be number"],
+          },
+          field2: {
+            __errors: ["is a required property"],
+          },
+        });
+      });
+
+      it("should not show any errors when branch is empty", () => {
+        const { comp, node } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData: { branch: 3 },
+        });
+
+        Simulate.change(node.querySelector("select"), {
+          target: { value: 3 },
+        });
+
+        expect(comp.state.errorSchema).eql({});
       });
     });
   });
@@ -1376,6 +1800,33 @@ describe("Form", () => {
         a: { $id: "root_a" },
         b: { $id: "root_b" },
       });
+    });
+  });
+
+  describe("Form disable prop", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+        bar: { type: "string" },
+      },
+    };
+    const formData = { foo: "foo", bar: "bar" };
+
+    it("should enable all items", () => {
+      const { node } = createFormComponent({ schema, formData });
+
+      expect(node.querySelectorAll("input:disabled")).to.have.length.of(0);
+    });
+
+    it("should disable all items", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        disabled: true,
+      });
+
+      expect(node.querySelectorAll("input:disabled")).to.have.length.of(2);
     });
   });
 

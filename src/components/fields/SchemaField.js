@@ -1,10 +1,16 @@
+import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
+import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
+import * as types from "../../types";
 
 import {
   isMultiSelect,
+  isSelect,
   retrieveSchema,
+  toIdSchema,
   getDefaultRegistry,
+  mergeObjects,
   getUiOptions,
   isFilesArray,
   deepEquals,
@@ -32,6 +38,13 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   }
 
   const componentName = COMPONENT_TYPES[getSchemaType(schema)];
+
+  // If the type is not defined and the schema uses 'anyOf', don't render
+  // a field and let the AnyOfField component handle the form display
+  if (!componentName && schema.anyOf) {
+    return () => null;
+  }
+
   return componentName in fields
     ? fields[componentName]
     : () => {
@@ -56,6 +69,19 @@ function Label(props) {
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
+  );
+}
+
+function LabelInput(props) {
+  const { id, label, onChange } = props;
+  return (
+    <input
+      className="form-control"
+      type="text"
+      id={id}
+      onBlur={event => onChange(event.target.value)}
+      defaultValue={label}
+    />
   );
 }
 
@@ -91,7 +117,6 @@ function ErrorList(props) {
     </div>
   );
 }
-
 function DefaultTemplate(props) {
   const {
     id,
@@ -104,22 +129,58 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
+    onKeyChange,
+    onDropPropertyClick,
   } = props;
   if (hidden) {
-    return children;
+    return <div className="hidden">{children}</div>;
   }
+
+  const additional = props.schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const keyLabel = `${label} Key`;
 
   return (
     <div className={classNames}>
-      {displayLabel && <Label label={label} required={required} id={id} />}
-      {displayLabel && description ? description : null}
-      {children}
-      {errors}
-      {help}
+      <div className={additional ? "row" : ""}>
+        {additional && (
+          <div className="col-xs-5 form-additional">
+            <div className="form-group">
+              <Label label={keyLabel} required={required} id={`${id}-key`} />
+              <LabelInput
+                label={label}
+                required={required}
+                id={`${id}-key`}
+                onChange={onKeyChange}
+              />
+            </div>
+          </div>
+        )}
+
+        <div
+          className={additional ? "form-additional form-group col-xs-5" : ""}>
+          {displayLabel && <Label label={label} required={required} id={id} />}
+          {displayLabel && description ? description : null}
+          {children}
+          {errors}
+          {help}
+        </div>
+        <div className="col-xs-2">
+          {additional && (
+            <IconButton
+              type="danger"
+              icon="remove"
+              className="array-item-remove btn-block"
+              tabIndex="-1"
+              style={{ border: "0" }}
+              disabled={props.disabled || props.readonly}
+              onClick={onDropPropertyClick(props.label)}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
-
 if (process.env.NODE_ENV !== "production") {
   DefaultTemplate.propTypes = {
     id: PropTypes.string,
@@ -153,8 +214,10 @@ function SchemaFieldRender(props) {
     uiSchema,
     formData,
     errorSchema,
-    idSchema,
+    idPrefix,
     name,
+    onKeyChange,
+    onDropPropertyClick,
     required,
     registry = getDefaultRegistry(),
   } = props;
@@ -164,7 +227,12 @@ function SchemaFieldRender(props) {
     formContext,
     FieldTemplate = DefaultTemplate,
   } = registry;
+  let idSchema = props.idSchema;
   const schema = retrieveSchema(props.schema, definitions, formData);
+  idSchema = mergeObjects(
+    toIdSchema(schema, null, definitions, formData, idPrefix),
+    idSchema
+  );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
@@ -199,6 +267,7 @@ function SchemaFieldRender(props) {
   const field = (
     <FieldComponent
       {...props}
+      idSchema={idSchema}
       schema={schema}
       uiSchema={{ ...uiSchema, classNames: undefined }}
       disabled={disabled}
@@ -247,6 +316,8 @@ function SchemaFieldRender(props) {
     id,
     label,
     hidden,
+    onKeyChange,
+    onDropPropertyClick,
     required,
     disabled,
     readonly,
@@ -258,7 +329,35 @@ function SchemaFieldRender(props) {
     uiSchema,
   };
 
-  return <FieldTemplate {...fieldProps}>{field}</FieldTemplate>;
+  const _AnyOfField = registry.fields.AnyOfField;
+
+  return (
+    <FieldTemplate {...fieldProps}>
+      {field}
+
+      {/*
+        If the schema `anyOf` can be rendered as a select control, don't
+        render the `anyOf` selection and let `StringField` component handle
+        rendering
+      */}
+      {schema.anyOf && !isSelect(schema) && (
+        <_AnyOfField
+          disabled={disabled}
+          errorSchema={errorSchema}
+          formData={formData}
+          idPrefix={idPrefix}
+          idSchema={idSchema}
+          onBlur={props.onBlur}
+          onChange={props.onChange}
+          onFocus={props.onFocus}
+          schema={schema}
+          registry={registry}
+          safeRenderCompletion={props.safeRenderCompletion}
+          uiSchema={uiSchema}
+        />
+      )}
+    </FieldTemplate>
+  );
 }
 
 class SchemaField extends React.Component {
@@ -292,17 +391,7 @@ if (process.env.NODE_ENV !== "production") {
     idSchema: PropTypes.object,
     formData: PropTypes.any,
     errorSchema: PropTypes.object,
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      ArrayFieldTemplate: PropTypes.func,
-      ObjectFieldTemplate: PropTypes.func,
-      FieldTemplate: PropTypes.func,
-      formContext: PropTypes.object.isRequired,
-    }),
+    registry: types.registry.isRequired,
   };
 }
 

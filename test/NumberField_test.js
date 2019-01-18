@@ -1,6 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
+import sinon from "sinon";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 
@@ -51,7 +52,9 @@ describe("NumberField", () => {
     });
 
     it("should default state value to undefined", () => {
-      const { comp } = createFormComponent({ schema: { type: "number" } });
+      const { comp } = createFormComponent({
+        schema: { type: "number" },
+      });
 
       expect(comp.state.formData).eql(undefined);
     });
@@ -204,6 +207,26 @@ describe("NumberField", () => {
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+    });
+
+    it("should infer the value from an enum on change", () => {
+      const spy = sinon.spy();
+      const { node } = createFormComponent({
+        schema: {
+          enum: [1, 2],
+        },
+        onChange: spy,
+      });
+
+      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      const $select = node.querySelector(".field select");
+      expect($select.value).eql("");
+
+      Simulate.change(node.querySelector(".field select"), {
+        target: { value: "1" },
+      });
+      expect($select.value).eql("1");
+      expect(spy.lastCall.args[0].formData).eql(1);
     });
 
     it("should render a string field with a label", () => {

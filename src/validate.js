@@ -3,6 +3,7 @@ import Ajv from "ajv";
 const ajv = new Ajv({
   errorDataPath: "property",
   allErrors: true,
+  multipleOfPrecision: 8,
 });
 // add custom formats
 ajv.addFormat(
@@ -161,6 +162,8 @@ export default function validateFormData(
   }
 
   let errors = transformAjvErrors(ajv.errors);
+  // Clear errors to prevent persistent errors, see #1104
+  ajv.errors = null;
 
   if (typeof transformErrors === "function") {
     errors = transformErrors(errors);
@@ -180,4 +183,17 @@ export default function validateFormData(
   const newErrors = toErrorList(newErrorSchema);
 
   return { errors: newErrors, errorSchema: newErrorSchema };
+}
+
+/**
+ * Validates data against a schema, returning true if the data is valid, or
+ * false otherwise. If the schema is invalid, then this function will return
+ * false.
+ */
+export function isValid(schema, data) {
+  try {
+    return ajv.validate(schema, data);
+  } catch (e) {
+    return false;
+  }
 }

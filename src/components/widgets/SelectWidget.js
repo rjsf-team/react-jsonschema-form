@@ -1,26 +1,37 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { asNumber } from "../../utils";
+import { asNumber, guessType } from "../../utils";
+
+const nums = new Set(["number", "integer"]);
 
 /**
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
  */
-function processValue({ type, items }, value) {
+function processValue(schema, value) {
+  // "enum" is a reserved word, so only "type" and "items" can be destructured
+  const { type, items } = schema;
   if (value === "") {
     return undefined;
-  } else if (
-    type === "array" &&
-    items &&
-    ["number", "integer"].includes(items.type)
-  ) {
+  } else if (type === "array" && items && nums.has(items.type)) {
     return value.map(asNumber);
   } else if (type === "boolean") {
     return value === "true";
   } else if (type === "number") {
     return asNumber(value);
   }
+
+  // If type is undefined, but an enum is present, try and infer the type from
+  // the enum values
+  if (schema.enum) {
+    if (schema.enum.every(x => guessType(x) === "number")) {
+      return asNumber(value);
+    } else if (schema.enum.every(x => guessType(x) === "boolean")) {
+      return value === "true";
+    }
+  }
+
   return value;
 }
 

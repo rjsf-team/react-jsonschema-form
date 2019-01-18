@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
 
 import { createFormComponent, createSandbox } from "./test_utils";
+import validateFormData from "../src/validate";
 
 describe("ObjectField", () => {
   let sandbox;
@@ -39,7 +40,9 @@ describe("ObjectField", () => {
     it("should render a fieldset", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("fieldset")).to.have.length.of(1);
+      const fieldset = node.querySelectorAll("fieldset");
+      expect(fieldset).to.have.length.of(1);
+      expect(fieldset[0].id).eql("root");
     });
 
     it("should render a fieldset legend", () => {
@@ -196,7 +199,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -211,7 +214,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > div> label"),
         l => l.textContent
       );
 
@@ -276,7 +279,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -309,7 +312,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -379,6 +382,360 @@ describe("ObjectField", () => {
       };
       const { node } = createFormComponent({ schema, fields });
       expect(node.querySelector("#title-")).to.be.null;
+    });
+  });
+
+  describe("additionalProperties", () => {
+    const schema = {
+      type: "object",
+      additionalProperties: {
+        type: "string",
+      },
+    };
+
+    it("should automatically add a property field if in formData", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+    });
+
+    it("should pass through non-schema properties and not throw validation errors if additionalProperties is undefined", () => {
+      const undefinedAPSchema = {
+        ...schema,
+        properties: { second: { type: "string" } },
+      };
+      delete undefinedAPSchema.additionalProperties;
+      const { comp } = createFormComponent({
+        schema: undefinedAPSchema,
+        formData: { nonschema: 1 },
+      });
+
+      expect(comp.state.formData.nonschema).eql(1);
+
+      const result = validateFormData(comp.state.formData, comp.state.schema);
+      expect(result.errors).eql([]);
+    });
+
+    it("should pass through non-schema properties but throw a validation error if additionalProperties is false", () => {
+      const { comp } = createFormComponent({
+        schema: {
+          ...schema,
+          additionalProperties: false,
+          properties: { second: { type: "string" } },
+        },
+        formData: { nonschema: 1 },
+      });
+
+      expect(comp.state.formData.nonschema).eql(1);
+
+      const result = validateFormData(comp.state.formData, comp.state.schema);
+      expect(result.errors[0].name).eql("additionalProperties");
+    });
+
+    it("should still obey properties if additionalProperties is defined", () => {
+      const { node } = createFormComponent({
+        schema: {
+          ...schema,
+          properties: {
+            definedProperty: {
+              type: "string",
+            },
+          },
+        },
+      });
+
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+    });
+
+    it("should render a label for the additional property key", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first-key']").textContent).eql(
+        "first Key"
+      );
+    });
+
+    it("should render a label for the additional property key if additionalProperties is true", () => {
+      const { node } = createFormComponent({
+        schema: { ...schema, additionalProperties: true },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first-key']").textContent).eql(
+        "first Key"
+      );
+    });
+
+    it("should not render a label for the additional property key if additionalProperties is false", () => {
+      const { node } = createFormComponent({
+        schema: { ...schema, additionalProperties: false },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first-key']")).eql(null);
+    });
+
+    it("should render a text input for the additional property key", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("#root_first-key").value).eql("first");
+    });
+
+    it("should render a label for the additional property value", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first']").textContent).eql("first");
+    });
+
+    it("should render a text input for the additional property value", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector("#root_first").value).eql("1");
+    });
+
+    it("should rename formData key if key input is renamed", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode, {
+        target: { value: "newFirst" },
+      });
+
+      expect(comp.state.formData.newFirst).eql(1);
+    });
+
+    it("should keep order of renamed key-value pairs while renaming key", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { first: 1, second: 2, third: 3 },
+      });
+
+      const textNode = node.querySelector("#root_second-key");
+      Simulate.blur(textNode, {
+        target: { value: "newSecond" },
+      });
+
+      expect(Object.keys(comp.state.formData)).eql([
+        "first",
+        "newSecond",
+        "third",
+      ]);
+    });
+
+    it("should attach suffix to formData key if new key already exists when key input is renamed", () => {
+      const formData = {
+        first: 1,
+        second: 2,
+      };
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode, {
+        target: { value: "second" },
+      });
+
+      expect(comp.state.formData["second-1"]).eql(1);
+    });
+
+    it("should not attach suffix when input is only clicked", () => {
+      const formData = {
+        first: 1,
+      };
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode);
+
+      expect(comp.state.formData.hasOwnProperty("first")).to.be.true;
+    });
+
+    it("should continue incrementing suffix to formData key until that key name is unique after a key input collision", () => {
+      const formData = {
+        first: 1,
+        second: 2,
+        "second-1": 2,
+        "second-2": 2,
+        "second-3": 2,
+        "second-4": 2,
+        "second-5": 2,
+        "second-6": 2,
+      };
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode, {
+        target: { value: "second" },
+      });
+
+      expect(comp.state.formData["second-7"]).eql(1);
+    });
+
+    it("should have an expand button", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector(".object-property-expand button")).not.eql(
+        null
+      );
+    });
+
+    it("should not have an expand button if expandable is false", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { "ui:options": { expandable: false } },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+
+    it("should add a new property when clicking the expand button", () => {
+      const { comp, node } = createFormComponent({ schema });
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      expect(comp.state.formData.newKey).eql("New Value");
+    });
+
+    it("should add a new property with suffix when clicking the expand button and 'newKey' already exists", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { newKey: 1 },
+      });
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      expect(comp.state.formData["newKey-1"]).eql("New Value");
+    });
+
+    it("should not provide an expand button if length equals maxProperties", () => {
+      const { node } = createFormComponent({
+        schema: { maxProperties: 1, ...schema },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+
+    it("should provide an expand button if length is less than maxProperties", () => {
+      const { node } = createFormComponent({
+        schema: { maxProperties: 2, ...schema },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).not.eql(
+        null
+      );
+    });
+
+    it("should not provide an expand button if expandable is expliclty false regardless of maxProperties value", () => {
+      const { node } = createFormComponent({
+        schema: { maxProperties: 2, ...schema },
+        formData: { first: 1 },
+        uiSchema: {
+          "ui:options": {
+            expandable: false,
+          },
+        },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+
+    it("should ignore expandable value if maxProperties constraint is not satisfied", () => {
+      const { node } = createFormComponent({
+        schema: { maxProperties: 1, ...schema },
+        formData: { first: 1 },
+        uiSchema: {
+          "ui:options": {
+            expandable: true,
+          },
+        },
+      });
+
+      expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+
+    it("should not have delete button if expand button has not been clicked", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector(".form-group > .btn-danger")).eql(null);
+    });
+
+    it("should have delete button if expand button has been clicked", () => {
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(
+        node.querySelector(".form-group > .row > .col-xs-2 .btn-danger")
+      ).eql(null);
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      expect(node.querySelector(".form-group > .row > .col-xs-2 > .btn-danger"))
+        .to.not.be.null;
+    });
+
+    it("delete button should delete key-value pair", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+      expect(node.querySelector("#root_first-key").value).to.eql("first");
+      Simulate.click(
+        node.querySelector(".form-group > .row > .col-xs-2 > .btn-danger")
+      );
+      expect(node.querySelector("#root_first-key")).to.not.exist;
+    });
+
+    it("delete button should delete correct pair", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1, second: 2, third: 3 },
+      });
+      const selector = ".form-group > .row > .col-xs-2 > .btn-danger";
+      expect(node.querySelectorAll(selector).length).to.eql(3);
+      Simulate.click(node.querySelectorAll(selector)[1]);
+      expect(node.querySelector("#root_second-key")).to.not.exist;
+      expect(node.querySelectorAll(selector).length).to.eql(2);
+    });
+
+    it("deleting content of value input should not delete pair", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      Simulate.change(node.querySelector("#root_first"), {
+        target: { value: "" },
+      });
+      expect(comp.state.formData["first"]).eql("");
     });
   });
 });

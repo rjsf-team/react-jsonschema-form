@@ -2,6 +2,7 @@ import { expect } from "chai";
 import React from "react";
 import { Simulate } from "react-addons-test-utils";
 import SelectWidget from "../src/components/widgets/SelectWidget";
+import RadioWidget from "../src/components/widgets/RadioWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("uiSchema", () => {
@@ -200,7 +201,11 @@ describe("uiSchema", () => {
       });
 
       it("should render merged ui:widget options for widget referenced as function", () => {
-        const { node } = createFormComponent({ schema, uiSchema, widgets });
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          widgets,
+        });
         const widget = node.querySelector("#funcAll");
 
         expect(widget.style.background).to.equal("purple");
@@ -210,7 +215,11 @@ describe("uiSchema", () => {
       });
 
       it("should render ui:widget default options for widget referenced as function", () => {
-        const { node } = createFormComponent({ schema, uiSchema, widgets });
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          widgets,
+        });
         const widget = node.querySelector("#funcNone");
 
         expect(widget.style.background).to.equal("yellow");
@@ -220,7 +229,11 @@ describe("uiSchema", () => {
       });
 
       it("should render merged ui:widget options for widget referenced as string", () => {
-        const { node } = createFormComponent({ schema, uiSchema, widgets });
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          widgets,
+        });
         const widget = node.querySelector("#stringAll");
 
         expect(widget.style.background).to.equal("blue");
@@ -230,7 +243,11 @@ describe("uiSchema", () => {
       });
 
       it("should render ui:widget default options for widget referenced as string", () => {
-        const { node } = createFormComponent({ schema, uiSchema, widgets });
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          widgets,
+        });
         const widget = node.querySelector("#stringNone");
 
         expect(widget.style.background).to.equal("yellow");
@@ -240,7 +257,11 @@ describe("uiSchema", () => {
       });
 
       it("should ui:option inputType for html5 input types", () => {
-        const { node } = createFormComponent({ schema, uiSchema, widgets });
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          widgets,
+        });
         const widget = node.querySelector("input[type='tel']");
         expect(widget).to.not.be.null;
       });
@@ -280,7 +301,11 @@ describe("uiSchema", () => {
       };
 
       it("should render a nested custom widget", () => {
-        const { node } = createFormComponent({ schema, uiSchema, widgets });
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          widgets,
+        });
 
         expect(node.querySelectorAll(".custom")).to.have.length.of(1);
       });
@@ -335,7 +360,11 @@ describe("uiSchema", () => {
         };
 
         it("should render a custom widget with options", () => {
-          const { node } = createFormComponent({ schema, uiSchema, widgets });
+          const { node } = createFormComponent({
+            schema,
+            uiSchema,
+            widgets,
+          });
 
           expect(node.querySelectorAll(".custom")).to.have.length.of(1);
         });
@@ -408,6 +437,38 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll("option:enabled")).to.have.length.of(
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen + 1
+        );
+      });
+    });
+
+    describe("enum fields disabled radio options", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          field: {
+            type: "string",
+            enum: ["foo", "bar"],
+          },
+        },
+      };
+      const uiSchema = {
+        field: {
+          "ui:widget": RadioWidget,
+          "ui:options": {
+            className: "custom",
+          },
+          "ui:enumDisabled": ["foo"],
+        },
+      };
+      it("should have atleast one radio option disabled", () => {
+        const { node } = createFormComponent({ schema, uiSchema });
+        const disabledOptionsLen = uiSchema.field["ui:enumDisabled"].length;
+        expect(node.querySelectorAll("input:disabled")).to.have.length.of(
+          disabledOptionsLen
+        );
+        expect(node.querySelectorAll("input:enabled")).to.have.length.of(
+          // Two options, one disabled, plus the placeholder
+          2 - disabledOptionsLen
         );
       });
     });
@@ -1766,7 +1827,11 @@ describe("uiSchema", () => {
           };
           const formData = ["a", "b"];
 
-          let rendered = createFormComponent({ schema, uiSchema, formData });
+          let rendered = createFormComponent({
+            schema,
+            uiSchema,
+            formData,
+          });
           node = rendered.node;
         });
 
@@ -2050,7 +2115,11 @@ describe("uiSchema", () => {
           };
           const formData = ["a", "b"];
 
-          let rendered = createFormComponent({ schema, uiSchema, formData });
+          let rendered = createFormComponent({
+            schema,
+            uiSchema,
+            formData,
+          });
           node = rendered.node;
         });
 

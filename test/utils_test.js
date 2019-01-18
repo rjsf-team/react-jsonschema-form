@@ -16,6 +16,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema,
+  guessType,
 } from "../src/utils";
 
 describe("utils", () => {
@@ -145,7 +146,14 @@ describe("utils", () => {
           properties: {
             level1: {
               type: "object",
-              default: { level2: { leaf1: 1, leaf2: 1, leaf3: 1, leaf4: 1 } },
+              default: {
+                level2: {
+                  leaf1: 1,
+                  leaf2: 1,
+                  leaf3: 1,
+                  leaf4: 1,
+                },
+              },
               properties: {
                 level2: {
                   type: "object",
@@ -166,9 +174,48 @@ describe("utils", () => {
           },
         };
         expect(
-          getDefaultFormState(schema, { level1: { level2: { leaf4: 4 } } })
+          getDefaultFormState(schema, {
+            level1: { level2: { leaf4: 4 } },
+          })
         ).eql({
-          level1: { level2: { leaf1: 1, leaf2: 2, leaf3: 3, leaf4: 4 } },
+          level1: {
+            level2: { leaf1: 1, leaf2: 2, leaf3: 3, leaf4: 4 },
+          },
+        });
+      });
+
+      it("should support nested values in formData", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            level1: {
+              type: "object",
+              properties: {
+                level2: {
+                  oneOf: [
+                    {
+                      type: "object",
+                      properties: {
+                        leaf1: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        const formData = {
+          level1: {
+            level2: {
+              leaf1: "a",
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, formData)).eql({
+          level1: { level2: { leaf1: "a" } },
         });
       });
 
@@ -183,7 +230,9 @@ describe("utils", () => {
             },
           },
         };
-        expect(getDefaultFormState(schema, {})).eql({ level1: [1, 2, 3] });
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: [1, 2, 3],
+        });
       });
 
       it("should use parent defaults for ArrayFields if declared in parent", () => {
@@ -197,7 +246,9 @@ describe("utils", () => {
             },
           },
         };
-        expect(getDefaultFormState(schema, {})).eql({ level1: [1, 2, 3] });
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: [1, 2, 3],
+        });
       });
 
       it("should map item defaults to fixed array default", () => {
@@ -338,7 +389,10 @@ describe("utils", () => {
     describe("uniqueItems is true", () => {
       describe("schema items enum is an array", () => {
         it("should be true", () => {
-          let schema = { items: { enum: ["foo", "bar"] }, uniqueItems: true };
+          let schema = {
+            items: { enum: ["foo", "bar"] },
+            uniqueItems: true,
+          };
           expect(isMultiSelect(schema)).to.be.true;
         });
       });
@@ -379,13 +433,18 @@ describe("utils", () => {
           items: { $ref: "#/definitions/FooItem" },
           uniqueItems: true,
         };
-        const definitions = { FooItem: { type: "string", enum: ["foo"] } };
+        const definitions = {
+          FooItem: { type: "string", enum: ["foo"] },
+        };
         expect(isMultiSelect(schema, definitions)).to.be.true;
       });
     });
 
     it("should be false if uniqueItems is false", () => {
-      const schema = { items: { enum: ["foo", "bar"] }, uniqueItems: false };
+      const schema = {
+        items: { enum: ["foo", "bar"] },
+        uniqueItems: false,
+      };
       expect(isMultiSelect(schema)).to.be.false;
     });
   });
@@ -417,6 +476,12 @@ describe("utils", () => {
 
     it("should override the first object with the values from the second", () => {
       expect(mergeObjects({ a: 1 }, { a: 2 })).eql({ a: 2 });
+    });
+
+    it("should override non-existing values of the first object with the values from the second", () => {
+      expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -470,7 +535,9 @@ describe("utils", () => {
         const obj1 = { a: { b: [1] } };
         const obj2 = { a: { b: [2] } };
 
-        expect(mergeObjects(obj1, obj2, true)).eql({ a: { b: [1, 2] } });
+        expect(mergeObjects(obj1, obj2, true)).eql({
+          a: { b: [1, 2] },
+        });
       });
     });
   });
@@ -679,6 +746,47 @@ describe("utils", () => {
               properties: {
                 a: { type: "string" },
                 b: { type: "integer" },
+              },
+            });
+          });
+        });
+
+        describe("with $ref in oneOf", () => {
+          it("should retrieve referenced schemas", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+              },
+              dependencies: {
+                a: {
+                  oneOf: [
+                    { $ref: "#/definitions/needsA" },
+                    { $ref: "#/definitions/needsB" },
+                  ],
+                },
+              },
+            };
+            const definitions = {
+              needsA: {
+                properties: {
+                  a: { enum: ["typeA"] },
+                  b: { type: "number" },
+                },
+              },
+              needsB: {
+                properties: {
+                  a: { enum: ["typeB"] },
+                  c: { type: "boolean" },
+                },
+              },
+            };
+            const formData = { a: "typeB" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { enum: ["typeA", "typeB"] },
+                c: { type: "boolean" },
               },
             });
           });
@@ -1049,6 +1157,31 @@ describe("utils", () => {
       });
     });
 
+    it("should return an idSchema for property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+        dependencies: {
+          foo: {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+      const formData = {
+        foo: "test",
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
+        $id: "root",
+        foo: { $id: "root_foo" },
+        bar: { $id: "root_bar" },
+      });
+    });
+
     it("should handle idPrefix parameter", () => {
       const schema = {
         definitions: {
@@ -1208,6 +1341,32 @@ describe("utils", () => {
       expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).eql(
         true
       );
+    });
+  });
+
+  describe("guessType()", () => {
+    it("should guess the type of array values", () => {
+      expect(guessType([1, 2, 3])).eql("array");
+    });
+
+    it("should guess the type of string values", () => {
+      expect(guessType("foobar")).eql("string");
+    });
+
+    it("should guess the type of null values", () => {
+      expect(guessType(null)).eql("null");
+    });
+
+    it("should treat undefined values as null values", () => {
+      expect(guessType()).eql("null");
+    });
+
+    it("should guess the type of boolean values", () => {
+      expect(guessType(true)).eql("boolean");
+    });
+
+    it("should guess the type of object values", () => {
+      expect(guessType({})).eql("object");
     });
   });
 });

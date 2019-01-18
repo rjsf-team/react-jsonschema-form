@@ -1,8 +1,9 @@
 var path = require("path");
 var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
+  mode: "production",
   entry: "./playground/app",
   output: {
     path: path.join(__dirname, "build"),
@@ -10,7 +11,7 @@ module.exports = {
     publicPath: "/static/"
   },
   plugins: [
-    new ExtractTextPlugin("styles.css", {allChunks: true}),
+    new MiniCssExtractPlugin({filename: "styles.css", allChunks: true}),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("production")
@@ -18,13 +19,15 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ["", ".js", ".jsx", ".css"]
+    extensions: [".js", ".jsx", ".css"]
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: "babel",
+        use: [
+          "babel-loader",
+        ],
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
@@ -33,16 +36,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract("css-loader"),
-        include: [
-          path.join(__dirname, "css"),
-          path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          "css-loader",
         ],
-      },
-      {
-        test: /\.json$/,
-        loader:"json-loader",
         include: [
           path.join(__dirname, "css"),
           path.join(__dirname, "playground"),
