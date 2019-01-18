@@ -773,7 +773,8 @@ describe("StringField", () => {
       );
 
       expect(lengths).eql([
-        121 + 1, // from 1900 to 2020 + undefined
+        // from 1900 to current year + 2 (inclusive) + 1 undefined option
+        new Date().getFullYear() - 1900 + 3 + 1,
         12 + 1,
         31 + 1,
         24 + 1,
@@ -1019,7 +1020,8 @@ describe("StringField", () => {
       );
 
       expect(lengths).eql([
-        121 + 1, // from 1900 to 2020 + undefined
+        // from 1900 to current year + 2 (inclusive) + 1 undefined option
+        new Date().getFullYear() - 1900 + 3 + 1,
         12 + 1,
         31 + 1,
       ]);

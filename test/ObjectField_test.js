@@ -40,7 +40,9 @@ describe("ObjectField", () => {
     it("should render a fieldset", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("fieldset")).to.have.length.of(1);
+      const fieldset = node.querySelectorAll("fieldset");
+      expect(fieldset).to.have.length.of(1);
+      expect(fieldset[0].id).eql("root");
     });
 
     it("should render a fieldset legend", () => {
@@ -197,7 +199,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -212,7 +214,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > div> label"),
         l => l.textContent
       );
 
@@ -277,7 +279,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -310,7 +312,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > label"),
+        node.querySelectorAll(".field > div > div > label"),
         l => l.textContent
       );
 
@@ -520,6 +522,24 @@ describe("ObjectField", () => {
       expect(comp.state.formData.newFirst).eql(1);
     });
 
+    it("should keep order of renamed key-value pairs while renaming key", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { first: 1, second: 2, third: 3 },
+      });
+
+      const textNode = node.querySelector("#root_second-key");
+      Simulate.blur(textNode, {
+        target: { value: "newSecond" },
+      });
+
+      expect(Object.keys(comp.state.formData)).eql([
+        "first",
+        "newSecond",
+        "third",
+      ]);
+    });
+
     it("should attach suffix to formData key if new key already exists when key input is renamed", () => {
       const formData = {
         first: 1,
@@ -536,6 +556,21 @@ describe("ObjectField", () => {
       });
 
       expect(comp.state.formData["second-1"]).eql(1);
+    });
+
+    it("should not attach suffix when input is only clicked", () => {
+      const formData = {
+        first: 1,
+      };
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode);
+
+      expect(comp.state.formData.hasOwnProperty("first")).to.be.true;
     });
 
     it("should continue incrementing suffix to formData key until that key name is unique after a key input collision", () => {
@@ -644,6 +679,63 @@ describe("ObjectField", () => {
       });
 
       expect(node.querySelector(".object-property-expand button")).to.be.null;
+    });
+
+    it("should not have delete button if expand button has not been clicked", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector(".form-group > .btn-danger")).eql(null);
+    });
+
+    it("should have delete button if expand button has been clicked", () => {
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(
+        node.querySelector(".form-group > .row > .col-xs-2 .btn-danger")
+      ).eql(null);
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      expect(node.querySelector(".form-group > .row > .col-xs-2 > .btn-danger"))
+        .to.not.be.null;
+    });
+
+    it("delete button should delete key-value pair", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+      expect(node.querySelector("#root_first-key").value).to.eql("first");
+      Simulate.click(
+        node.querySelector(".form-group > .row > .col-xs-2 > .btn-danger")
+      );
+      expect(node.querySelector("#root_first-key")).to.not.exist;
+    });
+
+    it("delete button should delete correct pair", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1, second: 2, third: 3 },
+      });
+      const selector = ".form-group > .row > .col-xs-2 > .btn-danger";
+      expect(node.querySelectorAll(selector).length).to.eql(3);
+      Simulate.click(node.querySelectorAll(selector)[1]);
+      expect(node.querySelector("#root_second-key")).to.not.exist;
+      expect(node.querySelectorAll(selector).length).to.eql(2);
+    });
+
+    it("deleting content of value input should not delete pair", () => {
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      Simulate.change(node.querySelector("#root_first"), {
+        target: { value: "" },
+      });
+      expect(comp.state.formData["first"]).eql("");
     });
   });
 });
