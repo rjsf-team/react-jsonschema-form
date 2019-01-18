@@ -368,6 +368,8 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 - `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
 - `alt-date`: Three `select` elements are used to select the year, month and the day.
 
+> **Firefox 57 - 66**: Firefox partially supporting `date` and `time` input types, but not `datetime-local`, `month` or `week`
+
 ![](http://i.imgur.com/VF5tY60.png)
 
 You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
@@ -510,7 +512,7 @@ const uiSchema = {
 
 #### `expandable` option
 
-If `additionalProperties` contains a schema object, an add button for new properies is shown by default. The UX for editing properties whose names are user-defined is still experimental.
+If `additionalProperties` contains a schema object, an add button for new properties is shown by default. The UX for editing properties whose names are user-defined is still experimental.
 
 You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
 
@@ -1061,7 +1063,9 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
 - `title`: A string value containing the title for the object.
 - `description`: A string value containing the description for the object.
+- `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
+- `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object is required.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
@@ -1086,15 +1090,13 @@ An error list template is basically a React stateless component being passed err
 function ErrorListTemplate(props) {
   const {errors} = props;
   return (
-    <div>
-      {errors.map((error, i) => {
-        return (
-          <li key={i}>
+    <ul>
+      {errors.map(error => (
+          <li key={error.stack}>
             {error.stack}
           </li>
-        );
-      })}
-    </div>
+        ))}
+    </ul>
   );
 }
 
@@ -1259,7 +1261,7 @@ render((
 
 #### Customizing widgets text input
 
-All the widgets that render a text input use the `BaseInput` component internally. If you need to customize all text inputs without customizing all widgets individially, you can provide a `BaseInput` component in the `widgets` property of `Form` (see [Custom component registration](#custom-component-registration).
+All the widgets that render a text input use the `BaseInput` component internally. If you need to customize all text inputs without customizing all widgets individually, you can provide a `BaseInput` component in the `widgets` property of `Form` (see [Custom component registration](#custom-component-registration).
 
 ### Custom field components
 
@@ -1332,7 +1334,7 @@ A field component will always be passed the following props:
  - `formData`: The data for this field;
  - `errorSchema`: The tree of errors for this field and its children;
  - `registry`: A [registry](#the-registry-object) object (read next).
- - `formContext`: A [formContext](#the-formcontext-object) object (read next next).
+ - `formContext`: A [formContext](#the-formcontext-object) object (read next).
 
 #### The `registry` object
 
@@ -1790,8 +1792,6 @@ The JSON Schema standard says that the dependency is triggered if the property i
 
 In this example the user is prompted with different follow-up questions dynamically based on their answer to the first question.
 
-Note that this is quite far from complete `oneOf` support!
-
 In these examples, the "Do you have any pets?" question is validated against the corresponding property in each schema in the `oneOf` array. If exactly one matches, the rest of that schema is merged with the existing schema.
 
 ## JSON Schema supporting status
@@ -1801,8 +1801,9 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 * `additionalItems` keyword for arrays
     This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
 * `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`
-    Nobody yet has come up with a PR that adds this feature with a simple and easy-to-understand UX.
-    You can use `oneOf` with [schema dependencies](#schema-dependencies) to dynamically add schema properties based on input data but this feature does not bring general support for `oneOf` elsewhere in a schema.
+    The `anyOf`  and `oneOf` keywords are supported,  however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
+
+    You can also use `oneOf` with [schema dependencies](#schema-dependencies) to dynamically add schema properties based on input data.
 
 ## Tips and tricks
 
@@ -1867,14 +1868,15 @@ $ git commit -m "Bump version $VERSION"
 $ git tag v$VERSION
 $ npm run dist
 $ npm publish
-$ git push --tags origin
+$ git push --tags origin master
 ```
 
 ## FAQ
 
 ### Q: Does rjsf support `oneOf`, `anyOf`, multiple types in an array, etc.?
 
-A: Not yet (except for a special case where you can use `oneOf` in [schema dependencies](#schema-dependencies)), but perhaps you will be the person whose PR will finally add the feature in a way that gets merged. For inspiration, see [#329](https://github.com/mozilla-services/react-jsonschema-form/pull/329) or [#417](https://github.com/mozilla-services/react-jsonschema-form/pull/417). See also: [#52](https://github.com/mozilla-services/react-jsonschema-form/issues/52), [#151](https://github.com/mozilla-services/react-jsonschema-form/issues/151), [#171](https://github.com/mozilla-services/react-jsonschema-form/issues/171), [#200](https://github.com/mozilla-services/react-jsonschema-form/issues/200), [#282](https://github.com/mozilla-services/react-jsonschema-form/issues/282), [#302](https://github.com/mozilla-services/react-jsonschema-form/pull/302), [#330](https://github.com/mozilla-services/react-jsonschema-form/issues/330), [#430](https://github.com/mozilla-services/react-jsonschema-form/issues/430), [#522](https://github.com/mozilla-services/react-jsonschema-form/issues/522), [#538](https://github.com/mozilla-services/react-jsonschema-form/issues/538), [#551](https://github.com/mozilla-services/react-jsonschema-form/issues/551), [#552](https://github.com/mozilla-services/react-jsonschema-form/issues/552), or [#648](https://github.com/mozilla-services/react-jsonschema-form/issues/648).
+A: The `anyOf`  and `oneOf` keywords are supported,  however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
+There is also special cased where you can use `oneOf` in [schema dependencies](#schema-dependencies), If you'd like to help improve support for these keywords, see the following issues for inspiration [#329](https://github.com/mozilla-services/react-jsonschema-form/pull/329) or [#417](https://github.com/mozilla-services/react-jsonschema-form/pull/417). See also: [#52](https://github.com/mozilla-services/react-jsonschema-form/issues/52), [#151](https://github.com/mozilla-services/react-jsonschema-form/issues/151), [#171](https://github.com/mozilla-services/react-jsonschema-form/issues/171), [#200](https://github.com/mozilla-services/react-jsonschema-form/issues/200), [#282](https://github.com/mozilla-services/react-jsonschema-form/issues/282), [#302](https://github.com/mozilla-services/react-jsonschema-form/pull/302), [#330](https://github.com/mozilla-services/react-jsonschema-form/issues/330), [#430](https://github.com/mozilla-services/react-jsonschema-form/issues/430), [#522](https://github.com/mozilla-services/react-jsonschema-form/issues/522), [#538](https://github.com/mozilla-services/react-jsonschema-form/issues/538), [#551](https://github.com/mozilla-services/react-jsonschema-form/issues/551), [#552](https://github.com/mozilla-services/react-jsonschema-form/issues/552), or [#648](https://github.com/mozilla-services/react-jsonschema-form/issues/648).
 
 ### Q: Will react-jsonschema-form support Material, Ant-Design, Foundation, or [some other specific widget library or frontend style]?
 
