@@ -1799,8 +1799,11 @@ In these examples, the "Do you have any pets?" question is validated against the
 This component follows [JSON Schema](http://json-schema.org/documentation.html) specs. Due to the limitation of form widgets, there are some exceptions as follows:
 
 * `additionalItems` keyword for arrays
+
     This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
+
 * `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`
+
     The `anyOf`  and `oneOf` keywords are supported,  however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
 
     You can also use `oneOf` with [schema dependencies](#schema-dependencies) to dynamically add schema properties based on input data.
