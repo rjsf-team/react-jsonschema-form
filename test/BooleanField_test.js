@@ -107,6 +107,23 @@ describe("BooleanField", () => {
     expect(node.querySelector(".field input").checked).eql(true);
   });
 
+  it("should support enum option ordering for radio widgets", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        enum: [false, true],
+      },
+      formData: true,
+      uiSchema: { "ui:widget": "radio" },
+    });
+
+    const labels = [].map.call(
+      node.querySelectorAll(".field-radio-group label"),
+      label => label.textContent
+    );
+    expect(labels).eql(["no", "yes"]);
+  });
+
   it("should support enumNames for radio widgets", () => {
     const { node } = createFormComponent({
       schema: {

@@ -41,8 +41,12 @@ function BooleanField(props) {
     });
   } else {
     enumOptions = optionsList({
-      enum: [true, false],
-      enumNames: schema.enumNames || ["yes", "no"],
+      enum: schema.enum || [true, false],
+      enumNames:
+        schema.enumNames ||
+        (schema.enum && schema.enum[0] === false
+          ? ["no", "yes"]
+          : ["yes", "no"]),
     });
   }
 
