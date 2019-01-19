@@ -54,6 +54,16 @@ describe("ObjectField", () => {
       expect(legend.id).eql("root__title");
     });
 
+    it("should render a hidden object", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "hidden",
+        },
+      });
+      expect(node.querySelector("div.hidden > fieldset")).to.exist;
+    });
+
     it("should render a customized title", () => {
       const CustomTitleField = ({ title }) => <div id="custom">{title}</div>;
 

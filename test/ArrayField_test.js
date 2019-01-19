@@ -64,6 +64,16 @@ describe("ArrayField", () => {
       expect(description.id).eql("root__description");
     });
 
+    it("should render a hidden list", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "hidden",
+        },
+      });
+      expect(node.querySelector("div.hidden > fieldset")).to.exist;
+    });
+
     it("should render a customized title", () => {
       const CustomTitleField = ({ title }) => <div id="custom">{title}</div>;
 
