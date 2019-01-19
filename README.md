@@ -659,6 +659,49 @@ This will be rendered as follows:
 </select>
 ```
 
+This also works for radio buttons:
+
+```js
+const schema = {
+  "type": "boolean",
+  "oneOf": [
+    {
+      "const": true,
+      "title": "Yes"
+    },
+    {
+      "const": false,
+      "title": "No"
+    }
+  ]
+};
+
+const uiSchema = {
+  "ui:widget": "radio"
+};
+```
+
+This will be rendered as follows:
+
+```html
+<div class="field-radio-group">
+  <div class="radio">
+    <label>
+      <span>
+        <input type="radio" name="0.005549338200675935" value="true"><span>Enable</span>
+      </span>
+    </label>
+  </div>
+  <div class="radio">
+    <label>
+      <span>
+        <input type="radio" name="0.005549338200675935" value="false"><span>Disable</span>
+      </span>
+    </label>
+  </div>
+</div>
+```
+
 A live example of both approaches side-by-side can be found in the **Alternatives** tab of the [playground](https://mozilla-services.github.io/react-jsonschema-form/).
 
 ### Disabled attribute for `enum` fields
