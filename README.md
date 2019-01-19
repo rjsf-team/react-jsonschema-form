@@ -60,7 +60,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
      - [Field labels](#field-labels)
      - [HTML5 Input Types](#html5-input-types)
      - [Form attributes](#form-attributes)
-     - [Form disable](#form-disable)
+     - [Disabling a form](#disabling-a-form)
   - [Advanced customization](#advanced-customization)
      - [Field template](#field-template)
      - [Array Field Template](#array-field-template)
@@ -903,9 +903,9 @@ The `Form` component supports the following html attributes:
   schema={} />
 ```
 
-### Form disable
+### Disabling a form
 
-Its possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down thru each field of the form. 
+It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form. 
 
 ```jsx
 <Form
@@ -913,7 +913,7 @@ Its possible to disable the whole form by setting the `disabled` prop. The `disa
   schema={} />
 ```
 
-If you just want to disable some of the fields see the `ui:disabled` parameter in the uiSchema directive. 
+If you just want to disable some of the fields, see the [`ui:disabled`](#disabled-fields) parameter in the `uiSchema` directive. 
 
 ## Advanced customization
 
