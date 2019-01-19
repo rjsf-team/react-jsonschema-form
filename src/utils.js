@@ -52,6 +52,7 @@ const widgetMap = {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
     files: "FileWidget",
+    hidden: "HiddenWidget",
   },
 };
 
