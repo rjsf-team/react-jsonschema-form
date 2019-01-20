@@ -1501,9 +1501,6 @@ describe("StringField", () => {
   describe("FileWidget", () => {
     const initialValue = "data:text/plain;name=file1.txt;base64,dGVzdDE=";
 
-    const nonUriEncodedValue = "fileáéí óú1.txt";
-    const uriEncodedValue = "file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt";
-
     it("should render a color field", () => {
       const { node } = createFormComponent({
         schema: {
@@ -1555,6 +1552,9 @@ describe("StringField", () => {
     });
 
     it("should encode file name with encodeURIComponent", () => {
+      const nonUriEncodedValue = "fileáéí óú1.txt";
+      const uriEncodedValue = "file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt";
+
       sandbox.stub(window, "FileReader").returns({
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
