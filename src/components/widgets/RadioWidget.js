@@ -10,6 +10,7 @@ function RadioWidget(props) {
     readonly,
     autofocus,
     onChange,
+    id,
   } = props;
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
@@ -17,7 +18,7 @@ function RadioWidget(props) {
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
   return (
-    <div className="field-radio-group">
+    <div className="field-radio-group" id={id}>
       {enumOptions.map((option, i) => {
         const checked = option.value === value;
         const itemDisabled =

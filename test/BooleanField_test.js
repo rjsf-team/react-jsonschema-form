@@ -30,6 +30,16 @@ describe("BooleanField", () => {
     ).to.have.length.of(1);
   });
 
+  it("should render a boolean field with the expected id", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+      },
+    });
+
+    expect(node.querySelector(".field input[type=checkbox]").id).eql("root");
+  });
+
   it("should render a boolean field with a label", () => {
     const { node } = createFormComponent({
       schema: {
@@ -105,6 +115,17 @@ describe("BooleanField", () => {
     });
 
     expect(node.querySelector(".field input").checked).eql(true);
+  });
+
+  it("should render radio widgets with the expected id", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+      },
+      uiSchema: { "ui:widget": "radio" },
+    });
+
+    expect(node.querySelector(".field-radio-group").id).eql("root");
   });
 
   it("should have default enum option labels for radio widgets", () => {
