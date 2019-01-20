@@ -1522,7 +1522,6 @@ describe("StringField", () => {
           default: initialValue,
         },
       });
-
       expect(comp.state.formData).eql(initialValue);
     });
 
@@ -1550,6 +1549,37 @@ describe("StringField", () => {
       return new Promise(setImmediate).then(() =>
         expect(comp.state.formData).eql(
           "data:text/plain;name=file1.txt;base64,x="
+        )
+      );
+    });
+
+    it("should encode file name with encodeURIComponent", () => {
+      const nonUriEncodedValue = "fileáéí óú1.txt";
+      const uriEncodedValue = "file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt";
+
+      sandbox.stub(window, "FileReader").returns({
+        set onload(fn) {
+          fn({ target: { result: "data:text/plain;base64,x=" } });
+        },
+        readAsDataUrl() {},
+      });
+
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "data-url",
+        },
+      });
+
+      Simulate.change(node.querySelector("[type=file]"), {
+        target: {
+          files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
+        },
+      });
+
+      return new Promise(setImmediate).then(() =>
+        expect(comp.state.formData).eql(
+          "data:text/plain;name=" + uriEncodedValue + ";base64,x="
         )
       );
     });
