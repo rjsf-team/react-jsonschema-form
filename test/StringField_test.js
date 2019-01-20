@@ -1501,6 +1501,9 @@ describe("StringField", () => {
   describe("FileWidget", () => {
     const initialValue = "data:text/plain;name=file1.txt;base64,dGVzdDE=";
 
+    const nonUriEncodedValue = "fileáéí óú1.txt";
+    const uriEncodedValue = "file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt";
+
     it("should render a color field", () => {
       const { node } = createFormComponent({
         schema: {
@@ -1520,7 +1523,6 @@ describe("StringField", () => {
           default: initialValue,
         },
       });
-
       expect(comp.state.formData).eql(initialValue);
     });
 
@@ -1541,13 +1543,13 @@ describe("StringField", () => {
 
       Simulate.change(node.querySelector("[type=file]"), {
         target: {
-          files: [{ name: "file1.txt", size: 1, type: "type" }],
+          files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
         },
       });
 
       return new Promise(setImmediate).then(() =>
         expect(comp.state.formData).eql(
-          "data:text/plain;name=file1.txt;base64,x="
+          "data:text/plain;name=" + uriEncodedValue + ";base64,x="
         )
       );
     });
