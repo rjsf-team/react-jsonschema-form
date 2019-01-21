@@ -200,10 +200,37 @@ export default class Form extends Component {
     };
   }
 
-  submit() {
-    if (this.formElement) {
-      this.formElement.dispatchEvent(new Event("submit", { cancelable: true }));
-    }
+  // getDocumentUpload(doc_type, filename, content_type) {
+  //   const url =  'http://example.com/movies.json';
+  //   // `https://self-onboarding-sg-gocar-integration.golabs.io/supply/app/v1/leads/d98c63ed-8e06-454e-98ac-96bffb4f3248/documents/url`;
+    
+    // fetch(url, {
+    //   method: 'GET', 
+    //   headers:{
+    //     'Content-Type': content_type,
+    //   }
+    // }).then(function(response) {
+    //   return response.json();
+    // }
+
+
+    //   fetch('http://example.com/movies.json')
+    // .then(function(response) {
+    //   return response.json();
+    // })
+    // .then(function(myJson) {
+    //   console.log(JSON.stringify(myJson));
+    // }); 
+    // // return Promise.resolve(Response.url)
+
+
+  // submit() {
+  //   if (this.formElement) {
+  //     this.formElement.dispatchEvent(new Event("submit", { cancelable: true }));
+  //   }
+  // }
+  getDocUploadURL() {
+    return 'https://self-onboarding-sg-gocar-integration.golabs.io/supply/app/v1/leads/d98c63ed-8e06-454e-98ac-96bffb4f3248/documents/url';
   }
 
   render() {
@@ -257,6 +284,7 @@ export default class Form extends Component {
             onChange={this.onChange}
             onBlur={this.onBlur}
             onFocus={this.onFocus}
+            getDocUploadUrl={this.props.getDocUploadUrl}
             registry={registry}
             safeRenderCompletion={safeRenderCompletion}
             disabled={disabled}

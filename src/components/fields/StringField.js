@@ -25,7 +25,8 @@ function StringField(props) {
     onFocus,
     registry = getDefaultRegistry(),
     rawErrors,
-    theme
+    theme,
+    getDocUploadUrl
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -55,6 +56,7 @@ function StringField(props) {
       placeholder={placeholder}
       rawErrors={rawErrors}
       theme={theme}
+      getDocUploadUrl={getDocUploadUrl}
     />
   );
 }

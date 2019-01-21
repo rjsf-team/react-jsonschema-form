@@ -401,6 +401,10 @@ class App extends Component {
     }
   };
 
+  getDocUploadUrl = (doc_type, file_name, content_type) => {
+    return Promise.resolve('https://7ffa17cf-4860-4140-bce6-31b1ddd7e375.mock.pstmn.io/uploadDoc')
+  }
+
   render() {
     const {
       schema,
@@ -485,7 +489,9 @@ class App extends Component {
                 console.log(`Focused ${id} with value ${value}`)
               }
               transformErrors={transformErrors}
-              onError={log("errors")}>
+              onError={log("errors")}
+              getDocUploadUrl={this.getDocUploadUrl}
+              >
               <div className="row">
                 <div className="col-sm-3">
                   <button className="btn btn-primary" type="submit">

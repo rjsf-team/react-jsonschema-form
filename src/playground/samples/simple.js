@@ -33,6 +33,10 @@ export default {
         type: "string",
         title: "Telephone",
         minLength: 10,
+      },
+      documentUpload: {
+        type: "string",
+        title: "Upload the Document",
       }
     },
     errorMessage: {
@@ -72,6 +76,10 @@ export default {
       },
       "ui:widget": "telephone",
       "ui:countryCode": "+65"
+    },
+    documentUpload: {
+      "ui:widget": "document",
+      "ui:doc_type": 10
     },
   },
   formData: {
