@@ -245,6 +245,50 @@ describe("BooleanField", () => {
     expect(node.querySelectorAll(".radio-inline")).to.have.length.of(2);
   });
 
+  it("should handle a focus event for radio widgets", () => {
+    const onFocus = sandbox.spy();
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        default: false,
+      },
+      uiSchema: {
+        "ui:widget": "radio",
+      },
+      onFocus,
+    });
+
+    const element = node.querySelector(".field-radio-group");
+    Simulate.focus(node.querySelector("input"), {
+      target: {
+        value: false,
+      },
+    });
+    expect(onFocus.calledWith(element.id, false)).to.be.true;
+  });
+
+  it("should handle a blur event for radio widgets", () => {
+    const onBlur = sandbox.spy();
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        default: false,
+      },
+      uiSchema: {
+        "ui:widget": "radio",
+      },
+      onBlur,
+    });
+
+    const element = node.querySelector(".field-radio-group");
+    Simulate.blur(node.querySelector("input"), {
+      target: {
+        value: false,
+      },
+    });
+    expect(onBlur.calledWith(element.id, false)).to.be.true;
+  });
+
   it("should support enumNames for select", () => {
     const { node } = createFormComponent({
       schema: {
@@ -260,6 +304,50 @@ describe("BooleanField", () => {
       label => label.textContent
     );
     expect(labels).eql(["", "Yes", "No"]);
+  });
+
+  it("should handle a focus event with checkbox", () => {
+    const onFocus = sandbox.spy();
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        default: false,
+      },
+      uiSchema: {
+        "ui:widget": "select",
+      },
+      onFocus,
+    });
+
+    const element = node.querySelector("select");
+    Simulate.focus(element, {
+      target: {
+        value: false,
+      },
+    });
+    expect(onFocus.calledWith(element.id, false)).to.be.true;
+  });
+
+  it("should handle a blur event with select", () => {
+    const onBlur = sandbox.spy();
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        default: false,
+      },
+      uiSchema: {
+        "ui:widget": "select",
+      },
+      onBlur,
+    });
+
+    const element = node.querySelector("select");
+    Simulate.blur(element, {
+      target: {
+        value: false,
+      },
+    });
+    expect(onBlur.calledWith(element.id, false)).to.be.true;
   });
 
   it("should render the widget with the expected id", () => {
@@ -283,6 +371,50 @@ describe("BooleanField", () => {
     });
 
     expect(node.querySelector("#custom")).to.exist;
+  });
+
+  it("should handle a focus event with checkbox", () => {
+    const onFocus = sandbox.spy();
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        default: false,
+      },
+      uiSchema: {
+        "ui:widget": "checkbox",
+      },
+      onFocus,
+    });
+
+    const element = node.querySelector("input");
+    Simulate.focus(element, {
+      target: {
+        value: false,
+      },
+    });
+    expect(onFocus.calledWith(element.id, false)).to.be.true;
+  });
+
+  it("should handle a blur event with checkbox", () => {
+    const onBlur = sandbox.spy();
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        default: false,
+      },
+      uiSchema: {
+        "ui:widget": "checkbox",
+      },
+      onBlur,
+    });
+
+    const element = node.querySelector("input");
+    Simulate.blur(element, {
+      target: {
+        value: false,
+      },
+    });
+    expect(onBlur.calledWith(element.id, false)).to.be.true;
   });
 
   describe("Label", () => {
