@@ -7,7 +7,7 @@ const ajv = new Ajv({
 // add custom formats
 ajv.addFormat(
   "data-url",
-  /^data:([a-z]+\/[a-z0-9-+.]+)?;name=(.*);base64,(.*)$/
+  /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/
 );
 ajv.addFormat(
   "color",
