@@ -541,6 +541,92 @@ describe("Form", () => {
       expect(node.querySelector("#root_children_0_name")).to.exist;
     });
 
+    it("should follow recursive references", () => {
+      const schema = {
+        definitions: {
+          bar: { $ref: "#/definitions/qux" },
+          qux: { type: "string" },
+        },
+        type: "object",
+        required: ["foo"],
+        properties: {
+          foo: { $ref: "#/definitions/bar" },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
+    it("should follow multiple recursive references", () => {
+      const schema = {
+        definitions: {
+          bar: { $ref: "#/definitions/bar2" },
+          bar2: { $ref: "#/definitions/qux" },
+          qux: { type: "string" },
+        },
+        type: "object",
+        required: ["foo"],
+        properties: {
+          foo: { $ref: "#/definitions/bar" },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
+    it("should handle recursive references to deep schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            $ref: "#/definitions/testdefref",
+          },
+          testdefref: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/testdef/properties/bar" },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
+    it("should handle multiple recursive references to deep schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            $ref: "#/definitions/testdefref1",
+          },
+          testdefref1: {
+            $ref: "#/definitions/testdefref2",
+          },
+          testdefref2: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/testdef/properties/bar" },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
     it("should priorize definition over schema type property", () => {
       // Refs bug #140
       const schema = {
