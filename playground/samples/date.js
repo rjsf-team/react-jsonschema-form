@@ -36,7 +36,8 @@ module.exports = {
           disableOpenOnEnter: true,
           animateYearScrolling: false,
           invalidLabel: "",
-          invalidDateMessage: false
+          invalidDateMessage: false,
+          setDateTimeToEndOf: "day",
         },
       },
       DateTimePickerAsDatePicker: {
@@ -50,7 +51,8 @@ module.exports = {
           animateYearScrolling: false,
           renderDateTimePickerAsDatePicker: true,
           invalidLabel: "",
-          invalidDateMessage: false
+          invalidDateMessage: false,
+          setDateTimeToEndOf: "day",
         },
       },
       date: {
@@ -63,10 +65,14 @@ module.exports = {
           animateYearScrolling: false,
           renderDateTimePickerAsDatePicker: false,
           invalidLabel: "",
-          invalidDateMessage: false
+          invalidDateMessage: false,
         },
       },
     },
   },
-  formData: {},
+  formData: {
+    native: {
+      DateTimePickerAsDatePicker: "2019-01-03T00:00:00.000Z",
+    },
+  },
 };

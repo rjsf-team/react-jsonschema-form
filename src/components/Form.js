@@ -182,6 +182,7 @@ export default class Form extends Component {
 
   onReset = event => {
     event.preventDefault();
+    console.log("json schema native form reset triggered");
     this.setState({ errors: [], errorSchema: {}, formData: {} }, () => {
       if (this.props.onReset) {
         this.props.onReset({ ...this.state, status: "reset" });
@@ -268,11 +269,18 @@ export default class Form extends Component {
           {children ? (
             children
           ) : (
-            <p>
-              <button type="submit" className="btn btn-info">
-                Submit
-              </button>
-            </p>
+            <div>
+              <p>
+                <button type="submit" className="btn btn-info">
+                  Submit
+                </button>
+              </p>
+              <p>
+                <button type="reset" className="btn btn-info">
+                  Reset
+                </button>
+              </p>
+            </div>
           )}
         </form>
       </MuiThemeProvider>

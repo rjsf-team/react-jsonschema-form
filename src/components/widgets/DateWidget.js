@@ -24,17 +24,19 @@ function DateWidget(props) {
           format={options.formatPattern}
           minDate={minDate}
           maxDate={maxDate}
-          value={value !== undefined ? moment(value) : ""}
+          value={value !== undefined ? moment.utc(value) : ""}
           onChange={date => {
-            // console.log("on change DatePicker val ", date);
-            onChange(
-              date
-                ? moment(date)
-                    .utc()
-                    .startOf("day")
-                    .format("YYYY-MM-DD")
-                : ""
-            );
+            if (!date) {
+              return onChange("");
+            }
+            let utcDate = moment(date);
+            var modifiedDatePerOptions = utcDate.startOf("day");
+            if (options.setDateTimeToEndOf) {
+              modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+                options.setDateTimeToEndOf
+              );
+            }
+            return onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
           }}
         />
       </div>
