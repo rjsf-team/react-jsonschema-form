@@ -6,9 +6,10 @@ const ajv = new Ajv({
   multipleOfPrecision: 8,
   schemaId: "auto",
 });
-//add more schemas to validate against, draft-7 remains default
-ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-04.json"));
-ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-06.json"));
+
+let alreadyAddedDraft4 = false;
+let alreadyAddedDraft6 = false;
+
 // add custom formats
 ajv.addFormat(
   "data-url",
@@ -158,6 +159,22 @@ export default function validateFormData(
   customValidate,
   transformErrors
 ) {
+  //add more schemas to validate against, draft-7 remains default
+  if (
+    !alreadyAddedDraft4 &&
+    /http:\/\/json-schema\.org\/draft-04\/schema#?/.test(schema.$schema)
+  ) {
+    ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-04.json"));
+    alreadyAddedDraft4 = true;
+  }
+  if (
+    !alreadyAddedDraft6 &&
+    /http:\/\/json-schema\.org\/draft-06\/schema#?/.test(schema.$schema)
+  ) {
+    ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-06.json"));
+    alreadyAddedDraft6 = true;
+  }
+
   try {
     ajv.validate(schema, formData);
   } catch (e) {
