@@ -508,10 +508,8 @@ const uiSchema = {
 };
 ```
 
-### Object item options
-
-#### `additionalProperties` option
-You can define `additionalProperties` by setting its value to a schema object as follows:
+#### Object `additionalProperties`
+You can define `additionalProperties` by setting its value to a schema object, such as the following:
 
 ```js
 const schema = {
@@ -525,7 +523,7 @@ In this way, an add button for new properties is shown by default. The UX for ed
 
 You can also define `uiSchema` options for `additionalProperties` by setting the `additionalProperties` attribute in the `uiSchema`.
 
-##### `expandable` option
+#### `expandable` option
 
 You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
 
