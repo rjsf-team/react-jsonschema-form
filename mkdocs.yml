@@ -1,2 +1,12 @@
 site_name: react-jsonschema-form documentation
 docs_dir: docs
+theme: readthedocs
+
+nav:
+  - Introduction: index.md
+  - Advanced Customization: advanced-customization.md
+  - Definitions: definitions.md
+  - Dependencies: dependencies.md
+  - Form Customization: form-customization.md
+  - Validation: validation.md
+  - Playground: https://mozilla-services.github.io/react-jsonschema-form/
