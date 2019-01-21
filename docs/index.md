@@ -233,6 +233,16 @@ If you want the development server to listen on another host or port, you can us
 $ RJSF_DEV_SERVER=0.0.0.0:8000 npm start
 ```
 
+### Build documentation
+
+We use [mkdocs](https://www.mkdocs.org/) to build our documentation. To run documentation locally, run:
+```
+$ pip install mkdocs==1.0.4
+$ mkdocs serve
+```
+
+Documentation will be served by [localhost:8000](http://localhost:8000).
+
 ### Tests
 
 ```
