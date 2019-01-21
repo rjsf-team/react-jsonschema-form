@@ -8,7 +8,7 @@ A simple [React](http://facebook.github.io/react/) component capable of building
 ![](http://i.imgur.com/M8ZCES5.gif)
 
 Testing powered by BrowserStack<br>
-<a target=_blank href="https://www.browserstack.com/"><img height=50 src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png"></a>
+<a target=_blank href="https://www.browserstack.com/"><img width=200 src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png"></a>
 
 
 ## Documentation
