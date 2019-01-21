@@ -10,3 +10,7 @@ nav:
   - Form Customization: form-customization.md
   - Validation: validation.md
   - Playground: https://mozilla-services.github.io/react-jsonschema-form/
+
+markdown_extensions:
+  - toc:
+      permalink: true

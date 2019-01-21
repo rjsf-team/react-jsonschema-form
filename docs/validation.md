@@ -88,7 +88,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-> Note: you can also use your own [ErrorList](#error-list-template)
+> Note: you can also use your own [ErrorList](advanced-customization.md#error-list-template)
 
 ### The case of empty strings
 
