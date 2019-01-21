@@ -1162,6 +1162,22 @@ describe("ArrayField", () => {
       expect(addInput.value).eql("bar");
     });
 
+    it("should apply uiSchema to additionalItems", () => {
+      const { node } = createFormComponent({
+        schema: schemaAdditional,
+        uiSchema: {
+          additionalItems: {
+            "ui:title": "Custom title",
+          },
+        },
+        formData: [1, 2, "bar"],
+      });
+      const label = node.querySelector(
+        "fieldset .field-string label.control-label"
+      );
+      expect(label.textContent).eql("Custom title*");
+    });
+
     it("should have an add button if additionalItems is an object", () => {
       const { node } = createFormComponent({ schema: schemaAdditional });
       expect(node.querySelector(".array-item-add button")).not.to.be.null;
