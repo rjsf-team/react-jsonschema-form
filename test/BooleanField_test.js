@@ -389,7 +389,7 @@ describe("BooleanField", () => {
     const element = node.querySelector("input");
     Simulate.focus(element, {
       target: {
-        value: false,
+        checked: false,
       },
     });
     expect(onFocus.calledWith(element.id, false)).to.be.true;
@@ -411,7 +411,7 @@ describe("BooleanField", () => {
     const element = node.querySelector("input");
     Simulate.blur(element, {
       target: {
-        value: false,
+        checked: false,
       },
     });
     expect(onBlur.calledWith(element.id, false)).to.be.true;
