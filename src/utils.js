@@ -394,7 +394,7 @@ function findSchemaDefinition($ref, definitions = {}) {
     let current = definitions;
     for (let part of parts) {
       part = part.replace(/~1/g, "/").replace(/~0/g, "~");
-      if (current.hasOwnProperty("$ref")) {
+      while (current.hasOwnProperty("$ref")) {
         current = findSchemaDefinition(current.$ref, definitions);
       }
       if (current.hasOwnProperty(part)) {
