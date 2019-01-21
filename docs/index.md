@@ -9,6 +9,9 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
 
 ![Image](https://i.imgur.com/M8ZCES5.gif)
 
+Testing powered by BrowserStack<br>
+<a target=_blank href="https://www.browserstack.com/"><img height=50 src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png"></a>
+
 ## Philosophy
 
 react-jsonschema-form is meant to automatically generate a React form based on a [JSON Schema](http://json-schema.org/). It is a major component in the [kinto-admin](https://github.com/Kinto/kinto-admin/) project. If you want to generate a form for any data, sight unseen, simply given a JSON schema, react-jsonschema-form may be for you. If you have _a priori_ knowledge of your data and want a toolkit for generating forms for it, you might look elsewhere.

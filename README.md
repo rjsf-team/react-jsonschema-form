@@ -9,6 +9,9 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
 
 ![](http://i.imgur.com/M8ZCES5.gif)
 
+Testing powered by BrowserStack<br>
+<a target=_blank href="https://www.browserstack.com/"><img height=50 src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png"></a>
+
 ## Table of Contents
 
   - [Philosophy](#philosophy)
