@@ -1863,6 +1863,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - Custom errors messages with transformErrors : https://jsfiddle.net/revolunet/5r3swnr4/
  - 2 columns form with CSS and FieldTemplate : https://jsfiddle.net/n1k0/bw0ffnz4/1/
  - Validate and submit form from external control : https://jsfiddle.net/spacebaboon/g5a1re63/
+ - Custom component for Help text with `ui:help` : https://codesandbox.io/s/14pqx97xl7
 
 ## Contributing
 
