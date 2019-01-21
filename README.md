@@ -1677,7 +1677,7 @@ This library partially supports [inline schema definition dereferencing]( http:/
 
 *(Sample schema courtesy of the [Space Telescope Science Institute](http://spacetelescope.github.io/understanding-json-schema/structuring.html))*
 
-Note that it only supports local definition referencing, we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
+Note that it only supports local definition referencing; we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
 
 ## Property dependencies
 
