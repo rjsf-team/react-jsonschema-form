@@ -30,18 +30,20 @@ function DateTimeWidget(props) {
             format={options.formatPattern}
             minDate={minDate}
             maxDate={maxDate}
-            value={value !== undefined ? moment(value) : null}
+            value={value !== undefined ? moment.utc(value) : null}
             onChange={date => {
-              return onChange(
-                date
-                  ? moment(date)
-                      .utc()
-                      .startOf("day")
-                      .toJSON()
-                  : ""
-              );
+              if (!date) {
+                return onChange("");
+              }
+              let utcDate = moment(date);
+              var modifiedDatePerOptions = utcDate.startOf("day");
+              if (options.setDateTimeToEndOf) {
+                modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+                  options.setDateTimeToEndOf
+                );
+              }
+              return onChange(modifiedDatePerOptions.toJSON());
             }}
-            // onChange={date => onChange(date ? moment(date).startOf("day").format("MM-DD-YYYY HH:MM:SS") : "")}
           />
         ) : (
           <DateTimePicker
@@ -50,19 +52,20 @@ function DateTimeWidget(props) {
             format={options.formatPattern}
             minDate={minDate}
             maxDate={maxDate}
-            value={value !== undefined ? moment(value) : null}
+            value={value !== undefined ? moment.utc(value) : null}
             onChange={date => {
-              // console.log("on change DateTimePicker val ", date);
-              onChange(
-                date
-                  ? moment(date)
-                      .utc()
-                      .startOf("minute")
-                      .toJSON()
-                  : ""
-              );
+              if (!date) {
+                return onChange("");
+              }
+              let utcDate = moment(date);
+              var modifiedDatePerOptions = utcDate.startOf("minute");
+              if (options.setDateTimeToEndOf) {
+                modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+                  options.setDateTimeToEndOf
+                );
+              }
+              return onChange(modifiedDatePerOptions.toJSON());
             }}
-            // onChange={date => onChange(date ? moment(date).startOf("day").format("MM-DD-YYYY HH:MM:SS") : "")}
           />
         )}
       </div>
