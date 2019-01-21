@@ -38,6 +38,7 @@ A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) i
            - [Multiple files](#multiple-files)
            - [File widget input ref](#file-widget-input-ref)
      - [Object fields ordering](#object-fields-ordering)
+     - [Object additional properties](#object-additional-properties)
      - [Object item options](#object-item-options)
         - [expandable option](#expandable-option)
      - [Array item options](#array-item-options)
@@ -508,7 +509,7 @@ const uiSchema = {
 };
 ```
 
-#### Object `additionalProperties`
+#### Object additional properties
 You can define `additionalProperties` by setting its value to a schema object, such as the following:
 
 ```js
