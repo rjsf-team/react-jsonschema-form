@@ -79,29 +79,29 @@ describe("Validation", () => {
       });
     });
 
-    describe("data-url validation", () => {
-      let errors;
-
+    describe("Data-Url validation", () => {
       const schema = {
         type: "object",
-        required: ["dataUrlWithName", "dataUrlWithoutName"],
         properties: {
           dataUrlWithName: { type: "string", format: "data-url" },
           dataUrlWithoutName: { type: "string", format: "data-url" },
         },
       };
 
-      beforeEach(() => {
+      it("Data-Url with name is accepted", () => {
         const formData = {
           dataUrlWithName: "data:text/plain;name=file1.txt;base64,x=",
+        };
+        const result = validateFormData(formData, schema);
+        expect(result.errors).to.have.length.of(0);
+      });
+
+      it("Data-Url without name is accepted", () => {
+        const formData = {
           dataUrlWithoutName: "data:text/plain;base64,x=",
         };
         const result = validateFormData(formData, schema);
-        errors = result.errors;
-      });
-
-      it("Both should be fine", () => {
-        expect(errors).to.have.length.of(0);
+        expect(result.errors).to.have.length.of(0);
       });
     });
 
