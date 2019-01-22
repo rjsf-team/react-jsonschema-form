@@ -411,7 +411,10 @@ class ArrayField extends Component {
     };
 
     // Check if a custom render function was passed in
-    const Component = ArrayFieldTemplate || DefaultNormalArrayFieldTemplate;
+    const Component =
+      uiSchema["ui:ArrayFieldTemplate"] ||
+      ArrayFieldTemplate ||
+      DefaultNormalArrayFieldTemplate;
     return <Component {...arrayProps} />;
   }
 
@@ -585,7 +588,10 @@ class ArrayField extends Component {
     };
 
     // Check if a custom template template was passed in
-    const Template = ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
+    const Template =
+      uiSchema["ui:ArrayFieldTemplate"] ||
+      ArrayFieldTemplate ||
+      DefaultFixedArrayFieldTemplate;
     return <Template {...arrayProps} />;
   }
 

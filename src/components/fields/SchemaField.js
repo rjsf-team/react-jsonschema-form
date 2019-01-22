@@ -221,12 +221,9 @@ function SchemaFieldRender(props) {
     required,
     registry = getDefaultRegistry(),
   } = props;
-  const {
-    definitions,
-    fields,
-    formContext,
-    FieldTemplate = DefaultTemplate,
-  } = registry;
+  const { definitions, fields, formContext } = registry;
+  const FieldTemplate =
+    uiSchema["ui:FieldTemplate"] || registry.FieldTemplate || DefaultTemplate;
   let idSchema = props.idSchema;
   const schema = retrieveSchema(props.schema, definitions, formData);
   idSchema = mergeObjects(

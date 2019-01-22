@@ -46,14 +46,33 @@ describe("ArrayFieldTemplate", () => {
         }
       }
 
-      it("should render a stateful custom component", () => {
-        const { node } = createFormComponent({
-          schema: { type: "array", items: { type: "string" } },
-          formData,
-          ArrayFieldTemplate,
-        });
+      describe("with template globally configured", () => {
+        it("should render a stateful custom component", () => {
+          const { node } = createFormComponent({
+            schema: { type: "array", items: { type: "string" } },
+            formData,
+            ArrayFieldTemplate,
+          });
 
-        expect(node.querySelectorAll(".field-array div")).to.have.length.of(6);
+          expect(node.querySelectorAll(".field-array div")).to.have.length.of(
+            6
+          );
+        });
+      });
+      describe("with template configured in ui:ArrayFieldTemplate", () => {
+        it("should render a stateful custom component", () => {
+          const { node } = createFormComponent({
+            schema: { type: "array", items: { type: "string" } },
+            formData,
+            uiSchema: {
+              "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+            },
+          });
+
+          expect(node.querySelectorAll(".field-array div")).to.have.length.of(
+            6
+          );
+        });
       });
     });
 
@@ -65,52 +84,74 @@ describe("ArrayFieldTemplate", () => {
         items: { type: "string" },
       };
 
-      const uiSchema = {
-        classNames: "custom-array",
-      };
-
       let node;
 
-      beforeEach(() => {
-        node = createFormComponent({
-          ArrayFieldTemplate,
-          formData,
-          schema,
-          uiSchema,
-        }).node;
-      });
+      describe("with template globally configured", () => {
+        const uiSchema = {
+          classNames: "custom-array",
+        };
 
-      it("should render one root element for the array", () => {
-        expect(node.querySelectorAll(".custom-array")).to.have.length.of(1);
-      });
+        beforeEach(() => {
+          node = createFormComponent({
+            ArrayFieldTemplate,
+            formData,
+            schema,
+            uiSchema,
+          }).node;
+        });
 
-      it("should render one add button", () => {
-        expect(node.querySelectorAll(".custom-array-add")).to.have.length.of(1);
+        sharedIts();
       });
+      describe("with template configured in ui:ArrayFieldTemplate", () => {
+        const uiSchema = {
+          classNames: "custom-array",
+          "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+        };
 
-      it("should render one child for each array item", () => {
-        expect(node.querySelectorAll(".custom-array-item")).to.have.length.of(
-          formData.length
-        );
+        beforeEach(() => {
+          node = createFormComponent({
+            formData,
+            schema,
+            uiSchema,
+          }).node;
+        });
+        sharedIts();
       });
+      function sharedIts() {
+        it("should render one root element for the array", () => {
+          expect(node.querySelectorAll(".custom-array")).to.have.length.of(1);
+        });
 
-      it("should render text input for each array item", () => {
-        expect(
-          node.querySelectorAll(".custom-array-item .field input[type=text]")
-        ).to.have.length.of(formData.length);
-      });
+        it("should render one add button", () => {
+          expect(node.querySelectorAll(".custom-array-add")).to.have.length.of(
+            1
+          );
+        });
 
-      it("should render move up button for all but one array items", () => {
-        expect(
-          node.querySelectorAll(".custom-array-item-move-up")
-        ).to.have.length.of(formData.length - 1);
-      });
+        it("should render one child for each array item", () => {
+          expect(node.querySelectorAll(".custom-array-item")).to.have.length.of(
+            formData.length
+          );
+        });
 
-      it("should render move down button for all but one array items", () => {
-        expect(
-          node.querySelectorAll(".custom-array-item-move-down")
-        ).to.have.length.of(formData.length - 1);
-      });
+        it("should render text input for each array item", () => {
+          expect(
+            node.querySelectorAll(".custom-array-item .field input[type=text]")
+          ).to.have.length.of(formData.length);
+        });
+
+        it("should render move up button for all but one array items", () => {
+          expect(
+            node.querySelectorAll(".custom-array-item-move-up")
+          ).to.have.length.of(formData.length - 1);
+        });
+
+        it("should render move down button for all but one array items", () => {
+          expect(
+            node.querySelectorAll(".custom-array-item-move-down")
+          ).to.have.length.of(formData.length - 1);
+        });
+      }
     });
 
     describe("fixed items", () => {
@@ -121,52 +162,72 @@ describe("ArrayFieldTemplate", () => {
         items: [{ type: "string" }, { type: "string" }, { type: "string" }],
       };
 
-      const uiSchema = {
-        classNames: "custom-array",
-      };
-
       let node;
 
-      beforeEach(() => {
-        node = createFormComponent({
-          ArrayFieldTemplate,
-          formData,
-          schema,
-          uiSchema,
-        }).node;
+      describe("with template globally configured", () => {
+        const uiSchema = {
+          classNames: "custom-array",
+        };
+        beforeEach(() => {
+          node = createFormComponent({
+            formData,
+            schema,
+            uiSchema,
+            ArrayFieldTemplate,
+          }).node;
+        });
+        sharedIts();
       });
 
-      it("should render one root element for the array", () => {
-        expect(node.querySelectorAll(".custom-array")).to.have.length.of(1);
+      describe("with template configured in ui:ArrayFieldTemplate", () => {
+        const uiSchema = {
+          classNames: "custom-array",
+          "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+        };
+        beforeEach(() => {
+          node = createFormComponent({
+            formData,
+            schema,
+            uiSchema,
+          }).node;
+        });
+        sharedIts();
       });
+      function sharedIts() {
+        it("should render one root element for the array", () => {
+          expect(node.querySelectorAll(".custom-array")).to.have.length.of(1);
+        });
 
-      it("should not render an add button", () => {
-        expect(node.querySelectorAll(".custom-array-add")).to.have.length.of(0);
-      });
+        it("should not render an add button", () => {
+          expect(node.querySelectorAll(".custom-array-add")).to.have.length.of(
+            0
+          );
+        });
 
-      it("should render one child for each array item", () => {
-        expect(node.querySelectorAll(".custom-array-item")).to.have.length.of(
-          formData.length
-        );
-      });
+        it("should render one child for each array item", () => {
+          expect(node.querySelectorAll(".custom-array-item")).to.have.length.of(
+            formData.length
+          );
+        });
 
-      it("should render text input for each array item", () => {
-        expect(
-          node.querySelectorAll(".custom-array-item .field input[type=text]")
-        ).to.have.length.of(formData.length);
-      });
+        it("should render text input for each array item", () => {
+          expect(
+            node.querySelectorAll(".custom-array-item .field input[type=text]")
+          ).to.have.length.of(formData.length);
+        });
 
-      it("should not render any move up buttons", () => {
-        expect(
-          node.querySelectorAll(".custom-array-item-move-up")
-        ).to.have.length.of(0);
-      });
+        it("should not render any move up buttons", () => {
+          expect(
+            node.querySelectorAll(".custom-array-item-move-up")
+          ).to.have.length.of(0);
+        });
 
-      it("should not render any move down buttons", () => {
-        expect(
-          node.querySelectorAll(".custom-array-item-move-down")
-        ).to.have.length.of(0);
-      });
+        it("should not render any move down buttons", () => {
+          expect(
+            node.querySelectorAll(".custom-array-item-move-down")
+          ).to.have.length.of(0);
+        });
+      }
     });
   });
 });

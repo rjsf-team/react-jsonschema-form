@@ -45,33 +45,57 @@ describe("ObjectFieldTemplate", () => {
   const DescriptionField = ({ description }) =>
     description ? <div className="description-field" /> : null;
 
-  const { node } = createFormComponent({
-    schema: {
-      type: "object",
-      properties: { foo: { type: "string" }, bar: { type: "string" } },
-    },
-    uiSchema: { "ui:description": "foobar" },
-    formData,
-    ObjectFieldTemplate,
-    fields: {
-      TitleField,
-      DescriptionField,
-    },
+  let node;
+  describe("with template globally configured", () => {
+    node = createFormComponent({
+      schema: {
+        type: "object",
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
+      },
+      uiSchema: { "ui:description": "foobar" },
+      formData,
+      ObjectFieldTemplate,
+      fields: {
+        TitleField,
+        DescriptionField,
+      },
+    }).node;
+    sharedIts();
+  });
+  describe("with template configured in ui:ObjectFieldTemplate", () => {
+    node = createFormComponent({
+      schema: {
+        type: "object",
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
+      },
+      uiSchema: {
+        "ui:description": "foobar",
+        "ui:ObjectFieldTemplate": ObjectFieldTemplate,
+      },
+      formData,
+      fields: {
+        TitleField,
+        DescriptionField,
+      },
+    }).node;
+    sharedIts();
   });
 
-  it("should render one root element", () => {
-    expect(node.querySelectorAll(".root")).to.have.length.of(1);
-  });
+  function sharedIts() {
+    it("should render one root element", () => {
+      expect(node.querySelectorAll(".root")).to.have.length.of(1);
+    });
 
-  it("should render one title", () => {
-    expect(node.querySelectorAll(".title-field")).to.have.length.of(1);
-  });
+    it("should render one title", () => {
+      expect(node.querySelectorAll(".title-field")).to.have.length.of(1);
+    });
 
-  it("should render one description", () => {
-    expect(node.querySelectorAll(".description-field")).to.have.length.of(1);
-  });
+    it("should render one description", () => {
+      expect(node.querySelectorAll(".description-field")).to.have.length.of(1);
+    });
 
-  it("should render two property containers", () => {
-    expect(node.querySelectorAll(".property")).to.have.length.of(2);
-  });
+    it("should render two property containers", () => {
+      expect(node.querySelectorAll(".property")).to.have.length.of(2);
+    });
+  }
 });
