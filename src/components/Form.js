@@ -58,9 +58,10 @@ export default class Form extends Component {
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
-
+    const additionalSchema =
+      props.additionalSchema || this.props.additionalSchema;
     const { errors, errorSchema } = mustValidate
-      ? this.validate(formData, schema)
+      ? this.validate(formData, schema, additionalSchema)
       : {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
@@ -80,6 +81,7 @@ export default class Form extends Component {
       edit,
       errors,
       errorSchema,
+      additionalSchema,
     };
   }
 
@@ -87,7 +89,11 @@ export default class Form extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  validate(formData, schema = this.props.schema) {
+  validate(
+    formData,
+    schema = this.props.schema,
+    additionalSchema = this.props.additionalSchema
+  ) {
     const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
     const resolvedSchema = retrieveSchema(schema, definitions, formData);
@@ -95,7 +101,8 @@ export default class Form extends Component {
       formData,
       resolvedSchema,
       validate,
-      transformErrors
+      transformErrors,
+      additionalSchema
     );
   }
 
