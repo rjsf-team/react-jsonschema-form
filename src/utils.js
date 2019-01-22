@@ -52,6 +52,7 @@ const widgetMap = {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
     files: "FileWidget",
+    hidden: "HiddenWidget",
   },
 };
 
@@ -157,9 +158,12 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
           if (schema.minItems > defaultsLength) {
             const defaultEntries = defaults || [];
             // populate the array with the defaults
+            const fillerSchema = Array.isArray(schema.items)
+              ? schema.additionalItems
+              : schema.items;
             const fillerEntries = fill(
               new Array(schema.minItems - defaultsLength),
-              computeDefaults(schema.items, schema.items.defaults, definitions)
+              computeDefaults(fillerSchema, fillerSchema.defaults, definitions)
             );
             // then fill up the rest with either the item default or empty, up to minItems
 
@@ -390,6 +394,9 @@ function findSchemaDefinition($ref, definitions = {}) {
     let current = definitions;
     for (let part of parts) {
       part = part.replace(/~1/g, "/").replace(/~0/g, "~");
+      while (current.hasOwnProperty("$ref")) {
+        current = findSchemaDefinition(current.$ref, definitions);
+      }
       if (current.hasOwnProperty(part)) {
         current = current[part];
       } else {

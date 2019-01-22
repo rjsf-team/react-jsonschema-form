@@ -22,6 +22,20 @@ module.exports = {
           },
         ],
       },
+      Toggle: {
+        title: "Toggle",
+        type: "boolean",
+        oneOf: [
+          {
+            title: "Enable",
+            const: true,
+          },
+          {
+            title: "Disable",
+            const: false,
+          },
+        ],
+      },
     },
     title: "Image editor",
     type: "object",
@@ -38,6 +52,10 @@ module.exports = {
           $ref: "#/definitions/Color",
         },
         title: "Color mask",
+      },
+      toggleMask: {
+        title: "Apply color mask",
+        $ref: "#/definitions/Toggle",
       },
       colorPalette: {
         type: "array",
@@ -57,6 +75,9 @@ module.exports = {
   uiSchema: {
     blendMode: {
       "ui:enumDisabled": ["multiply"],
+    },
+    toggleMask: {
+      "ui:widget": "radio",
     },
   },
   formData: {
