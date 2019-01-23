@@ -47,6 +47,36 @@ render((
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
 
+### Custom schema validation
+
+To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has `$schema` field that enables validator to use correct meta schema. For example:
+
+```json 
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  ...
+}
+```
+
+Then pass your meta schemas as `metaSchema` prop to your to your `Form` component:
+
+```jsx
+const metaSchema=YOUR_SCHEMA;
+
+render((
+  <Form schema={schema}
+        metaSchema={metaSchema} />
+), document.getElementById("app"));
+```
+`metaSchema` also accepts array of meta schemas:
+
+```jsx
+render((
+  <Form schema={schema}
+        metaSchema={[metaSchema1,metaSchema2]} />
+), document.getElementById("app"));
+```
+
 ### Custom error messages
 
 Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
