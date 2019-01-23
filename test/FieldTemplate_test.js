@@ -38,7 +38,7 @@ describe("FieldTemplate", () => {
         expect(node.querySelectorAll(".disabled")).to.have.length.of(0);
       });
     });
-    describe("with template configured in ui:ObjectFieldTemplate", () => {
+    describe("with template configured in ui:FieldTemplate", () => {
       it("should render with disabled when ui:disabled is truthy", () => {
         const { node } = createFormComponent({
           schema: { type: "string" },
