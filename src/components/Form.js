@@ -58,8 +58,7 @@ export default class Form extends Component {
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
-    const additionalSchema =
-      props.additionalSchema || this.props.additionalSchema;
+    const additionalSchema = props.additionalSchema;
     const { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema, additionalSchema)
       : {
