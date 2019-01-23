@@ -7,7 +7,7 @@ const ajv = new Ajv({
   schemaId: "auto",
 });
 //flag indicating whether we've already added custom schemas
-let addedAdditionalSchemas = false;
+let addedMetaSchemas = false;
 
 // add custom formats
 ajv.addFormat(
@@ -157,12 +157,12 @@ export default function validateFormData(
   schema,
   customValidate,
   transformErrors,
-  additionalSchema
+  metaSchema
 ) {
   //add more schemas to validate against
-  if (!addedAdditionalSchemas && additionalSchema) {
-    ajv.addMetaSchema(additionalSchema);
-    addedAdditionalSchemas = true;
+  if (!addedMetaSchemas && metaSchema) {
+    ajv.addMetaSchema(metaSchema);
+    addedMetaSchemas = true;
   }
 
   try {
