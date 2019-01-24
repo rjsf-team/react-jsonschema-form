@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { UnControlled as CodeMirror } from "react-codemirror2";
-
-import { shouldRender } from "../utils";
+import { render } from "react-dom";
+import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
-import Form from "../components/Form";
+import Form from "../src";
 
 // Import a few CodeMirror themes; these are used to match alternative
 // bootstrap ones.
@@ -513,4 +513,4 @@ class App extends Component {
   }
 }
 
-export default App;
+render(<App />, document.getElementById("app"));

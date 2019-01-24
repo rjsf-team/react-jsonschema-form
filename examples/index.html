@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Using JSON Schema Lib</title>
+  <link rel="stylesheet" id="theme" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <style>
+    #app {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 40px 60px;
+      box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- https://reactjs.org/docs/add-react-to-a-website.html -->
+  <!-- https://frontarm.com/articles/how-to-integrate-react-into-existing-app/ -->
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="./react-jsonschema-form.js"></script>
+  <script>
+      const Form = JSONSchemaForm.default;
+      
+      const schema = {
+          title: "Register with us!",
+          description: "A simple registration form.",
+          type: "object",
+          required: ["name", "lastName"],
+          properties: {
+            name: {
+              type: "string",
+              title: "FULL NAME",
+              maxLength: 40,
+              pattern: "[A-Za-z\s]"
+            },
+            mobilePrimary: {
+              type: "string",
+              title: "Primary Mobile Number",
+            },
+            mobileSecondary: {
+              type: "string",
+              title: "Secondary/Emergency Mobile Number",
+            },
+            email: {
+              type: "string",
+              title: "Email ID",
+            },
+            referralCode: {
+              type: "string",
+              title: "REFERRAL CODE(OPTIONAL)"
+            }
+          }
+      };
+
+      const uiSchema = {
+          name: {
+            "ui:autofocus": true,
+            "ui:emptyValue": "",
+            "ui:placeholder": "Your full name"
+          },
+          mobilePrimary: {
+            "ui:options": {
+              inputType: "tel",
+            },
+            "ui:widget": "telephone",
+            "ui:countryCode": "+65"
+          },
+          mobileSecondary: {
+            "ui:options": {
+              inputType: "tel",
+            },
+            "ui:widget": "telephone",
+            "ui:countryCode": "+65",
+            "ui:placeholder": "Your emergency mobile number"
+          },
+          email: {
+            "ui:widget": "email",
+            "ui:placeholder": "Your email ID"
+          },
+          referralCode: {
+            "ui:placeholder": "Enter referral code if available"
+          }
+      };
+        
+      const formData = {
+          name: "Rajeev Kumar Singh"
+      };
+
+      const theme = {
+        primaryColor: "red",
+        borderColor: "#c3c9d7",
+        fontSize: "16",
+        activeColor: "#1ad9f8",
+        labelColor: "#697b8c",
+        textTransform: "uppercase",
+        paddingBottom: "8"
+      };
+
+      const log = (type) => console.log.bind(console, type);
+
+      ReactDOM.render(
+        React.createElement(Form, {
+          schema: schema,
+          uiSchema: uiSchema,
+          formData: formData, 
+          theme: theme,
+          onChange: log("changed"), 
+          onSubmit: log("submitted"), 
+          onError: log("errors")
+        }), document.getElementById("app")
+      );
+  </script>
+</body>
+</html>

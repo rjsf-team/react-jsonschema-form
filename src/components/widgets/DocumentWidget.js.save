@@ -1,0 +1,58 @@
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import { jsx } from '@emotion/core';
+
+// class DocumentWidget extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     const Button = styled.button`
+//       color: green ${props =>};
+//       `
+
+//     return (
+//       <div className="form-group document-form-group">
+//         <Button>This my button component.</Button>)
+//         <input type="file" />
+//       </div>
+//     );
+//   }
+// }
+
+// export default DocumentWidget;
+
+
+function DocumentWidget(props) {
+  const { BaseInput } = props.registry.widget;
+
+  const Image = styled.img`
+    max-height: 150px;
+    padding-bottom: 20px;
+  `;
+  
+  return (
+    <div css={{
+      align: 'center',
+      background: '#e1f7e8',
+      border: '1px solid #c3c9d7',
+      display: '-webkit-box',
+      display: '-webkit-flex',
+      display: '-ms-flexbox',
+      display: 'flex',
+      flex: 'column',
+      margin: '0 auto',
+      padding: '25px',
+      width: '100'%
+    }}>
+      <Image>
+      </Image>
+      <BaseInput type="file" {...props}>
+      </BaseInput>
+    </div>
+  )
+}
+
+export default DocumentWidget
