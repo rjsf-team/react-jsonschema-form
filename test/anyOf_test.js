@@ -299,4 +299,277 @@ describe("anyOf", () => {
 
     expect(node.querySelector("select").value).eql("1");
   });
+
+  it("should not change the selected option when entering values", () => {
+    const schema = {
+      type: "object",
+      anyOf: [
+        {
+          title: "First method of identification",
+          properties: {
+            firstName: {
+              type: "string",
+            },
+            lastName: {
+              type: "string",
+            },
+          },
+        },
+        {
+          title: "Second method of identification",
+          properties: {
+            idCode: {
+              type: "string",
+            },
+          },
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    const $select = node.querySelector("select");
+
+    expect($select.value).eql("0");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect($select.value).eql("1");
+
+    Simulate.change(node.querySelector("input#root_idCode"), {
+      target: { value: "Lorem ipsum dolor sit amet" },
+    });
+
+    expect($select.value).eql("1");
+  });
+
+  it("should not change the selected option when entering values and the subschema uses `anyOf`", () => {
+    const schema = {
+      type: "object",
+      anyOf: [
+        {
+          title: "First method of identification",
+          properties: {
+            firstName: {
+              type: "string",
+            },
+            lastName: {
+              type: "string",
+            },
+          },
+        },
+        {
+          title: "Second method of identification",
+          properties: {
+            idCode: {
+              type: "string",
+            },
+          },
+          anyOf: [
+            {
+              properties: {
+                foo: {
+                  type: "string",
+                },
+              },
+            },
+            {
+              properties: {
+                bar: {
+                  type: "string",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    const $select = node.querySelector("select");
+
+    expect($select.value).eql("0");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect($select.value).eql("1");
+
+    Simulate.change(node.querySelector("input#root_idCode"), {
+      target: { value: "Lorem ipsum dolor sit amet" },
+    });
+
+    expect($select.value).eql("1");
+  });
+
+  it("should not change the selected option when entering values and the subschema uses `allOf`", () => {
+    const schema = {
+      type: "object",
+      anyOf: [
+        {
+          title: "First method of identification",
+          properties: {
+            firstName: {
+              type: "string",
+            },
+            lastName: {
+              type: "string",
+            },
+          },
+        },
+        {
+          title: "Second method of identification",
+          properties: {
+            idCode: {
+              type: "string",
+            },
+          },
+          allOf: [
+            {
+              properties: {
+                foo: {
+                  type: "string",
+                },
+              },
+            },
+            {
+              properties: {
+                bar: {
+                  type: "string",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    const $select = node.querySelector("select");
+
+    expect($select.value).eql("0");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect($select.value).eql("1");
+
+    Simulate.change(node.querySelector("input#root_idCode"), {
+      target: { value: "Lorem ipsum dolor sit amet" },
+    });
+
+    expect($select.value).eql("1");
+  });
+
+  it("should not mutate a schema that contains nested anyOf and allOf", () => {
+    const schema = {
+      type: "object",
+      anyOf: [
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+          allOf: [
+            {
+              properties: {
+                baz: { type: "string" },
+              },
+            },
+          ],
+          anyOf: [
+            {
+              properties: {
+                buzz: { type: "string" },
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    createFormComponent({
+      schema,
+    });
+
+    expect(schema).to.eql({
+      type: "object",
+      anyOf: [
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+          allOf: [
+            {
+              properties: {
+                baz: { type: "string" },
+              },
+            },
+          ],
+          anyOf: [
+            {
+              properties: {
+                buzz: { type: "string" },
+              },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  describe("Arrays", () => {
+    it("should correctly render form inputs for anyOf inside array items", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          items: {
+            type: "array",
+            items: {
+              type: "object",
+              anyOf: [
+                {
+                  properties: {
+                    foo: {
+                      type: "string",
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    bar: {
+                      type: "string",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(node.querySelector(".array-item-add button")).not.eql(null);
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelectorAll("select")).to.have.length.of(1);
+
+      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
+    });
+  });
 });

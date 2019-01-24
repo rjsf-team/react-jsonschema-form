@@ -6,6 +6,28 @@ module.exports = {
         type: "integer",
         title: "Age",
       },
+      items: {
+        type: "array",
+        items: {
+          type: "object",
+          anyOf: [
+            {
+              properties: {
+                foo: {
+                  type: "string",
+                },
+              },
+            },
+            {
+              properties: {
+                bar: {
+                  type: "string",
+                },
+              },
+            },
+          ],
+        },
+      },
     },
     anyOf: [
       {
