@@ -6,6 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Using JSON Schema Lib</title>
   <link rel="stylesheet" id="theme" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <style>
+    #app {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 40px 60px;
+      box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+      margin-top: 60px;
+    }
+  </style>
 </head>
 <body>
   <div id="app"></div>
@@ -19,13 +28,68 @@
       const Form = JSONSchemaForm.default;
       
       const schema = {
-        title: "Todo",
-        type: "object",
-        required: ["title"],
-        properties: {
-          title: {type: "string", title: "Title", default: "A new task"},
-          done: {type: "boolean", title: "Done?", default: false}
-        }
+          title: "Register with us!",
+          description: "A simple registration form.",
+          type: "object",
+          required: ["name", "lastName"],
+          properties: {
+            name: {
+              type: "string",
+              title: "FULL NAME",
+              maxLength: 40,
+              pattern: "[A-Za-z\s]"
+            },
+            mobilePrimary: {
+              type: "string",
+              title: "Primary Mobile Number",
+            },
+            mobileSecondary: {
+              type: "string",
+              title: "Secondary/Emergency Mobile Number",
+            },
+            email: {
+              type: "string",
+              title: "Email ID",
+            },
+            referralCode: {
+              type: "string",
+              title: "REFERRAL CODE(OPTIONAL)"
+            }
+          }
+      };
+
+      const uiSchema = {
+          name: {
+            "ui:autofocus": true,
+            "ui:emptyValue": "",
+            "ui:placeholder": "Your full name"
+          },
+          mobilePrimary: {
+            "ui:options": {
+              inputType: "tel",
+            },
+            "ui:widget": "telephone",
+            "ui:countryCode": "+65"
+          },
+          mobileSecondary: {
+            "ui:options": {
+              inputType: "tel",
+            },
+            "ui:widget": "telephone",
+            "ui:countryCode": "+65",
+            "ui:placeholder": "Your emergency mobile number"
+          },
+          email: {
+            "ui:widget": "email",
+            "ui:placeholder": "Your email ID"
+          },
+          referralCode: {
+            "ui:placeholder": "Enter referral code if available"
+          }
+      };
+        
+      const formData = {
+          name: "Rajeev Kumar Singh"
       };
 
       const theme = {
@@ -42,7 +106,9 @@
 
       ReactDOM.render(
         React.createElement(Form, {
-          schema: schema, 
+          schema: schema,
+          uiSchema: uiSchema,
+          formData: formData, 
           theme: theme,
           onChange: log("changed"), 
           onSubmit: log("submitted"), 

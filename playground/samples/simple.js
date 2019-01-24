@@ -34,15 +34,6 @@ export default {
         title: "Telephone",
         minLength: 10,
       }
-    },
-    errorMessage: {
-      properties: {
-        password: "Password should be longer than 3 characters",
-        firstName: {
-          maxLength: "Firstname should not be longer than 5 characters",
-          pattern: "Firstname should only contain alphabets and spaces"
-        }
-      }
     }
   },
 
@@ -74,6 +65,7 @@ export default {
       "ui:countryCode": "+65"
     },
   },
+  
   formData: {
     lastName: "Norris",
     age: 75,
