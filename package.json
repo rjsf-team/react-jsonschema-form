@@ -9,9 +9,7 @@
     "ajv": "^6.6.2",
     "core-js": "^2.6.2",
     "emotion-theming": "^10.0.6",
-    "lodash.topath": "^4.5.2",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "lodash.topath": "^4.5.2"
   },
   "scripts": {
     "start": "./node_modules/.bin/webpack-dev-server --inline --host 127.0.0.1 --content-base playground/",
@@ -24,6 +22,10 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "peerDependencies": {
+    "react": ">=15",
+    "react-dom": ">=15"
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
@@ -48,6 +50,8 @@
     "mocha": "^5.2.0",
     "prettier": "^1.16.0",
     "prop-types": "^15.6.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
     "react-codemirror2": "^5.1.0",
     "react-scripts": "2.1.3",
     "rimraf": "^2.6.3",

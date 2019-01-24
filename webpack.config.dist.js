@@ -11,7 +11,7 @@ module.exports = {
     publicPath: "/dist/",
     filename: "react-jsonschema-form.js",
     library: "JSONSchemaForm",
-    libraryTarget: "var"
+    libraryTarget: "umd"
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -20,6 +20,21 @@ module.exports = {
       }
     })
   ],
+  externals: {
+    react: {
+      root: "React",
+      commonjs: "react",
+      commonjs2: "react",
+      amd: "react"
+    },
+    'react-dom': {
+      root: "ReactDOM",
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+      umd: 'react-dom',
+    }
+  },
   devtool: "source-map",  
   module: {
     rules: [
