@@ -26,7 +26,8 @@ function StringField(props) {
     registry = getDefaultRegistry(),
     rawErrors,
     theme,
-    getDocUploadUrl
+    getDocUploadUrl,
+    isUnique
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -57,6 +58,7 @@ function StringField(props) {
       rawErrors={rawErrors}
       theme={theme}
       getDocUploadUrl={getDocUploadUrl}
+      isUnique={isUnique}
     />
   );
 }

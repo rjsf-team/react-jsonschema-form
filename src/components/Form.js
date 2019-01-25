@@ -26,10 +26,11 @@ export default class Form extends Component {
     theme: {
       primaryColor: "#31b057",
       borderColor: "#c3c9d7",
-      fontSize: "16",
       activeColor: "#1ad9f8",
       labelColor: "#697b8c",
       textTransform: "uppercase",
+      fontSize: "16",
+      fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif",
       paddingBottom: "8"
     }
   };
@@ -200,39 +201,6 @@ export default class Form extends Component {
     };
   }
 
-  // getDocumentUpload(doc_type, filename, content_type) {
-  //   const url =  'http://example.com/movies.json';
-  //   // `https://self-onboarding-sg-gocar-integration.golabs.io/supply/app/v1/leads/d98c63ed-8e06-454e-98ac-96bffb4f3248/documents/url`;
-    
-    // fetch(url, {
-    //   method: 'GET', 
-    //   headers:{
-    //     'Content-Type': content_type,
-    //   }
-    // }).then(function(response) {
-    //   return response.json();
-    // }
-
-
-    //   fetch('http://example.com/movies.json')
-    // .then(function(response) {
-    //   return response.json();
-    // })
-    // .then(function(myJson) {
-    //   console.log(JSON.stringify(myJson));
-    // }); 
-    // // return Promise.resolve(Response.url)
-
-
-  // submit() {
-  //   if (this.formElement) {
-  //     this.formElement.dispatchEvent(new Event("submit", { cancelable: true }));
-  //   }
-  // }
-  getDocUploadURL() {
-    return 'https://self-onboarding-sg-gocar-integration.golabs.io/supply/app/v1/leads/d98c63ed-8e06-454e-98ac-96bffb4f3248/documents/url';
-  }
-
   render() {
     const {
       children,
@@ -285,6 +253,7 @@ export default class Form extends Component {
             onBlur={this.onBlur}
             onFocus={this.onFocus}
             getDocUploadUrl={this.props.getDocUploadUrl}
+            isUnique={this.props.isUnique}
             registry={registry}
             safeRenderCompletion={safeRenderCompletion}
             disabled={disabled}

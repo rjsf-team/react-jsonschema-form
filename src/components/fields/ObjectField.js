@@ -170,6 +170,7 @@ class ObjectField extends Component {
       onFocus,
       registry = getDefaultRegistry(),
       getDocUploadUrl,
+      isUnique,
       theme
     } = this.props;
     const { definitions, fields, formContext } = registry;
@@ -223,6 +224,7 @@ class ObjectField extends Component {
               readonly={readonly}
               theme={theme}
               getDocUploadUrl={getDocUploadUrl}
+              isUnique={isUnique}
             />
           ),
           name,

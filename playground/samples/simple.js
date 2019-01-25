@@ -1,20 +1,27 @@
 export default {
   schema: {
-    title: "A registration form",
-    description: "A simple form example.",
+    title: "Register with us!",
+    description: "A simple registration form.",
     type: "object",
-    required: ["firstName", "lastName"],
+    required: ["name", "mobilePrimary", "email"],
     properties: {
-      firstName: {
+      name: {
         type: "string",
-        title: "First name",
-        default: "Chuck",
-        maxLength: 5,
+        title: "FULL NAME",
+        maxLength: 40,
         pattern: "[A-Za-z\s]"
       },
-      lastName: {
+      mobilePrimary: {
         type: "string",
-        title: "Last name",
+        title: "Primary Mobile Number",
+      },
+      mobileSecondary: {
+        type: "string",
+        title: "Secondary/Emergency Mobile Number",
+      },
+      email: {
+        type: "string",
+        title: "Email ID",
       },
       age: {
         type: "integer",
@@ -28,28 +35,38 @@ export default {
         type: "string",
         title: "Password",
         minLength: 3,
-      },
-      telephone: {
-        type: "string",
-        title: "Telephone",
-        minLength: 10,
-      },
-      documentUpload: {
-        type: "string",
-        title: "Upload the Document",
       }
     }
   },
 
   uiSchema: {
-    firstName: {
+    name: {
       "ui:autofocus": true,
       "ui:emptyValue": "",
+      "ui:placeholder": "Your full name"
+    },
+    mobilePrimary: {
+      "ui:options": {
+        inputType: "tel",
+      },
+      "ui:widget": "telephone",
+      "ui:countryCode": "+65"
+    },
+    mobileSecondary: {
+      "ui:options": {
+        inputType: "tel",
+      },
+      "ui:widget": "telephone",
+      "ui:countryCode": "+65",
+      "ui:placeholder": "Your emergency mobile number"
+    },
+    email: {
+      "ui:widget": "email",
+      "ui:placeholder": "Your email ID"
     },
     age: {
       "ui:widget": "updown",
-      "ui:title": "Age of person",
-      "ui:description": "(earthian year)",
+      "ui:title": "Age",
     },
     bio: {
       "ui:widget": "textarea",
@@ -60,24 +77,9 @@ export default {
     },
     date: {
       "ui:widget": "alt-datetime",
-    },
-    telephone: {
-      "ui:options": {
-        inputType: "tel",
-      },
-      "ui:widget": "telephone",
-      "ui:countryCode": "+65"
-    },
-    documentUpload: {
-      "ui:widget": "document",
-      "ui:doc_type": 10
-    },
+    }
   },
-  
+
   formData: {
-    lastName: "Norris",
-    age: 75,
-    bio: "Roundhouse kicking asses since 1940",
-    password: "noneed",
   },
 };

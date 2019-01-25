@@ -405,6 +405,14 @@ class App extends Component {
     return Promise.resolve('https://7ffa17cf-4860-4140-bce6-31b1ddd7e375.mock.pstmn.io/uploadDoc')
   }
 
+  checkUniqueness = (property_name, property_value) => {
+    if(property_name === 'email' && property_value === 'callicoder@gmail.com') {
+      return Promise.resolve(false)
+    } else {
+      return Promise.resolve(true)
+    }
+  }
+
   render() {
     const {
       schema,
@@ -491,6 +499,7 @@ class App extends Component {
               transformErrors={transformErrors}
               onError={log("errors")}
               getDocUploadUrl={this.getDocUploadUrl}
+              isUnique={this.checkUniqueness}
               >
               <div className="row">
                 <div className="col-sm-3">

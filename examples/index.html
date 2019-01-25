@@ -31,7 +31,7 @@
           title: "Register with us!",
           description: "A simple registration form.",
           type: "object",
-          required: ["name", "lastName"],
+          required: ["name", "mobilePrimary", "email"],
           properties: {
             name: {
               type: "string",
@@ -94,11 +94,12 @@
 
       const theme = {
         primaryColor: "red",
-        borderColor: "#c3c9d7",
-        fontSize: "16",
+        borderColor: "green",
         activeColor: "#1ad9f8",
         labelColor: "#697b8c",
         textTransform: "uppercase",
+        fontSize: "16",
+        fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif",
         paddingBottom: "8"
       };
 
@@ -112,7 +113,8 @@
           theme: theme,
           onChange: log("changed"), 
           onSubmit: log("submitted"), 
-          onError: log("errors")
+          onError: log("errors"),
+          noHtml5Validate: true
         }), document.getElementById("app")
       );
   </script>
