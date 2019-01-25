@@ -81,5 +81,8 @@ export default {
   },
 
   formData: {
+    "name": "Rajeev",
+    "mobilePrimary": "81978820",
+    "email": "callicoder@gmail.com"
   },
 };

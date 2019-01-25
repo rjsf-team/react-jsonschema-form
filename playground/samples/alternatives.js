@@ -22,6 +22,20 @@ export default {
           },
         ],
       },
+      Toggle: {
+        title: "Toggle",
+        type: "boolean",
+        oneOf: [
+          {
+            title: "Enable",
+            const: true,
+          },
+          {
+            title: "Disable",
+            const: false,
+          },
+        ],
+      },
     },
     title: "Image editor",
     type: "object",
@@ -38,6 +52,10 @@ export default {
           $ref: "#/definitions/Color",
         },
         title: "Color mask",
+      },
+      toggleMask: {
+        title: "Apply color mask",
+        $ref: "#/definitions/Toggle",
       },
       colorPalette: {
         type: "array",
@@ -57,6 +75,9 @@ export default {
   uiSchema: {
     blendMode: {
       "ui:enumDisabled": ["multiply"],
+    },
+    toggleMask: {
+      "ui:widget": "radio",
     },
   },
   formData: {
