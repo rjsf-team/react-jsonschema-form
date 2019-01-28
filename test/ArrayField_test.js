@@ -64,6 +64,16 @@ describe("ArrayField", () => {
       expect(description.id).eql("root__description");
     });
 
+    it("should render a hidden list", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "hidden",
+        },
+      });
+      expect(node.querySelector("div.hidden > fieldset")).to.exist;
+    });
+
     it("should render a customized title", () => {
       const CustomTitleField = ({ title }) => <div id="custom">{title}</div>;
 
@@ -1150,6 +1160,22 @@ describe("ArrayField", () => {
       );
       expect(addInput.id).eql("root_2");
       expect(addInput.value).eql("bar");
+    });
+
+    it("should apply uiSchema to additionalItems", () => {
+      const { node } = createFormComponent({
+        schema: schemaAdditional,
+        uiSchema: {
+          additionalItems: {
+            "ui:title": "Custom title",
+          },
+        },
+        formData: [1, 2, "bar"],
+      });
+      const label = node.querySelector(
+        "fieldset .field-string label.control-label"
+      );
+      expect(label.textContent).eql("Custom title*");
     });
 
     it("should have an add button if additionalItems is an object", () => {

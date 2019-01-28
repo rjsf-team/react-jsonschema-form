@@ -52,6 +52,7 @@ const widgetMap = {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
     files: "FileWidget",
+    hidden: "HiddenWidget",
   },
 };
 
@@ -393,6 +394,9 @@ function findSchemaDefinition($ref, definitions = {}) {
     let current = definitions;
     for (let part of parts) {
       part = part.replace(/~1/g, "/").replace(/~0/g, "~");
+      while (current.hasOwnProperty("$ref")) {
+        current = findSchemaDefinition(current.$ref, definitions);
+      }
       if (current.hasOwnProperty(part)) {
         current = current[part];
       } else {

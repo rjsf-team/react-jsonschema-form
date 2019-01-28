@@ -213,7 +213,6 @@ class ObjectField extends Component {
     }
 
     const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
-
     const templateProps = {
       title: uiSchema["ui:title"] || title,
       description,
@@ -230,7 +229,11 @@ class ObjectField extends Component {
               name={name}
               required={this.isRequired(name)}
               schema={schema.properties[name]}
-              uiSchema={uiSchema[name]}
+              uiSchema={
+                addedByAdditionalProperties
+                  ? uiSchema.additionalProperties
+                  : uiSchema[name]
+              }
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
