@@ -676,38 +676,12 @@ describe("Validation", () => {
       });
     });
     describe("Custom meta schema", () => {
-      let sandboxErr;
       let onSubmit;
       let onError;
-      let compWithMeta, nodeWithMeta, compWithoutMeta, nodeWithoutMeta;
-
-      beforeEach(() => {
-        sandboxErr = sinon.sandbox.create();
-        onSubmit = sandboxErr.spy();
-        onError = sandboxErr.spy();
-        const withMetaSchema = createFormComponent({
-          schema,
-          formData,
-          metaSchema: require("ajv/lib/refs/json-schema-draft-04.json"),
-          onSubmit,
-          onError,
-        });
-
-        compWithMeta = withMetaSchema.comp;
-        nodeWithMeta = withMetaSchema.node;
-        const withoutMetaSchema = createFormComponent({
-          schema,
-          formData,
-          onSubmit,
-          onError,
-        });
-        compWithoutMeta = withoutMetaSchema.comp;
-        nodeWithoutMeta = withoutMetaSchema.node;
-      });
-
-      afterEach(() => {
-        sandboxErr.restore();
-      });
+      let comp, node;
+      const formData = {
+        datasetId: "no err",
+      };
 
       const schema = {
         $ref: "#/definitions/Dataset",
@@ -725,28 +699,31 @@ describe("Validation", () => {
           },
         },
       };
-      const formData = {
-        datasetId: "no err",
-      };
 
-      it.only("asd", () => {
-        Simulate.submit(nodeWithoutMeta);
-        expect(
-          nodeWithoutMeta.querySelectorAll(".errors li")
-        ).to.have.length.of(0);
-        expect(compWithoutMeta.state.errors).to.have.lengthOf(0);
+      beforeEach(() => {
+        onSubmit = sandbox.spy();
+        onError = sandbox.spy();
+        const withMetaSchema = createFormComponent({
+          schema,
+          formData,
+          liveValidate: true,
+          metaSchema: require("ajv/lib/refs/json-schema-draft-04.json"),
+          onSubmit,
+          onError,
+        });
+        comp = withMetaSchema.comp;
+        node = withMetaSchema.node;
       });
-      it.only("query select", () => {
-        Simulate.submit(nodeWithMeta);
-        expect(nodeWithMeta.querySelectorAll(".errors li")).to.have.length.of(
-          1
-        );
-        expect(compWithMeta.state.errors[0].message).eql(
-          `should match pattern "\\d+"`
-        );
-      });
-      it.only("dff", () => {
-        // expect(compWithoutMeta.state.errors).to.have.length.of(0);
+
+      it("should be used to validate schema", () => {
+        expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+        expect(comp.state.errors).to.have.lengthOf(1);
+        expect(comp.state.errors[0].message).eql(`should match pattern "\\d+"`);
+        Simulate.change(node.querySelector("input"), {
+          target: { value: "1234" },
+        });
+        expect(node.querySelectorAll(".errors li")).to.have.length.of(0);
+        expect(comp.state.errors).to.have.lengthOf(0);
       });
     });
   });
