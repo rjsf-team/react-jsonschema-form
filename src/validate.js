@@ -159,7 +159,7 @@ export default function validateFormData(
   transformErrors,
   metaSchema
 ) {
-  //add more schemas to validate against
+  // add more schemas to validate against
   if (!addedMetaSchemas && metaSchema) {
     ajv.addMetaSchema(metaSchema);
     addedMetaSchemas = true;
