@@ -6,7 +6,7 @@ const ajv = new Ajv({
   multipleOfPrecision: 8,
   schemaId: "auto",
 });
-//flag indicating whether we've already added custom schemas
+// flag indicating whether we've already added custom schemas
 let addedMetaSchemas = false;
 
 // add custom formats
