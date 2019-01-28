@@ -348,14 +348,14 @@ describe("Validation", () => {
         it("should validate a minLength field", () => {
           expect(comp.state.errors).to.have.length.of(1);
           expect(comp.state.errors[0].message).eql(
-            "should not be shorter than 10 characters"
+            "should NOT be shorter than 10 characters"
           );
         });
 
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            ".foo should not be shorter than 10 characters"
+            ".foo should NOT be shorter than 10 characters"
           );
         });
 
@@ -480,7 +480,7 @@ describe("Validation", () => {
           },
           pass2: {
             __errors: [
-              "should not be shorter than 3 characters",
+              "should NOT be shorter than 3 characters",
               "Passwords don't match",
             ],
           },

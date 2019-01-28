@@ -1202,7 +1202,7 @@ describe("Form", () => {
           });
 
           expect(comp.state.errorSchema).eql({
-            __errors: ["should not be shorter than 8 characters"],
+            __errors: ["should NOT be shorter than 8 characters"],
           });
         });
 
@@ -1219,7 +1219,7 @@ describe("Form", () => {
           expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
           expect(
             node.querySelector(".field-string .error-detail").textContent
-          ).eql("should not be shorter than 8 characters");
+          ).eql("should NOT be shorter than 8 characters");
         });
       });
 
@@ -1274,7 +1274,7 @@ describe("Form", () => {
         Simulate.submit(node);
 
         expect(comp.state.errorSchema).eql({
-          __errors: ["should not be shorter than 8 characters"],
+          __errors: ["should NOT be shorter than 8 characters"],
         });
       });
 
@@ -1341,7 +1341,7 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
 
         expect(comp.state.errorSchema).eql({
-          __errors: ["should not be shorter than 8 characters"],
+          __errors: ["should NOT be shorter than 8 characters"],
         });
       });
 
@@ -1351,7 +1351,7 @@ describe("Form", () => {
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(
           node.querySelector(".field-string .error-detail").textContent
-        ).eql("should not be shorter than 8 characters");
+        ).eql("should NOT be shorter than 8 characters");
       });
     });
 
@@ -1370,7 +1370,7 @@ describe("Form", () => {
         const { comp } = createFormComponent(formProps);
         expect(comp.state.errorSchema).eql({
           __errors: [
-            "should not be shorter than 8 characters",
+            "should NOT be shorter than 8 characters",
             'should match pattern "d+"',
           ],
         });
@@ -1383,7 +1383,7 @@ describe("Form", () => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(errors).eql([
-          "should not be shorter than 8 characters",
+          "should NOT be shorter than 8 characters",
           'should match pattern "d+"',
         ]);
       });
@@ -1421,7 +1421,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           level1: {
             level2: {
-              __errors: ["should not be shorter than 8 characters"],
+              __errors: ["should NOT be shorter than 8 characters"],
             },
           },
         });
@@ -1435,7 +1435,7 @@ describe("Form", () => {
 
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(errorDetail.textContent).eql(
-          "should not be shorter than 8 characters"
+          "should NOT be shorter than 8 characters"
         );
       });
     });
@@ -1475,7 +1475,7 @@ describe("Form", () => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors).eql(["should not be shorter than 4 characters"]);
+        expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
 
       it("should not denote errors on non impacted fields", () => {
@@ -1534,7 +1534,7 @@ describe("Form", () => {
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
         const errors = [].map.call(liNodes, li => li.textContent);
 
-        expect(errors).eql(["should not be shorter than 4 characters"]);
+        expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
     });
 
@@ -1590,8 +1590,8 @@ describe("Form", () => {
 
         expect(errors).eql([
           null,
-          "should not be shorter than 4 characters",
-          "should not be shorter than 4 characters",
+          "should NOT be shorter than 4 characters",
+          "should NOT be shorter than 4 characters",
           null,
         ]);
       });
@@ -1623,7 +1623,7 @@ describe("Form", () => {
         expect(comp.state.errorSchema).eql({
           1: {
             foo: {
-              __errors: ["should not be shorter than 4 characters"],
+              __errors: ["should NOT be shorter than 4 characters"],
             },
           },
         });
@@ -1639,7 +1639,7 @@ describe("Form", () => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors).eql(["should not be shorter than 4 characters"]);
+        expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
     });
 
