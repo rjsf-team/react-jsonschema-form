@@ -294,15 +294,13 @@ describe("Validation", () => {
 
         it("should validate a required field", () => {
           expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql(
-            "should have required property foo"
-          );
+          expect(comp.state.errors[0].message).eql("is a required property");
         });
 
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            ".foo should have required property foo"
+            ".foo is a required property"
           );
         });
 
@@ -310,7 +308,7 @@ describe("Validation", () => {
           sinon.assert.calledWith(
             onError,
             sinon.match(errors => {
-              return errors[0].message === "should have required property foo";
+              return errors[0].message === "is a required property";
             })
           );
         });
@@ -364,7 +362,7 @@ describe("Validation", () => {
             onError,
             sinon.match(errors => {
               return (
-                errors[0].message === "should not be shorter than 10 characters"
+                errors[0].message === "should NOT be shorter than 10 characters"
               );
             })
           );
@@ -607,9 +605,7 @@ describe("Validation", () => {
 
         it("should validate a required field", () => {
           expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql(
-            "should have required property foo"
-          );
+          expect(comp.state.errors[0].message).eql("is a required property");
         });
 
         it("should not render error list if showErrorList prop true", () => {
@@ -620,7 +616,7 @@ describe("Validation", () => {
           sinon.assert.calledWith(
             onError,
             sinon.match(errors => {
-              return errors[0].message === "should have required property foo";
+              return errors[0].message === "is a required property";
             })
           );
         });

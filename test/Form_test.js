@@ -1292,7 +1292,7 @@ describe("Form", () => {
           sinon.match(value => {
             return (
               value.length === 1 &&
-              value[0].message === "should not be shorter than 8 characters"
+              value[0].message === "should NOT be shorter than 8 characters"
             );
           })
         );
