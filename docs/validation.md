@@ -58,7 +58,7 @@ To have your schemas validated against any other meta schema than draft-07 (the 
 }
 ```
 
-Then pass your meta schemas as `metaSchema` prop to your to your `Form` component:
+Note that react-jsonschema-form only supports the latest version of JSON Schema, draft-07, by default. To support additional meta schemas, you need to install `ajv` and import them, then pass your meta schemas through the `metaSchema` prop to your `Form` component:
 
 ```jsx
 const metaSchema=YOUR_SCHEMA;
