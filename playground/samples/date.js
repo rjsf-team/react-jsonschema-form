@@ -37,7 +37,7 @@ module.exports = {
           animateYearScrolling: false,
           invalidLabel: "",
           invalidDateMessage: false,
-          setDateTimeToEndOf: "day",
+          // setDateTimeToEndOf: "day",
         },
       },
       DateTimePickerAsDatePicker: {
@@ -52,7 +52,7 @@ module.exports = {
           renderDateTimePickerAsDatePicker: true,
           invalidLabel: "",
           invalidDateMessage: false,
-          setDateTimeToEndOf: "day",
+          // setDateTimeToEndOf: "day",
         },
       },
       date: {
