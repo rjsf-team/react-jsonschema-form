@@ -54,6 +54,16 @@ describe("ObjectField", () => {
       expect(legend.id).eql("root__title");
     });
 
+    it("should render a hidden object", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "hidden",
+        },
+      });
+      expect(node.querySelector("div.hidden > fieldset")).to.exist;
+    });
+
     it("should render a customized title", () => {
       const CustomTitleField = ({ title }) => <div id="custom">{title}</div>;
 
@@ -400,6 +410,23 @@ describe("ObjectField", () => {
       });
 
       expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+    });
+
+    it("should apply uiSchema to additionalProperties", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          additionalProperties: {
+            "ui:title": "CustomName",
+          },
+        },
+        formData: {
+          property1: "test",
+        },
+      });
+      const labels = node.querySelectorAll("label.control-label");
+      expect(labels[0].textContent).eql("CustomName Key");
+      expect(labels[1].textContent).eql("CustomName");
     });
 
     it("should pass through non-schema properties and not throw validation errors if additionalProperties is undefined", () => {
