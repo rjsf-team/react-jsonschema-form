@@ -1977,4 +1977,49 @@ describe("Form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
     });
   });
+
+  describe("Localization", () => {
+    const messages = {
+      required: "El campo es requerido",
+    };
+
+    const formProps = {
+      schema: {
+        type: "object",
+        title: "Contextualized localization",
+        required: ["name"],
+        properties: {
+          name: {
+            type: "string",
+            title: "Nombre",
+          },
+        },
+      },
+      formData: {
+        name: "Thing",
+      },
+      liveValidate: true,
+      noHtml5Validate: true,
+      localization: function(errors) {
+        errors &&
+          errors.forEach(property => {
+            property.message = messages[property.keyword] || property.message;
+          });
+      },
+    };
+
+    it("should change localization error messages", () => {
+      const { comp, node } = createFormComponent(formProps);
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "" },
+      });
+
+      expect(comp.state.errorSchema).eql({
+        name: {
+          __errors: ["El campo es requerido"],
+        },
+      });
+    });
+  });
 });
