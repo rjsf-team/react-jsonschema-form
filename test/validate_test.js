@@ -98,6 +98,52 @@ describe("Validation", () => {
       });
     });
 
+    describe("validating using custom meta schema", () => {
+      const schema = {
+        $ref: "#/definitions/Dataset",
+        $schema: "http://json-schema.org/draft-04/schema#",
+        definitions: {
+          Dataset: {
+            properties: {
+              datasetId: {
+                pattern: "\\d+",
+                type: "string",
+              },
+            },
+            required: ["datasetId"],
+            type: "object",
+          },
+        },
+      };
+      const metaSchema = require("ajv/lib/refs/json-schema-draft-04.json");
+
+      it("should return a validation error about meta schema", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema
+        );
+        expect(errors.validationErrors.message).to.equal(
+          'no schema with key or ref "http://json-schema.org/draft-04/schema#"'
+        );
+        expect(errors.errors).to.eql([]);
+        expect(errors.errorSchema).to.eql({});
+      });
+      it("should return a validation error about formData", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema,
+          null,
+          null,
+          metaSchema
+        );
+        expect(errors.validationErrors).to.equal(null);
+        expect(errors.errors).to.have.lengthOf(1);
+        expect(errors.errors[0].stack).to.equal(
+          '.datasetId should match pattern "\\d+"'
+        );
+      });
+    });
+
     describe("Custom validate function", () => {
       let errors, errorSchema;
 
