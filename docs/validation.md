@@ -68,7 +68,7 @@ render((
         metaSchema={metaSchema} />
 ), document.getElementById("app"));
 ```
-`metaSchema` also accepts array of meta schemas:
+`metaSchema` also accepts an array of meta schemas:
 
 ```jsx
 render((
