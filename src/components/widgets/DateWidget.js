@@ -1,8 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import moment from "moment";
-import MomentUtils from "@date-io/moment";
 import { DatePicker, MuiPickersUtilsProvider } from "material-ui-pickers";
+
+import MomentUtils from "@date-io/moment";
+import PropTypes from "prop-types";
+import React from "react";
+import moment from "moment";
 
 function DateWidget(props) {
   const { value, options, onChange } = props;
@@ -24,7 +25,7 @@ function DateWidget(props) {
           format={options.formatPattern}
           minDate={minDate}
           maxDate={maxDate}
-          value={value !== undefined ? moment.utc(value) : ""}
+          value={value !== undefined ? moment(value) : ""}
           onChange={date => {
             if (!date) {
               return onChange("");
