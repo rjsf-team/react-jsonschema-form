@@ -675,5 +675,10 @@ describe("Validation", () => {
         expect(node.querySelectorAll(".foo")).to.have.length.of(1);
       });
     });
+    describe("Custom meta schema", () => {
+      it.only("asd", () => {
+        expect(true).to.eql(true);
+      });
+    });
   });
 });

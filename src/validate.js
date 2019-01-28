@@ -164,12 +164,12 @@ export default function validateFormData(
     ajv.addMetaSchema(metaSchema);
     addedMetaSchemas = true;
   }
-
+  let validationErrors = null;
   try {
     ajv.validate(schema, formData);
-  } catch (e) {
-    // swallow errors thrown in ajv due to invalid schemas, these
-    // still get displayed
+  } catch (err) {
+    console.error(err);
+    validationErrors = err;
   }
 
   let errors = transformAjvErrors(ajv.errors);
@@ -182,7 +182,7 @@ export default function validateFormData(
   const errorSchema = toErrorSchema(errors);
 
   if (typeof customValidate !== "function") {
-    return { errors, errorSchema };
+    return { errors, errorSchema, validationErrors };
   }
 
   const errorHandler = customValidate(formData, createErrorHandler(formData));
@@ -193,7 +193,11 @@ export default function validateFormData(
   // properties.
   const newErrors = toErrorList(newErrorSchema);
 
-  return { errors: newErrors, errorSchema: newErrorSchema };
+  return {
+    errors: newErrors,
+    errorSchema: newErrorSchema,
+    validationErrors: validationErrors,
+  };
 }
 
 /**
