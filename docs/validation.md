@@ -49,7 +49,7 @@ render((
 
 ### Custom schema validation
 
-To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has `$schema` field that enables validator to use correct meta schema. For example:
+To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has a `$schema` attribute that enables the validator to use the correct meta schema. For example:
 
 ```json 
 {
