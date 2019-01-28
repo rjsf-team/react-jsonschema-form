@@ -676,8 +676,77 @@ describe("Validation", () => {
       });
     });
     describe("Custom meta schema", () => {
+      let sandboxErr;
+      let onSubmit;
+      let onError;
+      let compWithMeta, nodeWithMeta, compWithoutMeta, nodeWithoutMeta;
+
+      beforeEach(() => {
+        sandboxErr = sinon.sandbox.create();
+        onSubmit = sandboxErr.spy();
+        onError = sandboxErr.spy();
+        const withMetaSchema = createFormComponent({
+          schema,
+          formData,
+          metaSchema: require("ajv/lib/refs/json-schema-draft-04.json"),
+          onSubmit,
+          onError,
+        });
+
+        compWithMeta = withMetaSchema.comp;
+        nodeWithMeta = withMetaSchema.node;
+        const withoutMetaSchema = createFormComponent({
+          schema,
+          formData,
+          onSubmit,
+          onError,
+        });
+        compWithoutMeta = withoutMetaSchema.comp;
+        nodeWithoutMeta = withoutMetaSchema.node;
+      });
+
+      afterEach(() => {
+        sandboxErr.restore();
+      });
+
+      const schema = {
+        $ref: "#/definitions/Dataset",
+        $schema: "http://json-schema.org/draft-04/schema#",
+        definitions: {
+          Dataset: {
+            properties: {
+              datasetId: {
+                pattern: "\\d+",
+                type: "string",
+              },
+            },
+            required: ["datasetId"],
+            type: "object",
+          },
+        },
+      };
+      const formData = {
+        datasetId: "no err",
+      };
+
       it.only("asd", () => {
-        expect(true).to.eql(true);
+        Simulate.submit(nodeWithoutMeta);
+        expect(
+          nodeWithoutMeta.querySelectorAll(".errors li")
+        ).to.have.length.of(0);
+        expect(compWithoutMeta.state.errors).to.have.lengthOf(0);
+      });
+      it.only("query select", () => {
+        Simulate.submit(nodeWithMeta);
+        expect(nodeWithMeta.querySelectorAll(".errors li")).to.have.length.of(
+          1
+        );
+        expect(compWithMeta.state.errors[0].message).eql(
+          `should match pattern "\\d+"`
+        );
+      });
+      it.only("dff", () => {
+        // expect(compWithoutMeta.state.errors).to.have.length.of(0);
       });
     });
   });
