@@ -22,7 +22,6 @@ export default class Form extends Component {
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
-    localize: "en",
   };
 
   constructor(props) {
@@ -89,7 +88,7 @@ export default class Form extends Component {
   }
 
   validate(formData, schema = this.props.schema) {
-    const { validate, transformErrors, localize } = this.props;
+    const { validate, transformErrors, localization } = this.props;
     const { definitions } = this.getRegistry();
     const resolvedSchema = retrieveSchema(schema, definitions, formData);
     return validateFormData(
@@ -97,7 +96,7 @@ export default class Form extends Component {
       resolvedSchema,
       validate,
       transformErrors,
-      localize
+      localization
     );
   }
 
@@ -296,6 +295,6 @@ if (process.env.NODE_ENV !== "production") {
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
-    localize: PropTypes.string,
+    localization: PropTypes.func,
   };
 }

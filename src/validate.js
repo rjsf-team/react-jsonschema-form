@@ -1,6 +1,5 @@
 import toPath from "lodash.topath";
 import Ajv from "ajv";
-import localize from "ajv-i18n";
 const ajv = new Ajv({
   errorDataPath: "property",
   allErrors: true,
@@ -128,7 +127,6 @@ function transformAjvErrors(errors = []) {
   if (errors === null) {
     return [];
   }
-
   return errors.map(e => {
     const { dataPath, keyword, message, params } = e;
     let property = `${dataPath}`;
@@ -154,11 +152,14 @@ export default function validateFormData(
   schema,
   customValidate,
   transformErrors,
-  local
+  localization
 ) {
   try {
     ajv.validate(schema, formData);
-    localize[local] && localize[local](ajv.errors);
+    localization &&
+      typeof localization === "function" &&
+      localization(ajv.errors);
+    ajv.compile(schema);
   } catch (e) {
     // swallow errors thrown in ajv due to invalid schemas, these
     // still get displayed

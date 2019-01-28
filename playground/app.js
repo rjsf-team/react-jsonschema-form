@@ -416,7 +416,7 @@ class App extends Component {
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
-      localize = "en",
+      localization,
     } = this.state;
 
     return (
@@ -490,7 +490,7 @@ class App extends Component {
               }
               transformErrors={transformErrors}
               onError={log("errors")}
-              localize={localize}>
+              localization={localization}>
               <div className="row">
                 <div className="col-sm-3">
                   <button className="btn btn-primary" type="submit">

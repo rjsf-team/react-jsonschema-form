@@ -19,7 +19,7 @@ import customObject from "./customObject";
 import alternatives from "./alternatives";
 import propertyDependencies from "./propertyDependencies";
 import schemaDependencies from "./schemaDependencies";
-import localize from "./localize";
+import localization from "./localization";
 import additionalProperties from "./additionalProperties";
 
 export const samples = {
@@ -42,7 +42,7 @@ export const samples = {
   Alternatives: alternatives,
   "Property dependencies": propertyDependencies,
   "Schema dependencies": schemaDependencies,
-  Localize: localize,
+  Localization: localization,
   "Additional Properties": additionalProperties,
   "Any Of": anyOf,
   "One Of": oneOf,
