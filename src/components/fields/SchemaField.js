@@ -1,18 +1,19 @@
-import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
-import React from "react";
-import PropTypes from "prop-types";
-
 import {
-  isMultiSelect,
-  retrieveSchema,
-  toIdSchema,
+  deepEquals,
   getDefaultRegistry,
-  mergeObjects,
+  getSchemaType,
   getUiOptions,
   isFilesArray,
-  deepEquals,
-  getSchemaType,
+  isMultiSelect,
+  mergeObjects,
+  retrieveSchema,
+  toIdSchema,
 } from "../../utils";
+
+import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
+import PropTypes from "prop-types";
+import React from "react";
+import ReactHtmlParser from "react-html-parser";
 import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -56,7 +57,7 @@ function Label(props) {
   }
   return (
     <label className="control-label" htmlFor={id}>
-      {label}
+      {ReactHtmlParser(label)}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
   );
@@ -82,7 +83,7 @@ function Help(props) {
     return <div />;
   }
   if (typeof help === "string") {
-    return <p className="help-block">{help}</p>;
+    return <p className="help-block">{ReactHtmlParser(help)}</p>;
   }
   return <div className="help-block">{help}</div>;
 }

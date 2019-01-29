@@ -1,7 +1,7 @@
 module.exports = {
   schema: {
-    title: "A registration form",
-    description: "A simple form example.",
+    title: "A <b>registration</b> form",
+    description: "A <b>simple</b> form example.",
     type: "object",
     required: ["firstName", "lastName"],
     properties: {
@@ -37,12 +37,12 @@ module.exports = {
     },
     age: {
       "ui:widget": "updown",
-      "ui:title": "Age of person",
+      "ui:title": "Age of <i>person</i>",
       "ui:description": "(earthian year)",
     },
     password: {
       "ui:widget": "password",
-      "ui:help": "Hint: Make it strong!",
+      "ui:help": "<i>Hint: Make it strong!</i>",
     },
     telephone: {
       "ui:options": {
