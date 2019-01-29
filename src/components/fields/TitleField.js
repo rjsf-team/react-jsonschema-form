@@ -1,5 +1,6 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
+import ReactHtmlParser from "react-html-parser";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 
@@ -7,7 +8,7 @@ function TitleField(props) {
   const { id, title, required } = props;
   return (
     <legend id={id}>
-      {title}
+      {ReactHtmlParser(title)}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </legend>
   );

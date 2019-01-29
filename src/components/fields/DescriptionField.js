@@ -1,5 +1,6 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
+import ReactHtmlParser from "react-html-parser";
 
 function DescriptionField(props) {
   const { id, description } = props;
@@ -10,7 +11,7 @@ function DescriptionField(props) {
   if (typeof description === "string") {
     return (
       <p id={id} className="field-description">
-        {description}
+        {ReactHtmlParser(description)}
       </p>
     );
   } else {
