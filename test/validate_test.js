@@ -115,9 +115,10 @@ describe("Validation", () => {
           },
         },
       };
-      const metaSchema = require("ajv/lib/refs/json-schema-draft-04.json");
+      const metaSchemaDraft4 = require("ajv/lib/refs/json-schema-draft-04.json");
+      const metaSchemaDraft6 = require("ajv/lib/refs/json-schema-draft-06.json");
 
-      it("should return a validation error about meta schema", () => {
+      it("should return a validation error about meta schema when meta schema is not defined", () => {
         const errors = validateFormData(
           { datasetId: "some kind of text" },
           schema
@@ -134,7 +135,21 @@ describe("Validation", () => {
           schema,
           null,
           null,
-          metaSchema
+          metaSchemaDraft4
+        );
+        expect(errors.validationErrors).to.equal(null);
+        expect(errors.errors).to.have.lengthOf(1);
+        expect(errors.errors[0].stack).to.equal(
+          '.datasetId should match pattern "\\d+"'
+        );
+      });
+      it("should return a validation error about formData, when used with multiple meta schemas", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema,
+          null,
+          null,
+          [metaSchemaDraft4, metaSchemaDraft6]
         );
         expect(errors.validationErrors).to.equal(null);
         expect(errors.errors).to.have.lengthOf(1);
