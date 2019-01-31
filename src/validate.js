@@ -157,11 +157,11 @@ export default function validateFormData(
   schema,
   customValidate,
   transformErrors,
-  metaSchema
+  additionalMetaSchemas
 ) {
   // add more schemas to validate against
-  if (!addedMetaSchemas && metaSchema) {
-    ajv.addMetaSchema(metaSchema);
+  if (!addedMetaSchemas && additionalMetaSchemas) {
+    ajv.addMetaSchema(additionalMetaSchemas);
     addedMetaSchemas = true;
   }
   let validationErrors = null;

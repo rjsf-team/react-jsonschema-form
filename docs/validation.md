@@ -51,29 +51,32 @@ render((
 
 To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has a `$schema` attribute that enables the validator to use the correct meta schema. For example:
 
-```json 
+```json
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   ...
 }
 ```
 
-Note that react-jsonschema-form only supports the latest version of JSON Schema, draft-07, by default. To support additional meta schemas, you need to install `ajv` and import them, then pass your meta schemas through the `metaSchema` prop to your `Form` component:
+Note that react-jsonschema-form only supports the latest version of JSON Schema, draft-07, by default. To support additional meta schemas pass them through the `additionalMetaSchemas` prop to your `Form` component:
 
 ```jsx
-const metaSchema = require("ajv/lib/refs/json-schema-draft-04.json");
+const additionalMetaSchemas = require("ajv/lib/refs/json-schema-draft-04.json");
 
 render((
-  <Form schema={schema}
-        metaSchema={metaSchema} />
+  <Form schema={schema} 
+        additionalMetaSchemas={additionalMetaSchemas}/>
 ), document.getElementById("app"));
 ```
-`metaSchema` also accepts an array of meta schemas:
+
+In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
+
+`additionalMetaSchemas` also accepts an array of meta schemas:
 
 ```jsx
 render((
-  <Form schema={schema}
-        metaSchema={[metaSchema1,metaSchema2]} />
+  <Form schema={schema} 
+        additionalMetaSchemas={[metaSchema1, metaSchema2]} />
 ), document.getElementById("app"));
 ```
 
