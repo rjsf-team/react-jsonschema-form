@@ -35,6 +35,19 @@ export default {
         type: "string",
         title: "Password",
         minLength: 3,
+      },
+      join_reference: {
+        title: "Join Reference",
+        type: "string",
+        enum: [
+          "facebook",
+          "self",
+          "friends"
+        ]
+      },
+      area: {
+        type: "string",
+        title: "Area",
       }
     }
   },
@@ -77,6 +90,13 @@ export default {
     },
     date: {
       "ui:widget": "alt-datetime",
+    },
+    join_reference: {
+      "ui:placeholder": "Please select join reference"
+    },
+    area: {
+      "ui:widget": "dropdown",
+      "ui:placeholder": "Please select area"
     }
   },
 

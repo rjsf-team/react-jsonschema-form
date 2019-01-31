@@ -254,6 +254,7 @@ export default class Form extends Component {
             onFocus={this.onFocus}
             getDocUploadUrl={this.props.getDocUploadUrl}
             isUnique={this.props.isUnique}
+            handleGetListItems={this.props.handleGetListItems}
             registry={registry}
             safeRenderCompletion={safeRenderCompletion}
             disabled={disabled}

@@ -192,6 +192,7 @@ class ObjectField extends Component {
       registry = getDefaultRegistry(),
       getDocUploadUrl,
       isUnique,
+      handleGetListItems,
       theme
     } = this.props;
     const { definitions, fields, formContext } = registry;
@@ -254,6 +255,7 @@ class ObjectField extends Component {
               theme={theme}
               getDocUploadUrl={getDocUploadUrl}
               isUnique={isUnique}
+              handleGetListItems={handleGetListItems}
               onDropPropertyClick={this.onDropPropertyClick}
             />
           ),
