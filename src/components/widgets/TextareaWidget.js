@@ -10,8 +10,7 @@ padding: 6px 12px;
 font-size: 14px;
 line-height: 1.42857143;
 color: #555;
-background-col
-or: #fff;
+background-color: #fff;
 background-image: none;
 border: 1px solid ${props => props.theme.borderColor};
 &:hover, &:focus {

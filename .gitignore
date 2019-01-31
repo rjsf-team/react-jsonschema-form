@@ -6,3 +6,4 @@ site
 dist
 lib
 yarn.lock
+.idea/*

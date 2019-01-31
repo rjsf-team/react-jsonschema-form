@@ -18,7 +18,8 @@ import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
 import DocumentWidget from "./DocumentWidget";
-import TelephoneWidget from "./TelephoneWidget"
+import TelephoneWidget from "./TelephoneWidget";
+import DropDownWidget from "./DropDownWidget";
 
 export default {
   BaseInput,
@@ -42,4 +43,5 @@ export default {
   CheckboxWidget,
   CheckboxesWidget,
   TelephoneWidget,
+  DropDownWidget,
 };
