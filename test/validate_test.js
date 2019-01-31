@@ -60,15 +60,15 @@ describe("Validation", () => {
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(2);
+        expect(errors).to.have.lengthOf(2);
         expect(errors[0].message).eql("should be string");
         expect(errors[1].message).eql("should be string");
       });
 
       it("should return an errorSchema", () => {
-        expect(errorSchema.foo.__errors).to.have.length.of(1);
+        expect(errorSchema.foo.__errors).to.have.lengthOf(1);
         expect(errorSchema.foo.__errors[0]).eql("should be string");
-        expect(errorSchema[illFormedKey].__errors).to.have.length.of(1);
+        expect(errorSchema[illFormedKey].__errors).to.have.lengthOf(1);
         expect(errorSchema[illFormedKey].__errors[0]).eql("should be string");
       });
     });
@@ -94,7 +94,7 @@ describe("Validation", () => {
       });
 
       it("should not return an error", () => {
-        expect(errors).to.have.length.of(0);
+        expect(errors).to.have.lengthOf(0);
       });
     });
 
@@ -124,12 +124,12 @@ describe("Validation", () => {
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(1);
+        expect(errors).to.have.lengthOf(1);
         expect(errors[0].stack).eql("pass2: passwords don't match.");
       });
 
       it("should return an errorSchema", () => {
-        expect(errorSchema.pass2.__errors).to.have.length.of(1);
+        expect(errorSchema.pass2.__errors).to.have.lengthOf(1);
         expect(errorSchema.pass2.__errors[0]).eql("passwords don't match.");
       });
     });
@@ -148,7 +148,7 @@ describe("Validation", () => {
           dataUrlWithName: "data:text/plain;name=file1.txt;base64,x=",
         };
         const result = validateFormData(formData, schema);
-        expect(result.errors).to.have.length.of(0);
+        expect(result.errors).to.have.lengthOf(0);
       });
 
       it("Data-Url without name is accepted", () => {
@@ -156,7 +156,7 @@ describe("Validation", () => {
           dataUrlWithoutName: "data:text/plain;base64,x=",
         };
         const result = validateFormData(formData, schema);
-        expect(result.errors).to.have.length.of(0);
+        expect(result.errors).to.have.lengthOf(0);
       });
     });
 
@@ -236,14 +236,14 @@ describe("Validation", () => {
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(1);
+        expect(errors).to.have.lengthOf(1);
         expect(errors[0].name).eql("type");
         expect(errors[0].property).eql(".properties['foo'].required");
         expect(errors[0].message).eql("should be array");
       });
 
       it("should return an errorSchema", () => {
-        expect(errorSchema.properties.foo.required.__errors).to.have.length.of(
+        expect(errorSchema.properties.foo.required.__errors).to.have.lengthOf(
           1
         );
         expect(errorSchema.properties.foo.required.__errors[0]).eql(
@@ -293,12 +293,12 @@ describe("Validation", () => {
         });
 
         it("should validate a required field", () => {
-          expect(comp.state.errors).to.have.length.of(1);
+          expect(comp.state.errors).to.have.lengthOf(1);
           expect(comp.state.errors[0].message).eql("is a required property");
         });
 
         it("should render errors", () => {
-          expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+          expect(node.querySelectorAll(".errors li")).to.have.lengthOf(1);
           expect(node.querySelector(".errors li").textContent).eql(
             ".foo is a required property"
           );
@@ -344,14 +344,14 @@ describe("Validation", () => {
         });
 
         it("should validate a minLength field", () => {
-          expect(comp.state.errors).to.have.length.of(1);
+          expect(comp.state.errors).to.have.lengthOf(1);
           expect(comp.state.errors[0].message).eql(
             "should NOT be shorter than 10 characters"
           );
         });
 
         it("should render errors", () => {
-          expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+          expect(node.querySelectorAll(".errors li")).to.have.lengthOf(1);
           expect(node.querySelector(".errors li").textContent).eql(
             ".foo should NOT be shorter than 10 characters"
           );
@@ -604,12 +604,12 @@ describe("Validation", () => {
         });
 
         it("should validate a required field", () => {
-          expect(comp.state.errors).to.have.length.of(1);
+          expect(comp.state.errors).to.have.lengthOf(1);
           expect(comp.state.errors[0].message).eql("is a required property");
         });
 
         it("should not render error list if showErrorList prop true", () => {
-          expect(node.querySelectorAll(".errors li")).to.have.length.of(0);
+          expect(node.querySelectorAll(".errors li")).to.have.lengthOf(0);
         });
 
         it("should trigger the onError handler", () => {
@@ -660,19 +660,19 @@ describe("Validation", () => {
           ErrorList: CustomErrorList,
           formContext: { className: "foo" },
         });
-        expect(node.querySelectorAll(".CustomErrorList")).to.have.length.of(1);
+        expect(node.querySelectorAll(".CustomErrorList")).to.have.lengthOf(1);
         expect(node.querySelector(".CustomErrorList").textContent).eql(
           "1 custom"
         );
-        expect(node.querySelectorAll(".ErrorSchema")).to.have.length.of(1);
+        expect(node.querySelectorAll(".ErrorSchema")).to.have.lengthOf(1);
         expect(node.querySelector(".ErrorSchema").textContent).eql(
           "should be string"
         );
-        expect(node.querySelectorAll(".Schema")).to.have.length.of(1);
+        expect(node.querySelectorAll(".Schema")).to.have.lengthOf(1);
         expect(node.querySelector(".Schema").textContent).eql("string");
-        expect(node.querySelectorAll(".UiSchema")).to.have.length.of(1);
+        expect(node.querySelectorAll(".UiSchema")).to.have.lengthOf(1);
         expect(node.querySelector(".UiSchema").textContent).eql("bar");
-        expect(node.querySelectorAll(".foo")).to.have.length.of(1);
+        expect(node.querySelectorAll(".foo")).to.have.lengthOf(1);
       });
     });
   });
