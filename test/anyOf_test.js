@@ -1,22 +1,9 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
-
-import { createFormComponent, createSandbox, setProps } from "./test_utils";
+import { createFormComponent, setProps } from "./test_utils";
 
 describe("anyOf", () => {
-  let newSandbox;
-
-  beforeEach(() => {
-    
-    newSandbox = createSandbox();
-    console.log(newSandbox);
-    console.log("HELLO")
-  });
-
-  afterEach(() => {
-    newSandbox.restore();
-  });
 
   it("should not render a select element if the anyOf keyword is not present", () => {
     const schema = {

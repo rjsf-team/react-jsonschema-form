@@ -8,14 +8,13 @@ import Form from "../src";
 import {
   createComponent,
   createFormComponent,
-  createSandbox,
 } from "./test_utils";
 
 describe("Form", () => {
   let sandbox;
 
   beforeEach(() => {
-    sandbox = createSandbox();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -32,7 +31,7 @@ describe("Form", () => {
     it("should render a submit button", () => {
       const { node } = createFormComponent({ schema: {} });
 
-      expect(node.querySelectorAll("button[type=submit]")).to.have.length.of(1);
+      expect(node.querySelectorAll("button[type=submit]")).to.have.lengthOf(1);
     });
 
     it("should render children buttons", () => {
@@ -44,7 +43,7 @@ describe("Form", () => {
         </Form>
       );
       const node = findDOMNode(comp);
-      expect(node.querySelectorAll("button[type=submit]")).to.have.length.of(2);
+      expect(node.querySelectorAll("button[type=submit]")).to.have.lengthOf(2);
     });
   });
 
@@ -314,11 +313,11 @@ describe("Form", () => {
     });
 
     it("should pass errors as the provided React component", () => {
-      expect(node.querySelectorAll(".error-detail li")).to.have.length.of(1);
+      expect(node.querySelectorAll(".error-detail li")).to.have.lengthOf(1);
     });
 
     it("should pass rawErrors as an array of strings", () => {
-      expect(node.querySelectorAll(".raw-error")).to.have.length.of(1);
+      expect(node.querySelectorAll(".raw-error")).to.have.lengthOf(1);
     });
 
     it("should pass help as a the provided React element", () => {
@@ -334,9 +333,10 @@ describe("Form", () => {
 
   describe("Custom submit buttons", () => {
     it("should submit the form when clicked", done => {
-      let submitCount = 0;
       const onSubmit = () => {
+        let submitCount = 0;
         submitCount++;
+        console.log(submitCount)
         if (submitCount === 2) {
           done();
         }
@@ -349,6 +349,8 @@ describe("Form", () => {
         </Form>
       );
       const node = findDOMNode(comp);
+
+      console.log(onSubmit);
       const buttons = node.querySelectorAll("button[type=submit]");
       buttons[0].click();
       buttons[1].click();
@@ -366,7 +368,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(1);
     });
 
     it("should handle multiple schema definition references", () => {
@@ -383,7 +385,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(2);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(2);
     });
 
     it("should handle deeply referenced schema definitions", () => {
@@ -404,7 +406,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(1);
     });
 
     it("should handle references to deep schema definitions", () => {
@@ -425,7 +427,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(1);
     });
 
     it("should handle referenced definitions for array items", () => {
@@ -449,7 +451,7 @@ describe("Form", () => {
         },
       });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(1);
     });
 
     it("should raise for non-existent definitions referenced", () => {
@@ -555,7 +557,7 @@ describe("Form", () => {
       };
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(1);
     });
 
     it("should follow multiple recursive references", () => {
@@ -573,7 +575,7 @@ describe("Form", () => {
       };
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(1);
     });
 
     it("should handle recursive references to deep schema definitions", () => {
@@ -597,7 +599,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(1);
     });
 
     it("should handle multiple recursive references to deep schema definitions", () => {
@@ -624,7 +626,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(1);
     });
 
     it("should priorize definition over schema type property", () => {
@@ -650,7 +652,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(2);
+      expect(node.querySelectorAll("input[type=text]")).to.have.lengthOf(2);
     });
 
     it("should priorize local properties over definition ones", () => {
@@ -692,7 +694,7 @@ describe("Form", () => {
 
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("option")).to.have.length.of(3);
+      expect(node.querySelectorAll("option")).to.have.lengthOf(3);
     });
   });
 
@@ -1073,7 +1075,7 @@ describe("Form", () => {
           schema: { type: "number" },
         });
 
-        expect(comp.state.errors).to.have.length.of(1);
+        expect(comp.state.errors).to.have.lengthOf(1);
         expect(comp.state.errors[0].stack).to.eql("should be number");
       });
     });
@@ -1139,7 +1141,7 @@ describe("Form", () => {
             target: { value: "short" },
           });
 
-          expect(node.querySelectorAll(".field-error")).to.have.length.of(0);
+          expect(node.querySelectorAll(".field-error")).to.have.lengthOf(0);
         });
 
         it("should clean contextualized errors up when they're fixed", () => {
@@ -1175,7 +1177,7 @@ describe("Form", () => {
           });
           submit(node);
 
-          expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
+          expect(node.querySelectorAll(".field-error")).to.have.lengthOf(1);
 
           // Fix the second field
           Simulate.change(node.querySelectorAll("input[type=text]")[1], {
@@ -1186,7 +1188,7 @@ describe("Form", () => {
           // No error remaining, shouldn't throw.
           Simulate.submit(node);
 
-          expect(node.querySelectorAll(".field-error")).to.have.length.of(0);
+          expect(node.querySelectorAll(".field-error")).to.have.lengthOf(0);
         });
       });
 
@@ -1216,7 +1218,7 @@ describe("Form", () => {
             target: { value: "short" },
           });
 
-          expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
+          expect(node.querySelectorAll(".field-error")).to.have.lengthOf(1);
           expect(
             node.querySelector(".field-string .error-detail").textContent
           ).eql("should NOT be shorter than 8 characters");
@@ -1348,7 +1350,7 @@ describe("Form", () => {
       it("should denote the error in the field", () => {
         const { node } = createFormComponent(formProps);
 
-        expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
+        expect(node.querySelectorAll(".field-error")).to.have.lengthOf(1);
         expect(
           node.querySelector(".field-string .error-detail").textContent
         ).eql("should NOT be shorter than 8 characters");
@@ -1433,7 +1435,7 @@ describe("Form", () => {
           ".field-object .field-string .error-detail"
         );
 
-        expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
+        expect(node.querySelectorAll(".field-error")).to.have.lengthOf(1);
         expect(errorDetail.textContent).eql(
           "should NOT be shorter than 8 characters"
         );
@@ -1902,7 +1904,7 @@ describe("Form", () => {
     it("should enable all items", () => {
       const { node } = createFormComponent({ schema, formData });
 
-      expect(node.querySelectorAll("input:disabled")).to.have.length.of(0);
+      expect(node.querySelectorAll("input:disabled")).to.have.lengthOf(0);
     });
 
     it("should disable all items", () => {
@@ -1912,7 +1914,7 @@ describe("Form", () => {
         disabled: true,
       });
 
-      expect(node.querySelectorAll("input:disabled")).to.have.length.of(2);
+      expect(node.querySelectorAll("input:disabled")).to.have.lengthOf(2);
     });
   });
 

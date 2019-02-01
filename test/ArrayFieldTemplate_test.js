@@ -1,21 +1,10 @@
 import React, { PureComponent } from "react";
 
 import { expect } from "chai";
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("ArrayFieldTemplate", () => {
-  let sandbox;
-
   const formData = ["one", "two", "three"];
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe("Custom ArrayFieldTemplate of string array", () => {
     function ArrayFieldTemplate(props) {
       return (
@@ -53,7 +42,7 @@ describe("ArrayFieldTemplate", () => {
           ArrayFieldTemplate,
         });
 
-        expect(node.querySelectorAll(".field-array div")).to.have.length.of(6);
+        expect(node.querySelectorAll(".field-array div")).to.have.lengthOf(6);
       });
     });
 
@@ -81,15 +70,15 @@ describe("ArrayFieldTemplate", () => {
       });
 
       it("should render one root element for the array", () => {
-        expect(node.querySelectorAll(".custom-array")).to.have.length.of(1);
+        expect(node.querySelectorAll(".custom-array")).to.have.lengthOf(1);
       });
 
       it("should render one add button", () => {
-        expect(node.querySelectorAll(".custom-array-add")).to.have.length.of(1);
+        expect(node.querySelectorAll(".custom-array-add")).to.have.lengthOf(1);
       });
 
       it("should render one child for each array item", () => {
-        expect(node.querySelectorAll(".custom-array-item")).to.have.length.of(
+        expect(node.querySelectorAll(".custom-array-item")).to.have.lengthOf(
           formData.length
         );
       });
@@ -97,19 +86,19 @@ describe("ArrayFieldTemplate", () => {
       it("should render text input for each array item", () => {
         expect(
           node.querySelectorAll(".custom-array-item .field input[type=text]")
-        ).to.have.length.of(formData.length);
+        ).to.have.lengthOf(formData.length);
       });
 
       it("should render move up button for all but one array items", () => {
         expect(
           node.querySelectorAll(".custom-array-item-move-up")
-        ).to.have.length.of(formData.length - 1);
+        ).to.have.lengthOf(formData.length - 1);
       });
 
       it("should render move down button for all but one array items", () => {
         expect(
           node.querySelectorAll(".custom-array-item-move-down")
-        ).to.have.length.of(formData.length - 1);
+        ).to.have.lengthOf(formData.length - 1);
       });
     });
 
@@ -137,15 +126,15 @@ describe("ArrayFieldTemplate", () => {
       });
 
       it("should render one root element for the array", () => {
-        expect(node.querySelectorAll(".custom-array")).to.have.length.of(1);
+        expect(node.querySelectorAll(".custom-array")).to.have.lengthOf(1);
       });
 
       it("should not render an add button", () => {
-        expect(node.querySelectorAll(".custom-array-add")).to.have.length.of(0);
+        expect(node.querySelectorAll(".custom-array-add")).to.have.lengthOf(0);
       });
 
       it("should render one child for each array item", () => {
-        expect(node.querySelectorAll(".custom-array-item")).to.have.length.of(
+        expect(node.querySelectorAll(".custom-array-item")).to.have.lengthOf(
           formData.length
         );
       });
@@ -153,19 +142,19 @@ describe("ArrayFieldTemplate", () => {
       it("should render text input for each array item", () => {
         expect(
           node.querySelectorAll(".custom-array-item .field input[type=text]")
-        ).to.have.length.of(formData.length);
+        ).to.have.lengthOf(formData.length);
       });
 
       it("should not render any move up buttons", () => {
         expect(
           node.querySelectorAll(".custom-array-item-move-up")
-        ).to.have.length.of(0);
+        ).to.have.lengthOf(0);
       });
 
       it("should not render any move down buttons", () => {
         expect(
           node.querySelectorAll(".custom-array-item-move-down")
-        ).to.have.length.of(0);
+        ).to.have.lengthOf(0);
       });
     });
   });

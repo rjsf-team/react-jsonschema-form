@@ -1,19 +1,9 @@
 import React from "react";
 import { expect } from "chai";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("FormContext", () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   const schema = { type: "string" };
 
   const formContext = { foo: "bar" };

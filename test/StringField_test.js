@@ -1,10 +1,11 @@
 import React from "react";
+import sinon from "sinon";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 
 import { parseDateString, toDateString } from "../src/utils";
 import { utcToLocal } from "../src/components/widgets/DateTimeWidget";
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("StringField", () => {
   let sandbox;
@@ -12,7 +13,7 @@ describe("StringField", () => {
   const CustomWidget = () => <div id="custom" />;
 
   beforeEach(() => {
-    sandbox = createSandbox();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -29,7 +30,7 @@ describe("StringField", () => {
 
       expect(
         node.querySelectorAll(".field input[type=text]")
-      ).to.have.length.of(1);
+      ).to.have.lengthOf(1);
     });
 
     it("should render a string field with a label", () => {
@@ -190,7 +191,7 @@ describe("StringField", () => {
         },
       });
 
-      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field select")).to.have.lengthOf(1);
     });
 
     it("should render a string field for an enum without a type", () => {
@@ -200,7 +201,7 @@ describe("StringField", () => {
         },
       });
 
-      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field select")).to.have.lengthOf(1);
     });
 
     it("should render a string field with a label", () => {
@@ -409,7 +410,7 @@ describe("StringField", () => {
 
       expect(
         node.querySelectorAll(".field [type=datetime-local]")
-      ).to.have.length.of(1);
+      ).to.have.lengthOf(1);
     });
 
     it("should assign a default value", () => {
@@ -481,7 +482,7 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(comp.state.errors).to.have.lengthOf(1);
     });
 
     it("should render customized DateTimeWidget", () => {
@@ -525,7 +526,7 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      expect(node.querySelectorAll(".field [type=date]")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field [type=date]")).to.have.lengthOf(1);
     });
 
     it("should assign a default value", () => {
@@ -601,7 +602,7 @@ describe("StringField", () => {
         target: { value: "2012-12-12" },
       });
 
-      expect(comp.state.errors).to.have.length.of(0);
+      expect(comp.state.errors).to.have.lengthOf(0);
       expect(comp.state.formData).eql("2012-12-12");
     });
 
@@ -619,7 +620,7 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(comp.state.errors).to.have.lengthOf(1);
     });
 
     it("should render customized DateWidget", () => {
@@ -663,7 +664,7 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      expect(node.querySelectorAll(".field select")).to.have.length.of(6);
+      expect(node.querySelectorAll(".field select")).to.have.lengthOf(6);
     });
 
     it("should render a string field with a main label", () => {
@@ -925,7 +926,7 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      expect(node.querySelectorAll(".field select")).to.have.length.of(3);
+      expect(node.querySelectorAll(".field select")).to.have.lengthOf(3);
     });
 
     it("should render a string field with a main label", () => {
@@ -1084,7 +1085,7 @@ describe("StringField", () => {
 
       comp.componentWillReceiveProps({ formData: "2012-12-12" });
 
-      expect(comp.state.errors).to.have.length.of(0);
+      expect(comp.state.errors).to.have.lengthOf(0);
     });
 
     describe("Action buttons", () => {
@@ -1165,7 +1166,7 @@ describe("StringField", () => {
         },
       });
 
-      expect(node.querySelectorAll(".field [type=email]")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field [type=email]")).to.have.lengthOf(1);
     });
 
     it("should render a string field with a label", () => {
@@ -1259,7 +1260,7 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(comp.state.errors).to.have.lengthOf(1);
     });
 
     it("should render customized EmailWidget", () => {
@@ -1286,7 +1287,7 @@ describe("StringField", () => {
         },
       });
 
-      expect(node.querySelectorAll(".field [type=url]")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field [type=url]")).to.have.lengthOf(1);
     });
 
     it("should render a string field with a label", () => {
@@ -1379,7 +1380,7 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(comp.state.errors).to.have.lengthOf(1);
     });
 
     it("should render customized URLWidget", () => {
@@ -1410,7 +1411,7 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      expect(node.querySelectorAll(".field [type=color]")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field [type=color]")).to.have.lengthOf(1);
     });
 
     it("should assign a default value", () => {
@@ -1482,7 +1483,7 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(comp.state.errors).to.have.lengthOf(1);
     });
 
     it("should render customized ColorWidget", () => {
@@ -1511,7 +1512,7 @@ describe("StringField", () => {
         },
       });
 
-      expect(node.querySelectorAll(".field [type=file]")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field [type=file]")).to.have.lengthOf(1);
     });
 
     it("should assign a default value", () => {

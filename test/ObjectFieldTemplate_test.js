@@ -1,21 +1,11 @@
 import React, { PureComponent } from "react";
 
 import { expect } from "chai";
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("ObjectFieldTemplate", () => {
-  let sandbox;
 
   const formData = { foo: "bar", bar: "foo" };
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   class ObjectFieldTemplate extends PureComponent {
     render() {
       const {
@@ -60,18 +50,18 @@ describe("ObjectFieldTemplate", () => {
   });
 
   it("should render one root element", () => {
-    expect(node.querySelectorAll(".root")).to.have.length.of(1);
+    expect(node.querySelectorAll(".root")).to.have.lengthOf(1);
   });
 
   it("should render one title", () => {
-    expect(node.querySelectorAll(".title-field")).to.have.length.of(1);
+    expect(node.querySelectorAll(".title-field")).to.have.lengthOf(1);
   });
 
   it("should render one description", () => {
-    expect(node.querySelectorAll(".description-field")).to.have.length.of(1);
+    expect(node.querySelectorAll(".description-field")).to.have.lengthOf(1);
   });
 
   it("should render two property containers", () => {
-    expect(node.querySelectorAll(".property")).to.have.length.of(2);
+    expect(node.querySelectorAll(".property")).to.have.lengthOf(2);
   });
 });

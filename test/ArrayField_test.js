@@ -1,23 +1,14 @@
 import React from "react";
-
 import { expect } from "chai";
+import sinon from 'sinon';
 import { Simulate } from "react-dom/test-utils";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("ArrayField", () => {
-  let sandbox;
   const CustomComponent = props => {
     return <div id="custom">{props.rawErrors}</div>;
   };
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
 
   describe("Unsupported array schema", () => {
     it("should warn on missing items descriptor", () => {
@@ -42,7 +33,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({ schema });
 
       const fieldset = node.querySelectorAll("fieldset");
-      expect(fieldset).to.have.length.of(1);
+      expect(fieldset).to.have.lengthOf(1);
       expect(fieldset[0].id).eql("root");
     });
 
@@ -130,16 +121,17 @@ describe("ArrayField", () => {
       });
 
       const matches = node.querySelectorAll("#custom");
-      expect(matches).to.have.length.of(1);
+      expect(matches).to.have.lengthOf(1);
+      console.log(matches[0].textContent)
       expect(matches[0].textContent).to.eql(
-        "should NOT have less than 2 items"
+        "should NOT have fewer than 2 items"
       );
     });
 
     it("should contain no field in the list by default", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll(".field-string")).to.have.length.of(0);
+      expect(node.querySelectorAll(".field-string")).to.have.lengthOf(0);
     });
 
     it("should have an add button", () => {
@@ -162,7 +154,7 @@ describe("ArrayField", () => {
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
-      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field-string")).to.have.lengthOf(1);
     });
 
     it("should not provide an add button if length equals maxItems", () => {
@@ -228,7 +220,7 @@ describe("ArrayField", () => {
       });
       const inputs = node.querySelectorAll(".field-string input[type=text]");
 
-      expect(inputs).to.have.length.of(2);
+      expect(inputs).to.have.lengthOf(2);
       expect(inputs[0].value).eql("foo");
       expect(inputs[1].value).eql("bar");
     });
@@ -260,7 +252,7 @@ describe("ArrayField", () => {
       Simulate.click(moveDownBtns[0]);
 
       const inputs = node.querySelectorAll(".field-string input[type=text]");
-      expect(inputs).to.have.length.of(3);
+      expect(inputs).to.have.lengthOf(3);
       expect(inputs[0].value).eql("bar");
       expect(inputs[1].value).eql("foo");
       expect(inputs[2].value).eql("baz");
@@ -276,7 +268,7 @@ describe("ArrayField", () => {
       Simulate.click(moveUpBtns[2]);
 
       const inputs = node.querySelectorAll(".field-string input[type=text]");
-      expect(inputs).to.have.length.of(3);
+      expect(inputs).to.have.lengthOf(3);
       expect(inputs[0].value).eql("foo");
       expect(inputs[1].value).eql("baz");
       expect(inputs[2].value).eql("bar");
@@ -363,7 +355,7 @@ describe("ArrayField", () => {
       Simulate.click(dropBtns[0]);
 
       const inputs = node.querySelectorAll(".field-string input[type=text]");
-      expect(inputs).to.have.length.of(1);
+      expect(inputs).to.have.lengthOf(1);
       expect(inputs[0].value).eql("bar");
     });
 
@@ -396,7 +388,7 @@ describe("ArrayField", () => {
 
       expect(
         node.querySelectorAll(".has-error .error-detail")
-      ).to.have.length.of(1);
+      ).to.have.lengthOf(1);
 
       const dropBtns = node.querySelectorAll(".array-item-remove");
 
@@ -404,7 +396,7 @@ describe("ArrayField", () => {
 
       expect(
         node.querySelectorAll(".has-error .error-detail")
-      ).to.have.length.of(0);
+      ).to.have.lengthOf(0);
     });
 
     it("should handle cleared field values in the array", () => {
@@ -424,7 +416,7 @@ describe("ArrayField", () => {
       });
 
       expect(comp.state.formData).eql([1, null, 3]);
-      expect(comp.state.errors).to.have.length.of(1);
+      expect(comp.state.errors).to.have.lengthOf(1);
     });
 
     it("should render the input widgets with the expected ids", () => {
@@ -653,7 +645,7 @@ describe("ArrayField", () => {
       it("should render a select widget", () => {
         const { node } = createFormComponent({ schema });
 
-        expect(node.querySelectorAll("select")).to.have.length.of(1);
+        expect(node.querySelectorAll("select")).to.have.lengthOf(1);
       });
 
       it("should render a select widget with a label", () => {
@@ -672,7 +664,7 @@ describe("ArrayField", () => {
       it("should render options", () => {
         const { node } = createFormComponent({ schema });
 
-        expect(node.querySelectorAll("select option")).to.have.length.of(3);
+        expect(node.querySelectorAll("select option")).to.have.lengthOf(3);
       });
 
       it("should handle a change event", () => {
@@ -692,6 +684,7 @@ describe("ArrayField", () => {
       });
 
       it("should handle a blur event", () => {
+        const sandbox = sinon.createSandbox();
         const onBlur = sandbox.spy();
         const { node } = createFormComponent({ schema, onBlur });
 
@@ -705,11 +698,12 @@ describe("ArrayField", () => {
             ],
           },
         });
-
+        sandbox.restore();
         expect(onBlur.calledWith(select.id, ["foo", "bar"])).to.be.true;
       });
 
       it("should handle a focus event", () => {
+        const sandbox = sinon.createSandbox();
         const onFocus = sandbox.spy();
         const { node } = createFormComponent({ schema, onFocus });
 
@@ -723,7 +717,7 @@ describe("ArrayField", () => {
             ],
           },
         });
-
+        sandbox.restore();
         expect(onFocus.calledWith(select.id, ["foo", "bar"])).to.be.true;
       });
 
@@ -734,7 +728,7 @@ describe("ArrayField", () => {
         });
 
         const options = node.querySelectorAll(".field select option");
-        expect(options).to.have.length.of(3);
+        expect(options).to.have.lengthOf(3);
         expect(options[0].selected).eql(true); // foo
         expect(options[1].selected).eql(true); // bar
         expect(options[2].selected).eql(false); // fuzz
@@ -757,9 +751,9 @@ describe("ArrayField", () => {
         });
 
         const matches = node.querySelectorAll("#custom");
-        expect(matches).to.have.length.of(1);
+        expect(matches).to.have.lengthOf(1);
         expect(matches[0].textContent).to.eql(
-          "should NOT have duplicate items (items ## 0 and 1 are identical)"
+          "should NOT have duplicate items (items ## 1 and 0 are identical)"
         );
       });
     });
@@ -772,7 +766,7 @@ describe("ArrayField", () => {
       it("should render the expected number of checkboxes", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=checkbox]")).to.have.length.of(3);
+        expect(node.querySelectorAll("[type=checkbox]")).to.have.lengthOf(3);
       });
 
       it("should render the expected labels", () => {
@@ -832,7 +826,7 @@ describe("ArrayField", () => {
           },
         });
 
-        expect(node.querySelectorAll(".checkbox-inline")).to.have.length.of(3);
+        expect(node.querySelectorAll(".checkbox-inline")).to.have.lengthOf(3);
       });
 
       it("should pass rawErrors down to custom widgets", () => {
@@ -858,9 +852,9 @@ describe("ArrayField", () => {
         });
 
         const matches = node.querySelectorAll("#custom");
-        expect(matches).to.have.length.of(1);
+        expect(matches).to.have.lengthOf(1);
         expect(matches[0].textContent).to.eql(
-          "should NOT have less than 3 items"
+          "should NOT have fewer than 3 items"
         );
       });
     });
@@ -879,7 +873,7 @@ describe("ArrayField", () => {
     it("should render an input[type=file] widget", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("input[type=file]")).to.have.length.of(1);
+      expect(node.querySelectorAll("input[type=file]")).to.have.lengthOf(1);
     });
 
     it("should render a select widget with a label", () => {
@@ -896,6 +890,7 @@ describe("ArrayField", () => {
     });
 
     it("should handle a change event", () => {
+      const sandbox = sinon.createSandbox();
       sandbox.stub(window, "FileReader").returns({
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
@@ -913,7 +908,7 @@ describe("ArrayField", () => {
           ],
         },
       });
-
+      sandbox.restore();
       return new Promise(setImmediate).then(() =>
         expect(comp.state.formData).eql([
           "data:text/plain;name=file1.txt;base64,x=",
@@ -933,7 +928,7 @@ describe("ArrayField", () => {
 
       const li = node.querySelectorAll(".file-info li");
 
-      expect(li).to.have.length.of(2);
+      expect(li).to.have.lengthOf(2);
       expect(li[0].textContent).eql("file1.txt (text/plain, 5 bytes)");
       expect(li[1].textContent).eql("file2.png (image/png, 7 bytes)");
     });
@@ -965,9 +960,9 @@ describe("ArrayField", () => {
       });
 
       const matches = node.querySelectorAll("#custom");
-      expect(matches).to.have.length.of(1);
+      expect(matches).to.have.lengthOf(1);
       expect(matches[0].textContent).to.eql(
-        "should NOT have less than 5 items"
+        "should NOT have fewer than 5 items"
       );
     });
   });
@@ -990,7 +985,7 @@ describe("ArrayField", () => {
         schema,
         formData: [[1, 2], [3, 4]],
       });
-      expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(2);
+      expect(node.querySelectorAll("fieldset fieldset")).to.have.lengthOf(2);
     });
 
     it("should add an inner list when clicking the add button", () => {
@@ -999,7 +994,7 @@ describe("ArrayField", () => {
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
-      expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(1);
+      expect(node.querySelectorAll("fieldset fieldset")).to.have.lengthOf(1);
     });
 
     it("should pass rawErrors down to every level of custom widgets", () => {
@@ -1038,12 +1033,12 @@ describe("ArrayField", () => {
       });
 
       const matches = node.querySelectorAll("#custom-error");
-      expect(matches).to.have.length.of(2);
+      expect(matches).to.have.lengthOf(2);
       expect(matches[0].textContent).to.eql(
-        "should NOT have less than 3 items"
+        "should NOT have fewer than 3 items"
       );
       expect(matches[1].textContent).to.eql(
-        "should NOT have less than 2 items"
+        "should NOT have fewer than 2 items"
       );
     });
   });
@@ -1086,7 +1081,7 @@ describe("ArrayField", () => {
     it("should render a fieldset", () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll("fieldset")).to.have.length.of(1);
+      expect(node.querySelectorAll("fieldset")).to.have.lengthOf(1);
     });
 
     it("should render a fieldset legend", () => {
@@ -1158,6 +1153,7 @@ describe("ArrayField", () => {
       const addInput = node.querySelector(
         "fieldset .field-string input[type=text]"
       );
+
       expect(addInput.id).eql("root_2");
       expect(addInput.value).eql("bar");
     });
@@ -1257,7 +1253,7 @@ describe("ArrayField", () => {
 
         Simulate.click(addBtn);
 
-        expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
+        expect(node.querySelectorAll(".field-string")).to.have.lengthOf(2);
         expect(comp.state.formData).eql([1, 2, "foo", undefined]);
       });
 
@@ -1275,7 +1271,7 @@ describe("ArrayField", () => {
 
         Simulate.click(dropBtns[0]);
 
-        expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+        expect(node.querySelectorAll(".field-string")).to.have.lengthOf(1);
         expect(comp.state.formData).eql([1, 2, "baz"]);
 
         dropBtns = node.querySelectorAll(".array-item-remove");

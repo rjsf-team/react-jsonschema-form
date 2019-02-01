@@ -74,7 +74,7 @@ function Label(props) {
     text-transform: uppercase;
   `;
   return (
-    <StLabel htmlFor={id}>
+    <StLabel className="control-label" htmlFor={id}>
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </StLabel>

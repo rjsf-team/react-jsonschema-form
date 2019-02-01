@@ -14,19 +14,20 @@ export function createComponent(Component, props) {
 }
 
 export function createFormComponent(props) {
+
   return createComponent(Form, { ...props, safeRenderCompletion: true });
 }
 
-export function createSandbox() {
-  // Ensure we catch any React warning and mark them as test failures.
-  let newSinon;
-  newSinon = sinon.createSandbox();
-  sinon.stub(console, 'error').callsFake(error => {
-    throw new Error(error);
-  });
+// export function createSandbox() {
+//   // Ensure we catch any React warning and mark them as test failures.
+//   let newSinon;
+//   newSinon = sinon.createSandbox();
+//   sinon.stub(console, 'error').callsFake(error => {
+//     throw new Error(error);
+//   });
 
-  return newSinon; 
-}
+//   return newSinon; 
+// }
 
 export function setProps(comp, newProps) {
   const node = findDOMNode(comp);

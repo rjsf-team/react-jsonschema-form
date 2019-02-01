@@ -11,7 +11,7 @@ describe("BooleanField", () => {
   const CustomWidget = () => <div id="custom" />;
 
   beforeEach(() => {
-    sandbox = createSandbox();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -27,7 +27,7 @@ describe("BooleanField", () => {
 
     expect(
       node.querySelectorAll(".field input[type=checkbox]")
-    ).to.have.length.of(1);
+    ).to.have.lengthOf(1);
   });
 
   it("should render a boolean field with the expected id", () => {
@@ -59,7 +59,7 @@ describe("BooleanField", () => {
       },
     });
 
-    expect(node.querySelectorAll(".field label")).to.have.length.of(1);
+    expect(node.querySelectorAll(".field label")).to.have.lengthOf(1);
   });
 
   it("should render a description", () => {
@@ -242,7 +242,7 @@ describe("BooleanField", () => {
       },
     });
 
-    expect(node.querySelectorAll(".radio-inline")).to.have.length.of(2);
+    expect(node.querySelectorAll(".radio-inline")).to.have.lengthOf(2);
   });
 
   it("should handle a focus event for radio widgets", () => {
@@ -475,7 +475,7 @@ describe("BooleanField", () => {
         },
       });
 
-      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field select")).to.have.lengthOf(1);
     });
 
     it("should infer the value from an enum on change", () => {
@@ -487,7 +487,7 @@ describe("BooleanField", () => {
         onChange: spy,
       });
 
-      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field select")).to.have.lengthOf(1);
       const $select = node.querySelector(".field select");
       expect($select.value).eql("");
 

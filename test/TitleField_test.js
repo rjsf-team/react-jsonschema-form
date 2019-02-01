@@ -5,16 +5,6 @@ import TitleField from "../src/components/fields/TitleField";
 import { createSandbox, createComponent } from "./test_utils";
 
 describe("TitleField", () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
   class TitleFieldWrapper extends React.Component {

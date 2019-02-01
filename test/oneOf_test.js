@@ -2,18 +2,9 @@ import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 
-import { createFormComponent, createSandbox, setProps } from "./test_utils";
+import { createFormComponent, setProps } from "./test_utils";
 
 describe("oneOf", () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
 
   it("should not render a select element if the oneOf keyword is not present", () => {
     const schema = {
@@ -27,7 +18,7 @@ describe("oneOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("select")).to.have.length.of(0);
+    expect(node.querySelectorAll("select")).to.have.lengthOf(0);
   });
 
   it("should render a select element if the oneOf keyword is present", () => {
@@ -51,7 +42,7 @@ describe("oneOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("select")).to.have.length.of(1);
+    expect(node.querySelectorAll("select")).to.have.lengthOf(1);
   });
 
   it("should change the rendered form when the select value is changed", () => {
@@ -75,8 +66,8 @@ describe("oneOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("#root_foo")).to.have.length.of(1);
-    expect(node.querySelectorAll("#root_bar")).to.have.length.of(0);
+    expect(node.querySelectorAll("#root_foo")).to.have.lengthOf(1);
+    expect(node.querySelectorAll("#root_bar")).to.have.lengthOf(0);
 
     const $select = node.querySelector("select");
 
@@ -84,8 +75,8 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    expect(node.querySelectorAll("#root_foo")).to.have.length.of(0);
-    expect(node.querySelectorAll("#root_bar")).to.have.length.of(1);
+    expect(node.querySelectorAll("#root_foo")).to.have.lengthOf(0);
+    expect(node.querySelectorAll("#root_bar")).to.have.lengthOf(1);
   });
 
   it("should handle change events", () => {

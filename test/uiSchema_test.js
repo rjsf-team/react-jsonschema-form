@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import sinon from "sinon";
 import React from "react";
 import { Simulate } from "react-dom/test-utils";
 import SelectWidget from "../src/components/widgets/SelectWidget";
@@ -6,15 +7,15 @@ import RadioWidget from "../src/components/widgets/RadioWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("uiSchema", () => {
-  let sandbox;
+  // let sandbox;
 
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
+  // beforeEach(() => {
+  //   sandbox = createSandbox();
+  // });
 
-  afterEach(() => {
-    sandbox.restore();
-  });
+  // afterEach(() => {
+  //   sandbox.restore();
+  // });
 
   describe("custom classNames", () => {
     const schema = {
@@ -72,14 +73,16 @@ describe("uiSchema", () => {
       it("should render a root custom widget", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+        expect(node.querySelectorAll(".custom")).to.have.lengthOf(1);
       });
     });
 
     describe("custom options", () => {
-      let widget, widgets, schema, uiSchema;
+      let sandbox;
 
+      let widget, widgets, schema, uiSchema;
       beforeEach(() => {
+        sandbox = sinon.createSandbox()
         sandbox.stub(console, "warn");
 
         widget = ({ label, options }) => <div id={label} style={options} />;
@@ -158,6 +161,10 @@ describe("uiSchema", () => {
           },
         };
       });
+
+      afterEach(() => {
+        sandbox.restore();
+      })
 
       it("should log warning when deprecated ui:widget: {component, options} api is used", () => {
         createFormComponent({
@@ -307,7 +314,7 @@ describe("uiSchema", () => {
           widgets,
         });
 
-        expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+        expect(node.querySelectorAll(".custom")).to.have.lengthOf(1);
       });
     });
 
@@ -341,7 +348,7 @@ describe("uiSchema", () => {
         it("should render a custom widget with options", () => {
           const { node } = createFormComponent({ schema, uiSchema });
 
-          expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+          expect(node.querySelectorAll(".custom")).to.have.lengthOf(1);
         });
       });
 
@@ -366,7 +373,7 @@ describe("uiSchema", () => {
             widgets,
           });
 
-          expect(node.querySelectorAll(".custom")).to.have.length.of(1);
+          expect(node.querySelectorAll(".custom")).to.have.lengthOf(1);
         });
       });
     });
@@ -405,7 +412,7 @@ describe("uiSchema", () => {
 
       it("should merge enumOptions with custom options", () => {
         const { node } = createFormComponent({ schema, uiSchema });
-        expect(node.querySelectorAll(".custom option")).to.have.length.of(2);
+        expect(node.querySelectorAll(".custom option")).to.have.lengthOf(2);
       });
     });
 
@@ -431,10 +438,10 @@ describe("uiSchema", () => {
       it("should have atleast one option disabled", () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const disabledOptionsLen = uiSchema.field["ui:enumDisabled"].length;
-        expect(node.querySelectorAll("option:disabled")).to.have.length.of(
+        expect(node.querySelectorAll("option:disabled")).to.have.lengthOf(
           disabledOptionsLen
         );
-        expect(node.querySelectorAll("option:enabled")).to.have.length.of(
+        expect(node.querySelectorAll("option:enabled")).to.have.lengthOf(
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen + 1
         );
@@ -463,10 +470,10 @@ describe("uiSchema", () => {
       it("should have atleast one radio option disabled", () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const disabledOptionsLen = uiSchema.field["ui:enumDisabled"].length;
-        expect(node.querySelectorAll("input:disabled")).to.have.length.of(
+        expect(node.querySelectorAll("input:disabled")).to.have.lengthOf(
           disabledOptionsLen
         );
-        expect(node.querySelectorAll("input:enabled")).to.have.length.of(
+        expect(node.querySelectorAll("input:enabled")).to.have.lengthOf(
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen
         );
@@ -830,7 +837,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("input[type=file]")).to.have.length.of(1);
+        expect(node.querySelectorAll("input[type=file]")).to.have.lengthOf(1);
       });
     });
 
@@ -845,7 +852,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("textarea")).to.have.length.of(1);
+        expect(node.querySelectorAll("textarea")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -896,7 +903,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=password]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=password]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -946,7 +953,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=color]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=color]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -990,7 +997,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=hidden]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=hidden]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -1040,7 +1047,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=radio]")).to.have.length.of(2);
+        expect(node.querySelectorAll("[type=radio]")).to.have.lengthOf(2);
       });
 
       it("should support formData", () => {
@@ -1098,7 +1105,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=number]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=number]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -1179,7 +1186,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=range]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=range]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -1270,7 +1277,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=radio]")).to.have.length.of(3);
+        expect(node.querySelectorAll("[type=radio]")).to.have.lengthOf(3);
       });
 
       it("should support formData", () => {
@@ -1314,7 +1321,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=hidden]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=hidden]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -1363,7 +1370,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=number]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=number]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -1407,7 +1414,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=range]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=range]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -1461,7 +1468,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=radio]")).to.have.length.of(2);
+        expect(node.querySelectorAll("[type=radio]")).to.have.lengthOf(2);
       });
 
       it("should support formData", () => {
@@ -1505,7 +1512,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=hidden]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=hidden]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {
@@ -1554,7 +1561,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=radio]")).to.have.length.of(2);
+        expect(node.querySelectorAll("[type=radio]")).to.have.lengthOf(2);
         expect(node.querySelectorAll("[type=radio]")[0]).not.eql(null);
         expect(node.querySelectorAll("[type=radio]")[1]).not.eql(null);
       });
@@ -1628,7 +1635,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("select option")).to.have.length.of(3);
+        expect(node.querySelectorAll("select option")).to.have.lengthOf(3);
       });
 
       it("should render boolean option labels", () => {
@@ -1687,7 +1694,7 @@ describe("uiSchema", () => {
       it("should accept a uiSchema object", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("[type=hidden]")).to.have.length.of(1);
+        expect(node.querySelectorAll("[type=hidden]")).to.have.lengthOf(1);
       });
 
       it("should support formData", () => {

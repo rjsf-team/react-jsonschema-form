@@ -1,15 +1,16 @@
 import React from "react";
 import { expect } from "chai";
+import sinon from 'sinon';
 import { Simulate } from "react-dom/test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 import validateFormData from "../src/validate";
 
 describe("ObjectField", () => {
   let sandbox;
 
   beforeEach(() => {
-    sandbox = createSandbox();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -41,7 +42,7 @@ describe("ObjectField", () => {
       const { node } = createFormComponent({ schema });
 
       const fieldset = node.querySelectorAll("fieldset");
-      expect(fieldset).to.have.length.of(1);
+      expect(fieldset).to.have.lengthOf(1);
       expect(fieldset[0].id).eql("root");
     });
 
@@ -103,7 +104,7 @@ describe("ObjectField", () => {
 
       expect(
         node.querySelectorAll(".field input[type=text]")
-      ).to.have.length.of(1);
+      ).to.have.lengthOf(1);
     });
 
     it("should render a boolean property", () => {
@@ -111,7 +112,7 @@ describe("ObjectField", () => {
 
       expect(
         node.querySelectorAll(".field input[type=checkbox]")
-      ).to.have.length.of(1);
+      ).to.have.lengthOf(1);
     });
 
     it("should handle a default object value", () => {
@@ -409,7 +410,7 @@ describe("ObjectField", () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field-string")).to.have.lengthOf(1);
     });
 
     it("should apply uiSchema to additionalProperties", () => {
@@ -474,7 +475,7 @@ describe("ObjectField", () => {
         },
       });
 
-      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field-string")).to.have.lengthOf(1);
     });
 
     it("should render a label for the additional property key", () => {

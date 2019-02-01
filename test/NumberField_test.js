@@ -3,13 +3,13 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("NumberField", () => {
   let sandbox;
 
   beforeEach(() => {
-    sandbox = createSandbox();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -26,7 +26,7 @@ describe("NumberField", () => {
 
       expect(
         node.querySelectorAll(".field input[type=text]")
-      ).to.have.length.of(1);
+      ).to.have.lengthOf(1);
     });
 
     it("should render a string field with a label", () => {
@@ -206,7 +206,7 @@ describe("NumberField", () => {
         },
       });
 
-      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field select")).to.have.lengthOf(1);
     });
 
     it("should infer the value from an enum on change", () => {
@@ -218,7 +218,7 @@ describe("NumberField", () => {
         onChange: spy,
       });
 
-      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field select")).to.have.lengthOf(1);
       const $select = node.querySelector(".field select");
       expect($select.value).eql("");
 
