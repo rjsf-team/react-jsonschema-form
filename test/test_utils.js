@@ -1,11 +1,11 @@
 /* Utils for tests. */
 
-import React from "react";
-import sinon from "sinon";
-import { renderIntoDocument } from "react-dom/test-utils";
-import { findDOMNode, render } from "react-dom";
+import React from 'react';
+import sinon from 'sinon';
+import { renderIntoDocument } from 'react-dom/test-utils';
+import { findDOMNode, render } from 'react-dom';
 
-import Form from "../src";
+import Form from '../src';
 
 export function createComponent(Component, props) {
   const comp = renderIntoDocument(<Component {...props} />);
@@ -18,12 +18,14 @@ export function createFormComponent(props) {
 }
 
 export function createSandbox() {
-  const sandbox = sinon.createSandbox();
   // Ensure we catch any React warning and mark them as test failures.
-  sandbox.stub(console, "error", error => {
+  let newSinon;
+  newSinon = sinon.createSandbox();
+  sinon.stub(console, 'error').callsFake(error => {
     throw new Error(error);
   });
-  return sandbox;
+
+  return newSinon; 
 }
 
 export function setProps(comp, newProps) {

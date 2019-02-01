@@ -5,14 +5,17 @@ import { Simulate } from "react-dom/test-utils";
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
 
 describe("anyOf", () => {
-  let sandbox;
+  let newSandbox;
 
   beforeEach(() => {
-    sandbox = createSandbox();
+    
+    newSandbox = createSandbox();
+    console.log(newSandbox);
+    console.log("HELLO")
   });
 
   afterEach(() => {
-    sandbox.restore();
+    newSandbox.restore();
   });
 
   it("should not render a select element if the anyOf keyword is not present", () => {
@@ -27,7 +30,7 @@ describe("anyOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("select")).to.have.length.of(0);
+    expect(node.querySelectorAll("select")).to.have.lengthOf(0);
   });
 
   it("should render a select element if the anyOf keyword is present", () => {
@@ -51,7 +54,7 @@ describe("anyOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("select")).to.have.length.of(1);
+    expect(node.querySelectorAll("select")).to.have.lengthOf(1);
   });
 
   it("should change the rendered form when the select value is changed", () => {
@@ -75,8 +78,8 @@ describe("anyOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("#root_foo")).to.have.length.of(1);
-    expect(node.querySelectorAll("#root_bar")).to.have.length.of(0);
+    expect(node.querySelectorAll("#root_foo")).to.have.lengthOf(1);
+    expect(node.querySelectorAll("#root_bar")).to.have.lengthOf(0);
 
     const $select = node.querySelector("select");
 
@@ -84,8 +87,8 @@ describe("anyOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    expect(node.querySelectorAll("#root_foo")).to.have.length.of(0);
-    expect(node.querySelectorAll("#root_bar")).to.have.length.of(1);
+    expect(node.querySelectorAll("#root_foo")).to.have.lengthOf(0);
+    expect(node.querySelectorAll("#root_bar")).to.have.lengthOf(1);
   });
 
   it("should handle change events", () => {
@@ -567,9 +570,9 @@ describe("anyOf", () => {
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
-      expect(node.querySelectorAll("select")).to.have.length.of(1);
+      expect(node.querySelectorAll("select")).to.have.lengthOf(1);
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_foo")).to.have.lengthOf(1);
     });
   });
 });
