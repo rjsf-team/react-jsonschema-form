@@ -16,7 +16,6 @@ class DropDownWidget extends React.Component {
     this.state = {
       dropDownValues: []
     };
-
   }
 
   componentDidMount() {
@@ -26,7 +25,6 @@ class DropDownWidget extends React.Component {
           dropDownValues: response
         });
       }).catch(error => {
-      console.log(error);
     });
   }
 
@@ -35,8 +33,6 @@ class DropDownWidget extends React.Component {
     console.log('selected value for field ' + event.target.id + ' is ' + selectedValue);
     this.props.onChange(selectedValue);
   };
-
-
 
   render() {
     const optionViews = [];
@@ -47,7 +43,6 @@ class DropDownWidget extends React.Component {
       optionViews.push(
         <option key={dropDownValue.label} value={dropDownValue.value}>{dropDownValue.label}</option>);
     });
-    
 
     return (
       <div>

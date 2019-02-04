@@ -3,7 +3,7 @@ import { expect } from "chai";
 import sinon from 'sinon';
 import { Simulate } from "react-dom/test-utils";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent } from "./test_utils";
 
 describe("ArrayField", () => {
   const CustomComponent = props => {

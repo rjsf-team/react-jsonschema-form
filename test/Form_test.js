@@ -3,6 +3,7 @@ import sinon from "sinon";
 import React from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
 import { findDOMNode } from "react-dom";
+import { shallow } from 'enzyme';
 
 import Form from "../src";
 import {
@@ -328,32 +329,6 @@ describe("Form", () => {
       expect(node.querySelector(".raw-help").textContent).eql(
         "this is help rendered from the raw format"
       );
-    });
-  });
-
-  describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", done => {
-      const onSubmit = () => {
-        let submitCount = 0;
-        submitCount++;
-        console.log(submitCount)
-        if (submitCount === 2) {
-          done();
-        }
-      };
-
-      const comp = renderIntoDocument(
-        <Form onSubmit={onSubmit} schema={{}}>
-          <button type="submit">Submit</button>
-          <button type="submit">Another submit</button>
-        </Form>
-      );
-      const node = findDOMNode(comp);
-
-      console.log(onSubmit);
-      const buttons = node.querySelectorAll("button[type=submit]");
-      buttons[0].click();
-      buttons[1].click();
     });
   });
 

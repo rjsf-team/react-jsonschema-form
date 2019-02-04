@@ -7,15 +7,6 @@ import RadioWidget from "../src/components/widgets/RadioWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("uiSchema", () => {
-  // let sandbox;
-
-  // beforeEach(() => {
-  //   sandbox = createSandbox();
-  // });
-
-  // afterEach(() => {
-  //   sandbox.restore();
-  // });
 
   describe("custom classNames", () => {
     const schema = {
