@@ -65,13 +65,13 @@ const additionalMetaSchemas = require("ajv/lib/refs/json-schema-draft-04.json");
 
 render((
   <Form schema={schema} 
-        additionalMetaSchemas={additionalMetaSchemas}/>
+        additionalMetaSchemas={[additionalMetaSchemas]}/>
 ), document.getElementById("app"));
 ```
 
 In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
 
-`additionalMetaSchemas` also accepts an array of meta schemas:
+`additionalMetaSchemas` also accepts more than one meta schema:
 
 ```jsx
 render((

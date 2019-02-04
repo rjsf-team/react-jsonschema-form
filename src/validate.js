@@ -168,7 +168,6 @@ export default function validateFormData(
   try {
     ajv.validate(schema, formData);
   } catch (err) {
-    console.error(err);
     validationErrors = err;
   }
 
