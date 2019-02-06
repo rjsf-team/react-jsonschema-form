@@ -258,6 +258,11 @@ $ npm test
 $ npm run tdd
 ```
 
+#### Code coverage
+
+Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run. 
+The full report can be seen by opening `./coverage/lcov-report/index.html`.
+
 ### Releasing
 
 ```

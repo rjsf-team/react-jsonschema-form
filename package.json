@@ -19,6 +19,7 @@
     "start": "node devServer.js",
     "tdd": "cross-env NODE_ENV=test mocha --require babel-register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
     "test": "cross-env NODE_ENV=test mocha --require babel-register --require ./test/setup-jsdom.js test/**/*_test.js",
+    "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require babel-register --require ./test/setup-jsdom.js test/**/*_test.js",
     "test-debug": "cross-env NODE_ENV=test mocha --require babel-register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
   },
   "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi --tab-width 2",
@@ -83,6 +84,7 @@
     "lint-staged": "^3.3.1",
     "mini-css-extract-plugin": "^0.4.3",
     "mocha": "^5.2.0",
+    "nyc": "^13.2.0",
     "prettier": "^1.15.1",
     "react": "^15.5.0",
     "react-addons-test-utils": "^15.3.2",
