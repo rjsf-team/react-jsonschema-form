@@ -732,7 +732,9 @@ export function toIdSchema(
       field,
       fieldId,
       definitions,
-      formData[name],
+      // Its possible that formData is not an object, this can happen if an
+      // array item has just been added, but not populated with data yet
+      (formData || {})[name],
       idPrefix
     );
   }

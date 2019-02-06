@@ -1183,6 +1183,64 @@ describe("utils", () => {
       });
     });
 
+    it("should return an idSchema for nested property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          obj: {
+            type: "object",
+            properties: {
+              foo: { type: "string" },
+            },
+            dependencies: {
+              foo: {
+                properties: {
+                  bar: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+      };
+      const formData = {
+        obj: {
+          foo: "test",
+        },
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
+        $id: "root",
+        obj: {
+          $id: "root_obj",
+          foo: { $id: "root_obj_foo" },
+          bar: { $id: "root_obj_bar" },
+        },
+      });
+    });
+
+    it("should return an idSchema for unmet property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+        dependencies: {
+          foo: {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const formData = {};
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
+        $id: "root",
+        foo: { $id: "root_foo" },
+      });
+    });
+
     it("should handle idPrefix parameter", () => {
       const schema = {
         definitions: {
@@ -1204,6 +1262,24 @@ describe("utils", () => {
           bar: { $id: "rjsf_bar" },
         }
       );
+    });
+
+    it("should handle null form data for object schemas", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+          bar: { type: "string" },
+        },
+      };
+      const formData = null;
+      const result = toIdSchema(schema, null, {}, formData, "rjsf");
+
+      expect(result).eql({
+        $id: "rjsf",
+        foo: { $id: "rjsf_foo" },
+        bar: { $id: "rjsf_bar" },
+      });
     });
   });
 
