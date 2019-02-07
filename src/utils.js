@@ -67,6 +67,11 @@ export function getDefaultRegistry() {
 
 export function getSchemaType(schema) {
   let { type } = schema;
+
+  if (!type && schema.const) {
+    return guessType(schema.const);
+  }
+
   if (!type && schema.enum) {
     type = "string";
   }
