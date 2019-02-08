@@ -5,6 +5,7 @@ import {
   dataURItoBlob,
   deepEquals,
   getDefaultFormState,
+  getSchemaType,
   isFilesArray,
   isConstant,
   toConstant,
@@ -1367,6 +1368,53 @@ describe("utils", () => {
 
     it("should guess the type of object values", () => {
       expect(guessType({})).eql("object");
+    });
+  });
+
+  describe("getSchemaType()", () => {
+    const cases = [
+      {
+        schema: { type: "string" },
+        expected: "string",
+      },
+      {
+        schema: { type: "number" },
+        expected: "number",
+      },
+      {
+        schema: { type: "integer" },
+        expected: "integer",
+      },
+      {
+        schema: { type: "object" },
+        expected: "object",
+      },
+      {
+        schema: { type: "array" },
+        expected: "array",
+      },
+      {
+        schema: { type: "boolean" },
+        expected: "boolean",
+      },
+      {
+        schema: { type: "null" },
+        expected: "null",
+      },
+      {
+        schema: { const: "foo" },
+        expected: "string",
+      },
+      {
+        schema: { const: 1 },
+        expected: "number",
+      },
+    ];
+
+    it("should correctly guess the type of a schema", () => {
+      for (const test of cases) {
+        expect(getSchemaType(test.schema)).eql(test.expected);
+      }
     });
   });
 });
