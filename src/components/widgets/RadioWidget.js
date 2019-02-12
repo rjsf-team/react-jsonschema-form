@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 function RadioWidget(props) {
   const {
     options,
-    id,
     value,
     required,
     disabled,
@@ -18,7 +17,7 @@ function RadioWidget(props) {
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
   return (
-    <div className="field-radio-group" id={id}>
+    <div className="field-radio-group">
       {enumOptions.map((option, i) => {
         const checked = option.value === value;
         const disabledCls = disabled || readonly ? "disabled" : "";
