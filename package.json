@@ -57,7 +57,8 @@
     "prop-types": "^15.5.8",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-html-parser": "^2.0.2"
+    "react-html-parser": "^2.0.2",
+    "react-select": "^2.3.0"
   },
   "devDependencies": {
     "atob": "^2.0.3",

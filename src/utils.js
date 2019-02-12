@@ -31,6 +31,7 @@ const widgetMap = {
     "alt-datetime": "AltDateTimeWidget",
     color: "ColorWidget",
     file: "FileWidget",
+    multiselect: "MultiSelect",
   },
   number: {
     text: "TextWidget",
@@ -39,6 +40,7 @@ const widgetMap = {
     range: "RangeWidget",
     radio: "RadioWidget",
     hidden: "HiddenWidget",
+    multiselect: "MultiSelect",
   },
   integer: {
     text: "TextWidget",
@@ -47,11 +49,13 @@ const widgetMap = {
     range: "RangeWidget",
     radio: "RadioWidget",
     hidden: "HiddenWidget",
+    multiselect: "MultiSelect",
   },
   array: {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
     files: "FileWidget",
+    multiselect: "MultiSelect",
   },
 };
 
