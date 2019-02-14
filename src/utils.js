@@ -52,6 +52,7 @@ const widgetMap = {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
     files: "FileWidget",
+    hidden: "HiddenWidget",
   },
 };
 
@@ -66,6 +67,11 @@ export function getDefaultRegistry() {
 
 export function getSchemaType(schema) {
   let { type } = schema;
+
+  if (!type && schema.const) {
+    return guessType(schema.const);
+  }
+
   if (!type && schema.enum) {
     type = "string";
   }
@@ -157,9 +163,12 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
           if (schema.minItems > defaultsLength) {
             const defaultEntries = defaults || [];
             // populate the array with the defaults
+            const fillerSchema = Array.isArray(schema.items)
+              ? schema.additionalItems
+              : schema.items;
             const fillerEntries = fill(
               new Array(schema.minItems - defaultsLength),
-              computeDefaults(schema.items, schema.items.defaults, definitions)
+              computeDefaults(fillerSchema, fillerSchema.defaults, definitions)
             );
             // then fill up the rest with either the item default or empty, up to minItems
 
@@ -390,6 +399,9 @@ function findSchemaDefinition($ref, definitions = {}) {
     let current = definitions;
     for (let part of parts) {
       part = part.replace(/~1/g, "/").replace(/~0/g, "~");
+      while (current.hasOwnProperty("$ref")) {
+        current = findSchemaDefinition(current.$ref, definitions);
+      }
       if (current.hasOwnProperty(part)) {
         current = current[part];
       } else {
@@ -406,7 +418,7 @@ function findSchemaDefinition($ref, definitions = {}) {
 
 // In the case where we have to implicitly create a schema, it is useful to know what type to use
 //  based on the data we are defining
-const guessType = function guessType(value) {
+export const guessType = function guessType(value) {
   if (Array.isArray(value)) {
     return "array";
   } else if (typeof value === "string") {

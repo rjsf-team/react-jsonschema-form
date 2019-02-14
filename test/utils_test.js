@@ -5,6 +5,7 @@ import {
   dataURItoBlob,
   deepEquals,
   getDefaultFormState,
+  getSchemaType,
   isFilesArray,
   isConstant,
   toConstant,
@@ -16,6 +17,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema,
+  guessType,
 } from "../src/utils";
 
 describe("utils", () => {
@@ -289,6 +291,26 @@ describe("utils", () => {
 
         expect(getDefaultFormState(schema, undefined, schema.definitions)).eql({
           foo: 42,
+        });
+      });
+
+      it("should fill array with additional items schema when items is empty", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              minItems: 1,
+              additionalItems: {
+                type: "string",
+                default: "foo",
+              },
+              items: [],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          array: ["foo"],
         });
       });
     });
@@ -1320,6 +1342,79 @@ describe("utils", () => {
       expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).eql(
         true
       );
+    });
+  });
+
+  describe("guessType()", () => {
+    it("should guess the type of array values", () => {
+      expect(guessType([1, 2, 3])).eql("array");
+    });
+
+    it("should guess the type of string values", () => {
+      expect(guessType("foobar")).eql("string");
+    });
+
+    it("should guess the type of null values", () => {
+      expect(guessType(null)).eql("null");
+    });
+
+    it("should treat undefined values as null values", () => {
+      expect(guessType()).eql("null");
+    });
+
+    it("should guess the type of boolean values", () => {
+      expect(guessType(true)).eql("boolean");
+    });
+
+    it("should guess the type of object values", () => {
+      expect(guessType({})).eql("object");
+    });
+  });
+
+  describe("getSchemaType()", () => {
+    const cases = [
+      {
+        schema: { type: "string" },
+        expected: "string",
+      },
+      {
+        schema: { type: "number" },
+        expected: "number",
+      },
+      {
+        schema: { type: "integer" },
+        expected: "integer",
+      },
+      {
+        schema: { type: "object" },
+        expected: "object",
+      },
+      {
+        schema: { type: "array" },
+        expected: "array",
+      },
+      {
+        schema: { type: "boolean" },
+        expected: "boolean",
+      },
+      {
+        schema: { type: "null" },
+        expected: "null",
+      },
+      {
+        schema: { const: "foo" },
+        expected: "string",
+      },
+      {
+        schema: { const: 1 },
+        expected: "number",
+      },
+    ];
+
+    it("should correctly guess the type of a schema", () => {
+      for (const test of cases) {
+        expect(getSchemaType(test.schema)).eql(test.expected);
+      }
     });
   });
 });

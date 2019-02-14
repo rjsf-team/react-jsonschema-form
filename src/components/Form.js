@@ -151,6 +151,7 @@ export default class Form extends Component {
 
   onSubmit = event => {
     event.preventDefault();
+    event.persist();
 
     if (!this.props.noValidate) {
       const { errors, errorSchema } = this.validate(this.state.formData);
@@ -168,7 +169,7 @@ export default class Form extends Component {
 
     this.setState({ errors: [], errorSchema: {} }, () => {
       if (this.props.onSubmit) {
-        this.props.onSubmit({ ...this.state, status: "submitted" });
+        this.props.onSubmit({ ...this.state, status: "submitted" }, event);
       }
     });
   };
@@ -250,11 +251,11 @@ export default class Form extends Component {
         {children ? (
           children
         ) : (
-          <p>
+          <div>
             <button type="submit" className="btn btn-info">
               Submit
             </button>
-          </p>
+          </div>
         )}
       </form>
     );
