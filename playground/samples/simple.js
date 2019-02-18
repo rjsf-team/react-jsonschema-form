@@ -6,7 +6,7 @@ module.exports = {
     required: ["firstName", "lastName"],
     properties: {
       blogs: {
-        type: "string",
+        type: "integer",
         title: "Search Movies",
         currentPageNumber: 1,
         pageSize: 5,
@@ -16,8 +16,8 @@ module.exports = {
         // So make sure that the data type of that key matches with type specified.
         cols: [
           { name: "USER ID", key: "userId", hide: true },
-          { name: "ID", key: "id", displaySelected: true },
-          { name: "Title", key: "title", primary: true },
+          { name: "ID", key: "id", primary: true },
+          { name: "Title", key: "title", displaySelected: true },
           { name: "Body", key: "body", hide: true },
         ],
         selectedOptions: [],
