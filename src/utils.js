@@ -31,6 +31,7 @@ const widgetMap = {
     "alt-datetime": "AltDateTimeWidget",
     color: "ColorWidget",
     file: "FileWidget",
+    asyncMultiselectDropdown: "AsyncMultiselectDropdown",
   },
   number: {
     text: "TextWidget",
@@ -39,6 +40,7 @@ const widgetMap = {
     range: "RangeWidget",
     radio: "RadioWidget",
     hidden: "HiddenWidget",
+    asyncMultiselectDropdown: "AsyncMultiselectDropdown",
   },
   integer: {
     text: "TextWidget",
@@ -47,6 +49,7 @@ const widgetMap = {
     range: "RangeWidget",
     radio: "RadioWidget",
     hidden: "HiddenWidget",
+    asyncMultiselectDropdown: "AsyncMultiselectDropdown",
   },
   array: {
     select: "SelectWidget",
