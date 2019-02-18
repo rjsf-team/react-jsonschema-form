@@ -17,6 +17,7 @@ import TextareaWidget from "./TextareaWidget";
 import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
+import AsyncMultiselectDropdown from "./AsyncMultiselectDropdown/index";
 
 export default {
   BaseInput,
@@ -38,4 +39,5 @@ export default {
   FileWidget,
   CheckboxWidget,
   CheckboxesWidget,
+  AsyncMultiselectDropdown,
 };
