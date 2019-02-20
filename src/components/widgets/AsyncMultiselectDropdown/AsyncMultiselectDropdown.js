@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
-import { Paper, TextField, CircularProgress } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import { Paper, TextField, CircularProgress, Grid } from "@material-ui/core";
 import OptionsList from "./OptionsList";
 import SelectionBar from "./SelectionBar";
 
+const styles = {
+  container: {
+    display: "block",
+  },
+  inputField: {
+    verticalAlign: "bottom",
+  },
+};
 class AsyncMultiselectDropdown extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +39,7 @@ class AsyncMultiselectDropdown extends Component {
       currentPageNumber,
     } = this.props.schema;
     this.setState({
-      pageNumber: currentPageNumber - 1,
+      pageNumber: currentPageNumber,
       pageSize,
       selectionColumn,
       selectedOptions,
@@ -43,7 +51,7 @@ class AsyncMultiselectDropdown extends Component {
 
   handleChange = event =>
     this.setState(
-      { searchText: event.target.value, isSearching: true },
+      { searchText: event.target.value, isSearching: true, pageNumber: 0 },
       this.fetchData
     );
 
@@ -71,7 +79,7 @@ class AsyncMultiselectDropdown extends Component {
 
     this.setState({ isLoading: true });
     Promise.all([
-      loadOptions(searchText, pageNumber + 1, pageSize),
+      loadOptions(searchText, pageNumber, pageSize),
       loadOptionsCount(searchText),
     ]).then(([resLoadOptions, resLoadOptionsCount]) =>
       this.setState({
@@ -97,6 +105,9 @@ class AsyncMultiselectDropdown extends Component {
 
     if (indexOfSelectedOption !== -1) {
       selectedOptions.splice(indexOfSelectedOption, 1);
+      if (!isMultiselect) {
+        this.closeOptionPanel();
+      }
     } else {
       if (!isMultiselect) {
         selectedOptions = [selectedRow];
@@ -110,7 +121,7 @@ class AsyncMultiselectDropdown extends Component {
     if (selectedOptions && selectedOptions.length > 0) {
       this.props.onChange(selectedOptions[0][primaryColumn]);
     } else {
-      this.props.onChange(null);
+      this.props.onChange(undefined);
     }
   };
 
@@ -120,7 +131,7 @@ class AsyncMultiselectDropdown extends Component {
       if (selectedOptions[index][selectionColumn] === deletedChoice) {
         selectedOptions.splice(index, 1);
         this.setState({ selectedOptions });
-        this.props.schema.onSelect(selectedOptions);
+        this.props.onChange(undefined);
       }
     }
   };
@@ -146,6 +157,7 @@ class AsyncMultiselectDropdown extends Component {
   render() {
     const {
       label,
+      classes,
       schema: { cols },
       placeholder,
     } = this.props;
@@ -162,7 +174,9 @@ class AsyncMultiselectDropdown extends Component {
       isLoading,
     } = this.state;
 
-    const loader = isLoading && <CircularProgress size={24} />;
+    const loader = isLoading && (
+      <CircularProgress size={25} style={{ marginLeft: 10 }} />
+    );
     const selected = (
       <SelectionBar
         selectedOptions={selectedOptions}
@@ -171,22 +185,28 @@ class AsyncMultiselectDropdown extends Component {
         onDeleteChoice={this.onDeleteChoice}
       />
     );
-
     return (
       <div>
-        <TextField
-          label={label}
-          placeholder={placeholder}
-          margin="normal"
-          multiline
-          value={searchText}
-          onChange={this.handleChange}
-          onFocus={() => this.setState({ isSearching: true })}
-          InputProps={{
-            startAdornment: selected,
-            endAdornment: loader,
-          }}
-        />
+        <Grid
+          container
+          direction="row"
+          align-items="center"
+          className={classes.container}>
+          <TextField
+            label={label}
+            placeholder={placeholder}
+            className={classes.inputField}
+            margin="normal"
+            value={searchText}
+            onChange={this.handleChange}
+            onFocus={() => this.setState({ isSearching: true })}
+            InputProps={{
+              startAdornment: selected,
+              // endAdornment: loader,
+            }}
+          />
+          {loader}
+        </Grid>
         <Paper>
           {isSearching && (
             <OptionsList
@@ -216,4 +236,4 @@ AsyncMultiselectDropdown.propTypes = {
   label: PropTypes.string.isRequired,
 };
 
-export default AsyncMultiselectDropdown;
+export default withStyles(styles)(AsyncMultiselectDropdown);

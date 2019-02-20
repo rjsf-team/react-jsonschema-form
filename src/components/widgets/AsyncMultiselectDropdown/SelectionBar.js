@@ -22,7 +22,13 @@ const SelectionBar = props => {
       </React.Fragment>
     );
   } else if (selectedOptions[0]) {
-    return selectedOptions[0][selectionColumn];
+    return (
+      <Chip
+        label={selectedOptions[0][selectionColumn]}
+        style={{ marginRight: 5, height: 30 }}
+        onDelete={() => onDeleteChoice(selectedOptions[0][selectionColumn])}
+      />
+    );
   }
 
   return null;

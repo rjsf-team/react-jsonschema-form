@@ -9,8 +9,8 @@ module.exports = {
         type: "integer",
         title: "Search Movies",
         currentPageNumber: 1,
-        pageSize: 5,
-        loadOptionsCount: searchText => 50,
+        pageSize: 10,
+        loadOptionsCount: searchText => 80,
         isMultiselect: false,
         // The col with primary set to true is the value which will be returned.
         // So make sure that the data type of that key matches with type specified.
@@ -28,44 +28,46 @@ module.exports = {
             })
             .then(json => {
               const searched = json.filter(value =>
-                value.title.includes(searchText.toLowerCase())
+                value.title.toLowerCase().includes(searchText.toLowerCase())
               );
               const result = searched.splice(pageNumber * pageSize, pageSize);
               return result;
             });
         },
       },
-      movie: {
-        type: "string",
-        title: "Search Movies",
-        currentPageNumber: 1,
-        pageSize: 5,
-        loadOptionsCount: searchText => 50,
-        isMultiselect: true,
-        cols: [
-          { name: "ID", key: "userId" },
-          { name: "USER ID", key: "id" },
-          { name: "Title", key: "title", primary: true },
-          { name: "Body", key: "body" },
-        ],
-        selectedOptions: [],
-        loadOptions: (searchText, pageNumber, pageSize) => {
-          return fetch(`https://jsonplaceholder.typicode.com/posts`)
-            .then(response => {
-              return response.json();
-            })
-            .then(json => {
-              const searched = json.filter(value =>
-                value.title.includes(searchText.toLowerCase())
-              );
-              const result = searched.splice(pageNumber * pageSize, pageSize);
-              return result;
-            });
-        },
-        onSelect: currentSelectedOption => {
-          console.log("currentSelectedOption111 ==> ", currentSelectedOption);
-        },
-      },
+
+      // For now don't try multiselect component
+      // Multiselect component will be commit in next changes.
+
+      // movie: {
+      //   type: "integer",
+      //   title: "Search Movies",
+      //   currentPageNumber: 1,
+      //   pageSize: 5,
+      //   loadOptionsCount: searchText => 50,
+      //   isMultiselect: true,
+      //   cols: [
+      //     { name: "ID", key: "userId", hide: true },
+      //     { name: "USER ID", key: "id", primary: true },
+      //     { name: "Title", key: "title", displaySelected: true  },
+      //     { name: "Body", key: "body" },
+      //   ],
+      //   selectedOptions: [],
+      //   loadOptions: (searchText, pageNumber, pageSize) => {
+      //     debugger;
+      //     return fetch(`https://jsonplaceholder.typicode.com/posts`)
+      //       .then(response => {
+      //         return response.json();
+      //       })
+      //       .then(json => {
+      //         const searched = json.filter(value =>
+      //           value.title.includes(searchText.toLowerCase())
+      //         );
+      //         const result = searched.splice(pageNumber * pageSize, pageSize);
+      //         return result;
+      //       });
+      //   },
+      // },
       firstName: {
         type: "string",
         title: "First name",
@@ -93,19 +95,16 @@ module.exports = {
   },
   uiSchema: {
     blogs: {
-      "ui:autofocus": true,
       "ui:emptyValue": "",
-      "ui:placeholder": "Type your choice to search....",
+      "ui:placeholder": "Type your choice to search...",
       "ui:widget": "asyncMultiselectDropdown",
     },
     movie: {
-      "ui:autofocus": true,
       "ui:emptyValue": "",
       "ui:placeholder": "Type your choice to search....",
       "ui:widget": "asyncMultiselectDropdown",
     },
     firstName: {
-      "ui:autofocus": true,
       "ui:emptyValue": "",
     },
     age: {

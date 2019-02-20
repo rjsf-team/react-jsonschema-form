@@ -10,6 +10,7 @@ import {
   TableCell,
   Button,
   Checkbox,
+  Radio,
 } from "@material-ui/core";
 
 const OptionsList = props => {
@@ -36,7 +37,7 @@ const OptionsList = props => {
       <Table>
         <TableHead>
           <TableRow>
-            {isMultiselect && <TableCell />}
+            <TableCell />
             {cols.map((column, key) => {
               if (!column.hasOwnProperty("hide")) {
                 return <TableCell key={key}>{column.name}</TableCell>;
@@ -50,10 +51,22 @@ const OptionsList = props => {
           {options.map((row, rowkey) => (
             <TableRow
               key={rowkey}
+              hover
+              selected={
+                getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
+              }
               onClick={event => handleRowClick(event, row)}>
-              {isMultiselect && (
+              {isMultiselect ? (
                 <TableCell key={rowkey}>
                   <Checkbox
+                    checked={
+                      getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
+                    }
+                  />
+                </TableCell>
+              ) : (
+                <TableCell key={rowkey}>
+                  <Radio
                     checked={
                       getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
                     }
@@ -84,7 +97,7 @@ const OptionsList = props => {
           }}
           onChangePage={handleChangePage}
         />
-        {isMultiselect && <Button onClick={closeOptionPanel}>Done</Button>}
+        <Button onClick={closeOptionPanel}>Done</Button>
       </Grid>
     </React.Fragment>
   );
