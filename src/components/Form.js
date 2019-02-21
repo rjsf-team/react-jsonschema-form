@@ -91,7 +91,8 @@ export default class Form extends Component {
   validate(
     formData,
     schema = this.props.schema,
-    additionalMetaSchemas = this.props.additionalMetaSchemas
+    additionalMetaSchemas = this.props.additionalMetaSchemas,
+    additionalFormats = this.props.additionalFormats
   ) {
     const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
@@ -101,7 +102,8 @@ export default class Form extends Component {
       resolvedSchema,
       validate,
       transformErrors,
-      additionalMetaSchemas
+      additionalMetaSchemas,
+      additionalFormats
     );
   }
 
