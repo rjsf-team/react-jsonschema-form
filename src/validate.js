@@ -160,7 +160,12 @@ export default function validateFormData(
   additionalMetaSchemas
 ) {
   // add more schemas to validate against
-  if (!addedMetaSchemas && additionalMetaSchemas) {
+  if (
+    !addedMetaSchemas &&
+    additionalMetaSchemas &&
+    Array.isArray(additionalMetaSchemas) &&
+    additionalMetaSchemas.length > 0
+  ) {
     ajv.addMetaSchema(additionalMetaSchemas);
     addedMetaSchemas = true;
   }

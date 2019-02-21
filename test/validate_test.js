@@ -135,7 +135,7 @@ describe("Validation", () => {
           schema,
           null,
           null,
-          metaSchemaDraft4
+          [metaSchemaDraft4]
         );
         expect(errors.validationErrors).to.equal(null);
         expect(errors.errors).to.have.lengthOf(1);
@@ -768,7 +768,9 @@ describe("Validation", () => {
           schema,
           formData,
           liveValidate: true,
-          additionalMetaSchemas: require("ajv/lib/refs/json-schema-draft-04.json"),
+          additionalMetaSchemas: [
+            require("ajv/lib/refs/json-schema-draft-04.json"),
+          ],
           onSubmit,
           onError,
         });
