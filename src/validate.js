@@ -3,7 +3,6 @@ import Ajv from "ajv";
 let ajv = createAjvInstance();
 import { deepEquals } from "./utils";
 
-// flag indicating whether we've already added custom schemas
 let formerMetaSchema = null;
 
 import { isObject, mergeObjects } from "./utils";
