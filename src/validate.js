@@ -1,25 +1,32 @@
 import toPath from "lodash.topath";
 import Ajv from "ajv";
-const ajv = new Ajv({
-  errorDataPath: "property",
-  allErrors: true,
-  multipleOfPrecision: 8,
-  schemaId: "auto",
-});
-// flag indicating whether we've already added custom schemas
-let addedMetaSchemas = false;
+let ajv = createAjvInstance();
+import { deepEquals } from "./utils";
 
-// add custom formats
-ajv.addFormat(
-  "data-url",
-  /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/
-);
-ajv.addFormat(
-  "color",
-  /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
-);
+// flag indicating whether we've already added custom schemas
+let formerMetaSchema = null;
 
 import { isObject, mergeObjects } from "./utils";
+
+function createAjvInstance() {
+  const ajv = new Ajv({
+    errorDataPath: "property",
+    allErrors: true,
+    multipleOfPrecision: 8,
+    schemaId: "auto",
+  });
+
+  // add custom formats
+  ajv.addFormat(
+    "data-url",
+    /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/
+  );
+  ajv.addFormat(
+    "color",
+    /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
+  );
+  return ajv;
+}
 
 function toErrorSchema(errors) {
   // Transforms a ajv validation errors list:
@@ -161,14 +168,15 @@ export default function validateFormData(
 ) {
   // add more schemas to validate against
   if (
-    !addedMetaSchemas &&
     additionalMetaSchemas &&
-    Array.isArray(additionalMetaSchemas) &&
-    additionalMetaSchemas.length > 0
+    !deepEquals(formerMetaSchema, additionalMetaSchemas) &&
+    Array.isArray(additionalMetaSchemas)
   ) {
+    ajv = createAjvInstance();
     ajv.addMetaSchema(additionalMetaSchemas);
-    addedMetaSchemas = true;
+    formerMetaSchema = additionalMetaSchemas;
   }
+
   let validationErrors = null;
   try {
     ajv.validate(schema, formData);
