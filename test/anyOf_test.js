@@ -571,5 +571,51 @@ describe("anyOf", () => {
 
       expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
     });
+
+    it("should correctly render mixed types for anyOf inside array items", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          items: {
+            type: "array",
+            items: {
+              anyOf: [
+                {
+                  type: "string",
+                },
+                {
+                  type: "object",
+                  properties: {
+                    foo: {
+                      type: "integer",
+                    },
+                    bar: {
+                      type: "string",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(node.querySelector(".array-item-add button")).not.eql(null);
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      const $select = node.querySelector("select");
+      expect($select).not.eql(null);
+      Simulate.change($select, {
+        target: { value: $select.options[1].value },
+      });
+
+      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+    });
   });
 });

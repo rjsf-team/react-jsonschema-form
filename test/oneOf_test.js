@@ -299,4 +299,139 @@ describe("oneOf", () => {
 
     expect(node.querySelector("select").value).eql("1");
   });
+
+  it("should not change the selected option when entering values on a subschema with multiple required options", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        items: {
+          oneOf: [
+            {
+              type: "string",
+            },
+            {
+              type: "object",
+              properties: {
+                foo: {
+                  type: "integer",
+                },
+                bar: {
+                  type: "string",
+                },
+              },
+              required: ["foo", "bar"],
+            },
+          ],
+        },
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    const $select = node.querySelector("select");
+
+    expect($select.value).eql("0");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect($select.value).eql("1");
+
+    Simulate.change(node.querySelector("input#root_bar"), {
+      target: { value: "Lorem ipsum dolor sit amet" },
+    });
+
+    expect($select.value).eql("1");
+  });
+
+  it("should empty the form data when switching from an option of type 'object'", () => {
+    const schema = {
+      oneOf: [
+        {
+          type: "object",
+          properties: {
+            foo: {
+              type: "integer",
+            },
+            bar: {
+              type: "string",
+            },
+          },
+          required: ["foo", "bar"],
+        },
+        {
+          type: "string",
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData: {
+        foo: 1,
+        bar: "abc",
+      },
+    });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect($select.value).eql("1");
+
+    expect(node.querySelector("input#root").value).eql("");
+  });
+
+  describe("Arrays", () => {
+    it("should correctly render mixed types for oneOf inside array items", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          items: {
+            type: "array",
+            items: {
+              oneOf: [
+                {
+                  type: "string",
+                },
+                {
+                  type: "object",
+                  properties: {
+                    foo: {
+                      type: "integer",
+                    },
+                    bar: {
+                      type: "string",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(node.querySelector(".array-item-add button")).not.eql(null);
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      const $select = node.querySelector("select");
+      expect($select).not.eql(null);
+      Simulate.change($select, {
+        target: { value: $select.options[1].value },
+      });
+
+      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+    });
+  });
 });
