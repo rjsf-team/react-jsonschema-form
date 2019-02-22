@@ -811,6 +811,39 @@ describe("Form", () => {
 
       sinon.assert.notCalled(onSubmit);
     });
+
+    it("should call getUsedFormData when the omitUnusedData prop is true", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            minLength: 1,
+          },
+        },
+      };
+      const formData = {
+        foo: "",
+      };
+      const onSubmit = sandbox.spy();
+      const onError = sandbox.spy();
+      const omitUnusedData = true;
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+        onError,
+        omitUnusedData,
+      });
+
+      sandbox.stub(comp, "getUsedFormData").returns({
+        foo: "",
+      });
+
+      Simulate.submit(node);
+
+      sinon.assert.calledOnce(comp.getUsedFormData);
+    });
   });
 
   describe("getUsedFormData", () => {
