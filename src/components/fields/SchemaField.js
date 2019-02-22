@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import * as types from "../../types";
 
 import {
+  idToPath,
   isMultiSelect,
   isSelect,
   retrieveSchema,
@@ -79,6 +80,7 @@ function LabelInput(props) {
       className="form-control"
       type="text"
       id={id}
+      name={idToPath(id)}
       onBlur={event => onChange(event.target.value)}
       defaultValue={label}
     />

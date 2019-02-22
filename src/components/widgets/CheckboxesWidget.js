@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { idToPath } from "../../utils";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -29,6 +30,7 @@ function CheckboxesWidget(props) {
             <input
               type="checkbox"
               id={`${id}_${index}`}
+              name={idToPath(`${id}.${index}`)}
               checked={checked}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && index === 0}

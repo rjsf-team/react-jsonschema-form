@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
+import _pick from "lodash/pick";
 import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
@@ -22,6 +22,7 @@ export default class Form extends Component {
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
+    omitUnusedData: true,
   };
 
   constructor(props) {
@@ -149,12 +150,30 @@ export default class Form extends Component {
     }
   };
 
+  getUsedFormData = event => {
+    const fields = event.target.elements;
+    const inputNames = Object.keys(fields).reduce((filtered, i) => {
+      const fieldName = fields[i].name;
+      if (fieldName) {
+        filtered.push(fieldName);
+      }
+      return filtered;
+    }, []);
+
+    return _pick(this.state.formData, inputNames);
+  };
+
   onSubmit = event => {
     event.preventDefault();
     event.persist();
+    let newFormData = this.state.formData;
+
+    if (this.props.omitUnusedData) {
+      newFormData = this.getUsedFormData(event, this.state.formData);
+    }
 
     if (!this.props.noValidate) {
-      const { errors, errorSchema } = this.validate(this.state.formData);
+      const { errors, errorSchema } = this.validate(newFormData);
       if (Object.keys(errors).length > 0) {
         setState(this, { errors, errorSchema }, () => {
           if (this.props.onError) {
@@ -169,7 +188,10 @@ export default class Form extends Component {
 
     this.setState({ errors: [], errorSchema: {} }, () => {
       if (this.props.onSubmit) {
-        this.props.onSubmit({ ...this.state, status: "submitted" }, event);
+        this.props.onSubmit(
+          { ...this.state, formData: newFormData, status: "submitted" },
+          event
+        );
       }
     });
   };
@@ -295,5 +317,6 @@ if (process.env.NODE_ENV !== "production") {
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
+    omitUnusedData: PropTypes.bool,
   };
 }

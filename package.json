@@ -47,6 +47,7 @@
     "ajv": "^5.2.3",
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.7",
+    "lodash.pick": "^4.4.0",
     "lodash.topath": "^4.5.2",
     "prop-types": "^15.5.8"
   },

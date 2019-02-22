@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { dataURItoBlob, shouldRender, setState } from "../../utils";
+import { dataURItoBlob, shouldRender, setState, idToPath } from "../../utils";
 
 function addNameToDataURL(dataURL, name) {
   return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
@@ -98,6 +98,7 @@ class FileWidget extends Component {
           <input
             ref={ref => (this.inputRef = ref)}
             id={id}
+            name={idToPath(id)}
             type="file"
             disabled={readonly || disabled}
             onChange={this.onChange}

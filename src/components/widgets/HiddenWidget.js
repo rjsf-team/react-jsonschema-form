@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { idToPath } from "../../utils";
 
 function HiddenWidget({ id, value }) {
   return (
     <input
       type="hidden"
       id={id}
+      name={idToPath(id)}
       value={typeof value === "undefined" ? "" : value}
     />
   );

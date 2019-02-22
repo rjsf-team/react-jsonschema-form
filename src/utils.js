@@ -741,6 +741,10 @@ export function toIdSchema(
   return idSchema;
 }
 
+export function idToPath(id) {
+  return id.replace(/^root_/, "").replace(/_/g, ".");
+}
+
 export function parseDateString(dateString, includeTime = true) {
   if (!dateString) {
     return {

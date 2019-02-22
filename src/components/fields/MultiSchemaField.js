@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-import { guessType } from "../../utils";
+import { guessType, idToPath } from "../../utils";
 import { isValid } from "../../validate";
 
 class AnyOfField extends Component {
@@ -161,7 +161,8 @@ class AnyOfField extends Component {
             className="form-control"
             onChange={this.onOptionChange}
             value={selectedOption}
-            id={`${idSchema.$id}_anyof_select`}>
+            id={`${idSchema.$id}_anyof_select`}
+            name={idToPath(idSchema.$id)}>
             {options.map((option, index) => {
               return (
                 <option key={index} value={index}>

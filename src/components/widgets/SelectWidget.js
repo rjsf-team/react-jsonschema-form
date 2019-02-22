@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { asNumber, guessType } from "../../utils";
+import { asNumber, guessType, idToPath } from "../../utils";
 
 const nums = new Set(["number", "integer"]);
 
@@ -67,6 +67,7 @@ function SelectWidget(props) {
   return (
     <select
       id={id}
+      name={idToPath(id)}
       multiple={multiple}
       className="form-control"
       value={typeof value === "undefined" ? emptyValue : value}
