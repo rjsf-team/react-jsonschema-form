@@ -813,6 +813,80 @@ describe("Form", () => {
     });
   });
 
+  describe("getUsedFormData", () => {
+    it("should call getUsedFormData with data from fields in event", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+      const formData = {
+        foo: "bar",
+      };
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const event = { target: { elements: [{ name: "foo" }] } };
+      const result = comp.getUsedFormData(event);
+      expect(result).eql({ foo: "bar" });
+    });
+
+    it("unused form values should be omitted", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+          baz: { type: "string" },
+          list: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                title: { type: "string" },
+                details: { type: "string" },
+              },
+            },
+          },
+        },
+      };
+
+      const formData = {
+        foo: "bar",
+        baz: "buzz",
+        list: [
+          { title: "title0", details: "details0" },
+          { title: "title1", details: "details1" },
+        ],
+      };
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const event = {
+        target: {
+          elements: [
+            { name: "foo" },
+            { name: "list.0.title" },
+            { name: "list.1.details" },
+          ],
+        },
+      };
+      const result = comp.getUsedFormData(event);
+      expect(result).eql({
+        foo: "bar",
+        list: [{ title: "title0" }, { details: "details1" }],
+      });
+    });
+  });
+
   describe("Change handler", () => {
     it("should call provided change handler on form state change", () => {
       const schema = {

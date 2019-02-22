@@ -22,7 +22,7 @@ export default class Form extends Component {
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
-    omitUnusedData: true,
+    omitUnusedData: false,
   };
 
   constructor(props) {
