@@ -351,7 +351,7 @@ describe("StringField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
-    it("should render a select element and it's first option is 'false', if set the enum and the default value is false.", () => {
+    it("should render a select element with first option 'false' if the default value is false", () => {
       const schema = {
         type: "object",
         properties: {
@@ -369,25 +369,6 @@ describe("StringField", () => {
 
       const options = node.querySelectorAll("option");
       expect(options[0].innerHTML).eql("false");
-    });
-
-    it("should render a select element and the option's length is equal the enum's length, if set the enum.", () => {
-      const schema = {
-        type: "object",
-        properties: {
-          foo: {
-            type: "string",
-            enum: [false, true],
-            default: false,
-          },
-        },
-      };
-
-      const { node } = createFormComponent({
-        schema,
-      });
-
-      const options = node.querySelectorAll("option");
       expect(options.length).eql(2);
     });
 
@@ -408,10 +389,11 @@ describe("StringField", () => {
       });
 
       const options = node.querySelectorAll("option");
+      expect(options[0].innerHTML).eql("");
       expect(options.length).eql(2);
     });
 
-    it("shouldn't render two empty options, when the default value is empty.", () => {
+    it("should render only one empty option when the default value is empty.", () => {
       const schema = {
         type: "object",
         properties: {
@@ -428,6 +410,7 @@ describe("StringField", () => {
       });
 
       const options = node.querySelectorAll("option");
+      expect(options[0].innerHTML).eql("");
       expect(options.length).eql(1);
     });
   });
