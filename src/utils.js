@@ -743,7 +743,7 @@ export function toIdSchema(
 
 export function idToPath(id) {
   // Remove the prefix and then replace all '_' with '.'
-  return id.substring(id.indexOf("_") + 1).replace(/_/g, ".");
+  return id.replace(/[^_]*_/, "").replace(/_/g, ".");
 }
 
 export function parseDateString(dateString, includeTime = true) {
