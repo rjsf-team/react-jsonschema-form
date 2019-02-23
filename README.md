@@ -1620,7 +1620,7 @@ Each element in the `errors` list passed to `transformErrors` has the following 
 - `params`: an object with the error params returned by ajv ([see doc](https://github.com/epoberezkin/ajv#error-parameters) for more info).
 - `property`: a string in Javascript property accessor notation to the data path of the field with the error. For example, `.name` or `['first-name']`.
 - `stack`: full error name, for example ".name is a required property".
-- `schemaPath`: JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`.
+- `schemaPath`: JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`. Note: this may sometimes be wrong due to a [https://github.com/epoberezkin/ajv/issues/512](bug in ajv).
 
 ### Error List Display
 
