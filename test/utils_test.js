@@ -17,6 +17,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema,
+  idToPath,
   guessType,
 } from "../src/utils";
 
@@ -1280,6 +1281,22 @@ describe("utils", () => {
         foo: { $id: "rjsf_foo" },
         bar: { $id: "rjsf_bar" },
       });
+    });
+  });
+
+  describe("idToPath()", () => {
+    it("should convert id to path", () => {
+      const id = "root_test_0_foo";
+      const path = idToPath(id);
+
+      expect(path).eql("test.0.foo");
+    });
+
+    it("should convert id with no prefix to path", () => {
+      const id = "_test_0_foo";
+      const path = idToPath(id);
+
+      expect(path).eql("test.0.foo");
     });
   });
 

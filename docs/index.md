@@ -118,6 +118,8 @@ render((
 ), document.getElementById("app"));
 ```
 
+> Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to omit those unused values on form submission, set the `omitUnusedData` prop to `true`.
+
 #### Form error event handler
 
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
