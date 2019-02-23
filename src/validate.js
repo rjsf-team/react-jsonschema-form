@@ -163,7 +163,7 @@ export default function validateFormData(
   schema,
   customValidate,
   transformErrors,
-  additionalMetaSchemas
+  additionalMetaSchemas = []
 ) {
   // add more schemas to validate against
   if (
