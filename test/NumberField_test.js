@@ -290,5 +290,82 @@ describe("NumberField", () => {
 
       expect(node.querySelector("select").id).eql("root");
     });
+
+    it("should render a select element if set the enum.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [0],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const selects = node.querySelectorAll("select");
+      expect(selects).to.have.length.of(1);
+    });
+
+    it("should render a select element and it's value is empty, if set the enum and the default value is undefined.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [0],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const selects = node.querySelectorAll("select");
+      expect(selects[0].value).eql("");
+    });
+
+    it("should render a select element and it's first option has an empty innerHTML, if set the enum and the default value is undefined.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [0],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const options = node.querySelectorAll("option");
+      expect(options[0].innerHTML).eql("");
+    });
+
+    it("should render a select element and it's first option is '0', if set the enum and the default value is 0.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [0],
+            default: 0,
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const options = node.querySelectorAll("option");
+      expect(options[0].innerHTML).eql("0");
+    });
   });
 });
