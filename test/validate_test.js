@@ -239,6 +239,7 @@ describe("Validation", () => {
         expect(errors).to.have.length.of(1);
         expect(errors[0].name).eql("type");
         expect(errors[0].property).eql(".properties['foo'].required");
+        expect(errors[0].schemaPath).eql("#/definitions/stringArray/type"); // TODO: This schema path is wrong due to a bug in ajv; change this test when https://github.com/epoberezkin/ajv/issues/512 is fixed.
         expect(errors[0].message).eql("should be array");
       });
 
@@ -345,6 +346,9 @@ describe("Validation", () => {
 
         it("should validate a minLength field", () => {
           expect(comp.state.errors).to.have.length.of(1);
+          expect(comp.state.errors[0].schemaPath).eql(
+            "#/properties/foo/minLength"
+          );
           expect(comp.state.errors[0].message).eql(
             "should NOT be shorter than 10 characters"
           );
