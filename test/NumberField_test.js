@@ -290,5 +290,76 @@ describe("NumberField", () => {
 
       expect(node.querySelector("select").id).eql("root");
     });
+
+    it("should render a select element with a blank option, when default value is not set.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [0],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const selects = node.querySelectorAll("select");
+      expect(selects[0].value).eql("");
+
+      const options = node.querySelectorAll("option");
+      expect(options.length).eql(2);
+      expect(options[0].innerHTML).eql("");
+    });
+
+    it("should render a select element without a blank option, if a default value is set.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [2],
+            default: 2,
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const selects = node.querySelectorAll("select");
+      expect(selects[0].value).eql("2");
+
+      const options = node.querySelectorAll("option");
+      expect(options.length).eql(1);
+      expect(options[0].innerHTML).eql("2");
+    });
+
+    it("should render a select element without a blank option, if the default value is 0.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [0],
+            default: 0,
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const selects = node.querySelectorAll("select");
+      expect(selects[0].value).eql("0");
+
+      const options = node.querySelectorAll("option");
+      expect(options.length).eql(1);
+      expect(options[0].innerHTML).eql("0");
+    });
   });
 });
