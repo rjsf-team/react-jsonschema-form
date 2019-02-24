@@ -30,7 +30,7 @@ function CheckboxesWidget(props) {
             <input
               type="checkbox"
               id={`${id}_${index}`}
-              name={idToPath(`${id}.${index}`)}
+              name={idToPath(`${id}_${index}`)}
               checked={checked}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && index === 0}

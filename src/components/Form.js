@@ -168,7 +168,7 @@ export default class Form extends Component {
     event.persist();
     let newFormData = this.state.formData;
 
-    if (this.props.omitUnusedData) {
+    if (this.props.omitUnusedData === true) {
       newFormData = this.getUsedFormData(event, this.state.formData);
     }
 
