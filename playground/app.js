@@ -320,12 +320,19 @@ class App extends Component {
   constructor(props) {
     super(props);
     // initialize state with Simple data sample
-    const { schema, uiSchema, formData, validate } = samples.Simple;
+    const {
+      schema,
+      uiSchema,
+      formData,
+      errorSchema,
+      validate,
+    } = samples.Simple;
     this.state = {
       form: false,
       schema,
       uiSchema,
       formData,
+      errorSchema,
       validate,
       editor: "default",
       theme: "default",
@@ -378,6 +385,9 @@ class App extends Component {
 
   onFormDataEdited = formData => this.setState({ formData, shareURL: null });
 
+  onErrorSchemaEdited = errorSchema =>
+    this.setState({ errorSchema, shareURL: null });
+
   onThemeSelected = (theme, { stylesheet, editor }) => {
     this.setState({ theme, editor: editor ? editor : "default" });
     setImmediate(() => {
@@ -388,16 +398,21 @@ class App extends Component {
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
-  onFormDataChange = ({ formData }) =>
-    this.setState({ formData, shareURL: null });
+  onFormDataChange = ({ formData, errorSchema }) =>
+    this.setState({ formData, errorSchema, shareURL: null });
+
+  onErrorSchemaChange = errorSchema =>
+    this.setState({ errorSchema, shareURL: null });
 
   onShare = () => {
-    const { formData, schema, uiSchema } = this.state;
+    const { formData, schema, uiSchema, errorSchema } = this.state;
     const {
       location: { origin, pathname },
     } = document;
     try {
-      const hash = btoa(JSON.stringify({ formData, schema, uiSchema }));
+      const hash = btoa(
+        JSON.stringify({ formData, schema, uiSchema, errorSchema })
+      );
       this.setState({ shareURL: `${origin}${pathname}#${hash}` });
     } catch (err) {
       this.setState({ shareURL: null });
@@ -410,6 +425,7 @@ class App extends Component {
       uiSchema,
       formData,
       liveSettings,
+      errorSchema,
       validate,
       theme,
       editor,
@@ -464,6 +480,16 @@ class App extends Component {
               />
             </div>
           </div>
+          <div className="row">
+            <div className="col">
+              <Editor
+                title="errorSchema"
+                theme={editor}
+                code={toJson(errorSchema)}
+                onChange={this.onErrorSchemaEdited}
+              />
+            </div>
+          </div>
         </div>
         <div className="col-sm-5">
           {this.state.form && (
@@ -475,11 +501,13 @@ class App extends Component {
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
+              errorSchema={errorSchema}
               onChange={this.onFormDataChange}
               onSubmit={({ formData }, e) => {
                 console.log("submitted formData", formData);
                 console.log("submit event", e);
               }}
+              onValidate={this.onErrorSchemaChange}
               fields={{ geo: GeoPosition }}
               validate={validate}
               onBlur={(id, value) =>
