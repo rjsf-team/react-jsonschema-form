@@ -182,8 +182,16 @@ export default function validateFormData(
   } catch (err) {
     validationErrors = err;
   }
-
   let errors = transformAjvErrors(ajv.errors);
+  if (validationErrors && validationErrors.message) {
+    errors = [
+      ...errors,
+      {
+        stack: validationErrors.message,
+      },
+    ];
+  }
+
   // Clear errors to prevent persistent errors, see #1104
   ajv.errors = null;
 
