@@ -1995,7 +1995,7 @@ describe("Form", () => {
 
       const { comp } = createFormComponent(formProps);
 
-      expect(comp.state.errorSchema).eql({});
+      expect(comp.state.errorSchema).eql({ __errors: [undefined] });
 
       setProps(comp, {
         ...formProps,
@@ -2013,7 +2013,7 @@ describe("Form", () => {
 
       setProps(comp, formProps);
 
-      expect(comp.state.errorSchema).eql({});
+      expect(comp.state.errorSchema).eql({ __errors: [undefined] });
     });
   });
 });
