@@ -70,7 +70,9 @@ function toErrorSchema(errors) {
       // "errors" (see `validate.createErrorHandler`).
       parent.__errors = parent.__errors.concat(message);
     } else {
-      parent.__errors = [message];
+      if (message) {
+        parent.__errors = [message];
+      }
     }
     return errorSchema;
   }, {});
@@ -201,7 +203,6 @@ export default function validateFormData(
     errors = transformErrors(errors);
   }
   const errorSchema = toErrorSchema(errors);
-
   if (typeof customValidate !== "function") {
     return { errors, errorSchema };
   }

@@ -131,7 +131,7 @@ describe("Validation", () => {
             stack: errMessage,
           },
         ]);
-        expect(errors.errorSchema).to.eql({ __errors: [undefined] });
+        expect(errors.errorSchema).to.eql({});
       });
       it("should return a validation error about formData", () => {
         const errors = validateFormData(
