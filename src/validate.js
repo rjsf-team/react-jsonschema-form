@@ -219,7 +219,6 @@ export default function validateFormData(
   return {
     errors: newErrors,
     errorSchema: newErrorSchema,
-    validationErrors: validationErrors,
   };
 }
 
