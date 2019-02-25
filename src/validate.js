@@ -179,25 +179,25 @@ export default function validateFormData(
     formerMetaSchema = additionalMetaSchemas;
   }
 
-  let validationErrors = null;
+  let validationError = null;
   try {
     ajv.validate(schema, formData);
   } catch (err) {
-    validationErrors = err;
+    validationError = err;
   }
-  let errors = transformAjvErrors(ajv.errors);
 
-  if (validationErrors && validationErrors.message) {
+  let errors = transformAjvErrors(ajv.errors);
+  // Clear errors to prevent persistent errors, see #1104
+
+  ajv.errors = null;
+  if (validationError && validationError.message) {
     errors = [
       ...errors,
       {
-        stack: validationErrors.message,
+        stack: validationError.message,
       },
     ];
   }
-
-  // Clear errors to prevent persistent errors, see #1104
-  ajv.errors = null;
 
   if (typeof transformErrors === "function") {
     errors = transformErrors(errors);
