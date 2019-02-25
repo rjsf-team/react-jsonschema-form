@@ -123,10 +123,14 @@ describe("Validation", () => {
           { datasetId: "some kind of text" },
           schema
         );
-        expect(errors.validationErrors.message).to.equal(
-          'no schema with key or ref "http://json-schema.org/draft-04/schema#"'
-        );
-        expect(errors.errors).to.eql([]);
+        const errMessage =
+          'no schema with key or ref "http://json-schema.org/draft-04/schema#"';
+        expect(errors.errors[0].stack).to.equal(errMessage);
+        expect(errors.errors).to.eql([
+          {
+            stack: errMessage,
+          },
+        ]);
         expect(errors.errorSchema).to.eql({});
       });
       it("should return a validation error about formData", () => {
@@ -137,7 +141,6 @@ describe("Validation", () => {
           null,
           [metaSchemaDraft4]
         );
-        expect(errors.validationErrors).to.equal(null);
         expect(errors.errors).to.have.lengthOf(1);
         expect(errors.errors[0].stack).to.equal(
           '.datasetId should match pattern "\\d+"'
@@ -151,7 +154,6 @@ describe("Validation", () => {
           null,
           [metaSchemaDraft4, metaSchemaDraft6]
         );
-        expect(errors.validationErrors).to.equal(null);
         expect(errors.errors).to.have.lengthOf(1);
         expect(errors.errors[0].stack).to.equal(
           '.datasetId should match pattern "\\d+"'
@@ -297,10 +299,13 @@ describe("Validation", () => {
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(1);
+        expect(errors).to.have.length.of(2);
         expect(errors[0].name).eql("type");
         expect(errors[0].property).eql(".properties['foo'].required");
         expect(errors[0].message).eql("should be array");
+        expect(errors[1].stack).eql(
+          "schema is invalid: data.properties['foo'].required should be array"
+        );
       });
 
       it("should return an errorSchema", () => {
