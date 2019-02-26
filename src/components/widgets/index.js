@@ -38,4 +38,5 @@ export default {
   FileWidget,
   CheckboxWidget,
   CheckboxesWidget,
+  MultiSelectWidget: SelectWidget,
 };

@@ -129,7 +129,7 @@ describe("FormContext", () => {
   });
 
   it("should be passed to multiselect", () => {
-    const widgets = { SelectWidget: CustomComponent };
+    const widgets = { MultiSelectWidget: CustomComponent };
     const { node } = createFormComponent({
       schema: {
         type: "array",

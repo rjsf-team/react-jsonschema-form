@@ -750,7 +750,7 @@ describe("ArrayField", () => {
         const { node } = createFormComponent({
           schema,
           widgets: {
-            SelectWidget: CustomComponent,
+            MultiSelectWidget: CustomComponent,
           },
           formData: ["foo", "foo"],
           liveValidate: true,
