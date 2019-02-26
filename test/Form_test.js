@@ -1693,7 +1693,7 @@ describe("Form", () => {
           liveValidate: true,
         });
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        Simulate.change(node.querySelector("input[type=number]"), {
           target: { value: "not a number" },
         });
 
@@ -1711,7 +1711,7 @@ describe("Form", () => {
           formData: { branch: 2 },
         });
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        Simulate.change(node.querySelector("input[type=number]"), {
           target: { value: "not a number" },
         });
 

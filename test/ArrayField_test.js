@@ -1102,7 +1102,7 @@ describe("ArrayField", () => {
         "fieldset .field-string input[type=text]"
       );
       const numInput = node.querySelector(
-        "fieldset .field-number input[type=text]"
+        "fieldset .field-number input[type=number]"
       );
       expect(strInput.id).eql("root_0");
       expect(numInput.id).eql("root_1");
@@ -1114,7 +1114,7 @@ describe("ArrayField", () => {
         "fieldset .field-string input[type=text]"
       );
       const numInput = node.querySelector(
-        "fieldset .field-number input[type=text]"
+        "fieldset .field-number input[type=number]"
       );
       expect(strInput.required).eql(true);
       expect(numInput.required).eql(true);
@@ -1129,7 +1129,7 @@ describe("ArrayField", () => {
         "fieldset .field-string input[type=text]"
       );
       const numInput = node.querySelector(
-        "fieldset .field-number input[type=text]"
+        "fieldset .field-number input[type=number]"
       );
       expect(strInput.value).eql("foo");
       expect(numInput.value).eql("42");
@@ -1141,7 +1141,7 @@ describe("ArrayField", () => {
         "fieldset .field-string input[type=text]"
       );
       const numInput = node.querySelector(
-        "fieldset .field-number input[type=text]"
+        "fieldset .field-number input[type=number]"
       );
 
       Simulate.change(strInput, { target: { value: "bar" } });
