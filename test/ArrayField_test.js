@@ -750,6 +750,23 @@ describe("ArrayField", () => {
         const { node } = createFormComponent({
           schema,
           widgets: {
+            SelectWidget: CustomComponent,
+          },
+          formData: ["foo", "foo"],
+          liveValidate: true,
+        });
+
+        const matches = node.querySelectorAll("#custom");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.eql(
+          "should NOT have duplicate items (items ## 0 and 1 are identical)"
+        );
+      });
+
+      it("should pass rawErrors down to custom widgets", () => {
+        const { node } = createFormComponent({
+          schema,
+          widgets: {
             MultiSelectWidget: CustomComponent,
           },
           formData: ["foo", "foo"],

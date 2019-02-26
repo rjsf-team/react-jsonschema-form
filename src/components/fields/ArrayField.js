@@ -433,7 +433,10 @@ class ArrayField extends Component {
     const { widgets, definitions, formContext } = registry;
     const itemsSchema = retrieveSchema(schema.items, definitions, formData);
     const enumOptions = optionsList(itemsSchema);
-    const { widget = "select", ...options } = {
+    const selectWidget = widgets.hasOwnProperty("MultiSelectWidget")
+      ? "multiselect"
+      : "select";
+    const { widget = selectWidget, ...options } = {
       ...getUiOptions(uiSchema),
       enumOptions,
     };
