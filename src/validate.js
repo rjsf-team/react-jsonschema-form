@@ -190,7 +190,14 @@ export default function validateFormData(
   // Clear errors to prevent persistent errors, see #1104
 
   ajv.errors = null;
-  if (validationError && validationError.message) {
+
+  const noProperMetaSchema =
+    validationError &&
+    validationError.message &&
+    typeof validationError.message === "string" &&
+    validationError.message.includes("no schema with key or ref ");
+
+  if (noProperMetaSchema) {
     errors = [
       ...errors,
       {
@@ -198,11 +205,23 @@ export default function validateFormData(
       },
     ];
   }
-
   if (typeof transformErrors === "function") {
     errors = transformErrors(errors);
   }
-  const errorSchema = toErrorSchema(errors);
+
+  let errorSchema = toErrorSchema(errors);
+
+  if (noProperMetaSchema) {
+    errorSchema = {
+      ...errorSchema,
+      ...{
+        $schema: {
+          __errors: [validationError.message],
+        },
+      },
+    };
+  }
+
   if (typeof customValidate !== "function") {
     return { errors, errorSchema };
   }
