@@ -131,7 +131,9 @@ describe("Validation", () => {
             stack: errMessage,
           },
         ]);
-        expect(errors.errorSchema).to.eql({});
+        expect(errors.errorSchema).to.eql({
+          $schema: { __errors: [errMessage] },
+        });
       });
       it("should return a validation error about formData", () => {
         const errors = validateFormData(
@@ -299,13 +301,10 @@ describe("Validation", () => {
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(2);
+        expect(errors).to.have.length.of(1);
         expect(errors[0].name).eql("type");
         expect(errors[0].property).eql(".properties['foo'].required");
         expect(errors[0].message).eql("should be array");
-        expect(errors[1].stack).eql(
-          "schema is invalid: data.properties['foo'].required should be array"
-        );
       });
 
       it("should return an errorSchema", () => {

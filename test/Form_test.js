@@ -1995,7 +1995,13 @@ describe("Form", () => {
 
       const { comp } = createFormComponent(formProps);
 
-      expect(comp.state.errorSchema).eql({});
+      expect(comp.state.errorSchema).eql({
+        $schema: {
+          __errors: [
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+          ],
+        },
+      });
 
       setProps(comp, {
         ...formProps,
@@ -2013,7 +2019,13 @@ describe("Form", () => {
 
       setProps(comp, formProps);
 
-      expect(comp.state.errorSchema).eql({});
+      expect(comp.state.errorSchema).eql({
+        $schema: {
+          __errors: [
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+          ],
+        },
+      });
     });
   });
 });
