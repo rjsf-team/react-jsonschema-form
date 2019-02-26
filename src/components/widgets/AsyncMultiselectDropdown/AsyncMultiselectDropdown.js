@@ -7,11 +7,11 @@ import SelectionBar from "./SelectionBar";
 
 const styles = {
   container: {
-    display: "block",
+    display: "block"
   },
   inputField: {
-    verticalAlign: "bottom",
-  },
+    verticalAlign: "bottom"
+  }
 };
 class AsyncMultiselectDropdown extends Component {
   constructor(props) {
@@ -21,81 +21,68 @@ class AsyncMultiselectDropdown extends Component {
       searchText: "",
       options: [],
       pageNumber: 0,
-      pageSize: 10,
-      selectedOptions: [],
-      isLoading: false,
-      totalOptionsCount: 0,
-      selectionColumn: null,
-      primaryColumn: null,
+      ...props.schema
     };
   }
 
-  componentDidMount = async () => {
-    const {
-      pageSize,
-      selectedOptions,
-      isMultiselect,
-      selectionColumn,
-      currentPageNumber,
-    } = this.props.schema;
-    this.setState({
-      pageNumber: currentPageNumber,
-      pageSize,
-      selectionColumn,
-      selectedOptions,
-      isMultiselect,
-      isLoading: false,
-    });
+  componentDidMount() {
+    this.initStateFromProps();
     this.fetchData();
-  };
+  }
 
-  handleChange = event =>
+  handleChange = event => {
     this.setState(
       { searchText: event.target.value, isSearching: true, pageNumber: 0 },
-      this.fetchData
+      () => this.fetchData()
     );
+  }
 
-  fetchData = async () => {
-    const { searchText, pageNumber } = this.state;
-    const {
-      schema: { loadOptions, pageSize, loadOptionsCount, cols },
-    } = this.props;
+  initStateFromProps = () => {
+    const { cols } = this.state;
     let selectionColumn = "";
     let primaryColumn = "";
 
     for (let index = 0; index < cols.length; index++) {
-      if (cols[index].displaySelected) {
+      if (cols[index].displaySelected && this.state.selectionColumn === undefined) {
         selectionColumn = cols[index].key;
-        break;
       }
-    }
-
-    for (let index = 0; index < cols.length; index++) {
-      if (cols[index].primary) {
+      if (cols[index].primary && this.state.primaryColumn === undefined ) {
         primaryColumn = cols[index].key;
+      }
+      if (this.state.primary !== undefined && this.state.selectionColumn !== undefined) {
         break;
       }
     }
+    this.setState({ selectionColumn, primaryColumn });
+  }
 
+  fetchData = () => {
+    const {
+      searchText,
+      pageNumber,
+      loadOptions,
+      loadOptionsCount,
+      pageSize,
+    } = this.state;
+    
     this.setState({ isLoading: true });
     Promise.all([
       loadOptions(searchText, pageNumber, pageSize),
-      loadOptionsCount(searchText),
+      loadOptionsCount(searchText)
     ]).then(([resLoadOptions, resLoadOptionsCount]) =>
       this.setState({
         options: resLoadOptions,
         pageNumber: pageNumber,
         pageSize,
         totalOptionsCount: resLoadOptionsCount,
-        selectionColumn,
-        primaryColumn,
-        isLoading: false,
+        isLoading: false
       })
     );
   };
 
-  handleChangePage = (event, page) =>
-    this.setState({ pageNumber: page }, this.fetchData);
+  handleChangePage = (event, page) => {
+    this.setState({ pageNumber: page }, () => this.fetchData());
+  };
 
   handleRowClick = (event, selectedRow) => {
     let { selectedOptions, isMultiselect, primaryColumn } = this.state;
@@ -117,32 +104,52 @@ class AsyncMultiselectDropdown extends Component {
       }
     }
     this.setState({ selectedOptions, searchText: " " });
-    // TODO: Considering that for now just working on single value select
-    if (selectedOptions && selectedOptions.length > 0) {
-      this.props.onChange(selectedOptions[0][primaryColumn]);
+
+    if (selectedOptions.length > 0) {
+      if (!isMultiselect) {
+        this.props.onChange(selectedOptions[0][primaryColumn]);
+      } else {
+        selectedOptions = selectedOptions.map(value => value[primaryColumn]);
+        this.props.onChange(JSON.stringify(selectedOptions));
+      }
     } else {
       this.props.onChange(undefined);
     }
   };
 
   onDeleteChoice = deletedChoice => {
-    const { selectionColumn, selectedOptions } = this.state;
+    let {
+      selectionColumn,
+      selectedOptions,
+      isMultiselect,
+      primaryColumn
+    } = this.state;
     for (let index = 0; index < selectedOptions.length; index++) {
       if (selectedOptions[index][selectionColumn] === deletedChoice) {
         selectedOptions.splice(index, 1);
         this.setState({ selectedOptions });
-        this.props.onChange(undefined);
+        if (selectedOptions.length > 0) {
+          if (!isMultiselect) {
+            this.props.onChange(selectedOptions[0][primaryColumn]);
+          } else {
+            selectedOptions = selectedOptions.map(
+              value => value[primaryColumn]
+            );
+            this.props.onChange(JSON.stringify(selectedOptions));
+          }
+        } else {
+          this.props.onChange(undefined);
+        }
       }
     }
   };
 
   getIndexOfSelectedRowFromSelectedOptionsList = selectedRow => {
-    const { selectedOptions } = this.state;
+    const { selectedOptions, primaryColumn } = this.state;
     let recordFounded = -1;
     for (let index = 0; index < selectedOptions.length; index++) {
-      if (
-        JSON.stringify(selectedOptions[index]) === JSON.stringify(selectedRow)
-      ) {
+      if (selectedOptions[index][primaryColumn] === selectedRow[primaryColumn])
+      {
         recordFounded = index;
         break;
       }
@@ -155,23 +162,20 @@ class AsyncMultiselectDropdown extends Component {
   };
 
   render() {
-    const {
-      label,
-      classes,
-      schema: { cols },
-      placeholder,
-    } = this.props;
+    const { label, classes, placeholder } = this.props;
     const {
       isSearching,
       searchText,
       options,
       pageNumber,
       pageSize,
+      cols,
+      customClass,
       totalOptionsCount,
       selectedOptions,
       selectionColumn,
       isMultiselect,
-      isLoading,
+      isLoading
     } = this.state;
 
     const loader = isLoading && (
@@ -186,7 +190,7 @@ class AsyncMultiselectDropdown extends Component {
       />
     );
     return (
-      <div>
+      <div className={customClass}>
         <Grid
           container
           direction="row"
@@ -201,8 +205,7 @@ class AsyncMultiselectDropdown extends Component {
             onChange={this.handleChange}
             onFocus={() => this.setState({ isSearching: true })}
             InputProps={{
-              startAdornment: selected,
-              // endAdornment: loader,
+              startAdornment: selected
             }}
           />
           {loader}
@@ -233,7 +236,7 @@ class AsyncMultiselectDropdown extends Component {
 AsyncMultiselectDropdown.propTypes = {
   schema: PropTypes.object.isRequired,
   placeholder: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(AsyncMultiselectDropdown);
