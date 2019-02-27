@@ -17,6 +17,7 @@ export default class Form extends Component {
     uiSchema: {},
     noValidate: false,
     liveValidate: false,
+    disabled: false,
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
@@ -184,6 +185,7 @@ export default class Form extends Component {
       enctype,
       acceptcharset,
       noHtml5Validate,
+      disabled,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
@@ -215,6 +217,7 @@ export default class Form extends Component {
           onFocus={this.onFocus}
           registry={registry}
           safeRenderCompletion={safeRenderCompletion}
+          disabled={disabled}
         />
         {children ? (
           children
