@@ -476,9 +476,10 @@ class App extends Component {
               uiSchema={uiSchema}
               formData={formData}
               onChange={this.onFormDataChange}
-              onSubmit={({ formData }) =>
-                console.log("submitted formData", formData)
-              }
+              onSubmit={({ formData }, e) => {
+                console.log("submitted formData", formData);
+                console.log("submit event", e);
+              }}
               fields={{ geo: GeoPosition }}
               validate={validate}
               onBlur={(id, value) =>

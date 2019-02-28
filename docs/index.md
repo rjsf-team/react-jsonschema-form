@@ -107,10 +107,10 @@ render((
 
 #### Form submission
 
-You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after:
+You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after. The original event will also be passed as a second parameter:
 
 ```js
-const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
+const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
 
 render((
   <Form schema={schema}
@@ -257,6 +257,11 @@ $ npm test
 ```
 $ npm run tdd
 ```
+
+#### Code coverage
+
+Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run. 
+The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 ### Releasing
 

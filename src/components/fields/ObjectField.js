@@ -237,7 +237,7 @@ class ObjectField extends Component {
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
-              formData={formData[name]}
+              formData={(formData || {})[name]}
               onKeyChange={this.onKeyChange(name)}
               onChange={this.onPropertyChange(
                 name,
