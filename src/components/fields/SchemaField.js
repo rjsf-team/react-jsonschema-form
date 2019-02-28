@@ -120,7 +120,6 @@ function ErrorList(props) {
 function DefaultTemplate(props) {
   const {
     id,
-    classNames,
     label,
     children,
     errors,
@@ -128,68 +127,20 @@ function DefaultTemplate(props) {
     description,
     hidden,
     required,
-    disabled,
-    readonly,
     displayLabel,
-    onKeyChange,
-    onDropPropertyClick,
-    schema,
   } = props;
   if (hidden) {
     return <div className="hidden">{children}</div>;
   }
 
-  const keyLabel = `${label} Key`; // i18n ?
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
-
-  if (additional) {
-    return (
-      <div className={classNames}>
-        <div className="row form-additional">
-          <div className="col-xs-9 form-additional-pair">
-            <div className="form-group form-additional-key">
-              <Label label={keyLabel} required={required} id={`${id}-key`} />
-              <LabelInput
-                label={label}
-                required={required}
-                id={`${id}-key`}
-                onChange={onKeyChange}
-              />
-            </div>
-            <div className="form-group form-additional-value">
-              {displayLabel && (
-                <Label label={label} required={required} id={id} />
-              )}
-              {displayLabel && description ? description : null}
-              {children}
-              {errors}
-              {help}
-            </div>
-          </div>
-          <div className="col-xs-3 form-additional-actions">
-            <div className="btn-group">
-              <IconButton
-                type="danger"
-                icon="remove"
-                className="form-additional-remove"
-                disabled={disabled || readonly}
-                onClick={onDropPropertyClick(label)}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className={classNames}>
+    <WrapIfAdditional parentProps={props}>
       {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}
       {errors}
       {help}
-    </div>
+    </WrapIfAdditional>
   );
 }
 if (process.env.NODE_ENV !== "production") {
@@ -219,6 +170,58 @@ DefaultTemplate.defaultProps = {
   required: false,
   displayLabel: true,
 };
+
+function WrapIfAdditional(props) {
+  const {
+    id,
+    classNames,
+    disabled,
+    label,
+    onKeyChange,
+    onDropPropertyClick,
+    readonly,
+    required,
+    schema,
+  } = props.parentProps;
+  const keyLabel = `${label} Key`; // i18n ?
+  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+
+  if (!additional) {
+    return <div className={classNames}>{props.children}</div>;
+  }
+
+  return (
+    <div className={classNames}>
+      <div className="row">
+        <div className="col-xs-5 form-additional">
+          <div className="form-group">
+            <Label label={keyLabel} required={required} id={`${id}-key`} />
+            <LabelInput
+              label={label}
+              required={required}
+              id={`${id}-key`}
+              onChange={onKeyChange}
+            />
+          </div>
+        </div>
+        <div className="form-additional form-group col-xs-5">
+          {props.children}
+        </div>
+        <div className="col-xs-2">
+          <IconButton
+            type="danger"
+            icon="remove"
+            className="array-item-remove btn-block"
+            tabIndex="-1"
+            style={{ border: "0" }}
+            disabled={disabled || readonly}
+            onClick={onDropPropertyClick(label)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function SchemaFieldRender(props) {
   const {
