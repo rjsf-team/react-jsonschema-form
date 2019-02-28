@@ -118,7 +118,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-> Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to omit those unused values on form submission, set the `omitUnusedData` prop to `true`.
+> Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to omit those unused values on form submission, set the `omitUnusedData` prop to `true`. If you wish to use this option with custom field components then you must add the `name` attribute to your input elements, see: [Custom Field Components](/advanced-customization/#custom-field-components)
 
 #### Form error event handler
 
@@ -262,7 +262,7 @@ $ npm run tdd
 
 #### Code coverage
 
-Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run. 
+Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
 The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 ### Releasing

@@ -91,7 +91,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
-- `idSchema`: Object
+- `idSchema`: A tree of unique ids/names for every child field
 - `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
 - `onAddClick: (event) => void`: A function that adds a new item to the array.
 - `readonly`: A boolean value stating if the array is read-only.
@@ -152,7 +152,7 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `required`: A boolean value stating if the object is required.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
-- `idSchema`: An object containing the id for this object & ids for it's properties.
+- `idSchema`: An object containing the id/name for this object & ids/names for it's properties.
 - `formData`: The form data for the object.
 - `formContext`: The `formContext` object that you passed to Form.
 
@@ -255,6 +255,7 @@ render((
 The following props are passed to custom widget components:
 
 - `id`: The generated id for this field;
+- `name`: The preferred name for this field;
 - `schema`: The JSONSchema subschema object for this field;
 - `value`: The current value for this field;
 - `required`: The required status of this field;
@@ -267,6 +268,8 @@ The following props are passed to custom widget components:
 - `formContext`: The `formContext` object that you passed to Form.
 
 > Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
+
+> Note: The name given in the props must match the `name` attribute on the actual input element (e.g. `<input/>`, `<textarea/>`, `<select/>`, etc.) if you wish to use the `omitUnusedData` Form option. This is because `omitUnusedData` looks for the form element names in order to determine which fields are in use and which are unused.
 
 #### Custom component registration
 
@@ -413,11 +416,26 @@ A field component will always be passed the following props:
 
  - `schema`: The JSON schema for this field;
  - `uiSchema`: The [uiSchema](#the-uischema-object) for this field;
- - `idSchema`: The tree of unique ids for every child field;
+ - `idSchema`: The tree of unique ids and names for every child field;
  - `formData`: The data for this field;
  - `errorSchema`: The tree of errors for this field and its children;
  - `registry`: A [registry](#the-registry-object) object (read next).
  - `formContext`: A [formContext](#the-formcontext-object) object (read next).
+
+> Note: If you with to use the `omitUnusedData` Form option with your custom field component then you must add the `name` attribute to all of your form input elements (e.g. `<input/>`, `<textarea/>`, `<select/>`, etc.), which can be found in the `idSchema` prop. This is because `omitUnusedData` looks for the form element names in order to determine which fields are in use and which are unused. Example using the render from the geo component above:
+
+```jsx
+render() {
+  const {lat, lon} = this.state;
+  const {idSchema} = this.props;
+  return (
+    <div>
+      <input type="number" value={lat} onChange={this.onChange("lat")} name={idSchema.lat.name}/>
+      <input type="number" value={lon} onChange={this.onChange("lon")} name={idSchema.lon.name}/>
+    </div>
+  );
+}
+```
 
 #### The `registry` object
 
