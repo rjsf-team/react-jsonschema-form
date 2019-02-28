@@ -16,6 +16,7 @@ if (process.env.NODE_ENV !== "production") {
   ColorWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     value: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

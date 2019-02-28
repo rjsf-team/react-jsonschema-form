@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { idToPath } from "../../utils";
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
@@ -31,7 +30,6 @@ function BaseInput(props) {
 
   return (
     <input
-      name={idToPath(inputProps.id)}
       className="form-control"
       readOnly={readonly}
       disabled={disabled}
@@ -56,6 +54,7 @@ BaseInput.defaultProps = {
 if (process.env.NODE_ENV !== "production") {
   BaseInput.propTypes = {
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,
     required: PropTypes.bool,

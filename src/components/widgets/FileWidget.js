@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { dataURItoBlob, shouldRender, setState, idToPath } from "../../utils";
+import { dataURItoBlob, shouldRender, setState } from "../../utils";
 
 function addNameToDataURL(dataURL, name) {
   return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
@@ -90,7 +90,7 @@ class FileWidget extends Component {
   };
 
   render() {
-    const { multiple, id, readonly, disabled, autofocus } = this.props;
+    const { multiple, id, name, readonly, disabled, autofocus } = this.props;
     const { filesInfo } = this.state;
     return (
       <div>
@@ -98,7 +98,7 @@ class FileWidget extends Component {
           <input
             ref={ref => (this.inputRef = ref)}
             id={id}
-            name={idToPath(id)}
+            name={name}
             type="file"
             disabled={readonly || disabled}
             onChange={this.onChange}

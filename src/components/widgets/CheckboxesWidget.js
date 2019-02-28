@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { idToPath } from "../../utils";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -15,7 +14,16 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const { id, disabled, options, value, autofocus, readonly, onChange } = props;
+  const {
+    id,
+    name,
+    disabled,
+    options,
+    value,
+    autofocus,
+    readonly,
+    onChange,
+  } = props;
   const { enumOptions, enumDisabled, inline } = options;
   return (
     <div className="checkboxes" id={id}>
@@ -30,7 +38,7 @@ function CheckboxesWidget(props) {
             <input
               type="checkbox"
               id={`${id}_${index}`}
-              name={idToPath(`${id}_${index}`)}
+              name={name}
               checked={checked}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && index === 0}
@@ -71,6 +79,7 @@ if (process.env.NODE_ENV !== "production") {
   CheckboxesWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     options: PropTypes.shape({
       enumOptions: PropTypes.array,
       inline: PropTypes.bool,

@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import * as types from "../../types";
 
 import {
-  idToPath,
   isMultiSelect,
   isSelect,
   retrieveSchema,
@@ -74,13 +73,13 @@ function Label(props) {
 }
 
 function LabelInput(props) {
-  const { id, label, onChange } = props;
+  const { id, label, onChange, name } = props;
   return (
     <input
       className="form-control"
       type="text"
       id={id}
-      name={idToPath(id)}
+      name={name}
       onBlur={event => onChange(event.target.value)}
       defaultValue={label}
     />
@@ -122,6 +121,7 @@ function ErrorList(props) {
 function DefaultTemplate(props) {
   const {
     id,
+    name,
     classNames,
     label,
     children,
@@ -153,6 +153,7 @@ function DefaultTemplate(props) {
                 required={required}
                 id={`${id}-key`}
                 onChange={onKeyChange}
+                name={name}
               />
             </div>
           </div>
@@ -283,6 +284,7 @@ function SchemaFieldRender(props) {
 
   const { type } = schema;
   const id = idSchema.$id;
+  const elementName = idSchema.name;
   const label =
     uiSchema["ui:title"] || props.schema.title || schema.title || name;
   const description =
@@ -316,6 +318,7 @@ function SchemaFieldRender(props) {
     errors: <ErrorList errors={errors} />,
     rawErrors: errors,
     id,
+    name: elementName,
     label,
     hidden,
     onKeyChange,

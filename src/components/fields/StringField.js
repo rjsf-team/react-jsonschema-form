@@ -39,6 +39,7 @@ function StringField(props) {
       options={{ ...options, enumOptions }}
       schema={schema}
       id={idSchema && idSchema.$id}
+      name={idSchema && idSchema.name}
       label={title === undefined ? name : title}
       value={formData}
       onChange={onChange}

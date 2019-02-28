@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import DescriptionField from "../fields/DescriptionField.js";
-import { idToPath } from "../../utils";
 
 function CheckboxWidget(props) {
   const {
     schema,
     id,
+    name,
     value,
     required,
     disabled,
@@ -26,7 +26,7 @@ function CheckboxWidget(props) {
         <input
           type="checkbox"
           id={id}
-          name={idToPath(id)}
+          name={name}
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled || readonly}
@@ -49,6 +49,7 @@ if (process.env.NODE_ENV !== "production") {
   CheckboxWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     value: PropTypes.bool,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

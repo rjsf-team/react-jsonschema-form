@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { asNumber, guessType, idToPath } from "../../utils";
+import { asNumber, guessType } from "../../utils";
 
 const nums = new Set(["number", "integer"]);
 
@@ -50,6 +50,7 @@ function SelectWidget(props) {
   const {
     schema,
     id,
+    name,
     options,
     value,
     required,
@@ -67,7 +68,7 @@ function SelectWidget(props) {
   return (
     <select
       id={id}
-      name={idToPath(id)}
+      name={name}
       multiple={multiple}
       className="form-control"
       value={typeof value === "undefined" ? emptyValue : value}
@@ -115,6 +116,7 @@ if (process.env.NODE_ENV !== "production") {
   SelectWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     options: PropTypes.shape({
       enumOptions: PropTypes.array,
     }).isRequired,

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-import { guessType, idToPath } from "../../utils";
+import { guessType } from "../../utils";
 import { isValid } from "../../validate";
 
 class AnyOfField extends Component {
@@ -162,7 +162,7 @@ class AnyOfField extends Component {
             onChange={this.onOptionChange}
             value={selectedOption}
             id={`${idSchema.$id}_anyof_select`}
-            name={idToPath(idSchema.$id)}>
+            name={idSchema.name}>
             {options.map((option, index) => {
               return (
                 <option key={index} value={index}>

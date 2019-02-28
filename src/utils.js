@@ -712,8 +712,13 @@ export function toIdSchema(
   formData = {},
   idPrefix = "root"
 ) {
+  const $id = id || idPrefix;
   const idSchema = {
-    $id: id || idPrefix,
+    $id,
+    name: $id
+      .replace(new RegExp(`^${idPrefix}`), "")
+      .replace(/^_/, "")
+      .replace(/_/g, "."),
   };
   if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
@@ -739,11 +744,6 @@ export function toIdSchema(
     );
   }
   return idSchema;
-}
-
-export function idToPath(id) {
-  // Remove the prefix and then replace all '_' with '.'
-  return id.replace(/[^_]*_/, "").replace(/_/g, ".");
 }
 
 export function parseDateString(dateString, includeTime = true) {

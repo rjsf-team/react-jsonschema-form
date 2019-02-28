@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { idToPath } from "../../utils";
 
 function TextareaWidget(props) {
   const {
     id,
+    name,
     options,
     placeholder,
     value,
@@ -22,7 +22,7 @@ function TextareaWidget(props) {
   return (
     <textarea
       id={id}
-      name={idToPath(id)}
+      name={name}
       className="form-control"
       value={typeof value === "undefined" ? "" : value}
       placeholder={placeholder}
@@ -47,6 +47,7 @@ if (process.env.NODE_ENV !== "production") {
   TextareaWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     options: PropTypes.shape({
       rows: PropTypes.number,

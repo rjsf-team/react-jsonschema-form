@@ -392,6 +392,7 @@ class ArrayField extends Component {
           autofocus: autofocus && index === 0,
           onBlur,
           onFocus,
+          idPrefix,
         });
       }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
@@ -441,6 +442,7 @@ class ArrayField extends Component {
     return (
       <Widget
         id={idSchema && idSchema.$id}
+        name={idSchema && idSchema.name}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -476,10 +478,12 @@ class ArrayField extends Component {
     const { widgets, formContext } = registry;
     const { widget = "files", ...options } = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
+
     return (
       <Widget
         options={options}
         id={idSchema && idSchema.$id}
+        name={idSchema && idSchema.name}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -571,6 +575,7 @@ class ArrayField extends Component {
           autofocus: autofocus && index === 0,
           onBlur,
           onFocus,
+          idPrefix,
         });
       }),
       onAddClick: this.onAddClick,
@@ -604,6 +609,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       rawErrors,
+      idPrefix,
     } = props;
     const {
       disabled,
@@ -643,6 +649,7 @@ class ArrayField extends Component {
           readonly={this.props.readonly}
           autofocus={autofocus}
           rawErrors={rawErrors}
+          idPrefix={idPrefix}
         />
       ),
       className: "array-item",

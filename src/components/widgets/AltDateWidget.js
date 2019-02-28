@@ -27,6 +27,7 @@ function DateElement(props) {
     autofocus,
     registry,
     onBlur,
+    name,
   } = props;
   const id = rootId + "_" + type;
   const { SelectWidget } = registry.widgets;
@@ -34,6 +35,7 @@ function DateElement(props) {
     <SelectWidget
       schema={{ type: "integer" }}
       id={id}
+      name={name}
       className="form-control"
       options={{ enumOptions: rangeOptions(range[0], range[1]) }}
       placeholder={type}
@@ -127,6 +129,7 @@ class AltDateWidget extends Component {
   render() {
     const {
       id,
+      name,
       disabled,
       readonly,
       autofocus,
@@ -140,6 +143,7 @@ class AltDateWidget extends Component {
           <li key={i}>
             <DateElement
               rootId={id}
+              name={name}
               select={this.onChange}
               {...elemProps}
               disabled={disabled}
@@ -180,6 +184,7 @@ if (process.env.NODE_ENV !== "production") {
   AltDateWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     value: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

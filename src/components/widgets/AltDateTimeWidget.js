@@ -11,6 +11,7 @@ if (process.env.NODE_ENV !== "production") {
   AltDateTimeWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     value: PropTypes.string,
     required: PropTypes.bool,
     onChange: PropTypes.func,

@@ -1954,7 +1954,11 @@ describe("Form", () => {
         },
         formData: { a: "int" },
       });
-      expect(comp.state.idSchema).eql({ $id: "root", a: { $id: "root_a" } });
+      expect(comp.state.idSchema).eql({
+        $id: "root",
+        name: "",
+        a: { $id: "root_a", name: "a" },
+      });
     });
 
     it("should update idSchema based on truthy value", () => {
@@ -1990,8 +1994,9 @@ describe("Form", () => {
       });
       expect(comp.state.idSchema).eql({
         $id: "root",
-        a: { $id: "root_a" },
-        b: { $id: "root_b" },
+        name: "",
+        a: { $id: "root_a", name: "a" },
+        b: { $id: "root_b", name: "b" },
       });
     });
   });

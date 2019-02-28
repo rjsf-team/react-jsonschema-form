@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { idToPath } from "../../utils";
 function RadioWidget(props) {
   const {
     options,
@@ -13,6 +12,7 @@ function RadioWidget(props) {
     onFocus,
     onChange,
     id,
+    name,
   } = props;
 
   const { enumOptions, enumDisabled, inline } = options;
@@ -31,7 +31,7 @@ function RadioWidget(props) {
             <input
               type="radio"
               checked={checked}
-              name={idToPath(id)}
+              name={name}
               required={required}
               value={option.value}
               disabled={disabled || itemDisabled || readonly}
@@ -66,6 +66,7 @@ if (process.env.NODE_ENV !== "production") {
   RadioWidget.propTypes = {
     schema: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     options: PropTypes.shape({
       enumOptions: PropTypes.array,
       inline: PropTypes.bool,
