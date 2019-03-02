@@ -1,7 +1,7 @@
 ## Form data validation
 
 The Form properties may contain an optional validatorProperties which is
-passed to the validator. If validatorProperties.useTitle is true, the errors
+passed to the validator. If validatorProperties.useTitles is true, the errors
 object returned by the validator contains the titles of fields in the name
 and stack fields.
 
