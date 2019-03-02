@@ -482,6 +482,7 @@ class App extends Component {
               }}
               fields={{ geo: GeoPosition }}
               validate={validate}
+              validatorProperties={{ useTitles: true }}
               onBlur={(id, value) =>
                 console.log(`Touched ${id} with value ${value}`)
               }
