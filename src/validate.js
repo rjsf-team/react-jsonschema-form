@@ -1,19 +1,36 @@
 import toPath from "lodash.topath";
 import Ajv from "ajv";
-const ajv = new Ajv({
-  errorDataPath: "property",
-  allErrors: true,
-  multipleOfPrecision: 8,
-});
-// add custom formats
-ajv.addFormat(
-  "data-url",
-  /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/
-);
-ajv.addFormat(
-  "color",
-  /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
-);
+var _ajv;
+var validatorProperties;
+
+export function setValidatorProperties(properties)
+{
+  validatorProperties = properties;
+}
+
+function getAjv()
+{
+  if (_ajv)
+    return _ajv;
+  const ajv = new Ajv({
+    errorDataPath: "property",
+    allErrors: true,
+    multipleOfPrecision: 8,
+    verbose: validatorProperties && validatorProperties.useTitles
+  });
+
+  // add custom formats
+  ajv.addFormat(
+    "data-url",
+    /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/
+  );
+  ajv.addFormat(
+    "color",
+    /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
+  );
+  _ajv = ajv;
+  return _ajv;
+}
 
 import { isObject, mergeObjects } from "./utils";
 
@@ -129,16 +146,23 @@ function transformAjvErrors(errors = []) {
   }
 
   return errors.map(e => {
-    const { dataPath, keyword, message, params } = e;
+    const { dataPath, keyword, message, params, schema, parentSchema } = e;
     let property = `${dataPath}`;
-
+    if (dataPath == '.terms.paymentTerms')
+    {
+        console.log("error=", JSON.stringify(e))
+    }
     // put data in expected format
+    const useTitle = validatorProperties && validatorProperties.useTitles && parentSchema && parentSchema.title
+    const stackProperty = useTitle ? parentSchema.title : property;
     return {
-      name: keyword,
+      name: useTitle ? parentSchema.title : keyword,
       property,
       message,
       params, // specific to ajv
-      stack: `${property} ${message}`.trim(),
+      schema,
+      parentSchema,
+      stack: `${stackProperty} ${message}`.trim(),
     };
   });
 }
@@ -154,6 +178,7 @@ export default function validateFormData(
   customValidate,
   transformErrors
 ) {
+  const ajv = getAjv();
   try {
     ajv.validate(schema, formData);
   } catch (e) {
@@ -192,7 +217,7 @@ export default function validateFormData(
  */
 export function isValid(schema, data) {
   try {
-    return ajv.validate(schema, data);
+    return getAjv().validate(schema, data);
   } catch (e) {
     return false;
   }

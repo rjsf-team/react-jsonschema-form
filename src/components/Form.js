@@ -11,7 +11,7 @@ import {
   getDefaultRegistry,
   deepEquals,
 } from "../utils";
-import validateFormData, { toErrorList } from "../validate";
+import validateFormData, { setValidatorProperties, toErrorList } from "../validate";
 
 export default class Form extends Component {
   static defaultProps = {
@@ -26,6 +26,9 @@ export default class Form extends Component {
 
   constructor(props) {
     super(props);
+    if (props.validatorProperties) {
+      setValidatorProperties(props.validatorProperties);
+    }
     this.state = this.getStateFromProps(props);
     if (
       this.props.onChange &&

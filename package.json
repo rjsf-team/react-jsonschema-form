@@ -1,7 +1,7 @@
 {
-  "name": "react-jsonschema-form",
+  "name": "react-jsonschema-form-with-titles",
   "version": "1.2.1",
-  "description": "A simple React component capable of building HTML forms out of a JSON schema.",
+  "description": "A simple React component capable of building HTML forms out of a JSON schema. Forked from react-jsonschema-form version 1.2.1",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
