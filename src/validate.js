@@ -3,20 +3,19 @@ import Ajv from "ajv";
 var _ajv;
 var validatorProperties;
 
-export function setValidatorProperties(properties)
-{
+export function setValidatorProperties(properties) {
   validatorProperties = properties;
 }
 
-function getAjv()
-{
-  if (_ajv)
+function getAjv() {
+  if (_ajv) {
     return _ajv;
+  }
   const ajv = new Ajv({
     errorDataPath: "property",
     allErrors: true,
     multipleOfPrecision: 8,
-    verbose: validatorProperties && validatorProperties.useTitles
+    verbose: validatorProperties && validatorProperties.useTitles,
   });
 
   // add custom formats
@@ -148,12 +147,12 @@ function transformAjvErrors(errors = []) {
   return errors.map(e => {
     const { dataPath, keyword, message, params, schema, parentSchema } = e;
     let property = `${dataPath}`;
-    if (dataPath == '.terms.paymentTerms')
-    {
-        console.log("error=", JSON.stringify(e))
-    }
     // put data in expected format
-    const useTitle = validatorProperties && validatorProperties.useTitles && parentSchema && parentSchema.title
+    const useTitle =
+      validatorProperties &&
+      validatorProperties.useTitles &&
+      parentSchema &&
+      parentSchema.title;
     const stackProperty = useTitle ? parentSchema.title : property;
     return {
       name: useTitle ? parentSchema.title : keyword,
