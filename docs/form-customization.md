@@ -687,6 +687,7 @@ The `Form` component supports the following html attributes:
 ```jsx
 <Form
   id="edit-form"
+  validatorProperties={{useTitle:true}}
   className="form form-wide"
   name="awesomeForm"
   method="post"
@@ -697,6 +698,10 @@ The `Form` component supports the following html attributes:
   acceptcharset="ISO-8859-1"
   schema={} />
 ```
+
+validatorProperties is a properties object to pass to the validator. If
+useTitle is set to true, the validator will return the titles of fields that
+have errors.
 
 ### Disabling a form
 

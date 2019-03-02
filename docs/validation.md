@@ -1,5 +1,10 @@
 ## Form data validation
 
+The Form properties may contain an optional validatorProperties which is
+passed to the validator. If validatorProperties.useTitle is true, the errors
+object returned by the validator contains the titles of fields in the name
+and stack fields.
+
 ### Live validation
 
 By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.
