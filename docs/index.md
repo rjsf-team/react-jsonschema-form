@@ -137,6 +137,8 @@ render((
 
 If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
 
+> Note: If `omitUnusedData` and `liveValidate` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called.
+
 #### Form field blur events
 
 Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass an `onBlur` handler, which will receive the id of the input that was blurred and the field value.
