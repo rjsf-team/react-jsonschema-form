@@ -118,19 +118,39 @@ export default class Form extends Component {
     return null;
   }
 
+  getUsedFormData = formData => {
+    const fields = this.formElement.querySelectorAll("[name]");
+    const inputNames = Object.keys(fields).reduce((filtered, i) => {
+      const fieldName = fields[i].name;
+      if (fieldName) {
+        filtered.push(fieldName);
+      }
+      return filtered;
+    }, []);
+
+    return _pick(formData, inputNames);
+  };
+
   onChange = (formData, newErrorSchema) => {
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = { formData };
+    let newFormData = formData;
+
+    if (this.props.omitUnusedData === true && this.props.liveValidate) {
+      newFormData = this.getUsedFormData(formData);
+    }
+
     if (mustValidate) {
-      const { errors, errorSchema } = this.validate(formData);
-      state = { ...state, errors, errorSchema };
+      const { errors, errorSchema } = this.validate(newFormData);
+      state = { formData: newFormData, errors, errorSchema };
     } else if (!this.props.noValidate && newErrorSchema) {
       state = {
-        ...state,
+        formData: newFormData,
         errorSchema: newErrorSchema,
         errors: toErrorList(newErrorSchema),
       };
     }
+
     setState(this, state, () => {
       if (this.props.onChange) {
         this.props.onChange(this.state);
@@ -150,26 +170,13 @@ export default class Form extends Component {
     }
   };
 
-  getUsedFormData = event => {
-    const fields = event.target.elements;
-    const inputNames = Object.keys(fields).reduce((filtered, i) => {
-      const fieldName = fields[i].name;
-      if (fieldName) {
-        filtered.push(fieldName);
-      }
-      return filtered;
-    }, []);
-
-    return _pick(this.state.formData, inputNames);
-  };
-
   onSubmit = event => {
     event.preventDefault();
     event.persist();
     let newFormData = this.state.formData;
 
     if (this.props.omitUnusedData === true) {
-      newFormData = this.getUsedFormData(event, this.state.formData);
+      newFormData = this.getUsedFormData(this.state.formData);
     }
 
     if (!this.props.noValidate) {
@@ -186,14 +193,17 @@ export default class Form extends Component {
       }
     }
 
-    this.setState({ errors: [], errorSchema: {} }, () => {
-      if (this.props.onSubmit) {
-        this.props.onSubmit(
-          { ...this.state, formData: newFormData, status: "submitted" },
-          event
-        );
+    this.setState(
+      { formData: newFormData, errors: [], errorSchema: {} },
+      () => {
+        if (this.props.onSubmit) {
+          this.props.onSubmit(
+            { ...this.state, formData: newFormData, status: "submitted" },
+            event
+          );
+        }
       }
-    });
+    );
   };
 
   getRegistry() {
