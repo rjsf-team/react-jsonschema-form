@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@date-io/date-fns": "0.0.2",
-    "@date-io/moment": "0.0.2",
+    "@date-io/moment": "^1.0.1",
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
     "ajv": "^5.2.3",
