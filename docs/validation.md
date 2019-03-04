@@ -47,6 +47,39 @@ render((
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
 
+### Custom schema validation
+
+To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has a `$schema` attribute that enables the validator to use the correct meta schema. For example:
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  ...
+}
+```
+
+Note that react-jsonschema-form only supports the latest version of JSON Schema, draft-07, by default. To support additional meta schemas pass them through the `additionalMetaSchemas` prop to your `Form` component:
+
+```jsx
+const additionalMetaSchemas = require("ajv/lib/refs/json-schema-draft-04.json");
+
+render((
+  <Form schema={schema} 
+        additionalMetaSchemas={[additionalMetaSchemas]}/>
+), document.getElementById("app"));
+```
+
+In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
+
+`additionalMetaSchemas` also accepts more than one meta schema:
+
+```jsx
+render((
+  <Form schema={schema} 
+        additionalMetaSchemas={[metaSchema1, metaSchema2]} />
+), document.getElementById("app"));
+```
+
 ### Custom error messages
 
 Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.

@@ -98,6 +98,71 @@ describe("Validation", () => {
       });
     });
 
+    describe("validating using custom meta schema", () => {
+      const schema = {
+        $ref: "#/definitions/Dataset",
+        $schema: "http://json-schema.org/draft-04/schema#",
+        definitions: {
+          Dataset: {
+            properties: {
+              datasetId: {
+                pattern: "\\d+",
+                type: "string",
+              },
+            },
+            required: ["datasetId"],
+            type: "object",
+          },
+        },
+      };
+      const metaSchemaDraft4 = require("ajv/lib/refs/json-schema-draft-04.json");
+      const metaSchemaDraft6 = require("ajv/lib/refs/json-schema-draft-06.json");
+
+      it("should return a validation error about meta schema when meta schema is not defined", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema
+        );
+        const errMessage =
+          'no schema with key or ref "http://json-schema.org/draft-04/schema#"';
+        expect(errors.errors[0].stack).to.equal(errMessage);
+        expect(errors.errors).to.eql([
+          {
+            stack: errMessage,
+          },
+        ]);
+        expect(errors.errorSchema).to.eql({
+          $schema: { __errors: [errMessage] },
+        });
+      });
+      it("should return a validation error about formData", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema,
+          null,
+          null,
+          [metaSchemaDraft4]
+        );
+        expect(errors.errors).to.have.lengthOf(1);
+        expect(errors.errors[0].stack).to.equal(
+          '.datasetId should match pattern "\\d+"'
+        );
+      });
+      it("should return a validation error about formData, when used with multiple meta schemas", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema,
+          null,
+          null,
+          [metaSchemaDraft4, metaSchemaDraft6]
+        );
+        expect(errors.errors).to.have.lengthOf(1);
+        expect(errors.errors[0].stack).to.equal(
+          '.datasetId should match pattern "\\d+"'
+        );
+      });
+    });
+
     describe("Custom validate function", () => {
       let errors, errorSchema;
 
@@ -673,6 +738,58 @@ describe("Validation", () => {
         expect(node.querySelectorAll(".UiSchema")).to.have.length.of(1);
         expect(node.querySelector(".UiSchema").textContent).eql("bar");
         expect(node.querySelectorAll(".foo")).to.have.length.of(1);
+      });
+    });
+    describe("Custom meta schema", () => {
+      let onSubmit;
+      let onError;
+      let comp, node;
+      const formData = {
+        datasetId: "no err",
+      };
+
+      const schema = {
+        $ref: "#/definitions/Dataset",
+        $schema: "http://json-schema.org/draft-04/schema#",
+        definitions: {
+          Dataset: {
+            properties: {
+              datasetId: {
+                pattern: "\\d+",
+                type: "string",
+              },
+            },
+            required: ["datasetId"],
+            type: "object",
+          },
+        },
+      };
+
+      beforeEach(() => {
+        onSubmit = sandbox.spy();
+        onError = sandbox.spy();
+        const withMetaSchema = createFormComponent({
+          schema,
+          formData,
+          liveValidate: true,
+          additionalMetaSchemas: [
+            require("ajv/lib/refs/json-schema-draft-04.json"),
+          ],
+          onSubmit,
+          onError,
+        });
+        comp = withMetaSchema.comp;
+        node = withMetaSchema.node;
+      });
+      it("should be used to validate schema", () => {
+        expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+        expect(comp.state.errors).to.have.lengthOf(1);
+        expect(comp.state.errors[0].message).eql(`should match pattern "\\d+"`);
+        Simulate.change(node.querySelector("input"), {
+          target: { value: "1234" },
+        });
+        expect(node.querySelectorAll(".errors li")).to.have.length.of(0);
+        expect(comp.state.errors).to.have.lengthOf(0);
       });
     });
   });
