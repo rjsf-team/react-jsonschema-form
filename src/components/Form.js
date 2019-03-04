@@ -22,7 +22,7 @@ export default class Form extends Component {
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
-    omitUnusedData: false,
+    omitExtraData: true,
   };
 
   constructor(props) {
@@ -142,7 +142,7 @@ export default class Form extends Component {
     let state = { formData };
     let newFormData = formData;
 
-    if (this.props.omitUnusedData === true && this.props.liveValidate) {
+    if (this.props.omitExtraData === true && this.props.liveValidate) {
       newFormData = this.getUsedFormData(formData);
     }
 
@@ -181,7 +181,7 @@ export default class Form extends Component {
     event.persist();
     let newFormData = this.state.formData;
 
-    if (this.props.omitUnusedData === true) {
+    if (this.props.omitExtraData === true) {
       newFormData = this.getUsedFormData(this.state.formData);
     }
 
@@ -334,6 +334,6 @@ if (process.env.NODE_ENV !== "production") {
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
     additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
-    omitUnusedData: PropTypes.bool,
+    omitExtraData: PropTypes.bool,
   };
 }

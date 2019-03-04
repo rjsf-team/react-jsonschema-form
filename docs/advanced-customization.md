@@ -269,7 +269,7 @@ The following props are passed to custom widget components:
 
 > Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
 
-> Note: The name given in the props must match the `name` attribute on the actual input element (e.g. `<input/>`, `<textarea/>`, `<select/>`, etc.) if you wish to use the `omitUnusedData` Form option. This is because `omitUnusedData` looks for the form element names in order to determine which fields are in use and which are unused.
+> Note: The name given in the props must match the `name` attribute on the actual input element (e.g. `<input/>`, `<textarea/>`, `<select/>`, etc.) if you wish to use the `omitExtraData` Form option. This is because `omitExtraData` looks for the form element names in order to determine which fields are in use and which are extra.
 
 #### Custom component registration
 
@@ -422,7 +422,7 @@ A field component will always be passed the following props:
  - `registry`: A [registry](#the-registry-object) object (read next).
  - `formContext`: A [formContext](#the-formcontext-object) object (read next).
 
-> Note: If you with to use the `omitUnusedData` Form option with your custom field component then you must add the `name` attribute to all of your form input elements (e.g. `<input/>`, `<textarea/>`, `<select/>`, etc.), which can be found in the `idSchema` prop. This is because `omitUnusedData` looks for the form element names in order to determine which fields are in use and which are unused. Example using the render from the geo component above:
+> Note: If you with to use the `omitExtraData` Form option with your custom field component then you must add the `name` attribute to all of your form input elements (e.g. `<input/>`, `<textarea/>`, `<select/>`, etc.), which can be found in the `idSchema` prop. This is because `omitExtraData` looks for the form element names in order to determine which fields are in use and which are extra. Example using the render from the geo component above:
 
 ```jsx
 render() {

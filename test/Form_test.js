@@ -813,7 +813,7 @@ describe("Form", () => {
       sinon.assert.notCalled(onSubmit);
     });
 
-    it("should call getUsedFormData when the omitUnusedData prop is true", () => {
+    it("should call getUsedFormData when the omitExtraData prop is true", () => {
       const schema = {
         type: "object",
         properties: {
@@ -827,13 +827,13 @@ describe("Form", () => {
       };
       const onSubmit = sandbox.spy();
       const onError = sandbox.spy();
-      const omitUnusedData = true;
+      const omitExtraData = true;
       const { comp, node } = createFormComponent({
         schema,
         formData,
         onSubmit,
         onError,
-        omitUnusedData,
+        omitExtraData,
       });
 
       sandbox.stub(comp, "getUsedFormData").returns({
@@ -957,7 +957,7 @@ describe("Form", () => {
       });
     });
 
-    it("should call getUsedFormData when the omitUnusedData prop is true and liveValidate is true", () => {
+    it("should call getUsedFormData when the omitExtraData prop is true and liveValidate is true", () => {
       const schema = {
         type: "object",
         properties: {
@@ -970,13 +970,13 @@ describe("Form", () => {
         foo: "bar",
       };
       const onChange = sandbox.spy();
-      const omitUnusedData = true;
+      const omitExtraData = true;
       const liveValidate = true;
       const { node, comp } = createFormComponent({
         schema,
         formData,
         onChange,
-        omitUnusedData,
+        omitExtraData,
         liveValidate,
       });
 
@@ -991,7 +991,7 @@ describe("Form", () => {
       sinon.assert.calledOnce(comp.getUsedFormData);
     });
 
-    it("should not call getUsedFormData when the omitUnusedData prop is true and liveValidate is false", () => {
+    it("should not call getUsedFormData when the omitExtraData prop is true and liveValidate is false", () => {
       const schema = {
         type: "object",
         properties: {
@@ -1004,13 +1004,13 @@ describe("Form", () => {
         foo: "bar",
       };
       const onChange = sandbox.spy();
-      const omitUnusedData = true;
+      const omitExtraData = true;
       const liveValidate = false;
       const { node, comp } = createFormComponent({
         schema,
         formData,
         onChange,
-        omitUnusedData,
+        omitExtraData,
         liveValidate,
       });
 
