@@ -122,6 +122,9 @@ dist
 lib
 yarn.lock
 
+# IDE
+.vscode
+
 # Code coverage
 coverage
 .nyc_output
