@@ -134,7 +134,7 @@ function DefaultTemplate(props) {
   }
 
   return (
-    <WrapIfAdditional parentProps={props}>
+    <WrapIfAdditional {...props}>
       {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}
@@ -182,7 +182,7 @@ function WrapIfAdditional(props) {
     readonly,
     required,
     schema,
-  } = props.parentProps;
+  } = props;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
 
