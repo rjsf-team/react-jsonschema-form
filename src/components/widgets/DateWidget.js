@@ -25,10 +25,10 @@ function DateWidget(props) {
           format={options.formatPattern}
           minDate={minDate}
           maxDate={maxDate}
-          value={value !== undefined ? moment(value) : ""}
+          value={value !== undefined ? moment(value) : null}
           onChange={date => {
             if (!date) {
-              return onChange("");
+              return onChange(undefined);
             }
             let utcDate = moment(date);
             var modifiedDatePerOptions = utcDate.startOf("day");
