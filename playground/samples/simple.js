@@ -5,6 +5,16 @@ module.exports = {
     type: "object",
     required: ["firstName", "lastName"],
     properties: {
+      DOB: {
+        type: "string",
+        format: "date-time",
+        title: "DOB"
+      },
+      VisitDate: {
+        type: "string",
+        format: "date-time",
+        title: "Visit Date & Time"
+      },
       blogs: {
         type: "integer",
         title: "Search Blogs",
@@ -12,7 +22,7 @@ module.exports = {
         pageSize: 10,
         loadOptionsCount: searchText => 100,
         isMultiselect: false,
-        customClass: "asyncSelect",
+        customClass: "async",
         // The col with primary set to true is the value which will be returned.
         // So make sure that the data type of that key matches with type specified.
         cols: [
@@ -22,13 +32,15 @@ module.exports = {
           { name: "Body", key: "body", hide: true }
         ],
         selectedOptions: [
-            {
-              body: "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
-              id: 1,
-              title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-              userid:1
-            }
-          ],
+          {
+            body:
+              "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
+            id: 1,
+            title:
+              "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+            userid: 1
+          }
+        ],
         loadOptions: (searchText, pageNumber, pageSize) => {
           return fetch(`https://jsonplaceholder.typicode.com/posts`)
             .then(response => {
@@ -59,10 +71,12 @@ module.exports = {
         ],
         selectedOptions: [
           {
-            body: "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
+            body:
+              "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
             id: 1,
-            title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-            userid:1
+            title:
+              "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+            userid: 1
           }
         ],
         loadOptions: (searchText, pageNumber, pageSize) => {
@@ -105,6 +119,37 @@ module.exports = {
     }
   },
   uiSchema: {
+    DOB: {
+      "ui:options": {
+        disableFuture: true,
+        formatPattern: "MM-DD-YYYY",
+        format: "date",
+        placeholder: "MM-DD-YYYY",
+        disableOpenOnEnter: true,
+        animateYearScrolling: false,
+        renderDateTimePickerAsDatePicker: true,
+        invalidLabel: "",
+        clearable: true,
+        keyboard: true
+      },
+      classNames: "formControlGroup",
+    },
+    VisitDate: {
+      "ui:options": {
+        disableFuture: true,
+        minDate: "2019-01-01",
+        maxDate: "2019-12-31",
+        formatPattern: "MM-DD-YYYY hh:mm",
+        format: "date-time",
+        placeholder: "MM-DD-YYYY hh:mm",
+        disableOpenOnEnter: true,
+        animateYearScrolling: false,
+        invalidLabel: "",
+        clearable: true,
+        keyboard: true
+      },
+      classNames: "formControlGroup",
+    },
     blogs: {
       "ui:emptyValue": "",
       "ui:placeholder": "Type your choice to search...",

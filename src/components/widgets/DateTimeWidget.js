@@ -33,7 +33,7 @@ function DateTimeWidget(props) {
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
               if (!date) {
-                return onChange("");
+                return onChange(undefined);
               }
               let utcDate = moment(date);
               var modifiedDatePerOptions = utcDate.startOf("day");
@@ -55,7 +55,7 @@ function DateTimeWidget(props) {
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
               if (!date) {
-                return onChange("");
+                return onChange(undefined);
               }
               let utcDate = moment(date);
               var modifiedDatePerOptions = utcDate.startOf("minute");
