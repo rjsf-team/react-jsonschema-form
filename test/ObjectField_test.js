@@ -721,7 +721,7 @@ describe("ObjectField", () => {
 
       expect(
         node.querySelector(
-          ".form-group > .form-additional > .form-additional-actions .btn-danger"
+          ".form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger"
         )
       ).eql(null);
 
