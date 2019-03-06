@@ -110,6 +110,15 @@ render((
 > Notes:
 > - The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
 
+Each element in the `errors` list passed to `transformErrors` has the following properties:
+
+- `name`: name of the error, for example, "required" or "minLength"
+- `message`: message, for example, "is a required property" or "should NOT be shorter than 3 characters"
+- `params`: an object with the error params returned by ajv ([see doc](https://github.com/epoberezkin/ajv#error-parameters) for more info).
+- `property`: a string in Javascript property accessor notation to the data path of the field with the error. For example, `.name` or `['first-name']`.
+- `stack`: full error name, for example ".name is a required property".
+- `schemaPath`: JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`. (Note: this may sometimes be wrong due to a [https://github.com/epoberezkin/ajv/issues/512](bug in ajv)).
+
 ### Error List Display
 
 To disable rendering of the error list at the top of the form, you can set the `showErrorList` prop to `false`. Doing so will still validate the form, but only the inline display will show.

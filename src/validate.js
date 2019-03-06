@@ -142,7 +142,7 @@ function transformAjvErrors(errors = []) {
   }
 
   return errors.map(e => {
-    const { dataPath, keyword, message, params } = e;
+    const { dataPath, keyword, message, params, schemaPath } = e;
     let property = `${dataPath}`;
 
     // put data in expected format
@@ -152,6 +152,7 @@ function transformAjvErrors(errors = []) {
       message,
       params, // specific to ajv
       stack: `${property} ${message}`.trim(),
+      schemaPath,
     };
   });
 }
