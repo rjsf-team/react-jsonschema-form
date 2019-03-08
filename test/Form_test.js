@@ -866,7 +866,7 @@ describe("Form", () => {
 
       comp.formElement = {
         querySelectorAll: () => {
-          return [{ name: "foo" }];
+          return [{ name: "foo" }, { test: "someElementWithNoName" }];
         },
       };
 
@@ -914,6 +914,7 @@ describe("Form", () => {
             { name: "foo" },
             { name: "list.0.title" },
             { name: "list.1.details" },
+            { test: "someElementWithNoName" },
           ];
         },
       };

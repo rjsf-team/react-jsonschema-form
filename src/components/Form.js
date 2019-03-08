@@ -126,13 +126,10 @@ export default class Form extends Component {
 
   getUsedFormData = formData => {
     const fields = this.formElement.querySelectorAll("[name]");
-    const inputNames = Object.keys(fields).reduce((filtered, i) => {
-      const fieldName = fields[i].name;
-      if (fieldName) {
-        filtered.push(fieldName);
-      }
-      return filtered;
-    }, []);
+    const inputNames = [];
+    fields.forEach(field => {
+      inputNames.push(field.name);
+    });
 
     return _pick(formData, inputNames);
   };
