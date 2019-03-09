@@ -1,5 +1,3 @@
-import React from "react";
-
 module.exports = {
   schema: {
     title: "Property dependencies",
@@ -56,12 +54,8 @@ module.exports = {
   uiSchema: {
     unidirectional: {
       credit_card: {
-        "ui:help": (
-          <p>
-            If you enter anything here then <code>billing_address</code> will
-            become required.
-          </p>
-        ),
+        "ui:help":
+          "If you enter anything here then billing_address will become required.",
       },
       billing_address: {
         "ui:help":
@@ -70,20 +64,12 @@ module.exports = {
     },
     bidirectional: {
       credit_card: {
-        "ui:help": (
-          <p>
-            "If you enter anything here then <code>billing_address</code> will
-            become required.
-          </p>
-        ),
+        "ui:help":
+          "If you enter anything here then billing_address will become required.",
       },
       billing_address: {
-        "ui:help": (
-          <p>
-            If you enter anything here then <code>credit_card</code> will become
-            required.
-          </p>
-        ),
+        "ui:help":
+          "If you enter anything here then credit_card will become required.",
       },
     },
   },
