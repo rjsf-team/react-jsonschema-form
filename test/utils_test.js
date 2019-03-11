@@ -1485,6 +1485,18 @@ describe("utils", () => {
         schema: { const: 1 },
         expected: "number",
       },
+      {
+        schema: { type: ["string", "null"] },
+        expected: "string",
+      },
+      {
+        schema: { type: ["null", "number"] },
+        expected: "number",
+      },
+      {
+        schema: { type: ["integer", "null"] },
+        expected: "integer",
+      },
     ];
 
     it("should correctly guess the type of a schema", () => {
