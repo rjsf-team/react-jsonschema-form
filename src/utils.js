@@ -73,8 +73,13 @@ export function getSchemaType(schema) {
   }
 
   if (!type && schema.enum) {
-    type = "string";
+    return "string";
   }
+
+  if (type instanceof Array && type.length === 2 && type.includes("null")) {
+    return type.find(type => type !== "null");
+  }
+
   return type;
 }
 
