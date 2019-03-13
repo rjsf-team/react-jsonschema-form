@@ -33,8 +33,9 @@ const OptionsList = props => {
   }
 
   return (
-    <React.Fragment>
-      <Table>
+    <Grid container className='AsyncMultDdown-opt__wrapper'>
+      <Grid item xs={12} className='AsyncMultDdown-opt__grid'>
+      <Table className='AsyncMultDdown-opt__table'>
         <TableHead>
           <TableRow>
             <TableCell />
@@ -82,7 +83,9 @@ const OptionsList = props => {
           ))}
         </TableBody>
       </Table>
-      <Grid container direction="row" justify="flex-end">
+      </Grid>
+      <Grid item xs={12} className='AsyncMultDdown-opt-btn__container'>
+      <Grid container  direction="row" justify="flex-end">
         <TablePagination
           rowsPerPageOptions={[pageSize]}
           component="div"
@@ -98,8 +101,9 @@ const OptionsList = props => {
           onChangePage={handleChangePage}
         />
         <Button onClick={closeOptionPanel}>Done</Button>
+        </Grid>
       </Grid>
-    </React.Fragment>
+      </Grid>
   );
 };
 export default OptionsList;
