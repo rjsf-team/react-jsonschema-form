@@ -196,7 +196,9 @@ class AsyncMultiselectDropdown extends Component {
           direction="row"
           align-items="center"
           className={classes.container}>
+          <Grid item xs={12}>
           <TextField
+          fullWidth
             label={label}
             placeholder={placeholder}
             className={classes.inputField}
@@ -210,7 +212,8 @@ class AsyncMultiselectDropdown extends Component {
           />
           {loader}
         </Grid>
-        <Paper>
+        </Grid>
+        <Paper className='AsyncMultiselectDropdown-paper'>
           {isSearching && (
             <OptionsList
               isMultiselect={isMultiselect}
