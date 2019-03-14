@@ -21,7 +21,6 @@ import {
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
-    // See #312: Ensure compatibility with old versions of React.
     return null;
   }
   const id = `${idSchema.$id}__title`;
@@ -30,7 +29,6 @@ function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
 
 function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   if (!description) {
-    // See #312: Ensure compatibility with old versions of React.
     return null;
   }
   const id = `${idSchema.$id}__description`;
