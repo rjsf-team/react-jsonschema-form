@@ -139,6 +139,7 @@ module.exports = {
         disableFuture: true,
         minDate: "2019-01-01",
         maxDate: "2019-12-31",
+        ampm: false,
         formatPattern: "MM-DD-YYYY hh:mm",
         format: "date-time",
         placeholder: "MM-DD-YYYY hh:mm",

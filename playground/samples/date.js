@@ -36,6 +36,7 @@ module.exports = {
           disableOpenOnEnter: true,
           animateYearScrolling: false,
           invalidLabel: "",
+          ampm: false,
           // invalidDateMessage: false,
           clearable: true,
           keyboard: true,
