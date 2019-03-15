@@ -8,7 +8,6 @@ module.exports = {
       firstName: {
         type: "string",
         title: "First name",
-        default: "Chuck",
       },
       lastName: {
         type: "string",
@@ -61,6 +60,7 @@ module.exports = {
     },
   },
   formData: {
+    firstName: "Chuck",
     lastName: "Norris",
     age: 75,
     bio: "Roundhouse kicking asses since 1940",
