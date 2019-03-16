@@ -49,7 +49,7 @@ render((
 
 ### Custom string formats
 
-[Pre-defined semantic formats](https://json-schema.org/latest/json-schema-validation.html#rfc.section.7) are limited. react-jsonschema-form adds two formats: `color` and `data-url` to support certain [alternative widgets](form-customization.md#alternative-widgets). You can add formats of your own through the `additionalFormats` prop to your `Form` component:
+[Pre-defined semantic formats](https://json-schema.org/latest/json-schema-validation.html#rfc.section.7) are limited. react-jsonschema-form adds two formats: `color` and `data-url` to support certain [alternative widgets](form-customization.md#alternative-widgets). You can add formats of your own through the `customFormats` prop to your `Form` component:
 
 ```jsx
 const schema = {
@@ -59,13 +59,13 @@ const schema = {
   }
 };
 
-const additionalFormats = {
+const customFormats = {
   'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
 };
 
 render((
   <Form schema={schema} 
-        additionalFormats={additionalFormats}/>
+        customFormats={customFormats}/>
 ), document.getElementById("app"));
 ```
 

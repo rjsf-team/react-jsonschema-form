@@ -92,7 +92,7 @@ export default class Form extends Component {
     formData,
     schema = this.props.schema,
     additionalMetaSchemas = this.props.additionalMetaSchemas,
-    additionalFormats = this.props.additionalFormats
+    customFormats = this.props.customFormats
   ) {
     const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
@@ -103,7 +103,7 @@ export default class Form extends Component {
       validate,
       transformErrors,
       additionalMetaSchemas,
-      additionalFormats
+      customFormats
     );
   }
 
@@ -303,7 +303,7 @@ if (process.env.NODE_ENV !== "production") {
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
-    additionalFormats: PropTypes.object,
+    customFormats: PropTypes.object,
     additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
   };
 }
