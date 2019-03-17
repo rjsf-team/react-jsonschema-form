@@ -603,8 +603,11 @@ function withExactlyOneSubschema(
     }
   });
   if (validSubschemas.length !== 1) {
+    const schemaName = Object.keys(schema.properties)[0];
     console.warn(
-      "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid"
+      "ignoring oneOf in dependencies for '" +
+        schemaName +
+        "' because there isn't exactly one subschema that is valid"
     );
     return schema;
   }
