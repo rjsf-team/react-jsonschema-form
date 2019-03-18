@@ -71,8 +71,8 @@ describe("oneOf", () => {
       ],
     };
     const uiSchema = {
-      "ui:widget": props => {
-        return <section {...props}>Custom Widget</section>;
+      "ui:widget": () => {
+        return <section>Custom Widget</section>;
       },
     };
 
