@@ -86,7 +86,7 @@ const OptionsList = props => {
       </Grid>
       <Grid item xs={12} className='AsyncMultDdown-opt-btn__container'>
       <Grid container  direction="row" justify="flex-end">
-        <TablePagination
+        {totalOptionsCount > pageSize && <TablePagination
           rowsPerPageOptions={[pageSize]}
           component="div"
           count={totalOptionsCount}
@@ -99,7 +99,7 @@ const OptionsList = props => {
             "aria-label": "Next Page",
           }}
           onChangePage={handleChangePage}
-        />
+        /> }
         <Button onClick={closeOptionPanel}>Done</Button>
         </Grid>
       </Grid>
