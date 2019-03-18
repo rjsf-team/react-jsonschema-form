@@ -103,7 +103,7 @@ class AsyncMultiselectDropdown extends Component {
         selectedOptions.push(selectedRow);
       }
     }
-    this.setState({ selectedOptions, searchText: " " });
+    this.setState({ selectedOptions });
 
     if (selectedOptions.length > 0) {
       if (!isMultiselect) {
@@ -175,7 +175,9 @@ class AsyncMultiselectDropdown extends Component {
       selectedOptions,
       selectionColumn,
       isMultiselect,
-      isLoading
+      isLoading,
+      primaryColumn,
+      getChipDisplayText
     } = this.state;
 
     const loader = isLoading && (
@@ -183,10 +185,12 @@ class AsyncMultiselectDropdown extends Component {
     );
     const selected = (
       <SelectionBar
+        primaryColumn={primaryColumn}
         selectedOptions={selectedOptions}
         isMultiselect={isMultiselect}
         selectionColumn={selectionColumn}
         onDeleteChoice={this.onDeleteChoice}
+        getChipDisplayText={getChipDisplayText}
       />
     );
     return (

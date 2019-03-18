@@ -20,7 +20,7 @@ module.exports = {
         title: "Search Blogs",
         currentPageNumber: 1,
         pageSize: 10,
-        loadOptionsCount: searchText => 100,
+        loadOptionsCount: searchText => 10,
         isMultiselect: false,
         customClass: "async",
         // The col with primary set to true is the value which will be returned.
@@ -53,6 +53,9 @@ module.exports = {
               const result = searched.splice(pageNumber * pageSize, pageSize);
               return result;
             });
+        },
+        getChipDisplayText: (selectedPrimaryKey) => {
+          return "ABC =>" + selectedPrimaryKey;
         }
       },
       movie: {
@@ -91,6 +94,9 @@ module.exports = {
               const result = searched.splice(pageNumber * pageSize, pageSize);
               return result;
             });
+        },
+        getChipDisplayText: (selectedPrimaryKey) => {
+          return "ABC =>" + selectedPrimaryKey;
         }
       },
       firstName: {
