@@ -1,5 +1,5 @@
 import Form from "./components/Form";
-import withTheme from './withTheme';
+import withTheme from "./withTheme";
 
-export {withTheme}
+export { withTheme };
 export default Form;
