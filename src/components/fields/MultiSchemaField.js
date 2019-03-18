@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-import { guessType, getWidget } from "../../utils";
+import { getUiOptions, getWidget, guessType } from "../../utils";
 import { isValid } from "../../validate";
 
 class AnyOfField extends Component {
@@ -143,7 +143,8 @@ class AnyOfField extends Component {
     const _SchemaField = registry.fields.SchemaField;
     const { widgets } = registry;
     const { selectedOption } = this.state;
-    const Widget = getWidget({ type: "string" }, "select", widgets);
+    const { widget = "select", ...uiOptions } = getUiOptions(uiSchema);
+    const Widget = getWidget({ type: "number" }, widget, widgets);
 
     const option = options[selectedOption] || null;
     let optionSchema;
@@ -165,11 +166,14 @@ class AnyOfField extends Component {
       <div className="panel panel-default panel-body">
         <div className="form-group">
           <Widget
-            schema={{ type: "string", default: 0 }}
-            onChange={this.onOptionChange}
-            value={selectedOption}
             id={`${idSchema.$id}_anyof_select`}
+            schema={{ type: "number", default: 0 }}
+            onChange={this.onOptionChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            value={selectedOption}
             options={{ enumOptions }}
+            {...uiOptions}
           />
         </div>
 

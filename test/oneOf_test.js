@@ -54,6 +54,36 @@ describe("oneOf", () => {
     expect(node.querySelectorAll("select")).to.have.length.of(1);
   });
 
+  it("should render a custom widget", () => {
+    const schema = {
+      type: "object",
+      oneOf: [
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+        },
+        {
+          properties: {
+            bar: { type: "string" },
+          },
+        },
+      ],
+    };
+    const uiSchema = {
+      "ui:widget": props => {
+        return <section {...props}>Custom Widget</section>;
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      uiSchema,
+    });
+
+    expect(node.querySelectorAll("section")).to.have.length.of(1);
+  });
+
   it("should change the rendered form when the select value is changed", () => {
     const schema = {
       type: "object",
