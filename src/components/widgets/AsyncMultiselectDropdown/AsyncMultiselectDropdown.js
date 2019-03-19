@@ -38,7 +38,8 @@ class AsyncMultiselectDropdown extends Component {
   }
 
   initStateFromProps = () => {
-    const { cols } = this.state;
+    const { cols, isMultiselect } = this.state;
+    const value = this.props.value;
     let selectionColumn = "";
     let primaryColumn = "";
 
@@ -54,6 +55,18 @@ class AsyncMultiselectDropdown extends Component {
       }
     }
     this.setState({ selectionColumn, primaryColumn });
+    const selectedOptions = [];
+    if (!isMultiselect) {      
+      selectedOptions.push(this.state.getSelectedOptionDetails(value));
+    } else {
+      const selectedList = JSON.parse(value);
+      selectedList.forEach(value => {
+        const result = this.state.getSelectedOptionDetails(value);
+        selectedOptions.push(result);
+      });
+    }
+    this.setState({ selectedOptions });
+   
   }
 
   fetchData = () => {
