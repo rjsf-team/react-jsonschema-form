@@ -66,7 +66,7 @@ module.exports = {
               lookupString = value.title;
             }
           });
-          return lookupString + " === " + selectedPrimaryKey;
+          return lookupString + "(" + selectedPrimaryKey+")";
         }
       },
       movie: {
@@ -116,7 +116,7 @@ module.exports = {
               lookupString = value.title;
             }
           });
-          return lookupString + " === " + selectedPrimaryKey;
+          return lookupString + "(" + selectedPrimaryKey+")"
         }
       },
       firstName: {
