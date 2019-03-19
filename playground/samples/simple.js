@@ -31,16 +31,17 @@ module.exports = {
           { name: "Title", key: "title", displaySelected: true },
           { name: "Body", key: "body", hide: true }
         ],
-        selectedOptions: [
-          {
-            body:
-              "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
+        getSelectedOptionDetails: (selectedPrimaryKey) =>         
+        {
+          const result = {
+            body: "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
             id: 1,
-            title:
-              "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+            title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
             userid: 1
-          }
-        ],
+          };
+          console.log("selectedPrimaryKey ==> ", selectedPrimaryKey);
+          return result;
+        },
         loadOptions: (searchText, pageNumber, pageSize) => {
           return fetch(`https://jsonplaceholder.typicode.com/posts`)
             .then(response => {
@@ -54,7 +55,7 @@ module.exports = {
               return result;
             });
         },
-        getChipDisplayText: (selectedPrimaryKey) => {
+        getChipDisplayText: selectedPrimaryKey => {
           return "ABC =>" + selectedPrimaryKey;
         }
       },
@@ -72,16 +73,18 @@ module.exports = {
           { name: "Title", key: "title", displaySelected: true },
           { name: "Body", key: "body", hide: true }
         ],
-        selectedOptions: [
-          {
-            body:
-              "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
+        getSelectedOptionDetails: selectedPrimaryKey => 
+        {
+          const result = {
+            body: "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
             id: 1,
-            title:
-              "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+            title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
             userid: 1
-          }
-        ],
+          };
+          console.log("selectedPrimaryKey ==> ", selectedPrimaryKey);
+          return result;
+        }
+        ,
         loadOptions: (searchText, pageNumber, pageSize) => {
           return fetch(`https://jsonplaceholder.typicode.com/posts`)
             .then(response => {
@@ -95,7 +98,7 @@ module.exports = {
               return result;
             });
         },
-        getChipDisplayText: (selectedPrimaryKey) => {
+        getChipDisplayText: selectedPrimaryKey => {
           return "ABC =>" + selectedPrimaryKey;
         }
       },
@@ -186,6 +189,8 @@ module.exports = {
     }
   },
   formData: {
+    blogs: 1,
+    movie: "[1]",
     lastName: "Norris",
     age: 75,
     password: "noneed"
