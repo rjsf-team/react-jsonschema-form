@@ -1,3 +1,5 @@
+let optionsForMultiSelect= [];
+let optionsForSingleSelect= [];
 module.exports = {
   schema: {
     title: "A <b>registration</b> form",
@@ -42,6 +44,7 @@ module.exports = {
           console.log("selectedPrimaryKey ==> ", selectedPrimaryKey);
           return result;
         },
+        
         loadOptions: (searchText, pageNumber, pageSize) => {
           return fetch(`https://jsonplaceholder.typicode.com/posts`)
             .then(response => {
@@ -52,11 +55,18 @@ module.exports = {
                 value.title.toLowerCase().includes(searchText.toLowerCase())
               );
               const result = searched.splice(pageNumber * pageSize, pageSize);
+              optionsForSingleSelect = optionsForSingleSelect.concat(result);
               return result;
             });
         },
         getChipDisplayText: selectedPrimaryKey => {
-          return "ABC =>" + selectedPrimaryKey;
+          let lookupString = '';
+          optionsForSingleSelect.forEach(value => {
+            if (value.id === selectedPrimaryKey) {
+              lookupString = value.title;
+            }
+          });
+          return lookupString + " === " + selectedPrimaryKey;
         }
       },
       movie: {
@@ -95,11 +105,18 @@ module.exports = {
                 value.title.includes(searchText.toLowerCase())
               );
               const result = searched.splice(pageNumber * pageSize, pageSize);
+              optionsForMultiSelect = optionsForMultiSelect.concat(result);
               return result;
             });
         },
         getChipDisplayText: selectedPrimaryKey => {
-          return "ABC =>" + selectedPrimaryKey;
+          let lookupString = '';
+          optionsForMultiSelect.forEach(value => {
+            if (value.id === selectedPrimaryKey) {
+              lookupString = value.title;
+            }
+          });
+          return lookupString + " === " + selectedPrimaryKey;
         }
       },
       firstName: {
@@ -189,8 +206,8 @@ module.exports = {
     }
   },
   formData: {
-    blogs: 1,
-    movie: "[1]",
+    blogs: 2,
+    movie: "[2]",
     lastName: "Norris",
     age: 75,
     password: "noneed"
