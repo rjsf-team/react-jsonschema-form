@@ -1364,3 +1364,34 @@ export function schemaRequiresTrueValue(schema) {
 
   return false;
 }
+
+function trimObject(object) {
+  return Object.entries(object).reduce((acc, [key, value]) => {
+    const trimmed = trimEmptyValues(value);
+    if (trimmed) {
+      if (!acc) {
+        acc = {};
+      }
+      acc[key] = trimmed;
+    }
+    return acc;
+  }, undefined);
+}
+
+function trimArray(array) {
+  return array.reduce((acc, value) => {
+    const trimmed = trimEmptyValues(value);
+    if (trimmed) {
+      acc.push(trimmed);
+    }
+    return acc;
+  }, []);
+}
+
+export function trimEmptyValues(value) {
+  return Array.isArray(value)
+    ? trimArray(value)
+    : typeof value === "object"
+    ? trimObject(value)
+    : value;
+}

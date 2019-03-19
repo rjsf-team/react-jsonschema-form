@@ -7,7 +7,7 @@ let formerCustomFormats = null;
 let formerMetaSchema = null;
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
-import { isObject, mergeObjects } from "./utils";
+import { isObject, mergeObjects, trimEmptyValues } from "./utils";
 
 function createAjvInstance() {
   const ajv = new Ajv({
@@ -205,7 +205,9 @@ export default function validateFormData(
 
   let validationError = null;
   try {
-    ajv.validate(schema, formData);
+    // 675 - deal with optional objects with required values
+    const trimmedData = trimEmptyValues(formData);
+    ajv.validate(schema, trimmedData);
   } catch (err) {
     validationError = err;
   }
@@ -300,13 +302,16 @@ export function withIdRefPrefix(schemaNode) {
  */
 export function isValid(schema, data, rootSchema) {
   try {
+    // 675 - deal with optional objects with required values
+    const trimmedData = trimEmptyValues(data);
+
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // then rewrite the schema ref's to point to the rootSchema
     // this accounts for the case where schema have references to models
     // that lives in the rootSchema but not in the schema in question.
     return ajv
       .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
-      .validate(withIdRefPrefix(schema), data);
+      .validate(withIdRefPrefix(schema), trimmedData);
   } catch (e) {
     return false;
   } finally {
