@@ -56,17 +56,18 @@ class AsyncMultiselectDropdown extends Component {
     }
     this.setState({ selectionColumn, primaryColumn });
     const selectedOptions = [];
-    if (!isMultiselect) {      
-      selectedOptions.push(this.state.getSelectedOptionDetails(value));
-    } else {
-      const selectedList = JSON.parse(value);
-      selectedList.forEach(value => {
-        const result = this.state.getSelectedOptionDetails(value);
-        selectedOptions.push(result);
-      });
+    if (value){
+      if (!isMultiselect) {      
+        selectedOptions.push(this.state.getSelectedOptionDetails(value));
+      } else {
+        const selectedList = JSON.parse(value);
+        selectedList.forEach(value => {
+          const result = this.state.getSelectedOptionDetails(value);
+          selectedOptions.push(result);
+        });
+      }
     }
-    this.setState({ selectedOptions });
-   
+    this.setState({ selectedOptions }); 
   }
 
   fetchData = () => {
