@@ -37,7 +37,7 @@ module.exports = {
         {
           const result = {
             body: "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
-            id: 1,
+            id: 2,
             title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
             userid: 1
           };
@@ -87,7 +87,7 @@ module.exports = {
         {
           const result = {
             body: "quia et suscipit↵suscipit recusandae consequuntur expedita et cumreprehenderit molestiae ut ut quas totamnostrum rerum est autem sunt rem eveniet architecto",
-            id: 1,
+            id: 2,
             title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
             userid: 1
           };
