@@ -1518,6 +1518,11 @@ describe("utils", () => {
       const expected = { a: "value", b: 3 };
       expect(trimEmptyValues(input)).to.eql(expected);
     });
+    it("flat populated object with boolean values", () => {
+      const input = { a: true, b: false };
+      const expected = { a: true, b: false };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
     it("flat partially populated object", () => {
       const input = { a: "value", b: undefined };
       const expected = { a: "value" };
@@ -1564,6 +1569,7 @@ describe("utils", () => {
             c32: {
               c321: undefined,
               c322: undefined,
+              c323: false,
             },
             c33: {
               c331: "nested value",
@@ -1577,6 +1583,9 @@ describe("utils", () => {
         c: {
           c2: "nested value",
           c3: {
+            c32: {
+              c323: false,
+            },
             c33: {
               c331: "nested value",
             },
@@ -1607,6 +1616,7 @@ describe("utils", () => {
             c32: {
               c321: undefined,
               c322: undefined,
+              c323: false,
             },
             c33: {
               c331: "nested value",
@@ -1621,6 +1631,9 @@ describe("utils", () => {
           c1: [],
           c2: "nested value",
           c3: {
+            c32: {
+              c323: false,
+            },
             c33: {
               c331: "nested value",
               c332: [{ b: "value" }],
