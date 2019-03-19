@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import React from "react";
 
 import {
   asNumber,
@@ -6,6 +7,7 @@ import {
   deepEquals,
   getDefaultFormState,
   getSchemaType,
+  getWidget,
   isFilesArray,
   isConstant,
   toConstant,
@@ -1491,6 +1493,54 @@ describe("utils", () => {
       for (const test of cases) {
         expect(getSchemaType(test.schema)).eql(test.expected);
       }
+    });
+  });
+
+  describe.only("getWidget()", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        object: {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              default: ["foo", "bar"],
+              items: {
+                type: "string",
+              },
+            },
+            bool: {
+              type: "boolean",
+              default: true,
+            },
+          },
+        },
+      },
+    };
+
+    it("should fail if widget has incorrect type", () => {
+      const Widget = new Number(1);
+      expect(() => getWidget(schema, Widget)).to.Throw(
+        Error,
+        `Unsupported widget definition: object`
+      );
+    });
+
+    it("should fail if widget has no type property", () => {
+      const Widget = "blabla";
+      expect(() => getWidget(schema, Widget)).to.Throw(
+        Error,
+        `No widget for type "object"`
+      );
+    });
+
+    //TODO: Unskip the test when react>=16.3 will be used
+    it.skip("should not fail on forwarded ref component", () => {
+      const Widget = React.forwardRef((props, ref) => (
+        <div {...props} ref={ref} />
+      ));
+      expect(getWidget(schema, Widget)).eql(<Widget />);
     });
   });
 });
