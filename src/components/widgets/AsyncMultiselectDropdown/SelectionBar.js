@@ -14,7 +14,7 @@ const SelectionBar = props => {
   if (isMultiselect) {
     return (
       <React.Fragment>
-        {selectedOptions.map((value, key) => (
+        {selectedOptions && selectedOptions.map((value, key) => (
           <Chip
             key={key}
             label={getChipDisplayText ? getChipDisplayText(value[primaryColumn]) : value[selectionColumn]}
@@ -24,7 +24,7 @@ const SelectionBar = props => {
         ))}
       </React.Fragment>
     );
-  } else if (selectedOptions[0]) {
+  } else if (selectedOptions && selectedOptions[0]) {
     return (
       <Chip
         label={getChipDisplayText ? getChipDisplayText(selectedOptions[0][primaryColumn]): selectedOptions[0][selectionColumn]}
