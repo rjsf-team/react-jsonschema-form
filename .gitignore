@@ -124,6 +124,7 @@ yarn.lock
 
 # IDE
 .vscode
+.idea
 
 # Code coverage
 coverage

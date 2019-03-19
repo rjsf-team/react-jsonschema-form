@@ -18,6 +18,7 @@ import {
   toDateString,
   toIdSchema,
   guessType,
+  trimEmptyValues,
 } from "../src/utils";
 
 describe("utils", () => {
@@ -1503,6 +1504,131 @@ describe("utils", () => {
       for (const test of cases) {
         expect(getSchemaType(test.schema)).eql(test.expected);
       }
+    });
+  });
+
+  describe("trimEmptyValues", () => {
+    it("empty object", () => {
+      const input = {};
+      const expected = undefined;
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("flat populated object", () => {
+      const input = { a: "value", b: 3 };
+      const expected = { a: "value", b: 3 };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("flat partially populated object", () => {
+      const input = { a: "value", b: undefined };
+      const expected = { a: "value" };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("flat unpopulated object", () => {
+      const input = { a: undefined, b: undefined };
+      const expected = undefined;
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("nested populated object", () => {
+      const input = { a: "value", b: 3, c: { c1: "nested value" } };
+      const expected = { a: "value", b: 3, c: { c1: "nested value" } };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("nested partially populated object", () => {
+      const input = { a: "value", b: undefined, c: { c1: "nested value" } };
+      const expected = { a: "value", c: { c1: "nested value" } };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("unpopulated nested object", () => {
+      const input = { a: "value", b: 3, c: { c1: undefined } };
+      const expected = { a: "value", b: 3 };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("partially populated nested object", () => {
+      const input = {
+        a: "value",
+        b: 3,
+        c: { c1: undefined, c2: "nested value" },
+      };
+      const expected = { a: "value", b: 3, c: { c2: "nested value" } };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("partially populated deeply nested object", () => {
+      const input = {
+        a: "value",
+        b: undefined,
+        c: {
+          c1: undefined,
+          c2: "nested value",
+          c3: {
+            c31: undefined,
+            c32: {
+              c321: undefined,
+              c322: undefined,
+            },
+            c33: {
+              c331: "nested value",
+              c332: undefined,
+            },
+          },
+        },
+      };
+      const expected = {
+        a: "value",
+        c: {
+          c2: "nested value",
+          c3: {
+            c33: {
+              c331: "nested value",
+            },
+          },
+        },
+      };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("empty array is kept", () => {
+      const input = { a: [] };
+      const expected = { a: [] };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("populated array is kept", () => {
+      const input = { a: [{ b: "value" }] };
+      const expected = { a: [{ b: "value" }] };
+      expect(trimEmptyValues(input)).to.eql(expected);
+    });
+    it("partially populated deeply nested object with arrays", () => {
+      const input = {
+        a: "value",
+        b: undefined,
+        c: {
+          c1: [],
+          c2: "nested value",
+          c3: {
+            c31: undefined,
+            c32: {
+              c321: undefined,
+              c322: undefined,
+            },
+            c33: {
+              c331: "nested value",
+              c332: [{ a: undefined, b: { c: undefined } }, { b: "value" }],
+            },
+          },
+        },
+      };
+      const expected = {
+        a: "value",
+        c: {
+          c1: [],
+          c2: "nested value",
+          c3: {
+            c33: {
+              c331: "nested value",
+              c332: [{ b: "value" }],
+            },
+          },
+        },
+      };
+      expect(trimEmptyValues(input)).to.eql(expected);
     });
   });
 });
