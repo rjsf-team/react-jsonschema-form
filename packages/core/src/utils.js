@@ -1368,7 +1368,7 @@ export function schemaRequiresTrueValue(schema) {
 function trimObject(object) {
   return Object.entries(object).reduce((acc, [key, value]) => {
     const trimmed = trimEmptyValues(value);
-    if (trimmed) {
+    if (trimmed || trimmed === false) {
       if (!acc) {
         acc = {};
       }
@@ -1381,7 +1381,7 @@ function trimObject(object) {
 function trimArray(array) {
   return array.reduce((acc, value) => {
     const trimmed = trimEmptyValues(value);
-    if (trimmed) {
+    if (trimmed || trimmed === false) {
       acc.push(trimmed);
     }
     return acc;
