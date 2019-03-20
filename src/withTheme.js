@@ -8,7 +8,7 @@ function withTheme(data) {
       let { templates, widgets, fields, ...otherProps } = this.props;
       templates = { ...data.templates, ...templates };
       widgets = { ...data.widgets, ...widgets };
-      fields = { ...data.Fields, ...fields };
+      fields = { ...data.fields, ...fields };
       let ThemedForm = Form;
       if (data.form) {
         ThemedForm = data.form;
