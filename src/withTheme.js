@@ -5,7 +5,7 @@ import Form from "./";
 function withTheme(data) {
   return class extends Component {
     render() {
-      let { templates, widgets, fields, ...restData } = this.props;
+      let { templates, widgets, fields, ...otherProps } = this.props;
       templates = { ...data.templates, ...templates };
       widgets = { ...data.widgets, ...widgets };
       fields = { ...data.Fields, ...fields };
@@ -15,7 +15,7 @@ function withTheme(data) {
       }
       return (
         <ThemedForm
-          {...restData}
+          {...otherProps}
           {...templates}
           widgets={widgets}
           fields={fields}
