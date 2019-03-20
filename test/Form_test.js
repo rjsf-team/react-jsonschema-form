@@ -11,6 +11,7 @@ import {
   createSandbox,
   setProps,
 } from "./test_utils";
+import localize from "ajv-i18n";
 
 describe("Form", () => {
   let sandbox;
@@ -1976,6 +1977,42 @@ describe("Form", () => {
 
     it("should set attr novalidate of form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
+    });
+  });
+
+  describe("Localization", () => {
+    const formProps = {
+      schema: {
+        type: "object",
+        title: "Contextualized localization",
+        required: ["name"],
+        properties: {
+          name: {
+            type: "string",
+            title: "Nombre",
+          },
+        },
+      },
+      formData: {
+        name: "Thing",
+      },
+      liveValidate: true,
+      noHtml5Validate: true,
+      localization: localize.es,
+    };
+
+    it("should change localization error messages", () => {
+      const { comp, node } = createFormComponent(formProps);
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "" },
+      });
+
+      expect(comp.state.errorSchema).eql({
+        name: {
+          __errors: ["debe tener la propiedad requerida name"],
+        },
+      });
     });
   });
 

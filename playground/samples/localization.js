@@ -1,26 +1,4 @@
-const messages = {
-  required: "El campo {{missingProperty}} es requerido",
-  type: "Debe ser {{type}}",
-};
-
-function convertMessagesText(typeError, params) {
-  switch (typeError) {
-    case "required": {
-      const { missingProperty } = params;
-      return messages[typeError].replace(
-        "{{missingProperty}}",
-        missingProperty
-      );
-    }
-    case "type": {
-      const { type } = params;
-      return messages[typeError].replace(
-        "{{type}}",
-        Array.isArray(type) ? type.join(",") : type
-      );
-    }
-  }
-}
+import localize from "ajv-i18n";
 
 module.exports = {
   schema: {
@@ -42,12 +20,5 @@ module.exports = {
     active: "wrong",
   },
   uiSchema: {},
-  localization: function(errors) {
-    errors &&
-      errors.forEach(property => {
-        property.message =
-          convertMessagesText(property.keyword, property.params) ||
-          property.message;
-      });
-  },
+  localization: localize.es,
 };

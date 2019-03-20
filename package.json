@@ -50,6 +50,7 @@
     "prop-types": "^15.5.8"
   },
   "devDependencies": {
+    "ajv-i18n": "^3.4.0",
     "atob": "^2.0.3",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.26.3",
