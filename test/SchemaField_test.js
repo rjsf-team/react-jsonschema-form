@@ -108,7 +108,7 @@ describe("SchemaField", () => {
               receivedProps = props;
             }
             render() {
-              return <div />;
+              return null;
             }
           },
         },
