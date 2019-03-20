@@ -1981,27 +1981,27 @@ describe("Form", () => {
   });
 
   describe("Localization", () => {
-    const formProps = {
-      schema: {
-        type: "object",
-        title: "Contextualized localization",
-        required: ["name"],
-        properties: {
-          name: {
-            type: "string",
-            title: "Nombre",
+    it("should change localization error messages", () => {
+      const formProps = {
+        schema: {
+          type: "object",
+          title: "Contextualized localization",
+          required: ["name"],
+          properties: {
+            name: {
+              type: "string",
+              title: "Nombre",
+            },
           },
         },
-      },
-      formData: {
-        name: "Thing",
-      },
-      liveValidate: true,
-      noHtml5Validate: true,
-      localization: localize.es,
-    };
+        formData: {
+          name: "Thing",
+        },
+        liveValidate: true,
+        noHtml5Validate: true,
+        localization: localize.es,
+      };
 
-    it("should change localization error messages", () => {
       const { comp, node } = createFormComponent(formProps);
 
       Simulate.change(node.querySelector("input[type=text]"), {
@@ -2010,7 +2010,7 @@ describe("Form", () => {
 
       expect(comp.state.errorSchema).eql({
         name: {
-          __errors: ["debe tener la propiedad requerida name"],
+          __errors: ["is a required property"],
         },
       });
     });
