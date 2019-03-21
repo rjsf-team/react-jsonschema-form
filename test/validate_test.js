@@ -141,6 +141,7 @@ describe("Validation", () => {
           schema,
           null,
           null,
+          null,
           [metaSchemaDraft4]
         );
         expect(errors.errors).to.have.lengthOf(1);
@@ -152,6 +153,7 @@ describe("Validation", () => {
         const errors = validateFormData(
           { datasetId: "some kind of text" },
           schema,
+          null,
           null,
           null,
           [metaSchemaDraft4, metaSchemaDraft6]
