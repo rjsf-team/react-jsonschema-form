@@ -46,7 +46,7 @@ class DateWidget extends React.Component {
                   options.setDateTimeToEndOf
                 );
               }
-              return onChange(modifiedDatePerOptions.toJSON());
+              return onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
             }}
             onClear={e => {
               this.setState({ selectedDate: undefined });
