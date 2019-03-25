@@ -239,7 +239,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > div> label"),
+        node.querySelectorAll(".field > label"),
         l => l.textContent
       );
 
