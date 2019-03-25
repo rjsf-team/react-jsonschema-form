@@ -67,9 +67,19 @@ export function getDefaultRegistry() {
 
 export function getSchemaType(schema) {
   let { type } = schema;
-  if (!type && schema.enum) {
-    type = "string";
+
+  if (!type && schema.const) {
+    return guessType(schema.const);
   }
+
+  if (!type && schema.enum) {
+    return "string";
+  }
+
+  if (type instanceof Array && type.length === 2 && type.includes("null")) {
+    return type.find(type => type !== "null");
+  }
+
   return type;
 }
 
@@ -724,7 +734,9 @@ export function toIdSchema(
       field,
       fieldId,
       definitions,
-      formData[name],
+      // It's possible that formData is not an object -- this can happen if an
+      // array item has just been added, but not populated with data yet
+      (formData || {})[name],
       idPrefix
     );
   }

@@ -9,6 +9,7 @@ import {
   createComponent,
   createFormComponent,
   createSandbox,
+  setProps,
 } from "./test_utils";
 
 describe("Form", () => {
@@ -774,15 +775,15 @@ describe("Form", () => {
         foo: "bar",
       };
       const onSubmit = sandbox.spy();
+      const event = { type: "submit" };
       const { comp, node } = createFormComponent({
         schema,
         formData,
         onSubmit,
       });
 
-      Simulate.submit(node);
-
-      sinon.assert.calledWithMatch(onSubmit, comp.state);
+      Simulate.submit(node, event);
+      sinon.assert.calledWithMatch(onSubmit, comp.state, event);
     });
 
     it("should not call provided submit handler on validation errors", () => {
@@ -1693,7 +1694,7 @@ describe("Form", () => {
           liveValidate: true,
         });
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        Simulate.change(node.querySelector("input[type=number]"), {
           target: { value: "not a number" },
         });
 
@@ -1711,7 +1712,7 @@ describe("Form", () => {
           formData: { branch: 2 },
         });
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        Simulate.change(node.querySelector("input[type=number]"), {
           target: { value: "not a number" },
         });
 
@@ -1975,6 +1976,56 @@ describe("Form", () => {
 
     it("should set attr novalidate of form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
+    });
+  });
+
+  describe("Meta schema updates", () => {
+    it("Should update allowed meta schemas when additionalMetaSchemas is changed", () => {
+      const formProps = {
+        liveValidate: true,
+        schema: {
+          $schema: "http://json-schema.org/draft-04/schema#",
+          type: "string",
+          minLength: 8,
+          pattern: "d+",
+        },
+        formData: "short",
+        additionalMetaSchemas: [],
+      };
+
+      const { comp } = createFormComponent(formProps);
+
+      expect(comp.state.errorSchema).eql({
+        $schema: {
+          __errors: [
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+          ],
+        },
+      });
+
+      setProps(comp, {
+        ...formProps,
+        additionalMetaSchemas: [
+          require("ajv/lib/refs/json-schema-draft-04.json"),
+        ],
+      });
+
+      expect(comp.state.errorSchema).eql({
+        __errors: [
+          "should NOT be shorter than 8 characters",
+          'should match pattern "d+"',
+        ],
+      });
+
+      setProps(comp, formProps);
+
+      expect(comp.state.errorSchema).eql({
+        $schema: {
+          __errors: [
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+          ],
+        },
+      });
     });
   });
 });

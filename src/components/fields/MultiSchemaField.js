@@ -69,6 +69,10 @@ class AnyOfField extends Component {
           augmentedSchema = Object.assign({}, option, requiresAnyOf);
         }
 
+        // Remove the "required" field as it's likely that not all fields have
+        // been filled in yet, which will mean that the schema is not valid
+        delete augmentedSchema.required;
+
         if (isValid(augmentedSchema, formData)) {
           return i;
         }
@@ -85,7 +89,14 @@ class AnyOfField extends Component {
     const selectedOption = parseInt(event.target.value, 10);
     const { formData, onChange, options } = this.props;
 
-    if (guessType(formData) === "object") {
+    const newOption = options[selectedOption];
+
+    // If the new option is of type object and the current data is an object,
+    // discard properties added using the old option.
+    if (
+      guessType(formData) === "object" &&
+      (newOption.type === "object" || newOption.properties)
+    ) {
       const newFormData = Object.assign({}, formData);
 
       const optionsToDiscard = options.slice();

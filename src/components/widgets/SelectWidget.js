@@ -91,7 +91,9 @@ function SelectWidget(props) {
         const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
       }}>
-      {!multiple && !schema.default && <option value="">{placeholder}</option>}
+      {!multiple && schema.default === undefined && (
+        <option value="">{placeholder}</option>
+      )}
       {enumOptions.map(({ value, label }, i) => {
         const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
         return (

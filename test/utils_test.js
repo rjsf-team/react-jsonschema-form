@@ -5,6 +5,7 @@ import {
   dataURItoBlob,
   deepEquals,
   getDefaultFormState,
+  getSchemaType,
   isFilesArray,
   isConstant,
   toConstant,
@@ -1182,6 +1183,64 @@ describe("utils", () => {
       });
     });
 
+    it("should return an idSchema for nested property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          obj: {
+            type: "object",
+            properties: {
+              foo: { type: "string" },
+            },
+            dependencies: {
+              foo: {
+                properties: {
+                  bar: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+      };
+      const formData = {
+        obj: {
+          foo: "test",
+        },
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
+        $id: "root",
+        obj: {
+          $id: "root_obj",
+          foo: { $id: "root_obj_foo" },
+          bar: { $id: "root_obj_bar" },
+        },
+      });
+    });
+
+    it("should return an idSchema for unmet property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+        dependencies: {
+          foo: {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const formData = {};
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
+        $id: "root",
+        foo: { $id: "root_foo" },
+      });
+    });
+
     it("should handle idPrefix parameter", () => {
       const schema = {
         definitions: {
@@ -1203,6 +1262,24 @@ describe("utils", () => {
           bar: { $id: "rjsf_bar" },
         }
       );
+    });
+
+    it("should handle null form data for object schemas", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+          bar: { type: "string" },
+        },
+      };
+      const formData = null;
+      const result = toIdSchema(schema, null, {}, formData, "rjsf");
+
+      expect(result).eql({
+        $id: "rjsf",
+        foo: { $id: "rjsf_foo" },
+        bar: { $id: "rjsf_bar" },
+      });
     });
   });
 
@@ -1367,6 +1444,65 @@ describe("utils", () => {
 
     it("should guess the type of object values", () => {
       expect(guessType({})).eql("object");
+    });
+  });
+
+  describe("getSchemaType()", () => {
+    const cases = [
+      {
+        schema: { type: "string" },
+        expected: "string",
+      },
+      {
+        schema: { type: "number" },
+        expected: "number",
+      },
+      {
+        schema: { type: "integer" },
+        expected: "integer",
+      },
+      {
+        schema: { type: "object" },
+        expected: "object",
+      },
+      {
+        schema: { type: "array" },
+        expected: "array",
+      },
+      {
+        schema: { type: "boolean" },
+        expected: "boolean",
+      },
+      {
+        schema: { type: "null" },
+        expected: "null",
+      },
+      {
+        schema: { const: "foo" },
+        expected: "string",
+      },
+      {
+        schema: { const: 1 },
+        expected: "number",
+      },
+      {
+        schema: { type: ["string", "null"] },
+        expected: "string",
+      },
+      {
+        schema: { type: ["null", "number"] },
+        expected: "number",
+      },
+      {
+        schema: { type: ["integer", "null"] },
+        expected: "integer",
+      },
+    ];
+
+    it("should correctly guess the type of a schema", () => {
+      for (const test of cases) {
+        expect(getSchemaType(test.schema)).eql(test.expected);
+      }
     });
   });
 });

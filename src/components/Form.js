@@ -58,9 +58,9 @@ export default class Form extends Component {
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
-
+    const additionalMetaSchemas = props.additionalMetaSchemas;
     const { errors, errorSchema } = mustValidate
-      ? this.validate(formData, schema)
+      ? this.validate(formData, schema, additionalMetaSchemas)
       : {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
@@ -80,6 +80,7 @@ export default class Form extends Component {
       edit,
       errors,
       errorSchema,
+      additionalMetaSchemas,
     };
   }
 
@@ -87,7 +88,11 @@ export default class Form extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  validate(formData, schema = this.props.schema) {
+  validate(
+    formData,
+    schema = this.props.schema,
+    additionalMetaSchemas = this.props.additionalMetaSchemas
+  ) {
     const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
     const resolvedSchema = retrieveSchema(schema, definitions, formData);
@@ -95,7 +100,8 @@ export default class Form extends Component {
       formData,
       resolvedSchema,
       validate,
-      transformErrors
+      transformErrors,
+      additionalMetaSchemas
     );
   }
 
@@ -151,6 +157,7 @@ export default class Form extends Component {
 
   onSubmit = event => {
     event.preventDefault();
+    event.persist();
 
     if (!this.props.noValidate) {
       const { errors, errorSchema } = this.validate(this.state.formData);
@@ -168,7 +175,7 @@ export default class Form extends Component {
 
     this.setState({ errors: [], errorSchema: {} }, () => {
       if (this.props.onSubmit) {
-        this.props.onSubmit({ ...this.state, status: "submitted" });
+        this.props.onSubmit({ ...this.state, status: "submitted" }, event);
       }
     });
   };
@@ -294,5 +301,6 @@ if (process.env.NODE_ENV !== "production") {
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
+    additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
   };
 }

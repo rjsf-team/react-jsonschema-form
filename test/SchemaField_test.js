@@ -108,7 +108,7 @@ describe("SchemaField", () => {
               receivedProps = props;
             }
             render() {
-              return <div />;
+              return null;
             }
           },
         },
@@ -313,7 +313,7 @@ describe("SchemaField", () => {
       submit(node);
 
       const matches = node.querySelectorAll(
-        "form > .form-group > div > div > div > .error-detail .text-danger"
+        "form > .form-group > div > .error-detail .text-danger"
       );
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.eql("container");

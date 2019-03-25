@@ -350,6 +350,69 @@ describe("StringField", () => {
 
       expect(node.querySelector("#custom")).to.exist;
     });
+
+    it("should render a select element with first option 'false' if the default value is false", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            enum: [false, true],
+            default: false,
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const options = node.querySelectorAll("option");
+      expect(options[0].innerHTML).eql("false");
+      expect(options.length).eql(2);
+    });
+
+    it("should render a select element and the option's length is equal the enum's length, if set the enum and the default value is empty.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            enum: ["", "1"],
+            default: "",
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const options = node.querySelectorAll("option");
+      expect(options[0].innerHTML).eql("");
+      expect(options.length).eql(2);
+    });
+
+    it("should render only one empty option when the default value is empty.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            enum: [""],
+            default: "",
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const options = node.querySelectorAll("option");
+      expect(options[0].innerHTML).eql("");
+      expect(options.length).eql(1);
+    });
   });
 
   describe("TextareaWidget", () => {
