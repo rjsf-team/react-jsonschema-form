@@ -694,8 +694,7 @@ The `Form` component supports the following html attributes:
   action="/users/list"
   autocomplete="off"
   enctype="multipart/form-data"
-  acceptcharset="ISO-8859-1"
-  schema={} />
+  acceptcharset="ISO-8859-1" />
 ```
 
 ### Disabling a form
