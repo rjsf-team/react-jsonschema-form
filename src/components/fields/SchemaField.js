@@ -26,6 +26,7 @@ const COMPONENT_TYPES = {
   number: "NumberField",
   object: "ObjectField",
   string: "StringField",
+  null: "NullField",
 };
 
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
