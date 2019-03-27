@@ -517,7 +517,7 @@ describe("utils", () => {
       expect(mergeObjects(obj1, obj2)).eql(expected);
     });
 
-    it("shouldn't recursively merge File object", () => {
+    it("should recursively merge File objects", () => {
       const file = new File(["test"], "test.txt");
       const obj1 = {
         a: {},
