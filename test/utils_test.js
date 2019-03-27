@@ -549,6 +549,17 @@ describe("utils", () => {
       expect(mergeObjects(obj1, obj2)).eql(expected);
     });
 
+    it("should recursively merge File objects", () => {
+      const file = new File(["test"], "test.txt");
+      const obj1 = {
+        a: {},
+      };
+      const obj2 = {
+        a: file,
+      };
+      expect(mergeObjects(obj1, obj2).a).instanceOf(File);
+    });
+
     describe("concatArrays option", () => {
       it("should not concat arrays by default", () => {
         const obj1 = { a: [1] };
