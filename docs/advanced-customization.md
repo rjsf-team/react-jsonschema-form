@@ -257,9 +257,11 @@ The following props are passed to custom widget components:
 - `id`: The generated id for this field;
 - `schema`: The JSONSchema subschema object for this field;
 - `value`: The current value for this field;
+- `placeholder`: the placeholder for the field, if any;
 - `required`: The required status of this field;
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
+- `autofocus`: `true` if the widget should autofocus;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
