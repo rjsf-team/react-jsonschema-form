@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import {
   asNumber,
+  orderProperties,
   dataURItoBlob,
   deepEquals,
   getDefaultFormState,
@@ -343,6 +344,37 @@ describe("utils", () => {
     });
   });
 
+  describe("orderProperties()", () => {
+    it("should remove from order elements that are not in properties", () => {
+      const properties = ["foo", "baz"];
+      const order = ["foo", "bar", "baz", "qux"];
+      expect(orderProperties(properties, order)).eql(["foo", "baz"]);
+    });
+
+    it("should order properties according to the order", () => {
+      const properties = ["bar", "foo"];
+      const order = ["foo", "bar"];
+      expect(orderProperties(properties, order)).eql(["foo", "bar"]);
+    });
+
+    it("should replace * with properties that are absent in order", () => {
+      const properties = ["foo", "bar", "baz"];
+      const order = ["*", "foo"];
+      expect(orderProperties(properties, order)).eql(["bar", "baz", "foo"]);
+    });
+
+    it("should handle more complex ordering case correctly", () => {
+      const properties = ["foo", "baz", "qux", "bar"];
+      const order = ["quux", "foo", "*", "corge", "baz"];
+      expect(orderProperties(properties, order)).eql([
+        "foo",
+        "qux",
+        "bar",
+        "baz",
+      ]);
+    });
+  });
+
   describe("isConstant", () => {
     it("should return false when neither enum nor const is defined", () => {
       const schema = {};
@@ -515,6 +547,17 @@ describe("utils", () => {
         c: 3,
       };
       expect(mergeObjects(obj1, obj2)).eql(expected);
+    });
+
+    it("should recursively merge File objects", () => {
+      const file = new File(["test"], "test.txt");
+      const obj1 = {
+        a: {},
+      };
+      const obj2 = {
+        a: file,
+      };
+      expect(mergeObjects(obj1, obj2).a).instanceOf(File);
     });
 
     describe("concatArrays option", () => {
