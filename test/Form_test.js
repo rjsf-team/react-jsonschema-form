@@ -5,12 +5,7 @@ import { renderIntoDocument, Simulate } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import {
-  createComponent,
-  createFormComponent,
-  createSandbox,
-  setProps,
-} from "./test_utils";
+import { createFormComponent, createSandbox, setProps } from "./test_utils";
 
 describe("Form", () => {
   let sandbox;
