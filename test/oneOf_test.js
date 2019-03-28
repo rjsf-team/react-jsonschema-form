@@ -70,18 +70,18 @@ describe("oneOf", () => {
         },
       ],
     };
-    const uiSchema = {
-      "ui:widget": () => {
-        return <section>Custom Widget</section>;
+    const widgets = {
+      SelectWidget: () => {
+        return <section id="CustomSelect">Custom Widget</section>;
       },
     };
 
     const { node } = createFormComponent({
       schema,
-      uiSchema,
+      widgets,
     });
 
-    expect(node.querySelectorAll("section")).to.have.length.of(1);
+    expect(node.querySelector("#CustomSelect")).to.exist;
   });
 
   it("should change the rendered form when the select value is changed", () => {
