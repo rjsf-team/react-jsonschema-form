@@ -45,7 +45,7 @@ class DateTimeWidget extends React.Component {
       : moment().add(100, "years");
     return (
       <MuiPickersUtilsProvider
-        utils={MomentUtils}day
+        utils={MomentUtils}
         locale={this.props.selectedLocale}
         moment={moment}>
         <div className="picker">
