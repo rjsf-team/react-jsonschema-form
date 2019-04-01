@@ -21,7 +21,10 @@ class DateTimeWidget extends React.Component {
     if (!result) {nextProps.onChange(undefined);}
     else {
       let utcDate = moment(nextState.selectedDate);
-      var modifiedDatePerOptions = utcDate.startOf("day");
+      let modifiedDatePerOptions;
+      nextProps.options.renderDateTimePickerAsDatePicker ? 
+        modifiedDatePerOptions = utcDate.startOf("day") : 
+        modifiedDatePerOptions = utcDate.startOf("minute");
       if (nextProps.options.setDateTimeToEndOf) {
         modifiedDatePerOptions = modifiedDatePerOptions.endOf(
           nextProps.options.setDateTimeToEndOf
@@ -42,7 +45,7 @@ class DateTimeWidget extends React.Component {
       : moment().add(100, "years");
     return (
       <MuiPickersUtilsProvider
-        utils={MomentUtils}
+        utils={MomentUtils}day
         locale={this.props.selectedLocale}
         moment={moment}>
         <div className="picker">
@@ -60,7 +63,7 @@ class DateTimeWidget extends React.Component {
                   return onChange(undefined);
                 }
                 let utcDate = moment(date);
-                var modifiedDatePerOptions = utcDate.startOf("minute");
+                var modifiedDatePerOptions = utcDate.startOf("day");
                 if (options.setDateTimeToEndOf) {
                   modifiedDatePerOptions = modifiedDatePerOptions.endOf(
                     options.setDateTimeToEndOf
