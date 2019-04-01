@@ -1,7 +1,7 @@
 import {
   DatePicker,
   DateTimePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "material-ui-pickers";
 
 import MomentUtils from "@date-io/moment";
@@ -13,7 +13,7 @@ class DateTimeWidget extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: this.props.value
+      selectedDate: this.props.value,
     };
   }
   render() {
@@ -45,7 +45,7 @@ class DateTimeWidget extends React.Component {
                   return onChange(undefined);
                 }
                 let utcDate = moment(date);
-                var modifiedDatePerOptions = utcDate.startOf("minute");
+                var modifiedDatePerOptions = utcDate.startOf("day");
                 if (options.setDateTimeToEndOf) {
                   modifiedDatePerOptions = modifiedDatePerOptions.endOf(
                     options.setDateTimeToEndOf
@@ -94,7 +94,7 @@ class DateTimeWidget extends React.Component {
 
 if (process.env.NODE_ENV !== "production") {
   DateTimeWidget.propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string,
   };
 }
 
