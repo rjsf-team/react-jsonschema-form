@@ -30,7 +30,7 @@ module.exports = {
         "ui:options": {
           disableFuture: true,
           minDate: "2019-01-01",
-          formatPattern: "MM-DD-YYYY hh:mm",
+          formatPattern: "MM-DD-YYYY HH:mm",
           format: "date-time",
           placeholder: "10-10-2018 22:10",
           disableOpenOnEnter: true,
