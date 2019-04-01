@@ -16,6 +16,24 @@ class DateTimeWidget extends React.Component {
       selectedDate: this.props.value,
     };
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    let result = moment(nextState.selectedDate, nextProps.options.formatPattern, true).isValid();
+    if (!result) {nextProps.onChange(undefined);}
+    else {
+      let utcDate = moment(nextState.selectedDate);
+      let modifiedDatePerOptions;
+      nextProps.options.renderDateTimePickerAsDatePicker ? 
+        modifiedDatePerOptions = utcDate.startOf("day") : 
+        modifiedDatePerOptions = utcDate.startOf("minute");
+      if (nextProps.options.setDateTimeToEndOf) {
+        modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+          nextProps.options.setDateTimeToEndOf
+        );
+      }
+      nextProps.onChange(modifiedDatePerOptions.toJSON());
+    }
+    return result;
+  }
   render() {
     const { options, onChange } = this.props;
     let { selectedDate } = this.state;
@@ -57,6 +75,9 @@ class DateTimeWidget extends React.Component {
                 this.setState({ selectedDate: undefined });
                 return onChange(undefined);
               }}
+              onInputChange={e => {
+                this.setState({ selectedDate: event.target.value });
+              }}
             />
           ) : (
             <DateTimePicker
@@ -83,6 +104,9 @@ class DateTimeWidget extends React.Component {
               onClear={e => {
                 this.setState({ selectedDate: undefined });
                 return onChange(undefined);
+              }}
+              onInputChange={e => {
+                this.setState({ selectedDate: event.target.value });
               }}
             />
           )}
