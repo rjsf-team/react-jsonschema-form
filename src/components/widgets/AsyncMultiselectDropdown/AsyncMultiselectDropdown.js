@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Paper, TextField, CircularProgress, Grid } from "@material-ui/core";
@@ -28,7 +29,19 @@ class AsyncMultiselectDropdown extends Component {
   componentDidMount() {
     this.initStateFromProps();
     this.fetchData();
+    document.addEventListener('click', this.handleClickOutside, true);
   }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClickOutside, true);
+  }
+
+  handleClickOutside = event => {    
+    const domNode = ReactDOM.findDOMNode(this);
+    if (!domNode || !domNode.contains(event.target)) {
+        this.closeOptionPanel();
+    }
+  };
 
   handleChange = event => {
     this.setState(
