@@ -32,6 +32,9 @@ class DateTimeWidget extends React.Component {
       }
       nextProps.onChange(modifiedDatePerOptions.toJSON());
     }
+    if (nextState.selectedDate === undefined) {
+      result = true;
+    }
     return result;
   }
   render() {
