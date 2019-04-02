@@ -25,6 +25,9 @@ class DateWidget extends React.Component {
       }
       nextProps.onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
     }
+    if (nextState.selectedDate === undefined) {
+      result = true;
+    }
     return result;
   }
   render() {
