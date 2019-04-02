@@ -46,14 +46,15 @@ describe("NullField", () => {
       expect(comp.state.formData).eql(null);
     });
 
-    it("should always hold the value null", () => {
+    it("should not overwrite existing data", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "null",
         },
+        formData: 3,
       });
 
-      expect(comp.state.formData).eql(null);
+      expect(comp.state.formData).eql(3);
     });
   });
 });

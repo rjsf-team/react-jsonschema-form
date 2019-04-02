@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 
 class NullField extends Component {
   componentDidMount() {
-    this.props.onChange(null);
+    if (this.props.formData === undefined) {
+      this.props.onChange(null);
+    }
   }
 
   render() {
