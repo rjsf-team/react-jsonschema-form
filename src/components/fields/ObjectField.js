@@ -9,6 +9,7 @@ import {
   getUiOptions,
   ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
+import { isObject } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
   const canExpand = function canExpand() {
@@ -92,7 +93,26 @@ class ObjectField extends Component {
         // set empty values to the empty string.
         value = "";
       }
-      const newFormData = { ...this.props.formData, [name]: value };
+      let newFormData = { ...this.props.formData, [name]: value };
+
+      // Retrieve what the schema will be after updating formData
+      const newSchema = retrieveSchema(
+        this.props.schema.properties[name],
+        this.props.registry.definitions,
+        newFormData[name]
+      );
+
+      // Set any null type fields back to null. Necessary for fields
+      // with dependencies that can alternate between null and another
+      // field type.
+      if (isObject(newSchema.properties)) {
+        Object.keys(newSchema.properties).forEach(property => {
+          if (newSchema.properties[property].type === "null") {
+            newFormData[name][property] = null;
+          }
+        });
+      }
+
       this.props.onChange(
         newFormData,
         errorSchema &&
