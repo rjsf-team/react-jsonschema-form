@@ -46,6 +46,13 @@ class DateTimeWidget extends React.Component {
     const maxDate = options.maxDate
       ? moment(options.maxDate)
       : moment().add(100, "years");
+    if (options.formatPattern === undefined
+      || options.formatPattern === null
+      || options.formatPattern === '') {   
+      options.renderDateTimePickerAsDatePicker 
+        ? options.formatPattern = "YYYY-MM-DD"
+        : options.formatPattern = "YYYY-MM-DD HH:mm";
+    }
     return (
       <MuiPickersUtilsProvider
         utils={MomentUtils}
