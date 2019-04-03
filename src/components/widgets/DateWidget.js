@@ -42,7 +42,7 @@ class DateWidget extends React.Component {
 if (options.formatPattern === undefined
       || options.formatPattern === null
       || options.formatPattern === '') {   
-      options.formatPattern = "MM-DD-YYYY";
+      options.formatPattern = "YYYY-MM-DD";
     }
     return (
       <MuiPickersUtilsProvider
