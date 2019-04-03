@@ -185,7 +185,12 @@ class AsyncMultiselectDropdown extends Component {
   };
 
   closeOptionPanel = () => {
-    this.setState({ isSearching: false, pageNumber: 0 }, () => this.fetchData());
+    if (this.state.pageNumber !== 0 ) {
+      this.setState({ isSearching: false, pageNumber: 0 }, () => this.fetchData());
+    }
+    else {
+      this.setState({ isSearching: false });
+    }
   };
 
   render() {
