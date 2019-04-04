@@ -63,7 +63,7 @@ describe("Rendering performance optimizations", () => {
       const fields = scryRenderedComponentsWithType(comp, SchemaField).reduce(
         (fields, fieldComp) => {
           sandbox.stub(fieldComp, "render").returns(<div />);
-          fields[fieldComp.props.idSchema.$id] = fieldComp;
+          fields[fieldComp.props.idSchema.__id] = fieldComp;
           return fields;
         }
       );
@@ -88,7 +88,7 @@ describe("Rendering performance optimizations", () => {
       const fields = scryRenderedComponentsWithType(comp, SchemaField).reduce(
         (fields, fieldComp) => {
           sandbox.stub(fieldComp, "render").returns(<div />);
-          fields[fieldComp.props.idSchema.$id] = fieldComp;
+          fields[fieldComp.props.idSchema.__id] = fieldComp;
           return fields;
         }
       );
@@ -112,7 +112,7 @@ describe("Rendering performance optimizations", () => {
         foo: { type: "string" },
       },
     };
-    const idSchema = { $id: "root", foo: { $id: "root_plop" } };
+    const idSchema = { __id: "root", foo: { __id: "root_plop" } };
 
     it("should not render if next props are equivalent", () => {
       const props = {

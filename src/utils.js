@@ -725,7 +725,7 @@ export function toIdSchema(
   idPrefix = "root"
 ) {
   const idSchema = {
-    $id: id || idPrefix,
+    __id: id || idPrefix,
   };
   if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
@@ -739,7 +739,7 @@ export function toIdSchema(
   }
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
+    const fieldId = idSchema.__id + "_" + name;
     idSchema[name] = toIdSchema(
       field,
       fieldId,

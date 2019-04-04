@@ -161,7 +161,7 @@ class AnyOfField extends Component {
             className="form-control"
             onChange={this.onOptionChange}
             value={selectedOption}
-            id={`${idSchema.$id}_anyof_select`}>
+            id={`${idSchema.__id}_anyof_select`}>
             {options.map((option, index) => {
               return (
                 <option key={index} value={index}>

@@ -6,9 +6,9 @@ function UnsupportedField({ schema, idSchema, reason }) {
     <div className="unsupported-field">
       <p>
         Unsupported field schema
-        {idSchema && idSchema.$id && (
+        {idSchema && idSchema.__id && (
           <span>
-            {" for"} field <code>{idSchema.$id}</code>
+            {" for"} field <code>{idSchema.__id}</code>
           </span>
         )}
         {reason && <em>: {reason}</em>}.

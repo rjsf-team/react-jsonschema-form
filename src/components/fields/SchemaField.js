@@ -292,7 +292,7 @@ function SchemaFieldRender(props) {
   );
 
   const { type } = schema;
-  const id = idSchema.$id;
+  const id = idSchema.__id;
   const label =
     uiSchema["ui:title"] || props.schema.title || schema.title || name;
   const description =

@@ -1078,7 +1078,7 @@ describe("utils", () => {
     it("should return an idSchema for root field", () => {
       const schema = { type: "string" };
 
-      expect(toIdSchema(schema)).eql({ $id: "root" });
+      expect(toIdSchema(schema)).eql({ __id: "root" });
     });
 
     it("should return an idSchema for nested objects", () => {
@@ -1095,10 +1095,10 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema)).eql({
-        $id: "root",
+        __id: "root",
         level1: {
-          $id: "root_level1",
-          level2: { $id: "root_level1_level2" },
+          __id: "root_level1",
+          level2: { __id: "root_level1_level2" },
         },
       });
     });
@@ -1125,16 +1125,16 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema)).eql({
-        $id: "root",
+        __id: "root",
         level1a: {
-          $id: "root_level1a",
-          level1a2a: { $id: "root_level1a_level1a2a" },
-          level1a2b: { $id: "root_level1a_level1a2b" },
+          __id: "root_level1a",
+          level1a2a: { __id: "root_level1a_level1a2a" },
+          level1a2b: { __id: "root_level1a_level1a2b" },
         },
         level1b: {
-          $id: "root_level1b",
-          level1b2a: { $id: "root_level1b_level1b2a" },
-          level1b2b: { $id: "root_level1b_level1b2b" },
+          __id: "root_level1b",
+          level1b2a: { __id: "root_level1b_level1b2a" },
+          level1b2b: { __id: "root_level1b_level1b2b" },
         },
       });
     });
@@ -1155,10 +1155,10 @@ describe("utils", () => {
         },
       };
       expect(toIdSchema(schema)).eql({
-        $id: "root",
+        __id: "root",
         metadata: {
-          $id: "root_metadata",
-          id: { $id: "root_metadata_id" },
+          __id: "root_metadata",
+          id: { __id: "root_metadata_id" },
         },
       });
     });
@@ -1175,8 +1175,8 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema)).eql({
-        $id: "root",
-        foo: { $id: "root_foo" },
+        __id: "root",
+        foo: { __id: "root_foo" },
       });
     });
 
@@ -1195,9 +1195,9 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions)).eql({
-        $id: "root",
-        foo: { $id: "root_foo" },
-        bar: { $id: "root_bar" },
+        __id: "root",
+        foo: { __id: "root_foo" },
+        bar: { __id: "root_bar" },
       });
     });
 
@@ -1220,9 +1220,9 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
-        $id: "root",
-        foo: { $id: "root_foo" },
-        bar: { $id: "root_bar" },
+        __id: "root",
+        foo: { __id: "root_foo" },
+        bar: { __id: "root_bar" },
       });
     });
 
@@ -1252,11 +1252,11 @@ describe("utils", () => {
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
-        $id: "root",
+        __id: "root",
         obj: {
-          $id: "root_obj",
-          foo: { $id: "root_obj_foo" },
-          bar: { $id: "root_obj_bar" },
+          __id: "root_obj",
+          foo: { __id: "root_obj_foo" },
+          bar: { __id: "root_obj_bar" },
         },
       });
     });
@@ -1279,8 +1279,8 @@ describe("utils", () => {
       const formData = {};
 
       expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
-        $id: "root",
-        foo: { $id: "root_foo" },
+        __id: "root",
+        foo: { __id: "root_foo" },
       });
     });
 
@@ -1300,9 +1300,9 @@ describe("utils", () => {
 
       expect(toIdSchema(schema, undefined, schema.definitions, {}, "rjsf")).eql(
         {
-          $id: "rjsf",
-          foo: { $id: "rjsf_foo" },
-          bar: { $id: "rjsf_bar" },
+          __id: "rjsf",
+          foo: { __id: "rjsf_foo" },
+          bar: { __id: "rjsf_bar" },
         }
       );
     });
@@ -1319,9 +1319,9 @@ describe("utils", () => {
       const result = toIdSchema(schema, null, {}, formData, "rjsf");
 
       expect(result).eql({
-        $id: "rjsf",
-        foo: { $id: "rjsf_foo" },
-        bar: { $id: "rjsf_bar" },
+        __id: "rjsf",
+        foo: { __id: "rjsf_foo" },
+        bar: { __id: "rjsf_bar" },
       });
     });
   });

@@ -23,7 +23,7 @@ function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
     return null;
   }
-  const id = `${idSchema.$id}__title`;
+  const id = `${idSchema.__id}__title`;
   return <TitleField id={id} title={title} required={required} />;
 }
 
@@ -31,7 +31,7 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   if (!description) {
     return null;
   }
-  const id = `${idSchema.$id}__description`;
+  const id = `${idSchema.__id}__description`;
   return <DescriptionField id={id} description={description} />;
 }
 
@@ -101,9 +101,9 @@ function DefaultArrayItem(props) {
 
 function DefaultFixedArrayFieldTemplate(props) {
   return (
-    <fieldset className={props.className} id={props.idSchema.$id}>
+    <fieldset className={props.className} id={props.idSchema.__id}>
       <ArrayFieldTitle
-        key={`array-field-title-${props.idSchema.$id}`}
+        key={`array-field-title-${props.idSchema.__id}`}
         TitleField={props.TitleField}
         idSchema={props.idSchema}
         title={props.uiSchema["ui:title"] || props.title}
@@ -113,14 +113,14 @@ function DefaultFixedArrayFieldTemplate(props) {
       {(props.uiSchema["ui:description"] || props.schema.description) && (
         <div
           className="field-description"
-          key={`field-description-${props.idSchema.$id}`}>
+          key={`field-description-${props.idSchema.__id}`}>
           {props.uiSchema["ui:description"] || props.schema.description}
         </div>
       )}
 
       <div
         className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}>
+        key={`array-item-list-${props.idSchema.__id}`}>
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 
@@ -137,9 +137,9 @@ function DefaultFixedArrayFieldTemplate(props) {
 
 function DefaultNormalArrayFieldTemplate(props) {
   return (
-    <fieldset className={props.className} id={props.idSchema.$id}>
+    <fieldset className={props.className} id={props.idSchema.__id}>
       <ArrayFieldTitle
-        key={`array-field-title-${props.idSchema.$id}`}
+        key={`array-field-title-${props.idSchema.__id}`}
         TitleField={props.TitleField}
         idSchema={props.idSchema}
         title={props.uiSchema["ui:title"] || props.title}
@@ -148,7 +148,7 @@ function DefaultNormalArrayFieldTemplate(props) {
 
       {(props.uiSchema["ui:description"] || props.schema.description) && (
         <ArrayFieldDescription
-          key={`array-field-description-${props.idSchema.$id}`}
+          key={`array-field-description-${props.idSchema.__id}`}
           DescriptionField={props.DescriptionField}
           idSchema={props.idSchema}
           description={
@@ -159,7 +159,7 @@ function DefaultNormalArrayFieldTemplate(props) {
 
       <div
         className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}>
+        key={`array-item-list-${props.idSchema.__id}`}>
         {props.items && props.items.map(p => DefaultArrayItem(p))}
       </div>
 
@@ -370,7 +370,7 @@ class ArrayField extends Component {
       items: formData.map((item, index) => {
         const itemSchema = retrieveSchema(schema.items, definitions, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.__id + "_" + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
@@ -438,7 +438,7 @@ class ArrayField extends Component {
     const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget
-        id={idSchema && idSchema.$id}
+        id={idSchema && idSchema.__id}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -477,7 +477,7 @@ class ArrayField extends Component {
     return (
       <Widget
         options={options}
-        id={idSchema && idSchema.$id}
+        id={idSchema && idSchema.__id}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -541,7 +541,7 @@ class ArrayField extends Component {
         const itemSchema = additional
           ? retrieveSchema(schema.additionalItems, definitions, item)
           : itemSchemas[index];
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.__id + "_" + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
