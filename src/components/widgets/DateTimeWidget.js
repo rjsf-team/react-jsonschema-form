@@ -20,17 +20,24 @@ class DateTimeWidget extends React.Component {
     let result = moment(nextState.selectedDate, nextProps.options.formatPattern, true).isValid();
     if (!result) {nextProps.onChange(undefined);}
     else {
-      let utcDate = moment(nextState.selectedDate);
-      let modifiedDatePerOptions;
-      nextProps.options.renderDateTimePickerAsDatePicker ? 
-        modifiedDatePerOptions = utcDate.startOf("day") : 
-        modifiedDatePerOptions = utcDate.startOf("minute");
-      if (nextProps.options.setDateTimeToEndOf) {
-        modifiedDatePerOptions = modifiedDatePerOptions.endOf(
-          nextProps.options.setDateTimeToEndOf
-        );
+      if (new Date(nextState.selectedDate) < new Date(nextProps.options.minDate)
+          || new Date(nextProps.options.maxDate) < new Date(nextState.selectedDate)) {
+        result = false;        
+        nextProps.onChange(undefined);
       }
-      nextProps.onChange(modifiedDatePerOptions.toJSON());
+      else {
+        let utcDate = moment(nextState.selectedDate);
+        let modifiedDatePerOptions;
+        nextProps.options.renderDateTimePickerAsDatePicker ? 
+          modifiedDatePerOptions = utcDate.startOf("day") : 
+          modifiedDatePerOptions = utcDate.startOf("minute");
+        if (nextProps.options.setDateTimeToEndOf) {
+          modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+            nextProps.options.setDateTimeToEndOf
+          );
+        }
+        nextProps.onChange(modifiedDatePerOptions.toJSON());
+      }
     }
     if (nextState.selectedDate === undefined) {
       result = true;
