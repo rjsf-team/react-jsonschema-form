@@ -16,14 +16,21 @@ class DateWidget extends React.Component {
     let result = moment(nextState.selectedDate, nextProps.options.formatPattern, true).isValid();
     if (!result) {nextProps.onChange(undefined);}
     else {
-      let utcDate = moment(nextState.selectedDate);
-      var modifiedDatePerOptions = utcDate.startOf("day");
-      if (nextProps.options.setDateTimeToEndOf) {
-        modifiedDatePerOptions = modifiedDatePerOptions.endOf(
-          nextProps.options.setDateTimeToEndOf
-        );
+      if (new Date(nextState.selectedDate) - new Date(nextProps.options.minDate) < 0 
+          || new Date(nextProps.options.maxDate) - new Date(nextState.selectedDate) < 0) {
+        result = false;        
+        nextProps.onChange(undefined);
       }
-      nextProps.onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
+      else {
+        let utcDate = moment(nextState.selectedDate);
+        var modifiedDatePerOptions = utcDate.startOf("day");
+        if (nextProps.options.setDateTimeToEndOf) {
+          modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+            nextProps.options.setDateTimeToEndOf
+          );
+        }
+        nextProps.onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
+      }
     }
     if (nextState.selectedDate === undefined) {
       result = true;
