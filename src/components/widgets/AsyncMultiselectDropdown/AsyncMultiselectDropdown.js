@@ -188,7 +188,7 @@ class AsyncMultiselectDropdown extends Component {
     if (this.state.pageNumber !== 0 ) {
       this.setState({ isSearching: false, pageNumber: 0 }, () => this.fetchData());
     }
-    else {
+    else if (this.state.isSearching) {
       this.setState({ isSearching: false });
     }
   };

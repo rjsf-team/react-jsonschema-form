@@ -17,20 +17,34 @@ class DateTimeWidget extends React.Component {
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
-    let result = moment(nextState.selectedDate, nextProps.options.formatPattern, true).isValid();
+    let formatPattern = nextProps.options.formatPattern;
+    if (formatPattern === undefined || formatPattern === null || formatPattern === '') {   
+      formatPattern = nextProps.options.renderDateTimePickerAsDatePicker ? "YYYY-MM-DD" : "YYYY-MM-DD HH:mm";
+    }
+    let result = moment(nextState.selectedDate, formatPattern, true).isValid();
     if (!result) {nextProps.onChange(undefined);}
     else {
-      let utcDate = moment(nextState.selectedDate);
-      let modifiedDatePerOptions;
-      nextProps.options.renderDateTimePickerAsDatePicker ? 
-        modifiedDatePerOptions = utcDate.startOf("day") : 
-        modifiedDatePerOptions = utcDate.startOf("minute");
-      if (nextProps.options.setDateTimeToEndOf) {
-        modifiedDatePerOptions = modifiedDatePerOptions.endOf(
-          nextProps.options.setDateTimeToEndOf
-        );
+      if ((nextProps.options.minDate && 
+        new Date(nextState.selectedDate) < new Date(nextProps.options.minDate))
+      || (nextProps.options.maxDate && 
+        new Date(nextProps.options.maxDate) < new Date(nextState.selectedDate)))
+      {
+        result = false;        
+        nextProps.onChange(undefined);
       }
-      nextProps.onChange(modifiedDatePerOptions.toJSON());
+      else {
+        let utcDate = moment(nextState.selectedDate);
+        let modifiedDatePerOptions;
+        nextProps.options.renderDateTimePickerAsDatePicker ? 
+          modifiedDatePerOptions = utcDate.startOf("day") : 
+          modifiedDatePerOptions = utcDate.startOf("minute");
+        if (nextProps.options.setDateTimeToEndOf) {
+          modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+            nextProps.options.setDateTimeToEndOf
+          );
+        }
+        nextProps.onChange(modifiedDatePerOptions.toJSON());
+      }
     }
     if (nextState.selectedDate === undefined) {
       result = true;
@@ -49,9 +63,7 @@ class DateTimeWidget extends React.Component {
     if (options.formatPattern === undefined
       || options.formatPattern === null
       || options.formatPattern === '') {   
-      options.renderDateTimePickerAsDatePicker 
-        ? options.formatPattern = "YYYY-MM-DD"
-        : options.formatPattern = "YYYY-MM-DD HH:mm";
+      options.formatPattern = options.renderDateTimePickerAsDatePicker ? "YYYY-MM-DD" : "YYYY-MM-DD HH:mm";
     }
     return (
       <MuiPickersUtilsProvider

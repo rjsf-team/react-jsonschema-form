@@ -13,17 +13,31 @@ class DateWidget extends React.Component {
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
-    let result = moment(nextState.selectedDate, nextProps.options.formatPattern, true).isValid();
+    let formatPattern = nextProps.options.formatPattern;
+    if (formatPattern === undefined || formatPattern === null || formatPattern === '') {   
+      formatPattern = "YYYY-MM-DD";
+    }
+    let result = moment(nextState.selectedDate, formatPattern, true).isValid();
     if (!result) {nextProps.onChange(undefined);}
     else {
-      let utcDate = moment(nextState.selectedDate);
-      var modifiedDatePerOptions = utcDate.startOf("day");
-      if (nextProps.options.setDateTimeToEndOf) {
-        modifiedDatePerOptions = modifiedDatePerOptions.endOf(
-          nextProps.options.setDateTimeToEndOf
-        );
+      if ((nextProps.options.minDate && 
+        new Date(nextState.selectedDate) < new Date(nextProps.options.minDate))
+      || (nextProps.options.maxDate && 
+        new Date(nextProps.options.maxDate) < new Date(nextState.selectedDate)))
+      {
+        result = false;        
+        nextProps.onChange(undefined);
       }
-      nextProps.onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
+      else {
+        let utcDate = moment(nextState.selectedDate);
+        var modifiedDatePerOptions = utcDate.startOf("day");
+        if (nextProps.options.setDateTimeToEndOf) {
+          modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+            nextProps.options.setDateTimeToEndOf
+          );
+        }
+        nextProps.onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
+      }
     }
     if (nextState.selectedDate === undefined) {
       result = true;
