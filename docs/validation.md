@@ -47,6 +47,30 @@ render((
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
 
+### Custom string formats
+
+[Pre-defined semantic formats](https://json-schema.org/latest/json-schema-validation.html#rfc.section.7) are limited. react-jsonschema-form adds two formats, `color` and `data-url`, to support certain [alternative widgets](form-customization.md#alternative-widgets). You can add formats of your own through the `customFormats` prop to your `Form` component:
+
+```jsx
+const schema = {
+  phoneNumber: {
+    type: 'string',
+    format: 'format-us'
+  }
+};
+
+const customFormats = {
+  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
+};
+
+render((
+  <Form schema={schema} 
+        customFormats={customFormats}/>
+), document.getElementById("app"));
+```
+
+Format values can be anything AJV’s [`addFormat` method](https://github.com/epoberezkin/ajv#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
+
 ### Custom schema validation
 
 To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has a `$schema` attribute that enables the validator to use the correct meta schema. For example:

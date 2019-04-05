@@ -3,6 +3,7 @@ import Ajv from "ajv";
 let ajv = createAjvInstance();
 import { deepEquals } from "./utils";
 
+let formerCustomFormats = null;
 let formerMetaSchema = null;
 
 import { isObject, mergeObjects } from "./utils";
@@ -167,17 +168,33 @@ export default function validateFormData(
   schema,
   customValidate,
   transformErrors,
-  additionalMetaSchemas = []
+  additionalMetaSchemas = [],
+  customFormats = {}
 ) {
+  const newMetaSchemas = !deepEquals(formerMetaSchema, additionalMetaSchemas);
+  const newFormats = !deepEquals(formerCustomFormats, customFormats);
+
+  if (newMetaSchemas || newFormats) {
+    ajv = createAjvInstance();
+  }
+
   // add more schemas to validate against
   if (
     additionalMetaSchemas &&
-    !deepEquals(formerMetaSchema, additionalMetaSchemas) &&
+    newMetaSchemas &&
     Array.isArray(additionalMetaSchemas)
   ) {
-    ajv = createAjvInstance();
     ajv.addMetaSchema(additionalMetaSchemas);
     formerMetaSchema = additionalMetaSchemas;
+  }
+
+  // add more custom formats to validate against
+  if (customFormats && newFormats && isObject(customFormats)) {
+    Object.keys(customFormats).forEach(formatName => {
+      ajv.addFormat(formatName, customFormats[formatName]);
+    });
+
+    formerCustomFormats = customFormats;
   }
 
   let validationError = null;
@@ -198,7 +215,13 @@ export default function validateFormData(
     typeof validationError.message === "string" &&
     validationError.message.includes("no schema with key or ref ");
 
-  if (noProperMetaSchema) {
+  const unknownFormat =
+    validationError &&
+    validationError.message &&
+    typeof validationError.message === "string" &&
+    validationError.message.includes("unknown format");
+
+  if (noProperMetaSchema || unknownFormat) {
     errors = [
       ...errors,
       {
@@ -212,7 +235,7 @@ export default function validateFormData(
 
   let errorSchema = toErrorSchema(errors);
 
-  if (noProperMetaSchema) {
+  if (noProperMetaSchema || unknownFormat) {
     errorSchema = {
       ...errorSchema,
       ...{
