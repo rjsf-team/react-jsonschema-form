@@ -13,7 +13,11 @@ class DateWidget extends React.Component {
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
-    let result = moment(nextState.selectedDate, nextProps.options.formatPattern, true).isValid();
+    let formatPattern = nextProps.options.formatPattern;
+    if (formatPattern === undefined || formatPattern === null || formatPattern === '') {   
+      formatPattern = "YYYY-MM-DD";
+    }
+    let result = moment(nextState.selectedDate, formatPattern, true).isValid();
     if (!result) {nextProps.onChange(undefined);}
     else {
       if ((nextProps.options.minDate && 
