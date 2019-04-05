@@ -21,9 +21,9 @@ class DateTimeWidget extends React.Component {
     if (!result) {nextProps.onChange(undefined);}
     else {
       if ((nextProps.options.minDate && 
-        new Date(nextState.selectedDate) - new Date(nextProps.options.minDate) < 0)
+        new Date(nextState.selectedDate) < new Date(nextProps.options.minDate))
       || (nextProps.options.maxDate && 
-        new Date(nextProps.options.maxDate) - new Date(nextState.selectedDate) < 0))
+        new Date(nextProps.options.maxDate) < new Date(nextState.selectedDate)))
       {
         result = false;        
         nextProps.onChange(undefined);
