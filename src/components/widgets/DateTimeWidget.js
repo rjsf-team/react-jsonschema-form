@@ -17,7 +17,13 @@ class DateTimeWidget extends React.Component {
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
-    let result = moment(nextState.selectedDate, nextProps.options.formatPattern, true).isValid();
+    let formatPattern = nextProps.options.formatPattern;
+    if (formatPattern === undefined || formatPattern === null || formatPattern === '') {   
+      nextProps.options.renderDateTimePickerAsDatePicker 
+        ? formatPattern = "YYYY-MM-DD"
+        : formatPattern = "YYYY-MM-DD HH:mm";
+    }
+    let result = moment(nextState.selectedDate, formatPattern, true).isValid();
     if (!result) {nextProps.onChange(undefined);}
     else {
       if ((nextProps.options.minDate && 
