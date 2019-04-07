@@ -8,6 +8,7 @@ nav:
   - Definitions: definitions.md
   - Dependencies: dependencies.md
   - Form Customization: form-customization.md
+  - Customizing with other frameworks: theme-customization.md
   - Validation: validation.md
   - Playground: https://mozilla-services.github.io/react-jsonschema-form/
 
