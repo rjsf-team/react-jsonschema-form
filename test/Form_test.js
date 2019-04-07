@@ -1979,6 +1979,53 @@ describe("Form", () => {
     });
   });
 
+  describe("Custom format updates", () => {
+    it("Should update custom formats when customFormats is changed", () => {
+      const formProps = {
+        liveValidate: true,
+        formData: {
+          areaCode: 123,
+        },
+        schema: {
+          type: "object",
+          properties: {
+            areaCode: {
+              type: "number",
+              format: "area-code",
+            },
+          },
+        },
+        uiSchema: {
+          areaCode: {
+            "ui:widget": "area-code",
+          },
+        },
+        widgets: {
+          "area-code": () => <div id="custom" />,
+        },
+      };
+
+      const { comp } = createFormComponent(formProps);
+
+      expect(comp.state.errorSchema).eql({
+        $schema: {
+          __errors: [
+            'unknown format "area-code" is used in schema at path "#/properties/areaCode"',
+          ],
+        },
+      });
+
+      setProps(comp, {
+        ...formProps,
+        customFormats: {
+          "area-code": /\d{3}/,
+        },
+      });
+
+      expect(comp.state.errorSchema).eql({});
+    });
+  });
+
   describe("Meta schema updates", () => {
     it("Should update allowed meta schemas when additionalMetaSchemas is changed", () => {
       const formProps = {
