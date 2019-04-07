@@ -1,31 +1,30 @@
 ## Customizing with other frameworks
 
 ### withTheme Higher-Order Component
-`withTheme` component provides easy way to change appearence of form, widgets, templates and fields by using theme object. This object is passed as the only parameter like so: `withTheme(ThemeObj)` and it returns component which you use instead of standard `Form` component.
+`withTheme` component provides a way to extend the functionality of react-jsonschema-form by passing in a theme object, which contains an easy way to change the appearance of the form, widgets, templates and fields by passing in theme object. This object is passed as the only parameter like so: `withTheme(ThemeObj)` and it returns component which you use instead of standard `Form` component.
 
 ### Usage
 
 ```jsx
-import React, { Component } from 'react'
-import { withTheme } from 'react-jsonschema-form'
-import Bootstrap4Theme from 'react-jsonschema-form-theme-bs4'
+import React, { Component } from 'react';
+import { withTheme } from 'react-jsonschema-form';
+import Bootstrap4Theme from 'react-jsonschema-form-theme-bs4';
 
+const ThemedForm = withTheme(Bootstrap4Theme); 
 class Demo extends Component {
     render() {
-        const ThemedForm = withTheme(Bootstrap4Theme); 
-        return <ThemedForm schema={schemaObj} uiSchema={uiSchemaObj}/>
+        return <ThemedForm schema={{...}} uiSchema={{...}} />
     }
 }
 ```
-*(you have to provide schemaObj and uiSchemaObj, these are excluded from example usage in favor of simplicity)*
 
 ### Theme object
-Theme object consists of **widgets**, **templates**, **fields** and **form**, none of them is required, atleast one should be provided though.
+The Theme object consists of the properties **widgets**, **templates**, **fields** and **form**. The form merges each prop's value with the default value for it; for example, providing a single widget in **widgets** will merge it with  If one of these properties is not specified, the form reverts to the default None are required, although at least one should be provided though.
 
 #### widgets and fields 
-**widgets** and **fields** should be in exact format as show in [here](/advanced-customization/#custom-widgets-and-fields).
+**widgets** and **fields** should be in the same format as shown [here](/advanced-customization/#custom-widgets-and-fields).
 
-example theme with custom widget:
+Example theme with custom widget:
 ```jsx
 const MyCustomWidget = (props) => {
   return (
@@ -44,10 +43,11 @@ const myWidgets = {
 const ThemeObject = {widgets: myWidgets};
 export default ThemeObject;
 ```
-similarly for **fields**
+
+The above can similarly be done for **fields**.
 
 #### templates
-**templates** should be object containing template objects which gets spread (using spread operator, like so `<Form {...theme.templates} />`). In [here](/advanced-customization/#array-field-template) and [here](/advanced-customization/#error-list-template) are two examples of custom templates, below is example how to use these two custom templates in theme object:
+**templates** should be an object containing template objects which gets spread (using spread operator, like so `<Form {...theme.templates} />`). In [here](/advanced-customization/#array-field-template) and [here](/advanced-customization/#error-list-template) are two examples of custom templates, below is example how to use these two custom templates in theme object:
 ```jsx
 function MyArrayFieldTemplate(props) {
   return (
