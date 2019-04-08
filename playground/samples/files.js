@@ -25,7 +25,7 @@ module.exports = {
   },
   uiSchema: {
     filesAccept: {
-      "ui:accept": ".pdf",
+      "ui:options": { accept: ".pdf" },
     },
   },
   formData: {},
