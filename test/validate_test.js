@@ -3,10 +3,40 @@ import { expect } from "chai";
 import sinon from "sinon";
 import { Simulate } from "react-addons-test-utils";
 
-import validateFormData, { toErrorList } from "../src/validate";
+import validateFormData, { isValid, toErrorList } from "../src/validate";
 import { createFormComponent } from "./test_utils";
 
 describe("Validation", () => {
+  describe("validate.isValid()", () => {
+    it("should return true if the data is valid against the schema", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+
+      expect(isValid(schema, { foo: "bar" })).to.be.true;
+    });
+
+    it("should return false if the data is not valid against the schema", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+
+      expect(isValid(schema, { foo: 12345 })).to.be.false;
+    });
+
+    it("should return false if the schema is invalid", () => {
+      const schema = "foobarbaz";
+
+      expect(isValid(schema, { foo: "bar" })).to.be.false;
+    });
+  });
+
   describe("validate.validateFormData()", () => {
     describe("No custom validate function", () => {
       const illFormedKey = "bar.'\"[]()=+*&^%$#@!";
@@ -43,6 +73,159 @@ describe("Validation", () => {
       });
     });
 
+    describe("Validating multipleOf with a float", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          price: {
+            title: "Price per task ($)",
+            type: "number",
+            multipleOf: 0.01,
+            minimum: 0,
+          },
+        },
+      };
+
+      let errors;
+
+      beforeEach(() => {
+        const result = validateFormData({ price: 0.14 }, schema);
+        errors = result.errors;
+      });
+
+      it("should not return an error", () => {
+        expect(errors).to.have.length.of(0);
+      });
+    });
+
+    describe("validating using custom meta schema", () => {
+      const schema = {
+        $ref: "#/definitions/Dataset",
+        $schema: "http://json-schema.org/draft-04/schema#",
+        definitions: {
+          Dataset: {
+            properties: {
+              datasetId: {
+                pattern: "\\d+",
+                type: "string",
+              },
+            },
+            required: ["datasetId"],
+            type: "object",
+          },
+        },
+      };
+      const metaSchemaDraft4 = require("ajv/lib/refs/json-schema-draft-04.json");
+      const metaSchemaDraft6 = require("ajv/lib/refs/json-schema-draft-06.json");
+
+      it("should return a validation error about meta schema when meta schema is not defined", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema
+        );
+        const errMessage =
+          'no schema with key or ref "http://json-schema.org/draft-04/schema#"';
+        expect(errors.errors[0].stack).to.equal(errMessage);
+        expect(errors.errors).to.eql([
+          {
+            stack: errMessage,
+          },
+        ]);
+        expect(errors.errorSchema).to.eql({
+          $schema: { __errors: [errMessage] },
+        });
+      });
+      it("should return a validation error about formData", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema,
+          null,
+          null,
+          [metaSchemaDraft4]
+        );
+        expect(errors.errors).to.have.lengthOf(1);
+        expect(errors.errors[0].stack).to.equal(
+          '.datasetId should match pattern "\\d+"'
+        );
+      });
+      it("should return a validation error about formData, when used with multiple meta schemas", () => {
+        const errors = validateFormData(
+          { datasetId: "some kind of text" },
+          schema,
+          null,
+          null,
+          [metaSchemaDraft4, metaSchemaDraft6]
+        );
+        expect(errors.errors).to.have.lengthOf(1);
+        expect(errors.errors[0].stack).to.equal(
+          '.datasetId should match pattern "\\d+"'
+        );
+      });
+    });
+
+    describe("validating using custom string formats", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          phone: {
+            type: "string",
+            format: "phone-us",
+          },
+        },
+      };
+
+      it("should return a validation error if unknown string format is used", () => {
+        const result = validateFormData({ phone: "800.555.2368" }, schema);
+        const errMessage =
+          'unknown format "phone-us" is used in schema at path "#/properties/phone"';
+
+        expect(result.errors[0].stack).include(errMessage);
+        expect(result.errorSchema).to.eql({
+          $schema: { __errors: [errMessage] },
+        });
+      });
+
+      it("should return a validation error about formData", () => {
+        const result = validateFormData(
+          { phone: "800.555.2368" },
+          schema,
+          null,
+          null,
+          null,
+          { "phone-us": /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/ }
+        );
+
+        expect(result.errors).to.have.lengthOf(1);
+        expect(result.errors[0].stack).to.equal(
+          '.phone should match format "phone-us"'
+        );
+      });
+
+      it("prop updates with new custom formats are accepted", () => {
+        const result = validateFormData(
+          { phone: "abc" },
+          {
+            type: "object",
+            properties: {
+              phone: {
+                type: "string",
+                format: "area-code",
+              },
+            },
+          },
+          null,
+          null,
+          null,
+          { "area-code": /\d{3}/ }
+        );
+
+        expect(result.errors).to.have.lengthOf(1);
+        expect(result.errors[0].stack).to.equal(
+          '.phone should match format "area-code"'
+        );
+      });
+    });
+
     describe("Custom validate function", () => {
       let errors, errorSchema;
 
@@ -76,6 +259,32 @@ describe("Validation", () => {
       it("should return an errorSchema", () => {
         expect(errorSchema.pass2.__errors).to.have.length.of(1);
         expect(errorSchema.pass2.__errors[0]).eql("passwords don't match.");
+      });
+    });
+
+    describe("Data-Url validation", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          dataUrlWithName: { type: "string", format: "data-url" },
+          dataUrlWithoutName: { type: "string", format: "data-url" },
+        },
+      };
+
+      it("Data-Url with name is accepted", () => {
+        const formData = {
+          dataUrlWithName: "data:text/plain;name=file1.txt;base64,x=",
+        };
+        const result = validateFormData(formData, schema);
+        expect(result.errors).to.have.length.of(0);
+      });
+
+      it("Data-Url without name is accepted", () => {
+        const formData = {
+          dataUrlWithoutName: "data:text/plain;base64,x=",
+        };
+        const result = validateFormData(formData, schema);
+        expect(result.errors).to.have.length.of(0);
       });
     });
 
@@ -158,6 +367,7 @@ describe("Validation", () => {
         expect(errors).to.have.length.of(1);
         expect(errors[0].name).eql("type");
         expect(errors[0].property).eql(".properties['foo'].required");
+        expect(errors[0].schemaPath).eql("#/definitions/stringArray/type"); // TODO: This schema path is wrong due to a bug in ajv; change this test when https://github.com/epoberezkin/ajv/issues/512 is fixed.
         expect(errors[0].message).eql("should be array");
       });
 
@@ -264,6 +474,9 @@ describe("Validation", () => {
 
         it("should validate a minLength field", () => {
           expect(comp.state.errors).to.have.length.of(1);
+          expect(comp.state.errors[0].schemaPath).eql(
+            "#/properties/foo/minLength"
+          );
           expect(comp.state.errors[0].message).eql(
             "should NOT be shorter than 10 characters"
           );
@@ -592,6 +805,58 @@ describe("Validation", () => {
         expect(node.querySelectorAll(".UiSchema")).to.have.length.of(1);
         expect(node.querySelector(".UiSchema").textContent).eql("bar");
         expect(node.querySelectorAll(".foo")).to.have.length.of(1);
+      });
+    });
+    describe("Custom meta schema", () => {
+      let onSubmit;
+      let onError;
+      let comp, node;
+      const formData = {
+        datasetId: "no err",
+      };
+
+      const schema = {
+        $ref: "#/definitions/Dataset",
+        $schema: "http://json-schema.org/draft-04/schema#",
+        definitions: {
+          Dataset: {
+            properties: {
+              datasetId: {
+                pattern: "\\d+",
+                type: "string",
+              },
+            },
+            required: ["datasetId"],
+            type: "object",
+          },
+        },
+      };
+
+      beforeEach(() => {
+        onSubmit = sandbox.spy();
+        onError = sandbox.spy();
+        const withMetaSchema = createFormComponent({
+          schema,
+          formData,
+          liveValidate: true,
+          additionalMetaSchemas: [
+            require("ajv/lib/refs/json-schema-draft-04.json"),
+          ],
+          onSubmit,
+          onError,
+        });
+        comp = withMetaSchema.comp;
+        node = withMetaSchema.node;
+      });
+      it("should be used to validate schema", () => {
+        expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+        expect(comp.state.errors).to.have.lengthOf(1);
+        expect(comp.state.errors[0].message).eql(`should match pattern "\\d+"`);
+        Simulate.change(node.querySelector("input"), {
+          target: { value: "1234" },
+        });
+        expect(node.querySelectorAll(".errors li")).to.have.length.of(0);
+        expect(comp.state.errors).to.have.lengthOf(0);
       });
     });
   });

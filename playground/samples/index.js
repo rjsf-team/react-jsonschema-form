@@ -1,4 +1,6 @@
 import arrays from "./arrays";
+import anyOf from "./anyOf";
+import oneOf from "./oneOf";
 import nested from "./nested";
 import numbers from "./numbers";
 import simple from "./simple";
@@ -17,6 +19,8 @@ import customObject from "./customObject";
 import alternatives from "./alternatives";
 import propertyDependencies from "./propertyDependencies";
 import schemaDependencies from "./schemaDependencies";
+import additionalProperties from "./additionalProperties";
+import nullable from "./nullable";
 
 export const samples = {
   Simple: simple,
@@ -38,4 +42,8 @@ export const samples = {
   Alternatives: alternatives,
   "Property dependencies": propertyDependencies,
   "Schema dependencies": schemaDependencies,
+  "Additional Properties": additionalProperties,
+  "Any Of": anyOf,
+  "One Of": oneOf,
+  Nullable: nullable,
 };

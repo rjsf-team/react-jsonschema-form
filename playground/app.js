@@ -21,7 +21,13 @@ import "codemirror/theme/eclipse.css";
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
 const toJson = val => JSON.stringify(val, null, 2);
-const liveValidateSchema = { type: "boolean", title: "Live validation" };
+const liveSettingsSchema = {
+  type: "object",
+  properties: {
+    validate: { type: "boolean", title: "Live validation" },
+    disable: { type: "boolean", title: "Disable whole form" },
+  },
+};
 const cmOptions = {
   theme: "default",
   height: "auto",
@@ -323,7 +329,10 @@ class App extends Component {
       validate,
       editor: "default",
       theme: "default",
-      liveValidate: true,
+      liveSettings: {
+        validate: true,
+        disable: false,
+      },
       shareURL: null,
     };
   }
@@ -348,6 +357,9 @@ class App extends Component {
   load = data => {
     // Reset the ArrayFieldTemplate whenever you load new data
     const { ArrayFieldTemplate, ObjectFieldTemplate } = data;
+    // uiSchema is missing on some examples. Provide a default to
+    // clear the field in all cases.
+    const { uiSchema = {} } = data;
     // force resetting form component instance
     this.setState({ form: false }, _ =>
       this.setState({
@@ -355,6 +367,7 @@ class App extends Component {
         form: true,
         ArrayFieldTemplate,
         ObjectFieldTemplate,
+        uiSchema,
       })
     );
   };
@@ -373,7 +386,7 @@ class App extends Component {
     });
   };
 
-  setLiveValidate = ({ formData }) => this.setState({ liveValidate: formData });
+  setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
   onFormDataChange = ({ formData }) =>
     this.setState({ formData, shareURL: null });
@@ -396,7 +409,7 @@ class App extends Component {
       schema,
       uiSchema,
       formData,
-      liveValidate,
+      liveSettings,
       validate,
       theme,
       editor,
@@ -415,9 +428,9 @@ class App extends Component {
             </div>
             <div className="col-sm-2">
               <Form
-                schema={liveValidateSchema}
-                formData={liveValidate}
-                onChange={this.setLiveValidate}>
+                schema={liveSettingsSchema}
+                formData={liveSettings}
+                onChange={this.setLiveSettings}>
                 <div />
               </Form>
             </div>
@@ -457,14 +470,16 @@ class App extends Component {
             <Form
               ArrayFieldTemplate={ArrayFieldTemplate}
               ObjectFieldTemplate={ObjectFieldTemplate}
-              liveValidate={liveValidate}
+              liveValidate={liveSettings.validate}
+              disabled={liveSettings.disable}
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
               onChange={this.onFormDataChange}
-              onSubmit={({ formData }) =>
-                console.log("submitted formData", formData)
-              }
+              onSubmit={({ formData }, e) => {
+                console.log("submitted formData", formData);
+                console.log("submit event", e);
+              }}
               fields={{ geo: GeoPosition }}
               validate={validate}
               onBlur={(id, value) =>
