@@ -9,41 +9,41 @@ class DateWidget extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: this.props.value
+      selectedDate: this.props.value,
     };
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    let formatPattern = nextProps.options.formatPattern;
-    if (formatPattern === undefined || formatPattern === null || formatPattern === '') {   
-      formatPattern = "YYYY-MM-DD";
-    }
-    let result = moment(nextState.selectedDate, formatPattern, true).isValid();
-    if (!result) {nextProps.onChange(undefined);}
-    else {
-      if ((nextProps.options.minDate && 
-        new Date(nextState.selectedDate) < new Date(nextProps.options.minDate))
-      || (nextProps.options.maxDate && 
-        new Date(nextProps.options.maxDate) < new Date(nextState.selectedDate)))
-      {
-        result = false;        
-        nextProps.onChange(undefined);
-      }
-      else {
-        let utcDate = moment(nextState.selectedDate);
-        var modifiedDatePerOptions = utcDate.startOf("day");
-        if (nextProps.options.setDateTimeToEndOf) {
-          modifiedDatePerOptions = modifiedDatePerOptions.endOf(
-            nextProps.options.setDateTimeToEndOf
-          );
-        }
-        nextProps.onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
-      }
-    }
-    if (nextState.selectedDate === undefined) {
-      result = true;
-    }
-    return result;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   let formatPattern = nextProps.options.formatPattern;
+  //   if (formatPattern === undefined || formatPattern === null || formatPattern === '') {
+  //     formatPattern = "YYYY-MM-DD";
+  //   }
+  //   let result = moment(nextState.selectedDate, formatPattern, true).isValid();
+  //   if (!result) {nextProps.onChange(undefined);}
+  //   else {
+  //     if ((nextProps.options.minDate &&
+  //       new Date(nextState.selectedDate) < new Date(nextProps.options.minDate))
+  //     || (nextProps.options.maxDate &&
+  //       new Date(nextProps.options.maxDate) < new Date(nextState.selectedDate)))
+  //     {
+  //       result = false;
+  //       nextProps.onChange(undefined);
+  //     }
+  //     else {
+  //       let utcDate = moment(nextState.selectedDate);
+  //       var modifiedDatePerOptions = utcDate.startOf("day");
+  //       if (nextProps.options.setDateTimeToEndOf) {
+  //         modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+  //           nextProps.options.setDateTimeToEndOf
+  //         );
+  //       }
+  //       nextProps.onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
+  //     }
+  //   }
+  //   if (nextState.selectedDate === undefined) {
+  //     result = true;
+  //   }
+  //   return result;
+  // }
   render() {
     const { options, onChange } = this.props;
     let { selectedDate } = this.state;
@@ -53,9 +53,11 @@ class DateWidget extends React.Component {
     const maxDate = options.maxDate
       ? moment(options.maxDate)
       : moment().add(100, "years");
-if (options.formatPattern === undefined
-      || options.formatPattern === null
-      || options.formatPattern === '') {   
+    if (
+      options.formatPattern === undefined ||
+      options.formatPattern === null ||
+      options.formatPattern === ""
+    ) {
       options.formatPattern = "YYYY-MM-DD";
     }
     return (
@@ -100,7 +102,7 @@ if (options.formatPattern === undefined
 }
 if (process.env.NODE_ENV !== "production") {
   DateWidget.propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string,
   };
 }
 
