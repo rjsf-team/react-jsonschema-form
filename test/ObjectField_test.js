@@ -209,7 +209,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > div > label"),
+        node.querySelectorAll(".field > label"),
         l => l.textContent
       );
 
@@ -224,14 +224,14 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > div> label"),
+        node.querySelectorAll(".field > label"),
         l => l.textContent
       );
 
       expect(labels).eql(["baz", "bar", "qux", "foo"]);
     });
 
-    it("should throw when order list contains an extraneous property", () => {
+    it("should use provided order also if order list contains extraneous properties", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
@@ -239,9 +239,12 @@ describe("ObjectField", () => {
         },
       });
 
-      expect(node.querySelector(".config-error").textContent).to.match(
-        /contains extraneous properties 'wut\?', 'huh\?'/
+      const labels = [].map.call(
+        node.querySelectorAll(".field > label"),
+        l => l.textContent
       );
+
+      expect(labels).eql(["baz", "qux", "bar", "foo"]);
     });
 
     it("should throw when order list misses an existing property", () => {
@@ -289,7 +292,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > div > label"),
+        node.querySelectorAll(".field > label"),
         l => l.textContent
       );
 
@@ -322,7 +325,7 @@ describe("ObjectField", () => {
         },
       });
       const labels = [].map.call(
-        node.querySelectorAll(".field > div > div > label"),
+        node.querySelectorAll(".field > label"),
         l => l.textContent
       );
 
@@ -720,13 +723,18 @@ describe("ObjectField", () => {
       });
 
       expect(
-        node.querySelector(".form-group > .row > .col-xs-2 .btn-danger")
+        node.querySelector(
+          ".form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger"
+        )
       ).eql(null);
 
       Simulate.click(node.querySelector(".object-property-expand button"));
 
-      expect(node.querySelector(".form-group > .row > .col-xs-2 > .btn-danger"))
-        .to.not.be.null;
+      expect(
+        node.querySelector(
+          ".form-group > .row > .form-additional + .col-xs-2 > .btn-danger"
+        )
+      ).to.not.be.null;
     });
 
     it("delete button should delete key-value pair", () => {
@@ -736,7 +744,9 @@ describe("ObjectField", () => {
       });
       expect(node.querySelector("#root_first-key").value).to.eql("first");
       Simulate.click(
-        node.querySelector(".form-group > .row > .col-xs-2 > .btn-danger")
+        node.querySelector(
+          ".form-group > .row > .form-additional + .col-xs-2 > .btn-danger"
+        )
       );
       expect(node.querySelector("#root_first-key")).to.not.exist;
     });
@@ -746,7 +756,8 @@ describe("ObjectField", () => {
         schema,
         formData: { first: 1, second: 2, third: 3 },
       });
-      const selector = ".form-group > .row > .col-xs-2 > .btn-danger";
+      const selector =
+        ".form-group > .row > .form-additional + .col-xs-2 > .btn-danger";
       expect(node.querySelectorAll(selector).length).to.eql(3);
       Simulate.click(node.querySelectorAll(selector)[1]);
       expect(node.querySelector("#root_second-key")).to.not.exist;

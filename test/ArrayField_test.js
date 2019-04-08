@@ -24,8 +24,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({ schema: { type: "array" } });
 
       expect(
-        node.querySelector(".field-array > div > div > .unsupported-field")
-          .textContent
+        node.querySelector(".field-array > .unsupported-field").textContent
       ).to.contain("Missing items definition");
     });
   });
@@ -132,7 +131,7 @@ describe("ArrayField", () => {
       const matches = node.querySelectorAll("#custom");
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.eql(
-        "should NOT have less than 2 items"
+        "should NOT have fewer than 2 items"
       );
     });
 
@@ -759,7 +758,7 @@ describe("ArrayField", () => {
         const matches = node.querySelectorAll("#custom");
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.eql(
-          "should NOT have duplicate items (items ## 0 and 1 are identical)"
+          "should NOT have duplicate items (items ## 1 and 0 are identical)"
         );
       });
     });
@@ -860,7 +859,7 @@ describe("ArrayField", () => {
         const matches = node.querySelectorAll("#custom");
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.eql(
-          "should NOT have less than 3 items"
+          "should NOT have fewer than 3 items"
         );
       });
     });
@@ -967,7 +966,7 @@ describe("ArrayField", () => {
       const matches = node.querySelectorAll("#custom");
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.eql(
-        "should NOT have less than 5 items"
+        "should NOT have fewer than 5 items"
       );
     });
   });
@@ -1040,10 +1039,10 @@ describe("ArrayField", () => {
       const matches = node.querySelectorAll("#custom-error");
       expect(matches).to.have.length.of(2);
       expect(matches[0].textContent).to.eql(
-        "should NOT have less than 3 items"
+        "should NOT have fewer than 3 items"
       );
       expect(matches[1].textContent).to.eql(
-        "should NOT have less than 2 items"
+        "should NOT have fewer than 2 items"
       );
     });
   });
@@ -1102,7 +1101,7 @@ describe("ArrayField", () => {
         "fieldset .field-string input[type=text]"
       );
       const numInput = node.querySelector(
-        "fieldset .field-number input[type=text]"
+        "fieldset .field-number input[type=number]"
       );
       expect(strInput.id).eql("root_0");
       expect(numInput.id).eql("root_1");
@@ -1114,7 +1113,7 @@ describe("ArrayField", () => {
         "fieldset .field-string input[type=text]"
       );
       const numInput = node.querySelector(
-        "fieldset .field-number input[type=text]"
+        "fieldset .field-number input[type=number]"
       );
       expect(strInput.required).eql(true);
       expect(numInput.required).eql(true);
@@ -1129,7 +1128,7 @@ describe("ArrayField", () => {
         "fieldset .field-string input[type=text]"
       );
       const numInput = node.querySelector(
-        "fieldset .field-number input[type=text]"
+        "fieldset .field-number input[type=number]"
       );
       expect(strInput.value).eql("foo");
       expect(numInput.value).eql("42");
@@ -1141,7 +1140,7 @@ describe("ArrayField", () => {
         "fieldset .field-string input[type=text]"
       );
       const numInput = node.querySelector(
-        "fieldset .field-number input[type=text]"
+        "fieldset .field-number input[type=number]"
       );
 
       Simulate.change(strInput, { target: { value: "bar" } });

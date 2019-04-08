@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-import { guessType } from "../../utils";
+import { getUiOptions, getWidget, guessType } from "../../utils";
 import { isValid } from "../../validate";
 
 class AnyOfField extends Component {
@@ -69,6 +69,10 @@ class AnyOfField extends Component {
           augmentedSchema = Object.assign({}, option, requiresAnyOf);
         }
 
+        // Remove the "required" field as it's likely that not all fields have
+        // been filled in yet, which will mean that the schema is not valid
+        delete augmentedSchema.required;
+
         if (isValid(augmentedSchema, formData)) {
           return i;
         }
@@ -81,11 +85,18 @@ class AnyOfField extends Component {
     return 0;
   }
 
-  onOptionChange = event => {
-    const selectedOption = parseInt(event.target.value, 10);
+  onOptionChange = option => {
+    const selectedOption = parseInt(option, 10);
     const { formData, onChange, options } = this.props;
 
-    if (guessType(formData) === "object") {
+    const newOption = options[selectedOption];
+
+    // If the new option is of type object and the current data is an object,
+    // discard properties added using the old option.
+    if (
+      guessType(formData) === "object" &&
+      (newOption.type === "object" || newOption.properties)
+    ) {
       const newFormData = Object.assign({}, formData);
 
       const optionsToDiscard = options.slice();
@@ -108,7 +119,7 @@ class AnyOfField extends Component {
     }
 
     this.setState({
-      selectedOption: parseInt(event.target.value, 10),
+      selectedOption: parseInt(option, 10),
     });
   };
 
@@ -130,7 +141,10 @@ class AnyOfField extends Component {
     } = this.props;
 
     const _SchemaField = registry.fields.SchemaField;
+    const { widgets } = registry;
     const { selectedOption } = this.state;
+    const { widget = "select", ...uiOptions } = getUiOptions(uiSchema);
+    const Widget = getWidget({ type: "number" }, widget, widgets);
 
     const option = options[selectedOption] || null;
     let optionSchema;
@@ -143,22 +157,24 @@ class AnyOfField extends Component {
         : Object.assign({}, option, { type: baseType });
     }
 
+    const enumOptions = options.map((option, index) => ({
+      label: option.title || `Option ${index + 1}`,
+      value: index,
+    }));
+
     return (
       <div className="panel panel-default panel-body">
         <div className="form-group">
-          <select
-            className="form-control"
+          <Widget
+            id={`${idSchema.$id}_anyof_select`}
+            schema={{ type: "number", default: 0 }}
             onChange={this.onOptionChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
             value={selectedOption}
-            id={`${idSchema.$id}_anyof_select`}>
-            {options.map((option, index) => {
-              return (
-                <option key={index} value={index}>
-                  {option.title || `Option ${index + 1}`}
-                </option>
-              );
-            })}
-          </select>
+            options={{ enumOptions }}
+            {...uiOptions}
+          />
         </div>
 
         {option !== null && (
