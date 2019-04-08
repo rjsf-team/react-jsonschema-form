@@ -55,7 +55,7 @@ render((
 const schema = {
   phoneNumber: {
     type: 'string',
-    format: 'format-us'
+    format: 'phone-us'
   }
 };
 
