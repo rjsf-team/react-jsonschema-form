@@ -290,28 +290,30 @@ export function orderProperties(properties, order) {
       ? `properties '${arr.join("', '")}'`
       : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
-  const orderHash = arrayToHash(order);
+  let orderHash = arrayToHash(order);
   const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
+  let filteredOrder = order;
   if (extraneous.length) {
-    throw new Error(
-      `uiSchema order list contains extraneous ${errorPropList(extraneous)}`
+    filteredOrder = order.filter(
+      prop => !(prop !== "*" && !propertyHash[prop])
     );
+    orderHash = arrayToHash(filteredOrder);
   }
   const rest = properties.filter(prop => !orderHash[prop]);
-  const restIndex = order.indexOf("*");
+  const restIndex = filteredOrder.indexOf("*");
   if (restIndex === -1) {
     if (rest.length) {
       throw new Error(
         `uiSchema order list does not contain ${errorPropList(rest)}`
       );
     }
-    return order;
+    return filteredOrder;
   }
-  if (restIndex !== order.lastIndexOf("*")) {
+  if (restIndex !== filteredOrder.lastIndexOf("*")) {
     throw new Error("uiSchema order list contains more than one wildcard item");
   }
 
-  const complete = [...order];
+  const complete = [...filteredOrder];
   complete.splice(restIndex, 1, ...rest);
   return complete;
 }
