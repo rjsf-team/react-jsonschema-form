@@ -229,7 +229,7 @@ export function getUiOptions(uiSchema) {
 }
 
 export function isObject(thing) {
-  if (thing instanceof File) {
+  if (typeof File !== "undefined" && thing instanceof File) {
     return false;
   }
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
