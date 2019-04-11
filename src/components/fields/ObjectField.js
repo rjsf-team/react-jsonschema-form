@@ -221,15 +221,11 @@ class ObjectField extends Component {
       const properties = Object.keys(schema.properties || {});
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
     } catch (err) {
-      return (
-        <div>
-          <p className="config-error" style={{ color: "red" }}>
-            Invalid {name || "root"} object field configuration:
-            <em>{err.message}</em>.
-          </p>
-          <pre>{JSON.stringify(schema)}</pre>
-        </div>
-      );
+      console.error(`Invalid ${name || "root"} object field configuration`, {
+        err,
+        schema,
+      });
+      return null;
     }
 
     const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
