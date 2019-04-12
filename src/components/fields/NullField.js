@@ -1,5 +1,5 @@
 import { Component } from "react";
-import PropTypes from "prop-types";
+import * as types from "../../types";
 
 class NullField extends Component {
   componentDidMount() {
@@ -14,9 +14,7 @@ class NullField extends Component {
 }
 
 if (process.env.NODE_ENV !== "production") {
-  NullField.propTypes = {
-    onChange: PropTypes.func,
-  };
+  NullField.propTypes = types.fieldProps;
 }
 
 export default NullField;
