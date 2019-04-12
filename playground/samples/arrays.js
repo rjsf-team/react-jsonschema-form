@@ -30,6 +30,30 @@ module.exports = {
         },
         uniqueItems: true,
       },
+      anyOfCheckBox: {
+        type: "integer",
+        title: "dafdafdfa",
+        anyOf: [
+          {
+            type: "integer",
+            title: "one",
+            help: "help needed",
+            enum: ["foo"],
+          },
+          {
+            type: "integer",
+            title: "two",
+            help: "helppppppp",
+            enum: ["bar"],
+          },
+          {
+            type: "integer",
+            title: "three",
+            help: "heeeeeelpx",
+            enum: ["fuzz"],
+          },
+        ],
+      },
       multipleChoicesList: {
         type: "array",
         title: "A multiple choices list",
@@ -144,6 +168,12 @@ module.exports = {
       "ui:options": {
         color: "primary",
       },
+    },
+    anyOfCheckBox: {
+      "ui:widget": "radio",
+      // "ui:help": [{ enum : "foo", label: "foodata"},
+      // { enum : "bar", label: "bardata"}
+      //]
     },
     multipleChoicesList: {
       "ui:widget": "select",
