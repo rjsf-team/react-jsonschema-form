@@ -32,12 +32,12 @@ function DateTimeWidget(props) {
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
-      locale={this.props.selectedLocale}
+      locale={props.selectedLocale}
       moment={moment}>
       <div className="picker">
         {options.renderDateTimePickerAsDatePicker ? (
           <DatePicker
-            {...this.props}
+            {...props}
             {...options}
             format={options.formatPattern}
             minDate={minDate}
@@ -67,7 +67,7 @@ function DateTimeWidget(props) {
           />
         ) : (
           <DateTimePicker
-            {...this.props}
+            {...props}
             {...options}
             format={options.formatPattern}
             minDate={minDate}

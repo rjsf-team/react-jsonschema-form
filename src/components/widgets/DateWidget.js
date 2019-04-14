@@ -23,11 +23,11 @@ function DateWidget(props) {
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
-      locale={this.props.selectedLocale}
+      locale={props.selectedLocale}
       moment={moment}>
       <div className="picker">
         <DatePicker
-          {...this.props}
+          {...props}
           {...options}
           format={options.formatPattern}
           minDate={minDate}
