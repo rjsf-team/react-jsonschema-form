@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { asNumber, guessType } from "../../utils";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
@@ -9,15 +10,15 @@ import Input from "@material-ui/core/Input";
 
 const classes = PropTypes.object.isRequired;
 
-import { asNumber } from "../../utils";
-
 const nums = new Set(["number", "integer"]);
 
 /**
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
  */
-function processValue({ type, items }, value) {
+function processValue(schema, value) {
+  // "enum" is a reserved word, so only "type" and "items" can be destructured
+  const { type, items } = schema;
   if (value === "") {
     return undefined;
   } else if (type === "array" && items && nums.has(items.type)) {
@@ -27,7 +28,29 @@ function processValue({ type, items }, value) {
   } else if (type === "number") {
     return asNumber(value);
   }
+
+  // If type is undefined, but an enum is present, try and infer the type from
+  // the enum values
+  if (schema.enum) {
+    if (schema.enum.every(x => guessType(x) === "number")) {
+      return asNumber(value);
+    } else if (schema.enum.every(x => guessType(x) === "boolean")) {
+      return value === "true";
+    }
+  }
+
   return value;
+}
+
+function getValue(event, multiple) {
+  if (multiple) {
+    return [].slice
+      .call(event.target.options)
+      .filter(o => o.selected)
+      .map(o => o.value);
+  } else {
+    return event.target.value;
+  }
 }
 
 function SelectWidget(props) {
@@ -69,19 +92,22 @@ function SelectWidget(props) {
         onBlur={
           onBlur &&
           (event => {
-            onBlur(id, processValue(schema, event.target.value));
+            const newValue = getValue(event, multiple);
+            onBlur(id, processValue(schema, newValue));
           })
         }
         onFocus={
           onFocus &&
           (event => {
-            onFocus(id, processValue(schema, event.target.value));
+            const newValue = getValue(event, multiple);
+            onFocus(id, processValue(schema, newValue));
           })
         }
         onChange={event => {
-          onChange(processValue(schema, event.target.value));
+          const newValue = getValue(event, multiple);
+          onChange(processValue(schema, newValue));
         }}>
-        {!multiple && !schema.default && (
+        {!multiple && schema.default === undefined && (
           <MenuItem value="">{placeholder ? placeholder : "Select"}</MenuItem>
         )}
         {enumOptions.map(({ value, label }, i) => {

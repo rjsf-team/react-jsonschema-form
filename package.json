@@ -47,7 +47,7 @@
     "@date-io/moment": "^1.1.0",
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
-    "ajv": "^5.2.3",
+    "ajv": "^6.7.0",
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.7",
     "date-fns": "^2.0.0-alpha.25",
@@ -60,6 +60,7 @@
     "react-html-parser": "^2.0.2"
   },
   "devDependencies": {
+    "nyc": "^13.2.0",
     "atob": "^2.0.3",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.26.3",

@@ -12,7 +12,10 @@ function RadioWidget(props) {
     disabled,
     readonly,
     autofocus,
+    onBlur,
+    onFocus,
     onChange,
+    id,
   } = props;
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
@@ -40,8 +43,10 @@ function RadioWidget(props) {
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && i === 0}
               onChange={_ => onChange(option.value)}
+              onBlur={onBlur && (event => onBlur(id, event.target.value))}
+              onFocus={onFocus && (event => onFocus(id, event.target.value))}
             />
-            {/* <span>{option.label}</span> */}
+            <span>{option.label}</span>
           </span>
         );
 

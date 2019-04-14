@@ -224,7 +224,6 @@ function ThemeSelector({ theme, select }) {
     <Form
       uiTheme={uiTheme}
       schema={themeSchema}
-      uiTheme={uiTheme}
       formData={theme}
       onChange={({ formData }) => select(formData, themes[formData])}>
       <div />
@@ -311,6 +310,9 @@ class App extends Component {
   load = data => {
     // Reset the ArrayFieldTemplate whenever you load new data
     const { ArrayFieldTemplate, ObjectFieldTemplate } = data;
+    // uiSchema is missing on some examples. Provide a default to
+    // clear the field in all cases.
+    const { uiSchema = {} } = data;
     // force resetting form component instance
     this.setState({ form: false }, _ =>
       this.setState({
@@ -318,6 +320,7 @@ class App extends Component {
         form: true,
         ArrayFieldTemplate,
         ObjectFieldTemplate,
+        uiSchema, //TODO: @pankaz to check why was this added
       })
     );
   };
@@ -371,7 +374,7 @@ class App extends Component {
     return (
       <div className="container-fluid">
         <div className="page-header">
-          <h1>react-jsonschema-materialui-forms</h1>
+          <h1>react-jsonschema-form</h1>
           <div className="row">
             <div className="col-sm-8">
               <Selector onSelected={this.load} />
@@ -428,9 +431,10 @@ class App extends Component {
               uiSchema={uiSchema}
               formData={formData}
               onChange={this.onFormDataChange}
-              onSubmit={({ formData }) =>
-                console.log("submitted formData", formData)
-              }
+              onSubmit={({ formData }, e) => {
+                console.log("submitted formData", formData);
+                console.log("submit event", e);
+              }}
               fields={{ geo: GeoPosition }}
               validate={validate}
               onBlur={(id, value) =>
