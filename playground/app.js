@@ -283,7 +283,7 @@ class App extends Component {
       editor: "default",
       theme: "default",
       liveSettings: {
-        validate: true,
+        validate: false,
         disable: false,
       },
       shareURL: null,
@@ -370,6 +370,12 @@ class App extends Component {
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
+    let onFieldChange = (fieldName, formData) => {
+      console.log(`Field ${fieldName} changed and formData was ${formData}`);
+    };
+    let formContext = {
+      onFieldChange: onFieldChange,
+    };
 
     return (
       <div className="container-fluid">
@@ -433,16 +439,17 @@ class App extends Component {
               onChange={this.onFormDataChange}
               onSubmit={({ formData }, e) => {
                 console.log("submitted formData", formData);
-                console.log("submit event", e);
+                // console.log("submit event", e);
               }}
               fields={{ geo: GeoPosition }}
               validate={validate}
-              onBlur={(id, value) =>
-                console.log(`Touched ${id} with value ${value}`)
-              }
-              onFocus={(id, value) =>
-                console.log(`Focused ${id} with value ${value}`)
-              }
+              // onBlur={(id, value) =>
+              //   console.log(`Touched ${id} with value ${value}`)
+              // }
+              // onFocus={(id, value) =>
+              //   console.log(`Focused ${id} with value ${value}`)
+              // }
+              formContext={formContext}
               transformErrors={transformErrors}
               onError={log("errors")}>
               <div className="row">

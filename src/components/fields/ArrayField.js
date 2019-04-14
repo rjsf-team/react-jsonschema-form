@@ -101,7 +101,7 @@ function DefaultArrayItem(props) {
 
 function DefaultFixedArrayFieldTemplate(props) {
   return (
-    <React.Fragment className={props.className}>
+    <div className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -131,13 +131,13 @@ function DefaultFixedArrayFieldTemplate(props) {
           disabled={props.disabled || props.readonly}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 }
 
 function DefaultNormalArrayFieldTemplate(props) {
   return (
-    <React.Fragment className={props.className}>
+    <div className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -170,7 +170,7 @@ function DefaultNormalArrayFieldTemplate(props) {
           disabled={props.disabled || props.readonly}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 }
 

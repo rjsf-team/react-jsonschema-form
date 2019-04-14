@@ -404,7 +404,35 @@ class SchemaField extends React.Component {
   }
 
   render() {
-    return SchemaFieldRender(this.props);
+    // Implemented changes based on https://github.com/mozilla-services/react-jsonschema-form/issues/651#issuecomment-319347385
+    const customProps = {};
+
+    //Only process if we are dealing with a field, not the parent object
+    if (this.props.name) {
+      const formContext = this.props.registry.formContext;
+
+      //Store the original onChange event provided to the SchemaField
+      //as well as the name of the field
+      const { onChange, name } = this.props;
+
+      //Provide a new onChange event for the SchemaField
+      customProps.onChange = function(formData) {
+        //Call the original onChange handler
+        onChange(formData);
+
+        //Call the custom handler provided in the formContext, if it exists,
+        //with the field name and new value
+        if (
+          formContext &&
+          formContext.onFieldChange &&
+          typeof formContext.onFieldChange === "function"
+        ) {
+          formContext.onFieldChange(name, formData);
+        }
+      };
+    }
+
+    return SchemaFieldRender({ ...this.props, ...customProps });
   }
 }
 
