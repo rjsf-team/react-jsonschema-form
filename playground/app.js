@@ -370,8 +370,10 @@ class App extends Component {
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
-    let onFieldChange = (fieldName, formData) => {
-      console.log(`Field ${fieldName} changed and formData was ${formData}`);
+    let onFieldChange = (fieldName, fieldValue) => {
+      console.log(
+        `Field ${fieldName} changed and it's new value is ${fieldValue}`
+      );
     };
     let formContext = {
       onFieldChange: onFieldChange,
