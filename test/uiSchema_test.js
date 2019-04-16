@@ -48,6 +48,43 @@ describe("uiSchema", () => {
     });
   });
 
+  describe("custom style", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "string",
+        },
+        bar: {
+          type: "string",
+        },
+      },
+    };
+
+    const uiSchema = {
+      foo: {
+        style: {
+          paddingRight: "1em",
+        },
+      },
+      bar: {
+        style: {
+          paddingLeft: "1.5em",
+          color: "orange",
+        },
+      },
+    };
+
+    it("should apply custom styles to target widgets", () => {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const [foo, bar] = node.querySelectorAll(".field-string");
+
+      expect(foo.style.paddingRight).eql("1em");
+      expect(bar.style.paddingLeft).eql("1.5em");
+      expect(bar.style.color).eql("orange");
+    });
+  });
+
   describe("custom widget", () => {
     describe("root widget", () => {
       const schema = {

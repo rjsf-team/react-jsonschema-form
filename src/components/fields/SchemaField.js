@@ -148,6 +148,7 @@ if (process.env.NODE_ENV !== "production") {
   DefaultTemplate.propTypes = {
     id: PropTypes.string,
     classNames: PropTypes.string,
+    style: PropTypes.object,
     label: PropTypes.string,
     children: PropTypes.node.isRequired,
     errors: PropTypes.element,
@@ -176,6 +177,7 @@ function WrapIfAdditional(props) {
   const {
     id,
     classNames,
+    style,
     disabled,
     label,
     onKeyChange,
@@ -188,11 +190,15 @@ function WrapIfAdditional(props) {
   const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
 
   if (!additional) {
-    return <div className={classNames}>{props.children}</div>;
+    return (
+      <div className={classNames} style={style}>
+        {props.children}
+      </div>
+    );
   }
 
   return (
-    <div className={classNames}>
+    <div className={classNames} style={style}>
       <div className="row">
         <div className="col-xs-5 form-additional">
           <div className="form-group">
@@ -282,7 +288,7 @@ function SchemaFieldRender(props) {
       {...props}
       idSchema={idSchema}
       schema={schema}
-      uiSchema={{ ...uiSchema, classNames: undefined }}
+      uiSchema={{ ...uiSchema, classNames: undefined, style: undefined }}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
@@ -336,6 +342,7 @@ function SchemaFieldRender(props) {
     readonly,
     displayLabel,
     classNames,
+    style: uiSchema.style,
     formContext,
     fields,
     schema,

@@ -176,6 +176,35 @@ describe("SchemaField", () => {
 
       expect(node.querySelectorAll(".foo")).to.have.length.of(1);
     });
+
+    it("should not pass style to child component", () => {
+      const CustomSchemaField = function(props) {
+        return (
+          <SchemaField
+            {...props}
+            uiSchema={{ ...props.uiSchema, "ui:field": undefined }}
+            name="field"
+          />
+        );
+      };
+
+      const schema = {
+        type: "string",
+      };
+      const uiSchema = {
+        "ui:rootFieldId": "myform",
+        "ui:field": "customSchemaField",
+        classNames: "foo",
+        style: {
+          paddingRight: "1.5em",
+        },
+      };
+      const fields = { customSchemaField: CustomSchemaField };
+
+      const { node } = createFormComponent({ schema, uiSchema, fields });
+
+      expect(node.querySelectorAll("[style*='1.5em']")).to.have.length.of(1);
+    });
   });
 
   describe("label support", () => {

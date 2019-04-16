@@ -336,7 +336,32 @@ const uiSchema = {
 Will result in:
 
 ```html
-<div class="field field-string task-title foo-bar" >
+<div class="field field-string task-title foo-bar">
+  <label>
+    <span>Title*</span>
+    <input value="My task" required="" type="text">
+  </label>
+</div>
+```
+
+### Custom styles
+
+The uiSchema object accepts a `style` property for each field of the schema:
+
+```jsx
+const uiSchema = {
+  title: {
+    style: {
+      color: "orange"
+    }
+  }
+};
+```
+
+Will result in:
+
+```html
+<div class="field field-string" style="color: orange">
   <label>
     <span>Title*</span>
     <input value="My task" required="" type="text">
