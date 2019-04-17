@@ -76,6 +76,28 @@ render((
 
 Here's a list of supported alternative widgets for different JSONSchema data types:
 
+#### Creating a `select` element
+
+To create a select element, you can use `enum`. The array elements will render as options. To add labels that differ from the option's values use `enumNames`:
+
+```js
+const schema = {
+  type: "string",
+  enum: ['AU', 'FR', 'GB'],
+  enumNames: ["Australia", "France", "United Kingdom"]
+};
+```
+
+This will be rendered using a select box like this:
+
+```html
+<select>
+  <option value="AU">Australia</option>
+  <option value="FR">France</option>
+  <option value="GB">United Kingdom</option>
+</select>
+```
+
 #### For `boolean` fields
 
   * `radio`: a radio button group with `true` and `false` as selectable values;
