@@ -22,6 +22,19 @@ module.exports = {
         type: "string",
         title: "Bio",
       },
+      destination: {
+        type: "string",
+        title: "Where are you headed?",
+        enum: [
+          "GB",
+          "AU",
+          "France"
+        ],
+        enumNames: [
+          "United Kindom",
+          "Australia"
+        ]
+		  },
       password: {
         type: "string",
         title: "Password",
