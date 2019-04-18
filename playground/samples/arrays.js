@@ -37,19 +37,19 @@ module.exports = {
           {
             type: "integer",
             title: "one",
-            help: "help needed",
+            help: "Help for option 1",
             enum: ["foo"],
           },
           {
             type: "integer",
             title: "two",
-            help: "helppppppp",
+            help: "Help for option 2",
             enum: ["bar"],
           },
           {
             type: "integer",
             title: "three",
-            help: "heeeeeelpx",
+            help: "Help for option 3",
             enum: ["fuzz"],
           },
         ],
@@ -170,10 +170,7 @@ module.exports = {
       },
     },
     anyOfCheckBox: {
-      "ui:widget": "radio",
-      // "ui:help": [{ enum : "foo", label: "foodata"},
-      // { enum : "bar", label: "bardata"}
-      //]
+      "ui:widget": "radio"
     },
     multipleChoicesList: {
       "ui:widget": "select",
