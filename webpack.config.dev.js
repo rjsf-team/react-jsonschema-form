@@ -3,7 +3,7 @@ var webpack = require("webpack");
 
 module.exports = {
   mode: "development",
-  devtool: "eval",
+  devtool: "source-map",
   entry: [
     "webpack-hot-middleware/client?reload=true",
     "./playground/app"

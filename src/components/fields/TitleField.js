@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
 import React from "react";
+import PropTypes from "prop-types";
 import ReactHtmlParser from "react-html-parser";
 
 const REQUIRED_FIELD_SYMBOL = "*";

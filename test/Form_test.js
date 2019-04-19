@@ -5,7 +5,12 @@ import { renderIntoDocument, Simulate } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
 
 import Form from "../src";
-import { createFormComponent, createSandbox } from "./test_utils";
+import {
+  createComponent,
+  createFormComponent,
+  createSandbox,
+  setProps,
+} from "./test_utils";
 
 describe("Form", () => {
   let sandbox;
@@ -123,6 +128,7 @@ describe("Form", () => {
         ids.push(input.getAttribute("id"));
       }
       expect(ids).to.eql(["rjsf_count"]);
+      expect(node.querySelector("fieldset").id).to.eql("rjsf");
     });
   });
 
@@ -147,6 +153,7 @@ describe("Form", () => {
         ids.push(input.getAttribute("id"));
       }
       expect(ids).to.eql(["rjsf_count"]);
+      expect(node.querySelector("fieldset").id).to.eql("rjsf");
     });
 
     it("should work with oneOf", function() {
@@ -535,6 +542,92 @@ describe("Form", () => {
       expect(node.querySelector("#root_children_0_name")).to.exist;
     });
 
+    it("should follow recursive references", () => {
+      const schema = {
+        definitions: {
+          bar: { $ref: "#/definitions/qux" },
+          qux: { type: "string" },
+        },
+        type: "object",
+        required: ["foo"],
+        properties: {
+          foo: { $ref: "#/definitions/bar" },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
+    it("should follow multiple recursive references", () => {
+      const schema = {
+        definitions: {
+          bar: { $ref: "#/definitions/bar2" },
+          bar2: { $ref: "#/definitions/qux" },
+          qux: { type: "string" },
+        },
+        type: "object",
+        required: ["foo"],
+        properties: {
+          foo: { $ref: "#/definitions/bar" },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
+    it("should handle recursive references to deep schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            $ref: "#/definitions/testdefref",
+          },
+          testdefref: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/testdef/properties/bar" },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
+    it("should handle multiple recursive references to deep schema definitions", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            $ref: "#/definitions/testdefref1",
+          },
+          testdefref1: {
+            $ref: "#/definitions/testdefref2",
+          },
+          testdefref2: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/testdef/properties/bar" },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
+    });
+
     it("should priorize definition over schema type property", () => {
       // Refs bug #140
       const schema = {
@@ -682,15 +775,15 @@ describe("Form", () => {
         foo: "bar",
       };
       const onSubmit = sandbox.spy();
+      const event = { type: "submit" };
       const { comp, node } = createFormComponent({
         schema,
         formData,
         onSubmit,
       });
 
-      Simulate.submit(node);
-
-      sinon.assert.calledWithMatch(onSubmit, comp.state);
+      Simulate.submit(node, event);
+      sinon.assert.calledWithMatch(onSubmit, comp.state, event);
     });
 
     it("should not call provided submit handler on validation errors", () => {
@@ -906,6 +999,54 @@ describe("Form", () => {
         sinon.assert.calledOnce(onChangeProp);
         sinon.assert.calledWith(onChangeProp, comp.state);
         expect(comp.state.formData).eql("the new default");
+      });
+    });
+
+    describe("when the onChange prop sets formData to a falsey value", () => {
+      class TestForm extends React.Component {
+        constructor() {
+          super();
+
+          this.state = {
+            formData: {},
+          };
+        }
+
+        onChange = () => {
+          this.setState({ formData: this.props.falseyValue });
+        };
+
+        render() {
+          const schema = {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          };
+          return (
+            <Form
+              onChange={this.onChange}
+              schema={schema}
+              formData={this.state.formData}
+            />
+          );
+        }
+      }
+
+      const falseyValues = [0, false, null, undefined, NaN];
+
+      falseyValues.forEach(falseyValue => {
+        it("Should not crash due to 'Maximum call stack size exceeded...'", () => {
+          // It is expected that this will throw an error due to non-matching propTypes,
+          // so the error message needs to be inspected
+          try {
+            createComponent(TestForm, { falseyValue });
+          } catch (e) {
+            expect(e.message).to.not.equal("Maximum call stack size exceeded");
+          }
+        });
       });
     });
   });
@@ -1553,7 +1694,7 @@ describe("Form", () => {
           liveValidate: true,
         });
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        Simulate.change(node.querySelector("input[type=number]"), {
           target: { value: "not a number" },
         });
 
@@ -1571,7 +1712,7 @@ describe("Form", () => {
           formData: { branch: 2 },
         });
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        Simulate.change(node.querySelector("input[type=number]"), {
           target: { value: "not a number" },
         });
 
@@ -1835,6 +1976,103 @@ describe("Form", () => {
 
     it("should set attr novalidate of form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
+    });
+  });
+
+  describe("Custom format updates", () => {
+    it("Should update custom formats when customFormats is changed", () => {
+      const formProps = {
+        liveValidate: true,
+        formData: {
+          areaCode: 123,
+        },
+        schema: {
+          type: "object",
+          properties: {
+            areaCode: {
+              type: "number",
+              format: "area-code",
+            },
+          },
+        },
+        uiSchema: {
+          areaCode: {
+            "ui:widget": "area-code",
+          },
+        },
+        widgets: {
+          "area-code": () => <div id="custom" />,
+        },
+      };
+
+      const { comp } = createFormComponent(formProps);
+
+      expect(comp.state.errorSchema).eql({
+        $schema: {
+          __errors: [
+            'unknown format "area-code" is used in schema at path "#/properties/areaCode"',
+          ],
+        },
+      });
+
+      setProps(comp, {
+        ...formProps,
+        customFormats: {
+          "area-code": /\d{3}/,
+        },
+      });
+
+      expect(comp.state.errorSchema).eql({});
+    });
+  });
+
+  describe("Meta schema updates", () => {
+    it("Should update allowed meta schemas when additionalMetaSchemas is changed", () => {
+      const formProps = {
+        liveValidate: true,
+        schema: {
+          $schema: "http://json-schema.org/draft-04/schema#",
+          type: "string",
+          minLength: 8,
+          pattern: "d+",
+        },
+        formData: "short",
+        additionalMetaSchemas: [],
+      };
+
+      const { comp } = createFormComponent(formProps);
+
+      expect(comp.state.errorSchema).eql({
+        $schema: {
+          __errors: [
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+          ],
+        },
+      });
+
+      setProps(comp, {
+        ...formProps,
+        additionalMetaSchemas: [
+          require("ajv/lib/refs/json-schema-draft-04.json"),
+        ],
+      });
+
+      expect(comp.state.errorSchema).eql({
+        __errors: [
+          "should NOT be shorter than 8 characters",
+          'should match pattern "d+"',
+        ],
+      });
+
+      setProps(comp, formProps);
+
+      expect(comp.state.errorSchema).eql({
+        $schema: {
+          __errors: [
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+          ],
+        },
+      });
     });
   });
 });
