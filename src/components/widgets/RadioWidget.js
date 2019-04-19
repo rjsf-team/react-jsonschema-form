@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Tooltip from "@material-ui/core/Tooltip";
+import InfoIcon from "@material-ui/icons/Info";
+import IconButton from "@material-ui/core/IconButton";
+import ReactHtmlParser from "react-html-parser";
 
 function RadioWidget(props) {
   const {
@@ -15,7 +19,8 @@ function RadioWidget(props) {
     onBlur,
     onFocus,
     onChange,
-    id,
+    schema,
+    id
   } = props;
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
@@ -30,6 +35,20 @@ function RadioWidget(props) {
           enumDisabled && enumDisabled.indexOf(option.value) != -1;
         const disabledCls =
           disabled || itemDisabled || readonly ? "disabled" : "";
+
+        const toolTip =
+          schema && schema.anyOf ? (
+            <span>
+              <Tooltip title={ReactHtmlParser(schema.anyOf[i].help)}>
+                <IconButton aria-label={ReactHtmlParser(schema.anyOf[i].help)}>
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+            </span>
+          ) : (
+            <div />
+          );
+
         const radio = (
           <span>
             <FormControlLabel
@@ -46,7 +65,8 @@ function RadioWidget(props) {
               onBlur={onBlur && (event => onBlur(id, event.target.value))}
               onFocus={onFocus && (event => onFocus(id, event.target.value))}
             />
-            <span>{option.label}</span>
+            {/* <span>{option.label}</span> */}
+            <span>{toolTip}</span>
           </span>
         );
 
