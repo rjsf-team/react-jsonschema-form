@@ -18,6 +18,9 @@ import {
   getSchemaType,
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
+import Tooltip from "@material-ui/core/Tooltip";
+import InfoIcon from "@material-ui/icons/Info";
+import IconButton from "@material-ui/core/IconButton";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -90,10 +93,15 @@ function Help(props) {
   if (!help) {
     return null;
   }
-  if (typeof help === "string") {
-    return <p className="help-block">{ReactHtmlParser(help)}</p>;
-  }
-  return <div className="help-block">{help}</div>;
+  return (
+    <Tooltip title={ReactHtmlParser(help)}>
+      <IconButton
+        aria-label={ReactHtmlParser(help)}
+        style={{ margin: "0 0 0 -12px" }}>
+        <InfoIcon />
+      </IconButton>
+    </Tooltip>
+  );
 }
 
 function ErrorList(props) {

@@ -1,6 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
+import Tooltip from "@material-ui/core/Tooltip";
+import InfoIcon from "@material-ui/icons/Info";
+import IconButton from "@material-ui/core/IconButton";
+import ReactHtmlParser from "react-html-parser";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -15,7 +19,16 @@ function deselectValue(value, selected) {
 }
 
 function CheckboxesWidget(props) {
-  const { id, disabled, options, value, autofocus, readonly, onChange } = props;
+  const {
+    id,
+    disabled,
+    options,
+    value,
+    autofocus,
+    readonly,
+    onChange,
+    schema: { items },
+  } = props;
   const { enumOptions, enumDisabled, inline, color } = options;
   return (
     <div className="checkboxes" id={id}>
@@ -25,6 +38,20 @@ function CheckboxesWidget(props) {
           enumDisabled && enumDisabled.indexOf(option.value) != -1;
         const disabledCls =
           disabled || itemDisabled || readonly ? "disabled" : "";
+
+        const toolTip =
+          items && items.anyOf ? (
+            <span>
+              <Tooltip title={ReactHtmlParser(items.anyOf[index].help)}>
+                <IconButton
+                  aria-label={ReactHtmlParser(items.anyOf[index].help)}>
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+            </span>
+          ) : (
+            <div />
+          );
         const checkbox = (
           <span>
             <Checkbox
@@ -43,13 +70,18 @@ function CheckboxesWidget(props) {
                 }
               }}
             />
+
             <span>{option.label}</span>
+            <span>{toolTip}</span>
           </span>
         );
         return inline ? (
-          <label key={index} className={`checkbox-inline ${disabledCls}`}>
-            {checkbox}
-          </label>
+          <div>
+            <label key={index} className={`checkbox-inline ${disabledCls}`}>
+              {checkbox}
+            </label>
+            <label key={index} className={`checkbox-inline ${disabledCls}`} />
+          </div>
         ) : (
           <div key={index} className={`checkbox ${disabledCls}`}>
             <label>{checkbox}</label>
