@@ -170,7 +170,7 @@ module.exports = {
       },
     },
     anyOfCheckBox: {
-      "ui:widget": "radio"
+      "ui:widget": "radio",
     },
     multipleChoicesList: {
       "ui:widget": "select",

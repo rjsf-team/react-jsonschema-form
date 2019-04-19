@@ -20,7 +20,7 @@ function RadioWidget(props) {
     onFocus,
     onChange,
     schema,
-    id
+    id,
   } = props;
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();

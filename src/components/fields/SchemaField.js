@@ -20,7 +20,6 @@ import {
 import UnsupportedField from "./UnsupportedField";
 import Tooltip from "@material-ui/core/Tooltip";
 import InfoIcon from "@material-ui/icons/Info";
-import IconButton from "@material-ui/core/IconButton";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
