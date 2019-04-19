@@ -421,6 +421,7 @@ class ArrayField extends Component {
       formData,
       disabled,
       readonly,
+      required,
       autofocus,
       onBlur,
       onFocus,
@@ -448,6 +449,7 @@ class ArrayField extends Component {
         value={items}
         disabled={disabled}
         readonly={readonly}
+        required={required}
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
