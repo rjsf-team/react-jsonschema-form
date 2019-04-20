@@ -3,24 +3,15 @@ import PropTypes from "prop-types";
 
 import { dataURItoBlob, shouldRender, setState } from "../../utils";
 
-function addNameToDataURL(dataURL, name) {
-  return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
-}
-
 function processFile(file) {
   const { name, size, type } = file;
   return new Promise((resolve, reject) => {
-    const reader = new window.FileReader();
-    reader.onerror = reject;
-    reader.onload = event => {
-      resolve({
-        dataURL: addNameToDataURL(event.target.result, name),
-        name,
-        size,
-        type,
-      });
-    };
-    reader.readAsDataURL(file);
+    resolve({
+      dataURL: window.URL.createObjectURL(file),
+      name,
+      size,
+      type,
+    });
   });
 }
 
