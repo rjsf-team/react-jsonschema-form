@@ -1589,12 +1589,13 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", () => {
-      sandbox.stub(window, "FileReader").returns({
-        set onload(fn) {
-          fn({ target: { result: "data:text/plain;base64,x=" } });
-        },
-        readAsDataUrl() {},
-      });
+      window.URL.createObjectURL = function() {};
+
+      sandbox
+        .stub(window.URL, "createObjectURL")
+        .returns(
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c"
+        );
 
       const { comp, node } = createFormComponent({
         schema: {
@@ -1605,13 +1606,17 @@ describe("StringField", () => {
 
       Simulate.change(node.querySelector("[type=file]"), {
         target: {
-          files: [{ name: "file1.txt", size: 1, type: "type" }],
+          files: [
+            new window.File(["test"], "foo1.txt", {
+              type: "text/plain",
+            }),
+          ],
         },
       });
 
       return new Promise(setImmediate).then(() =>
         expect(comp.state.formData).eql(
-          "data:text/plain;name=file1.txt;base64,x="
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#foo1.txt"
         )
       );
     });
@@ -1620,12 +1625,13 @@ describe("StringField", () => {
       const nonUriEncodedValue = "fileáéí óú1.txt";
       const uriEncodedValue = "file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt";
 
-      sandbox.stub(window, "FileReader").returns({
-        set onload(fn) {
-          fn({ target: { result: "data:text/plain;base64,x=" } });
-        },
-        readAsDataUrl() {},
-      });
+      window.URL.createObjectURL = function() {};
+
+      sandbox
+        .stub(window.URL, "createObjectURL")
+        .returns(
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c"
+        );
 
       const { comp, node } = createFormComponent({
         schema: {
@@ -1636,13 +1642,18 @@ describe("StringField", () => {
 
       Simulate.change(node.querySelector("[type=file]"), {
         target: {
-          files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
+          files: [
+            new window.File(["test"], nonUriEncodedValue, {
+              type: "text/plain",
+            }),
+          ],
         },
       });
 
       return new Promise(setImmediate).then(() =>
         expect(comp.state.formData).eql(
-          "data:text/plain;name=" + uriEncodedValue + ";base64,x="
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#" +
+            uriEncodedValue
         )
       );
     });

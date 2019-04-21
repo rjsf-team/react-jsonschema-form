@@ -3,11 +3,18 @@ import PropTypes from "prop-types";
 
 import { dataURItoBlob, shouldRender, setState } from "../../utils";
 
+// function addNameToDataURL(dataURL, name) {
+//   return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
+// }
+
 function processFile(file) {
   const { name, size, type } = file;
-  return new Promise((resolve, reject) => {
+  console.debug("debug :: process-file :: clg ::", window.URL.createObjectURL);
+  return new Promise(resolve => {
     resolve({
-      dataURL: window.URL.createObjectURL(file),
+      dataURL: `${window.URL.createObjectURL(file)}#${encodeURIComponent(
+        name
+      )}`,
       name,
       size,
       type,
@@ -66,12 +73,15 @@ class FileWidget extends Component {
   onChange = event => {
     const { multiple, onChange } = this.props;
     processFiles(event.target.files).then(filesInfo => {
+      console.debug("debug :: filesInfo :: ", filesInfo);
+
       const state = {
         values: filesInfo.map(fileInfo => fileInfo.dataURL),
         filesInfo,
       };
       setState(this, state, () => {
         if (multiple) {
+          console.debug("debug :: onchange file multiple :: ", state);
           onChange(state.values);
         } else {
           onChange(state.values[0]);

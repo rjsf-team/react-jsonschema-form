@@ -895,30 +895,34 @@ describe("ArrayField", () => {
     });
 
     it("should handle a change event", () => {
-      sandbox.stub(window, "FileReader").returns({
-        set onload(fn) {
-          fn({ target: { result: "data:text/plain;base64,x=" } });
-        },
-        readAsDataUrl() {},
-      });
+      window.URL.createObjectURL = function() {};
+
+      sandbox
+        .stub(window.URL, "createObjectURL")
+        .returns(
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c"
+        );
 
       const { comp, node } = createFormComponent({ schema });
-
       Simulate.change(node.querySelector(".field input[type=file]"), {
         target: {
           files: [
-            { name: "file1.txt", size: 1, type: "type" },
-            { name: "file2.txt", size: 2, type: "type" },
+            new window.File(["test"], "foo1.txt", {
+              type: "text/plain",
+            }),
+            new window.File(["test"], "foo2.txt", {
+              type: "text/plain",
+            }),
           ],
         },
       });
 
-      return new Promise(setImmediate).then(() =>
+      return new Promise(setImmediate).then(() => {
         expect(comp.state.formData).eql([
-          "data:text/plain;name=file1.txt;base64,x=",
-          "data:text/plain;name=file2.txt;base64,x=",
-        ])
-      );
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#foo1.txt",
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#foo2.txt",
+        ]);
+      });
     });
 
     it("should fill field with data", () => {

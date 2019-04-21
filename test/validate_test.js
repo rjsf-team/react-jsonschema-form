@@ -273,7 +273,8 @@ describe("Validation", () => {
 
       it("Data-Url with name is accepted", () => {
         const formData = {
-          dataUrlWithName: "data:text/plain;name=file1.txt;base64,x=",
+          dataUrlWithName:
+            "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#file1.txt",
         };
         const result = validateFormData(formData, schema);
         expect(result.errors).to.have.length.of(0);
@@ -281,7 +282,8 @@ describe("Validation", () => {
 
       it("Data-Url without name is accepted", () => {
         const formData = {
-          dataUrlWithoutName: "data:text/plain;base64,x=",
+          dataUrlWithoutName:
+            "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c",
         };
         const result = validateFormData(formData, schema);
         expect(result.errors).to.have.length.of(0);
