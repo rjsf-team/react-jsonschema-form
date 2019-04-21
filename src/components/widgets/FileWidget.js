@@ -9,7 +9,6 @@ import { dataURItoBlob, shouldRender, setState } from "../../utils";
 
 function processFile(file) {
   const { name, size, type } = file;
-  console.debug("debug :: process-file :: clg ::", window.URL.createObjectURL);
   return new Promise(resolve => {
     resolve({
       dataURL: `${window.URL.createObjectURL(file)}#${encodeURIComponent(
