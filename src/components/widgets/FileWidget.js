@@ -72,15 +72,12 @@ class FileWidget extends Component {
   onChange = event => {
     const { multiple, onChange } = this.props;
     processFiles(event.target.files).then(filesInfo => {
-      console.debug("debug :: filesInfo :: ", filesInfo);
-
       const state = {
         values: filesInfo.map(fileInfo => fileInfo.dataURL),
         filesInfo,
       };
       setState(this, state, () => {
         if (multiple) {
-          console.debug("debug :: onchange file multiple :: ", state);
           onChange(state.values);
         } else {
           onChange(state.values[0]);
