@@ -49,7 +49,6 @@ module.exports = {
           {
             type: "integer",
             title: "three",
-            help: "Help for option 3",
             enum: ["fuzz"],
           },
         ],

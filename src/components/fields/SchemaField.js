@@ -1,9 +1,7 @@
 import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
-import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-import ReactHtmlParser from "react-html-parser";
 
 import {
   isMultiSelect,
@@ -20,6 +18,8 @@ import {
 import UnsupportedField from "./UnsupportedField";
 import Tooltip from "@material-ui/core/Tooltip";
 import InfoIcon from "@material-ui/icons/Info";
+import IconButton from "@material-ui/core/IconButton";
+import ReactHtmlParser from "react-html-parser";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -67,7 +67,10 @@ function Label(props) {
     return null;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <label
+      className="control-label"
+      htmlFor={id}
+      style={{ wordBreak: "break-word", maxWidth: "95%" }}>
       {ReactHtmlParser(label)}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
@@ -89,17 +92,19 @@ function LabelInput(props) {
 
 function Help(props) {
   const { help } = props;
+
   if (!help) {
     return null;
   }
   return (
-    <Tooltip title={ReactHtmlParser(help)}>
-      <IconButton
-        aria-label={ReactHtmlParser(help)}
-        style={{ margin: "0 0 0 -12px" }}>
-        <InfoIcon />
-      </IconButton>
-    </Tooltip>
+    <span>
+      <Tooltip title={ReactHtmlParser(help)}>
+        <IconButton aria-label={ReactHtmlParser(help)}>
+          <InfoIcon />
+        </IconButton>
+      </Tooltip>
+      <br />
+    </span>
   );
 }
 
@@ -145,9 +150,9 @@ function DefaultTemplate(props) {
     <WrapIfAdditional {...props}>
       {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
+      {help}
       {children}
       {errors}
-      {help}
     </WrapIfAdditional>
   );
 }

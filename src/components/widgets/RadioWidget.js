@@ -35,9 +35,8 @@ function RadioWidget(props) {
           enumDisabled && enumDisabled.indexOf(option.value) != -1;
         const disabledCls =
           disabled || itemDisabled || readonly ? "disabled" : "";
-
         const toolTip =
-          schema && schema.anyOf ? (
+          schema && schema.anyOf && schema.anyOf[i].help ? (
             <span>
               <Tooltip title={ReactHtmlParser(schema.anyOf[i].help)}>
                 <IconButton aria-label={ReactHtmlParser(schema.anyOf[i].help)}>

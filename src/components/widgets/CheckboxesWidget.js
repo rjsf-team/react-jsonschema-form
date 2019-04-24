@@ -40,7 +40,7 @@ function CheckboxesWidget(props) {
           disabled || itemDisabled || readonly ? "disabled" : "";
 
         const toolTip =
-          items && items.anyOf ? (
+          items && items.anyOf && items.anyOf[index].help ? (
             <span>
               <Tooltip title={ReactHtmlParser(items.anyOf[index].help)}>
                 <IconButton
