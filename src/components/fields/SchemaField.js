@@ -55,11 +55,10 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
 function Label(props) {
   const { label, required, id } = props;
   if (!label) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <label className="control-label" htmlFor={id} style={{wordBreak:"break-word", maxWidth:"95%"}}>
       {ReactHtmlParser(label)}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
