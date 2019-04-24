@@ -31,13 +31,20 @@ function FilesInfo(props) {
     return null;
   }
   return (
-    <ul className="file-info">
+    <ul class="list-group">
       {filesInfo.map((fileInfo, key) => {
-        const { name, size, type } = fileInfo;
+        const { dataURL, name, size, type } = fileInfo;
         return (
-          <li key={key}>
-            <strong>{name}</strong> ({type}, {size} bytes)
-          </li>
+          <div className="media">
+            <div className="media-left">
+              <object type={type} width="250" height="200" data={dataURL} />
+            </div>
+            <div className="media-body">
+              <h4 className="media-heading">
+                <strong>{name}</strong> ({type}, {size} bytes)
+              </h4>
+            </div>
+          </div>
         );
       })}
     </ul>
@@ -86,23 +93,29 @@ class FileWidget extends Component {
     });
   };
 
+  onBrowseClick = () => {
+    this.inputRef.click();
+  };
+
   render() {
     const { multiple, id, readonly, disabled, autofocus } = this.props;
     const { filesInfo } = this.state;
     return (
       <div>
-        <p>
+        <span className="btn btn-primary" onClick={this.onBrowseClick}>
+          Browse
           <input
             ref={ref => (this.inputRef = ref)}
             id={id}
             type="file"
+            style={{ display: "none" }}
             disabled={readonly || disabled}
             onChange={this.onChange}
             defaultValue=""
             autoFocus={autofocus}
             multiple={multiple}
           />
-        </p>
+        </span>
         <FilesInfo filesInfo={filesInfo} />
       </div>
     );
