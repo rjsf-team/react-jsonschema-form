@@ -314,6 +314,26 @@ describe("utils", () => {
           array: ["foo"],
         });
       });
+
+      it("should fill array with additional items schema when items is empty", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              minItems: 1,
+              additionalItems: {
+                type: "string",
+                default: "foo",
+              },
+              items: [],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          array: ["foo"],
+        });
+      });
     });
   });
 

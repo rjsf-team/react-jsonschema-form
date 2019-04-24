@@ -180,7 +180,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
             return defaultEntries.concat(fillerEntries);
           }
         } else {
-          return [];
+          return defaults ? defaults : [];
         }
       }
   }
