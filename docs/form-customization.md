@@ -596,7 +596,7 @@ const uiSchema = {
 
 ### Description texts
 
-Sometimes it's convenient to change description a field. This is the purpose of the `ui:description` uiSchema directive:
+Sometimes it's convenient to change the description of a field. This is the purpose of the `ui:description` uiSchema directive:
 
 ```js
 const schema = {type: "string"};
