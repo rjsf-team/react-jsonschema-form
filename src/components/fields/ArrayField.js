@@ -472,7 +472,10 @@ class ArrayField extends Component {
     const title = schema.title || name;
     const items = this.props.formData;
     const { widgets, formContext } = registry;
-    const { widget = "files", ...options } = getUiOptions(uiSchema);
+    const {
+      widget = schema.items.format === "data-url" ? "files" : "blobFiles",
+      ...options
+    } = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget

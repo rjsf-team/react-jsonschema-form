@@ -3,24 +3,17 @@ import PropTypes from "prop-types";
 
 import { dataURItoBlob, shouldRender, setState } from "../../utils";
 
-function addNameToDataURL(dataURL, name) {
-  return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
-}
-
 function processFile(file) {
   const { name, size, type } = file;
-  return new Promise((resolve, reject) => {
-    const reader = new window.FileReader();
-    reader.onerror = reject;
-    reader.onload = event => {
-      resolve({
-        dataURL: addNameToDataURL(event.target.result, name),
-        name,
-        size,
-        type,
-      });
-    };
-    reader.readAsDataURL(file);
+  return new Promise(resolve => {
+    resolve({
+      dataURL: `${window.URL.createObjectURL(file)}#${encodeURIComponent(
+        name
+      )}`,
+      name,
+      size,
+      type,
+    });
   });
 }
 
@@ -34,13 +27,20 @@ function FilesInfo(props) {
     return null;
   }
   return (
-    <ul className="file-info">
+    <ul className="list-group">
       {filesInfo.map((fileInfo, key) => {
-        const { name, size, type } = fileInfo;
+        const { dataURL, name, size, type } = fileInfo;
         return (
-          <li key={key}>
-            <strong>{name}</strong> ({type}, {size} bytes)
-          </li>
+          <div className="media" key={key}>
+            <div className="media-left">
+              <object type={type} width="250" height="200" data={dataURL} />
+            </div>
+            <div className="media-body">
+              <h4 className="media-heading">
+                <strong>{name}</strong> ({type}, {size} bytes)
+              </h4>
+            </div>
+          </div>
         );
       })}
     </ul>
@@ -89,23 +89,29 @@ class FileWidget extends Component {
     });
   };
 
+  onBrowseClick = () => {
+    this.inputRef.click();
+  };
+
   render() {
     const { multiple, id, readonly, disabled, autofocus } = this.props;
     const { filesInfo } = this.state;
     return (
       <div>
-        <p>
+        <span className="btn btn-primary" onClick={this.onBrowseClick}>
+          Browse
           <input
             ref={ref => (this.inputRef = ref)}
             id={id}
             type="file"
+            style={{ display: "none" }}
             disabled={readonly || disabled}
             onChange={this.onChange}
             defaultValue=""
             autoFocus={autofocus}
             multiple={multiple}
           />
-        </p>
+        </span>
         <FilesInfo filesInfo={filesInfo} />
       </div>
     );

@@ -20,6 +20,7 @@ const widgetMap = {
     ipv6: "TextWidget",
     uri: "URLWidget",
     "data-url": "FileWidget",
+    "blob-url": "BlobFileWidget",
     radio: "RadioWidget",
     select: "SelectWidget",
     textarea: "TextareaWidget",
@@ -31,6 +32,7 @@ const widgetMap = {
     "alt-datetime": "AltDateTimeWidget",
     color: "ColorWidget",
     file: "FileWidget",
+    blobFile: "BlobFileWidget",
   },
   number: {
     text: "TextWidget",
@@ -52,6 +54,7 @@ const widgetMap = {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
     files: "FileWidget",
+    blobFiles: "BlobFileWidget",
     hidden: "HiddenWidget",
   },
 };
@@ -363,11 +366,17 @@ export function isMultiSelect(schema, definitions = {}) {
 }
 
 export function isFilesArray(schema, uiSchema, definitions = {}) {
-  if (uiSchema["ui:widget"] === "files") {
+  if (
+    uiSchema["ui:widget"] === "files" ||
+    uiSchema["ui:widget"] === "blobFiles"
+  ) {
     return true;
   } else if (schema.items) {
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
+    return (
+      itemsSchema.type === "string" &&
+      (itemsSchema.format === "data-url" || itemsSchema.format === "blob-url")
+    );
   }
   return false;
 }

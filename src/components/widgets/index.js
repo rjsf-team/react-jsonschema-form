@@ -8,6 +8,7 @@ import DateWidget from "./DateWidget";
 import DateTimeWidget from "./DateTimeWidget";
 import EmailWidget from "./EmailWidget";
 import FileWidget from "./FileWidget";
+import BlobFileWidget from "./BlobFileWidget";
 import HiddenWidget from "./HiddenWidget";
 import PasswordWidget from "./PasswordWidget";
 import RadioWidget from "./RadioWidget";
@@ -36,6 +37,7 @@ export default {
   HiddenWidget,
   ColorWidget,
   FileWidget,
+  BlobFileWidget,
   CheckboxWidget,
   CheckboxesWidget,
 };
