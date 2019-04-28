@@ -444,33 +444,33 @@ export const guessType = function guessType(value) {
 };
 
 // This function will create new "properties" items for each key in our formData
-export function stubExistingAdditionalProperties(
-  schema,
-  definitions = {},
-  formData = {}
-) {
-  // Clone the schema so we don't ruin the consumer's original
-  schema = {
-    ...schema,
-    properties: { ...schema.properties },
-  };
-  Object.keys(formData).forEach(key => {
-    if (schema.properties.hasOwnProperty(key)) {
-      // No need to stub, our schema already has the property
-      return;
-    }
-    const additionalProperties = schema.additionalProperties.hasOwnProperty(
-      "type"
-    )
-      ? { ...schema.additionalProperties }
-      : { type: guessType(formData[key]) };
-    // The type of our new key should match the additionalProperties value;
-    schema.properties[key] = additionalProperties;
-    // Set our additional property flag so we know it was dynamically added
-    schema.properties[key][ADDITIONAL_PROPERTY_FLAG] = true;
-  });
-  return schema;
-}
+// export function stubExistingAdditionalProperties(
+//   schema,
+//   definitions = {},
+//   formData = {}
+// ) {
+//   // Clone the schema so we don't ruin the consumer's original
+//   schema = {
+//     ...schema,
+//     properties: { ...schema.properties },
+//   };
+//   Object.keys(formData).forEach(key => {
+//     if (schema.properties.hasOwnProperty(key)) {
+//       // No need to stub, our schema already has the property
+//       return;
+//     }
+//     const additionalProperties = schema.additionalProperties.hasOwnProperty(
+//       "type"
+//     )
+//       ? { ...schema.additionalProperties }
+//       : { type: guessType(formData[key]) };
+//     // The type of our new key should match the additionalProperties value;
+//     schema.properties[key] = additionalProperties;
+//     // Set our additional property flag so we know it was dynamically added
+//     schema.properties[key][ADDITIONAL_PROPERTY_FLAG] = true;
+//   });
+//   return schema;
+// }
 
 export function resolveSchema(schema, definitions = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
@@ -499,16 +499,16 @@ function resolveReference(schema, definitions, formData) {
 
 export function retrieveSchema(schema, definitions = {}, formData = {}) {
   const resolvedSchema = resolveSchema(schema, definitions, formData);
-  const hasAdditionalProperties =
-    resolvedSchema.hasOwnProperty("additionalProperties") &&
-    resolvedSchema.additionalProperties !== false;
-  if (hasAdditionalProperties) {
-    return stubExistingAdditionalProperties(
-      resolvedSchema,
-      definitions,
-      formData
-    );
-  }
+  // const hasAdditionalProperties =
+  //   resolvedSchema.hasOwnProperty("additionalProperties") &&
+  //   resolvedSchema.additionalProperties !== false;
+  // if (hasAdditionalProperties) {
+  //   return stubExistingAdditionalProperties(
+  //     resolvedSchema,
+  //     definitions,
+  //     formData
+  //   );
+  // }
   return resolvedSchema;
 }
 
