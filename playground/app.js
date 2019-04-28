@@ -18,6 +18,8 @@ import "codemirror/theme/solarized.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/eclipse.css";
 
+const SELECTED_TAB = "Files";
+
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
 const toJson = val => JSON.stringify(val, null, 2);
@@ -230,7 +232,7 @@ class Editor extends Component {
 class Selector extends Component {
   constructor(props) {
     super(props);
-    this.state = { current: "Simple" };
+    this.state = { current: SELECTED_TAB };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -346,7 +348,7 @@ class App extends Component {
         alert("Unable to load form setup data.");
       }
     } else {
-      this.load(samples.Simple);
+      this.load(samples[SELECTED_TAB]);
     }
   }
 
