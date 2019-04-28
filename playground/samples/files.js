@@ -34,5 +34,11 @@ module.exports = {
     },
   },
   uiSchema: {},
-  formData: {},
+  formData: {
+    blobFiles: [
+      "https://homepages.cae.wisc.edu/~ece533/images/boat.png",
+      "https://homepages.cae.wisc.edu/~ece533/images/tulips.png",
+      "https://homepages.cae.wisc.edu/~ece533/images/arctichare.png",
+    ],
+  },
 };

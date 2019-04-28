@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { dataURItoBlob, shouldRender, setState } from "../../utils";
+import { shouldRender, setState } from "../../utils";
 
 function processFile(file) {
   const { name, size, type } = file;
@@ -35,11 +35,13 @@ function FilesInfo(props) {
             <div className="media-left">
               <object type={type} width="250" height="200" data={dataURL} />
             </div>
-            <div className="media-body">
-              <h4 className="media-heading">
-                <strong>{name}</strong> ({type}, {size} bytes)
-              </h4>
-            </div>
+            {name && type && size && (
+              <div className="media-body">
+                <h4 className="media-heading">
+                  <strong>{name}</strong> ({type}, {size} bytes)
+                </h4>
+              </div>
+            )}
           </div>
         );
       })}
@@ -51,11 +53,9 @@ function extractFileInfo(dataURLs) {
   return dataURLs
     .filter(dataURL => typeof dataURL !== "undefined")
     .map(dataURL => {
-      const { blob, name } = dataURItoBlob(dataURL);
+      // const { blob, name } = dataURItoBlob(dataURL);
       return {
-        name: name,
-        size: blob.size,
-        type: blob.type,
+        dataURL,
       };
     });
 }
