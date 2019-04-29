@@ -2,6 +2,7 @@ import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
 import React from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
+import ReactHtmlParser from "react-html-parser";
 
 import {
   isMultiSelect,
@@ -15,11 +16,8 @@ import {
   deepEquals,
   getSchemaType,
 } from "../../utils";
-import UnsupportedField from "./UnsupportedField";
-import Tooltip from "@material-ui/core/Tooltip";
-import InfoIcon from "@material-ui/icons/Info";
-import IconButton from "@material-ui/core/IconButton";
-import ReactHtmlParser from "react-html-parser";
+import UnsupportedField from "./UnsupportedField";;
+import TooltipWrapper from '../widgets/TooltipWrapper'
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -51,14 +49,14 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   return componentName in fields
     ? fields[componentName]
     : () => {
-        return (
-          <UnsupportedField
-            schema={schema}
-            idSchema={idSchema}
-            reason={`Unknown field type ${schema.type}`}
-          />
-        );
-      };
+      return (
+        <UnsupportedField
+          schema={schema}
+          idSchema={idSchema}
+          reason={`Unknown field type ${schema.type}`}
+        />
+      );
+    };
 }
 
 function Label(props) {
@@ -67,10 +65,7 @@ function Label(props) {
     return null;
   }
   return (
-    <label
-      className="control-label"
-      htmlFor={id}
-      style={{ wordBreak: "break-word", maxWidth: "95%" }}>
+    <label className="control-label" htmlFor={id} style={{ wordBreak: "break-word", maxWidth: "95%" }}>
       {ReactHtmlParser(label)}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
@@ -92,17 +87,13 @@ function LabelInput(props) {
 
 function Help(props) {
   const { help } = props;
-
   if (!help) {
     return null;
   }
   return (
     <span>
-      <Tooltip title={ReactHtmlParser(help)}>
-        <IconButton aria-label={ReactHtmlParser(help)}>
-          <InfoIcon />
-        </IconButton>
-      </Tooltip>
+      <TooltipWrapper
+        help={ReactHtmlParser(help)} />
       <br />
     </span>
   );
@@ -149,8 +140,8 @@ function DefaultTemplate(props) {
   return (
     <WrapIfAdditional {...props}>
       {displayLabel && <Label label={label} required={required} id={id} />}
-      {displayLabel && description ? description : null}
       {help}
+      {displayLabel && description ? description : null}
       {children}
       {errors}
     </WrapIfAdditional>
@@ -428,7 +419,7 @@ class SchemaField extends React.Component {
       const { onChange, name } = this.props;
 
       //Provide a new onChange event for the SchemaField
-      customProps.onChange = function(formData) {
+      customProps.onChange = function (formData) {
         //Call the original onChange handler
         onChange(formData);
 
