@@ -128,6 +128,7 @@ export default class Form extends Component {
   }
 
   onChange = (formData, newErrorSchema) => {
+    formData = removeEmptyFields(formData);
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = { formData };
     if (mustValidate) {

@@ -54,7 +54,7 @@ module.exports = {
             },
           ],
         },
-        "uniqueItems": true
+        uniqueItems: true,
       },
       multipleChoicesList: {
         type: "array",
@@ -170,11 +170,10 @@ module.exports = {
       "ui:options": {
         color: "primary",
       },
-
     },
     anyOfCheckBox: {
       "ui:widget": "checkboxes",
-      "ui:help": "dfaada"
+      "ui:help": "dfaada",
     },
     multipleChoicesList: {
       "ui:widget": "select",

@@ -7,18 +7,18 @@ import {
   TextField,
   CircularProgress,
   Grid,
-  Icon
+  Icon,
 } from "@material-ui/core";
 import OptionsList from "./OptionsList";
 import SelectionBar from "./SelectionBar";
 
 const styles = {
   container: {
-    display: "block"
+    display: "block",
   },
   inputField: {
-    verticalAlign: "bottom"
-  }
+    verticalAlign: "bottom",
+  },
 };
 class AsyncMultiselectDropdown extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ class AsyncMultiselectDropdown extends Component {
       searchText: "",
       options: [],
       pageNumber: 0,
-      ...props.schema
+      ...props.schema,
     };
   }
 
@@ -101,20 +101,20 @@ class AsyncMultiselectDropdown extends Component {
       pageNumber,
       loadOptions,
       loadOptionsCount,
-      pageSize
+      pageSize,
     } = this.state;
 
     this.setState({ isLoading: true });
     Promise.all([
       loadOptions(searchText, pageNumber, pageSize),
-      loadOptionsCount(searchText)
+      loadOptionsCount(searchText),
     ]).then(([resLoadOptions, resLoadOptionsCount]) =>
       this.setState({
         options: resLoadOptions,
         pageNumber: pageNumber,
         pageSize,
         totalOptionsCount: resLoadOptionsCount,
-        isLoading: false
+        isLoading: false,
       })
     );
   };
@@ -161,7 +161,7 @@ class AsyncMultiselectDropdown extends Component {
       selectionColumn,
       selectedOptions,
       isMultiselect,
-      primaryColumn
+      primaryColumn,
     } = this.state;
     for (let index = 0; index < selectedOptions.length; index++) {
       if (selectedOptions[index][selectionColumn] === deletedChoice) {
@@ -223,7 +223,7 @@ class AsyncMultiselectDropdown extends Component {
       isMultiselect,
       isLoading,
       primaryColumn,
-      getChipDisplayText
+      getChipDisplayText,
     } = this.state;
 
     const loader = isLoading && (
@@ -258,7 +258,11 @@ class AsyncMultiselectDropdown extends Component {
               onFocus={() => this.setState({ isSearching: true })}
               InputProps={{
                 startAdornment: selected,
-                endAdornment: <Icon onClick={() => this.setState({ isSearching: true })}>arrow_drop_down</Icon>
+                endAdornment: (
+                  <Icon onClick={() => this.setState({ isSearching: true })}>
+                    arrow_drop_down
+                  </Icon>
+                ),
               }}
             />
             {loader}
@@ -290,7 +294,7 @@ class AsyncMultiselectDropdown extends Component {
 AsyncMultiselectDropdown.propTypes = {
   schema: PropTypes.object.isRequired,
   placeholder: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired
+  label: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(AsyncMultiselectDropdown);

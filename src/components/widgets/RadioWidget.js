@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import ReactHtmlParser from "react-html-parser";
-import TooltipWrapper from './TooltipWrapper'
+import TooltipWrapper from "./TooltipWrapper";
 
 function RadioWidget(props) {
   const {
@@ -18,7 +18,7 @@ function RadioWidget(props) {
     onFocus,
     onChange,
     schema,
-    id
+    id,
   } = props;
 
   const name = Math.random().toString();
@@ -35,11 +35,10 @@ function RadioWidget(props) {
 
         const toolTip =
           schema && schema.anyOf && schema.anyOf[i].help ? (
-            <TooltipWrapper
-              help={ReactHtmlParser(schema.anyOf[i].help)} />
+            <TooltipWrapper help={ReactHtmlParser(schema.anyOf[i].help)} />
           ) : (
-              <div />
-            );
+            <div />
+          );
 
         const radio = (
           <span>
@@ -66,10 +65,10 @@ function RadioWidget(props) {
             {radio}
           </label>
         ) : (
-            <div key={i} className={`radio ${disabledCls}`}>
-              <label>{radio}</label>
-            </div>
-          );
+          <div key={i} className={`radio ${disabledCls}`}>
+            <label>{radio}</label>
+          </div>
+        );
       })}
     </RadioGroup>
   );

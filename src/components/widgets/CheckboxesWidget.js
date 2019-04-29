@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
 import ReactHtmlParser from "react-html-parser";
-import TooltipWrapper  from './TooltipWrapper'
+import TooltipWrapper from "./TooltipWrapper";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -38,9 +38,9 @@ function CheckboxesWidget(props) {
           disabled || itemDisabled || readonly ? "disabled" : "";
 
         const toolTip =
-          items && items.anyOf && items.anyOf[index].help ? (<TooltipWrapper
-            help={ReactHtmlParser(items.anyOf[index].help)} />
-        ) : (
+          items && items.anyOf && items.anyOf[index].help ? (
+            <TooltipWrapper help={ReactHtmlParser(items.anyOf[index].help)} />
+          ) : (
             <div />
           );
         const checkbox = (

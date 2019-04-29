@@ -16,8 +16,8 @@ import {
   deepEquals,
   getSchemaType,
 } from "../../utils";
-import UnsupportedField from "./UnsupportedField";;
-import TooltipWrapper from '../widgets/TooltipWrapper'
+import UnsupportedField from "./UnsupportedField";
+import TooltipWrapper from "../widgets/TooltipWrapper";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -49,14 +49,14 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   return componentName in fields
     ? fields[componentName]
     : () => {
-      return (
-        <UnsupportedField
-          schema={schema}
-          idSchema={idSchema}
-          reason={`Unknown field type ${schema.type}`}
-        />
-      );
-    };
+        return (
+          <UnsupportedField
+            schema={schema}
+            idSchema={idSchema}
+            reason={`Unknown field type ${schema.type}`}
+          />
+        );
+      };
 }
 
 function Label(props) {
@@ -65,7 +65,10 @@ function Label(props) {
     return null;
   }
   return (
-    <label className="control-label" htmlFor={id} style={{ wordBreak: "break-word", maxWidth: "95%" }}>
+    <label
+      className="control-label"
+      htmlFor={id}
+      style={{ wordBreak: "break-word", maxWidth: "95%" }}>
       {ReactHtmlParser(label)}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
@@ -92,8 +95,7 @@ function Help(props) {
   }
   return (
     <span>
-      <TooltipWrapper
-        help={ReactHtmlParser(help)} />
+      <TooltipWrapper help={ReactHtmlParser(help)} />
       <br />
     </span>
   );
@@ -419,7 +421,7 @@ class SchemaField extends React.Component {
       const { onChange, name } = this.props;
 
       //Provide a new onChange event for the SchemaField
-      customProps.onChange = function (formData) {
+      customProps.onChange = function(formData) {
         //Call the original onChange handler
         onChange(formData);
 
