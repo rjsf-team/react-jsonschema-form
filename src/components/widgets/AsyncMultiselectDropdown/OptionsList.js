@@ -102,7 +102,7 @@ const OptionsList = props => {
               onChangePage={handleChangePage}
             />
           )}
-          <Button onClick={closeOptionPanel}>Done</Button>
+          {isMultiselect && <Button onClick={closeOptionPanel}>Done</Button> }
         </Grid>
       </Grid>
     </Grid>
