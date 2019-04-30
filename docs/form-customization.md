@@ -184,6 +184,167 @@ Notes:
  - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
  - A hidden widget takes its value from the `formData` prop.
 
+##### Filtering forms dynamically with hidden widgets
+
+Filtering large forms can be accomplished by taking a search string and dynamically constructing a `uiSchema` object based on it, using code like the following:
+
+```js
+const schema = {
+  type: 'object',
+  properties: {
+    foo: {
+      type: 'object',
+      properties: {
+        bar: {type: 'string'},
+      },
+    },
+    baz: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          description: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+};
+
+const objectContainsMatchingChildren = (object, stringToSearchFor) => {
+  const arrayToSearchFor = stringToSearchFor.split(',');
+
+  if (typeof object === 'object') {
+    return Object.keys(object).map(element => {
+      if (
+        typeof element === 'string' &&
+        arrayToSearchFor
+          .map(substringToSearchFor =>
+            element
+              .toLowerCase()
+              .includes(substringToSearchFor.toLowerCase().trim())
+          )
+          .includes(true)
+      ) {
+        return true;
+      }
+      if (typeof object[element] === 'object') {
+        return objectContainsMatchingChildren(
+          object[element],
+          stringToSearchFor
+        ).includes(true);
+      }
+      return false;
+    });
+  }
+  return false;
+};
+
+const applyFilterToObject = (object, searchString) => {
+  const arrayToSearchFor = searchString.split(',');
+
+  let objectCopy = {};
+
+  Object.keys(object).forEach(key => {
+    if (typeof object[key] === 'object') {
+      if (Array.isArray(object[key])) {
+        objectCopy[key] = {};
+      } else if (
+        typeof key === 'string' &&
+        arrayToSearchFor
+          .map(substringToSearchFor =>
+            key
+              .toLowerCase()
+              .includes(substringToSearchFor.toLowerCase().trim())
+          )
+          .includes(true)
+      ) {
+        objectCopy[key] = {};
+      } else if (
+        !objectContainsMatchingChildren(object[key], searchString).includes(
+          true
+        )
+      ) {
+        objectCopy[key] = {'ui:widget': 'hidden'};
+      } else if (key === 'properties') {
+        if (
+          objectContainsMatchingChildren(object[key], searchString).includes(
+            true
+          )
+        ) {
+          // console.log(
+          //   `Properties key "${key}" contains matching children.`
+          // );
+        }
+        objectCopy = objectContainsMatchingChildren(
+          object[key],
+          searchString
+        ).includes(true)
+          ? {
+              ...objectCopy[key],
+              ...applyFilterToObject(object[key], searchString),
+            }
+          : {
+              'ui:widget': 'hidden',
+            };
+      } else if (key === 'items') {
+        // console.log(`Entered 'items' part of tree with key "${key}".`);
+        if (
+          objectContainsMatchingChildren(object[key], searchString).includes(
+            true
+          )
+        ) {
+          // console.log(`Item key "${key}" contains matching children.`);
+        }
+        objectCopy[key] = objectContainsMatchingChildren(
+          object[key],
+          searchString
+        ).includes(true)
+          ? {
+              ...objectCopy[key],
+              ...applyFilterToObject(object[key], searchString),
+            }
+          : {
+              'ui:widget': 'hidden',
+            };
+      } else {
+        const elementContainsChildObjects = Object.keys(object[key])
+          .map(element => typeof object[key][element] === 'object')
+          .includes(true);
+
+        objectCopy[key] = elementContainsChildObjects
+          ? {...applyFilterToObject(object[key], searchString)}
+          : {'ui:widget': 'hidden'};
+      }
+    } else {
+      // console.log(`Rejecting key "${key}"...`);
+      objectCopy[key] = {'ui:widget': 'hidden'};
+    }
+  });
+
+  return objectCopy;
+};
+
+const uiSchema = applyFilterToObject(schema.properties, 'bar, description');
+
+console.log(uiSchema);
+
+// {
+//   "foo": {
+//     "bar": {}
+//   },
+//   "baz": {
+//     "type": {
+//       "ui:widget": "hidden"
+//     },
+//     "items": {
+//       "description": {}
+//     }
+//   }
+// }
+```
+
 #### File widgets
 
 This library supports a limited form of `input[type=file]` widgets, in the sense that it will propagate file contents to form data state as [data-url](http://dataurl.net/#about)s.
