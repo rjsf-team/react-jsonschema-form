@@ -72,7 +72,7 @@ module.exports = {
       credit_card: {
         "ui:help": (
           <p>
-            "If you enter anything here then <code>billing_address</code> will
+            If you enter anything here then <code>billing_address</code> will
             become required.
           </p>
         ),

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _pick from "lodash/pick";
+import _get from "lodash/get";
 import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
@@ -10,6 +11,7 @@ import {
   setState,
   getDefaultRegistry,
   deepEquals,
+  toNameSchema,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -49,15 +51,15 @@ export default class Form extends Component {
     this.setState(nextState);
   }
 
-  getStateFromProps(props) {
+  getStateFromProps(props, inputFormData = props.formData) {
     const state = this.state || {};
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
-    const edit = typeof props.formData !== "undefined";
+    const edit = typeof inputFormData !== "undefined";
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const { definitions } = schema;
-    const formData = getDefaultFormState(schema, props.formData, definitions);
+    const formData = getDefaultFormState(schema, inputFormData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
     const additionalMetaSchemas = props.additionalMetaSchemas;
     const { errors, errorSchema } = mustValidate
@@ -73,6 +75,7 @@ export default class Form extends Component {
       formData,
       props.idPrefix
     );
+    const nameSchema = toNameSchema(retrievedSchema, "", definitions, formData);
     return {
       schema,
       uiSchema,
@@ -82,6 +85,7 @@ export default class Form extends Component {
       errors,
       errorSchema,
       additionalMetaSchemas,
+      nameSchema,
     };
   }
 
@@ -124,14 +128,37 @@ export default class Form extends Component {
     return null;
   }
 
-  getUsedFormData = formData => {
-    const fields = this.formElement.querySelectorAll("[name]");
-    const inputNames = [];
-    fields.forEach(field => {
-      inputNames.push(field.name);
-    });
+  getUsedFormData = (formData, fields) => {
+    return _pick(formData, fields);
+  };
 
-    return _pick(formData, inputNames);
+  getFieldNames = (nameSchema, formData) => {
+    const getAllPaths = (_obj, acc = [], paths = []) => {
+      Object.keys(_obj).forEach(key => {
+        if (typeof _obj[key] === "object") {
+          if (!paths.length) {
+            getAllPaths(_obj[key], acc, [key]);
+          } else {
+            let newPaths = [];
+            paths.forEach(path => {
+              newPaths.push(path);
+            });
+            newPaths = newPaths.map(path => `${path}.${key}`);
+            getAllPaths(_obj[key], acc, newPaths);
+          }
+        } else if (key === "name") {
+          paths.forEach(path => {
+            const formValue = _get(formData, path);
+            if (typeof formValue !== "object") {
+              acc.push(path);
+            }
+          });
+        }
+      });
+      return acc;
+    };
+
+    return getAllPaths(nameSchema);
   };
 
   onChange = (formData, newErrorSchema) => {
@@ -140,7 +167,14 @@ export default class Form extends Component {
     let newFormData = formData;
 
     if (this.props.omitExtraData === true && this.props.liveValidate) {
-      newFormData = this.getUsedFormData(formData);
+      const newState = this.getStateFromProps(this.props, formData);
+
+      const fieldNames = this.getFieldNames(
+        newState.nameSchema,
+        newState.formData
+      );
+
+      newFormData = this.getUsedFormData(formData, fieldNames);
     }
 
     if (mustValidate) {
@@ -178,8 +212,11 @@ export default class Form extends Component {
     event.persist();
     let newFormData = this.state.formData;
 
+    const { nameSchema } = this.state;
+
     if (this.props.omitExtraData === true) {
-      newFormData = this.getUsedFormData(this.state.formData);
+      const fieldNames = this.getFieldNames(nameSchema, this.state.formData);
+      newFormData = this.getUsedFormData(this.state.formData, fieldNames);
     }
 
     if (!this.props.noValidate) {
