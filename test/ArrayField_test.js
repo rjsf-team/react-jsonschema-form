@@ -895,34 +895,30 @@ describe("ArrayField", () => {
     });
 
     it("should handle a change event", () => {
-      window.URL.createObjectURL = function() {};
-
-      sandbox
-        .stub(window.URL, "createObjectURL")
-        .returns(
-          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c"
-        );
+      sandbox.stub(window, "FileReader").returns({
+        set onload(fn) {
+          fn({ target: { result: "data:text/plain;base64,x=" } });
+        },
+        readAsDataUrl() {},
+      });
 
       const { comp, node } = createFormComponent({ schema });
+
       Simulate.change(node.querySelector(".field input[type=file]"), {
         target: {
           files: [
-            new window.File(["test"], "foo1.txt", {
-              type: "text/plain",
-            }),
-            new window.File(["test"], "foo2.txt", {
-              type: "text/plain",
-            }),
+            { name: "file1.txt", size: 1, type: "type" },
+            { name: "file2.txt", size: 2, type: "type" },
           ],
         },
       });
 
-      return new Promise(setImmediate).then(() => {
+      return new Promise(setImmediate).then(() =>
         expect(comp.state.formData).eql([
-          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#foo1.txt",
-          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#foo2.txt",
-        ]);
-      });
+          "data:text/plain;name=file1.txt;base64,x=",
+          "data:text/plain;name=file2.txt;base64,x=",
+        ])
+      );
     });
 
     it("should fill field with data", () => {
@@ -962,6 +958,123 @@ describe("ArrayField", () => {
         schema,
         widgets: {
           FileWidget: CustomComponent,
+        },
+        formData: [],
+        liveValidate: true,
+      });
+
+      const matches = node.querySelectorAll("#custom");
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.eql(
+        "should NOT have fewer than 5 items"
+      );
+    });
+  });
+
+  describe("Multiple blob files field", () => {
+    const schema = {
+      type: "array",
+      title: "My Blob field",
+      items: {
+        type: "string",
+        format: "blob-url",
+      },
+    };
+
+    it("should render an input[type=file] widget", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("input[type=file]")).to.have.length.of(1);
+    });
+
+    it("should render a select widget with a label", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector(".field label").textContent).eql(
+        "My Blob field"
+      );
+    });
+
+    it("should render a file widget with multiple attribute", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector(".field [type=file]").getAttribute("multiple"))
+        .not.to.be.null;
+    });
+
+    it("should handle a blob file change event", () => {
+      window.URL.createObjectURL = function() {};
+
+      sandbox
+        .stub(window.URL, "createObjectURL")
+        .returns(
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c"
+        );
+
+      const { comp, node } = createFormComponent({ schema });
+      Simulate.change(node.querySelector(".field input[type=file]"), {
+        target: {
+          files: [
+            new window.File(["test"], "foo1.txt", {
+              type: "text/plain",
+            }),
+            new window.File(["test"], "foo2.txt", {
+              type: "text/plain",
+            }),
+          ],
+        },
+      });
+
+      return new Promise(setImmediate).then(() => {
+        expect(comp.state.formData).eql([
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#foo1.txt",
+          "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#foo2.txt",
+        ]);
+      });
+    });
+
+    it("should fill field with data", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          "https://homepages.cae.wisc.edu/~ece533/images/boat.png",
+          "https://homepages.cae.wisc.edu/~ece533/images/tulips.png",
+        ],
+      });
+
+      const media = node.querySelectorAll(".list-group .media");
+      console.log("james media : ", node);
+
+      expect(media).to.have.length.of(2);
+
+      //TODO:
+      // remain from here
+      // window.document.querySelectorAll(".list-group .media")[0].
+      expect(media[0].textContent).eql("file1.txt (text/plain, 5 bytes)");
+      expect(media[1].textContent).eql("file2.png (image/png, 7 bytes)");
+    });
+
+    it("should render the file widget with the expected id", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector("input[type=file]").id).eql("root");
+    });
+
+    it("should pass rawErrors down to custom widgets", () => {
+      const schema = {
+        type: "array",
+        title: "My field",
+        items: {
+          type: "string",
+          format: "blob-url",
+        },
+        minItems: 5,
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        widgets: {
+          BlobFileWidget: CustomComponent,
         },
         formData: [],
         liveValidate: true,

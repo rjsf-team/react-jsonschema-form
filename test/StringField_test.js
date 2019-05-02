@@ -1589,6 +1589,117 @@ describe("StringField", () => {
     });
 
     it("should reflect the change into the dom", () => {
+      sandbox.stub(window, "FileReader").returns({
+        set onload(fn) {
+          fn({ target: { result: "data:text/plain;base64,x=" } });
+        },
+        readAsDataUrl() {},
+      });
+
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "data-url",
+        },
+      });
+
+      Simulate.change(node.querySelector("[type=file]"), {
+        target: {
+          files: [{ name: "file1.txt", size: 1, type: "type" }],
+        },
+      });
+
+      return new Promise(setImmediate).then(() =>
+        expect(comp.state.formData).eql(
+          "data:text/plain;name=file1.txt;base64,x="
+        )
+      );
+    });
+
+    it("should encode file name with encodeURIComponent", () => {
+      const nonUriEncodedValue = "fileáéí óú1.txt";
+      const uriEncodedValue = "file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt";
+
+      sandbox.stub(window, "FileReader").returns({
+        set onload(fn) {
+          fn({ target: { result: "data:text/plain;base64,x=" } });
+        },
+        readAsDataUrl() {},
+      });
+
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "data-url",
+        },
+      });
+
+      Simulate.change(node.querySelector("[type=file]"), {
+        target: {
+          files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
+        },
+      });
+
+      return new Promise(setImmediate).then(() =>
+        expect(comp.state.formData).eql(
+          "data:text/plain;name=" + uriEncodedValue + ";base64,x="
+        )
+      );
+    });
+
+    it("should render the widget with the expected id", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "data-url",
+        },
+      });
+
+      expect(node.querySelector("[type=file]").id).eql("root");
+    });
+
+    it("should render customized FileWidget", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "data-url",
+        },
+        widgets: {
+          FileWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector("#custom")).to.exist;
+    });
+  });
+
+  describe("BlobFileWidget", () => {
+    const initialValue =
+      "https://homepages.cae.wisc.edu/~ece533/images/boat.png";
+
+    it("should render a color field", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "blob-url",
+        },
+      });
+
+      expect(node.querySelectorAll(".field [type=file]")).to.have.length.of(1);
+    });
+
+    it("should assign a default value", () => {
+      const { comp } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "color",
+          default: initialValue,
+        },
+      });
+      expect(comp.state.formData).eql(initialValue);
+    });
+
+    it("should reflect the change into the dom", () => {
       window.URL.createObjectURL = function() {};
 
       sandbox
@@ -1636,7 +1747,7 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url",
+          format: "blob-url",
         },
       });
 
@@ -1662,7 +1773,7 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url",
+          format: "blob-url",
         },
       });
 
@@ -1673,7 +1784,7 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url",
+          format: "blob-url",
         },
         widgets: {
           FileWidget: CustomWidget,

@@ -60,7 +60,7 @@ function extractFileInfo(dataURLs) {
     });
 }
 
-class FileWidget extends Component {
+class BlobFileWidget extends Component {
   constructor(props) {
     super(props);
     const { value } = props;
@@ -118,12 +118,12 @@ class FileWidget extends Component {
   }
 }
 
-FileWidget.defaultProps = {
+BlobFileWidget.defaultProps = {
   autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
-  FileWidget.propTypes = {
+  BlobFileWidget.propTypes = {
     multiple: PropTypes.bool,
     value: PropTypes.oneOfType([
       PropTypes.string,
@@ -133,4 +133,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default FileWidget;
+export default BlobFileWidget;
