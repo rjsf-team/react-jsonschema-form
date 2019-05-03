@@ -1,12 +1,13 @@
 import AddButton from "../AddButton";
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as types from "../../types";
 
 import {
   orderProperties,
   retrieveSchema,
   getDefaultRegistry,
   getUiOptions,
+  ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
@@ -29,7 +30,7 @@ function DefaultObjectFieldTemplate(props) {
 
   const { TitleField, DescriptionField } = props;
   return (
-    <fieldset>
+    <fieldset id={props.idSchema.$id}>
       {(props.uiSchema["ui:title"] || props.title) && (
         <TitleField
           id={`${props.idSchema.$id}__title`}
@@ -79,8 +80,18 @@ class ObjectField extends Component {
     );
   }
 
-  onPropertyChange = name => {
+  onPropertyChange = (name, addedByAdditionalProperties = false) => {
     return (value, errorSchema) => {
+      if (!value && addedByAdditionalProperties) {
+        // Don't set value = undefined for fields added by
+        // additionalProperties. Doing so removes them from the
+        // formData, which causes them to completely disappear
+        // (including the input field for the property name). Unlike
+        // fields which are "mandated" by the schema, these fields can
+        // be set to undefined by clicking a "delete field" button, so
+        // set empty values to the empty string.
+        value = "";
+      }
       const newFormData = { ...this.props.formData, [name]: value };
       this.props.onChange(
         newFormData,
@@ -93,10 +104,20 @@ class ObjectField extends Component {
     };
   };
 
+  onDropPropertyClick = key => {
+    return event => {
+      event.preventDefault();
+      const { onChange, formData } = this.props;
+      const copiedFormData = { ...formData };
+      delete copiedFormData[key];
+      onChange(copiedFormData);
+    };
+  };
+
   getAvailableKey = (preferredKey, formData) => {
     var index = 0;
     var newKey = preferredKey;
-    while (this.props.formData.hasOwnProperty(newKey)) {
+    while (formData.hasOwnProperty(newKey)) {
       newKey = `${preferredKey}-${++index}`;
     }
     return newKey;
@@ -104,13 +125,19 @@ class ObjectField extends Component {
 
   onKeyChange = oldValue => {
     return (value, errorSchema) => {
+      if (oldValue === value) {
+        return;
+      }
       value = this.getAvailableKey(value, this.props.formData);
       const newFormData = { ...this.props.formData };
-      const property = newFormData[oldValue];
-      delete newFormData[oldValue];
-      newFormData[value] = property;
+      const newKeys = { [oldValue]: value };
+      const keyValues = Object.keys(newFormData).map(key => {
+        const newKey = newKeys[key] || key;
+        return { [newKey]: newFormData[key] };
+      });
+      const renamedObj = Object.assign({}, ...keyValues);
       this.props.onChange(
-        newFormData,
+        renamedObj,
         errorSchema &&
           this.props.errorSchema && {
             ...this.props.errorSchema,
@@ -170,9 +197,8 @@ class ObjectField extends Component {
     const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
-
     try {
-      const properties = Object.keys(schema.properties);
+      const properties = Object.keys(schema.properties || {});
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
     } catch (err) {
       return (
@@ -187,13 +213,15 @@ class ObjectField extends Component {
     }
 
     const Template = registry.ObjectFieldTemplate || DefaultObjectFieldTemplate;
-
     const templateProps = {
       title: uiSchema["ui:title"] || title,
       description,
       TitleField,
       DescriptionField,
       properties: orderedProperties.map(name => {
+        const addedByAdditionalProperties = schema.properties[
+          name
+        ].hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
         return {
           content: (
             <SchemaField
@@ -201,18 +229,26 @@ class ObjectField extends Component {
               name={name}
               required={this.isRequired(name)}
               schema={schema.properties[name]}
-              uiSchema={uiSchema[name]}
+              uiSchema={
+                addedByAdditionalProperties
+                  ? uiSchema.additionalProperties
+                  : uiSchema[name]
+              }
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
-              formData={formData[name]}
+              formData={(formData || {})[name]}
               onKeyChange={this.onKeyChange(name)}
-              onChange={this.onPropertyChange(name)}
+              onChange={this.onPropertyChange(
+                name,
+                addedByAdditionalProperties
+              )}
               onBlur={onBlur}
               onFocus={onFocus}
               registry={registry}
               disabled={disabled}
               readonly={readonly}
+              onDropPropertyClick={this.onDropPropertyClick}
             />
           ),
           name,
@@ -221,6 +257,8 @@ class ObjectField extends Component {
           required,
         };
       }),
+      readonly,
+      disabled,
       required,
       idSchema,
       uiSchema,
@@ -233,25 +271,7 @@ class ObjectField extends Component {
 }
 
 if (process.env.NODE_ENV !== "production") {
-  ObjectField.propTypes = {
-    schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.object,
-    errorSchema: PropTypes.object,
-    idSchema: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    formData: PropTypes.object,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired,
-    }),
-  };
+  ObjectField.propTypes = types.fieldProps;
 }
 
 export default ObjectField;

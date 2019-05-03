@@ -1,8 +1,9 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-addons-test-utils";
+import sinon from "sinon";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, setProps } from "./test_utils";
 
 describe("NumberField", () => {
   let sandbox;
@@ -16,7 +17,7 @@ describe("NumberField", () => {
   });
 
   describe("TextWidget", () => {
-    it("should render a string field", () => {
+    it("should render a number input", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
@@ -24,7 +25,7 @@ describe("NumberField", () => {
       });
 
       expect(
-        node.querySelectorAll(".field input[type=text]")
+        node.querySelectorAll(".field input[type=number]")
       ).to.have.length.of(1);
     });
 
@@ -128,18 +129,107 @@ describe("NumberField", () => {
       expect(node.querySelector(".field input").value).eql("2");
     });
 
-    it("should not cast the input as a number if it ends with a dot", () => {
+    describe("when inputting a number that ends with a dot and/or zero it should normalize it, without changing the input value", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "number",
         },
       });
 
-      Simulate.change(node.querySelector("input"), {
-        target: { value: "2." },
+      const $input = node.querySelector("input");
+
+      const tests = [
+        {
+          input: "2.",
+          output: 2,
+        },
+        {
+          input: "2.0",
+          output: 2,
+        },
+        {
+          input: "2.3",
+          output: 2.3,
+        },
+        {
+          input: "2.30",
+          output: 2.3,
+        },
+        {
+          input: "2.300",
+          output: 2.3,
+        },
+        {
+          input: "2.3001",
+          output: 2.3001,
+        },
+        {
+          input: "2.03",
+          output: 2.03,
+        },
+        {
+          input: "2.003",
+          output: 2.003,
+        },
+        {
+          input: "2.00300",
+          output: 2.003,
+        },
+        {
+          input: "200300",
+          output: 200300,
+        },
+      ];
+
+      tests.forEach(test => {
+        it(`should work with an input value of ${test.input}`, () => {
+          Simulate.change($input, {
+            target: { value: test.input },
+          });
+
+          expect(comp.state.formData).eql(test.output);
+          expect($input.value).eql(test.input);
+        });
+      });
+    });
+
+    it("should normalize values beginning with a decimal point", () => {
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "number",
+        },
       });
 
-      expect(comp.state.formData).eql("2.");
+      const $input = node.querySelector("input");
+
+      Simulate.change($input, {
+        target: { value: ".00" },
+      });
+
+      expect(comp.state.formData).eql(0);
+      expect($input.value).eql("0");
+    });
+
+    it("should update input values correctly when formData prop changes", () => {
+      const schema = {
+        type: "number",
+      };
+
+      const { comp, node } = createFormComponent({
+        schema,
+        formData: 2.03,
+      });
+
+      const $input = node.querySelector("input");
+
+      expect($input.value).eql("2.03");
+
+      setProps(comp, {
+        schema,
+        formData: 203,
+      });
+
+      expect($input.value).eql("203");
     });
 
     it("should render the widget with the expected id", () => {
@@ -149,7 +239,7 @@ describe("NumberField", () => {
         },
       });
 
-      expect(node.querySelector("input[type=text]").id).eql("root");
+      expect(node.querySelector("input[type=number]").id).eql("root");
     });
 
     it("should render with trailing zeroes", () => {
@@ -180,6 +270,19 @@ describe("NumberField", () => {
       expect(node.querySelector(".field input").value).eql("2.000");
     });
 
+    it("should allow a zero to be input", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+        },
+      });
+
+      Simulate.change(node.querySelector("input"), {
+        target: { value: "0" },
+      });
+      expect(node.querySelector(".field input").value).eql("0");
+    });
+
     it("should render customized StringField", () => {
       const CustomStringField = () => <div id="custom" />;
 
@@ -194,6 +297,17 @@ describe("NumberField", () => {
 
       expect(node.querySelector("#custom")).to.exist;
     });
+
+    it("should use step to represent the multipleOf keyword", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+          multipleOf: 5,
+        },
+      });
+
+      expect(node.querySelector("input").step).to.eql("5");
+    });
   });
 
   describe("SelectWidget", () => {
@@ -206,6 +320,26 @@ describe("NumberField", () => {
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+    });
+
+    it("should infer the value from an enum on change", () => {
+      const spy = sinon.spy();
+      const { node } = createFormComponent({
+        schema: {
+          enum: [1, 2],
+        },
+        onChange: spy,
+      });
+
+      expect(node.querySelectorAll(".field select")).to.have.length.of(1);
+      const $select = node.querySelector(".field select");
+      expect($select.value).eql("");
+
+      Simulate.change(node.querySelector(".field select"), {
+        target: { value: "1" },
+      });
+      expect($select.value).eql("1");
+      expect(spy.lastCall.args[0].formData).eql(1);
     });
 
     it("should render a string field with a label", () => {
@@ -268,6 +402,77 @@ describe("NumberField", () => {
       });
 
       expect(node.querySelector("select").id).eql("root");
+    });
+
+    it("should render a select element with a blank option, when default value is not set.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [0],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const selects = node.querySelectorAll("select");
+      expect(selects[0].value).eql("");
+
+      const options = node.querySelectorAll("option");
+      expect(options.length).eql(2);
+      expect(options[0].innerHTML).eql("");
+    });
+
+    it("should render a select element without a blank option, if a default value is set.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [2],
+            default: 2,
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const selects = node.querySelectorAll("select");
+      expect(selects[0].value).eql("2");
+
+      const options = node.querySelectorAll("option");
+      expect(options.length).eql(1);
+      expect(options[0].innerHTML).eql("2");
+    });
+
+    it("should render a select element without a blank option, if the default value is 0.", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "number",
+            enum: [0],
+            default: 0,
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const selects = node.querySelectorAll("select");
+      expect(selects[0].value).eql("0");
+
+      const options = node.querySelectorAll("option");
+      expect(options.length).eql(1);
+      expect(options[0].innerHTML).eql("0");
     });
   });
 });

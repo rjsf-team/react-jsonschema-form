@@ -38,13 +38,14 @@ export default class Form extends Component {
 
   componentWillReceiveProps(nextProps) {
     const nextState = this.getStateFromProps(nextProps);
-    this.setState(nextState);
     if (
       !deepEquals(nextState.formData, nextProps.formData) &&
+      !deepEquals(nextState.formData, this.state.formData) &&
       this.props.onChange
     ) {
       this.props.onChange(nextState);
     }
+    this.setState(nextState);
   }
 
   getStateFromProps(props) {
@@ -57,9 +58,10 @@ export default class Form extends Component {
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, props.formData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
-
+    const customFormats = props.customFormats;
+    const additionalMetaSchemas = props.additionalMetaSchemas;
     const { errors, errorSchema } = mustValidate
-      ? this.validate(formData, schema)
+      ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
       : {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
@@ -79,6 +81,7 @@ export default class Form extends Component {
       edit,
       errors,
       errorSchema,
+      additionalMetaSchemas,
     };
   }
 
@@ -86,7 +89,12 @@ export default class Form extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  validate(formData, schema = this.props.schema) {
+  validate(
+    formData,
+    schema = this.props.schema,
+    additionalMetaSchemas = this.props.additionalMetaSchemas,
+    customFormats = this.props.customFormats
+  ) {
     const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
     const resolvedSchema = retrieveSchema(schema, definitions, formData);
@@ -94,7 +102,9 @@ export default class Form extends Component {
       formData,
       resolvedSchema,
       validate,
-      transformErrors
+      transformErrors,
+      additionalMetaSchemas,
+      customFormats
     );
   }
 
@@ -150,6 +160,7 @@ export default class Form extends Component {
 
   onSubmit = event => {
     event.preventDefault();
+    event.persist();
 
     if (!this.props.noValidate) {
       const { errors, errorSchema } = this.validate(this.state.formData);
@@ -167,7 +178,7 @@ export default class Form extends Component {
 
     this.setState({ errors: [], errorSchema: {} }, () => {
       if (this.props.onSubmit) {
-        this.props.onSubmit({ ...this.state, status: "submitted" });
+        this.props.onSubmit({ ...this.state, status: "submitted" }, event);
       }
     });
   };
@@ -249,11 +260,11 @@ export default class Form extends Component {
         {children ? (
           children
         ) : (
-          <p>
+          <div>
             <button type="submit" className="btn btn-info">
               Submit
             </button>
-          </p>
+          </div>
         )}
       </form>
     );
@@ -293,5 +304,7 @@ if (process.env.NODE_ENV !== "production") {
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
+    customFormats: PropTypes.object,
+    additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
   };
 }

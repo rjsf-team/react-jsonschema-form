@@ -52,6 +52,7 @@ const widgetMap = {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
     files: "FileWidget",
+    hidden: "HiddenWidget",
   },
 };
 
@@ -66,9 +67,19 @@ export function getDefaultRegistry() {
 
 export function getSchemaType(schema) {
   let { type } = schema;
-  if (!type && schema.enum) {
-    type = "string";
+
+  if (!type && schema.const) {
+    return guessType(schema.const);
   }
+
+  if (!type && schema.enum) {
+    return "string";
+  }
+
+  if (type instanceof Array && type.length === 2 && type.includes("null")) {
+    return type.find(type => type !== "null");
+  }
+
   return type;
 }
 
@@ -157,9 +168,12 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
           if (schema.minItems > defaultsLength) {
             const defaultEntries = defaults || [];
             // populate the array with the defaults
+            const fillerSchema = Array.isArray(schema.items)
+              ? schema.additionalItems
+              : schema.items;
             const fillerEntries = fill(
               new Array(schema.minItems - defaultsLength),
-              computeDefaults(schema.items, schema.items.defaults, definitions)
+              computeDefaults(fillerSchema, fillerSchema.defaults, definitions)
             );
             // then fill up the rest with either the item default or empty, up to minItems
 
@@ -215,6 +229,9 @@ export function getUiOptions(uiSchema) {
 }
 
 export function isObject(thing) {
+  if (typeof File !== "undefined" && thing instanceof File) {
+    return false;
+  }
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
@@ -222,9 +239,9 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1[key],
+    const left = obj1 ? obj1[key] : {},
       right = obj2[key];
-    if (obj1.hasOwnProperty(key) && isObject(right)) {
+    if (obj1 && obj1.hasOwnProperty(key) && isObject(right)) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
       acc[key] = left.concat(right);
@@ -276,28 +293,32 @@ export function orderProperties(properties, order) {
       ? `properties '${arr.join("', '")}'`
       : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
-  const orderHash = arrayToHash(order);
   const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
   if (extraneous.length) {
-    throw new Error(
+    console.warn(
       `uiSchema order list contains extraneous ${errorPropList(extraneous)}`
     );
   }
+  const orderFiltered = order.filter(
+    prop => prop === "*" || propertyHash[prop]
+  );
+  const orderHash = arrayToHash(orderFiltered);
+
   const rest = properties.filter(prop => !orderHash[prop]);
-  const restIndex = order.indexOf("*");
+  const restIndex = orderFiltered.indexOf("*");
   if (restIndex === -1) {
     if (rest.length) {
       throw new Error(
         `uiSchema order list does not contain ${errorPropList(rest)}`
       );
     }
-    return order;
+    return orderFiltered;
   }
-  if (restIndex !== order.lastIndexOf("*")) {
+  if (restIndex !== orderFiltered.lastIndexOf("*")) {
     throw new Error("uiSchema order list contains more than one wildcard item");
   }
 
-  const complete = [...order];
+  const complete = [...orderFiltered];
   complete.splice(restIndex, 1, ...rest);
   return complete;
 }
@@ -390,6 +411,9 @@ function findSchemaDefinition($ref, definitions = {}) {
     let current = definitions;
     for (let part of parts) {
       part = part.replace(/~1/g, "/").replace(/~0/g, "~");
+      while (current.hasOwnProperty("$ref")) {
+        current = findSchemaDefinition(current.$ref, definitions);
+      }
       if (current.hasOwnProperty(part)) {
         current = current[part];
       } else {
@@ -406,7 +430,7 @@ function findSchemaDefinition($ref, definitions = {}) {
 
 // In the case where we have to implicitly create a schema, it is useful to know what type to use
 //  based on the data we are defining
-const guessType = function guessType(value) {
+export const guessType = function guessType(value) {
   if (Array.isArray(value)) {
     return "array";
   } else if (typeof value === "string") {
@@ -720,7 +744,9 @@ export function toIdSchema(
       field,
       fieldId,
       definitions,
-      formData[name],
+      // It's possible that formData is not an object -- this can happen if an
+      // array item has just been added, but not populated with data yet
+      (formData || {})[name],
       idPrefix
     );
   }
