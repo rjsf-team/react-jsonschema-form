@@ -1034,24 +1034,21 @@ describe("ArrayField", () => {
     });
 
     it("should fill field with data", () => {
+      const formData = [
+        "https://homepages.cae.wisc.edu/~ece533/images/boat.png",
+        "https://homepages.cae.wisc.edu/~ece533/images/tulips.png",
+      ];
       const { node } = createFormComponent({
         schema,
-        formData: [
-          "https://homepages.cae.wisc.edu/~ece533/images/boat.png",
-          "https://homepages.cae.wisc.edu/~ece533/images/tulips.png",
-        ],
+        formData,
       });
 
-      const media = node.querySelectorAll(".list-group .media");
-      console.log("james media : ", node);
+      const objectMedia = node.querySelectorAll(".media .media-left object");
 
-      expect(media).to.have.length.of(2);
+      expect(objectMedia).to.have.length.of(2);
 
-      //TODO:
-      // remain from here
-      // window.document.querySelectorAll(".list-group .media")[0].
-      expect(media[0].textContent).eql("file1.txt (text/plain, 5 bytes)");
-      expect(media[1].textContent).eql("file2.png (image/png, 7 bytes)");
+      expect(objectMedia[0].data).eql(formData[0]);
+      expect(objectMedia[1].data).eql(formData[1]);
     });
 
     it("should render the file widget with the expected id", () => {
