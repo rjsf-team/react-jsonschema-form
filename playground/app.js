@@ -18,7 +18,7 @@ import "codemirror/theme/solarized.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/eclipse.css";
 
-const SELECTED_TAB = "Files";
+const SELECTED_TAB = "Simple";
 
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);

@@ -299,7 +299,7 @@ describe("Validation", () => {
 
       it("Blob-Url with name is accepted", () => {
         const formData = {
-          dataUrlWithName:
+          blobUrlWithName:
             "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c#file1.txt",
         };
         const result = validateFormData(formData, schema);
@@ -308,7 +308,7 @@ describe("Validation", () => {
 
       it("Blob-Url without name is accepted", () => {
         const formData = {
-          dataUrlWithoutName:
+          blobUrlWithoutName:
             "blob:https://testing.com/a6a5f952-4c45-444b-93a2-957ae9a9883c",
         };
         const result = validateFormData(formData, schema);
