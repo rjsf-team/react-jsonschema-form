@@ -27,7 +27,7 @@ function FilesInfo(props) {
     return null;
   }
   return (
-    <ul className="list-group">
+    <div>
       {filesInfo.map((fileInfo, key) => {
         const { dataURL, name, size, type } = fileInfo;
         return (
@@ -45,7 +45,7 @@ function FilesInfo(props) {
           </div>
         );
       })}
-    </ul>
+    </div>
   );
 }
 
