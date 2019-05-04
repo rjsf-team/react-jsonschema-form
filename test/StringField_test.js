@@ -1711,7 +1711,7 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url",
+          format: "blob-url",
         },
       });
 
@@ -1787,7 +1787,7 @@ describe("StringField", () => {
           format: "blob-url",
         },
         widgets: {
-          FileWidget: CustomWidget,
+          BlobFileWidget: CustomWidget,
         },
       });
 
