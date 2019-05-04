@@ -21,7 +21,7 @@ function createAjvInstance() {
     "data-url",
     /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/
   );
-  ajv.addFormat("blob-url", /^(blob:http|http|https):\/\/.*$/);
+  ajv.addFormat("blob-url", /^(blob:http|blob:https|http|https):\/\/.*$/);
 
   ajv.addFormat(
     "color",
