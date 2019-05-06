@@ -123,6 +123,22 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
+export function hasWidget(schema, widget, registeredWidgets = {}) {
+  try {
+    getWidget(schema, widget, registeredWidgets);
+    return true;
+  } catch (e) {
+    if (
+      e.message &&
+      (e.message.startsWith("No widget") ||
+        e.message.startsWith("Unsupported widget"))
+    ) {
+      return false;
+    }
+    throw e;
+  }
+}
+
 function computeDefaults(schema, parentDefaults, definitions = {}) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
