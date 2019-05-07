@@ -15,7 +15,7 @@ module.exports = {
         title: "Last name",
       },
       age: {
-        type: "integer",
+        type: ["integer", "null"],
         title: "Age",
       },
       bio: {
@@ -43,6 +43,7 @@ module.exports = {
       "ui:widget": "updown",
       "ui:title": "Age of person",
       "ui:description": "(earthian year)",
+      "ui:emptyValue": null,
     },
     bio: {
       "ui:widget": "textarea",
