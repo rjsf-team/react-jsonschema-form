@@ -4,7 +4,8 @@ import * as types from "../../types";
 import { getUiOptions, getWidget, guessType } from "../../utils";
 import { isValid } from "../../validate";
 
-class AnyOfField extends Component {
+// Used as AnyOfField and OneOfField, see src/components/fields/index.js
+class MultiSchemaField extends Component {
   constructor(props) {
     super(props);
 
@@ -198,7 +199,7 @@ class AnyOfField extends Component {
   }
 }
 
-AnyOfField.defaultProps = {
+MultiSchemaField.defaultProps = {
   disabled: false,
   errorSchema: {},
   idSchema: {},
@@ -206,7 +207,7 @@ AnyOfField.defaultProps = {
 };
 
 if (process.env.NODE_ENV !== "production") {
-  AnyOfField.propTypes = {
+  MultiSchemaField.propTypes = {
     options: PropTypes.arrayOf(PropTypes.object).isRequired,
     baseType: PropTypes.string,
     uiSchema: PropTypes.object,
@@ -217,4 +218,4 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-export default AnyOfField;
+export default MultiSchemaField;
