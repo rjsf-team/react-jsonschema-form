@@ -3,6 +3,7 @@ import IconButton from "../IconButton";
 import React, { Component } from "react";
 import includes from "core-js/library/fn/array/includes";
 import * as types from "../../types";
+import { isObject } from "../../utils";
 
 import UnsupportedField from "./UnsupportedField";
 import {
@@ -297,8 +298,20 @@ class ArrayField extends Component {
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
         const jsonValue = typeof value === "undefined" ? null : value;
+        const { schema, registry = getDefaultRegistry() } = this.props;
+        const { definitions } = registry;
+        const itemSchema = retrieveSchema(schema.items, definitions, item);
+        if (isObject(itemSchema.properties) && jsonValue) {
+          Object.keys(itemSchema.properties).forEach(property => {
+            if (itemSchema.properties[property].type === "null") {
+              item[property] = null;
+            }
+          });
+        }
+
         return index === i ? jsonValue : item;
       });
+
       onChange(
         newFormData,
         errorSchema &&
