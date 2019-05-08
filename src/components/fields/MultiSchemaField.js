@@ -171,7 +171,8 @@ class AnyOfField extends Component {
               errorSchema={errorSchema}
               idSchema={idSchema}
               idPrefix={idPrefix}
-              formData={value}
+              options={options}
+              formData={selectedOption}
               onChange={this.onOptionChange}
               registry={registry}
               disabled={disabled}
