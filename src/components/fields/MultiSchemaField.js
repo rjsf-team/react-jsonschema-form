@@ -81,6 +81,10 @@ class AnyOfField extends Component {
       }
     }
 
+    if(this.state) {
+      return this.state.selectedOption || 0
+    }
+
     // If the form data matches none of the options, use the first option
     return 0;
   }
@@ -154,9 +158,25 @@ class AnyOfField extends Component {
         : Object.assign({}, option, { type: baseType });
     }
 
+    const MultiSchemaFieldSelect = registry.fields.MultiSchemaFieldSelect
+    
+
     return (
       <div className="panel panel-default panel-body">
         <div className="form-group">
+          {MultiSchemaFieldSelect ? 
+            <MultiSchemaFieldSelect
+              schema={optionSchema}
+              uiSchema={uiSchema}
+              errorSchema={errorSchema}
+              idSchema={idSchema}
+              idPrefix={idPrefix}
+              formData={value}
+              onChange={this.onOptionChange}
+              registry={registry}
+              disabled={disabled}
+            />
+          :
           <select
             className="form-control"
             onChange={this.onOptionChange}
@@ -170,6 +190,7 @@ class AnyOfField extends Component {
               );
             })}
           </select>
+          }
         </div>
 
         {option !== null && (
