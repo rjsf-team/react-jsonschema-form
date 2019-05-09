@@ -8,7 +8,7 @@ module.exports = {
       firstName: {
         type: "string",
         title: "First name",
-        default: "Chuck",
+        // default: "Chuck",
       },
       lastName: {
         type: "string",
@@ -38,6 +38,11 @@ module.exports = {
     firstName: {
       "ui:autofocus": true,
       "ui:emptyValue": "",
+      "ui:autocomplete": "family-name",
+    },
+    lastName: {
+      "ui:emptyValue": "",
+      "ui:autocomplete": "given-name",
     },
     age: {
       "ui:widget": "updown",
@@ -61,9 +66,9 @@ module.exports = {
     },
   },
   formData: {
-    lastName: "Norris",
-    age: 75,
-    bio: "Roundhouse kicking asses since 1940",
-    password: "noneed",
+    // lastName: "Norris",
+    // age: 75,
+    // bio: "Roundhouse kicking asses since 1940",
+    // password: "noneed",
   },
 };
