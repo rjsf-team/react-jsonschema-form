@@ -812,6 +812,106 @@ describe("Form", () => {
 
       sinon.assert.notCalled(onSubmit);
     });
+
+    it("should call getUsedFormData when the omitExtraData prop is true", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+          },
+        },
+      };
+      const formData = {
+        foo: "",
+      };
+      const onSubmit = sandbox.spy();
+      const onError = sandbox.spy();
+      const omitExtraData = true;
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+        onError,
+        omitExtraData,
+      });
+
+      sandbox.stub(comp, "getUsedFormData").returns({
+        foo: "",
+      });
+
+      Simulate.submit(node);
+
+      sinon.assert.calledOnce(comp.getUsedFormData);
+    });
+  });
+
+  describe("getUsedFormData", () => {
+    it("should call getUsedFormData with data from fields in event", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+      const formData = {
+        foo: "bar",
+      };
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const result = comp.getUsedFormData(formData, ["foo"]);
+      expect(result).eql({ foo: "bar" });
+    });
+
+    it("unused form values should be omitted", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+          baz: { type: "string" },
+          list: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                title: { type: "string" },
+                details: { type: "string" },
+              },
+            },
+          },
+        },
+      };
+
+      const formData = {
+        foo: "bar",
+        baz: "buzz",
+        list: [
+          { title: "title0", details: "details0" },
+          { title: "title1", details: "details1" },
+        ],
+      };
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const result = comp.getUsedFormData(formData, [
+        "foo",
+        "list.0.title",
+        "list.1.details",
+      ]);
+      expect(result).eql({
+        foo: "bar",
+        list: [{ title: "title0" }, { details: "details1" }],
+      });
+    });
   });
 
   describe("Change handler", () => {
@@ -843,6 +943,74 @@ describe("Form", () => {
           foo: "new",
         },
       });
+    });
+
+    it("should call getUsedFormData when the omitExtraData prop is true and liveValidate is true", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+          },
+        },
+      };
+      const formData = {
+        foo: "bar",
+      };
+      const onChange = sandbox.spy();
+      const omitExtraData = true;
+      const liveValidate = true;
+      const { node, comp } = createFormComponent({
+        schema,
+        formData,
+        onChange,
+        omitExtraData,
+        liveValidate,
+      });
+
+      sandbox.stub(comp, "getUsedFormData").returns({
+        foo: "",
+      });
+
+      Simulate.change(node.querySelector("[type=text]"), {
+        target: { value: "new" },
+      });
+
+      sinon.assert.calledOnce(comp.getUsedFormData);
+    });
+
+    it("should not call getUsedFormData when the omitExtraData prop is true and liveValidate is false", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+          },
+        },
+      };
+      const formData = {
+        foo: "bar",
+      };
+      const onChange = sandbox.spy();
+      const omitExtraData = true;
+      const liveValidate = false;
+      const { node, comp } = createFormComponent({
+        schema,
+        formData,
+        onChange,
+        omitExtraData,
+        liveValidate,
+      });
+
+      sandbox.stub(comp, "getUsedFormData").returns({
+        foo: "",
+      });
+
+      Simulate.change(node.querySelector("[type=text]"), {
+        target: { value: "new" },
+      });
+
+      sinon.assert.notCalled(comp.getUsedFormData);
     });
   });
   describe("Blur handler", () => {

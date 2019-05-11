@@ -753,6 +753,49 @@ export function toIdSchema(
   return idSchema;
 }
 
+export function toNameSchema(schema, name = "", definitions, formData = {}) {
+  const nameSchema = {
+    name,
+  };
+  if ("$ref" in schema || "dependencies" in schema) {
+    const _schema = retrieveSchema(schema, definitions, formData);
+    return toNameSchema(_schema, name, definitions, formData);
+  }
+  if ("items" in schema && !schema.items.$ref) {
+    const retVal = {};
+    if (Array.isArray(formData) && formData.length > 0) {
+      formData.forEach((element, index) => {
+        retVal[`${index}`] = toNameSchema(
+          schema.items,
+          `${name}.${index}`,
+          definitions,
+          element
+        );
+      });
+    }
+    return retVal;
+  }
+  if (schema.type !== "object") {
+    return nameSchema;
+  }
+  for (const property in schema.properties || {}) {
+    const field = schema.properties[property];
+    const fieldId = nameSchema.name
+      ? nameSchema.name + "." + property
+      : property;
+
+    nameSchema[property] = toNameSchema(
+      field,
+      fieldId,
+      definitions,
+      // It's possible that formData is not an object -- this can happen if an
+      // array item has just been added, but not populated with data yet
+      (formData || {})[property]
+    );
+  }
+  return nameSchema;
+}
+
 export function parseDateString(dateString, includeTime = true) {
   if (!dateString) {
     return {

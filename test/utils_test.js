@@ -18,6 +18,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema,
+  toNameSchema,
   guessType,
 } from "../src/utils";
 
@@ -1322,6 +1323,36 @@ describe("utils", () => {
         $id: "rjsf",
         foo: { $id: "rjsf_foo" },
         bar: { $id: "rjsf_bar" },
+      });
+    });
+  });
+
+  describe("toNameSchema", () => {
+    it("should return a nameSchema for root field", () => {
+      const schema = { type: "string" };
+
+      expect(toNameSchema(schema)).eql({ name: "" });
+    });
+
+    it("should return an idSchema for nested objects", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          level1: {
+            type: "object",
+            properties: {
+              level2: { type: "string" },
+            },
+          },
+        },
+      };
+
+      expect(toNameSchema(schema)).eql({
+        name: "",
+        level1: {
+          name: "level1",
+          level2: { name: "level1.level2" },
+        },
       });
     });
   });
