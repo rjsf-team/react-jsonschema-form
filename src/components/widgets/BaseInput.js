@@ -42,7 +42,11 @@ function BaseInput(props) {
       inputProps.type = "text";
     }
   }
-
+  // If ui:autocomplete passed
+  // https://developers.google.com/web/fundamentals/design-and-ux/input/forms/#recommended_input_name_and_autocomplete_attribute_values
+  if (options.autocomplete) {
+    inputProps.autoComplete = options.autocomplete;
+  }
   // If multipleOf is defined, use this as the step value. This mainly improves
   // the experience for keyboard users (who can use the up/down KB arrows).
   if (schema.multipleOf) {

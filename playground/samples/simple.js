@@ -39,6 +39,10 @@ module.exports = {
       "ui:autofocus": true,
       "ui:emptyValue": "",
     },
+    lastName: {
+      "ui:emptyValue": "",
+      "ui:autocomplete": "given-name", // try family-name
+    },
     age: {
       "ui:widget": "updown",
       "ui:title": "Age of person",
@@ -61,7 +65,6 @@ module.exports = {
     },
   },
   formData: {
-    lastName: "Norris",
     age: 75,
     bio: "Roundhouse kicking asses since 1940",
     password: "noneed",
