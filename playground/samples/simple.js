@@ -69,6 +69,12 @@ module.exports = {
           });
           return lookupString + "(" + selectedPrimaryKey + ")";
         },
+        onDeleteChoice: (selectedValue) => {
+          console.log("On delete called")
+        },
+        onSelectChoice: (selectedValue) => {
+          console.log("On select called")
+        }
       },
       movie: {
         type: "string",
@@ -119,6 +125,12 @@ module.exports = {
           });
           return lookupString + "(" + selectedPrimaryKey + ")";
         },
+        onDeleteChoice: (selectedValue) => {
+          console.log("On delete called")
+        },
+        onSelectChoice: (selectedValue) => {
+          console.log("On select called")
+        }
       },
       firstName: {
         type: "string",
