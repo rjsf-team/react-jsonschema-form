@@ -69,12 +69,12 @@ module.exports = {
           });
           return lookupString + "(" + selectedPrimaryKey + ")";
         },
-        onDeleteChoice: (selectedValue) => {
-          console.log("On delete called")
+        onDeleteChoice: selectedValue => {
+          console.log("Async select on delete called");
         },
-        onSelectChoice: (selectedValue) => {
-          console.log("On select called")
-        }
+        onSelectChoice: selectedValue => {
+          console.log("Async select on select called");
+        },
       },
       movie: {
         type: "string",
@@ -125,12 +125,12 @@ module.exports = {
           });
           return lookupString + "(" + selectedPrimaryKey + ")";
         },
-        onDeleteChoice: (selectedValue) => {
-          console.log("On delete called")
+        onDeleteChoice: selectedValue => {
+          console.log("Async select on delete called");
         },
-        onSelectChoice: (selectedValue) => {
-          console.log("On select called")
-        }
+        onSelectChoice: selectedValue => {
+          console.log("Async select on select called");
+        },
       },
       firstName: {
         type: "string",
