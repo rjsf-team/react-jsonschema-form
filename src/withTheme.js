@@ -9,12 +9,8 @@ function withTheme(data) {
       templates = { ...data.templates, ...templates };
       widgets = { ...data.widgets, ...widgets };
       fields = { ...data.fields, ...fields };
-      let ThemedForm = Form;
-      if (data.form) {
-        ThemedForm = data.form;
-      }
       return (
-        <ThemedForm
+        <Form
           {...otherProps}
           {...templates}
           widgets={widgets}
@@ -26,7 +22,6 @@ function withTheme(data) {
 }
 
 withTheme.propTypes = {
-  form: PropTypes.object,
   widgets: PropTypes.object,
   fields: PropTypes.object,
   templates: PropTypes.object,
