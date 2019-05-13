@@ -2499,7 +2499,7 @@ describe("uiSchema", () => {
 
       it("should mark as readonly a number text widget", () => {
         shouldBeReadonly(
-          "input[type=text]",
+          "input[type=number]",
           {
             type: "number",
             readOnly: true,
