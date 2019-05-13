@@ -150,7 +150,7 @@ export default class Form extends Component {
             newPaths = newPaths.map(path => `${path}.${key}`);
             getAllPaths(_obj[key], acc, newPaths);
           }
-        } else if (key === "name") {
+        } else if (key === "$name") {
           paths.forEach(path => {
             const formValue = _get(formData, path);
             if (typeof formValue !== "object") {

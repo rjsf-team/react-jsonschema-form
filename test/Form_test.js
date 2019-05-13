@@ -914,6 +914,132 @@ describe("Form", () => {
     });
   });
 
+  describe("getFieldNames()", () => {
+    it("should get field names from nameSchema", () => {
+      const schema = {};
+
+      const formData = {
+        extra: {
+          foo: "bar",
+        },
+        level1: {
+          level2: "test",
+          anotherThing: {
+            anotherThingNested: "abc",
+            extra: "asdf",
+            anotherThingNested2: 0,
+          },
+        },
+        level1a: 1.23,
+      };
+
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const nameSchema = {
+        $name: "",
+        level1: {
+          $name: "level1",
+          level2: { $name: "level1.level2" },
+          anotherThing: {
+            $name: "level1.anotherThing",
+            anotherThingNested: {
+              $name: "level1.anotherThing.anotherThingNested",
+            },
+            anotherThingNested2: {
+              $name: "level1.anotherThing.anotherThingNested2",
+            },
+          },
+        },
+        level1a: {
+          $name: "level1a",
+        },
+      };
+
+      const fieldNames = comp.getFieldNames(nameSchema, formData);
+      expect(fieldNames.sort()).eql(
+        [
+          "level1a",
+          "level1.level2",
+          "level1.anotherThing.anotherThingNested",
+          "level1.anotherThing.anotherThingNested2",
+        ].sort()
+      );
+    });
+
+    it("should get field names from nameSchema with array", () => {
+      const schema = {};
+
+      const formData = {
+        address_list: [
+          {
+            street_address: "21, Jump Street",
+            city: "Babel",
+            state: "Neverland",
+          },
+          {
+            street_address: "1234 Schema Rd.",
+            city: "New York",
+            state: "Arizona",
+          },
+        ],
+      };
+
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const nameSchema = {
+        $name: "",
+        address_list: {
+          "0": {
+            $name: "address_list.0",
+            city: {
+              $name: "address_list.0.city",
+            },
+            state: {
+              $name: "address_list.0.state",
+            },
+            street_address: {
+              $name: "address_list.0.street_address",
+            },
+          },
+          "1": {
+            $name: "address_list.1",
+            city: {
+              $name: "address_list.1.city",
+            },
+            state: {
+              $name: "address_list.1.state",
+            },
+            street_address: {
+              $name: "address_list.1.street_address",
+            },
+          },
+        },
+      };
+
+      const fieldNames = comp.getFieldNames(nameSchema, formData);
+      expect(fieldNames.sort()).eql(
+        [
+          "address_list.0.city",
+          "address_list.0.state",
+          "address_list.0.street_address",
+          "address_list.1.city",
+          "address_list.1.state",
+          "address_list.1.street_address",
+        ].sort()
+      );
+    });
+  });
+
   describe("Change handler", () => {
     it("should call provided change handler on form state change", () => {
       const schema = {

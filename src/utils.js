@@ -755,13 +755,13 @@ export function toIdSchema(
 
 export function toNameSchema(schema, name = "", definitions, formData = {}) {
   const nameSchema = {
-    name,
+    $name: name,
   };
   if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toNameSchema(_schema, name, definitions, formData);
   }
-  if ("items" in schema && !schema.items.$ref) {
+  if ("items" in schema) {
     const retVal = {};
     if (Array.isArray(formData) && formData.length > 0) {
       formData.forEach((element, index) => {
@@ -780,8 +780,8 @@ export function toNameSchema(schema, name = "", definitions, formData = {}) {
   }
   for (const property in schema.properties || {}) {
     const field = schema.properties[property];
-    const fieldId = nameSchema.name
-      ? nameSchema.name + "." + property
+    const fieldId = nameSchema.$name
+      ? nameSchema.$name + "." + property
       : property;
 
     nameSchema[property] = toNameSchema(
