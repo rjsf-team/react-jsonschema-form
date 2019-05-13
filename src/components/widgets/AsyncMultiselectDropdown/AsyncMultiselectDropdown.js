@@ -146,12 +146,15 @@ class AsyncMultiselectDropdown extends Component {
 
     if (selectedOptions.length > 0) {
       if (!isMultiselect) {
+        this.state.onSelectChoice(selectedOptions[0][primaryColumn]); 
         this.props.onChange(selectedOptions[0][primaryColumn]);
       } else {
         selectedOptions = selectedOptions.map(value => value[primaryColumn]);
+        this.state.onSelectChoice(JSON.stringify(selectedOptions));          
         this.props.onChange(JSON.stringify(selectedOptions));
       }
     } else {
+      this.state.onSelectChoice(undefined);
       this.props.onChange(undefined);
     }
   };
@@ -169,14 +172,17 @@ class AsyncMultiselectDropdown extends Component {
         this.setState({ selectedOptions });
         if (selectedOptions.length > 0) {
           if (!isMultiselect) {
+            this.state.onDeleteChoice(selectedOptions[0][primaryColumn]);             
             this.props.onChange(selectedOptions[0][primaryColumn]);
           } else {
             selectedOptions = selectedOptions.map(
               value => value[primaryColumn]
             );
+            this.state.onDeleteChoice(JSON.stringify(selectedOptions));          
             this.props.onChange(JSON.stringify(selectedOptions));
           }
         } else {
+          this.state.onDeleteChoice(undefined);      
           this.props.onChange(undefined);
         }
       }
