@@ -133,6 +133,11 @@ export default class Form extends Component {
   }
 
   getUsedFormData = (formData, fields) => {
+    //for the case of a single input form
+    if (fields.length === 0 && typeof formData !== "object") {
+      return formData;
+    }
+
     return _pick(formData, fields);
   };
 

@@ -847,6 +847,23 @@ describe("Form", () => {
   });
 
   describe("getUsedFormData", () => {
+    it("should just return the single input form value", () => {
+      const schema = {
+        title: "A single-field form",
+        type: "string",
+      };
+      const formData = "foo";
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const result = comp.getUsedFormData(formData, []);
+      expect(result).eql("foo");
+    });
+
     it("should call getUsedFormData with data from fields in event", () => {
       const schema = {
         type: "object",
@@ -915,6 +932,28 @@ describe("Form", () => {
   });
 
   describe("getFieldNames()", () => {
+    it("should return an empty array for a single input form", () => {
+      const schema = {
+        type: "string",
+      };
+
+      const formData = "foo";
+
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const nameSchema = {
+        $name: "",
+      };
+
+      const fieldNames = comp.getFieldNames(nameSchema, formData);
+      expect(fieldNames).eql([]);
+    });
+
     it("should get field names from nameSchema", () => {
       const schema = {};
 
