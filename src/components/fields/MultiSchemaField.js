@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-import { guessType } from "../../utils";
+import { guessType, retrieveNestedSchema } from "../../utils";
 import { isValid } from "../../validate";
 
 class AnyOfField extends Component {
@@ -69,6 +69,12 @@ class AnyOfField extends Component {
           augmentedSchema = Object.assign({}, option, requiresAnyOf);
         }
 
+        augmentedSchema = retrieveNestedSchema(
+          augmentedSchema,
+          this.props.registry.definitions,
+          formData
+        );
+
         // Remove the "required" field as it's likely that not all fields have
         // been filled in yet, which will mean that the schema is not valid
         delete augmentedSchema.required;
@@ -81,8 +87,8 @@ class AnyOfField extends Component {
       }
     }
 
-    if(this.state) {
-      return this.state.selectedOption || 0
+    if (this.state) {
+      return this.state.selectedOption || 0;
     }
 
     // If the form data matches none of the options, use the first option
@@ -158,13 +164,12 @@ class AnyOfField extends Component {
         : Object.assign({}, option, { type: baseType });
     }
 
-    const MultiSchemaFieldSelect = registry.fields.MultiSchemaFieldSelect
-    
+    const MultiSchemaFieldSelect = registry.fields.MultiSchemaFieldSelect;
 
     return (
       <div className="panel panel-default panel-body">
         <div className="form-group">
-          {MultiSchemaFieldSelect ? 
+          {MultiSchemaFieldSelect ? (
             <MultiSchemaFieldSelect
               schema={optionSchema}
               uiSchema={uiSchema}
@@ -177,21 +182,21 @@ class AnyOfField extends Component {
               registry={registry}
               disabled={disabled}
             />
-          :
-          <select
-            className="form-control"
-            onChange={this.onOptionChange}
-            value={selectedOption}
-            id={`${idSchema.$id}_anyof_select`}>
-            {options.map((option, index) => {
-              return (
-                <option key={index} value={index}>
-                  {option.title || `Option ${index + 1}`}
-                </option>
-              );
-            })}
-          </select>
-          }
+          ) : (
+            <select
+              className="form-control"
+              onChange={this.onOptionChange}
+              value={selectedOption}
+              id={`${idSchema.$id}_anyof_select`}>
+              {options.map((option, index) => {
+                return (
+                  <option key={index} value={index}>
+                    {option.title || `Option ${index + 1}`}
+                  </option>
+                );
+              })}
+            </select>
+          )}
         </div>
 
         {option !== null && (

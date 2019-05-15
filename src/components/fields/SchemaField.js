@@ -357,6 +357,7 @@ function SchemaFieldRender(props) {
       {schema.anyOf && !isSelect(schema) && (
         <_AnyOfField
           disabled={disabled}
+          schema={schema}
           errorSchema={errorSchema}
           formData={formData}
           idPrefix={idPrefix}

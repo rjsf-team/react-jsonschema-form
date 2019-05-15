@@ -13,6 +13,7 @@ import {
   mergeObjects,
   pad,
   parseDateString,
+  retrieveNestedSchema,
   retrieveSchema,
   shouldRender,
   toDateString,
@@ -948,6 +949,215 @@ describe("utils", () => {
           });
         });
       });
+    });
+  });
+
+  describe("retrieveNestedSchema()", () => {
+    it("should 'resolve' schemas without references", () => {
+      const schemas = [
+        {
+          title: "Person",
+          properties: {
+            PersonName: {
+              type: "object",
+              properties: {
+                NameSuffix: {
+                  type: "string",
+                },
+                Surname: {
+                  type: "string",
+                },
+                OtherGivenName: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                GivenName: {
+                  type: "string",
+                },
+              },
+              required: ["Surname", "GivenName"],
+              additionalProperties: false,
+            },
+          },
+          required: ["PersonName"],
+          additionalProperties: false,
+        },
+        {
+          title: "Business",
+          properties: {
+            CommlName: {
+              type: "object",
+              properties: {
+                CommercialName: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      ];
+      schemas.forEach(schema => {
+        const definitions = {};
+        expect(retrieveNestedSchema(schema, definitions)).eql(schema);
+      });
+    });
+
+    it("should 'resolve' schemas with references", () => {
+      const definitions = {
+        "C-11": {
+          type: "string",
+          minLength: 1,
+          maxLength: 11,
+        },
+        "C-255": {
+          type: "string",
+          minLength: 1,
+          maxLength: 255,
+        },
+      };
+
+      const schema = {
+        title: "Business",
+        properties: {
+          CommlName: {
+            type: "object",
+            properties: {
+              CommercialName: {
+                $ref: "#/definitions/C-255",
+              },
+            },
+          },
+        },
+      };
+      const expectedSchema = {
+        title: "Business",
+        properties: {
+          CommlName: {
+            type: "object",
+            properties: {
+              CommercialName: {
+                type: "string",
+                minLength: 1,
+                maxLength: 255,
+              },
+            },
+          },
+        },
+      };
+      expect(retrieveNestedSchema(schema, definitions)).eql(expectedSchema);
+    });
+
+    it("should 'resolve' schemas with several references", () => {
+      const definitions = {
+        "C-11": {
+          type: "string",
+          minLength: 1,
+          maxLength: 11,
+        },
+        "C-255": {
+          type: "string",
+          minLength: 1,
+          maxLength: 255,
+        },
+      };
+
+      const schema = {
+        title: "Person",
+        properties: {
+          PersonName: {
+            type: "object",
+            properties: {
+              NameSuffix: {
+                type: "string",
+              },
+              Surname: {
+                $ref: "#/definitions/C-11",
+              },
+              OtherGivenName: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              GivenName: {
+                $ref: "#/definitions/C-255",
+              },
+            },
+            required: ["Surname", "GivenName"],
+            additionalProperties: false,
+          },
+        },
+        required: ["PersonName"],
+        additionalProperties: false,
+      };
+      const expectedSchema = {
+        title: "Person",
+        properties: {
+          PersonName: {
+            type: "object",
+            properties: {
+              NameSuffix: {
+                type: "string",
+              },
+              Surname: {
+                type: "string",
+                minLength: 1,
+                maxLength: 11,
+              },
+              OtherGivenName: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              GivenName: {
+                type: "string",
+                minLength: 1,
+                maxLength: 255,
+              },
+            },
+            required: ["Surname", "GivenName"],
+            additionalProperties: false,
+          },
+        },
+        required: ["PersonName"],
+        additionalProperties: false,
+      };
+      expect(retrieveNestedSchema(schema, definitions)).eql(expectedSchema);
+    });
+
+    it("should 'resolve' the schema as is if a reference is not found", () => {
+      const definitions = {};
+
+      const schema = {
+        title: "Business",
+        properties: {
+          CommlName: {
+            type: "object",
+            properties: {
+              CommercialName: {
+                $ref: "#/definitions/C-255",
+              },
+            },
+          },
+        },
+      };
+      const expectedSchema = {
+        title: "Business",
+        properties: {
+          CommlName: {
+            type: "object",
+            properties: {
+              CommercialName: {
+                $ref: "#/definitions/C-255",
+              },
+            },
+          },
+        },
+      };
+      expect(retrieveNestedSchema(schema, definitions)).eql(expectedSchema);
     });
   });
 

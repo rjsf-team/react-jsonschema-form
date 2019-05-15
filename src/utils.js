@@ -4,6 +4,8 @@ import fill from "core-js/library/fn/array/fill";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
+const PROPERTIES_FIELD = "properties";
+
 const widgetMap = {
   boolean: {
     checkbox: "CheckboxWidget",
@@ -510,6 +512,41 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
   //   );
   // }
   return resolvedSchema;
+}
+
+export function retrieveNestedSchema(schema, definitions = {}, formData = {}) {
+  let nestedSchema = {};
+  // Recursively iterate over each schema key to resolve any definitions or dependencies
+  Object.keys(schema).forEach(key => {
+    if (schema.hasOwnProperty(PROPERTIES_FIELD)) {
+      nestedSchema = {
+        [PROPERTIES_FIELD]: retrieveNestedSchema(
+          schema.properties,
+          definitions,
+          formData
+        ),
+      };
+    } else if (
+      schema[key] instanceof Object &&
+      Object.keys(schema[key]).length > 0
+    ) {
+      nestedSchema = {
+        [key]: retrieveNestedSchema(schema[key], definitions),
+      };
+    } else {
+      try {
+        // Act on leaf
+        schema = retrieveSchema(schema, definitions, formData);
+      } catch (error) {
+        // Silently ignore errors (e.g. definitions not found) and return initial schema
+      }
+    }
+    schema = {
+      ...schema,
+      ...nestedSchema,
+    };
+  });
+  return schema;
 }
 
 function resolveDependencies(schema, definitions, formData) {
