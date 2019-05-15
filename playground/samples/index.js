@@ -22,6 +22,7 @@ import schemaDependencies from "./schemaDependencies";
 import localization from "./localization";
 import additionalProperties from "./additionalProperties";
 import nullable from "./nullable";
+import nullField from "./null";
 
 export const samples = {
   Simple: simple,
@@ -47,5 +48,6 @@ export const samples = {
   "Additional Properties": additionalProperties,
   "Any Of": anyOf,
   "One Of": oneOf,
+  "Null fields": nullField,
   Nullable: nullable,
 };

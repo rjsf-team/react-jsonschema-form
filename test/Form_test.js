@@ -2016,6 +2016,51 @@ describe("Form", () => {
     });
   });
 
+  describe("Custom format updates", () => {
+    it("Should update custom formats when customFormats is changed", () => {
+      const formProps = {
+        liveValidate: true,
+        formData: {
+          areaCode: "123455",
+        },
+        schema: {
+          type: "object",
+          properties: {
+            areaCode: {
+              type: "string",
+              format: "area-code",
+            },
+          },
+        },
+        uiSchema: {
+          areaCode: {
+            "ui:widget": "area-code",
+          },
+        },
+        widgets: {
+          "area-code": () => <div id="custom" />,
+        },
+      };
+
+      const { comp } = createFormComponent(formProps);
+
+      expect(comp.state.errorSchema).eql({});
+
+      setProps(comp, {
+        ...formProps,
+        customFormats: {
+          "area-code": /^\d{3}$/,
+        },
+      });
+
+      expect(comp.state.errorSchema).eql({
+        areaCode: {
+          __errors: ['should match format "area-code"'],
+        },
+      });
+    });
+  });
+
   describe("Meta schema updates", () => {
     it("Should update allowed meta schemas when additionalMetaSchemas is changed", () => {
       const formProps = {

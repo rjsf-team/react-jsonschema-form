@@ -59,9 +59,10 @@ export default class Form extends Component {
     const formData = getDefaultFormState(schema, props.formData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
     const localization = this.props.localization;
+    const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
     const { errors, errorSchema } = mustValidate
-      ? this.validate(formData, schema, additionalMetaSchemas, localization)
+      ? this.validate(formData, schema, additionalMetaSchemas, customFormats, localization)
       : {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
@@ -93,6 +94,7 @@ export default class Form extends Component {
     formData,
     schema = this.props.schema,
     additionalMetaSchemas = this.props.additionalMetaSchemas,
+    customFormats = this.props.customFormats,
     localization
   ) {
     const { validate, transformErrors } = this.props;
@@ -103,8 +105,9 @@ export default class Form extends Component {
       resolvedSchema,
       validate,
       transformErrors,
-      localization,
-      additionalMetaSchemas
+      additionalMetaSchemas,
+      customFormats,
+      localization
     );
   }
 
@@ -305,6 +308,7 @@ if (process.env.NODE_ENV !== "production") {
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
     localization: PropTypes.func,
+    customFormats: PropTypes.object,
     additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
   };
 }

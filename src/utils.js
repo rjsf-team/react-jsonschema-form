@@ -123,6 +123,22 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
+export function hasWidget(schema, widget, registeredWidgets = {}) {
+  try {
+    getWidget(schema, widget, registeredWidgets);
+    return true;
+  } catch (e) {
+    if (
+      e.message &&
+      (e.message.startsWith("No widget") ||
+        e.message.startsWith("Unsupported widget"))
+    ) {
+      return false;
+    }
+    throw e;
+  }
+}
+
 function computeDefaults(schema, parentDefaults, definitions = {}) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
@@ -229,6 +245,9 @@ export function getUiOptions(uiSchema) {
 }
 
 export function isObject(thing) {
+  if (typeof File !== "undefined" && thing instanceof File) {
+    return false;
+  }
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
@@ -252,6 +271,9 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
 export function asNumber(value) {
   if (value === "") {
     return undefined;
+  }
+  if (value === null) {
+    return null;
   }
   if (/\.$/.test(value)) {
     // "3." can't really be considered a number even if it parses in js. The
@@ -290,28 +312,32 @@ export function orderProperties(properties, order) {
       ? `properties '${arr.join("', '")}'`
       : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
-  const orderHash = arrayToHash(order);
   const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
   if (extraneous.length) {
-    throw new Error(
+    console.warn(
       `uiSchema order list contains extraneous ${errorPropList(extraneous)}`
     );
   }
+  const orderFiltered = order.filter(
+    prop => prop === "*" || propertyHash[prop]
+  );
+  const orderHash = arrayToHash(orderFiltered);
+
   const rest = properties.filter(prop => !orderHash[prop]);
-  const restIndex = order.indexOf("*");
+  const restIndex = orderFiltered.indexOf("*");
   if (restIndex === -1) {
     if (rest.length) {
       throw new Error(
         `uiSchema order list does not contain ${errorPropList(rest)}`
       );
     }
-    return order;
+    return orderFiltered;
   }
-  if (restIndex !== order.lastIndexOf("*")) {
+  if (restIndex !== orderFiltered.lastIndexOf("*")) {
     throw new Error("uiSchema order list contains more than one wildcard item");
   }
 
-  const complete = [...order];
+  const complete = [...orderFiltered];
   complete.splice(restIndex, 1, ...rest);
   return complete;
 }
