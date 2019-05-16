@@ -73,6 +73,12 @@ module.exports = {
         title: "A readonly field",
         default: "I am read-only.",
       },
+      readonly2: {
+        type: "string",
+        title: "Another readonly field",
+        default: "I am also read-only.",
+        readOnly: true,
+      },
       widgetOptions: {
         title: "Custom widget with options",
         type: "string",
