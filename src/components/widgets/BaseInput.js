@@ -64,6 +64,7 @@ function BaseInput(props) {
       autoFocus={autofocus}
       value={value == null ? "" : value}
       {...inputProps}
+      inputProps={inputProps}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
       onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
