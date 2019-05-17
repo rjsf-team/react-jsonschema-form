@@ -46,7 +46,10 @@
     "ajv": "^6.7.0",
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.7",
+    "lodash.isequal": "^4.5.0",
     "lodash.topath": "^4.5.2",
+    "memoize-one": "^5.0.4",
+    "mini-create-react-context": "^0.3.2",
     "prop-types": "^15.5.8"
   },
   "devDependencies": {

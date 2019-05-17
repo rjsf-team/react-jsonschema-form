@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import createReactContext from "mini-create-react-context";
+
 import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
@@ -10,8 +12,16 @@ import {
   setState,
   getDefaultRegistry,
   deepEquals,
+  createAjvInstance,
 } from "../utils";
+
 import validateFormData, { toErrorList } from "../validate";
+
+import memoizeOne from "memoize-one";
+
+export const FormContext = createReactContext({
+  ajv: undefined,
+});
 
 export default class Form extends Component {
   static defaultProps = {
@@ -26,6 +36,7 @@ export default class Form extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = this.getStateFromProps(props);
     if (
       this.props.onChange &&
@@ -48,6 +59,29 @@ export default class Form extends Component {
     this.setState(nextState);
   }
 
+  createMemoizedAjv = memoizeOne((additionalMetaSchemas, customFormats) =>
+    createAjvInstance({ additionalMetaSchemas, customFormats })
+  );
+
+  getAjv(props) {
+    // If ajv given in props, use this
+    if (props.ajv) {
+      return this.props.ajv;
+    }
+
+    // No external ajv -> construct a memoized one, which memoization depending on its possible configuration options
+    const { additionalMetaSchemas, customFormats } = props;
+    return this.createMemoizedAjv(additionalMetaSchemas, customFormats);
+  }
+
+  getContext() {
+    return this.createMemoizedContext(this.getAjv(this.props));
+  }
+
+  createMemoizedContext = memoizeOne(ajv => ({
+    ajv,
+  }));
+
   getStateFromProps(props) {
     const state = this.state || {};
     const schema = "schema" in props ? props.schema : this.props.schema;
@@ -56,17 +90,17 @@ export default class Form extends Component {
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const { definitions } = schema;
-    const formData = getDefaultFormState(schema, props.formData, definitions);
-    const retrievedSchema = retrieveSchema(schema, definitions, formData);
-    const customFormats = props.customFormats;
-    const additionalMetaSchemas = props.additionalMetaSchemas;
+    const ajv = this.getAjv(props);
+    const formData = getDefaultFormState(ajv, schema, props.formData, definitions);
+    const retrievedSchema = retrieveSchema(ajv, schema, definitions, formData);
     const { errors, errorSchema } = mustValidate
-      ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
+      ? this.validate(ajv, formData, schema)
       : {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
         };
     const idSchema = toIdSchema(
+      ajv,
       retrievedSchema,
       uiSchema["ui:rootFieldId"],
       definitions,
@@ -81,7 +115,6 @@ export default class Form extends Component {
       edit,
       errors,
       errorSchema,
-      additionalMetaSchemas,
     };
   }
 
@@ -90,21 +123,19 @@ export default class Form extends Component {
   }
 
   validate(
+    ajv,
     formData,
-    schema = this.props.schema,
-    additionalMetaSchemas = this.props.additionalMetaSchemas,
-    customFormats = this.props.customFormats
+    schema = this.props.schema
   ) {
     const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
-    const resolvedSchema = retrieveSchema(schema, definitions, formData);
+    const resolvedSchema = retrieveSchema(ajv, schema, definitions, formData);
     return validateFormData(
+      ajv,
       formData,
       resolvedSchema,
       validate,
-      transformErrors,
-      additionalMetaSchemas,
-      customFormats
+      transformErrors
     );
   }
 
@@ -130,7 +161,7 @@ export default class Form extends Component {
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = { formData };
     if (mustValidate) {
-      const { errors, errorSchema } = this.validate(formData);
+      const { errors, errorSchema } = this.validate(this.getAjv(this.props), formData);
       state = { ...state, errors, errorSchema };
     } else if (!this.props.noValidate && newErrorSchema) {
       state = {
@@ -163,7 +194,7 @@ export default class Form extends Component {
     event.persist();
 
     if (!this.props.noValidate) {
-      const { errors, errorSchema } = this.validate(this.state.formData);
+      const { errors, errorSchema } = this.validate(this.getAjv(this.props), this.state.formData);
       if (Object.keys(errors).length > 0) {
         setState(this, { errors, errorSchema }, () => {
           if (this.props.onError) {
@@ -227,6 +258,7 @@ export default class Form extends Component {
     const _SchemaField = registry.fields.SchemaField;
 
     return (
+      <FormContext.Provider value={this.getContext()}>
       <form
         className={className ? className : "rjsf"}
         id={id}
@@ -267,6 +299,7 @@ export default class Form extends Component {
           </div>
         )}
       </form>
+      </FormContext.Provider>
     );
   }
 }

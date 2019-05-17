@@ -5,6 +5,9 @@ import { Simulate } from "react-addons-test-utils";
 import { createFormComponent, createSandbox } from "./test_utils";
 import validateFormData from "../src/validate";
 
+import { getGlobalAjv } from "./test_utils";
+const globalAjv = getGlobalAjv();
+
 describe("ObjectField", () => {
   let sandbox;
 
@@ -445,7 +448,7 @@ describe("ObjectField", () => {
 
       expect(comp.state.formData.nonschema).eql(1);
 
-      const result = validateFormData(comp.state.formData, comp.state.schema);
+      const result = validateFormData(globalAjv, comp.state.formData, comp.state.schema);
       expect(result.errors).eql([]);
     });
 
@@ -461,7 +464,7 @@ describe("ObjectField", () => {
 
       expect(comp.state.formData.nonschema).eql(1);
 
-      const result = validateFormData(comp.state.formData, comp.state.schema);
+      const result = validateFormData(globalAjv, comp.state.formData, comp.state.schema );
       expect(result.errors[0].name).eql("additionalProperties");
     });
 

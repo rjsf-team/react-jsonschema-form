@@ -1,4 +1,5 @@
 import React from "react";
+import Ajv from "ajv";
 import validateFormData from "./validate";
 import fill from "core-js/library/fn/array/fill";
 
@@ -139,7 +140,7 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
   }
 }
 
-function computeDefaults(schema, parentDefaults, definitions = {}) {
+function computeDefaults(ajv, schema, parentDefaults, definitions = {}) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
@@ -152,10 +153,10 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
-    return computeDefaults(refSchema, defaults, definitions);
+    return computeDefaults(ajv, refSchema, defaults, definitions);
   } else if (isFixedItems(schema)) {
     defaults = schema.items.map(itemSchema =>
-      computeDefaults(itemSchema, undefined, definitions)
+      computeDefaults(ajv, itemSchema, undefined, definitions)
     );
   }
   // Not defaults defined for this node, fallback to generic typed ones.
@@ -170,6 +171,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
         acc[key] = computeDefaults(
+          ajv,
           schema.properties[key],
           (defaults || {})[key],
           definitions
@@ -179,7 +181,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
 
     case "array":
       if (schema.minItems) {
-        if (!isMultiSelect(schema, definitions)) {
+        if (!isMultiSelect(ajv, schema, definitions)) {
           const defaultsLength = defaults ? defaults.length : 0;
           if (schema.minItems > defaultsLength) {
             const defaultEntries = defaults || [];
@@ -189,7 +191,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
               : schema.items;
             const fillerEntries = fill(
               new Array(schema.minItems - defaultsLength),
-              computeDefaults(fillerSchema, fillerSchema.defaults, definitions)
+              computeDefaults(ajv, fillerSchema, fillerSchema.defaults, definitions)
             );
             // then fill up the rest with either the item default or empty, up to minItems
 
@@ -203,12 +205,12 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   return defaults;
 }
 
-export function getDefaultFormState(_schema, formData, definitions = {}) {
+export function getDefaultFormState(ajv, _schema, formData, definitions = {}) {
   if (!isObject(_schema)) {
     throw new Error("Invalid schema: " + _schema);
   }
-  const schema = retrieveSchema(_schema, definitions, formData);
-  const defaults = computeDefaults(schema, _schema.default, definitions);
+  const schema = retrieveSchema(ajv, _schema, definitions, formData);
+  const defaults = computeDefaults(ajv, schema, _schema.default, definitions);
   if (typeof formData === "undefined") {
     // No form data? Use schema defaults.
     return defaults;
@@ -363,8 +365,8 @@ export function toConstant(schema) {
   }
 }
 
-export function isSelect(_schema, definitions = {}) {
-  const schema = retrieveSchema(_schema, definitions);
+export function isSelect(ajv, _schema, definitions = {}) {
+  const schema = retrieveSchema(ajv, _schema, definitions);
   const altSchemas = schema.oneOf || schema.anyOf;
   if (Array.isArray(schema.enum)) {
     return true;
@@ -374,18 +376,18 @@ export function isSelect(_schema, definitions = {}) {
   return false;
 }
 
-export function isMultiSelect(schema, definitions = {}) {
+export function isMultiSelect(ajv, schema, definitions = {}) {
   if (!schema.uniqueItems || !schema.items) {
     return false;
   }
-  return isSelect(schema.items, definitions);
+  return isSelect(ajv, schema.items, definitions);
 }
 
-export function isFilesArray(schema, uiSchema, definitions = {}) {
+export function isFilesArray(ajv, schema, uiSchema, definitions = {}) {
   if (uiSchema["ui:widget"] === "files") {
     return true;
   } else if (schema.items) {
-    const itemsSchema = retrieveSchema(schema.items, definitions);
+    const itemsSchema = retrieveSchema(ajv, schema.items, definitions);
     return itemsSchema.type === "string" && itemsSchema.format === "data-url";
   }
   return false;
@@ -496,33 +498,34 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
-export function resolveSchema(schema, definitions = {}, formData = {}) {
+export function resolveSchema(ajv, schema, definitions = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
-    return resolveReference(schema, definitions, formData);
+    return resolveReference(ajv, schema, definitions, formData);
   } else if (schema.hasOwnProperty("dependencies")) {
-    const resolvedSchema = resolveDependencies(schema, definitions, formData);
-    return retrieveSchema(resolvedSchema, definitions, formData);
+    const resolvedSchema = resolveDependencies(ajv, schema, definitions, formData);
+    return retrieveSchema(ajv, resolvedSchema, definitions, formData);
   } else {
     // No $ref or dependencies attribute found, returning the original schema.
     return schema;
   }
 }
 
-function resolveReference(schema, definitions, formData) {
+function resolveReference(ajv, schema, definitions, formData) {
   // Retrieve the referenced schema definition.
   const $refSchema = findSchemaDefinition(schema.$ref, definitions);
   // Drop the $ref property of the source schema.
   const { $ref, ...localSchema } = schema;
   // Update referenced schema definition with local schema properties.
   return retrieveSchema(
+    ajv,
     { ...$refSchema, ...localSchema },
     definitions,
     formData
   );
 }
 
-export function retrieveSchema(schema, definitions = {}, formData = {}) {
-  const resolvedSchema = resolveSchema(schema, definitions, formData);
+export function retrieveSchema(ajv, schema, definitions = {}, formData = {}) {
+  const resolvedSchema = resolveSchema(ajv, schema, definitions, formData);
   const hasAdditionalProperties =
     resolvedSchema.hasOwnProperty("additionalProperties") &&
     resolvedSchema.additionalProperties !== false;
@@ -536,7 +539,7 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
   return resolvedSchema;
 }
 
-function resolveDependencies(schema, definitions, formData) {
+function resolveDependencies(ajv, schema, definitions, formData) {
   // Drop the dependencies from the source schema.
   let { dependencies = {}, ...resolvedSchema } = schema;
   // Process dependencies updating the local schema properties as appropriate.
@@ -550,6 +553,7 @@ function resolveDependencies(schema, definitions, formData) {
       resolvedSchema = withDependentProperties(resolvedSchema, dependencyValue);
     } else if (isObject(dependencyValue)) {
       resolvedSchema = withDependentSchema(
+        ajv,
         resolvedSchema,
         definitions,
         formData,
@@ -572,6 +576,7 @@ function withDependentProperties(schema, additionallyRequired) {
 }
 
 function withDependentSchema(
+  ajv,
   schema,
   definitions,
   formData,
@@ -579,6 +584,7 @@ function withDependentSchema(
   dependencyValue
 ) {
   let { oneOf, ...dependentSchema } = retrieveSchema(
+    ajv,
     dependencyValue,
     definitions,
     formData
@@ -593,10 +599,11 @@ function withDependentSchema(
   // Resolve $refs inside oneOf.
   const resolvedOneOf = oneOf.map(subschema =>
     subschema.hasOwnProperty("$ref")
-      ? resolveReference(subschema, definitions, formData)
+      ? resolveReference(ajv, subschema, definitions, formData)
       : subschema
   );
   return withExactlyOneSubschema(
+    ajv,
     schema,
     definitions,
     formData,
@@ -606,6 +613,7 @@ function withDependentSchema(
 }
 
 function withExactlyOneSubschema(
+  ajv,
   schema,
   definitions,
   formData,
@@ -624,7 +632,7 @@ function withExactlyOneSubschema(
           [dependencyKey]: conditionPropertySchema,
         },
       };
-      const { errors } = validateFormData(formData, conditionSchema);
+      const { errors } = validateFormData(ajv, formData, conditionSchema);
       return errors.length === 0;
     }
   });
@@ -642,7 +650,7 @@ function withExactlyOneSubschema(
   const dependentSchema = { ...subschema, properties: dependentSubschema };
   return mergeSchemas(
     schema,
-    retrieveSchema(dependentSchema, definitions, formData)
+    retrieveSchema(ajv, dependentSchema, definitions, formData)
   );
 }
 
@@ -737,6 +745,7 @@ export function shouldRender(comp, nextProps, nextState) {
 }
 
 export function toIdSchema(
+  ajv,
   schema,
   id,
   definitions,
@@ -747,11 +756,11 @@ export function toIdSchema(
     $id: id || idPrefix,
   };
   if ("$ref" in schema || "dependencies" in schema) {
-    const _schema = retrieveSchema(schema, definitions, formData);
-    return toIdSchema(_schema, id, definitions, formData, idPrefix);
+    const _schema = retrieveSchema(ajv, schema, definitions, formData);
+    return toIdSchema(ajv, _schema, id, definitions, formData, idPrefix);
   }
   if ("items" in schema && !schema.items.$ref) {
-    return toIdSchema(schema.items, id, definitions, formData, idPrefix);
+    return toIdSchema(ajv, schema.items, id, definitions, formData, idPrefix);
   }
   if (schema.type !== "object") {
     return idSchema;
@@ -760,6 +769,7 @@ export function toIdSchema(
     const field = schema.properties[name];
     const fieldId = idSchema.$id + "_" + name;
     idSchema[name] = toIdSchema(
+      ajv,
       field,
       fieldId,
       definitions,
@@ -869,4 +879,40 @@ export function rangeSpec(schema) {
     spec.max = schema.maximum;
   }
   return spec;
+}
+
+export function createAjvInstance(options = {}) {
+  const { additionalMetaSchemas = [], customFormats = {} } = options;
+
+  const ajv = new Ajv({
+    errorDataPath: "property",
+    allErrors: true,
+    multipleOfPrecision: 8,
+    schemaId: "auto",
+    unknownFormats: "ignore",
+  });
+
+  // add custom formats
+  ajv.addFormat(
+    "data-url",
+    /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/
+  );
+  ajv.addFormat(
+    "color",
+    /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
+  );
+
+  // add more schemas to validate against
+  if (additionalMetaSchemas && Array.isArray(additionalMetaSchemas)) {
+    ajv.addMetaSchema(additionalMetaSchemas);
+  }
+
+  // add more custom formats to validate against
+  if (customFormats && isObject(customFormats)) {
+    Object.keys(customFormats).forEach(formatName => {
+      ajv.addFormat(formatName, customFormats[formatName]);
+    });
+  }
+
+  return ajv;
 }

@@ -1,33 +1,6 @@
-import toPath from "lodash.topath";
-import Ajv from "ajv";
-let ajv = createAjvInstance();
-import { deepEquals } from "./utils";
-
-let formerCustomFormats = null;
-let formerMetaSchema = null;
+import _toPath from "lodash.topath";
 
 import { isObject, mergeObjects } from "./utils";
-
-function createAjvInstance() {
-  const ajv = new Ajv({
-    errorDataPath: "property",
-    allErrors: true,
-    multipleOfPrecision: 8,
-    schemaId: "auto",
-    unknownFormats: "ignore",
-  });
-
-  // add custom formats
-  ajv.addFormat(
-    "data-url",
-    /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/
-  );
-  ajv.addFormat(
-    "color",
-    /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
-  );
-  return ajv;
-}
 
 function toErrorSchema(errors) {
   // Transforms a ajv validation errors list:
@@ -50,7 +23,7 @@ function toErrorSchema(errors) {
   }
   return errors.reduce((errorSchema, error) => {
     const { property, message } = error;
-    const path = toPath(property);
+    const path = _toPath(property);
     let parent = errorSchema;
 
     // If the property is at the root (.level1) then toPath creates
@@ -165,39 +138,12 @@ function transformAjvErrors(errors = []) {
  * will be used to add custom validation errors for each field.
  */
 export default function validateFormData(
+  ajv,
   formData,
   schema,
   customValidate,
-  transformErrors,
-  additionalMetaSchemas = [],
-  customFormats = {}
+  transformErrors
 ) {
-  const newMetaSchemas = !deepEquals(formerMetaSchema, additionalMetaSchemas);
-  const newFormats = !deepEquals(formerCustomFormats, customFormats);
-
-  if (newMetaSchemas || newFormats) {
-    ajv = createAjvInstance();
-  }
-
-  // add more schemas to validate against
-  if (
-    additionalMetaSchemas &&
-    newMetaSchemas &&
-    Array.isArray(additionalMetaSchemas)
-  ) {
-    ajv.addMetaSchema(additionalMetaSchemas);
-    formerMetaSchema = additionalMetaSchemas;
-  }
-
-  // add more custom formats to validate against
-  if (customFormats && newFormats && isObject(customFormats)) {
-    Object.keys(customFormats).forEach(formatName => {
-      ajv.addFormat(formatName, customFormats[formatName]);
-    });
-
-    formerCustomFormats = customFormats;
-  }
-
   let validationError = null;
   try {
     ajv.validate(schema, formData);
@@ -264,7 +210,7 @@ export default function validateFormData(
  * false otherwise. If the schema is invalid, then this function will return
  * false.
  */
-export function isValid(schema, data) {
+export function isValid(ajv, schema, data) {
   try {
     return ajv.validate(schema, data);
   } catch (e) {

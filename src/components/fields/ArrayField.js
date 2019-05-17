@@ -19,6 +19,8 @@ import {
   getDefaultRegistry,
 } from "../../utils";
 
+import { FormContext } from "../Form";
+
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
     return null;
@@ -225,7 +227,7 @@ class ArrayField extends Component {
     }
     this.props.onChange([
       ...formData,
-      getDefaultFormState(itemSchema, undefined, definitions),
+      getDefaultFormState(this._context.ajv, itemSchema,undefined, definitions),
     ]);
   };
 
@@ -314,7 +316,27 @@ class ArrayField extends Component {
     this.props.onChange(value);
   };
 
+  // WORKAROUND: wrapper for render() as a workaround for missing static variable contextType.
+  // The contextType feature is available starting with React 16.6.
+  // mini-create-react-context does not polyfill/ponyfill this feature and we're not
+  // aware of any other solutions backporting this. As soon as the peer dependency to
+  // React has been bumped up to >= 16.6:
+  // - declare contextType static variable: static contextType = FormContext;
+  // - rename this._context to this.context
+  // - remove render() method
+  // - rename renderWithContext() method to render()
   render() {
+    return (
+      <FormContext.Consumer>
+        {context => {
+          this._context = context;
+          return this.renderWithContext();
+        }}
+      </FormContext.Consumer>
+    );
+  }
+
+  renderWithContext() {
     const {
       schema,
       uiSchema,
@@ -334,10 +356,10 @@ class ArrayField extends Component {
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
-    if (isFilesArray(schema, uiSchema, definitions)) {
+    if (isFilesArray(this._context.ajv, schema, uiSchema, definitions)) {
       return this.renderFiles();
     }
-    if (isMultiSelect(schema, definitions)) {
+    if (isMultiSelect(this._context.ajv, schema, definitions)) {
       return this.renderMultiSelect();
     }
     return this.renderNormalArray();
@@ -364,14 +386,15 @@ class ArrayField extends Component {
     const title = schema.title === undefined ? name : schema.title;
     const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
     const { TitleField, DescriptionField } = fields;
-    const itemsSchema = retrieveSchema(schema.items, definitions);
+    const itemsSchema = retrieveSchema(this._context.ajv, schema.items, definitions);
     const arrayProps = {
       canAdd: this.canAddItem(formData),
       items: formData.map((item, index) => {
-        const itemSchema = retrieveSchema(schema.items, definitions, item);
+        const itemSchema = retrieveSchema(this._context.ajv, schema.items, definitions, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
         const itemIdSchema = toIdSchema(
+          this._context.ajv,
           itemSchema,
           itemIdPrefix,
           definitions,
@@ -430,7 +453,7 @@ class ArrayField extends Component {
     } = this.props;
     const items = this.props.formData;
     const { widgets, definitions, formContext } = registry;
-    const itemsSchema = retrieveSchema(schema.items, definitions, formData);
+    const itemsSchema = retrieveSchema(this._context.ajv, schema.items, definitions, formData);
     const enumOptions = optionsList(itemsSchema);
     const { widget = "select", ...options } = {
       ...getUiOptions(uiSchema),
@@ -519,10 +542,10 @@ class ArrayField extends Component {
     const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
-      retrieveSchema(item, definitions, formData[index])
+      retrieveSchema(this._context.ajv, item, definitions, formData[index])
     );
     const additionalSchema = allowAdditionalItems(schema)
-      ? retrieveSchema(schema.additionalItems, definitions, formData)
+      ? retrieveSchema(this._context.ajv, schema.additionalItems, definitions, formData)
       : null;
 
     if (!items || items.length < itemSchemas.length) {
@@ -541,10 +564,11 @@ class ArrayField extends Component {
       items: items.map((item, index) => {
         const additional = index >= itemSchemas.length;
         const itemSchema = additional
-          ? retrieveSchema(schema.additionalItems, definitions, item)
+          ? retrieveSchema(this._context.ajv, schema.additionalItems, definitions, item)
           : itemSchemas[index];
         const itemIdPrefix = idSchema.$id + "_" + index;
         const itemIdSchema = toIdSchema(
+          this._context.ajv,
           itemSchema,
           itemIdPrefix,
           definitions,

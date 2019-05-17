@@ -18,6 +18,8 @@ import {
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
+import { FormContext } from "../Form";
+
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   array: "ArrayField",
@@ -225,6 +227,9 @@ function WrapIfAdditional(props) {
 }
 
 function SchemaFieldRender(props) {
+  return (
+    <FormContext.Consumer>
+      {context => {
   const {
     uiSchema,
     formData,
@@ -243,9 +248,9 @@ function SchemaFieldRender(props) {
     FieldTemplate = DefaultTemplate,
   } = registry;
   let idSchema = props.idSchema;
-  const schema = retrieveSchema(props.schema, definitions, formData);
+  const schema = retrieveSchema(context.ajv, props.schema, definitions, formData);
   idSchema = mergeObjects(
-    toIdSchema(schema, null, definitions, formData, idPrefix),
+    toIdSchema(context.ajv, schema, null, definitions, formData, idPrefix),
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
@@ -266,8 +271,8 @@ function SchemaFieldRender(props) {
   let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
     displayLabel =
-      isMultiSelect(schema, definitions) ||
-      isFilesArray(schema, uiSchema, definitions);
+      isMultiSelect(context.ajv, schema, definitions) ||
+      isFilesArray(context.ajv, schema, uiSchema, definitions);
   }
   if (schema.type === "object") {
     displayLabel = false;
@@ -359,7 +364,7 @@ function SchemaFieldRender(props) {
         render the selection and let `StringField` component handle
         rendering
       */}
-      {schema.anyOf && !isSelect(schema) && (
+      {schema.anyOf && !isSelect(context.ajv, schema) && (
         <_AnyOfField
           disabled={disabled}
           errorSchema={errorSchema}
@@ -377,7 +382,7 @@ function SchemaFieldRender(props) {
         />
       )}
 
-      {schema.oneOf && !isSelect(schema) && (
+      {schema.oneOf && !isSelect(context.ajv, schema) && (
         <_OneOfField
           disabled={disabled}
           errorSchema={errorSchema}
@@ -395,6 +400,9 @@ function SchemaFieldRender(props) {
         />
       )}
     </FieldTemplate>
+  );
+      }}
+    </FormContext.Consumer>
   );
 }
 

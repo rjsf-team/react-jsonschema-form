@@ -5,6 +5,9 @@ import sinon from "sinon";
 import { renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode, render } from "react-dom";
 
+import _isEqual from "lodash.isequal";
+import { createAjvInstance } from "../src/utils";
+
 import Form from "../src";
 
 export function createComponent(Component, props) {
@@ -30,3 +33,25 @@ export function setProps(comp, newProps) {
   const node = findDOMNode(comp);
   render(React.createElement(comp.constructor, newProps), node.parentNode);
 }
+
+// Configure global ajv instance
+export const getGlobalAjv = (() => {
+  let ajvInstance = null;
+  let formerCustomFormats = null;
+  let formerMetaSchema = null;
+
+  return (options = {}) => {
+    const { additionalMetaSchemas = [], customFormats = {} } = options;
+    const newMetaSchemas = !_isEqual(formerMetaSchema, additionalMetaSchemas);
+    const newFormats = !_isEqual(formerCustomFormats, customFormats);
+
+    if (!ajvInstance || newMetaSchemas || newFormats) {
+      // Create global ajv
+      ajvInstance = createAjvInstance(options);
+      formerMetaSchema = additionalMetaSchemas;
+      formerCustomFormats = customFormats;
+    }
+
+    return ajvInstance;
+  };
+})();

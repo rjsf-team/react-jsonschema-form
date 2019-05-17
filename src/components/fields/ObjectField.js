@@ -10,6 +10,8 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
 
+import { FormContext } from "../Form";
+
 function DefaultObjectFieldTemplate(props) {
   const canExpand = function canExpand() {
     const { formData, schema, uiSchema } = props;
@@ -176,7 +178,27 @@ class ObjectField extends Component {
     this.props.onChange(newFormData);
   };
 
+  // WORKAROUND: wrapper for render() as a workaround for missing static variable contextType.
+  // The contextType feature is available starting with React 16.6.
+  // mini-create-react-context does not polyfill/ponyfill this feature and we're not
+  // aware of any other solutions backporting this. As soon as the peer dependency to
+  // React has been bumped up to >= 16.6:
+  // - declare contextType static variable: static contextType = FormContext;
+  // - rename this._context to this.context
+  // - remove render() method
+  // - rename renderWithContext() method to render()
   render() {
+    return (
+      <FormContext.Consumer>
+        {context => {
+          this._context = context;
+          return this.renderWithContext();
+        }}
+      </FormContext.Consumer>
+    );
+  }
+
+  renderWithContext() {
     const {
       uiSchema,
       formData,
@@ -193,7 +215,7 @@ class ObjectField extends Component {
     } = this.props;
     const { definitions, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
-    const schema = retrieveSchema(this.props.schema, definitions, formData);
+    const schema = retrieveSchema(this._context.ajv,this.props.schema, definitions, formData);
     const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
