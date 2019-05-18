@@ -55,7 +55,20 @@ function BaseInput(props) {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
 
-  return (
+  return inputProps.type === "range" ? (
+    <input
+      className={classes.textField}
+      margin="normal"
+      readOnly={readonly}
+      disabled={disabled}
+      autoFocus={autofocus}
+      value={value == null ? "" : value}
+      {...inputProps}
+      onChange={_onChange}
+      onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
+      onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
+    />
+  ) : (
     <TextField
       className={classes.textField}
       margin="normal"
@@ -64,7 +77,6 @@ function BaseInput(props) {
       autoFocus={autofocus}
       value={value == null ? "" : value}
       {...inputProps}
-      inputProps={inputProps}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
       onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}

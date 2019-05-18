@@ -11,9 +11,15 @@ function RangeWidget(props) {
       widgets: { BaseInput },
     },
   } = props;
+
   return (
     <div className="field-range-wrapper">
-      <BaseInput type="range" {...props} {...rangeSpec(schema)} />
+      <BaseInput
+        type="range"
+        {...props}
+        value={value ? value : 0}
+        {...rangeSpec(schema)}
+      />
       <span className="range-view">{value}</span>
     </div>
   );

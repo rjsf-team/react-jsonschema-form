@@ -12,6 +12,13 @@ module.exports = {
         format: "date-time",
         title: "DOB",
       },
+      integerRangeSteps: {
+        title: "Integer range (by 10)",
+        type: "integer",
+        minimum: 0,
+        maximum: 10,
+        multipleOf: 1,
+      },
       VisitDate: {
         type: "string",
         format: "date-time",
@@ -173,6 +180,9 @@ module.exports = {
       },
       classNames: "formControlGroup",
     },
+    integerRangeSteps: {
+      "ui:widget": "range",
+    },
     VisitDate: {
       "ui:options": {
         disableFuture: true,
@@ -222,6 +232,7 @@ module.exports = {
     blogs: 2,
     movie: "[2]",
     lastName: "Norris",
+    integerRangeSteps: 3,
     age: 75,
     password: "noneed",
   },
