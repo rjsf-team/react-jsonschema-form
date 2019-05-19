@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-import { getUiOptions, getWidget, guessType } from "../../utils";
+import {
+  getUiOptions,
+  getWidget,
+  guessType,
+  retrieveSchema,
+} from "../../utils";
 import { isValid } from "../../validate";
 
 class AnyOfField extends Component {
@@ -29,8 +34,16 @@ class AnyOfField extends Component {
   }
 
   getMatchingOption(formData, options) {
+    const { definitions } = this.props.registry;
     for (let i = 0; i < options.length; i++) {
-      const option = options[i];
+      // Assign the definitions to the option, otherwise the match can fail if
+      // the new option uses a $ref
+      const option = Object.assign(
+        {
+          definitions,
+        },
+        options[i]
+      );
 
       // If the schema describes an object then we need to add slightly more
       // strict matching to the schema, because unless the schema uses the
@@ -81,15 +94,20 @@ class AnyOfField extends Component {
       }
     }
 
-    // If the form data matches none of the options, use the first option
-    return 0;
+    // If the form data matches none of the options, use the currently selected
+    // option, assuming it's available; otherwise use the first option
+    return this && this.state ? this.state.selectedOption : 0;
   }
 
   onOptionChange = option => {
     const selectedOption = parseInt(option, 10);
-    const { formData, onChange, options } = this.props;
-
-    const newOption = options[selectedOption];
+    const { formData, onChange, options, registry } = this.props;
+    const { definitions } = registry;
+    const newOption = retrieveSchema(
+      options[selectedOption],
+      definitions,
+      formData
+    );
 
     // If the new option is of type object and the current data is an object,
     // discard properties added using the old option.
