@@ -95,7 +95,7 @@ class AnyOfField extends Component {
     }
 
     // If the form data matches none of the options, use the currently selected
-    // option, assuming its available, otherwise use the first option
+    // option, assuming it's available; otherwise use the first option
     return this && this.state ? this.state.selectedOption : 0;
   }
 
