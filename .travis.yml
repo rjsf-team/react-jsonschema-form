@@ -8,6 +8,7 @@ node_js:
 - "9"
 - "10"
 - "11"
+- "12"
 env:
 - ACTION=test
 - ACTION="run lint"
