@@ -1984,13 +1984,13 @@ describe("Form", () => {
       const formProps = {
         liveValidate: true,
         formData: {
-          areaCode: 123,
+          areaCode: "123455",
         },
         schema: {
           type: "object",
           properties: {
             areaCode: {
-              type: "number",
+              type: "string",
               format: "area-code",
             },
           },
@@ -2007,22 +2007,20 @@ describe("Form", () => {
 
       const { comp } = createFormComponent(formProps);
 
-      expect(comp.state.errorSchema).eql({
-        $schema: {
-          __errors: [
-            'unknown format "area-code" is used in schema at path "#/properties/areaCode"',
-          ],
-        },
-      });
+      expect(comp.state.errorSchema).eql({});
 
       setProps(comp, {
         ...formProps,
         customFormats: {
-          "area-code": /\d{3}/,
+          "area-code": /^\d{3}$/,
         },
       });
 
-      expect(comp.state.errorSchema).eql({});
+      expect(comp.state.errorSchema).eql({
+        areaCode: {
+          __errors: ['should match format "area-code"'],
+        },
+      });
     });
   });
 

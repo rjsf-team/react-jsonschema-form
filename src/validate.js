@@ -14,6 +14,7 @@ function createAjvInstance() {
     allErrors: true,
     multipleOfPrecision: 8,
     schemaId: "auto",
+    unknownFormats: "ignore",
   });
 
   // add custom formats
@@ -215,13 +216,7 @@ export default function validateFormData(
     typeof validationError.message === "string" &&
     validationError.message.includes("no schema with key or ref ");
 
-  const unknownFormat =
-    validationError &&
-    validationError.message &&
-    typeof validationError.message === "string" &&
-    validationError.message.includes("unknown format");
-
-  if (noProperMetaSchema || unknownFormat) {
+  if (noProperMetaSchema) {
     errors = [
       ...errors,
       {
@@ -235,7 +230,7 @@ export default function validateFormData(
 
   let errorSchema = toErrorSchema(errors);
 
-  if (noProperMetaSchema || unknownFormat) {
+  if (noProperMetaSchema) {
     errorSchema = {
       ...errorSchema,
       ...{
