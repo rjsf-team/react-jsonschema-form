@@ -146,6 +146,20 @@ The `ui:disabled` uiSchema directive will disable all child widgets from a given
 
 The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only.
 
+You can also set specific fields to read-only by setting the `readOnly` property in the schema.
+
+```js
+const schema = {
+  type: "object",
+  properties: {
+    foo: {
+      type: "string",
+      readOnly: true
+    }
+  }
+};
+```
+
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
 #### Hidden widgets
@@ -596,7 +610,7 @@ const uiSchema = {
 
 ### Description texts
 
-Sometimes it's convenient to change description a field. This is the purpose of the `ui:description` uiSchema directive:
+Sometimes it's convenient to change the description of a field. This is the purpose of the `ui:description` uiSchema directive:
 
 ```js
 const schema = {type: "string"};

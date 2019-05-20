@@ -174,15 +174,9 @@ describe("Validation", () => {
         },
       };
 
-      it("should return a validation error if unknown string format is used", () => {
+      it("should not return a validation error if unknown string format is used", () => {
         const result = validateFormData({ phone: "800.555.2368" }, schema);
-        const errMessage =
-          'unknown format "phone-us" is used in schema at path "#/properties/phone"';
-
-        expect(result.errors[0].stack).include(errMessage);
-        expect(result.errorSchema).to.eql({
-          $schema: { __errors: [errMessage] },
-        });
+        expect(result.errors.length).eql(0);
       });
 
       it("should return a validation error about formData", () => {
