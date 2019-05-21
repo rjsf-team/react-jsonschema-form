@@ -1544,11 +1544,22 @@ describe("utils", () => {
         schema: { type: ["integer", "null"] },
         expected: "integer",
       },
+      {
+        schema: { properties: {} },
+        expected: "object",
+      },
+      {
+        schema: { additionalProperties: {} },
+        expected: "object",
+      },
     ];
 
     it("should correctly guess the type of a schema", () => {
       for (const test of cases) {
-        expect(getSchemaType(test.schema)).eql(test.expected);
+        expect(getSchemaType(test.schema)).eql(
+          test.expected,
+          `${JSON.stringify(test.schema)} should guess type of ${test.expected}`
+        );
       }
     });
   });

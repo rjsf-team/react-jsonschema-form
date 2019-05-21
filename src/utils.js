@@ -76,6 +76,10 @@ export function getSchemaType(schema) {
     return "string";
   }
 
+  if ((!type && schema.properties) || schema.additionalProperties) {
+    return "object";
+  }
+
   if (type instanceof Array && type.length === 2 && type.includes("null")) {
     return type.find(type => type !== "null");
   }
