@@ -342,6 +342,10 @@ describe("utils", () => {
     it("should return undefined if the input is empty", () => {
       expect(asNumber("")).eql(undefined);
     });
+
+    it("should return null if the input is null", () => {
+      expect(asNumber(null)).eql(null);
+    });
   });
 
   describe("orderProperties()", () => {

@@ -7,6 +7,7 @@ import {
   isSelect,
   optionsList,
   getDefaultRegistry,
+  hasWidget,
 } from "../../utils";
 
 function StringField(props) {
@@ -29,7 +30,10 @@ function StringField(props) {
   const { title, format } = schema;
   const { widgets, formContext } = registry;
   const enumOptions = isSelect(schema) && optionsList(schema);
-  const defaultWidget = format || (enumOptions ? "select" : "text");
+  let defaultWidget = enumOptions ? "select" : "text";
+  if (format && hasWidget(schema, format, widgets)) {
+    defaultWidget = format;
+  }
   const { widget = defaultWidget, placeholder = "", ...options } = getUiOptions(
     uiSchema
   );
