@@ -1,7 +1,7 @@
 ## Customizing with other frameworks
 
 ### withTheme Higher-Order Component
-`withTheme` component provides a way to extend the functionality of react-jsonschema-form by passing in a theme object, which contains an easy way to change the appearance of the form, widgets, templates and fields by passing in theme object. This object is passed as the only parameter like so: `withTheme(ThemeObj)` and it returns component which you use instead of standard `Form` component.
+The `withTheme` component provides an easy way to extend the functionality of react-jsonschema-form by passing in a theme object that defines custom/overridden widgets and fields, as well as any of the other possible properties of the standard rjsf `Form` component. This theme-defining object is passed as the only parameter to the HOC (`withTheme(ThemeObj)`), and the HOC will return a themed-component which you use instead of the standard `Form` component.
 
 ### Usage
 
@@ -18,10 +18,10 @@ class Demo extends Component {
 }
 ```
 
-### Theme object
-The Theme object consists of the properties **widgets**, **templates** and **fields**. The form merges each prop's value with the default value for it; for example, providing a single widget in **widgets** will merge it with all default widgets and overrides it if names are equal. If one of these properties is not specified, the form reverts to the default. None are required, although at least one should be provided though.
+### Theme object properties
+The Theme object consists of the same properties as the rjsf `Form` component (such as **widgets** and **fields**). The themed-Form component merges together any theme-specific **widgets** and **fields** with the default **widgets** and **fields**. For instance, providing a single widget in **widgets** will merge this widget with all the default widgets of the rjsf `Form` component, but overrides the default if the theme's widget's name matches the default widget's name. Thus, for each default widget or field not specified/overridden, the themed-form will rely on the defaults from the rjsf `Form`. Note that you are not required to pass in either custom **widgets** or **fields** when using the custom-themed HOC component; you can make the essentially redefine the default Form by simply doing `const Form = withTheme({});`.
 
-#### widgets and fields 
+#### Widgets and fields 
 **widgets** and **fields** should be in the same format as shown [here](/advanced-customization/#custom-widgets-and-fields).
 
 Example theme with custom widget:
@@ -46,8 +46,8 @@ export default ThemeObject;
 
 The above can be similarly done for **fields**.
 
-#### templates
-**templates** should be an object containing template objects which gets spread (using spread operator, like so `<Form {...theme.templates} />`). In [here](/advanced-customization/#array-field-template) and [here](/advanced-customization/#error-list-template) are two examples of custom templates, below is example how to use these two custom templates in theme object:
+#### Templates
+Each template should be passed directly into the theme object just as you would into the rjsf Form component. In [here](/advanced-customization/#array-field-template) and [here](/advanced-customization/#error-list-template) are two examples of custom templates, below is example how to use these two custom templates in the theme object:
 ```jsx
 function MyArrayFieldTemplate(props) {
   return (
@@ -71,17 +71,24 @@ function MyErrorListTemplate(props) {
   );
 }
 
-const myTemplates = {
+const ThemeObject = {
     ArrayFieldTemplate: MyArrayFieldTemplate, 
     ErrorList: MyErrorListTemplate,
-};
-
-const ThemeObject = {
-    templates: myTemplates
+    widgets: myWidgets
 };
 
 export default ThemeObject;
 ```
 
-### Overriding
-As well as theme can override **widgets**, **templates** and **fields**, you can override **widgets**, **templates**, **fields** of theme just as usual. So user has higher priority than theme and theme higher than default values (**User**>**Theme**>**Defaults**).
+### Overriding other Form properties
+Just as the theme can override **widgets**, **fields**, any of the field templates, and set default values to properties like **showErrorList**, you can do the same with the instance of the withTheme() Form component.
+```jsx
+const ThemeObject = {
+    ArrayFieldTemplate: MyArrayFieldTemplate, 
+    fields: myFields,
+    showErrorList: false,
+    widgets: myWidgets
+};
+```
+
+Thus, the user has higher priority than the withTheme HOC, and the theme has higher priority than the default values of the rjsf Form component (**User** > **Theme** > **Defaults**).

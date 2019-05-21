@@ -2,19 +2,18 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Form from "./";
 
-function withTheme(data) {
+function withTheme(themeProps) {
   return class extends Component {
     render() {
-      let { templates, widgets, fields, ...otherProps } = this.props;
-      templates = { ...data.templates, ...templates };
-      widgets = { ...data.widgets, ...widgets };
-      fields = { ...data.fields, ...fields };
+      let { fields, widgets, ...directProps } = this.props;
+      fields = { ...themeProps.fields, ...fields };
+      widgets = { ...themeProps.widgets, ...widgets };
       return (
         <Form
-          {...otherProps}
-          {...templates}
-          widgets={widgets}
+          {...themeProps}
+          {...directProps}
           fields={fields}
+          widgets={widgets}
         />
       );
     }
@@ -24,7 +23,6 @@ function withTheme(data) {
 withTheme.propTypes = {
   widgets: PropTypes.object,
   fields: PropTypes.object,
-  templates: PropTypes.object,
 };
 
 export default withTheme;
