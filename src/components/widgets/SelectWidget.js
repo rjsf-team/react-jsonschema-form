@@ -94,7 +94,7 @@ function SelectWidget(props) {
       {!multiple && schema.default === undefined && (
         <option value="" key="placeholder">{placeholder}</option>
       )}
-      {!enumOptions.map(option => option.value).includes(value) ? (
+      {value !== "" && value !== undefined && !enumOptions.map(option => option.value).includes(value) ? (
         <option key={`${value}-invalid`} value={value}>
           {value}
         </option>
