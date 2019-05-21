@@ -92,7 +92,7 @@ function SelectWidget(props) {
         onChange(processValue(schema, newValue));
       }}>
       {!multiple && schema.default === undefined && (
-        <option value="">{placeholder}</option>
+        <option value="" key="placeholder">{placeholder}</option>
       )}
       {!enumOptions.map(option => option.value).includes(value) ? (
         <option key={`${value}-invalid`} value="">
