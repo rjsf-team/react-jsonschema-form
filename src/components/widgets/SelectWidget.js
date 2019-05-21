@@ -94,6 +94,9 @@ function SelectWidget(props) {
       {!multiple && schema.default === undefined && (
         <option value="">{placeholder}</option>
       )}
+      {!enumOptions.map(option => option.value).includes(value) ? (
+        <option value={value}>{value} [Invalid value]</option>
+      ) : null}
       {enumOptions.map(({ value, label }, i) => {
         const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
         return (
