@@ -95,8 +95,8 @@ function SelectWidget(props) {
         <option value="" key="placeholder">{placeholder}</option>
       )}
       {!enumOptions.map(option => option.value).includes(value) ? (
-        <option key={`${value}-invalid`} value="">
-          {placeholder}
+        <option key={`${value}-invalid`} value={value}>
+          {value}
         </option>
       ) : null}
       {enumOptions.map(({value, label}, i) => {
