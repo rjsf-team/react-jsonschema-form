@@ -205,6 +205,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - 2 columns form with CSS and FieldTemplate: <https://jsfiddle.net/n1k0/bw0ffnz4/1/>
  - Validate and submit form from external control: <https://jsfiddle.net/spacebaboon/g5a1re63/>
  - Custom component for Help text with `ui:help`: <https://codesandbox.io/s/14pqx97xl7/>
+ - Collapsing / Showing and Hiding individual fields: <https://codesandbox.io/s/examplereactjsonschemaformcollapsefieldtemplate-t41dn>
 
 ## Contributing
 
@@ -260,7 +261,7 @@ $ npm run tdd
 
 #### Code coverage
 
-Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run. 
+Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
 The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 ### Releasing
@@ -289,7 +290,7 @@ A: Probably not. We use Bootstrap v3 and it works fine for our needs. We would l
 
 ### Q: Is there a way to "collapse" fields, for instance to show/hide individual fields?
 
-A: There's no specific built-in way to do this, but you can write your own FieldTemplate that supports hiding/showing fields according to user input. We don't yet have an example of this use, but if you write one, please add it to the "tips and tricks" section, above. See also: [#268](https://github.com/mozilla-services/react-jsonschema-form/issues/268), [#304](https://github.com/mozilla-services/react-jsonschema-form/pull/304), [#598](https://github.com/mozilla-services/react-jsonschema-form/issues/598), [#920](https://github.com/mozilla-services/react-jsonschema-form/issues/920).
+A: There's no specific built-in way to do this, but you can write your own FieldTemplate that supports hiding/showing fields according to user input. See the "tips and tricks" section above for one example implementation. See also: [#268](https://github.com/mozilla-services/react-jsonschema-form/issues/268), [#304](https://github.com/mozilla-services/react-jsonschema-form/pull/304), [#598](https://github.com/mozilla-services/react-jsonschema-form/issues/598), [#920](https://github.com/mozilla-services/react-jsonschema-form/issues/920).
 
 ## License
 
