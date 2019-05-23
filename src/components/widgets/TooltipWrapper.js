@@ -7,7 +7,7 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 const TooltipWrapper = props => {
   let [open, setTooltip] = useState(false);
   return (
-    <span>
+    <span className="click-tooltip__wrapper">
       <ClickAwayListener
         onClickAway={() => {
           setTooltip((open = false));

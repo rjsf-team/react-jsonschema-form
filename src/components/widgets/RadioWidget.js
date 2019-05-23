@@ -33,6 +33,12 @@ function RadioWidget(props) {
         const disabledCls =
           disabled || itemDisabled || readonly ? "disabled" : "";
 
+        let helpText =
+          schema && schema.anyOf && schema.anyOf[i].help
+            ? schema.anyOf[i].help
+            : "";
+        console.log("helpText ", helpText);
+
         const toolTip =
           schema && schema.anyOf && schema.anyOf[i].help ? (
             <TooltipWrapper help={ReactHtmlParser(schema.anyOf[i].help)} />
@@ -56,17 +62,20 @@ function RadioWidget(props) {
               onBlur={onBlur && (event => onBlur(id, event.target.value))}
               onFocus={onFocus && (event => onFocus(id, event.target.value))}
             />
-            <span>{toolTip}</span>
           </span>
         );
 
         return inline ? (
-          <label key={i} className={`radio-inline ${disabledCls}`}>
-            {radio}
-          </label>
+          <React.Fragment>
+            <label key={i} className={`radio-inline ${disabledCls}`}>
+              {radio}
+            </label>
+            <span>{toolTip}</span>
+          </React.Fragment>
         ) : (
           <div key={i} className={`radio ${disabledCls}`}>
             <label>{radio}</label>
+            <span>{toolTip}</span>
           </div>
         );
       })}

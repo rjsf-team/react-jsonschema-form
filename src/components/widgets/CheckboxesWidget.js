@@ -61,9 +61,7 @@ function CheckboxesWidget(props) {
                 }
               }}
             />
-
             <span>{option.label}</span>
-            <span>{toolTip}</span>
           </span>
         );
         return inline ? (
@@ -72,10 +70,12 @@ function CheckboxesWidget(props) {
               {checkbox}
             </label>
             <label key={index} className={`checkbox-inline ${disabledCls}`} />
+            <span>{toolTip}</span>
           </div>
         ) : (
           <div key={index} className={`checkbox ${disabledCls}`}>
             <label>{checkbox}</label>
+            <span>{toolTip}</span>
           </div>
         );
       })}
