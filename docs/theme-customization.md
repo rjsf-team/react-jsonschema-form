@@ -47,7 +47,7 @@ export default ThemeObject;
 The above can be similarly done for **fields**.
 
 #### Templates
-Each template should be passed directly into the theme object just as you would into the rjsf Form component. In [here](/advanced-customization/#array-field-template) and [here](/advanced-customization/#error-list-template) are two examples of custom templates, below is example how to use these two custom templates in the theme object:
+Each template should be passed directly into the theme object just as you would into the rjsf Form component. Here is an example of how to use a custom [ArrayFieldTemplate](/advanced-customization/#array-field-template) and [ErrorListTemplate](/advanced-customization/#error-list-template) in the theme object:
 ```jsx
 function MyArrayFieldTemplate(props) {
   return (
@@ -80,7 +80,7 @@ const ThemeObject = {
 export default ThemeObject;
 ```
 
-### Overriding other Form properties
+### Overriding other Form props
 Just as the theme can override **widgets**, **fields**, any of the field templates, and set default values to properties like **showErrorList**, you can do the same with the instance of the withTheme() Form component.
 ```jsx
 const ThemeObject = {
