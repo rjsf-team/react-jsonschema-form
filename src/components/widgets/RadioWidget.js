@@ -51,7 +51,7 @@ function RadioWidget(props) {
             <FormControlLabel
               type="radio"
               control={<Radio color="primary" />}
-              label={option.label}
+              label={ReactHtmlParser(option.label)}
               checked={checked}
               name={name}
               required={required}

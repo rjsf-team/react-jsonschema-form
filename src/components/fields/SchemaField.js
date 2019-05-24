@@ -60,7 +60,7 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
 }
 
 function Label(props) {
-  const { label, required, id } = props;
+  const { label, required, id, children } = props;
   if (!label) {
     return null;
   }
@@ -71,6 +71,7 @@ function Label(props) {
       style={{ wordBreak: "break-word", maxWidth: "95%" }}>
       {ReactHtmlParser(label)}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
+      {children}
     </label>
   );
 }
@@ -139,10 +140,19 @@ function DefaultTemplate(props) {
     return <div className="hidden">{children}</div>;
   }
 
+  var labelAndHelpContent = "";
+  if (displayLabel) {
+    labelAndHelpContent = (
+      <Label label={label} required={required} id={id}>
+        {" "}
+        {help}{" "}
+      </Label>
+    );
+  }
+
   return (
     <WrapIfAdditional {...props}>
-      {displayLabel && <Label label={label} required={required} id={id} />}
-      {help}
+      {labelAndHelpContent}
       {displayLabel && description ? description : null}
       {children}
       {errors}

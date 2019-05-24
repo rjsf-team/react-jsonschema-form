@@ -7,6 +7,7 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
+import ReactHtmlParser from "react-html-parser";
 
 const classes = PropTypes.object.isRequired;
 
@@ -114,7 +115,7 @@ function SelectWidget(props) {
           const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
           return (
             <MenuItem key={i} value={value} disabled={disabled}>
-              {label}
+              {ReactHtmlParser(label)}
             </MenuItem>
           );
         })}
