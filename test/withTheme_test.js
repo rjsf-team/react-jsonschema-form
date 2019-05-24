@@ -4,7 +4,7 @@ import React from "react";
 import { withTheme } from "../src";
 import { createComponent, createSandbox } from "./test_utils";
 
-describe.only("withTheme", () => {
+describe("withTheme", () => {
   let sandbox;
 
   beforeEach(() => {
