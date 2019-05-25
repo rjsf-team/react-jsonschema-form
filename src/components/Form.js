@@ -139,11 +139,9 @@ export default class Form extends Component {
         errors: toErrorList(newErrorSchema),
       };
     }
-    setState(this, state, () => {
-      if (this.props.onChange) {
-        this.props.onChange(this.state);
-      }
-    });
+
+    this.props.onChange && this.props.onChange(state);
+    this.setState(state);
   };
 
   onBlur = (...args) => {
