@@ -315,23 +315,24 @@ describe("utils", () => {
         });
       });
 
-      it("should fill array with additional items schema when items is empty", () => {
+      it("defaults passed along for multiselect arrays when minItems is present", () => {
         const schema = {
           type: "object",
           properties: {
             array: {
               type: "array",
               minItems: 1,
-              additionalItems: {
+              uniqueItems: true,
+              default: ["foo", "qux"],
+              items: {
                 type: "string",
-                default: "foo",
+                enum: ["foo", "bar", "fuzz", "qux"],
               },
-              items: [],
             },
           },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          array: ["foo"],
+          array: ["foo", "qux"],
         });
       });
     });
