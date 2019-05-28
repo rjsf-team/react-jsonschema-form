@@ -292,6 +292,8 @@ A: Probably not. We use Bootstrap v3 and it works fine for our needs. We would l
 
 A: There's no specific built-in way to do this, but you can write your own FieldTemplate that supports hiding/showing fields according to user input. See the "tips and tricks" section above for one example implementation. See also: [#268](https://github.com/mozilla-services/react-jsonschema-form/issues/268), [#304](https://github.com/mozilla-services/react-jsonschema-form/pull/304), [#598](https://github.com/mozilla-services/react-jsonschema-form/issues/598), [#920](https://github.com/mozilla-services/react-jsonschema-form/issues/920).
 
+For filtering fields using a search box, see [this example implementation](https://codesandbox.io/s/examplereactjsonschemaformfilter-wikn6).
+
 ## License
 
 Apache 2
