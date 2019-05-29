@@ -11,9 +11,17 @@ const nums = new Set(['number', 'integer']);
  */
 function processValue(schema, value) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
+  console.log(14);
+  console.log(value);
   const { type, items } = schema;
+  if (Array.isArray(value)) {
+    console.log(18);
+    return value.map(
+      item => item === '' ? null : item
+    );
+  }
   if (value === '') {
-    return undefined;
+    return null;
   } else if (type === 'array' && items && nums.has(items.type)) {
     return value.map(asNumber);
   } else if (type === 'boolean') {
@@ -71,7 +79,7 @@ function SelectWidget(props) {
     // This has to do with how Date-Times are handled:
     value !== -1
   ) {
-    if (value === null || value === undefined ) {
+    if (value === undefined ) {
       invalidValue = '';
     }
     if (
@@ -126,6 +134,10 @@ function SelectWidget(props) {
       )}
       {
         typeof invalidValue === 'string' &&
+          // Don't re-render an option that is
+          // identical to the placeholder above:
+          invalidValue !== placeholder &&
+          invalidValue !== "" &&
           <option key={`${value}-invalid`} value={value || ""}>
             {String(invalidValue) || ""} [Invalid value]
           </option>

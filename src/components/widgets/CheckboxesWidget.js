@@ -48,7 +48,7 @@ function CheckboxesWidget(props) {
                   }
                 }}
               />
-              <span>{invalidValue} [Invalid value]</span>
+              {String(invalidValue) || '""'} [Invalid value]
             </span>
           );
           return inline ? (
