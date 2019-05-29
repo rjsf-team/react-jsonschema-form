@@ -76,7 +76,7 @@ export function getSchemaType(schema) {
     return "string";
   }
 
-  if ((!type && schema.properties) || schema.additionalProperties) {
+  if (!type && (schema.properties || schema.additionalProperties)) {
     return "object";
   }
 
