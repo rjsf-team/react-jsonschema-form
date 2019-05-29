@@ -661,6 +661,13 @@ describe('ArrayField', () => {
         expect(node.querySelector('.field label').textContent).eql('My field');
       });
 
+      it('should render invalid data, and mark it as invalid', () => {
+        const formData = ["foo", "duck"]
+        const {node} = createFormComponent({schema, formData});
+
+        expect(node.querySelector('.field select').textContent).eql('duck [Invalid value]');
+      });
+
       it('should render a select widget with multiple attribute', () => {
         const {node} = createFormComponent({schema});
 
@@ -671,8 +678,7 @@ describe('ArrayField', () => {
       it('should render options', () => {
         const {node} = createFormComponent({schema});
 
-        // Length should be number of options, plus a blank option:
-        expect(node.querySelectorAll('select option')).to.have.length.of(4);
+        expect(node.querySelectorAll('select option')).to.have.length.of(3);
       });
 
       it('should handle a change event', () => {
@@ -735,11 +741,10 @@ describe('ArrayField', () => {
 
         const options = node.querySelectorAll('.field select option');
         // Length should be number of options, plus a blank option:
-        expect(options).to.have.length.of(4);
-        expect(options[0].selected).eql(false); // blank
-        expect(options[1].selected).eql(true); // foo
-        expect(options[2].selected).eql(true); // bar
-        expect(options[3].selected).eql(false); // fuzz
+        expect(options).to.have.length.of(3);
+        expect(options[0].selected).eql(true); // foo
+        expect(options[1].selected).eql(true); // bar
+        expect(options[2].selected).eql(false); // fuzz
       });
 
       it('should render the select widget with the expected id', () => {

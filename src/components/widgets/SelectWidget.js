@@ -65,6 +65,39 @@ function SelectWidget(props) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : '';
 
+  let invalidValue;
+
+  console.log('value:');
+  console.log(value);
+
+  if (
+    value !== '' &&
+    value !== undefined &&
+    value !== null &&
+    // This has to do with how Date-Times are handled:
+    value !== -1
+  ) {
+    if (
+      typeof value === "string" &&
+      !enumOptions.map(option =>  option.value).includes(value)
+    ) {
+      invalidValue = value;
+    }
+    if (Array.isArray(value)) {
+      // Get the set difference between the actual
+      // values in the data, and the allowed
+      // values from the schema:
+      invalidValue = [...value].filter(
+        x => {
+          return !enumOptions.map(option => option.value).includes(x);
+        }
+      );
+    }
+  }
+
+  console.log('invalidValue:');
+  console.log(invalidValue);
+
   return (
     <select
       id={id}
@@ -93,31 +126,26 @@ function SelectWidget(props) {
         onChange(processValue(schema, newValue));
       }}>
       {!multiple && schema.default === undefined && (
-        <option value="" key="placeholder">
-          {placeholder}
+        <option value={""} key="placeholder">
+          {placeholder || ""}
         </option>
       )}
-      {value !== '' &&
-      value !== undefined &&
-      value !== null &&
-      // This has to do with how Date-Times are handled:
-      value !== -1 && (
-      (
-        typeof value === "string" &&
-        !enumOptions.map(option =>  option.value).includes(value)
-      ) || (
-        Array.isArray(value) &&
-        !enumOptions.map(option => option.value).every(
-          optionValue => value.includes(optionValue)
-        ) &&
-        !value.every(
-          valueEntry => enumOptions.map(option => option.value).includes(valueEntry)
-        )
-      )) ? (
-        <option key={value} value={value}>
-          {value} [Invalid value]
-        </option>
-      ) : null}
+      {
+        typeof invalidValue === 'string' &&
+          <option key={value} value={value}>
+            {value} [Invalid value]
+          </option>
+      }
+      {
+        Array.isArray(invalidValue) &&
+        invalidValue.map(singleInvalidValue => {
+          return <option key={singleInvalidValue} value={singleInvalidValue}>
+            {singleInvalidValue} [Invalid value]
+          </option>;
+        })
+      }
+        ) : null
+      }
       {enumOptions.map(({ value, label }, i) => {
         const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
         return (
