@@ -16,8 +16,52 @@ function deselectValue(value, selected) {
 function CheckboxesWidget(props) {
   const { id, disabled, options, value, autofocus, readonly, onChange } = props;
   const { enumOptions, enumDisabled, inline } = options;
+
+  // Get the set difference between the actual
+  // values in the data, and the allowed
+  // values from the schema:
+  const invalidItems = [...value].filter(
+    x => {
+      return !enumOptions.map(option => option.value).includes(x);
+    }
+  );
+
   return (
     <div className="checkboxes" id={id}>
+      {
+        // Show invalid items that are present
+        // in the underlying data:
+        invalidItems.map((invalidValue, index) => {
+          const checkbox = (
+            <span>
+              <input
+                type="checkbox"
+                id={`${id}_${index}`}
+                checked={true}
+                disabled={false}
+                onChange={event => {
+                  const all = enumOptions.map(({ value }) => value);
+                  if (event.target.checked) {
+                    onChange(selectValue(invalidValue, value, all));
+                  } else {
+                    onChange(deselectValue(invalidValue, value));
+                  }
+                }}
+              />
+              <span>{invalidValue} [Invalid value]</span>
+            </span>
+          );
+          return inline ? (
+            <label key={index} className={`checkbox-inline`}>
+              {checkbox}
+            </label>
+          ) : (
+            <div key={index} className={`checkbox`}>
+              <label>{checkbox}</label>
+            </div>
+          );
+        })
+      }
       {enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         const itemDisabled =

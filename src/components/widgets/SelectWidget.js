@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {asNumber, guessType} from '../../utils';
+import { asNumber, guessType } from '../../utils';
 
 const nums = new Set(['number', 'integer']);
 
@@ -11,7 +11,7 @@ const nums = new Set(['number', 'integer']);
  */
 function processValue(schema, value) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
-  const {type, items} = schema;
+  const { type, items } = schema;
   if (value === '') {
     return undefined;
   } else if (type === 'array' && items && nums.has(items.type)) {
@@ -62,7 +62,7 @@ function SelectWidget(props) {
     onFocus,
     placeholder,
   } = props;
-  const {enumOptions, enumDisabled} = options;
+  const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : '';
 
   return (
@@ -101,13 +101,24 @@ function SelectWidget(props) {
       value !== undefined &&
       value !== null &&
       // This has to do with how Date-Times are handled:
-      value !== -1 &&
-      !enumOptions.map(option => option.value).includes(value) ? (
+      value !== -1 && (
+      (
+        typeof value === "string" &&
+        !enumOptions.map(option =>  option.value).includes(value)
+      ) || (
+        Array.isArray(value) &&
+        !enumOptions.map(option => option.value).every(
+          optionValue => value.includes(optionValue)
+        ) &&
+        !value.every(
+          valueEntry => enumOptions.map(option => option.value).includes(valueEntry)
+        )
+      )) ? (
         <option key={value} value={value}>
-          {value} 123
+          {value} [Invalid value]
         </option>
       ) : null}
-      {enumOptions.map(({value, label}, i) => {
+      {enumOptions.map(({ value, label }, i) => {
         const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
         return (
           <option key={i} value={value} disabled={disabled}>
