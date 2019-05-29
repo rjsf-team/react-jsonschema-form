@@ -635,6 +635,22 @@ describe('ArrayField', () => {
       const inputs = form.node.querySelectorAll('input[type=text]');
       expect(inputs.length).eql(0);
     });
+
+    it('should render invalid but selected data, and mark it as invalid', () => {
+      const schema = {
+        type: 'array',
+        title: 'My field',
+        items: {
+          enum: ['foo', 'bar', 'fuzz'],
+          type: 'string',
+        },
+        uniqueItems: false,
+      };
+      const formData = ["duck", "foo"];
+      const {node} = createFormComponent({schema, formData});
+
+      expect(node.querySelectorAll('.field select option')[1].textContent).eql('duck [Invalid value]');
+    });
   });
 
   describe('Multiple choices list', () => {
@@ -665,7 +681,7 @@ describe('ArrayField', () => {
         const formData = ["foo", "duck"]
         const {node} = createFormComponent({schema, formData});
 
-        expect(node.querySelector('.field select').textContent).eql('duck [Invalid value]');
+        expect(node.querySelector('.field select option').textContent).eql('duck [Invalid value]');
       });
 
       it('should render a select widget with multiple attribute', () => {
