@@ -80,6 +80,25 @@ describe("ObjectFieldTemplate", () => {
     }).node;
     sharedIts();
   });
+  describe("with template configured globally overridden by ui:ObjectFieldTemplate", () => {
+    node = createFormComponent({
+      schema: {
+        type: "object",
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
+      },
+      uiSchema: {
+        "ui:description": "foobar",
+        "ui:ObjectFieldTemplate": ObjectFieldTemplate,
+      },
+      formData,
+      ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
+      fields: {
+        TitleField,
+        DescriptionField,
+      },
+    }).node;
+    sharedIts();
+  });
 
   function sharedIts() {
     it("should render one root element", () => {

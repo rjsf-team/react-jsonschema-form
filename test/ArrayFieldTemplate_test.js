@@ -80,6 +80,23 @@ describe("ArrayFieldTemplate", () => {
           ).to.have.length.of(3);
         });
       });
+      describe("with template configured globally being overriden in ui:ArrayFieldTemplate", () => {
+        it("should render a stateful custom component", () => {
+          const { node } = createFormComponent({
+            schema: { type: "array", items: { type: "string" } },
+            formData,
+            uiSchema: {
+              "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+            },
+            // Empty field template for proof that we're doing overrides
+            ArrayFieldTemplate: () => <div />,
+          });
+
+          expect(
+            node.querySelectorAll(".field-array .field-content div")
+          ).to.have.length.of(3);
+        });
+      });
     });
 
     describe("not fixed items", () => {
@@ -119,6 +136,23 @@ describe("ArrayFieldTemplate", () => {
             formData,
             schema,
             uiSchema,
+          }).node;
+        });
+        sharedIts();
+      });
+      describe("with template configured globally being overriden in ui:ArrayFieldTemplate", () => {
+        const uiSchema = {
+          classNames: "custom-array",
+          "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+        };
+
+        beforeEach(() => {
+          node = createFormComponent({
+            formData,
+            schema,
+            uiSchema,
+            // Empty field template for proof that we're doing overrides
+            ArrayFieldTemplate: () => <div />,
           }).node;
         });
         sharedIts();
@@ -195,6 +229,22 @@ describe("ArrayFieldTemplate", () => {
             formData,
             schema,
             uiSchema,
+          }).node;
+        });
+        sharedIts();
+      });
+      describe("with template configured globally being overriden in ui:ArrayFieldTemplate", () => {
+        const uiSchema = {
+          classNames: "custom-array",
+          "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+        };
+        beforeEach(() => {
+          node = createFormComponent({
+            formData,
+            schema,
+            uiSchema,
+            // Empty field template for proof that we're doing overrides
+            ArrayFieldTemplate: () => <div />,
           }).node;
         });
         sharedIts();
