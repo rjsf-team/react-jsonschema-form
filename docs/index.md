@@ -107,10 +107,10 @@ render((
 
 #### Form submission
 
-You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after:
+You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after. The original event will also be passed as a second parameter:
 
 ```js
-const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
+const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
 
 render((
   <Form schema={schema}
@@ -258,6 +258,11 @@ $ npm test
 $ npm run tdd
 ```
 
+#### Code coverage
+
+Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run. 
+The full report can be seen by opening `./coverage/lcov-report/index.html`.
+
 ### Releasing
 
 ```
@@ -275,6 +280,8 @@ $ git push --tags origin master
 
 A: The `anyOf`  and `oneOf` keywords are supported,  however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
 There is also special cased where you can use `oneOf` in [schema dependencies](dependencies.md#schema-dependencies), If you'd like to help improve support for these keywords, see the following issues for inspiration [#329](https://github.com/mozilla-services/react-jsonschema-form/pull/329) or [#417](https://github.com/mozilla-services/react-jsonschema-form/pull/417). See also: [#52](https://github.com/mozilla-services/react-jsonschema-form/issues/52), [#151](https://github.com/mozilla-services/react-jsonschema-form/issues/151), [#171](https://github.com/mozilla-services/react-jsonschema-form/issues/171), [#200](https://github.com/mozilla-services/react-jsonschema-form/issues/200), [#282](https://github.com/mozilla-services/react-jsonschema-form/issues/282), [#302](https://github.com/mozilla-services/react-jsonschema-form/pull/302), [#330](https://github.com/mozilla-services/react-jsonschema-form/issues/330), [#430](https://github.com/mozilla-services/react-jsonschema-form/issues/430), [#522](https://github.com/mozilla-services/react-jsonschema-form/issues/522), [#538](https://github.com/mozilla-services/react-jsonschema-form/issues/538), [#551](https://github.com/mozilla-services/react-jsonschema-form/issues/551), [#552](https://github.com/mozilla-services/react-jsonschema-form/issues/552), or [#648](https://github.com/mozilla-services/react-jsonschema-form/issues/648).
+
+In addition, "nullable" types are supported in a narrow sense: If a property declares a type of `["<some-type>", "null"]`, then `"some-type"` will be passed through as the type used to determine which widget to use for rendering the field. However, the actual rendering and handling of the field is unchanged; you are free to handle this using an approach (`'ui:emptyValue': null`, for example) best-suited to your use case.
 
 ### Q: Will react-jsonschema-form support Material, Ant-Design, Foundation, or [some other specific widget library or frontend style]?
 

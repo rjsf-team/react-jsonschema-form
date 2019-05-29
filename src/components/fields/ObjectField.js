@@ -233,11 +233,15 @@ class ObjectField extends Component {
               name={name}
               required={this.isRequired(name)}
               schema={schema.properties[name]}
-              uiSchema={uiSchema[name]}
+              uiSchema={
+                addedByAdditionalProperties
+                  ? uiSchema.additionalProperties
+                  : uiSchema[name]
+              }
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
-              formData={formData[name]}
+              formData={(formData || {})[name]}
               onKeyChange={this.onKeyChange(name)}
               onChange={this.onPropertyChange(
                 name,
