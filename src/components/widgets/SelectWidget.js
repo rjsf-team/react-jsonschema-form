@@ -11,19 +11,15 @@ const nums = new Set(['number', 'integer']);
  */
 function processValue(schema, value) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
-  console.log(14);
-  console.log(value);
   const { type, items } = schema;
-  if (Array.isArray(value)) {
-    console.log(18);
-    return value.map(
-      item => item === '' ? null : item
-    );
-  }
   if (value === '') {
     return null;
   } else if (type === 'array' && items && nums.has(items.type)) {
     return value.map(asNumber);
+  } else if (Array.isArray(value)) {
+    return value.map(
+      item => item === '' ? null : item
+    );
   } else if (type === 'boolean') {
     return value === 'true';
   } else if (type === 'number') {
@@ -128,8 +124,8 @@ function SelectWidget(props) {
         onChange(processValue(schema, newValue));
       }}>
       {!multiple && schema.default === undefined && (
-        <option value={""} key="placeholder">
-          {placeholder || ""}
+        <option value={emptyValue} key="placeholder">
+          {placeholder || emptyValue}
         </option>
       )}
       {
@@ -138,14 +134,14 @@ function SelectWidget(props) {
           // identical to the placeholder above:
           invalidValue !== placeholder &&
           invalidValue !== "" &&
-          <option key={`${value}-invalid`} value={value || ""}>
-            {String(invalidValue) || ""} [Invalid value]
+          <option key={`${value}-invalid`} value={value || emptyValue}>
+            {String(invalidValue) || emptyValue} [Invalid value]
           </option>
       }
       {
         Array.isArray(invalidValue) &&
         invalidValue.map(singleInvalidValue => {
-          return <option key={`${singleInvalidValue}-invalid`} value={singleInvalidValue || ""}>
+          return <option key={`${singleInvalidValue}-invalid`} value={singleInvalidValue || emptyValue}>
             {String(singleInvalidValue) || '[blank]'} [Invalid value]
           </option>;
         })
