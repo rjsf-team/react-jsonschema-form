@@ -67,16 +67,13 @@ function SelectWidget(props) {
 
   let invalidValue;
 
-  console.log('value:');
-  console.log(value);
-
   if (
-    value !== '' &&
-    value !== undefined &&
-    value !== null &&
     // This has to do with how Date-Times are handled:
     value !== -1
   ) {
+    if (value === null || value === undefined ) {
+      invalidValue = '';
+    }
     if (
       typeof value === "string" &&
       !enumOptions.map(option =>  option.value).includes(value)
@@ -94,9 +91,6 @@ function SelectWidget(props) {
       );
     }
   }
-
-  console.log('invalidValue:');
-  console.log(invalidValue);
 
   return (
     <select
@@ -132,19 +126,18 @@ function SelectWidget(props) {
       )}
       {
         typeof invalidValue === 'string' &&
-          <option key={value} value={value}>
-            {value} [Invalid value]
+          <option key={`${value}-invalid`} value={value || ""}>
+            {String(invalidValue) || ""} [Invalid value]
           </option>
       }
       {
         Array.isArray(invalidValue) &&
         invalidValue.map(singleInvalidValue => {
-          return <option key={singleInvalidValue} value={singleInvalidValue}>
-            {singleInvalidValue} [Invalid value]
+          return <option key={`${singleInvalidValue}-invalid`} value={singleInvalidValue || ""}>
+            {String(singleInvalidValue) || '[blank]'} [Invalid value]
           </option>;
         })
       }
-        ) : null
       }
       {enumOptions.map(({ value, label }, i) => {
         const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
