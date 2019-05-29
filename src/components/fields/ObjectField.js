@@ -106,7 +106,7 @@ class ObjectField extends Component {
 
   onDropPropertyClick = key => {
     return event => {
-      event.preventDefault();
+      event && event.preventDefault();
       const { onChange, formData } = this.props;
       const copiedFormData = { ...formData };
       delete copiedFormData[key];

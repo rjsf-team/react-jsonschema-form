@@ -161,8 +161,8 @@ export default class Form extends Component {
   };
 
   onSubmit = event => {
-    event.preventDefault();
-    event.persist();
+    event && event.preventDefault();
+    event && event.persist();
 
     if (!this.props.noValidate) {
       const { errors, errorSchema } = this.validate(this.state.formData);
@@ -193,7 +193,7 @@ export default class Form extends Component {
   };
 
   onReset = event => {
-    event.preventDefault();
+    event && event.preventDefault();
     console.log("json schema native form reset triggered");
     this.setState({ errors: [], errorSchema: {}, formData: {} }, () => {
       if (this.props.onReset) {
