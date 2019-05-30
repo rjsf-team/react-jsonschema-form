@@ -5,7 +5,7 @@ import { asNumber, guessType } from '../../utils';
 
 const nums = new Set(['number', 'integer']);
 const nullPlaceholderValue = '|||nullPlaceholder|||';
-const placeholderValue = '|||defaultPlaceholder|||';
+const defaultPlaceholderValue = '|||defaultPlaceholder|||';
 
 /**
  * This is a silly limitation in the DOM where option change event values are
@@ -14,21 +14,17 @@ const placeholderValue = '|||defaultPlaceholder|||';
 function processValue(schema, value) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
   const { type, items } = schema;
-  console.log(17);
-  console.log(value);
-  console.log(value === nullPlaceholderValue);
-  console.log(value === placeholderValue);
-  console.log('---------');
+
   if (
-    value === '' ||
+    value === "" ||
     value === null ||
     value === undefined
   ) {
     return value;
   } else if (value === nullPlaceholderValue) {
     return undefined;
-  } else if (value === placeholderValue) {
-    return '';
+  } else if (value === defaultPlaceholderValue) {
+    return "";
   } else if (type === 'array' && items && nums.has(items.type)) {
     return value.map(asNumber);
   } else if (Array.isArray(value)) {
@@ -56,10 +52,20 @@ function processValue(schema, value) {
 
 function getValue(event, multiple) {
   if (multiple) {
-    return [].slice
+    console.log(59);
+    const output = [].slice
       .call(event.target.options)
       .filter(o => o.selected)
-      .map(o => o.value);
+      .map(o => {
+        if (o.value === defaultPlaceholderValue) {
+          return '';
+        } else if (o.value === nullPlaceholderValue) {
+          return undefined;
+        }
+        return o.value;
+      });
+    console.log(output);
+    return output;
   } else {
     return event.target.value;
   }
@@ -84,54 +90,54 @@ function SelectWidget(props) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : '';
 
-  const transformedValue = value === null ||
-    typeof value === "undefined" ?
-      nullPlaceholderValue :
-      value;
-
   let invalidValue;
 
+  if (value === undefined) {
+    invalidValue = '';
+  }
   if (
-    // This has to do with how Date-Times are handled:
-    true
-    // value !== -1 // &&
-    // schema.format &&
-    // (
-    //   schema.format === "date" ||
-    //   schema.format === "date-time"
-    // )
+    typeof value === "string" &&
+    !enumOptions.map(option =>  option.value).includes(value)
   ) {
-    if (value === undefined) {
-      invalidValue = '';
-    }
-    if (
-      typeof value === "string" &&
-      !enumOptions.map(option =>  option.value).includes(value)
-    ) {
-      invalidValue = value;
-    }
-    if (Array.isArray(value)) {
-      // Get the set difference between the actual
-      // values in the data, and the allowed
-      // values from the schema:
-      invalidValue = [...value].filter(
-        x => {
-          return !enumOptions.map(option => option.value).includes(x);
-        }
-      );
-    }
+    invalidValue = value;
+  }
+  if (Array.isArray(value)) {
+    // Get the set difference between the actual
+    // values in the data, and the allowed
+    // values from the schema:
+    invalidValue = [...value].filter(
+      x => {
+        return !enumOptions.map(option => option.value).includes(x);
+      }
+    );
   }
 
-  console.log('InvalidValue:');
-  console.log(invalidValue);
-  console.log(typeof invalidValue);
+  let selectValue = value;
+  if (typeof value === 'undefined' || value === null) {
+    selectValue = nullPlaceholderValue;
+  } else if (Array.isArray(value)) {
+    selectValue = value.map(item => {
+      console.log('item is:');
+      console.log(item);
+      if (item === "") {
+        return defaultPlaceholderValue;
+      }
+      if (item === null || item === undefined) {
+        return nullPlaceholderValue;
+      }
+      return item;
+    });
+  }
+
+  console.log('selectValue:');
+  console.log(selectValue);
 
   return (
     <select
       id={id}
       multiple={multiple}
       className="form-control"
-      value={typeof value === 'undefined' || value === null ? nullPlaceholderValue : value}
+      value={selectValue}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -150,11 +156,13 @@ function SelectWidget(props) {
         })
       }
       onChange={event => {
+        console.log(142);
+        console.log(event.target);
         const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
       }}>
       {!multiple && schema.default === undefined && (
-        <option value={placeholderValue} key="placeholder">
+        <option value={defaultPlaceholderValue} key="placeholder">
           {placeholder || emptyValue}
         </option>
       )}
@@ -164,30 +172,35 @@ function SelectWidget(props) {
           // identical to the placeholder above:
           invalidValue !== placeholder &&
           invalidValue !== "" &&
-          <option key={`${value}-invalid-${Math.random()}`} value={
-            (
-              (typeof invalidValue === "undefined" || invalidValue === null) ?
-              nullPlaceholderValue : false
-            ) ||
-            invalidValue ||
-            emptyValue
-          }>
+          <option
+            key={`${value}-invalid-${Math.random()}`} value={
+              (
+                (typeof invalidValue === "undefined" || invalidValue === null) ?
+                nullPlaceholderValue : false
+              ) ||
+              invalidValue ||
+              emptyValue
+            }
+          >
             {String(invalidValue) || emptyValue} [Invalid value]
           </option>
       }
       {
         Array.isArray(invalidValue) &&
         invalidValue.map(singleInvalidValue => {
-          return <option key={`${singleInvalidValue}-invalid-${Math.random()}`} value={(
-            (typeof invalidValue === "undefined" || singleInvalidValue === null) ?
-            nullPlaceholderValue : false
-          ) ||
-          singleInvalidValue ||
-          placeholderValue}>
+          return <option
+            key={`${singleInvalidValue}-invalid-${Math.random()}`}
+            value={(
+              (typeof invalidValue === "undefined" || singleInvalidValue === null) ?
+              nullPlaceholderValue : false
+              ) ||
+              singleInvalidValue ||
+              defaultPlaceholderValue
+            }
+          >
             {String(singleInvalidValue) || '[blank]'} [Invalid value]
           </option>;
         })
-      }
       }
       {enumOptions.map(({ value, label }, i) => {
         const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
