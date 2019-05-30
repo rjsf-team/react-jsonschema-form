@@ -114,8 +114,6 @@ function SelectWidget(props) {
     selectValue = nullPlaceholderValue;
   } else if (Array.isArray(value)) {
     selectValue = value.map(item => {
-      console.log('item is:');
-      console.log(item);
       if (item === "") {
         return defaultPlaceholderValue;
       }
@@ -125,13 +123,6 @@ function SelectWidget(props) {
       return item;
     });
   }
-
-  console.log('selectValue:');
-  console.log(selectValue);
-  console.log('value:');
-  console.log(value);
-  console.log('invalidValue:');
-  console.log(invalidValue);
 
   return (
     <select
