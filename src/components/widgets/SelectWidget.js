@@ -14,6 +14,11 @@ const placeholderValue = '|||defaultPlaceholder|||';
 function processValue(schema, value) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
   const { type, items } = schema;
+  console.log(17);
+  console.log(value);
+  console.log(value === nullPlaceholderValue);
+  console.log(value === placeholderValue);
+  console.log('---------');
   if (
     value === '' ||
     value === null ||
@@ -23,12 +28,12 @@ function processValue(schema, value) {
   } else if (value === nullPlaceholderValue) {
     return undefined;
   } else if (value === placeholderValue) {
-    return undefined;
+    return '';
   } else if (type === 'array' && items && nums.has(items.type)) {
     return value.map(asNumber);
   } else if (Array.isArray(value)) {
     return value.map(
-      item => item === '' ? null : item
+      item => processValue(schema, item)
     );
   } else if (type === 'boolean') {
     return value === 'true';
@@ -78,6 +83,11 @@ function SelectWidget(props) {
   } = props;
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : '';
+
+  const transformedValue = value === null ||
+    typeof value === "undefined" ?
+      nullPlaceholderValue :
+      value;
 
   let invalidValue;
 
@@ -162,14 +172,19 @@ function SelectWidget(props) {
             invalidValue ||
             emptyValue
           }>
-            {String(invalidValue) || emptyValue} [Invalid value] a
+            {String(invalidValue) || emptyValue} [Invalid value]
           </option>
       }
       {
         Array.isArray(invalidValue) &&
         invalidValue.map(singleInvalidValue => {
-          return <option key={`${singleInvalidValue}-invalid-${Math.random()}`} value={singleInvalidValue || (typeof value === "undefined" || value === null && nullPlaceholderValue) || emptyValue}>
- ||             {String(singleInvalidValue) || '[blank]'} [Invalid value]
+          return <option key={`${singleInvalidValue}-invalid-${Math.random()}`} value={(
+            (typeof invalidValue === "undefined" || singleInvalidValue === null) ?
+            nullPlaceholderValue : false
+          ) ||
+          singleInvalidValue ||
+          placeholderValue}>
+            {String(singleInvalidValue) || '[blank]'} [Invalid value]
           </option>;
         })
       }
