@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { asNumber, guessType } from '../../utils';
 
 const nums = new Set(['number', 'integer']);
+const nullPlaceholderValue = '|||nullPlaceholder|||';
+const placeholderValue = '|||defaultPlaceholder|||';
 
 /**
  * This is a silly limitation in the DOM where option change event values are
@@ -12,8 +14,16 @@ const nums = new Set(['number', 'integer']);
 function processValue(schema, value) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
   const { type, items } = schema;
-  if (value === '') {
-    return null;
+  if (
+    value === '' ||
+    value === null ||
+    value === undefined
+  ) {
+    return value;
+  } else if (value === nullPlaceholderValue) {
+    return undefined;
+  } else if (value === placeholderValue) {
+    return undefined;
   } else if (type === 'array' && items && nums.has(items.type)) {
     return value.map(asNumber);
   } else if (Array.isArray(value)) {
@@ -73,9 +83,15 @@ function SelectWidget(props) {
 
   if (
     // This has to do with how Date-Times are handled:
-    value !== -1
+    true
+    // value !== -1 // &&
+    // schema.format &&
+    // (
+    //   schema.format === "date" ||
+    //   schema.format === "date-time"
+    // )
   ) {
-    if (value === undefined ) {
+    if (value === undefined) {
       invalidValue = '';
     }
     if (
@@ -96,12 +112,15 @@ function SelectWidget(props) {
     }
   }
 
+  console.log('InvalidValue:');
+  console.log(invalidValue);
+
   return (
     <select
       id={id}
       multiple={multiple}
       className="form-control"
-      value={typeof value === 'undefined' ? emptyValue : value}
+      value={typeof value === 'undefined' || value === null ? nullPlaceholderValue : value}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -124,25 +143,32 @@ function SelectWidget(props) {
         onChange(processValue(schema, newValue));
       }}>
       {!multiple && schema.default === undefined && (
-        <option value={emptyValue} key="placeholder">
+        <option value={placeholderValue} key="placeholder">
           {placeholder || emptyValue}
         </option>
       )}
       {
+        () => {
+          console.log(149);
+          console.log(
+            ((typeof value === "undefined" || value === null) && nullPlaceholderValue) || value || emptyValue
+          );
+        }
+      }{
         typeof invalidValue === 'string' &&
           // Don't re-render an option that is
           // identical to the placeholder above:
           invalidValue !== placeholder &&
           invalidValue !== "" &&
-          <option key={`${value}-invalid`} value={value || emptyValue}>
-            {String(invalidValue) || emptyValue} [Invalid value]
+          <option key={`${value}-invalid-${Math.random()}`} value={((typeof value === "undefined" || value === null) && nullPlaceholderValue) || value || emptyValue}>
+            {String(invalidValue) || emptyValue} [Invalid value] a
           </option>
       }
       {
         Array.isArray(invalidValue) &&
         invalidValue.map(singleInvalidValue => {
-          return <option key={`${singleInvalidValue}-invalid`} value={singleInvalidValue || emptyValue}>
-            {String(singleInvalidValue) || '[blank]'} [Invalid value]
+          return <option key={`${singleInvalidValue}-invalid-${Math.random()}`} value={singleInvalidValue || (typeof value === "undefined" || value === null && nullPlaceholderValue) || emptyValue}>
+ ||             {String(singleInvalidValue) || '[blank]'} [Invalid value]
           </option>;
         })
       }
