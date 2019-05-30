@@ -114,6 +114,7 @@ function SelectWidget(props) {
 
   console.log('InvalidValue:');
   console.log(invalidValue);
+  console.log(typeof invalidValue);
 
   return (
     <select
@@ -148,19 +149,19 @@ function SelectWidget(props) {
         </option>
       )}
       {
-        () => {
-          console.log(149);
-          console.log(
-            ((typeof value === "undefined" || value === null) && nullPlaceholderValue) || value || emptyValue
-          );
-        }
-      }{
         typeof invalidValue === 'string' &&
           // Don't re-render an option that is
           // identical to the placeholder above:
           invalidValue !== placeholder &&
           invalidValue !== "" &&
-          <option key={`${value}-invalid-${Math.random()}`} value={((typeof value === "undefined" || value === null) && nullPlaceholderValue) || value || emptyValue}>
+          <option key={`${value}-invalid-${Math.random()}`} value={
+            (
+              (typeof invalidValue === "undefined" || invalidValue === null) ?
+              nullPlaceholderValue : false
+            ) ||
+            invalidValue ||
+            emptyValue
+          }>
             {String(invalidValue) || emptyValue} [Invalid value] a
           </option>
       }
@@ -176,7 +177,15 @@ function SelectWidget(props) {
       {enumOptions.map(({ value, label }, i) => {
         const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
         return (
-          <option key={i} value={value} disabled={disabled}>
+          <option key={i} value={
+            (
+              (typeof value === "undefined" || value === null) ?
+              nullPlaceholderValue : false
+            ) ||
+            value ||
+            emptyValue
+          }
+          disabled={disabled}>
             {label}
           </option>
         );
