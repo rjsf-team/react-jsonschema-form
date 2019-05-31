@@ -44,7 +44,22 @@ export default class Form extends Component {
       !deepEquals(nextState.formData, this.state.formData) &&
       this.props.onChange
     ) {
+      console.log(
+        "Auto triggering the native library onChange handler. Passing the following object to the onChange handler ",
+        nextState
+      );
       this.props.onChange(nextState);
+    } else {
+      console.log(
+        "Did not trigger the native library onChange handler. nextState.formData",
+        nextState.formData,
+        "nextProps.formData",
+        nextProps.formData,
+        "this.state.formData",
+        this.state.formData,
+        "this.props.onChange",
+        this.props.onChange
+      );
     }
     this.setState(nextState);
   }
