@@ -54,6 +54,29 @@ describe("oneOf", () => {
     expect(node.querySelectorAll("select")).to.have.length.of(1);
   });
 
+  it("should assign a default value", () => {
+    const { comp } = createFormComponent({
+      schema: {
+        oneOf: [
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        ],
+      },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+  });
+
   it("should render a custom widget", () => {
     const schema = {
       type: "object",

@@ -157,6 +157,16 @@ export function computeDefaults(schema, parentDefaults, definitions = {}) {
     defaults = schema.items.map(itemSchema =>
       computeDefaults(itemSchema, undefined, definitions)
     );
+  } else if ("oneOf" in schema) {
+    schema =
+      schema["oneOf"][
+        getMatchingOption(undefined, schema["oneOf"], definitions)
+      ];
+  } else if ("anyOf" in schema) {
+    schema =
+      schema["anyOf"][
+        getMatchingOption(undefined, schema["anyOf"], definitions)
+      ];
   }
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof defaults === "undefined") {
