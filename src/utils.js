@@ -139,7 +139,7 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
   }
 }
 
-export function computeDefaults(schema, parentDefaults, definitions = {}) {
+function computeDefaults(schema, parentDefaults, definitions = {}) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
