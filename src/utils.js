@@ -549,6 +549,17 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
 function resolveDependencies(schema, definitions, formData) {
   // Drop the dependencies from the source schema.
   let { dependencies = {}, ...resolvedSchema } = schema;
+  if ("oneOf" in resolvedSchema) {
+    resolvedSchema =
+      resolvedSchema["oneOf"][
+        getMatchingOption(formData, resolvedSchema["oneOf"], definitions)
+      ];
+  } else if ("anyOf" in resolvedSchema) {
+    resolvedSchema =
+      resolvedSchema["anyOf"][
+        getMatchingOption(formData, resolvedSchema["anyOf"], definitions)
+      ];
+  }
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     // Skip this dependency if its trigger property is not present.

@@ -358,6 +358,41 @@ describe("utils", () => {
             },
           });
         });
+
+        it("should populate defaults for oneOf + dependencies", () => {
+          const schema = {
+            oneOf: [
+              {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                },
+              },
+            ],
+            dependencies: {
+              name: {
+                oneOf: [
+                  {
+                    properties: {
+                      name: {
+                        type: "string",
+                      },
+                      grade: {
+                        default: "A",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+          expect(getDefaultFormState(schema, { name: "Name" })).eql({
+            name: "Name",
+            grade: "A",
+          });
+        });
       });
 
       describe("getDefaultFormState with anyOf", () => {
@@ -401,6 +436,41 @@ describe("utils", () => {
             name: {
               first: "First Name",
             },
+          });
+        });
+
+        it("should populate defaults for anyOf + dependencies", () => {
+          const schema = {
+            anyOf: [
+              {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                },
+              },
+            ],
+            dependencies: {
+              name: {
+                oneOf: [
+                  {
+                    properties: {
+                      name: {
+                        type: "string",
+                      },
+                      grade: {
+                        default: "A",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+          expect(getDefaultFormState(schema, { name: "Name" })).eql({
+            name: "Name",
+            grade: "A",
           });
         });
       });
