@@ -54,8 +54,8 @@ describe("oneOf", () => {
     expect(node.querySelectorAll("select")).to.have.length.of(1);
   });
 
-  it("should assign a default value", () => {
-    const { comp } = createFormComponent({
+  it("should assign a default value and set defaults on option change", () => {
+    const { comp, node } = createFormComponent({
       schema: {
         oneOf: [
           {
@@ -67,7 +67,7 @@ describe("oneOf", () => {
           {
             type: "object",
             properties: {
-              bar: { type: "string" },
+              foo: { type: "string", default: "defaultbar" },
             },
           },
         ],
@@ -75,6 +75,14 @@ describe("oneOf", () => {
     });
 
     expect(comp.state.formData).eql({ foo: "defaultfoo" });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultbar" });
   });
 
   it("should render a custom widget", () => {

@@ -6,6 +6,7 @@ import {
   getWidget,
   guessType,
   retrieveSchema,
+  getDefaultFormState,
   getMatchingOption,
 } from "../../utils";
 
@@ -57,11 +58,12 @@ class AnyOfField extends Component {
 
     // If the new option is of type object and the current data is an object,
     // discard properties added using the old option.
+    let newFormData = undefined;
     if (
       guessType(formData) === "object" &&
       (newOption.type === "object" || newOption.properties)
     ) {
-      const newFormData = Object.assign({}, formData);
+      newFormData = Object.assign({}, formData);
 
       const optionsToDiscard = options.slice();
       optionsToDiscard.splice(selectedOption, 1);
@@ -76,11 +78,11 @@ class AnyOfField extends Component {
           }
         }
       }
-
-      onChange(newFormData);
-    } else {
-      onChange(undefined);
     }
+    // Call getDefaultFormState to make sure defaults are populated on change.
+    onChange(
+      getDefaultFormState(options[selectedOption], newFormData, definitions)
+    );
 
     this.setState({
       selectedOption: parseInt(option, 10),
