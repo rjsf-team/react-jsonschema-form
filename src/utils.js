@@ -1,6 +1,7 @@
 import React from "react";
-import validateFormData, { isValid } from "./validate";
+import * as ReactIs from "react-is";
 import fill from "core-js/library/fn/array/fill";
+import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -98,7 +99,7 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (typeof widget === "function") {
+  if (typeof widget === "function" || ReactIs.isForwardRef(widget)) {
     return mergeOptions(widget);
   }
 
