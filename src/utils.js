@@ -562,7 +562,7 @@ function resolveDependencies(schema, definitions, formData) {
       ];
   } else if ("anyOf" in resolvedSchema) {
     resolvedSchema =
-      resolvedSchema.oneOf[
+      resolvedSchema.anyOf[
         getMatchingOption(formData, resolvedSchema.anyOf, definitions)
       ];
   }
