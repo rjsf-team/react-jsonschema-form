@@ -162,14 +162,10 @@ function computeDefaults(schema, parentDefaults, definitions, formData) {
     );
   } else if ("oneOf" in schema) {
     schema =
-      schema["oneOf"][
-        getMatchingOption(undefined, schema["oneOf"], definitions)
-      ];
+      schema.oneOf[getMatchingOption(undefined, schema.oneOf, definitions)];
   } else if ("anyOf" in schema) {
     schema =
-      schema["anyOf"][
-        getMatchingOption(undefined, schema["anyOf"], definitions)
-      ];
+      schema.anyOf[getMatchingOption(undefined, schema.anyOf, definitions)];
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.
@@ -561,13 +557,13 @@ function resolveDependencies(schema, definitions, formData) {
   let { dependencies = {}, ...resolvedSchema } = schema;
   if ("oneOf" in resolvedSchema) {
     resolvedSchema =
-      resolvedSchema["oneOf"][
-        getMatchingOption(formData, resolvedSchema["oneOf"], definitions)
+      resolvedSchema.oneOf[
+        getMatchingOption(formData, resolvedSchema.oneOf, definitions)
       ];
   } else if ("anyOf" in resolvedSchema) {
     resolvedSchema =
-      resolvedSchema["anyOf"][
-        getMatchingOption(formData, resolvedSchema["anyOf"], definitions)
+      resolvedSchema.oneOf[
+        getMatchingOption(formData, resolvedSchema.anyOf, definitions)
       ];
   }
   // Process dependencies updating the local schema properties as appropriate.
