@@ -47,7 +47,8 @@
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.7",
     "lodash.topath": "^4.5.2",
-    "prop-types": "^15.5.8"
+    "prop-types": "^15.5.8",
+    "react-is": "^16.8.4"
   },
   "devDependencies": {
     "atob": "^2.0.3",
