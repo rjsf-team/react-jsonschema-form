@@ -314,164 +314,165 @@ describe("utils", () => {
           array: ["foo"],
         });
       });
+    });
 
-      describe("getDefaultFormState with oneOf", () => {
-        it("should populate defaults for oneOf", () => {
-          const schema = {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-                oneOf: [
-                  { type: "string", default: "a" },
-                  { type: "string", default: "b" },
-                ],
-              },
-            },
-          };
-          expect(getDefaultFormState(schema, {})).eql({
-            name: "a",
-          });
-        });
-
-        it("should populate nested default values for oneOf", () => {
-          const schema = {
-            type: "object",
-            properties: {
-              name: {
-                type: "object",
-                oneOf: [
-                  {
-                    type: "object",
-                    properties: {
-                      first: { type: "string", default: "First Name" },
-                    },
-                  },
-                  { type: "string", default: "b" },
-                ],
-              },
-            },
-          };
-          expect(getDefaultFormState(schema, {})).eql({
+    describe("defaults with oneOf", () => {
+      it("should populate defaults for oneOf", () => {
+        const schema = {
+          type: "object",
+          properties: {
             name: {
-              first: "First Name",
+              type: "string",
+              oneOf: [
+                { type: "string", default: "a" },
+                { type: "string", default: "b" },
+              ],
             },
-          });
-        });
-
-        it("should populate defaults for oneOf + dependencies", () => {
-          const schema = {
-            oneOf: [
-              {
-                type: "object",
-                properties: {
-                  name: {
-                    type: "string",
-                  },
-                },
-              },
-            ],
-            dependencies: {
-              name: {
-                oneOf: [
-                  {
-                    properties: {
-                      name: {
-                        type: "string",
-                      },
-                      grade: {
-                        default: "A",
-                      },
-                    },
-                  },
-                ],
-              },
-            },
-          };
-          expect(getDefaultFormState(schema, { name: "Name" })).eql({
-            name: "Name",
-            grade: "A",
-          });
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: "a",
         });
       });
 
-      describe("getDefaultFormState with anyOf", () => {
-        it("should populate defaults for anyOf", () => {
-          const schema = {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-                anyOf: [
-                  { type: "string", default: "a" },
-                  { type: "string", default: "b" },
-                ],
-              },
-            },
-          };
-          expect(getDefaultFormState(schema, {})).eql({
-            name: "a",
-          });
-        });
-
-        it("should populate nested default values for anyOf", () => {
-          const schema = {
-            type: "object",
-            properties: {
-              name: {
-                type: "object",
-                anyOf: [
-                  {
-                    type: "object",
-                    properties: {
-                      first: { type: "string", default: "First Name" },
-                    },
-                  },
-                  { type: "string", default: "b" },
-                ],
-              },
-            },
-          };
-          expect(getDefaultFormState(schema, {})).eql({
+      it("should populate nested default values for oneOf", () => {
+        const schema = {
+          type: "object",
+          properties: {
             name: {
-              first: "First Name",
-            },
-          });
-        });
-
-        it("should populate defaults for anyOf + dependencies", () => {
-          const schema = {
-            anyOf: [
-              {
-                type: "object",
-                properties: {
-                  name: {
-                    type: "string",
+              type: "object",
+              oneOf: [
+                {
+                  type: "object",
+                  properties: {
+                    first: { type: "string", default: "First Name" },
                   },
                 },
-              },
-            ],
-            dependencies: {
-              name: {
-                oneOf: [
-                  {
-                    properties: {
-                      name: {
-                        type: "string",
-                      },
-                      grade: {
-                        default: "A",
-                      },
-                    },
-                  },
-                ],
+                { type: "string", default: "b" },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: {
+            first: "First Name",
+          },
+        });
+      });
+
+      it("should populate defaults for oneOf + dependencies", () => {
+        const schema = {
+          oneOf: [
+            {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                },
               },
             },
-          };
-          expect(getDefaultFormState(schema, { name: "Name" })).eql({
-            name: "Name",
-            grade: "A",
-          });
+          ],
+          dependencies: {
+            name: {
+              oneOf: [
+                {
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    grade: {
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { name: "Name" })).eql({
+          name: "Name",
+          grade: "A",
+        });
+      });
+    });
+
+    describe("defaults with anyOf", () => {
+      it("should populate defaults for anyOf", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              anyOf: [
+                { type: "string", default: "a" },
+                { type: "string", default: "b" },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: "a",
+        });
+      });
+
+      it("should populate nested default values for anyOf", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "object",
+              anyOf: [
+                {
+                  type: "object",
+                  properties: {
+                    first: { type: "string", default: "First Name" },
+                  },
+                },
+                { type: "string", default: "b" },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: {
+            first: "First Name",
+          },
+        });
+      });
+
+      it("should populate defaults for anyOf + dependencies", () => {
+        const schema = {
+          anyOf: [
+            {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                },
+              },
+            },
+          ],
+          dependencies: {
+            name: {
+              oneOf: [
+                {
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    grade: {
+                      type: "string",
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { name: "Name" })).eql({
+          name: "Name",
+          grade: "A",
         });
       });
     });
