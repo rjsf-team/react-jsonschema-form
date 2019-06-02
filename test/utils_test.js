@@ -476,6 +476,122 @@ describe("utils", () => {
         });
       });
     });
+
+    describe("with dependencies", () => {
+      it("should populate defaults for dependencies", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+          dependencies: {
+            name: {
+              oneOf: [
+                {
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    grade: {
+                      type: "string",
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { name: "Name" })).eql({
+          name: "Name",
+          grade: "A",
+        });
+      });
+
+      it("should populate defaults for nested dependencies", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                },
+              },
+              dependencies: {
+                name: {
+                  oneOf: [
+                    {
+                      properties: {
+                        name: {
+                          type: "string",
+                        },
+                        grade: {
+                          type: "string",
+                          default: "A",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { foo: { name: "Name" } })).eql({
+          foo: {
+            name: "Name",
+            grade: "A",
+          },
+        });
+      });
+
+      it("should populate defaults for nested oneOf + dependencies", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              oneOf: [
+                {
+                  type: "object",
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                  },
+                },
+              ],
+              dependencies: {
+                name: {
+                  oneOf: [
+                    {
+                      properties: {
+                        name: {
+                          type: "string",
+                        },
+                        grade: {
+                          type: "string",
+                          default: "A",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { foo: { name: "Name" } })).eql({
+          foo: {
+            name: "Name",
+            grade: "A",
+          },
+        });
+      });
+    });
   });
 
   describe("asNumber()", () => {

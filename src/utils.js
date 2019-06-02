@@ -139,7 +139,7 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
   }
 }
 
-function computeDefaults(schema, parentDefaults, definitions = {}) {
+function computeDefaults(schema, parentDefaults, definitions, formData) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
@@ -152,10 +152,13 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
-    return computeDefaults(refSchema, defaults, definitions);
+    return computeDefaults(refSchema, defaults, definitions, formData);
+  } else if ("dependencies" in schema) {
+    const resolvedSchema = resolveDependencies(schema, definitions, formData);
+    return computeDefaults(resolvedSchema, defaults, definitions, formData);
   } else if (isFixedItems(schema)) {
     defaults = schema.items.map(itemSchema =>
-      computeDefaults(itemSchema, undefined, definitions)
+      computeDefaults(itemSchema, undefined, definitions, formData)
     );
   } else if ("oneOf" in schema) {
     schema =
@@ -168,6 +171,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
         getMatchingOption(undefined, schema["anyOf"], definitions)
       ];
   }
+
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof defaults === "undefined") {
     defaults = schema.default;
@@ -182,7 +186,8 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
         acc[key] = computeDefaults(
           schema.properties[key],
           (defaults || {})[key],
-          definitions
+          definitions,
+          (formData || {})[key]
         );
         return acc;
       }, {});
@@ -218,7 +223,12 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
     throw new Error("Invalid schema: " + _schema);
   }
   const schema = retrieveSchema(_schema, definitions, formData);
-  const defaults = computeDefaults(schema, _schema.default, definitions);
+  const defaults = computeDefaults(
+    schema,
+    _schema.default,
+    definitions,
+    formData
+  );
   if (typeof formData === "undefined") {
     // No form data? Use schema defaults.
     return defaults;
