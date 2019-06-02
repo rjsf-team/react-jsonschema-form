@@ -440,7 +440,7 @@ describe("utils", () => {
         });
       });
 
-      it.only("should populate defaults for anyOf + dependencies", () => {
+      it("should populate defaults for anyOf + dependencies", () => {
         const schema = {
           anyOf: [
             {
