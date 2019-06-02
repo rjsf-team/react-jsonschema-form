@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactIs from "react-is";
 import fill from "core-js/library/fn/array/fill";
-import validateFormData from "./validate";
+import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -140,7 +140,7 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
   }
 }
 
-function computeDefaults(schema, parentDefaults, definitions = {}) {
+function computeDefaults(schema, parentDefaults, definitions, formData) {
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
@@ -153,12 +153,22 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
-    return computeDefaults(refSchema, defaults, definitions);
+    return computeDefaults(refSchema, defaults, definitions, formData);
+  } else if ("dependencies" in schema) {
+    const resolvedSchema = resolveDependencies(schema, definitions, formData);
+    return computeDefaults(resolvedSchema, defaults, definitions, formData);
   } else if (isFixedItems(schema)) {
     defaults = schema.items.map(itemSchema =>
-      computeDefaults(itemSchema, undefined, definitions)
+      computeDefaults(itemSchema, undefined, definitions, formData)
     );
+  } else if ("oneOf" in schema) {
+    schema =
+      schema.oneOf[getMatchingOption(undefined, schema.oneOf, definitions)];
+  } else if ("anyOf" in schema) {
+    schema =
+      schema.anyOf[getMatchingOption(undefined, schema.anyOf, definitions)];
   }
+
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof defaults === "undefined") {
     defaults = schema.default;
@@ -173,7 +183,8 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
         acc[key] = computeDefaults(
           schema.properties[key],
           (defaults || {})[key],
-          definitions
+          definitions,
+          (formData || {})[key]
         );
         return acc;
       }, {});
@@ -209,7 +220,12 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
     throw new Error("Invalid schema: " + _schema);
   }
   const schema = retrieveSchema(_schema, definitions, formData);
-  const defaults = computeDefaults(schema, _schema.default, definitions);
+  const defaults = computeDefaults(
+    schema,
+    _schema.default,
+    definitions,
+    formData
+  );
   if (typeof formData === "undefined") {
     // No form data? Use schema defaults.
     return defaults;
@@ -540,6 +556,17 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
 function resolveDependencies(schema, definitions, formData) {
   // Drop the dependencies from the source schema.
   let { dependencies = {}, ...resolvedSchema } = schema;
+  if ("oneOf" in resolvedSchema) {
+    resolvedSchema =
+      resolvedSchema.oneOf[
+        getMatchingOption(formData, resolvedSchema.oneOf, definitions)
+      ];
+  } else if ("anyOf" in resolvedSchema) {
+    resolvedSchema =
+      resolvedSchema.anyOf[
+        getMatchingOption(formData, resolvedSchema.anyOf, definitions)
+      ];
+  }
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     // Skip this dependency if its trigger property is not present.
@@ -870,4 +897,66 @@ export function rangeSpec(schema) {
     spec.max = schema.maximum;
   }
   return spec;
+}
+
+export function getMatchingOption(formData, options, definitions) {
+  for (let i = 0; i < options.length; i++) {
+    // Assign the definitions to the option, otherwise the match can fail if
+    // the new option uses a $ref
+    const option = Object.assign(
+      {
+        definitions,
+      },
+      options[i]
+    );
+
+    // If the schema describes an object then we need to add slightly more
+    // strict matching to the schema, because unless the schema uses the
+    // "requires" keyword, an object will match the schema as long as it
+    // doesn't have matching keys with a conflicting type. To do this we use an
+    // "anyOf" with an array of requires. This augmentation expresses that the
+    // schema should match if any of the keys in the schema are present on the
+    // object and pass validation.
+    if (option.properties) {
+      // Create an "anyOf" schema that requires at least one of the keys in the
+      // "properties" object
+      const requiresAnyOf = {
+        anyOf: Object.keys(option.properties).map(key => ({
+          required: [key],
+        })),
+      };
+
+      let augmentedSchema;
+
+      // If the "anyOf" keyword already exists, wrap the augmentation in an "allOf"
+      if (option.anyOf) {
+        // Create a shallow clone of the option
+        const { ...shallowClone } = option;
+
+        if (!shallowClone.allOf) {
+          shallowClone.allOf = [];
+        } else {
+          // If "allOf" already exists, shallow clone the array
+          shallowClone.allOf = shallowClone.allOf.slice();
+        }
+
+        shallowClone.allOf.push(requiresAnyOf);
+
+        augmentedSchema = shallowClone;
+      } else {
+        augmentedSchema = Object.assign({}, option, requiresAnyOf);
+      }
+
+      // Remove the "required" field as it's likely that not all fields have
+      // been filled in yet, which will mean that the schema is not valid
+      delete augmentedSchema.required;
+
+      if (isValid(augmentedSchema, formData)) {
+        return i;
+      }
+    } else if (isValid(options[i], formData)) {
+      return i;
+    }
+  }
+  return 0;
 }
