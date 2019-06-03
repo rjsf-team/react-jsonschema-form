@@ -1843,7 +1843,7 @@ describe("utils", () => {
     });
   });
 
-  describe.only("getWidget()", () => {
+  describe("getWidget()", () => {
     const schema = {
       type: "object",
       properties: {
