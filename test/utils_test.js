@@ -316,6 +316,27 @@ describe("utils", () => {
           array: ["foo"],
         });
       });
+
+      it("defaults passed along for multiselect arrays when minItems is present", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              minItems: 1,
+              uniqueItems: true,
+              default: ["foo", "qux"],
+              items: {
+                type: "string",
+                enum: ["foo", "bar", "fuzz", "qux"],
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          array: ["foo", "qux"],
+        });
+      });
     });
 
     describe("defaults with oneOf", () => {

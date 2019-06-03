@@ -212,7 +212,7 @@ function computeDefaults(schema, parentDefaults, definitions, formData) {
             return defaultEntries.concat(fillerEntries);
           }
         } else {
-          return [];
+          return defaults ? defaults : [];
         }
       }
   }
