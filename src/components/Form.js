@@ -40,26 +40,10 @@ export default class Form extends Component {
   componentWillReceiveProps(nextProps) {
     const nextState = this.getStateFromProps(nextProps);
     if (
-      !deepEquals(nextState.formData, nextProps.formData) &&
       !deepEquals(nextState.formData, this.state.formData) &&
       this.props.onChange
     ) {
-      console.log(
-        "Auto triggering the native library onChange handler. Passing the following object to the onChange handler ",
-        nextState
-      );
       this.props.onChange(nextState);
-    } else {
-      console.log(
-        "Did not trigger the native library onChange handler. nextState.formData",
-        nextState.formData,
-        "nextProps.formData",
-        nextProps.formData,
-        "this.state.formData",
-        this.state.formData,
-        "this.props.onChange",
-        this.props.onChange
-      );
     }
     this.setState(nextState);
   }
@@ -209,7 +193,6 @@ export default class Form extends Component {
 
   onReset = event => {
     event && event.preventDefault();
-    console.log("json schema native form reset triggered");
     this.setState({ errors: [], errorSchema: {}, formData: {} }, () => {
       if (this.props.onReset) {
         this.props.onReset({ ...this.state, status: "reset" });

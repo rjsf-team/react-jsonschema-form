@@ -33,12 +33,6 @@ function RadioWidget(props) {
         const disabledCls =
           disabled || itemDisabled || readonly ? "disabled" : "";
 
-        let helpText =
-          schema && schema.anyOf && schema.anyOf[i].help
-            ? schema.anyOf[i].help
-            : "";
-        console.log("helpText ", helpText);
-
         const toolTip =
           schema && schema.anyOf && schema.anyOf[i].help ? (
             <TooltipWrapper help={ReactHtmlParser(schema.anyOf[i].help)} />
