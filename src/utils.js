@@ -101,7 +101,7 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (typeof widget === "function") {
+  if (typeof widget === "function" || typeof widget === "object") {
     return mergeOptions(widget);
   }
 

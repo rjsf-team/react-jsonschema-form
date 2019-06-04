@@ -5,7 +5,9 @@ import {
   DatePicker,
   DateTimePicker,
   MuiPickersUtilsProvider,
-} from "material-ui-pickers";
+  KeyboardDatePicker,
+  KeyboardDateTimePicker
+} from "@material-ui/pickers";
 
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
@@ -28,7 +30,6 @@ function DateTimeWidget(props) {
       ? "YYYY-MM-DD"
       : "YYYY-MM-DD HH:mm";
   }
-
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
@@ -36,7 +37,7 @@ function DateTimeWidget(props) {
       moment={moment}>
       <div className="picker">
         {options.renderDateTimePickerAsDatePicker ? (
-          <DatePicker
+          <KeyboardDatePicker
             {...props}
             {...options}
             format={options.formatPattern}
@@ -45,7 +46,7 @@ function DateTimeWidget(props) {
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
               // this.setState({ value: date });
-              if (!date) {
+              if (!date._isValid) {
                 return onChange(undefined);
               }
               let utcDate = moment(date);
@@ -66,7 +67,7 @@ function DateTimeWidget(props) {
             }}
           />
         ) : (
-          <DateTimePicker
+          <KeyboardDateTimePicker
             {...props}
             {...options}
             format={options.formatPattern}
@@ -75,7 +76,7 @@ function DateTimeWidget(props) {
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
               // this.setState({ selectedDate: date });
-              if (!date) {
+              if (!date._isValid) {
                 return onChange(undefined);
               }
               let utcDate = moment(date);

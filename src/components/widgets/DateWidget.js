@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { DatePicker, MuiPickersUtilsProvider } from "material-ui-pickers";
+import { DatePicker, MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 
@@ -26,7 +26,7 @@ function DateWidget(props) {
       locale={props.selectedLocale}
       moment={moment}>
       <div className="picker">
-        <DatePicker
+        <KeyboardDatePicker
           {...props}
           {...options}
           format={options.formatPattern}
@@ -35,7 +35,7 @@ function DateWidget(props) {
           value={value !== undefined ? moment(value) : null}
           onChange={date => {
             // this.setState({ selectedDate: date });
-            if (!date) {
+            if (!date._isValid) {
               return onChange(undefined);
             }
             let utcDate = moment(date);
