@@ -887,51 +887,6 @@ describe("Validation", () => {
           });
         });
       });
-      describe("with wildcards", () => {
-        it("should have the order foo - qux - quuz - bar", () => {
-          const schema = {
-            type: "object",
-            properties: {
-              bar: {
-                type: "string",
-                minLength: 1,
-              },
-              foo: {
-                type: "string",
-                minLength: 1,
-              },
-              qux: {
-                type: "string",
-                minLength: 1,
-              },
-              quuz: {
-                type: "string",
-                minLength: 1,
-              },
-            },
-          };
-          const uiSchema = {
-            "ui:order": ["foo", "*", "bar"],
-          };
-          const formData = {
-            foo: "",
-            bar: "",
-            qux: "",
-            quuz: "",
-          };
-          const result = validateFormData(
-            formData,
-            schema,
-            null,
-            null,
-            null,
-            null,
-            uiSchema
-          );
-          expectOrder(result.errors, [".foo", ".qux", ".quuz", ".bar"]);
-        });
-      });
-      // TODO check
       describe("with oneOfs", () => {
         it.only("should have the order in which the properties appear in the schema (foo - bar - oneOfError)", () => {
           const schema = {
@@ -1053,29 +1008,32 @@ describe("Validation", () => {
                   bar: {
                     type: "string",
                   },
-                  foo: {
-                    type: "string",
-                  },
                 },
-                required: ["bar", "foo"],
+                required: ["bar"],
               },
               {
                 properties: {
-                  quuz: {
+                  foo: {
                     type: "string",
+                    minimum: 1,
+                  },
+                  wobble: {
+                    type: "string",
+                    minimum: 1,
+                  },
+                  wibble: {
+                    type: "string",
+                    minimum: 1,
                   },
                 },
-                required: ["quuz"],
+                required: ["foo", "wobble", "wibble"],
               },
             ],
           };
           const uiSchema = {
-            "ui:order": ["bar", "foo", "*"],
+            "ui:order": ["foo", "wibble", "wobble", "bar"],
           };
-          const formData = {
-            bar: "",
-            foo: "",
-          };
+          const formData = {};
           const result = validateFormData(
             formData,
             schema,
@@ -1085,7 +1043,345 @@ describe("Validation", () => {
             null,
             uiSchema
           );
-          expectOrder(result.errors, [".foo", ".bar", ""]);
+          expectOrder(result.errors, [".foo", ".wibble", ".wobble", ".bar"]);
+        });
+      });
+      describe("with wildcards", () => {
+        describe("one level", () => {
+          it.only("should have the order foo - qux - quuz - bar", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                bar: {
+                  type: "string",
+                  minLength: 1,
+                },
+                foo: {
+                  type: "string",
+                  minLength: 1,
+                },
+                qux: {
+                  type: "string",
+                  minLength: 1,
+                },
+                quuz: {
+                  type: "string",
+                  minLength: 1,
+                },
+              },
+            };
+            const uiSchema = {
+              "ui:order": ["foo", "*", "bar"],
+            };
+            const formData = {
+              foo: "",
+              bar: "",
+              qux: "",
+              quuz: "",
+            };
+            const result = validateFormData(
+              formData,
+              schema,
+              null,
+              null,
+              null,
+              null,
+              uiSchema
+            );
+            expectOrder(result.errors, [".foo", ".qux", ".quuz", ".bar"]);
+          });
+        });
+
+        describe("nested wildcard", () => {
+          describe("* in the middle of uiOrders", () => {
+            it.only("should have the order foo - quux - quuz - bar when all question orders are defined", () => {
+              const schema = {
+                type: "object",
+                properties: {
+                  bar: {
+                    type: "string",
+                    minLength: 1,
+                  },
+                  foo: {
+                    type: "string",
+                    minLength: 1,
+                  },
+                  qux: {
+                    type: "object",
+                    properties: {
+                      quuz: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      quux: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                    },
+                  },
+                },
+              };
+              const uiSchema = {
+                "ui:order": ["foo", "*", "bar"],
+                qux: {
+                  "ui:order": ["quux", "quuz"],
+                },
+              };
+              const formData = {
+                foo: "",
+                bar: "",
+                qux: {
+                  quux: "",
+                  quuz: "",
+                },
+              };
+              const result = validateFormData(
+                formData,
+                schema,
+                null,
+                null,
+                null,
+                null,
+                uiSchema
+              );
+              expectOrder(result.errors, [
+                ".foo",
+                ".qux.quux",
+                ".qux.quuz",
+                ".bar",
+              ]);
+            });
+            it.only("should have the order foo - quux - quuz - bar when some question orders are defined", () => {
+              const schema = {
+                type: "object",
+                properties: {
+                  bar: {
+                    type: "string",
+                    minLength: 1,
+                  },
+                  wibble: {
+                    type: "object",
+                    properties: {
+                      wubble: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      wobble: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                    },
+                  },
+                  foo: {
+                    type: "string",
+                    minLength: 1,
+                  },
+                  qux: {
+                    type: "object",
+                    properties: {
+                      quuz: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      quux: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      corge: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                    },
+                  },
+                },
+              };
+              const uiSchema = {
+                "ui:order": ["foo", "*", "bar"],
+                qux: {
+                  "ui:order": ["quux", "*"],
+                },
+              };
+              const formData = {
+                foo: "",
+                wibble: {
+                  wobble: "",
+                  wubble: "",
+                },
+                bar: "",
+                qux: {
+                  quux: "",
+                  quuz: "",
+                  corge: "",
+                },
+              };
+              const result = validateFormData(
+                formData,
+                schema,
+                null,
+                null,
+                null,
+                null,
+                uiSchema
+              );
+              expectOrder(result.errors, [
+                ".foo",
+                ".wibble.wubble",
+                ".wibble.wobble",
+                ".qux.quux",
+                ".qux.quuz",
+                ".qux.corge",
+                ".bar",
+              ]);
+            });
+          });
+        });
+
+        describe("and arrays", () => {
+          it.only("should order active at the top and the array at the bottom", () => {
+            const schema = {
+              title: "Contextualized errors",
+              type: "object",
+              properties: {
+                firstName: {
+                  type: "string",
+                  title: "First name",
+                  minLength: 8,
+                  pattern: "\\d+",
+                },
+                active: {
+                  type: "boolean",
+                  title: "Active",
+                },
+                skills: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    minLength: 5,
+                  },
+                },
+                multipleChoicesList: {
+                  type: "array",
+                  title: "Pick max two items",
+                  uniqueItems: true,
+                  maxItems: 2,
+                  items: {
+                    type: "string",
+                    enum: ["foo", "bar", "fuzz"],
+                  },
+                },
+              },
+            };
+            const uiSchema = {
+              "ui:order": ["active", "*", "skills"],
+            };
+            const formData = {
+              firstName: "Chuck",
+              active: "wrong",
+              skills: ["karate", "budo", "aikido"],
+              multipleChoicesList: ["foo", "bar", "fuzz"],
+            };
+            const result = validateFormData(
+              formData,
+              schema,
+              null,
+              null,
+              null,
+              null,
+              uiSchema
+            );
+            expectOrder(result.errors, [
+              ".active",
+              ".firstName",
+              ".firstName",
+              ".multipleChoicesList",
+              ".skills[1]",
+            ]);
+          });
+          it.only("should order wildcard in an array", () => {
+            const schema = {
+              title: "Contextualized errors",
+              type: "object",
+              required: ["foo"],
+              properties: {
+                bar: {
+                  type: "boolean",
+                  title: "Active",
+                },
+                foo: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      wobble: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      qux: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      quux: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      wibble: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                    },
+                  },
+                },
+              },
+            };
+            const uiSchema = {
+              foo: {
+                "ui:order": ["wibble", "*", "wobble"],
+              },
+            };
+            const formData = {
+              bar: "wrong",
+              foo: [
+                {
+                  wobble: "val a",
+                  qux: "a val",
+                  quux: "",
+                  wibble: "",
+                },
+                {
+                  wobble: "",
+                  qux: "",
+                  quux: "",
+                  wibble: "",
+                },
+                {
+                  wobble: "",
+                  qux: "",
+                  quux: "b val",
+                  wibble: "val b",
+                },
+              ],
+            };
+            const result = validateFormData(
+              formData,
+              schema,
+              null,
+              null,
+              null,
+              null,
+              uiSchema
+            );
+            expectOrder(result.errors, [
+              ".bar",
+              ".foo[0].wibble",
+              ".foo[0].quux",
+              ".foo[1].wibble",
+              ".foo[1].qux",
+              ".foo[1].quux",
+              ".foo[1].wobble",
+              ".foo[2].qux",
+              ".foo[2].wobble",
+            ]);
+          });
         });
       });
     });
