@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import validateFormData from "../src/validate";
 
-describe("Validation Error Sorting", () => {
+describe.only("Validation Error Sorting", () => {
   describe("validate.validateFormData()", () => {
     describe("error sorting", () => {
       const expectOrder = (sortedErrors, expectedOrder) => {
@@ -1291,7 +1291,7 @@ describe("Validation Error Sorting", () => {
               null,
               uiSchema
             );
-            expectOrder(result.errors, [".foo.wobble", ".foo.wibble", ".bar"]);
+            expectOrder(result.errors, [".foo.wibble", ".foo.wobble", ".bar"]);
           });
         });
       });
