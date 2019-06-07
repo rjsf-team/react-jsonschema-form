@@ -177,10 +177,15 @@ function transformAjvErrors(errors = []) {
  *         }
  *     }
  * }
- * // example output
+ * // sample output
+ * // different cases possible of an error.properties; here are some EXAMPLES
  * {
- *     "foo.bar": [...__errors],
- *     "foo.bar[2].wibble: [...__errors]
+ *     ".foo": [* errors like: a -> is-required; is-not-a-string; is-not-of-type *],
+ *     ".bar[n]": [* errors like: b -> is-not-an-array *],
+ *     ".bar[n].qux": [* errors like: (a) *],
+ *     ".bar[n].qux[4]": [* errors like: (b) *],
+ *     ".bar[n].qux[4].wibble": [* errors like: (a) *],
+ *     "": [* errors like: does-not-match-oneof-schema *]
  * }
  *
  * @param {object} _target - the object to add the key to.
@@ -226,10 +231,20 @@ function flattenErrorSchema(_target, _errors, _errorSchema, _currentPath = "") {
   });
 }
 
+/**
+ * sorting based on flattened _errorSchema
+ *
+ * @param uiSchema
+ * @param _errors
+ * @param _errorSchema
+ * @return {Array}
+ */
 function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
   console.log("");
   console.log("calling orderErrorsByUiSchema");
-
+  if (!Array.isArray(_errors) || _errors.length === 0) {
+    return [];
+  }
   const flattenedErrorSchema = {};
   flattenErrorSchema(flattenedErrorSchema, _errors, _errorSchema);
 
@@ -246,17 +261,16 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
   const addErrorsForNode = (uiSchemaNode, currentPath = ".") => {
     // currentPath can include array indices [0]
     console.warn(
-      "CALLING addErrorsForNode with uiSchemaNode and currentPath:",
-      uiSchemaNode,
-      currentPath
+      `CALLING addErrorsForNode with uiSchemaNode and currentPath (${currentPath})`,
+      uiSchemaNode
     );
     const currentNodeUiOrder = uiSchemaNode["ui:order"];
     if (currentNodeUiOrder) {
       // there is an ui order here
       currentNodeUiOrder.forEach(propInCurrentUiOrder => {
-        console.log(
+        /*console.log(
           `currentnodeUiorder: ${propInCurrentUiOrder}, ${currentNodeUiOrder}`
-        );
+        );*/
         const constructPathOfPropInCurrentUiOrder = () =>
           [
             currentPath
@@ -268,52 +282,61 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
             .filter(x => !!x)
             .join(".");
 
-        // TODO check for *
-
         const currentErrorPath = constructPathOfPropInCurrentUiOrder();
         const errorForThisProp = flattenedErrorSchema[currentErrorPath];
-        console.log(
+        /*console.log(
           `we are looking at uiOrder prop (${propInCurrentUiOrder}) in path (${currentErrorPath})`,
           errorForThisProp,
           currentPath,
           uiSchemaNode,
           1133
-        );
+        );*/
         // TODO see if there are errors in flattenedErrorSchema that match currentErrorPath{somenumber}.propInCurrentUiOrder
+
+        const errForCurrentPath = flattenedErrorSchema[currentPath];
+        if (errForCurrentPath) {
+          errForCurrentPath.forEach(e => {
+            if (!orderedErrors.includes(e)) {
+              orderedErrors.push(e);
+            }
+          });
+        }
 
         if (errorForThisProp) {
           // there is an error for this exact path
-          // console.log('there is an error for this exact path!!!!!', errorForThisProp)
+          console.log(
+            `there is an error for this exact path (${currentErrorPath})!!!!!`,
+            errorForThisProp
+          );
           errorForThisProp.forEach(err => {
             // a validation error for a property in the errorSchema can have multiple errors, we want to add each one individually
             if (!orderedErrors.includes(err)) {
               orderedErrors.push(err);
             }
           });
+
+          console.log("checking for more", uiSchemaNode);
           const flattenedArrayErrosWithCurrentErrorPath = Object.entries(
             flattenedErrorSchema
           ).filter(([errPath]) => errPath.startsWith(`${currentErrorPath}[`));
           // we don't want to stop adding the errors for this property (maybe it's a list with minItems and there are errors in the nested children)
-          console.log(
-            0,
-            "here we are ",
-            currentErrorPath,
-            flattenedArrayErrosWithCurrentErrorPath
-          );
 
           // TODO check here
+          console.log(flattenedArrayErrosWithCurrentErrorPath);
           flattenedArrayErrosWithCurrentErrorPath.forEach(([errPath]) => {
             // there in an error in this array so we want to go through them one by one and add them individually
-            addErrorsForNode(
-              uiSchemaNode[propInCurrentUiOrder],
-              errPath.substring(0, errPath.lastIndexOf("."))
-            );
+            console.log(errPath.substring(0, errPath.lastIndexOf(".")));
+            if (uiSchemaNode[propInCurrentUiOrder]) {
+              addErrorsForNode(
+                uiSchemaNode[propInCurrentUiOrder],
+                errPath.substring(0, errPath.lastIndexOf("."))
+              );
+            }
           });
         }
 
         if (uiSchemaNode[propInCurrentUiOrder]) {
           // there is no error on this level of the uiSchema, but the error prop itself has an uiSchema prop -> we dive in...
-          console.log(`1 going into with ${currentErrorPath}`);
           const flattenedArrayErrosWithCurrentErrorPath = Object.entries(
             flattenedErrorSchema
           ).filter(([errPath]) => errPath.startsWith(`${currentErrorPath}[`));
@@ -329,7 +352,9 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
           // TODO iterate over all errors to see if there are errors for this array, then call addErrorsForNode for every error
           addErrorsForNode(
             uiSchemaNode[propInCurrentUiOrder],
-            currentErrorPath
+            currentErrorPath.startsWith(".")
+              ? currentErrorPath
+              : `.${currentErrorPath}`
           );
         } else if (
           _errors.some(err => err.property.startsWith(`.${currentErrorPath}[`))
@@ -395,7 +420,7 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
                 errProp.indexOf(uiSchemaNodeProperty)
               );
 
-              console.log(10, nextCurrentPathAppendix);
+              // console.log(10, nextCurrentPathAppendix);
               if (nextCurrentPathAppendix.includes(".")) {
                 nextCurrentPathAppendix = nextCurrentPathAppendix.substring(
                   0,
@@ -425,9 +450,9 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
 
           // call addErrorsForNode for each error
           errorsNotMentionedInUiOrder.forEach(err => {
-            const propName = err.property.substring(
+            /*const propName = err.property.substring(
               err.property.indexOf(currentPath) + 1
-            );
+            );*/
 
             // property name of next thing
             const { property: errProp } = err;
@@ -458,14 +483,14 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
             }.${nextCurrentPathAppendix}`;
 
             // TODO find out what's the next prop in the current path
-            console.log(
+            /*console.log(
               11,
               currentPath,
               currentNodeUiOrder,
               "current schema:",
               uiSchemaNode
-            );
-            console.log(
+            );*/
+            /*console.log(
               12,
               errProp,
               propName,
@@ -473,7 +498,7 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
               propertyNameOfNextLevelAfterCurrentPath,
               uiSchemaNodeProperty,
               nextCurrentPathAppendix
-            );
+            );*/
             const uiSchemaNodeForProp =
               uiSchemaNode[uiSchemaNodeProperty] ||
               uiSchemaNode[nextCurrentPathAppendix];
@@ -481,12 +506,12 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
             console.log();
 
             if (uiSchemaNodeForProp) {
-              console.log(
+              /*console.log(
                 13,
                 "and we will go into ",
                 nextCurrentPath,
                 uiSchemaNodeForProp
-              );
+              );*/
               addErrorsForNode(uiSchemaNodeForProp, nextCurrentPath);
             } else {
               if (!orderedErrors.includes(err)) {
@@ -501,8 +526,14 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
     } else {
       console.log("THERE IS no  UIORDER FOR /|\\");
 
+      const errsOnTheCurrentLevel = _errors.filter(err => {
+        console.log(
+          `checking error (${err.property}) at current path (${currentPath})`
+        );
+        return err.property.startsWith(currentPath);
+      });
       // find errors on the current level
-      _errors.forEach(e => {
+      errsOnTheCurrentLevel.forEach(e => {
         /*console.log(7, e, e.property.indexOf(currentPath), e.property.substring(
           e.property.indexOf(currentPath) + 1
         ));
@@ -552,6 +583,14 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
 
   addErrorsForNode(uiSchema);
 
+  const unsortableErrors = _errors.filter(err => {
+    return !orderedErrors.includes(err);
+  });
+
+  unsortableErrors.forEach(err => {
+    orderedErrors.push(err);
+  });
+
   console.log();
   console.log(
     "outcome of the sorting: ",
@@ -559,6 +598,7 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
     "hehe",
     orderedErrors.length
   );
+
   return orderedErrors;
 }
 
@@ -612,6 +652,7 @@ export default function validateFormData(
   } catch (err) {
     validationError = err;
   }
+  console.log("xxx", formData);
 
   let errors = transformAjvErrors(ajv.errors);
   // Clear errors to prevent persistent errors, see #1104
