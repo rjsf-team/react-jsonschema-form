@@ -614,6 +614,52 @@ describe("utils", () => {
           },
         });
       });
+
+      it("should populate defaults for nested dependencies when formData is undefined", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            can_1: {
+              type: "object",
+              properties: {
+                phy: {
+                  title: "Physical",
+                  description: "XYZ",
+                  type: "object",
+                  properties: {
+                    bit_rate_cfg_mode: {
+                      title: "Sub title",
+                      description: "XYZ",
+                      type: "integer",
+                      default: 0,
+                    },
+                  },
+                  dependencies: {
+                    bit_rate_cfg_mode: {
+                      oneOf: [
+                        {
+                          properties: {
+                            bit_rate_cfg_mode: {
+                              enum: [0],
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, undefined)).eql({
+          can_1: {
+            phy: {
+              bit_rate_cfg_mode: 0,
+            },
+          },
+        });
+      });
     });
   });
 
