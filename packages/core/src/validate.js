@@ -281,16 +281,6 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
         );
         // TODO see if there are errors in flattenedErrorSchema that match currentErrorPath{somenumber}.propInCurrentUiOrder
 
-        const isThisAnArrayQuestionmark = _errors.some(err =>
-          err.property.startsWith(`${currentPath}[`)
-        );
-        const errsOnThisLevel = _errors.filter(err =>
-          err.property.startsWith(`${currentPath}`)
-        );
-        console.log(
-          `${currentPath} isthisanarray ? ${isThisAnArrayQuestionmark} `,
-          errsOnThisLevel
-        );
         if (errorForThisProp) {
           // there is an error for this exact path
           // console.log('there is an error for this exact path!!!!!', errorForThisProp)
@@ -300,11 +290,18 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
               orderedErrors.push(err);
             }
           });
-          // we don't want to stop adding the errors for this property (maybe it's a list with minItems and there are errors in the nested children)
-          console.log(0, "here we are ", currentErrorPath);
           const flattenedArrayErrosWithCurrentErrorPath = Object.entries(
             flattenedErrorSchema
           ).filter(([errPath]) => errPath.startsWith(`${currentErrorPath}[`));
+          // we don't want to stop adding the errors for this property (maybe it's a list with minItems and there are errors in the nested children)
+          console.log(
+            0,
+            "here we are ",
+            currentErrorPath,
+            flattenedArrayErrosWithCurrentErrorPath
+          );
+
+          // TODO check here
           flattenedArrayErrosWithCurrentErrorPath.forEach(([errPath]) => {
             // there in an error in this array so we want to go through them one by one and add them individually
             addErrorsForNode(
@@ -312,7 +309,9 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
               errPath.substring(0, errPath.lastIndexOf("."))
             );
           });
-        } else if (uiSchemaNode[propInCurrentUiOrder]) {
+        }
+
+        if (uiSchemaNode[propInCurrentUiOrder]) {
           // there is no error on this level of the uiSchema, but the error prop itself has an uiSchema prop -> we dive in...
           console.log(`1 going into with ${currentErrorPath}`);
           const flattenedArrayErrosWithCurrentErrorPath = Object.entries(
@@ -335,6 +334,7 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
         } else if (
           _errors.some(err => err.property.startsWith(`.${currentErrorPath}[`))
         ) {
+          console.log("DISGUSTING");
           // there's no error for this exact prop, but maybe it's an array
           const errorsThatStartWithThisPath = _errors.filter(err => {
             // console.log(`iterating over the errors to see if the err property (${err.property}) starts with (${`.${currentErrorPath}[`})`, err.property.startsWith(`.${currentErrorPath}[`));
@@ -344,33 +344,9 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
           errorsThatStartWithThisPath
             .filter(er => !orderedErrors.includes(er))
             .forEach(er => orderedErrors.push(er));
-        } else if (
-          _errors.some(err => {
-            return err.property.endsWith(`].${propInCurrentUiOrder}`);
-          })
-        ) {
-          /*const allErrsWithThisProp = _errors.filter((err) => {
-            return err.property.endsWith(`].${propInCurrentUiOrder}`);
-            // this is a prop of an array
-          });
-          allErrsWithThisProp.forEach((err) => {
-            if (!orderedErrors.includes(err)) {
-              // console.log(`orderederrors does not include this! `, orderedErrors, err)
-              // orderedErrors.push(err);
-            }
+        }
 
-          });*/
-          /*const flattenedArrayErrosWithCurrentErrorPath = Object.entries(
-            flattenedErrorSchema
-          ).filter(([errPath]) => errPath.startsWith(`${currentErrorPath}[`));
-          flattenedArrayErrosWithCurrentErrorPath.forEach(([errPath]) => {
-            // there in an error in this array so we want to go through them one by one and add them individually
-            addErrorsForNode(
-              uiSchemaNode[propInCurrentUiOrder],
-              errPath.substring(0, errPath.lastIndexOf("."))
-            );
-          });*/
-        } else if (propInCurrentUiOrder === "*") {
+        if (propInCurrentUiOrder === "*") {
           // TODO look for errors in this level
 
           // find errors on current path
@@ -378,136 +354,197 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
           // if errors are arrays -> go deeper
 
           // 1. find errors on current path
-          const errorsOnTheCurrentPath = _errors.filter(err =>
-            err.property.startsWith(currentPath)
-          ); /*:OK:*/
-          console.log(
+          const errorsOnTheCurrentPath = _errors.filter(
+            err =>
+              err.property.startsWith(currentPath) &&
+              err.property !== currentPath
+          );
+          const errorsThatAreTheCurrentPath = _errors.filter(
+            err => err.property === currentPath
+          );
+
+          errorsThatAreTheCurrentPath.forEach(e => {
+            if (!orderedErrors.includes(e)) {
+              orderedErrors.push(e);
+            }
+          });
+          /*console.log(
             55,
             currentPath,
             currentNodeUiOrder,
             errorsOnTheCurrentPath
-          );
+          );*/
 
           // filter out errors which are mentioned in the uiSchema
           const errorsNotMentionedInUiOrder = errorsOnTheCurrentPath.filter(
             err => {
-              const propName = err.property.substring(
-                err.property.indexOf(currentPath) + 1
+              // property name of next thing
+              const { property: errProp } = err;
+
+              const propertyNameOfNextLevelAfterCurrentPath = errProp
+                .replace(currentPath, "")
+                .replace(/(\[|\.]).*$/gm, "");
+
+              const uiSchemaNodeProperty = propertyNameOfNextLevelAfterCurrentPath.startsWith(
+                "."
+              )
+                ? propertyNameOfNextLevelAfterCurrentPath.substring(1)
+                : propertyNameOfNextLevelAfterCurrentPath;
+
+              let nextCurrentPathAppendix = errProp.substring(
+                errProp.indexOf(uiSchemaNodeProperty)
               );
-              console.log(
-                err.property,
-                propName.includes("["),
-                propName.includes(".")
-              );
-              let propName2 = propName;
-              if (propName.includes(".")) {
-                propName2 = propName.substring(propName.lastIndexOf(".") + 1);
-              } else if (propName.includes("[")) {
-                // TODO check if this is suitable for an array in an array (if not do some more checks)
-                propName2 = propName.substring(0, propName.indexOf("["));
+
+              console.log(10, nextCurrentPathAppendix);
+              if (nextCurrentPathAppendix.includes(".")) {
+                nextCurrentPathAppendix = nextCurrentPathAppendix.substring(
+                  0,
+                  nextCurrentPathAppendix.indexOf(".")
+                );
               }
-              console.log(
-                74,
-                currentNodeUiOrder,
-                propName,
-                propName2,
-                !currentNodeUiOrder.includes(propName2)
+              /*
+              console.log(`hey (${currentPath}) we're trying; is the uiSchemaNodeProperty (${uiSchemaNodeProperty}) not in the currentNodeUiOrder ${!currentNodeUiOrder.includes(uiSchemaNodeProperty)}`,
+                propName, nextCurrentPath, nextCurrentPathAppendix, propertyNameOfNextLevelAfterCurrentPath);
+*/
+
+              return (
+                uiSchemaNodeProperty !== "" &&
+                !currentNodeUiOrder.includes(uiSchemaNodeProperty)
               );
-              return !currentNodeUiOrder.includes(propName2);
             }
           );
-          console.log(
+          /*console.log(
             `filtered out errors, the following errors are not mentioned in the uiOrder so we want to add them at this point`,
             errorsNotMentionedInUiOrder
-          );
+            , 'already ordered:',
+            orderedErrors
+          );*/
+
+          // TODO -> when there are errors on the current path with [n] -> add all errors and only call addErrorsForNode for errors that are arrays
+          // TODO when threre are no array errors, we want to check if the error is an object
 
           // call addErrorsForNode for each error
           errorsNotMentionedInUiOrder.forEach(err => {
             const propName = err.property.substring(
               err.property.indexOf(currentPath) + 1
             );
-            const propName2 = propName.substring(0, propName.indexOf("."));
-            const propName3 = propName.substring(0, propName.indexOf("["));
-            const uiSchemaNodeForProp = uiSchemaNode[propName3 || propName2];
+
+            // property name of next thing
+            const { property: errProp } = err;
+
+            const propertyNameOfNextLevelAfterCurrentPath = errProp
+              .replace(currentPath, "")
+              .replace(/(\[|\.]).*$/gm, "");
+
+            const uiSchemaNodeProperty = propertyNameOfNextLevelAfterCurrentPath.startsWith(
+              "."
+            )
+              ? propertyNameOfNextLevelAfterCurrentPath.substring(1)
+              : propertyNameOfNextLevelAfterCurrentPath;
+
+            let nextCurrentPathAppendix = errProp.substring(
+              errProp.indexOf(uiSchemaNodeProperty)
+            );
+
+            console.log(10, nextCurrentPathAppendix);
+            if (nextCurrentPathAppendix.includes(".")) {
+              nextCurrentPathAppendix = nextCurrentPathAppendix.substring(
+                0,
+                nextCurrentPathAppendix.indexOf(".")
+              );
+            }
+            const nextCurrentPath = `${
+              currentPath !== "." ? currentPath : ""
+            }.${nextCurrentPathAppendix}`;
+
+            // TODO find out what's the next prop in the current path
+            console.log(
+              11,
+              currentPath,
+              currentNodeUiOrder,
+              "current schema:",
+              uiSchemaNode
+            );
+            console.log(
+              12,
+              errProp,
+              propName,
+              "now the outcome of the nextProp construction: ",
+              propertyNameOfNextLevelAfterCurrentPath,
+              uiSchemaNodeProperty,
+              nextCurrentPathAppendix
+            );
+            const uiSchemaNodeForProp =
+              uiSchemaNode[uiSchemaNodeProperty] ||
+              uiSchemaNode[nextCurrentPathAppendix];
+
             console.log();
 
-            console.log(
-              1,
-              propName2,
-              err.property,
-              uiSchemaNode,
-              currentPath,
-              uiSchemaNodeForProp
-            );
             if (uiSchemaNodeForProp) {
               console.log(
-                3,
-                "found a prop name",
-                `${currentPath !== "." ? currentPath : ""}.${propName2}`
+                13,
+                "and we will go into ",
+                nextCurrentPath,
+                uiSchemaNodeForProp
               );
-              addErrorsForNode(
-                uiSchemaNodeForProp,
-                `${currentPath !== "." ? currentPath : ""}.${propName2}`
-              );
-              // if its an array give the currentPath currentPath[].propName2 for each error
+              addErrorsForNode(uiSchemaNodeForProp, nextCurrentPath);
             } else {
-              // console.log(` all errrors here `, err)
               if (!orderedErrors.includes(err)) {
                 // console.log(`orderederrors does not include this! `, orderedErrors, err)
                 orderedErrors.push(err);
               }
-
-              // we don't want to stop adding the errors for this property (maybe it's a list with minItems and there are errors in the nested children)
-              /*
-                            const flattenedArrayErrosWithCurrentErrorPath = Object.entries(
-                              flattenedErrorSchema
-                            ).filter(([errPath]) => {
-                              console.log(4, errPath, currentErrorPath, `${currentErrorPath.substring(0, currentErrorPath.lastIndexOf('.'))}[`);
-                              return errPath.startsWith(`${currentErrorPath.substring(0, currentErrorPath.lastIndexOf('.'))}[`);
-                            });
-                            console.log(flattenedArrayErrosWithCurrentErrorPath)
-                            flattenedArrayErrosWithCurrentErrorPath.forEach(([errPath]) => {
-                              // there in an error in this array so we want to go through them one by one and add them individually
-
-                              if (uiSchemaNodeForProp) {
-                                addErrorsForNode(
-                                  uiSchemaNodeForProp,
-                                  errPath.substring(0, errPath.lastIndexOf("."))
-                                );
-                              }
-                            });*/
             }
           });
         }
       });
+      console.log("end of known uiOrder");
     } else {
-      console.log("THERE IS no  UIORDER FOR", uiSchemaNode, currentPath);
+      console.log("THERE IS no  UIORDER FOR /|\\");
 
       // find errors on the current level
       _errors.forEach(e => {
-        const pathForProblematicThing = e.property.substring(
+        /*console.log(7, e, e.property.indexOf(currentPath), e.property.substring(
           e.property.indexOf(currentPath) + 1
-        );
-        const pathFor = pathForProblematicThing.substring(
-          0,
-          pathForProblematicThing.lastIndexOf(".")
-        );
+        ));
+*/
+
+        const propWithoutCurrentPath = e.property.replace(currentPath, "");
+        // console.log(4, e.property, currentPath, propWithoutCurrentPath)
+
+        const pathFor = propWithoutCurrentPath.includes(".")
+          ? propWithoutCurrentPath.substring(
+              0,
+              propWithoutCurrentPath.indexOf(".")
+            )
+          : "";
+
         // is there a prop in the uiSchema for this? -> go deeper
-        console.log(uiSchemaNode, pathFor);
+        // console.log(8, pathFor, pathFor2);
         let nextUiSchemaNode;
         if (pathFor.endsWith("]")) {
+          // console.log(9, 'going deeper with', pathFor.substring(0, pathFor.indexOf("[")))
+
           nextUiSchemaNode =
             uiSchemaNode[pathFor.substring(0, pathFor.indexOf("["))];
         } else {
+          // console.log(9, 'trying to access uiSchemaNode property using: ', pathFor);
+
           nextUiSchemaNode = uiSchemaNode[pathFor];
         }
         if (nextUiSchemaNode) {
-          console.log("haha we want to go deeper ", pathFor);
+          console.log("haha we want to go deeper ", pathFor, nextUiSchemaNode);
           // the uiSchema node has a property for this ui:order element! Maybe it has an uiOrder itself
           addErrorsForNode(nextUiSchemaNode, `.${pathFor}`);
         } else {
+          console.log(
+            "simply adding error since there is no uiSchemaNode handling it :shrug:",
+            e
+          );
           // there is no property for this element in the current uiSchema so we simply add it to this position
-          orderedErrors.push(e);
+          if (!orderedErrors.includes(e)) {
+            // console.log(`orderederrors does not include this! `, orderedErrors, err)
+            orderedErrors.push(e);
+          }
         }
       });
     }
@@ -613,7 +650,6 @@ export default function validateFormData(
   }
 
   if (typeof customValidate !== "function") {
-    console.log("he ho onetwothree", errors);
     const orderedErrors = orderErrorsByUiSchema(uiSchema, errors, errorSchema);
     return { errors: orderedErrors, errorSchema };
   }
