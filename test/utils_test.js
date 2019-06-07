@@ -615,7 +615,7 @@ describe("utils", () => {
         });
       });
 
-      it("should populate defaults for nested dependencies when formData is undefined", () => {
+      it("should populate defaults for nested dependencies when formData passed to computeDefaults is undefined", () => {
         const schema = {
           type: "object",
           properties: {
@@ -661,7 +661,7 @@ describe("utils", () => {
         });
       });
 
-      it("should populate defaults for nested dependencies when formData is null", () => {
+      it("should not crash for defaults for nested dependencies when formData passed to computeDefaults is null", () => {
         const schema = {
           type: "object",
           properties: {
@@ -698,11 +698,9 @@ describe("utils", () => {
             },
           },
         };
-        expect(getDefaultFormState(schema, null)).eql({
+        expect(getDefaultFormState(schema, { can_1: { phy: null } })).eql({
           can_1: {
-            phy: {
-              bit_rate_cfg_mode: 0,
-            },
+            phy: null,
           },
         });
       });

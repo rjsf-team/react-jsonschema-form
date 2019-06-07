@@ -144,7 +144,13 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
   }
 }
 
-function computeDefaults(schema, parentDefaults, definitions, formData = {}) {
+function computeDefaults(
+  schema,
+  parentDefaults,
+  definitions,
+  rawFormData = {}
+) {
+  const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
