@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import validateFormData from "../src/validate";
 
-describe.only("Validation Error Sorting", () => {
+describe("Validation Error Sorting", () => {
   describe("validate.validateFormData()", () => {
     describe("error sorting", () => {
       const expectOrder = (sortedErrors, expectedOrder) => {
@@ -490,7 +490,7 @@ describe.only("Validation Error Sorting", () => {
           });
         });
         describe("containing nested objects", () => {
-          it.only("should have the order foo - wibble - plugh - garply - grault - wobble - bar", () => {
+          it("should have the order foo - wibble - plugh - garply - grault - wobble - bar", () => {
             const schema = {
               type: "object",
               properties: {
@@ -1291,7 +1291,7 @@ describe.only("Validation Error Sorting", () => {
               null,
               uiSchema
             );
-            expectOrder(result.errors, [".foo.wibble", ".foo.wobble", ".bar"]);
+            expectOrder(result.errors, [".foo.wobble", ".foo.wibble", ".bar"]);
           });
         });
       });
@@ -1373,6 +1373,7 @@ describe.only("Validation Error Sorting", () => {
             ]);
           }
         );
+
         it("should be ordered by the uiSchema", () => {
           const schema = {
             type: "object",

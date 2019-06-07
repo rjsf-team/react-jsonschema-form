@@ -202,12 +202,12 @@ function flattenErrorSchema(_target, _errors, _errorSchema, _currentPath = "") {
         .split(".")
         .filter(x => x !== "__errors");
       _target[_currentPath] = _errors.filter(
-        e =>
-          e.property ===
+        err =>
+          err.property ===
           `.${pathWithoutErrorsArray.reduce(
             (acc, curVal) =>
               `${acc}${
-                e.property.includes(`[${curVal}]`)
+                err.property && err.property.includes(`[${curVal}]`)
                   ? `[${curVal}]`
                   : `.${curVal}`
               }`
@@ -217,8 +217,10 @@ function flattenErrorSchema(_target, _errors, _errorSchema, _currentPath = "") {
       // we did not find the __errors array, yet. Let's go deeper
       let nextLevelPath;
       if (
-        _errors.some(err =>
-          err.property.includes(`${_currentPath}[${schemaKey}]`)
+        _errors.some(
+          err =>
+            "property" in err &&
+            err.property.includes(`${_currentPath}[${schemaKey}]`)
         )
       ) {
         // array!
@@ -241,14 +243,13 @@ function flattenErrorSchema(_target, _errors, _errorSchema, _currentPath = "") {
  */
 function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
   console.log("");
-  console.log("calling orderErrorsByUiSchema");
+  console.log("calling orderErrorsByUiSchema", uiSchema, _errors, _errorSchema);
+  console.log("");
   if (!Array.isArray(_errors) || _errors.length === 0) {
     return [];
   }
   const flattenedErrorSchema = {};
   flattenErrorSchema(flattenedErrorSchema, _errors, _errorSchema);
-
-  console.log("");
   console.log(
     4242,
     "outcome of creating the flattenedErrorSchema: ",
@@ -530,7 +531,7 @@ function orderErrorsByUiSchema(uiSchema, _errors, _errorSchema) {
         console.log(
           `checking error (${err.property}) at current path (${currentPath})`
         );
-        return err.property.startsWith(currentPath);
+        return "property" in err && err.property.startsWith(currentPath);
       });
       // find errors on the current level
       errsOnTheCurrentLevel.forEach(e => {
@@ -652,7 +653,6 @@ export default function validateFormData(
   } catch (err) {
     validationError = err;
   }
-  console.log("xxx", formData);
 
   let errors = transformAjvErrors(ajv.errors);
   // Clear errors to prevent persistent errors, see #1104
@@ -703,14 +703,14 @@ export default function validateFormData(
   // properties.
   const newErrors = toErrorList(newErrorSchema);
 
-  const orderedNewErrors = orderErrorsByUiSchema(
+  const orderedErrors = orderErrorsByUiSchema(
     uiSchema,
     newErrors,
-    errorSchema
+    newErrorSchema
   );
 
   return {
-    errors: orderedNewErrors,
+    errors: orderedErrors,
     errorSchema: newErrorSchema,
   };
 }
