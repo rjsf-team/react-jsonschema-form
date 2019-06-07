@@ -284,6 +284,13 @@ const uiSchema = {
 };
 ```
 
+Note: by the JSON-Schema definition, the order of a JSON object is not important. That's why when a JSON object is sent over the network (e.g. by a REST endpoint), the result can differ in structure from the defined schema.  In this case it is advisable to set the `ui:order` properties in the uiSchema to avoid problems with the order of form fields.
+
+#### Error sorting
+
+To ensure that the list of form validation errors matches the order of the fields shown in a form, the errors are sorted also according to the order of `ui:order` properties. 
+
+
 ### Object additional properties
 
 You can define `additionalProperties` by setting its value to a schema object, such as the following:
