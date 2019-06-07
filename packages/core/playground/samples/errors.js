@@ -2,23 +2,17 @@ module.exports = {
   schema: {
     title: "Contextualized errors",
     type: "object",
+    required: ["planet"],
     properties: {
+      active: {
+        type: "boolean",
+        title: "Active",
+      },
       firstName: {
         type: "string",
         title: "First name",
         minLength: 8,
         pattern: "\\d+",
-      },
-      active: {
-        type: "boolean",
-        title: "Active",
-      },
-      skills: {
-        type: "array",
-        items: {
-          type: "string",
-          minLength: 5,
-        },
       },
       multipleChoicesList: {
         type: "array",
@@ -30,9 +24,22 @@ module.exports = {
           enum: ["foo", "bar", "fuzz"],
         },
       },
+      skills: {
+        type: "array",
+        items: {
+          type: "string",
+          minLength: 5,
+        },
+      },
+      planet: {
+        type: "string",
+        title: "Home planet",
+      },
     },
   },
-  uiSchema: {},
+  uiSchema: {
+    "ui:order": ["firstName", "active", "skills", "*"],
+  },
   formData: {
     firstName: "Chuck",
     active: "wrong",

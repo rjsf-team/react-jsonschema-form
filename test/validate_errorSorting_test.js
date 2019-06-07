@@ -611,345 +611,6 @@ describe.only("Validation Error Sorting", () => {
         });
       });
 
-      describe("and arrays", () => {
-        it("should order active at the top and the array at the bottom", () => {
-          const schema = {
-            title: "Contextualized errors",
-            type: "object",
-            properties: {
-              firstName: {
-                type: "string",
-                title: "First name",
-                minLength: 8,
-                pattern: "\\d+",
-              },
-              active: {
-                type: "boolean",
-                title: "Active",
-              },
-              skills: {
-                type: "array",
-                items: {
-                  type: "string",
-                  minLength: 5,
-                },
-              },
-              multipleChoicesList: {
-                type: "array",
-                title: "Pick max two items",
-                uniqueItems: true,
-                maxItems: 2,
-                items: {
-                  type: "string",
-                  enum: ["foo", "bar", "fuzz"],
-                },
-              },
-            },
-          };
-          const uiSchema = {
-            "ui:order": ["active", "*", "skills"],
-          };
-          const formData = {
-            firstName: "Chuck",
-            active: "wrong",
-            skills: ["karate", "budo", "aikido"],
-            multipleChoicesList: ["foo", "bar", "fuzz"],
-          };
-          const result = validateFormData(
-            formData,
-            schema,
-            null,
-            null,
-            null,
-            null,
-            uiSchema
-          );
-          expectOrder(result.errors, [
-            ".active",
-            ".firstName",
-            ".firstName",
-            ".multipleChoicesList",
-            ".skills[1]",
-          ]);
-        });
-
-        it("should order wildcard in an array", () => {
-          const schema = {
-            title: "Contextualized errors",
-            type: "object",
-            required: ["foo"],
-            properties: {
-              bar: {
-                type: "boolean",
-                title: "Active",
-              },
-              foo: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    wobble: {
-                      type: "string",
-                      minLength: 1,
-                    },
-                    qux: {
-                      type: "string",
-                      minLength: 1,
-                    },
-                    quux: {
-                      type: "string",
-                      minLength: 1,
-                    },
-                    wibble: {
-                      type: "string",
-                      minLength: 1,
-                    },
-                  },
-                },
-              },
-            },
-          };
-          const uiSchema = {
-            foo: {
-              "ui:order": ["wibble", "*", "wobble"],
-            },
-          };
-          const formData = {
-            bar: "wrong",
-            foo: [
-              {
-                wobble: "val a",
-                qux: "a val",
-                quux: "",
-                wibble: "",
-              },
-              {
-                wobble: "",
-                qux: "",
-                quux: "",
-                wibble: "",
-              },
-              {
-                wobble: "",
-                qux: "",
-                quux: "b val",
-                wibble: "val b",
-              },
-            ],
-          };
-          const result = validateFormData(
-            formData,
-            schema,
-            null,
-            null,
-            null,
-            null,
-            uiSchema
-          );
-          expectOrder(result.errors, [
-            ".bar",
-            ".foo[0].wibble",
-            ".foo[0].quux",
-            ".foo[1].wibble",
-            ".foo[1].qux",
-            ".foo[1].quux",
-            ".foo[1].wobble",
-            ".foo[2].qux",
-            ".foo[2].wobble",
-          ]);
-        });
-
-        it("should order wildcard in nested arrays", () => {
-          const schema = {
-            title: "Contextualized errors",
-            type: "object",
-            required: ["foo"],
-            properties: {
-              bar: {
-                type: "boolean",
-                title: "Active",
-              },
-              foo: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    wobble: {
-                      type: "string",
-                      minLength: 1,
-                    },
-                    qux: {
-                      type: "string",
-                      minLength: 1,
-                    },
-                    quux: {
-                      type: "array",
-                      items: {
-                        type: "object",
-                        properties: {
-                          grault: {
-                            type: "string",
-                            minLength: 1,
-                          },
-                          garply: {
-                            type: "string",
-                            minLength: 1,
-                          },
-                        },
-                      },
-                      minItems: 2,
-                    },
-                    wibble: {
-                      type: "string",
-                      minLength: 1,
-                    },
-                  },
-                },
-              },
-            },
-          };
-          const uiSchema = {
-            foo: {
-              "ui:order": ["wibble", "*", "wobble"],
-              quux: {
-                "ui:order": ["garply", "*"],
-              },
-            },
-          };
-          const formData = {
-            bar: "wrong",
-            foo: [
-              {
-                wobble: "val a",
-                qux: "a val",
-                quux: [
-                  {
-                    grault: "",
-                    garply: "",
-                  },
-                  {
-                    grault: "grault [0]",
-                    garply: "",
-                  },
-                ],
-                wibble: "",
-              },
-              {
-                wobble: "",
-                qux: "",
-                quux: [
-                  {
-                    grault: "",
-                    garply: "",
-                  },
-                ],
-                wibble: "",
-              },
-              {
-                wobble: "",
-                qux: "",
-                quux: [
-                  {
-                    grault: "",
-                    garply: "grault [2]",
-                  },
-                  {
-                    grault: "",
-                    garply: "",
-                  },
-                ],
-                wibble: "val b",
-              },
-            ],
-          };
-          const result = validateFormData(
-            formData,
-            schema,
-            null,
-            null,
-            null,
-            null,
-            uiSchema
-          );
-
-          expectOrder(result.errors, [
-            ".bar",
-            ".foo[0].wibble",
-            ".foo[0].quux[0].garply",
-            ".foo[0].quux[0].grault",
-            ".foo[0].quux[1].garply",
-            ".foo[1].wibble",
-            ".foo[1].qux",
-            ".foo[1].quux",
-            ".foo[1].quux[0].garply",
-            ".foo[1].quux[0].grault",
-            ".foo[1].wobble",
-            ".foo[2].qux",
-            ".foo[2].quux[0].grault",
-            ".foo[2].quux[1].garply",
-            ".foo[2].quux[1].grault",
-            ".foo[2].wobble",
-          ]);
-        });
-
-        it("should order item-related errors before it's children", () => {
-          const schema = {
-            title: "Contextualized errors",
-            type: "object",
-            properties: {
-              active: {
-                type: "boolean",
-              },
-              firstName: {
-                type: "string",
-                minLength: 1,
-              },
-              skills: {
-                type: "array",
-                items: {
-                  type: "string",
-                  minLength: 6,
-                },
-                maxItems: 5,
-              },
-            },
-          };
-          const uiSchema = {
-            "ui:order": ["active", "*", "skills"],
-          };
-          const formData = {
-            active: "wrong",
-            firstName: "",
-            skills: [
-              "trumpet",
-              "sleep",
-              "juggling",
-              "eating",
-              "loving",
-              1337,
-              "work",
-            ],
-          };
-          const result = validateFormData(
-            formData,
-            schema,
-            null,
-            null,
-            null,
-            null,
-            uiSchema
-          );
-          expectOrder(result.errors, [
-            ".active",
-            ".firstName",
-            ".skills",
-            ".skills[1]",
-            ".skills[5]",
-            ".skills[6]",
-          ]);
-        });
-      });
-
       describe("with wildcards", () => {
         describe("one level", () => {
           it("should have the order foo - qux - quuz - bar", () => {
@@ -1035,6 +696,345 @@ describe.only("Validation Error Sorting", () => {
               uiSchema
             );
             expectOrder(result.errors, [".qux", ".quuz", ".foo", ".bar"]);
+          });
+        });
+
+        describe("comined with arrays", () => {
+          it("should order active at the top and the array at the bottom", () => {
+            const schema = {
+              title: "Contextualized errors",
+              type: "object",
+              properties: {
+                firstName: {
+                  type: "string",
+                  title: "First name",
+                  minLength: 8,
+                  pattern: "\\d+",
+                },
+                active: {
+                  type: "boolean",
+                  title: "Active",
+                },
+                skills: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    minLength: 5,
+                  },
+                },
+                multipleChoicesList: {
+                  type: "array",
+                  title: "Pick max two items",
+                  uniqueItems: true,
+                  maxItems: 2,
+                  items: {
+                    type: "string",
+                    enum: ["foo", "bar", "fuzz"],
+                  },
+                },
+              },
+            };
+            const uiSchema = {
+              "ui:order": ["active", "*", "skills"],
+            };
+            const formData = {
+              firstName: "Chuck",
+              active: "wrong",
+              skills: ["karate", "budo", "aikido"],
+              multipleChoicesList: ["foo", "bar", "fuzz"],
+            };
+            const result = validateFormData(
+              formData,
+              schema,
+              null,
+              null,
+              null,
+              null,
+              uiSchema
+            );
+            expectOrder(result.errors, [
+              ".active",
+              ".firstName",
+              ".firstName",
+              ".multipleChoicesList",
+              ".skills[1]",
+            ]);
+          });
+
+          it("should order wildcard in an array", () => {
+            const schema = {
+              title: "Contextualized errors",
+              type: "object",
+              required: ["foo"],
+              properties: {
+                bar: {
+                  type: "boolean",
+                  title: "Active",
+                },
+                foo: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      wobble: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      qux: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      quux: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      wibble: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                    },
+                  },
+                },
+              },
+            };
+            const uiSchema = {
+              foo: {
+                "ui:order": ["wibble", "*", "wobble"],
+              },
+            };
+            const formData = {
+              bar: "wrong",
+              foo: [
+                {
+                  wobble: "val a",
+                  qux: "a val",
+                  quux: "",
+                  wibble: "",
+                },
+                {
+                  wobble: "",
+                  qux: "",
+                  quux: "",
+                  wibble: "",
+                },
+                {
+                  wobble: "",
+                  qux: "",
+                  quux: "b val",
+                  wibble: "val b",
+                },
+              ],
+            };
+            const result = validateFormData(
+              formData,
+              schema,
+              null,
+              null,
+              null,
+              null,
+              uiSchema
+            );
+            expectOrder(result.errors, [
+              ".bar",
+              ".foo[0].wibble",
+              ".foo[0].quux",
+              ".foo[1].wibble",
+              ".foo[1].qux",
+              ".foo[1].quux",
+              ".foo[1].wobble",
+              ".foo[2].qux",
+              ".foo[2].wobble",
+            ]);
+          });
+
+          it("should order wildcard in nested arrays", () => {
+            const schema = {
+              title: "Contextualized errors",
+              type: "object",
+              required: ["foo"],
+              properties: {
+                bar: {
+                  type: "boolean",
+                  title: "Active",
+                },
+                foo: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      wobble: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      qux: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                      quux: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          properties: {
+                            grault: {
+                              type: "string",
+                              minLength: 1,
+                            },
+                            garply: {
+                              type: "string",
+                              minLength: 1,
+                            },
+                          },
+                        },
+                        minItems: 2,
+                      },
+                      wibble: {
+                        type: "string",
+                        minLength: 1,
+                      },
+                    },
+                  },
+                },
+              },
+            };
+            const uiSchema = {
+              foo: {
+                "ui:order": ["wibble", "*", "wobble"],
+                quux: {
+                  "ui:order": ["garply", "*"],
+                },
+              },
+            };
+            const formData = {
+              bar: "wrong",
+              foo: [
+                {
+                  wobble: "val a",
+                  qux: "a val",
+                  quux: [
+                    {
+                      grault: "",
+                      garply: "",
+                    },
+                    {
+                      grault: "grault [0]",
+                      garply: "",
+                    },
+                  ],
+                  wibble: "",
+                },
+                {
+                  wobble: "",
+                  qux: "",
+                  quux: [
+                    {
+                      grault: "",
+                      garply: "",
+                    },
+                  ],
+                  wibble: "",
+                },
+                {
+                  wobble: "",
+                  qux: "",
+                  quux: [
+                    {
+                      grault: "",
+                      garply: "grault [2]",
+                    },
+                    {
+                      grault: "",
+                      garply: "",
+                    },
+                  ],
+                  wibble: "val b",
+                },
+              ],
+            };
+            const result = validateFormData(
+              formData,
+              schema,
+              null,
+              null,
+              null,
+              null,
+              uiSchema
+            );
+
+            expectOrder(result.errors, [
+              ".bar",
+              ".foo[0].wibble",
+              ".foo[0].quux[0].garply",
+              ".foo[0].quux[0].grault",
+              ".foo[0].quux[1].garply",
+              ".foo[1].wibble",
+              ".foo[1].qux",
+              ".foo[1].quux",
+              ".foo[1].quux[0].garply",
+              ".foo[1].quux[0].grault",
+              ".foo[1].wobble",
+              ".foo[2].qux",
+              ".foo[2].quux[0].grault",
+              ".foo[2].quux[1].garply",
+              ".foo[2].quux[1].grault",
+              ".foo[2].wobble",
+            ]);
+          });
+
+          it("should order item-related errors before it's children", () => {
+            const schema = {
+              title: "Contextualized errors",
+              type: "object",
+              properties: {
+                active: {
+                  type: "boolean",
+                },
+                firstName: {
+                  type: "string",
+                  minLength: 1,
+                },
+                skills: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    minLength: 6,
+                  },
+                  maxItems: 5,
+                },
+              },
+            };
+            const uiSchema = {
+              "ui:order": ["active", "*", "skills"],
+            };
+            const formData = {
+              active: "wrong",
+              firstName: "",
+              skills: [
+                "trumpet",
+                "sleep",
+                "juggling",
+                "eating",
+                "loving",
+                1337,
+                "work",
+              ],
+            };
+            const result = validateFormData(
+              formData,
+              schema,
+              null,
+              null,
+              null,
+              null,
+              uiSchema
+            );
+            expectOrder(result.errors, [
+              ".active",
+              ".firstName",
+              ".skills",
+              ".skills[1]",
+              ".skills[5]",
+              ".skills[6]",
+            ]);
           });
         });
 
