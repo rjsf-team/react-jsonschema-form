@@ -1066,6 +1066,34 @@ describe("utils", () => {
               },
             });
           });
+          it("should concat required properties", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { type: "string" },
+                b: { type: "integer" },
+              },
+              required: ["a"],
+              dependencies: {
+                a: {
+                  properties: {
+                    a: { type: "string" },
+                  },
+                  required: ["b"],
+                },
+              },
+            };
+            const definitions = {};
+            const formData = { a: "1" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { type: "string" },
+                b: { type: "integer" },
+              },
+              required: ["a", "b"],
+            });
+          });
         });
 
         describe("with $ref in dependency", () => {
