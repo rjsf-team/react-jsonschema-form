@@ -614,6 +614,96 @@ describe("utils", () => {
           },
         });
       });
+
+      it("should populate defaults for nested dependencies when formData passed to computeDefaults is undefined", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            can_1: {
+              type: "object",
+              properties: {
+                phy: {
+                  title: "Physical",
+                  description: "XYZ",
+                  type: "object",
+                  properties: {
+                    bit_rate_cfg_mode: {
+                      title: "Sub title",
+                      description: "XYZ",
+                      type: "integer",
+                      default: 0,
+                    },
+                  },
+                  dependencies: {
+                    bit_rate_cfg_mode: {
+                      oneOf: [
+                        {
+                          properties: {
+                            bit_rate_cfg_mode: {
+                              enum: [0],
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, undefined)).eql({
+          can_1: {
+            phy: {
+              bit_rate_cfg_mode: 0,
+            },
+          },
+        });
+      });
+
+      it("should not crash for defaults for nested dependencies when formData passed to computeDefaults is null", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            can_1: {
+              type: "object",
+              properties: {
+                phy: {
+                  title: "Physical",
+                  description: "XYZ",
+                  type: "object",
+                  properties: {
+                    bit_rate_cfg_mode: {
+                      title: "Sub title",
+                      description: "XYZ",
+                      type: "integer",
+                      default: 0,
+                    },
+                  },
+                  dependencies: {
+                    bit_rate_cfg_mode: {
+                      oneOf: [
+                        {
+                          properties: {
+                            bit_rate_cfg_mode: {
+                              enum: [0],
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { can_1: { phy: null } })).eql({
+          can_1: {
+            phy: null,
+          },
+        });
+      });
     });
   });
 
