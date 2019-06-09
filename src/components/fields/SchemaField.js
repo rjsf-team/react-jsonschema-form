@@ -15,6 +15,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactHtmlParser from "react-html-parser";
 import UnsupportedField from "./UnsupportedField";
+import Tooltip from "@material-ui/core/Tooltip";
+import InfoIcon from "@material-ui/icons/Info";
+import IconButton from "@material-ui/core/IconButton";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -52,11 +55,10 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
 function Label(props) {
   const { label, required, id } = props;
   if (!label) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <label className="control-label" htmlFor={id} style={{wordBreak:"break-word", maxWidth:"95%"}}>
       {ReactHtmlParser(label)}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
@@ -82,10 +84,15 @@ function Help(props) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
-  if (typeof help === "string") {
-    return <p className="help-block">{ReactHtmlParser(help)}</p>;
-  }
-  return <div className="help-block">{help}</div>;
+  return (
+    <Tooltip title={ReactHtmlParser(help)}>
+      <IconButton
+        aria-label={ReactHtmlParser(help)}
+        style={{ margin: "0 0 0 -12px" }}>
+        <InfoIcon />
+      </IconButton>
+    </Tooltip>
+  );
 }
 
 function ErrorList(props) {
