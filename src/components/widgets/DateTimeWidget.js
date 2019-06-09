@@ -2,11 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import {
-  DatePicker,
-  DateTimePicker,
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-  KeyboardDateTimePicker
+  KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 
 import MomentUtils from "@date-io/moment";
@@ -56,7 +54,9 @@ function DateTimeWidget(props) {
                   options.setDateTimeToEndOf
                 );
               }
-              return onChange(modifiedDatePerOptions.toJSON());
+              return onChange(
+                modifiedDatePerOptions.format("YYYY-MM-DD HH:mm:ss")
+              );
             }}
             onClear={e => {
               // this.setState({ selectedDate: undefined });
@@ -86,7 +86,9 @@ function DateTimeWidget(props) {
                   options.setDateTimeToEndOf
                 );
               }
-              return onChange(modifiedDatePerOptions.toJSON());
+              return onChange(
+                modifiedDatePerOptions.format("YYYY-MM-DD HH:mm:ss")
+              );
             }}
             onClear={e => {
               // this.setState({ selectedDate: undefined });

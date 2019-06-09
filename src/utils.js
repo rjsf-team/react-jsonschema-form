@@ -858,8 +858,10 @@ export function rangeSpec(schema) {
 export function removeEmptyFields(obj) {
   Object.entries(obj).forEach(([key, val]) => {
     if (val && typeof val === "object") {
-      removeEmptyFields(val);
-    } else if (val == null || typeof val == "undefined") {
+      val = removeEmptyFields(val);
+    }
+
+    if (val == null || typeof val == "undefined") {
       delete obj[key];
     }
   });
