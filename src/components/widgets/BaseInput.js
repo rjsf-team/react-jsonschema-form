@@ -7,7 +7,7 @@ function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   if (!props.id) {
-    console.log("No id for", props);
+    // console.log("No id for", props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
   const {
@@ -25,12 +25,50 @@ function BaseInput(props) {
     ...inputProps
   } = props;
 
-  inputProps.type = options.inputType || inputProps.type || "text";
+  // If options.inputType is set use that as the input type
+  if (options.inputType) {
+    inputProps.type = options.inputType;
+  } else if (!inputProps.type) {
+    // If the schema is of type number or integer, set the input type to number
+    if (schema.type === "number") {
+      inputProps.type = "number";
+      // Setting step to 'any' fixes a bug in Safari where decimals are not
+      // allowed in number inputs
+      inputProps.step = "any";
+    } else if (schema.type === "integer") {
+      inputProps.type = "number";
+      // Since this is integer, you always want to step up or down in multiples
+      // of 1
+      inputProps.step = "1";
+    } else {
+      inputProps.type = "text";
+    }
+  }
+
+  // If multipleOf is defined, use this as the step value. This mainly improves
+  // the experience for keyboard users (who can use the up/down KB arrows).
+  if (schema.multipleOf) {
+    inputProps.step = schema.multipleOf;
+  }
+
   const _onChange = ({ target: { value } }) => {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
 
-  return (
+  return inputProps.type === "range" ? (
+    <input
+      className={classes.textField}
+      margin="normal"
+      readOnly={readonly}
+      disabled={disabled}
+      autoFocus={autofocus}
+      value={value == null ? "" : value}
+      {...inputProps}
+      onChange={_onChange}
+      onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
+      onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
+    />
+  ) : (
     <TextField
       className={classes.textField}
       margin="normal"
@@ -47,7 +85,6 @@ function BaseInput(props) {
 }
 
 BaseInput.defaultProps = {
-  type: "text",
   required: false,
   disabled: false,
   readonly: false,

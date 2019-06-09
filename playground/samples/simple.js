@@ -12,6 +12,13 @@ module.exports = {
         format: "date-time",
         title: "DOB",
       },
+      integerRangeSteps: {
+        title: "Integer range (by 10)",
+        type: "integer",
+        minimum: 0,
+        maximum: 10,
+        multipleOf: 1,
+      },
       VisitDate: {
         type: "string",
         format: "date-time",
@@ -69,6 +76,12 @@ module.exports = {
           });
           return lookupString + "(" + selectedPrimaryKey + ")";
         },
+        onDeleteChoice: selectedValue => {
+          console.log("Async select on delete called");
+        },
+        onSelectChoice: selectedValue => {
+          console.log("Async select on select called");
+        },
       },
       movie: {
         type: "string",
@@ -119,6 +132,12 @@ module.exports = {
           });
           return lookupString + "(" + selectedPrimaryKey + ")";
         },
+        onDeleteChoice: selectedValue => {
+          console.log("Async select on delete called");
+        },
+        onSelectChoice: selectedValue => {
+          console.log("Async select on select called");
+        },
       },
       firstName: {
         type: "string",
@@ -160,6 +179,9 @@ module.exports = {
         keyboard: true,
       },
       classNames: "formControlGroup",
+    },
+    integerRangeSteps: {
+      "ui:widget": "range",
     },
     VisitDate: {
       "ui:options": {
@@ -210,6 +232,7 @@ module.exports = {
     blogs: 2,
     movie: "[2]",
     lastName: "Norris",
+    integerRangeSteps: 3,
     age: 75,
     password: "noneed",
   },

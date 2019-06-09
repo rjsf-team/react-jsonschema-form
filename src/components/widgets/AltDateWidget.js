@@ -84,7 +84,7 @@ class AltDateWidget extends Component {
   };
 
   setNow = event => {
-    event.preventDefault();
+    event && event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
       return;
@@ -94,7 +94,7 @@ class AltDateWidget extends Component {
   };
 
   clear = event => {
-    event.preventDefault();
+    event && event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
       return;

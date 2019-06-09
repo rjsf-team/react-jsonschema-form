@@ -8,35 +8,43 @@ const SelectionBar = props => {
     selectionColumn,
     onDeleteChoice,
     primaryColumn,
-    getChipDisplayText
+    getChipDisplayText,
   } = props;
-  
+
   if (isMultiselect) {
     return (
-      <React.Fragment>
-        {selectedOptions && selectedOptions.map((value, key) => {
-          let displayText = getChipDisplayText 
-            ? getChipDisplayText(value[primaryColumn])
-            : value[selectionColumn];
-          if (displayText !== '' && displayText !== undefined && displayText !== null) {
-            return (
-              <Chip
-                key={key}
-                label={displayText}
-                style={{ marginRight: 5, height: 30 }}
-                onDelete={() => onDeleteChoice(value[selectionColumn])}
-              />
-            );
-          }
-          }
-        )}
-      </React.Fragment>
+      <div>
+        {selectedOptions &&
+          selectedOptions.map((value, key) => {
+            let displayText = getChipDisplayText
+              ? getChipDisplayText(value[primaryColumn])
+              : value[selectionColumn];
+            if (
+              displayText !== "" &&
+              displayText !== undefined &&
+              displayText !== null
+            ) {
+              return (
+                <Chip
+                  key={key}
+                  label={displayText}
+                  style={{ marginRight: 5, height: 30 }}
+                  onDelete={() => onDeleteChoice(value[selectionColumn])}
+                />
+              );
+            }
+          })}
+      </div>
     );
   } else if (selectedOptions && selectedOptions[0]) {
-    let displayText = getChipDisplayText 
+    let displayText = getChipDisplayText
       ? getChipDisplayText(selectedOptions[0][primaryColumn])
       : selectedOptions[0][selectionColumn];
-    if (displayText !== '' && displayText !== undefined && displayText !== null) {
+    if (
+      displayText !== "" &&
+      displayText !== undefined &&
+      displayText !== null
+    ) {
       return (
         <Chip
           label={displayText}

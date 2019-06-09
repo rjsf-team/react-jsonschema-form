@@ -31,28 +31,30 @@ module.exports = {
         uniqueItems: true,
       },
       anyOfCheckBox: {
-        type: "integer",
-        title: "dafdafdfa",
-        anyOf: [
+        type: "string",
+        title: "daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        oneOf: [
           {
             type: "integer",
             title: "one",
-            help: "help needed",
+            help:
+              "Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1 Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1Help for option 1",
             enum: ["foo"],
           },
           {
             type: "integer",
             title: "two",
-            help: "helppppppp",
+            help: "Help for option 2",
             enum: ["bar"],
           },
           {
             type: "integer",
             title: "three",
-            help: "heeeeeelpx",
             enum: ["fuzz"],
           },
         ],
+
+        uniqueItems: true,
       },
       multipleChoicesList: {
         type: "array",
@@ -171,9 +173,7 @@ module.exports = {
     },
     anyOfCheckBox: {
       "ui:widget": "radio",
-      // "ui:help": [{ enum : "foo", label: "foodata"},
-      // { enum : "bar", label: "bardata"}
-      //]
+      "ui:help": "dfaada",
     },
     multipleChoicesList: {
       "ui:widget": "select",

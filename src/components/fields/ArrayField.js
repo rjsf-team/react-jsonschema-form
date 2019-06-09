@@ -1,8 +1,8 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import includes from "core-js/library/fn/array/includes";
+import * as types from "../../types";
 
 import UnsupportedField from "./UnsupportedField";
 import {
@@ -21,8 +21,7 @@ import {
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   const id = `${idSchema.$id}__title`;
   return <TitleField id={id} title={title} required={required} />;
@@ -30,8 +29,7 @@ function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
 
 function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   if (!description) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   const id = `${idSchema.$id}__description`;
   return <DescriptionField id={id} description={description} />;
@@ -103,7 +101,7 @@ function DefaultArrayItem(props) {
 
 function DefaultFixedArrayFieldTemplate(props) {
   return (
-    <React.Fragment className={props.className}>
+    <div className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -133,13 +131,13 @@ function DefaultFixedArrayFieldTemplate(props) {
           disabled={props.disabled || props.readonly}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 }
 
 function DefaultNormalArrayFieldTemplate(props) {
   return (
-    <React.Fragment className={props.className}>
+    <div className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -172,7 +170,7 @@ function DefaultNormalArrayFieldTemplate(props) {
           disabled={props.disabled || props.readonly}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 }
 
@@ -218,7 +216,7 @@ class ArrayField extends Component {
   }
 
   onAddClick = event => {
-    event.preventDefault();
+    event && event.preventDefault();
     const { schema, formData, registry = getDefaultRegistry() } = this.props;
     const { definitions } = registry;
     let itemSchema = schema.items;
@@ -276,20 +274,19 @@ class ArrayField extends Component {
           }
         }
       }
-      onChange(
-        formData.map((item, i) => {
-          // i is string, index and newIndex are numbers,
-          // so using "==" to compare
-          if (i == newIndex) {
-            return formData[index];
-          } else if (i == index) {
-            return formData[newIndex];
-          } else {
-            return item;
-          }
-        }),
-        newErrorSchema
-      );
+
+      function reOrderArray() {
+        // Copy item
+        let newFormData = formData.slice();
+
+        // Moves item from index to newIndex
+        newFormData.splice(index, 1);
+        newFormData.splice(newIndex, 0, formData[index]);
+
+        return newFormData;
+      }
+
+      onChange(reOrderArray(), newErrorSchema);
     };
   };
 
@@ -661,34 +658,7 @@ class ArrayField extends Component {
 }
 
 if (process.env.NODE_ENV !== "production") {
-  ArrayField.propTypes = {
-    schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.shape({
-      "ui:options": PropTypes.shape({
-        addable: PropTypes.bool,
-        orderable: PropTypes.bool,
-        removable: PropTypes.bool,
-      }),
-    }),
-    idSchema: PropTypes.object,
-    errorSchema: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    onBlur: PropTypes.func,
-    onFocus: PropTypes.func,
-    formData: PropTypes.array,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    autofocus: PropTypes.bool,
-    registry: PropTypes.shape({
-      widgets: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-      ).isRequired,
-      fields: PropTypes.objectOf(PropTypes.func).isRequired,
-      definitions: PropTypes.object.isRequired,
-      formContext: PropTypes.object.isRequired,
-    }),
-  };
+  ArrayField.propTypes = types.fieldProps;
 }
 
 export default ArrayField;

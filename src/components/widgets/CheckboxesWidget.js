@@ -1,10 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from "@material-ui/core/Tooltip";
-import InfoIcon from "@material-ui/icons/Info";
-import IconButton from "@material-ui/core/IconButton";
 import ReactHtmlParser from "react-html-parser";
+import TooltipWrapper from "./TooltipWrapper";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -40,15 +38,8 @@ function CheckboxesWidget(props) {
           disabled || itemDisabled || readonly ? "disabled" : "";
 
         const toolTip =
-          items && items.anyOf ? (
-            <span>
-              <Tooltip title={ReactHtmlParser(items.anyOf[index].help)}>
-                <IconButton
-                  aria-label={ReactHtmlParser(items.anyOf[index].help)}>
-                  <InfoIcon />
-                </IconButton>
-              </Tooltip>
-            </span>
+          items && items.anyOf && items.anyOf[index].help ? (
+            <TooltipWrapper help={ReactHtmlParser(items.anyOf[index].help)} />
           ) : (
             <div />
           );
@@ -70,9 +61,7 @@ function CheckboxesWidget(props) {
                 }
               }}
             />
-
             <span>{option.label}</span>
-            <span>{toolTip}</span>
           </span>
         );
         return inline ? (
@@ -81,10 +70,12 @@ function CheckboxesWidget(props) {
               {checkbox}
             </label>
             <label key={index} className={`checkbox-inline ${disabledCls}`} />
+            <span>{toolTip}</span>
           </div>
         ) : (
           <div key={index} className={`checkbox ${disabledCls}`}>
             <label>{checkbox}</label>
+            <span>{toolTip}</span>
           </div>
         );
       })}

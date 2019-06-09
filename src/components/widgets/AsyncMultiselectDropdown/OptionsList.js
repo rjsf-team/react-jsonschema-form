@@ -33,77 +33,79 @@ const OptionsList = props => {
   }
 
   return (
-    <Grid container className='AsyncMultDdown-opt__wrapper'>
-      <Grid item xs={12} className='AsyncMultDdown-opt__grid'>
-      <Table className='AsyncMultDdown-opt__table'>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            {cols.map((column, key) => {
-              if (!column.hasOwnProperty("hide")) {
-                return <TableCell key={key}>{column.name}</TableCell>;
-              } else {
-                hideColumns.push(column.key);
-              }
-            })}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {options.map((row, rowkey) => (
-            <TableRow
-              key={rowkey}
-              hover
-              selected={
-                getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
-              }
-              onClick={event => handleRowClick(event, row)}>
-              {isMultiselect ? (
-                <TableCell key={rowkey}>
-                  <Checkbox
-                    checked={
-                      getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
-                    }
-                  />
-                </TableCell>
-              ) : (
-                <TableCell key={rowkey}>
-                  <Radio
-                    checked={
-                      getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
-                    }
-                  />
-                </TableCell>
-              )}
-              {Object.keys(row).map((cell, cellkey) => {
-                if (hideColumns.indexOf(cell) === -1) {
-                  return <TableCell key={cellkey}>{row[cell]}</TableCell>;
+    <Grid container className="AsyncMultDdown-opt__wrapper">
+      <Grid item xs={12} className="AsyncMultDdown-opt__grid">
+        <Table className="AsyncMultDdown-opt__table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              {cols.map((column, key) => {
+                if (!column.hasOwnProperty("hide")) {
+                  return <TableCell key={key}>{column.name}</TableCell>;
+                } else {
+                  hideColumns.push(column.key);
                 }
               })}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {options.map((row, rowkey) => (
+              <TableRow
+                key={rowkey}
+                hover
+                selected={
+                  getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
+                }
+                onClick={event => handleRowClick(event, row)}>
+                {isMultiselect ? (
+                  <TableCell key={rowkey}>
+                    <Checkbox
+                      checked={
+                        getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
+                      }
+                    />
+                  </TableCell>
+                ) : (
+                  <TableCell key={rowkey}>
+                    <Radio
+                      checked={
+                        getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
+                      }
+                    />
+                  </TableCell>
+                )}
+                {Object.keys(row).map((cell, cellkey) => {
+                  if (hideColumns.indexOf(cell) === -1) {
+                    return <TableCell key={cellkey}>{row[cell]}</TableCell>;
+                  }
+                })}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </Grid>
-      <Grid item xs={12} className='AsyncMultDdown-opt-btn__container'>
-      <Grid container  direction="row" justify="flex-end">
-        {totalOptionsCount > pageSize && <TablePagination
-          rowsPerPageOptions={[pageSize]}
-          component="div"
-          count={totalOptionsCount}
-          rowsPerPage={pageSize}
-          page={pageNumber}
-          backIconButtonProps={{
-            "aria-label": "Previous Page",
-          }}
-          nextIconButtonProps={{
-            "aria-label": "Next Page",
-          }}
-          onChangePage={handleChangePage}
-        /> }
-        <Button onClick={closeOptionPanel}>Done</Button>
+      <Grid item xs={12} className="AsyncMultDdown-opt-btn__container">
+        <Grid container direction="row" justify="flex-end">
+          {totalOptionsCount > pageSize && (
+            <TablePagination
+              rowsPerPageOptions={[pageSize]}
+              component="div"
+              count={totalOptionsCount}
+              rowsPerPage={pageSize}
+              page={pageNumber}
+              backIconButtonProps={{
+                "aria-label": "Previous Page",
+              }}
+              nextIconButtonProps={{
+                "aria-label": "Next Page",
+              }}
+              onChangePage={handleChangePage}
+            />
+          )}
+          {isMultiselect && <Button onClick={closeOptionPanel}>Done</Button>}
         </Grid>
       </Grid>
-      </Grid>
+    </Grid>
   );
 };
 export default OptionsList;

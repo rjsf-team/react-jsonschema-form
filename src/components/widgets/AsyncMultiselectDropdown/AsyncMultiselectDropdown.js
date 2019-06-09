@@ -2,17 +2,23 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Paper, TextField, CircularProgress, Grid } from "@material-ui/core";
+import {
+  Paper,
+  TextField,
+  CircularProgress,
+  Grid,
+  Icon,
+} from "@material-ui/core";
 import OptionsList from "./OptionsList";
 import SelectionBar from "./SelectionBar";
 
 const styles = {
   container: {
-    display: "block"
+    display: "block",
   },
   inputField: {
-    verticalAlign: "bottom"
-  }
+    verticalAlign: "bottom",
+  },
 };
 class AsyncMultiselectDropdown extends Component {
   constructor(props) {
@@ -22,24 +28,24 @@ class AsyncMultiselectDropdown extends Component {
       searchText: "",
       options: [],
       pageNumber: 0,
-      ...props.schema
+      ...props.schema,
     };
   }
 
   componentDidMount() {
     this.initStateFromProps();
     this.fetchData();
-    document.addEventListener('click', this.handleClickOutside, true);
+    document.addEventListener("click", this.handleClickOutside, true);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.handleClickOutside, true);
+    document.removeEventListener("click", this.handleClickOutside, true);
   }
 
-  handleClickOutside = event => {    
+  handleClickOutside = event => {
     const domNode = ReactDOM.findDOMNode(this);
     if (!domNode || !domNode.contains(event.target)) {
-        this.closeOptionPanel();
+      this.closeOptionPanel();
     }
   };
 
@@ -48,7 +54,7 @@ class AsyncMultiselectDropdown extends Component {
       { searchText: event.target.value, isSearching: true, pageNumber: 0 },
       () => this.fetchData()
     );
-  }
+  };
 
   initStateFromProps = () => {
     const { cols, isMultiselect } = this.state;
@@ -57,20 +63,26 @@ class AsyncMultiselectDropdown extends Component {
     let primaryColumn = "";
 
     for (let index = 0; index < cols.length; index++) {
-      if (cols[index].displaySelected && this.state.selectionColumn === undefined) {
+      if (
+        cols[index].displaySelected &&
+        this.state.selectionColumn === undefined
+      ) {
         selectionColumn = cols[index].key;
       }
-      if (cols[index].primary && this.state.primaryColumn === undefined ) {
+      if (cols[index].primary && this.state.primaryColumn === undefined) {
         primaryColumn = cols[index].key;
       }
-      if (this.state.primary !== undefined && this.state.selectionColumn !== undefined) {
+      if (
+        this.state.primary !== undefined &&
+        this.state.selectionColumn !== undefined
+      ) {
         break;
       }
     }
     this.setState({ selectionColumn, primaryColumn });
     const selectedOptions = [];
-    if (value){
-      if (!isMultiselect) {      
+    if (value) {
+      if (!isMultiselect) {
         selectedOptions.push(this.state.getSelectedOptionDetails(value));
       } else {
         const selectedList = JSON.parse(value);
@@ -80,8 +92,8 @@ class AsyncMultiselectDropdown extends Component {
         });
       }
     }
-    this.setState({ selectedOptions }); 
-  }
+    this.setState({ selectedOptions });
+  };
 
   fetchData = () => {
     const {
@@ -91,18 +103,18 @@ class AsyncMultiselectDropdown extends Component {
       loadOptionsCount,
       pageSize,
     } = this.state;
-    
+
     this.setState({ isLoading: true });
     Promise.all([
       loadOptions(searchText, pageNumber, pageSize),
-      loadOptionsCount(searchText)
+      loadOptionsCount(searchText),
     ]).then(([resLoadOptions, resLoadOptionsCount]) =>
       this.setState({
         options: resLoadOptions,
         pageNumber: pageNumber,
         pageSize,
         totalOptionsCount: resLoadOptionsCount,
-        isLoading: false
+        isLoading: false,
       })
     );
   };
@@ -134,12 +146,15 @@ class AsyncMultiselectDropdown extends Component {
 
     if (selectedOptions.length > 0) {
       if (!isMultiselect) {
+        this.state.onSelectChoice(selectedOptions[0][primaryColumn]); 
         this.props.onChange(selectedOptions[0][primaryColumn]);
       } else {
         selectedOptions = selectedOptions.map(value => value[primaryColumn]);
+        this.state.onSelectChoice(JSON.stringify(selectedOptions));          
         this.props.onChange(JSON.stringify(selectedOptions));
       }
     } else {
+      this.state.onSelectChoice(undefined);
       this.props.onChange(undefined);
     }
   };
@@ -149,7 +164,7 @@ class AsyncMultiselectDropdown extends Component {
       selectionColumn,
       selectedOptions,
       isMultiselect,
-      primaryColumn
+      primaryColumn,
     } = this.state;
     for (let index = 0; index < selectedOptions.length; index++) {
       if (selectedOptions[index][selectionColumn] === deletedChoice) {
@@ -157,14 +172,17 @@ class AsyncMultiselectDropdown extends Component {
         this.setState({ selectedOptions });
         if (selectedOptions.length > 0) {
           if (!isMultiselect) {
+            this.state.onDeleteChoice(selectedOptions[0][primaryColumn]);             
             this.props.onChange(selectedOptions[0][primaryColumn]);
           } else {
             selectedOptions = selectedOptions.map(
               value => value[primaryColumn]
             );
+            this.state.onDeleteChoice(JSON.stringify(selectedOptions));          
             this.props.onChange(JSON.stringify(selectedOptions));
           }
         } else {
+          this.state.onDeleteChoice(undefined);      
           this.props.onChange(undefined);
         }
       }
@@ -175,8 +193,9 @@ class AsyncMultiselectDropdown extends Component {
     const { selectedOptions, primaryColumn } = this.state;
     let recordFounded = -1;
     for (let index = 0; index < selectedOptions.length; index++) {
-      if (selectedOptions[index][primaryColumn] === selectedRow[primaryColumn])
-      {
+      if (
+        selectedOptions[index][primaryColumn] === selectedRow[primaryColumn]
+      ) {
         recordFounded = index;
         break;
       }
@@ -185,10 +204,11 @@ class AsyncMultiselectDropdown extends Component {
   };
 
   closeOptionPanel = () => {
-    if (this.state.pageNumber !== 0 ) {
-      this.setState({ isSearching: false, pageNumber: 0 }, () => this.fetchData());
-    }
-    else if (this.state.isSearching) {
+    if (this.state.pageNumber !== 0) {
+      this.setState({ isSearching: false, pageNumber: 0 }, () =>
+        this.fetchData()
+      );
+    } else if (this.state.isSearching) {
       this.setState({ isSearching: false });
     }
   };
@@ -209,7 +229,7 @@ class AsyncMultiselectDropdown extends Component {
       isMultiselect,
       isLoading,
       primaryColumn,
-      getChipDisplayText
+      getChipDisplayText,
     } = this.state;
 
     const loader = isLoading && (
@@ -233,23 +253,28 @@ class AsyncMultiselectDropdown extends Component {
           align-items="center"
           className={classes.container}>
           <Grid item xs={12}>
-          <TextField
-          fullWidth
-            label={label}
-            placeholder={placeholder}
-            className={classes.inputField}
-            margin="normal"
-            value={searchText}
-            onChange={this.handleChange}
-            onFocus={() => this.setState({ isSearching: true })}
-            InputProps={{
-              startAdornment: selected
-            }}
-          />
-          {loader}
+            <TextField
+              fullWidth
+              label={label}
+              placeholder={placeholder}
+              className={classes.inputField}
+              margin="normal"
+              value={searchText}
+              onChange={this.handleChange}
+              onFocus={() => this.setState({ isSearching: true })}
+              InputProps={{
+                startAdornment: selected,
+                endAdornment: (
+                  <Icon onClick={() => this.setState({ isSearching: true })}>
+                    arrow_drop_down
+                  </Icon>
+                ),
+              }}
+            />
+            {loader}
+          </Grid>
         </Grid>
-        </Grid>
-        <Paper className='AsyncMultiselectDropdown-paper'>
+        <Paper className="AsyncMultiselectDropdown-paper">
           {isSearching && (
             <OptionsList
               isMultiselect={isMultiselect}
@@ -275,7 +300,7 @@ class AsyncMultiselectDropdown extends Component {
 AsyncMultiselectDropdown.propTypes = {
   schema: PropTypes.object.isRequired,
   placeholder: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired
+  label: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(AsyncMultiselectDropdown);

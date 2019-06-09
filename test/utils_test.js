@@ -2,9 +2,11 @@ import { expect } from "chai";
 
 import {
   asNumber,
+  orderProperties,
   dataURItoBlob,
   deepEquals,
   getDefaultFormState,
+  getSchemaType,
   isFilesArray,
   isConstant,
   toConstant,
@@ -16,6 +18,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema,
+  guessType,
 } from "../src/utils";
 
 describe("utils", () => {
@@ -183,6 +186,41 @@ describe("utils", () => {
         });
       });
 
+      it("should support nested values in formData", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            level1: {
+              type: "object",
+              properties: {
+                level2: {
+                  oneOf: [
+                    {
+                      type: "object",
+                      properties: {
+                        leaf1: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        const formData = {
+          level1: {
+            level2: {
+              leaf1: "a",
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, formData)).eql({
+          level1: { level2: { leaf1: "a" } },
+        });
+      });
+
       it("should use parent defaults for ArrayFields", () => {
         const schema = {
           type: "object",
@@ -256,6 +294,26 @@ describe("utils", () => {
           foo: 42,
         });
       });
+
+      it("should fill array with additional items schema when items is empty", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              minItems: 1,
+              additionalItems: {
+                type: "string",
+                default: "foo",
+              },
+              items: [],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          array: ["foo"],
+        });
+      });
     });
   });
 
@@ -283,6 +341,37 @@ describe("utils", () => {
 
     it("should return undefined if the input is empty", () => {
       expect(asNumber("")).eql(undefined);
+    });
+  });
+
+  describe("orderProperties()", () => {
+    it("should remove from order elements that are not in properties", () => {
+      const properties = ["foo", "baz"];
+      const order = ["foo", "bar", "baz", "qux"];
+      expect(orderProperties(properties, order)).eql(["foo", "baz"]);
+    });
+
+    it("should order properties according to the order", () => {
+      const properties = ["bar", "foo"];
+      const order = ["foo", "bar"];
+      expect(orderProperties(properties, order)).eql(["foo", "bar"]);
+    });
+
+    it("should replace * with properties that are absent in order", () => {
+      const properties = ["foo", "bar", "baz"];
+      const order = ["*", "foo"];
+      expect(orderProperties(properties, order)).eql(["bar", "baz", "foo"]);
+    });
+
+    it("should handle more complex ordering case correctly", () => {
+      const properties = ["foo", "baz", "qux", "bar"];
+      const order = ["quux", "foo", "*", "corge", "baz"];
+      expect(orderProperties(properties, order)).eql([
+        "foo",
+        "qux",
+        "bar",
+        "baz",
+      ]);
     });
   });
 
@@ -422,6 +511,12 @@ describe("utils", () => {
       expect(mergeObjects({ a: 1 }, { a: 2 })).eql({ a: 2 });
     });
 
+    it("should override non-existing values of the first object with the values from the second", () => {
+      expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
+    });
+
     it("should recursively merge deeply nested objects", () => {
       const obj1 = {
         a: 1,
@@ -452,6 +547,17 @@ describe("utils", () => {
         c: 3,
       };
       expect(mergeObjects(obj1, obj2)).eql(expected);
+    });
+
+    it("should recursively merge File objects", () => {
+      const file = new File(["test"], "test.txt");
+      const obj1 = {
+        a: {},
+      };
+      const obj2 = {
+        a: file,
+      };
+      expect(mergeObjects(obj1, obj2).a).instanceOf(File);
     });
 
     describe("concatArrays option", () => {
@@ -1120,6 +1226,64 @@ describe("utils", () => {
       });
     });
 
+    it("should return an idSchema for nested property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          obj: {
+            type: "object",
+            properties: {
+              foo: { type: "string" },
+            },
+            dependencies: {
+              foo: {
+                properties: {
+                  bar: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+      };
+      const formData = {
+        obj: {
+          foo: "test",
+        },
+      };
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
+        $id: "root",
+        obj: {
+          $id: "root_obj",
+          foo: { $id: "root_obj_foo" },
+          bar: { $id: "root_obj_bar" },
+        },
+      });
+    });
+
+    it("should return an idSchema for unmet property dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+        dependencies: {
+          foo: {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const formData = {};
+
+      expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
+        $id: "root",
+        foo: { $id: "root_foo" },
+      });
+    });
+
     it("should handle idPrefix parameter", () => {
       const schema = {
         definitions: {
@@ -1141,6 +1305,24 @@ describe("utils", () => {
           bar: { $id: "rjsf_bar" },
         }
       );
+    });
+
+    it("should handle null form data for object schemas", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+          bar: { type: "string" },
+        },
+      };
+      const formData = null;
+      const result = toIdSchema(schema, null, {}, formData, "rjsf");
+
+      expect(result).eql({
+        $id: "rjsf",
+        foo: { $id: "rjsf_foo" },
+        bar: { $id: "rjsf_bar" },
+      });
     });
   });
 
@@ -1279,6 +1461,91 @@ describe("utils", () => {
       expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).eql(
         true
       );
+    });
+  });
+
+  describe("guessType()", () => {
+    it("should guess the type of array values", () => {
+      expect(guessType([1, 2, 3])).eql("array");
+    });
+
+    it("should guess the type of string values", () => {
+      expect(guessType("foobar")).eql("string");
+    });
+
+    it("should guess the type of null values", () => {
+      expect(guessType(null)).eql("null");
+    });
+
+    it("should treat undefined values as null values", () => {
+      expect(guessType()).eql("null");
+    });
+
+    it("should guess the type of boolean values", () => {
+      expect(guessType(true)).eql("boolean");
+    });
+
+    it("should guess the type of object values", () => {
+      expect(guessType({})).eql("object");
+    });
+  });
+
+  describe("getSchemaType()", () => {
+    const cases = [
+      {
+        schema: { type: "string" },
+        expected: "string",
+      },
+      {
+        schema: { type: "number" },
+        expected: "number",
+      },
+      {
+        schema: { type: "integer" },
+        expected: "integer",
+      },
+      {
+        schema: { type: "object" },
+        expected: "object",
+      },
+      {
+        schema: { type: "array" },
+        expected: "array",
+      },
+      {
+        schema: { type: "boolean" },
+        expected: "boolean",
+      },
+      {
+        schema: { type: "null" },
+        expected: "null",
+      },
+      {
+        schema: { const: "foo" },
+        expected: "string",
+      },
+      {
+        schema: { const: 1 },
+        expected: "number",
+      },
+      {
+        schema: { type: ["string", "null"] },
+        expected: "string",
+      },
+      {
+        schema: { type: ["null", "number"] },
+        expected: "number",
+      },
+      {
+        schema: { type: ["integer", "null"] },
+        expected: "integer",
+      },
+    ];
+
+    it("should correctly guess the type of a schema", () => {
+      for (const test of cases) {
+        expect(getSchemaType(test.schema)).eql(test.expected);
+      }
     });
   });
 });
