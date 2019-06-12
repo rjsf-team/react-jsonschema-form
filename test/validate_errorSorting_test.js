@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import validateFormData from "../src/validate";
 
-describe.only("Validation Error Sorting", () => {
+describe("Validation Error Sorting", () => {
   describe("validate.validateFormData()", () => {
     describe("error sorting", () => {
       const expectOrder = (sortedErrors, expectedOrder) => {
