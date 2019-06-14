@@ -43,7 +43,9 @@ function DateTimeWidget(props) {
             maxDate={maxDate}
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
-              // this.setState({ value: date });
+              if (!date) {
+                return onChange(undefined);
+              }
               if (!date._isValid) {
                 return onChange(undefined);
               }
@@ -76,6 +78,9 @@ function DateTimeWidget(props) {
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
               // this.setState({ selectedDate: date });
+              if (!date) {
+                return onChange(undefined);
+              }
               if (!date._isValid) {
                 return onChange(undefined);
               }

@@ -175,7 +175,7 @@ module.exports = {
         animateYearScrolling: false,
         renderDateTimePickerAsDatePicker: true,
         invalidLabel: "",
-        clearable: true,
+        clearable: false,
         keyboard: true,
       },
       classNames: "formControlGroup",

@@ -38,6 +38,10 @@ function DateWidget(props) {
           value={value !== undefined ? moment(value) : null}
           onChange={date => {
             // this.setState({ selectedDate: date });
+            if (!date) {
+              return onChange(undefined);
+            }
+
             if (!date._isValid) {
               return onChange(undefined);
             }
