@@ -577,20 +577,36 @@ function resolveDependencies(schema, definitions, formData) {
         getMatchingOption(formData, resolvedSchema.anyOf, definitions)
       ];
   }
+  return processDependencies(
+    dependencies,
+    resolvedSchema,
+    definitions,
+    formData
+  );
+}
+function processDependencies(
+  dependencies,
+  resolvedSchema,
+  definitions,
+  formData
+) {
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     // Skip this dependency if its trigger property is not present.
     if (formData[dependencyKey] === undefined) {
       continue;
     }
-    // Skip this dependency if it is not included in the schema.
+    // Skip this dependency if it is not included in the schema (such as when dependencyKey is itself a hidden dependency.)
     if (
       resolvedSchema.properties &&
       !(dependencyKey in resolvedSchema.properties)
     ) {
       continue;
     }
-    const dependencyValue = dependencies[dependencyKey];
+    const {
+      [dependencyKey]: dependencyValue,
+      ...remainingDependencies
+    } = dependencies;
     if (Array.isArray(dependencyValue)) {
       resolvedSchema = withDependentProperties(resolvedSchema, dependencyValue);
     } else if (isObject(dependencyValue)) {
@@ -602,6 +618,12 @@ function resolveDependencies(schema, definitions, formData) {
         dependencyValue
       );
     }
+    return processDependencies(
+      remainingDependencies,
+      resolvedSchema,
+      definitions,
+      formData
+    );
   }
   return resolvedSchema;
 }
