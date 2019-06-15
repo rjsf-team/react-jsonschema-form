@@ -583,6 +583,13 @@ function resolveDependencies(schema, definitions, formData) {
     if (formData[dependencyKey] === undefined) {
       continue;
     }
+    // Skip this dependency if it is not included in the schema.
+    if (
+      resolvedSchema.properties &&
+      !(dependencyKey in resolvedSchema.properties)
+    ) {
+      continue;
+    }
     const dependencyValue = dependencies[dependencyKey];
     if (Array.isArray(dependencyValue)) {
       resolvedSchema = withDependentProperties(resolvedSchema, dependencyValue);
