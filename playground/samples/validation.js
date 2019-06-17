@@ -16,7 +16,7 @@ function transformErrors(errors) {
   });
 }
 
-module.exports = {
+export default {
   schema: {
     title: "Custom validation",
     description:

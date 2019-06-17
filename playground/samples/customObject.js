@@ -18,7 +18,7 @@ function ObjectFieldTemplate({ TitleField, properties, title, description }) {
   );
 }
 
-module.exports = {
+export default {
   schema: {
     title: "A registration form",
     description:
