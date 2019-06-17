@@ -1369,6 +1369,125 @@ describe("utils", () => {
               },
             });
           });
+
+          describe("showing/hiding nested dependencies", () => {
+            const schema = {
+              type: "object",
+              dependencies: {
+                employee_accounts: {
+                  oneOf: [
+                    {
+                      properties: {
+                        employee_accounts: {
+                          const: true,
+                        },
+                        update_absences: {
+                          title: "Update Absences",
+                          type: "string",
+                          oneOf: [
+                            {
+                              title: "Both",
+                              const: "BOTH",
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  ],
+                },
+                update_absences: {
+                  oneOf: [
+                    {
+                      properties: {
+                        permitted_extension: {
+                          title: "Permitted Extension",
+                          type: "integer",
+                        },
+                        update_absences: {
+                          const: "BOTH",
+                        },
+                      },
+                    },
+                    {
+                      properties: {
+                        permitted_extension: {
+                          title: "Permitted Extension",
+                          type: "integer",
+                        },
+                        update_absences: {
+                          const: "MEDICAL_ONLY",
+                        },
+                      },
+                    },
+                    {
+                      properties: {
+                        permitted_extension: {
+                          title: "Permitted Extension",
+                          type: "integer",
+                        },
+                        update_absences: {
+                          const: "NON_MEDICAL_ONLY",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+              properties: {
+                employee_accounts: {
+                  type: "boolean",
+                  title: "Employee Accounts",
+                },
+              },
+            };
+            const definitions = {};
+
+            it("should not include nested dependencies that should be hidden", () => {
+              const formData = {
+                employee_accounts: false,
+                update_absences: "BOTH",
+              };
+              expect(retrieveSchema(schema, definitions, formData)).eql({
+                type: "object",
+                properties: {
+                  employee_accounts: {
+                    type: "boolean",
+                    title: "Employee Accounts",
+                  },
+                },
+              });
+            });
+
+            it("should include nested dependencies that should not be hidden", () => {
+              const formData = {
+                employee_accounts: true,
+                update_absences: "BOTH",
+              };
+              expect(retrieveSchema(schema, definitions, formData)).eql({
+                type: "object",
+                properties: {
+                  employee_accounts: {
+                    type: "boolean",
+                    title: "Employee Accounts",
+                  },
+                  permitted_extension: {
+                    title: "Permitted Extension",
+                    type: "integer",
+                  },
+                  update_absences: {
+                    title: "Update Absences",
+                    type: "string",
+                    oneOf: [
+                      {
+                        title: "Both",
+                        const: "BOTH",
+                      },
+                    ],
+                  },
+                },
+              });
+            });
+          });
         });
 
         describe("with $ref in dependency", () => {
