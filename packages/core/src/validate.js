@@ -207,16 +207,16 @@ function accumulatePropertyErrors(_errors) {
  * Sorts the ajv {_errors} by the nested ui:order structure in the {_uiSchema} and
  * the {_errorSchema}.
  *
- * The first step is to flatten the _errorSchema.
+ * The first step is to combine all errors for each faulty schema property (@see {accumulatePropertyErrors}).
  * Then we recursively search through the _uiSchema to sort all errors
  * based on whatever uiSchema structure was passed in. It always tries to
  * consult the ui:orders of any nested uiSchema path for the path it is trying to sort.
  *
- * @param _uiSchema
- * @param _errors
- * @return {Array}
+ * @param {object[]} _errors - the ajv errors to sort
+ * @param {object} _uiSchema - the ui schema
+ * @return {Array} all ajv errors in the uischema order
  */
-function orderErrorsByUiSchema(_uiSchema, _errors) {
+function orderErrorsByUiSchema(_errors, _uiSchema) {
   if (!Array.isArray(_errors) || _errors.length === 0) {
     return [];
   }
@@ -496,7 +496,7 @@ export default function validateFormData(
   }
 
   if (typeof customValidate !== "function") {
-    const orderedErrors = orderErrorsByUiSchema(uiSchema, errors);
+    const orderedErrors = orderErrorsByUiSchema(errors, uiSchema);
     return { errors: orderedErrors, errorSchema };
   }
 
@@ -508,7 +508,7 @@ export default function validateFormData(
   // properties.
   const newErrors = toErrorList(newErrorSchema);
 
-  const orderedErrors = orderErrorsByUiSchema(uiSchema, newErrors);
+  const orderedErrors = orderErrorsByUiSchema(newErrors, uiSchema);
 
   return {
     errors: orderedErrors,
