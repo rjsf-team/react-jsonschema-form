@@ -161,84 +161,46 @@ function transformAjvErrors(errors = []) {
 }
 
 /**
- * Recursively searches through the _errorSchema to find all `__errors` entries.
- * When one is found a new property is added to the `_target` with the path to
- * this `__errors` as the key and the value of `__errors`.
- * It tries to distinguish between normal object properties (e.g. { foo: { 0: {} } }
- * and arrays (e.g. { foo: [{}] }) by checking the originial errors in the {_errors}
- * list to construct either `foo.0` or `foo[0]`.
+ * Iterates over all {_errors} to create an object containing properties with the
+ * error property as the key and all errors for this error property as the value
  *
  * @example
- * // sample errorSchema input
- * {
- *     foo: {
- *         __errors: [...__errorsOfThisProp]
- *     },
- *     bar: {
- *         __errors: [...__errorsOfThisProp],
- *         2: {
- *             __errors: [...__errorsOfThisProp],
- *             qux: { ... }
- *         }
- *     }
- * }
+ * // sample ajv _errors input
+ * [
+ *    {property: '.foo', ...errorForThisProp},
+ *    {property: '.bar', ...errorForThisProp},
+ *    {property: '.bar[2]', ...errorForThisProp},
+ *    {property: '.bar[2].qux', ...errorForThisProp},
+ *    {property: '.bar', ...errorForThisProp}
+ *    {property: '', ...errorForThisProp}
+ * ]
  * // sample output
  * // different cases possible of an error.properties; here are some EXAMPLES
  * {
- *     ".foo": [* errors like: a -> is-required; is-not-a-string; is-not-of-type *],
- *     ".bar[n]": [* errors like: b -> is-not-an-array *],
- *     ".bar[n].qux": [* errors like: (a) *],
- *     ".bar[n].qux[4]": [* errors like: (b) *],
- *     ".bar[n].qux[4].wibble": [* errors like: (a) *],
- *     ".bax.2": [* errors like: (a) *],
- *     "": [* errors like: does-not-match-oneof-schema *]
+ *     ".foo": [* all errors for this prop *],
+ *     ".bar[n]": [* all errors for this prop *],
+ *     ".bar[n].qux": [* all errors for this prop *],
+ *     ".bar[n].qux[4]": [* all errors for this prop *],
+ *     ".bar[n].qux[4].wibble": [* all errors for this prop *],
+ *     ".bax.2": [* all errors for this prop *],
+ *     "": [* all errors for this prop *]
  * }
  *
- * @param {object} _target - the object to add the key to.
  * @param {object[]} _errors - the errors of ajv
- * @param {object} _errorSchema - the error schema constructed by the `toErrorSchema` function
- * @param {string} _currentPath - the path of the current nested object
  */
-function flattenErrorSchema(_target, _errors, _errorSchema, _currentPath = "") {
-  Object.entries(_errorSchema).forEach(([schemaKey, schemaValue]) => {
-    if (schemaKey === "__errors" && Array.isArray(schemaValue)) {
-      // find the error in _errors for this path
-      const pathWithoutErrorsArray = _currentPath
-        .split(".")
-        .filter(pathPropKey => pathPropKey !== "__errors");
-
-      _target[_currentPath] = _errors.filter(
-        err =>
-          err.property ===
-          `.${pathWithoutErrorsArray.reduce(
-            (acc, curVal) =>
-              `${acc}${
-                err.property &&
-                err.property.includes(`${_currentPath}[${curVal}]`)
-                  ? `[${curVal}]`
-                  : `.${curVal}`
-              }`
-          )}`
-      );
-    } else {
-      // the value of the current _errorSchema prop is not the `__errors` property
-      let nextLevelPath;
-      if (
-        _errors.some(
-          err =>
-            "property" in err &&
-            err.property.includes(`${_currentPath}[${schemaKey}]`)
-        )
-      ) {
-        // we assume that the current errorSchema key (e.g. 0) is an array because there is an error with e.g. _currentPath[0]
-        nextLevelPath = `${_currentPath}[${schemaKey}]`;
-      } else {
-        nextLevelPath =
-          _currentPath === "" ? schemaKey : `${_currentPath}.${schemaKey}`;
-      }
-      flattenErrorSchema(_target, _errors, schemaValue, nextLevelPath);
-    }
+function accumulatePropertyErrors(_errors) {
+  const flattenedErrorSchema = {};
+  const allErrorKeysWithoutDuplicates = [
+    ...new Set(_errors.map(err => err.property)),
+  ];
+  allErrorKeysWithoutDuplicates.forEach(errKey => {
+    const errPropKey =
+      errKey && errKey.startsWith(".") ? errKey.substring(1) : errKey;
+    flattenedErrorSchema[errPropKey] = _errors.filter(
+      err => err.property === errKey
+    );
   });
+  return flattenedErrorSchema;
 }
 
 /**
@@ -252,17 +214,15 @@ function flattenErrorSchema(_target, _errors, _errorSchema, _currentPath = "") {
  *
  * @param _uiSchema
  * @param _errors
- * @param _errorSchema
  * @return {Array}
  */
-function orderErrorsByUiSchema(_uiSchema, _errors, _errorSchema) {
+function orderErrorsByUiSchema(_uiSchema, _errors) {
   if (!Array.isArray(_errors) || _errors.length === 0) {
     return [];
   }
-  console.log(`in`, _errorSchema);
-  const flattenedErrorSchema = {};
-  flattenErrorSchema(flattenedErrorSchema, _errors, _errorSchema);
-  console.log(`out`, flattenedErrorSchema);
+  const propertiesAndTheirErrors = accumulatePropertyErrors(_errors);
+  console.log(`out`, propertiesAndTheirErrors, _errors);
+
   const orderedErrors = [];
 
   const addToOrderedErrorsIfAbsent = errorToAdd => {
@@ -284,8 +244,8 @@ function orderErrorsByUiSchema(_uiSchema, _errors, _errorSchema) {
 
         const uiSchemaNodeofPropInOrder = uiSchemaNode[propInCurrentUiOrder];
         const pathOfPropInOrder = getErrorSchemaPathOfCurrentPropInCurrentUiOrder();
-        const errorsForThisProp = flattenedErrorSchema[pathOfPropInOrder];
-        const errForCurrentPath = flattenedErrorSchema[currentErrorPath];
+        const errorsForThisProp = propertiesAndTheirErrors[pathOfPropInOrder];
+        const errForCurrentPath = propertiesAndTheirErrors[currentErrorPath];
         if (errForCurrentPath) {
           // there is an error for this exact path
           errForCurrentPath.forEach(addToOrderedErrorsIfAbsent);
@@ -298,7 +258,7 @@ function orderErrorsByUiSchema(_uiSchema, _errors, _errorSchema) {
 
         if (uiSchemaNodeofPropInOrder) {
           // there is no error on this level of the _uiSchema, but the error prop itself has an _uiSchema prop -> we dive in...
-          Object.entries(flattenedErrorSchema)
+          Object.entries(propertiesAndTheirErrors)
             .filter(([errPath]) => errPath.startsWith(`${pathOfPropInOrder}[`))
             .forEach(([errPath]) => {
               // there in an error in this array so we want to go through them one by one and add them individually
@@ -536,7 +496,7 @@ export default function validateFormData(
   }
 
   if (typeof customValidate !== "function") {
-    const orderedErrors = orderErrorsByUiSchema(uiSchema, errors, errorSchema);
+    const orderedErrors = orderErrorsByUiSchema(uiSchema, errors);
     return { errors: orderedErrors, errorSchema };
   }
 
@@ -548,11 +508,7 @@ export default function validateFormData(
   // properties.
   const newErrors = toErrorList(newErrorSchema);
 
-  const orderedErrors = orderErrorsByUiSchema(
-    uiSchema,
-    newErrors,
-    newErrorSchema
-  );
+  const orderedErrors = orderErrorsByUiSchema(uiSchema, newErrors);
 
   return {
     errors: orderedErrors,
