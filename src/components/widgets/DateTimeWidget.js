@@ -28,6 +28,15 @@ function DateTimeWidget(props) {
       ? "YYYY-MM-DD"
       : "YYYY-MM-DD HH:mm";
   }
+
+  if (
+    options.convertDateTimeToUtc === undefined ||
+    options.convertDateTimeToUtc === null ||
+    options.convertDateTimeToUtc === ""
+  ) {
+    options.convertDateTimeToUtc = true;
+  }
+
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
@@ -57,7 +66,9 @@ function DateTimeWidget(props) {
                 );
               }
               return onChange(
-                modifiedDatePerOptions.format("YYYY-MM-DD HH:mm:ss")
+                options.convertDateTimeToUtc
+                  ? modifiedDatePerOptions.toJSON()
+                  : modifiedDatePerOptions.format("YYYY-MM-DD HH:mm:ss")
               );
             }}
             onClear={e => {
@@ -92,7 +103,9 @@ function DateTimeWidget(props) {
                 );
               }
               return onChange(
-                modifiedDatePerOptions.format("YYYY-MM-DD HH:mm:ss")
+                options.convertDateTimeToUtc
+                  ? modifiedDatePerOptions.toJSON()
+                  : modifiedDatePerOptions.format("YYYY-MM-DD HH:mm:ss")
               );
             }}
             onClear={e => {
