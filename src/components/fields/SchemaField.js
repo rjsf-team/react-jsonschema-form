@@ -26,6 +26,7 @@ const COMPONENT_TYPES = {
   number: "NumberField",
   object: "ObjectField",
   string: "StringField",
+  null: "NullField",
 };
 
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
@@ -61,8 +62,7 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
 function Label(props) {
   const { label, required, id } = props;
   if (!label) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   return (
     <label className="control-label" htmlFor={id}>
@@ -88,8 +88,7 @@ function LabelInput(props) {
 function Help(props) {
   const { help } = props;
   if (!help) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   if (typeof help === "string") {
     return <p className="help-block">{help}</p>;
@@ -100,7 +99,7 @@ function Help(props) {
 function ErrorList(props) {
   const { errors = [] } = props;
   if (errors.length === 0) {
-    return <div />;
+    return null;
   }
 
   return (
@@ -252,12 +251,15 @@ function SchemaFieldRender(props) {
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
-  const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
+  const readonly = Boolean(
+    props.readonly ||
+      uiSchema["ui:readonly"] ||
+      props.schema.readOnly ||
+      schema.readOnly
+  );
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
-
   if (Object.keys(schema).length === 0) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
 
   const uiOptions = getUiOptions(uiSchema);
@@ -371,6 +373,7 @@ function SchemaFieldRender(props) {
           baseType={schema.type}
           registry={registry}
           safeRenderCompletion={props.safeRenderCompletion}
+          schema={schema}
           uiSchema={uiSchema}
         />
       )}
@@ -389,6 +392,7 @@ function SchemaFieldRender(props) {
           baseType={schema.type}
           registry={registry}
           safeRenderCompletion={props.safeRenderCompletion}
+          schema={schema}
           uiSchema={uiSchema}
         />
       )}

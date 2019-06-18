@@ -1,5 +1,3 @@
-import React from "react";
-
 module.exports = {
   schema: {
     title: "Schema dependencies",
@@ -110,12 +108,8 @@ module.exports = {
   uiSchema: {
     simple: {
       credit_card: {
-        "ui:help": (
-          <p>
-            If you enter anything here then <code>billing_address</code> will be
-            dynamically added to the form.
-          </p>
-        ),
+        "ui:help":
+          "If you enter anything here then billing_address will be dynamically added to the form.",
       },
     },
     conditional: {

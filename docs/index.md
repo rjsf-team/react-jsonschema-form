@@ -205,6 +205,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
  - 2 columns form with CSS and FieldTemplate: <https://jsfiddle.net/n1k0/bw0ffnz4/1/>
  - Validate and submit form from external control: <https://jsfiddle.net/spacebaboon/g5a1re63/>
  - Custom component for Help text with `ui:help`: <https://codesandbox.io/s/14pqx97xl7/>
+ - Collapsing / Showing and Hiding individual fields: <https://codesandbox.io/s/examplereactjsonschemaformcollapsefieldtemplate-t41dn>
 
 ## Contributing
 
@@ -260,7 +261,7 @@ $ npm run tdd
 
 #### Code coverage
 
-Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run. 
+Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
 The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 ### Releasing
@@ -281,13 +282,15 @@ $ git push --tags origin master
 A: The `anyOf`  and `oneOf` keywords are supported,  however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
 There is also special cased where you can use `oneOf` in [schema dependencies](dependencies.md#schema-dependencies), If you'd like to help improve support for these keywords, see the following issues for inspiration [#329](https://github.com/mozilla-services/react-jsonschema-form/pull/329) or [#417](https://github.com/mozilla-services/react-jsonschema-form/pull/417). See also: [#52](https://github.com/mozilla-services/react-jsonschema-form/issues/52), [#151](https://github.com/mozilla-services/react-jsonschema-form/issues/151), [#171](https://github.com/mozilla-services/react-jsonschema-form/issues/171), [#200](https://github.com/mozilla-services/react-jsonschema-form/issues/200), [#282](https://github.com/mozilla-services/react-jsonschema-form/issues/282), [#302](https://github.com/mozilla-services/react-jsonschema-form/pull/302), [#330](https://github.com/mozilla-services/react-jsonschema-form/issues/330), [#430](https://github.com/mozilla-services/react-jsonschema-form/issues/430), [#522](https://github.com/mozilla-services/react-jsonschema-form/issues/522), [#538](https://github.com/mozilla-services/react-jsonschema-form/issues/538), [#551](https://github.com/mozilla-services/react-jsonschema-form/issues/551), [#552](https://github.com/mozilla-services/react-jsonschema-form/issues/552), or [#648](https://github.com/mozilla-services/react-jsonschema-form/issues/648).
 
+In addition, "nullable" types are supported in a narrow sense: If a property declares a type of `["<some-type>", "null"]`, then `"some-type"` will be passed through as the type used to determine which widget to use for rendering the field. However, the actual rendering and handling of the field is unchanged; you are free to handle this using an approach (`'ui:emptyValue': null`, for example) best-suited to your use case.
+
 ### Q: Will react-jsonschema-form support Material, Ant-Design, Foundation, or [some other specific widget library or frontend style]?
 
 A: Probably not. We use Bootstrap v3 and it works fine for our needs. We would like for react-jsonschema-form to support other frameworks, we just don't want to support them ourselves. Ideally, these frontend styles could be added to react-jsonschema-form with a third-party library. If there is a technical limitation preventing this, please consider opening a PR. See also: [#91](https://github.com/mozilla-services/react-jsonschema-form/issues/91), [#99](https://github.com/mozilla-services/react-jsonschema-form/issues/99), [#125](https://github.com/mozilla-services/react-jsonschema-form/issues/125), [#237](https://github.com/mozilla-services/react-jsonschema-form/issues/237), [#287](https://github.com/mozilla-services/react-jsonschema-form/issues/287), [#299](https://github.com/mozilla-services/react-jsonschema-form/issues/299), [#440](https://github.com/mozilla-services/react-jsonschema-form/issues/440), [#461](https://github.com/mozilla-services/react-jsonschema-form/issues/461), [#546](https://github.com/mozilla-services/react-jsonschema-form/issues/546), [#555](https://github.com/mozilla-services/react-jsonschema-form/issues/555), [#626](https://github.com/mozilla-services/react-jsonschema-form/issues/626), and [#623](https://github.com/mozilla-services/react-jsonschema-form/pull/623).
 
 ### Q: Is there a way to "collapse" fields, for instance to show/hide individual fields?
 
-A: There's no specific built-in way to do this, but you can write your own FieldTemplate that supports hiding/showing fields according to user input. We don't yet have an example of this use, but if you write one, please add it to the "tips and tricks" section, above. See also: [#268](https://github.com/mozilla-services/react-jsonschema-form/issues/268), [#304](https://github.com/mozilla-services/react-jsonschema-form/pull/304), [#598](https://github.com/mozilla-services/react-jsonschema-form/issues/598), [#920](https://github.com/mozilla-services/react-jsonschema-form/issues/920).
+A: There's no specific built-in way to do this, but you can write your own FieldTemplate that supports hiding/showing fields according to user input. See the "tips and tricks" section above for one example implementation. See also: [#268](https://github.com/mozilla-services/react-jsonschema-form/issues/268), [#304](https://github.com/mozilla-services/react-jsonschema-form/pull/304), [#598](https://github.com/mozilla-services/react-jsonschema-form/issues/598), [#920](https://github.com/mozilla-services/react-jsonschema-form/issues/920).
 
 ## License
 

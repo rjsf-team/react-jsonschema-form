@@ -1,6 +1,7 @@
 import React from "react";
-import validateFormData from "./validate";
+import * as ReactIs from "react-is";
 import fill from "core-js/library/fn/array/fill";
+import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -73,8 +74,17 @@ export function getSchemaType(schema) {
   }
 
   if (!type && schema.enum) {
-    type = "string";
+    return "string";
   }
+
+  if (!type && (schema.properties || schema.additionalProperties)) {
+    return "object";
+  }
+
+  if (type instanceof Array && type.length === 2 && type.includes("null")) {
+    return type.find(type => type !== "null");
+  }
+
   return type;
 }
 
@@ -93,7 +103,7 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (typeof widget === "function") {
+  if (typeof widget === "function" || ReactIs.isForwardRef(widget)) {
     return mergeOptions(widget);
   }
 
@@ -118,7 +128,29 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
   throw new Error(`No widget "${widget}" for type "${type}"`);
 }
 
-function computeDefaults(schema, parentDefaults, definitions = {}) {
+export function hasWidget(schema, widget, registeredWidgets = {}) {
+  try {
+    getWidget(schema, widget, registeredWidgets);
+    return true;
+  } catch (e) {
+    if (
+      e.message &&
+      (e.message.startsWith("No widget") ||
+        e.message.startsWith("Unsupported widget"))
+    ) {
+      return false;
+    }
+    throw e;
+  }
+}
+
+function computeDefaults(
+  schema,
+  parentDefaults,
+  definitions,
+  rawFormData = {}
+) {
+  const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
@@ -131,12 +163,22 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
-    return computeDefaults(refSchema, defaults, definitions);
+    return computeDefaults(refSchema, defaults, definitions, formData);
+  } else if ("dependencies" in schema) {
+    const resolvedSchema = resolveDependencies(schema, definitions, formData);
+    return computeDefaults(resolvedSchema, defaults, definitions, formData);
   } else if (isFixedItems(schema)) {
     defaults = schema.items.map(itemSchema =>
-      computeDefaults(itemSchema, undefined, definitions)
+      computeDefaults(itemSchema, undefined, definitions, formData)
     );
+  } else if ("oneOf" in schema) {
+    schema =
+      schema.oneOf[getMatchingOption(undefined, schema.oneOf, definitions)];
+  } else if ("anyOf" in schema) {
+    schema =
+      schema.anyOf[getMatchingOption(undefined, schema.anyOf, definitions)];
   }
+
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof defaults === "undefined") {
     defaults = schema.default;
@@ -151,7 +193,8 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
         acc[key] = computeDefaults(
           schema.properties[key],
           (defaults || {})[key],
-          definitions
+          definitions,
+          (formData || {})[key]
         );
         return acc;
       }, {});
@@ -175,7 +218,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
             return defaultEntries.concat(fillerEntries);
           }
         } else {
-          return [];
+          return defaults ? defaults : [];
         }
       }
   }
@@ -187,7 +230,12 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
     throw new Error("Invalid schema: " + _schema);
   }
   const schema = retrieveSchema(_schema, definitions, formData);
-  const defaults = computeDefaults(schema, _schema.default, definitions);
+  const defaults = computeDefaults(
+    schema,
+    _schema.default,
+    definitions,
+    formData
+  );
   if (typeof formData === "undefined") {
     // No form data? Use schema defaults.
     return defaults;
@@ -224,6 +272,9 @@ export function getUiOptions(uiSchema) {
 }
 
 export function isObject(thing) {
+  if (typeof File !== "undefined" && thing instanceof File) {
+    return false;
+  }
   return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }
 
@@ -247,6 +298,9 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
 export function asNumber(value) {
   if (value === "") {
     return undefined;
+  }
+  if (value === null) {
+    return null;
   }
   if (/\.$/.test(value)) {
     // "3." can't really be considered a number even if it parses in js. The
@@ -285,28 +339,32 @@ export function orderProperties(properties, order) {
       ? `properties '${arr.join("', '")}'`
       : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
-  const orderHash = arrayToHash(order);
   const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
   if (extraneous.length) {
-    throw new Error(
+    console.warn(
       `uiSchema order list contains extraneous ${errorPropList(extraneous)}`
     );
   }
+  const orderFiltered = order.filter(
+    prop => prop === "*" || propertyHash[prop]
+  );
+  const orderHash = arrayToHash(orderFiltered);
+
   const rest = properties.filter(prop => !orderHash[prop]);
-  const restIndex = order.indexOf("*");
+  const restIndex = orderFiltered.indexOf("*");
   if (restIndex === -1) {
     if (rest.length) {
       throw new Error(
         `uiSchema order list does not contain ${errorPropList(rest)}`
       );
     }
-    return order;
+    return orderFiltered;
   }
-  if (restIndex !== order.lastIndexOf("*")) {
+  if (restIndex !== orderFiltered.lastIndexOf("*")) {
     throw new Error("uiSchema order list contains more than one wildcard item");
   }
 
-  const complete = [...order];
+  const complete = [...orderFiltered];
   complete.splice(restIndex, 1, ...rest);
   return complete;
 }
@@ -508,6 +566,17 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
 function resolveDependencies(schema, definitions, formData) {
   // Drop the dependencies from the source schema.
   let { dependencies = {}, ...resolvedSchema } = schema;
+  if ("oneOf" in resolvedSchema) {
+    resolvedSchema =
+      resolvedSchema.oneOf[
+        getMatchingOption(formData, resolvedSchema.oneOf, definitions)
+      ];
+  } else if ("anyOf" in resolvedSchema) {
+    resolvedSchema =
+      resolvedSchema.anyOf[
+        getMatchingOption(formData, resolvedSchema.anyOf, definitions)
+      ];
+  }
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     // Skip this dependency if its trigger property is not present.
@@ -838,4 +907,66 @@ export function rangeSpec(schema) {
     spec.max = schema.maximum;
   }
   return spec;
+}
+
+export function getMatchingOption(formData, options, definitions) {
+  for (let i = 0; i < options.length; i++) {
+    // Assign the definitions to the option, otherwise the match can fail if
+    // the new option uses a $ref
+    const option = Object.assign(
+      {
+        definitions,
+      },
+      options[i]
+    );
+
+    // If the schema describes an object then we need to add slightly more
+    // strict matching to the schema, because unless the schema uses the
+    // "requires" keyword, an object will match the schema as long as it
+    // doesn't have matching keys with a conflicting type. To do this we use an
+    // "anyOf" with an array of requires. This augmentation expresses that the
+    // schema should match if any of the keys in the schema are present on the
+    // object and pass validation.
+    if (option.properties) {
+      // Create an "anyOf" schema that requires at least one of the keys in the
+      // "properties" object
+      const requiresAnyOf = {
+        anyOf: Object.keys(option.properties).map(key => ({
+          required: [key],
+        })),
+      };
+
+      let augmentedSchema;
+
+      // If the "anyOf" keyword already exists, wrap the augmentation in an "allOf"
+      if (option.anyOf) {
+        // Create a shallow clone of the option
+        const { ...shallowClone } = option;
+
+        if (!shallowClone.allOf) {
+          shallowClone.allOf = [];
+        } else {
+          // If "allOf" already exists, shallow clone the array
+          shallowClone.allOf = shallowClone.allOf.slice();
+        }
+
+        shallowClone.allOf.push(requiresAnyOf);
+
+        augmentedSchema = shallowClone;
+      } else {
+        augmentedSchema = Object.assign({}, option, requiresAnyOf);
+      }
+
+      // Remove the "required" field as it's likely that not all fields have
+      // been filled in yet, which will mean that the schema is not valid
+      delete augmentedSchema.required;
+
+      if (isValid(augmentedSchema, formData)) {
+        return i;
+      }
+    } else if (isValid(options[i], formData)) {
+      return i;
+    }
+  }
+  return 0;
 }

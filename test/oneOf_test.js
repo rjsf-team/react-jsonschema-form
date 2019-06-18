@@ -55,6 +55,67 @@ describe("oneOf", () => {
     expect(node.querySelector("select").id).eql("root__anyof_select");
   });
 
+  it("should assign a default value and set defaults on option change", () => {
+    const { comp, node } = createFormComponent({
+      schema: {
+        oneOf: [
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultbar" },
+            },
+          },
+        ],
+      },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultbar" });
+  });
+
+  it("should render a custom widget", () => {
+    const schema = {
+      type: "object",
+      oneOf: [
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+        },
+        {
+          properties: {
+            bar: { type: "string" },
+          },
+        },
+      ],
+    };
+    const widgets = {
+      SelectWidget: () => {
+        return <section id="CustomSelect">Custom Widget</section>;
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      widgets,
+    });
+
+    expect(node.querySelector("#CustomSelect")).to.exist;
+  });
+
   it("should change the rendered form when the select value is changed", () => {
     const schema = {
       type: "object",
@@ -433,6 +494,68 @@ describe("oneOf", () => {
 
       expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
       expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+    });
+  });
+
+  describe("definitions", () => {
+    it("should handle the $ref keyword correctly", () => {
+      const schema = {
+        definitions: {
+          fieldEither: {
+            type: "object",
+            oneOf: [
+              {
+                type: "object",
+                properties: {
+                  value: {
+                    type: "string",
+                  },
+                },
+              },
+              {
+                type: "object",
+                properties: {
+                  value: {
+                    type: "array",
+                    items: {
+                      $ref: "#/definitions/fieldEither",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/fieldEither",
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(node.querySelector(".array-item-add button")).not.eql(null);
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      const $select = node.querySelector("select");
+      expect($select).not.eql(null);
+      Simulate.change($select, {
+        target: { value: $select.options[1].value },
+      });
+
+      // This works because the nested "add" button will now be the first to
+      // appear in the dom
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect($select.value).to.eql($select.options[1].value);
     });
   });
 });
