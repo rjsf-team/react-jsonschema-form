@@ -406,6 +406,7 @@ class ArrayField extends Component {
       formContext,
       formData,
       rawErrors,
+      registry,
     };
 
     // Check if a custom render function was passed in
