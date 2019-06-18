@@ -52,6 +52,7 @@ describe("oneOf", () => {
     });
 
     expect(node.querySelectorAll("select")).to.have.length.of(1);
+    expect(node.querySelector("select").id).eql("root__oneof_select");
   });
 
   it("should change the rendered form when the select value is changed", () => {
