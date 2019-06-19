@@ -217,6 +217,28 @@ The included `FileWidget` exposes a reference to the `<input type="file" />` ele
 
 This allows you to programmatically trigger the browser's file selector, which can be used in a custom file widget.
 
+#### File widget options
+
+##### `accept` option
+
+You can use accept attribute to specify a filter for what file types the user can pick from the file input dialog box
+
+```jsx
+const schema = {
+  type: "string",
+  format: "data-url"
+};
+
+const uiSchema = {
+  "ui:options": { accept: ".pdf" }
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
+```
+
 ### Object fields ordering
 
 Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
