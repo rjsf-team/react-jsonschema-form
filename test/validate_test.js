@@ -163,6 +163,63 @@ describe("Validation", () => {
       });
     });
 
+    describe("validating using custom string formats", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          phone: {
+            type: "string",
+            format: "phone-us",
+          },
+        },
+      };
+
+      it("should not return a validation error if unknown string format is used", () => {
+        const result = validateFormData({ phone: "800.555.2368" }, schema);
+        expect(result.errors.length).eql(0);
+      });
+
+      it("should return a validation error about formData", () => {
+        const result = validateFormData(
+          { phone: "800.555.2368" },
+          schema,
+          null,
+          null,
+          null,
+          { "phone-us": /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/ }
+        );
+
+        expect(result.errors).to.have.lengthOf(1);
+        expect(result.errors[0].stack).to.equal(
+          '.phone should match format "phone-us"'
+        );
+      });
+
+      it("prop updates with new custom formats are accepted", () => {
+        const result = validateFormData(
+          { phone: "abc" },
+          {
+            type: "object",
+            properties: {
+              phone: {
+                type: "string",
+                format: "area-code",
+              },
+            },
+          },
+          null,
+          null,
+          null,
+          { "area-code": /\d{3}/ }
+        );
+
+        expect(result.errors).to.have.lengthOf(1);
+        expect(result.errors[0].stack).to.equal(
+          '.phone should match format "area-code"'
+        );
+      });
+    });
+
     describe("Custom validate function", () => {
       let errors, errorSchema;
 

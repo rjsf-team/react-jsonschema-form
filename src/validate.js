@@ -3,6 +3,7 @@ import Ajv from "ajv";
 let ajv = createAjvInstance();
 import { deepEquals } from "./utils";
 
+let formerCustomFormats = null;
 let formerMetaSchema = null;
 
 import { isObject, mergeObjects } from "./utils";
@@ -13,6 +14,7 @@ function createAjvInstance() {
     allErrors: true,
     multipleOfPrecision: 8,
     schemaId: "auto",
+    unknownFormats: "ignore",
   });
 
   // add custom formats
@@ -167,17 +169,33 @@ export default function validateFormData(
   schema,
   customValidate,
   transformErrors,
-  additionalMetaSchemas = []
+  additionalMetaSchemas = [],
+  customFormats = {}
 ) {
+  const newMetaSchemas = !deepEquals(formerMetaSchema, additionalMetaSchemas);
+  const newFormats = !deepEquals(formerCustomFormats, customFormats);
+
+  if (newMetaSchemas || newFormats) {
+    ajv = createAjvInstance();
+  }
+
   // add more schemas to validate against
   if (
     additionalMetaSchemas &&
-    !deepEquals(formerMetaSchema, additionalMetaSchemas) &&
+    newMetaSchemas &&
     Array.isArray(additionalMetaSchemas)
   ) {
-    ajv = createAjvInstance();
     ajv.addMetaSchema(additionalMetaSchemas);
     formerMetaSchema = additionalMetaSchemas;
+  }
+
+  // add more custom formats to validate against
+  if (customFormats && newFormats && isObject(customFormats)) {
+    Object.keys(customFormats).forEach(formatName => {
+      ajv.addFormat(formatName, customFormats[formatName]);
+    });
+
+    formerCustomFormats = customFormats;
   }
 
   let validationError = null;

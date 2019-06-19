@@ -506,6 +506,27 @@ class App extends Component {
             </Form>
           )}
         </div>
+        <div className="col-sm-12">
+          <p style={{ textAlign: "center" }}>
+            Powered by
+            <a href="https://github.com/mozilla-services/react-jsonschema-form">
+              react-jsonschema-form
+            </a>
+            . Bootstrap themes courtesy of{" "}
+            <a href="http://bootswatch.com/">Bootswatch</a> and{" "}
+            <a href="https://github.com/aalpern/bootstrap-solarized/">
+              bootstrap-solarized
+            </a>
+            .
+            {process.env.SHOW_NETLIFY_BADGE === "true" && (
+              <div style={{ float: "right" }}>
+                <a href="https://www.netlify.com">
+                  <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" />
+                </a>
+              </div>
+            )}
+          </p>
+        </div>
       </div>
     );
   }

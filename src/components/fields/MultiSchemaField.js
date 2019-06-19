@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-import { guessType } from "../../utils";
-import { isValid } from "../../validate";
+import {
+  getUiOptions,
+  getWidget,
+  guessType,
+  retrieveSchema,
+  getDefaultFormState,
+  getMatchingOption,
+} from "../../utils";
 
 class AnyOfField extends Component {
   constructor(props) {
@@ -29,75 +35,35 @@ class AnyOfField extends Component {
   }
 
   getMatchingOption(formData, options) {
-    for (let i = 0; i < options.length; i++) {
-      const option = options[i];
+    const { definitions } = this.props.registry;
 
-      // If the schema describes an object then we need to add slightly more
-      // strict matching to the schema, because unless the schema uses the
-      // "requires" keyword, an object will match the schema as long as it
-      // doesn't have matching keys with a conflicting type. To do this we use an
-      // "anyOf" with an array of requires. This augmentation expresses that the
-      // schema should match if any of the keys in the schema are present on the
-      // object and pass validation.
-      if (option.properties) {
-        // Create an "anyOf" schema that requires at least one of the keys in the
-        // "properties" object
-        const requiresAnyOf = {
-          anyOf: Object.keys(option.properties).map(key => ({
-            required: [key],
-          })),
-        };
-
-        let augmentedSchema;
-
-        // If the "anyOf" keyword already exists, wrap the augmentation in an "allOf"
-        if (option.anyOf) {
-          // Create a shallow clone of the option
-          const { ...shallowClone } = option;
-
-          if (!shallowClone.allOf) {
-            shallowClone.allOf = [];
-          } else {
-            // If "allOf" already exists, shallow clone the array
-            shallowClone.allOf = shallowClone.allOf.slice();
-          }
-
-          shallowClone.allOf.push(requiresAnyOf);
-
-          augmentedSchema = shallowClone;
-        } else {
-          augmentedSchema = Object.assign({}, option, requiresAnyOf);
-        }
-
-        // Remove the "required" field as it's likely that not all fields have
-        // been filled in yet, which will mean that the schema is not valid
-        delete augmentedSchema.required;
-
-        if (isValid(augmentedSchema, formData)) {
-          return i;
-        }
-      } else if (isValid(options[i], formData)) {
-        return i;
-      }
+    let option = getMatchingOption(formData, options, definitions);
+    if (option !== 0) {
+      return option;
     }
-
-    // If the form data matches none of the options, use the first option
-    return 0;
+    // If the form data matches none of the options, use the currently selected
+    // option, assuming it's available; otherwise use the first option
+    return this && this.state ? this.state.selectedOption : 0;
   }
 
-  onOptionChange = event => {
-    const selectedOption = parseInt(event.target.value, 10);
-    const { formData, onChange, options } = this.props;
-
-    const newOption = options[selectedOption];
+  onOptionChange = option => {
+    const selectedOption = parseInt(option, 10);
+    const { formData, onChange, options, registry } = this.props;
+    const { definitions } = registry;
+    const newOption = retrieveSchema(
+      options[selectedOption],
+      definitions,
+      formData
+    );
 
     // If the new option is of type object and the current data is an object,
     // discard properties added using the old option.
+    let newFormData = undefined;
     if (
       guessType(formData) === "object" &&
       (newOption.type === "object" || newOption.properties)
     ) {
-      const newFormData = Object.assign({}, formData);
+      newFormData = Object.assign({}, formData);
 
       const optionsToDiscard = options.slice();
       optionsToDiscard.splice(selectedOption, 1);
@@ -112,14 +78,14 @@ class AnyOfField extends Component {
           }
         }
       }
-
-      onChange(newFormData);
-    } else {
-      onChange(undefined);
     }
+    // Call getDefaultFormState to make sure defaults are populated on change.
+    onChange(
+      getDefaultFormState(options[selectedOption], newFormData, definitions)
+    );
 
     this.setState({
-      selectedOption: parseInt(event.target.value, 10),
+      selectedOption: parseInt(option, 10),
     });
   };
 
@@ -141,7 +107,10 @@ class AnyOfField extends Component {
     } = this.props;
 
     const _SchemaField = registry.fields.SchemaField;
+    const { widgets } = registry;
     const { selectedOption } = this.state;
+    const { widget = "select", ...uiOptions } = getUiOptions(uiSchema);
+    const Widget = getWidget({ type: "number" }, widget, widgets);
 
     const option = options[selectedOption] || null;
     let optionSchema;
@@ -154,22 +123,24 @@ class AnyOfField extends Component {
         : Object.assign({}, option, { type: baseType });
     }
 
+    const enumOptions = options.map((option, index) => ({
+      label: option.title || `Option ${index + 1}`,
+      value: index,
+    }));
+
     return (
       <div className="panel panel-default panel-body">
         <div className="form-group">
-          <select
-            className="form-control"
+          <Widget
+            id={`${idSchema.$id}_anyof_select`}
+            schema={{ type: "number", default: 0 }}
             onChange={this.onOptionChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
             value={selectedOption}
-            id={`${idSchema.$id}_anyof_select`}>
-            {options.map((option, index) => {
-              return (
-                <option key={index} value={index}>
-                  {option.title || `Option ${index + 1}`}
-                </option>
-              );
-            })}
-          </select>
+            options={{ enumOptions }}
+            {...uiOptions}
+          />
         </div>
 
         {option !== null && (

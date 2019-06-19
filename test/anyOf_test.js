@@ -54,6 +54,67 @@ describe("anyOf", () => {
     expect(node.querySelectorAll("select")).to.have.length.of(1);
   });
 
+  it("should assign a default value and set defaults on option change", () => {
+    const { comp, node } = createFormComponent({
+      schema: {
+        anyOf: [
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultbar" },
+            },
+          },
+        ],
+      },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultbar" });
+  });
+
+  it("should render a custom widget", () => {
+    const schema = {
+      type: "object",
+      anyOf: [
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+        },
+        {
+          properties: {
+            bar: { type: "string" },
+          },
+        },
+      ],
+    };
+    const widgets = {
+      SelectWidget: () => {
+        return <section id="CustomSelect">Custom Widget</section>;
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      widgets,
+    });
+
+    expect(node.querySelector("#CustomSelect")).to.exist;
+  });
+
   it("should change the rendered form when the select value is changed", () => {
     const schema = {
       type: "object",

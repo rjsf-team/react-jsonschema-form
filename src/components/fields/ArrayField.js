@@ -21,8 +21,7 @@ import {
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   const id = `${idSchema.$id}__title`;
   return <TitleField id={id} title={title} required={required} />;
@@ -30,8 +29,7 @@ function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
 
 function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   if (!description) {
-    // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   const id = `${idSchema.$id}__description`;
   return <DescriptionField id={id} description={description} />;
@@ -408,6 +406,7 @@ class ArrayField extends Component {
       formContext,
       formData,
       rawErrors,
+      registry,
     };
 
     // Check if a custom render function was passed in
@@ -423,6 +422,9 @@ class ArrayField extends Component {
       formData,
       disabled,
       readonly,
+      required,
+      label,
+      placeholder,
       autofocus,
       onBlur,
       onFocus,
@@ -447,9 +449,13 @@ class ArrayField extends Component {
         onFocus={onFocus}
         options={options}
         schema={schema}
+        registry={registry}
         value={items}
         disabled={disabled}
         readonly={readonly}
+        required={required}
+        label={label}
+        placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}

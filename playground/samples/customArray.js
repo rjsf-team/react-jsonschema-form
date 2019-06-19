@@ -45,7 +45,7 @@ function ArrayFieldTemplate(props) {
   );
 }
 
-module.exports = {
+export default {
   schema: {
     title: "Custom array of strings",
     type: "array",
