@@ -232,6 +232,84 @@ describe("Validation Error Sorting", () => {
           );
           expectOrder(result.errors, [".foo.wibble", ".foo.wobble", ".bar"]);
         });
+
+        it("should be able to deal with properties on the same level which names start alike", () => {
+          const schema = {
+            type: "object",
+            properties: {
+              bar: {
+                type: "string",
+                minLength: 1,
+              },
+              foo: {
+                type: "object",
+                properties: {
+                  wibble: {
+                    type: "object",
+                    required: ["quux", "qux"],
+                    properties: {
+                      quux: {
+                        type: "string",
+                      },
+                      qux: {
+                        type: "string",
+                      },
+                    },
+                  },
+                  wibblewobble: {
+                    type: "object",
+                    required: ["fred", "thud", "waldo"],
+                    properties: {
+                      fred: {
+                        type: "string",
+                      },
+                      thud: {
+                        type: "string",
+                      },
+                      waldo: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          const uiSchema = {
+            "ui:order": ["foo", "bar"],
+            foo: {
+              "ui:order": ["wibble", "wibblewobble"],
+              wibble: {},
+              wibblewobble: {
+                "ui:order": ["waldo", "fred", "*"],
+              },
+            },
+          };
+          const formData = {
+            foo: {
+              wibble: {},
+              wibblewobble: {},
+            },
+            bar: "",
+          };
+          const result = validateFormData(
+            formData,
+            schema,
+            null,
+            null,
+            null,
+            null,
+            uiSchema
+          );
+          expectOrder(result.errors, [
+            ".foo.wibble.quux",
+            ".foo.wibble.qux",
+            ".foo.wibblewobble.waldo",
+            ".foo.wibblewobble.fred",
+            ".foo.wibblewobble.thud",
+            ".bar",
+          ]);
+        });
       });
 
       describe("with enums", () => {

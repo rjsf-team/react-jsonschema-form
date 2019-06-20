@@ -356,7 +356,14 @@ function orderErrorsByUiSchema(_errors, _uiSchema) {
     } else {
       // there is no ui:order
       const errsOnTheCurrentLevel = _errors.filter(
-        err => "property" in err && err.property.startsWith(currentErrorPath)
+        err =>
+          "property" in err &&
+          (err.property === currentErrorPath ||
+            err.property.startsWith(
+              currentErrorPath === "."
+                ? currentErrorPath
+                : `${currentErrorPath}.`
+            ))
       );
 
       errsOnTheCurrentLevel.forEach(err => {
