@@ -177,7 +177,7 @@ module.exports = {
         invalidLabel: "",
         keyboard: true,
         convertDateTimeToUtc: false,
-        clearable: false,
+        clearable: true,
       },
       classNames: "formControlGroup",
     },
