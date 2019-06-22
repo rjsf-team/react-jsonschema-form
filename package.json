@@ -46,6 +46,7 @@
     "@babel/runtime-corejs2": "^7.4.5",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
+    "lodash.pick": "^4.4.0",
     "lodash.topath": "^4.5.2",
     "prop-types": "^15.5.8",
     "react-is": "^16.8.4"

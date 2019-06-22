@@ -118,6 +118,8 @@ render((
 ), document.getElementById("app"));
 ```
 
+> Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, then set the `omitExtraData` prop to `true`.
+
 #### Form error event handler
 
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
@@ -134,6 +136,8 @@ render((
 #### Form data changes
 
 If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
+
+> Note: If `omitExtraData` and `liveValidate` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called.
 
 #### Form field blur events
 
