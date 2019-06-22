@@ -188,6 +188,9 @@ export default class Form extends Component {
       );
 
       newFormData = this.getUsedFormData(formData, fieldNames);
+      state = {
+        formData: newFormData,
+      };
     }
 
     if (mustValidate) {
