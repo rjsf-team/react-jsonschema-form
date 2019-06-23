@@ -20,7 +20,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema,
-  toNameSchema,
+  toPathSchema,
   guessType,
 } from "../src/utils";
 
@@ -1868,14 +1868,14 @@ describe("utils", () => {
     });
   });
 
-  describe("toNameSchema", () => {
-    it("should return a nameSchema for root field", () => {
+  describe("toPathSchema", () => {
+    it("should return a pathSchema for root field", () => {
       const schema = { type: "string" };
 
-      expect(toNameSchema(schema)).eql({ $name: "" });
+      expect(toPathSchema(schema)).eql({ $name: "" });
     });
 
-    it("should return a nameSchema for nested objects", () => {
+    it("should return a pathSchema for nested objects", () => {
       const schema = {
         type: "object",
         properties: {
@@ -1888,7 +1888,7 @@ describe("utils", () => {
         },
       };
 
-      expect(toNameSchema(schema)).eql({
+      expect(toPathSchema(schema)).eql({
         $name: "",
         level1: {
           $name: "level1",
@@ -1897,7 +1897,7 @@ describe("utils", () => {
       });
     });
 
-    it("should return a nameSchema for a schema with dependencies", () => {
+    it("should return a pathSchema for a schema with dependencies", () => {
       const schema = {
         type: "object",
         properties: {
@@ -1941,7 +1941,7 @@ describe("utils", () => {
         ],
       };
 
-      expect(toNameSchema(schema, "", schema.definitions, formData)).eql({
+      expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         list: {
           "0": {
@@ -1978,7 +1978,7 @@ describe("utils", () => {
       });
     });
 
-    it("should return a nameSchema for a schema with references", () => {
+    it("should return a pathSchema for a schema with references", () => {
       const schema = {
         definitions: {
           address: {
@@ -2014,7 +2014,7 @@ describe("utils", () => {
         },
       };
 
-      expect(toNameSchema(schema, "", schema.definitions, formData)).eql({
+      expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         billing_address: {
           $name: "billing_address",
@@ -2031,7 +2031,7 @@ describe("utils", () => {
       });
     });
 
-    it("should return a nameSchema for a schema with references in an array item", () => {
+    it("should return a pathSchema for a schema with references in an array item", () => {
       const schema = {
         definitions: {
           address: {
@@ -2077,7 +2077,7 @@ describe("utils", () => {
         ],
       };
 
-      expect(toNameSchema(schema, "", schema.definitions, formData)).eql({
+      expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         address_list: {
           "0": {
@@ -2108,7 +2108,7 @@ describe("utils", () => {
       });
     });
 
-    it("should return an nameSchema with different types of arrays", () => {
+    it("should return an pathSchema with different types of arrays", () => {
       const schema = {
         definitions: {
           Thing: {
@@ -2294,7 +2294,7 @@ describe("utils", () => {
         ],
       };
 
-      expect(toNameSchema(schema, "", schema.definitions, formData)).eql({
+      expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         defaultsAndMinItems: {
           "0": {

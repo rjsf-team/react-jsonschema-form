@@ -839,19 +839,19 @@ export function toIdSchema(
   return idSchema;
 }
 
-export function toNameSchema(schema, name = "", definitions, formData = {}) {
-  const nameSchema = {
+export function toPathSchema(schema, name = "", definitions, formData = {}) {
+  const pathSchema = {
     $name: name,
   };
   if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
-    return toNameSchema(_schema, name, definitions, formData);
+    return toPathSchema(_schema, name, definitions, formData);
   }
   if ("items" in schema) {
     const retVal = {};
     if (Array.isArray(formData) && formData.length > 0) {
       formData.forEach((element, index) => {
-        retVal[`${index}`] = toNameSchema(
+        retVal[`${index}`] = toPathSchema(
           schema.items,
           `${name}.${index}`,
           definitions,
@@ -862,15 +862,15 @@ export function toNameSchema(schema, name = "", definitions, formData = {}) {
     return retVal;
   }
   if (schema.type !== "object") {
-    return nameSchema;
+    return pathSchema;
   }
   for (const property in schema.properties || {}) {
     const field = schema.properties[property];
-    const fieldId = nameSchema.$name
-      ? nameSchema.$name + "." + property
+    const fieldId = pathSchema.$name
+      ? pathSchema.$name + "." + property
       : property;
 
-    nameSchema[property] = toNameSchema(
+    pathSchema[property] = toPathSchema(
       field,
       fieldId,
       definitions,
@@ -879,7 +879,7 @@ export function toNameSchema(schema, name = "", definitions, formData = {}) {
       (formData || {})[property]
     );
   }
-  return nameSchema;
+  return pathSchema;
 }
 
 export function parseDateString(dateString, includeTime = true) {
