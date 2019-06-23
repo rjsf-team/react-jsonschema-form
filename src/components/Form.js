@@ -12,7 +12,7 @@ import {
   setState,
   getDefaultRegistry,
   deepEquals,
-  toNameSchema,
+  toPathSchema,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -77,7 +77,7 @@ export default class Form extends Component {
       formData,
       props.idPrefix
     );
-    const nameSchema = toNameSchema(retrievedSchema, "", definitions, formData);
+    const pathSchema = toPathSchema(retrievedSchema, "", definitions, formData);
     return {
       schema,
       uiSchema,
@@ -87,7 +87,7 @@ export default class Form extends Component {
       errors,
       errorSchema,
       additionalMetaSchemas,
-      nameSchema,
+      pathSchema,
     };
   }
 
@@ -141,7 +141,7 @@ export default class Form extends Component {
     return _pick(formData, fields);
   };
 
-  getFieldNames = (nameSchema, formData) => {
+  getFieldNames = (pathSchema, formData) => {
     const getAllPaths = (_obj, acc = [], paths = []) => {
       Object.keys(_obj).forEach(key => {
         if (typeof _obj[key] === "object") {
@@ -167,7 +167,7 @@ export default class Form extends Component {
       return acc;
     };
 
-    return getAllPaths(nameSchema);
+    return getAllPaths(pathSchema);
   };
 
   onChange = (formData, newErrorSchema) => {
@@ -179,7 +179,7 @@ export default class Form extends Component {
       const newState = this.getStateFromProps(this.props, formData);
 
       const fieldNames = this.getFieldNames(
-        newState.nameSchema,
+        newState.pathSchema,
         newState.formData
       );
 
@@ -220,10 +220,10 @@ export default class Form extends Component {
     event.persist();
     let newFormData = this.state.formData;
 
-    const { nameSchema } = this.state;
+    const { pathSchema } = this.state;
 
     if (this.props.omitExtraData === true) {
-      const fieldNames = this.getFieldNames(nameSchema, this.state.formData);
+      const fieldNames = this.getFieldNames(pathSchema, this.state.formData);
       newFormData = this.getUsedFormData(this.state.formData, fieldNames);
     }
 

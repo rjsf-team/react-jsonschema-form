@@ -946,15 +946,15 @@ describe("Form", () => {
         onSubmit,
       });
 
-      const nameSchema = {
+      const pathSchema = {
         $name: "",
       };
 
-      const fieldNames = comp.getFieldNames(nameSchema, formData);
+      const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames).eql([]);
     });
 
-    it("should get field names from nameSchema", () => {
+    it("should get field names from pathSchema", () => {
       const schema = {};
 
       const formData = {
@@ -979,7 +979,7 @@ describe("Form", () => {
         onSubmit,
       });
 
-      const nameSchema = {
+      const pathSchema = {
         $name: "",
         level1: {
           $name: "level1",
@@ -999,7 +999,7 @@ describe("Form", () => {
         },
       };
 
-      const fieldNames = comp.getFieldNames(nameSchema, formData);
+      const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
         [
           "level1a",
@@ -1010,7 +1010,7 @@ describe("Form", () => {
       );
     });
 
-    it("should get field names from nameSchema with array", () => {
+    it("should get field names from pathSchema with array", () => {
       const schema = {};
 
       const formData = {
@@ -1035,7 +1035,7 @@ describe("Form", () => {
         onSubmit,
       });
 
-      const nameSchema = {
+      const pathSchema = {
         $name: "",
         address_list: {
           "0": {
@@ -1065,7 +1065,7 @@ describe("Form", () => {
         },
       };
 
-      const fieldNames = comp.getFieldNames(nameSchema, formData);
+      const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
         [
           "address_list.0.city",
