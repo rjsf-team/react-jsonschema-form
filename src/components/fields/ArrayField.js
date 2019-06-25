@@ -18,6 +18,7 @@ import {
   toIdSchema,
   getDefaultRegistry,
 } from "../../utils";
+import shortid from "shortid";
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
@@ -174,6 +175,25 @@ function DefaultNormalArrayFieldTemplate(props) {
   );
 }
 
+function generateRowId() {
+  return shortid.generate();
+}
+
+function generateKeyedFormData(formData) {
+  return !Array.isArray(formData)
+    ? []
+    : formData.map(item => {
+        return {
+          key: generateRowId(),
+          item,
+        };
+      });
+}
+
+function keyedToPlainFormData(keyedFormData) {
+  return keyedFormData.map(keyedItem => keyedItem.item);
+}
+
 class ArrayField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -184,6 +204,51 @@ class ArrayField extends Component {
     readonly: false,
     autofocus: false,
   };
+
+  constructor(props) {
+    super(props);
+    const { formData } = props;
+    const keyedFormData = generateKeyedFormData(formData);
+    this.state = {
+      keyedFormData,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const nextFormData = nextProps.formData;
+    const previousKeyedFormData = this.state.keyedFormData;
+    const newKeyedFormData =
+      nextFormData.length === previousKeyedFormData.length
+        ? previousKeyedFormData.map((previousKeyedFormDatum, index) => {
+            return {
+              key: previousKeyedFormDatum.key,
+              item: nextFormData[index],
+            };
+          })
+        : generateKeyedFormData(nextFormData);
+    this.setState({
+      keyedFormData: newKeyedFormData,
+    });
+  }
+
+  /*
+  // React 16.3 replaces componentWillReceiveProps with getDerivedStateFromProps
+  //
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const nextFormData = nextProps.formData;
+    const previousKeyedFormData = prevState.keyedFormData;
+    const newKeyedFormData = (nextFormData.length === previousKeyedFormData.length) ?
+      previousKeyedFormData.map((previousKeyedFormDatum, index) => {
+        return {
+          key: previousKeyedFormDatum.key,
+          item: nextFormData[index]
+        };
+      }) : generateKeyedFormData(nextFormData);
+    return {
+      keyedFormData: newKeyedFormData
+    };
+  }
+  */
 
   get itemTitle() {
     const { schema } = this.props;
@@ -217,16 +282,29 @@ class ArrayField extends Component {
 
   onAddClick = event => {
     event.preventDefault();
-    const { schema, formData, registry = getDefaultRegistry() } = this.props;
+    const { schema, registry = getDefaultRegistry() } = this.props;
     const { definitions } = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    this.props.onChange([
-      ...formData,
-      getDefaultFormState(itemSchema, undefined, definitions),
-    ]);
+    const newFormDataRow = getDefaultFormState(
+      itemSchema,
+      undefined,
+      definitions
+    );
+    const newKeyedFormData = [
+      ...this.state.keyedFormData,
+      {
+        key: generateRowId(),
+        item: newFormDataRow,
+      },
+    ];
+
+    this.setState({
+      keyedFormData: newKeyedFormData,
+    });
+    this.props.onChange(keyedToPlainFormData(newKeyedFormData));
   };
 
   onDropIndexClick = index => {
@@ -234,7 +312,8 @@ class ArrayField extends Component {
       if (event) {
         event.preventDefault();
       }
-      const { formData, onChange } = this.props;
+      const { onChange } = this.props;
+      const { keyedFormData } = this.state;
       // refs #195: revalidate to ensure properly reindexing errors
       let newErrorSchema;
       if (this.props.errorSchema) {
@@ -249,7 +328,11 @@ class ArrayField extends Component {
           }
         }
       }
-      onChange(formData.filter((_, i) => i !== index), newErrorSchema);
+      const newKeyedFormData = keyedFormData.filter((_, i) => i !== index);
+      this.setState({
+        keyedFormData: newKeyedFormData,
+      });
+      onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema);
     };
   };
 
@@ -259,7 +342,7 @@ class ArrayField extends Component {
         event.preventDefault();
         event.target.blur();
       }
-      const { formData, onChange } = this.props;
+      const { onChange } = this.props;
       let newErrorSchema;
       if (this.props.errorSchema) {
         newErrorSchema = {};
@@ -275,18 +358,22 @@ class ArrayField extends Component {
         }
       }
 
+      const { keyedFormData } = this.state;
       function reOrderArray() {
         // Copy item
-        let newFormData = formData.slice();
+        let _newKeyedFormData = keyedFormData.slice();
 
         // Moves item from index to newIndex
-        newFormData.splice(index, 1);
-        newFormData.splice(newIndex, 0, formData[index]);
+        _newKeyedFormData.splice(index, 1);
+        _newKeyedFormData.splice(newIndex, 0, keyedFormData[index]);
 
-        return newFormData;
+        return _newKeyedFormData;
       }
-
-      onChange(reOrderArray(), newErrorSchema);
+      const newKeyedFormData = reOrderArray();
+      this.setState({
+        keyedFormData: newKeyedFormData,
+      });
+      onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema);
     };
   };
 
@@ -367,7 +454,8 @@ class ArrayField extends Component {
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const arrayProps = {
       canAdd: this.canAddItem(formData),
-      items: formData.map((item, index) => {
+      items: this.state.keyedFormData.map((keyedItem, index) => {
+        const { key, item } = keyedItem;
         const itemSchema = retrieveSchema(schema.items, definitions, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
@@ -379,6 +467,7 @@ class ArrayField extends Component {
           idPrefix
         );
         return this.renderArrayFieldItem({
+          key,
           index,
           canMoveUp: index > 0,
           canMoveDown: index < formData.length - 1,
@@ -597,6 +686,7 @@ class ArrayField extends Component {
 
   renderArrayFieldItem(props) {
     const {
+      key,
       index,
       canRemove = true,
       canMoveUp = true,
@@ -658,6 +748,7 @@ class ArrayField extends Component {
       hasMoveDown: has.moveDown,
       hasRemove: has.remove,
       index,
+      key,
       onDropIndexClick: this.onDropIndexClick,
       onReorderClick: this.onReorderClick,
       readonly,
