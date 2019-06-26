@@ -282,7 +282,7 @@ class ArrayField extends Component {
 
   onAddClick = event => {
     event.preventDefault();
-    const { schema, registry = getDefaultRegistry() } = this.props;
+    const { schema, registry = getDefaultRegistry(), onChange } = this.props;
     const { definitions } = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
@@ -301,10 +301,12 @@ class ArrayField extends Component {
       },
     ];
 
-    this.setState({
-      keyedFormData: newKeyedFormData,
-    });
-    this.props.onChange(keyedToPlainFormData(newKeyedFormData));
+    this.setState(
+      {
+        keyedFormData: newKeyedFormData,
+      },
+      () => onChange(keyedToPlainFormData(newKeyedFormData))
+    );
   };
 
   onDropIndexClick = index => {
@@ -329,10 +331,12 @@ class ArrayField extends Component {
         }
       }
       const newKeyedFormData = keyedFormData.filter((_, i) => i !== index);
-      this.setState({
-        keyedFormData: newKeyedFormData,
-      });
-      onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema);
+      this.setState(
+        {
+          keyedFormData: newKeyedFormData,
+        },
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
+      );
     };
   };
 
@@ -370,10 +374,12 @@ class ArrayField extends Component {
         return _newKeyedFormData;
       }
       const newKeyedFormData = reOrderArray();
-      this.setState({
-        keyedFormData: newKeyedFormData,
-      });
-      onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema);
+      this.setState(
+        {
+          keyedFormData: newKeyedFormData,
+        },
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
+      );
     };
   };
 
