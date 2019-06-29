@@ -175,11 +175,7 @@ export default class Form extends Component {
     let state = { formData };
     let newFormData = formData;
 
-    if (
-      this.props.omitExtraData === true &&
-      (this.props.liveValidate || this.props.liveOmit) &&
-      this.props.liveOmit !== false
-    ) {
+    if (this.props.omitExtraData === true && this.props.liveOmit === true) {
       const newState = this.getStateFromProps(this.props, formData);
 
       const fieldNames = this.getFieldNames(
