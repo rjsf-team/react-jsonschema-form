@@ -294,6 +294,7 @@ export default class Form extends Component {
       acceptcharset,
       noHtml5Validate,
       disabled,
+      formContext,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
@@ -323,6 +324,7 @@ export default class Form extends Component {
           errorSchema={errorSchema}
           idSchema={idSchema}
           idPrefix={idPrefix}
+          formContext={formContext}
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}
