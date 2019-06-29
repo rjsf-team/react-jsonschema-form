@@ -1110,7 +1110,7 @@ describe("Form", () => {
       });
     });
 
-    it("should call getUsedFormData when the omitExtraData prop is true and liveValidate is true", () => {
+    it("should call getUsedFormData when the omitExtraData prop is true and liveOmit is true", () => {
       const schema = {
         type: "object",
         properties: {
@@ -1124,13 +1124,13 @@ describe("Form", () => {
       };
       const onChange = sandbox.spy();
       const omitExtraData = true;
-      const liveValidate = true;
+      const liveOmit = true;
       const { node, comp } = createFormComponent({
         schema,
         formData,
         onChange,
         omitExtraData,
-        liveValidate,
+        liveOmit,
       });
 
       sandbox.stub(comp, "getUsedFormData").returns({
