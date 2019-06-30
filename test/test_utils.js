@@ -2,7 +2,7 @@
 
 import React from "react";
 import sinon from "sinon";
-import { renderIntoDocument } from "react-addons-test-utils";
+import { renderIntoDocument } from "react-dom/test-utils";
 import { findDOMNode, render } from "react-dom";
 
 import Form from "../src";
