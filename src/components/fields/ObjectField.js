@@ -117,7 +117,7 @@ class ObjectField extends Component {
   getAvailableKey = (preferredKey, formData) => {
     var index = 0;
     var newKey = preferredKey;
-    while (formData.hasOwnProperty(newKey)) {
+    while (Object.prototype.hasOwnProperty.call(formData, newKey)) {
       newKey = `${preferredKey}-${++index}`;
     }
     return newKey;
@@ -219,9 +219,10 @@ class ObjectField extends Component {
       TitleField,
       DescriptionField,
       properties: orderedProperties.map(name => {
-        const addedByAdditionalProperties = schema.properties[
-          name
-        ].hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+        const addedByAdditionalProperties = Object.prototype.hasOwnProperty.call(
+          schema.properties[name],
+          ADDITIONAL_PROPERTY_FLAG
+        );
         return {
           content: (
             <SchemaField

@@ -600,7 +600,8 @@ describe("ObjectField", () => {
       const textNode = node.querySelector("#root_first-key");
       Simulate.blur(textNode);
 
-      expect(comp.state.formData.hasOwnProperty("first")).to.be.true;
+      expect(Object.prototype.hasOwnProperty.call(comp.state.formData, "first"))
+        .to.be.true;
     });
 
     it("should continue incrementing suffix to formData key until that key name is unique after a key input collision", () => {

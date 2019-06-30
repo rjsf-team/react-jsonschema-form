@@ -218,7 +218,8 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    expect(comp.state.formData.hasOwnProperty("foo")).to.be.false;
+    expect(Object.prototype.hasOwnProperty.call(comp.state.formData, "foo")).to
+      .be.false;
     expect(comp.state.formData.buzz).eql("Lorem ipsum dolor sit amet");
   });
 

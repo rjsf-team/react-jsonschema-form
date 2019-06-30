@@ -185,7 +185,10 @@ function WrapIfAdditional(props) {
     schema,
   } = props;
   const keyLabel = `${label} Key`; // i18n ?
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const additional = Object.prototype.hasOwnProperty.call(
+    schema,
+    ADDITIONAL_PROPERTY_FLAG
+  );
 
   if (!additional) {
     return <div className={classNames}>{props.children}</div>;

@@ -72,7 +72,7 @@ class AnyOfField extends Component {
       for (const option of optionsToDiscard) {
         if (option.properties) {
           for (const key in option.properties) {
-            if (newFormData.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(newFormData, key)) {
               delete newFormData[key];
             }
           }

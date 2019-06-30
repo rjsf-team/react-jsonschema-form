@@ -111,16 +111,16 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     throw new Error(`Unsupported widget definition: ${typeof widget}`);
   }
 
-  if (registeredWidgets.hasOwnProperty(widget)) {
+  if (Object.prototype.hasOwnProperty.call(registeredWidgets, widget)) {
     const registeredWidget = registeredWidgets[widget];
     return getWidget(schema, registeredWidget, registeredWidgets);
   }
 
-  if (!widgetMap.hasOwnProperty(type)) {
+  if (!Object.prototype.hasOwnProperty.call(widgetMap, type)) {
     throw new Error(`No widget for type "${type}"`);
   }
 
-  if (widgetMap[type].hasOwnProperty(widget)) {
+  if (Object.prototype.hasOwnProperty.call(widgetMap[type], widget)) {
     const registeredWidget = registeredWidgets[widgetMap[type][widget]];
     return getWidget(schema, registeredWidget, registeredWidgets);
   }
@@ -284,7 +284,11 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1 ? obj1[key] : {},
       right = obj2[key];
-    if (obj1 && obj1.hasOwnProperty(key) && isObject(right)) {
+    if (
+      obj1 &&
+      Object.prototype.hasOwnProperty.call(obj1, key) &&
+      isObject(right)
+    ) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
       acc[key] = left.concat(right);
@@ -376,14 +380,14 @@ export function orderProperties(properties, order) {
 export function isConstant(schema) {
   return (
     (Array.isArray(schema.enum) && schema.enum.length === 1) ||
-    schema.hasOwnProperty("const")
+    Object.prototype.hasOwnProperty.call(schema, "const")
   );
 }
 
 export function toConstant(schema) {
   if (Array.isArray(schema.enum) && schema.enum.length === 1) {
     return schema.enum[0];
-  } else if (schema.hasOwnProperty("const")) {
+  } else if (Object.prototype.hasOwnProperty.call(schema, "const")) {
     return schema.const;
   } else {
     throw new Error("schema cannot be inferred as a constant");
@@ -457,10 +461,10 @@ function findSchemaDefinition($ref, definitions = {}) {
     let current = definitions;
     for (let part of parts) {
       part = part.replace(/~1/g, "/").replace(/~0/g, "~");
-      while (current.hasOwnProperty("$ref")) {
+      while (Object.prototype.hasOwnProperty.call(current, "$ref")) {
         current = findSchemaDefinition(current.$ref, definitions);
       }
-      if (current.hasOwnProperty(part)) {
+      if (Object.prototype.hasOwnProperty.call(current, part)) {
         current = current[part];
       } else {
         // No matching definition found, that's an error (bogus schema?)
@@ -506,11 +510,12 @@ export function stubExistingAdditionalProperties(
     properties: { ...schema.properties },
   };
   Object.keys(formData).forEach(key => {
-    if (schema.properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(schema.properties, key)) {
       // No need to stub, our schema already has the property
       return;
     }
-    const additionalProperties = schema.additionalProperties.hasOwnProperty(
+    const additionalProperties = Object.prototype.hasOwnProperty.call(
+      schema.additionalProperties,
       "type"
     )
       ? { ...schema.additionalProperties }
@@ -524,9 +529,9 @@ export function stubExistingAdditionalProperties(
 }
 
 export function resolveSchema(schema, definitions = {}, formData = {}) {
-  if (schema.hasOwnProperty("$ref")) {
+  if (Object.prototype.hasOwnProperty.call(schema, "$ref")) {
     return resolveReference(schema, definitions, formData);
-  } else if (schema.hasOwnProperty("dependencies")) {
+  } else if (Object.prototype.hasOwnProperty.call(schema, "dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return retrieveSchema(resolvedSchema, definitions, formData);
   } else {
@@ -551,8 +556,10 @@ function resolveReference(schema, definitions, formData) {
 export function retrieveSchema(schema, definitions = {}, formData = {}) {
   const resolvedSchema = resolveSchema(schema, definitions, formData);
   const hasAdditionalProperties =
-    resolvedSchema.hasOwnProperty("additionalProperties") &&
-    resolvedSchema.additionalProperties !== false;
+    Object.prototype.hasOwnProperty.call(
+      resolvedSchema,
+      "additionalProperties"
+    ) && resolvedSchema.additionalProperties !== false;
   if (hasAdditionalProperties) {
     return stubExistingAdditionalProperties(
       resolvedSchema,
@@ -659,7 +666,7 @@ function withDependentSchema(
   }
   // Resolve $refs inside oneOf.
   const resolvedOneOf = oneOf.map(subschema =>
-    subschema.hasOwnProperty("$ref")
+    Object.prototype.hasOwnProperty.call(subschema, "$ref")
       ? resolveReference(subschema, definitions, formData)
       : subschema
   );
