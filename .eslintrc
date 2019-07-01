@@ -18,7 +18,8 @@
         }],
         "no-console": [0],
         "object-curly-spacing": [2, "always"],
-        "keyword-spacing": ["error"]
+        "keyword-spacing": ["error"],
+        "no-prototype-builtins": ["error"]
     },
     "env": {
         "es6": true,
