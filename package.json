@@ -51,6 +51,7 @@
     "lodash.topath": "^4.5.2",
     "prop-types": "^15.5.8",
     "react-is": "^16.8.4",
+    "react-lifecycles-compat": "^3.0.4",
     "shortid": "^2.2.14"
   },
   "devDependencies": {

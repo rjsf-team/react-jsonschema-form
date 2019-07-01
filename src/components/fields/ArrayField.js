@@ -1,6 +1,7 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
+import { polyfill } from "react-lifecycles-compat";
 import includes from "core-js/library/fn/array/includes";
 import * as types from "../../types";
 
@@ -217,9 +218,9 @@ class ArrayField extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     const nextFormData = nextProps.formData;
-    const previousKeyedFormData = this.state.keyedFormData;
+    const previousKeyedFormData = prevState.keyedFormData;
     const newKeyedFormData =
       nextFormData.length === previousKeyedFormData.length
         ? previousKeyedFormData.map((previousKeyedFormDatum, index) => {
@@ -229,29 +230,10 @@ class ArrayField extends Component {
             };
           })
         : generateKeyedFormData(nextFormData);
-    this.setState({
-      keyedFormData: newKeyedFormData,
-    });
-  }
-
-  /*
-  // React 16.3 replaces componentWillReceiveProps with getDerivedStateFromProps
-  //
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const nextFormData = nextProps.formData;
-    const previousKeyedFormData = prevState.keyedFormData;
-    const newKeyedFormData = (nextFormData.length === previousKeyedFormData.length) ?
-      previousKeyedFormData.map((previousKeyedFormDatum, index) => {
-        return {
-          key: previousKeyedFormDatum.key,
-          item: nextFormData[index]
-        };
-      }) : generateKeyedFormData(nextFormData);
     return {
-      keyedFormData: newKeyedFormData
+      keyedFormData: newKeyedFormData,
     };
   }
-  */
 
   get itemTitle() {
     const { schema } = this.props;
@@ -770,5 +752,7 @@ class ArrayField extends Component {
 if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = types.fieldProps;
 }
+
+polyfill(ArrayField);
 
 export default ArrayField;
