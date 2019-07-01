@@ -45,7 +45,10 @@ function DefaultArrayItem(props) {
     fontWeight: "bold",
   };
   return (
-    <div key={props.index} className={props.className}>
+    <div
+      key={props.key}
+      id={`array-item-${props.key}`}
+      className={props.className}>
       <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
         {props.children}
       </div>
@@ -639,7 +642,8 @@ class ArrayField extends Component {
       disabled,
       idSchema,
       formData,
-      items: items.map((item, index) => {
+      items: this.state.keyedFormData.map((keyedItem, index) => {
+        const { key, item } = keyedItem;
         const additional = index >= itemSchemas.length;
         const itemSchema = additional
           ? retrieveSchema(schema.additionalItems, definitions, item)
@@ -660,6 +664,7 @@ class ArrayField extends Component {
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
 
         return this.renderArrayFieldItem({
+          key,
           index,
           canRemove: additional,
           canMoveUp: index >= itemSchemas.length + 1,
