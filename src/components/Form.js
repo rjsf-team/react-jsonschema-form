@@ -140,8 +140,8 @@ export default class Form extends Component {
       };
     }
 
-    this.props.onChange && this.props.onChange(state);
     this.setState(state);
+    this.props.onChange && this.props.onChange(state);
   };
 
   onBlur = (...args) => {
