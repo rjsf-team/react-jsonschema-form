@@ -2406,4 +2406,12 @@ describe("Form", () => {
       });
     });
   });
+
+  describe("Changing the tagName", () => {
+    it("should render the component using the custom tag name", () => {
+      const tagName = "SPAN";
+      const { node } = createFormComponent({ schema: {}, tagName });
+      expect(node.tagName).eql(tagName);
+    });
+  });
 });
