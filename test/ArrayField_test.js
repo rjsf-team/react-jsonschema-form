@@ -221,12 +221,15 @@ describe("ArrayField", () => {
     });
 
     it("should assign new keys/ids when clicking the add button", () => {
-      const { node } = createFormComponent({ schema });
+      const { node } = createFormComponent({
+        schema,
+        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+      });
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
-      expect(node.querySelector(".array-item").id.startsWith("array-item-")).to
-        .be.true;
+      expect(node.querySelector(".array-item").hasAttribute(ArrayKeyDataAttr))
+        .to.be.true;
     });
 
     it("should not provide an add button if length equals maxItems", () => {
