@@ -223,10 +223,20 @@ class ArrayField extends Component {
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    this.props.onChange([
-      ...formData,
-      getDefaultFormState(itemSchema, undefined, definitions),
-    ]);
+    if (formData) {
+      this.props.onChange([
+        ...formData,
+        getDefaultFormState(
+          itemSchema,
+          itemSchema.type === "array" ? [] : undefined,
+          definitions
+        ),
+      ]);
+    } else {
+      this.props.onChange([
+        getDefaultFormState(itemSchema, undefined, definitions),
+      ]);
+    }
   };
 
   onDropIndexClick = index => {
