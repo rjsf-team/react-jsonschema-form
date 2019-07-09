@@ -359,6 +359,23 @@ describe("utils", () => {
         });
       });
 
+      it("should populate defaults for oneOf when 'type': 'object' is missing", () => {
+        const schema = {
+          type: "object",
+          oneOf: [
+            {
+              properties: { name: { type: "string", default: "a" } },
+            },
+            {
+              properties: { id: { type: "number", default: 13 } },
+            },
+          ],
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: "a",
+        });
+      });
+
       it("should populate nested default values for oneOf", () => {
         const schema = {
           type: "object",
