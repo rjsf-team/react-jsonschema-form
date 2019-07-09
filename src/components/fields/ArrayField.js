@@ -46,10 +46,7 @@ function DefaultArrayItem(props) {
     fontWeight: "bold",
   };
   return (
-    <div
-      key={props.key}
-      id={`array-item-${props.key}`}
-      className={props.className}>
+    <div key={props.key} className={props.className}>
       <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
         {props.children}
       </div>

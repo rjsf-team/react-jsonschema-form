@@ -5,6 +5,62 @@ import { Simulate } from "react-addons-test-utils";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 
+const ArrayKeyDataAttr = "data-rjsf-itemkey";
+const ExposedArrayKeyTemplate = function(props) {
+  return (
+    <div className="array">
+      {props.items &&
+        props.items.map(element => (
+          <div
+            key={element.key}
+            className="array-item"
+            data-rjsf-itemkey={element.key}>
+            <div>{element.children}</div>
+            {(element.hasMoveUp || element.hasMoveDown) && (
+              <button
+                className="array-item-move-down"
+                onClick={element.onReorderClick(
+                  element.index,
+                  element.index + 1
+                )}>
+                Down
+              </button>
+            )}
+            {(element.hasMoveUp || element.hasMoveDown) && (
+              <button
+                className="array-item-move-up"
+                onClick={element.onReorderClick(
+                  element.index,
+                  element.index - 1
+                )}>
+                Up
+              </button>
+            )}
+            {element.hasRemove && (
+              <button
+                className="array-item-remove"
+                onClick={element.onDropIndexClick(element.index)}>
+                Remove
+              </button>
+            )}
+            <button onClick={element.onDropIndexClick(element.index)}>
+              Delete
+            </button>
+            <hr />
+          </div>
+        ))}
+
+      {props.canAdd && (
+        <div className="array-item-add">
+          <button onClick={props.onAddClick} type="button">
+            Add New
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 describe("ArrayField", () => {
   let sandbox;
   const CustomComponent = props => {
@@ -195,23 +251,27 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
         formData: ["foo"],
+        ArrayFieldTemplate: ExposedArrayKeyTemplate,
       });
 
       const startRows = node.querySelectorAll(".array-item");
-      const startRow1_id = startRows[0].id;
-      const startRow2_id = startRows[1] ? startRows[1].id : undefined;
+      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
+      const startRow2_key = startRows[1]
+        ? startRows[1].getAttribute(ArrayKeyDataAttr)
+        : undefined;
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
       const endRows = node.querySelectorAll(".array-item");
-      const endRow1_id = endRows[0].id;
-      const endRow2_id = endRows[1].id;
+      const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
+      const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
 
-      expect(startRow1_id).to.equal(endRow1_id);
-      expect(startRow2_id).to.not.equal(endRow2_id);
+      expect(startRow1_key).to.equal(endRow1_key);
+      expect(startRow2_key).to.not.equal(endRow2_key);
 
-      expect(startRow2_id).to.be.undefined;
-      expect(endRow2_id.startsWith("array-item-")).to.be.true;
+      expect(startRow2_key).to.be.undefined;
+      expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
     it("should not provide an add button if addable is expliclty false regardless maxItems value", () => {
@@ -317,46 +377,56 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
+        ArrayFieldTemplate: ExposedArrayKeyTemplate,
       });
       const moveDownBtns = node.querySelectorAll(".array-item-move-down");
       const startRows = node.querySelectorAll(".array-item");
-      const startRow1_id = startRows[0].id;
-      const startRow2_id = startRows[1].id;
-      const startRow3_id = startRows[2].id;
+      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
+      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
+      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
       Simulate.click(moveDownBtns[0]);
 
       const endRows = node.querySelectorAll(".array-item");
-      const endRow1_id = endRows[0].id;
-      const endRow2_id = endRows[1].id;
-      const endRow3_id = endRows[2].id;
+      const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
+      const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
+      const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
 
-      expect(startRow1_id).to.equal(endRow2_id);
-      expect(startRow2_id).to.equal(endRow1_id);
-      expect(startRow3_id).to.equal(endRow3_id);
+      expect(startRow1_key).to.equal(endRow2_key);
+      expect(startRow2_key).to.equal(endRow1_key);
+      expect(startRow3_key).to.equal(endRow3_key);
+
+      expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[2].hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
     it("should retain row keys/ids when moving up", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
+        ArrayFieldTemplate: ExposedArrayKeyTemplate,
       });
       const moveUpBtns = node.querySelectorAll(".array-item-move-up");
       const startRows = node.querySelectorAll(".array-item");
-      const startRow1_id = startRows[0].id;
-      const startRow2_id = startRows[1].id;
-      const startRow3_id = startRows[2].id;
+      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
+      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
+      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
       Simulate.click(moveUpBtns[2]);
 
       const endRows = node.querySelectorAll(".array-item");
-      const endRow1_id = endRows[0].id;
-      const endRow2_id = endRows[1].id;
-      const endRow3_id = endRows[2].id;
+      const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
+      const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
+      const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
 
-      expect(startRow1_id).to.equal(endRow1_id);
-      expect(startRow2_id).to.equal(endRow3_id);
-      expect(startRow3_id).to.equal(endRow2_id);
+      expect(startRow1_key).to.equal(endRow1_key);
+      expect(startRow2_key).to.equal(endRow3_key);
+      expect(startRow3_key).to.equal(endRow2_key);
+
+      expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[2].hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
     it("should move from first to last in the list", () => {
@@ -375,7 +445,7 @@ describe("ArrayField", () => {
         return (
           <div
             key={props.key}
-            id={`array-item-${props.key}`}
+            data-rjsf-itemkey={props.key}
             className={`array-item item-${props.index}`}>
             {props.children}
             {buttons}
@@ -398,9 +468,9 @@ describe("ArrayField", () => {
       });
 
       const startRows = node.querySelectorAll(".array-item");
-      const startRow1_id = startRows[0].id;
-      const startRow2_id = startRows[1].id;
-      const startRow3_id = startRows[2].id;
+      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
+      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
+      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
       const button = node.querySelector(".item-0 .array-item-move-to-2");
       Simulate.click(button);
@@ -411,15 +481,17 @@ describe("ArrayField", () => {
       expect(inputs[2].value).eql("foo");
 
       const endRows = node.querySelectorAll(".array-item");
-      const endRow1_id = endRows[0].id;
-      const endRow2_id = endRows[1].id;
-      const endRow3_id = endRows[2].id;
+      const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
+      const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
+      const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
 
-      expect(startRow1_id).to.equal(endRow3_id);
-      expect(startRow2_id).to.equal(endRow1_id);
-      expect(startRow3_id).to.equal(endRow2_id);
+      expect(startRow1_key).to.equal(endRow3_key);
+      expect(startRow2_key).to.equal(endRow1_key);
+      expect(startRow3_key).to.equal(endRow2_key);
 
-      expect(endRow2_id.startsWith("array-item-")).to.be.true;
+      expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[2].hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
     it("should disable move buttons on the ends of the list", () => {
@@ -467,18 +539,20 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar"],
+        ArrayFieldTemplate: ExposedArrayKeyTemplate,
       });
 
       const startRows = node.querySelectorAll(".array-item");
-      const startRow2_id = startRows[1].id;
+      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
 
       const dropBtns = node.querySelectorAll(".array-item-remove");
       Simulate.click(dropBtns[0]);
 
       const endRows = node.querySelectorAll(".array-item");
-      const endRow1_id = endRows[0].id;
+      const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
 
-      expect(startRow2_id).to.equal(endRow1_id);
+      expect(startRow2_key).to.equal(endRow1_key);
+      expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
     it("should not show remove button if removable is false", () => {
@@ -1364,13 +1438,16 @@ describe("ArrayField", () => {
       const { comp, node } = createFormComponent({
         schema: schemaAdditional,
         formData: [1, 2, "foo"],
+        ArrayFieldTemplate: ExposedArrayKeyTemplate,
       });
 
       const startRows = node.querySelectorAll(".array-item");
-      const startRow1_id = startRows[0].id;
-      const startRow2_id = startRows[1].id;
-      const startRow3_id = startRows[2].id;
-      const startRow4_id = startRows[3] ? startRows[3].id : undefined;
+      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
+      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
+      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
+      const startRow4_key = startRows[3]
+        ? startRows[3].getAttribute(ArrayKeyDataAttr)
+        : undefined;
 
       it("should add a field when clicking add button", () => {
         const addBtn = node.querySelector(".array-item-add button");
@@ -1383,18 +1460,21 @@ describe("ArrayField", () => {
 
       it("should retain existing row keys/ids when adding additional items", () => {
         const endRows = node.querySelectorAll(".array-item");
-        const endRow1_id = endRows[0].id;
-        const endRow2_id = endRows[1].id;
-        const endRow3_id = endRows[2].id;
-        const endRow4_id = endRows[3].id;
+        const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
+        const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
+        const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
+        const endRow4_key = endRows[3].getAttribute(ArrayKeyDataAttr);
 
-        expect(startRow1_id).to.equal(endRow1_id);
-        expect(startRow2_id).to.equal(endRow2_id);
-        expect(startRow3_id).to.equal(endRow3_id);
+        expect(startRow1_key).to.equal(endRow1_key);
+        expect(startRow2_key).to.equal(endRow2_key);
+        expect(startRow3_key).to.equal(endRow3_key);
 
-        expect(startRow4_id).to.not.equal(endRow4_id);
-        expect(startRow4_id).to.be.undefined;
-        expect(endRow4_id.startsWith("array-item-")).to.be.true;
+        expect(startRow4_key).to.not.equal(endRow4_key);
+        expect(startRow4_key).to.be.undefined;
+        expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+        expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+        expect(endRows[2].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+        expect(endRows[3].hasAttribute(ArrayKeyDataAttr)).to.be.true;
       });
 
       it("should change the state when changing input value", () => {
