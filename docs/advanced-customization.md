@@ -527,6 +527,27 @@ render((
 ), document.getElementById("app"));
 ```
 
+The default widgets you can overwrite are:
+
+ - `AltDateTimeWidget`
+ - `AltDateWidget`
+ - `CheckboxesWidget`
+ - `CheckboxWidget`
+ - `ColorWidget`
+ - `DateTimeWidget`
+ - `DateWidget`
+ - `EmailWidget`
+ - `FileWidget`
+ - `HiddenWidget`
+ - `PasswordWidget`
+ - `RadioWidget`
+ - `RangeWidget`
+ - `SelectWidget`
+ - `TextareaWidget`
+ - `TextWidget`
+ - `UpDownWidget`
+ - `URLWidget`
+
 ### Custom titles
 
 You can provide your own implementation of the `TitleField` base React component for rendering any title. This is useful when you want to augment how titles are handled.
