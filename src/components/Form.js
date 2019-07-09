@@ -285,6 +285,7 @@ export default class Form extends Component {
       id,
       idPrefix,
       className,
+      tagName,
       name,
       method,
       target,
@@ -300,9 +301,10 @@ export default class Form extends Component {
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
+    const FormTag = tagName ? tagName : "form";
 
     return (
-      <form
+      <FormTag
         className={className ? className : "rjsf"}
         id={id}
         name={name}
@@ -342,7 +344,7 @@ export default class Form extends Component {
             </button>
           </div>
         )}
-      </form>
+      </FormTag>
     );
   }
 }
@@ -366,6 +368,7 @@ if (process.env.NODE_ENV !== "production") {
     onSubmit: PropTypes.func,
     id: PropTypes.string,
     className: PropTypes.string,
+    tagName: PropTypes.string,
     name: PropTypes.string,
     method: PropTypes.string,
     target: PropTypes.string,
