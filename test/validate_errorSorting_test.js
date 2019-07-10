@@ -592,7 +592,7 @@ describe("Validation Error Sorting", () => {
                       plugh: {
                         type: "array",
                         items: {
-                          type: "array",
+                          type: "object",
                           properties: {
                             grault: {
                               type: "string",
@@ -1355,8 +1355,8 @@ describe("Validation Error Sorting", () => {
             };
             const formData = {
               foo: {
-                wibble: "",
                 wobble: "",
+                wibble: "",
               },
               bar: "",
             };
@@ -1369,7 +1369,7 @@ describe("Validation Error Sorting", () => {
               null,
               uiSchema
             );
-            expectOrder(result.errors, [".foo.wibble", ".foo.wobble", ".bar"]);
+            expectOrder(result.errors, [".foo.wobble", ".foo.wibble", ".bar"]);
           });
         });
       });

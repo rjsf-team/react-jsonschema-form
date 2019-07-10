@@ -221,7 +221,6 @@ function orderErrorsByUiSchema(_errors, _uiSchema) {
     return [];
   }
   const propertiesAndTheirErrors = accumulatePropertyErrors(_errors);
-  console.log(`out`, propertiesAndTheirErrors, _errors);
 
   const orderedErrors = [];
 
