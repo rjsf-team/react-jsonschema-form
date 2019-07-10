@@ -3,6 +3,8 @@ import sinon from "sinon";
 import React from "react";
 import { renderIntoDocument, Simulate } from "react-addons-test-utils";
 import { findDOMNode } from "react-dom";
+import { Portal } from "react-portal";
+import { createRef } from "create-react-ref";
 
 import Form from "../src";
 import {
@@ -2404,6 +2406,57 @@ describe("Form", () => {
           ],
         },
       });
+    });
+  });
+
+  describe("Nested forms", () => {
+    it("should call provided submit handler with form state", () => {
+      const onSubmit = sandbox.spy();
+      let innerRef;
+
+      class ArrayTemplateWithForm extends React.Component {
+        constructor(props) {
+          super(props);
+          innerRef = createRef();
+        }
+
+        render() {
+          const innerFormProps = {
+            schema: {},
+            onSubmit,
+          };
+
+          return (
+            <Portal>
+              <div className="array" ref={innerRef}>
+                <Form {...innerFormProps}>
+                  <button className="array-form-submit" type="submit">
+                    Submit
+                  </button>
+                </Form>
+              </div>
+            </Portal>
+          );
+        }
+      }
+
+      const outerFormProps = {
+        schema: {
+          type: "array",
+          title: "my list",
+          description: "my description",
+          items: { type: "string" },
+        },
+        formData: ["foo", "bar"],
+        ArrayFieldTemplate: ArrayTemplateWithForm,
+        onSubmit,
+      };
+      createFormComponent(outerFormProps);
+      const arrayForm = innerRef.current.querySelector("form");
+      const arraySubmit = arrayForm.querySelector(".array-form-submit");
+
+      arraySubmit.click();
+      sinon.assert.calledOnce(onSubmit);
     });
   });
 });
