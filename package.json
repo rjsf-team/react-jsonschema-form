@@ -50,7 +50,9 @@
     "lodash.pick": "^4.4.0",
     "lodash.topath": "^4.5.2",
     "prop-types": "^15.5.8",
-    "react-is": "^16.8.4"
+    "react-is": "^16.8.4",
+    "react-lifecycles-compat": "^3.0.4",
+    "shortid": "^2.2.14"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -90,7 +92,6 @@
     "nyc": "^13.2.0",
     "prettier": "^1.15.1",
     "react": "^15.5.0",
-    "react-addons-test-utils": "^15.3.2",
     "react-codemirror2": "^4.1.0",
     "react-dom": "^15.3.2",
     "react-portal": "^4.2.0",

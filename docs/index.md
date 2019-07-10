@@ -118,7 +118,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-> Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, then set the `omitExtraData` prop to `true`.
+> Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, then set the `omitExtraData` prop to `true`. Set the `liveOmit` prop to true in order to remove extra data upon form data change.
 
 #### Form error event handler
 
@@ -137,7 +137,7 @@ render((
 
 If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
 
-> Note: If `omitExtraData` and `liveValidate` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called.
+> Note: If `omitExtraData` and `liveOmit` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called.
 
 #### Form field blur events
 

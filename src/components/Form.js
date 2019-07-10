@@ -175,7 +175,7 @@ export default class Form extends Component {
     let state = { formData };
     let newFormData = formData;
 
-    if (this.props.omitExtraData === true && this.props.liveValidate) {
+    if (this.props.omitExtraData === true && this.props.liveOmit === true) {
       const newState = this.getStateFromProps(this.props, formData);
 
       const fieldNames = this.getFieldNames(
@@ -184,6 +184,9 @@ export default class Form extends Component {
       );
 
       newFormData = this.getUsedFormData(formData, fieldNames);
+      state = {
+        formData: newFormData,
+      };
     }
 
     if (mustValidate) {
@@ -286,6 +289,7 @@ export default class Form extends Component {
       id,
       idPrefix,
       className,
+      tagName,
       name,
       method,
       target,
@@ -295,14 +299,16 @@ export default class Form extends Component {
       acceptcharset,
       noHtml5Validate,
       disabled,
+      formContext,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
+    const FormTag = tagName ? tagName : "form";
 
     return (
-      <form
+      <FormTag
         className={className ? className : "rjsf"}
         id={id}
         name={name}
@@ -324,6 +330,7 @@ export default class Form extends Component {
           errorSchema={errorSchema}
           idSchema={idSchema}
           idPrefix={idPrefix}
+          formContext={formContext}
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}
@@ -341,7 +348,7 @@ export default class Form extends Component {
             </button>
           </div>
         )}
-      </form>
+      </FormTag>
     );
   }
 }
@@ -365,6 +372,7 @@ if (process.env.NODE_ENV !== "production") {
     onSubmit: PropTypes.func,
     id: PropTypes.string,
     className: PropTypes.string,
+    tagName: PropTypes.string,
     name: PropTypes.string,
     method: PropTypes.string,
     target: PropTypes.string,

@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import React from "react";
-import { renderIntoDocument, Simulate } from "react-addons-test-utils";
+import { renderIntoDocument, Simulate } from "react-dom/test-utils";
 import { findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
 import { createRef } from "create-react-ref";
@@ -1112,7 +1112,7 @@ describe("Form", () => {
       });
     });
 
-    it("should call getUsedFormData when the omitExtraData prop is true and liveValidate is true", () => {
+    it("should call getUsedFormData when the omitExtraData prop is true and liveOmit is true", () => {
       const schema = {
         type: "object",
         properties: {
@@ -1126,13 +1126,13 @@ describe("Form", () => {
       };
       const onChange = sandbox.spy();
       const omitExtraData = true;
-      const liveValidate = true;
+      const liveOmit = true;
       const { node, comp } = createFormComponent({
         schema,
         formData,
         onChange,
         omitExtraData,
-        liveValidate,
+        liveOmit,
       });
 
       sandbox.stub(comp, "getUsedFormData").returns({
@@ -2406,6 +2406,14 @@ describe("Form", () => {
           ],
         },
       });
+    });
+  });
+
+  describe("Changing the tagName", () => {
+    it("should render the component using the custom tag name", () => {
+      const tagName = "SPAN";
+      const { node } = createFormComponent({ schema: {}, tagName });
+      expect(node.tagName).eql(tagName);
     });
   });
 
