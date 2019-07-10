@@ -184,7 +184,7 @@ function computeDefaults(
     defaults = schema.default;
   }
 
-  switch (schema.type) {
+  switch (getSchemaType(schema)) {
     // We need to recur for object schema inner default values.
     case "object":
       return Object.keys(schema.properties || {}).reduce((acc, key) => {

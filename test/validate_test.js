@@ -1,7 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 import sinon from "sinon";
-import { Simulate } from "react-addons-test-utils";
+import { Simulate } from "react-dom/test-utils";
 
 import validateFormData, { isValid, toErrorList } from "../src/validate";
 import { createFormComponent } from "./test_utils";

@@ -1,6 +1,6 @@
 import React from "react";
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
+import { Simulate } from "react-dom/test-utils";
 
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
 
@@ -66,6 +66,36 @@ describe("oneOf", () => {
           },
           {
             type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultbar" },
+            },
+          },
+        ],
+      },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultbar" });
+  });
+
+  it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
+    const { comp, node } = createFormComponent({
+      schema: {
+        type: "object",
+        oneOf: [
+          {
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          {
             properties: {
               foo: { type: "string", default: "defaultbar" },
             },

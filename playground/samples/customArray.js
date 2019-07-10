@@ -5,7 +5,7 @@ function ArrayFieldTemplate(props) {
     <div className={props.className}>
       {props.items &&
         props.items.map(element => (
-          <div key={element.index}>
+          <div key={element.key} className={element.className}>
             <div>{element.children}</div>
             {element.hasMoveDown && (
               <button

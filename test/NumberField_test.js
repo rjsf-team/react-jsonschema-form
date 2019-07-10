@@ -1,6 +1,6 @@
 import React from "react";
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
+import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
@@ -307,6 +307,28 @@ describe("NumberField", () => {
       });
 
       expect(node.querySelector("input").step).to.eql("5");
+    });
+
+    it("should use min to represent the minimum keyword", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+          minimum: 0,
+        },
+      });
+
+      expect(node.querySelector("input").min).to.eql("0");
+    });
+
+    it("should use max to represent the maximum keyword", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "number",
+          maximum: 100,
+        },
+      });
+
+      expect(node.querySelector("input").max).to.eql("100");
     });
   });
 
