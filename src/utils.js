@@ -184,7 +184,7 @@ function computeDefaults(
     defaults = schema.default;
   }
 
-  switch (schema.type) {
+  switch (getSchemaType(schema)) {
     // We need to recur for object schema inner default values.
     case "object":
       return Object.keys(schema.properties || {}).reduce((acc, key) => {
@@ -577,13 +577,36 @@ function resolveDependencies(schema, definitions, formData) {
         getMatchingOption(formData, resolvedSchema.anyOf, definitions)
       ];
   }
+  return processDependencies(
+    dependencies,
+    resolvedSchema,
+    definitions,
+    formData
+  );
+}
+function processDependencies(
+  dependencies,
+  resolvedSchema,
+  definitions,
+  formData
+) {
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     // Skip this dependency if its trigger property is not present.
     if (formData[dependencyKey] === undefined) {
       continue;
     }
-    const dependencyValue = dependencies[dependencyKey];
+    // Skip this dependency if it is not included in the schema (such as when dependencyKey is itself a hidden dependency.)
+    if (
+      resolvedSchema.properties &&
+      !(dependencyKey in resolvedSchema.properties)
+    ) {
+      continue;
+    }
+    const {
+      [dependencyKey]: dependencyValue,
+      ...remainingDependencies
+    } = dependencies;
     if (Array.isArray(dependencyValue)) {
       resolvedSchema = withDependentProperties(resolvedSchema, dependencyValue);
     } else if (isObject(dependencyValue)) {
@@ -595,6 +618,12 @@ function resolveDependencies(schema, definitions, formData) {
         dependencyValue
       );
     }
+    return processDependencies(
+      remainingDependencies,
+      resolvedSchema,
+      definitions,
+      formData
+    );
   }
   return resolvedSchema;
 }
@@ -808,6 +837,49 @@ export function toIdSchema(
     );
   }
   return idSchema;
+}
+
+export function toPathSchema(schema, name = "", definitions, formData = {}) {
+  const pathSchema = {
+    $name: name,
+  };
+  if ("$ref" in schema || "dependencies" in schema) {
+    const _schema = retrieveSchema(schema, definitions, formData);
+    return toPathSchema(_schema, name, definitions, formData);
+  }
+  if ("items" in schema) {
+    const retVal = {};
+    if (Array.isArray(formData) && formData.length > 0) {
+      formData.forEach((element, index) => {
+        retVal[`${index}`] = toPathSchema(
+          schema.items,
+          `${name}.${index}`,
+          definitions,
+          element
+        );
+      });
+    }
+    return retVal;
+  }
+  if (schema.type !== "object") {
+    return pathSchema;
+  }
+  for (const property in schema.properties || {}) {
+    const field = schema.properties[property];
+    const fieldId = pathSchema.$name
+      ? pathSchema.$name + "." + property
+      : property;
+
+    pathSchema[property] = toPathSchema(
+      field,
+      fieldId,
+      definitions,
+      // It's possible that formData is not an object -- this can happen if an
+      // array item has just been added, but not populated with data yet
+      (formData || {})[property]
+    );
+  }
+  return pathSchema;
 }
 
 export function parseDateString(dateString, includeTime = true) {

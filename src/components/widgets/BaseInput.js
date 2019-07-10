@@ -49,6 +49,14 @@ function BaseInput(props) {
     inputProps.step = schema.multipleOf;
   }
 
+  if (typeof schema.minimum !== "undefined") {
+    inputProps.min = schema.minimum;
+  }
+
+  if (typeof schema.maximum !== "undefined") {
+    inputProps.max = schema.maximum;
+  }
+
   const _onChange = ({ target: { value } }) => {
     return props.onChange(value === "" ? options.emptyValue : value);
   };

@@ -85,6 +85,36 @@ describe("anyOf", () => {
     expect(comp.state.formData).eql({ foo: "defaultbar" });
   });
 
+  it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
+    const { comp, node } = createFormComponent({
+      schema: {
+        type: "object",
+        anyOf: [
+          {
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          {
+            properties: {
+              foo: { type: "string", default: "defaultbar" },
+            },
+          },
+        ],
+      },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultbar" });
+  });
+
   it("should render a custom widget", () => {
     const schema = {
       type: "object",

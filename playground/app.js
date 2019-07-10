@@ -26,6 +26,7 @@ const liveSettingsSchema = {
   properties: {
     validate: { type: "boolean", title: "Live validation" },
     disable: { type: "boolean", title: "Disable whole form" },
+    omitExtraData: { type: "boolean", title: "Omit extra data" },
   },
 };
 const cmOptions = {
@@ -332,6 +333,7 @@ class App extends Component {
       liveSettings: {
         validate: true,
         disable: false,
+        omitExtraData: false,
       },
       shareURL: null,
     };
@@ -472,6 +474,7 @@ class App extends Component {
               ObjectFieldTemplate={ObjectFieldTemplate}
               liveValidate={liveSettings.validate}
               disabled={liveSettings.disable}
+              omitExtraData={liveSettings.omitExtraData}
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}

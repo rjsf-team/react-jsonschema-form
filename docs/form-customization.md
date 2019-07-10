@@ -744,3 +744,15 @@ It's possible to disable the whole form by setting the `disabled` prop. The `dis
 ```
 
 If you just want to disable some of the fields, see the [`ui:disabled`](#disabled-fields) parameter in the `uiSchema` directive. 
+
+
+### Changing the tag name
+
+
+It's possible to change the default `form` tag name to a different HTML tag, which can be helpful if you are nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no longer work.
+
+```jsx
+<Form
+  tagName="div"
+/>
+```
