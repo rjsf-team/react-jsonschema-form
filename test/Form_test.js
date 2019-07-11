@@ -2419,7 +2419,8 @@ describe("Form", () => {
 
   describe("Nested forms", () => {
     it("should call provided submit handler with form state", () => {
-      const onSubmit = sandbox.spy();
+      const innerOnSubmit = sandbox.spy();
+      const outerOnSubmit = sandbox.spy();
       let innerRef;
 
       class ArrayTemplateWithForm extends React.Component {
@@ -2431,7 +2432,7 @@ describe("Form", () => {
         render() {
           const innerFormProps = {
             schema: {},
-            onSubmit,
+            onSubmit: innerOnSubmit,
           };
 
           return (
@@ -2457,14 +2458,15 @@ describe("Form", () => {
         },
         formData: ["foo", "bar"],
         ArrayFieldTemplate: ArrayTemplateWithForm,
-        onSubmit,
+        onSubmit: outerOnSubmit,
       };
       createFormComponent(outerFormProps);
       const arrayForm = innerRef.current.querySelector("form");
       const arraySubmit = arrayForm.querySelector(".array-form-submit");
 
       arraySubmit.click();
-      sinon.assert.calledOnce(onSubmit);
+      sinon.assert.calledOnce(innerOnSubmit);
+      sinon.assert.notCalled(outerOnSubmit);
     });
   });
 });
