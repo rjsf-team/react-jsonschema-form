@@ -219,11 +219,11 @@ export default class Form extends Component {
   };
 
   onSubmit = event => {
+    event.preventDefault();
     if (event.target !== event.currentTarget) {
       return;
     }
 
-    event.preventDefault();
     event.persist();
     let newFormData = this.state.formData;
 
