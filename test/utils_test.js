@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import React from "react";
 
 import {
   asNumber,
@@ -7,6 +8,7 @@ import {
   deepEquals,
   getDefaultFormState,
   getSchemaType,
+  getWidget,
   isFilesArray,
   isConstant,
   toConstant,
@@ -18,6 +20,7 @@ import {
   shouldRender,
   toDateString,
   toIdSchema,
+  toPathSchema,
   guessType,
 } from "../src/utils";
 
@@ -314,6 +317,411 @@ describe("utils", () => {
           array: ["foo"],
         });
       });
+
+      it("defaults passed along for multiselect arrays when minItems is present", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              minItems: 1,
+              uniqueItems: true,
+              default: ["foo", "qux"],
+              items: {
+                type: "string",
+                enum: ["foo", "bar", "fuzz", "qux"],
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          array: ["foo", "qux"],
+        });
+      });
+    });
+
+    describe("defaults with oneOf", () => {
+      it("should populate defaults for oneOf", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              oneOf: [
+                { type: "string", default: "a" },
+                { type: "string", default: "b" },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: "a",
+        });
+      });
+
+      it("should populate defaults for oneOf when 'type': 'object' is missing", () => {
+        const schema = {
+          type: "object",
+          oneOf: [
+            {
+              properties: { name: { type: "string", default: "a" } },
+            },
+            {
+              properties: { id: { type: "number", default: 13 } },
+            },
+          ],
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: "a",
+        });
+      });
+
+      it("should populate nested default values for oneOf", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "object",
+              oneOf: [
+                {
+                  type: "object",
+                  properties: {
+                    first: { type: "string", default: "First Name" },
+                  },
+                },
+                { type: "string", default: "b" },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: {
+            first: "First Name",
+          },
+        });
+      });
+
+      it("should populate defaults for oneOf + dependencies", () => {
+        const schema = {
+          oneOf: [
+            {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                },
+              },
+            },
+          ],
+          dependencies: {
+            name: {
+              oneOf: [
+                {
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    grade: {
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { name: "Name" })).eql({
+          name: "Name",
+          grade: "A",
+        });
+      });
+    });
+
+    describe("defaults with anyOf", () => {
+      it("should populate defaults for anyOf", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              anyOf: [
+                { type: "string", default: "a" },
+                { type: "string", default: "b" },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: "a",
+        });
+      });
+
+      it("should populate nested default values for anyOf", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "object",
+              anyOf: [
+                {
+                  type: "object",
+                  properties: {
+                    first: { type: "string", default: "First Name" },
+                  },
+                },
+                { type: "string", default: "b" },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, {})).eql({
+          name: {
+            first: "First Name",
+          },
+        });
+      });
+
+      it("should populate defaults for anyOf + dependencies", () => {
+        const schema = {
+          anyOf: [
+            {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                },
+              },
+            },
+          ],
+          dependencies: {
+            name: {
+              oneOf: [
+                {
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    grade: {
+                      type: "string",
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { name: "Name" })).eql({
+          name: "Name",
+          grade: "A",
+        });
+      });
+    });
+
+    describe("with dependencies", () => {
+      it("should populate defaults for dependencies", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+          dependencies: {
+            name: {
+              oneOf: [
+                {
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    grade: {
+                      type: "string",
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { name: "Name" })).eql({
+          name: "Name",
+          grade: "A",
+        });
+      });
+
+      it("should populate defaults for nested dependencies", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                },
+              },
+              dependencies: {
+                name: {
+                  oneOf: [
+                    {
+                      properties: {
+                        name: {
+                          type: "string",
+                        },
+                        grade: {
+                          type: "string",
+                          default: "A",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { foo: { name: "Name" } })).eql({
+          foo: {
+            name: "Name",
+            grade: "A",
+          },
+        });
+      });
+
+      it("should populate defaults for nested oneOf + dependencies", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: {
+              oneOf: [
+                {
+                  type: "object",
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                  },
+                },
+              ],
+              dependencies: {
+                name: {
+                  oneOf: [
+                    {
+                      properties: {
+                        name: {
+                          type: "string",
+                        },
+                        grade: {
+                          type: "string",
+                          default: "A",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { foo: { name: "Name" } })).eql({
+          foo: {
+            name: "Name",
+            grade: "A",
+          },
+        });
+      });
+
+      it("should populate defaults for nested dependencies when formData passed to computeDefaults is undefined", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            can_1: {
+              type: "object",
+              properties: {
+                phy: {
+                  title: "Physical",
+                  description: "XYZ",
+                  type: "object",
+                  properties: {
+                    bit_rate_cfg_mode: {
+                      title: "Sub title",
+                      description: "XYZ",
+                      type: "integer",
+                      default: 0,
+                    },
+                  },
+                  dependencies: {
+                    bit_rate_cfg_mode: {
+                      oneOf: [
+                        {
+                          properties: {
+                            bit_rate_cfg_mode: {
+                              enum: [0],
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, undefined)).eql({
+          can_1: {
+            phy: {
+              bit_rate_cfg_mode: 0,
+            },
+          },
+        });
+      });
+
+      it("should not crash for defaults for nested dependencies when formData passed to computeDefaults is null", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            can_1: {
+              type: "object",
+              properties: {
+                phy: {
+                  title: "Physical",
+                  description: "XYZ",
+                  type: "object",
+                  properties: {
+                    bit_rate_cfg_mode: {
+                      title: "Sub title",
+                      description: "XYZ",
+                      type: "integer",
+                      default: 0,
+                    },
+                  },
+                  dependencies: {
+                    bit_rate_cfg_mode: {
+                      oneOf: [
+                        {
+                          properties: {
+                            bit_rate_cfg_mode: {
+                              enum: [0],
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { can_1: { phy: null } })).eql({
+          can_1: {
+            phy: null,
+          },
+        });
+      });
     });
   });
 
@@ -341,6 +749,10 @@ describe("utils", () => {
 
     it("should return undefined if the input is empty", () => {
       expect(asNumber("")).eql(undefined);
+    });
+
+    it("should return null if the input is null", () => {
+      expect(asNumber(null)).eql(null);
     });
   });
 
@@ -762,6 +1174,34 @@ describe("utils", () => {
               },
             });
           });
+          it("should concat required properties", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { type: "string" },
+                b: { type: "integer" },
+              },
+              required: ["a"],
+              dependencies: {
+                a: {
+                  properties: {
+                    a: { type: "string" },
+                  },
+                  required: ["b"],
+                },
+              },
+            };
+            const definitions = {};
+            const formData = { a: "1" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { type: "string" },
+                b: { type: "integer" },
+              },
+              required: ["a", "b"],
+            });
+          });
         });
 
         describe("with $ref in dependency", () => {
@@ -945,6 +1385,125 @@ describe("utils", () => {
                 a: { type: "string", enum: ["int", "bool"] },
                 b: { type: "boolean" },
               },
+            });
+          });
+
+          describe("showing/hiding nested dependencies", () => {
+            const schema = {
+              type: "object",
+              dependencies: {
+                employee_accounts: {
+                  oneOf: [
+                    {
+                      properties: {
+                        employee_accounts: {
+                          const: true,
+                        },
+                        update_absences: {
+                          title: "Update Absences",
+                          type: "string",
+                          oneOf: [
+                            {
+                              title: "Both",
+                              const: "BOTH",
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  ],
+                },
+                update_absences: {
+                  oneOf: [
+                    {
+                      properties: {
+                        permitted_extension: {
+                          title: "Permitted Extension",
+                          type: "integer",
+                        },
+                        update_absences: {
+                          const: "BOTH",
+                        },
+                      },
+                    },
+                    {
+                      properties: {
+                        permitted_extension: {
+                          title: "Permitted Extension",
+                          type: "integer",
+                        },
+                        update_absences: {
+                          const: "MEDICAL_ONLY",
+                        },
+                      },
+                    },
+                    {
+                      properties: {
+                        permitted_extension: {
+                          title: "Permitted Extension",
+                          type: "integer",
+                        },
+                        update_absences: {
+                          const: "NON_MEDICAL_ONLY",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+              properties: {
+                employee_accounts: {
+                  type: "boolean",
+                  title: "Employee Accounts",
+                },
+              },
+            };
+            const definitions = {};
+
+            it("should not include nested dependencies that should be hidden", () => {
+              const formData = {
+                employee_accounts: false,
+                update_absences: "BOTH",
+              };
+              expect(retrieveSchema(schema, definitions, formData)).eql({
+                type: "object",
+                properties: {
+                  employee_accounts: {
+                    type: "boolean",
+                    title: "Employee Accounts",
+                  },
+                },
+              });
+            });
+
+            it("should include nested dependencies that should not be hidden", () => {
+              const formData = {
+                employee_accounts: true,
+                update_absences: "BOTH",
+              };
+              expect(retrieveSchema(schema, definitions, formData)).eql({
+                type: "object",
+                properties: {
+                  employee_accounts: {
+                    type: "boolean",
+                    title: "Employee Accounts",
+                  },
+                  permitted_extension: {
+                    title: "Permitted Extension",
+                    type: "integer",
+                  },
+                  update_absences: {
+                    title: "Update Absences",
+                    type: "string",
+                    oneOf: [
+                      {
+                        title: "Both",
+                        const: "BOTH",
+                      },
+                    ],
+                  },
+                },
+              });
             });
           });
         });
@@ -1326,6 +1885,584 @@ describe("utils", () => {
     });
   });
 
+  describe("toPathSchema", () => {
+    it("should return a pathSchema for root field", () => {
+      const schema = { type: "string" };
+
+      expect(toPathSchema(schema)).eql({ $name: "" });
+    });
+
+    it("should return a pathSchema for nested objects", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          level1: {
+            type: "object",
+            properties: {
+              level2: { type: "string" },
+            },
+          },
+        },
+      };
+
+      expect(toPathSchema(schema)).eql({
+        $name: "",
+        level1: {
+          $name: "level1",
+          level2: { $name: "level1.level2" },
+        },
+      });
+    });
+
+    it("should return a pathSchema for a schema with dependencies", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          list: {
+            title: "list",
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                a: { type: "string" },
+                b: { type: "string" },
+              },
+              dependencies: {
+                b: {
+                  properties: {
+                    c: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const formData = {
+        list: [
+          {
+            a: "a1",
+            b: "b1",
+            c: "c1",
+          },
+          {
+            a: "a2",
+          },
+          {
+            a: "a2",
+            c: "c2",
+          },
+        ],
+      };
+
+      expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
+        $name: "",
+        list: {
+          "0": {
+            $name: "list.0",
+            a: {
+              $name: "list.0.a",
+            },
+            b: {
+              $name: "list.0.b",
+            },
+            c: {
+              $name: "list.0.c",
+            },
+          },
+          "1": {
+            $name: "list.1",
+            a: {
+              $name: "list.1.a",
+            },
+            b: {
+              $name: "list.1.b",
+            },
+          },
+          "2": {
+            $name: "list.2",
+            a: {
+              $name: "list.2.a",
+            },
+            b: {
+              $name: "list.2.b",
+            },
+          },
+        },
+      });
+    });
+
+    it("should return a pathSchema for a schema with references", () => {
+      const schema = {
+        definitions: {
+          address: {
+            type: "object",
+            properties: {
+              street_address: {
+                type: "string",
+              },
+              city: {
+                type: "string",
+              },
+              state: {
+                type: "string",
+              },
+            },
+            required: ["street_address", "city", "state"],
+          },
+        },
+        type: "object",
+        properties: {
+          billing_address: {
+            title: "Billing address",
+            $ref: "#/definitions/address",
+          },
+        },
+      };
+
+      const formData = {
+        billing_address: {
+          street_address: "21, Jump Street",
+          city: "Babel",
+          state: "Neverland",
+        },
+      };
+
+      expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
+        $name: "",
+        billing_address: {
+          $name: "billing_address",
+          city: {
+            $name: "billing_address.city",
+          },
+          state: {
+            $name: "billing_address.state",
+          },
+          street_address: {
+            $name: "billing_address.street_address",
+          },
+        },
+      });
+    });
+
+    it("should return a pathSchema for a schema with references in an array item", () => {
+      const schema = {
+        definitions: {
+          address: {
+            type: "object",
+            properties: {
+              street_address: {
+                type: "string",
+              },
+              city: {
+                type: "string",
+              },
+              state: {
+                type: "string",
+              },
+            },
+            required: ["street_address", "city", "state"],
+          },
+        },
+        type: "object",
+        properties: {
+          address_list: {
+            title: "Address list",
+            type: "array",
+            items: {
+              $ref: "#/definitions/address",
+            },
+          },
+        },
+      };
+
+      const formData = {
+        address_list: [
+          {
+            street_address: "21, Jump Street",
+            city: "Babel",
+            state: "Neverland",
+          },
+          {
+            street_address: "1234 Schema Rd.",
+            city: "New York",
+            state: "Arizona",
+          },
+        ],
+      };
+
+      expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
+        $name: "",
+        address_list: {
+          "0": {
+            $name: "address_list.0",
+            city: {
+              $name: "address_list.0.city",
+            },
+            state: {
+              $name: "address_list.0.state",
+            },
+            street_address: {
+              $name: "address_list.0.street_address",
+            },
+          },
+          "1": {
+            $name: "address_list.1",
+            city: {
+              $name: "address_list.1.city",
+            },
+            state: {
+              $name: "address_list.1.state",
+            },
+            street_address: {
+              $name: "address_list.1.street_address",
+            },
+          },
+        },
+      });
+    });
+
+    it("should return an pathSchema with different types of arrays", () => {
+      const schema = {
+        definitions: {
+          Thing: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                default: "Default name",
+              },
+            },
+          },
+        },
+        type: "object",
+        properties: {
+          listOfStrings: {
+            type: "array",
+            title: "A list of strings",
+            items: {
+              type: "string",
+              default: "bazinga",
+            },
+          },
+          multipleChoicesList: {
+            type: "array",
+            title: "A multiple choices list",
+            items: {
+              type: "string",
+              enum: ["foo", "bar", "fuzz", "qux"],
+            },
+            uniqueItems: true,
+          },
+          fixedItemsList: {
+            type: "array",
+            title: "A list of fixed items",
+            items: [
+              {
+                title: "A string value",
+                type: "string",
+                default: "lorem ipsum",
+              },
+              {
+                title: "a boolean value",
+                type: "boolean",
+              },
+            ],
+            additionalItems: {
+              title: "Additional item",
+              type: "number",
+            },
+          },
+          minItemsList: {
+            type: "array",
+            title: "A list with a minimal number of items",
+            minItems: 3,
+            items: {
+              $ref: "#/definitions/Thing",
+            },
+          },
+          defaultsAndMinItems: {
+            type: "array",
+            title: "List and item level defaults",
+            minItems: 5,
+            default: ["carp", "trout", "bream"],
+            items: {
+              type: "string",
+              default: "unidentified",
+            },
+          },
+          nestedList: {
+            type: "array",
+            title: "Nested list",
+            items: {
+              type: "array",
+              title: "Inner list",
+              items: {
+                type: "string",
+                default: "lorem ipsum",
+              },
+            },
+          },
+          listOfObjects: {
+            type: "array",
+            title: "List of objects",
+            items: {
+              type: "object",
+              title: "Object in list",
+              properties: {
+                name: {
+                  type: "string",
+                  default: "Default name",
+                },
+                id: {
+                  type: "number",
+                  default: "an id",
+                },
+              },
+            },
+          },
+          unorderable: {
+            title: "Unorderable items",
+            type: "array",
+            items: {
+              type: "string",
+              default: "lorem ipsum",
+            },
+          },
+          unremovable: {
+            title: "Unremovable items",
+            type: "array",
+            items: {
+              type: "string",
+              default: "lorem ipsum",
+            },
+          },
+          noToolbar: {
+            title: "No add, remove and order buttons",
+            type: "array",
+            items: {
+              type: "string",
+              default: "lorem ipsum",
+            },
+          },
+          fixedNoToolbar: {
+            title: "Fixed array without buttons",
+            type: "array",
+            items: [
+              {
+                title: "A number",
+                type: "number",
+                default: 42,
+              },
+              {
+                title: "A boolean",
+                type: "boolean",
+                default: false,
+              },
+            ],
+            additionalItems: {
+              title: "A string",
+              type: "string",
+              default: "lorem ipsum",
+            },
+          },
+        },
+      };
+
+      const formData = {
+        listOfStrings: ["foo", "bar"],
+        multipleChoicesList: ["foo", "bar"],
+        fixedItemsList: ["Some text", true, 123],
+        minItemsList: [
+          {
+            name: "Default name",
+          },
+          {
+            name: "Default name",
+          },
+          {
+            name: "Default name",
+          },
+        ],
+        defaultsAndMinItems: [
+          "carp",
+          "trout",
+          "bream",
+          "unidentified",
+          "unidentified",
+        ],
+        nestedList: [["lorem", "ipsum"], ["dolor"]],
+        listOfObjects: [
+          { name: "name1", id: 123 },
+          { name: "name2", id: 1234 },
+          { id: 12345 },
+        ],
+        unorderable: ["one", "two"],
+        unremovable: ["one", "two"],
+        noToolbar: ["one", "two"],
+        fixedNoToolbar: [
+          42,
+          true,
+          "additional item one",
+          "additional item two",
+        ],
+      };
+
+      expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
+        $name: "",
+        defaultsAndMinItems: {
+          "0": {
+            $name: "defaultsAndMinItems.0",
+          },
+          "1": {
+            $name: "defaultsAndMinItems.1",
+          },
+          "2": {
+            $name: "defaultsAndMinItems.2",
+          },
+          "3": {
+            $name: "defaultsAndMinItems.3",
+          },
+          "4": {
+            $name: "defaultsAndMinItems.4",
+          },
+        },
+        fixedItemsList: {
+          "0": {
+            $name: "fixedItemsList.0",
+          },
+          "1": {
+            $name: "fixedItemsList.1",
+          },
+          "2": {
+            $name: "fixedItemsList.2",
+          },
+        },
+        fixedNoToolbar: {
+          "0": {
+            $name: "fixedNoToolbar.0",
+          },
+          "1": {
+            $name: "fixedNoToolbar.1",
+          },
+          "2": {
+            $name: "fixedNoToolbar.2",
+          },
+          "3": {
+            $name: "fixedNoToolbar.3",
+          },
+        },
+        listOfObjects: {
+          "0": {
+            $name: "listOfObjects.0",
+            id: {
+              $name: "listOfObjects.0.id",
+            },
+            name: {
+              $name: "listOfObjects.0.name",
+            },
+          },
+          "1": {
+            $name: "listOfObjects.1",
+            id: {
+              $name: "listOfObjects.1.id",
+            },
+            name: {
+              $name: "listOfObjects.1.name",
+            },
+          },
+          "2": {
+            $name: "listOfObjects.2",
+            id: {
+              $name: "listOfObjects.2.id",
+            },
+            name: {
+              $name: "listOfObjects.2.name",
+            },
+          },
+        },
+        listOfStrings: {
+          "0": {
+            $name: "listOfStrings.0",
+          },
+          "1": {
+            $name: "listOfStrings.1",
+          },
+        },
+        minItemsList: {
+          "0": {
+            $name: "minItemsList.0",
+            name: {
+              $name: "minItemsList.0.name",
+            },
+          },
+          "1": {
+            $name: "minItemsList.1",
+            name: {
+              $name: "minItemsList.1.name",
+            },
+          },
+          "2": {
+            $name: "minItemsList.2",
+            name: {
+              $name: "minItemsList.2.name",
+            },
+          },
+        },
+        multipleChoicesList: {
+          "0": {
+            $name: "multipleChoicesList.0",
+          },
+          "1": {
+            $name: "multipleChoicesList.1",
+          },
+        },
+        nestedList: {
+          "0": {
+            "0": {
+              $name: "nestedList.0.0",
+            },
+            "1": {
+              $name: "nestedList.0.1",
+            },
+          },
+          "1": {
+            "0": {
+              $name: "nestedList.1.0",
+            },
+          },
+        },
+        noToolbar: {
+          "0": {
+            $name: "noToolbar.0",
+          },
+          "1": {
+            $name: "noToolbar.1",
+          },
+        },
+        unorderable: {
+          "0": {
+            $name: "unorderable.0",
+          },
+          "1": {
+            $name: "unorderable.1",
+          },
+        },
+        unremovable: {
+          "0": {
+            $name: "unremovable.0",
+          },
+          "1": {
+            $name: "unremovable.1",
+          },
+        },
+      });
+    });
+  });
+
   describe("parseDateString()", () => {
     it("should raise on invalid JSON datetime", () => {
       expect(() => parseDateString("plop")).to.Throw(Error, "Unable to parse");
@@ -1540,12 +2677,71 @@ describe("utils", () => {
         schema: { type: ["integer", "null"] },
         expected: "integer",
       },
+      {
+        schema: { properties: {} },
+        expected: "object",
+      },
+      {
+        schema: { additionalProperties: {} },
+        expected: "object",
+      },
     ];
 
     it("should correctly guess the type of a schema", () => {
       for (const test of cases) {
-        expect(getSchemaType(test.schema)).eql(test.expected);
+        expect(getSchemaType(test.schema)).eql(
+          test.expected,
+          `${JSON.stringify(test.schema)} should guess type of ${test.expected}`
+        );
       }
+    });
+  });
+
+  describe("getWidget()", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        object: {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              default: ["foo", "bar"],
+              items: {
+                type: "string",
+              },
+            },
+            bool: {
+              type: "boolean",
+              default: true,
+            },
+          },
+        },
+      },
+    };
+
+    it("should fail if widget has incorrect type", () => {
+      const Widget = new Number(1);
+      expect(() => getWidget(schema, Widget)).to.Throw(
+        Error,
+        `Unsupported widget definition: object`
+      );
+    });
+
+    it("should fail if widget has no type property", () => {
+      const Widget = "blabla";
+      expect(() => getWidget(schema, Widget)).to.Throw(
+        Error,
+        `No widget for type "object"`
+      );
+    });
+
+    //TODO: Unskip the test when react>=16.3 will be used
+    it.skip("should not fail on forwarded ref component", () => {
+      const Widget = React.forwardRef((props, ref) => (
+        <div {...props} ref={ref} />
+      ));
+      expect(getWidget(schema, Widget)).eql(<Widget />);
     });
   });
 });

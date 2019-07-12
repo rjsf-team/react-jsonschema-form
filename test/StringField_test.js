@@ -1,6 +1,6 @@
 import React from "react";
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
+import { Simulate } from "react-dom/test-utils";
 
 import { parseDateString, toDateString } from "../src/utils";
 import { utcToLocal } from "../src/components/widgets/DateTimeWidget";
@@ -1566,7 +1566,7 @@ describe("StringField", () => {
   describe("FileWidget", () => {
     const initialValue = "data:text/plain;name=file1.txt;base64,dGVzdDE=";
 
-    it("should render a color field", () => {
+    it("should render a file field", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
@@ -1581,7 +1581,7 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "color",
+          format: "data-url",
           default: initialValue,
         },
       });

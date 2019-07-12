@@ -1,6 +1,6 @@
 import React from "react";
 import { expect } from "chai";
-import { Simulate } from "react-addons-test-utils";
+import { Simulate } from "react-dom/test-utils";
 
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
 
@@ -52,6 +52,67 @@ describe("anyOf", () => {
     });
 
     expect(node.querySelectorAll("select")).to.have.length.of(1);
+  });
+
+  it("should assign a default value and set defaults on option change", () => {
+    const { comp, node } = createFormComponent({
+      schema: {
+        anyOf: [
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultbar" },
+            },
+          },
+        ],
+      },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultbar" });
+  });
+
+  it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
+    const { comp, node } = createFormComponent({
+      schema: {
+        type: "object",
+        anyOf: [
+          {
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          {
+            properties: {
+              foo: { type: "string", default: "defaultbar" },
+            },
+          },
+        ],
+      },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect(comp.state.formData).eql({ foo: "defaultbar" });
   });
 
   it("should render a custom widget", () => {

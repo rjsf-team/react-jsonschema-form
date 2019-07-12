@@ -248,7 +248,12 @@ function SchemaFieldRender(props) {
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
-  const readonly = Boolean(props.readonly || uiSchema["ui:readonly"]);
+  const readonly = Boolean(
+    props.readonly ||
+      uiSchema["ui:readonly"] ||
+      props.schema.readOnly ||
+      schema.readOnly
+  );
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
   if (Object.keys(schema).length === 0) {
     return null;
@@ -365,6 +370,7 @@ function SchemaFieldRender(props) {
           baseType={schema.type}
           registry={registry}
           safeRenderCompletion={props.safeRenderCompletion}
+          schema={schema}
           uiSchema={uiSchema}
         />
       )}
@@ -383,6 +389,7 @@ function SchemaFieldRender(props) {
           baseType={schema.type}
           registry={registry}
           safeRenderCompletion={props.safeRenderCompletion}
+          schema={schema}
           uiSchema={uiSchema}
         />
       )}

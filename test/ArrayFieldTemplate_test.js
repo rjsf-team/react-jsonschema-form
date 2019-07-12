@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-
 import { expect } from "chai";
 import { createFormComponent, createSandbox } from "./test_utils";
 
@@ -284,6 +283,47 @@ describe("ArrayFieldTemplate", () => {
           ).to.have.length.of(0);
         });
       }
+    });
+  });
+
+  describe("Stateful ArrayFieldTemplate", () => {
+    class ArrayFieldTemplate extends PureComponent {
+      render() {
+        return (
+          <div className="field-content">
+            {this.props.items.map((item, i) => (
+              <div key={i}>item.children</div>
+            ))}
+          </div>
+        );
+      }
+    }
+
+    it("should render a stateful custom component", () => {
+      const { node } = createFormComponent({
+        schema: { type: "array", items: { type: "string" } },
+        formData,
+        ArrayFieldTemplate,
+      });
+      expect(
+        node.querySelectorAll(".field-array .field-content div")
+      ).to.have.length.of(3);
+    });
+  });
+
+  describe("pass right props to ArrayFieldTemplate", () => {
+    it("should pass registry prop", () => {
+      const ArrayFieldTemplate = ({ registry }) => {
+        if (!registry) {
+          throw "Error";
+        }
+        return null;
+      };
+      createFormComponent({
+        schema: { type: "array", items: { type: "string" } },
+        formData,
+        ArrayFieldTemplate,
+      });
     });
   });
 });

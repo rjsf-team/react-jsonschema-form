@@ -112,6 +112,7 @@ The following props are part of each element in `items`:
 - `hasRemove`: A boolean value stating whether the array item can be removed.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
+- `key`: A stable, unique key for the array item.
 - `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
@@ -526,6 +527,27 @@ render((
     formData={formData} />
 ), document.getElementById("app"));
 ```
+
+The default widgets you can overwrite are:
+
+ - `AltDateTimeWidget`
+ - `AltDateWidget`
+ - `CheckboxesWidget`
+ - `CheckboxWidget`
+ - `ColorWidget`
+ - `DateTimeWidget`
+ - `DateWidget`
+ - `EmailWidget`
+ - `FileWidget`
+ - `HiddenWidget`
+ - `PasswordWidget`
+ - `RadioWidget`
+ - `RangeWidget`
+ - `SelectWidget`
+ - `TextareaWidget`
+ - `TextWidget`
+ - `UpDownWidget`
+ - `URLWidget`
 
 ### Custom titles
 
