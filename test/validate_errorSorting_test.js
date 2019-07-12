@@ -566,6 +566,65 @@ describe("Validation Error Sorting", () => {
               ".bar",
             ]);
           });
+          it("should consider the nested uiOrder in the items tab", () => {
+            const schema = {
+              type: "object",
+              title: "tp.form.dowjones.title",
+              required: ["foo"],
+              properties: {
+                foo: {
+                  type: "object",
+                  properties: {
+                    rows: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        required: ["wibble", "wobble", "wabble"],
+                        properties: {
+                          wabble: { type: "string" },
+                          wibble: { type: "string" },
+                          wobble: { type: "string" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              additionalProperties: false,
+            };
+            const uiSchema = {
+              foo: {
+                rows: {
+                  items: {
+                    "ui:order": ["wibble", "wobble", "wabble"],
+                  },
+                },
+                "ui:order": ["rows"],
+              },
+            };
+            const formData = {
+              foo: {
+                rows: [{}, {}],
+              },
+            };
+            const result = validateFormData(
+              formData,
+              schema,
+              null,
+              null,
+              null,
+              null,
+              uiSchema
+            );
+            expectOrder(result.errors, [
+              ".foo.rows[0].wibble",
+              ".foo.rows[0].wobble",
+              ".foo.rows[0].wabble",
+              ".foo.rows[1].wibble",
+              ".foo.rows[1].wobble",
+              ".foo.rows[1].wabble",
+            ]);
+          });
         });
         describe("containing nested objects", () => {
           it("should have the order foo - wibble - plugh - garply - grault - wobble - bar", () => {

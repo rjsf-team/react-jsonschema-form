@@ -231,7 +231,10 @@ function orderErrorsByUiSchema(_errors, _uiSchema) {
   };
 
   const addErrorsForNode = (uiSchemaNode, currentErrorPath = ".") => {
-    const currentNodeUiOrder = uiSchemaNode["ui:order"];
+    let currentNodeUiOrder = uiSchemaNode["ui:order"];
+    if (!currentNodeUiOrder && "items" in uiSchemaNode) {
+      currentNodeUiOrder = uiSchemaNode.items["ui:order"];
+    }
     if (currentNodeUiOrder) {
       // there is an ui order here
       currentNodeUiOrder.forEach(propInCurrentUiOrder => {
