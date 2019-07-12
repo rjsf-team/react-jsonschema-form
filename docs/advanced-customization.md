@@ -5,8 +5,8 @@ _ | Custom Field  | Custom Template | Custom Widget
 --|---------- | ------------- | ----
 What it does | Overrides all behaviour | Overrides just the layout | Overrides just the input box (not layout, labels, or help, or validation)
 Usage | Global or per-field | Global or per-field | Global or per-field
-Global Example | `<Form fields={MyCustomFields} />` |  `<Form ArrayFieldTemplate={ArrayFieldTemplate} />` | `<Form widgets={MyCustomWidgets} />`
-Per-Field Example | `"ui:field": MyField` |  `"ui:ArrayFieldTemplate": MyArrayTemplate` | `"ui:widget":MyWidget`
+Global Example | `<Form fields={MyCustomField} />` |  `<Form ArrayFieldTemplate={MyArrayTemplate} />` | `<Form widgets={MyCustomWidget} />`
+Per-Field Example | `"ui:field": MyCustomField` |  `"ui:ArrayFieldTemplate": MyArrayTemplate` | `"ui:widget":MyCustomWidget`
 Documentation | [Field](#field-props) | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)
 
 ### Field template
