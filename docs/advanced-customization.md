@@ -3,11 +3,11 @@
 
 _ | Custom Field  | Custom Template | Custom Widget
 --|---------- | ------------- | ----
-What it does | Overrides all behaviour | Overrides just the layout | Overrides just the input box (not layout, labels, or help, or validation)
-Usage | Global or per-field | Only global | Global or per-field
-Global Example | `<Form fields={MyCustomFields} />` |  `<Form ArrayFieldTemplate={ArrayFieldTemplate} />` | `<Form widgets={MyCustomWidgets} />`
-Per-Field Example | `"ui:field": MyField` |  N/A | `"ui:widget":MyWidget`
-Documentation | [Field](#field-props) | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)
+**What it does** | Overrides all behaviour | Overrides just the layout (not behaviour) | Overrides just the input box (not layout, labels, or help, or validation)
+**Usage** | Global or per-field | Global or per-field | Global or per-field
+**Global Example** | `<Form fields={MyCustomField} />` |  `<Form ArrayFieldTemplate={MyArrayTemplate} />` | `<Form widgets={MyCustomWidget} />`
+**Per-Field Example** | `"ui:field": MyCustomField` |  `"ui:ArrayFieldTemplate": MyArrayTemplate` | `"ui:widget":MyCustomWidget`
+**Documentation** | [Field](#field-props) | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)
 
 ### Field template
 
@@ -35,6 +35,19 @@ render((
 ), document.getElementById("app"));
 ```
 
+You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property.
+
+```jsx
+const uiSchema = {
+  "ui:FieldTemplate": CustomFieldTemplate
+}
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />,
+), document.getElementById("app"));
+```
+
 If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`.
 
 The following props are passed to a custom field template component:
@@ -59,7 +72,7 @@ The following props are passed to a custom field template component:
 - `uiSchema`: The uiSchema object for this field.
 - `formContext`: The `formContext` object that you passed to Form.
 
-> Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
+> Note: you can only define a single global field template for a form, but you can set individual field templates per property using `"ui:FieldTemplate"`.
 
 ### Array Field Template
 
@@ -82,7 +95,21 @@ render((
 ), document.getElementById("app"));
 ```
 
+You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property.
+
+```jsx
+const uiSchema = {
+  "ui:ArrayFieldTemplate": ArrayFieldTemplate
+}
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />,
+), document.getElementById("app"));
+```
+
 Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -117,6 +144,8 @@ The following props are part of each element in `items`:
 - `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
 
+> Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
+
 ### Object Field Template
 
 Similarly to the `FieldTemplate` you can use an `ObjectFieldTemplate` to customize how your
@@ -136,6 +165,19 @@ function ObjectFieldTemplate(props) {
 render((
   <Form schema={schema}
         ObjectFieldTemplate={ObjectFieldTemplate} />,
+), document.getElementById("app"));
+```
+
+You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property.
+
+```jsx
+const uiSchema = {
+  "ui:ObjectFieldTemplate": ObjectFieldTemplate
+}
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />,
 ), document.getElementById("app"));
 ```
 
@@ -163,6 +205,9 @@ The following props are part of each element in `properties`:
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `readonly`: A boolean value stating if the property is read-only.
+
+> Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an object field template, you may need to specify both `ui:FieldTemplate` and `ui:ObjectFieldTemplate`.
+
 
 ### Error List template
 
