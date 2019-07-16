@@ -207,7 +207,7 @@ describe("NumberField", () => {
       });
 
       expect(comp.state.formData).eql(0);
-      expect($input.value).eql("0");
+      expect($input.value).eql(".00");
     });
 
     it("should update input values correctly when formData prop changes", () => {
