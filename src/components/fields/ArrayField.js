@@ -262,7 +262,7 @@ class ArrayField extends Component {
     return addable;
   }
 
-  onAddClick = event => {
+  onAddClick = (event = event) => {
     event.preventDefault();
     const { schema, registry = getDefaultRegistry(), onChange } = this.props;
     const { definitions } = registry;
