@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import _pick from "lodash/pick";
-import _get from "lodash/get";
+import _pick from "lodash.pick";
+import _get from "lodash.get";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
