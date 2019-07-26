@@ -16,8 +16,17 @@ module.exports = {
           format: "data-url",
         },
       },
+      filesAccept: {
+        type: "string",
+        format: "data-url",
+        title: "Single File with Accept attribute",
+      },
     },
   },
-  uiSchema: {},
+  uiSchema: {
+    filesAccept: {
+      "ui:options": { accept: ".pdf" },
+    },
+  },
   formData: {},
 };

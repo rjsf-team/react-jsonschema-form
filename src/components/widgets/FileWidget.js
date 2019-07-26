@@ -90,7 +90,7 @@ class FileWidget extends Component {
   };
 
   render() {
-    const { multiple, id, readonly, disabled, autofocus } = this.props;
+    const { multiple, id, readonly, disabled, autofocus, options } = this.props;
     const { filesInfo } = this.state;
     return (
       <div>
@@ -104,6 +104,7 @@ class FileWidget extends Component {
             defaultValue=""
             autoFocus={autofocus}
             multiple={multiple}
+            accept={options.accept}
           />
         </p>
         <FilesInfo filesInfo={filesInfo} />

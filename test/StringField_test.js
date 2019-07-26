@@ -1653,6 +1653,20 @@ describe("StringField", () => {
           type: "string",
           format: "data-url",
         },
+        uiSchema: {
+          "ui:options": { accept: ".pdf" },
+        },
+      });
+
+      expect(node.querySelector("[type=file]").accept).eql(".pdf");
+    });
+
+    it("should render the file widget with accept attribute", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "data-url",
+        },
       });
 
       expect(node.querySelector("[type=file]").id).eql("root");
