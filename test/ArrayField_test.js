@@ -277,6 +277,84 @@ describe("ArrayField", () => {
       expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
+    it("should allow inserting anywhere in list", () => {
+      function addItemAboveOrBelow(item) {
+        const beforeIndex = item.index;
+        const addBeforeButton = (
+          <button
+            key={`array-item-add-before-${item.key}`}
+            className={
+              "array-item-move-before array-item-move-before-to-" + beforeIndex
+            }
+            onClick={item.onAddIndexClick(beforeIndex)}>
+            {"Add Item Above"}
+          </button>
+        );
+
+        const afterIndex = item.index + 1;
+        const addAfterButton = (
+          <button
+            key={`array-item-add-after-${item.key}`}
+            className={
+              "array-item-move-after array-item-move-after-to-" + afterIndex
+            }
+            onClick={item.onAddIndexClick(afterIndex)}>
+            {"Add Item Below"}
+          </button>
+        );
+
+        return (
+          <div
+            key={item.key}
+            data-rjsf-itemkey={item.key}
+            className={`array-item item-${item.index}`}>
+            <div>{addBeforeButton}</div>
+            {item.children}
+            <div>{addAfterButton}</div>
+            <hr />
+          </div>
+        );
+      }
+
+      function addAboveOrBelowArrayFieldTemplate(props) {
+        return (
+          <div className="array">{props.items.map(addItemAboveOrBelow)}</div>
+        );
+      }
+
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar", "baz"],
+        ArrayFieldTemplate: addAboveOrBelowArrayFieldTemplate,
+      });
+
+      const addBeforeButtons = node.querySelectorAll(".array-item-move-before");
+      const addAfterButtons = node.querySelectorAll(".array-item-move-after");
+
+      const startRows = node.querySelectorAll(".array-item");
+      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
+      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
+      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
+
+      Simulate.click(addBeforeButtons[0]);
+      Simulate.click(addAfterButtons[0]);
+
+      const endRows = node.querySelectorAll(".array-item");
+      const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
+      const endRow4_key = endRows[3].getAttribute(ArrayKeyDataAttr);
+      const endRow5_key = endRows[4].getAttribute(ArrayKeyDataAttr);
+
+      expect(startRow1_key).to.equal(endRow2_key);
+      expect(startRow2_key).to.equal(endRow4_key);
+      expect(startRow3_key).to.equal(endRow5_key);
+
+      expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[2].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[3].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(endRows[4].hasAttribute(ArrayKeyDataAttr)).to.be.true;
+    });
+
     it("should not provide an add button if addable is expliclty false regardless maxItems value", () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },

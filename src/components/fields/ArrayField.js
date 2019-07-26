@@ -262,26 +262,25 @@ class ArrayField extends Component {
     return addable;
   }
 
-  onAddClick = event => {
-    event.preventDefault();
-    const { schema, registry = getDefaultRegistry(), onChange } = this.props;
+  _getNewFormDataRow = () => {
+    const { schema, registry = getDefaultRegistry() } = this.props;
     const { definitions } = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    const newFormDataRow = getDefaultFormState(
-      itemSchema,
-      undefined,
-      definitions
-    );
-    const newKeyedFormData = [
-      ...this.state.keyedFormData,
-      {
-        key: generateRowId(),
-        item: newFormDataRow,
-      },
-    ];
+    return getDefaultFormState(itemSchema, undefined, definitions);
+  };
+
+  onAddClick = event => {
+    event.preventDefault();
+
+    const { onChange } = this.props;
+    const newKeyedFormDataRow = {
+      key: generateRowId(),
+      item: this._getNewFormDataRow(),
+    };
+    const newKeyedFormData = [...this.state.keyedFormData, newKeyedFormDataRow];
 
     this.setState(
       {
@@ -289,6 +288,28 @@ class ArrayField extends Component {
       },
       () => onChange(keyedToPlainFormData(newKeyedFormData))
     );
+  };
+
+  onAddIndexClick = index => {
+    return event => {
+      if (event) {
+        event.preventDefault();
+      }
+      const { onChange } = this.props;
+      const newKeyedFormDataRow = {
+        key: generateRowId(),
+        item: this._getNewFormDataRow(),
+      };
+      let newKeyedFormData = [...this.state.keyedFormData];
+      newKeyedFormData.splice(index, 0, newKeyedFormDataRow);
+
+      this.setState(
+        {
+          keyedFormData: newKeyedFormData,
+        },
+        () => onChange(keyedToPlainFormData(newKeyedFormData))
+      );
+    };
   };
 
   onDropIndexClick = index => {
@@ -745,6 +766,7 @@ class ArrayField extends Component {
       hasRemove: has.remove,
       index,
       key,
+      onAddIndexClick: this.onAddIndexClick,
       onDropIndexClick: this.onDropIndexClick,
       onReorderClick: this.onReorderClick,
       readonly,
