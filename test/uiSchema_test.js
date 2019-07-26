@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import React from "react";
-import { Simulate } from "react-addons-test-utils";
+import { Simulate } from "react-dom/test-utils";
 import SelectWidget from "../src/components/widgets/SelectWidget";
 import RadioWidget from "../src/components/widgets/RadioWidget";
 import { createFormComponent, createSandbox } from "./test_utils";
