@@ -235,7 +235,7 @@ This allows you to programmatically trigger the browser's file selector, which c
 
 ##### `accept` option
 
-You can use accept attribute to specify a filter for what file types the user can upload
+You can use the accept attribute to specify a filter for what file types the user can upload:
 
 ```jsx
 const schema = {
