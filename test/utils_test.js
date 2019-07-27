@@ -723,6 +723,27 @@ describe("utils", () => {
         });
       });
     });
+
+    describe("with schema keys not defined in the formData", () => {
+      it("shouldn't add in undefined keys to formData", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: { type: "string" },
+            bar: { type: "string" },
+          },
+        };
+        const formData = {
+          foo: "foo",
+          baz: "baz",
+        };
+        const result = {
+          foo: "foo",
+          baz: "baz",
+        };
+        expect(getDefaultFormState(schema, formData)).to.eql(result);
+      });
+    });
   });
 
   describe("asNumber()", () => {
