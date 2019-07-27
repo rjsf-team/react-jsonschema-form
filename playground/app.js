@@ -1,22 +1,10 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
-import { UnControlled as CodeMirror } from "react-codemirror2";
-import "codemirror/mode/javascript/javascript";
+import MonacoEditor from "react-monaco-editor";
 
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
-
-// Import a few CodeMirror themes; these are used to match alternative
-// bootstrap ones.
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/dracula.css";
-import "codemirror/theme/blackboard.css";
-import "codemirror/theme/mbo.css";
-import "codemirror/theme/ttcn.css";
-import "codemirror/theme/solarized.css";
-import "codemirror/theme/monokai.css";
-import "codemirror/theme/eclipse.css";
 
 const log = type => console.log.bind(console, type);
 const fromJson = json => JSON.parse(json);
@@ -29,20 +17,6 @@ const liveSettingsSchema = {
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
   },
-};
-const cmOptions = {
-  theme: "default",
-  height: "auto",
-  viewportMargin: Infinity,
-  mode: {
-    name: "javascript",
-    json: true,
-    statementIndent: 2,
-  },
-  lineNumbers: true,
-  lineWrapping: true,
-  indentWithTabs: false,
-  tabSize: 2,
 };
 const themes = {
   default: {
@@ -197,9 +171,8 @@ class Editor extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onCodeChange = (editor, metadata, code) => {
-    this.setState({ valid: true, code });
-    setImmediate(() => {
+  onCodeChange = code => {
+    this.setState({ valid: true, code }, () => {
       try {
         this.props.onChange(fromJson(this.state.code));
       } catch (err) {
@@ -209,7 +182,7 @@ class Editor extends Component {
   };
 
   render() {
-    const { title, theme } = this.props;
+    const { title } = this.props;
     const icon = this.state.valid ? "ok" : "remove";
     const cls = this.state.valid ? "valid" : "invalid";
     return (
@@ -218,11 +191,13 @@ class Editor extends Component {
           <span className={`${cls} glyphicon glyphicon-${icon}`} />
           {" " + title}
         </div>
-        <CodeMirror
+        <MonacoEditor
+          language="json"
           value={this.state.code}
+          theme="vs-light"
           onChange={this.onCodeChange}
-          autoCursor={false}
-          options={Object.assign({}, cmOptions, { theme })}
+          height={400}
+          options={{ minimap: { enabled: false } }}
         />
       </div>
     );
