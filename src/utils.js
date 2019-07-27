@@ -247,7 +247,7 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
     // Override schema defaults with form data.
     return mergeObjects(defaults, formData);
   }
-  return formData || defaults;
+  return typeof formData !== "undefined" ? formData : defaults;
 }
 
 export function getUiOptions(uiSchema) {

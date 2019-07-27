@@ -35,6 +35,18 @@ describe("utils", () => {
           })
         ).to.eql("foo");
       });
+
+      it("should keep existing form data that is equal to 0", () => {
+        expect(
+          getDefaultFormState(
+            {
+              type: "number",
+              default: 1,
+            },
+            0
+          )
+        ).to.eql(0);
+      });
     });
 
     describe("nested default", () => {
