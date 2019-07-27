@@ -282,62 +282,6 @@ describe("Validation", () => {
       });
     });
 
-    describe("toErrorList()", () => {
-      it("should convert an errorSchema into a flat list", () => {
-        expect(
-          toErrorList({
-            __errors: ["err1", "err2"],
-            a: {
-              b: {
-                __errors: ["err3", "err4"],
-              },
-            },
-            c: {
-              __errors: ["err5"],
-            },
-          })
-        ).eql([
-          { stack: "root: err1" },
-          { stack: "root: err2" },
-          { stack: "b: err3" },
-          { stack: "b: err4" },
-          { stack: "c: err5" },
-        ]);
-      });
-    });
-
-    describe("transformErrors", () => {
-      const illFormedKey = "bar.'\"[]()=+*&^%$#@!";
-      const schema = {
-        type: "object",
-        properties: {
-          foo: { type: "string" },
-          [illFormedKey]: { type: "string" },
-        },
-      };
-      const newErrorMessage = "Better error message";
-      const transformErrors = errors => {
-        return [Object.assign({}, errors[0], { message: newErrorMessage })];
-      };
-
-      let errors;
-
-      beforeEach(() => {
-        const result = validateFormData(
-          { foo: 42, [illFormedKey]: 41 },
-          schema,
-          undefined,
-          transformErrors
-        );
-        errors = result.errors;
-      });
-
-      it("should use transformErrors function", () => {
-        expect(errors).not.to.be.empty;
-        expect(errors[0].message).to.equal(newErrorMessage);
-      });
-    });
-
     describe("Invalid schema", () => {
       const schema = {
         type: "object",
@@ -373,6 +317,62 @@ describe("Validation", () => {
           "should be array"
         );
       });
+    });
+  });
+
+  describe("toErrorList()", () => {
+    it("should convert an errorSchema into a flat list", () => {
+      expect(
+        toErrorList({
+          __errors: ["err1", "err2"],
+          a: {
+            b: {
+              __errors: ["err3", "err4"],
+            },
+          },
+          c: {
+            __errors: ["err5"],
+          },
+        })
+      ).eql([
+        { stack: "root: err1" },
+        { stack: "root: err2" },
+        { stack: "b: err3" },
+        { stack: "b: err4" },
+        { stack: "c: err5" },
+      ]);
+    });
+  });
+
+  describe("transformErrors", () => {
+    const illFormedKey = "bar.'\"[]()=+*&^%$#@!";
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+        [illFormedKey]: { type: "string" },
+      },
+    };
+    const newErrorMessage = "Better error message";
+    const transformErrors = errors => {
+      return [Object.assign({}, errors[0], { message: newErrorMessage })];
+    };
+
+    let errors;
+
+    beforeEach(() => {
+      const result = validateFormData(
+        { foo: 42, [illFormedKey]: 41 },
+        schema,
+        undefined,
+        transformErrors
+      );
+      errors = result.errors;
+    });
+
+    it("should use transformErrors function", () => {
+      expect(errors).not.to.be.empty;
+      expect(errors[0].message).to.equal(newErrorMessage);
     });
   });
 
