@@ -106,6 +106,13 @@ const themes = {
   },
 };
 
+const monacoEditorOptions = {
+  minimap: {
+    enabled: false,
+  },
+  automaticLayout: true,
+};
+
 class GeoPosition extends Component {
   constructor(props) {
     super(props);
@@ -203,7 +210,7 @@ class Editor extends Component {
           theme="vs-light"
           onChange={this.onCodeChange}
           height={400}
-          options={{ minimap: { enabled: false } }}
+          options={monacoEditorOptions}
         />
       </div>
     );
