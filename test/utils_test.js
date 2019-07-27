@@ -48,16 +48,19 @@ describe("utils", () => {
         ).to.eql(0);
       });
 
-      it("should overwrite existing form data that is equal to null", () => {
-        expect(
-          getDefaultFormState(
-            {
-              type: "number",
-              default: 1,
-            },
-            null
-          )
-        ).to.eql(1);
+      const noneValues = [null, undefined, NaN];
+      noneValues.forEach(noneValue => {
+        it("should overwrite existing form data that is equal to a none value", () => {
+          expect(
+            getDefaultFormState(
+              {
+                type: "number",
+                default: 1,
+              },
+              noneValue
+            )
+          ).to.eql(1);
+        });
       });
     });
 
