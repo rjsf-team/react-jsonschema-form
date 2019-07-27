@@ -7,7 +7,6 @@ import { samples } from "./samples";
 import Form from "../src";
 
 const log = type => console.log.bind(console, type);
-const fromJson = json => JSON.parse(json);
 const toJson = val => JSON.stringify(val, null, 2);
 const liveSettingsSchema = {
   type: "object",
@@ -168,17 +167,24 @@ class Editor extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return shouldRender(this, nextProps, nextState);
+    if (this.state.valid) {
+      return (
+        JSON.stringify(JSON.parse(nextProps.code)) !==
+        JSON.stringify(JSON.parse(this.state.code))
+      );
+    }
+    return false;
   }
 
   onCodeChange = code => {
-    this.setState({ valid: true, code }, () => {
-      try {
-        this.props.onChange(fromJson(this.state.code));
-      } catch (err) {
-        this.setState({ valid: false, code });
-      }
-    });
+    try {
+      const parsedCode = JSON.parse(code);
+      this.setState({ valid: true, code }, () =>
+        this.props.onChange(parsedCode)
+      );
+    } catch (err) {
+      this.setState({ valid: false, code });
+    }
   };
 
   render() {
