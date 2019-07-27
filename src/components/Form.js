@@ -13,6 +13,7 @@ import {
   getDefaultRegistry,
   deepEquals,
   toPathSchema,
+  isObject,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -30,7 +31,7 @@ export default class Form extends Component {
 
   constructor(props) {
     super(props);
-    this.state = this.getStateFromProps(props);
+    this.state = this.getStateFromProps(props, props.formData);
     if (
       this.props.onChange &&
       !deepEquals(this.state.formData, this.props.formData)
@@ -41,7 +42,7 @@ export default class Form extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextState = this.getStateFromProps(nextProps);
+    const nextState = this.getStateFromProps(nextProps, nextProps.formData);
     if (
       !deepEquals(nextState.formData, nextProps.formData) &&
       !deepEquals(nextState.formData, this.state.formData) &&
@@ -52,7 +53,7 @@ export default class Form extends Component {
     this.setState(nextState);
   }
 
-  getStateFromProps(props, inputFormData = props.formData) {
+  getStateFromProps(props, inputFormData) {
     const state = this.state || {};
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
@@ -171,6 +172,10 @@ export default class Form extends Component {
   };
 
   onChange = (formData, newErrorSchema) => {
+    if (isObject(formData) || Array.isArray(formData)) {
+      const newState = this.getStateFromProps(this.props, formData);
+      formData = newState.formData;
+    }
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = { formData };
     let newFormData = formData;
