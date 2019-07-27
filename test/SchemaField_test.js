@@ -304,7 +304,7 @@ describe("SchemaField", () => {
       }
     }
 
-    it("should render it's own errors", () => {
+    it("should render its own errors", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
