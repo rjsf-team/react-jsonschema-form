@@ -190,15 +190,12 @@ function computeDefaults(
       return Object.keys(schema.properties || {}).reduce((acc, key) => {
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
-        let computedDefaults = computeDefaults(
+        acc[key] = computeDefaults(
           schema.properties[key],
           (defaults || {})[key],
           definitions,
           (formData || {})[key]
         );
-        if (typeof computedDefaults !== "undefined") {
-          acc[key] = computedDefaults;
-        }
         return acc;
       }, {});
 
