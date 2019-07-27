@@ -239,7 +239,7 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
     definitions,
     formData
   );
-  if (typeof formData === "undefined") {
+  if (typeof formData === "undefined" || formData === null) {
     // No form data? Use schema defaults.
     return defaults;
   }
@@ -247,7 +247,7 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
     // Override schema defaults with form data.
     return mergeObjects(defaults, formData);
   }
-  return typeof formData !== "undefined" ? formData : defaults;
+  return formData;
 }
 
 export function getUiOptions(uiSchema) {

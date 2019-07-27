@@ -47,6 +47,18 @@ describe("utils", () => {
           )
         ).to.eql(0);
       });
+
+      it("should overwrite existing form data that is equal to null", () => {
+        expect(
+          getDefaultFormState(
+            {
+              type: "number",
+              default: 1,
+            },
+            null
+          )
+        ).to.eql(1);
+      });
     });
 
     describe("nested default", () => {
