@@ -1,7 +1,7 @@
 import toPath from "lodash.topath";
 import Ajv from "ajv";
 let ajv = createAjvInstance();
-import { deepEquals } from "./utils";
+import { deepEquals, getDefaultFormState } from "./utils";
 
 let formerCustomFormats = null;
 let formerMetaSchema = null;
@@ -172,6 +172,10 @@ export default function validateFormData(
   additionalMetaSchemas = [],
   customFormats = {}
 ) {
+  // Include form data with undefined values, which is required for validation.
+  const { definitions } = schema;
+  formData = getDefaultFormState(schema, formData, definitions, true);
+
   const newMetaSchemas = !deepEquals(formerMetaSchema, additionalMetaSchemas);
   const newFormats = !deepEquals(formerCustomFormats, customFormats);
 
