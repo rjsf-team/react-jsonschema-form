@@ -116,8 +116,9 @@ export default class Form extends Component {
     let state = { formData };
     if (mustValidate) {
       this.validate(formData).then(setStateAndBackPropagate);
+    } else {
+      setStateAndBackPropagate(state);
     }
-    setStateAndBackPropagate(state);
   };
 
   onBlur = (...args) => {
