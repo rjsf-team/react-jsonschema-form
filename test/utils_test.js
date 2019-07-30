@@ -13,6 +13,7 @@ import {
   isConstant,
   toConstant,
   isMultiSelect,
+  mergeDefaultsWithFormData,
   mergeObjects,
   pad,
   parseDateString,
@@ -345,6 +346,43 @@ describe("utils", () => {
         });
       });
 
+      it("should not fill array with additional items from schema when items is empty and form data contains partial array", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              minItems: 2,
+              additionalItems: {
+                type: "string",
+                default: "foo",
+              },
+              items: [],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { array: ["bar"] })).eql({
+          array: ["bar"],
+        });
+      });
+
+      it("should fill defaults in existing array items", () => {
+        const schema = {
+          type: "array",
+          minItems: 2,
+          items: {
+            type: "object",
+            properties: {
+              item: {
+                type: "string",
+                default: "foo",
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, [{}])).eql([{ item: "foo" }]);
+      });
+
       it("defaults passed along for multiselect arrays when minItems is present", () => {
         const schema = {
           type: "object",
@@ -615,6 +653,120 @@ describe("utils", () => {
             grade: "A",
           },
         });
+      });
+
+      it("should populate defaults for nested dependencies in arrays", () => {
+        const schema = {
+          type: "array",
+          items: {
+            properties: {
+              foo: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                },
+                dependencies: {
+                  name: {
+                    oneOf: [
+                      {
+                        properties: {
+                          name: {
+                            type: "string",
+                          },
+                          grade: {
+                            type: "string",
+                            default: "A",
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, [{ foo: { name: "Name" } }])).eql([
+          {
+            foo: {
+              name: "Name",
+              grade: "A",
+            },
+          },
+        ]);
+      });
+
+      it("should populate defaults for nested dependencies in arrays when matching enum values in oneOf", () => {
+        const schema = {
+          type: "array",
+          items: {
+            properties: {
+              foo: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                },
+                dependencies: {
+                  name: {
+                    oneOf: [
+                      {
+                        properties: {
+                          name: {
+                            enum: ["first"],
+                          },
+                          grade: {
+                            type: "string",
+                            default: "A",
+                          },
+                        },
+                      },
+                      {
+                        properties: {
+                          name: {
+                            enum: ["second"],
+                          },
+                          grade: {
+                            type: "string",
+                            default: "B",
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          getDefaultFormState(schema, [
+            { foo: { name: "first" } },
+            { foo: { name: "second" } },
+            { foo: { name: "third" } },
+          ])
+        ).eql([
+          {
+            foo: {
+              name: "first",
+              grade: "A",
+            },
+          },
+          {
+            foo: {
+              name: "second",
+              grade: "B",
+            },
+          },
+          {
+            foo: {
+              name: "third",
+            },
+          },
+        ]);
       });
 
       it("should populate defaults for nested oneOf + dependencies", () => {
@@ -953,6 +1105,93 @@ describe("utils", () => {
       const schema = {};
       const uiSchema = {};
       expect(isFilesArray(schema, uiSchema)).to.be.false;
+    });
+  });
+
+  describe("mergeDefaultsWithFormData()", () => {
+    it("should't mutate the provided objects", () => {
+      const obj1 = { a: 1 };
+      mergeDefaultsWithFormData(obj1, { b: 2 });
+      expect(obj1).eql({ a: 1 });
+    });
+
+    it("should't mutate the provided arrays", () => {
+      const array1 = [1];
+      mergeDefaultsWithFormData(array1, [2]);
+      expect(array1).eql([1]);
+    });
+
+    it("should merge two one-level deep objects", () => {
+      expect(mergeDefaultsWithFormData({ a: 1 }, { b: 2 })).eql({ a: 1, b: 2 });
+    });
+
+    it("should override the first object with the values from the second", () => {
+      expect(mergeDefaultsWithFormData({ a: 1 }, { a: 2 })).eql({ a: 2 });
+    });
+
+    it("should override non-existing values of the first object with the values from the second", () => {
+      expect(
+        mergeDefaultsWithFormData(
+          { a: { b: undefined } },
+          { a: { b: { c: 1 } } }
+        )
+      ).eql({ a: { b: { c: 1 } } });
+    });
+
+    it("should merge arrays using entries from second", () => {
+      expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5])).eql([4, 5]);
+    });
+
+    it("should deeply merge arrays with overlapping entries", () => {
+      expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }])).eql([
+        { a: 1, b: 2 },
+      ]);
+    });
+
+    it("should recursively merge deeply nested objects", () => {
+      const obj1 = {
+        a: 1,
+        b: {
+          c: 3,
+          d: [1, 2, 3],
+          e: { f: { g: 1 } },
+          h: [{ i: 1 }, { i: 2 }],
+        },
+        c: 2,
+      };
+      const obj2 = {
+        a: 1,
+        b: {
+          d: [3],
+          e: { f: { h: 2 } },
+          g: 1,
+          h: [{ i: 3 }],
+        },
+        c: 3,
+      };
+      const expected = {
+        a: 1,
+        b: {
+          c: 3,
+          d: [3],
+          e: { f: { g: 1, h: 2 } },
+          g: 1,
+          h: [{ i: 3 }],
+        },
+        c: 3,
+      };
+      expect(mergeDefaultsWithFormData(obj1, obj2)).eql(expected);
+    });
+
+    it("should recursively merge File objects", () => {
+      const file = new File(["test"], "test.txt");
+      const obj1 = {
+        a: {},
+      };
+      const obj2 = {
+        a: file,
+      };
+      expect(mergeDefaultsWithFormData(obj1, obj2).a).instanceOf(File);
     });
   });
 
