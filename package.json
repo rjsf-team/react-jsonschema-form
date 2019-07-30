@@ -24,8 +24,8 @@
   "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi --tab-width 2",
   "lint-staged": {
     "{playground,src,test}/**/*.js": [
-      "npm run lint",
-      "npm run cs-format",
+      "eslint --fix",
+      "prettier --jsx-bracket-same-line --trailing-comma es5 --use-tabs false --semi --tab-width 2 --write",
       "git add"
     ]
   },
