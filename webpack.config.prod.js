@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
   mode: "production",
@@ -11,6 +12,9 @@ module.exports = {
     publicPath: "/static/"
   },
   plugins: [
+    new MonacoWebpackPlugin({
+      languages: ['json']
+    }),
     new MiniCssExtractPlugin({filename: "styles.css", allChunks: true}),
     new webpack.DefinePlugin({
       "process.env": {
