@@ -2469,4 +2469,28 @@ describe("Form", () => {
       sinon.assert.notCalled(outerOnSubmit);
     });
   });
+
+  describe("Dependency defaults", () => {
+    it("should show dependency defaults for uncontrolled components", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          firstName: { type: "string" },
+        },
+        dependencies: {
+          firstName: {
+            properties: {
+              lastName: { type: "string", default: "Norris" },
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      Simulate.change(node.querySelector("#root_firstName"), {
+        target: { value: "Chuck" },
+      });
+      expect(node.querySelector("#root_lastName").value).eql("Norris");
+    });
+  });
 });

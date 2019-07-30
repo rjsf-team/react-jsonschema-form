@@ -35,6 +35,33 @@ describe("utils", () => {
           })
         ).to.eql("foo");
       });
+
+      it("should keep existing form data that is equal to 0", () => {
+        expect(
+          getDefaultFormState(
+            {
+              type: "number",
+              default: 1,
+            },
+            0
+          )
+        ).to.eql(0);
+      });
+
+      const noneValues = [null, undefined, NaN];
+      noneValues.forEach(noneValue => {
+        it("should overwrite existing form data that is equal to a none value", () => {
+          expect(
+            getDefaultFormState(
+              {
+                type: "number",
+                default: 1,
+              },
+              noneValue
+            )
+          ).to.eql(1);
+        });
+      });
     });
 
     describe("nested default", () => {
@@ -721,6 +748,27 @@ describe("utils", () => {
             phy: null,
           },
         });
+      });
+    });
+
+    describe("with schema keys not defined in the formData", () => {
+      it("shouldn't add in undefined keys to formData", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            foo: { type: "string" },
+            bar: { type: "string" },
+          },
+        };
+        const formData = {
+          foo: "foo",
+          baz: "baz",
+        };
+        const result = {
+          foo: "foo",
+          baz: "baz",
+        };
+        expect(getDefaultFormState(schema, formData)).to.eql(result);
       });
     });
   });
