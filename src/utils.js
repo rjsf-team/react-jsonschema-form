@@ -299,7 +299,6 @@ export function getDefaultFormState(
  * - scalars are overwritten/set by form data
  */
 export function mergeDefaultsWithFormData(defaults, formData) {
-  // Recursively merge deeply nested objects.
   if (Array.isArray(formData)) {
     const leftArray = Array.isArray(defaults) ? defaults : [];
     return formData.map((value, idx) => {
