@@ -105,7 +105,7 @@ export default class Form extends Component {
   onChange = (formData, options = { validate: false }) => {
     const setStateAndBackPropagate = state => {
       setState(this, state, () => {
-        if (this.props.onChange) {
+        if (state.formData && this.props.onChange) {
           this.props.onChange(this.state);
         }
       });
@@ -116,9 +116,8 @@ export default class Form extends Component {
     let state = { formData };
     if (mustValidate) {
       this.validate(formData).then(setStateAndBackPropagate);
-    } else {
-      setStateAndBackPropagate(state);
     }
+    setStateAndBackPropagate(state);
   };
 
   onBlur = (...args) => {
