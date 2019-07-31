@@ -1,5 +1,6 @@
 import React from "react";
 import * as ReactIs from "react-is";
+import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
 
@@ -561,6 +562,13 @@ export function resolveSchema(schema, definitions = {}, formData = {}) {
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return retrieveSchema(resolvedSchema, definitions, formData);
+  } else if (schema.hasOwnProperty("allOf")) {
+    return {
+      ...schema,
+      allOf: schema.allOf.map(allOfSubschema =>
+        retrieveSchema(allOfSubschema, definitions, formData)
+      ),
+    };
   } else {
     // No $ref or dependencies attribute found, returning the original schema.
     return schema;
@@ -580,8 +588,16 @@ function resolveReference(schema, definitions, formData) {
   );
 }
 
-export function retrieveSchema(schema, definitions = {}, formData = {}) {
-  const resolvedSchema = resolveSchema(schema, definitions, formData);
+export function retrieveSchema(
+  schema,
+  definitions = {},
+  formData = {},
+  shouldMergeAllOf = true
+) {
+  let resolvedSchema = resolveSchema(schema, definitions, formData);
+  if (shouldMergeAllOf && "allOf" in schema) {
+    resolvedSchema = mergeAllOf(resolvedSchema, { deep: false });
+  }
   const hasAdditionalProperties =
     resolvedSchema.hasOwnProperty("additionalProperties") &&
     resolvedSchema.additionalProperties !== false;
