@@ -46,7 +46,7 @@
     "@babel/runtime-corejs2": "^7.4.5",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
-    "json-schema-merge-allof": "^0.6.0",
+    "json-schema-merge-allof": "git+https://github.com/mokkabonna/json-schema-merge-allof.git#e43d0f2227476e069667358b86d0e8c91b50a777",
     "lodash": "^4.17.15",
     "prop-types": "^15.5.8",
     "react-is": "^16.8.4",
