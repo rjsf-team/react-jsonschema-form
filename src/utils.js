@@ -556,27 +556,17 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
-export function resolveSchema(
-  schema,
-  definitions = {},
-  formData = {},
-  shouldMergeAllOf = true
-) {
+export function resolveSchema(schema, definitions = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
     return resolveReference(schema, definitions, formData);
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
-    return retrieveSchema(
-      resolvedSchema,
-      definitions,
-      formData,
-      shouldMergeAllOf
-    );
+    return retrieveSchema(resolvedSchema, definitions, formData);
   } else if (schema.hasOwnProperty("allOf")) {
     return {
       ...schema,
       allOf: schema.allOf.map(allOfSubschema =>
-        retrieveSchema(allOfSubschema, definitions, formData, shouldMergeAllOf)
+        retrieveSchema(allOfSubschema, definitions, formData)
       ),
     };
   } else {
@@ -598,19 +588,9 @@ function resolveReference(schema, definitions, formData) {
   );
 }
 
-export function retrieveSchema(
-  schema,
-  definitions = {},
-  formData = {},
-  shouldMergeAllOf = true
-) {
-  let resolvedSchema = resolveSchema(
-    schema,
-    definitions,
-    formData,
-    shouldMergeAllOf
-  );
-  if (shouldMergeAllOf && "allOf" in schema) {
+export function retrieveSchema(schema, definitions = {}, formData = {}) {
+  let resolvedSchema = resolveSchema(schema, definitions, formData);
+  if ("allOf" in schema) {
     resolvedSchema = mergeAllOf(resolvedSchema, { deep: false });
   }
   const hasAdditionalProperties =

@@ -104,7 +104,7 @@ export default class Form extends Component {
   ) {
     const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
-    const resolvedSchema = retrieveSchema(schema, definitions, formData, false);
+    const resolvedSchema = retrieveSchema(schema, definitions, formData);
     return validateFormData(
       formData,
       resolvedSchema,
