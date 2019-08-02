@@ -210,6 +210,9 @@ export default function validateFormData(
     validationError = err;
   }
 
+  // No ajv errors found, only async errors possible now
+  let canSubmit = !ajv.errors;
+
   let errors = transformAjvErrors(ajv.errors);
 
   // Clear errors to prevent persistent errors, see #1104
@@ -249,7 +252,7 @@ export default function validateFormData(
   }
 
   if (typeof customValidate !== "function") {
-    return { errors, errorSchema };
+    return { errors, errorSchema, canSubmit };
   }
 
   const errorHandler = customValidate(formData, createErrorHandler(formData));
@@ -263,6 +266,7 @@ export default function validateFormData(
   return {
     errors: newErrors,
     errorSchema: newErrorSchema,
+    canSubmit,
   };
 }
 

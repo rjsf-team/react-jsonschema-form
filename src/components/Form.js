@@ -64,7 +64,7 @@ export default class Form extends Component {
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof inputFormData !== "undefined";
     const extraErrorsChange =
-      !prevProps || (props.extraErrors !== prevProps.extraErrors);
+      !prevProps || props.extraErrors !== prevProps.extraErrors;
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate =
       edit && !props.noValidate && (liveValidate || extraErrorsChange);
@@ -255,9 +255,14 @@ export default class Form extends Component {
       newFormData = this.getUsedFormData(this.state.formData, fieldNames);
     }
 
+    let errors = [];
+    let errorSchema = {};
     if (!this.props.noValidate) {
-      const { errors, errorSchema } = this.validate(newFormData);
-      if (Object.keys(errors).length > 0) {
+      const validationResult = this.validate(newFormData);
+      errors = validationResult.errors;
+      errorSchema = validationResult.errorSchema;
+      let canSubmit = validationResult.canSubmit;
+      if (!canSubmit) {
         setState(this, { errors, errorSchema }, () => {
           if (this.props.onError) {
             this.props.onError(errors);
@@ -269,17 +274,14 @@ export default class Form extends Component {
       }
     }
 
-    this.setState(
-      { formData: newFormData, errors: [], errorSchema: {} },
-      () => {
-        if (this.props.onSubmit) {
-          this.props.onSubmit(
-            { ...this.state, formData: newFormData, status: "submitted" },
-            event
-          );
-        }
+    this.setState({ formData: newFormData, errors, errorSchema }, () => {
+      if (this.props.onSubmit) {
+        this.props.onSubmit(
+          { ...this.state, formData: newFormData, status: "submitted" },
+          event
+        );
       }
-    );
+    });
   };
 
   getRegistry() {
