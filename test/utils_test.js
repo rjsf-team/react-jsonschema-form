@@ -307,6 +307,210 @@ describe("utils", () => {
         });
       });
 
+      it("should merge schema array item defaults from grandparent for overlapping default definitions", () => {
+        const schema = {
+          type: "object",
+          default: {
+            level1: { level2: ["root-default-1", "root-default-2"] },
+          },
+          properties: {
+            level1: {
+              type: "object",
+              properties: {
+                level2: {
+                  type: "array",
+                  items: [
+                    {
+                      type: "string",
+                      default: "child-default-1",
+                    },
+                    {
+                      type: "string",
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: { level2: ["child-default-1", "root-default-2"] },
+        });
+      });
+
+      it("should overwrite schema array item defaults from parent for nested default definitions", () => {
+        const schema = {
+          type: "object",
+          default: {
+            level1: {
+              level2: [{ item: "root-default-1" }, { item: "root-default-2" }],
+            },
+          },
+          properties: {
+            level1: {
+              type: "object",
+              default: { level2: [{ item: "parent-default-1" }, {}] },
+              properties: {
+                level2: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      item: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: { level2: [{ item: "parent-default-1" }, {}] },
+        });
+      });
+
+      it("should merge schema array item defaults from sam item for overlapping default definitions", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            level1: {
+              type: "array",
+              default: ["property-default-1", "property-default-2"],
+              items: [
+                {
+                  type: "string",
+                  default: "child-default-1",
+                },
+                {
+                  type: "string",
+                },
+              ],
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: ["child-default-1", "property-default-2"],
+        });
+      });
+
+      it("should merge schema from additionalItems defaults into property default", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            level1: {
+              type: "array",
+              default: [
+                {
+                  item: "property-default-1",
+                },
+                {},
+              ],
+              additionalItems: {
+                type: "object",
+                properties: {
+                  item: {
+                    type: "string",
+                    default: "additional-default",
+                  },
+                },
+              },
+              items: [
+                {
+                  type: "object",
+                  properties: {
+                    item: {
+                      type: "string",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: [
+            { item: "property-default-1" },
+            { item: "additional-default" },
+          ],
+        });
+      });
+
+      it("should overwrite defaults over multiple levels with arrays", () => {
+        const schema = {
+          type: "object",
+          default: {
+            level1: [
+              {
+                item: "root-default-1",
+              },
+              {
+                item: "root-default-2",
+              },
+              {
+                item: "root-default-3",
+              },
+              {
+                item: "root-default-4",
+              },
+            ],
+          },
+          properties: {
+            level1: {
+              type: "array",
+              default: [
+                {
+                  item: "property-default-1",
+                },
+                {},
+                {},
+              ],
+              additionalItems: {
+                type: "object",
+                properties: {
+                  item: {
+                    type: "string",
+                    default: "additional-default",
+                  },
+                },
+              },
+              items: [
+                {
+                  type: "object",
+                  properties: {
+                    item: {
+                      type: "string",
+                    },
+                  },
+                },
+                {
+                  type: "object",
+                  properties: {
+                    item: {
+                      type: "string",
+                      default: "child-default-2",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: [
+            { item: "property-default-1" },
+            { item: "child-default-2" },
+            { item: "additional-default" },
+          ],
+        });
+      });
+
       it("should use schema default for referenced definitions", () => {
         const schema = {
           definitions: {

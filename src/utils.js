@@ -181,10 +181,10 @@ function computeDefaults(
       includeUndefinedValues
     );
   } else if (isFixedItems(schema)) {
-    defaults = schema.items.map(itemSchema =>
+    defaults = schema.items.map((itemSchema, idx) =>
       computeDefaults(
         itemSchema,
-        undefined,
+        Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         definitions,
         formData,
         includeUndefinedValues
@@ -223,6 +223,17 @@ function computeDefaults(
       }, {});
 
     case "array":
+      // inject defaults into existing array defaults
+      if (Array.isArray(defaults)) {
+        defaults = defaults.map((item, idx) => {
+          return computeDefaults(
+            schema.items[idx] || schema.additionalItems || {},
+            item,
+            definitions
+          );
+        });
+      }
+
       // deeply inject defaults into already existing form data
       if (Array.isArray(rawFormData)) {
         defaults = rawFormData.map((array, idx) => {
