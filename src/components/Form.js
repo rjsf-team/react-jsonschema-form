@@ -43,7 +43,11 @@ export default class Form extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextState = this.getStateFromProps(nextProps, nextProps.formData);
+    const nextState = this.getStateFromProps(
+      nextProps,
+      nextProps.formData,
+      this.props
+    );
     if (
       !deepEquals(nextState.formData, nextProps.formData) &&
       !deepEquals(nextState.formData, this.state.formData) &&
@@ -60,7 +64,7 @@ export default class Form extends Component {
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof inputFormData !== "undefined";
     const extraErrorsChange =
-      prevProps && props.extraErrors && prevProps.extraErrors;
+      !!prevProps && props.extraErrors !== prevProps.extraErrors;
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate =
       edit && !props.noValidate && (liveValidate || extraErrorsChange);
@@ -70,7 +74,13 @@ export default class Form extends Component {
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
     const { errors, errorSchema } = mustValidate
-      ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
+      ? this.validate(
+          formData,
+          schema,
+          additionalMetaSchemas,
+          customFormats,
+          props.extraErrors
+        )
       : {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
@@ -104,9 +114,10 @@ export default class Form extends Component {
     formData,
     schema = this.props.schema,
     additionalMetaSchemas = this.props.additionalMetaSchemas,
-    customFormats = this.props.customFormats
+    customFormats = this.props.customFormats,
+    extraErrors = this.props.extraErrors
   ) {
-    const { validate, transformErrors, extraErrors } = this.props;
+    const { validate, transformErrors } = this.props;
     const { definitions } = this.getRegistry();
     const resolvedSchema = retrieveSchema(schema, definitions, formData);
     return validateFormData(
