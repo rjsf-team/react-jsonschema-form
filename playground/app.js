@@ -377,6 +377,9 @@ class App extends Component {
 
   onFormDataEdited = formData => this.setState({ formData, shareURL: null });
 
+  onExtraErrorsEdited = extraErrors =>
+    this.setState({ extraErrors, shareURL: null });
+
   onThemeSelected = (theme, { stylesheet, editor }) => {
     this.setState({ theme, editor: editor ? editor : "default" });
     setImmediate(() => {
@@ -415,6 +418,7 @@ class App extends Component {
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
+      extraErrors,
     } = this.state;
 
     return (
@@ -439,12 +443,24 @@ class App extends Component {
           </div>
         </div>
         <div className="col-sm-7">
-          <Editor
-            title="JSONSchema"
-            theme={editor}
-            code={toJson(schema)}
-            onChange={this.onSchemaEdited}
-          />
+          <div className="row">
+            <div className="col-sm-6">
+              <Editor
+                title="JSONSchema"
+                theme={editor}
+                code={toJson(schema)}
+                onChange={this.onSchemaEdited}
+              />
+            </div>
+            <div className="col-sm-6">
+              <Editor
+                title="extraErrors"
+                theme={editor}
+                code={toJson(extraErrors)}
+                onChange={this.onExtraErrorsEdited}
+              />
+            </div>
+          </div>
           <div className="row">
             <div className="col-sm-6">
               <Editor
@@ -476,6 +492,7 @@ class App extends Component {
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
+              extraErrors={extraErrors}
               onChange={this.onFormDataChange}
               onSubmit={({ formData }, e) => {
                 console.log("submitted formData", formData);
