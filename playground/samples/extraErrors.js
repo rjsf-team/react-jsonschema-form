@@ -29,6 +29,7 @@ module.exports = {
     {
       property: ".firstName",
       message: "An extra error, could be added asynchronously.",
+      stack: ".firstName has an extra error, could be added asynchronously.",
     },
   ],
 };
