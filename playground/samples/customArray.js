@@ -55,4 +55,5 @@ export default {
   },
   formData: ["react", "jsonschema", "form"],
   ArrayFieldTemplate,
+  extraErrors: [],
 };

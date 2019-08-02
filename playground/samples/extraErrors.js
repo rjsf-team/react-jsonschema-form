@@ -1,12 +1,9 @@
 module.exports = {
   schema: {
-    title: "A customizable registration form",
-    description: "A simple form with additional properties example.",
+    title: "Extra error example",
+    description: "A form with an extra error on the firstName property.",
     type: "object",
     required: ["firstName", "lastName"],
-    additionalProperties: {
-      type: "string",
-    },
     properties: {
       firstName: {
         type: "string",
@@ -27,7 +24,11 @@ module.exports = {
   formData: {
     firstName: "Chuck",
     lastName: "Norris",
-    assKickCount: "infinity",
   },
-  extraErrors: [],
+  extraErrors: [
+    {
+      property: ".firstName",
+      message: "An extra error, could be added asynchronously.",
+    },
+  ],
 };

@@ -25,4 +25,5 @@ module.exports = {
     },
   },
   formData: {},
+  extraErrors: [],
 };

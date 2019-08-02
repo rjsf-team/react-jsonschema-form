@@ -174,4 +174,5 @@ module.exports = {
     noToolbar: ["one", "two"],
     fixedNoToolbar: [42, true, "additional item one", "additional item two"],
   },
+  extraErrors: [],
 };

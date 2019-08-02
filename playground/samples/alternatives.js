@@ -86,4 +86,5 @@ module.exports = {
     colorPalette: ["#ff0000"],
     blendMode: "screen",
   },
+  extraErrors: [],
 };

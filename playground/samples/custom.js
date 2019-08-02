@@ -19,4 +19,5 @@ module.exports = {
     lat: 0,
     lon: 0,
   },
+  extraErrors: [],
 };

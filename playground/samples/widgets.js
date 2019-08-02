@@ -177,4 +177,5 @@ export default {
     },
     secret: "I'm a hidden string.",
   },
+  extraErrors: [],
 };

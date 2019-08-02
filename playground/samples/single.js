@@ -5,4 +5,5 @@ module.exports = {
   },
   formData: "initial value",
   uiSchema: {},
+  extraErrors: [],
 };

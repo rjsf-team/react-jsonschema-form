@@ -47,4 +47,5 @@ export default {
   formData: {},
   validate,
   transformErrors,
+  extraErrors: [],
 };

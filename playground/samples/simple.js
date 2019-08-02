@@ -66,4 +66,5 @@ module.exports = {
     bio: "Roundhouse kicking asses since 1940",
     password: "noneed",
   },
+  extraErrors: [],
 };

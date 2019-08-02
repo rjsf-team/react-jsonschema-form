@@ -58,4 +58,5 @@ module.exports = {
       children: [{ name: "leaf" }],
     },
   },
+  extraErrors: [],
 };

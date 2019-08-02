@@ -70,4 +70,5 @@ module.exports = {
     bio: null,
     password: "noneed",
   },
+  extraErrors: [],
 };

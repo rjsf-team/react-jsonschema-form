@@ -60,4 +60,5 @@ module.exports = {
     integerRange: 42,
     integerRangeSteps: 80,
   },
+  extraErrors: [],
 };

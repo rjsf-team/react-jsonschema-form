@@ -62,4 +62,5 @@ export default {
     password: "noneed",
   },
   ObjectFieldTemplate,
+  extraErrors: [],
 };

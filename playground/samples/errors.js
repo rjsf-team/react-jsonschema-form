@@ -39,4 +39,5 @@ module.exports = {
     skills: ["karate", "budo", "aikido"],
     multipleChoicesList: ["foo", "bar", "fuzz"],
   },
+  extraErrors: [],
 };

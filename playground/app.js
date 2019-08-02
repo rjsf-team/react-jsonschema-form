@@ -310,12 +310,19 @@ class App extends Component {
   constructor(props) {
     super(props);
     // initialize state with Simple data sample
-    const { schema, uiSchema, formData, validate } = samples.Simple;
+    const {
+      schema,
+      uiSchema,
+      formData,
+      validate,
+      extraErrors,
+    } = samples.Simple;
     this.state = {
       form: false,
       schema,
       uiSchema,
       formData,
+      extraErrors,
       validate,
       editor: "default",
       theme: "default",
