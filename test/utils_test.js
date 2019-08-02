@@ -373,7 +373,7 @@ describe("utils", () => {
         });
       });
 
-      it("should merge schema array item defaults from sam item for overlapping default definitions", () => {
+      it("should merge schema array item defaults from the same item for overlapping default definitions", () => {
         const schema = {
           type: "object",
           properties: {
