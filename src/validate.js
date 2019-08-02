@@ -170,7 +170,8 @@ export default function validateFormData(
   customValidate,
   transformErrors,
   additionalMetaSchemas = [],
-  customFormats = {}
+  customFormats = {},
+  extraErrors = []
 ) {
   // Include form data with undefined values, which is required for validation.
   const { definitions } = schema;
@@ -210,9 +211,11 @@ export default function validateFormData(
   }
 
   let errors = transformAjvErrors(ajv.errors);
-  // Clear errors to prevent persistent errors, see #1104
 
+  // Clear errors to prevent persistent errors, see #1104
   ajv.errors = null;
+
+  errors = errors.concat(extraErrors);
 
   const noProperMetaSchema =
     validationError &&

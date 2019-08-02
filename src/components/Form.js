@@ -27,6 +27,7 @@ export default class Form extends Component {
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
+    extraErrors: [],
   };
 
   constructor(props) {
@@ -53,13 +54,15 @@ export default class Form extends Component {
     this.setState(nextState);
   }
 
-  getStateFromProps(props, inputFormData) {
+  getStateFromProps(props, inputFormData, prevProps) {
     const state = this.state || {};
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof inputFormData !== "undefined";
+    const extraErrorsChange = props.extraErrors && prevProps.extraErrors;
     const liveValidate = props.liveValidate || this.props.liveValidate;
-    const mustValidate = edit && !props.noValidate && liveValidate;
+    const mustValidate =
+      edit && !props.noValidate && (liveValidate || extraErrorsChange);
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, inputFormData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
@@ -102,7 +105,7 @@ export default class Form extends Component {
     additionalMetaSchemas = this.props.additionalMetaSchemas,
     customFormats = this.props.customFormats
   ) {
-    const { validate, transformErrors } = this.props;
+    const { validate, transformErrors, extraErrors } = this.props;
     const { definitions } = this.getRegistry();
     const resolvedSchema = retrieveSchema(schema, definitions, formData);
     return validateFormData(
@@ -111,7 +114,8 @@ export default class Form extends Component {
       validate,
       transformErrors,
       additionalMetaSchemas,
-      customFormats
+      customFormats,
+      extraErrors
     );
   }
 
@@ -363,6 +367,7 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     formData: PropTypes.any,
+    extraErrors: PropTypes.array,
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
     ),
