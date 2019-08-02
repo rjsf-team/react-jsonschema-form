@@ -59,7 +59,8 @@ export default class Form extends Component {
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof inputFormData !== "undefined";
-    const extraErrorsChange = props.extraErrors && prevProps.extraErrors;
+    const extraErrorsChange =
+      prevProps && props.extraErrors && prevProps.extraErrors;
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate =
       edit && !props.noValidate && (liveValidate || extraErrorsChange);
