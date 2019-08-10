@@ -511,7 +511,7 @@ class App extends Component {
             <a href="https://github.com/aalpern/bootstrap-solarized/">
               bootstrap-solarized
             </a>
-            .
+            . Bootstrap version v3.3.6.
             {process.env.SHOW_NETLIFY_BADGE === "true" && (
               <div style={{ float: "right" }}>
                 <a href="https://www.netlify.com">
