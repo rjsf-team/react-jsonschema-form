@@ -1599,6 +1599,19 @@ describe("utils", () => {
         });
       });
     });
+
+    describe("allOf", () => {
+      it("should merge types", () => {
+        const schema = {
+          allOf: [{ type: ["string", "number", "null"] }, { type: "string" }],
+        };
+        const definitions = {};
+        const formData = {};
+        expect(retrieveSchema(schema, definitions, formData)).eql({
+          type: "string",
+        });
+      });
+    });
   });
 
   describe("shouldRender", () => {
