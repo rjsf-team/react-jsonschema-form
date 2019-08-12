@@ -168,13 +168,32 @@ class ObjectField extends Component {
   }
 
   handleAddClick = schema => () => {
-    const type = schema.additionalProperties.type;
+    let type = schema.additionalProperties.type;
     const newFormData = { ...this.props.formData };
+
+    if (
+      type === undefined &&
+      schema.additionalProperties.hasOwnProperty("$ref")
+    ) {
+      const refSchema = retrieveSchema(
+        schema.additionalProperties,
+        this.getDefinitions(),
+        this.props.formData
+      );
+      type = refSchema.type;
+    }
+
     newFormData[
       this.getAvailableKey("newKey", newFormData)
     ] = this.getDefaultValue(type);
+
     this.props.onChange(newFormData);
   };
+
+  getDefinitions() {
+    const { registry = getDefaultRegistry() } = this.props;
+    return registry.definitions;
+  }
 
   render() {
     const {

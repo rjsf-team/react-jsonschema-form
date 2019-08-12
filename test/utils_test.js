@@ -2,6 +2,7 @@ import { expect } from "chai";
 import React from "react";
 
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   asNumber,
   orderProperties,
   dataURItoBlob,
@@ -1069,6 +1070,38 @@ describe("utils", () => {
       const definitions = { "a~complex/name": address };
 
       expect(retrieveSchema(schema, definitions)).eql(address);
+    });
+
+    it("should 'resolve' and stub out a schema which contains an `additionalProperties` with a definition", () => {
+      const schema = {
+        type: "object",
+        additionalProperties: {
+          $ref: "#/definitions/components/schemas/address",
+        },
+      };
+
+      const address = {
+        type: "object",
+        properties: {
+          street_address: { type: "string" },
+          city: { type: "string" },
+          state: { type: "string" },
+        },
+        required: ["street_address", "city", "state"],
+      };
+
+      const definitions = { components: { schemas: { address } } };
+      const formData = { newKey: {} };
+
+      expect(retrieveSchema(schema, definitions, formData)).eql({
+        ...schema,
+        properties: {
+          newKey: {
+            ...address,
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
+      });
     });
 
     it("should priorize local definitions over foreign ones", () => {

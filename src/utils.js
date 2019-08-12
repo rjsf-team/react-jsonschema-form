@@ -542,11 +542,20 @@ export function stubExistingAdditionalProperties(
       // No need to stub, our schema already has the property
       return;
     }
-    const additionalProperties = schema.additionalProperties.hasOwnProperty(
-      "type"
-    )
-      ? { ...schema.additionalProperties }
-      : { type: guessType(formData[key]) };
+
+    let additionalProperties;
+    if (schema.additionalProperties.hasOwnProperty("type")) {
+      additionalProperties = { ...schema.additionalProperties };
+    } else if (schema.additionalProperties.hasOwnProperty("$ref")) {
+      additionalProperties = retrieveSchema(
+        schema.additionalProperties,
+        definitions,
+        formData
+      );
+    } else {
+      additionalProperties = { type: guessType(formData[key]) };
+    }
+
     // The type of our new key should match the additionalProperties value;
     schema.properties[key] = additionalProperties;
     // Set our additional property flag so we know it was dynamically added
