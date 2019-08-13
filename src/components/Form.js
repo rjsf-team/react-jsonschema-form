@@ -140,8 +140,8 @@ export default class Form extends Component {
     }
 
     let data = _pick(formData, fields);
-    if (typeof formData === "array") {
-      return Object.keys(data).map((k) => data[k]);
+    if (Array.isArray(formData)) {
+      return Object.keys(data).map(key => data[key]);
     } else {
       return data;
     }
