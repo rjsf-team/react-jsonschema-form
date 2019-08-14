@@ -866,6 +866,25 @@ describe("Form", () => {
       expect(result).eql("foo");
     });
 
+    it("should return the root level array", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      };
+      const formData = [];
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const result = comp.getUsedFormData(formData, []);
+      expect(result).eql([]);
+    });
+
     it("should call getUsedFormData with data from fields in event", () => {
       const schema = {
         type: "object",
