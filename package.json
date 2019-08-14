@@ -40,7 +40,7 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "react": ">=15"
+    "react": ">=16"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.4.5",
