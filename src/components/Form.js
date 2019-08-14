@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _pick from "lodash/pick";
-import _get from "lodash/get";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
@@ -142,7 +141,7 @@ export default class Form extends Component {
     return _pick(formData, fields);
   };
 
-  getFieldNames = (pathSchema, formData) => {
+  getFieldNames = pathSchema => {
     const getAllPaths = (_obj, acc = [], paths = []) => {
       Object.keys(_obj).forEach(key => {
         if (typeof _obj[key] === "object") {
@@ -158,8 +157,7 @@ export default class Form extends Component {
           }
         } else if (key === "$name") {
           paths.forEach(path => {
-            const formValue = _get(formData, path);
-            if (typeof formValue !== "object") {
+            if (!_obj["$hasChildren"]) {
               acc.push(path);
             }
           });
@@ -183,10 +181,7 @@ export default class Form extends Component {
     if (this.props.omitExtraData === true && this.props.liveOmit === true) {
       const newState = this.getStateFromProps(this.props, formData);
 
-      const fieldNames = this.getFieldNames(
-        newState.pathSchema,
-        newState.formData
-      );
+      const fieldNames = this.getFieldNames(newState.pathSchema);
 
       newFormData = this.getUsedFormData(formData, fieldNames);
       state = {
@@ -235,7 +230,7 @@ export default class Form extends Component {
     const { pathSchema } = this.state;
 
     if (this.props.omitExtraData === true) {
-      const fieldNames = this.getFieldNames(pathSchema, this.state.formData);
+      const fieldNames = this.getFieldNames(pathSchema);
       newFormData = this.getUsedFormData(this.state.formData, fieldNames);
     }
 

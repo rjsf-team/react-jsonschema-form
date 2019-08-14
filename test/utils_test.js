@@ -1955,8 +1955,10 @@ describe("utils", () => {
 
       expect(toPathSchema(schema)).eql({
         $name: "",
+        $hasChildren: true,
         level1: {
           $name: "level1",
+          $hasChildren: true,
           level2: { $name: "level1.level2" },
         },
       });
@@ -2008,9 +2010,11 @@ describe("utils", () => {
 
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
+        $hasChildren: true,
         list: {
           "0": {
             $name: "list.0",
+            $hasChildren: true,
             a: {
               $name: "list.0.a",
             },
@@ -2023,6 +2027,7 @@ describe("utils", () => {
           },
           "1": {
             $name: "list.1",
+            $hasChildren: true,
             a: {
               $name: "list.1.a",
             },
@@ -2032,6 +2037,7 @@ describe("utils", () => {
           },
           "2": {
             $name: "list.2",
+            $hasChildren: true,
             a: {
               $name: "list.2.a",
             },
@@ -2081,8 +2087,10 @@ describe("utils", () => {
 
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
+        $hasChildren: true,
         billing_address: {
           $name: "billing_address",
+          $hasChildren: true,
           city: {
             $name: "billing_address.city",
           },
@@ -2144,9 +2152,11 @@ describe("utils", () => {
 
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
+        $hasChildren: true,
         address_list: {
           "0": {
             $name: "address_list.0",
+            $hasChildren: true,
             city: {
               $name: "address_list.0.city",
             },
@@ -2159,6 +2169,7 @@ describe("utils", () => {
           },
           "1": {
             $name: "address_list.1",
+            $hasChildren: true,
             city: {
               $name: "address_list.1.city",
             },
@@ -2361,6 +2372,7 @@ describe("utils", () => {
 
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
+        $hasChildren: true,
         defaultsAndMinItems: {
           "0": {
             $name: "defaultsAndMinItems.0",
@@ -2406,6 +2418,7 @@ describe("utils", () => {
         listOfObjects: {
           "0": {
             $name: "listOfObjects.0",
+            $hasChildren: true,
             id: {
               $name: "listOfObjects.0.id",
             },
@@ -2415,6 +2428,7 @@ describe("utils", () => {
           },
           "1": {
             $name: "listOfObjects.1",
+            $hasChildren: true,
             id: {
               $name: "listOfObjects.1.id",
             },
@@ -2424,6 +2438,7 @@ describe("utils", () => {
           },
           "2": {
             $name: "listOfObjects.2",
+            $hasChildren: true,
             id: {
               $name: "listOfObjects.2.id",
             },
@@ -2443,18 +2458,21 @@ describe("utils", () => {
         minItemsList: {
           "0": {
             $name: "minItemsList.0",
+            $hasChildren: true,
             name: {
               $name: "minItemsList.0.name",
             },
           },
           "1": {
             $name: "minItemsList.1",
+            $hasChildren: true,
             name: {
               $name: "minItemsList.1.name",
             },
           },
           "2": {
             $name: "minItemsList.2",
+            $hasChildren: true,
             name: {
               $name: "minItemsList.2.name",
             },

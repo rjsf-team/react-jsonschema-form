@@ -910,6 +910,7 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
       // array item has just been added, but not populated with data yet
       (formData || {})[property]
     );
+    pathSchema["$hasChildren"] = true;
   }
   return pathSchema;
 }
