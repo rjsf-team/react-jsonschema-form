@@ -2,6 +2,7 @@ import React from "react";
 import * as ReactIs from "react-is";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
+import isPlainObject from "lodash/isPlainObject";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -881,14 +882,19 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
   }
   if ("items" in schema) {
     const retVal = {};
+    const setItemPathSchema = (element, index) => {
+      retVal[`${index}`] = toPathSchema(
+        schema.items,
+        `${name}.${index}`,
+        definitions,
+        element
+      );
+    };
     if (Array.isArray(formData) && formData.length > 0) {
-      formData.forEach((element, index) => {
-        retVal[`${index}`] = toPathSchema(
-          schema.items,
-          `${name}.${index}`,
-          definitions,
-          element
-        );
+      formData.forEach(setItemPathSchema);
+    } else if (isPlainObject(formData)) {
+      Object.keys(formData).forEach(name => {
+        setItemPathSchema(formData[name], name);
       });
     }
     return retVal;

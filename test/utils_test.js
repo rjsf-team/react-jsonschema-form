@@ -2527,6 +2527,96 @@ describe("utils", () => {
         },
       });
     });
+
+    it("should return a pathSchema for none indexed form data for array types", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          listOfStrings: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          listOfObjects: {
+            type: "array",
+            title: "List of objects",
+            items: {
+              type: "object",
+              title: "Object in list",
+              properties: {
+                name: {
+                  type: "string",
+                  default: "Default name",
+                },
+                id: {
+                  type: "number",
+                  default: "an id",
+                },
+              },
+            },
+          },
+        },
+      };
+
+      //let server control keys for array type.
+      const formData = {
+        listOfStrings: {
+          a: "foo",
+          b: "bar",
+        },
+        listOfObjects: {
+          "123": { name: "name1", id: 123 },
+          "1234": { name: "name2", id: 1234 },
+          "12345": { id: 12345 },
+        },
+      };
+
+      expect(toPathSchema(schema, "", null, formData)).eql({
+        $name: "",
+        $hasChildren: true,
+        listOfStrings: {
+          a: {
+            $name: "listOfStrings.a",
+          },
+          b: {
+            $name: "listOfStrings.b",
+          },
+        },
+        listOfObjects: {
+          "123": {
+            $name: "listOfObjects.123",
+            $hasChildren: true,
+            id: {
+              $name: "listOfObjects.123.id",
+            },
+            name: {
+              $name: "listOfObjects.123.name",
+            },
+          },
+          "1234": {
+            $name: "listOfObjects.1234",
+            $hasChildren: true,
+            id: {
+              $name: "listOfObjects.1234.id",
+            },
+            name: {
+              $name: "listOfObjects.1234.name",
+            },
+          },
+          "12345": {
+            $name: "listOfObjects.12345",
+            $hasChildren: true,
+            id: {
+              $name: "listOfObjects.12345.id",
+            },
+            name: {
+              $name: "listOfObjects.12345.name",
+            },
+          },
+        },
+      });
+    });
   });
 
   describe("parseDateString()", () => {
