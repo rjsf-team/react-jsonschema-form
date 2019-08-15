@@ -175,9 +175,10 @@ class ObjectField extends Component {
       type === undefined &&
       schema.additionalProperties.hasOwnProperty("$ref")
     ) {
+      const { registry = getDefaultRegistry() } = this.props;
       const refSchema = retrieveSchema(
         schema.additionalProperties,
-        this.getDefinitions(),
+        registry.definitions,
         this.props.formData
       );
       type = refSchema.type;
@@ -189,11 +190,6 @@ class ObjectField extends Component {
 
     this.props.onChange(newFormData);
   };
-
-  getDefinitions() {
-    const { registry = getDefaultRegistry() } = this.props;
-    return registry.definitions;
-  }
 
   render() {
     const {
