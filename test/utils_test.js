@@ -1104,6 +1104,32 @@ describe("utils", () => {
       });
     });
 
+    it.only("should 'resolve' and stub out a schema which contains an `additionalProperties` with a type and definition", () => {
+      const schema = {
+        type: "string",
+        additionalProperties: {
+          $ref: "#/definitions/number",
+        },
+      };
+
+      const number = {
+        type: "number",
+      };
+
+      const definitions = { number };
+      const formData = { newKey: {} };
+
+      expect(retrieveSchema(schema, definitions, formData)).eql({
+        ...schema,
+        properties: {
+          newKey: {
+            ...number,
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
+      });
+    });
+
     it("should priorize local definitions over foreign ones", () => {
       const schema = {
         $ref: "#/definitions/address",

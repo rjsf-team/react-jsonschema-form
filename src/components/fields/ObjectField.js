@@ -171,16 +171,14 @@ class ObjectField extends Component {
     let type = schema.additionalProperties.type;
     const newFormData = { ...this.props.formData };
 
-    if (
-      type === undefined &&
-      schema.additionalProperties.hasOwnProperty("$ref")
-    ) {
+    if (schema.additionalProperties.hasOwnProperty("$ref")) {
       const { registry = getDefaultRegistry() } = this.props;
       const refSchema = retrieveSchema(
-        schema.additionalProperties,
+        { $ref: schema.additionalProperties["$ref"] },
         registry.definitions,
         this.props.formData
       );
+
       type = refSchema.type;
     }
 
