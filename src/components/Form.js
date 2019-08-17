@@ -14,6 +14,8 @@ import {
   deepEquals,
   toPathSchema,
   isObject,
+  registerFormNode,
+  unregisterFormNode,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -327,6 +329,7 @@ export default class Form extends Component {
         onSubmit={this.onSubmit}
         ref={form => {
           this.formElement = form;
+          registerFormNode(this.props.id, form);
         }}>
         {this.renderErrors()}
         <_SchemaField
@@ -355,6 +358,10 @@ export default class Form extends Component {
         )}
       </FormTag>
     );
+  }
+
+  componentWillUnmount() {
+    unregisterFormNode(this.props.id);
   }
 }
 

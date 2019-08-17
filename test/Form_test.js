@@ -6,7 +6,7 @@ import { findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
 import { createRef } from "create-react-ref";
 
-import Form from "../src";
+import Form, { submitForm } from "../src";
 import {
   createComponent,
   createFormComponent,
@@ -2491,6 +2491,38 @@ describe("Form", () => {
         target: { value: "Chuck" },
       });
       expect(node.querySelector("#root_lastName").value).eql("Norris");
+    });
+  });
+
+  describe("Function `submitForm`", () => {
+    it("should do nothing if there's no form found with given id", () => {
+      const onFormSubmit = sandbox.spy();
+
+      createFormComponent({
+        schema: {},
+        onSubmit: onFormSubmit,
+      });
+
+      const isSubmitted = submitForm("non-exist-form-id");
+
+      expect(isSubmitted).to.be.false;
+      sinon.assert.notCalled(onFormSubmit);
+    });
+
+    it("should submit a form found with given id", () => {
+      const onFormSubmit = sandbox.spy();
+      const formId = "form-id";
+
+      createFormComponent({
+        id: formId,
+        schema: {},
+        onSubmit: onFormSubmit,
+      });
+
+      const isSubmitted = submitForm(formId);
+
+      expect(isSubmitted).to.be.true;
+      sinon.assert.calledOnce(onFormSubmit);
     });
   });
 });

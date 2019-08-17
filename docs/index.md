@@ -163,6 +163,22 @@ render((
 yourForm.submit();
 ```
 
+Alternatively, if your form component is given an `id`, instead of getting a reference to the `Form` component, you can use the utility function `submitForm` to submit the form programmatically. Advantage of using this approach is that you now don't have to pass the form component reference around, if your implementation needs to trigger the form submit in another component (say, a modal) or as part of a data flow (say, a redux middleware after some AJAX finishes).
+
+```js
+import Form, { submitForm } from 'react-jsonschema-form';
+
+const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
+const formId = 'my-form';
+
+render((
+  <Form id={formId} schema={schema}
+        onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
+), document.getElementById("app"));
+
+submitForm(formId);
+```
+
 ## Styling your forms
 
 This library renders form fields and widgets leveraging the [Bootstrap](http://getbootstrap.com/) semantics. That means your forms will be beautiful by default if you're loading its stylesheet in your page.

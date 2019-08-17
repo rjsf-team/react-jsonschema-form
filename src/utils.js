@@ -66,6 +66,41 @@ export function getDefaultRegistry() {
   };
 }
 
+const currentFormInstances = {};
+
+export function registerFormNode(formId, formNode) {
+  if (typeof formId !== "undefined") {
+    currentFormInstances[formId] = formNode;
+  }
+}
+
+export function unregisterFormNode(formId) {
+  delete currentFormInstances[formId];
+}
+
+function getRegisteredFormNode(formId) {
+  const formNode = currentFormInstances[formId];
+
+  if (!formNode && process.env.NODE_ENV === "development") {
+    console.error(
+      `No registered form node found with given id (${formId}). Please check if the target form has proper id assigned.`
+    );
+  }
+
+  return formNode;
+}
+
+export function submitForm(formId) {
+  const formNode = getRegisteredFormNode(formId);
+
+  if (formNode) {
+    formNode.dispatchEvent(new window.Event("submit", { cancelable: true }));
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export function getSchemaType(schema) {
   let { type } = schema;
 
