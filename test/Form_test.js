@@ -763,25 +763,21 @@ for (let formExtraProps of formExtraPropsList) {
         },
       };
 
-      it("should propagate deeply nested defaults to form state", done => {
+      it("should propagate deeply nested defaults to form state", () => {
         const { comp, node } = createFormComponent({ schema });
 
         Simulate.click(node.querySelector(".array-item-add button"));
         Simulate.submit(node);
 
-        // For some reason this may take some time to render, hence the safe wait.
-        setTimeout(() => {
-          expect(comp.state.formData).eql({
-            object: {
-              array: [
-                {
-                  bool: true,
-                },
-              ],
-            },
-          });
-          done();
-        }, 250);
+        expect(comp.state.formData).eql({
+          object: {
+            array: [
+              {
+                bool: true,
+              },
+            ],
+          },
+        });
       });
     });
 
