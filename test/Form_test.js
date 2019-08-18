@@ -1795,27 +1795,6 @@ for (let formExtraProps of formExtraPropsList) {
 
         expect(comp.state.formData).eql({ bar: "baz" });
       });
-
-      it("should replace state when formData keys have changed", () => {
-        const formData = { foo: "foo", bar: "bar" };
-        const { comp, node } = createFormComponent({ schema, formData });
-        comp.componentWillReceiveProps({
-          schema: {
-            type: "object",
-            properties: {
-              foo: { type: "string" },
-              baz: { type: "string" },
-            },
-          },
-          formData: { foo: "foo", baz: "bar" },
-        });
-
-        Simulate.change(node.querySelector("#root_baz"), {
-          target: { value: "baz" },
-        });
-
-        expect(comp.state.formData).eql({ foo: "foo", baz: "baz" });
-      });
     });
 
     describe("idSchema updates based on formData", () => {
@@ -2545,6 +2524,74 @@ describe("Form omitExtraData and liveOmit", () => {
           "address_list.1.street_address",
         ].sort()
       );
+    });
+  });
+
+  describe.only("Schema and formData updates", () => {
+    // https://github.com/mozilla-services/react-jsonschema-form/issues/231
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+        bar: { type: "string" },
+      },
+    };
+
+    for (let omitExtraData of [true, false]) {
+      it(
+        "should replace state when formData keys have changed with omitExtraData=" +
+          omitExtraData,
+        () => {
+          const formData = { foo: "foo", bar: "bar" };
+          const { comp, node } = createFormComponent({
+            schema,
+            formData,
+            omitExtraData,
+          });
+          comp.componentWillReceiveProps({
+            schema: {
+              type: "object",
+              properties: {
+                foo: { type: "string" },
+                baz: { type: "string" },
+              },
+            },
+            formData: { foo: "foo", baz: "bar" },
+          });
+
+          Simulate.change(node.querySelector("#root_baz"), {
+            target: { value: "baz" },
+          });
+
+          expect(comp.state.formData).eql({ foo: "foo", baz: "baz" });
+        }
+      );
+    }
+
+    it("should replace state and omit extra data when formData keys have changed, with liveOmit=true", () => {
+      const formData = { foo: "foo", bar: "bar" };
+      const { comp, node } = createFormComponent({
+        schema,
+        formData,
+        omitExtraData: true,
+        liveOmit: true,
+      });
+      comp.componentWillReceiveProps({
+        schema: {
+          type: "object",
+          properties: {
+            foo: { type: "string" },
+            baz: { type: "string" },
+          },
+        },
+        formData: { foo: "foo", baz: "bar" },
+      });
+
+      Simulate.change(node.querySelector("#root_baz"), {
+        target: { value: "baz" },
+      });
+
+      expect(comp.state.formData).eql({ foo: "foo" });
     });
   });
 });
