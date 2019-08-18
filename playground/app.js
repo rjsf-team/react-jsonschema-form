@@ -384,12 +384,14 @@ class App extends Component {
     this.setState({ formData, shareURL: null });
 
   onShare = () => {
-    const { formData, schema, uiSchema } = this.state;
+    const { formData, schema, uiSchema, liveSettings } = this.state;
     const {
       location: { origin, pathname },
     } = document;
     try {
-      const hash = btoa(JSON.stringify({ formData, schema, uiSchema }));
+      const hash = btoa(
+        JSON.stringify({ formData, schema, uiSchema, liveSettings })
+      );
       this.setState({ shareURL: `${origin}${pathname}#${hash}` });
     } catch (err) {
       this.setState({ shareURL: null });
