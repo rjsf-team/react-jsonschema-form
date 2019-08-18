@@ -170,12 +170,17 @@ export default class Form extends Component {
   };
 
   onChange = (formData, newErrorSchema) => {
+    let state = {};
     if (isObject(formData) || Array.isArray(formData)) {
       const newState = this.getStateFromProps(this.props, formData);
       formData = newState.formData;
+
+      state = {
+        formData,
+        pathSchema: newState.pathSchema,
+      };
     }
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
-    let state = { formData };
     let newFormData = formData;
 
     if (this.props.omitExtraData === true && this.props.liveOmit === true) {
@@ -185,6 +190,7 @@ export default class Form extends Component {
 
       newFormData = this.getUsedFormData(formData, fieldNames);
       state = {
+        pathSchema: newState.pathSchema,
         formData: newFormData,
       };
     }
