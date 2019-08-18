@@ -30,3 +30,20 @@ export function setProps(comp, newProps) {
   const node = findDOMNode(comp);
   render(React.createElement(comp.constructor, newProps), node.parentNode);
 }
+
+/* Run a group of tests with different combinations of omitExtraData and liveOmit as form props.
+ */
+export function describeRepeated(title, fn) {
+  const formExtraPropsList = [
+    { omitExtraData: false },
+    { omitExtraData: true },
+    { omitExtraData: true, liveOmit: true },
+  ];
+  for (let formExtraProps of formExtraPropsList) {
+    const createFormComponentFn = props =>
+      createFormComponent({ ...props, ...formExtraProps });
+    describe(title + " " + JSON.stringify(formExtraProps), () =>
+      fn(createFormComponentFn)
+    );
+  }
+}
