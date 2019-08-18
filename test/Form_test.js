@@ -9,7 +9,7 @@ import { createRef } from "create-react-ref";
 import Form from "../src";
 import {
   createComponent,
-  createFormComponent as createFormComponentFn,
+  createFormComponent,
   createSandbox,
   setProps,
   describeRepeated,
@@ -2138,7 +2138,6 @@ describeRepeated("Form common", () => {
   });
 });
 
-const createFormComponent = createFormComponentFn;
 describe("Form omitExtraData and liveOmit", () => {
   let sandbox;
 
