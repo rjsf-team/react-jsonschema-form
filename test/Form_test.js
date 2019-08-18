@@ -2237,7 +2237,7 @@ describe("Form omitExtraData and liveOmit", () => {
     sinon.assert.calledOnce(comp.getUsedFormData);
   });
 
-  it("should not call getUsedFormData when the omitExtraData prop is true and liveValidate is false", () => {
+  it("should not call getUsedFormData when the omitExtraData prop is true and liveOmit is unspecified", () => {
     const schema = {
       type: "object",
       properties: {
@@ -2251,13 +2251,11 @@ describe("Form omitExtraData and liveOmit", () => {
     };
     const onChange = sandbox.spy();
     const omitExtraData = true;
-    const liveValidate = false;
     const { node, comp } = createFormComponent({
       schema,
       formData,
       onChange,
       omitExtraData,
-      liveValidate,
     });
 
     sandbox.stub(comp, "getUsedFormData").returns({
