@@ -139,7 +139,12 @@ export default class Form extends Component {
       return formData;
     }
 
-    return _pick(formData, fields);
+    let data = _pick(formData, fields);
+    if (Array.isArray(formData)) {
+      return Object.keys(data).map(key => data[key]);
+    }
+
+    return data;
   };
 
   getFieldNames = (pathSchema, formData) => {
