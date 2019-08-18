@@ -32,7 +32,6 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props, props.formData);
-    // console.log("comparing", !deepEquals(this.state.formData, this.props.formData), JSON.stringify(this.state.formData), JSON.stringify(this.props.formData))
     if (
       this.props.onChange &&
       !deepEquals(this.state.formData, this.props.formData)
@@ -63,7 +62,6 @@ export default class Form extends Component {
     const mustValidate = edit && !props.noValidate && liveValidate;
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, inputFormData, definitions);
-    // console.log("GSFP", JSON.stringify(inputFormData), JSON.stringify(formData));
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
@@ -150,7 +148,6 @@ export default class Form extends Component {
   };
 
   getFieldNames = (pathSchema, formData) => {
-    // console.log(pathSchema, formData);
     const getAllPaths = (_obj, acc = [], paths = []) => {
       Object.keys(_obj).forEach(key => {
         if (typeof _obj[key] === "object") {
@@ -180,17 +177,10 @@ export default class Form extends Component {
   };
 
   onChange = (formData, newErrorSchema) => {
-    // console.log("OC", formData);
-    console.log(
-      "ON CHANGE CALLED",
-      this.props.omitExtraData,
-      this.props.liveOmit
-    );
     if (isObject(formData) || Array.isArray(formData)) {
       const newState = this.getStateFromProps(this.props, formData);
       formData = newState.formData;
     }
-    console.log("formData is", formData);
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = { formData };
     let newFormData = formData;
@@ -204,13 +194,6 @@ export default class Form extends Component {
       );
 
       newFormData = this.getUsedFormData(formData, fieldNames);
-      console.log(
-        "formData",
-        JSON.stringify(formData),
-        fieldNames,
-        "newFormData",
-        JSON.stringify(newFormData)
-      );
       state = {
         formData: newFormData,
       };
@@ -254,8 +237,6 @@ export default class Form extends Component {
     event.persist();
     let newFormData = this.state.formData;
 
-    const { pathSchema } = this.state;
-
     if (this.props.omitExtraData === true) {
       const newState = this.getStateFromProps(this.props, this.state.formData);
       const fieldNames = this.getFieldNames(
@@ -263,13 +244,6 @@ export default class Form extends Component {
         newState.formData
       );
       newFormData = this.getUsedFormData(this.state.formData, fieldNames);
-      console.log(
-        "ONSUBMIT",
-        JSON.stringify(this.state.formData),
-        JSON.stringify(pathSchema),
-        fieldNames,
-        newFormData
-      );
     }
 
     if (!this.props.noValidate) {
