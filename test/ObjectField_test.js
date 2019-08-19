@@ -552,6 +552,26 @@ describe("ObjectField", () => {
       expect(comp.state.formData.newFirst).eql(1);
     });
 
+    it("should retain user-input data if key-value pair has a title present in the schema", () => {
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "object",
+          additionalProperties: {
+            title: "Custom title",
+            type: "string",
+          },
+        },
+        formData: { "Custom title": 1 },
+      });
+
+      const textNode = node.querySelector("#root_Custom\\ title-key");
+      Simulate.blur(textNode, {
+        target: { value: "Renamed custom title" },
+      });
+
+      expect(comp.state.formData["Renamed custom title"]).eql(1);
+    });
+
     it("should keep order of renamed key-value pairs while renaming key", () => {
       const { comp, node } = createFormComponent({
         schema,
