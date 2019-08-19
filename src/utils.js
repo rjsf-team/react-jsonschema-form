@@ -873,43 +873,35 @@ export function toIdSchema(
 
 export function toPathSchema(schema, name = "", definitions, formData = {}) {
   const pathSchema = {
-    $name: name,
+    $name: name.replace(/\.$/, ""),
   };
   if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toPathSchema(_schema, name, definitions, formData);
   }
-  if ("items" in schema) {
-    const retVal = {};
-    if (Array.isArray(formData) && formData.length > 0) {
-      formData.forEach((element, index) => {
-        retVal[`${index}`] = toPathSchema(
-          schema.items,
-          `${name}.${index}`,
-          definitions,
-          element
-        );
-      });
+  if (
+    schema.type === "array" &&
+    schema.hasOwnProperty("items") &&
+    Array.isArray(formData) &&
+    formData.length > 0
+  ) {
+    formData.forEach((element, i) => {
+      pathSchema[i] = toPathSchema(
+        schema.items,
+        `${name}${i}.`,
+        definitions,
+        element
+      );
+    });
+  } else if (schema.type === "object" && schema.hasOwnProperty("properties")) {
+    for (const property in schema.properties || {}) {
+      pathSchema[property] = toPathSchema(
+        schema.properties[property],
+        `${name}${property}.`,
+        definitions,
+        (formData || {})[property]
+      );
     }
-    return retVal;
-  }
-  if (schema.type !== "object") {
-    return pathSchema;
-  }
-  for (const property in schema.properties || {}) {
-    const field = schema.properties[property];
-    const fieldId = pathSchema.$name
-      ? pathSchema.$name + "." + property
-      : property;
-
-    pathSchema[property] = toPathSchema(
-      field,
-      fieldId,
-      definitions,
-      // It's possible that formData is not an object -- this can happen if an
-      // array item has just been added, but not populated with data yet
-      (formData || {})[property]
-    );
   }
   return pathSchema;
 }

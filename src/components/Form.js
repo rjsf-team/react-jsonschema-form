@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
+import _isEmpty from "lodash/isEmpty";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
@@ -149,17 +150,13 @@ export default class Form extends Component {
           if (!paths.length) {
             getAllPaths(_obj[key], acc, [key]);
           } else {
-            let newPaths = [];
-            paths.forEach(path => {
-              newPaths.push(path);
-            });
-            newPaths = newPaths.map(path => `${path}.${key}`);
+            let newPaths = paths.map(path => `${path}.${key}`);
             getAllPaths(_obj[key], acc, newPaths);
           }
         } else if (key === "$name") {
           paths.forEach(path => {
             const formValue = _get(formData, path);
-            if (typeof formValue !== "object") {
+            if (typeof formValue !== "object" || _isEmpty(formValue)) {
               acc.push(path);
             }
           });
