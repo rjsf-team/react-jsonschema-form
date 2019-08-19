@@ -15,7 +15,7 @@ import {
   describeRepeated,
 } from "./test_utils";
 
-describeRepeated("Form common", () => {
+describeRepeated("Form common", createFormComponent => {
   let sandbox;
 
   beforeEach(() => {
@@ -1114,6 +1114,128 @@ describeRepeated("Form common", () => {
     });
   });
 
+  describe("Internal formData updates", () => {
+    it("root", () => {
+      const formProps = {
+        schema: { type: "string" },
+        liveValidate: true,
+      };
+      const { comp, node } = createFormComponent(formProps);
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "yo" },
+      });
+
+      expect(comp.state.formData).eql("yo");
+    });
+    it("object", () => {
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "object",
+          properties: {
+            foo: {
+              type: "string",
+            },
+          },
+        },
+      });
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "yo" },
+      });
+
+      expect(comp.state.formData).eql({ foo: "yo" });
+    });
+    it("array of strings", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      };
+      const { comp, node } = createFormComponent({ schema });
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "yo" },
+      });
+
+      expect(comp.state.formData).eql(["yo"]);
+    });
+    it("array of objects", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+          },
+        },
+      };
+      const { comp, node } = createFormComponent({ schema });
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "yo" },
+      });
+
+      expect(comp.state.formData).eql([{ name: "yo" }]);
+    });
+    it("dependency with array of objects", () => {
+      const schema = {
+        definitions: {},
+        type: "object",
+        properties: {
+          show: {
+            type: "boolean",
+          },
+        },
+        dependencies: {
+          show: {
+            oneOf: [
+              {
+                properties: {
+                  show: {
+                    const: true,
+                  },
+                  participants: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        name: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+      const { comp, node } = createFormComponent({ schema });
+
+      Simulate.change(node.querySelector("[type=checkbox]"), {
+        target: { checked: true },
+      });
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      Simulate.change(node.querySelector("input[type=text]"), {
+        target: { value: "yo" },
+      });
+
+      expect(comp.state.formData).eql({
+        show: true,
+        participants: [{ name: "yo" }],
+      });
+    });
+  });
+
   describe("Error contextualization", () => {
     describe("on form state updated", () => {
       const schema = {
@@ -1742,16 +1864,15 @@ describeRepeated("Form common", () => {
   });
 
   describe("Schema and formData updates", () => {
-    // https://github.com/mozilla-services/react-jsonschema-form/issues/231
-    const schema = {
-      type: "object",
-      properties: {
-        foo: { type: "string" },
-        bar: { type: "string" },
-      },
-    };
-
     it("should replace state when formData have keys removed", () => {
+      // https://github.com/mozilla-services/react-jsonschema-form/issues/231
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+          bar: { type: "string" },
+        },
+      };
       const formData = { foo: "foo", bar: "bar" };
       const { comp, node } = createFormComponent({ schema, formData });
       comp.componentWillReceiveProps({
