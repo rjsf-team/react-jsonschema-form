@@ -154,8 +154,7 @@ export default class Form extends Component {
           if (!paths.length) {
             getAllPaths(_obj[key], acc, [key]);
           } else {
-            let newPaths = [...paths];
-            newPaths = newPaths.map(path => `${path}.${key}`);
+            let newPaths = paths.map(path => `${path}.${key}`);
             getAllPaths(_obj[key], acc, newPaths);
           }
         } else if (key === "$name") {
