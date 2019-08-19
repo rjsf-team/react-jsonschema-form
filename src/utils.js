@@ -880,7 +880,6 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
     return toPathSchema(_schema, name, definitions, formData);
   }
   if (
-    schema.type === "array" &&
     schema.hasOwnProperty("items") &&
     Array.isArray(formData) &&
     formData.length > 0
@@ -893,7 +892,7 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
         element
       );
     });
-  } else if (schema.type === "object" && schema.hasOwnProperty("properties")) {
+  } else if (schema.hasOwnProperty("properties")) {
     for (const property in schema.properties || {}) {
       pathSchema[property] = toPathSchema(
         schema.properties[property],
