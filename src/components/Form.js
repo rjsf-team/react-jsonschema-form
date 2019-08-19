@@ -141,7 +141,7 @@ export default class Form extends Component {
 
     let data = _pick(formData, fields);
     if (Array.isArray(formData)) {
-      return Object.keys(data).map(key => data[key]);
+      return data.map((key, i) => data[i]);
     }
 
     return data;
@@ -194,6 +194,7 @@ export default class Form extends Component {
       );
 
       newFormData = this.getUsedFormData(formData, fieldNames);
+
       state = {
         formData: newFormData,
       };
