@@ -2009,6 +2009,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         list: {
+          $name: "list",
           "0": {
             $name: "list.0",
             a: {
@@ -2145,6 +2146,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         address_list: {
+          $name: "address_list",
           "0": {
             $name: "address_list.0",
             city: {
@@ -2362,6 +2364,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         defaultsAndMinItems: {
+          $name: "defaultsAndMinItems",
           "0": {
             $name: "defaultsAndMinItems.0",
           },
@@ -2379,6 +2382,7 @@ describe("utils", () => {
           },
         },
         fixedItemsList: {
+          $name: "fixedItemsList",
           "0": {
             $name: "fixedItemsList.0",
           },
@@ -2390,6 +2394,7 @@ describe("utils", () => {
           },
         },
         fixedNoToolbar: {
+          $name: "fixedNoToolbar",
           "0": {
             $name: "fixedNoToolbar.0",
           },
@@ -2404,6 +2409,7 @@ describe("utils", () => {
           },
         },
         listOfObjects: {
+          $name: "listOfObjects",
           "0": {
             $name: "listOfObjects.0",
             id: {
@@ -2433,6 +2439,7 @@ describe("utils", () => {
           },
         },
         listOfStrings: {
+          $name: "listOfStrings",
           "0": {
             $name: "listOfStrings.0",
           },
@@ -2441,6 +2448,7 @@ describe("utils", () => {
           },
         },
         minItemsList: {
+          $name: "minItemsList",
           "0": {
             $name: "minItemsList.0",
             name: {
@@ -2461,6 +2469,7 @@ describe("utils", () => {
           },
         },
         multipleChoicesList: {
+          $name: "multipleChoicesList",
           "0": {
             $name: "multipleChoicesList.0",
           },
@@ -2469,7 +2478,9 @@ describe("utils", () => {
           },
         },
         nestedList: {
+          $name: "nestedList",
           "0": {
+            $name: "nestedList.0",
             "0": {
               $name: "nestedList.0.0",
             },
@@ -2478,12 +2489,14 @@ describe("utils", () => {
             },
           },
           "1": {
+            $name: "nestedList.1",
             "0": {
               $name: "nestedList.1.0",
             },
           },
         },
         noToolbar: {
+          $name: "noToolbar",
           "0": {
             $name: "noToolbar.0",
           },
@@ -2492,6 +2505,7 @@ describe("utils", () => {
           },
         },
         unorderable: {
+          $name: "unorderable",
           "0": {
             $name: "unorderable.0",
           },
@@ -2500,6 +2514,7 @@ describe("utils", () => {
           },
         },
         unremovable: {
+          $name: "unremovable",
           "0": {
             $name: "unremovable.0",
           },
