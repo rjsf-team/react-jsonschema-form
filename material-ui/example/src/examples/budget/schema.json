@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "properties": {
+    "roles": {
+      "title": "Roles",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "Role",
+        "default": {
+          "allocations": []
+        },
+        "properties": {
+          "location": {
+            "title": "Location",
+            "type": "string"
+          },
+          "allocations": {
+            "title": "Allocations",
+            "type": "array",
+            "items": {
+              "default": {},
+              "type": "object",
+              "properties": {
+                "name": {
+                  "title": "Resource",
+                  "type": "string"
+                },
+                "rate": {
+                  "title": "Rate",
+                  "type": "string"
+                },
+                "location": {
+                  "title": "Location",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "firstName": "Chuck",
+  "active": "wrong",
+  "skills": ["karate", "budo", "aikido"],
+  "multipleChoicesList": ["foo", "bar", "fuzz"]
+}

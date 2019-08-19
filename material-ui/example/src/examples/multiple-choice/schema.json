@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "multipleChoicesList": {
+      "type": "array",
+      "title": "A multiple choices list",
+      "items": {
+        "type": "string",
+        "enum": ["foo", "bar", "fuzz", "qux"]
+      },
+      "uniqueItems": true
+    }
+  }
+}

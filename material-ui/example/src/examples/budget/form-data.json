@@ -1,0 +1,14 @@
+{
+  "roles": [
+    {
+      "location": "uk",
+      "allocations": [
+        {
+          "name": "jim",
+          "role": "pm",
+          "location": "in"
+        }
+      ]
+    }
+  ]
+}

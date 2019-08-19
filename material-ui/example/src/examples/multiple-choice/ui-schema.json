@@ -1,0 +1,5 @@
+{
+  "multipleChoicesList": {
+    "ui:widget": "checkboxes"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "items": {
+      "details": {
+        "ui:widget": "textarea"
+      }
+    }
+  }
+}

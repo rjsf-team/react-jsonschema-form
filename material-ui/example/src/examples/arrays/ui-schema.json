@@ -1,0 +1,12 @@
+{
+  "fixedItemsList": {
+    "items": [
+      {
+        "ui:widget": "textarea"
+      },
+      {
+        "ui:widget": "select"
+      }
+    ]
+  }
+}

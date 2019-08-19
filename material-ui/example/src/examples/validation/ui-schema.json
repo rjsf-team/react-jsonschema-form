@@ -1,0 +1,8 @@
+{
+  "pass1": {
+    "ui:widget": "password"
+  },
+  "pass2": {
+    "ui:widget": "password"
+  }
+}

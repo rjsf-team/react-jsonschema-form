@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "fixedItemsList": {
+      "type": "array",
+      "title": "A list of fixed items",
+      "items": [
+        {
+          "title": "A string value",
+          "type": "string",
+          "default": "lorem ipsum"
+        },
+        {
+          "title": "a boolean value",
+          "type": "boolean"
+        }
+      ],
+      "additionalItems": {
+        "title": "Relations",
+        "type": "string",
+        "default": ""
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "roles": {
+    "items": {
+      "allocations": {
+        "items": {
+          "ui:orientation": "row"
+        }
+      }
+    }
+  }
+}

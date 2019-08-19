@@ -1,0 +1,54 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "src/index.tsx",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html --public-url .",
+    "clean": "rimraf dist",
+    "predeploy": "run-s clean build",
+    "deploy": "gh-pages -d dist -m '[skip ci] Update' -u 'CircleCI <lorenz.henk@cybertec.at>'"
+  },
+  "dependencies": {
+    "@material-ui/styles": "^4.1.2",
+    "classnames": "^2.2.6",
+    "codemirror": "^5.48.0",
+    "react-app-polyfill": "^1.0.0",
+    "react-codemirror2": "^6.0.0"
+  },
+  "alias": {
+    "@material-ui/core": "../node_modules/@material-ui/core",
+    "@material-ui/icons": "../node_modules/@material-ui/icons",
+    "react": "../node_modules/react",
+    "react-dom": "../node_modules/react-dom/profiling",
+    "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@types/react": "^16.8.15",
+    "@types/react-dom": "^16.8.4",
+    "gh-pages": "^2.0.1",
+    "npm-run-all": "^4.1.5",
+    "parcel": "^1.12.3",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.5.2"
+  },
+  "homepage": "https://cybertec-postgresql.github.io/rjsf-material-ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cybertec-postgresql/rjsf-material-ui.git"
+  },
+  "author": "Agustin N. R. Ramirez <agustin.ramirez@cybertec.at>",
+  "keywords": [
+    "react",
+    "form",
+    "json-schema",
+    "material-ui"
+  ]
+}
