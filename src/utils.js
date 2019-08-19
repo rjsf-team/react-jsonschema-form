@@ -1,5 +1,6 @@
 import React from "react";
 import * as ReactIs from "react-is";
+import _get from "lodash/get";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
 
@@ -1073,4 +1074,20 @@ export function getMatchingOption(formData, options, definitions) {
     }
   }
   return 0;
+}
+
+function removeLastPart(input) {
+  let parts = input.split(".");
+  if (parts.length < 2) {
+    return input;
+  }
+  parts.pop();
+  return parts.join(".");
+}
+
+export function getLastPart(data, path) {
+  if (path.indexOf(".") === -1) {
+    return data;
+  }
+  return _get(data, removeLastPart(path));
 }

@@ -14,6 +14,7 @@ import {
   deepEquals,
   toPathSchema,
   isObject,
+  getLastPart,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
@@ -141,7 +142,7 @@ export default class Form extends Component {
 
     let data = _pick(formData, fields);
     if (Array.isArray(formData)) {
-      return data.map((key, i) => data[i]);
+      return Object.keys(data).map(i => data[i]);
     }
 
     return data;
@@ -161,6 +162,16 @@ export default class Form extends Component {
           paths.forEach(path => {
             const formValue = _get(formData, path);
             if (typeof formValue !== "object") {
+              acc.push(path);
+            }
+            if (
+              isObject(formValue) &&
+              Object.keys(formValue).length === 0 &&
+              Array.isArray(getLastPart(formData, path))
+            ) {
+              // If formValue is {} and it is stored above, then user it.
+              // Example: path = "participants.0", formData = {participants: [{}]}, formValue = {}, so it should actually add this path to lodash.
+              // This is because doing _pick(formData, "participants.0.name") gives us {} (i.e. removes the participant) whereas _pick(formData, "participants.0") gives us {}, which is what we want.
               acc.push(path);
             }
           });
