@@ -873,7 +873,7 @@ export function toIdSchema(
 
 export function toPathSchema(schema, name = "", definitions, formData = {}) {
   const pathSchema = {
-    $name: name.replace(/\.$/, ""),
+    $name: name.replace(/^\./, ""),
   };
   if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
@@ -887,7 +887,7 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
     formData.forEach((element, i) => {
       pathSchema[i] = toPathSchema(
         schema.items,
-        `${name}${i}.`,
+        `${name}.${i}`,
         definitions,
         element
       );
@@ -896,7 +896,7 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
     for (const property in schema.properties) {
       pathSchema[property] = toPathSchema(
         schema.properties[property],
-        `${name}${property}.`,
+        `${name}.${property}`,
         definitions,
         (formData || {})[property]
       );
