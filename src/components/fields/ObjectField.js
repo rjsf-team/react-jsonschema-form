@@ -90,7 +90,7 @@ class ObjectField extends Component {
         // fields which are "mandated" by the schema, these fields can
         // be set to undefined by clicking a "delete field" button, so
         // set empty values to the empty string.
-        if (typeof value == "boolean") {
+        if (typeof value === "boolean") {
           value = false;
         } else {
           value = "";
