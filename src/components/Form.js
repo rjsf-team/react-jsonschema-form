@@ -79,7 +79,6 @@ export default class Form extends Component {
       formData,
       props.idPrefix
     );
-    const pathSchema = toPathSchema(retrievedSchema, "", definitions, formData);
     return {
       schema,
       uiSchema,
@@ -89,7 +88,6 @@ export default class Form extends Component {
       errors,
       errorSchema,
       additionalMetaSchemas,
-      pathSchema,
     };
   }
 
@@ -180,12 +178,19 @@ export default class Form extends Component {
     let newFormData = formData;
 
     if (this.props.omitExtraData === true && this.props.liveOmit === true) {
-      const newState = this.getStateFromProps(this.props, formData);
-
-      const fieldNames = this.getFieldNames(
-        newState.pathSchema,
-        newState.formData
+      const retrievedSchema = retrieveSchema(
+        this.state.schema,
+        this.state.schema.definitions,
+        formData
       );
+      const pathSchema = toPathSchema(
+        retrievedSchema,
+        "",
+        this.state.schema.definitions,
+        formData
+      );
+
+      const fieldNames = this.getFieldNames(pathSchema, formData);
 
       newFormData = this.getUsedFormData(formData, fieldNames);
       state = {
@@ -231,11 +236,22 @@ export default class Form extends Component {
     event.persist();
     let newFormData = this.state.formData;
 
-    const { pathSchema } = this.state;
-
     if (this.props.omitExtraData === true) {
-      const fieldNames = this.getFieldNames(pathSchema, this.state.formData);
-      newFormData = this.getUsedFormData(this.state.formData, fieldNames);
+      const retrievedSchema = retrieveSchema(
+        this.state.schema,
+        this.state.schema.definitions,
+        newFormData
+      );
+      const pathSchema = toPathSchema(
+        retrievedSchema,
+        "",
+        this.state.schema.definitions,
+        newFormData
+      );
+
+      const fieldNames = this.getFieldNames(pathSchema, newFormData);
+
+      newFormData = this.getUsedFormData(newFormData, fieldNames);
     }
 
     if (!this.props.noValidate) {
