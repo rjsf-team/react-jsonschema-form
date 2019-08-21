@@ -893,7 +893,7 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
       );
     });
   } else if (schema.hasOwnProperty("properties")) {
-    for (const property in schema.properties || {}) {
+    for (const property in schema.properties) {
       pathSchema[property] = toPathSchema(
         schema.properties[property],
         `${name}${property}.`,
