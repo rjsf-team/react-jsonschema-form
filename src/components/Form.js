@@ -150,11 +150,11 @@ export default class Form extends Component {
     const getAllPaths = (_obj, acc = [], paths = [""]) => {
       Object.keys(_obj).forEach(key => {
         if (typeof _obj[key] === "object") {
-          let newPaths = paths.map(path => `${path}${key}.`);
+          let newPaths = paths.map(path => `${path}.${key}`);
           getAllPaths(_obj[key], acc, newPaths);
         } else if (key === "$name" && _obj[key] !== "") {
           paths.forEach(path => {
-            path = path.replace(/\.$/, "");
+            path = path.replace(/^\./, "");
             const formValue = _get(formData, path);
             if (typeof formValue !== "object" || _isEmpty(formValue)) {
               acc.push(path);
