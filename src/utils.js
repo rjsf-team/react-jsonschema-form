@@ -879,11 +879,7 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toPathSchema(_schema, name, definitions, formData);
   }
-  if (
-    schema.hasOwnProperty("items") &&
-    Array.isArray(formData) &&
-    formData.length > 0
-  ) {
+  if (schema.hasOwnProperty("items") && Array.isArray(formData)) {
     formData.forEach((element, i) => {
       pathSchema[i] = toPathSchema(
         schema.items,
@@ -898,6 +894,8 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
         schema.properties[property],
         `${name}.${property}`,
         definitions,
+        // It's possible that formData is not an object -- this can happen if an
+        // array item has just been added, but not populated with data yet
         (formData || {})[property]
       );
     }

@@ -156,6 +156,8 @@ export default class Form extends Component {
           paths.forEach(path => {
             path = path.replace(/^\./, "");
             const formValue = _get(formData, path);
+            // adds path to fieldNames if it points to a value
+            // or an empty object/array
             if (typeof formValue !== "object" || _isEmpty(formValue)) {
               acc.push(path);
             }
