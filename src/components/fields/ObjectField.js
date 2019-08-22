@@ -173,11 +173,24 @@ class ObjectField extends Component {
   }
 
   handleAddClick = schema => () => {
-    const type = schema.additionalProperties.type;
+    let type = schema.additionalProperties.type;
     const newFormData = { ...this.props.formData };
+
+    if (schema.additionalProperties.hasOwnProperty("$ref")) {
+      const { registry = getDefaultRegistry() } = this.props;
+      const refSchema = retrieveSchema(
+        { $ref: schema.additionalProperties["$ref"] },
+        registry.definitions,
+        this.props.formData
+      );
+
+      type = refSchema.type;
+    }
+
     newFormData[
       this.getAvailableKey("newKey", newFormData)
     ] = this.getDefaultValue(type);
+
     this.props.onChange(newFormData);
   };
 
