@@ -516,6 +516,45 @@ describe("Form", () => {
       expect(node.querySelector("input[type=text]").value).eql("hello");
     });
 
+    it("should propagate referenced definition defaults in objects with additionalProperties", () => {
+      const schema = {
+        definitions: {
+          testdef: { type: "string" },
+        },
+        type: "object",
+        additionalProperties: {
+          $ref: "#/definitions/testdef",
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      Simulate.click(node.querySelector(".btn-add"));
+
+      expect(node.querySelector("input[type=text]").value).eql("newKey");
+    });
+
+    it("should propagate referenced definition defaults in objects with additionalProperties that have a type present", () => {
+      // Though `additionalProperties` has a `type` present here, it also has a `$ref` so that
+      // referenced schema should override it.
+      const schema = {
+        definitions: {
+          testdef: { type: "number" },
+        },
+        type: "object",
+        additionalProperties: {
+          type: "string",
+          $ref: "#/definitions/testdef",
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      Simulate.click(node.querySelector(".btn-add"));
+
+      expect(node.querySelector("input[type=number]").value).eql("0");
+    });
+
     it("should recursively handle referenced definitions", () => {
       const schema = {
         $ref: "#/definitions/node",
