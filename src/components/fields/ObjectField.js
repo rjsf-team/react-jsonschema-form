@@ -92,7 +92,7 @@ class ObjectField extends Component {
         // set empty values to the empty string.
         if (typeof value === "boolean") {
           value = false;
-        } else {
+        } else if (value === "" || value === undefined) {
           value = "";
         }
       }
