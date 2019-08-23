@@ -300,7 +300,7 @@ export default class Form extends Component {
 
   submit() {
     if (this.formElement) {
-      this.formElement.dispatchEvent(new Event("submit", { cancelable: true }));
+      this.formElement.dispatchEvent(new CustomEvent("submit", { cancelable: true }));
     }
   }
 
