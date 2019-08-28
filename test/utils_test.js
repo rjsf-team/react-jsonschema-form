@@ -49,6 +49,17 @@ describe("utils", () => {
         ).to.eql(0);
       });
 
+      it("should keep existing form data that is equal to false", () => {
+        expect(
+          getDefaultFormState(
+            {
+              type: "boolean",
+            },
+            false
+          )
+        ).to.eql(false);
+      });
+
       const noneValues = [null, undefined, NaN];
       noneValues.forEach(noneValue => {
         it("should overwrite existing form data that is equal to a none value", () => {

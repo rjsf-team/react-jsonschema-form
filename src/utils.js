@@ -273,7 +273,7 @@ export function getDefaultFormState(
     // Override schema defaults with form data.
     return mergeObjects(defaults, formData);
   }
-  if (formData === 0) {
+  if (formData === 0 || formData === false) {
     return formData;
   }
   return formData || defaults;
