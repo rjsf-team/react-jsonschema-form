@@ -265,6 +265,7 @@ class ObjectField extends Component {
                   ? uiSchema.additionalProperties
                   : uiSchema[name]
               }
+              propertyNamesSchema={schema.propertyNames}
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               idPrefix={idPrefix}

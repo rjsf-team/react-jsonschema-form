@@ -72,17 +72,38 @@ function Label(props) {
   );
 }
 
-function LabelInput(props) {
-  const { id, label, onChange } = props;
-  return (
-    <input
-      className="form-control"
-      type="text"
-      id={id}
-      onBlur={event => onChange(event.target.value)}
-      defaultValue={label}
-    />
-  );
+class LabelInput extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      value: props.label,
+    };
+  }
+  render() {
+    const { id, label, onChange, schema, registry } = this.props;
+
+    if (!schema) {
+      return (
+        <input
+          className="form-control"
+          type="text"
+          id={id}
+          onBlur={event => onChange(event.target.value)}
+          defaultValue={label}
+        />
+      );
+    }
+
+    return (
+      <SchemaField
+        schema={schema}
+        formData={this.state.value}
+        registry={registry}
+        onChange={value => this.setState({ value })}
+        onBlur={(id, value) => onChange(value)}
+      />
+    );
+  }
 }
 
 function Help(props) {
@@ -183,6 +204,7 @@ function WrapIfAdditional(props) {
     readonly,
     required,
     schema,
+    propertyNamesSchema,
   } = props;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
@@ -199,7 +221,8 @@ function WrapIfAdditional(props) {
             <Label label={keyLabel} required={required} id={`${id}-key`} />
             <LabelInput
               label={label}
-              required={required}
+              schema={propertyNamesSchema}
+              registry={props.registry}
               id={`${id}-key`}
               onChange={onKeyChange}
             />
@@ -236,6 +259,7 @@ function SchemaFieldRender(props) {
     required,
     registry = getDefaultRegistry(),
     wasPropertyKeyModified = false,
+    propertyNamesSchema,
   } = props;
   const { definitions, fields, formContext } = registry;
   const FieldTemplate =
@@ -350,6 +374,8 @@ function SchemaFieldRender(props) {
     fields,
     schema,
     uiSchema,
+    propertyNamesSchema,
+    registry,
   };
 
   const _AnyOfField = registry.fields.AnyOfField;
@@ -434,6 +460,7 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     idSchema: PropTypes.object,
+    propertyNamesSchema: PropTypes.object,
     formData: PropTypes.any,
     errorSchema: PropTypes.object,
     registry: types.registry.isRequired,
