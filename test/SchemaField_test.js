@@ -210,6 +210,36 @@ describe("SchemaField", () => {
     });
   });
 
+  describe("additional properties", () => {
+    const schema = {
+      type: "object",
+      additionalProperties: true,
+    };
+
+    it("should render text input for object key if schema has additional properties", () => {
+      const { node } = createFormComponent({ schema });
+      Simulate.click(node.querySelector(".glyphicon-plus"));
+
+      expect(node.querySelectorAll("input[value='newKey']")).to.have.length.of(
+        1
+      );
+    });
+
+    it("should render SchemaField as input for object key if schema has propertyNames schema", () => {
+      const schemaWithPropertyNames = {
+        ...schema,
+        propertyNames: {
+          type: "string",
+          enum: ["1", "2"],
+        },
+      };
+      const { node } = createFormComponent({ schema: schemaWithPropertyNames });
+      Simulate.click(node.querySelector(".glyphicon-plus"));
+
+      expect(node.querySelectorAll("select")).to.have.length.of(1);
+    });
+  });
+
   describe("description support", () => {
     const schema = {
       type: "object",
