@@ -1,11 +1,11 @@
-import AddButton from "../AddButton";
-import IconButton from "../IconButton";
-import React, { Component } from "react";
-import { polyfill } from "react-lifecycles-compat";
-import includes from "core-js/library/fn/array/includes";
-import * as types from "../../types";
+import AddButton from '../AddButton';
+import IconButton from '../IconButton';
+import React, { Component } from 'react';
+import { polyfill } from 'react-lifecycles-compat';
+import includes from 'core-js/library/fn/array/includes';
+import * as types from '../../types';
 
-import UnsupportedField from "./UnsupportedField";
+import UnsupportedField from './UnsupportedField';
 import {
   getWidget,
   getDefaultFormState,
@@ -18,8 +18,8 @@ import {
   retrieveSchema,
   toIdSchema,
   getDefaultRegistry,
-} from "../../utils";
-import shortid from "shortid";
+} from '../../utils';
+import shortid from 'shortid';
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
@@ -43,11 +43,11 @@ function DefaultArrayItem(props) {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   };
   return (
     <div key={props.key} className={props.className}>
-      <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
+      <div className={props.hasToolbar ? 'col-xs-9' : 'col-xs-12'}>
         {props.children}
       </div>
 
@@ -56,8 +56,8 @@ function DefaultArrayItem(props) {
           <div
             className="btn-group"
             style={{
-              display: "flex",
-              justifyContent: "space-around",
+              display: 'flex',
+              justifyContent: 'space-around',
             }}>
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconButton
@@ -108,15 +108,15 @@ function DefaultFixedArrayFieldTemplate(props) {
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
         idSchema={props.idSchema}
-        title={props.uiSchema["ui:title"] || props.title}
+        title={props.uiSchema['ui:title'] || props.title}
         required={props.required}
       />
 
-      {(props.uiSchema["ui:description"] || props.schema.description) && (
+      {(props.uiSchema['ui:description'] || props.schema.description) && (
         <div
           className="field-description"
           key={`field-description-${props.idSchema.$id}`}>
-          {props.uiSchema["ui:description"] || props.schema.description}
+          {props.uiSchema['ui:description'] || props.schema.description}
         </div>
       )}
 
@@ -144,17 +144,17 @@ function DefaultNormalArrayFieldTemplate(props) {
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
         idSchema={props.idSchema}
-        title={props.uiSchema["ui:title"] || props.title}
+        title={props.uiSchema['ui:title'] || props.title}
         required={props.required}
       />
 
-      {(props.uiSchema["ui:description"] || props.schema.description) && (
+      {(props.uiSchema['ui:description'] || props.schema.description) && (
         <ArrayFieldDescription
           key={`array-field-description-${props.idSchema.$id}`}
           DescriptionField={props.DescriptionField}
           idSchema={props.idSchema}
           description={
-            props.uiSchema["ui:description"] || props.schema.description
+            props.uiSchema['ui:description'] || props.schema.description
           }
         />
       )}
@@ -234,17 +234,17 @@ class ArrayField extends Component {
 
   get itemTitle() {
     const { schema } = this.props;
-    return schema.items.title || schema.items.description || "Item";
+    return schema.items.title || schema.items.description || 'Item';
   }
 
-  isItemRequired(itemSchema) {
+  static isItemRequired(itemSchema) {
     if (Array.isArray(itemSchema.type)) {
       // While we don't yet support composite/nullable jsonschema types, it's
       // future-proof to check for requirement against these.
-      return !includes(itemSchema.type, "null");
+      return !includes(itemSchema.type, 'null');
     }
     // All non-null array item types are inherently required by design
-    return itemSchema.type !== "null";
+    return itemSchema.type !== 'null';
   }
 
   canAddItem(formItems) {
@@ -355,9 +355,9 @@ class ArrayField extends Component {
         newErrorSchema = {};
         const errorSchema = this.props.errorSchema;
         for (let i in errorSchema) {
-          if (i == index) {
+          if (i === index) {
             newErrorSchema[newIndex] = errorSchema[index];
-          } else if (i == newIndex) {
+          } else if (i === newIndex) {
             newErrorSchema[index] = errorSchema[newIndex];
           } else {
             newErrorSchema[i] = errorSchema[i];
@@ -392,7 +392,7 @@ class ArrayField extends Component {
       const newFormData = formData.map((item, i) => {
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
-        const jsonValue = typeof value === "undefined" ? null : value;
+        const jsonValue = typeof value === 'undefined' ? null : value;
         return index === i ? jsonValue : item;
       });
       onChange(
@@ -418,7 +418,7 @@ class ArrayField extends Component {
       registry = getDefaultRegistry(),
     } = this.props;
     const { definitions } = registry;
-    if (!schema.hasOwnProperty("items")) {
+    if (!schema.hasOwnProperty('items')) {
       return (
         <UnsupportedField
           schema={schema}
@@ -467,7 +467,7 @@ class ArrayField extends Component {
         const { key, item } = keyedItem;
         const itemSchema = retrieveSchema(schema.items, definitions, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.$id + '_' + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
@@ -509,7 +509,7 @@ class ArrayField extends Component {
 
     // Check if a custom render function was passed in
     const Component =
-      uiSchema["ui:ArrayFieldTemplate"] ||
+      uiSchema['ui:ArrayFieldTemplate'] ||
       ArrayFieldTemplate ||
       DefaultNormalArrayFieldTemplate;
     return <Component {...arrayProps} />;
@@ -536,7 +536,7 @@ class ArrayField extends Component {
     const { widgets, definitions, formContext } = registry;
     const itemsSchema = retrieveSchema(schema.items, definitions, formData);
     const enumOptions = optionsList(itemsSchema);
-    const { widget = "select", ...options } = {
+    const { widget = 'select', ...options } = {
       ...getUiOptions(uiSchema),
       enumOptions,
     };
@@ -581,7 +581,7 @@ class ArrayField extends Component {
     const title = schema.title || name;
     const items = this.props.formData;
     const { widgets, formContext } = registry;
-    const { widget = "files", ...options } = getUiOptions(uiSchema);
+    const { widget = 'files', ...options } = getUiOptions(uiSchema);
     const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget
@@ -641,7 +641,7 @@ class ArrayField extends Component {
     // These are the props passed into the render function
     const arrayProps = {
       canAdd: this.canAddItem(items) && additionalSchema,
-      className: "field field-array field-array-fixed-items",
+      className: 'field field-array field-array-fixed-items',
       disabled,
       idSchema,
       formData,
@@ -651,7 +651,7 @@ class ArrayField extends Component {
         const itemSchema = additional
           ? retrieveSchema(schema.additionalItems, definitions, item)
           : itemSchemas[index];
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.$id + '_' + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
@@ -695,7 +695,7 @@ class ArrayField extends Component {
 
     // Check if a custom template template was passed in
     const Template =
-      uiSchema["ui:ArrayFieldTemplate"] ||
+      uiSchema['ui:ArrayFieldTemplate'] ||
       ArrayFieldTemplate ||
       DefaultFixedArrayFieldTemplate;
     return <Template {...arrayProps} />;
@@ -730,7 +730,7 @@ class ArrayField extends Component {
     const { orderable, removable } = {
       orderable: true,
       removable: true,
-      ...uiSchema["ui:options"],
+      ...uiSchema['ui:options'],
     };
     const has = {
       moveUp: orderable && canMoveUp,
@@ -747,7 +747,7 @@ class ArrayField extends Component {
           formData={itemData}
           errorSchema={itemErrorSchema}
           idSchema={itemIdSchema}
-          required={this.isItemRequired(itemSchema)}
+          required={ArrayField.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}
           onBlur={onBlur}
           onFocus={onFocus}
@@ -758,7 +758,7 @@ class ArrayField extends Component {
           rawErrors={rawErrors}
         />
       ),
-      className: "array-item",
+      className: 'array-item',
       disabled,
       hasToolbar: has.toolbar,
       hasMoveUp: has.moveUp,
@@ -774,7 +774,7 @@ class ArrayField extends Component {
   }
 }
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== 'production') {
   ArrayField.propTypes = types.fieldProps;
 }
 
