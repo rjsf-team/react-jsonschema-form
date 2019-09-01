@@ -1,66 +1,66 @@
-import React from "react";
-import * as ReactIs from "react-is";
-import fill from "core-js/library/fn/array/fill";
-import validateFormData, { isValid } from "./validate";
+import React from 'react';
+import * as ReactIs from 'react-is';
+import fill from 'core-js/library/fn/array/fill';
+import validateFormData, { isValid } from './validate';
 
-export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
+export const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
 
 const widgetMap = {
   boolean: {
-    checkbox: "CheckboxWidget",
-    radio: "RadioWidget",
-    select: "SelectWidget",
-    hidden: "HiddenWidget",
+    checkbox: 'CheckboxWidget',
+    radio: 'RadioWidget',
+    select: 'SelectWidget',
+    hidden: 'HiddenWidget',
   },
   string: {
-    text: "TextWidget",
-    password: "PasswordWidget",
-    email: "EmailWidget",
-    hostname: "TextWidget",
-    ipv4: "TextWidget",
-    ipv6: "TextWidget",
-    uri: "URLWidget",
-    "data-url": "FileWidget",
-    radio: "RadioWidget",
-    select: "SelectWidget",
-    textarea: "TextareaWidget",
-    hidden: "HiddenWidget",
-    date: "DateWidget",
-    datetime: "DateTimeWidget",
-    "date-time": "DateTimeWidget",
-    "alt-date": "AltDateWidget",
-    "alt-datetime": "AltDateTimeWidget",
-    color: "ColorWidget",
-    file: "FileWidget",
+    text: 'TextWidget',
+    password: 'PasswordWidget',
+    email: 'EmailWidget',
+    hostname: 'TextWidget',
+    ipv4: 'TextWidget',
+    ipv6: 'TextWidget',
+    uri: 'URLWidget',
+    'data-url': 'FileWidget',
+    radio: 'RadioWidget',
+    select: 'SelectWidget',
+    textarea: 'TextareaWidget',
+    hidden: 'HiddenWidget',
+    date: 'DateWidget',
+    datetime: 'DateTimeWidget',
+    'date-time': 'DateTimeWidget',
+    'alt-date': 'AltDateWidget',
+    'alt-datetime': 'AltDateTimeWidget',
+    color: 'ColorWidget',
+    file: 'FileWidget',
   },
   number: {
-    text: "TextWidget",
-    select: "SelectWidget",
-    updown: "UpDownWidget",
-    range: "RangeWidget",
-    radio: "RadioWidget",
-    hidden: "HiddenWidget",
+    text: 'TextWidget',
+    select: 'SelectWidget',
+    updown: 'UpDownWidget',
+    range: 'RangeWidget',
+    radio: 'RadioWidget',
+    hidden: 'HiddenWidget',
   },
   integer: {
-    text: "TextWidget",
-    select: "SelectWidget",
-    updown: "UpDownWidget",
-    range: "RangeWidget",
-    radio: "RadioWidget",
-    hidden: "HiddenWidget",
+    text: 'TextWidget',
+    select: 'SelectWidget',
+    updown: 'UpDownWidget',
+    range: 'RangeWidget',
+    radio: 'RadioWidget',
+    hidden: 'HiddenWidget',
   },
   array: {
-    select: "SelectWidget",
-    checkboxes: "CheckboxesWidget",
-    files: "FileWidget",
-    hidden: "HiddenWidget",
+    select: 'SelectWidget',
+    checkboxes: 'CheckboxesWidget',
+    files: 'FileWidget',
+    hidden: 'HiddenWidget',
   },
 };
 
 export function getDefaultRegistry() {
   return {
-    fields: require("./components/fields").default,
-    widgets: require("./components/widgets").default,
+    fields: require('./components/fields').default,
+    widgets: require('./components/widgets').default,
     definitions: {},
     formContext: {},
   };
@@ -74,15 +74,15 @@ export function getSchemaType(schema) {
   }
 
   if (!type && schema.enum) {
-    return "string";
+    return 'string';
   }
 
   if (!type && (schema.properties || schema.additionalProperties)) {
-    return "object";
+    return 'object';
   }
 
-  if (type instanceof Array && type.length === 2 && type.includes("null")) {
-    return type.find(type => type !== "null");
+  if (type instanceof Array && type.length === 2 && type.includes('null')) {
+    return type.find(type => type !== 'null');
   }
 
   return type;
@@ -103,11 +103,11 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (typeof widget === "function" || ReactIs.isForwardRef(widget)) {
+  if (typeof widget === 'function' || ReactIs.isForwardRef(widget)) {
     return mergeOptions(widget);
   }
 
-  if (typeof widget !== "string") {
+  if (typeof widget !== 'string') {
     throw new Error(`Unsupported widget definition: ${typeof widget}`);
   }
 
@@ -135,8 +135,8 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
   } catch (e) {
     if (
       e.message &&
-      (e.message.startsWith("No widget") ||
-        e.message.startsWith("Unsupported widget"))
+      (e.message.startsWith('No widget') ||
+        e.message.startsWith('Unsupported widget'))
     ) {
       return false;
     }
@@ -158,10 +158,10 @@ function computeDefaults(
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
     defaults = mergeObjects(defaults, schema.default);
-  } else if ("default" in schema) {
+  } else if ('default' in schema) {
     // Use schema defaults for this node.
     defaults = schema.default;
-  } else if ("$ref" in schema) {
+  } else if ('$ref' in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
     return computeDefaults(
@@ -171,7 +171,7 @@ function computeDefaults(
       formData,
       includeUndefinedValues
     );
-  } else if ("dependencies" in schema) {
+  } else if ('dependencies' in schema) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return computeDefaults(
       resolvedSchema,
@@ -190,22 +190,22 @@ function computeDefaults(
         includeUndefinedValues
       )
     );
-  } else if ("oneOf" in schema) {
+  } else if ('oneOf' in schema) {
     schema =
       schema.oneOf[getMatchingOption(undefined, schema.oneOf, definitions)];
-  } else if ("anyOf" in schema) {
+  } else if ('anyOf' in schema) {
     schema =
       schema.anyOf[getMatchingOption(undefined, schema.anyOf, definitions)];
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.
-  if (typeof defaults === "undefined") {
+  if (typeof defaults === 'undefined') {
     defaults = schema.default;
   }
 
   switch (getSchemaType(schema)) {
     // We need to recur for object schema inner default values.
-    case "object":
+    case 'object':
       return Object.keys(schema.properties || {}).reduce((acc, key) => {
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
@@ -222,7 +222,7 @@ function computeDefaults(
         return acc;
       }, {});
 
-    case "array":
+    case 'array':
       if (schema.minItems) {
         if (!isMultiSelect(schema, definitions)) {
           const defaultsLength = defaults ? defaults.length : 0;
@@ -255,7 +255,7 @@ export function getDefaultFormState(
   includeUndefinedValues = false
 ) {
   if (!isObject(_schema)) {
-    throw new Error("Invalid schema: " + _schema);
+    throw new Error('Invalid schema: ' + _schema);
   }
   const schema = retrieveSchema(_schema, definitions, formData);
   const defaults = computeDefaults(
@@ -265,7 +265,7 @@ export function getDefaultFormState(
     formData,
     includeUndefinedValues
   );
-  if (typeof formData === "undefined") {
+  if (typeof formData === 'undefined') {
     // No form data? Use schema defaults.
     return defaults;
   }
@@ -282,13 +282,13 @@ export function getDefaultFormState(
 export function getUiOptions(uiSchema) {
   // get all passed options from ui:widget, ui:options, and ui:<optionName>
   return Object.keys(uiSchema)
-    .filter(key => key.indexOf("ui:") === 0)
+    .filter(key => key.indexOf('ui:') === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
 
-      if (key === "ui:widget" && isObject(value)) {
+      if (key === 'ui:widget' && isObject(value)) {
         console.warn(
-          "Setting options via ui:widget object is deprecated, use ui:options instead"
+          'Setting options via ui:widget object is deprecated, use ui:options instead'
         );
         return {
           ...options,
@@ -296,7 +296,7 @@ export function getUiOptions(uiSchema) {
           widget: value.component,
         };
       }
-      if (key === "ui:options" && isObject(value)) {
+      if (key === 'ui:options' && isObject(value)) {
         return { ...options, ...value };
       }
       return { ...options, [key.substring(3)]: value };
@@ -304,10 +304,10 @@ export function getUiOptions(uiSchema) {
 }
 
 export function isObject(thing) {
-  if (typeof File !== "undefined" && thing instanceof File) {
+  if (typeof File !== 'undefined' && thing instanceof File) {
     return false;
   }
-  return typeof thing === "object" && thing !== null && !Array.isArray(thing);
+  return typeof thing === 'object' && thing !== null && !Array.isArray(thing);
 }
 
 export function mergeObjects(obj1, obj2, concatArrays = false) {
@@ -328,7 +328,7 @@ export function mergeObjects(obj1, obj2, concatArrays = false) {
 }
 
 export function asNumber(value) {
-  if (value === "") {
+  if (value === '') {
     return undefined;
   }
   if (value === null) {
@@ -344,7 +344,7 @@ export function asNumber(value) {
     return value;
   }
   const n = Number(value);
-  const valid = typeof n === "number" && !Number.isNaN(n);
+  const valid = typeof n === 'number' && !Number.isNaN(n);
 
   if (/\.\d*0$/.test(value)) {
     // It's a number, that's cool - but we need it as a string so it doesn't screw
@@ -371,19 +371,19 @@ export function orderProperties(properties, order) {
       ? `properties '${arr.join("', '")}'`
       : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
-  const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
+  const extraneous = order.filter(prop => prop !== '*' && !propertyHash[prop]);
   if (extraneous.length) {
     console.warn(
       `uiSchema order list contains extraneous ${errorPropList(extraneous)}`
     );
   }
   const orderFiltered = order.filter(
-    prop => prop === "*" || propertyHash[prop]
+    prop => prop === '*' || propertyHash[prop]
   );
   const orderHash = arrayToHash(orderFiltered);
 
   const rest = properties.filter(prop => !orderHash[prop]);
-  const restIndex = orderFiltered.indexOf("*");
+  const restIndex = orderFiltered.indexOf('*');
   if (restIndex === -1) {
     if (rest.length) {
       throw new Error(
@@ -392,8 +392,8 @@ export function orderProperties(properties, order) {
     }
     return orderFiltered;
   }
-  if (restIndex !== orderFiltered.lastIndexOf("*")) {
-    throw new Error("uiSchema order list contains more than one wildcard item");
+  if (restIndex !== orderFiltered.lastIndexOf('*')) {
+    throw new Error('uiSchema order list contains more than one wildcard item');
   }
 
   const complete = [...orderFiltered];
@@ -408,17 +408,17 @@ export function orderProperties(properties, order) {
 export function isConstant(schema) {
   return (
     (Array.isArray(schema.enum) && schema.enum.length === 1) ||
-    schema.hasOwnProperty("const")
+    schema.hasOwnProperty('const')
   );
 }
 
 export function toConstant(schema) {
   if (Array.isArray(schema.enum) && schema.enum.length === 1) {
     return schema.enum[0];
-  } else if (schema.hasOwnProperty("const")) {
+  } else if (schema.hasOwnProperty('const')) {
     return schema.const;
   } else {
-    throw new Error("schema cannot be inferred as a constant");
+    throw new Error('schema cannot be inferred as a constant');
   }
 }
 
@@ -441,11 +441,11 @@ export function isMultiSelect(schema, definitions = {}) {
 }
 
 export function isFilesArray(schema, uiSchema, definitions = {}) {
-  if (uiSchema["ui:widget"] === "files") {
+  if (uiSchema['ui:widget'] === 'files') {
     return true;
   } else if (schema.items) {
     const itemsSchema = retrieveSchema(schema.items, definitions);
-    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
+    return itemsSchema.type === 'string' && itemsSchema.format === 'data-url';
   }
   return false;
 }
@@ -460,7 +460,7 @@ export function isFixedItems(schema) {
 
 export function allowAdditionalItems(schema) {
   if (schema.additionalItems === true) {
-    console.warn("additionalItems=true is currently not supported");
+    console.warn('additionalItems=true is currently not supported');
   }
   return isObject(schema.additionalItems);
 }
@@ -485,11 +485,11 @@ function findSchemaDefinition($ref, definitions = {}) {
   // Extract and use the referenced definition if we have it.
   const match = /^#\/definitions\/(.*)$/.exec($ref);
   if (match && match[1]) {
-    const parts = match[1].split("/");
+    const parts = match[1].split('/');
     let current = definitions;
     for (let part of parts) {
-      part = part.replace(/~1/g, "/").replace(/~0/g, "~");
-      while (current.hasOwnProperty("$ref")) {
+      part = part.replace(/~1/g, '/').replace(/~0/g, '~');
+      while (current.hasOwnProperty('$ref')) {
         current = findSchemaDefinition(current.$ref, definitions);
       }
       if (current.hasOwnProperty(part)) {
@@ -510,20 +510,20 @@ function findSchemaDefinition($ref, definitions = {}) {
 //  based on the data we are defining
 export const guessType = function guessType(value) {
   if (Array.isArray(value)) {
-    return "array";
-  } else if (typeof value === "string") {
-    return "string";
+    return 'array';
+  } else if (typeof value === 'string') {
+    return 'string';
   } else if (value == null) {
-    return "null";
-  } else if (typeof value === "boolean") {
-    return "boolean";
+    return 'null';
+  } else if (typeof value === 'boolean') {
+    return 'boolean';
   } else if (!isNaN(value)) {
-    return "number";
-  } else if (typeof value === "object") {
-    return "object";
+    return 'number';
+  } else if (typeof value === 'object') {
+    return 'object';
   }
   // Default to string if we can't figure it out
-  return "string";
+  return 'string';
 };
 
 // This function will create new "properties" items for each key in our formData
@@ -545,13 +545,13 @@ export function stubExistingAdditionalProperties(
     }
 
     let additionalProperties;
-    if (schema.additionalProperties.hasOwnProperty("$ref")) {
+    if (schema.additionalProperties.hasOwnProperty('$ref')) {
       additionalProperties = retrieveSchema(
-        { $ref: schema.additionalProperties["$ref"] },
+        { $ref: schema.additionalProperties['$ref'] },
         definitions,
         formData
       );
-    } else if (schema.additionalProperties.hasOwnProperty("type")) {
+    } else if (schema.additionalProperties.hasOwnProperty('type')) {
       additionalProperties = { ...schema.additionalProperties };
     } else {
       additionalProperties = { type: guessType(formData[key]) };
@@ -567,9 +567,9 @@ export function stubExistingAdditionalProperties(
 }
 
 export function resolveSchema(schema, definitions = {}, formData = {}) {
-  if (schema.hasOwnProperty("$ref")) {
+  if (schema.hasOwnProperty('$ref')) {
     return resolveReference(schema, definitions, formData);
-  } else if (schema.hasOwnProperty("dependencies")) {
+  } else if (schema.hasOwnProperty('dependencies')) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return retrieveSchema(resolvedSchema, definitions, formData);
   } else {
@@ -594,7 +594,7 @@ function resolveReference(schema, definitions, formData) {
 export function retrieveSchema(schema, definitions = {}, formData = {}) {
   const resolvedSchema = resolveSchema(schema, definitions, formData);
   const hasAdditionalProperties =
-    resolvedSchema.hasOwnProperty("additionalProperties") &&
+    resolvedSchema.hasOwnProperty('additionalProperties') &&
     resolvedSchema.additionalProperties !== false;
   if (hasAdditionalProperties) {
     return stubExistingAdditionalProperties(
@@ -609,12 +609,12 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
 function resolveDependencies(schema, definitions, formData) {
   // Drop the dependencies from the source schema.
   let { dependencies = {}, ...resolvedSchema } = schema;
-  if ("oneOf" in resolvedSchema) {
+  if ('oneOf' in resolvedSchema) {
     resolvedSchema =
       resolvedSchema.oneOf[
         getMatchingOption(formData, resolvedSchema.oneOf, definitions)
       ];
-  } else if ("anyOf" in resolvedSchema) {
+  } else if ('anyOf' in resolvedSchema) {
     resolvedSchema =
       resolvedSchema.anyOf[
         getMatchingOption(formData, resolvedSchema.anyOf, definitions)
@@ -702,7 +702,7 @@ function withDependentSchema(
   }
   // Resolve $refs inside oneOf.
   const resolvedOneOf = oneOf.map(subschema =>
-    subschema.hasOwnProperty("$ref")
+    subschema.hasOwnProperty('$ref')
       ? resolveReference(subschema, definitions, formData)
       : subschema
   );
@@ -729,7 +729,7 @@ function withExactlyOneSubschema(
     const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
     if (conditionPropertySchema) {
       const conditionSchema = {
-        type: "object",
+        type: 'object',
         properties: {
           [dependencyKey]: conditionPropertySchema,
         },
@@ -761,7 +761,7 @@ function mergeSchemas(schema1, schema2) {
 }
 
 function isArguments(object) {
-  return Object.prototype.toString.call(object) === "[object Arguments]";
+  return Object.prototype.toString.call(object) === '[object Arguments]';
 }
 
 export function deepEquals(a, b, ca = [], cb = []) {
@@ -770,11 +770,11 @@ export function deepEquals(a, b, ca = [], cb = []) {
   // https://github.com/othiym23/node-deeper
   if (a === b) {
     return true;
-  } else if (typeof a === "function" || typeof b === "function") {
+  } else if (typeof a === 'function' || typeof b === 'function') {
     // Assume all functions are equivalent
     // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
     return true;
-  } else if (typeof a !== "object" || typeof b !== "object") {
+  } else if (typeof a !== 'object' || typeof b !== 'object') {
     return false;
   } else if (a === null || b === null) {
     return false;
@@ -851,24 +851,24 @@ export function toIdSchema(
   id,
   definitions,
   formData = {},
-  idPrefix = "root"
+  idPrefix = 'root'
 ) {
   const idSchema = {
     $id: id || idPrefix,
   };
-  if ("$ref" in schema || "dependencies" in schema) {
+  if ('$ref' in schema || 'dependencies' in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toIdSchema(_schema, id, definitions, formData, idPrefix);
   }
-  if ("items" in schema && !schema.items.$ref) {
+  if ('items' in schema && !schema.items.$ref) {
     return toIdSchema(schema.items, id, definitions, formData, idPrefix);
   }
-  if (schema.type !== "object") {
+  if (schema.type !== 'object') {
     return idSchema;
   }
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
+    const fieldId = idSchema.$id + '_' + name;
     idSchema[name] = toIdSchema(
       field,
       fieldId,
@@ -882,15 +882,15 @@ export function toIdSchema(
   return idSchema;
 }
 
-export function toPathSchema(schema, name = "", definitions, formData = {}) {
+export function toPathSchema(schema, name = '', definitions, formData = {}) {
   const pathSchema = {
-    $name: name.replace(/^\./, ""),
+    $name: name.replace(/^\./, ''),
   };
-  if ("$ref" in schema || "dependencies" in schema) {
+  if ('$ref' in schema || 'dependencies' in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toPathSchema(_schema, name, definitions, formData);
   }
-  if (schema.hasOwnProperty("items") && Array.isArray(formData)) {
+  if (schema.hasOwnProperty('items') && Array.isArray(formData)) {
     formData.forEach((element, i) => {
       pathSchema[i] = toPathSchema(
         schema.items,
@@ -899,16 +899,18 @@ export function toPathSchema(schema, name = "", definitions, formData = {}) {
         element
       );
     });
-  } else if (schema.hasOwnProperty("properties")) {
+  } else if (schema.hasOwnProperty('properties')) {
     for (const property in schema.properties) {
-      pathSchema[property] = toPathSchema(
-        schema.properties[property],
-        `${name}.${property}`,
-        definitions,
-        // It's possible that formData is not an object -- this can happen if an
-        // array item has just been added, but not populated with data yet
-        (formData || {})[property]
-      );
+      if (schema.properties.hasOwnProperty(property)) {
+        pathSchema[property] = toPathSchema(
+          schema.properties[property],
+          `${name}.${property}`,
+          definitions,
+          // It's possible that formData is not an object -- this can happen if an
+          // array item has just been added, but not populated with data yet
+          (formData || {})[property]
+        );
+      }
     }
   }
   return pathSchema;
@@ -927,7 +929,7 @@ export function parseDateString(dateString, includeTime = true) {
   }
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) {
-    throw new Error("Unable to parse date " + dateString);
+    throw new Error('Unable to parse date ' + dateString);
   }
   return {
     year: date.getUTCFullYear(),
@@ -951,7 +953,7 @@ export function toDateString(
 export function pad(num, size) {
   let s = String(num);
   while (s.length < size) {
-    s = "0" + s;
+    s = '0' + s;
   }
   return s;
 }
@@ -968,23 +970,23 @@ export function setState(instance, state, callback) {
 
 export function dataURItoBlob(dataURI) {
   // Split metadata from data
-  const splitted = dataURI.split(",");
+  const splitted = dataURI.split(',');
   // Split params
-  const params = splitted[0].split(";");
+  const params = splitted[0].split(';');
   // Get mime-type from params
-  const type = params[0].replace("data:", "");
+  const type = params[0].replace('data:', '');
   // Filter the name property from params
   const properties = params.filter(param => {
-    return param.split("=")[0] === "name";
+    return param.split('=')[0] === 'name';
   });
   // Look for the name and use unknown if no name property.
   let name;
   if (properties.length !== 1) {
-    name = "unknown";
+    name = 'unknown';
   } else {
     // Because we filtered out the other property,
     // we only have the name case here.
-    name = properties[0].split("=")[1];
+    name = properties[0].split('=')[1];
   }
 
   // Built the Uint8Array Blob parameter from the base64 string.
