@@ -370,6 +370,9 @@ class App extends Component {
 
   onFormDataEdited = formData => this.setState({ formData, shareURL: null });
 
+  onErrorSchemaEdited = errorSchema =>
+    this.setState({ errorSchema, shareURL: null });
+
   onThemeSelected = (theme, { stylesheet, editor }) => {
     this.setState({ theme, editor: editor ? editor : "default" });
     setImmediate(() => {
@@ -384,13 +387,25 @@ class App extends Component {
     this.setState({ formData, shareURL: null });
 
   onShare = () => {
-    const { formData, schema, uiSchema, liveSettings } = this.state;
+    const {
+      formData,
+      schema,
+      uiSchema,
+      liveSettings,
+      errorSchema,
+    } = this.state;
     const {
       location: { origin, pathname },
     } = document;
     try {
       const hash = btoa(
-        JSON.stringify({ formData, schema, uiSchema, liveSettings })
+        JSON.stringify({
+          formData,
+          schema,
+          uiSchema,
+          liveSettings,
+          errorSchema,
+        })
       );
       this.setState({ shareURL: `${origin}${pathname}#${hash}` });
     } catch (err) {
@@ -403,6 +418,7 @@ class App extends Component {
       schema,
       uiSchema,
       formData,
+      errorSchema,
       liveSettings,
       validate,
       theme,
@@ -458,6 +474,16 @@ class App extends Component {
               />
             </div>
           </div>
+          <div className="row">
+            <div className="col">
+              <Editor
+                title="errorSchema"
+                theme={editor}
+                code={toJson(errorSchema || {})}
+                onChange={this.onErrorSchemaEdited}
+              />
+            </div>
+          </div>
         </div>
         <div className="col-sm-5">
           {this.state.form && (
@@ -471,6 +497,7 @@ class App extends Component {
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
+              errorSchema={errorSchema}
               onChange={this.onFormDataChange}
               onSubmit={({ formData }, e) => {
                 console.log("submitted formData", formData);

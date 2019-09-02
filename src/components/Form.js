@@ -17,6 +17,7 @@ import {
   isObject,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
+import { mergeObjects } from "../utils";
 
 export default class Form extends Component {
   static defaultProps = {
@@ -66,12 +67,16 @@ export default class Form extends Component {
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
-    const { errors, errorSchema } = mustValidate
+    let { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
       : {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
         };
+    if (props.errorSchema) {
+      errorSchema = mergeObjects(errorSchema, props.errorSchema);
+      errors = toErrorList(errorSchema);
+    }
     const idSchema = toIdSchema(
       retrievedSchema,
       uiSchema["ui:rootFieldId"],
@@ -257,8 +262,12 @@ export default class Form extends Component {
     }
 
     if (!this.props.noValidate) {
-      const { errors, errorSchema } = this.validate(newFormData);
+      let { errors, errorSchema } = this.validate(newFormData);
       if (Object.keys(errors).length > 0) {
+        if (this.props.errorSchema) {
+          errorSchema = mergeObjects(errorSchema, this.props.errorSchema);
+          errors = toErrorList(errorSchema);
+        }
         setState(this, { errors, errorSchema }, () => {
           if (this.props.onError) {
             this.props.onError(errors);
@@ -270,8 +279,18 @@ export default class Form extends Component {
       }
     }
 
+    let errorSchema;
+    let errors;
+    if (this.props.errorSchema) {
+      errorSchema = this.props.errorSchema;
+      errors = toErrorList(errorSchema);
+    } else {
+      errorSchema = {};
+      errors = [];
+    }
+
     this.setState(
-      { formData: newFormData, errors: [], errorSchema: {} },
+      { formData: newFormData, errors: errors, errorSchema: errorSchema },
       () => {
         if (this.props.onSubmit) {
           this.props.onSubmit(
@@ -412,5 +431,6 @@ if (process.env.NODE_ENV !== "production") {
     customFormats: PropTypes.object,
     additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
     omitExtraData: PropTypes.bool,
+    errorSchema: PropTypes.object,
   };
 }
