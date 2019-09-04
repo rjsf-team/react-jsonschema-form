@@ -18,7 +18,12 @@ import {
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 
-export default class Form extends Component {
+interface IFormProps {
+  [x: string]: any,
+  formElement: any
+}
+
+export default class Form extends Component<IFormProps, any> {
   static defaultProps = {
     uiSchema: {},
     noValidate: false,
