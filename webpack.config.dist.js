@@ -40,6 +40,9 @@ module.exports = {
       umd: 'react-dom',
     }
   },
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".css"]
+  },
   module: {
     rules: [
       {

@@ -20,10 +20,13 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
   ],
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".css"]
+  },
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         use: [
           "babel-loader",
         ],
