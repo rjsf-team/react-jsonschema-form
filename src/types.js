@@ -5,7 +5,7 @@ export const registry = PropTypes.shape({
   FieldTemplate: PropTypes.elementType,
   ObjectFieldTemplate: PropTypes.elementType,
   definitions: PropTypes.object.isRequired,
-  fields: PropTypes.objectOf(PropTypes.elementType),
+  fields: PropTypes.objectOf(PropTypes.elementType).isRequired,
   formContext: PropTypes.object.isRequired,
   widgets: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.func, PropTypes.object])
