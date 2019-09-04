@@ -16,10 +16,10 @@
     "publish-to-npm": "npm run dist && npm publish",
     "preversion": "npm run build:playground && npm run dist && npm run cs-check && npm run lint",
     "start": "node devServer.js",
-    "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
+    "tdd": "cross-env NODE_ENV=test mocha --require ./babel-register.js --watch --require ./test/setup-jsdom.js test/**/*_test.js",
+    "test": "cross-env NODE_ENV=test mocha --require ./babel-register.js --require ./test/setup-jsdom.js test/**/*_test.js",
+    "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require ./babel-register.js --require ./test/setup-jsdom.js test/**/*_test.js",
+    "test-debug": "cross-env NODE_ENV=test mocha --require ./babel-register.js --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
   },
   "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi --tab-width 2",
   "lint-staged": {
@@ -62,7 +62,7 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
-    "@babel/register": "^7.4.4",
+    "./babel-register.js": "^7.4.4",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
