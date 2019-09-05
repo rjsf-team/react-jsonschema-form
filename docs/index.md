@@ -5,7 +5,7 @@ react-jsonschema-form
 
 A simple [React](http://facebook.github.io/react/) component capable of building HTML forms out of a [JSON schema](http://json-schema.org/) and using [Bootstrap](http://getbootstrap.com/) semantics by default.
 
-A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) is hosted on gh-pages.
+A [live playground](https://rjsf-team.github.io/react-jsonschema-form/) is hosted on gh-pages.
 
 ![Image](https://i.imgur.com/M8ZCES5.gif)
 
@@ -171,7 +171,7 @@ You're not necessarily forced to use Bootstrap; while it uses its semantics, it 
 
 If you're okay with using styles from the Bootstrap ecosystem though, then the good news is that you have access to many themes for it, which are compatible with our generated forms!
 
-Here are some examples from the [playground](http://mozilla-services.github.io/react-jsonschema-form/), using some of the [Bootswatch](http://bootswatch.com/) free themes:
+Here are some examples from the [playground](https://rjsf-team.github.io/react-jsonschema-form/), using some of the [Bootswatch](http://bootswatch.com/) free themes:
 
 ![](https://i.imgur.com/1Z5oUK3.png)
 ![](https://i.imgur.com/IMFqMwK.png)

@@ -10,7 +10,7 @@ nav:
   - Form Customization: form-customization.md
   - Theme Customization: theme-customization.md
   - Validation: validation.md
-  - Playground: https://mozilla-services.github.io/react-jsonschema-form/
+  - Playground: https://rjsf-team.github.io/react-jsonschema-form/
 
 markdown_extensions:
   - toc:
