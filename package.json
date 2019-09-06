@@ -48,7 +48,7 @@
     "core-js": "^2.5.7",
     "lodash": "^4.17.15",
     "prop-types": "^15.5.8",
-    "react-is": "^16.8.4",
+    "react-is": "^16.9.0",
     "shortid": "^2.2.14"
   },
   "devDependencies": {
