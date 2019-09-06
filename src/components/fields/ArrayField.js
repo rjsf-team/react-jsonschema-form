@@ -211,10 +211,17 @@ class ArrayField extends Component {
     const keyedFormData = generateKeyedFormData(formData);
     this.state = {
       keyedFormData,
+      updatedKeyedFormData: false,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    // Don't call getDerivedStateFromProps if keyed formdata was just updated.
+    if (prevState.updatedKeyedFormData) {
+      return {
+        updatedKeyedFormData: false,
+      };
+    }
     const nextFormData = nextProps.formData;
     const previousKeyedFormData = prevState.keyedFormData;
     const newKeyedFormData =
@@ -280,10 +287,10 @@ class ArrayField extends Component {
       item: this._getNewFormDataRow(),
     };
     const newKeyedFormData = [...this.state.keyedFormData, newKeyedFormDataRow];
-
     this.setState(
       {
         keyedFormData: newKeyedFormData,
+        updatedKeyedFormData: true,
       },
       () => onChange(keyedToPlainFormData(newKeyedFormData))
     );
@@ -305,6 +312,7 @@ class ArrayField extends Component {
       this.setState(
         {
           keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
         },
         () => onChange(keyedToPlainFormData(newKeyedFormData))
       );
@@ -336,6 +344,7 @@ class ArrayField extends Component {
       this.setState(
         {
           keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
         },
         () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
       );
