@@ -1,7 +1,6 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
-import { polyfill } from "react-lifecycles-compat";
 import includes from "core-js/library/fn/array/includes";
 import * as types from "../../types";
 
@@ -777,7 +776,5 @@ class ArrayField extends Component {
 if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = types.fieldProps;
 }
-
-polyfill(ArrayField);
 
 export default ArrayField;
