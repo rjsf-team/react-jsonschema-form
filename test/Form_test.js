@@ -1494,22 +1494,13 @@ describe("Form", () => {
             },
           });
 
-          function submit(node) {
-            try {
-              Simulate.submit(node);
-            } catch (err) {
-              // Validation is expected to fail and call console.error, which is
-              // stubbed to actually throw in createSandbox().
-            }
-          }
-
-          submit(node);
+          Simulate.submit(node);
 
           // Fix the first field
           Simulate.change(node.querySelectorAll("input[type=text]")[0], {
             target: { value: "fixed error" },
           });
-          submit(node);
+          Simulate.submit(node);
 
           expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
 
@@ -1517,7 +1508,7 @@ describe("Form", () => {
           Simulate.change(node.querySelectorAll("input[type=text]")[1], {
             target: { value: "fixed error too" },
           });
-          submit(node);
+          Simulate.submit(node);
 
           // No error remaining, shouldn't throw.
           Simulate.submit(node);
