@@ -9,7 +9,6 @@ import {
   retrieveSchema,
   shouldRender,
   toIdSchema,
-  setState,
   getDefaultRegistry,
   deepEquals,
   toPathSchema,
@@ -204,11 +203,10 @@ export default class Form extends Component {
         errors: toErrorList(newErrorSchema),
       };
     }
-    setState(this, state, () => {
-      if (this.props.onChange) {
-        this.props.onChange(this.state);
-      }
-    });
+    this.setState(
+      state,
+      () => this.props.onChange && this.props.onChange(state)
+    );
   };
 
   onBlur = (...args) => {
@@ -242,7 +240,7 @@ export default class Form extends Component {
     if (!this.props.noValidate) {
       const { errors, errorSchema } = this.validate(newFormData);
       if (Object.keys(errors).length > 0) {
-        setState(this, { errors, errorSchema }, () => {
+        this.setState({ errors, errorSchema }, () => {
           if (this.props.onError) {
             this.props.onError(errors);
           } else {
