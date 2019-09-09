@@ -233,4 +233,17 @@ describe("withTheme", () => {
       );
     });
   });
+
+  it("should forward the ref", () => {
+    let ref = undefined;
+    const schema = {};
+    const uiSchema = {};
+
+    createComponent(withTheme({ ref: form => (ref = form) }), {
+      schema,
+      uiSchema,
+    });
+
+    expect(ref.submit).to.exist();
+  });
 });
