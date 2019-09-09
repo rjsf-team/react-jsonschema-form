@@ -21,7 +21,7 @@ class AnyOfField extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const matchingOption = this.getMatchingOption(
       nextProps.formData,
       nextProps.options

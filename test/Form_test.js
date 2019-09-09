@@ -1271,7 +1271,9 @@ describe("Form", () => {
     });
 
     describe("when the form data is set to null", () => {
-      beforeEach(() => comp.componentWillReceiveProps({ formData: null }));
+      beforeEach(() =>
+        comp.UNSAFE_componentWillReceiveProps({ formData: null })
+      );
 
       it("should call onChange", () => {
         sinon.assert.calledOnce(onChangeProp);
@@ -1287,7 +1289,7 @@ describe("Form", () => {
       };
 
       beforeEach(() =>
-        comp.componentWillReceiveProps({
+        comp.UNSAFE_componentWillReceiveProps({
           schema: newSchema,
           formData: "some value",
         })
@@ -1307,7 +1309,7 @@ describe("Form", () => {
       };
 
       beforeEach(() =>
-        comp.componentWillReceiveProps({
+        comp.UNSAFE_componentWillReceiveProps({
           schema: newSchema,
           formData: "something else",
         })
@@ -1327,7 +1329,10 @@ describe("Form", () => {
       };
 
       beforeEach(() =>
-        comp.componentWillReceiveProps({ schema: newSchema, formData: null })
+        comp.UNSAFE_componentWillReceiveProps({
+          schema: newSchema,
+          formData: null,
+        })
       );
 
       it("should call onChange", () => {
@@ -1396,7 +1401,7 @@ describe("Form", () => {
       it("should update form state from new formData prop value", () => {
         const { comp } = createFormComponent(formProps);
 
-        comp.componentWillReceiveProps({ formData: "yo" });
+        comp.UNSAFE_componentWillReceiveProps({ formData: "yo" });
 
         expect(comp.state.formData).eql("yo");
       });
@@ -1404,7 +1409,7 @@ describe("Form", () => {
       it("should validate formData when the schema is updated", () => {
         const { comp } = createFormComponent(formProps);
 
-        comp.componentWillReceiveProps({
+        comp.UNSAFE_componentWillReceiveProps({
           formData: "yo",
           schema: { type: "number" },
         });
@@ -1427,7 +1432,7 @@ describe("Form", () => {
           },
         });
 
-        comp.componentWillReceiveProps({ formData: { foo: "yo" } });
+        comp.UNSAFE_componentWillReceiveProps({ formData: { foo: "yo" } });
 
         expect(comp.state.formData).eql({ foo: "yo" });
       });
@@ -1443,7 +1448,7 @@ describe("Form", () => {
         };
         const { comp } = createFormComponent({ schema });
 
-        comp.componentWillReceiveProps({ formData: ["yo"] });
+        comp.UNSAFE_componentWillReceiveProps({ formData: ["yo"] });
 
         expect(comp.state.formData).eql(["yo"]);
       });
@@ -1494,22 +1499,13 @@ describe("Form", () => {
             },
           });
 
-          function submit(node) {
-            try {
-              Simulate.submit(node);
-            } catch (err) {
-              // Validation is expected to fail and call console.error, which is
-              // stubbed to actually throw in createSandbox().
-            }
-          }
-
-          submit(node);
+          Simulate.submit(node);
 
           // Fix the first field
           Simulate.change(node.querySelectorAll("input[type=text]")[0], {
             target: { value: "fixed error" },
           });
-          submit(node);
+          Simulate.submit(node);
 
           expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
 
@@ -1517,7 +1513,7 @@ describe("Form", () => {
           Simulate.change(node.querySelectorAll("input[type=text]")[1], {
             target: { value: "fixed error too" },
           });
-          submit(node);
+          Simulate.submit(node);
 
           // No error remaining, shouldn't throw.
           Simulate.submit(node);
@@ -2090,7 +2086,7 @@ describe("Form", () => {
     it("should replace state when formData have keys removed", () => {
       const formData = { foo: "foo", bar: "bar" };
       const { comp, node } = createFormComponent({ schema, formData });
-      comp.componentWillReceiveProps({
+      comp.UNSAFE_componentWillReceiveProps({
         schema: {
           type: "object",
           properties: {
@@ -2110,7 +2106,7 @@ describe("Form", () => {
     it("should replace state when formData keys have changed", () => {
       const formData = { foo: "foo", bar: "bar" };
       const { comp, node } = createFormComponent({ schema, formData });
-      comp.componentWillReceiveProps({
+      comp.UNSAFE_componentWillReceiveProps({
         schema: {
           type: "object",
           properties: {
@@ -2157,7 +2153,7 @@ describe("Form", () => {
     it("should not update idSchema for a falsey value", () => {
       const formData = { a: "int" };
       const { comp } = createFormComponent({ schema, formData });
-      comp.componentWillReceiveProps({
+      comp.UNSAFE_componentWillReceiveProps({
         schema: {
           type: "object",
           properties: {
@@ -2191,7 +2187,7 @@ describe("Form", () => {
         a: "int",
       };
       const { comp } = createFormComponent({ schema, formData });
-      comp.componentWillReceiveProps({
+      comp.UNSAFE_componentWillReceiveProps({
         schema: {
           type: "object",
           properties: {

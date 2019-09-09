@@ -103,7 +103,10 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (typeof widget === "function" || ReactIs.isForwardRef(widget)) {
+  if (
+    typeof widget === "function" ||
+    ReactIs.isForwardRef(React.createElement(widget))
+  ) {
     return mergeOptions(widget);
   }
 
