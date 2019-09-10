@@ -102,7 +102,6 @@ class AnyOfField extends Component {
       onFocus,
       options,
       registry,
-      safeRenderCompletion,
       uiSchema,
     } = this.props;
 
@@ -155,7 +154,6 @@ class AnyOfField extends Component {
             onBlur={onBlur}
             onFocus={onFocus}
             registry={registry}
-            safeRenderCompletion={safeRenderCompletion}
             disabled={disabled}
           />
         )}

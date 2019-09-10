@@ -22,7 +22,6 @@ export default class Form extends Component {
     noValidate: false,
     liveValidate: false,
     disabled: false,
-    safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
@@ -288,7 +287,6 @@ export default class Form extends Component {
   render() {
     const {
       children,
-      safeRenderCompletion,
       id,
       idPrefix,
       className,
@@ -339,7 +337,6 @@ export default class Form extends Component {
           onBlur={this.onBlur}
           onFocus={this.onFocus}
           registry={registry}
-          safeRenderCompletion={safeRenderCompletion}
           disabled={disabled}
         />
         {children ? (
@@ -388,7 +385,6 @@ if (process.env.NODE_ENV !== "production") {
     liveValidate: PropTypes.bool,
     validate: PropTypes.func,
     transformErrors: PropTypes.func,
-    safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,
     customFormats: PropTypes.object,
     additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
