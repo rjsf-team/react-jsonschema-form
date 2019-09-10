@@ -787,7 +787,7 @@ describeRepeated("Form common", createFormComponent => {
       const { comp, node } = createFormComponent({ schema });
 
       Simulate.click(node.querySelector(".array-item-add button"));
-      Simulate.Simulate.submit(node);
+      Simulate.submit(node);
 
       expect(comp.state.formData).eql({
         object: {
@@ -846,7 +846,7 @@ describeRepeated("Form common", createFormComponent => {
         onError,
       });
 
-      Simulate.Simulate.submit(node);
+      Simulate.submit(node);
 
       sinon.assert.notCalled(onSubmit);
     });
@@ -950,7 +950,7 @@ describeRepeated("Form common", createFormComponent => {
       const onError = sandbox.spy();
       const { node } = createFormComponent({ schema, formData, onError });
 
-      Simulate.Simulate.submit(node);
+      Simulate.submit(node);
 
       sinon.assert.calledOnce(onError);
     });
@@ -1338,10 +1338,10 @@ describeRepeated("Form common", createFormComponent => {
           Simulate.change(node.querySelectorAll("input[type=text]")[1], {
             target: { value: "fixed error too" },
           });
-          Simulate.Simulate.submit(node);
+          Simulate.submit(node);
 
           // No error remaining, shouldn't throw.
-          Simulate.Simulate.submit(node);
+          Simulate.submit(node);
 
           expect(node.querySelectorAll(".field-error")).to.have.length.of(0);
         });
@@ -1406,7 +1406,7 @@ describeRepeated("Form common", createFormComponent => {
           Simulate.change(node.querySelector("input[type=text]"), {
             target: { value: "short" },
           });
-          Simulate.Simulate.submit(node);
+          Simulate.submit(node);
 
           expect(comp.state.errorSchema).eql({});
         });
@@ -1428,7 +1428,7 @@ describeRepeated("Form common", createFormComponent => {
         Simulate.change(node.querySelector("input[type=text]"), {
           target: { value: "short" },
         });
-        Simulate.Simulate.submit(node);
+        Simulate.submit(node);
 
         expect(comp.state.errorSchema).eql({
           __errors: ["should NOT be shorter than 8 characters"],
@@ -1442,7 +1442,7 @@ describeRepeated("Form common", createFormComponent => {
         Simulate.change(node.querySelector("input[type=text]"), {
           target: { value: "short" },
         });
-        Simulate.Simulate.submit(node);
+        Simulate.submit(node);
 
         sinon.assert.calledWithMatch(
           onError,
@@ -1465,7 +1465,7 @@ describeRepeated("Form common", createFormComponent => {
         Simulate.change(node.querySelector("input[type=text]"), {
           target: { value: "short" },
         });
-        Simulate.Simulate.submit(node);
+        Simulate.submit(node);
 
         expect(comp.state.errorSchema).eql({
           __errors: ["should NOT be shorter than 8 characters"],
@@ -1476,7 +1476,7 @@ describeRepeated("Form common", createFormComponent => {
         Simulate.change(node.querySelector("input[type=text]"), {
           target: { value: "long enough" },
         });
-        Simulate.Simulate.submit(node);
+        Simulate.submit(node);
 
         expect(comp.state.errorSchema).eql({});
         expect(comp.state.errors).eql([]);
@@ -2421,7 +2421,7 @@ describe("Form omitExtraData and liveOmit", () => {
         foo: "",
       });
 
-      Simulate.Simulate.submit(node);
+      Simulate.submit(node);
 
       sinon.assert.calledOnce(comp.getUsedFormData);
     });
