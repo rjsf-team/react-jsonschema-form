@@ -1434,82 +1434,78 @@ describe("Validation Error Sorting", () => {
       });
 
       describe("with oneOfs", () => {
-        it(
-          "should have the order in which the properties appear in the schema (foo.wibble - foo.wobble - foo - bar.wibble - bar.wobble - bar -" +
-            " oneOfError) with two oneOfs",
-          () => {
-            const schema = {
-              type: "object",
-              required: ["foo", "bar"],
-              properties: {
-                foo: {
-                  type: "object",
-                  oneOf: [
-                    {
-                      properties: {
-                        wibble: {
-                          type: "string",
-                        },
+        it("should have the order in which the properties appear in the schema (foo.wibble - foo.wobble - foo - bar.wibble - bar.wobble - bar - oneOfError) with two oneOfs", () => {
+          const schema = {
+            type: "object",
+            required: ["foo", "bar"],
+            properties: {
+              foo: {
+                type: "object",
+                oneOf: [
+                  {
+                    properties: {
+                      wibble: {
+                        type: "string",
                       },
-                      required: ["wibble"],
                     },
-                    {
-                      properties: {
-                        wobble: {
-                          type: "string",
-                        },
+                    required: ["wibble"],
+                  },
+                  {
+                    properties: {
+                      wobble: {
+                        type: "string",
                       },
-                      required: ["wobble"],
                     },
-                  ],
-                },
-                bar: {
-                  type: "object",
-                  oneOf: [
-                    {
-                      properties: {
-                        wibble: {
-                          type: "string",
-                        },
-                      },
-                      required: ["wibble"],
-                    },
-                    {
-                      properties: {
-                        wobble: {
-                          type: "string",
-                        },
-                      },
-                      required: ["wobble"],
-                    },
-                  ],
-                },
+                    required: ["wobble"],
+                  },
+                ],
               },
-            };
-            const uiSchema = {};
-            const formData = {
-              foo: {},
-              bar: {},
-            };
-            const result = validateFormData(
-              formData,
-              schema,
-              null,
-              null,
-              null,
-              null,
-              uiSchema
-            );
-            expectOrder(result.errors, [
-              ".foo.wibble",
-              ".foo.wobble",
-              ".foo",
-              ".bar.wibble",
-              ".bar.wobble",
-              ".bar",
-            ]);
-          }
-        );
+              bar: {
+                type: "object",
+                oneOf: [
+                  {
+                    properties: {
+                      wibble: {
+                        type: "string",
+                      },
+                    },
+                    required: ["wibble"],
+                  },
+                  {
+                    properties: {
+                      wobble: {
+                        type: "string",
+                      },
+                    },
+                    required: ["wobble"],
+                  },
+                ],
+              },
+            },
+          };
+          const uiSchema = {};
+          const formData = {
+            foo: {},
+            bar: {},
+          };
+          const result = validateFormData(
+            formData,
+            schema,
+            null,
+            null,
+            null,
+            null,
+            uiSchema
+          );
+          expectOrder(result.errors, [
+            ".foo.wibble",
+            ".foo.wobble",
+            ".foo",
+            ".bar.wibble",
+            ".bar.wobble",
+            ".bar",
+          ]);
+        });
 
         it("should be ordered by the uiSchema", () => {
           const schema = {
