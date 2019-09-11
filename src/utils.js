@@ -103,7 +103,10 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (typeof widget === "function" || ReactIs.isForwardRef(widget)) {
+  if (
+    typeof widget === "function" ||
+    ReactIs.isForwardRef(React.createElement(widget))
+  ) {
     return mergeOptions(widget);
   }
 
@@ -273,7 +276,7 @@ export function getDefaultFormState(
     // Override schema defaults with form data.
     return mergeObjects(defaults, formData);
   }
-  if (formData === 0) {
+  if (formData === 0 || formData === false) {
     return formData;
   }
   return formData || defaults;
@@ -884,43 +887,32 @@ export function toIdSchema(
 
 export function toPathSchema(schema, name = "", definitions, formData = {}) {
   const pathSchema = {
-    $name: name,
+    $name: name.replace(/^\./, ""),
   };
   if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toPathSchema(_schema, name, definitions, formData);
   }
-  if ("items" in schema) {
-    const retVal = {};
-    if (Array.isArray(formData) && formData.length > 0) {
-      formData.forEach((element, index) => {
-        retVal[`${index}`] = toPathSchema(
-          schema.items,
-          `${name}.${index}`,
-          definitions,
-          element
-        );
-      });
+  if (schema.hasOwnProperty("items") && Array.isArray(formData)) {
+    formData.forEach((element, i) => {
+      pathSchema[i] = toPathSchema(
+        schema.items,
+        `${name}.${i}`,
+        definitions,
+        element
+      );
+    });
+  } else if (schema.hasOwnProperty("properties")) {
+    for (const property in schema.properties) {
+      pathSchema[property] = toPathSchema(
+        schema.properties[property],
+        `${name}.${property}`,
+        definitions,
+        // It's possible that formData is not an object -- this can happen if an
+        // array item has just been added, but not populated with data yet
+        (formData || {})[property]
+      );
     }
-    return retVal;
-  }
-  if (schema.type !== "object") {
-    return pathSchema;
-  }
-  for (const property in schema.properties || {}) {
-    const field = schema.properties[property];
-    const fieldId = pathSchema.$name
-      ? pathSchema.$name + "." + property
-      : property;
-
-    pathSchema[property] = toPathSchema(
-      field,
-      fieldId,
-      definitions,
-      // It's possible that formData is not an object -- this can happen if an
-      // array item has just been added, but not populated with data yet
-      (formData || {})[property]
-    );
   }
   return pathSchema;
 }

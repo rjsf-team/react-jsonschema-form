@@ -49,6 +49,17 @@ describe("utils", () => {
         ).to.eql(0);
       });
 
+      it("should keep existing form data that is equal to false", () => {
+        expect(
+          getDefaultFormState(
+            {
+              type: "boolean",
+            },
+            false
+          )
+        ).to.eql(false);
+      });
+
       const noneValues = [null, undefined, NaN];
       noneValues.forEach(noneValue => {
         it("should overwrite existing form data that is equal to a none value", () => {
@@ -1104,7 +1115,7 @@ describe("utils", () => {
       });
     });
 
-    it.only("should 'resolve' and stub out a schema which contains an `additionalProperties` with a type and definition", () => {
+    it("should 'resolve' and stub out a schema which contains an `additionalProperties` with a type and definition", () => {
       const schema = {
         type: "string",
         additionalProperties: {
@@ -2068,6 +2079,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         list: {
+          $name: "list",
           "0": {
             $name: "list.0",
             a: {
@@ -2204,6 +2216,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         address_list: {
+          $name: "address_list",
           "0": {
             $name: "address_list.0",
             city: {
@@ -2421,6 +2434,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         defaultsAndMinItems: {
+          $name: "defaultsAndMinItems",
           "0": {
             $name: "defaultsAndMinItems.0",
           },
@@ -2438,6 +2452,7 @@ describe("utils", () => {
           },
         },
         fixedItemsList: {
+          $name: "fixedItemsList",
           "0": {
             $name: "fixedItemsList.0",
           },
@@ -2449,6 +2464,7 @@ describe("utils", () => {
           },
         },
         fixedNoToolbar: {
+          $name: "fixedNoToolbar",
           "0": {
             $name: "fixedNoToolbar.0",
           },
@@ -2463,6 +2479,7 @@ describe("utils", () => {
           },
         },
         listOfObjects: {
+          $name: "listOfObjects",
           "0": {
             $name: "listOfObjects.0",
             id: {
@@ -2492,6 +2509,7 @@ describe("utils", () => {
           },
         },
         listOfStrings: {
+          $name: "listOfStrings",
           "0": {
             $name: "listOfStrings.0",
           },
@@ -2500,6 +2518,7 @@ describe("utils", () => {
           },
         },
         minItemsList: {
+          $name: "minItemsList",
           "0": {
             $name: "minItemsList.0",
             name: {
@@ -2520,6 +2539,7 @@ describe("utils", () => {
           },
         },
         multipleChoicesList: {
+          $name: "multipleChoicesList",
           "0": {
             $name: "multipleChoicesList.0",
           },
@@ -2528,7 +2548,9 @@ describe("utils", () => {
           },
         },
         nestedList: {
+          $name: "nestedList",
           "0": {
+            $name: "nestedList.0",
             "0": {
               $name: "nestedList.0.0",
             },
@@ -2537,12 +2559,14 @@ describe("utils", () => {
             },
           },
           "1": {
+            $name: "nestedList.1",
             "0": {
               $name: "nestedList.1.0",
             },
           },
         },
         noToolbar: {
+          $name: "noToolbar",
           "0": {
             $name: "noToolbar.0",
           },
@@ -2551,6 +2575,7 @@ describe("utils", () => {
           },
         },
         unorderable: {
+          $name: "unorderable",
           "0": {
             $name: "unorderable.0",
           },
@@ -2559,6 +2584,7 @@ describe("utils", () => {
           },
         },
         unremovable: {
+          $name: "unremovable",
           "0": {
             $name: "unremovable.0",
           },
@@ -2843,12 +2869,16 @@ describe("utils", () => {
       );
     });
 
-    //TODO: Unskip the test when react>=16.3 will be used
-    it.skip("should not fail on forwarded ref component", () => {
+    it("should not fail on correct component", () => {
+      const Widget = props => <div {...props} />;
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
+    });
+
+    it("should not fail on forwarded ref component", () => {
       const Widget = React.forwardRef((props, ref) => (
         <div {...props} ref={ref} />
       ));
-      expect(getWidget(schema, Widget)).eql(<Widget />);
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
   });
 });

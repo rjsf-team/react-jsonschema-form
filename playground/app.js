@@ -169,7 +169,7 @@ class Editor extends Component {
     this.state = { valid: true, code: props.code };
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     this.setState({ valid: true, code: props.code });
   }
 
