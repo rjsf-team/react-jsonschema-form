@@ -1,2 +1,2 @@
-[context.deploy-preview.environment]
+[build.environment]
   SHOW_NETLIFY_BADGE = "true"

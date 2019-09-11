@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
+import _isEmpty from "lodash/isEmpty";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
@@ -39,7 +40,7 @@ export default class Form extends Component {
     this.formElement = null;
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const nextState = this.getStateFromProps(nextProps, nextProps.formData);
     if (
       !deepEquals(nextState.formData, nextProps.formData) &&
@@ -76,7 +77,6 @@ export default class Form extends Component {
       formData,
       props.idPrefix
     );
-    const pathSchema = toPathSchema(retrievedSchema, "", definitions, formData);
     return {
       schema,
       uiSchema,
@@ -86,7 +86,6 @@ export default class Form extends Component {
       errors,
       errorSchema,
       additionalMetaSchemas,
-      pathSchema,
     };
   }
 
@@ -137,27 +136,27 @@ export default class Form extends Component {
       return formData;
     }
 
-    return _pick(formData, fields);
+    let data = _pick(formData, fields);
+    if (Array.isArray(formData)) {
+      return Object.keys(data).map(key => data[key]);
+    }
+
+    return data;
   };
 
   getFieldNames = (pathSchema, formData) => {
-    const getAllPaths = (_obj, acc = [], paths = []) => {
+    const getAllPaths = (_obj, acc = [], paths = [""]) => {
       Object.keys(_obj).forEach(key => {
         if (typeof _obj[key] === "object") {
-          if (!paths.length) {
-            getAllPaths(_obj[key], acc, [key]);
-          } else {
-            let newPaths = [];
-            paths.forEach(path => {
-              newPaths.push(path);
-            });
-            newPaths = newPaths.map(path => `${path}.${key}`);
-            getAllPaths(_obj[key], acc, newPaths);
-          }
-        } else if (key === "$name") {
+          let newPaths = paths.map(path => `${path}.${key}`);
+          getAllPaths(_obj[key], acc, newPaths);
+        } else if (key === "$name" && _obj[key] !== "") {
           paths.forEach(path => {
+            path = path.replace(/^\./, "");
             const formValue = _get(formData, path);
-            if (typeof formValue !== "object") {
+            // adds path to fieldNames if it points to a value
+            // or an empty object/array
+            if (typeof formValue !== "object" || _isEmpty(formValue)) {
               acc.push(path);
             }
           });
@@ -179,12 +178,19 @@ export default class Form extends Component {
     let newFormData = formData;
 
     if (this.props.omitExtraData === true && this.props.liveOmit === true) {
-      const newState = this.getStateFromProps(this.props, formData);
-
-      const fieldNames = this.getFieldNames(
-        newState.pathSchema,
-        newState.formData
+      const retrievedSchema = retrieveSchema(
+        this.state.schema,
+        this.state.schema.definitions,
+        formData
       );
+      const pathSchema = toPathSchema(
+        retrievedSchema,
+        "",
+        this.state.schema.definitions,
+        formData
+      );
+
+      const fieldNames = this.getFieldNames(pathSchema, formData);
 
       newFormData = this.getUsedFormData(formData, fieldNames);
       state = {
@@ -229,11 +235,22 @@ export default class Form extends Component {
     event.persist();
     let newFormData = this.state.formData;
 
-    const { pathSchema } = this.state;
-
     if (this.props.omitExtraData === true) {
-      const fieldNames = this.getFieldNames(pathSchema, this.state.formData);
-      newFormData = this.getUsedFormData(this.state.formData, fieldNames);
+      const retrievedSchema = retrieveSchema(
+        this.state.schema,
+        this.state.schema.definitions,
+        newFormData
+      );
+      const pathSchema = toPathSchema(
+        retrievedSchema,
+        "",
+        this.state.schema.definitions,
+        newFormData
+      );
+
+      const fieldNames = this.getFieldNames(pathSchema, newFormData);
+
+      newFormData = this.getUsedFormData(newFormData, fieldNames);
     }
 
     if (!this.props.noValidate) {

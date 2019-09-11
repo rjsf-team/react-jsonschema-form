@@ -235,6 +235,7 @@ function SchemaFieldRender(props) {
     onDropPropertyClick,
     required,
     registry = getDefaultRegistry(),
+    wasPropertyKeyModified = false,
   } = props;
   const { definitions, fields, formContext } = registry;
   const FieldTemplate =
@@ -296,8 +297,15 @@ function SchemaFieldRender(props) {
 
   const { type } = schema;
   const id = idSchema.$id;
-  const label =
-    uiSchema["ui:title"] || props.schema.title || schema.title || name;
+
+  // If this schema has a title defined, but the user has set a new key/label, retain their input.
+  let label;
+  if (wasPropertyKeyModified) {
+    label = name;
+  } else {
+    label = uiSchema["ui:title"] || props.schema.title || schema.title || name;
+  }
+
   const description =
     uiSchema["ui:description"] ||
     props.schema.description ||
