@@ -2869,12 +2869,16 @@ describe("utils", () => {
       );
     });
 
-    //TODO: Unskip the test when react>=16.3 will be used
-    it.skip("should not fail on forwarded ref component", () => {
+    it("should not fail on correct component", () => {
+      const Widget = props => <div {...props} />;
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
+    });
+
+    it("should not fail on forwarded ref component", () => {
       const Widget = React.forwardRef((props, ref) => (
         <div {...props} ref={ref} />
       ));
-      expect(getWidget(schema, Widget)).eql(<Widget />);
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
   });
 });

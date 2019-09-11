@@ -296,21 +296,13 @@ describe("SchemaField", () => {
       return errors;
     }
 
-    function submit(node) {
-      try {
-        Simulate.submit(node);
-      } catch (e) {
-        // Silencing error thrown as failure is expected here
-      }
-    }
-
     it("should render its own errors", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
         validate,
       });
-      submit(node);
+      Simulate.submit(node);
 
       const matches = node.querySelectorAll(
         "form > .form-group > div > .error-detail .text-danger"
@@ -325,7 +317,7 @@ describe("SchemaField", () => {
         uiSchema,
         validate,
       });
-      submit(node);
+      Simulate.submit(node);
 
       const matches = node.querySelectorAll(
         "form .form-group .form-group .text-danger"
@@ -346,7 +338,7 @@ describe("SchemaField", () => {
           validate,
           widgets: { BaseInput: customStringWidget },
         });
-        submit(node);
+        Simulate.submit(node);
 
         const matches = node.querySelectorAll(".custom-text-widget");
         expect(matches).to.have.length.of(1);
