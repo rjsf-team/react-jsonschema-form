@@ -348,7 +348,7 @@ class App extends Component {
 
   load = data => {
     // Reset the ArrayFieldTemplate whenever you load new data
-    const { ArrayFieldTemplate, ObjectFieldTemplate } = data;
+    const { ArrayFieldTemplate, ObjectFieldTemplate, errorSchema } = data;
     // uiSchema is missing on some examples. Provide a default to
     // clear the field in all cases.
     const { uiSchema = {} } = data;
@@ -360,6 +360,7 @@ class App extends Component {
         ArrayFieldTemplate,
         ObjectFieldTemplate,
         uiSchema,
+        errorSchema,
       })
     );
   };
@@ -474,16 +475,18 @@ class App extends Component {
               />
             </div>
           </div>
-          <div className="row">
-            <div className="col">
-              <Editor
-                title="errorSchema"
-                theme={editor}
-                code={toJson(errorSchema || {})}
-                onChange={this.onErrorSchemaEdited}
-              />
+          {errorSchema && (
+            <div className="row">
+              <div className="col">
+                <Editor
+                  title="errorSchema"
+                  theme={editor}
+                  code={toJson(errorSchema || {})}
+                  onChange={this.onErrorSchemaEdited}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="col-sm-5">
           {this.state.form && (
