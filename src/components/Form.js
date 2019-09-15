@@ -206,13 +206,20 @@ export default class Form extends Component {
     }
 
     if (mustValidate) {
-      const { errors, errorSchema } = this.validate(newFormData);
+      let { errors, errorSchema } = this.validate(newFormData);
+      if (this.props.errorSchema) {
+        errorSchema = mergeObjects(errorSchema, this.props.errorSchema);
+        errors = toErrorList(errorSchema);
+      }
       state = { formData: newFormData, errors, errorSchema };
     } else if (!this.props.noValidate && newErrorSchema) {
+      const errorSchema = this.props.errorSchema
+        ? mergeObjects(newErrorSchema, this.props.errorSchema)
+        : newErrorSchema;
       state = {
         formData: newFormData,
-        errorSchema: newErrorSchema,
-        errors: toErrorList(newErrorSchema),
+        errorSchema: errorSchema,
+        errors: toErrorList(errorSchema),
       };
     }
     setState(this, state, () => {
