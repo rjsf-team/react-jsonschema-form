@@ -1,7 +1,6 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
-import { polyfill } from "react-lifecycles-compat";
 import includes from "core-js/library/fn/array/includes";
 import * as types from "../../types";
 
@@ -212,10 +211,17 @@ class ArrayField extends Component {
     const keyedFormData = generateKeyedFormData(formData);
     this.state = {
       keyedFormData,
+      updatedKeyedFormData: false,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    // Don't call getDerivedStateFromProps if keyed formdata was just updated.
+    if (prevState.updatedKeyedFormData) {
+      return {
+        updatedKeyedFormData: false,
+      };
+    }
     const nextFormData = nextProps.formData;
     const previousKeyedFormData = prevState.keyedFormData;
     const newKeyedFormData =
@@ -281,10 +287,10 @@ class ArrayField extends Component {
       item: this._getNewFormDataRow(),
     };
     const newKeyedFormData = [...this.state.keyedFormData, newKeyedFormDataRow];
-
     this.setState(
       {
         keyedFormData: newKeyedFormData,
+        updatedKeyedFormData: true,
       },
       () => onChange(keyedToPlainFormData(newKeyedFormData))
     );
@@ -306,6 +312,7 @@ class ArrayField extends Component {
       this.setState(
         {
           keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
         },
         () => onChange(keyedToPlainFormData(newKeyedFormData))
       );
@@ -337,6 +344,7 @@ class ArrayField extends Component {
       this.setState(
         {
           keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
         },
         () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
       );
@@ -777,7 +785,5 @@ class ArrayField extends Component {
 if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = types.fieldProps;
 }
-
-polyfill(ArrayField);
 
 export default ArrayField;

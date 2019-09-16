@@ -169,7 +169,7 @@ class Editor extends Component {
     this.state = { valid: true, code: props.code };
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     this.setState({ valid: true, code: props.code });
   }
 
@@ -384,12 +384,14 @@ class App extends Component {
     this.setState({ formData, shareURL: null });
 
   onShare = () => {
-    const { formData, schema, uiSchema } = this.state;
+    const { formData, schema, uiSchema, liveSettings } = this.state;
     const {
       location: { origin, pathname },
     } = document;
     try {
-      const hash = btoa(JSON.stringify({ formData, schema, uiSchema }));
+      const hash = btoa(
+        JSON.stringify({ formData, schema, uiSchema, liveSettings })
+      );
       this.setState({ shareURL: `${origin}${pathname}#${hash}` });
     } catch (err) {
       this.setState({ shareURL: null });
@@ -502,7 +504,7 @@ class App extends Component {
         </div>
         <div className="col-sm-12">
           <p style={{ textAlign: "center" }}>
-            Powered by
+            Powered by{" "}
             <a href="https://github.com/mozilla-services/react-jsonschema-form">
               react-jsonschema-form
             </a>
@@ -511,7 +513,7 @@ class App extends Component {
             <a href="https://github.com/aalpern/bootstrap-solarized/">
               bootstrap-solarized
             </a>
-            .
+            . Bootstrap version v3.3.6.
             {process.env.SHOW_NETLIFY_BADGE === "true" && (
               <div style={{ float: "right" }}>
                 <a href="https://www.netlify.com">

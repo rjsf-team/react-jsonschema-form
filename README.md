@@ -15,7 +15,7 @@ Testing powered by BrowserStack<br>
 Documentation is hosted on: https://react-jsonschema-form.readthedocs.io/
 
 ## Live Playground
-A [live playground](https://mozilla-services.github.io/react-jsonschema-form/) is hosted on gh-pages.
+A [live playground](https://rjsf-team.github.io/react-jsonschema-form/) is hosted on gh-pages.
 
 ## Contributing
 Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/#contributing) to get started.
