@@ -265,7 +265,7 @@ const schema = {
       type: "object",
       properties: {
         bar: {
-          type: "string
+          type: "string",
         }
       }
     },
