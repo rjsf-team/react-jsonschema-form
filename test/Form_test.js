@@ -2810,5 +2810,25 @@ describe("Form omitExtraData and liveOmit", () => {
 
       expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
     });
+
+    it("should not block form submission", () => {
+      const onSubmit = sinon.spy();
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+
+      const errorSchema = {
+        foo: {
+          __errors: ["some error that got added as a prop"],
+        },
+      };
+
+      const { node } = createFormComponent({ schema, errorSchema, onSubmit });
+      Simulate.submit(node);
+      sinon.assert.calledOnce(onSubmit);
+    });
   });
 });
