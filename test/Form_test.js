@@ -2785,15 +2785,11 @@ describe("Form omitExtraData and liveOmit", () => {
       const schema = {
         type: "object",
         properties: {
-          foo: {
-            type: "string",
-          },
+          foo: { type: "string" },
           candy: {
             type: "object",
             properties: {
-              bar: {
-                type: "string",
-              },
+              bar: { type: "string" },
             },
           },
         },
