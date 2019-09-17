@@ -270,7 +270,7 @@ const schema = {
       }
     },
   },
-},
+}
 
 const errorSchema = {
   foo: {
