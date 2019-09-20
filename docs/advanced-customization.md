@@ -272,7 +272,7 @@ const schema = {
   },
 }
 
-const errorSchema = {
+const extraErrors = {
   foo: {
     __errors: ["some error that got added as a prop"],
   },
@@ -285,7 +285,7 @@ const errorSchema = {
 
 render((
   <Form schema={schema}
-        errorSchema={errorSchema} />,
+        extraErrors={extraErrors} />,
 ), document.getElementById("app"));
 ```
 

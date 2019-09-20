@@ -66,7 +66,7 @@ module.exports = {
     bio: "Roundhouse kicking asses since 1940",
     password: "noneed",
   },
-  errorSchema: {
+  extraErrors: {
     firstName: {
       __errors: ["some error that got added as a prop"],
     },

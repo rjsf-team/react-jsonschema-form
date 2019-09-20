@@ -348,7 +348,7 @@ class App extends Component {
 
   load = data => {
     // Reset the ArrayFieldTemplate whenever you load new data
-    const { ArrayFieldTemplate, ObjectFieldTemplate, errorSchema } = data;
+    const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors } = data;
     // uiSchema is missing on some examples. Provide a default to
     // clear the field in all cases.
     const { uiSchema = {} } = data;
@@ -360,7 +360,7 @@ class App extends Component {
         ArrayFieldTemplate,
         ObjectFieldTemplate,
         uiSchema,
-        errorSchema,
+        extraErrors,
       })
     );
   };
@@ -371,8 +371,8 @@ class App extends Component {
 
   onFormDataEdited = formData => this.setState({ formData, shareURL: null });
 
-  onErrorSchemaEdited = errorSchema =>
-    this.setState({ errorSchema, shareURL: null });
+  onExtraErrorsEdited = extraErrors =>
+    this.setState({ extraErrors, shareURL: null });
 
   onThemeSelected = (theme, { stylesheet, editor }) => {
     this.setState({ theme, editor: editor ? editor : "default" });
@@ -419,7 +419,7 @@ class App extends Component {
       schema,
       uiSchema,
       formData,
-      errorSchema,
+      extraErrors,
       liveSettings,
       validate,
       theme,
@@ -475,14 +475,14 @@ class App extends Component {
               />
             </div>
           </div>
-          {errorSchema && (
+          {extraErrors && (
             <div className="row">
               <div className="col">
                 <Editor
-                  title="errorSchema"
+                  title="extraErrors"
                   theme={editor}
-                  code={toJson(errorSchema || {})}
-                  onChange={this.onErrorSchemaEdited}
+                  code={toJson(extraErrors || {})}
+                  onChange={this.onExtraErrorsEdited}
                 />
               </div>
             </div>
@@ -500,7 +500,7 @@ class App extends Component {
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
-              errorSchema={errorSchema}
+              extraErrors={extraErrors}
               onChange={this.onFormDataChange}
               onSubmit={({ formData }, e) => {
                 console.log("submitted formData", formData);

@@ -2795,7 +2795,7 @@ describe("Form omitExtraData and liveOmit", () => {
         },
       };
 
-      const errorSchema = {
+      const extraErrors = {
         foo: {
           __errors: ["some error that got added as a prop"],
         },
@@ -2806,7 +2806,7 @@ describe("Form omitExtraData and liveOmit", () => {
         },
       };
 
-      const { node } = createFormComponent({ schema, errorSchema });
+      const { node } = createFormComponent({ schema, extraErrors });
 
       expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
     });
@@ -2820,13 +2820,13 @@ describe("Form omitExtraData and liveOmit", () => {
         },
       };
 
-      const errorSchema = {
+      const extraErrors = {
         foo: {
           __errors: ["some error that got added as a prop"],
         },
       };
 
-      const { node } = createFormComponent({ schema, errorSchema, onSubmit });
+      const { node } = createFormComponent({ schema, extraErrors, onSubmit });
       Simulate.submit(node);
       sinon.assert.calledOnce(onSubmit);
     });

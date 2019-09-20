@@ -73,8 +73,8 @@ export default class Form extends Component {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
         };
-    if (props.errorSchema) {
-      errorSchema = mergeObjects(errorSchema, props.errorSchema);
+    if (props.extraErrors) {
+      errorSchema = mergeObjects(errorSchema, props.extraErrors);
       errors = toErrorList(errorSchema);
     }
     const idSchema = toIdSchema(
@@ -207,14 +207,14 @@ export default class Form extends Component {
 
     if (mustValidate) {
       let { errors, errorSchema } = this.validate(newFormData);
-      if (this.props.errorSchema) {
-        errorSchema = mergeObjects(errorSchema, this.props.errorSchema);
+      if (this.props.extraErrors) {
+        errorSchema = mergeObjects(errorSchema, this.props.extraErrors);
         errors = toErrorList(errorSchema);
       }
       state = { formData: newFormData, errors, errorSchema };
     } else if (!this.props.noValidate && newErrorSchema) {
-      const errorSchema = this.props.errorSchema
-        ? mergeObjects(newErrorSchema, this.props.errorSchema)
+      const errorSchema = this.props.extraErrors
+        ? mergeObjects(newErrorSchema, this.props.extraErrors)
         : newErrorSchema;
       state = {
         formData: newFormData,
@@ -271,8 +271,8 @@ export default class Form extends Component {
     if (!this.props.noValidate) {
       let { errors, errorSchema } = this.validate(newFormData);
       if (Object.keys(errors).length > 0) {
-        if (this.props.errorSchema) {
-          errorSchema = mergeObjects(errorSchema, this.props.errorSchema);
+        if (this.props.extraErrors) {
+          errorSchema = mergeObjects(errorSchema, this.props.extraErrors);
           errors = toErrorList(errorSchema);
         }
         setState(this, { errors, errorSchema }, () => {
@@ -288,8 +288,8 @@ export default class Form extends Component {
 
     let errorSchema;
     let errors;
-    if (this.props.errorSchema) {
-      errorSchema = this.props.errorSchema;
+    if (this.props.extraErrors) {
+      errorSchema = this.props.extraErrors;
       errors = toErrorList(errorSchema);
     } else {
       errorSchema = {};
@@ -438,6 +438,6 @@ if (process.env.NODE_ENV !== "production") {
     customFormats: PropTypes.object,
     additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
     omitExtraData: PropTypes.bool,
-    errorSchema: PropTypes.object,
+    extraErrors: PropTypes.object,
   };
 }
