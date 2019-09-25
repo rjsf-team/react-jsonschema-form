@@ -383,10 +383,10 @@ if (process.env.NODE_ENV !== "production") {
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
     ),
-    fields: PropTypes.objectOf(PropTypes.func),
-    ArrayFieldTemplate: PropTypes.func,
-    ObjectFieldTemplate: PropTypes.func,
-    FieldTemplate: PropTypes.func,
+    fields: PropTypes.objectOf(PropTypes.elementType),
+    ArrayFieldTemplate: PropTypes.elementType,
+    ObjectFieldTemplate: PropTypes.elementType,
+    FieldTemplate: PropTypes.elementType,
     ErrorList: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,

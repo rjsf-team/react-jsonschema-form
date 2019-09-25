@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 
 export const registry = PropTypes.shape({
-  ArrayFieldTemplate: PropTypes.func,
-  FieldTemplate: PropTypes.func,
-  ObjectFieldTemplate: PropTypes.func,
+  ArrayFieldTemplate: PropTypes.elementType,
+  FieldTemplate: PropTypes.elementType,
+  ObjectFieldTemplate: PropTypes.elementType,
   definitions: PropTypes.object.isRequired,
-  fields: PropTypes.objectOf(PropTypes.func).isRequired,
+  fields: PropTypes.objectOf(PropTypes.elementType).isRequired,
   formContext: PropTypes.object.isRequired,
   widgets: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.func, PropTypes.object])
