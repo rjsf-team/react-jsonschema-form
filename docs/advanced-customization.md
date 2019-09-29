@@ -108,7 +108,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+Please see [customArray.tsx](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.tsx) for a better example.
 
 
 The following props are passed to each `ArrayFieldTemplate`:
@@ -182,7 +182,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-Please see [customObject.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customObject.js) for a better example.
+Please see [customObject.tsx](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customObject.tsx) for a better example.
 
 The following props are passed to each `ObjectFieldTemplate`:
 
