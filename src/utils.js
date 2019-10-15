@@ -2,6 +2,7 @@ import React from "react";
 import * as ReactIs from "react-is";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
+import { union } from "lodash";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -763,7 +764,8 @@ function withExactlyOneSubschema(
 // Recursively merge deeply nested schemas.
 // The difference between mergeSchemas and mergeObjects
 // is that mergeSchemas only concats arrays for
-// values under the "required" keyword.
+// values under the "required" keyword, and when it does,
+// it doesn't include duplicate values.
 export function mergeSchemas(obj1, obj2) {
   var acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
@@ -776,7 +778,9 @@ export function mergeSchemas(obj1, obj2) {
       Array.isArray(left) &&
       Array.isArray(right)
     ) {
-      acc[key] = left.concat(right);
+      // Don't include duplicate values when merging
+      // "required" fields.
+      acc[key] = union(left, right);
     } else {
       acc[key] = right;
     }

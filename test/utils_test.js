@@ -1144,6 +1144,13 @@ describe("utils", () => {
 
         expect(mergeSchemas(obj1, obj2)).eql({ a: { required: [1, 2] } });
       });
+
+      it("should not include duplicate values when concatting arrays under 'required' keyword", () => {
+        const obj1 = { required: [1] };
+        const obj2 = { required: [1] };
+
+        expect(mergeSchemas(obj1, obj2)).eql({ required: [1] });
+      });
     });
   });
 
@@ -1409,13 +1416,14 @@ describe("utils", () => {
               required: ["a", "b"],
             });
           });
-          it("should not concat enum properties", () => {
+          it("should not concat enum properties, but should concat 'required' properties", () => {
             const schema = {
               type: "object",
               properties: {
                 a: { type: "string", enum: ["FOO", "BAR", "BAZ"] },
                 b: { type: "string", enum: ["GREEN", "BLUE", "RED"] },
               },
+              required: ["a"],
               dependencies: {
                 a: {
                   properties: {
