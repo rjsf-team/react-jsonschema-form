@@ -1132,24 +1132,36 @@ describe("utils", () => {
       });
 
       it("should concat arrays under 'required' keyword", () => {
-        const obj1 = { required: [1] };
-        const obj2 = { required: [2] };
+        const obj1 = { type: "object", required: [1] };
+        const obj2 = { type: "object", required: [2] };
 
-        expect(mergeSchemas(obj1, obj2)).eql({ required: [1, 2] });
+        expect(mergeSchemas(obj1, obj2)).eql({
+          type: "object",
+          required: [1, 2],
+        });
       });
 
       it("should concat nested arrays under 'required' keyword", () => {
-        const obj1 = { a: { required: [1] } };
-        const obj2 = { a: { required: [2] } };
+        const obj1 = { a: { type: "object", required: [1] } };
+        const obj2 = { a: { type: "object", required: [2] } };
 
-        expect(mergeSchemas(obj1, obj2)).eql({ a: { required: [1, 2] } });
+        expect(mergeSchemas(obj1, obj2)).eql({
+          a: { type: "object", required: [1, 2] },
+        });
       });
 
       it("should not include duplicate values when concatting arrays under 'required' keyword", () => {
-        const obj1 = { required: [1] };
-        const obj2 = { required: [1] };
+        const obj1 = { type: "object", required: [1] };
+        const obj2 = { type: "object", required: [1] };
 
-        expect(mergeSchemas(obj1, obj2)).eql({ required: [1] });
+        expect(mergeSchemas(obj1, obj2)).eql({ type: "object", required: [1] });
+      });
+
+      it("should not concat arrays under 'required' keyword that are not under an object type", () => {
+        const obj1 = { required: [1] };
+        const obj2 = { required: [2] };
+
+        expect(mergeSchemas(obj1, obj2)).eql({ required: [2] });
       });
     });
   });

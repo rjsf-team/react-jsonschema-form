@@ -67,6 +67,7 @@ export function getDefaultRegistry() {
   };
 }
 
+/* Gets the type of a given schema. */
 export function getSchemaType(schema) {
   let { type } = schema;
 
@@ -774,6 +775,8 @@ export function mergeSchemas(obj1, obj2) {
     if (obj1 && obj1.hasOwnProperty(key) && isObject(right)) {
       acc[key] = mergeSchemas(left, right);
     } else if (
+      (getSchemaType(obj1 || {}) === "object" ||
+        getSchemaType(obj2 || {}) === "object") &&
       key === "required" &&
       Array.isArray(left) &&
       Array.isArray(right)
