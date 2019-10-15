@@ -2291,7 +2291,44 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("Dependency defaults", () => {
+  describe("Dependencies", () => {
+    it("should not give a validation error by duplicating enum values in dependencies", () => {
+      const schema = {
+        title: "A registration form",
+        description: "A simple form example.",
+        type: "object",
+        properties: {
+          type1: {
+            type: "string",
+            title: "Type 1",
+            enum: ["FOO", "BAR", "BAZ"],
+          },
+          type2: {
+            type: "string",
+            title: "Type 2",
+            enum: ["GREEN", "BLUE", "RED"],
+          },
+        },
+        dependencies: {
+          type1: {
+            properties: {
+              type1: {
+                enum: ["FOO"],
+              },
+              type2: {
+                enum: ["GREEN"],
+              },
+            },
+          },
+        },
+      };
+      const formData = {
+        type1: "FOO",
+      };
+      const { node, comp } = createFormComponent({ schema, formData });
+      Simulate.submit(node);
+      expect(comp.state.errors).to.have.length.of(0);
+    });
     it("should show dependency defaults for uncontrolled components", () => {
       const schema = {
         type: "object",
