@@ -1104,7 +1104,7 @@ describe("utils", () => {
       });
     });
 
-    it.only("should 'resolve' and stub out a schema which contains an `additionalProperties` with a type and definition", () => {
+    it("should 'resolve' and stub out a schema which contains an `additionalProperties` with a type and definition", () => {
       const schema = {
         type: "string",
         additionalProperties: {

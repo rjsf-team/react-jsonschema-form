@@ -122,7 +122,7 @@ class GeoPosition extends Component {
   onChange(name) {
     return event => {
       this.setState({ [name]: parseFloat(event.target.value) });
-      setImmediate(() => this.props.onChange(this.state));
+      setTimeout(() => this.props.onChange(this.state), 0);
     };
   }
 
@@ -231,7 +231,7 @@ class Selector extends Component {
     return event => {
       event.preventDefault();
       this.setState({ current: label });
-      setImmediate(() => this.props.onSelected(samples[label]));
+      setTimeout(() => this.props.onSelected(samples[label]), 0);
     };
   };
 
@@ -372,10 +372,10 @@ class App extends Component {
 
   onThemeSelected = (theme, { stylesheet, editor }) => {
     this.setState({ theme, editor: editor ? editor : "default" });
-    setImmediate(() => {
+    setTimeout(() => {
       // Side effect!
       document.getElementById("theme").setAttribute("href", stylesheet);
-    });
+    }, 0);
   };
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });

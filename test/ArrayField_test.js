@@ -1183,7 +1183,7 @@ describe("ArrayField", () => {
         },
       });
 
-      return new Promise(setImmediate).then(() =>
+      return new Promise(resolve => setTimeout(resolve, 0)).then(() =>
         expect(comp.state.formData).eql([
           "data:text/plain;name=file1.txt;base64,x=",
           "data:text/plain;name=file2.txt;base64,x=",
