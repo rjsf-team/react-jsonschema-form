@@ -1060,7 +1060,7 @@ describe("utils", () => {
   });
 
   describe("mergeSchemas()", () => {
-    it("should't mutate the provided objects", () => {
+    it("shouldn't mutate the provided objects", () => {
       const obj1 = { a: 1 };
       mergeSchemas(obj1, { b: 2 });
       expect(obj1).eql({ a: 1 });
