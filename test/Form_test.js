@@ -2138,6 +2138,7 @@ describeRepeated("Form common", createFormComponent => {
   describe("Deprecated autocomplete attribute", () => {
     it("should set attr autocomplete of form", () => {
       const formProps = {
+        schema: {},
         autocomplete: "off",
       };
       const node = createFormComponent(formProps).node;
@@ -2145,7 +2146,9 @@ describeRepeated("Form common", createFormComponent => {
     });
 
     it("should log deprecation warning when it is used", () => {
+      sandbox.stub(console, "warn");
       createFormComponent({
+        schema: {},
         autocomplete: "off",
       });
       expect(
@@ -2155,20 +2158,9 @@ describeRepeated("Form common", createFormComponent => {
       ).to.be.true;
     });
 
-    it("should log warning when autocomplete is used along with autoComplete", () => {
-      createFormComponent({
-        autocomplete: "off",
-        autoComplete: "off",
-      });
-      expect(
-        console.warn.calledWithMatch(
-          /Both autocomplete and autoComplete properties of Form are set/
-        )
-      ).to.be.true;
-    });
-
     it("should use autoComplete value if both autocomplete and autoComplete are used", () => {
       const formProps = {
+        schema: {},
         autocomplete: "off",
         autoComplete: "on",
       };
