@@ -333,11 +333,6 @@ export default class Form extends Component {
       console.warn(
         "Using autocomplete property of Form is deprecated, use autoComplete instead."
       );
-      if (currentAutoComplete) {
-        console.warn(
-          "Both autocomplete and autoComplete properties of Form are set, autoComplete will be used."
-        );
-      }
     }
     const autoComplete = currentAutoComplete
       ? currentAutoComplete
