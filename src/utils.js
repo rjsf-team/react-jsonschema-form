@@ -962,7 +962,7 @@ export function setState(instance, state, callback) {
     instance.setState(state, callback);
   } else {
     instance.setState(state);
-    setImmediate(callback);
+    setTimeout(callback, 0);
   }
 }
 
