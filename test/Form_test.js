@@ -2082,7 +2082,7 @@ describeRepeated("Form common", createFormComponent => {
       method: "post",
       target: "_blank",
       action: "/users/list",
-      autocomplete: "off",
+      autoComplete: "off",
       enctype: "multipart/form-data",
       acceptcharset: "ISO-8859-1",
       noHtml5Validate: true,
@@ -2118,8 +2118,8 @@ describeRepeated("Form common", createFormComponent => {
       expect(node.getAttribute("action")).eql(formProps.action);
     });
 
-    it("should set attr autoComplete of form", () => {
-      expect(node.getAttribute("autocomplete")).eql(formProps.autocomplete);
+    it("should set attr autocomplete of form", () => {
+      expect(node.getAttribute("autocomplete")).eql(formProps.autoComplete);
     });
 
     it("should set attr enctype of form", () => {
@@ -2132,6 +2132,40 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should set attr novalidate of form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
+    });
+  });
+
+  describe("Deprecated autocomplete attribute", () => {
+    it("should set attr autocomplete of form", () => {
+      const formProps = {
+        schema: {},
+        autocomplete: "off",
+      };
+      const node = createFormComponent(formProps).node;
+      expect(node.getAttribute("autocomplete")).eql(formProps.autocomplete);
+    });
+
+    it("should log deprecation warning when it is used", () => {
+      sandbox.stub(console, "warn");
+      createFormComponent({
+        schema: {},
+        autocomplete: "off",
+      });
+      expect(
+        console.warn.calledWithMatch(
+          /Using autocomplete property of Form is deprecated/
+        )
+      ).to.be.true;
+    });
+
+    it("should use autoComplete value if both autocomplete and autoComplete are used", () => {
+      const formProps = {
+        schema: {},
+        autocomplete: "off",
+        autoComplete: "on",
+      };
+      const node = createFormComponent(formProps).node;
+      expect(node.getAttribute("autocomplete")).eql(formProps.autoComplete);
     });
   });
 
