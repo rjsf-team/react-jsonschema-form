@@ -1141,6 +1141,16 @@ describe("utils", () => {
         });
       });
 
+      it("should concat arrays under 'required' keyword when one of the schemas is an object type", () => {
+        const obj1 = { type: "object", required: [1] };
+        const obj2 = { required: [2] };
+
+        expect(mergeSchemas(obj1, obj2)).eql({
+          type: "object",
+          required: [1, 2],
+        });
+      });
+
       it("should concat nested arrays under 'required' keyword", () => {
         const obj1 = { a: { type: "object", required: [1] } };
         const obj2 = { a: { type: "object", required: [2] } };
