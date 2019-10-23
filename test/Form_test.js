@@ -2809,4 +2809,56 @@ describe("Form omitExtraData and liveOmit", () => {
 
     expect(comp.state.formData).eql({ foo: "foobar" });
   });
+
+  describe("Async errors", () => {
+    it("should render the async errors", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+          candy: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const extraErrors = {
+        foo: {
+          __errors: ["some error that got added as a prop"],
+        },
+        candy: {
+          bar: {
+            __errors: ["some other error that got added as a prop"],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({ schema, extraErrors });
+
+      expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
+    });
+
+    it("should not block form submission", () => {
+      const onSubmit = sinon.spy();
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+
+      const extraErrors = {
+        foo: {
+          __errors: ["some error that got added as a prop"],
+        },
+      };
+
+      const { node } = createFormComponent({ schema, extraErrors, onSubmit });
+      Simulate.submit(node);
+      sinon.assert.calledOnce(onSubmit);
+    });
+  });
 });

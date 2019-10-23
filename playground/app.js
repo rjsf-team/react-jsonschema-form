@@ -348,7 +348,7 @@ class App extends Component {
 
   load = data => {
     // Reset the ArrayFieldTemplate whenever you load new data
-    const { ArrayFieldTemplate, ObjectFieldTemplate } = data;
+    const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors } = data;
     // uiSchema is missing on some examples. Provide a default to
     // clear the field in all cases.
     const { uiSchema = {} } = data;
@@ -360,6 +360,7 @@ class App extends Component {
         ArrayFieldTemplate,
         ObjectFieldTemplate,
         uiSchema,
+        extraErrors,
       })
     );
   };
@@ -369,6 +370,9 @@ class App extends Component {
   onUISchemaEdited = uiSchema => this.setState({ uiSchema, shareURL: null });
 
   onFormDataEdited = formData => this.setState({ formData, shareURL: null });
+
+  onExtraErrorsEdited = extraErrors =>
+    this.setState({ extraErrors, shareURL: null });
 
   onThemeSelected = (theme, { stylesheet, editor }) => {
     this.setState({ theme, editor: editor ? editor : "default" });
@@ -384,13 +388,25 @@ class App extends Component {
     this.setState({ formData, shareURL: null });
 
   onShare = () => {
-    const { formData, schema, uiSchema, liveSettings } = this.state;
+    const {
+      formData,
+      schema,
+      uiSchema,
+      liveSettings,
+      errorSchema,
+    } = this.state;
     const {
       location: { origin, pathname },
     } = document;
     try {
       const hash = btoa(
-        JSON.stringify({ formData, schema, uiSchema, liveSettings })
+        JSON.stringify({
+          formData,
+          schema,
+          uiSchema,
+          liveSettings,
+          errorSchema,
+        })
       );
       this.setState({ shareURL: `${origin}${pathname}#${hash}` });
     } catch (err) {
@@ -403,6 +419,7 @@ class App extends Component {
       schema,
       uiSchema,
       formData,
+      extraErrors,
       liveSettings,
       validate,
       theme,
@@ -458,6 +475,18 @@ class App extends Component {
               />
             </div>
           </div>
+          {extraErrors && (
+            <div className="row">
+              <div className="col">
+                <Editor
+                  title="extraErrors"
+                  theme={editor}
+                  code={toJson(extraErrors || {})}
+                  onChange={this.onExtraErrorsEdited}
+                />
+              </div>
+            </div>
+          )}
         </div>
         <div className="col-sm-5">
           {this.state.form && (
@@ -471,6 +500,7 @@ class App extends Component {
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}
+              extraErrors={extraErrors}
               onChange={this.onFormDataChange}
               onSubmit={({ formData }, e) => {
                 console.log("submitted formData", formData);
