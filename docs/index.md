@@ -196,6 +196,31 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 
 * `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/mozilla-services/react-jsonschema-form/issues/848) [#902](https://github.com/mozilla-services/react-jsonschema-form/issues/902) [#992](https://github.com/mozilla-services/react-jsonschema-form/issues/992)
 
+## Handling of schema defaults
+
+This library automatically fills default values defined the [JSON Schema](http://json-schema.org/documentation.html) as initial values in your form. This also works for complex structures in the schema. If a field has a default defined, it should always appear as default value in form. This also works when using [schema dependencies](#schema-dependencies).
+
+Since there is a complex interaction between any supplied original form data and any injected defaults, this library tries to do the injection in a way which keeps the original intention of the original form data.
+
+Check out the defaults example on the [live playground](https://mozilla-services.github.io/react-jsonschema-form/) to see this in action.
+
+### Merging of defaults into the form data
+
+There are three different cases which need to be considered for the merging. Objects, arrays and scalar values. This library always deeply merges any defaults with the existing form data for objects.
+
+This are the rules which are used when injecting the defaults: 
+
+- When the is a scalar in the form data, nothing is changed. 
+- When the value is `undefined` in the form data, the default is created in the form data.
+- When the value is an object in the form data, the defaults are deeply merged into the form data, using the rules defined here for the deep merge.
+- Then the value is an array in the form data, defaults are only injected in existing array items. No new array items will be created, even if the schema has minItems or additional items defined.
+
+### Merging of defaults within the schema
+
+In the schema itself, defaults of parent elements are propagated into children. So when you have a schema which defines a deeply nested object as default, these defaults will be applied to children of the current node. This also merges objects defined at different levels together with the "deeper" not having precedence. If the parent node defines properties, which are not defined in the child, they will be merged so that the default for the child will be the merged defaults of parent and child.
+
+For arrays this is not the case. Defining an array, when a parent also defines an array, will be overwritten. This is only true when arrays are used in the same level, for objects within these arrays, they will be deeply merged again.
+
 ## Tips and tricks
 
  - Custom field template: <https://jsfiddle.net/hdp1kgn6/1/>
