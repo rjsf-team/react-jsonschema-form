@@ -229,7 +229,7 @@ function computeDefaults(
       }, {});
 
     case "array":
-      // inject defaults into existing array defaults
+      // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
         defaults = defaults.map((item, idx) => {
           return computeDefaults(
@@ -240,14 +240,14 @@ function computeDefaults(
         });
       }
 
-      // deeply inject defaults into already existing form data
+      // Deeply inject defaults into already existing form data
       if (Array.isArray(rawFormData)) {
-        defaults = rawFormData.map((array, idx) => {
+        defaults = rawFormData.map((item, idx) => {
           return computeDefaults(
             schema.items,
             (defaults || {})[idx],
             definitions,
-            array
+            item
           );
         });
       }
@@ -307,20 +307,22 @@ export function getDefaultFormState(
 }
 
 /**
- * When merging defaults and form data, we want to merge in very specific way:
+ * When merging defaults and form data, we want to merge in this specific way:
  * - objects are deeply merged
- * - arrays are merged in such way that:
+ * - arrays are merged in such a way that:
  *   - when the array is set in form data, only array entries set in form data
- *     are deeply merged, additional entries from the defaults are ignored
+ *     are deeply merged; additional entries from the defaults are ignored
  *   - when the array is not set in form data, the default is copied over
  * - scalars are overwritten/set by form data
  */
 export function mergeDefaultsWithFormData(defaults, formData) {
   if (Array.isArray(formData)) {
-    const leftArray = Array.isArray(defaults) ? defaults : [];
+    if (!Array.isArray(defaults)) {
+      defaults = [];
+    }
     return formData.map((value, idx) => {
-      if (leftArray[idx]) {
-        return mergeDefaultsWithFormData(leftArray[idx], value);
+      if (defaults[idx]) {
+        return mergeDefaultsWithFormData(defaults[idx], value);
       }
       return value;
     });
