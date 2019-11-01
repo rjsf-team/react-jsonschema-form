@@ -2082,7 +2082,7 @@ describeRepeated("Form common", createFormComponent => {
       method: "post",
       target: "_blank",
       action: "/users/list",
-      autocomplete: "off",
+      autoComplete: "off",
       enctype: "multipart/form-data",
       acceptcharset: "ISO-8859-1",
       noHtml5Validate: true,
@@ -2118,8 +2118,8 @@ describeRepeated("Form common", createFormComponent => {
       expect(node.getAttribute("action")).eql(formProps.action);
     });
 
-    it("should set attr autoComplete of form", () => {
-      expect(node.getAttribute("autocomplete")).eql(formProps.autocomplete);
+    it("should set attr autocomplete of form", () => {
+      expect(node.getAttribute("autocomplete")).eql(formProps.autoComplete);
     });
 
     it("should set attr enctype of form", () => {
@@ -2132,6 +2132,40 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should set attr novalidate of form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
+    });
+  });
+
+  describe("Deprecated autocomplete attribute", () => {
+    it("should set attr autocomplete of form", () => {
+      const formProps = {
+        schema: {},
+        autocomplete: "off",
+      };
+      const node = createFormComponent(formProps).node;
+      expect(node.getAttribute("autocomplete")).eql(formProps.autocomplete);
+    });
+
+    it("should log deprecation warning when it is used", () => {
+      sandbox.stub(console, "warn");
+      createFormComponent({
+        schema: {},
+        autocomplete: "off",
+      });
+      expect(
+        console.warn.calledWithMatch(
+          /Using autocomplete property of Form is deprecated/
+        )
+      ).to.be.true;
+    });
+
+    it("should use autoComplete value if both autocomplete and autoComplete are used", () => {
+      const formProps = {
+        schema: {},
+        autocomplete: "off",
+        autoComplete: "on",
+      };
+      const node = createFormComponent(formProps).node;
+      expect(node.getAttribute("autocomplete")).eql(formProps.autoComplete);
     });
   });
 
@@ -2291,7 +2325,44 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("Dependency defaults", () => {
+  describe("Dependencies", () => {
+    it("should not give a validation error by duplicating enum values in dependencies", () => {
+      const schema = {
+        title: "A registration form",
+        description: "A simple form example.",
+        type: "object",
+        properties: {
+          type1: {
+            type: "string",
+            title: "Type 1",
+            enum: ["FOO", "BAR", "BAZ"],
+          },
+          type2: {
+            type: "string",
+            title: "Type 2",
+            enum: ["GREEN", "BLUE", "RED"],
+          },
+        },
+        dependencies: {
+          type1: {
+            properties: {
+              type1: {
+                enum: ["FOO"],
+              },
+              type2: {
+                enum: ["GREEN"],
+              },
+            },
+          },
+        },
+      };
+      const formData = {
+        type1: "FOO",
+      };
+      const { node, comp } = createFormComponent({ schema, formData });
+      Simulate.submit(node);
+      expect(comp.state.errors).to.have.length.of(0);
+    });
     it("should show dependency defaults for uncontrolled components", () => {
       const schema = {
         type: "object",
@@ -2774,5 +2845,57 @@ describe("Form omitExtraData and liveOmit", () => {
     });
 
     expect(comp.state.formData).eql({ foo: "foobar" });
+  });
+
+  describe("Async errors", () => {
+    it("should render the async errors", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+          candy: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const extraErrors = {
+        foo: {
+          __errors: ["some error that got added as a prop"],
+        },
+        candy: {
+          bar: {
+            __errors: ["some other error that got added as a prop"],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({ schema, extraErrors });
+
+      expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
+    });
+
+    it("should not block form submission", () => {
+      const onSubmit = sinon.spy();
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+
+      const extraErrors = {
+        foo: {
+          __errors: ["some error that got added as a prop"],
+        },
+      };
+
+      const { node } = createFormComponent({ schema, extraErrors, onSubmit });
+      Simulate.submit(node);
+      sinon.assert.calledOnce(onSubmit);
+    });
   });
 });

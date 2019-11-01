@@ -1,0 +1,87 @@
+{
+  "name": "rjsf-material-ui",
+  "version": "0.3.6",
+  "main": "dist/index.js",
+  "module": "dist/rjsf-material-ui.esm.js",
+  "typings": "dist/index.d.ts",
+  "description": "Material UI theme, fields and widgets for react-jsonschema-form",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "clean": "rimraf dist",
+    "test": "tsdx test --env=jsdom",
+    "npm": "np",
+    "publish-to-npm": "run-s clean build npm"
+  },
+  "peerDependencies": {
+    "@material-ui/core": "^4.2.0",
+    "@material-ui/icons": "^4.2.1",
+    "react": ">=16",
+    "react-jsonschema-form": "^1.6.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@material-ui/core": "^4.2.0",
+    "@material-ui/icons": "^4.2.1",
+    "@types/jest": "^24.0.15",
+    "@types/json-schema": "^7.0.3",
+    "@types/react": "^16.8.23",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-jsonschema-form": "^1.6.2",
+    "husky": "^3.0.0",
+    "np": "^5.0.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-jsonschema-form": "^1.6.1",
+    "rimraf": "^2.6.3",
+    "tsdx": "^0.7.2",
+    "tslib": "^1.10.0",
+    "typescript": "^3.5.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Agustin N. R. Ramirez <agustin.ramirez@cybertec.at>",
+  "contributors": [
+    "Lorenz Henk <lorenz.henk@cybertec.at>"
+  ],
+  "keywords": [
+    "Material UI",
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "material-ui",
+    "rjsf-material-ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cybertec-postgresql/rjsf-material-ui.git"
+  },
+  "license": "MIT"
+}

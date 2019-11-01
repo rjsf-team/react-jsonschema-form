@@ -16,6 +16,7 @@ import {
   isObject,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
+import { mergeObjects } from "../utils";
 
 export default class Form extends Component {
   static defaultProps = {
@@ -64,12 +65,16 @@ export default class Form extends Component {
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
-    const { errors, errorSchema } = mustValidate
+    let { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
       : {
           errors: state.errors || [],
           errorSchema: state.errorSchema || {},
         };
+    if (props.extraErrors) {
+      errorSchema = mergeObjects(errorSchema, props.extraErrors);
+      errors = toErrorList(errorSchema);
+    }
     const idSchema = toIdSchema(
       retrievedSchema,
       uiSchema["ui:rootFieldId"],
@@ -199,13 +204,20 @@ export default class Form extends Component {
     }
 
     if (mustValidate) {
-      const { errors, errorSchema } = this.validate(newFormData);
+      let { errors, errorSchema } = this.validate(newFormData);
+      if (this.props.extraErrors) {
+        errorSchema = mergeObjects(errorSchema, this.props.extraErrors);
+        errors = toErrorList(errorSchema);
+      }
       state = { formData: newFormData, errors, errorSchema };
     } else if (!this.props.noValidate && newErrorSchema) {
+      const errorSchema = this.props.extraErrors
+        ? mergeObjects(newErrorSchema, this.props.extraErrors)
+        : newErrorSchema;
       state = {
         formData: newFormData,
-        errorSchema: newErrorSchema,
-        errors: toErrorList(newErrorSchema),
+        errorSchema: errorSchema,
+        errors: toErrorList(errorSchema),
       };
     }
     this.setState(
@@ -254,8 +266,12 @@ export default class Form extends Component {
     }
 
     if (!this.props.noValidate) {
-      const { errors, errorSchema } = this.validate(newFormData);
+      let { errors, errorSchema } = this.validate(newFormData);
       if (Object.keys(errors).length > 0) {
+        if (this.props.extraErrors) {
+          errorSchema = mergeObjects(errorSchema, this.props.extraErrors);
+          errors = toErrorList(errorSchema);
+        }
         this.setState({ errors, errorSchema }, () => {
           if (this.props.onError) {
             this.props.onError(errors);
@@ -267,8 +283,18 @@ export default class Form extends Component {
       }
     }
 
+    let errorSchema;
+    let errors;
+    if (this.props.extraErrors) {
+      errorSchema = this.props.extraErrors;
+      errors = toErrorList(errorSchema);
+    } else {
+      errorSchema = {};
+      errors = [];
+    }
+
     this.setState(
-      { formData: newFormData, errors: [], errorSchema: {} },
+      { formData: newFormData, errors: errors, errorSchema: errorSchema },
       () => {
         if (this.props.onSubmit) {
           this.props.onSubmit(
@@ -312,7 +338,8 @@ export default class Form extends Component {
       method,
       target,
       action,
-      autocomplete,
+      autocomplete: deprecatedAutocomplete,
+      autoComplete: currentAutoComplete,
       enctype,
       acceptcharset,
       noHtml5Validate,
@@ -324,6 +351,14 @@ export default class Form extends Component {
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
     const FormTag = tagName ? tagName : "form";
+    if (deprecatedAutocomplete) {
+      console.warn(
+        "Using autocomplete property of Form is deprecated, use autoComplete instead."
+      );
+    }
+    const autoComplete = currentAutoComplete
+      ? currentAutoComplete
+      : deprecatedAutocomplete;
 
     return (
       <FormTag
@@ -333,7 +368,7 @@ export default class Form extends Component {
         method={method}
         target={target}
         action={action}
-        autoComplete={autocomplete}
+        autoComplete={autoComplete}
         encType={enctype}
         acceptCharset={acceptcharset}
         noValidate={noHtml5Validate}
@@ -378,10 +413,10 @@ if (process.env.NODE_ENV !== "production") {
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
     ),
-    fields: PropTypes.objectOf(PropTypes.func),
-    ArrayFieldTemplate: PropTypes.func,
-    ObjectFieldTemplate: PropTypes.func,
-    FieldTemplate: PropTypes.func,
+    fields: PropTypes.objectOf(PropTypes.elementType),
+    ArrayFieldTemplate: PropTypes.elementType,
+    ObjectFieldTemplate: PropTypes.elementType,
+    FieldTemplate: PropTypes.elementType,
     ErrorList: PropTypes.func,
     onChange: PropTypes.func,
     onError: PropTypes.func,
@@ -395,6 +430,7 @@ if (process.env.NODE_ENV !== "production") {
     target: PropTypes.string,
     action: PropTypes.string,
     autocomplete: PropTypes.string,
+    autoComplete: PropTypes.string,
     enctype: PropTypes.string,
     acceptcharset: PropTypes.string,
     noValidate: PropTypes.bool,
@@ -406,5 +442,6 @@ if (process.env.NODE_ENV !== "production") {
     customFormats: PropTypes.object,
     additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
     omitExtraData: PropTypes.bool,
+    extraErrors: PropTypes.object,
   };
 }
