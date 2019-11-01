@@ -1326,13 +1326,13 @@ describe("utils", () => {
   });
 
   describe("mergeDefaultsWithFormData()", () => {
-    it("should't mutate the provided objects", () => {
+    it("shouldn't mutate the provided objects", () => {
       const obj1 = { a: 1 };
       mergeDefaultsWithFormData(obj1, { b: 2 });
       expect(obj1).eql({ a: 1 });
     });
 
-    it("should't mutate the provided arrays", () => {
+    it("shouldn't mutate the provided arrays", () => {
       const array1 = [1];
       mergeDefaultsWithFormData(array1, [2]);
       expect(array1).eql([1]);
@@ -1413,7 +1413,7 @@ describe("utils", () => {
   });
 
   describe("mergeObjects()", () => {
-    it("should't mutate the provided objects", () => {
+    it("shouldn't mutate the provided objects", () => {
       const obj1 = { a: 1 };
       mergeObjects(obj1, { b: 2 });
       expect(obj1).eql({ a: 1 });
