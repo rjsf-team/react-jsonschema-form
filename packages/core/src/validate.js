@@ -14,7 +14,7 @@ function createAjvInstance() {
     allErrors: true,
     multipleOfPrecision: 8,
     schemaId: "auto",
-    unknownFormats: "ignore"
+    unknownFormats: "ignore",
   });
 
   // add custom formats
@@ -87,7 +87,7 @@ export function toErrorList(errorSchema, fieldName = "root") {
     errorList = errorList.concat(
       errorSchema.__errors.map(stack => {
         return {
-          stack: `${fieldName}: ${stack}`
+          stack: `${fieldName}: ${stack}`,
         };
       })
     );
@@ -108,7 +108,7 @@ function createErrorHandler(formData) {
     __errors: [],
     addError(message) {
       this.__errors.push(message);
-    }
+    },
   };
   if (isObject(formData)) {
     return Object.keys(formData).reduce((acc, key) => {
@@ -154,7 +154,7 @@ function transformAjvErrors(errors = []) {
       message,
       params, // specific to ajv
       stack: `${property} ${message}`.trim(),
-      schemaPath
+      schemaPath,
     };
   });
 }
@@ -224,8 +224,8 @@ export default function validateFormData(
     errors = [
       ...errors,
       {
-        stack: validationError.message
-      }
+        stack: validationError.message,
+      },
     ];
   }
   if (typeof transformErrors === "function") {
@@ -239,9 +239,9 @@ export default function validateFormData(
       ...errorSchema,
       ...{
         $schema: {
-          __errors: [validationError.message]
-        }
-      }
+          __errors: [validationError.message],
+        },
+      },
     };
   }
 
@@ -259,7 +259,7 @@ export default function validateFormData(
 
   return {
     errors: newErrors,
-    errorSchema: newErrorSchema
+    errorSchema: newErrorSchema,
   };
 }
 

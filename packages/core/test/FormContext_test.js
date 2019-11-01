@@ -25,7 +25,7 @@ describe("FormContext", () => {
   it("should be passed to Form", () => {
     const { comp } = createFormComponent({
       schema: schema,
-      formContext
+      formContext,
     });
     expect(comp.props.formContext).eq(formContext);
   });
@@ -37,7 +37,7 @@ describe("FormContext", () => {
       schema: schema,
       uiSchema: { "ui:field": "custom" },
       fields,
-      formContext
+      formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
@@ -50,7 +50,7 @@ describe("FormContext", () => {
       schema: { type: "string" },
       uiSchema: { "ui:widget": "custom" },
       widgets,
-      formContext
+      formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
@@ -66,12 +66,12 @@ describe("FormContext", () => {
         type: "object",
         properties: {
           prop: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       },
       FieldTemplate: CustomTemplateField,
-      formContext
+      formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
@@ -86,11 +86,11 @@ describe("FormContext", () => {
       schema: {
         type: "array",
         items: {
-          type: "string"
-        }
+          type: "string",
+        },
       },
       ArrayFieldTemplate: CustomArrayTemplateField,
-      formContext
+      formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
@@ -105,12 +105,12 @@ describe("FormContext", () => {
         title: "A title",
         properties: {
           prop: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       },
       fields,
-      formContext
+      formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
@@ -122,7 +122,7 @@ describe("FormContext", () => {
     const { node } = createFormComponent({
       schema: { type: "string", description: "A description" },
       fields,
-      formContext
+      formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
@@ -136,12 +136,12 @@ describe("FormContext", () => {
         items: {
           type: "string",
           enum: ["foo"],
-          enumNames: ["bar"]
+          enumNames: ["bar"],
         },
-        uniqueItems: true
+        uniqueItems: true,
       },
       widgets,
-      formContext
+      formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
@@ -154,11 +154,11 @@ describe("FormContext", () => {
         type: "array",
         items: {
           type: "string",
-          format: "data-url"
-        }
+          format: "data-url",
+        },
       },
       widgets,
-      formContext
+      formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;

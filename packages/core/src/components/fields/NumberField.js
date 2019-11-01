@@ -37,7 +37,7 @@ class NumberField extends React.Component {
     super(props);
 
     this.state = {
-      lastValue: props.value
+      lastValue: props.value,
     };
   }
 
@@ -93,7 +93,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 NumberField.defaultProps = {
-  uiSchema: {}
+  uiSchema: {},
 };
 
 export default NumberField;

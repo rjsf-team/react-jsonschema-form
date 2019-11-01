@@ -6,43 +6,43 @@ module.exports = {
     properties: {
       password: {
         type: "string",
-        title: "Password"
+        title: "Password",
       },
       lastName: {
         type: "string",
-        title: "Last name"
+        title: "Last name",
       },
       bio: {
         type: "string",
-        title: "Bio"
+        title: "Bio",
       },
       firstName: {
         type: "string",
-        title: "First name"
+        title: "First name",
       },
       age: {
         type: "integer",
-        title: "Age"
-      }
-    }
+        title: "Age",
+      },
+    },
   },
   uiSchema: {
     "ui:order": ["firstName", "lastName", "*", "password"],
     age: {
-      "ui:widget": "updown"
+      "ui:widget": "updown",
     },
     bio: {
-      "ui:widget": "textarea"
+      "ui:widget": "textarea",
     },
     password: {
-      "ui:widget": "password"
-    }
+      "ui:widget": "password",
+    },
   },
   formData: {
     firstName: "Chuck",
     lastName: "Norris",
     age: 75,
     bio: "Roundhouse kicking asses since 1940",
-    password: "noneed"
-  }
+    password: "noneed",
+  },
 };

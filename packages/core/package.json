@@ -1,13 +1,13 @@
 {
   "name": "@rjsf-jasonritchie/core",
-  "version": "2.0.0-alpha",
+  "version": "2.0.0-alpha.2",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
     "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js && cp playground/index.prod.html build/index.html",
-    "cs-check": "prettier -l $npm_package_prettierOptions \"{playground,src,test}/**/*.js\"",
-    "cs-format": "prettier --jsx-bracket-same-line --trailing-comma es5 --use-tabs false --semi --tab-width 2 \"{playground,src,test}/**/*.js\" --write",
+    "cs-check": "prettier -l \"{playground,src,test}/**/*.js\"",
+    "cs-format": "prettier \"{playground,src,test}/**/*.js\" --write",
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test playground",
     "prepare": "npm run dist",
@@ -21,11 +21,10 @@
     "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
     "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
   },
-  "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi --tab-width 2",
   "lint-staged": {
     "{playground,src,test}/**/*.js": [
       "eslint --fix",
-      "prettier --jsx-bracket-same-line --trailing-comma es5 --use-tabs false --semi --tab-width 2 --write",
+      "prettier --write",
       "git add"
     ]
   },
@@ -89,7 +88,6 @@
     "mocha": "^5.2.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "nyc": "^13.2.0",
-    "prettier": "^1.15.1",
     "react": "^16.9.0",
     "react-codemirror2": "^4.1.0",
     "react-dom": "^16.9.0",

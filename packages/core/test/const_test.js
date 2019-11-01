@@ -17,12 +17,12 @@ describe("const", () => {
     const schema = {
       type: "object",
       properties: {
-        foo: { const: "bar" }
-      }
+        foo: { const: "bar" },
+      },
     };
 
     const { node } = createFormComponent({
-      schema
+      schema,
     });
 
     expect(node.querySelector("input#root_foo")).not.eql(null);
@@ -32,12 +32,12 @@ describe("const", () => {
     const schema = {
       type: "object",
       properties: {
-        foo: { const: 123 }
-      }
+        foo: { const: 123 },
+      },
     };
 
     const { node } = createFormComponent({
-      schema
+      schema,
     });
 
     expect(node.querySelector("input#root_foo")).not.eql(null);
@@ -47,12 +47,12 @@ describe("const", () => {
     const schema = {
       type: "object",
       properties: {
-        foo: { const: true }
-      }
+        foo: { const: true },
+      },
     };
 
     const { node } = createFormComponent({
-      schema
+      schema,
     });
 
     expect(node.querySelector("input#root_foo[type='checkbox']")).not.eql(null);

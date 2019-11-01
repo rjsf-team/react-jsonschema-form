@@ -6,27 +6,27 @@ module.exports = {
       file: {
         type: "string",
         format: "data-url",
-        title: "Single file"
+        title: "Single file",
       },
       files: {
         type: "array",
         title: "Multiple files",
         items: {
           type: "string",
-          format: "data-url"
-        }
+          format: "data-url",
+        },
       },
       filesAccept: {
         type: "string",
         format: "data-url",
-        title: "Single File with Accept attribute"
-      }
-    }
+        title: "Single File with Accept attribute",
+      },
+    },
   },
   uiSchema: {
     filesAccept: {
-      "ui:options": { accept: ".pdf" }
-    }
+      "ui:options": { accept: ".pdf" },
+    },
   },
-  formData: {}
+  formData: {},
 };

@@ -5,20 +5,20 @@ module.exports = {
       {
         properties: {
           lorem: {
-            type: "string"
-          }
+            type: "string",
+          },
         },
-        required: ["lorem"]
+        required: ["lorem"],
       },
       {
         properties: {
           ipsum: {
-            type: "string"
-          }
+            type: "string",
+          },
         },
-        required: ["ipsum"]
-      }
-    ]
+        required: ["ipsum"],
+      },
+    ],
   },
-  formData: {}
+  formData: {},
 };

@@ -17,8 +17,8 @@ if (process.env.NODE_ENV !== "production") {
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
-      PropTypes.bool
-    ])
+      PropTypes.bool,
+    ]),
   };
 }
 

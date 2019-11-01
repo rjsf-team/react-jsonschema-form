@@ -8,19 +8,19 @@ module.exports = {
           {
             type: "string",
             enum: ["#ff0000"],
-            title: "Red"
+            title: "Red",
           },
           {
             type: "string",
             enum: ["#00ff00"],
-            title: "Green"
+            title: "Green",
           },
           {
             type: "string",
             enum: ["#0000ff"],
-            title: "Blue"
-          }
-        ]
+            title: "Blue",
+          },
+        ],
       },
       Toggle: {
         title: "Toggle",
@@ -28,14 +28,14 @@ module.exports = {
         oneOf: [
           {
             title: "Enable",
-            const: true
+            const: true,
           },
           {
             title: "Disable",
-            const: false
-          }
-        ]
-      }
+            const: false,
+          },
+        ],
+      },
     },
     title: "Image editor",
     type: "object",
@@ -43,47 +43,47 @@ module.exports = {
     properties: {
       currentColor: {
         $ref: "#/definitions/Color",
-        title: "Brush color"
+        title: "Brush color",
       },
       colorMask: {
         type: "array",
         uniqueItems: true,
         items: {
-          $ref: "#/definitions/Color"
+          $ref: "#/definitions/Color",
         },
-        title: "Color mask"
+        title: "Color mask",
       },
       toggleMask: {
         title: "Apply color mask",
-        $ref: "#/definitions/Toggle"
+        $ref: "#/definitions/Toggle",
       },
       colorPalette: {
         type: "array",
         title: "Color palette",
         items: {
-          $ref: "#/definitions/Color"
-        }
+          $ref: "#/definitions/Color",
+        },
       },
       blendMode: {
         title: "Blend mode",
         type: "string",
         enum: ["screen", "multiply", "overlay"],
-        enumNames: ["Screen", "Multiply", "Overlay"]
-      }
-    }
+        enumNames: ["Screen", "Multiply", "Overlay"],
+      },
+    },
   },
   uiSchema: {
     blendMode: {
-      "ui:enumDisabled": ["multiply"]
+      "ui:enumDisabled": ["multiply"],
     },
     toggleMask: {
-      "ui:widget": "radio"
-    }
+      "ui:widget": "radio",
+    },
   },
   formData: {
     currentColor: "#00ff00",
     colorMask: ["#0000ff"],
     colorPalette: ["#ff0000"],
-    blendMode: "screen"
-  }
+    blendMode: "screen",
+  },
 };

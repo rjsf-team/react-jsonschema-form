@@ -8,66 +8,66 @@ module.exports = {
       firstName: {
         type: "string",
         title: "First name",
-        default: "Chuck"
+        default: "Chuck",
       },
       lastName: {
         type: "string",
-        title: "Last name"
+        title: "Last name",
       },
       age: {
         type: ["integer", "null"],
-        title: "Age"
+        title: "Age",
       },
       bio: {
         type: ["string", "null"],
-        title: "Bio"
+        title: "Bio",
       },
       password: {
         type: "string",
         title: "Password",
-        minLength: 3
+        minLength: 3,
       },
       telephone: {
         type: "string",
         title: "Telephone",
-        minLength: 10
-      }
-    }
+        minLength: 10,
+      },
+    },
   },
   uiSchema: {
     firstName: {
       "ui:autofocus": true,
-      "ui:emptyValue": ""
+      "ui:emptyValue": "",
     },
     age: {
       "ui:widget": "updown",
       "ui:title": "Age of person",
       "ui:description": "(earthian year)",
-      "ui:emptyValue": null
+      "ui:emptyValue": null,
     },
     bio: {
       "ui:widget": "textarea",
       "ui:placeholder":
         "Leaving this field empty will cause formData property to be `null`",
-      "ui:emptyValue": null
+      "ui:emptyValue": null,
     },
     password: {
       "ui:widget": "password",
-      "ui:help": "Hint: Make it strong!"
+      "ui:help": "Hint: Make it strong!",
     },
     date: {
-      "ui:widget": "alt-datetime"
+      "ui:widget": "alt-datetime",
     },
     telephone: {
       "ui:options": {
-        inputType: "tel"
-      }
-    }
+        inputType: "tel",
+      },
+    },
   },
   formData: {
     lastName: "Norris",
     age: 75,
     bio: null,
-    password: "noneed"
-  }
+    password: "noneed",
+  },
 };

@@ -9,14 +9,14 @@ function largeEnum(n) {
 module.exports = {
   schema: {
     definitions: {
-      largeEnum: { type: "string", enum: largeEnum(100) }
+      largeEnum: { type: "string", enum: largeEnum(100) },
     },
     title: "A rather large form",
     type: "object",
     properties: {
       string: {
         type: "string",
-        title: "Some string"
+        title: "Some string",
       },
       choice1: { $ref: "#/definitions/largeEnum" },
       choice2: { $ref: "#/definitions/largeEnum" },
@@ -27,13 +27,13 @@ module.exports = {
       choice7: { $ref: "#/definitions/largeEnum" },
       choice8: { $ref: "#/definitions/largeEnum" },
       choice9: { $ref: "#/definitions/largeEnum" },
-      choice10: { $ref: "#/definitions/largeEnum" }
-    }
+      choice10: { $ref: "#/definitions/largeEnum" },
+    },
   },
   uiSchema: {
     choice1: {
-      "ui:placeholder": "Choose one"
-    }
+      "ui:placeholder": "Choose one",
+    },
   },
-  formData: {}
+  formData: {},
 };

@@ -24,7 +24,7 @@ describe("FieldTemplate", () => {
         const { node } = createFormComponent({
           schema: { type: "string" },
           uiSchema: { "ui:disabled": true },
-          FieldTemplate
+          FieldTemplate,
         });
         expect(node.querySelectorAll(".disabled")).to.have.length.of(1);
       });
@@ -33,7 +33,7 @@ describe("FieldTemplate", () => {
         const { node } = createFormComponent({
           schema: { type: "string" },
           uiSchema: { "ui:disabled": false },
-          FieldTemplate
+          FieldTemplate,
         });
         expect(node.querySelectorAll(".disabled")).to.have.length.of(0);
       });
@@ -42,7 +42,7 @@ describe("FieldTemplate", () => {
       it("should render with disabled when ui:disabled is truthy", () => {
         const { node } = createFormComponent({
           schema: { type: "string" },
-          uiSchema: { "ui:disabled": true, "ui:FieldTemplate": FieldTemplate }
+          uiSchema: { "ui:disabled": true, "ui:FieldTemplate": FieldTemplate },
         });
         expect(node.querySelectorAll(".disabled")).to.have.length.of(1);
       });
@@ -50,7 +50,7 @@ describe("FieldTemplate", () => {
       it("should render with disabled when ui:disabled is falsey", () => {
         const { node } = createFormComponent({
           schema: { type: "string" },
-          uiSchema: { "ui:disabled": false, "ui:FieldTemplate": FieldTemplate }
+          uiSchema: { "ui:disabled": false, "ui:FieldTemplate": FieldTemplate },
         });
         expect(node.querySelectorAll(".disabled")).to.have.length.of(0);
       });
@@ -61,7 +61,7 @@ describe("FieldTemplate", () => {
           schema: { type: "string" },
           uiSchema: { "ui:disabled": true, "ui:FieldTemplate": FieldTemplate },
           // Empty field template to prove that overides work
-          FieldTemplate: () => <div />
+          FieldTemplate: () => <div />,
         });
         expect(node.querySelectorAll(".disabled")).to.have.length.of(1);
       });
@@ -71,7 +71,7 @@ describe("FieldTemplate", () => {
           schema: { type: "string" },
           uiSchema: { "ui:disabled": false, "ui:FieldTemplate": FieldTemplate },
           // Empty field template to prove that overides work
-          FieldTemplate: () => <div />
+          FieldTemplate: () => <div />,
         });
         expect(node.querySelectorAll(".disabled")).to.have.length.of(0);
       });

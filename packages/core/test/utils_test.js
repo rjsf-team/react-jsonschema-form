@@ -23,7 +23,7 @@ import {
   toIdSchema,
   toPathSchema,
   guessType,
-  mergeSchemas
+  mergeSchemas,
 } from "../src/utils";
 
 describe("utils", () => {
@@ -33,7 +33,7 @@ describe("utils", () => {
         expect(
           getDefaultFormState({
             type: "string",
-            default: "foo"
+            default: "foo",
           })
         ).to.eql("foo");
       });
@@ -43,7 +43,7 @@ describe("utils", () => {
           getDefaultFormState(
             {
               type: "number",
-              default: 1
+              default: 1,
             },
             0
           )
@@ -54,7 +54,7 @@ describe("utils", () => {
         expect(
           getDefaultFormState(
             {
-              type: "boolean"
+              type: "boolean",
             },
             false
           )
@@ -68,7 +68,7 @@ describe("utils", () => {
             getDefaultFormState(
               {
                 type: "number",
-                default: 1
+                default: 1,
               },
               noneValue
             )
@@ -85,9 +85,9 @@ describe("utils", () => {
             properties: {
               string: {
                 type: "string",
-                default: "foo"
-              }
-            }
+                default: "foo",
+              },
+            },
           })
         ).to.eql({ string: "foo" });
       });
@@ -95,7 +95,7 @@ describe("utils", () => {
       it("should default to empty object if no properties are defined", () => {
         expect(
           getDefaultFormState({
-            type: "object"
+            type: "object",
           })
         ).to.eql({});
       });
@@ -110,11 +110,11 @@ describe("utils", () => {
                 properties: {
                   string: {
                     type: "string",
-                    default: "foo"
-                  }
-                }
-              }
-            }
+                    default: "foo",
+                  },
+                },
+              },
+            },
           })
         ).to.eql({ object: { string: "foo" } });
       });
@@ -128,10 +128,10 @@ describe("utils", () => {
                 type: "array",
                 default: ["foo", "bar"],
                 items: {
-                  type: "string"
-                }
-              }
-            }
+                  type: "string",
+                },
+              },
+            },
           })
         ).to.eql({ array: ["foo", "bar"] });
       });
@@ -148,12 +148,12 @@ describe("utils", () => {
                     type: "array",
                     default: ["foo", "bar"],
                     items: {
-                      type: "string"
-                    }
-                  }
-                }
-              }
-            }
+                      type: "string",
+                    },
+                  },
+                },
+              },
+            },
           })
         ).to.eql({ object: { array: ["foo", "bar"] } });
       });
@@ -169,19 +169,19 @@ describe("utils", () => {
                   type: "array",
                   default: ["foo", "bar"],
                   items: {
-                    type: "string"
-                  }
+                    type: "string",
+                  },
                 },
                 bool: {
                   type: "boolean",
-                  default: true
-                }
-              }
-            }
-          }
+                  default: true,
+                },
+              },
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          object: { array: ["foo", "bar"], bool: true }
+          object: { array: ["foo", "bar"], bool: true },
         });
       });
 
@@ -196,8 +196,8 @@ describe("utils", () => {
                   leaf1: 1,
                   leaf2: 1,
                   leaf3: 1,
-                  leaf4: 1
-                }
+                  leaf4: 1,
+                },
               },
               properties: {
                 level2: {
@@ -205,27 +205,27 @@ describe("utils", () => {
                   default: {
                     // No level2 default for leaf1
                     leaf2: 2,
-                    leaf3: 2
+                    leaf3: 2,
                   },
                   properties: {
                     leaf1: { type: "number" }, // No level2 default for leaf1
                     leaf2: { type: "number" }, // No level3 default for leaf2
                     leaf3: { type: "number", default: 3 },
-                    leaf4: { type: "number" } // Defined in formData.
-                  }
-                }
-              }
-            }
-          }
+                    leaf4: { type: "number" }, // Defined in formData.
+                  },
+                },
+              },
+            },
+          },
         };
         expect(
           getDefaultFormState(schema, {
-            level1: { level2: { leaf4: 4 } }
+            level1: { level2: { leaf4: 4 } },
           })
         ).eql({
           level1: {
-            level2: { leaf1: 1, leaf2: 2, leaf3: 3, leaf4: 4 }
-          }
+            level2: { leaf1: 1, leaf2: 2, leaf3: 3, leaf4: 4 },
+          },
         });
       });
 
@@ -242,25 +242,25 @@ describe("utils", () => {
                       type: "object",
                       properties: {
                         leaf1: {
-                          type: "string"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
+                          type: "string",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
         };
         const formData = {
           level1: {
             level2: {
-              leaf1: "a"
-            }
-          }
+              leaf1: "a",
+            },
+          },
         };
         expect(getDefaultFormState(schema, formData)).eql({
-          level1: { level2: { leaf1: "a" } }
+          level1: { level2: { leaf1: "a" } },
         });
       });
 
@@ -271,12 +271,12 @@ describe("utils", () => {
             level1: {
               type: "array",
               default: [1, 2, 3],
-              items: { type: "number" }
-            }
-          }
+              items: { type: "number" },
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          level1: [1, 2, 3]
+          level1: [1, 2, 3],
         });
       });
 
@@ -287,12 +287,12 @@ describe("utils", () => {
           properties: {
             level1: {
               type: "array",
-              items: { type: "number" }
-            }
-          }
+              items: { type: "number" },
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          level1: [1, 2, 3]
+          level1: [1, 2, 3],
         });
       });
 
@@ -305,17 +305,17 @@ describe("utils", () => {
               items: [
                 {
                   type: "string",
-                  default: "foo"
+                  default: "foo",
                 },
                 {
-                  type: "number"
-                }
-              ]
-            }
-          }
+                  type: "number",
+                },
+              ],
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          array: ["foo", undefined]
+          array: ["foo", undefined],
         });
       });
 
@@ -325,16 +325,16 @@ describe("utils", () => {
             testdef: {
               type: "object",
               properties: {
-                foo: { type: "number" }
-              }
-            }
+                foo: { type: "number" },
+              },
+            },
           },
           $ref: "#/definitions/testdef",
-          default: { foo: 42 }
+          default: { foo: 42 },
         };
 
         expect(getDefaultFormState(schema, undefined, schema.definitions)).eql({
-          foo: 42
+          foo: 42,
         });
       });
 
@@ -347,14 +347,14 @@ describe("utils", () => {
               minItems: 1,
               additionalItems: {
                 type: "string",
-                default: "foo"
+                default: "foo",
               },
-              items: []
-            }
-          }
+              items: [],
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          array: ["foo"]
+          array: ["foo"],
         });
       });
 
@@ -369,13 +369,13 @@ describe("utils", () => {
               default: ["foo", "qux"],
               items: {
                 type: "string",
-                enum: ["foo", "bar", "fuzz", "qux"]
-              }
-            }
-          }
+                enum: ["foo", "bar", "fuzz", "qux"],
+              },
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          array: ["foo", "qux"]
+          array: ["foo", "qux"],
         });
       });
     });
@@ -389,13 +389,13 @@ describe("utils", () => {
               type: "string",
               oneOf: [
                 { type: "string", default: "a" },
-                { type: "string", default: "b" }
-              ]
-            }
-          }
+                { type: "string", default: "b" },
+              ],
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          name: "a"
+          name: "a",
         });
       });
 
@@ -404,15 +404,15 @@ describe("utils", () => {
           type: "object",
           oneOf: [
             {
-              properties: { name: { type: "string", default: "a" } }
+              properties: { name: { type: "string", default: "a" } },
             },
             {
-              properties: { id: { type: "number", default: 13 } }
-            }
-          ]
+              properties: { id: { type: "number", default: 13 } },
+            },
+          ],
         };
         expect(getDefaultFormState(schema, {})).eql({
-          name: "a"
+          name: "a",
         });
       });
 
@@ -426,18 +426,18 @@ describe("utils", () => {
                 {
                   type: "object",
                   properties: {
-                    first: { type: "string", default: "First Name" }
-                  }
+                    first: { type: "string", default: "First Name" },
+                  },
                 },
-                { type: "string", default: "b" }
-              ]
-            }
-          }
+                { type: "string", default: "b" },
+              ],
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
           name: {
-            first: "First Name"
-          }
+            first: "First Name",
+          },
         });
       });
 
@@ -448,10 +448,10 @@ describe("utils", () => {
               type: "object",
               properties: {
                 name: {
-                  type: "string"
-                }
-              }
-            }
+                  type: "string",
+                },
+              },
+            },
           ],
           dependencies: {
             name: {
@@ -459,20 +459,20 @@ describe("utils", () => {
                 {
                   properties: {
                     name: {
-                      type: "string"
+                      type: "string",
                     },
                     grade: {
-                      default: "A"
-                    }
-                  }
-                }
-              ]
-            }
-          }
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
         };
         expect(getDefaultFormState(schema, { name: "Name" })).eql({
           name: "Name",
-          grade: "A"
+          grade: "A",
         });
       });
     });
@@ -486,13 +486,13 @@ describe("utils", () => {
               type: "string",
               anyOf: [
                 { type: "string", default: "a" },
-                { type: "string", default: "b" }
-              ]
-            }
-          }
+                { type: "string", default: "b" },
+              ],
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
-          name: "a"
+          name: "a",
         });
       });
 
@@ -506,18 +506,18 @@ describe("utils", () => {
                 {
                   type: "object",
                   properties: {
-                    first: { type: "string", default: "First Name" }
-                  }
+                    first: { type: "string", default: "First Name" },
+                  },
                 },
-                { type: "string", default: "b" }
-              ]
-            }
-          }
+                { type: "string", default: "b" },
+              ],
+            },
+          },
         };
         expect(getDefaultFormState(schema, {})).eql({
           name: {
-            first: "First Name"
-          }
+            first: "First Name",
+          },
         });
       });
 
@@ -528,10 +528,10 @@ describe("utils", () => {
               type: "object",
               properties: {
                 name: {
-                  type: "string"
-                }
-              }
-            }
+                  type: "string",
+                },
+              },
+            },
           ],
           dependencies: {
             name: {
@@ -539,21 +539,21 @@ describe("utils", () => {
                 {
                   properties: {
                     name: {
-                      type: "string"
+                      type: "string",
                     },
                     grade: {
                       type: "string",
-                      default: "A"
-                    }
-                  }
-                }
-              ]
-            }
-          }
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
         };
         expect(getDefaultFormState(schema, { name: "Name" })).eql({
           name: "Name",
-          grade: "A"
+          grade: "A",
         });
       });
     });
@@ -564,8 +564,8 @@ describe("utils", () => {
           type: "object",
           properties: {
             name: {
-              type: "string"
-            }
+              type: "string",
+            },
           },
           dependencies: {
             name: {
@@ -573,21 +573,21 @@ describe("utils", () => {
                 {
                   properties: {
                     name: {
-                      type: "string"
+                      type: "string",
                     },
                     grade: {
                       type: "string",
-                      default: "A"
-                    }
-                  }
-                }
-              ]
-            }
-          }
+                      default: "A",
+                    },
+                  },
+                },
+              ],
+            },
+          },
         };
         expect(getDefaultFormState(schema, { name: "Name" })).eql({
           name: "Name",
-          grade: "A"
+          grade: "A",
         });
       });
 
@@ -599,8 +599,8 @@ describe("utils", () => {
               type: "object",
               properties: {
                 name: {
-                  type: "string"
-                }
+                  type: "string",
+                },
               },
               dependencies: {
                 name: {
@@ -608,25 +608,25 @@ describe("utils", () => {
                     {
                       properties: {
                         name: {
-                          type: "string"
+                          type: "string",
                         },
                         grade: {
                           type: "string",
-                          default: "A"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
+                          default: "A",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
         };
         expect(getDefaultFormState(schema, { foo: { name: "Name" } })).eql({
           foo: {
             name: "Name",
-            grade: "A"
-          }
+            grade: "A",
+          },
         });
       });
 
@@ -640,10 +640,10 @@ describe("utils", () => {
                   type: "object",
                   properties: {
                     name: {
-                      type: "string"
-                    }
-                  }
-                }
+                      type: "string",
+                    },
+                  },
+                },
               ],
               dependencies: {
                 name: {
@@ -651,25 +651,25 @@ describe("utils", () => {
                     {
                       properties: {
                         name: {
-                          type: "string"
+                          type: "string",
                         },
                         grade: {
                           type: "string",
-                          default: "A"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
+                          default: "A",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
         };
         expect(getDefaultFormState(schema, { foo: { name: "Name" } })).eql({
           foo: {
             name: "Name",
-            grade: "A"
-          }
+            grade: "A",
+          },
         });
       });
 
@@ -689,8 +689,8 @@ describe("utils", () => {
                       title: "Sub title",
                       description: "XYZ",
                       type: "integer",
-                      default: 0
-                    }
+                      default: 0,
+                    },
                   },
                   dependencies: {
                     bit_rate_cfg_mode: {
@@ -698,24 +698,24 @@ describe("utils", () => {
                         {
                           properties: {
                             bit_rate_cfg_mode: {
-                              enum: [0]
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          }
+                              enum: [0],
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
         };
         expect(getDefaultFormState(schema, undefined)).eql({
           can_1: {
             phy: {
-              bit_rate_cfg_mode: 0
-            }
-          }
+              bit_rate_cfg_mode: 0,
+            },
+          },
         });
       });
 
@@ -735,8 +735,8 @@ describe("utils", () => {
                       title: "Sub title",
                       description: "XYZ",
                       type: "integer",
-                      default: 0
-                    }
+                      default: 0,
+                    },
                   },
                   dependencies: {
                     bit_rate_cfg_mode: {
@@ -744,22 +744,22 @@ describe("utils", () => {
                         {
                           properties: {
                             bit_rate_cfg_mode: {
-                              enum: [0]
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          }
+                              enum: [0],
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
         };
         expect(getDefaultFormState(schema, { can_1: { phy: null } })).eql({
           can_1: {
-            phy: null
-          }
+            phy: null,
+          },
         });
       });
     });
@@ -770,16 +770,16 @@ describe("utils", () => {
           type: "object",
           properties: {
             foo: { type: "string" },
-            bar: { type: "string" }
-          }
+            bar: { type: "string" },
+          },
         };
         const formData = {
           foo: "foo",
-          baz: "baz"
+          baz: "baz",
         };
         const result = {
           foo: "foo",
-          baz: "baz"
+          baz: "baz",
         };
         expect(getDefaultFormState(schema, formData)).to.eql(result);
       });
@@ -843,7 +843,7 @@ describe("utils", () => {
         "foo",
         "qux",
         "bar",
-        "baz"
+        "baz",
       ]);
     });
   });
@@ -897,7 +897,7 @@ describe("utils", () => {
         it("should be true", () => {
           let schema = {
             items: { enum: ["foo", "bar"] },
-            uniqueItems: true
+            uniqueItems: true,
           };
           expect(isMultiSelect(schema)).to.be.true;
         });
@@ -920,7 +920,7 @@ describe("utils", () => {
         it("should be false if oneOf/anyOf schemas are not all constants", () => {
           const schema = {
             items: { oneOf: [constantSchema, notConstantSchema] },
-            uniqueItems: true
+            uniqueItems: true,
           };
           expect(isMultiSelect(schema)).to.be.false;
         });
@@ -928,7 +928,7 @@ describe("utils", () => {
         it("should be true if oneOf/anyOf schemas are all constants", () => {
           const schema = {
             items: { oneOf: [constantSchema, constantSchema] },
-            uniqueItems: true
+            uniqueItems: true,
           };
           expect(isMultiSelect(schema)).to.be.true;
         });
@@ -937,10 +937,10 @@ describe("utils", () => {
       it("should retrieve reference schema definitions", () => {
         const schema = {
           items: { $ref: "#/definitions/FooItem" },
-          uniqueItems: true
+          uniqueItems: true,
         };
         const definitions = {
-          FooItem: { type: "string", enum: ["foo"] }
+          FooItem: { type: "string", enum: ["foo"] },
         };
         expect(isMultiSelect(schema, definitions)).to.be.true;
       });
@@ -949,7 +949,7 @@ describe("utils", () => {
     it("should be false if uniqueItems is false", () => {
       const schema = {
         items: { enum: ["foo", "bar"] },
-        uniqueItems: false
+        uniqueItems: false,
       };
       expect(isMultiSelect(schema)).to.be.false;
     });
@@ -996,18 +996,18 @@ describe("utils", () => {
         b: {
           c: 3,
           d: [1, 2, 3],
-          e: { f: { g: 1 } }
+          e: { f: { g: 1 } },
         },
-        c: 2
+        c: 2,
       };
       const obj2 = {
         a: 1,
         b: {
           d: [3, 2, 1],
           e: { f: { h: 2 } },
-          g: 1
+          g: 1,
         },
-        c: 3
+        c: 3,
       };
       const expected = {
         a: 1,
@@ -1015,9 +1015,9 @@ describe("utils", () => {
           c: 3,
           d: [3, 2, 1],
           e: { f: { g: 1, h: 2 } },
-          g: 1
+          g: 1,
         },
-        c: 3
+        c: 3,
       };
       expect(mergeObjects(obj1, obj2)).eql(expected);
     });
@@ -1025,10 +1025,10 @@ describe("utils", () => {
     it("should recursively merge File objects", () => {
       const file = new File(["test"], "test.txt");
       const obj1 = {
-        a: {}
+        a: {},
       };
       const obj2 = {
-        a: file
+        a: file,
       };
       expect(mergeObjects(obj1, obj2).a).instanceOf(File);
     });
@@ -1053,7 +1053,7 @@ describe("utils", () => {
         const obj2 = { a: { b: [2] } };
 
         expect(mergeObjects(obj1, obj2, true)).eql({
-          a: { b: [1, 2] }
+          a: { b: [1, 2] },
         });
       });
     });
@@ -1086,18 +1086,18 @@ describe("utils", () => {
         b: {
           c: 3,
           d: [1, 2, 3],
-          e: { f: { g: 1 } }
+          e: { f: { g: 1 } },
         },
-        c: 2
+        c: 2,
       };
       const obj2 = {
         a: 1,
         b: {
           d: [3, 2, 1],
           e: { f: { h: 2 } },
-          g: 1
+          g: 1,
         },
-        c: 3
+        c: 3,
       };
       const expected = {
         a: 1,
@@ -1105,9 +1105,9 @@ describe("utils", () => {
           c: 3,
           d: [3, 2, 1],
           e: { f: { g: 1, h: 2 } },
-          g: 1
+          g: 1,
         },
-        c: 3
+        c: 3,
       };
       expect(mergeSchemas(obj1, obj2)).eql(expected);
     });
@@ -1115,10 +1115,10 @@ describe("utils", () => {
     it("should recursively merge File objects", () => {
       const file = new File(["test"], "test.txt");
       const obj1 = {
-        a: {}
+        a: {},
       };
       const obj2 = {
-        a: file
+        a: file,
       };
       expect(mergeSchemas(obj1, obj2).a).instanceOf(File);
     });
@@ -1137,7 +1137,7 @@ describe("utils", () => {
 
         expect(mergeSchemas(obj1, obj2)).eql({
           type: "object",
-          required: [1, 2]
+          required: [1, 2],
         });
       });
 
@@ -1147,7 +1147,7 @@ describe("utils", () => {
 
         expect(mergeSchemas(obj1, obj2)).eql({
           type: "object",
-          required: [1, 2]
+          required: [1, 2],
         });
       });
 
@@ -1156,7 +1156,7 @@ describe("utils", () => {
         const obj2 = { a: { type: "object", required: [2] } };
 
         expect(mergeSchemas(obj1, obj2)).eql({
-          a: { type: "object", required: [1, 2] }
+          a: { type: "object", required: [1, 2] },
         });
       });
 
@@ -1184,9 +1184,9 @@ describe("utils", () => {
         properties: {
           street_address: { type: "string" },
           city: { type: "string" },
-          state: { type: "string" }
+          state: { type: "string" },
         },
-        required: ["street_address", "city", "state"]
+        required: ["street_address", "city", "state"],
       };
       const definitions = { address };
 
@@ -1205,8 +1205,8 @@ describe("utils", () => {
       const schema = {
         type: "object",
         additionalProperties: {
-          $ref: "#/definitions/components/schemas/address"
-        }
+          $ref: "#/definitions/components/schemas/address",
+        },
       };
 
       const address = {
@@ -1214,9 +1214,9 @@ describe("utils", () => {
         properties: {
           street_address: { type: "string" },
           city: { type: "string" },
-          state: { type: "string" }
+          state: { type: "string" },
         },
-        required: ["street_address", "city", "state"]
+        required: ["street_address", "city", "state"],
       };
 
       const definitions = { components: { schemas: { address } } };
@@ -1227,9 +1227,9 @@ describe("utils", () => {
         properties: {
           newKey: {
             ...address,
-            [ADDITIONAL_PROPERTY_FLAG]: true
-          }
-        }
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
       });
     });
 
@@ -1237,12 +1237,12 @@ describe("utils", () => {
       const schema = {
         type: "string",
         additionalProperties: {
-          $ref: "#/definitions/number"
-        }
+          $ref: "#/definitions/number",
+        },
       };
 
       const number = {
-        type: "number"
+        type: "number",
       };
 
       const definitions = { number };
@@ -1253,26 +1253,26 @@ describe("utils", () => {
         properties: {
           newKey: {
             ...number,
-            [ADDITIONAL_PROPERTY_FLAG]: true
-          }
-        }
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
       });
     });
 
     it("should priorize local definitions over foreign ones", () => {
       const schema = {
         $ref: "#/definitions/address",
-        title: "foo"
+        title: "foo",
       };
       const address = {
         type: "string",
-        title: "bar"
+        title: "bar",
       };
       const definitions = { address };
 
       expect(retrieveSchema(schema, definitions)).eql({
         ...address,
-        title: "foo"
+        title: "foo",
       });
     });
 
@@ -1283,12 +1283,12 @@ describe("utils", () => {
             type: "object",
             properties: {
               a: { type: "string" },
-              b: { type: "integer" }
+              b: { type: "integer" },
             },
             required: ["a"],
             dependencies: {
-              a: ["b"]
-            }
+              a: ["b"],
+            },
           };
           const definitions = {};
           const formData = {};
@@ -1296,9 +1296,9 @@ describe("utils", () => {
             type: "object",
             properties: {
               a: { type: "string" },
-              b: { type: "integer" }
+              b: { type: "integer" },
             },
-            required: ["a"]
+            required: ["a"],
           });
         });
       });
@@ -1310,11 +1310,11 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "integer" }
+                b: { type: "integer" },
               },
               dependencies: {
-                a: ["b"]
-              }
+                a: ["b"],
+              },
             };
             const definitions = {};
             const formData = { a: "1" };
@@ -1322,9 +1322,9 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "integer" }
+                b: { type: "integer" },
               },
-              required: ["b"]
+              required: ["b"],
             });
           });
         });
@@ -1335,12 +1335,12 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "integer" }
+                b: { type: "integer" },
               },
               required: ["a"],
               dependencies: {
-                a: ["b"]
-              }
+                a: ["b"],
+              },
             };
             const definitions = {};
             const formData = { a: "1" };
@@ -1348,9 +1348,9 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "integer" }
+                b: { type: "integer" },
               },
-              required: ["a", "b"]
+              required: ["a", "b"],
             });
           });
         });
@@ -1364,23 +1364,23 @@ describe("utils", () => {
             const schema = {
               type: "object",
               properties: {
-                a: { type: "string" }
+                a: { type: "string" },
               },
               dependencies: {
                 a: {
                   properties: {
-                    b: { type: "integer" }
-                  }
-                }
-              }
+                    b: { type: "integer" },
+                  },
+                },
+              },
             };
             const definitions = {};
             const formData = {};
             expect(retrieveSchema(schema, definitions, formData)).eql({
               type: "object",
               properties: {
-                a: { type: "string" }
-              }
+                a: { type: "string" },
+              },
             });
           });
         });
@@ -1390,15 +1390,15 @@ describe("utils", () => {
             const schema = {
               type: "object",
               properties: {
-                a: { type: "string" }
+                a: { type: "string" },
               },
               dependencies: {
                 a: {
                   properties: {
-                    b: { type: "integer" }
-                  }
-                }
-              }
+                    b: { type: "integer" },
+                  },
+                },
+              },
             };
             const definitions = {};
             const formData = { a: "1" };
@@ -1406,8 +1406,8 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "integer" }
-              }
+                b: { type: "integer" },
+              },
             });
           });
           it("should concat required properties", () => {
@@ -1415,17 +1415,17 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "integer" }
+                b: { type: "integer" },
               },
               required: ["a"],
               dependencies: {
                 a: {
                   properties: {
-                    a: { type: "string" }
+                    a: { type: "string" },
                   },
-                  required: ["b"]
-                }
-              }
+                  required: ["b"],
+                },
+              },
             };
             const definitions = {};
             const formData = { a: "1" };
@@ -1433,9 +1433,9 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "integer" }
+                b: { type: "integer" },
               },
-              required: ["a", "b"]
+              required: ["a", "b"],
             });
           });
           it("should not concat enum properties, but should concat 'required' properties", () => {
@@ -1443,18 +1443,18 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string", enum: ["FOO", "BAR", "BAZ"] },
-                b: { type: "string", enum: ["GREEN", "BLUE", "RED"] }
+                b: { type: "string", enum: ["GREEN", "BLUE", "RED"] },
               },
               required: ["a"],
               dependencies: {
                 a: {
                   properties: {
                     a: { enum: ["FOO"] },
-                    b: { enum: ["BLUE"] }
+                    b: { enum: ["BLUE"] },
                   },
-                  required: ["a", "b"]
-                }
-              }
+                  required: ["a", "b"],
+                },
+              },
             };
             const definitions = {};
             const formData = { a: "FOO" };
@@ -1462,9 +1462,9 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string", enum: ["FOO"] },
-                b: { type: "string", enum: ["BLUE"] }
+                b: { type: "string", enum: ["BLUE"] },
               },
-              required: ["a", "b"]
+              required: ["a", "b"],
             });
           });
         });
@@ -1474,28 +1474,28 @@ describe("utils", () => {
             const schema = {
               type: "object",
               properties: {
-                a: { type: "string" }
+                a: { type: "string" },
               },
               dependencies: {
                 a: {
-                  $ref: "#/definitions/needsB"
-                }
-              }
+                  $ref: "#/definitions/needsB",
+                },
+              },
             };
             const definitions = {
               needsB: {
                 properties: {
-                  b: { type: "integer" }
-                }
-              }
+                  b: { type: "integer" },
+                },
+              },
             };
             const formData = { a: "1" };
             expect(retrieveSchema(schema, definitions, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "integer" }
-              }
+                b: { type: "integer" },
+              },
             });
           });
         });
@@ -1505,38 +1505,38 @@ describe("utils", () => {
             const schema = {
               type: "object",
               properties: {
-                a: { enum: ["typeA", "typeB"] }
+                a: { enum: ["typeA", "typeB"] },
               },
               dependencies: {
                 a: {
                   oneOf: [
                     { $ref: "#/definitions/needsA" },
-                    { $ref: "#/definitions/needsB" }
-                  ]
-                }
-              }
+                    { $ref: "#/definitions/needsB" },
+                  ],
+                },
+              },
             };
             const definitions = {
               needsA: {
                 properties: {
                   a: { enum: ["typeA"] },
-                  b: { type: "number" }
-                }
+                  b: { type: "number" },
+                },
               },
               needsB: {
                 properties: {
                   a: { enum: ["typeB"] },
-                  c: { type: "boolean" }
-                }
-              }
+                  c: { type: "boolean" },
+                },
+              },
             };
             const formData = { a: "typeB" };
             expect(retrieveSchema(schema, definitions, formData)).eql({
               type: "object",
               properties: {
                 a: { enum: ["typeA", "typeB"] },
-                c: { type: "boolean" }
-              }
+                c: { type: "boolean" },
+              },
             });
           });
         });
@@ -1548,7 +1548,7 @@ describe("utils", () => {
             const schema = {
               type: "object",
               properties: {
-                a: { type: "string" }
+                a: { type: "string" },
               },
               dependencies: {
                 a: {
@@ -1556,26 +1556,26 @@ describe("utils", () => {
                     {
                       properties: {
                         a: { enum: ["int"] },
-                        b: { type: "integer" }
-                      }
+                        b: { type: "integer" },
+                      },
                     },
                     {
                       properties: {
                         a: { enum: ["bool"] },
-                        b: { type: "boolean" }
-                      }
-                    }
-                  ]
-                }
-              }
+                        b: { type: "boolean" },
+                      },
+                    },
+                  ],
+                },
+              },
             };
             const definitions = {};
             const formData = {};
             expect(retrieveSchema(schema, definitions, formData)).eql({
               type: "object",
               properties: {
-                a: { type: "string" }
-              }
+                a: { type: "string" },
+              },
             });
           });
         });
@@ -1585,7 +1585,7 @@ describe("utils", () => {
             const schema = {
               type: "object",
               properties: {
-                a: { type: "string", enum: ["int", "bool"] }
+                a: { type: "string", enum: ["int", "bool"] },
               },
               dependencies: {
                 a: {
@@ -1593,18 +1593,18 @@ describe("utils", () => {
                     {
                       properties: {
                         a: { enum: ["int"] },
-                        b: { type: "integer" }
-                      }
+                        b: { type: "integer" },
+                      },
                     },
                     {
                       properties: {
                         a: { enum: ["bool"] },
-                        b: { type: "boolean" }
-                      }
-                    }
-                  ]
-                }
-              }
+                        b: { type: "boolean" },
+                      },
+                    },
+                  ],
+                },
+              },
             };
             const definitions = {};
             const formData = { a: "int" };
@@ -1612,8 +1612,8 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string", enum: ["int", "bool"] },
-                b: { type: "integer" }
-              }
+                b: { type: "integer" },
+              },
             });
           });
 
@@ -1621,7 +1621,7 @@ describe("utils", () => {
             const schema = {
               type: "object",
               properties: {
-                a: { type: "string", enum: ["int", "bool"] }
+                a: { type: "string", enum: ["int", "bool"] },
               },
               dependencies: {
                 a: {
@@ -1629,18 +1629,18 @@ describe("utils", () => {
                     {
                       properties: {
                         a: { enum: ["int"] },
-                        b: { type: "integer" }
-                      }
+                        b: { type: "integer" },
+                      },
                     },
                     {
                       properties: {
                         a: { enum: ["bool"] },
-                        b: { type: "boolean" }
-                      }
-                    }
-                  ]
-                }
-              }
+                        b: { type: "boolean" },
+                      },
+                    },
+                  ],
+                },
+              },
             };
             const definitions = {};
             const formData = { a: "bool" };
@@ -1648,8 +1648,8 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string", enum: ["int", "bool"] },
-                b: { type: "boolean" }
-              }
+                b: { type: "boolean" },
+              },
             });
           });
 
@@ -1662,7 +1662,7 @@ describe("utils", () => {
                     {
                       properties: {
                         employee_accounts: {
-                          const: true
+                          const: true,
                         },
                         update_absences: {
                           title: "Update Absences",
@@ -1670,13 +1670,13 @@ describe("utils", () => {
                           oneOf: [
                             {
                               title: "Both",
-                              const: "BOTH"
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  ]
+                              const: "BOTH",
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  ],
                 },
                 update_absences: {
                   oneOf: [
@@ -1684,78 +1684,78 @@ describe("utils", () => {
                       properties: {
                         permitted_extension: {
                           title: "Permitted Extension",
-                          type: "integer"
+                          type: "integer",
                         },
                         update_absences: {
-                          const: "BOTH"
-                        }
-                      }
+                          const: "BOTH",
+                        },
+                      },
                     },
                     {
                       properties: {
                         permitted_extension: {
                           title: "Permitted Extension",
-                          type: "integer"
+                          type: "integer",
                         },
                         update_absences: {
-                          const: "MEDICAL_ONLY"
-                        }
-                      }
+                          const: "MEDICAL_ONLY",
+                        },
+                      },
                     },
                     {
                       properties: {
                         permitted_extension: {
                           title: "Permitted Extension",
-                          type: "integer"
+                          type: "integer",
                         },
                         update_absences: {
-                          const: "NON_MEDICAL_ONLY"
-                        }
-                      }
-                    }
-                  ]
-                }
+                          const: "NON_MEDICAL_ONLY",
+                        },
+                      },
+                    },
+                  ],
+                },
               },
               properties: {
                 employee_accounts: {
                   type: "boolean",
-                  title: "Employee Accounts"
-                }
-              }
+                  title: "Employee Accounts",
+                },
+              },
             };
             const definitions = {};
 
             it("should not include nested dependencies that should be hidden", () => {
               const formData = {
                 employee_accounts: false,
-                update_absences: "BOTH"
+                update_absences: "BOTH",
               };
               expect(retrieveSchema(schema, definitions, formData)).eql({
                 type: "object",
                 properties: {
                   employee_accounts: {
                     type: "boolean",
-                    title: "Employee Accounts"
-                  }
-                }
+                    title: "Employee Accounts",
+                  },
+                },
               });
             });
 
             it("should include nested dependencies that should not be hidden", () => {
               const formData = {
                 employee_accounts: true,
-                update_absences: "BOTH"
+                update_absences: "BOTH",
               };
               expect(retrieveSchema(schema, definitions, formData)).eql({
                 type: "object",
                 properties: {
                   employee_accounts: {
                     type: "boolean",
-                    title: "Employee Accounts"
+                    title: "Employee Accounts",
                   },
                   permitted_extension: {
                     title: "Permitted Extension",
-                    type: "integer"
+                    type: "integer",
                   },
                   update_absences: {
                     title: "Update Absences",
@@ -1763,11 +1763,11 @@ describe("utils", () => {
                     oneOf: [
                       {
                         title: "Both",
-                        const: "BOTH"
-                      }
-                    ]
-                  }
-                }
+                        const: "BOTH",
+                      },
+                    ],
+                  },
+                },
               });
             });
           });
@@ -1778,13 +1778,13 @@ describe("utils", () => {
             const schema = {
               type: "object",
               properties: {
-                a: { type: "string", enum: ["int", "bool"] }
+                a: { type: "string", enum: ["int", "bool"] },
               },
               dependencies: {
                 a: {
-                  $ref: "#/definitions/typedInput"
-                }
-              }
+                  $ref: "#/definitions/typedInput",
+                },
+              },
             };
             const definitions = {
               typedInput: {
@@ -1792,25 +1792,25 @@ describe("utils", () => {
                   {
                     properties: {
                       a: { enum: ["int"] },
-                      b: { type: "integer" }
-                    }
+                      b: { type: "integer" },
+                    },
                   },
                   {
                     properties: {
                       a: { enum: ["bool"] },
-                      b: { type: "boolean" }
-                    }
-                  }
-                ]
-              }
+                      b: { type: "boolean" },
+                    },
+                  },
+                ],
+              },
             };
             const formData = { a: "bool" };
             expect(retrieveSchema(schema, definitions, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string", enum: ["int", "bool"] },
-                b: { type: "boolean" }
-              }
+                b: { type: "boolean" },
+              },
             });
           });
         });
@@ -1849,7 +1849,7 @@ describe("utils", () => {
     describe("nested levels comparison checks", () => {
       const initial = {
         props: { myProp: { mySubProp: 1 } },
-        state: { myState: { mySubState: 1 } }
+        state: { myState: { mySubState: 1 } },
       };
 
       it("should detect equivalent props and state", () => {
@@ -1888,7 +1888,7 @@ describe("utils", () => {
           shouldRender(
             {
               props: { myProp: { mySubProp: fn } },
-              state: { myState: { mySubState: fn } }
+              state: { myState: { mySubState: fn } },
             },
             { myProp: { mySubProp: fn } },
             { myState: { mySubState: fn } }
@@ -1912,18 +1912,18 @@ describe("utils", () => {
           level1: {
             type: "object",
             properties: {
-              level2: { type: "string" }
-            }
-          }
-        }
+              level2: { type: "string" },
+            },
+          },
+        },
       };
 
       expect(toIdSchema(schema)).eql({
         $id: "root",
         level1: {
           $id: "root_level1",
-          level2: { $id: "root_level1_level2" }
-        }
+          level2: { $id: "root_level1_level2" },
+        },
       });
     });
 
@@ -1935,17 +1935,17 @@ describe("utils", () => {
             type: "object",
             properties: {
               level1a2a: { type: "string" },
-              level1a2b: { type: "string" }
-            }
+              level1a2b: { type: "string" },
+            },
           },
           level1b: {
             type: "object",
             properties: {
               level1b2a: { type: "string" },
-              level1b2b: { type: "string" }
-            }
-          }
-        }
+              level1b2b: { type: "string" },
+            },
+          },
+        },
       };
 
       expect(toIdSchema(schema)).eql({
@@ -1953,13 +1953,13 @@ describe("utils", () => {
         level1a: {
           $id: "root_level1a",
           level1a2a: { $id: "root_level1a_level1a2a" },
-          level1a2b: { $id: "root_level1a_level1a2b" }
+          level1a2b: { $id: "root_level1a_level1a2b" },
         },
         level1b: {
           $id: "root_level1b",
           level1b2a: { $id: "root_level1b_level1b2a" },
-          level1b2b: { $id: "root_level1b_level1b2b" }
-        }
+          level1b2b: { $id: "root_level1b_level1b2b" },
+        },
       });
     });
 
@@ -1971,19 +1971,19 @@ describe("utils", () => {
             type: "object",
             properties: {
               id: {
-                type: "string"
-              }
+                type: "string",
+              },
             },
-            required: ["id"]
-          }
-        }
+            required: ["id"],
+          },
+        },
       };
       expect(toIdSchema(schema)).eql({
         $id: "root",
         metadata: {
           $id: "root_metadata",
-          id: { $id: "root_metadata_id" }
-        }
+          id: { $id: "root_metadata_id" },
+        },
       });
     });
 
@@ -1993,14 +1993,14 @@ describe("utils", () => {
         items: {
           type: "object",
           properties: {
-            foo: { type: "string" }
-          }
-        }
+            foo: { type: "string" },
+          },
+        },
       };
 
       expect(toIdSchema(schema)).eql({
         $id: "root",
-        foo: { $id: "root_foo" }
+        foo: { $id: "root_foo" },
       });
     });
 
@@ -2011,17 +2011,17 @@ describe("utils", () => {
             type: "object",
             properties: {
               foo: { type: "string" },
-              bar: { type: "string" }
-            }
-          }
+              bar: { type: "string" },
+            },
+          },
         },
-        $ref: "#/definitions/testdef"
+        $ref: "#/definitions/testdef",
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions)).eql({
         $id: "root",
         foo: { $id: "root_foo" },
-        bar: { $id: "root_bar" }
+        bar: { $id: "root_bar" },
       });
     });
 
@@ -2029,24 +2029,24 @@ describe("utils", () => {
       const schema = {
         type: "object",
         properties: {
-          foo: { type: "string" }
+          foo: { type: "string" },
         },
         dependencies: {
           foo: {
             properties: {
-              bar: { type: "string" }
-            }
-          }
-        }
+              bar: { type: "string" },
+            },
+          },
+        },
       };
       const formData = {
-        foo: "test"
+        foo: "test",
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
         $id: "root",
         foo: { $id: "root_foo" },
-        bar: { $id: "root_bar" }
+        bar: { $id: "root_bar" },
       });
     });
 
@@ -2057,22 +2057,22 @@ describe("utils", () => {
           obj: {
             type: "object",
             properties: {
-              foo: { type: "string" }
+              foo: { type: "string" },
             },
             dependencies: {
               foo: {
                 properties: {
-                  bar: { type: "string" }
-                }
-              }
-            }
-          }
-        }
+                  bar: { type: "string" },
+                },
+              },
+            },
+          },
+        },
       };
       const formData = {
         obj: {
-          foo: "test"
-        }
+          foo: "test",
+        },
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
@@ -2080,8 +2080,8 @@ describe("utils", () => {
         obj: {
           $id: "root_obj",
           foo: { $id: "root_obj_foo" },
-          bar: { $id: "root_obj_bar" }
-        }
+          bar: { $id: "root_obj_bar" },
+        },
       });
     });
 
@@ -2089,22 +2089,22 @@ describe("utils", () => {
       const schema = {
         type: "object",
         properties: {
-          foo: { type: "string" }
+          foo: { type: "string" },
         },
         dependencies: {
           foo: {
             properties: {
-              bar: { type: "string" }
-            }
-          }
-        }
+              bar: { type: "string" },
+            },
+          },
+        },
       };
 
       const formData = {};
 
       expect(toIdSchema(schema, undefined, schema.definitions, formData)).eql({
         $id: "root",
-        foo: { $id: "root_foo" }
+        foo: { $id: "root_foo" },
       });
     });
 
@@ -2115,18 +2115,18 @@ describe("utils", () => {
             type: "object",
             properties: {
               foo: { type: "string" },
-              bar: { type: "string" }
-            }
-          }
+              bar: { type: "string" },
+            },
+          },
         },
-        $ref: "#/definitions/testdef"
+        $ref: "#/definitions/testdef",
       };
 
       expect(toIdSchema(schema, undefined, schema.definitions, {}, "rjsf")).eql(
         {
           $id: "rjsf",
           foo: { $id: "rjsf_foo" },
-          bar: { $id: "rjsf_bar" }
+          bar: { $id: "rjsf_bar" },
         }
       );
     });
@@ -2136,8 +2136,8 @@ describe("utils", () => {
         type: "object",
         properties: {
           foo: { type: "string" },
-          bar: { type: "string" }
-        }
+          bar: { type: "string" },
+        },
       };
       const formData = null;
       const result = toIdSchema(schema, null, {}, formData, "rjsf");
@@ -2145,7 +2145,7 @@ describe("utils", () => {
       expect(result).eql({
         $id: "rjsf",
         foo: { $id: "rjsf_foo" },
-        bar: { $id: "rjsf_bar" }
+        bar: { $id: "rjsf_bar" },
       });
     });
   });
@@ -2164,18 +2164,18 @@ describe("utils", () => {
           level1: {
             type: "object",
             properties: {
-              level2: { type: "string" }
-            }
-          }
-        }
+              level2: { type: "string" },
+            },
+          },
+        },
       };
 
       expect(toPathSchema(schema)).eql({
         $name: "",
         level1: {
           $name: "level1",
-          level2: { $name: "level1.level2" }
-        }
+          level2: { $name: "level1.level2" },
+        },
       });
     });
 
@@ -2190,20 +2190,20 @@ describe("utils", () => {
               type: "object",
               properties: {
                 a: { type: "string" },
-                b: { type: "string" }
+                b: { type: "string" },
               },
               dependencies: {
                 b: {
                   properties: {
                     c: {
-                      type: "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                      type: "string",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       };
 
       const formData = {
@@ -2211,16 +2211,16 @@ describe("utils", () => {
           {
             a: "a1",
             b: "b1",
-            c: "c1"
-          },
-          {
-            a: "a2"
+            c: "c1",
           },
           {
             a: "a2",
-            c: "c2"
-          }
-        ]
+          },
+          {
+            a: "a2",
+            c: "c2",
+          },
+        ],
       };
 
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
@@ -2230,34 +2230,34 @@ describe("utils", () => {
           "0": {
             $name: "list.0",
             a: {
-              $name: "list.0.a"
+              $name: "list.0.a",
             },
             b: {
-              $name: "list.0.b"
+              $name: "list.0.b",
             },
             c: {
-              $name: "list.0.c"
-            }
+              $name: "list.0.c",
+            },
           },
           "1": {
             $name: "list.1",
             a: {
-              $name: "list.1.a"
+              $name: "list.1.a",
             },
             b: {
-              $name: "list.1.b"
-            }
+              $name: "list.1.b",
+            },
           },
           "2": {
             $name: "list.2",
             a: {
-              $name: "list.2.a"
+              $name: "list.2.a",
             },
             b: {
-              $name: "list.2.b"
-            }
-          }
-        }
+              $name: "list.2.b",
+            },
+          },
+        },
       });
     });
 
@@ -2268,33 +2268,33 @@ describe("utils", () => {
             type: "object",
             properties: {
               street_address: {
-                type: "string"
+                type: "string",
               },
               city: {
-                type: "string"
+                type: "string",
               },
               state: {
-                type: "string"
-              }
+                type: "string",
+              },
             },
-            required: ["street_address", "city", "state"]
-          }
+            required: ["street_address", "city", "state"],
+          },
         },
         type: "object",
         properties: {
           billing_address: {
             title: "Billing address",
-            $ref: "#/definitions/address"
-          }
-        }
+            $ref: "#/definitions/address",
+          },
+        },
       };
 
       const formData = {
         billing_address: {
           street_address: "21, Jump Street",
           city: "Babel",
-          state: "Neverland"
-        }
+          state: "Neverland",
+        },
       };
 
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
@@ -2302,15 +2302,15 @@ describe("utils", () => {
         billing_address: {
           $name: "billing_address",
           city: {
-            $name: "billing_address.city"
+            $name: "billing_address.city",
           },
           state: {
-            $name: "billing_address.state"
+            $name: "billing_address.state",
           },
           street_address: {
-            $name: "billing_address.street_address"
-          }
-        }
+            $name: "billing_address.street_address",
+          },
+        },
       });
     });
 
@@ -2321,17 +2321,17 @@ describe("utils", () => {
             type: "object",
             properties: {
               street_address: {
-                type: "string"
+                type: "string",
               },
               city: {
-                type: "string"
+                type: "string",
               },
               state: {
-                type: "string"
-              }
+                type: "string",
+              },
             },
-            required: ["street_address", "city", "state"]
-          }
+            required: ["street_address", "city", "state"],
+          },
         },
         type: "object",
         properties: {
@@ -2339,10 +2339,10 @@ describe("utils", () => {
             title: "Address list",
             type: "array",
             items: {
-              $ref: "#/definitions/address"
-            }
-          }
-        }
+              $ref: "#/definitions/address",
+            },
+          },
+        },
       };
 
       const formData = {
@@ -2350,14 +2350,14 @@ describe("utils", () => {
           {
             street_address: "21, Jump Street",
             city: "Babel",
-            state: "Neverland"
+            state: "Neverland",
           },
           {
             street_address: "1234 Schema Rd.",
             city: "New York",
-            state: "Arizona"
-          }
-        ]
+            state: "Arizona",
+          },
+        ],
       };
 
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
@@ -2367,28 +2367,28 @@ describe("utils", () => {
           "0": {
             $name: "address_list.0",
             city: {
-              $name: "address_list.0.city"
+              $name: "address_list.0.city",
             },
             state: {
-              $name: "address_list.0.state"
+              $name: "address_list.0.state",
             },
             street_address: {
-              $name: "address_list.0.street_address"
-            }
+              $name: "address_list.0.street_address",
+            },
           },
           "1": {
             $name: "address_list.1",
             city: {
-              $name: "address_list.1.city"
+              $name: "address_list.1.city",
             },
             state: {
-              $name: "address_list.1.state"
+              $name: "address_list.1.state",
             },
             street_address: {
-              $name: "address_list.1.street_address"
-            }
-          }
-        }
+              $name: "address_list.1.street_address",
+            },
+          },
+        },
       });
     });
 
@@ -2400,10 +2400,10 @@ describe("utils", () => {
             properties: {
               name: {
                 type: "string",
-                default: "Default name"
-              }
-            }
-          }
+                default: "Default name",
+              },
+            },
+          },
         },
         type: "object",
         properties: {
@@ -2412,17 +2412,17 @@ describe("utils", () => {
             title: "A list of strings",
             items: {
               type: "string",
-              default: "bazinga"
-            }
+              default: "bazinga",
+            },
           },
           multipleChoicesList: {
             type: "array",
             title: "A multiple choices list",
             items: {
               type: "string",
-              enum: ["foo", "bar", "fuzz", "qux"]
+              enum: ["foo", "bar", "fuzz", "qux"],
             },
-            uniqueItems: true
+            uniqueItems: true,
           },
           fixedItemsList: {
             type: "array",
@@ -2431,25 +2431,25 @@ describe("utils", () => {
               {
                 title: "A string value",
                 type: "string",
-                default: "lorem ipsum"
+                default: "lorem ipsum",
               },
               {
                 title: "a boolean value",
-                type: "boolean"
-              }
+                type: "boolean",
+              },
             ],
             additionalItems: {
               title: "Additional item",
-              type: "number"
-            }
+              type: "number",
+            },
           },
           minItemsList: {
             type: "array",
             title: "A list with a minimal number of items",
             minItems: 3,
             items: {
-              $ref: "#/definitions/Thing"
-            }
+              $ref: "#/definitions/Thing",
+            },
           },
           defaultsAndMinItems: {
             type: "array",
@@ -2458,8 +2458,8 @@ describe("utils", () => {
             default: ["carp", "trout", "bream"],
             items: {
               type: "string",
-              default: "unidentified"
-            }
+              default: "unidentified",
+            },
           },
           nestedList: {
             type: "array",
@@ -2469,9 +2469,9 @@ describe("utils", () => {
               title: "Inner list",
               items: {
                 type: "string",
-                default: "lorem ipsum"
-              }
-            }
+                default: "lorem ipsum",
+              },
+            },
           },
           listOfObjects: {
             type: "array",
@@ -2482,38 +2482,38 @@ describe("utils", () => {
               properties: {
                 name: {
                   type: "string",
-                  default: "Default name"
+                  default: "Default name",
                 },
                 id: {
                   type: "number",
-                  default: "an id"
-                }
-              }
-            }
+                  default: "an id",
+                },
+              },
+            },
           },
           unorderable: {
             title: "Unorderable items",
             type: "array",
             items: {
               type: "string",
-              default: "lorem ipsum"
-            }
+              default: "lorem ipsum",
+            },
           },
           unremovable: {
             title: "Unremovable items",
             type: "array",
             items: {
               type: "string",
-              default: "lorem ipsum"
-            }
+              default: "lorem ipsum",
+            },
           },
           noToolbar: {
             title: "No add, remove and order buttons",
             type: "array",
             items: {
               type: "string",
-              default: "lorem ipsum"
-            }
+              default: "lorem ipsum",
+            },
           },
           fixedNoToolbar: {
             title: "Fixed array without buttons",
@@ -2522,21 +2522,21 @@ describe("utils", () => {
               {
                 title: "A number",
                 type: "number",
-                default: 42
+                default: 42,
               },
               {
                 title: "A boolean",
                 type: "boolean",
-                default: false
-              }
+                default: false,
+              },
             ],
             additionalItems: {
               title: "A string",
               type: "string",
-              default: "lorem ipsum"
-            }
-          }
-        }
+              default: "lorem ipsum",
+            },
+          },
+        },
       };
 
       const formData = {
@@ -2545,32 +2545,37 @@ describe("utils", () => {
         fixedItemsList: ["Some text", true, 123],
         minItemsList: [
           {
-            name: "Default name"
+            name: "Default name",
           },
           {
-            name: "Default name"
+            name: "Default name",
           },
           {
-            name: "Default name"
-          }
+            name: "Default name",
+          },
         ],
         defaultsAndMinItems: [
           "carp",
           "trout",
           "bream",
           "unidentified",
-          "unidentified"
+          "unidentified",
         ],
         nestedList: [["lorem", "ipsum"], ["dolor"]],
         listOfObjects: [
           { name: "name1", id: 123 },
           { name: "name2", id: 1234 },
-          { id: 12345 }
+          { id: 12345 },
         ],
         unorderable: ["one", "two"],
         unremovable: ["one", "two"],
         noToolbar: ["one", "two"],
-        fixedNoToolbar: [42, true, "additional item one", "additional item two"]
+        fixedNoToolbar: [
+          42,
+          true,
+          "additional item one",
+          "additional item two",
+        ],
       };
 
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
@@ -2578,162 +2583,162 @@ describe("utils", () => {
         defaultsAndMinItems: {
           $name: "defaultsAndMinItems",
           "0": {
-            $name: "defaultsAndMinItems.0"
+            $name: "defaultsAndMinItems.0",
           },
           "1": {
-            $name: "defaultsAndMinItems.1"
+            $name: "defaultsAndMinItems.1",
           },
           "2": {
-            $name: "defaultsAndMinItems.2"
+            $name: "defaultsAndMinItems.2",
           },
           "3": {
-            $name: "defaultsAndMinItems.3"
+            $name: "defaultsAndMinItems.3",
           },
           "4": {
-            $name: "defaultsAndMinItems.4"
-          }
+            $name: "defaultsAndMinItems.4",
+          },
         },
         fixedItemsList: {
           $name: "fixedItemsList",
           "0": {
-            $name: "fixedItemsList.0"
+            $name: "fixedItemsList.0",
           },
           "1": {
-            $name: "fixedItemsList.1"
+            $name: "fixedItemsList.1",
           },
           "2": {
-            $name: "fixedItemsList.2"
-          }
+            $name: "fixedItemsList.2",
+          },
         },
         fixedNoToolbar: {
           $name: "fixedNoToolbar",
           "0": {
-            $name: "fixedNoToolbar.0"
+            $name: "fixedNoToolbar.0",
           },
           "1": {
-            $name: "fixedNoToolbar.1"
+            $name: "fixedNoToolbar.1",
           },
           "2": {
-            $name: "fixedNoToolbar.2"
+            $name: "fixedNoToolbar.2",
           },
           "3": {
-            $name: "fixedNoToolbar.3"
-          }
+            $name: "fixedNoToolbar.3",
+          },
         },
         listOfObjects: {
           $name: "listOfObjects",
           "0": {
             $name: "listOfObjects.0",
             id: {
-              $name: "listOfObjects.0.id"
+              $name: "listOfObjects.0.id",
             },
             name: {
-              $name: "listOfObjects.0.name"
-            }
+              $name: "listOfObjects.0.name",
+            },
           },
           "1": {
             $name: "listOfObjects.1",
             id: {
-              $name: "listOfObjects.1.id"
+              $name: "listOfObjects.1.id",
             },
             name: {
-              $name: "listOfObjects.1.name"
-            }
+              $name: "listOfObjects.1.name",
+            },
           },
           "2": {
             $name: "listOfObjects.2",
             id: {
-              $name: "listOfObjects.2.id"
+              $name: "listOfObjects.2.id",
             },
             name: {
-              $name: "listOfObjects.2.name"
-            }
-          }
+              $name: "listOfObjects.2.name",
+            },
+          },
         },
         listOfStrings: {
           $name: "listOfStrings",
           "0": {
-            $name: "listOfStrings.0"
+            $name: "listOfStrings.0",
           },
           "1": {
-            $name: "listOfStrings.1"
-          }
+            $name: "listOfStrings.1",
+          },
         },
         minItemsList: {
           $name: "minItemsList",
           "0": {
             $name: "minItemsList.0",
             name: {
-              $name: "minItemsList.0.name"
-            }
+              $name: "minItemsList.0.name",
+            },
           },
           "1": {
             $name: "minItemsList.1",
             name: {
-              $name: "minItemsList.1.name"
-            }
+              $name: "minItemsList.1.name",
+            },
           },
           "2": {
             $name: "minItemsList.2",
             name: {
-              $name: "minItemsList.2.name"
-            }
-          }
+              $name: "minItemsList.2.name",
+            },
+          },
         },
         multipleChoicesList: {
           $name: "multipleChoicesList",
           "0": {
-            $name: "multipleChoicesList.0"
+            $name: "multipleChoicesList.0",
           },
           "1": {
-            $name: "multipleChoicesList.1"
-          }
+            $name: "multipleChoicesList.1",
+          },
         },
         nestedList: {
           $name: "nestedList",
           "0": {
             $name: "nestedList.0",
             "0": {
-              $name: "nestedList.0.0"
+              $name: "nestedList.0.0",
             },
             "1": {
-              $name: "nestedList.0.1"
-            }
+              $name: "nestedList.0.1",
+            },
           },
           "1": {
             $name: "nestedList.1",
             "0": {
-              $name: "nestedList.1.0"
-            }
-          }
+              $name: "nestedList.1.0",
+            },
+          },
         },
         noToolbar: {
           $name: "noToolbar",
           "0": {
-            $name: "noToolbar.0"
+            $name: "noToolbar.0",
           },
           "1": {
-            $name: "noToolbar.1"
-          }
+            $name: "noToolbar.1",
+          },
         },
         unorderable: {
           $name: "unorderable",
           "0": {
-            $name: "unorderable.0"
+            $name: "unorderable.0",
           },
           "1": {
-            $name: "unorderable.1"
-          }
+            $name: "unorderable.1",
+          },
         },
         unremovable: {
           $name: "unremovable",
           "0": {
-            $name: "unremovable.0"
+            $name: "unremovable.0",
           },
           "1": {
-            $name: "unremovable.1"
-          }
-        }
+            $name: "unremovable.1",
+          },
+        },
       });
     });
   });
@@ -2750,7 +2755,7 @@ describe("utils", () => {
         day: -1,
         hour: -1,
         minute: -1,
-        second: -1
+        second: -1,
       });
     });
 
@@ -2761,7 +2766,7 @@ describe("utils", () => {
         day: -1,
         hour: 0,
         minute: 0,
-        second: 0
+        second: 0,
       });
     });
 
@@ -2772,7 +2777,7 @@ describe("utils", () => {
         day: 5,
         hour: 14,
         minute: 1,
-        second: 30
+        second: 30,
       });
     });
 
@@ -2783,7 +2788,7 @@ describe("utils", () => {
         day: 5,
         hour: 0,
         minute: 0,
-        second: 0
+        second: 0,
       });
     });
   });
@@ -2797,7 +2802,7 @@ describe("utils", () => {
           day: 5,
           hour: 14,
           minute: 1,
-          second: 30
+          second: 30,
         })
       ).eql("2016-04-05T14:01:30.000Z");
     });
@@ -2808,7 +2813,7 @@ describe("utils", () => {
           {
             year: 2016,
             month: 4,
-            day: 5
+            day: 5,
           },
           false
         )
@@ -2906,60 +2911,60 @@ describe("utils", () => {
     const cases = [
       {
         schema: { type: "string" },
-        expected: "string"
+        expected: "string",
       },
       {
         schema: { type: "number" },
-        expected: "number"
+        expected: "number",
       },
       {
         schema: { type: "integer" },
-        expected: "integer"
+        expected: "integer",
       },
       {
         schema: { type: "object" },
-        expected: "object"
+        expected: "object",
       },
       {
         schema: { type: "array" },
-        expected: "array"
+        expected: "array",
       },
       {
         schema: { type: "boolean" },
-        expected: "boolean"
+        expected: "boolean",
       },
       {
         schema: { type: "null" },
-        expected: "null"
+        expected: "null",
       },
       {
         schema: { const: "foo" },
-        expected: "string"
+        expected: "string",
       },
       {
         schema: { const: 1 },
-        expected: "number"
+        expected: "number",
       },
       {
         schema: { type: ["string", "null"] },
-        expected: "string"
+        expected: "string",
       },
       {
         schema: { type: ["null", "number"] },
-        expected: "number"
+        expected: "number",
       },
       {
         schema: { type: ["integer", "null"] },
-        expected: "integer"
+        expected: "integer",
       },
       {
         schema: { properties: {} },
-        expected: "object"
+        expected: "object",
       },
       {
         schema: { additionalProperties: {} },
-        expected: "object"
-      }
+        expected: "object",
+      },
     ];
 
     it("should correctly guess the type of a schema", () => {
@@ -2983,16 +2988,16 @@ describe("utils", () => {
               type: "array",
               default: ["foo", "bar"],
               items: {
-                type: "string"
-              }
+                type: "string",
+              },
             },
             bool: {
               type: "boolean",
-              default: true
-            }
-          }
-        }
-      }
+              default: true,
+            },
+          },
+        },
+      },
     };
 
     it("should fail if widget has incorrect type", () => {

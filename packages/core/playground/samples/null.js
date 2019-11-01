@@ -9,20 +9,20 @@ module.exports = {
         title: "A null field",
         description:
           "Null fields like this are great for adding extra information",
-        type: "null"
+        type: "null",
       },
       firstName: {
         type: "string",
         title: "A regular string field",
-        default: "Chuck"
-      }
-    }
+        default: "Chuck",
+      },
+    },
   },
   uiSchema: {
     firstName: {
       "ui:autofocus": true,
-      "ui:emptyValue": ""
-    }
+      "ui:emptyValue": "",
+    },
   },
-  formData: {}
+  formData: {},
 };

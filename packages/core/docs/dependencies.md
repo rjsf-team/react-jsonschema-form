@@ -48,7 +48,7 @@ field will be required if `billing_address` is defined making them both required
 }
 ```
 
-_(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#property-dependencies))_
+*(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#property-dependencies))*
 
 ## Schema dependencies
 
@@ -80,7 +80,7 @@ This library also supports modifying portions of a schema based on form data.
 
 In this example the `billing_address` field will be displayed in the form if `credit_card` is defined.
 
-_(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#schema-dependencies))_
+*(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#schema-dependencies))*
 
 ### Dynamic
 
@@ -93,42 +93,58 @@ The JSON Schema standard says that the dependency is triggered if the property i
   "properties": {
     "Do you have any pets?": {
       "type": "string",
-      "enum": ["No", "Yes: One", "Yes: More than one"],
+      "enum": [
+        "No",
+        "Yes: One",
+        "Yes: More than one"
+      ],
       "default": "No"
     }
   },
-  "required": ["Do you have any pets?"],
+  "required": [
+    "Do you have any pets?"
+  ],
   "dependencies": {
     "Do you have any pets?": {
       "oneOf": [
         {
           "properties": {
             "Do you have any pets?": {
-              "enum": ["No"]
+              "enum": [
+                "No"
+              ]
             }
           }
         },
         {
           "properties": {
             "Do you have any pets?": {
-              "enum": ["Yes: One"]
+              "enum": [
+                "Yes: One"
+              ]
             },
             "How old is your pet?": {
               "type": "number"
             }
           },
-          "required": ["How old is your pet?"]
+          "required": [
+            "How old is your pet?"
+          ]
         },
         {
           "properties": {
             "Do you have any pets?": {
-              "enum": ["Yes: More than one"]
+              "enum": [
+                "Yes: More than one"
+              ]
             },
             "Do you want to get rid of any?": {
               "type": "boolean"
             }
           },
-          "required": ["Do you want to get rid of any?"]
+          "required": [
+            "Do you want to get rid of any?"
+          ]
         }
       ]
     }

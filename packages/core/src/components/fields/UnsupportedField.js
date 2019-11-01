@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== "production") {
   UnsupportedField.propTypes = {
     schema: PropTypes.object.isRequired,
     idSchema: PropTypes.object,
-    reason: PropTypes.string
+    reason: PropTypes.string,
   };
 }
 

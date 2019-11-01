@@ -23,7 +23,7 @@ describe("ObjectFieldTemplate", () => {
         DescriptionField,
         properties,
         title,
-        description
+        description,
       } = this.props;
       return (
         <div className="root">
@@ -50,15 +50,15 @@ describe("ObjectFieldTemplate", () => {
     node = createFormComponent({
       schema: {
         type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } }
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
       },
       uiSchema: { "ui:description": "foobar" },
       formData,
       ObjectFieldTemplate,
       fields: {
         TitleField,
-        DescriptionField
-      }
+        DescriptionField,
+      },
     }).node;
     sharedIts();
   });
@@ -66,17 +66,17 @@ describe("ObjectFieldTemplate", () => {
     node = createFormComponent({
       schema: {
         type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } }
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
       },
       uiSchema: {
         "ui:description": "foobar",
-        "ui:ObjectFieldTemplate": ObjectFieldTemplate
+        "ui:ObjectFieldTemplate": ObjectFieldTemplate,
       },
       formData,
       fields: {
         TitleField,
-        DescriptionField
-      }
+        DescriptionField,
+      },
     }).node;
     sharedIts();
   });
@@ -84,18 +84,18 @@ describe("ObjectFieldTemplate", () => {
     node = createFormComponent({
       schema: {
         type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } }
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
       },
       uiSchema: {
         "ui:description": "foobar",
-        "ui:ObjectFieldTemplate": ObjectFieldTemplate
+        "ui:ObjectFieldTemplate": ObjectFieldTemplate,
       },
       formData,
       ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
       fields: {
         TitleField,
-        DescriptionField
-      }
+        DescriptionField,
+      },
     }).node;
     sharedIts();
   });

@@ -31,19 +31,18 @@ function validate(formData, errors) {
 const schema = {
   type: "object",
   properties: {
-    pass1: { type: "string", minLength: 3 },
-    pass2: { type: "string", minLength: 3 }
+    pass1: {type: "string", minLength: 3},
+    pass2: {type: "string", minLength: 3},
   }
 };
 
-render(
-  <Form schema={schema} validate={validate} />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema}
+        validate={validate} />
+), document.getElementById("app"));
 ```
 
 > Notes:
->
 > - The `validate()` function must **always** return the `errors` object
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
@@ -55,19 +54,19 @@ render(
 ```jsx
 const schema = {
   phoneNumber: {
-    type: "string",
-    format: "phone-us"
+    type: 'string',
+    format: 'phone-us'
   }
 };
 
 const customFormats = {
-  "phone-us": /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
+  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
 };
 
-render(
-  <Form schema={schema} customFormats={customFormats} />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema} 
+        customFormats={customFormats}/>
+), document.getElementById("app"));
 ```
 
 Format values can be anything AJV’s [`addFormat` method](https://github.com/epoberezkin/ajv#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
@@ -88,10 +87,10 @@ Note that react-jsonschema-form only supports the latest version of JSON Schema,
 ```jsx
 const additionalMetaSchemas = require("ajv/lib/refs/json-schema-draft-04.json");
 
-render(
-  <Form schema={schema} additionalMetaSchemas={[additionalMetaSchemas]} />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema} 
+        additionalMetaSchemas={[additionalMetaSchemas]}/>
+), document.getElementById("app"));
 ```
 
 In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
@@ -99,10 +98,10 @@ In this example `schema` passed as props to `Form` component can be validated ag
 `additionalMetaSchemas` also accepts more than one meta schema:
 
 ```jsx
-render(
-  <Form schema={schema} additionalMetaSchemas={[metaSchema1, metaSchema2]} />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema} 
+        additionalMetaSchemas={[metaSchema1, metaSchema2]} />
+), document.getElementById("app"));
 ```
 
 ### Custom error messages
@@ -113,7 +112,7 @@ Validation error messages are provided by the JSON Schema validation by default.
 function transformErrors(errors) {
   return errors.map(error => {
     if (error.name === "pattern") {
-      error.message = "Only digits are allowed";
+      error.message = "Only digits are allowed"
     }
     return error;
   });
@@ -122,18 +121,17 @@ function transformErrors(errors) {
 const schema = {
   type: "object",
   properties: {
-    onlyNumbersString: { type: "string", pattern: "^\\d*$" }
+    onlyNumbersString: {type: "string", pattern: "^\\d*$"},
   }
 };
 
-render(
-  <Form schema={schema} transformErrors={transformErrors} />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema}
+        transformErrors={transformErrors} />
+), document.getElementById("app"));
 ```
 
 > Notes:
->
 > - The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
 
 Each element in the `errors` list passed to `transformErrors` has the following properties:
@@ -150,10 +148,10 @@ Each element in the `errors` list passed to `transformErrors` has the following 
 To disable rendering of the error list at the top of the form, you can set the `showErrorList` prop to `false`. Doing so will still validate the form, but only the inline display will show.
 
 ```js
-render(
-  <Form schema={schema} showErrorList={false} />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema}
+        showErrorList={false} />
+), document.getElementById("app"));
 ```
 
 > Note: you can also use your own [ErrorList](advanced-customization.md#error-list-template)

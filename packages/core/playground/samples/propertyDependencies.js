@@ -11,19 +11,19 @@ module.exports = {
         type: "object",
         properties: {
           name: {
-            type: "string"
+            type: "string",
           },
           credit_card: {
-            type: "number"
+            type: "number",
           },
           billing_address: {
-            type: "string"
-          }
+            type: "string",
+          },
         },
         required: ["name"],
         dependencies: {
-          credit_card: ["billing_address"]
-        }
+          credit_card: ["billing_address"],
+        },
       },
       bidirectional: {
         title: "Bidirectional",
@@ -34,51 +34,51 @@ module.exports = {
         type: "object",
         properties: {
           name: {
-            type: "string"
+            type: "string",
           },
           credit_card: {
-            type: "number"
+            type: "number",
           },
           billing_address: {
-            type: "string"
-          }
+            type: "string",
+          },
         },
         required: ["name"],
         dependencies: {
           credit_card: ["billing_address"],
-          billing_address: ["credit_card"]
-        }
-      }
-    }
+          billing_address: ["credit_card"],
+        },
+      },
+    },
   },
   uiSchema: {
     unidirectional: {
       credit_card: {
         "ui:help":
-          "If you enter anything here then billing_address will become required."
+          "If you enter anything here then billing_address will become required.",
       },
       billing_address: {
         "ui:help":
-          "It’s okay to have a billing address without a credit card number."
-      }
+          "It’s okay to have a billing address without a credit card number.",
+      },
     },
     bidirectional: {
       credit_card: {
         "ui:help":
-          "If you enter anything here then billing_address will become required."
+          "If you enter anything here then billing_address will become required.",
       },
       billing_address: {
         "ui:help":
-          "If you enter anything here then credit_card will become required."
-      }
-    }
+          "If you enter anything here then credit_card will become required.",
+      },
+    },
   },
   formData: {
     unidirectional: {
-      name: "Tim"
+      name: "Tim",
     },
     bidirectional: {
-      name: "Jill"
-    }
-  }
+      name: "Jill",
+    },
+  },
 };

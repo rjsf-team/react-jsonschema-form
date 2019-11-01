@@ -4,7 +4,7 @@ module.exports = {
     properties: {
       age: {
         type: "integer",
-        title: "Age"
+        title: "Age",
       },
       items: {
         type: "array",
@@ -14,20 +14,20 @@ module.exports = {
             {
               properties: {
                 foo: {
-                  type: "string"
-                }
-              }
+                  type: "string",
+                },
+              },
             },
             {
               properties: {
                 bar: {
-                  type: "string"
-                }
-              }
-            }
-          ]
-        }
-      }
+                  type: "string",
+                },
+              },
+            },
+          ],
+        },
+      },
     },
     anyOf: [
       {
@@ -36,24 +36,24 @@ module.exports = {
           firstName: {
             type: "string",
             title: "First name",
-            default: "Chuck"
+            default: "Chuck",
           },
           lastName: {
             type: "string",
-            title: "Last name"
-          }
-        }
+            title: "Last name",
+          },
+        },
       },
       {
         title: "Second method of identification",
         properties: {
           idCode: {
             type: "string",
-            title: "ID code"
-          }
-        }
-      }
-    ]
+            title: "ID code",
+          },
+        },
+      },
+    ],
   },
-  formData: {}
+  formData: {},
 };

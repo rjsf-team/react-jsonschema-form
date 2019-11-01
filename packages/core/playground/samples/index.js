@@ -49,5 +49,5 @@ export const samples = {
   "One Of": oneOf,
   "Null fields": nullField,
   Nullable: nullable,
-  ErrorSchema: errorSchema
+  ErrorSchema: errorSchema,
 };

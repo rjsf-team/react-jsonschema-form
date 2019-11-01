@@ -22,7 +22,7 @@ function withTheme(themeProps) {
 
 withTheme.propTypes = {
   widgets: PropTypes.object,
-  fields: PropTypes.object
+  fields: PropTypes.object,
 };
 
 export default withTheme;

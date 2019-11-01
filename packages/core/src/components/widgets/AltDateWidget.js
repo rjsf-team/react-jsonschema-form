@@ -26,7 +26,7 @@ function DateElement(props) {
     readonly,
     autofocus,
     registry,
-    onBlur
+    onBlur,
   } = props;
   const id = rootId + "_" + type;
   const { SelectWidget } = registry.widgets;
@@ -54,8 +54,8 @@ class AltDateWidget extends Component {
     readonly: false,
     autofocus: false,
     options: {
-      yearsRange: [1900, new Date().getFullYear() + 2]
-    }
+      yearsRange: [1900, new Date().getFullYear() + 2],
+    },
   };
 
   constructor(props) {
@@ -109,10 +109,10 @@ class AltDateWidget extends Component {
       {
         type: "year",
         range: options.yearsRange,
-        value: year
+        value: year,
       },
       { type: "month", range: [1, 12], value: month },
-      { type: "day", range: [1, 31], value: day }
+      { type: "day", range: [1, 31], value: day },
     ];
     if (time) {
       data.push(
@@ -132,7 +132,7 @@ class AltDateWidget extends Component {
       autofocus,
       registry,
       onBlur,
-      options
+      options,
     } = this.props;
     return (
       <ul className="list-inline">
@@ -166,8 +166,7 @@ class AltDateWidget extends Component {
             <a
               href="#"
               className="btn btn-warning btn-clear"
-              onClick={this.clear}
-            >
+              onClick={this.clear}>
               Clear
             </a>
           </li>
@@ -189,7 +188,7 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
     time: PropTypes.bool,
-    options: PropTypes.object
+    options: PropTypes.object,
   };
 }
 

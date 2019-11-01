@@ -17,8 +17,8 @@ describe("NullField", () => {
     it("should render a null field", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "null"
-        }
+          type: "null",
+        },
       });
 
       expect(node.querySelectorAll(".field")).to.have.length.of(1);
@@ -28,8 +28,8 @@ describe("NullField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "null",
-          title: "foo"
-        }
+          title: "foo",
+        },
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -39,8 +39,8 @@ describe("NullField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "null",
-          default: null
-        }
+          default: null,
+        },
       });
 
       expect(comp.state.formData).eql(null);
@@ -49,9 +49,9 @@ describe("NullField", () => {
     it("should not overwrite existing data", () => {
       const { comp } = createFormComponent({
         schema: {
-          type: "null"
+          type: "null",
         },
-        formData: 3
+        formData: 3,
       });
 
       expect(comp.state.formData).eql(3);

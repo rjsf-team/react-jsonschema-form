@@ -7,7 +7,7 @@ import {
   retrieveSchema,
   getDefaultRegistry,
   getUiOptions,
-  ADDITIONAL_PROPERTY_FLAG
+  ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
@@ -66,12 +66,12 @@ class ObjectField extends Component {
     idSchema: {},
     required: false,
     disabled: false,
-    readonly: false
+    readonly: false,
   };
 
   state = {
     wasPropertyKeyModified: false,
-    additionalProperties: {}
+    additionalProperties: {},
   };
 
   isRequired(name) {
@@ -99,7 +99,7 @@ class ObjectField extends Component {
         errorSchema &&
           this.props.errorSchema && {
             ...this.props.errorSchema,
-            [name]: errorSchema
+            [name]: errorSchema,
           }
       );
     };
@@ -146,7 +146,7 @@ class ObjectField extends Component {
         errorSchema &&
           this.props.errorSchema && {
             ...this.props.errorSchema,
-            [value]: errorSchema
+            [value]: errorSchema,
           }
       );
     };
@@ -207,7 +207,7 @@ class ObjectField extends Component {
       idPrefix,
       onBlur,
       onFocus,
-      registry = getDefaultRegistry()
+      registry = getDefaultRegistry(),
     } = this.props;
 
     const { definitions, fields, formContext } = registry;
@@ -286,7 +286,7 @@ class ObjectField extends Component {
           name,
           readonly,
           disabled,
-          required
+          required,
         };
       }),
       readonly,
@@ -296,7 +296,7 @@ class ObjectField extends Component {
       uiSchema,
       schema,
       formData,
-      formContext
+      formContext,
     };
     return <Template {...templateProps} onAddClick={this.handleAddClick} />;
   }

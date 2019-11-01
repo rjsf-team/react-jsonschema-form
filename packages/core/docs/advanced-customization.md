@@ -1,16 +1,17 @@
 ## Advanced customization
 
-| \_                    | Custom Field                      | Custom Template                                                                                                                                                       | Custom Widget                                                             |
-| --------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| **What it does**      | Overrides all behaviour           | Overrides just the layout (not behaviour)                                                                                                                             | Overrides just the input box (not layout, labels, or help, or validation) |
-| **Usage**             | Global or per-field               | Global or per-field                                                                                                                                                   | Global or per-field                                                       |
-| **Global Example**    | `<Form fields={MyCustomField} />` | `<Form ArrayFieldTemplate={MyArrayTemplate} />`                                                                                                                       | `<Form widgets={MyCustomWidget} />`                                       |
-| **Per-Field Example** | `"ui:field": MyCustomField`       | `"ui:ArrayFieldTemplate": MyArrayTemplate`                                                                                                                            | `"ui:widget":MyCustomWidget`                                              |
-| **Documentation**     | [Field](#field-props)             | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)                               |
+
+_ | Custom Field  | Custom Template | Custom Widget
+--|---------- | ------------- | ----
+**What it does** | Overrides all behaviour | Overrides just the layout (not behaviour) | Overrides just the input box (not layout, labels, or help, or validation)
+**Usage** | Global or per-field | Global or per-field | Global or per-field
+**Global Example** | `<Form fields={MyCustomField} />` |  `<Form ArrayFieldTemplate={MyArrayTemplate} />` | `<Form widgets={MyCustomWidget} />`
+**Per-Field Example** | `"ui:field": MyCustomField` |  `"ui:ArrayFieldTemplate": MyArrayTemplate` | `"ui:widget":MyCustomWidget`
+**Documentation** | [Field](#field-props) | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)
 
 ### Field template
 
-To take control over the inner organization of each field (each form row), you can define a _field template_ for your form.
+To take control over the inner organization of each field (each form row), you can define a *field template* for your form.
 
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
@@ -108,6 +109,7 @@ render((
 ```
 
 Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -207,9 +209,10 @@ The following props are part of each element in `properties`:
 
 > Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an object field template, you may need to specify both `ui:FieldTemplate` and `ui:ObjectFieldTemplate`.
 
+
 ### Error List template
 
-To take control over how the form errors are displayed, you can define an _error list template_ for your form. This list is the form global error list that appears at the top of your forms.
+To take control over how the form errors are displayed, you can define an *error list template* for your form. This list is the form global error list that appears at the top of your forms.
 
 An error list template is basically a React stateless component being passed errors as props so you can render them as you like:
 
@@ -243,6 +246,7 @@ The following props are passed to `ErrorList`
 - `schema`: The schema that was passed to `Form`.
 - `uiSchema`: The uiSchema that was passed to `Form`.
 - `formContext`: The `formContext` object that you passed to Form.
+
 
 ### Async Errors
 
@@ -302,10 +306,10 @@ This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key"
 
 ### Custom widgets and fields
 
-The API allows to specify your own custom _widget_ and _field_ components:
+The API allows to specify your own custom *widget* and *field* components:
 
-- A _widget_ represents a HTML tag for the user to enter data, eg. `input`, `select`, etc.
-- A _field_ usually wraps one or more widgets and most often handles internal field state; think of a field as a form row, including the labels.
+- A *widget* represents a HTML tag for the user to enter data, eg. `input`, `select`, etc.
+- A *field* usually wraps one or more widgets and most often handles internal field state; think of a field as a form row, including the labels.
 
 ### Custom widget components
 
@@ -362,15 +366,13 @@ The following props are passed to custom widget components:
 Alternatively, you can register them all at once by passing the `widgets` prop to the `Form` component, and reference their identifier from the `uiSchema`:
 
 ```jsx
-const MyCustomWidget = props => {
+const MyCustomWidget = (props) => {
   return (
-    <input
-      type="text"
+    <input type="text"
       className="custom"
       value={props.value}
       required={props.required}
-      onChange={event => props.onChange(event.target.value)}
-    />
+      onChange={(event) => props.onChange(event.target.value)} />
   );
 };
 
@@ -380,12 +382,14 @@ const widgets = {
 
 const uiSchema = {
   "ui:widget": "myCustomWidget"
-};
+}
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} widgets={widgets} />,
-  document.getElementById("app")
-);
+render((
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    widgets={widgets} />
+), document.getElementById("app"));
 ```
 
 This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
@@ -402,9 +406,9 @@ const schema = {
 };
 
 function MyCustomWidget(props) {
-  const { options } = props;
-  const { color, backgroundColor } = options;
-  return <input style={{ color, backgroundColor }} />;
+  const {options} = props;
+  const {color, backgroundColor} = options;
+  return <input style={{color, backgroundColor}} />;
 }
 
 MyCustomWidget.defaultProps = {
@@ -421,10 +425,10 @@ const uiSchema = {
 };
 
 // renders red on yellow input
-render(
-  <Form schema={schema} uiSchema={uiSchema} />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
@@ -439,15 +443,15 @@ All the widgets that render a text input use the `BaseInput` component internall
 
 You can provide your own field components to a uiSchema for basically any json schema data type, by specifying a `ui:field` property.
 
-For example, let's create and register a dumb `geo` component handling a _latitude_ and a _longitude_:
+For example, let's create and register a dumb `geo` component handling a *latitude* and a *longitude*:
 
 ```jsx
 const schema = {
   type: "object",
   required: ["lat", "lon"],
   properties: {
-    lat: { type: "number" },
-    lon: { type: "number" }
+    lat: {type: "number"},
+    lon: {type: "number"}
   }
 };
 
@@ -455,22 +459,19 @@ const schema = {
 class GeoPosition extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ...props.formData };
+    this.state = {...props.formData};
   }
 
   onChange(name) {
-    return event => {
-      this.setState(
-        {
-          [name]: parseFloat(event.target.value)
-        },
-        () => this.props.onChange(this.state)
-      );
+    return (event) => {
+      this.setState({
+        [name]: parseFloat(event.target.value)
+      }, () => this.props.onChange(this.state));
     };
   }
 
   render() {
-    const { lat, lon } = this.state;
+    const {lat, lon} = this.state;
     return (
       <div>
         <input type="number" value={lat} onChange={this.onChange("lat")} />
@@ -481,18 +482,20 @@ class GeoPosition extends React.Component {
 }
 
 // Define the custom field component to use for the root object
-const uiSchema = { "ui:field": "geo" };
+const uiSchema = {"ui:field": "geo"};
 
 // Define the custom field components to register; here our "geo"
 // custom field component
-const fields = { geo: GeoPosition };
+const fields = {geo: GeoPosition};
 
 // Render the form with all the properties we just defined passed
 // as props
-render(
-  <Form schema={schema} uiSchema={uiSchema} fields={fields} />,
-  document.getElementById("app")
-);
+render((
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    fields={fields} />
+), document.getElementById("app"));
 ```
 
 > Note: Registered fields can be reused across the entire schema.
@@ -501,22 +504,22 @@ render(
 
 A field component will always be passed the following props:
 
-- `schema`: The JSON schema for this field;
-- `uiSchema`: The [uiSchema](#the-uischema-object) for this field;
-- `idSchema`: The tree of unique ids for every child field;
-- `formData`: The data for this field;
-- `errorSchema`: The tree of errors for this field and its children;
-- `registry`: A [registry](#the-registry-object) object (read next).
-- `formContext`: A [formContext](#the-formcontext-object) object (read next).
+ - `schema`: The JSON schema for this field;
+ - `uiSchema`: The [uiSchema](#the-uischema-object) for this field;
+ - `idSchema`: The tree of unique ids for every child field;
+ - `formData`: The data for this field;
+ - `errorSchema`: The tree of errors for this field and its children;
+ - `registry`: A [registry](#the-registry-object) object (read next).
+ - `formContext`: A [formContext](#the-formcontext-object) object (read next).
 
 #### The `registry` object
 
 The `registry` is an object containing the registered custom fields and widgets as well as root schema definitions.
 
-- `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField`, `TitleField` and `DescriptionField` components;
-- `widgets`: The [custom registered widgets](#custom-widget-components), if any;
-- `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
-- `formContext`: The [formContext](#the-formcontext-object) object.
+ - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField`, `TitleField` and `DescriptionField` components;
+ - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
+ - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
+ - `formContext`: The [formContext](#the-formcontext-object) object.
 
 The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
 
@@ -529,21 +532,11 @@ You can provide a `formContext` object to the Form, which is passed down to all 
 The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use glyphicons but still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
 
 ```css
-i.glyphicon {
-  display: none;
-}
-.btn-add::after {
-  content: "Add";
-}
-.array-item-move-up::after {
-  content: "Move Up";
-}
-.array-item-move-down::after {
-  content: "Move Down";
-}
-.array-item-remove::after {
-  content: "Remove";
-}
+i.glyphicon { display: none; }
+.btn-add::after { content: 'Add'; }
+.array-item-move-up::after { content: 'Move Up'; }
+.array-item-move-down::after { content: 'Move Down'; }
+.array-item-remove::after { content: 'Remove'; }
 ```
 
 ### Custom SchemaField
@@ -570,15 +563,12 @@ const fields = {
   SchemaField: CustomSchemaField
 };
 
-render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    formData={formData}
-    fields={fields}
-  />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        fields={fields} />
+), document.getElementById("app"));
 ```
 
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
@@ -590,14 +580,11 @@ Props passed to a custom SchemaField are the same as [the ones passed to a custo
 You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
 
 ```jsx
+
 const CustomCheckbox = function(props) {
   return (
-    <button
-      id="custom"
-      className={props.value ? "checked" : "unchecked"}
-      onClick={() => props.onChange(!props.value)}
-    >
-      {props.value}
+    <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
+    	{props.value}
     </button>
   );
 };
@@ -606,53 +593,51 @@ const widgets = {
   CheckboxWidget: CustomCheckbox
 };
 
-render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    formData={formData}
-    widgets={widgets}
-  />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        widgets={widgets} />
+), document.getElementById("app"));
 ```
 
 This allows you to create a reusable customized form class with your custom fields and widgets:
 
 ```jsx
-const customFields = { StringField: CustomString };
-const customWidgets = { CheckboxWidget: CustomCheckbox };
+const customFields = {StringField: CustomString};
+const customWidgets = {CheckboxWidget: CustomCheckbox};
 
 function MyForm(props) {
   return <Form fields={customFields} widgets={customWidgets} {...props} />;
 }
 
-render(
-  <MyForm schema={schema} uiSchema={uiSchema} formData={formData} />,
-  document.getElementById("app")
-);
+render((
+  <MyForm schema={schema}
+    uiSchema={uiSchema}
+    formData={formData} />
+), document.getElementById("app"));
 ```
 
 The default widgets you can overwrite are:
 
-- `AltDateTimeWidget`
-- `AltDateWidget`
-- `CheckboxesWidget`
-- `CheckboxWidget`
-- `ColorWidget`
-- `DateTimeWidget`
-- `DateWidget`
-- `EmailWidget`
-- `FileWidget`
-- `HiddenWidget`
-- `PasswordWidget`
-- `RadioWidget`
-- `RangeWidget`
-- `SelectWidget`
-- `TextareaWidget`
-- `TextWidget`
-- `UpDownWidget`
-- `URLWidget`
+ - `AltDateTimeWidget`
+ - `AltDateWidget`
+ - `CheckboxesWidget`
+ - `CheckboxWidget`
+ - `ColorWidget`
+ - `DateTimeWidget`
+ - `DateWidget`
+ - `EmailWidget`
+ - `FileWidget`
+ - `HiddenWidget`
+ - `PasswordWidget`
+ - `RadioWidget`
+ - `RangeWidget`
+ - `SelectWidget`
+ - `TextareaWidget`
+ - `TextWidget`
+ - `UpDownWidget`
+ - `URLWidget`
 
 ### Custom titles
 
@@ -661,8 +646,9 @@ You can provide your own implementation of the `TitleField` base React component
 Simply pass a `fields` object having a `TitleField` property to your `Form` component:
 
 ```jsx
-const CustomTitleField = ({ title, required }) => {
-  const legend = required ? title + "*" : title;
+
+const CustomTitleField = ({title, required}) => {
+  const legend = required ? title + '*' : title;
   return <div id="custom">{legend}</div>;
 };
 
@@ -670,15 +656,12 @@ const fields = {
   TitleField: CustomTitleField
 };
 
-render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    formData={formData}
-    fields={fields}
-  />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        fields={fields} />
+), document.getElementById("app"));
 ```
 
 ### Custom descriptions
@@ -688,7 +671,8 @@ You can provide your own implementation of the `DescriptionField` base React com
 Simply pass a `fields` object having a `DescriptionField` property to your `Form` component:
 
 ```jsx
-const CustomDescriptionField = ({ id, description }) => {
+
+const CustomDescriptionField = ({id, description}) => {
   return <div id={id}>{description}</div>;
 };
 
@@ -696,13 +680,10 @@ const fields = {
   DescriptionField: CustomDescriptionField
 };
 
-render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    formData={formData}
-    fields={fields}
-  />,
-  document.getElementById("app")
-);
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        fields={fields} />
+), document.getElementById("app"));
 ```

@@ -14,7 +14,7 @@ import {
   getUiOptions,
   isFilesArray,
   deepEquals,
-  getSchemaType
+  getSchemaType,
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
 
@@ -26,7 +26,7 @@ const COMPONENT_TYPES = {
   number: "NumberField",
   object: "ObjectField",
   string: "StringField",
-  null: "NullField"
+  null: "NullField",
 };
 
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
@@ -128,7 +128,7 @@ function DefaultTemplate(props) {
     description,
     hidden,
     required,
-    displayLabel
+    displayLabel,
   } = props;
   if (hidden) {
     return <div className="hidden">{children}</div>;
@@ -161,7 +161,7 @@ if (process.env.NODE_ENV !== "production") {
     readonly: PropTypes.bool,
     displayLabel: PropTypes.bool,
     fields: PropTypes.object,
-    formContext: PropTypes.object
+    formContext: PropTypes.object,
   };
 }
 
@@ -169,7 +169,7 @@ DefaultTemplate.defaultProps = {
   hidden: false,
   readonly: false,
   required: false,
-  displayLabel: true
+  displayLabel: true,
 };
 
 function WrapIfAdditional(props) {
@@ -182,7 +182,7 @@ function WrapIfAdditional(props) {
     onDropPropertyClick,
     readonly,
     required,
-    schema
+    schema,
   } = props;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
@@ -235,7 +235,7 @@ function SchemaFieldRender(props) {
     onDropPropertyClick,
     required,
     registry = getDefaultRegistry(),
-    wasPropertyKeyModified = false
+    wasPropertyKeyModified = false,
   } = props;
   const { definitions, fields, formContext } = registry;
   const FieldTemplate =
@@ -318,7 +318,7 @@ function SchemaFieldRender(props) {
     "field",
     `field-${type}`,
     errors && errors.length > 0 ? "field-error has-error has-danger" : "",
-    uiSchema.classNames
+    uiSchema.classNames,
   ]
     .join(" ")
     .trim();
@@ -349,7 +349,7 @@ function SchemaFieldRender(props) {
     formContext,
     fields,
     schema,
-    uiSchema
+    uiSchema,
   };
 
   const _AnyOfField = registry.fields.AnyOfField;
@@ -426,7 +426,7 @@ SchemaField.defaultProps = {
   idSchema: {},
   disabled: false,
   readonly: false,
-  autofocus: false
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -436,7 +436,7 @@ if (process.env.NODE_ENV !== "production") {
     idSchema: PropTypes.object,
     formData: PropTypes.any,
     errorSchema: PropTypes.object,
-    registry: types.registry.isRequired
+    registry: types.registry.isRequired,
   };
 }
 

@@ -1,6 +1,6 @@
 ## Schema definitions and references
 
-This library partially supports [inline schema definition dereferencing](http://json-schema.org/latest/json-schema-core.html#rfc.section.7.2.3), which is Barbarian for _avoiding to copy and paste commonly used field schemas_:
+This library partially supports [inline schema definition dereferencing]( http://json-schema.org/latest/json-schema-core.html#rfc.section.7.2.3), which is Barbarian for *avoiding to copy and paste commonly used field schemas*:
 
 ```json
 {
@@ -9,8 +9,8 @@ This library partially supports [inline schema definition dereferencing](http://
       "type": "object",
       "properties": {
         "street_address": { "type": "string" },
-        "city": { "type": "string" },
-        "state": { "type": "string" }
+        "city":           { "type": "string" },
+        "state":          { "type": "string" }
       },
       "required": ["street_address", "city", "state"]
     }
@@ -23,6 +23,7 @@ This library partially supports [inline schema definition dereferencing](http://
 }
 ```
 
-_(Sample schema courtesy of the [Space Telescope Science Institute](http://spacetelescope.github.io/understanding-json-schema/structuring.html))_
+*(Sample schema courtesy of the [Space Telescope Science Institute](http://spacetelescope.github.io/understanding-json-schema/structuring.html))*
 
 Note that it only supports local definition referencing; we do not plan on fetching foreign schemas over HTTP anytime soon. Basically, you can only reference a definition from the very schema object defining it.
+

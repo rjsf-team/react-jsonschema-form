@@ -9,7 +9,7 @@ export const registry = PropTypes.shape({
   formContext: PropTypes.object.isRequired,
   widgets: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.func, PropTypes.object])
-  ).isRequired
+  ).isRequired,
 });
 
 export const fieldProps = {
@@ -30,7 +30,7 @@ export const fieldProps = {
     "ui:options": PropTypes.shape({
       addable: PropTypes.bool,
       orderable: PropTypes.bool,
-      removable: PropTypes.bool
-    })
-  })
+      removable: PropTypes.bool,
+    }),
+  }),
 };

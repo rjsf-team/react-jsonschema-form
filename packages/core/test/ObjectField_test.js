@@ -24,17 +24,17 @@ describe("ObjectField", () => {
       required: ["foo"],
       default: {
         foo: "hey",
-        bar: true
+        bar: true,
       },
       properties: {
         foo: {
           title: "Foo",
-          type: "string"
+          type: "string",
         },
         bar: {
-          type: "boolean"
-        }
-      }
+          type: "boolean",
+        },
+      },
     };
 
     it("should render a fieldset", () => {
@@ -58,8 +58,8 @@ describe("ObjectField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
-          "ui:widget": "hidden"
-        }
+          "ui:widget": "hidden",
+        },
       });
       expect(node.querySelector("div.hidden > fieldset")).to.exist;
     });
@@ -70,8 +70,8 @@ describe("ObjectField", () => {
       const { node } = createFormComponent({
         schema,
         fields: {
-          TitleField: CustomTitleField
-        }
+          TitleField: CustomTitleField,
+        },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
         "my object"
@@ -85,7 +85,7 @@ describe("ObjectField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: { DescriptionField: CustomDescriptionField }
+        fields: { DescriptionField: CustomDescriptionField },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
         "my description"
@@ -138,8 +138,8 @@ describe("ObjectField", () => {
         schema,
         formData: {
           foo: "hey",
-          bar: true
-        }
+          bar: true,
+        },
       });
 
       expect(node.querySelector(".field input[type=text]").value).eql("hey");
@@ -152,7 +152,7 @@ describe("ObjectField", () => {
       const { comp, node } = createFormComponent({ schema });
 
       Simulate.change(node.querySelector("input[type=text]"), {
-        target: { value: "changed" }
+        target: { value: "changed" },
       });
 
       expect(comp.state.formData.foo).eql("changed");
@@ -164,7 +164,7 @@ describe("ObjectField", () => {
 
       const input = node.querySelector("input[type=text]");
       Simulate.blur(input, {
-        target: { value: "changed" }
+        target: { value: "changed" },
       });
 
       expect(onBlur.calledWith(input.id, "changed")).to.be.true;
@@ -176,7 +176,7 @@ describe("ObjectField", () => {
 
       const input = node.querySelector("input[type=text]");
       Simulate.focus(input, {
-        target: { value: "changed" }
+        target: { value: "changed" },
       });
 
       expect(onFocus.calledWith(input.id, "changed")).to.be.true;
@@ -197,16 +197,16 @@ describe("ObjectField", () => {
         foo: { type: "string" },
         bar: { type: "string" },
         baz: { type: "string" },
-        qux: { type: "string" }
-      }
+        qux: { type: "string" },
+      },
     };
 
     it("should use provided order", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
-          "ui:order": ["baz", "qux", "bar", "foo"]
-        }
+          "ui:order": ["baz", "qux", "bar", "foo"],
+        },
       });
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
@@ -220,8 +220,8 @@ describe("ObjectField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
-          "ui:order": ["baz", "*", "foo"]
-        }
+          "ui:order": ["baz", "*", "foo"],
+        },
       });
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
@@ -235,8 +235,8 @@ describe("ObjectField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
-          "ui:order": ["baz", "qux", "bar", "wut?", "foo", "huh?"]
-        }
+          "ui:order": ["baz", "qux", "bar", "wut?", "foo", "huh?"],
+        },
       });
 
       const labels = [].map.call(
@@ -251,8 +251,8 @@ describe("ObjectField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
-          "ui:order": ["baz", "bar"]
-        }
+          "ui:order": ["baz", "bar"],
+        },
       });
 
       expect(node.querySelector(".config-error").textContent).to.match(
@@ -264,8 +264,8 @@ describe("ObjectField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
-          "ui:order": ["baz", "*", "bar", "*"]
-        }
+          "ui:order": ["baz", "*", "bar", "*"],
+        },
       });
 
       expect(node.querySelector(".config-error").textContent).to.match(
@@ -276,20 +276,20 @@ describe("ObjectField", () => {
     it("should order referenced schema definitions", () => {
       const refSchema = {
         definitions: {
-          testdef: { type: "string" }
+          testdef: { type: "string" },
         },
         type: "object",
         properties: {
           foo: { $ref: "#/definitions/testdef" },
-          bar: { $ref: "#/definitions/testdef" }
-        }
+          bar: { $ref: "#/definitions/testdef" },
+        },
       };
 
       const { node } = createFormComponent({
         schema: refSchema,
         uiSchema: {
-          "ui:order": ["bar", "foo"]
-        }
+          "ui:order": ["bar", "foo"],
+        },
       });
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
@@ -306,23 +306,23 @@ describe("ObjectField", () => {
             type: "object",
             properties: {
               foo: { type: "string" },
-              bar: { type: "string" }
-            }
-          }
+              bar: { type: "string" },
+            },
+          },
         },
         type: "object",
         properties: {
-          root: { $ref: "#/definitions/testdef" }
-        }
+          root: { $ref: "#/definitions/testdef" },
+        },
       };
 
       const { node } = createFormComponent({
         schema: refSchema,
         uiSchema: {
           root: {
-            "ui:order": ["bar", "foo"]
-          }
-        }
+            "ui:order": ["bar", "foo"],
+          },
+        },
       });
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
@@ -337,15 +337,15 @@ describe("ObjectField", () => {
         type: "object",
         properties: {
           foo: { type: "string" },
-          bar: { type: "string" }
-        }
+          bar: { type: "string" },
+        },
       };
 
       const { node } = createFormComponent({
         schema,
         uiSchema: {
-          "ui:order": ["bar", "foo"]
-        }
+          "ui:order": ["bar", "foo"],
+        },
       });
 
       const ids = [].map.call(
@@ -367,9 +367,9 @@ describe("ObjectField", () => {
         properties: {
           object: {
             type: "object",
-            properties: {}
-          }
-        }
+            properties: {},
+          },
+        },
       };
 
       const { node } = createFormComponent({ schema, fields });
@@ -380,7 +380,7 @@ describe("ObjectField", () => {
       const schema = {
         type: "object",
         properties: {},
-        title: "test"
+        title: "test",
       };
 
       const { node } = createFormComponent({ schema, fields });
@@ -391,7 +391,7 @@ describe("ObjectField", () => {
       const schema = {
         type: "object",
         properties: {},
-        title: ""
+        title: "",
       };
       const { node } = createFormComponent({ schema, fields });
       expect(node.querySelector("#title-")).to.be.null;
@@ -402,14 +402,14 @@ describe("ObjectField", () => {
     const schema = {
       type: "object",
       additionalProperties: {
-        type: "string"
-      }
+        type: "string",
+      },
     };
 
     it("should automatically add a property field if in formData", () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
@@ -420,12 +420,12 @@ describe("ObjectField", () => {
         schema,
         uiSchema: {
           additionalProperties: {
-            "ui:title": "CustomName"
-          }
+            "ui:title": "CustomName",
+          },
         },
         formData: {
-          property1: "test"
-        }
+          property1: "test",
+        },
       });
       const labels = node.querySelectorAll("label.control-label");
       expect(labels[0].textContent).eql("CustomName Key");
@@ -435,12 +435,12 @@ describe("ObjectField", () => {
     it("should pass through non-schema properties and not throw validation errors if additionalProperties is undefined", () => {
       const undefinedAPSchema = {
         ...schema,
-        properties: { second: { type: "string" } }
+        properties: { second: { type: "string" } },
       };
       delete undefinedAPSchema.additionalProperties;
       const { comp } = createFormComponent({
         schema: undefinedAPSchema,
-        formData: { nonschema: 1 }
+        formData: { nonschema: 1 },
       });
 
       expect(comp.state.formData.nonschema).eql(1);
@@ -454,9 +454,9 @@ describe("ObjectField", () => {
         schema: {
           ...schema,
           additionalProperties: false,
-          properties: { second: { type: "string" } }
+          properties: { second: { type: "string" } },
         },
-        formData: { nonschema: 1 }
+        formData: { nonschema: 1 },
       });
 
       expect(comp.state.formData.nonschema).eql(1);
@@ -471,10 +471,10 @@ describe("ObjectField", () => {
           ...schema,
           properties: {
             definedProperty: {
-              type: "string"
-            }
-          }
-        }
+              type: "string",
+            },
+          },
+        },
       });
 
       expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
@@ -483,7 +483,7 @@ describe("ObjectField", () => {
     it("should render a label for the additional property key", () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelector("[for='root_first-key']").textContent).eql(
@@ -494,7 +494,7 @@ describe("ObjectField", () => {
     it("should render a label for the additional property key if additionalProperties is true", () => {
       const { node } = createFormComponent({
         schema: { ...schema, additionalProperties: true },
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelector("[for='root_first-key']").textContent).eql(
@@ -505,7 +505,7 @@ describe("ObjectField", () => {
     it("should not render a label for the additional property key if additionalProperties is false", () => {
       const { node } = createFormComponent({
         schema: { ...schema, additionalProperties: false },
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelector("[for='root_first-key']")).eql(null);
@@ -514,7 +514,7 @@ describe("ObjectField", () => {
     it("should render a text input for the additional property key", () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelector("#root_first-key").value).eql("first");
@@ -523,7 +523,7 @@ describe("ObjectField", () => {
     it("should render a label for the additional property value", () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelector("[for='root_first']").textContent).eql("first");
@@ -532,7 +532,7 @@ describe("ObjectField", () => {
     it("should render a text input for the additional property value", () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelector("#root_first").value).eql("1");
@@ -541,12 +541,12 @@ describe("ObjectField", () => {
     it("should rename formData key if key input is renamed", () => {
       const { comp, node } = createFormComponent({
         schema,
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       const textNode = node.querySelector("#root_first-key");
       Simulate.blur(textNode, {
-        target: { value: "newFirst" }
+        target: { value: "newFirst" },
       });
 
       expect(comp.state.formData.newFirst).eql(1);
@@ -558,15 +558,15 @@ describe("ObjectField", () => {
           type: "object",
           additionalProperties: {
             title: "Custom title",
-            type: "string"
-          }
+            type: "string",
+          },
         },
-        formData: { "Custom title": 1 }
+        formData: { "Custom title": 1 },
       });
 
       const textNode = node.querySelector("#root_Custom\\ title-key");
       Simulate.blur(textNode, {
-        target: { value: "Renamed custom title" }
+        target: { value: "Renamed custom title" },
       });
 
       expect(comp.state.formData["Renamed custom title"]).eql(1);
@@ -575,34 +575,34 @@ describe("ObjectField", () => {
     it("should keep order of renamed key-value pairs while renaming key", () => {
       const { comp, node } = createFormComponent({
         schema,
-        formData: { first: 1, second: 2, third: 3 }
+        formData: { first: 1, second: 2, third: 3 },
       });
 
       const textNode = node.querySelector("#root_second-key");
       Simulate.blur(textNode, {
-        target: { value: "newSecond" }
+        target: { value: "newSecond" },
       });
 
       expect(Object.keys(comp.state.formData)).eql([
         "first",
         "newSecond",
-        "third"
+        "third",
       ]);
     });
 
     it("should attach suffix to formData key if new key already exists when key input is renamed", () => {
       const formData = {
         first: 1,
-        second: 2
+        second: 2,
       };
       const { comp, node } = createFormComponent({
         schema,
-        formData
+        formData,
       });
 
       const textNode = node.querySelector("#root_first-key");
       Simulate.blur(textNode, {
-        target: { value: "second" }
+        target: { value: "second" },
       });
 
       expect(comp.state.formData["second-1"]).eql(1);
@@ -610,11 +610,11 @@ describe("ObjectField", () => {
 
     it("should not attach suffix when input is only clicked", () => {
       const formData = {
-        first: 1
+        first: 1,
       };
       const { comp, node } = createFormComponent({
         schema,
-        formData
+        formData,
       });
 
       const textNode = node.querySelector("#root_first-key");
@@ -632,16 +632,16 @@ describe("ObjectField", () => {
         "second-3": 2,
         "second-4": 2,
         "second-5": 2,
-        "second-6": 2
+        "second-6": 2,
       };
       const { comp, node } = createFormComponent({
         schema,
-        formData
+        formData,
       });
 
       const textNode = node.querySelector("#root_first-key");
       Simulate.blur(textNode, {
-        target: { value: "second" }
+        target: { value: "second" },
       });
 
       expect(comp.state.formData["second-7"]).eql(1);
@@ -658,7 +658,7 @@ describe("ObjectField", () => {
     it("should not have an expand button if expandable is false", () => {
       const { node } = createFormComponent({
         schema,
-        uiSchema: { "ui:options": { expandable: false } }
+        uiSchema: { "ui:options": { expandable: false } },
       });
 
       expect(node.querySelector(".object-property-expand button")).to.be.null;
@@ -675,7 +675,7 @@ describe("ObjectField", () => {
     it("should add a new property with suffix when clicking the expand button and 'newKey' already exists", () => {
       const { comp, node } = createFormComponent({
         schema,
-        formData: { newKey: 1 }
+        formData: { newKey: 1 },
       });
 
       Simulate.click(node.querySelector(".object-property-expand button"));
@@ -686,7 +686,7 @@ describe("ObjectField", () => {
     it("should not provide an expand button if length equals maxProperties", () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 1, ...schema },
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelector(".object-property-expand button")).to.be.null;
@@ -695,7 +695,7 @@ describe("ObjectField", () => {
     it("should provide an expand button if length is less than maxProperties", () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 2, ...schema },
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       expect(node.querySelector(".object-property-expand button")).not.eql(
@@ -709,9 +709,9 @@ describe("ObjectField", () => {
         formData: { first: 1 },
         uiSchema: {
           "ui:options": {
-            expandable: false
-          }
-        }
+            expandable: false,
+          },
+        },
       });
 
       expect(node.querySelector(".object-property-expand button")).to.be.null;
@@ -723,9 +723,9 @@ describe("ObjectField", () => {
         formData: { first: 1 },
         uiSchema: {
           "ui:options": {
-            expandable: true
-          }
-        }
+            expandable: true,
+          },
+        },
       });
 
       expect(node.querySelector(".object-property-expand button")).to.be.null;
@@ -739,7 +739,7 @@ describe("ObjectField", () => {
 
     it("should have delete button if expand button has been clicked", () => {
       const { node } = createFormComponent({
-        schema
+        schema,
       });
 
       expect(
@@ -760,7 +760,7 @@ describe("ObjectField", () => {
     it("delete button should delete key-value pair", () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
       expect(node.querySelector("#root_first-key").value).to.eql("first");
       Simulate.click(
@@ -774,7 +774,7 @@ describe("ObjectField", () => {
     it("delete button should delete correct pair", () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1, second: 2, third: 3 }
+        formData: { first: 1, second: 2, third: 3 },
       });
       const selector =
         ".form-group > .row > .form-additional + .col-xs-2 > .btn-danger";
@@ -787,11 +787,11 @@ describe("ObjectField", () => {
     it("deleting content of value input should not delete pair", () => {
       const { comp, node } = createFormComponent({
         schema,
-        formData: { first: 1 }
+        formData: { first: 1 },
       });
 
       Simulate.change(node.querySelector("#root_first"), {
-        target: { value: "" }
+        target: { value: "" },
       });
       expect(comp.state.formData["first"]).eql("");
     });

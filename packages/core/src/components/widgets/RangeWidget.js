@@ -8,8 +8,8 @@ function RangeWidget(props) {
     schema,
     value,
     registry: {
-      widgets: { BaseInput }
-    }
+      widgets: { BaseInput },
+    },
   } = props;
   return (
     <div className="field-range-wrapper">
@@ -21,7 +21,7 @@ function RangeWidget(props) {
 
 if (process.env.NODE_ENV !== "production") {
   RangeWidget.propTypes = {
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 }
 

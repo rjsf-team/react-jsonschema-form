@@ -1,6 +1,6 @@
 {
   "name": "@rjsf-jasonritchie/material-ui",
-  "version": "2.0.0-alpha",
+  "version": "2.0.0-alpha.2",
   "main": "dist/index.js",
   "module": "dist/rjsf-material-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -36,11 +36,8 @@
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
     "@types/react-jsonschema-form": "^1.6.2",
-    "husky": "^3.0.0",
     "np": "^5.0.3",
     "npm-run-all": "^4.1.5",
-    "prettier": "^1.18.2",
-    "pretty-quick": "^1.11.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-jsonschema-form": "^1.6.1",
@@ -48,17 +45,6 @@
     "tsdx": "^0.7.2",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
   },
   "publishConfig": {
     "access": "public"

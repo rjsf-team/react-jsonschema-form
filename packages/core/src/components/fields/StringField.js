@@ -7,7 +7,7 @@ import {
   isSelect,
   optionsList,
   getDefaultRegistry,
-  hasWidget
+  hasWidget,
 } from "../../utils";
 
 function StringField(props) {
@@ -25,7 +25,7 @@ function StringField(props) {
     onBlur,
     onFocus,
     registry = getDefaultRegistry(),
-    rawErrors
+    rawErrors,
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -68,7 +68,7 @@ StringField.defaultProps = {
   uiSchema: {},
   disabled: false,
   readonly: false,
-  autofocus: false
+  autofocus: false,
 };
 
 export default StringField;

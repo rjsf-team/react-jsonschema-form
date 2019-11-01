@@ -14,7 +14,7 @@ import {
   getDefaultRegistry,
   deepEquals,
   toPathSchema,
-  isObject
+  isObject,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 import { mergeObjects } from "../utils";
@@ -28,7 +28,7 @@ export default class Form extends Component {
     safeRenderCompletion: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
-    omitExtraData: false
+    omitExtraData: false,
   };
 
   constructor(props) {
@@ -71,7 +71,7 @@ export default class Form extends Component {
       ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
       : {
           errors: state.errors || [],
-          errorSchema: state.errorSchema || {}
+          errorSchema: state.errorSchema || {},
         };
     if (props.extraErrors) {
       errorSchema = mergeObjects(errorSchema, props.extraErrors);
@@ -92,7 +92,7 @@ export default class Form extends Component {
       edit,
       errors,
       errorSchema,
-      additionalMetaSchemas
+      additionalMetaSchemas,
     };
   }
 
@@ -201,7 +201,7 @@ export default class Form extends Component {
 
       newFormData = this.getUsedFormData(formData, fieldNames);
       state = {
-        formData: newFormData
+        formData: newFormData,
       };
     }
 
@@ -219,7 +219,7 @@ export default class Form extends Component {
       state = {
         formData: newFormData,
         errorSchema: errorSchema,
-        errors: toErrorList(errorSchema)
+        errors: toErrorList(errorSchema),
       };
     }
     setState(this, state, () => {
@@ -320,7 +320,7 @@ export default class Form extends Component {
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
-      formContext: this.props.formContext || {}
+      formContext: this.props.formContext || {},
     };
   }
 
@@ -348,7 +348,7 @@ export default class Form extends Component {
       acceptcharset,
       noHtml5Validate,
       disabled,
-      formContext
+      formContext,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
@@ -379,8 +379,7 @@ export default class Form extends Component {
         onSubmit={this.onSubmit}
         ref={form => {
           this.formElement = form;
-        }}
-      >
+        }}>
         {this.renderErrors()}
         <_SchemaField
           schema={schema}
@@ -449,6 +448,6 @@ if (process.env.NODE_ENV !== "production") {
     customFormats: PropTypes.object,
     additionalMetaSchemas: PropTypes.arrayOf(PropTypes.object),
     omitExtraData: PropTypes.bool,
-    extraErrors: PropTypes.object
+    extraErrors: PropTypes.object,
   };
 }

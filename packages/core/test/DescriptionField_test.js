@@ -28,7 +28,7 @@ describe("DescriptionField", () => {
 
   it("should return a div for a custom component", () => {
     const props = {
-      description: <em>description</em>
+      description: <em>description</em>,
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
@@ -37,7 +37,7 @@ describe("DescriptionField", () => {
 
   it("should return a p for a description text", () => {
     const props = {
-      description: "description"
+      description: "description",
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
@@ -47,7 +47,7 @@ describe("DescriptionField", () => {
   it("should have the expected id", () => {
     const props = {
       description: "Field description",
-      id: "sample_id"
+      id: "sample_id",
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 

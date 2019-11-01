@@ -11,34 +11,34 @@ module.exports = {
         type: "object",
         properties: {
           name: {
-            type: "string"
+            type: "string",
           },
           credit_card: {
-            type: "number"
-          }
+            type: "number",
+          },
         },
         required: ["name"],
         dependencies: {
           credit_card: {
             properties: {
               billing_address: {
-                type: "string"
-              }
+                type: "string",
+              },
             },
-            required: ["billing_address"]
-          }
-        }
+            required: ["billing_address"],
+          },
+        },
       },
       conditional: {
         title: "Conditional",
-        $ref: "#/definitions/person"
+        $ref: "#/definitions/person",
       },
       arrayOfConditionals: {
         title: "Array of conditionals",
         type: "array",
         items: {
-          $ref: "#/definitions/person"
-        }
+          $ref: "#/definitions/person",
+        },
       },
       fixedArrayOfConditionals: {
         title: "Fixed array of conditionals",
@@ -46,14 +46,14 @@ module.exports = {
         items: [
           {
             title: "Primary person",
-            $ref: "#/definitions/person"
-          }
+            $ref: "#/definitions/person",
+          },
         ],
         additionalItems: {
           title: "Additional person",
-          $ref: "#/definitions/person"
-        }
-      }
+          $ref: "#/definitions/person",
+        },
+      },
     },
     definitions: {
       person: {
@@ -63,8 +63,8 @@ module.exports = {
           "Do you have any pets?": {
             type: "string",
             enum: ["No", "Yes: One", "Yes: More than one"],
-            default: "No"
-          }
+            default: "No",
+          },
         },
         required: ["Do you have any pets?"],
         dependencies: {
@@ -73,99 +73,99 @@ module.exports = {
               {
                 properties: {
                   "Do you have any pets?": {
-                    enum: ["No"]
-                  }
-                }
+                    enum: ["No"],
+                  },
+                },
               },
               {
                 properties: {
                   "Do you have any pets?": {
-                    enum: ["Yes: One"]
+                    enum: ["Yes: One"],
                   },
                   "How old is your pet?": {
-                    type: "number"
-                  }
+                    type: "number",
+                  },
                 },
-                required: ["How old is your pet?"]
+                required: ["How old is your pet?"],
               },
               {
                 properties: {
                   "Do you have any pets?": {
-                    enum: ["Yes: More than one"]
+                    enum: ["Yes: More than one"],
                   },
                   "Do you want to get rid of any?": {
-                    type: "boolean"
-                  }
+                    type: "boolean",
+                  },
                 },
-                required: ["Do you want to get rid of any?"]
-              }
-            ]
-          }
-        }
-      }
-    }
+                required: ["Do you want to get rid of any?"],
+              },
+            ],
+          },
+        },
+      },
+    },
   },
   uiSchema: {
     simple: {
       credit_card: {
         "ui:help":
-          "If you enter anything here then billing_address will be dynamically added to the form."
-      }
+          "If you enter anything here then billing_address will be dynamically added to the form.",
+      },
     },
     conditional: {
       "Do you want to get rid of any?": {
-        "ui:widget": "radio"
-      }
+        "ui:widget": "radio",
+      },
     },
     arrayOfConditionals: {
       items: {
         "Do you want to get rid of any?": {
-          "ui:widget": "radio"
-        }
-      }
+          "ui:widget": "radio",
+        },
+      },
     },
     fixedArrayOfConditionals: {
       items: {
         "Do you want to get rid of any?": {
-          "ui:widget": "radio"
-        }
+          "ui:widget": "radio",
+        },
       },
       additionalItems: {
         "Do you want to get rid of any?": {
-          "ui:widget": "radio"
-        }
-      }
-    }
+          "ui:widget": "radio",
+        },
+      },
+    },
   },
   formData: {
     simple: {
-      name: "Randy"
+      name: "Randy",
     },
     conditional: {
-      "Do you have any pets?": "No"
+      "Do you have any pets?": "No",
     },
     arrayOfConditionals: [
       {
         "Do you have any pets?": "Yes: One",
-        "How old is your pet?": 6
+        "How old is your pet?": 6,
       },
       {
         "Do you have any pets?": "Yes: More than one",
-        "Do you want to get rid of any?": false
-      }
+        "Do you want to get rid of any?": false,
+      },
     ],
     fixedArrayOfConditionals: [
       {
-        "Do you have any pets?": "No"
+        "Do you have any pets?": "No",
       },
       {
         "Do you have any pets?": "Yes: One",
-        "How old is your pet?": 6
+        "How old is your pet?": 6,
       },
       {
         "Do you have any pets?": "Yes: More than one",
-        "Do you want to get rid of any?": true
-      }
-    ]
-  }
+        "Do you want to get rid of any?": true,
+      },
+    ],
+  },
 };

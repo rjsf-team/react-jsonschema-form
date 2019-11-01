@@ -56,7 +56,7 @@ describe("ArrayFieldTemplate", () => {
           const { node } = createFormComponent({
             schema: { type: "array", items: { type: "string" } },
             formData,
-            ArrayFieldTemplate
+            ArrayFieldTemplate,
           });
 
           expect(
@@ -70,8 +70,8 @@ describe("ArrayFieldTemplate", () => {
             schema: { type: "array", items: { type: "string" } },
             formData,
             uiSchema: {
-              "ui:ArrayFieldTemplate": ArrayFieldTemplate
-            }
+              "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+            },
           });
 
           expect(
@@ -85,10 +85,10 @@ describe("ArrayFieldTemplate", () => {
             schema: { type: "array", items: { type: "string" } },
             formData,
             uiSchema: {
-              "ui:ArrayFieldTemplate": ArrayFieldTemplate
+              "ui:ArrayFieldTemplate": ArrayFieldTemplate,
             },
             // Empty field template for proof that we're doing overrides
-            ArrayFieldTemplate: () => <div />
+            ArrayFieldTemplate: () => <div />,
           });
 
           expect(
@@ -103,14 +103,14 @@ describe("ArrayFieldTemplate", () => {
         type: "array",
         title: "my list",
         description: "my description",
-        items: { type: "string" }
+        items: { type: "string" },
       };
 
       let node;
 
       describe("with template globally configured", () => {
         const uiSchema = {
-          classNames: "custom-array"
+          classNames: "custom-array",
         };
 
         beforeEach(() => {
@@ -118,7 +118,7 @@ describe("ArrayFieldTemplate", () => {
             ArrayFieldTemplate,
             formData,
             schema,
-            uiSchema
+            uiSchema,
           }).node;
         });
 
@@ -127,14 +127,14 @@ describe("ArrayFieldTemplate", () => {
       describe("with template configured in ui:ArrayFieldTemplate", () => {
         const uiSchema = {
           classNames: "custom-array",
-          "ui:ArrayFieldTemplate": ArrayFieldTemplate
+          "ui:ArrayFieldTemplate": ArrayFieldTemplate,
         };
 
         beforeEach(() => {
           node = createFormComponent({
             formData,
             schema,
-            uiSchema
+            uiSchema,
           }).node;
         });
         sharedIts();
@@ -142,7 +142,7 @@ describe("ArrayFieldTemplate", () => {
       describe("with template configured globally being overriden in ui:ArrayFieldTemplate", () => {
         const uiSchema = {
           classNames: "custom-array",
-          "ui:ArrayFieldTemplate": ArrayFieldTemplate
+          "ui:ArrayFieldTemplate": ArrayFieldTemplate,
         };
 
         beforeEach(() => {
@@ -151,7 +151,7 @@ describe("ArrayFieldTemplate", () => {
             schema,
             uiSchema,
             // Empty field template for proof that we're doing overrides
-            ArrayFieldTemplate: () => <div />
+            ArrayFieldTemplate: () => <div />,
           }).node;
         });
         sharedIts();
@@ -198,21 +198,21 @@ describe("ArrayFieldTemplate", () => {
         type: "array",
         title: "my list",
         description: "my description",
-        items: [{ type: "string" }, { type: "string" }, { type: "string" }]
+        items: [{ type: "string" }, { type: "string" }, { type: "string" }],
       };
 
       let node;
 
       describe("with template globally configured", () => {
         const uiSchema = {
-          classNames: "custom-array"
+          classNames: "custom-array",
         };
         beforeEach(() => {
           node = createFormComponent({
             formData,
             schema,
             uiSchema,
-            ArrayFieldTemplate
+            ArrayFieldTemplate,
           }).node;
         });
         sharedIts();
@@ -221,13 +221,13 @@ describe("ArrayFieldTemplate", () => {
       describe("with template configured in ui:ArrayFieldTemplate", () => {
         const uiSchema = {
           classNames: "custom-array",
-          "ui:ArrayFieldTemplate": ArrayFieldTemplate
+          "ui:ArrayFieldTemplate": ArrayFieldTemplate,
         };
         beforeEach(() => {
           node = createFormComponent({
             formData,
             schema,
-            uiSchema
+            uiSchema,
           }).node;
         });
         sharedIts();
@@ -235,7 +235,7 @@ describe("ArrayFieldTemplate", () => {
       describe("with template configured globally being overriden in ui:ArrayFieldTemplate", () => {
         const uiSchema = {
           classNames: "custom-array",
-          "ui:ArrayFieldTemplate": ArrayFieldTemplate
+          "ui:ArrayFieldTemplate": ArrayFieldTemplate,
         };
         beforeEach(() => {
           node = createFormComponent({
@@ -243,7 +243,7 @@ describe("ArrayFieldTemplate", () => {
             schema,
             uiSchema,
             // Empty field template for proof that we're doing overrides
-            ArrayFieldTemplate: () => <div />
+            ArrayFieldTemplate: () => <div />,
           }).node;
         });
         sharedIts();
@@ -303,7 +303,7 @@ describe("ArrayFieldTemplate", () => {
       const { node } = createFormComponent({
         schema: { type: "array", items: { type: "string" } },
         formData,
-        ArrayFieldTemplate
+        ArrayFieldTemplate,
       });
       expect(
         node.querySelectorAll(".field-array .field-content div")
@@ -322,7 +322,7 @@ describe("ArrayFieldTemplate", () => {
       createFormComponent({
         schema: { type: "array", items: { type: "string" } },
         formData,
-        ArrayFieldTemplate
+        ArrayFieldTemplate,
       });
     });
   });

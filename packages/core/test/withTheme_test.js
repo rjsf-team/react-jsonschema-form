@@ -20,23 +20,23 @@ describe("withTheme", () => {
       const fields = {
         StringField() {
           return <div className="string-field" />;
-        }
+        },
       };
       const schema = {
         type: "object",
         properties: {
           fieldA: {
-            type: "string"
+            type: "string",
           },
           fieldB: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       };
       const uiSchema = {};
       let { node } = createComponent(withTheme({ fields }), {
         schema,
-        uiSchema
+        uiSchema,
       });
       expect(node.querySelectorAll(".string-field")).to.have.length.of(2);
     });
@@ -45,29 +45,29 @@ describe("withTheme", () => {
       const themeFields = {
         StringField() {
           return <div className="string-field" />;
-        }
+        },
       };
       const userFields = {
         NumberField() {
           return <div className="number-field" />;
-        }
+        },
       };
       const schema = {
         type: "object",
         properties: {
           fieldA: {
-            type: "string"
+            type: "string",
           },
           fieldB: {
-            type: "number"
-          }
-        }
+            type: "number",
+          },
+        },
       };
       const uiSchema = {};
       let { node } = createComponent(withTheme({ fields: themeFields }), {
         schema,
         uiSchema,
-        fields: userFields
+        fields: userFields,
       });
       expect(node.querySelectorAll(".string-field")).to.have.length.of(1);
       expect(node.querySelectorAll(".number-field")).to.have.length.of(1);
@@ -77,29 +77,29 @@ describe("withTheme", () => {
       const themeFields = {
         StringField() {
           return <div className="string-field" />;
-        }
+        },
       };
       const userFields = {
         StringField() {
           return <div className="form-control" />;
-        }
+        },
       };
       const schema = {
         type: "object",
         properties: {
           fieldA: {
-            type: "string"
+            type: "string",
           },
           fieldB: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       };
       const uiSchema = {};
       let { node } = createComponent(withTheme({ fields: themeFields }), {
         schema,
         uiSchema,
-        fields: userFields
+        fields: userFields,
       });
       expect(node.querySelectorAll(".string-field")).to.have.length.of(0);
       expect(node.querySelectorAll(".form-control")).to.have.length.of(2);
@@ -109,43 +109,43 @@ describe("withTheme", () => {
   describe("With widgets", () => {
     it("should use the withTheme widget", () => {
       const widgets = {
-        TextWidget: () => <div id="test" />
+        TextWidget: () => <div id="test" />,
       };
       const schema = {
-        type: "string"
+        type: "string",
       };
       const uiSchema = {};
       let { node } = createComponent(withTheme({ widgets }), {
         schema,
-        uiSchema
+        uiSchema,
       });
       expect(node.querySelectorAll("#test")).to.have.length.of(1);
     });
 
     it("should use the withTheme widget as well as user defined widget", () => {
       const themeWidgets = {
-        TextWidget: () => <div id="test-theme-widget" />
+        TextWidget: () => <div id="test-theme-widget" />,
       };
       const userWidgets = {
-        DateWidget: () => <div id="test-user-widget" />
+        DateWidget: () => <div id="test-user-widget" />,
       };
       const schema = {
         type: "object",
         properties: {
           fieldA: {
-            type: "string"
+            type: "string",
           },
           fieldB: {
             format: "date",
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       };
       const uiSchema = {};
       let { node } = createComponent(withTheme({ widgets: themeWidgets }), {
         schema,
         uiSchema,
-        widgets: userWidgets
+        widgets: userWidgets,
       });
       expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(1);
       expect(node.querySelectorAll("#test-user-widget")).to.have.length.of(1);
@@ -153,24 +153,24 @@ describe("withTheme", () => {
 
     it("should use only the user defined widget", () => {
       const themeWidgets = {
-        TextWidget: () => <div id="test-theme-widget" />
+        TextWidget: () => <div id="test-theme-widget" />,
       };
       const userWidgets = {
-        TextWidget: () => <div id="test-user-widget" />
+        TextWidget: () => <div id="test-user-widget" />,
       };
       const schema = {
         type: "object",
         properties: {
           fieldA: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       };
       const uiSchema = {};
       let { node } = createComponent(withTheme({ widgets: themeWidgets }), {
         schema,
         uiSchema,
-        widgets: userWidgets
+        widgets: userWidgets,
       });
       expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(0);
       expect(node.querySelectorAll("#test-user-widget")).to.have.length.of(1);
@@ -182,23 +182,23 @@ describe("withTheme", () => {
       const themeTemplates = {
         FieldTemplate() {
           return <div className="with-theme-field-template" />;
-        }
+        },
       };
       const schema = {
         type: "object",
         properties: {
           fieldA: {
-            type: "string"
+            type: "string",
           },
           fieldB: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       };
       const uiSchema = {};
       let { node } = createComponent(withTheme({ ...themeTemplates }), {
         schema,
-        uiSchema
+        uiSchema,
       });
       expect(
         node.querySelectorAll(".with-theme-field-template")
@@ -209,21 +209,21 @@ describe("withTheme", () => {
       const themeTemplates = {
         FieldTemplate() {
           return <div className="with-theme-field-template" />;
-        }
+        },
       };
       const userTemplates = {
         FieldTemplate() {
           return <div className="user-field-template" />;
-        }
+        },
       };
 
       const schema = {
         type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } }
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
       };
       let { node } = createComponent(withTheme({ ...themeTemplates }), {
         schema,
-        ...userTemplates
+        ...userTemplates,
       });
       expect(
         node.querySelectorAll(".with-theme-field-template")

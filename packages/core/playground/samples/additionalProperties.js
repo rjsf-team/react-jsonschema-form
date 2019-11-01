@@ -5,28 +5,28 @@ module.exports = {
     type: "object",
     required: ["firstName", "lastName"],
     additionalProperties: {
-      type: "string"
+      type: "string",
     },
     properties: {
       firstName: {
         type: "string",
-        title: "First name"
+        title: "First name",
       },
       lastName: {
         type: "string",
-        title: "Last name"
-      }
-    }
+        title: "Last name",
+      },
+    },
   },
   uiSchema: {
     firstName: {
       "ui:autofocus": true,
-      "ui:emptyValue": ""
-    }
+      "ui:emptyValue": "",
+    },
   },
   formData: {
     firstName: "Chuck",
     lastName: "Norris",
-    assKickCount: "infinity"
-  }
+    assKickCount: "infinity",
+  },
 };

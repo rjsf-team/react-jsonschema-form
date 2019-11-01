@@ -4,12 +4,26 @@
   "private": true,
   "description": "monorepo for react-jsonschema-form and its themes",
   "scripts": {
+    "postinstall": "lerna bootstrap",
     "bootstrap": "lerna bootstrap",
     "publish": "lerna publish",
-    "changed": "lerna changed"
+    "changed": "lerna changed",
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "cs-check": "lerna run cs-check",
+    "cs-format": "lerna run cs-format",
+    "dist": "lerna run dist"
   },
   "dependencies": {
+    "prettier": "^1.18.2",
     "lerna": "^3.18.3"
+  },
+  "prettier": {
+    "jsxBracketSameLine": true,
+    "trailingComma": "es5",
+    "useTabs": false,
+    "semi": true,
+    "tabWidth": 2
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme"

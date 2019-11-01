@@ -21,8 +21,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          multipleOf: 5
-        }
+          multipleOf: 5,
+        },
       });
 
       expect(node.querySelector("input").step).to.eql("5");
@@ -32,8 +32,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          minimum: 0
-        }
+          minimum: 0,
+        },
       });
 
       expect(node.querySelector("input").min).to.eql("0");
@@ -43,8 +43,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          maximum: 100
-        }
+          maximum: 100,
+        },
       });
 
       expect(node.querySelector("input").max).to.eql("100");
@@ -54,8 +54,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          multipleOf: 5
-        }
+          multipleOf: 5,
+        },
       });
 
       expect(node.querySelector("input").step).to.eql("5");
@@ -65,8 +65,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          minimum: 0
-        }
+          minimum: 0,
+        },
       });
 
       expect(node.querySelector("input").min).to.eql("0");
@@ -76,8 +76,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          maximum: 100
-        }
+          maximum: 100,
+        },
       });
 
       expect(node.querySelector("input").max).to.eql("100");
@@ -88,18 +88,18 @@ describe("NumberField", () => {
       {},
       {
         "ui:options": {
-          inputType: "text"
-        }
-      }
+          inputType: "text",
+        },
+      },
     ];
     for (let uiSchema of uiSchemas) {
       it("should render a string field with a label", () => {
         const { node } = createFormComponent({
           schema: {
             type: "number",
-            title: "foo"
+            title: "foo",
           },
-          uiSchema
+          uiSchema,
         });
 
         expect(node.querySelector(".field label").textContent).eql("foo");
@@ -109,9 +109,9 @@ describe("NumberField", () => {
         const { node } = createFormComponent({
           schema: {
             type: "number",
-            description: "bar"
+            description: "bar",
           },
-          uiSchema
+          uiSchema,
         });
 
         expect(node.querySelector(".field-description").textContent).eql("bar");
@@ -120,7 +120,7 @@ describe("NumberField", () => {
       it("should default state value to undefined", () => {
         const { comp } = createFormComponent({
           schema: { type: "number" },
-          uiSchema
+          uiSchema,
         });
 
         expect(comp.state.formData).eql(undefined);
@@ -130,9 +130,9 @@ describe("NumberField", () => {
         const { node } = createFormComponent({
           schema: {
             type: "number",
-            default: 2
+            default: 2,
           },
-          uiSchema
+          uiSchema,
         });
 
         expect(node.querySelector(".field input").value).eql("2");
@@ -141,13 +141,13 @@ describe("NumberField", () => {
       it("should handle a change event", () => {
         const { comp, node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
-          uiSchema
+          uiSchema,
         });
 
         Simulate.change(node.querySelector("input"), {
-          target: { value: "2" }
+          target: { value: "2" },
         });
 
         expect(comp.state.formData).eql(2);
@@ -157,15 +157,15 @@ describe("NumberField", () => {
         const onBlur = sandbox.spy();
         const { node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
           uiSchema,
-          onBlur
+          onBlur,
         });
 
         const input = node.querySelector("input");
         Simulate.blur(input, {
-          target: { value: "2" }
+          target: { value: "2" },
         });
 
         expect(onBlur.calledWith(input.id, 2));
@@ -175,15 +175,15 @@ describe("NumberField", () => {
         const onFocus = sandbox.spy();
         const { node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
           uiSchema,
-          onFocus
+          onFocus,
         });
 
         const input = node.querySelector("input");
         Simulate.focus(input, {
-          target: { value: "2" }
+          target: { value: "2" },
         });
 
         expect(onFocus.calledWith(input.id, 2));
@@ -192,10 +192,10 @@ describe("NumberField", () => {
       it("should fill field with data", () => {
         const { node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
           uiSchema,
-          formData: 2
+          formData: 2,
         });
 
         expect(node.querySelector(".field input").value).eql("2");
@@ -204,9 +204,9 @@ describe("NumberField", () => {
       describe("when inputting a number that ends with a dot and/or zero it should normalize it, without changing the input value", () => {
         const { comp, node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
-          uiSchema
+          uiSchema,
         });
 
         const $input = node.querySelector("input");
@@ -214,50 +214,50 @@ describe("NumberField", () => {
         const tests = [
           {
             input: "2.",
-            output: 2
+            output: 2,
           },
           {
             input: "2.0",
-            output: 2
+            output: 2,
           },
           {
             input: "2.3",
-            output: 2.3
+            output: 2.3,
           },
           {
             input: "2.30",
-            output: 2.3
+            output: 2.3,
           },
           {
             input: "2.300",
-            output: 2.3
+            output: 2.3,
           },
           {
             input: "2.3001",
-            output: 2.3001
+            output: 2.3001,
           },
           {
             input: "2.03",
-            output: 2.03
+            output: 2.03,
           },
           {
             input: "2.003",
-            output: 2.003
+            output: 2.003,
           },
           {
             input: "2.00300",
-            output: 2.003
+            output: 2.003,
           },
           {
             input: "200300",
-            output: 200300
-          }
+            output: 200300,
+          },
         ];
 
         tests.forEach(test => {
           it(`should work with an input value of ${test.input}`, () => {
             Simulate.change($input, {
-              target: { value: test.input }
+              target: { value: test.input },
             });
 
             expect(comp.state.formData).eql(test.output);
@@ -269,15 +269,15 @@ describe("NumberField", () => {
       it("should normalize values beginning with a decimal point", () => {
         const { comp, node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
-          uiSchema
+          uiSchema,
         });
 
         const $input = node.querySelector("input");
 
         Simulate.change($input, {
-          target: { value: ".00" }
+          target: { value: ".00" },
         });
 
         expect(comp.state.formData).eql(0);
@@ -286,13 +286,13 @@ describe("NumberField", () => {
 
       it("should update input values correctly when formData prop changes", () => {
         const schema = {
-          type: "number"
+          type: "number",
         };
 
         const { comp, node } = createFormComponent({
           schema,
           uiSchema,
-          formData: 2.03
+          formData: 2.03,
         });
 
         const $input = node.querySelector("input");
@@ -301,7 +301,7 @@ describe("NumberField", () => {
 
         setProps(comp, {
           schema,
-          formData: 203
+          formData: 203,
         });
 
         expect($input.value).eql("203");
@@ -310,9 +310,9 @@ describe("NumberField", () => {
       it("should render the widget with the expected id", () => {
         const { node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
-          uiSchema
+          uiSchema,
         });
 
         expect(node.querySelector("input").id).eql("root");
@@ -321,28 +321,28 @@ describe("NumberField", () => {
       it("should render with trailing zeroes", () => {
         const { node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
-          uiSchema
+          uiSchema,
         });
 
         Simulate.change(node.querySelector("input"), {
-          target: { value: "2." }
+          target: { value: "2." },
         });
         expect(node.querySelector(".field input").value).eql("2.");
 
         Simulate.change(node.querySelector("input"), {
-          target: { value: "2.0" }
+          target: { value: "2.0" },
         });
         expect(node.querySelector(".field input").value).eql("2.0");
 
         Simulate.change(node.querySelector("input"), {
-          target: { value: "2.00" }
+          target: { value: "2.00" },
         });
         expect(node.querySelector(".field input").value).eql("2.00");
 
         Simulate.change(node.querySelector("input"), {
-          target: { value: "2.000" }
+          target: { value: "2.000" },
         });
         expect(node.querySelector(".field input").value).eql("2.000");
       });
@@ -350,13 +350,13 @@ describe("NumberField", () => {
       it("should allow a zero to be input", () => {
         const { node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
-          uiSchema
+          uiSchema,
         });
 
         Simulate.change(node.querySelector("input"), {
-          target: { value: "0" }
+          target: { value: "0" },
         });
         expect(node.querySelector(".field input").value).eql("0");
       });
@@ -366,12 +366,12 @@ describe("NumberField", () => {
 
         const { node } = createFormComponent({
           schema: {
-            type: "number"
+            type: "number",
           },
           uiSchema,
           fields: {
-            StringField: CustomStringField
-          }
+            StringField: CustomStringField,
+          },
         });
 
         expect(node.querySelector("#custom")).to.exist;
@@ -384,8 +384,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          enum: [1, 2]
-        }
+          enum: [1, 2],
+        },
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(1);
@@ -395,9 +395,9 @@ describe("NumberField", () => {
       const spy = sinon.spy();
       const { node } = createFormComponent({
         schema: {
-          enum: [1, 2]
+          enum: [1, 2],
         },
-        onChange: spy
+        onChange: spy,
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(1);
@@ -405,7 +405,7 @@ describe("NumberField", () => {
       expect($select.value).eql("");
 
       Simulate.change(node.querySelector(".field select"), {
-        target: { value: "1" }
+        target: { value: "1" },
       });
       expect($select.value).eql("1");
       expect(spy.lastCall.args[0].formData).eql(1);
@@ -416,8 +416,8 @@ describe("NumberField", () => {
         schema: {
           type: "number",
           enum: [1, 2],
-          title: "foo"
-        }
+          title: "foo",
+        },
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -428,8 +428,8 @@ describe("NumberField", () => {
         schema: {
           type: "number",
           enum: [1, 2],
-          default: 1
-        }
+          default: 1,
+        },
       });
 
       expect(comp.state.formData).eql(1);
@@ -439,12 +439,12 @@ describe("NumberField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "number",
-          enum: [1, 2]
-        }
+          enum: [1, 2],
+        },
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "2" }
+        target: { value: "2" },
       });
 
       expect(comp.state.formData).eql(2);
@@ -454,9 +454,9 @@ describe("NumberField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "number",
-          enum: [1, 2]
+          enum: [1, 2],
         },
-        formData: 2
+        formData: 2,
       });
 
       expect(comp.state.formData).eql(2);
@@ -466,8 +466,8 @@ describe("NumberField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          enum: [1, 2]
-        }
+          enum: [1, 2],
+        },
       });
 
       expect(node.querySelector("select").id).eql("root");
@@ -479,13 +479,13 @@ describe("NumberField", () => {
         properties: {
           foo: {
             type: "number",
-            enum: [0]
-          }
-        }
+            enum: [0],
+          },
+        },
       };
 
       const { node } = createFormComponent({
-        schema
+        schema,
       });
 
       const selects = node.querySelectorAll("select");
@@ -503,13 +503,13 @@ describe("NumberField", () => {
           foo: {
             type: "number",
             enum: [2],
-            default: 2
-          }
-        }
+            default: 2,
+          },
+        },
       };
 
       const { node } = createFormComponent({
-        schema
+        schema,
       });
 
       const selects = node.querySelectorAll("select");
@@ -527,13 +527,13 @@ describe("NumberField", () => {
           foo: {
             type: "number",
             enum: [0],
-            default: 0
-          }
-        }
+            default: 0,
+          },
+        },
       };
 
       const { node } = createFormComponent({
-        schema
+        schema,
       });
 
       const selects = node.querySelectorAll("select");

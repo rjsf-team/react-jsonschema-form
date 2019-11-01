@@ -8,8 +8,7 @@ function ObjectFieldTemplate({ TitleField, properties, title, description }) {
         {properties.map(prop => (
           <div
             className="col-lg-2 col-md-4 col-sm-6 col-xs-12"
-            key={prop.content.key}
-          >
+            key={prop.content.key}>
             {prop.content}
           </div>
         ))}
@@ -29,38 +28,38 @@ export default {
     properties: {
       firstName: {
         type: "string",
-        title: "First name"
+        title: "First name",
       },
       lastName: {
         type: "string",
-        title: "Last name"
+        title: "Last name",
       },
       age: {
         type: "integer",
-        title: "Age"
+        title: "Age",
       },
       bio: {
         type: "string",
-        title: "Bio"
+        title: "Bio",
       },
       password: {
         type: "string",
         title: "Password",
-        minLength: 3
+        minLength: 3,
       },
       telephone: {
         type: "string",
         title: "Telephone",
-        minLength: 10
-      }
-    }
+        minLength: 10,
+      },
+    },
   },
   formData: {
     firstName: "Chuck",
     lastName: "Norris",
     age: 75,
     bio: "Roundhouse kicking asses since 1940",
-    password: "noneed"
+    password: "noneed",
   },
-  ObjectFieldTemplate
+  ObjectFieldTemplate,
 };

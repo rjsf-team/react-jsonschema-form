@@ -42,7 +42,7 @@ function CheckboxWidget(props) {
     autofocus,
     onBlur,
     onFocus,
-    onChange
+    onChange,
   } = props;
 
   // Because an unchecked checkbox will cause html5 validation to fail, only add
@@ -74,7 +74,7 @@ function CheckboxWidget(props) {
 }
 
 CheckboxWidget.defaultProps = {
-  autofocus: false
+  autofocus: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -86,7 +86,7 @@ if (process.env.NODE_ENV !== "production") {
     disabled: PropTypes.bool,
     readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
   };
 }
 

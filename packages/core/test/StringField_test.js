@@ -23,8 +23,8 @@ describe("StringField", () => {
     it("should render a string field", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "string"
-        }
+          type: "string",
+        },
       });
 
       expect(
@@ -36,8 +36,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          title: "foo"
-        }
+          title: "foo",
+        },
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -47,8 +47,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          description: "bar"
-        }
+          description: "bar",
+        },
       });
 
       expect(node.querySelector(".field-description").textContent).eql("bar");
@@ -58,8 +58,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          default: "plop"
-        }
+          default: "plop",
+        },
       });
 
       expect(node.querySelector(".field input").value).eql("plop");
@@ -67,7 +67,7 @@ describe("StringField", () => {
 
     it("should default state value to undefined", () => {
       const { comp } = createFormComponent({
-        schema: { type: "string" }
+        schema: { type: "string" },
       });
 
       expect(comp.state.formData).eql(undefined);
@@ -76,12 +76,12 @@ describe("StringField", () => {
     it("should handle a change event", () => {
       const { comp, node } = createFormComponent({
         schema: {
-          type: "string"
-        }
+          type: "string",
+        },
       });
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "yo" }
+        target: { value: "yo" },
       });
 
       expect(comp.state.formData).eql("yo");
@@ -91,13 +91,13 @@ describe("StringField", () => {
       const onBlur = sandbox.spy();
       const { node } = createFormComponent({
         schema: {
-          type: "string"
+          type: "string",
         },
-        onBlur
+        onBlur,
       });
       const input = node.querySelector("input");
       Simulate.blur(input, {
-        target: { value: "yo" }
+        target: { value: "yo" },
       });
 
       expect(onBlur.calledWith(input.id, "yo")).to.be.true;
@@ -107,13 +107,13 @@ describe("StringField", () => {
       const onFocus = sandbox.spy();
       const { node } = createFormComponent({
         schema: {
-          type: "string"
+          type: "string",
         },
-        onFocus
+        onFocus,
       });
       const input = node.querySelector("input");
       Simulate.focus(input, {
-        target: { value: "yo" }
+        target: { value: "yo" },
       });
 
       expect(onFocus.calledWith(input.id, "yo")).to.be.true;
@@ -122,11 +122,11 @@ describe("StringField", () => {
     it("should handle an empty string change event", () => {
       const { comp, node } = createFormComponent({
         schema: { type: "string" },
-        formData: "x"
+        formData: "x",
       });
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "" }
+        target: { value: "" },
       });
 
       expect(comp.state.formData).eql(undefined);
@@ -136,11 +136,11 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: { type: "string" },
         uiSchema: { "ui:emptyValue": "default" },
-        formData: "x"
+        formData: "x",
       });
 
       Simulate.change(node.querySelector("input"), {
-        target: { value: "" }
+        target: { value: "" },
       });
 
       expect(comp.state.formData).eql("default");
@@ -149,9 +149,9 @@ describe("StringField", () => {
     it("should fill field with data", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "string"
+          type: "string",
         },
-        formData: "plip"
+        formData: "plip",
       });
 
       expect(node.querySelector(".field input").value).eql("plip");
@@ -160,8 +160,8 @@ describe("StringField", () => {
     it("should render the widget with the expected id", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "string"
-        }
+          type: "string",
+        },
       });
 
       expect(node.querySelector("input[type=text]").id).eql("root");
@@ -170,11 +170,11 @@ describe("StringField", () => {
     it("should render customized TextWidget", () => {
       const { node } = createFormComponent({
         schema: {
-          type: "string"
+          type: "string",
         },
         widgets: {
-          TextWidget: CustomWidget
-        }
+          TextWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -186,8 +186,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["foo", "bar"]
-        }
+          enum: ["foo", "bar"],
+        },
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(1);
@@ -196,8 +196,8 @@ describe("StringField", () => {
     it("should render a string field for an enum without a type", () => {
       const { node } = createFormComponent({
         schema: {
-          enum: ["foo", "bar"]
-        }
+          enum: ["foo", "bar"],
+        },
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(1);
@@ -208,8 +208,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           enum: ["foo", "bar"],
-          title: "foo"
-        }
+          title: "foo",
+        },
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -219,8 +219,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["foo", "bar"]
-        }
+          enum: ["foo", "bar"],
+        },
       });
 
       expect(node.querySelectorAll(".field option")[0].value).eql("");
@@ -230,13 +230,13 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["foo", "bar"]
+          enum: ["foo", "bar"],
         },
         uiSchema: {
           "ui:options": {
-            placeholder: "Test"
-          }
-        }
+            placeholder: "Test",
+          },
+        },
       });
 
       expect(node.querySelectorAll(".field option")[0].textContent).eql("Test");
@@ -247,8 +247,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           enum: ["foo", "bar"],
-          default: "bar"
-        }
+          default: "bar",
+        },
       });
 
       expect(comp.state.formData).eql("bar");
@@ -258,12 +258,12 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["foo", "bar"]
-        }
+          enum: ["foo", "bar"],
+        },
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "foo" }
+        target: { value: "foo" },
       });
 
       expect(comp.state.formData).eql("foo");
@@ -273,12 +273,12 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["foo", "bar"]
-        }
+          enum: ["foo", "bar"],
+        },
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "" }
+        target: { value: "" },
       });
 
       expect(comp.state.formData).to.be.undefined;
@@ -288,12 +288,12 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["foo", "bar"]
-        }
+          enum: ["foo", "bar"],
+        },
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "foo" }
+        target: { value: "foo" },
       });
 
       expect(node.querySelector("select").value).eql("foo");
@@ -303,12 +303,12 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["foo", "bar"]
-        }
+          enum: ["foo", "bar"],
+        },
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "" }
+        target: { value: "" },
       });
 
       expect(node.querySelector("select").value).eql("");
@@ -318,9 +318,9 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["foo", "bar"]
+          enum: ["foo", "bar"],
         },
-        formData: "bar"
+        formData: "bar",
       });
 
       expect(comp.state.formData).eql("bar");
@@ -330,8 +330,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          enum: ["a", "b"]
-        }
+          enum: ["a", "b"],
+        },
       });
 
       expect(node.querySelector("select").id).eql("root");
@@ -341,11 +341,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          enum: []
+          enum: [],
         },
         widgets: {
-          SelectWidget: CustomWidget
-        }
+          SelectWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -358,13 +358,13 @@ describe("StringField", () => {
           foo: {
             type: "string",
             enum: [false, true],
-            default: false
-          }
-        }
+            default: false,
+          },
+        },
       };
 
       const { node } = createFormComponent({
-        schema
+        schema,
       });
 
       const options = node.querySelectorAll("option");
@@ -379,13 +379,13 @@ describe("StringField", () => {
           foo: {
             type: "string",
             enum: ["", "1"],
-            default: ""
-          }
-        }
+            default: "",
+          },
+        },
       };
 
       const { node } = createFormComponent({
-        schema
+        schema,
       });
 
       const options = node.querySelectorAll("option");
@@ -400,13 +400,13 @@ describe("StringField", () => {
           foo: {
             type: "string",
             enum: [""],
-            default: ""
-          }
-        }
+            default: "",
+          },
+        },
       };
 
       const { node } = createFormComponent({
-        schema
+        schema,
       });
 
       const options = node.querySelectorAll("option");
@@ -420,11 +420,11 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: { type: "string" },
         uiSchema: { "ui:widget": "textarea" },
-        formData: "x"
+        formData: "x",
       });
 
       Simulate.change(node.querySelector("textarea"), {
-        target: { value: "" }
+        target: { value: "" },
       });
 
       expect(comp.state.formData).eql(undefined);
@@ -435,13 +435,13 @@ describe("StringField", () => {
         schema: { type: "string" },
         uiSchema: {
           "ui:widget": "textarea",
-          "ui:emptyValue": "default"
+          "ui:emptyValue": "default",
         },
-        formData: "x"
+        formData: "x",
       });
 
       Simulate.change(node.querySelector("textarea"), {
-        target: { value: "" }
+        target: { value: "" },
       });
 
       expect(comp.state.formData).eql("default");
@@ -452,9 +452,9 @@ describe("StringField", () => {
         schema: { type: "string" },
         uiSchema: {
           "ui:widget": "textarea",
-          "ui:options": { rows: 20 }
+          "ui:options": { rows: 20 },
         },
-        formData: "x"
+        formData: "x",
       });
 
       expect(node.querySelector("textarea").getAttribute("rows")).eql("20");
@@ -466,8 +466,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
-        }
+          format: "date-time",
+        },
       });
 
       expect(
@@ -481,8 +481,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "date-time",
-          default: datetime
-        }
+          default: datetime,
+        },
       });
 
       expect(comp.state.formData).eql(datetime);
@@ -492,14 +492,14 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
-        }
+          format: "date-time",
+        },
       });
 
       const newDatetime = new Date().toJSON();
 
       Simulate.change(node.querySelector("[type=datetime-local]"), {
-        target: { value: newDatetime }
+        target: { value: newDatetime },
       });
 
       expect(node.querySelector("[type=datetime-local]").value).eql(
@@ -512,9 +512,9 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
-        formData: datetime
+        formData: datetime,
       });
 
       expect(comp.state.formData).eql(datetime);
@@ -524,8 +524,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
-        }
+          format: "date-time",
+        },
       });
 
       expect(node.querySelector("[type=datetime-local]").id).eql("root");
@@ -535,13 +535,13 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
-        liveValidate: true
+        liveValidate: true,
       });
 
       Simulate.change(node.querySelector("[type=datetime-local]"), {
-        target: { value: "invalid" }
+        target: { value: "invalid" },
       });
 
       expect(comp.state.errors).to.have.length.of(1);
@@ -551,11 +551,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
         widgets: {
-          DateTimeWidget: CustomWidget
-        }
+          DateTimeWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -565,11 +565,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
         widgets: {
-          BaseInput: CustomWidget
-        }
+          BaseInput: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -583,9 +583,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(node.querySelectorAll(".field [type=date]")).to.have.length.of(1);
@@ -597,9 +597,9 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "date",
-          default: datetime
+          default: datetime,
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(comp.state.formData).eql(datetime);
@@ -609,15 +609,15 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        uiSchema
+        uiSchema,
       });
 
       const newDatetime = "2012-12-12";
 
       Simulate.change(node.querySelector("[type=date]"), {
-        target: { value: newDatetime }
+        target: { value: newDatetime },
       });
 
       expect(node.querySelector("[type=date]").value)
@@ -630,9 +630,9 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        formData: datetime
+        formData: datetime,
       });
 
       expect(comp.state.formData).eql(datetime);
@@ -642,9 +642,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(node.querySelector("[type=date]").id).eql("root");
@@ -654,14 +654,14 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
         uiSchema,
-        liveValidate: true
+        liveValidate: true,
       });
 
       Simulate.change(node.querySelector("[type=date]"), {
-        target: { value: "2012-12-12" }
+        target: { value: "2012-12-12" },
       });
 
       expect(comp.state.errors).to.have.length.of(0);
@@ -672,14 +672,14 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
         uiSchema,
-        liveValidate: true
+        liveValidate: true,
       });
 
       Simulate.change(node.querySelector("[type=date]"), {
-        target: { value: "invalid" }
+        target: { value: "invalid" },
       });
 
       expect(comp.state.errors).to.have.length.of(1);
@@ -689,11 +689,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
         widgets: {
-          DateWidget: CustomWidget
-        }
+          DateWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -703,11 +703,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
         widgets: {
-          BaseInput: CustomWidget
-        }
+          BaseInput: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -721,9 +721,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(6);
@@ -734,9 +734,9 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "date-time",
-          title: "foo"
+          title: "foo",
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -748,9 +748,9 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "date-time",
-          default: datetime
+          default: datetime,
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(comp.state.formData).eql(datetime);
@@ -760,28 +760,28 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
-        uiSchema
+        uiSchema,
       });
 
       Simulate.change(node.querySelector("#root_year"), {
-        target: { value: 2012 }
+        target: { value: 2012 },
       });
       Simulate.change(node.querySelector("#root_month"), {
-        target: { value: 10 }
+        target: { value: 10 },
       });
       Simulate.change(node.querySelector("#root_day"), {
-        target: { value: 2 }
+        target: { value: 2 },
       });
       Simulate.change(node.querySelector("#root_hour"), {
-        target: { value: 1 }
+        target: { value: 1 },
       });
       Simulate.change(node.querySelector("#root_minute"), {
-        target: { value: 2 }
+        target: { value: 2 },
       });
       Simulate.change(node.querySelector("#root_second"), {
-        target: { value: 3 }
+        target: { value: 3 },
       });
 
       expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
@@ -792,9 +792,9 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
-        formData: datetime
+        formData: datetime,
       });
 
       expect(comp.state.formData).eql(datetime);
@@ -804,9 +804,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
-        uiSchema
+        uiSchema,
       });
 
       const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
@@ -817,7 +817,7 @@ describe("StringField", () => {
         "root_day",
         "root_hour",
         "root_minute",
-        "root_second"
+        "root_second",
       ]);
     });
 
@@ -825,9 +825,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
-        uiSchema
+        uiSchema,
       });
 
       const lengths = [].map.call(
@@ -842,7 +842,7 @@ describe("StringField", () => {
         31 + 1,
         24 + 1,
         60 + 1,
-        60 + 1
+        60 + 1,
       ]);
       const monthOptions = node.querySelectorAll("select#root_month option");
       const monthOptionsValues = [].map.call(monthOptions, o => o.value);
@@ -859,7 +859,7 @@ describe("StringField", () => {
         "9",
         "10",
         "11",
-        "12"
+        "12",
       ]);
     });
 
@@ -867,9 +867,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
-        uiSchema
+        uiSchema,
       });
 
       const monthOptions = node.querySelectorAll("select#root_month option");
@@ -887,7 +887,7 @@ describe("StringField", () => {
         "09",
         "10",
         "11",
-        "12"
+        "12",
       ]);
     });
 
@@ -896,9 +896,9 @@ describe("StringField", () => {
         const { node } = createFormComponent({
           schema: {
             type: "string",
-            format: "date-time"
+            format: "date-time",
           },
-          uiSchema
+          uiSchema,
         });
 
         const buttonLabels = [].map.call(
@@ -912,9 +912,9 @@ describe("StringField", () => {
         const { comp, node } = createFormComponent({
           schema: {
             type: "string",
-            format: "date-time"
+            format: "date-time",
           },
-          uiSchema
+          uiSchema,
         });
 
         Simulate.click(node.querySelector("a.btn-now"));
@@ -929,9 +929,9 @@ describe("StringField", () => {
         const { comp, node } = createFormComponent({
           schema: {
             type: "string",
-            format: "date-time"
+            format: "date-time",
           },
-          uiSchema
+          uiSchema,
         });
 
         Simulate.click(node.querySelector("a.btn-now"));
@@ -945,14 +945,14 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date-time"
+          format: "date-time",
         },
         uiSchema: {
-          "ui:widget": "alt-datetime"
+          "ui:widget": "alt-datetime",
         },
         widgets: {
-          AltDateTimeWidget: CustomWidget
-        }
+          AltDateTimeWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -962,14 +962,14 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
         uiSchema: {
-          "ui:widget": "alt-datetime"
+          "ui:widget": "alt-datetime",
         },
         widgets: {
-          AltDateTimeWidget: CustomWidget
-        }
+          AltDateTimeWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -983,9 +983,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(node.querySelectorAll(".field select")).to.have.length.of(3);
@@ -996,9 +996,9 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "date",
-          title: "foo"
+          title: "foo",
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -1010,9 +1010,9 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "date",
-          default: datetime
+          default: datetime,
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(comp.state.formData).eql(datetime);
@@ -1022,19 +1022,19 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        uiSchema
+        uiSchema,
       });
 
       Simulate.change(node.querySelector("#root_year"), {
-        target: { value: 2012 }
+        target: { value: 2012 },
       });
       Simulate.change(node.querySelector("#root_month"), {
-        target: { value: 10 }
+        target: { value: 10 },
       });
       Simulate.change(node.querySelector("#root_day"), {
-        target: { value: 2 }
+        target: { value: 2 },
       });
 
       expect(comp.state.formData).eql("2012-10-02");
@@ -1045,10 +1045,10 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
         uiSchema,
-        formData: datetime
+        formData: datetime,
       });
 
       expect(comp.state.formData).eql(datetime);
@@ -1058,9 +1058,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        uiSchema
+        uiSchema,
       });
 
       const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
@@ -1072,9 +1072,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        uiSchema
+        uiSchema,
       });
 
       const lengths = [].map.call(
@@ -1086,7 +1086,7 @@ describe("StringField", () => {
         // from 1900 to current year + 2 (inclusive) + 1 undefined option
         new Date().getFullYear() - 1900 + 3 + 1,
         12 + 1,
-        31 + 1
+        31 + 1,
       ]);
       const monthOptions = node.querySelectorAll("select#root_month option");
       const monthOptionsValues = [].map.call(monthOptions, o => o.value);
@@ -1103,7 +1103,7 @@ describe("StringField", () => {
         "9",
         "10",
         "11",
-        "12"
+        "12",
       ]);
     });
 
@@ -1111,9 +1111,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
-        uiSchema
+        uiSchema,
       });
 
       const monthOptions = node.querySelectorAll("select#root_month option");
@@ -1131,7 +1131,7 @@ describe("StringField", () => {
         "09",
         "10",
         "11",
-        "12"
+        "12",
       ]);
     });
 
@@ -1139,10 +1139,10 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
         uiSchema,
-        liveValidate: true
+        liveValidate: true,
       });
 
       comp.UNSAFE_componentWillReceiveProps({ formData: "2012-12-12" });
@@ -1155,9 +1155,9 @@ describe("StringField", () => {
         const { node } = createFormComponent({
           schema: {
             type: "string",
-            format: "date"
+            format: "date",
           },
-          uiSchema
+          uiSchema,
         });
 
         const buttonLabels = [].map.call(
@@ -1171,9 +1171,9 @@ describe("StringField", () => {
         const { comp, node } = createFormComponent({
           schema: {
             type: "string",
-            format: "date"
+            format: "date",
           },
-          uiSchema
+          uiSchema,
         });
 
         Simulate.click(node.querySelector("a.btn-now"));
@@ -1189,9 +1189,9 @@ describe("StringField", () => {
         const { comp, node } = createFormComponent({
           schema: {
             type: "string",
-            format: "date"
+            format: "date",
           },
-          uiSchema
+          uiSchema,
         });
 
         Simulate.click(node.querySelector("a.btn-now"));
@@ -1205,14 +1205,14 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "date"
+          format: "date",
         },
         uiSchema: {
-          "ui:widget": "alt-date"
+          "ui:widget": "alt-date",
         },
         widgets: {
-          AltDateWidget: CustomWidget
-        }
+          AltDateWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -1224,8 +1224,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "email"
-        }
+          format: "email",
+        },
       });
 
       expect(node.querySelectorAll(".field [type=email]")).to.have.length.of(1);
@@ -1236,8 +1236,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "email",
-          title: "foo"
-        }
+          title: "foo",
+        },
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -1248,8 +1248,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "email",
-          description: "baz"
-        }
+          description: "baz",
+        },
       });
 
       expect(node.querySelector(".field-description").textContent).eql("baz");
@@ -1261,8 +1261,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "email",
-          default: email
-        }
+          default: email,
+        },
       });
 
       expect(comp.state.formData).eql(email);
@@ -1272,14 +1272,14 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "email"
-        }
+          format: "email",
+        },
       });
 
       const newDatetime = new Date().toJSON();
 
       Simulate.change(node.querySelector("[type=email]"), {
-        target: { value: newDatetime }
+        target: { value: newDatetime },
       });
 
       expect(node.querySelector("[type=email]").value).eql(newDatetime);
@@ -1290,9 +1290,9 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "email"
+          format: "email",
         },
-        formData: email
+        formData: email,
       });
 
       expect(comp.state.formData).eql(email);
@@ -1302,8 +1302,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "email"
-        }
+          format: "email",
+        },
       });
 
       expect(node.querySelector("[type=email]").id).eql("root");
@@ -1313,13 +1313,13 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "email"
+          format: "email",
         },
-        liveValidate: true
+        liveValidate: true,
       });
 
       Simulate.change(node.querySelector("[type=email]"), {
-        target: { value: "invalid" }
+        target: { value: "invalid" },
       });
 
       expect(comp.state.errors).to.have.length.of(1);
@@ -1329,11 +1329,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "email"
+          format: "email",
         },
         widgets: {
-          EmailWidget: CustomWidget
-        }
+          EmailWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -1345,8 +1345,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "uri"
-        }
+          format: "uri",
+        },
       });
 
       expect(node.querySelectorAll(".field [type=url]")).to.have.length.of(1);
@@ -1357,8 +1357,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "uri",
-          title: "foo"
-        }
+          title: "foo",
+        },
       });
 
       expect(node.querySelector(".field label").textContent).eql("foo");
@@ -1369,8 +1369,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "uri",
-          description: "baz"
-        }
+          description: "baz",
+        },
       });
 
       expect(node.querySelector(".field-description").textContent).eql("baz");
@@ -1382,8 +1382,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "uri",
-          default: url
-        }
+          default: url,
+        },
       });
 
       expect(comp.state.formData).eql(url);
@@ -1393,13 +1393,13 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "uri"
-        }
+          format: "uri",
+        },
       });
 
       const newDatetime = new Date().toJSON();
       Simulate.change(node.querySelector("[type=url]"), {
-        target: { value: newDatetime }
+        target: { value: newDatetime },
       });
 
       expect(node.querySelector("[type=url]").value).eql(newDatetime);
@@ -1410,9 +1410,9 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "uri"
+          format: "uri",
         },
-        formData: url
+        formData: url,
       });
 
       expect(comp.state.formData).eql(url);
@@ -1422,8 +1422,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "uri"
-        }
+          format: "uri",
+        },
       });
 
       expect(node.querySelector("[type=url]").id).eql("root");
@@ -1433,13 +1433,13 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "uri"
+          format: "uri",
         },
-        liveValidate: true
+        liveValidate: true,
       });
 
       Simulate.change(node.querySelector("[type=url]"), {
-        target: { value: "invalid" }
+        target: { value: "invalid" },
       });
 
       expect(comp.state.errors).to.have.length.of(1);
@@ -1449,11 +1449,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "uri"
+          format: "uri",
         },
         widgets: {
-          URLWidget: CustomWidget
-        }
+          URLWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -1468,9 +1468,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "color"
+          format: "color",
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(node.querySelectorAll(".field [type=color]")).to.have.length.of(1);
@@ -1481,9 +1481,9 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "color",
-          default: color
+          default: color,
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(comp.state.formData).eql(color);
@@ -1493,15 +1493,15 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "color"
+          format: "color",
         },
-        uiSchema
+        uiSchema,
       });
 
       const newColor = "#654321";
 
       Simulate.change(node.querySelector("[type=color]"), {
-        target: { value: newColor }
+        target: { value: newColor },
       });
 
       expect(node.querySelector("[type=color]").value).eql(newColor);
@@ -1511,9 +1511,9 @@ describe("StringField", () => {
       const { comp } = createFormComponent({
         schema: {
           type: "string",
-          format: "color"
+          format: "color",
         },
-        formData: color
+        formData: color,
       });
 
       expect(comp.state.formData).eql(color);
@@ -1523,9 +1523,9 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "color"
+          format: "color",
         },
-        uiSchema
+        uiSchema,
       });
 
       expect(node.querySelector("[type=color]").id).eql("root");
@@ -1535,14 +1535,14 @@ describe("StringField", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "color"
+          format: "color",
         },
         uiSchema,
-        liveValidate: true
+        liveValidate: true,
       });
 
       Simulate.change(node.querySelector("[type=color]"), {
-        target: { value: "invalid" }
+        target: { value: "invalid" },
       });
 
       expect(comp.state.errors).to.have.length.of(1);
@@ -1552,11 +1552,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "color"
+          format: "color",
         },
         widgets: {
-          ColorWidget: CustomWidget
-        }
+          ColorWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -1570,8 +1570,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url"
-        }
+          format: "data-url",
+        },
       });
 
       expect(node.querySelectorAll(".field [type=file]")).to.have.length.of(1);
@@ -1582,8 +1582,8 @@ describe("StringField", () => {
         schema: {
           type: "string",
           format: "data-url",
-          default: initialValue
-        }
+          default: initialValue,
+        },
       });
       expect(comp.state.formData).eql(initialValue);
     });
@@ -1593,20 +1593,20 @@ describe("StringField", () => {
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
         },
-        readAsDataUrl() {}
+        readAsDataUrl() {},
       });
 
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url"
-        }
+          format: "data-url",
+        },
       });
 
       Simulate.change(node.querySelector("[type=file]"), {
         target: {
-          files: [{ name: "file1.txt", size: 1, type: "type" }]
-        }
+          files: [{ name: "file1.txt", size: 1, type: "type" }],
+        },
       });
 
       return new Promise(setImmediate).then(() =>
@@ -1624,20 +1624,20 @@ describe("StringField", () => {
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
         },
-        readAsDataUrl() {}
+        readAsDataUrl() {},
       });
 
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url"
-        }
+          format: "data-url",
+        },
       });
 
       Simulate.change(node.querySelector("[type=file]"), {
         target: {
-          files: [{ name: nonUriEncodedValue, size: 1, type: "type" }]
-        }
+          files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
+        },
       });
 
       return new Promise(setImmediate).then(() =>
@@ -1651,11 +1651,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url"
+          format: "data-url",
         },
         uiSchema: {
-          "ui:options": { accept: ".pdf" }
-        }
+          "ui:options": { accept: ".pdf" },
+        },
       });
 
       expect(node.querySelector("[type=file]").accept).eql(".pdf");
@@ -1665,8 +1665,8 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url"
-        }
+          format: "data-url",
+        },
       });
 
       expect(node.querySelector("[type=file]").id).eql("root");
@@ -1676,11 +1676,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
-          format: "data-url"
+          format: "data-url",
         },
         widgets: {
-          FileWidget: CustomWidget
-        }
+          FileWidget: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -1692,11 +1692,11 @@ describe("StringField", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
-          format: "updown"
+          format: "updown",
         },
         widgets: {
-          BaseInput: CustomWidget
-        }
+          BaseInput: CustomWidget,
+        },
       });
 
       expect(node.querySelector("#custom")).to.exist;
@@ -1713,14 +1713,14 @@ describe("StringField", () => {
         type: "object",
         properties: {
           string: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       };
       const uiSchema = {
         string: {
-          "ui:widget": "Widget"
-        }
+          "ui:widget": "Widget",
+        },
       };
 
       const { node } = createFormComponent({ schema, widgets, uiSchema });
@@ -1730,10 +1730,10 @@ describe("StringField", () => {
     it("should pass schema title to widget", () => {
       const schema = {
         type: "string",
-        title: "test"
+        title: "test",
       };
       const uiSchema = {
-        "ui:widget": "Widget"
+        "ui:widget": "Widget",
       };
 
       const { node } = createFormComponent({ schema, widgets, uiSchema });
@@ -1743,10 +1743,10 @@ describe("StringField", () => {
     it("should pass empty schema title to widget", () => {
       const schema = {
         type: "string",
-        title: ""
+        title: "",
       };
       const uiSchema = {
-        "ui:widget": "Widget"
+        "ui:widget": "Widget",
       };
       const { node } = createFormComponent({ schema, widgets, uiSchema });
       expect(node.querySelector("#label-")).to.not.be.null;
