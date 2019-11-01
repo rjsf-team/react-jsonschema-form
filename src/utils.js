@@ -988,16 +988,6 @@ export function pad(num, size) {
   return s;
 }
 
-export function setState(instance, state, callback) {
-  const { safeRenderCompletion } = instance.props;
-  if (safeRenderCompletion) {
-    instance.setState(state, callback);
-  } else {
-    instance.setState(state);
-    setImmediate(callback);
-  }
-}
-
 export function dataURItoBlob(dataURI) {
   // Split metadata from data
   const splitted = dataURI.split(",");

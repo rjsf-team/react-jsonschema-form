@@ -14,7 +14,7 @@ export function createComponent(Component, props) {
 }
 
 export function createFormComponent(props) {
-  return createComponent(Form, { ...props, safeRenderCompletion: true });
+  return createComponent(Form, { ...props });
 }
 
 export function createSandbox() {
