@@ -190,9 +190,11 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 
 * `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`)
 
-    The `anyOf`  and `oneOf` keywords are supported,  however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
+    The `anyOf` and `oneOf` keywords are supported; however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
 
     You can also use `oneOf` with [schema dependencies](dependencies.md#schema-dependencies) to dynamically add schema properties based on input data.
+
+    The `allOf` keyword is supported; it uses [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) to merge subschemas to render the final combined schema in the form. When these subschemas are incompatible, though, it may not be able to render anything.
 
 * `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/mozilla-services/react-jsonschema-form/issues/848) [#902](https://github.com/mozilla-services/react-jsonschema-form/issues/902) [#992](https://github.com/mozilla-services/react-jsonschema-form/issues/992)
 
