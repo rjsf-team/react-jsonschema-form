@@ -26,8 +26,19 @@ import {
   guessType,
   mergeSchemas,
 } from "../src/utils";
+import { createSandbox } from "./test_utils";
 
 describe("utils", () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   describe("getDefaultFormState()", () => {
     describe("root default", () => {
       it("should map root schema default to form state, if any", () => {
@@ -1428,9 +1439,9 @@ describe("utils", () => {
     });
 
     it("should override non-existing values of the first object with the values from the second", () => {
-      expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
-        { a: { b: { c: 1 } } }
-      );
+      expect(
+        mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })
+      ).eql({ a: { b: { c: 1 } } });
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -1518,9 +1529,9 @@ describe("utils", () => {
     });
 
     it("should override non-existing values of the first object with the values from the second", () => {
-      expect(mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
-        { a: { b: { c: 1 } } }
-      );
+      expect(
+        mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })
+      ).eql({ a: { b: { c: 1 } } });
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -2269,6 +2280,32 @@ describe("utils", () => {
         const formData = {};
         expect(retrieveSchema(schema, definitions, formData)).eql({
           type: "string",
+        });
+      });
+      it("should not merge incompatible types", () => {
+        sandbox.stub(console, "warn");
+        const schema = {
+          allOf: [{ type: "string" }, { type: "boolean" }],
+        };
+        const definitions = {};
+        const formData = {};
+        expect(retrieveSchema(schema, definitions, formData)).eql({});
+        expect(
+          console.warn.calledWithMatch(/could not merge subschemas in allOf/)
+        ).to.be.true;
+      });
+      it("should merge types with $ref in them", () => {
+        const schema = {
+          allOf: [{ $ref: "#/definitions/1" }, { $ref: "#/definitions/2" }],
+        };
+        const definitions = {
+          "1": { type: "string" },
+          "2": { minLength: 5 },
+        };
+        const formData = {};
+        expect(retrieveSchema(schema, definitions, formData)).eql({
+          type: "string",
+          minLength: 5,
         });
       });
     });
@@ -3329,7 +3366,12 @@ describe("utils", () => {
     // worthless to reproduce all the tests existing for it; so we focus on the
     // behavioral differences we introduced.
     it("should assume functions are always equivalent", () => {
-      expect(deepEquals(() => {}, () => {})).eql(true);
+      expect(
+        deepEquals(
+          () => {},
+          () => {}
+        )
+      ).eql(true);
       expect(deepEquals({ foo() {} }, { foo() {} })).eql(true);
       expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).eql(
         true

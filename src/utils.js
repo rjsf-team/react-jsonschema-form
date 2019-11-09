@@ -663,7 +663,16 @@ function resolveReference(schema, definitions, formData) {
 export function retrieveSchema(schema, definitions = {}, formData = {}) {
   let resolvedSchema = resolveSchema(schema, definitions, formData);
   if ("allOf" in schema) {
-    resolvedSchema = mergeAllOf(resolvedSchema, { deep: false });
+    try {
+      resolvedSchema = mergeAllOf(
+        { ...resolvedSchema, allOf: resolvedSchema.allOf },
+        { deep: false }
+      );
+    } catch (e) {
+      console.warn("could not merge subschemas in allOf:\n" + e);
+      const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
+      return resolvedSchemaWithoutAllOf;
+    }
   }
   const hasAdditionalProperties =
     resolvedSchema.hasOwnProperty("additionalProperties") &&
