@@ -3,6 +3,7 @@ import * as ReactIs from "react-is";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
 import { union } from "lodash";
+import jsonpointer from "jsonpointer";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -543,29 +544,19 @@ export function optionsList(schema) {
 }
 
 function findSchemaDefinition($ref, rootSchema = {}) {
-  // Extract and use the referenced definition if we have it.
-  const definitions = rootSchema.definitions || {};
-  const match = /^#\/definitions\/(.*)$/.exec($ref);
-  if (match && match[1]) {
-    const parts = match[1].split("/");
-    let current = definitions;
-    for (let part of parts) {
-      part = part.replace(/~1/g, "/").replace(/~0/g, "~");
-      while (current.hasOwnProperty("$ref")) {
-        current = findSchemaDefinition(current.$ref, rootSchema);
-      }
-      if (current.hasOwnProperty(part)) {
-        current = current[part];
-      } else {
-        // No matching definition found, that's an error (bogus schema?)
-        throw new Error(`Could not find a definition for ${$ref}.`);
-      }
-    }
-    return current;
+  const origRef = $ref;
+  if ($ref.startsWith("#/definitions")) {
+    // Backwards compatibility with old #/definitions syntax.
+    $ref = $ref.substring(1);
   }
-
-  // No matching definition found, that's an error (bogus schema?)
-  throw new Error(`Could not find a definition for ${$ref}.`);
+  const current = jsonpointer.get(rootSchema, $ref);
+  if (current === undefined) {
+    throw new Error(`Could not find a definition for ${origRef}.`);
+  }
+  if (current.hasOwnProperty("$ref")) {
+    return findSchemaDefinition(current.$ref, rootSchema);
+  }
+  return current;
 }
 
 // In the case where we have to implicitly create a schema, it is useful to know what type to use
