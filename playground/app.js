@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import MonacoEditor from "react-monaco-editor";
 
-import { shouldRender } from "../src/utils";
+import { shouldRender } from "./packages/core/src/utils";
 import { samples } from "./samples";
-import Form from "../src";
+import Form from "./packages/core/src";
 
 const log = type => console.log.bind(console, type);
 const toJson = val => JSON.stringify(val, null, 2);
