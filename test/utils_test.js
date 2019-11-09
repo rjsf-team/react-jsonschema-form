@@ -2308,6 +2308,28 @@ describe("utils", () => {
           minLength: 5,
         });
       });
+      it("should properly merge schemas with nested allOf's", () => {
+        const schema = {
+          allOf: [
+            {
+              type: "string",
+              allOf: [{ minLength: 2 }, { maxLength: 5 }],
+            },
+            {
+              type: "string",
+              allOf: [{ default: "hi" }, { minLength: 4 }],
+            },
+          ],
+        };
+        const definitions = {};
+        const formData = {};
+        expect(retrieveSchema(schema, definitions, formData)).eql({
+          type: "string",
+          minLength: 4,
+          maxLength: 5,
+          default: "hi",
+        });
+      });
     });
   });
 
