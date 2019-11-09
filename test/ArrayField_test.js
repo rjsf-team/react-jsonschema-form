@@ -616,6 +616,23 @@ describe("ArrayField", () => {
       expect(inputs[0].value).eql("bar");
     });
 
+    it("should delete item from list and correct indices", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar", "baz"],
+      });
+      const deleteBtns = node.querySelectorAll(".array-item-remove");
+
+      Simulate.click(deleteBtns[0]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+
+      Simulate.change(inputs[0], { target: { value: "fuzz" } });
+      expect(inputs).to.have.length.of(2);
+      expect(inputs[0].value).eql("fuzz");
+      expect(inputs[1].value).eql("baz");
+    });
+
     it("should retain row keys/ids of remaining rows when a row is removed", () => {
       const { node } = createFormComponent({
         schema,

@@ -750,6 +750,7 @@ class ArrayField extends Component {
     return {
       children: (
         <SchemaField
+          index={index}
           schema={itemSchema}
           uiSchema={itemUiSchema}
           formData={itemData}
