@@ -14,19 +14,32 @@ export function createComponent(Component, props) {
 }
 
 export function createFormComponent(props) {
-  return createComponent(Form, { ...props, safeRenderCompletion: true });
+  return createComponent(Form, { ...props });
 }
 
 export function createSandbox() {
   const sandbox = sinon.sandbox.create();
-  // Ensure we catch any React warning and mark them as test failures.
-  sandbox.stub(console, "error", error => {
-    throw new Error(error);
-  });
   return sandbox;
 }
 
 export function setProps(comp, newProps) {
   const node = findDOMNode(comp);
   render(React.createElement(comp.constructor, newProps), node.parentNode);
+}
+
+/* Run a group of tests with different combinations of omitExtraData and liveOmit as form props.
+ */
+export function describeRepeated(title, fn) {
+  const formExtraPropsList = [
+    { omitExtraData: false },
+    { omitExtraData: true },
+    { omitExtraData: true, liveOmit: true },
+  ];
+  for (let formExtraProps of formExtraPropsList) {
+    const createFormComponentFn = props =>
+      createFormComponent({ ...props, ...formExtraProps });
+    describe(title + " " + JSON.stringify(formExtraProps), () =>
+      fn(createFormComponentFn)
+    );
+  }
 }

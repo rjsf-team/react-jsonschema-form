@@ -1,6 +1,6 @@
 {
   "name": "react-jsonschema-form",
-  "version": "1.7.0",
+  "version": "2.0.0-alpha.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
@@ -40,7 +40,7 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "react": ">=15"
+    "react": ">=16"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.4.5",
@@ -48,9 +48,8 @@
     "core-js": "^2.5.7",
     "json-schema-merge-allof": "git+https://github.com/mokkabonna/json-schema-merge-allof.git#e43d0f2227476e069667358b86d0e8c91b50a777",
     "lodash": "^4.17.15",
-    "prop-types": "^15.5.8",
-    "react-is": "^16.8.4",
-    "react-lifecycles-compat": "^3.0.4",
+    "prop-types": "^15.7.2",
+    "react-is": "^16.9.0",
     "shortid": "^2.2.14"
   },
   "devDependencies": {
@@ -92,9 +91,9 @@
     "monaco-editor-webpack-plugin": "^1.7.0",
     "nyc": "^13.2.0",
     "prettier": "^1.15.1",
-    "react": "^15.5.0",
+    "react": "^16.9.0",
     "react-codemirror2": "^4.1.0",
-    "react-dom": "^15.3.2",
+    "react-dom": "^16.9.0",
     "react-monaco-editor": "^0.26.2",
     "react-portal": "^4.2.0",
     "react-transform-catch-errors": "^1.0.0",

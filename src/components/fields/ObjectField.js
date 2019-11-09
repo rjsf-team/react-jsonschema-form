@@ -70,6 +70,7 @@ class ObjectField extends Component {
   };
 
   state = {
+    wasPropertyKeyModified: false,
     additionalProperties: {},
   };
 
@@ -128,6 +129,7 @@ class ObjectField extends Component {
       if (oldValue === value) {
         return;
       }
+
       value = this.getAvailableKey(value, this.props.formData);
       const newFormData = { ...this.props.formData };
       const newKeys = { [oldValue]: value };
@@ -136,6 +138,9 @@ class ObjectField extends Component {
         return { [newKey]: newFormData[key] };
       });
       const renamedObj = Object.assign({}, ...keyValues);
+
+      this.setState({ wasPropertyKeyModified: true });
+
       this.props.onChange(
         renamedObj,
         errorSchema &&
@@ -168,11 +173,24 @@ class ObjectField extends Component {
   }
 
   handleAddClick = schema => () => {
-    const type = schema.additionalProperties.type;
+    let type = schema.additionalProperties.type;
     const newFormData = { ...this.props.formData };
+
+    if (schema.additionalProperties.hasOwnProperty("$ref")) {
+      const { registry = getDefaultRegistry() } = this.props;
+      const refSchema = retrieveSchema(
+        { $ref: schema.additionalProperties["$ref"] },
+        registry.definitions,
+        this.props.formData
+      );
+
+      type = refSchema.type;
+    }
+
     newFormData[
       this.getAvailableKey("newKey", newFormData)
     ] = this.getDefaultValue(type);
+
     this.props.onChange(newFormData);
   };
 
@@ -191,10 +209,19 @@ class ObjectField extends Component {
       onFocus,
       registry = getDefaultRegistry(),
     } = this.props;
+
     const { definitions, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, definitions, formData);
-    const title = schema.title === undefined ? name : schema.title;
+
+    // If this schema has a title defined, but the user has set a new key/label, retain their input.
+    let title;
+    if (this.state.wasPropertyKeyModified) {
+      title = name;
+    } else {
+      title = schema.title === undefined ? name : schema.title;
+    }
+
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
     try {
@@ -242,6 +269,7 @@ class ObjectField extends Component {
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
               formData={(formData || {})[name]}
+              wasPropertyKeyModified={this.state.wasPropertyKeyModified}
               onKeyChange={this.onKeyChange(name)}
               onChange={this.onPropertyChange(
                 name,

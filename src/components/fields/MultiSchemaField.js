@@ -8,6 +8,7 @@ import {
   retrieveSchema,
   getDefaultFormState,
   getMatchingOption,
+  deepEquals,
 } from "../../utils";
 
 class AnyOfField extends Component {
@@ -21,17 +22,24 @@ class AnyOfField extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const matchingOption = this.getMatchingOption(
-      nextProps.formData,
-      nextProps.options
-    );
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      !deepEquals(this.props.formData, prevProps.formData) &&
+      this.props.idSchema.$id === prevProps.idSchema.$id
+    ) {
+      const matchingOption = this.getMatchingOption(
+        this.props.formData,
+        this.props.options
+      );
 
-    if (matchingOption === this.state.selectedOption) {
-      return;
+      if (!prevState || matchingOption === this.state.selectedOption) {
+        return;
+      }
+
+      this.setState({
+        selectedOption: matchingOption,
+      });
     }
-
-    this.setState({ selectedOption: matchingOption });
   }
 
   getMatchingOption(formData, options) {
@@ -102,7 +110,6 @@ class AnyOfField extends Component {
       onFocus,
       options,
       registry,
-      safeRenderCompletion,
       uiSchema,
     } = this.props;
 
@@ -155,7 +162,6 @@ class AnyOfField extends Component {
             onBlur={onBlur}
             onFocus={onFocus}
             registry={registry}
-            safeRenderCompletion={safeRenderCompletion}
             disabled={disabled}
           />
         )}

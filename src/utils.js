@@ -3,6 +3,7 @@ import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
+import { union } from "lodash";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -67,6 +68,7 @@ export function getDefaultRegistry() {
   };
 }
 
+/* Gets the type of a given schema. */
 export function getSchemaType(schema) {
   let { type } = schema;
 
@@ -104,7 +106,11 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (typeof widget === "function" || ReactIs.isForwardRef(widget)) {
+  if (
+    typeof widget === "function" ||
+    ReactIs.isForwardRef(React.createElement(widget)) ||
+    ReactIs.isMemo(widget)
+  ) {
     return mergeOptions(widget);
   }
 
@@ -182,10 +188,10 @@ function computeDefaults(
       includeUndefinedValues
     );
   } else if (isFixedItems(schema)) {
-    defaults = schema.items.map(itemSchema =>
+    defaults = schema.items.map((itemSchema, idx) =>
       computeDefaults(
         itemSchema,
-        undefined,
+        Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         definitions,
         formData,
         includeUndefinedValues
@@ -224,6 +230,28 @@ function computeDefaults(
       }, {});
 
     case "array":
+      // Inject defaults into existing array defaults
+      if (Array.isArray(defaults)) {
+        defaults = defaults.map((item, idx) => {
+          return computeDefaults(
+            schema.items[idx] || schema.additionalItems || {},
+            item,
+            definitions
+          );
+        });
+      }
+
+      // Deeply inject defaults into already existing form data
+      if (Array.isArray(rawFormData)) {
+        defaults = rawFormData.map((item, idx) => {
+          return computeDefaults(
+            schema.items,
+            (defaults || {})[idx],
+            definitions,
+            item
+          );
+        });
+      }
       if (schema.minItems) {
         if (!isMultiSelect(schema, definitions)) {
           const defaultsLength = defaults ? defaults.length : 0;
@@ -270,14 +298,47 @@ export function getDefaultFormState(
     // No form data? Use schema defaults.
     return defaults;
   }
-  if (isObject(formData)) {
-    // Override schema defaults with form data.
-    return mergeObjects(defaults, formData);
+  if (isObject(formData) || Array.isArray(formData)) {
+    return mergeDefaultsWithFormData(defaults, formData);
   }
-  if (formData === 0) {
+  if (formData === 0 || formData === false) {
     return formData;
   }
   return formData || defaults;
+}
+
+/**
+ * When merging defaults and form data, we want to merge in this specific way:
+ * - objects are deeply merged
+ * - arrays are merged in such a way that:
+ *   - when the array is set in form data, only array entries set in form data
+ *     are deeply merged; additional entries from the defaults are ignored
+ *   - when the array is not set in form data, the default is copied over
+ * - scalars are overwritten/set by form data
+ */
+export function mergeDefaultsWithFormData(defaults, formData) {
+  if (Array.isArray(formData)) {
+    if (!Array.isArray(defaults)) {
+      defaults = [];
+    }
+    return formData.map((value, idx) => {
+      if (defaults[idx]) {
+        return mergeDefaultsWithFormData(defaults[idx], value);
+      }
+      return value;
+    });
+  } else if (isObject(formData)) {
+    const acc = Object.assign({}, defaults); // Prevent mutation of source object.
+    return Object.keys(formData).reduce((acc, key) => {
+      acc[key] = mergeDefaultsWithFormData(
+        defaults ? defaults[key] : {},
+        formData[key]
+      );
+      return acc;
+    }, acc);
+  } else {
+    return formData;
+  }
 }
 
 export function getUiOptions(uiSchema) {
@@ -538,21 +599,32 @@ export function stubExistingAdditionalProperties(
     ...schema,
     properties: { ...schema.properties },
   };
+
   Object.keys(formData).forEach(key => {
     if (schema.properties.hasOwnProperty(key)) {
       // No need to stub, our schema already has the property
       return;
     }
-    const additionalProperties = schema.additionalProperties.hasOwnProperty(
-      "type"
-    )
-      ? { ...schema.additionalProperties }
-      : { type: guessType(formData[key]) };
+
+    let additionalProperties;
+    if (schema.additionalProperties.hasOwnProperty("$ref")) {
+      additionalProperties = retrieveSchema(
+        { $ref: schema.additionalProperties["$ref"] },
+        definitions,
+        formData
+      );
+    } else if (schema.additionalProperties.hasOwnProperty("type")) {
+      additionalProperties = { ...schema.additionalProperties };
+    } else {
+      additionalProperties = { type: guessType(formData[key]) };
+    }
+
     // The type of our new key should match the additionalProperties value;
     schema.properties[key] = additionalProperties;
     // Set our additional property flag so we know it was dynamically added
     schema.properties[key][ADDITIONAL_PROPERTY_FLAG] = true;
   });
+
   return schema;
 }
 
@@ -756,8 +828,34 @@ function withExactlyOneSubschema(
   );
 }
 
-function mergeSchemas(schema1, schema2) {
-  return mergeObjects(schema1, schema2, true);
+// Recursively merge deeply nested schemas.
+// The difference between mergeSchemas and mergeObjects
+// is that mergeSchemas only concats arrays for
+// values under the "required" keyword, and when it does,
+// it doesn't include duplicate values.
+export function mergeSchemas(obj1, obj2) {
+  var acc = Object.assign({}, obj1); // Prevent mutation of source object.
+  return Object.keys(obj2).reduce((acc, key) => {
+    const left = obj1 ? obj1[key] : {},
+      right = obj2[key];
+    if (obj1 && obj1.hasOwnProperty(key) && isObject(right)) {
+      acc[key] = mergeSchemas(left, right);
+    } else if (
+      obj1 &&
+      obj2 &&
+      (getSchemaType(obj1) === "object" || getSchemaType(obj2) === "object") &&
+      key === "required" &&
+      Array.isArray(left) &&
+      Array.isArray(right)
+    ) {
+      // Don't include duplicate values when merging
+      // "required" fields.
+      acc[key] = union(left, right);
+    } else {
+      acc[key] = right;
+    }
+    return acc;
+  }, acc);
 }
 
 function isArguments(object) {
@@ -884,43 +982,32 @@ export function toIdSchema(
 
 export function toPathSchema(schema, name = "", definitions, formData = {}) {
   const pathSchema = {
-    $name: name,
+    $name: name.replace(/^\./, ""),
   };
   if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
     const _schema = retrieveSchema(schema, definitions, formData);
     return toPathSchema(_schema, name, definitions, formData);
   }
-  if ("items" in schema) {
-    const retVal = {};
-    if (Array.isArray(formData) && formData.length > 0) {
-      formData.forEach((element, index) => {
-        retVal[`${index}`] = toPathSchema(
-          schema.items,
-          `${name}.${index}`,
-          definitions,
-          element
-        );
-      });
+  if (schema.hasOwnProperty("items") && Array.isArray(formData)) {
+    formData.forEach((element, i) => {
+      pathSchema[i] = toPathSchema(
+        schema.items,
+        `${name}.${i}`,
+        definitions,
+        element
+      );
+    });
+  } else if (schema.hasOwnProperty("properties")) {
+    for (const property in schema.properties) {
+      pathSchema[property] = toPathSchema(
+        schema.properties[property],
+        `${name}.${property}`,
+        definitions,
+        // It's possible that formData is not an object -- this can happen if an
+        // array item has just been added, but not populated with data yet
+        (formData || {})[property]
+      );
     }
-    return retVal;
-  }
-  if (schema.type !== "object") {
-    return pathSchema;
-  }
-  for (const property in schema.properties || {}) {
-    const field = schema.properties[property];
-    const fieldId = pathSchema.$name
-      ? pathSchema.$name + "." + property
-      : property;
-
-    pathSchema[property] = toPathSchema(
-      field,
-      fieldId,
-      definitions,
-      // It's possible that formData is not an object -- this can happen if an
-      // array item has just been added, but not populated with data yet
-      (formData || {})[property]
-    );
   }
   return pathSchema;
 }
@@ -965,16 +1052,6 @@ export function pad(num, size) {
     s = "0" + s;
   }
   return s;
-}
-
-export function setState(instance, state, callback) {
-  const { safeRenderCompletion } = instance.props;
-  if (safeRenderCompletion) {
-    instance.setState(state, callback);
-  } else {
-    instance.setState(state);
-    setImmediate(callback);
-  }
 }
 
 export function dataURItoBlob(dataURI) {

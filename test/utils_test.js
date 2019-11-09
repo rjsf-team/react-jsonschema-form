@@ -2,6 +2,7 @@ import { expect } from "chai";
 import React from "react";
 
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   asNumber,
   orderProperties,
   dataURItoBlob,
@@ -13,6 +14,7 @@ import {
   isConstant,
   toConstant,
   isMultiSelect,
+  mergeDefaultsWithFormData,
   mergeObjects,
   pad,
   parseDateString,
@@ -22,6 +24,7 @@ import {
   toIdSchema,
   toPathSchema,
   guessType,
+  mergeSchemas,
 } from "../src/utils";
 
 describe("utils", () => {
@@ -46,6 +49,17 @@ describe("utils", () => {
             0
           )
         ).to.eql(0);
+      });
+
+      it("should keep existing form data that is equal to false", () => {
+        expect(
+          getDefaultFormState(
+            {
+              type: "boolean",
+            },
+            false
+          )
+        ).to.eql(false);
       });
 
       const noneValues = [null, undefined, NaN];
@@ -306,6 +320,210 @@ describe("utils", () => {
         });
       });
 
+      it("should merge schema array item defaults from grandparent for overlapping default definitions", () => {
+        const schema = {
+          type: "object",
+          default: {
+            level1: { level2: ["root-default-1", "root-default-2"] },
+          },
+          properties: {
+            level1: {
+              type: "object",
+              properties: {
+                level2: {
+                  type: "array",
+                  items: [
+                    {
+                      type: "string",
+                      default: "child-default-1",
+                    },
+                    {
+                      type: "string",
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: { level2: ["child-default-1", "root-default-2"] },
+        });
+      });
+
+      it("should overwrite schema array item defaults from parent for nested default definitions", () => {
+        const schema = {
+          type: "object",
+          default: {
+            level1: {
+              level2: [{ item: "root-default-1" }, { item: "root-default-2" }],
+            },
+          },
+          properties: {
+            level1: {
+              type: "object",
+              default: { level2: [{ item: "parent-default-1" }, {}] },
+              properties: {
+                level2: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      item: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: { level2: [{ item: "parent-default-1" }, {}] },
+        });
+      });
+
+      it("should merge schema array item defaults from the same item for overlapping default definitions", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            level1: {
+              type: "array",
+              default: ["property-default-1", "property-default-2"],
+              items: [
+                {
+                  type: "string",
+                  default: "child-default-1",
+                },
+                {
+                  type: "string",
+                },
+              ],
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: ["child-default-1", "property-default-2"],
+        });
+      });
+
+      it("should merge schema from additionalItems defaults into property default", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            level1: {
+              type: "array",
+              default: [
+                {
+                  item: "property-default-1",
+                },
+                {},
+              ],
+              additionalItems: {
+                type: "object",
+                properties: {
+                  item: {
+                    type: "string",
+                    default: "additional-default",
+                  },
+                },
+              },
+              items: [
+                {
+                  type: "object",
+                  properties: {
+                    item: {
+                      type: "string",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: [
+            { item: "property-default-1" },
+            { item: "additional-default" },
+          ],
+        });
+      });
+
+      it("should overwrite defaults over multiple levels with arrays", () => {
+        const schema = {
+          type: "object",
+          default: {
+            level1: [
+              {
+                item: "root-default-1",
+              },
+              {
+                item: "root-default-2",
+              },
+              {
+                item: "root-default-3",
+              },
+              {
+                item: "root-default-4",
+              },
+            ],
+          },
+          properties: {
+            level1: {
+              type: "array",
+              default: [
+                {
+                  item: "property-default-1",
+                },
+                {},
+                {},
+              ],
+              additionalItems: {
+                type: "object",
+                properties: {
+                  item: {
+                    type: "string",
+                    default: "additional-default",
+                  },
+                },
+              },
+              items: [
+                {
+                  type: "object",
+                  properties: {
+                    item: {
+                      type: "string",
+                    },
+                  },
+                },
+                {
+                  type: "object",
+                  properties: {
+                    item: {
+                      type: "string",
+                      default: "child-default-2",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        expect(getDefaultFormState(schema, {})).eql({
+          level1: [
+            { item: "property-default-1" },
+            { item: "child-default-2" },
+            { item: "additional-default" },
+          ],
+        });
+      });
+
       it("should use schema default for referenced definitions", () => {
         const schema = {
           definitions: {
@@ -343,6 +561,43 @@ describe("utils", () => {
         expect(getDefaultFormState(schema, {})).eql({
           array: ["foo"],
         });
+      });
+
+      it("should not fill array with additional items from schema when items is empty and form data contains partial array", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            array: {
+              type: "array",
+              minItems: 2,
+              additionalItems: {
+                type: "string",
+                default: "foo",
+              },
+              items: [],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { array: ["bar"] })).eql({
+          array: ["bar"],
+        });
+      });
+
+      it("should fill defaults in existing array items", () => {
+        const schema = {
+          type: "array",
+          minItems: 2,
+          items: {
+            type: "object",
+            properties: {
+              item: {
+                type: "string",
+                default: "foo",
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, [{}])).eql([{ item: "foo" }]);
       });
 
       it("defaults passed along for multiselect arrays when minItems is present", () => {
@@ -615,6 +870,120 @@ describe("utils", () => {
             grade: "A",
           },
         });
+      });
+
+      it("should populate defaults for nested dependencies in arrays", () => {
+        const schema = {
+          type: "array",
+          items: {
+            properties: {
+              foo: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                },
+                dependencies: {
+                  name: {
+                    oneOf: [
+                      {
+                        properties: {
+                          name: {
+                            type: "string",
+                          },
+                          grade: {
+                            type: "string",
+                            default: "A",
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, [{ foo: { name: "Name" } }])).eql([
+          {
+            foo: {
+              name: "Name",
+              grade: "A",
+            },
+          },
+        ]);
+      });
+
+      it("should populate defaults for nested dependencies in arrays when matching enum values in oneOf", () => {
+        const schema = {
+          type: "array",
+          items: {
+            properties: {
+              foo: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                },
+                dependencies: {
+                  name: {
+                    oneOf: [
+                      {
+                        properties: {
+                          name: {
+                            enum: ["first"],
+                          },
+                          grade: {
+                            type: "string",
+                            default: "A",
+                          },
+                        },
+                      },
+                      {
+                        properties: {
+                          name: {
+                            enum: ["second"],
+                          },
+                          grade: {
+                            type: "string",
+                            default: "B",
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          getDefaultFormState(schema, [
+            { foo: { name: "first" } },
+            { foo: { name: "second" } },
+            { foo: { name: "third" } },
+          ])
+        ).eql([
+          {
+            foo: {
+              name: "first",
+              grade: "A",
+            },
+          },
+          {
+            foo: {
+              name: "second",
+              grade: "B",
+            },
+          },
+          {
+            foo: {
+              name: "third",
+            },
+          },
+        ]);
       });
 
       it("should populate defaults for nested oneOf + dependencies", () => {
@@ -956,8 +1325,95 @@ describe("utils", () => {
     });
   });
 
+  describe("mergeDefaultsWithFormData()", () => {
+    it("shouldn't mutate the provided objects", () => {
+      const obj1 = { a: 1 };
+      mergeDefaultsWithFormData(obj1, { b: 2 });
+      expect(obj1).eql({ a: 1 });
+    });
+
+    it("shouldn't mutate the provided arrays", () => {
+      const array1 = [1];
+      mergeDefaultsWithFormData(array1, [2]);
+      expect(array1).eql([1]);
+    });
+
+    it("should merge two one-level deep objects", () => {
+      expect(mergeDefaultsWithFormData({ a: 1 }, { b: 2 })).eql({ a: 1, b: 2 });
+    });
+
+    it("should override the first object with the values from the second", () => {
+      expect(mergeDefaultsWithFormData({ a: 1 }, { a: 2 })).eql({ a: 2 });
+    });
+
+    it("should override non-existing values of the first object with the values from the second", () => {
+      expect(
+        mergeDefaultsWithFormData(
+          { a: { b: undefined } },
+          { a: { b: { c: 1 } } }
+        )
+      ).eql({ a: { b: { c: 1 } } });
+    });
+
+    it("should merge arrays using entries from second", () => {
+      expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5])).eql([4, 5]);
+    });
+
+    it("should deeply merge arrays with overlapping entries", () => {
+      expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }])).eql([
+        { a: 1, b: 2 },
+      ]);
+    });
+
+    it("should recursively merge deeply nested objects", () => {
+      const obj1 = {
+        a: 1,
+        b: {
+          c: 3,
+          d: [1, 2, 3],
+          e: { f: { g: 1 } },
+          h: [{ i: 1 }, { i: 2 }],
+        },
+        c: 2,
+      };
+      const obj2 = {
+        a: 1,
+        b: {
+          d: [3],
+          e: { f: { h: 2 } },
+          g: 1,
+          h: [{ i: 3 }],
+        },
+        c: 3,
+      };
+      const expected = {
+        a: 1,
+        b: {
+          c: 3,
+          d: [3],
+          e: { f: { g: 1, h: 2 } },
+          g: 1,
+          h: [{ i: 3 }],
+        },
+        c: 3,
+      };
+      expect(mergeDefaultsWithFormData(obj1, obj2)).eql(expected);
+    });
+
+    it("should recursively merge File objects", () => {
+      const file = new File(["test"], "test.txt");
+      const obj1 = {
+        a: {},
+      };
+      const obj2 = {
+        a: file,
+      };
+      expect(mergeDefaultsWithFormData(obj1, obj2).a).instanceOf(File);
+    });
+  });
+
   describe("mergeObjects()", () => {
-    it("should't mutate the provided objects", () => {
+    it("shouldn't mutate the provided objects", () => {
       const obj1 = { a: 1 };
       mergeObjects(obj1, { b: 2 });
       expect(obj1).eql({ a: 1 });
@@ -1046,6 +1502,123 @@ describe("utils", () => {
     });
   });
 
+  describe("mergeSchemas()", () => {
+    it("shouldn't mutate the provided objects", () => {
+      const obj1 = { a: 1 };
+      mergeSchemas(obj1, { b: 2 });
+      expect(obj1).eql({ a: 1 });
+    });
+
+    it("should merge two one-level deep objects", () => {
+      expect(mergeSchemas({ a: 1 }, { b: 2 })).eql({ a: 1, b: 2 });
+    });
+
+    it("should override the first object with the values from the second", () => {
+      expect(mergeSchemas({ a: 1 }, { a: 2 })).eql({ a: 2 });
+    });
+
+    it("should override non-existing values of the first object with the values from the second", () => {
+      expect(mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
+    });
+
+    it("should recursively merge deeply nested objects", () => {
+      const obj1 = {
+        a: 1,
+        b: {
+          c: 3,
+          d: [1, 2, 3],
+          e: { f: { g: 1 } },
+        },
+        c: 2,
+      };
+      const obj2 = {
+        a: 1,
+        b: {
+          d: [3, 2, 1],
+          e: { f: { h: 2 } },
+          g: 1,
+        },
+        c: 3,
+      };
+      const expected = {
+        a: 1,
+        b: {
+          c: 3,
+          d: [3, 2, 1],
+          e: { f: { g: 1, h: 2 } },
+          g: 1,
+        },
+        c: 3,
+      };
+      expect(mergeSchemas(obj1, obj2)).eql(expected);
+    });
+
+    it("should recursively merge File objects", () => {
+      const file = new File(["test"], "test.txt");
+      const obj1 = {
+        a: {},
+      };
+      const obj2 = {
+        a: file,
+      };
+      expect(mergeSchemas(obj1, obj2).a).instanceOf(File);
+    });
+
+    describe("arrays", () => {
+      it("should not concat arrays", () => {
+        const obj1 = { a: [1] };
+        const obj2 = { a: [2] };
+
+        expect(mergeSchemas(obj1, obj2)).eql({ a: [2] });
+      });
+
+      it("should concat arrays under 'required' keyword", () => {
+        const obj1 = { type: "object", required: [1] };
+        const obj2 = { type: "object", required: [2] };
+
+        expect(mergeSchemas(obj1, obj2)).eql({
+          type: "object",
+          required: [1, 2],
+        });
+      });
+
+      it("should concat arrays under 'required' keyword when one of the schemas is an object type", () => {
+        const obj1 = { type: "object", required: [1] };
+        const obj2 = { required: [2] };
+
+        expect(mergeSchemas(obj1, obj2)).eql({
+          type: "object",
+          required: [1, 2],
+        });
+      });
+
+      it("should concat nested arrays under 'required' keyword", () => {
+        const obj1 = { a: { type: "object", required: [1] } };
+        const obj2 = { a: { type: "object", required: [2] } };
+
+        expect(mergeSchemas(obj1, obj2)).eql({
+          a: { type: "object", required: [1, 2] },
+        });
+      });
+
+      it("should not include duplicate values when concatting arrays under 'required' keyword", () => {
+        const obj1 = { type: "object", required: [1] };
+        const obj2 = { type: "object", required: [1] };
+
+        expect(mergeSchemas(obj1, obj2)).eql({ type: "object", required: [1] });
+      });
+
+      it("should not concat arrays under 'required' keyword that are not under an object type", () => {
+        const obj1 = { required: [1] };
+        const obj2 = { required: [2] };
+
+        expect(mergeSchemas(obj1, obj2)).eql({ required: [2] });
+      });
+    });
+  });
+
   describe("retrieveSchema()", () => {
     it("should 'resolve' a schema which contains definitions", () => {
       const schema = { $ref: "#/definitions/address" };
@@ -1069,6 +1642,64 @@ describe("utils", () => {
       const definitions = { "a~complex/name": address };
 
       expect(retrieveSchema(schema, definitions)).eql(address);
+    });
+
+    it("should 'resolve' and stub out a schema which contains an `additionalProperties` with a definition", () => {
+      const schema = {
+        type: "object",
+        additionalProperties: {
+          $ref: "#/definitions/components/schemas/address",
+        },
+      };
+
+      const address = {
+        type: "object",
+        properties: {
+          street_address: { type: "string" },
+          city: { type: "string" },
+          state: { type: "string" },
+        },
+        required: ["street_address", "city", "state"],
+      };
+
+      const definitions = { components: { schemas: { address } } };
+      const formData = { newKey: {} };
+
+      expect(retrieveSchema(schema, definitions, formData)).eql({
+        ...schema,
+        properties: {
+          newKey: {
+            ...address,
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
+      });
+    });
+
+    it("should 'resolve' and stub out a schema which contains an `additionalProperties` with a type and definition", () => {
+      const schema = {
+        type: "string",
+        additionalProperties: {
+          $ref: "#/definitions/number",
+        },
+      };
+
+      const number = {
+        type: "number",
+      };
+
+      const definitions = { number };
+      const formData = { newKey: {} };
+
+      expect(retrieveSchema(schema, definitions, formData)).eql({
+        ...schema,
+        properties: {
+          newKey: {
+            ...number,
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
+      });
     });
 
     it("should priorize local definitions over foreign ones", () => {
@@ -1246,6 +1877,35 @@ describe("utils", () => {
               properties: {
                 a: { type: "string" },
                 b: { type: "integer" },
+              },
+              required: ["a", "b"],
+            });
+          });
+          it("should not concat enum properties, but should concat 'required' properties", () => {
+            const schema = {
+              type: "object",
+              properties: {
+                a: { type: "string", enum: ["FOO", "BAR", "BAZ"] },
+                b: { type: "string", enum: ["GREEN", "BLUE", "RED"] },
+              },
+              required: ["a"],
+              dependencies: {
+                a: {
+                  properties: {
+                    a: { enum: ["FOO"] },
+                    b: { enum: ["BLUE"] },
+                  },
+                  required: ["a", "b"],
+                },
+              },
+            };
+            const definitions = {};
+            const formData = { a: "FOO" };
+            expect(retrieveSchema(schema, definitions, formData)).eql({
+              type: "object",
+              properties: {
+                a: { type: "string", enum: ["FOO"] },
+                b: { type: "string", enum: ["BLUE"] },
               },
               required: ["a", "b"],
             });
@@ -2022,6 +2682,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         list: {
+          $name: "list",
           "0": {
             $name: "list.0",
             a: {
@@ -2158,6 +2819,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         address_list: {
+          $name: "address_list",
           "0": {
             $name: "address_list.0",
             city: {
@@ -2375,6 +3037,7 @@ describe("utils", () => {
       expect(toPathSchema(schema, "", schema.definitions, formData)).eql({
         $name: "",
         defaultsAndMinItems: {
+          $name: "defaultsAndMinItems",
           "0": {
             $name: "defaultsAndMinItems.0",
           },
@@ -2392,6 +3055,7 @@ describe("utils", () => {
           },
         },
         fixedItemsList: {
+          $name: "fixedItemsList",
           "0": {
             $name: "fixedItemsList.0",
           },
@@ -2403,6 +3067,7 @@ describe("utils", () => {
           },
         },
         fixedNoToolbar: {
+          $name: "fixedNoToolbar",
           "0": {
             $name: "fixedNoToolbar.0",
           },
@@ -2417,6 +3082,7 @@ describe("utils", () => {
           },
         },
         listOfObjects: {
+          $name: "listOfObjects",
           "0": {
             $name: "listOfObjects.0",
             id: {
@@ -2446,6 +3112,7 @@ describe("utils", () => {
           },
         },
         listOfStrings: {
+          $name: "listOfStrings",
           "0": {
             $name: "listOfStrings.0",
           },
@@ -2454,6 +3121,7 @@ describe("utils", () => {
           },
         },
         minItemsList: {
+          $name: "minItemsList",
           "0": {
             $name: "minItemsList.0",
             name: {
@@ -2474,6 +3142,7 @@ describe("utils", () => {
           },
         },
         multipleChoicesList: {
+          $name: "multipleChoicesList",
           "0": {
             $name: "multipleChoicesList.0",
           },
@@ -2482,7 +3151,9 @@ describe("utils", () => {
           },
         },
         nestedList: {
+          $name: "nestedList",
           "0": {
+            $name: "nestedList.0",
             "0": {
               $name: "nestedList.0.0",
             },
@@ -2491,12 +3162,14 @@ describe("utils", () => {
             },
           },
           "1": {
+            $name: "nestedList.1",
             "0": {
               $name: "nestedList.1.0",
             },
           },
         },
         noToolbar: {
+          $name: "noToolbar",
           "0": {
             $name: "noToolbar.0",
           },
@@ -2505,6 +3178,7 @@ describe("utils", () => {
           },
         },
         unorderable: {
+          $name: "unorderable",
           "0": {
             $name: "unorderable.0",
           },
@@ -2513,6 +3187,7 @@ describe("utils", () => {
           },
         },
         unremovable: {
+          $name: "unremovable",
           "0": {
             $name: "unremovable.0",
           },
@@ -2797,12 +3472,21 @@ describe("utils", () => {
       );
     });
 
-    //TODO: Unskip the test when react>=16.3 will be used
-    it.skip("should not fail on forwarded ref component", () => {
+    it("should not fail on correct component", () => {
+      const Widget = props => <div {...props} />;
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
+    });
+
+    it("should not fail on forwarded ref component", () => {
       const Widget = React.forwardRef((props, ref) => (
         <div {...props} ref={ref} />
       ));
-      expect(getWidget(schema, Widget)).eql(<Widget />);
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
+    });
+
+    it("should not fail on memo component", () => {
+      const Widget = React.memo(props => <div {...props} />);
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
   });
 });
