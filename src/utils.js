@@ -187,10 +187,10 @@ function computeDefaults(
       includeUndefinedValues
     );
   } else if (isFixedItems(schema)) {
-    defaults = schema.items.map(itemSchema =>
+    defaults = schema.items.map((itemSchema, idx) =>
       computeDefaults(
         itemSchema,
-        undefined,
+        Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         definitions,
         formData,
         includeUndefinedValues
@@ -229,6 +229,28 @@ function computeDefaults(
       }, {});
 
     case "array":
+      // Inject defaults into existing array defaults
+      if (Array.isArray(defaults)) {
+        defaults = defaults.map((item, idx) => {
+          return computeDefaults(
+            schema.items[idx] || schema.additionalItems || {},
+            item,
+            definitions
+          );
+        });
+      }
+
+      // Deeply inject defaults into already existing form data
+      if (Array.isArray(rawFormData)) {
+        defaults = rawFormData.map((item, idx) => {
+          return computeDefaults(
+            schema.items,
+            (defaults || {})[idx],
+            definitions,
+            item
+          );
+        });
+      }
       if (schema.minItems) {
         if (!isMultiSelect(schema, definitions)) {
           const defaultsLength = defaults ? defaults.length : 0;
@@ -275,14 +297,47 @@ export function getDefaultFormState(
     // No form data? Use schema defaults.
     return defaults;
   }
-  if (isObject(formData)) {
-    // Override schema defaults with form data.
-    return mergeObjects(defaults, formData);
+  if (isObject(formData) || Array.isArray(formData)) {
+    return mergeDefaultsWithFormData(defaults, formData);
   }
   if (formData === 0 || formData === false) {
     return formData;
   }
   return formData || defaults;
+}
+
+/**
+ * When merging defaults and form data, we want to merge in this specific way:
+ * - objects are deeply merged
+ * - arrays are merged in such a way that:
+ *   - when the array is set in form data, only array entries set in form data
+ *     are deeply merged; additional entries from the defaults are ignored
+ *   - when the array is not set in form data, the default is copied over
+ * - scalars are overwritten/set by form data
+ */
+export function mergeDefaultsWithFormData(defaults, formData) {
+  if (Array.isArray(formData)) {
+    if (!Array.isArray(defaults)) {
+      defaults = [];
+    }
+    return formData.map((value, idx) => {
+      if (defaults[idx]) {
+        return mergeDefaultsWithFormData(defaults[idx], value);
+      }
+      return value;
+    });
+  } else if (isObject(formData)) {
+    const acc = Object.assign({}, defaults); // Prevent mutation of source object.
+    return Object.keys(formData).reduce((acc, key) => {
+      acc[key] = mergeDefaultsWithFormData(
+        defaults ? defaults[key] : {},
+        formData[key]
+      );
+      return acc;
+    }, acc);
+  } else {
+    return formData;
+  }
 }
 
 export function getUiOptions(uiSchema) {

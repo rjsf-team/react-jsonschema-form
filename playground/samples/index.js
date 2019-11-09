@@ -23,6 +23,7 @@ import additionalProperties from "./additionalProperties";
 import nullable from "./nullable";
 import nullField from "./null";
 import errorSchema from "./errorSchema";
+import defaults from "./defaults";
 
 export const samples = {
   Simple: simple,
@@ -50,4 +51,5 @@ export const samples = {
   "Null fields": nullField,
   Nullable: nullable,
   ErrorSchema: errorSchema,
+  Defaults: defaults,
 };

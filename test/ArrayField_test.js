@@ -405,7 +405,7 @@ describe("ArrayField", () => {
       expect(inputs[1].value).eql("bar");
     });
 
-    it("should't have reorder buttons when list length <= 1", () => {
+    it("shouldn't have reorder buttons when list length <= 1", () => {
       const { node } = createFormComponent({ schema, formData: ["foo"] });
 
       expect(node.querySelector(".array-item-move-up")).eql(null);
