@@ -716,6 +716,53 @@ describe("anyOf", () => {
       expect(selects[1].value).eql("0");
     });
 
+    it("should correctly update inputs for anyOf inside array items after being moved down", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          items: {
+            type: "array",
+            items: {
+              type: "object",
+              anyOf: [
+                {
+                  properties: {
+                    foo: {
+                      type: "string",
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    bar: {
+                      type: "string",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        formData: {
+          items: [{}, {}],
+        },
+      });
+
+      const moveDownBtns = node.querySelectorAll(".array-item-move-down");
+      Simulate.click(moveDownBtns[0]);
+
+      const strInputs = node.querySelectorAll(
+        "fieldset .field-string input[type=text]"
+      );
+
+      Simulate.change(strInputs[1], { target: { value: "bar" } });
+      expect(strInputs[1].value).eql("bar");
+    });
+
     it("should correctly render mixed types for anyOf inside array items", () => {
       const schema = {
         type: "object",
