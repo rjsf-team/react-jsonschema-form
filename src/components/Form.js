@@ -60,7 +60,7 @@ export default class Form extends Component {
     const edit = typeof inputFormData !== "undefined";
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
-    const { definitions } = schema;
+    const definitions = schema;
     const formData = getDefaultFormState(schema, inputFormData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
     const customFormats = props.customFormats;
@@ -185,13 +185,13 @@ export default class Form extends Component {
     if (this.props.omitExtraData === true && this.props.liveOmit === true) {
       const retrievedSchema = retrieveSchema(
         this.state.schema,
-        this.state.schema.definitions,
+        this.state.schema,
         formData
       );
       const pathSchema = toPathSchema(
         retrievedSchema,
         "",
-        this.state.schema.definitions,
+        this.state.schema,
         formData
       );
 
@@ -250,13 +250,13 @@ export default class Form extends Component {
     if (this.props.omitExtraData === true) {
       const retrievedSchema = retrieveSchema(
         this.state.schema,
-        this.state.schema.definitions,
+        this.state.schema,
         newFormData
       );
       const pathSchema = toPathSchema(
         retrievedSchema,
         "",
-        this.state.schema.definitions,
+        this.state.schema,
         newFormData
       );
 
@@ -316,7 +316,8 @@ export default class Form extends Component {
       ArrayFieldTemplate: this.props.ArrayFieldTemplate,
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
-      definitions: this.props.schema.definitions || {},
+      // TODO: fix this. this is a backwards incompatible change.
+      definitions: this.props.schema || {},
       formContext: this.props.formContext || {},
     };
   }

@@ -542,8 +542,9 @@ export function optionsList(schema) {
   }
 }
 
-function findSchemaDefinition($ref, definitions = {}) {
+function findSchemaDefinition($ref, rootSchema = {}) {
   // Extract and use the referenced definition if we have it.
+  const definitions = rootSchema.definitions || {};
   const match = /^#\/definitions\/(.*)$/.exec($ref);
   if (match && match[1]) {
     const parts = match[1].split("/");
@@ -551,7 +552,7 @@ function findSchemaDefinition($ref, definitions = {}) {
     for (let part of parts) {
       part = part.replace(/~1/g, "/").replace(/~0/g, "~");
       while (current.hasOwnProperty("$ref")) {
-        current = findSchemaDefinition(current.$ref, definitions);
+        current = findSchemaDefinition(current.$ref, rootSchema);
       }
       if (current.hasOwnProperty(part)) {
         current = current[part];
