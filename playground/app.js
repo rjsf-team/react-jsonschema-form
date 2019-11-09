@@ -5,6 +5,7 @@ import MonacoEditor from "react-monaco-editor";
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
+import "react-app-polyfill/ie11";
 
 const log = type => console.log.bind(console, type);
 const toJson = val => JSON.stringify(val, null, 2);
