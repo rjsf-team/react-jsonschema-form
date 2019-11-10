@@ -743,10 +743,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema: complexSchema,
         formData: {
-          foo: [
-            { bar: "bar1", baz: "baz1" },
-            { bar: "bar2", baz: "baz2" },
-          ],
+          foo: [{ bar: "bar1", baz: "baz1" }, { bar: "bar2", baz: "baz2" }],
         },
       });
 
@@ -1277,10 +1274,7 @@ describe("ArrayField", () => {
     it("should render two lists of inputs inside of a list", () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
-          [1, 2],
-          [3, 4],
-        ],
+        formData: [[1, 2], [3, 4]],
       });
       expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(2);
     });
