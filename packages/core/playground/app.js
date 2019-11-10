@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import MonacoEditor from "react-monaco-editor";
 
-import { shouldRender } from "./packages/core/src/utils";
+import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
-import Form from "./packages/core/src";
+import Form from "../src";
 import "react-app-polyfill/ie11";
 
 const log = type => console.log.bind(console, type);
