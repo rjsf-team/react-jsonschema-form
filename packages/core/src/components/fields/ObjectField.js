@@ -67,7 +67,6 @@ class ObjectField extends Component {
     required: false,
     disabled: false,
     readonly: false,
-    isDebugMode: false,
   };
 
   state = {
@@ -203,7 +202,6 @@ class ObjectField extends Component {
       idSchema,
       name,
       required,
-      isDebugMode,
       disabled,
       readonly,
       idPrefix,
@@ -228,11 +226,7 @@ class ObjectField extends Component {
     let orderedProperties;
     try {
       const properties = Object.keys(schema.properties || {});
-      orderedProperties = orderProperties(
-        properties,
-        uiSchema["ui:order"],
-        isDebugMode
-      );
+      orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
     } catch (err) {
       return (
         <div>

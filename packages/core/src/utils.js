@@ -417,7 +417,7 @@ export function asNumber(value) {
   return valid ? n : value;
 }
 
-export function orderProperties(properties, order, isDebugMode) {
+export function orderProperties(properties, order) {
   if (!Array.isArray(order)) {
     return properties;
   }
@@ -432,12 +432,6 @@ export function orderProperties(properties, order, isDebugMode) {
       ? `properties '${arr.join("', '")}'`
       : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
-  const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
-  if (isDebugMode && extraneous.length) {
-    console.warn(
-      `uiSchema order list contains extraneous ${errorPropList(extraneous)}`
-    );
-  }
   const orderFiltered = order.filter(
     prop => prop === "*" || propertyHash[prop]
   );
