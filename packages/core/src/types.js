@@ -25,6 +25,7 @@ export const fieldProps = {
   readonly: PropTypes.bool,
   registry: registry.isRequired,
   required: PropTypes.bool,
+  isDebugMode: PropTypes.bool,
   schema: PropTypes.object.isRequired,
   uiSchema: PropTypes.shape({
     "ui:options": PropTypes.shape({
