@@ -428,7 +428,7 @@ if (process.env.NODE_ENV !== "production") {
     onSubmit: PropTypes.func,
     id: PropTypes.string,
     className: PropTypes.string,
-    tagName: PropTypes.string,
+    tagName: PropTypes.elementType,
     name: PropTypes.string,
     method: PropTypes.string,
     target: PropTypes.string,
