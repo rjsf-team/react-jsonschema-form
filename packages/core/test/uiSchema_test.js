@@ -1566,7 +1566,7 @@ describe("uiSchema", () => {
           node => node.textContent
         );
 
-        expect(labels).eql(["yes", "no"]);
+        expect(labels).eql(["Yes", "No"]);
       });
 
       it("should support formData", () => {
@@ -1634,8 +1634,8 @@ describe("uiSchema", () => {
       it("should render boolean option labels", () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelectorAll("option")[1].textContent).eql("yes");
-        expect(node.querySelectorAll("option")[2].textContent).eql("no");
+        expect(node.querySelectorAll("option")[1].textContent).eql("Yes");
+        expect(node.querySelectorAll("option")[2].textContent).eql("No");
       });
 
       it("should update state when true is selected", () => {

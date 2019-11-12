@@ -251,7 +251,7 @@ describe("BooleanField", () => {
       node.querySelectorAll(".field-radio-group label"),
       label => label.textContent
     );
-    expect(labels).eql(["yes", "no"]);
+    expect(labels).eql(["Yes", "No"]);
   });
 
   it("should support enum option ordering for radio widgets", () => {
@@ -268,7 +268,7 @@ describe("BooleanField", () => {
       node.querySelectorAll(".field-radio-group label"),
       label => label.textContent
     );
-    expect(labels).eql(["no", "yes"]);
+    expect(labels).eql(["No", "Yes"]);
   });
 
   it("should support enumNames for radio widgets", () => {

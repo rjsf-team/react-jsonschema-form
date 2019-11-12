@@ -36,7 +36,7 @@ function BooleanField(props) {
     enumOptions = optionsList({
       oneOf: schema.oneOf.map(option => ({
         ...option,
-        title: option.title || (option.const === true ? "yes" : "no"),
+        title: option.title || (option.const === true ? "Yes" : "No"),
       })),
     });
   } else {
@@ -45,8 +45,8 @@ function BooleanField(props) {
       enumNames:
         schema.enumNames ||
         (schema.enum && schema.enum[0] === false
-          ? ["no", "yes"]
-          : ["yes", "no"]),
+          ? ["No", "Yes"]
+          : ["Yes", "No"]),
     });
   }
 
