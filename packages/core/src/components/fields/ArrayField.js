@@ -510,7 +510,7 @@ class ArrayField extends Component {
       title,
       TitleField,
       formContext,
-      formData,
+      formData: keyedToPlainFormData(this.state.keyedFormData),
       rawErrors,
       registry,
     };
