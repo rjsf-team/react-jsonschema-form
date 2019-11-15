@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import validateFormData from "../src/validate";
+import validateFormData, { sortErrorsByUiSchema } from "../src/validate";
 
 describe("Validation Error Sorting", () => {
   describe("validate.validateFormData()", () => {
@@ -8,7 +8,7 @@ describe("Validation Error Sorting", () => {
       const expectOrder = (sortedErrors, expectedOrder) => {
         if (sortedErrors.length !== expectedOrder.length) {
           throw new Error(
-            `The amount of sored errors (${
+            `The number of sorted errors (${
               sortedErrors.length
             }) does not match the expected ones (${expectedOrder.length})`
           );
@@ -38,16 +38,20 @@ describe("Validation Error Sorting", () => {
           foo: "bar",
           bar: "foo",
         };
-        const result = validateFormData(
+        const validationResults = validateFormData(
           formData,
           schema,
           null,
           null,
           null,
-          null,
+          null
+        );
+        const sortingResults = sortErrorsByUiSchema(
+          validationResults.errors,
           uiSchema
         );
-        expectOrder(result.errors, []);
+
+        expectOrder(sortingResults, []);
       });
 
       describe("without ui:orders in an uiSchema", () => {
@@ -82,16 +86,20 @@ describe("Validation Error Sorting", () => {
             },
             bar: "",
           };
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [".bar", ".foo.wibble", ".foo.wobble"]);
+
+          expectOrder(sortingResults, [".bar", ".foo.wibble", ".foo.wobble"]);
         });
       });
 
@@ -131,16 +139,20 @@ describe("Validation Error Sorting", () => {
             },
             bar: "",
           };
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [".bar", ".foo.wibble", ".foo.wobble"]);
+
+          expectOrder(sortingResults, [".bar", ".foo.wibble", ".foo.wobble"]);
         });
       });
 
@@ -171,16 +183,20 @@ describe("Validation Error Sorting", () => {
             bar: "",
             qux: "",
           };
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [".foo", ".bar", ".qux"]);
+
+          expectOrder(sortingResults, [".foo", ".bar", ".qux"]);
         });
       });
 
@@ -221,16 +237,20 @@ describe("Validation Error Sorting", () => {
             },
             bar: "",
           };
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [".foo.wibble", ".foo.wobble", ".bar"]);
+
+          expectOrder(sortingResults, [".foo.wibble", ".foo.wobble", ".bar"]);
         });
 
         it("should be able to deal with properties on the same level which names start alike", () => {
@@ -292,16 +312,20 @@ describe("Validation Error Sorting", () => {
             },
             bar: "",
           };
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [
+
+          expectOrder(sortingResults, [
             ".foo.wibble.quux",
             ".foo.wibble.qux",
             ".foo.wibblewobble.waldo",
@@ -334,16 +358,20 @@ describe("Validation Error Sorting", () => {
             foo: "",
             bar: "",
           };
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [".foo", ".bar"]);
+
+          expectOrder(sortingResults, [".foo", ".bar"]);
         });
       });
 
@@ -370,16 +398,20 @@ describe("Validation Error Sorting", () => {
             foo: "",
             bar: "",
           };
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [".foo", ".foo", ".bar"]);
+
+          expectOrder(sortingResults, [".foo", ".foo", ".bar"]);
         });
       });
 
@@ -419,18 +451,23 @@ describe("Validation Error Sorting", () => {
               },
               bar: "",
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [".foo.wibble[0]", ".bar"]);
+
+            expectOrder(sortingResults, [".foo.wibble[0]", ".bar"]);
           });
         });
+
         describe("containing objects", () => {
           it("should have the order wibble - wobble - bar when only the array elements hav validationerrors", () => {
             const schema = {
@@ -481,16 +518,20 @@ describe("Validation Error Sorting", () => {
               ],
               bar: "",
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [
+
+            expectOrder(sortingResults, [
               ".foo[0].wobble",
               ".foo[1].wibble",
               ".foo[1].wobble",
@@ -498,6 +539,7 @@ describe("Validation Error Sorting", () => {
               ".bar",
             ]);
           });
+
           it("should have the order foo - wibble - wobble - bar when the array itself has validationerrors", () => {
             const schema = {
               type: "object",
@@ -548,16 +590,20 @@ describe("Validation Error Sorting", () => {
               ],
               bar: "",
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [
+
+            expectOrder(sortingResults, [
               ".foo",
               ".foo[0].wobble",
               ".foo[1].wibble",
@@ -566,6 +612,7 @@ describe("Validation Error Sorting", () => {
               ".bar",
             ]);
           });
+
           it("should consider the nested uiOrder in the items tab", () => {
             const schema = {
               type: "object",
@@ -607,16 +654,20 @@ describe("Validation Error Sorting", () => {
                 rows: [{}, {}],
               },
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [
+
+            expectOrder(sortingResults, [
               ".foo.rows[0].wibble",
               ".foo.rows[0].wobble",
               ".foo.rows[0].wabble",
@@ -626,6 +677,7 @@ describe("Validation Error Sorting", () => {
             ]);
           });
         });
+
         describe("containing nested objects", () => {
           it("should have the order foo - wibble - plugh - garply - grault - wobble - bar", () => {
             const schema = {
@@ -719,16 +771,20 @@ describe("Validation Error Sorting", () => {
               ],
               bar: "",
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [
+
+            expectOrder(sortingResults, [
               ".foo",
               ".foo[0].plugh",
               ".foo[0].plugh[0].grault",
@@ -781,17 +837,22 @@ describe("Validation Error Sorting", () => {
               qux: "",
               quuz: "",
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [".foo", ".qux", ".quuz", ".bar"]);
+
+            expectOrder(sortingResults, [".foo", ".qux", ".quuz", ".bar"]);
           });
+
           it("should have the order qux - quuz - foo - bar", () => {
             const schema = {
               type: "object",
@@ -823,16 +884,20 @@ describe("Validation Error Sorting", () => {
               qux: "",
               quuz: "",
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [".qux", ".quuz", ".foo", ".bar"]);
+
+            expectOrder(sortingResults, [".qux", ".quuz", ".foo", ".bar"]);
           });
         });
 
@@ -880,16 +945,20 @@ describe("Validation Error Sorting", () => {
               skills: ["karate", "budo", "aikido"],
               multipleChoicesList: ["foo", "bar", "fuzz"],
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [
+
+            expectOrder(sortingResults, [
               ".active",
               ".firstName",
               ".firstName",
@@ -962,16 +1031,20 @@ describe("Validation Error Sorting", () => {
                 },
               ],
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [
+
+            expectOrder(sortingResults, [
               ".bar",
               ".foo[0].wibble",
               ".foo[0].quux",
@@ -1087,17 +1160,20 @@ describe("Validation Error Sorting", () => {
                 },
               ],
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
 
-            expectOrder(result.errors, [
+            expectOrder(sortingResults, [
               ".bar",
               ".foo[0].wibble",
               ".foo[0].quux[0].garply",
@@ -1155,16 +1231,20 @@ describe("Validation Error Sorting", () => {
                 "work",
               ],
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [
+
+            expectOrder(sortingResults, [
               ".active",
               ".firstName",
               ".skills",
@@ -1218,22 +1298,27 @@ describe("Validation Error Sorting", () => {
                   quuz: "",
                 },
               };
-              const result = validateFormData(
+              const validationResults = validateFormData(
                 formData,
                 schema,
                 null,
                 null,
                 null,
-                null,
+                null
+              );
+              const sortingResults = sortErrorsByUiSchema(
+                validationResults.errors,
                 uiSchema
               );
-              expectOrder(result.errors, [
+
+              expectOrder(sortingResults, [
                 ".foo",
                 ".qux.quux",
                 ".qux.quuz",
                 ".bar",
               ]);
             });
+
             it("should have the order foo - quux - quuz - bar when some question orders are defined", () => {
               const schema = {
                 type: "object",
@@ -1297,16 +1382,20 @@ describe("Validation Error Sorting", () => {
                   corge: "",
                 },
               };
-              const result = validateFormData(
+              const validationResults = validateFormData(
                 formData,
                 schema,
                 null,
                 null,
                 null,
-                null,
+                null
+              );
+              const sortingResults = sortErrorsByUiSchema(
+                validationResults.errors,
                 uiSchema
               );
-              expectOrder(result.errors, [
+
+              expectOrder(sortingResults, [
                 ".foo",
                 ".wibble.wubble",
                 ".wibble.wobble",
@@ -1317,6 +1406,7 @@ describe("Validation Error Sorting", () => {
               ]);
             });
           });
+
           describe("* at the last instance of a object property", () => {
             it("should have the order foo - quux - quuz - bar when all question orders are defined", () => {
               const schema = {
@@ -1362,16 +1452,20 @@ describe("Validation Error Sorting", () => {
                 },
                 bar: "",
               };
-              const result = validateFormData(
+              const validationResults = validateFormData(
                 formData,
                 schema,
                 null,
                 null,
                 null,
-                null,
+                null
+              );
+              const sortingResults = sortErrorsByUiSchema(
+                validationResults.errors,
                 uiSchema
               );
-              expectOrder(result.errors, [
+
+              expectOrder(sortingResults, [
                 ".bar",
                 ".foo.qux.quuz",
                 ".foo.qux.quux",
@@ -1419,16 +1513,20 @@ describe("Validation Error Sorting", () => {
               },
               bar: "",
             };
-            const result = validateFormData(
+            const validationResults = validateFormData(
               formData,
               schema,
               null,
               null,
               null,
-              null,
+              null
+            );
+            const sortingResults = sortErrorsByUiSchema(
+              validationResults.errors,
               uiSchema
             );
-            expectOrder(result.errors, [".foo.wobble", ".foo.wibble", ".bar"]);
+
+            expectOrder(sortingResults, [".foo.wobble", ".foo.wibble", ".bar"]);
           });
         });
       });
@@ -1488,16 +1586,20 @@ describe("Validation Error Sorting", () => {
             foo: {},
             bar: {},
           };
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [
+
+          expectOrder(sortingResults, [
             ".foo.wibble",
             ".foo.wobble",
             ".foo",
@@ -1542,16 +1644,20 @@ describe("Validation Error Sorting", () => {
             "ui:order": ["foo", "wibble", "wobble", "bar"],
           };
           const formData = {};
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [
+
+          expectOrder(sortingResults, [
             ".foo",
             ".wibble",
             ".wobble",
@@ -1559,6 +1665,7 @@ describe("Validation Error Sorting", () => {
             "",
           ]);
         });
+
         it("should have the order in which the properties appear in the schema (foo - bar - oneOfError)", () => {
           const schema = {
             type: "object",
@@ -1583,16 +1690,20 @@ describe("Validation Error Sorting", () => {
           };
           const uiSchema = {};
           const formData = {};
-          const result = validateFormData(
+          const validationResults = validateFormData(
             formData,
             schema,
             null,
             null,
             null,
-            null,
+            null
+          );
+          const sortingResults = sortErrorsByUiSchema(
+            validationResults.errors,
             uiSchema
           );
-          expectOrder(result.errors, [".foo", ".bar", ""]);
+
+          expectOrder(sortingResults, [".foo", ".bar", ""]);
         });
       });
     });
