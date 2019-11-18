@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import { expect } from "chai";
+import { Simulate } from "react-dom/test-utils";
 import { createFormComponent, createSandbox } from "./test_utils";
 
 describe("ArrayFieldTemplate", () => {
@@ -324,6 +325,21 @@ describe("ArrayFieldTemplate", () => {
         formData,
         ArrayFieldTemplate,
       });
+    });
+
+    it("should pass formData prop and it should be in sync with items props", () => {
+      const ArrayFieldTemplate = ({ formData, items, onAddClick }) => {
+        if (formData.length !== items.length) {
+          throw "Error";
+        }
+        return <button className="array-item-add" onClick={onAddClick} />;
+      };
+      const { node } = createFormComponent({
+        schema: { type: "array", items: { type: "string" } },
+        formData,
+        ArrayFieldTemplate,
+      });
+      Simulate.click(node.querySelector(".array-item-add"));
     });
   });
 });
