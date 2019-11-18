@@ -146,7 +146,7 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("default");
     });
 
-    it("should handle an empty string change event with textbox is cleared", () => {
+    it("should handle an empty string change event with defaults set", () => {
       const { comp, node } = createFormComponent({
         schema: {
           type: "string",
