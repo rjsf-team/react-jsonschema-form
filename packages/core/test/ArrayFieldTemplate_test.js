@@ -327,12 +327,19 @@ describe("ArrayFieldTemplate", () => {
       });
     });
 
-    it("should pass formData prop and it should be in sync with items props", () => {
+    it("should pass formData", () => {
       const ArrayFieldTemplate = ({ formData, items, onAddClick }) => {
         if (formData.length !== items.length) {
           throw "Error";
         }
-        return <button className="array-item-add" onClick={onAddClick} />;
+        return (
+          <div>
+            {items.map((item, i) => (
+              <span key={i}>value: {formData[i]}</span>
+            ))}
+            <button className="array-item-add" onClick={onAddClick} />
+          </div>
+        );
       };
       const { node } = createFormComponent({
         schema: { type: "array", items: { type: "string" } },
