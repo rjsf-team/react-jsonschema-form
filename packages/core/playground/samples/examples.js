@@ -7,7 +7,7 @@ module.exports = {
       browser: {
         type: "string",
         title: "Browser",
-        examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"]
+        examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
       },
     },
   },
