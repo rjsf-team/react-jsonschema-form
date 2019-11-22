@@ -33,6 +33,13 @@ function DateWidget(props) {
     options.keyboard = false;
   }
 
+  console.log(
+    "options.keyboard ",
+    options.keyboard,
+    "typeof options.keyboard",
+    typeof options.keyboard
+  );
+
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
@@ -84,6 +91,7 @@ function DateWidget(props) {
             format={options.formatPattern}
             minDate={minDate}
             maxDate={maxDate}
+            keyboard={false}
             value={value !== undefined ? moment(value) : null}
             onChange={date => {
               // this.setState({ selectedDate: date });
