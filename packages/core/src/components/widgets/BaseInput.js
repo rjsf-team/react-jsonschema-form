@@ -76,9 +76,11 @@ function BaseInput(props) {
     />,
     schema.examples ? (
       <datalist id={`examples_${inputProps.id}`}>
-        {schema.examples.concat([]).map(example => (
-          <option key={example} value={example} />
-        ))}
+        {schema.examples
+          .concat(schema.default ? [schema.default] : [])
+          .map(example => (
+            <option key={example} value={example} />
+          ))}
       </datalist>
     ) : null,
   ];
