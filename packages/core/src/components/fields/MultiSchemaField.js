@@ -43,9 +43,9 @@ class AnyOfField extends Component {
   }
 
   getMatchingOption(formData, options) {
-    const { definitions } = this.props.registry;
+    const { rootSchema } = this.props.registry;
 
-    let option = getMatchingOption(formData, options, definitions);
+    let option = getMatchingOption(formData, options, rootSchema);
     if (option !== 0) {
       return option;
     }
@@ -57,10 +57,10 @@ class AnyOfField extends Component {
   onOptionChange = option => {
     const selectedOption = parseInt(option, 10);
     const { formData, onChange, options, registry } = this.props;
-    const { definitions } = registry;
+    const { rootSchema } = registry;
     const newOption = retrieveSchema(
       options[selectedOption],
-      definitions,
+      rootSchema,
       formData
     );
 
@@ -89,7 +89,7 @@ class AnyOfField extends Component {
     }
     // Call getDefaultFormState to make sure defaults are populated on change.
     onChange(
-      getDefaultFormState(options[selectedOption], newFormData, definitions)
+      getDefaultFormState(options[selectedOption], newFormData, rootSchema)
     );
 
     this.setState({

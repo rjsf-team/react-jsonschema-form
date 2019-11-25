@@ -663,7 +663,7 @@ describe("anyOf", () => {
       expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
     });
 
-    it("should not change the selected option when switching order of items for anyOf inside array items", () => {
+    it.only("should not change the selected option when switching order of items for anyOf inside array items", () => {
       const schema = {
         type: "object",
         properties: {

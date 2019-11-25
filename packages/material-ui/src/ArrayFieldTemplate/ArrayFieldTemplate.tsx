@@ -17,7 +17,7 @@ import IconButton from '../IconButton/IconButton';
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { schema, registry = getDefaultRegistry() } = props;
 
-  if (isMultiSelect(schema, registry.definitions)) {
+  if (isMultiSelect(schema, registry.rootSchema)) {
     return <DefaultFixedArrayFieldTemplate {...props} />;
   } else {
     return <DefaultNormalArrayFieldTemplate {...props} />;

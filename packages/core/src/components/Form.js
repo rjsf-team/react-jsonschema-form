@@ -60,9 +60,9 @@ export default class Form extends Component {
     const edit = typeof inputFormData !== "undefined";
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
-    const definitions = schema;
-    const formData = getDefaultFormState(schema, inputFormData, definitions);
-    const retrievedSchema = retrieveSchema(schema, definitions, formData);
+    const rootSchema = schema;
+    const formData = getDefaultFormState(schema, inputFormData, rootSchema);
+    const retrievedSchema = retrieveSchema(schema, rootSchema, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
     let { errors, errorSchema } = mustValidate
@@ -78,7 +78,7 @@ export default class Form extends Component {
     const idSchema = toIdSchema(
       retrievedSchema,
       uiSchema["ui:rootFieldId"],
-      definitions,
+      rootSchema,
       formData,
       props.idPrefix
     );
@@ -105,8 +105,8 @@ export default class Form extends Component {
     customFormats = this.props.customFormats
   ) {
     const { validate, transformErrors } = this.props;
-    const { definitions } = this.getRegistry();
-    const resolvedSchema = retrieveSchema(schema, definitions, formData);
+    const { rootSchema } = this.getRegistry();
+    const resolvedSchema = retrieveSchema(schema, rootSchema, formData);
     return validateFormData(
       formData,
       resolvedSchema,
@@ -317,7 +317,7 @@ export default class Form extends Component {
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
       // TODO: fix this. this is a backwards incompatible change.
-      definitions: this.props.schema || {},
+      rootSchema: this.props.schema || {},
       formContext: this.props.formContext || {},
     };
   }
