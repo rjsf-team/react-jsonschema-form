@@ -358,6 +358,38 @@ describe("oneOf", () => {
     expect(node.querySelector("select").value).eql("1");
   });
 
+  it("should select the correct field when one of the options has a $ref", () => {
+    const schema = {
+      type: "object",
+      definitions: {
+        test: {
+          type: "string"
+        }
+      },
+      properties: {
+        userId: {
+          oneOf: [
+            {
+              type: "number",
+            },
+            {
+              $ref: "#/definitions/test",
+            },
+          ],
+        },
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData: {
+        userId: "foobarbaz",
+      },
+    });
+
+    expect(node.querySelector("select").value).eql("1");
+  });
+
   it("should select the correct field when the formData property is updated", () => {
     const schema = {
       type: "object",
