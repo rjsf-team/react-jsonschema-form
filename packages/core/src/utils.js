@@ -1079,7 +1079,6 @@ export function rangeSpec(schema) {
 }
 
 export function getMatchingOption(formData, options, rootSchema) {
-  console.log("GMO", rootSchema, formData, options);
   for (let i = 0; i < options.length; i++) {
     const option = options[i];
 
