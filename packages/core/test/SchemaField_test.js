@@ -117,7 +117,7 @@ describe("SchemaField", () => {
       const { registry } = receivedProps;
       expect(registry.widgets).eql(getDefaultRegistry().widgets);
       // TODO: change this later
-      expect(registry.definitions).eql(schema);
+      expect(registry.rootSchema).eql(schema);
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
       expect(registry.fields.TitleField).eql(TitleField);
