@@ -2266,9 +2266,15 @@ describeRepeated("Form common", createFormComponent => {
 
   describe("Changing the tagName", () => {
     it("should render the component using the custom tag name", () => {
-      const tagName = "SPAN";
+      const tagName = "span";
       const { node } = createFormComponent({ schema: {}, tagName });
-      expect(node.tagName).eql(tagName);
+      expect(node.tagName).eql(tagName.toUpperCase());
+    });
+
+    it("should render the component using a ComponentType", () => {
+      const Component = props => <div {...props} id="test" />;
+      const { node } = createFormComponent({ schema: {}, tagName: Component });
+      expect(node.id).eql("test");
     });
   });
 
