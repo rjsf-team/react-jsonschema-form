@@ -756,3 +756,14 @@ It's possible to change the default `form` tag name to a different HTML tag, whi
   tagName="div"
 />
 ```
+
+You can also provide a class/function component.
+
+
+```jsx
+const CustomForm = props => <form {...props} style={...} className={...} />
+// ...
+<Form
+  tagName={CustomForm}
+/>
+```
