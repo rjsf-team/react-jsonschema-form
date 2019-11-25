@@ -52,7 +52,7 @@ describe("oneOf", () => {
     });
 
     expect(node.querySelectorAll("select")).to.have.length.of(1);
-    expect(node.querySelector("select").id).eql("root__anyof_select");
+    expect(node.querySelector("select").id).eql("root__oneof_select");
   });
 
   it("should assign a default value and set defaults on option change", () => {
