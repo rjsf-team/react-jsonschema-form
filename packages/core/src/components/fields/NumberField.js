@@ -3,18 +3,6 @@ import React from "react";
 import * as types from "../../types";
 import { asNumber } from "../../utils";
 
-// Matches a string that ends in a . character, optionally followed by a sequence of
-// digits followed by any number of 0 characters up until the end of the line.
-// Ensuring that there is at least one prefixed character is important so that
-// you don't incorrectly match against "0".
-const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
-
-// This is used for trimming the trailing 0 and . characters without affecting
-// the rest of the string. Its possible to use one RegEx with groups for this
-// functionality, but it is fairly complex compared to simply defining two
-// different matchers.
-const trailingCharMatcher = /[0.]0*$/;
-
 /**
  * The NumberField class has some special handling for dealing with trailing
  * decimal points and/or zeroes. This logic is designed to allow trailing values
@@ -51,15 +39,7 @@ class NumberField extends React.Component {
       value = `0${value}`;
     }
 
-    // Check that the value is a string (this can happen if the widget used is a
-    // <select>, due to an enum declaration etc) then, if the value ends in a
-    // trailing decimal point or multiple zeroes, strip the trailing values
-    let processed =
-      typeof value === "string" && value.match(trailingCharMatcherWithPrefix)
-        ? asNumber(value.replace(trailingCharMatcher, ""))
-        : asNumber(value);
-
-    this.props.onChange(processed);
+    this.props.onChange(asNumber(value));
   };
 
   render() {
