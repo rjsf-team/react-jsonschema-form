@@ -539,9 +539,11 @@ export function optionsList(schema) {
 
 function findSchemaDefinition($ref, rootSchema = {}) {
   const origRef = $ref;
-  if ($ref.startsWith("#/definitions")) {
-    // Backwards compatibility with old #/definitions syntax.
-    $ref = $ref.substring(1);
+  if ($ref.startsWith("#")) {
+    // Decode URI fragment representation.
+    $ref = decodeURIComponent($ref.substring(1));
+  } else {
+    throw new Error(`Could not find a definition for ${origRef}.`);
   }
   const current = jsonpointer.get(rootSchema, $ref);
   if (current === undefined) {

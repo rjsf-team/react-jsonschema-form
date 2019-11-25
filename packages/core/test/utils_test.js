@@ -1647,7 +1647,7 @@ describe("utils", () => {
         required: ["street_address", "city", "state"],
       };
       const schema = {
-        $ref: "/components/schemas/address",
+        $ref: "#/components/schemas/address",
         components: { schemas: { address } }
       };
 
@@ -1655,6 +1655,33 @@ describe("utils", () => {
         components: { schemas: { address } },
         ...address
       });
+    });
+
+    it("should give an error when JSON pointer is not in a URI encoded format", () => {
+      const address = {
+        type: "object",
+        properties: {
+          street_address: { type: "string" },
+          city: { type: "string" },
+          state: { type: "string" },
+        },
+        required: ["street_address", "city", "state"],
+      };
+      const schema = {
+        $ref: "/components/schemas/address",
+        components: { schemas: { address } }
+      };
+
+      expect(() => retrieveSchema(schema, schema)).to.throw("Could not find a definition");
+    });
+
+    it("should give an error when JSON pointer does not point to anything", () => {
+      const schema = {
+        $ref: "#/components/schemas/address",
+        components: { schemas: { } }
+      };
+
+      expect(() => retrieveSchema(schema, schema)).to.throw("Could not find a definition");
     });
 
     it("should 'resolve' escaped JSON Pointers", () => {
