@@ -1081,12 +1081,7 @@ export function rangeSpec(schema) {
 export function getMatchingOption(formData, options, rootSchema) {
   console.log("GMO", rootSchema, formData, options);
   for (let i = 0; i < options.length; i++) {
-    // Assign the definitions from the rootSchema to the option, otherwise the match can fail if
-    // the new option uses a $ref
-    const option = Object.assign(
-      rootSchema,
-      options[i]
-    );
+    const option = options[i];
 
     // If the schema describes an object then we need to add slightly more
     // strict matching to the schema, because unless the schema uses the
