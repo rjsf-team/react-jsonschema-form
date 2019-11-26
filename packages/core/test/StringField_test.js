@@ -63,6 +63,9 @@ describe("StringField", () => {
       });
 
       expect(node.querySelector(".field input").value).eql("plop");
+      expect(
+        node.querySelectorAll(".field datalist > option")
+      ).to.have.length.of(0);
     });
 
     it("should render a string field with examples", () => {
