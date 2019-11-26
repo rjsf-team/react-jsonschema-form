@@ -7,6 +7,10 @@ module.exports = {
     type: "object",
     required: ["firstName", "lastName"],
     properties: {
+      HeyThere: {
+        type: "description",
+        title: "Good evening",
+      },
       DOB: {
         type: "string",
         format: "date-time",
