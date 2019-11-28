@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
+  DatePicker,
 } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
@@ -23,42 +24,103 @@ function DateWidget(props) {
   ) {
     options.formatPattern = "YYYY-MM-DD";
   }
+
+  if (
+    options.keyboard === undefined ||
+    options.keyboard === null ||
+    options.keyboard === ""
+  ) {
+    options.keyboard = false;
+  }
+
+  console.log(
+    "options.keyboard ",
+    options.keyboard,
+    "typeof options.keyboard",
+    typeof options.keyboard
+  );
+
   return (
     <MuiPickersUtilsProvider
       utils={MomentUtils}
       locale={props.selectedLocale}
       moment={moment}>
-      <div className="picker">
-        <KeyboardDatePicker
-          {...props}
-          {...options}
-          format={options.formatPattern}
-          minDate={minDate}
-          maxDate={maxDate}
-          value={value !== undefined ? moment(value) : null}
-          onChange={date => {
-            // this.setState({ selectedDate: date });
-            if (!date._isValid) {
+      {options.keyboard && (
+        <div className="picker">
+          <KeyboardDatePicker
+            {...props}
+            {...options}
+            format={options.formatPattern}
+            minDate={minDate}
+            maxDate={maxDate}
+            value={value !== undefined ? moment(value) : null}
+            onChange={date => {
+              // this.setState({ selectedDate: date });
+              if (!date) {
+                return onChange(undefined);
+              }
+
+              if (!date._isValid) {
+                return onChange(undefined);
+              }
+              let utcDate = moment(date);
+              var modifiedDatePerOptions = utcDate.startOf("day");
+              if (options.setDateTimeToEndOf) {
+                modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+                  options.setDateTimeToEndOf
+                );
+              }
+              return onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
+            }}
+            onClear={e => {
+              // this.setState({ selectedDate: undefined });
               return onChange(undefined);
-            }
-            let utcDate = moment(date);
-            var modifiedDatePerOptions = utcDate.startOf("day");
-            if (options.setDateTimeToEndOf) {
-              modifiedDatePerOptions = modifiedDatePerOptions.endOf(
-                options.setDateTimeToEndOf
-              );
-            }
-            return onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
-          }}
-          onClear={e => {
-            // this.setState({ selectedDate: undefined });
-            return onChange(undefined);
-          }}
-          onInputChange={e => {
-            // this.setState({ selectedDate: event.target.value });
-          }}
-        />
-      </div>
+            }}
+            onInputChange={e => {
+              // this.setState({ selectedDate: event.target.value });
+            }}
+          />
+        </div>
+      )}
+
+      {!options.keyboard && (
+        <div className="picker">
+          <DatePicker
+            {...props}
+            {...options}
+            format={options.formatPattern}
+            minDate={minDate}
+            maxDate={maxDate}
+            keyboard={false}
+            value={value !== undefined ? moment(value) : null}
+            onChange={date => {
+              // this.setState({ selectedDate: date });
+              if (!date) {
+                return onChange(undefined);
+              }
+
+              if (!date._isValid) {
+                return onChange(undefined);
+              }
+              let utcDate = moment(date);
+              var modifiedDatePerOptions = utcDate.startOf("day");
+              if (options.setDateTimeToEndOf) {
+                modifiedDatePerOptions = modifiedDatePerOptions.endOf(
+                  options.setDateTimeToEndOf
+                );
+              }
+              return onChange(modifiedDatePerOptions.format("YYYY-MM-DD"));
+            }}
+            onClear={e => {
+              // this.setState({ selectedDate: undefined });
+              return onChange(undefined);
+            }}
+            onInputChange={e => {
+              // this.setState({ selectedDate: event.target.value });
+            }}
+          />
+        </div>
+      )}
     </MuiPickersUtilsProvider>
   );
 }

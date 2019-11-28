@@ -865,5 +865,10 @@ export function removeEmptyFields(obj) {
       delete obj[key];
     }
   });
+
+  if (Object.entries(obj).length === 0 && obj.constructor === Object) {
+    return null;
+  }
+
   return obj;
 }
