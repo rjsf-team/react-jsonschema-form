@@ -2,7 +2,7 @@ import React from "react";
 import * as ReactIs from "react-is";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
-import { union } from "lodash";
+import union from "lodash/union";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
