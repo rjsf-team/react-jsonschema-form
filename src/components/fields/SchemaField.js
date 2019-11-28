@@ -27,6 +27,8 @@ const COMPONENT_TYPES = {
   number: "NumberField",
   object: "ObjectField",
   string: "StringField",
+  description: "DescriptionField",
+  title: "TitleField",
 };
 
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
@@ -124,6 +126,7 @@ function ErrorList(props) {
     </div>
   );
 }
+
 function DefaultTemplate(props) {
   const {
     id,
@@ -159,6 +162,7 @@ function DefaultTemplate(props) {
     </WrapIfAdditional>
   );
 }
+
 if (process.env.NODE_ENV !== "production") {
   DefaultTemplate.propTypes = {
     id: PropTypes.string,
