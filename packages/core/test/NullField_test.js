@@ -34,7 +34,7 @@ describe("NullField", () => {
       expect(node.querySelector(".field label").textContent).eql("foo");
     });
 
-    it("should assign a default value", async () => {
+    it("should assign a default value", () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: "null",
@@ -42,11 +42,11 @@ describe("NullField", () => {
         },
       });
 
-      await submitForm(node);
+      submitForm(node);
       expect(onSubmit.lastCall.args[0].formData).eql(null);
     });
 
-    it("should not overwrite existing data", async () => {
+    it("should not overwrite existing data", () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: "null",
@@ -55,7 +55,7 @@ describe("NullField", () => {
         noValidate: true,
       });
 
-      await submitForm(node);
+      submitForm(node);
       expect(onSubmit.lastCall.args[0].formData).eql(3);
     });
   });

@@ -195,12 +195,12 @@ describe("BooleanField", () => {
     expect(node.querySelector(".field input").checked).eql(true);
   });
 
-  it("should default state value to undefined", async () => {
+  it("should default state value to undefined", () => {
     const { node, onSubmit } = createFormComponent({
       schema: { type: "boolean" },
       noValidate: true,
     });
-    await submitForm(node);
+    submitForm(node);
     expect(onSubmit.lastCall.args[0].formData).eql(undefined);
   });
 
@@ -621,14 +621,14 @@ describe("BooleanField", () => {
       expect(node.querySelector(".field label").textContent).eql("foo");
     });
 
-    it("should assign a default value", async () => {
+    it("should assign a default value", () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           enum: [true, false],
           default: true,
         },
       });
-      await submitForm(node);
+      submitForm(node);
       expect(onSubmit.lastCall.args[0].formData).eql(true);
     });
 

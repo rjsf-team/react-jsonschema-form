@@ -54,8 +54,8 @@ export function describeRepeated(title, fn) {
   }
 }
 
-export async function submitForm(node) {
-  await act(async () => {
+export function submitForm(node) {
+  act(async () => {
     node.querySelector("button[type=submit]").click();
   });
 }
