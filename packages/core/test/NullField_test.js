@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
+import sinon from "sinon";
 
 describe("NullField", () => {
   let sandbox;
@@ -35,15 +36,14 @@ describe("NullField", () => {
     });
 
     it("should assign a default value", () => {
-      const { node, onSubmit } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: {
           type: "null",
           default: null,
         },
       });
 
-      submitForm(node);
-      expect(onSubmit.lastCall.args[0].formData).eql(null);
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: null });
     });
 
     it("should not overwrite existing data", () => {
@@ -56,7 +56,7 @@ describe("NullField", () => {
       });
 
       submitForm(node);
-      expect(onSubmit.lastCall.args[0].formData).eql(3);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: 3 });
     });
   });
 });

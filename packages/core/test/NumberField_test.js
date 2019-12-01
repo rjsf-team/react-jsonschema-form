@@ -130,7 +130,9 @@ describe("NumberField", () => {
         });
 
         submitForm(node);
-        expect(onSubmit.lastCall.args[0].formData).eql(undefined);
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: undefined,
+        });
       });
 
       it("should assign a default value", () => {
@@ -157,7 +159,9 @@ describe("NumberField", () => {
           target: { value: "2" },
         });
 
-        expect(onChange.lastCall.args[0].formData).eql(2);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: 2,
+        });
       });
 
       it("should handle a blur event", () => {
@@ -267,7 +271,9 @@ describe("NumberField", () => {
               target: { value: test.input },
             });
 
-            expect(onChange.lastCall.args[0].formData).eql(test.output);
+            sinon.assert.calledWithMatch(onChange.lastCall, {
+              formData: test.output,
+            });
             expect($input.value).eql(test.input);
           });
         });
@@ -287,7 +293,9 @@ describe("NumberField", () => {
           target: { value: ".00" },
         });
 
-        expect(onChange.lastCall.args[0].formData).eql(0);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: 0,
+        });
         expect($input.value).eql(".00");
       });
 
@@ -440,7 +448,7 @@ describe("NumberField", () => {
         noValidate: true,
       });
 
-      expect(onChange.lastCall.args[0].formData).eql(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: 1 });
     });
 
     it("should handle a change event", () => {
@@ -455,7 +463,7 @@ describe("NumberField", () => {
         target: { value: "2" },
       });
 
-      expect(onChange.lastCall.args[0].formData).eql(2);
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: 2 });
     });
 
     it("should fill field with data", () => {
@@ -466,10 +474,8 @@ describe("NumberField", () => {
         },
         formData: 2,
       });
-
       submitForm(node);
-
-      expect(onSubmit.lastCall.args[0].formData).eql(2);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: 2 });
     });
 
     it("should render the widget with the expected id", () => {

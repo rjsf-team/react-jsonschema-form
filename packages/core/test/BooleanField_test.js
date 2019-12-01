@@ -201,12 +201,9 @@ describe("BooleanField", () => {
       noValidate: true,
     });
     submitForm(node);
-    expect(
-      onSubmit.calledOnceWithExactly({
-        schema: { type: "boolean" },
-        formData: undefined,
-      })
-    ).eql(true);
+    sinon.assert.calledWithMatch(onSubmit.lastCall, {
+      formData: undefined,
+    });
   });
 
   it("should handle a change event", () => {
@@ -220,7 +217,7 @@ describe("BooleanField", () => {
     Simulate.change(node.querySelector("input"), {
       target: { checked: true },
     });
-    expect(onChange.lastCall.args[0].formData).eql(true);
+    sinon.assert.calledWithMatch(onChange.lastCall, { formData: true });
   });
 
   it("should fill field with data", () => {
@@ -627,14 +624,15 @@ describe("BooleanField", () => {
     });
 
     it("should assign a default value", () => {
-      const { node, onSubmit } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: {
           enum: [true, false],
           default: true,
         },
       });
-      submitForm(node);
-      expect(onSubmit.lastCall.args[0].formData).eql(true);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: true,
+      });
     });
 
     it("should handle a change event", () => {
@@ -648,7 +646,9 @@ describe("BooleanField", () => {
         target: { value: "false" },
       });
 
-      expect(onChange.lastCall.args[0].formData).eql(false);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: false,
+      });
     });
 
     it("should render the widget with the expected id", () => {

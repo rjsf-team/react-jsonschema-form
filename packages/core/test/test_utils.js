@@ -28,7 +28,7 @@ export function createFormComponent(props) {
 }
 
 export function createSandbox() {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
   return sandbox;
 }
 
