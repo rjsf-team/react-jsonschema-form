@@ -195,7 +195,7 @@ describe("BooleanField", () => {
     expect(node.querySelector(".field input").checked).eql(true);
   });
 
-  it("should default state value to undefined", () => {
+  it("formData should default to undefined", () => {
     const { node, onSubmit } = createFormComponent({
       schema: { type: "boolean" },
       noValidate: true,

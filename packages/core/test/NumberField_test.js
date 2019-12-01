@@ -122,7 +122,7 @@ describe("NumberField", () => {
         expect(node.querySelector(".field-description").textContent).eql("bar");
       });
 
-      it("should default state value to undefined", () => {
+      it("formData should default to undefined", () => {
         const { node, onSubmit } = createFormComponent({
           schema: { type: "number" },
           uiSchema,
