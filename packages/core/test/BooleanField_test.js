@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("BooleanField", () => {
   let sandbox;
@@ -195,14 +195,17 @@ describe("BooleanField", () => {
     expect(node.querySelector(".field input").checked).eql(true);
   });
 
-  it("should default state value to undefined", () => {
-    const { comp } = createFormComponent({ schema: { type: "boolean" } });
-
-    expect(comp.state.formData).eql(undefined);
+  it("should default state value to undefined", async () => {
+    const { node, onSubmit } = createFormComponent({
+      schema: { type: "boolean" },
+      noValidate: true,
+    });
+    await submitForm(node);
+    expect(onSubmit.lastCall.args[0].formData).eql(undefined);
   });
 
-  it("should handle a change event", () => {
-    const { comp, node } = createFormComponent({
+  it("should handle a change event", async () => {
+    const { node, onChange } = createFormComponent({
       schema: {
         type: "boolean",
         default: false,
@@ -212,8 +215,7 @@ describe("BooleanField", () => {
     Simulate.change(node.querySelector("input"), {
       target: { checked: true },
     });
-
-    expect(comp.state.formData).eql(true);
+    expect(onChange.lastCall.args[0].formData).eql(true);
   });
 
   it("should fill field with data", () => {
@@ -619,19 +621,19 @@ describe("BooleanField", () => {
       expect(node.querySelector(".field label").textContent).eql("foo");
     });
 
-    it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+    it("should assign a default value", async () => {
+      const { node, onSubmit } = createFormComponent({
         schema: {
           enum: [true, false],
           default: true,
         },
       });
-
-      expect(comp.state.formData).eql(true);
+      await submitForm(node);
+      expect(onSubmit.lastCall.args[0].formData).eql(true);
     });
 
     it("should handle a change event", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           enum: [true, false],
         },
@@ -641,7 +643,7 @@ describe("BooleanField", () => {
         target: { value: "false" },
       });
 
-      expect(comp.state.formData).eql(false);
+      expect(onChange.lastCall.args[0].formData).eql(false);
     });
 
     it("should render the widget with the expected id", () => {

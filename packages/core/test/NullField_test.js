@@ -1,6 +1,5 @@
 import { expect } from "chai";
-
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("NullField", () => {
   let sandbox;
@@ -35,26 +34,29 @@ describe("NullField", () => {
       expect(node.querySelector(".field label").textContent).eql("foo");
     });
 
-    it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+    it("should assign a default value", async () => {
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "null",
           default: null,
         },
       });
 
-      expect(comp.state.formData).eql(null);
+      await submitForm(node);
+      expect(onSubmit.lastCall.args[0].formData).eql(null);
     });
 
-    it("should not overwrite existing data", () => {
-      const { comp } = createFormComponent({
+    it("should not overwrite existing data", async () => {
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "null",
         },
         formData: 3,
+        noValidate: true,
       });
 
-      expect(comp.state.formData).eql(3);
+      await submitForm(node);
+      expect(onSubmit.lastCall.args[0].formData).eql(3);
     });
   });
 });

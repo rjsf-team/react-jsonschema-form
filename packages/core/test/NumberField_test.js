@@ -3,7 +3,12 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox, setProps } from "./test_utils";
+import {
+  createFormComponent,
+  createSandbox,
+  setProps,
+  submitForm,
+} from "./test_utils";
 
 describe("NumberField", () => {
   let sandbox;
@@ -117,13 +122,15 @@ describe("NumberField", () => {
         expect(node.querySelector(".field-description").textContent).eql("bar");
       });
 
-      it("should default state value to undefined", () => {
-        const { comp } = createFormComponent({
+      it("should default state value to undefined", async () => {
+        const { node, onSubmit } = createFormComponent({
           schema: { type: "number" },
           uiSchema,
+          noValidate: true,
         });
 
-        expect(comp.state.formData).eql(undefined);
+        await submitForm(node);
+        expect(onSubmit.lastCall.args[0].formData).eql(undefined);
       });
 
       it("should assign a default value", () => {
@@ -139,7 +146,7 @@ describe("NumberField", () => {
       });
 
       it("should handle a change event", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "number",
           },
@@ -150,7 +157,7 @@ describe("NumberField", () => {
           target: { value: "2" },
         });
 
-        expect(comp.state.formData).eql(2);
+        expect(onChange.lastCall.args[0].formData).eql(2);
       });
 
       it("should handle a blur event", () => {
@@ -202,7 +209,7 @@ describe("NumberField", () => {
       });
 
       describe("when inputting a number that ends with a dot and/or zero it should normalize it, without changing the input value", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "number",
           },
@@ -260,14 +267,14 @@ describe("NumberField", () => {
               target: { value: test.input },
             });
 
-            expect(comp.state.formData).eql(test.output);
+            expect(onChange.lastCall.args[0].formData).eql(test.output);
             expect($input.value).eql(test.input);
           });
         });
       });
 
       it("should normalize values beginning with a decimal point", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "number",
           },
@@ -280,7 +287,7 @@ describe("NumberField", () => {
           target: { value: ".00" },
         });
 
-        expect(comp.state.formData).eql(0);
+        expect(onChange.lastCall.args[0].formData).eql(0);
         expect($input.value).eql(".00");
       });
 
@@ -424,19 +431,20 @@ describe("NumberField", () => {
     });
 
     it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: {
           type: "number",
           enum: [1, 2],
           default: 1,
         },
+        noValidate: true,
       });
 
-      expect(comp.state.formData).eql(1);
+      expect(onChange.lastCall.args[0].formData).eql(1);
     });
 
     it("should handle a change event", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "number",
           enum: [1, 2],
@@ -447,11 +455,11 @@ describe("NumberField", () => {
         target: { value: "2" },
       });
 
-      expect(comp.state.formData).eql(2);
+      expect(onChange.lastCall.args[0].formData).eql(2);
     });
 
-    it("should fill field with data", () => {
-      const { comp } = createFormComponent({
+    it("should fill field with data", async () => {
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "number",
           enum: [1, 2],
@@ -459,7 +467,9 @@ describe("NumberField", () => {
         formData: 2,
       });
 
-      expect(comp.state.formData).eql(2);
+      await submitForm(node);
+
+      expect(onSubmit.lastCall.args[0].formData).eql(2);
     });
 
     it("should render the widget with the expected id", () => {

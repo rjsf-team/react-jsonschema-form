@@ -2,15 +2,25 @@
 
 import React from "react";
 import sinon from "sinon";
-import { renderIntoDocument } from "react-dom/test-utils";
+import { renderIntoDocument, act } from "react-dom/test-utils";
 import { findDOMNode, render } from "react-dom";
 
 import Form from "../src";
 
 export function createComponent(Component, props) {
-  const comp = renderIntoDocument(<Component {...props} />);
+  const onChange = sinon.spy();
+  const onError = sinon.spy();
+  const onSubmit = sinon.spy();
+  const comp = renderIntoDocument(
+    <Component
+      onSubmit={onSubmit}
+      onError={onError}
+      onChange={onChange}
+      {...props}
+    />
+  );
   const node = findDOMNode(comp);
-  return { comp, node };
+  return { comp, node, onChange, onError, onSubmit };
 }
 
 export function createFormComponent(props) {
@@ -42,4 +52,10 @@ export function describeRepeated(title, fn) {
       fn(createFormComponentFn)
     );
   }
+}
+
+export async function submitForm(node) {
+  await act(async () => {
+    node.querySelector("button[type=submit]").click();
+  });
 }
