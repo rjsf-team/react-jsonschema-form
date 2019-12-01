@@ -55,7 +55,7 @@ export function describeRepeated(title, fn) {
 }
 
 export function submitForm(node) {
-  act(async () => {
+  act(() => {
     node.querySelector("button[type=submit]").click();
   });
 }

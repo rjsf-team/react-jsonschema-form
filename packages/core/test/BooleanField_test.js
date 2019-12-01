@@ -201,10 +201,15 @@ describe("BooleanField", () => {
       noValidate: true,
     });
     submitForm(node);
-    expect(onSubmit.lastCall.args[0].formData).eql(undefined);
+    expect(
+      onSubmit.calledOnceWithExactly({
+        schema: { type: "boolean" },
+        formData: undefined,
+      })
+    ).eql(true);
   });
 
-  it("should handle a change event", async () => {
+  it("should handle a change event", () => {
     const { node, onChange } = createFormComponent({
       schema: {
         type: "boolean",
