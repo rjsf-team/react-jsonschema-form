@@ -5,7 +5,7 @@ import sinon from "sinon";
 
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
-describe.only("ObjectField", () => {
+describe("ObjectField", () => {
   let sandbox;
 
   beforeEach(() => {
