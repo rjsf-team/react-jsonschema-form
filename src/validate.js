@@ -205,17 +205,24 @@ export default function validateFormData(
   }
 
   const byPassValidationTypes = ["description", "title"];
-  if(schema && schema.properties){
-    _.map(schema.properties,(property)=>{
-      if(_.includes(byPassValidationTypes, property.type)){
+  let clonedSchema = _.cloneDeep(schema);
+  if (clonedSchema && clonedSchema.properties) {
+    _.map(clonedSchema.properties, (property) => {
+      if (_.includes(byPassValidationTypes, property.type)) {
         delete property.type;
+      } else {
+        _.map(property.properties, (obj) => {
+          if (_.includes(byPassValidationTypes, obj.type)) {
+            delete obj.type;
+          }
+        })
       }
     });
   }
 
   let validationError = null;
   try {
-    ajv.validate(schema, formData);
+    ajv.validate(clonedSchema, formData);
   } catch (err) {
     validationError = err;
   }
