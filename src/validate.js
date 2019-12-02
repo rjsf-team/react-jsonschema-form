@@ -1,4 +1,5 @@
 import toPath from "lodash.topath";
+import _ from 'lodash';
 import Ajv from "ajv";
 let ajv = createAjvInstance();
 import { deepEquals } from "./utils";
@@ -201,6 +202,15 @@ export default function validateFormData(
     });
 
     formerCustomFormats = customFormats;
+  }
+
+  const byPassValidationTypes = ["description", "title"];
+  if(schema && schema.properties){
+    _.map(schema.properties,(property)=>{
+      if(_.includes(byPassValidationTypes, property.type)){
+        delete property.type;
+      }
+    });
   }
 
   let validationError = null;
