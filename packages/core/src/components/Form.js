@@ -316,8 +316,8 @@ export default class Form extends Component {
       ArrayFieldTemplate: this.props.ArrayFieldTemplate,
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
-      // TODO: fix this. this is a backwards incompatible change.
-      rootSchema: this.props.schema || {},
+      definitions: this.props.schema.definitions || {},
+      rootSchema: this.props.schema,
       formContext: this.props.formContext || {},
     };
   }
