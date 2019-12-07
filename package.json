@@ -1,125 +1,30 @@
 {
   "name": "react-jsonschema-form",
   "version": "2.0.0-alpha.1",
-  "description": "A simple React component capable of building HTML forms out of a JSON schema.",
+  "private": true,
+  "description": "monorepo for react-jsonschema-form and its themes",
   "scripts": {
-    "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
-    "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
-    "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js && cp playground/index.prod.html build/index.html",
-    "cs-check": "prettier -l $npm_package_prettierOptions \"{playground,src,test}/**/*.js\"",
-    "cs-format": "prettier --jsx-bracket-same-line --trailing-comma es5 --use-tabs false --semi --tab-width 2 \"{playground,src,test}/**/*.js\" --write",
-    "dist": "npm run build:lib && npm run build:dist",
-    "lint": "eslint src test playground",
-    "prepare": "npm run dist",
-    "precommit": "lint-staged",
-    "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "publish-to-npm": "npm run dist && npm publish",
-    "preversion": "npm run build:playground && npm run dist && npm run cs-check && npm run lint",
-    "start": "node devServer.js",
-    "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
-  },
-  "prettierOptions": "--jsx-bracket-same-line --trailing-comma es5 --semi --tab-width 2",
-  "lint-staged": {
-    "{playground,src,test}/**/*.js": [
-      "eslint --fix",
-      "prettier --jsx-bracket-same-line --trailing-comma es5 --use-tabs false --semi --tab-width 2 --write",
-      "git add"
-    ]
-  },
-  "main": "lib/index.js",
-  "files": [
-    "dist",
-    "lib"
-  ],
-  "engineStrict": false,
-  "engines": {
-    "npm": ">=2.14.7",
-    "node": ">=6"
-  },
-  "peerDependencies": {
-    "react": ">=16"
+    "postinstall": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap",
+    "publish": "lerna publish",
+    "changed": "lerna changed",
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "cs-check": "lerna run cs-check",
+    "cs-format": "lerna run cs-format",
+    "dist": "lerna run dist"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.4.5",
-    "ajv": "^6.7.0",
-    "core-js": "^2.5.7",
-    "json-schema-merge-allof": "0.6.0",
-    "lodash": "^4.17.15",
-    "prop-types": "^15.7.2",
-    "react-is": "^16.9.0",
-    "shortid": "^2.2.14"
+    "prettier": "^1.18.2",
+    "lerna": "^3.18.3"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
-    "@babel/plugin-transform-react-jsx": "^7.3.0",
-    "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/register": "^7.4.4",
-    "atob": "^2.0.3",
-    "babel-eslint": "^10.0.1",
-    "babel-loader": "^8.0.6",
-    "chai": "^3.3.0",
-    "codemirror": "^5.30.0",
-    "create-react-ref": "^0.1.0",
-    "cross-env": "^2.0.1",
-    "css-loader": "^0.23.1",
-    "eslint": "^4.9.0",
-    "eslint-config-react-app": "^2.0.1",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.4.0",
-    "estraverse": "^4.2.0",
-    "estraverse-fb": "^1.3.1",
-    "express": "^4.14.0",
-    "gh-pages": "^0.11.0",
-    "html": "^1.0.0",
-    "husky": "^0.13.2",
-    "jsdom": "^8.3.0",
-    "json-loader": "^0.5.7",
-    "lint-staged": "^3.3.1",
-    "loader-utils": "^1.2.3",
-    "mini-css-extract-plugin": "^0.4.3",
-    "mocha": "^5.2.0",
-    "monaco-editor-webpack-plugin": "^1.7.0",
-    "nyc": "^13.2.0",
-    "prettier": "^1.15.1",
-    "react": "^16.9.0",
-    "react-codemirror2": "^4.1.0",
-    "react-dom": "^16.9.0",
-    "react-monaco-editor": "^0.26.2",
-    "react-portal": "^4.2.0",
-    "react-transform-catch-errors": "^1.0.0",
-    "react-transform-hmr": "^1.0.1",
-    "redbox-react": "^1.3.3",
-    "rimraf": "^2.5.4",
-    "sinon": "^1.17.6",
-    "style-loader": "^0.13.1",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-middleware": "^3.4.0",
-    "webpack-hot-middleware": "^2.13.2"
+  "prettier": {
+    "jsxBracketSameLine": true,
+    "trailingComma": "es5",
+    "useTabs": false,
+    "semi": true,
+    "tabWidth": 2
   },
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
-  },
-  "author": "Nicolas Perriault <nperriault@mozilla.com>",
-  "keywords": [
-    "react",
-    "form",
-    "json-schema"
-  ],
   "license": "Apache-2.0",
   "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme"
 }
