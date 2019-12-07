@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     title: "Examples",
     description: "A text field with example values.",

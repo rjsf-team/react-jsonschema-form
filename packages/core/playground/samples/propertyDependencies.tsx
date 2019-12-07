@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     title: "Property dependencies",
     description: "These samples are best viewed without live validation.",

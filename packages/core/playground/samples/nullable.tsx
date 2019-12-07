@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     title: "A registration form (nullable)",
     description: "A simple form example using nullable types",

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     title: "Date and time widgets",
     type: "object",
