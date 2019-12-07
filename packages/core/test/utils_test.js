@@ -1309,7 +1309,7 @@ describe("utils", () => {
         const definitions = {
           FooItem: { type: "string", enum: ["foo"] },
         };
-        expect(isMultiSelect(schema, {definitions})).to.be.true;
+        expect(isMultiSelect(schema, { definitions })).to.be.true;
       });
     });
 
@@ -1644,7 +1644,7 @@ describe("utils", () => {
       };
       const definitions = { address };
 
-      expect(retrieveSchema(schema, {definitions})).eql(address);
+      expect(retrieveSchema(schema, { definitions })).eql(address);
     });
 
     it("should 'resolve' a schema which contains definitions not in `#/definitions`", () => {
@@ -1659,12 +1659,12 @@ describe("utils", () => {
       };
       const schema = {
         $ref: "#/components/schemas/address",
-        components: { schemas: { address } }
+        components: { schemas: { address } },
       };
 
       expect(retrieveSchema(schema, schema)).eql({
         components: { schemas: { address } },
-        ...address
+        ...address,
       });
     });
 
@@ -1680,19 +1680,23 @@ describe("utils", () => {
       };
       const schema = {
         $ref: "/components/schemas/address",
-        components: { schemas: { address } }
+        components: { schemas: { address } },
       };
 
-      expect(() => retrieveSchema(schema, schema)).to.throw("Could not find a definition");
+      expect(() => retrieveSchema(schema, schema)).to.throw(
+        "Could not find a definition"
+      );
     });
 
     it("should give an error when JSON pointer does not point to anything", () => {
       const schema = {
         $ref: "#/components/schemas/address",
-        components: { schemas: { } }
+        components: { schemas: {} },
       };
 
-      expect(() => retrieveSchema(schema, schema)).to.throw("Could not find a definition");
+      expect(() => retrieveSchema(schema, schema)).to.throw(
+        "Could not find a definition"
+      );
     });
 
     it("should 'resolve' escaped JSON Pointers", () => {
@@ -1700,7 +1704,7 @@ describe("utils", () => {
       const address = { type: "string" };
       const definitions = { "a~complex/name": address };
 
-      expect(retrieveSchema(schema, {definitions})).eql(address);
+      expect(retrieveSchema(schema, { definitions })).eql(address);
     });
 
     it("should 'resolve' and stub out a schema which contains an `additionalProperties` with a definition", () => {
@@ -1724,7 +1728,7 @@ describe("utils", () => {
       const definitions = { components: { schemas: { address } } };
       const formData = { newKey: {} };
 
-      expect(retrieveSchema(schema, {definitions}, formData)).eql({
+      expect(retrieveSchema(schema, { definitions }, formData)).eql({
         ...schema,
         properties: {
           newKey: {
@@ -1750,7 +1754,7 @@ describe("utils", () => {
       const definitions = { number };
       const formData = { newKey: {} };
 
-      expect(retrieveSchema(schema, {definitions}, formData)).eql({
+      expect(retrieveSchema(schema, { definitions }, formData)).eql({
         ...schema,
         properties: {
           newKey: {
@@ -1772,7 +1776,7 @@ describe("utils", () => {
       };
       const definitions = { address };
 
-      expect(retrieveSchema(schema, {definitions})).eql({
+      expect(retrieveSchema(schema, { definitions })).eql({
         ...address,
         title: "foo",
       });
@@ -1794,7 +1798,7 @@ describe("utils", () => {
           };
           const definitions = {};
           const formData = {};
-          expect(retrieveSchema(schema, {definitions}, formData)).eql({
+          expect(retrieveSchema(schema, { definitions }, formData)).eql({
             type: "object",
             properties: {
               a: { type: "string" },
@@ -1820,7 +1824,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = { a: "1" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string" },
@@ -1846,7 +1850,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = { a: "1" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string" },
@@ -1878,7 +1882,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = {};
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string" },
@@ -1904,7 +1908,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = { a: "1" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string" },
@@ -1931,7 +1935,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = { a: "1" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string" },
@@ -1960,7 +1964,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = { a: "FOO" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string", enum: ["FOO"] },
@@ -1992,7 +1996,7 @@ describe("utils", () => {
               },
             };
             const formData = { a: "1" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string" },
@@ -2033,7 +2037,7 @@ describe("utils", () => {
               },
             };
             const formData = { a: "typeB" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { enum: ["typeA", "typeB"] },
@@ -2073,7 +2077,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = {};
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string" },
@@ -2110,7 +2114,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = { a: "int" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string", enum: ["int", "bool"] },
@@ -2146,7 +2150,7 @@ describe("utils", () => {
             };
             const definitions = {};
             const formData = { a: "bool" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string", enum: ["int", "bool"] },
@@ -2232,7 +2236,7 @@ describe("utils", () => {
                 employee_accounts: false,
                 update_absences: "BOTH",
               };
-              expect(retrieveSchema(schema, {definitions}, formData)).eql({
+              expect(retrieveSchema(schema, { definitions }, formData)).eql({
                 type: "object",
                 properties: {
                   employee_accounts: {
@@ -2248,7 +2252,7 @@ describe("utils", () => {
                 employee_accounts: true,
                 update_absences: "BOTH",
               };
-              expect(retrieveSchema(schema, {definitions}, formData)).eql({
+              expect(retrieveSchema(schema, { definitions }, formData)).eql({
                 type: "object",
                 properties: {
                   employee_accounts: {
@@ -2307,7 +2311,7 @@ describe("utils", () => {
               },
             };
             const formData = { a: "bool" };
-            expect(retrieveSchema(schema, {definitions}, formData)).eql({
+            expect(retrieveSchema(schema, { definitions }, formData)).eql({
               type: "object",
               properties: {
                 a: { type: "string", enum: ["int", "bool"] },
@@ -2326,7 +2330,7 @@ describe("utils", () => {
         };
         const definitions = {};
         const formData = {};
-        expect(retrieveSchema(schema, {definitions}, formData)).eql({
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
           type: "string",
         });
       });
@@ -2337,7 +2341,7 @@ describe("utils", () => {
         };
         const definitions = {};
         const formData = {};
-        expect(retrieveSchema(schema, {definitions}, formData)).eql({});
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({});
         expect(
           console.warn.calledWithMatch(/could not merge subschemas in allOf/)
         ).to.be.true;
@@ -2351,7 +2355,7 @@ describe("utils", () => {
           "2": { minLength: 5 },
         };
         const formData = {};
-        expect(retrieveSchema(schema, {definitions}, formData)).eql({
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
           type: "string",
           minLength: 5,
         });
@@ -2371,7 +2375,7 @@ describe("utils", () => {
         };
         const definitions = {};
         const formData = {};
-        expect(retrieveSchema(schema, {definitions}, formData)).eql({
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
           type: "string",
           minLength: 4,
           maxLength: 5,
@@ -2685,13 +2689,11 @@ describe("utils", () => {
         $ref: "#/definitions/testdef",
       };
 
-      expect(toIdSchema(schema, undefined, schema, {}, "rjsf")).eql(
-        {
-          $id: "rjsf",
-          foo: { $id: "rjsf_foo" },
-          bar: { $id: "rjsf_bar" },
-        }
-      );
+      expect(toIdSchema(schema, undefined, schema, {}, "rjsf")).eql({
+        $id: "rjsf",
+        foo: { $id: "rjsf_foo" },
+        bar: { $id: "rjsf_bar" },
+      });
     });
 
     it("should handle null form data for object schemas", () => {
