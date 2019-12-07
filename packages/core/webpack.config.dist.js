@@ -40,10 +40,13 @@ module.exports = {
       umd: 'react-dom',
     }
   },
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".css"]
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         use: [
           "babel-loader",
         ],
