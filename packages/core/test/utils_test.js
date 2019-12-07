@@ -2326,7 +2326,7 @@ describe("utils", () => {
         };
         const definitions = {};
         const formData = {};
-        expect(retrieveSchema(schema, definitions, formData)).eql({
+        expect(retrieveSchema(schema, {definitions}, formData)).eql({
           type: "string",
         });
       });
@@ -2337,7 +2337,7 @@ describe("utils", () => {
         };
         const definitions = {};
         const formData = {};
-        expect(retrieveSchema(schema, definitions, formData)).eql({});
+        expect(retrieveSchema(schema, {definitions}, formData)).eql({});
         expect(
           console.warn.calledWithMatch(/could not merge subschemas in allOf/)
         ).to.be.true;
@@ -2351,7 +2351,7 @@ describe("utils", () => {
           "2": { minLength: 5 },
         };
         const formData = {};
-        expect(retrieveSchema(schema, definitions, formData)).eql({
+        expect(retrieveSchema(schema, {definitions}, formData)).eql({
           type: "string",
           minLength: 5,
         });
@@ -2371,7 +2371,7 @@ describe("utils", () => {
         };
         const definitions = {};
         const formData = {};
-        expect(retrieveSchema(schema, definitions, formData)).eql({
+        expect(retrieveSchema(schema, {definitions}, formData)).eql({
           type: "string",
           minLength: 4,
           maxLength: 5,
