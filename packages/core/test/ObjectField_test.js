@@ -1,9 +1,9 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
+import sinon from "sinon";
 
-import { createFormComponent, createSandbox } from "./test_utils";
-import validateFormData from "../src/validate";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("ObjectField", () => {
   let sandbox;
@@ -149,13 +149,15 @@ describe("ObjectField", () => {
     });
 
     it("should handle object fields change events", () => {
-      const { comp, node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
 
       Simulate.change(node.querySelector("input[type=text]"), {
         target: { value: "changed" },
       });
 
-      expect(comp.state.formData.foo).eql("changed");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { foo: "changed" },
+      });
     });
 
     it("should handle object fields with blur events", () => {
@@ -432,25 +434,27 @@ describe("ObjectField", () => {
       expect(labels[1].textContent).eql("CustomName");
     });
 
-    it("should pass through non-schema properties and not throw validation errors if additionalProperties is undefined", () => {
+    it("should not throw validation errors if additionalProperties is undefined", () => {
       const undefinedAPSchema = {
         ...schema,
         properties: { second: { type: "string" } },
       };
       delete undefinedAPSchema.additionalProperties;
-      const { comp } = createFormComponent({
+      const { node, onSubmit, onError } = createFormComponent({
         schema: undefinedAPSchema,
         formData: { nonschema: 1 },
       });
 
-      expect(comp.state.formData.nonschema).eql(1);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: { nonschema: 1 },
+      });
 
-      const result = validateFormData(comp.state.formData, comp.state.schema);
-      expect(result.errors).eql([]);
+      sinon.assert.notCalled(onError);
     });
 
-    it("should pass through non-schema properties but throw a validation error if additionalProperties is false", () => {
-      const { comp } = createFormComponent({
+    it("should throw a validation error if additionalProperties is false", () => {
+      const { node, onSubmit, onError } = createFormComponent({
         schema: {
           ...schema,
           additionalProperties: false,
@@ -458,11 +462,18 @@ describe("ObjectField", () => {
         },
         formData: { nonschema: 1 },
       });
-
-      expect(comp.state.formData.nonschema).eql(1);
-
-      const result = validateFormData(comp.state.formData, comp.state.schema);
-      expect(result.errors[0].name).eql("additionalProperties");
+      submitForm(node);
+      sinon.assert.notCalled(onSubmit);
+      sinon.assert.calledWithMatch(onError.lastCall, [
+        {
+          message: "is an invalid additional property",
+          name: "additionalProperties",
+          params: { additionalProperty: "nonschema" },
+          property: "['nonschema']",
+          schemaPath: "#/additionalProperties",
+          stack: "['nonschema'] is an invalid additional property",
+        },
+      ]);
     });
 
     it("should still obey properties if additionalProperties is defined", () => {
@@ -539,7 +550,7 @@ describe("ObjectField", () => {
     });
 
     it("should rename formData key if key input is renamed", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema,
         formData: { first: 1 },
       });
@@ -549,11 +560,13 @@ describe("ObjectField", () => {
         target: { value: "newFirst" },
       });
 
-      expect(comp.state.formData.newFirst).eql(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { newFirst: 1, first: undefined },
+      });
     });
 
     it("should retain user-input data if key-value pair has a title present in the schema", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "object",
           additionalProperties: {
@@ -569,11 +582,13 @@ describe("ObjectField", () => {
         target: { value: "Renamed custom title" },
       });
 
-      expect(comp.state.formData["Renamed custom title"]).eql(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { "Renamed custom title": 1 },
+      });
     });
 
     it("should keep order of renamed key-value pairs while renaming key", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema,
         formData: { first: 1, second: 2, third: 3 },
       });
@@ -583,7 +598,11 @@ describe("ObjectField", () => {
         target: { value: "newSecond" },
       });
 
-      expect(Object.keys(comp.state.formData)).eql([
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { first: 1, newSecond: 2, third: 3 },
+      });
+
+      expect(Object.keys(onChange.lastCall.args[0].formData)).eql([
         "first",
         "newSecond",
         "third",
@@ -595,7 +614,7 @@ describe("ObjectField", () => {
         first: 1,
         second: 2,
       };
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema,
         formData,
       });
@@ -605,14 +624,16 @@ describe("ObjectField", () => {
         target: { value: "second" },
       });
 
-      expect(comp.state.formData["second-1"]).eql(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { second: 2, "second-1": 1 },
+      });
     });
 
     it("should not attach suffix when input is only clicked", () => {
       const formData = {
         first: 1,
       };
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema,
         formData,
       });
@@ -620,7 +641,7 @@ describe("ObjectField", () => {
       const textNode = node.querySelector("#root_first-key");
       Simulate.blur(textNode);
 
-      expect(comp.state.formData.hasOwnProperty("first")).to.be.true;
+      sinon.assert.notCalled(onChange);
     });
 
     it("should continue incrementing suffix to formData key until that key name is unique after a key input collision", () => {
@@ -634,7 +655,7 @@ describe("ObjectField", () => {
         "second-5": 2,
         "second-6": 2,
       };
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema,
         formData,
       });
@@ -644,7 +665,18 @@ describe("ObjectField", () => {
         target: { value: "second" },
       });
 
-      expect(comp.state.formData["second-7"]).eql(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          second: 2,
+          "second-1": 2,
+          "second-2": 2,
+          "second-3": 2,
+          "second-4": 2,
+          "second-5": 2,
+          "second-6": 2,
+          "second-7": 1,
+        },
+      });
     });
 
     it("should have an expand button", () => {
@@ -665,22 +697,29 @@ describe("ObjectField", () => {
     });
 
     it("should add a new property when clicking the expand button", () => {
-      const { comp, node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
 
       Simulate.click(node.querySelector(".object-property-expand button"));
 
-      expect(comp.state.formData.newKey).eql("New Value");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          newKey: "New Value",
+        },
+      });
     });
 
     it("should add a new property with suffix when clicking the expand button and 'newKey' already exists", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema,
         formData: { newKey: 1 },
       });
 
       Simulate.click(node.querySelector(".object-property-expand button"));
-
-      expect(comp.state.formData["newKey-1"]).eql("New Value");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          "newKey-1": "New Value",
+        },
+      });
     });
 
     it("should not provide an expand button if length equals maxProperties", () => {
@@ -785,7 +824,7 @@ describe("ObjectField", () => {
     });
 
     it("deleting content of value input should not delete pair", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema,
         formData: { first: 1 },
       });
@@ -793,7 +832,10 @@ describe("ObjectField", () => {
       Simulate.change(node.querySelector("#root_first"), {
         target: { value: "" },
       });
-      expect(comp.state.formData["first"]).eql("");
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { first: "" },
+      });
     });
   });
 });

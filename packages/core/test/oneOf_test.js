@@ -1,6 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
+import sinon from "sinon";
 
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
 
@@ -55,7 +56,7 @@ describe("oneOf", () => {
   });
 
   it("should assign a default value and set defaults on option change", () => {
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema: {
         oneOf: [
           {
@@ -74,7 +75,9 @@ describe("oneOf", () => {
       },
     });
 
-    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "defaultfoo" },
+    });
 
     const $select = node.querySelector("select");
 
@@ -82,11 +85,13 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    expect(comp.state.formData).eql({ foo: "defaultbar" });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "defaultbar" },
+    });
   });
 
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema: {
         type: "object",
         oneOf: [
@@ -104,7 +109,9 @@ describe("oneOf", () => {
       },
     });
 
-    expect(comp.state.formData).eql({ foo: "defaultfoo" });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "defaultfoo" },
+    });
 
     const $select = node.querySelector("select");
 
@@ -112,7 +119,9 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    expect(comp.state.formData).eql({ foo: "defaultbar" });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "defaultbar" },
+    });
   });
 
   it("should render a custom widget", () => {
@@ -196,7 +205,7 @@ describe("oneOf", () => {
       ],
     };
 
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema,
     });
 
@@ -204,7 +213,9 @@ describe("oneOf", () => {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
 
-    expect(comp.state.formData.foo).eql("Lorem ipsum dolor sit amet");
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "Lorem ipsum dolor sit amet" },
+    });
   });
 
   it("should clear previous data when changing options", () => {
@@ -227,7 +238,7 @@ describe("oneOf", () => {
       ],
     };
 
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema,
     });
 
@@ -239,8 +250,12 @@ describe("oneOf", () => {
       target: { value: "Consectetur adipiscing elit" },
     });
 
-    expect(comp.state.formData.buzz).eql("Lorem ipsum dolor sit amet");
-    expect(comp.state.formData.foo).eql("Consectetur adipiscing elit");
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        buzz: "Lorem ipsum dolor sit amet",
+        foo: "Consectetur adipiscing elit",
+      },
+    });
 
     const $select = node.querySelector("select");
 
@@ -248,8 +263,12 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    expect(comp.state.formData.hasOwnProperty("foo")).to.be.false;
-    expect(comp.state.formData.buzz).eql("Lorem ipsum dolor sit amet");
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        buzz: "Lorem ipsum dolor sit amet",
+        foo: undefined,
+      },
+    });
   });
 
   it("should support options with different types", () => {
@@ -269,7 +288,7 @@ describe("oneOf", () => {
       },
     };
 
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema,
     });
 
@@ -277,8 +296,10 @@ describe("oneOf", () => {
       target: { value: 12345 },
     });
 
-    expect(comp.state.formData).eql({
-      userId: 12345,
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        userId: 12345,
+      },
     });
 
     const $select = node.querySelector("select");
@@ -287,16 +308,19 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    expect(comp.state.formData).eql({
-      userId: undefined,
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        userId: undefined,
+      },
     });
 
     Simulate.change(node.querySelector("input#root_userId"), {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
-
-    expect(comp.state.formData).eql({
-      userId: "Lorem ipsum dolor sit amet",
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        userId: "Lorem ipsum dolor sit amet",
+      },
     });
   });
 

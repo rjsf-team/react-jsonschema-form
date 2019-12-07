@@ -26,7 +26,10 @@ describe("Rendering performance optimizations", () => {
       const schema = { type: "string" };
       const uiSchema = {};
 
-      const { comp } = createFormComponent({ schema, uiSchema });
+      const { comp } = createFormComponent({
+        schema,
+        uiSchema,
+      });
       sandbox.stub(comp, "render").returns(<div />);
 
       comp.UNSAFE_componentWillReceiveProps({ schema });
@@ -38,7 +41,10 @@ describe("Rendering performance optimizations", () => {
       const schema = { type: "string" };
       const formData = "foo";
 
-      const { comp } = createFormComponent({ schema, formData });
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+      });
       sandbox.stub(comp, "render").returns(<div />);
 
       comp.UNSAFE_componentWillReceiveProps({ formData });
@@ -102,6 +108,8 @@ describe("Rendering performance optimizations", () => {
 
   describe("SchemaField", () => {
     const onChange = () => {};
+    const onSubmit = () => {};
+    const onError = () => {};
     const onBlur = () => {};
     const onFocus = () => {};
     const registry = getDefaultRegistry();
@@ -120,6 +128,8 @@ describe("Rendering performance optimizations", () => {
         schema,
         uiSchema,
         onChange,
+        onSubmit,
+        onError,
         idSchema,
         onBlur,
         onFocus,
@@ -139,6 +149,8 @@ describe("Rendering performance optimizations", () => {
         schema,
         formData: { foo: "blah" },
         onChange,
+        onSubmit,
+        onError,
         idSchema,
         onBlur,
       };
