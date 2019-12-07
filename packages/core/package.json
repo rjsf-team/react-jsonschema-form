@@ -45,6 +45,7 @@
     "@babel/runtime-corejs2": "^7.4.5",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
+    "json-schema-merge-allof": "^0.6.0",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react-app-polyfill": "^1.0.4",

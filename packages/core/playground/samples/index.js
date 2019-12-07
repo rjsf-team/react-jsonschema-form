@@ -1,6 +1,7 @@
 import arrays from "./arrays";
 import anyOf from "./anyOf";
 import oneOf from "./oneOf";
+import allOf from "./allOf";
 import nested from "./nested";
 import numbers from "./numbers";
 import simple from "./simple";
@@ -48,6 +49,7 @@ export const samples = {
   "Additional Properties": additionalProperties,
   "Any Of": anyOf,
   "One Of": oneOf,
+  "All Of": allOf,
   "Null fields": nullField,
   Nullable: nullable,
   ErrorSchema: errorSchema,
