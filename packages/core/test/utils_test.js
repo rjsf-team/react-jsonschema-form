@@ -1439,9 +1439,9 @@ describe("utils", () => {
     });
 
     it("should override non-existing values of the first object with the values from the second", () => {
-      expect(
-        mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })
-      ).eql({ a: { b: { c: 1 } } });
+      expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -1529,9 +1529,9 @@ describe("utils", () => {
     });
 
     it("should override non-existing values of the first object with the values from the second", () => {
-      expect(
-        mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })
-      ).eql({ a: { b: { c: 1 } } });
+      expect(mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -3388,12 +3388,7 @@ describe("utils", () => {
     // worthless to reproduce all the tests existing for it; so we focus on the
     // behavioral differences we introduced.
     it("should assume functions are always equivalent", () => {
-      expect(
-        deepEquals(
-          () => {},
-          () => {}
-        )
-      ).eql(true);
+      expect(deepEquals(() => {}, () => {})).eql(true);
       expect(deepEquals({ foo() {} }, { foo() {} })).eql(true);
       expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).eql(
         true

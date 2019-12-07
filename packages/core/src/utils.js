@@ -658,9 +658,10 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
   let resolvedSchema = resolveSchema(schema, definitions, formData);
   if ("allOf" in schema) {
     try {
-      resolvedSchema = mergeAllOf(
-        { ...resolvedSchema, allOf: resolvedSchema.allOf }
-      );
+      resolvedSchema = mergeAllOf({
+        ...resolvedSchema,
+        allOf: resolvedSchema.allOf,
+      });
     } catch (e) {
       console.warn("could not merge subschemas in allOf:\n" + e);
       const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
