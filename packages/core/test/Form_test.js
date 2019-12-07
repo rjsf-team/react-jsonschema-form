@@ -618,57 +618,6 @@ describeRepeated("Form common", createFormComponent => {
 
       expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
     });
-    // TODO: should these two tests be skipped? should we deprecate this functionality?
-    it.skip("should handle recursive references to deep schema definitions", () => {
-      const schema = {
-        definitions: {
-          testdef: {
-            $ref: "#/definitions/testdefref",
-          },
-          testdefref: {
-            type: "object",
-            properties: {
-              bar: { type: "string" },
-            },
-          },
-        },
-        type: "object",
-        properties: {
-          foo: { $ref: "#/definitions/testdef/properties/bar" },
-        },
-      };
-
-      const { node } = createFormComponent({ schema });
-
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
-    });
-
-    it.skip("should handle multiple recursive references to deep schema definitions", () => {
-      const schema = {
-        definitions: {
-          testdef: {
-            $ref: "#/definitions/testdefref1",
-          },
-          testdefref1: {
-            $ref: "#/definitions/testdefref2",
-          },
-          testdefref2: {
-            type: "object",
-            properties: {
-              bar: { type: "string" },
-            },
-          },
-        },
-        type: "object",
-        properties: {
-          foo: { $ref: "#/definitions/testdef/properties/bar" },
-        },
-      };
-
-      const { node } = createFormComponent({ schema });
-
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
-    });
 
     it("should priorize definition over schema type property", () => {
       // Refs bug #140
