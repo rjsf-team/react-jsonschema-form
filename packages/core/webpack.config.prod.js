@@ -3,7 +3,7 @@ var webpack = require("webpack");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-export default {
+module.exports = {
   mode: "production",
   entry: "./playground/app",
   output: {

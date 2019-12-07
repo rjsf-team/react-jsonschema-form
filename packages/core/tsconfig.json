@@ -9,7 +9,7 @@
       "sourceMap": true,
       "rootDir": "./",
       "strict": true,
-      "noImplicitAny": false,
+      "noImplicitAny": false, // TODO: set this to true
       "strictNullChecks": true,
       "strictFunctionTypes": true,
       "strictPropertyInitialization": true,
@@ -17,7 +17,7 @@
       "alwaysStrict": true,
       "noUnusedLocals": true,
       "noUnusedParameters": true,
-      "noImplicitReturns": true,
+      "noImplicitReturns": false, // TODO: set this to true
       "noFallthroughCasesInSwitch": true,
       "allowSyntheticDefaultImports": true,
       "moduleResolution": "node",
@@ -26,7 +26,8 @@
         "*": ["src/*", "node_modules/*"]
       },
       "jsx": "react",
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "downlevelIteration": true
     }
   }
   

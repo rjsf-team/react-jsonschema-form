@@ -18,7 +18,7 @@ import {
 import validateFormData, { toErrorList } from "../validate";
 import { mergeObjects } from "../utils";
 
-export default class Form extends Component<{}, {}> {
+export default class Form extends Component {
   static defaultProps = {
     uiSchema: {},
     noValidate: false,

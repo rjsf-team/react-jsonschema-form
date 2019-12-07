@@ -2,7 +2,7 @@ var path = require("path");
 var webpack = require("webpack");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-export default {
+module.exports = {
   mode: "production",
   cache: true,
   context: __dirname + "/src",
