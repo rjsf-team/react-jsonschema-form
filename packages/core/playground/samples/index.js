@@ -1,6 +1,7 @@
 import arrays from "./arrays";
 import anyOf from "./anyOf";
 import oneOf from "./oneOf";
+import allOf from "./allOf";
 import nested from "./nested";
 import numbers from "./numbers";
 import simple from "./simple";
@@ -9,6 +10,7 @@ import ordering from "./ordering";
 import references from "./references";
 import custom from "./custom";
 import errors from "./errors";
+import examples from "./examples";
 import large from "./large";
 import date from "./date";
 import validation from "./validation";
@@ -35,6 +37,7 @@ export const samples = {
   References: references,
   Custom: custom,
   Errors: errors,
+  Examples: examples,
   Large: large,
   "Date & time": date,
   Validation: validation,
@@ -48,6 +51,7 @@ export const samples = {
   "Additional Properties": additionalProperties,
   "Any Of": anyOf,
   "One Of": oneOf,
+  "All Of": allOf,
   "Null fields": nullField,
   Nullable: nullable,
   ErrorSchema: errorSchema,

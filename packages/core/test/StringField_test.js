@@ -63,6 +63,60 @@ describe("StringField", () => {
       });
 
       expect(node.querySelector(".field input").value).eql("plop");
+      expect(
+        node.querySelectorAll(".field datalist > option")
+      ).to.have.length.of(0);
+    });
+
+    it("should render a string field with examples", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          examples: ["Firefox", "Chrome", "Vivaldi"],
+        },
+      });
+
+      expect(
+        node.querySelectorAll(".field datalist > option")
+      ).to.have.length.of(3);
+      const datalistId = node.querySelector(".field datalist").id;
+      expect(node.querySelector(".field input").getAttribute("list")).eql(
+        datalistId
+      );
+    });
+
+    it("should render a string with examples that includes the default value", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          default: "Firefox",
+          examples: ["Chrome", "Vivaldi"],
+        },
+      });
+      expect(
+        node.querySelectorAll(".field datalist > option")
+      ).to.have.length.of(3);
+      const datalistId = node.querySelector(".field datalist").id;
+      expect(node.querySelector(".field input").getAttribute("list")).eql(
+        datalistId
+      );
+    });
+
+    it("should render a string with examples that overlaps with the default value", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          default: "Firefox",
+          examples: ["Firefox", "Chrome", "Vivaldi"],
+        },
+      });
+      expect(
+        node.querySelectorAll(".field datalist > option")
+      ).to.have.length.of(3);
+      const datalistId = node.querySelector(".field datalist").id;
+      expect(node.querySelector(".field input").getAttribute("list")).eql(
+        datalistId
+      );
     });
 
     it("should default state value to undefined", () => {

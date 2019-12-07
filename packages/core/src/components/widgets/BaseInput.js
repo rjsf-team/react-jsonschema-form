@@ -61,7 +61,7 @@ function BaseInput(props) {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
 
-  return (
+  return [
     <input
       className="form-control"
       readOnly={readonly}
@@ -69,11 +69,23 @@ function BaseInput(props) {
       autoFocus={autofocus}
       value={value == null ? "" : value}
       {...inputProps}
+      list={schema.examples ? `examples_${inputProps.id}` : null}
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
       onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
-    />
-  );
+    />,
+    schema.examples ? (
+      <datalist id={`examples_${inputProps.id}`}>
+        {[
+          ...new Set(
+            schema.examples.concat(schema.default ? [schema.default] : [])
+          ),
+        ].map(example => (
+          <option key={example} value={example} />
+        ))}
+      </datalist>
+    ) : null,
+  ];
 }
 
 BaseInput.defaultProps = {

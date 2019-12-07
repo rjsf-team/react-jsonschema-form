@@ -3,7 +3,12 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox, setProps } from "./test_utils";
+import {
+  createFormComponent,
+  createSandbox,
+  setProps,
+  submitForm,
+} from "./test_utils";
 
 describe("NumberField", () => {
   let sandbox;
@@ -117,13 +122,17 @@ describe("NumberField", () => {
         expect(node.querySelector(".field-description").textContent).eql("bar");
       });
 
-      it("should default state value to undefined", () => {
-        const { comp } = createFormComponent({
+      it("formData should default to undefined", () => {
+        const { node, onSubmit } = createFormComponent({
           schema: { type: "number" },
           uiSchema,
+          noValidate: true,
         });
 
-        expect(comp.state.formData).eql(undefined);
+        submitForm(node);
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: undefined,
+        });
       });
 
       it("should assign a default value", () => {
@@ -139,7 +148,7 @@ describe("NumberField", () => {
       });
 
       it("should handle a change event", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "number",
           },
@@ -150,7 +159,9 @@ describe("NumberField", () => {
           target: { value: "2" },
         });
 
-        expect(comp.state.formData).eql(2);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: 2,
+        });
       });
 
       it("should handle a blur event", () => {
@@ -202,7 +213,7 @@ describe("NumberField", () => {
       });
 
       describe("when inputting a number that ends with a dot and/or zero it should normalize it, without changing the input value", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "number",
           },
@@ -260,14 +271,16 @@ describe("NumberField", () => {
               target: { value: test.input },
             });
 
-            expect(comp.state.formData).eql(test.output);
+            sinon.assert.calledWithMatch(onChange.lastCall, {
+              formData: test.output,
+            });
             expect($input.value).eql(test.input);
           });
         });
       });
 
       it("should normalize values beginning with a decimal point", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "number",
           },
@@ -280,7 +293,9 @@ describe("NumberField", () => {
           target: { value: ".00" },
         });
 
-        expect(comp.state.formData).eql(0);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: 0,
+        });
         expect($input.value).eql(".00");
       });
 
@@ -424,19 +439,20 @@ describe("NumberField", () => {
     });
 
     it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: {
           type: "number",
           enum: [1, 2],
           default: 1,
         },
+        noValidate: true,
       });
 
-      expect(comp.state.formData).eql(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: 1 });
     });
 
     it("should handle a change event", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "number",
           enum: [1, 2],
@@ -447,19 +463,19 @@ describe("NumberField", () => {
         target: { value: "2" },
       });
 
-      expect(comp.state.formData).eql(2);
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: 2 });
     });
 
     it("should fill field with data", () => {
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "number",
           enum: [1, 2],
         },
         formData: 2,
       });
-
-      expect(comp.state.formData).eql(2);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: 2 });
     });
 
     it("should render the widget with the expected id", () => {

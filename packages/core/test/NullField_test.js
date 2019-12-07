@@ -1,6 +1,6 @@
 import { expect } from "chai";
-
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
+import sinon from "sinon";
 
 describe("NullField", () => {
   let sandbox;
@@ -36,25 +36,27 @@ describe("NullField", () => {
     });
 
     it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: {
           type: "null",
           default: null,
         },
       });
 
-      expect(comp.state.formData).eql(null);
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: null });
     });
 
     it("should not overwrite existing data", () => {
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "null",
         },
         formData: 3,
+        noValidate: true,
       });
 
-      expect(comp.state.formData).eql(3);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: 3 });
     });
   });
 });

@@ -1,8 +1,9 @@
 import React from "react";
 import * as ReactIs from "react-is";
+import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
-import { union } from "lodash";
+import union from "lodash/union";
 import jsonpointer from "jsonpointer";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
@@ -621,6 +622,13 @@ export function resolveSchema(schema, rootSchema = {}, formData = {}) {
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, rootSchema, formData);
     return retrieveSchema(resolvedSchema, rootSchema, formData);
+  } else if (schema.hasOwnProperty("allOf")) {
+    return {
+      ...schema,
+      allOf: schema.allOf.map(allOfSubschema =>
+        retrieveSchema(allOfSubschema, rootSchema, formData)
+      ),
+    };
   } else {
     // No $ref or dependencies attribute found, returning the original schema.
     return schema;
@@ -641,7 +649,19 @@ function resolveReference(schema, rootSchema, formData) {
 }
 
 export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
-  const resolvedSchema = resolveSchema(schema, rootSchema, formData);
+  let resolvedSchema = resolveSchema(schema, rootSchema, formData);
+  if ("allOf" in schema) {
+    try {
+      resolvedSchema = mergeAllOf({
+        ...resolvedSchema,
+        allOf: resolvedSchema.allOf,
+      });
+    } catch (e) {
+      console.warn("could not merge subschemas in allOf:\n" + e);
+      const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
+      return resolvedSchemaWithoutAllOf;
+    }
+  }
   const hasAdditionalProperties =
     resolvedSchema.hasOwnProperty("additionalProperties") &&
     resolvedSchema.additionalProperties !== false;
@@ -931,7 +951,7 @@ export function toIdSchema(
   const idSchema = {
     $id: id || idPrefix,
   };
-  if ("$ref" in schema || "dependencies" in schema) {
+  if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
     return toIdSchema(_schema, id, rootSchema, formData, idPrefix);
   }
@@ -961,7 +981,7 @@ export function toPathSchema(schema, name = "", rootSchema, formData = {}) {
   const pathSchema = {
     $name: name.replace(/^\./, ""),
   };
-  if ("$ref" in schema || "dependencies" in schema) {
+  if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
     return toPathSchema(_schema, name, rootSchema, formData);
   }
