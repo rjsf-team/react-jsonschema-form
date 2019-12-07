@@ -2,7 +2,7 @@ var path = require("path");
 var webpack = require("webpack");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-module.exports = {
+export default {
   mode: "development",
   devtool: "source-map",
   entry: [
@@ -29,6 +29,7 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/,
         use: [
           "babel-loader",
+          "ts-loader"
         ],
         include: [
           path.join(__dirname, "src"),

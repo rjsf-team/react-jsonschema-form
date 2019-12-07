@@ -3,7 +3,7 @@ var webpack = require("webpack");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-module.exports = {
+export default {
   mode: "production",
   entry: "./playground/app",
   output: {
@@ -32,6 +32,7 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/,
         use: [
           "babel-loader",
+          "ts-loader"
         ],
         include: [
           path.join(__dirname, "src"),

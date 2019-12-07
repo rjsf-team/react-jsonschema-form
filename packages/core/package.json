@@ -53,7 +53,6 @@
     "shortid": "^2.2.14"
   },
   "devDependencies": {
-    "./babel-register.js": "^7.4.4",
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
@@ -104,6 +103,8 @@
     "rimraf": "^2.5.4",
     "sinon": "^7.5.0",
     "style-loader": "^0.13.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.3",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",

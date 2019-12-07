@@ -2,7 +2,7 @@ var path = require("path");
 var webpack = require("webpack");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-module.exports = {
+export default {
   mode: "production",
   cache: true,
   context: __dirname + "/src",
@@ -49,6 +49,7 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/,
         use: [
           "babel-loader",
+          "ts-loader"
         ],
         exclude: [
           path.join(__dirname, "node_modules", "core-js"),
