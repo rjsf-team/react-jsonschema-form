@@ -6,7 +6,7 @@ module.exports = {
   mode: "production",
   cache: true,
   context: __dirname + "/src",
-  entry: "./index.js",
+  entry: "./index.tsx",
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/dist/",

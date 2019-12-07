@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import DescriptionField from "../fields/DescriptionField.js";
+import DescriptionField from "../fields/DescriptionField";
 
 // Check to see if a schema specifies that a value must be true
 function schemaRequiresTrueValue(schema) {
