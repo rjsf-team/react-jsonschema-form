@@ -10,6 +10,7 @@ import ordering from "./ordering";
 import references from "./references";
 import custom from "./custom";
 import errors from "./errors";
+import examples from "./examples";
 import large from "./large";
 import date from "./date";
 import validation from "./validation";
@@ -36,6 +37,7 @@ export const samples = {
   References: references,
   Custom: custom,
   Errors: errors,
+  Examples: examples,
   Large: large,
   "Date & time": date,
   Validation: validation,
