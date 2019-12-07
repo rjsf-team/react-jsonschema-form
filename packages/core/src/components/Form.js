@@ -323,7 +323,11 @@ export default class Form extends Component {
 
   submit() {
     if (this.formElement) {
-      this.formElement.dispatchEvent(new Event("submit", { cancelable: true }));
+      this.formElement.dispatchEvent(
+        new CustomEvent("submit", {
+          cancelable: true,
+        })
+      );
     }
   }
 
@@ -424,7 +428,7 @@ if (process.env.NODE_ENV !== "production") {
     onSubmit: PropTypes.func,
     id: PropTypes.string,
     className: PropTypes.string,
-    tagName: PropTypes.string,
+    tagName: PropTypes.elementType,
     name: PropTypes.string,
     method: PropTypes.string,
     target: PropTypes.string,
