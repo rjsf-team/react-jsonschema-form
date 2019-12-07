@@ -146,6 +146,21 @@ describe("StringField", () => {
       expect(comp.state.formData).eql("default");
     });
 
+    it("should handle an empty string change event with defaults set", () => {
+      const { comp, node } = createFormComponent({
+        schema: {
+          type: "string",
+          default: "a",
+        },
+      });
+
+      Simulate.change(node.querySelector("input"), {
+        target: { value: "" },
+      });
+
+      expect(comp.state.formData).eql(undefined);
+    });
+
     it("should fill field with data", () => {
       const { node } = createFormComponent({
         schema: {
