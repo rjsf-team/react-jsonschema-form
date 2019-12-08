@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { Simulate } from "react-dom/test-utils";
 
 import validateFormData, { isValid, toErrorList } from "../src/validate";
-import { createFormComponent } from "./test_utils";
+import { createFormComponent, submitForm } from "./test_utils";
 
 describe("Validation", () => {
   describe("validate.isValid()", () => {
@@ -398,41 +398,36 @@ describe("Validation", () => {
           },
         };
 
-        var comp, node, onError;
-
+        let onError, node;
         beforeEach(() => {
-          onError = sandbox.spy();
           const compInfo = createFormComponent({
             schema,
             formData: {
               foo: undefined,
             },
-            onError,
           });
-          comp = compInfo.comp;
+          onError = compInfo.onError;
           node = compInfo.node;
-
-          Simulate.submit(node);
+          submitForm(node);
         });
 
-        it("should validate a required field", () => {
-          expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql("is a required property");
+        it("should trigger onError call", () => {
+          sinon.assert.calledWithMatch(onError.lastCall, [
+            {
+              message: "is a required property",
+              name: "required",
+              params: { missingProperty: "foo" },
+              property: ".foo",
+              schemaPath: "#/required",
+              stack: ".foo is a required property",
+            },
+          ]);
         });
 
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
             ".foo is a required property"
-          );
-        });
-
-        it("should trigger the onError handler", () => {
-          sinon.assert.calledWith(
-            onError,
-            sinon.match(errors => {
-              return errors[0].message === "is a required property";
-            })
           );
         });
       });
@@ -449,7 +444,7 @@ describe("Validation", () => {
           },
         };
 
-        var comp, node, onError;
+        let node, onError;
 
         beforeEach(() => {
           onError = sandbox.spy();
@@ -460,20 +455,9 @@ describe("Validation", () => {
             },
             onError,
           });
-          comp = compInfo.comp;
           node = compInfo.node;
 
-          Simulate.submit(node);
-        });
-
-        it("should validate a minLength field", () => {
-          expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].schemaPath).eql(
-            "#/properties/foo/minLength"
-          );
-          expect(comp.state.errors[0].message).eql(
-            "should NOT be shorter than 10 characters"
-          );
+          submitForm(node);
         });
 
         it("should render errors", () => {
@@ -484,14 +468,16 @@ describe("Validation", () => {
         });
 
         it("should trigger the onError handler", () => {
-          sinon.assert.calledWith(
-            onError,
-            sinon.match(errors => {
-              return (
-                errors[0].message === "should NOT be shorter than 10 characters"
-              );
-            })
-          );
+          sinon.assert.calledWithMatch(onError.lastCall, [
+            {
+              message: "should NOT be shorter than 10 characters",
+              name: "minLength",
+              params: { limit: 10 },
+              property: ".foo",
+              schemaPath: "#/properties/foo/minLength",
+              stack: ".foo should NOT be shorter than 10 characters",
+            },
+          ]);
         });
       });
     });
@@ -539,7 +525,7 @@ describe("Validation", () => {
           onSubmit,
         });
 
-        Simulate.submit(node);
+        submitForm(node);
 
         sinon.assert.called(onSubmit);
       });
@@ -565,7 +551,7 @@ describe("Validation", () => {
           onError,
         });
 
-        Simulate.submit(node);
+        submitForm(node);
 
         sinon.assert.notCalled(onSubmit);
         sinon.assert.called(onError);
@@ -711,40 +697,36 @@ describe("Validation", () => {
           },
         };
 
-        var comp, node, onError;
-
+        let node, onError;
         beforeEach(() => {
-          onError = sandbox.spy();
           const compInfo = createFormComponent({
             schema,
             formData: {
               foo: undefined,
             },
-            onError,
             showErrorList: false,
           });
-          comp = compInfo.comp;
           node = compInfo.node;
+          onError = compInfo.onError;
 
-          Simulate.submit(node);
-        });
-
-        it("should validate a required field", () => {
-          expect(comp.state.errors).to.have.length.of(1);
-          expect(comp.state.errors[0].message).eql("is a required property");
+          submitForm(node);
         });
 
         it("should not render error list if showErrorList prop true", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(0);
         });
 
-        it("should trigger the onError handler", () => {
-          sinon.assert.calledWith(
-            onError,
-            sinon.match(errors => {
-              return errors[0].message === "is a required property";
-            })
-          );
+        it("should trigger onError call", () => {
+          sinon.assert.calledWithMatch(onError.lastCall, [
+            {
+              message: "is a required property",
+              name: "required",
+              params: { missingProperty: "foo" },
+              property: ".foo",
+              schemaPath: "#/required",
+              stack: ".foo is a required property",
+            },
+          ]);
         });
       });
     });
