@@ -1337,7 +1337,7 @@ describeRepeated("Form common", createFormComponent => {
             target: { value: "short" },
           });
           sinon.assert.calledWithMatch(onChange.lastCall, {
-            onError: undefined,
+            errorSchema: undefined,
           });
         });
 
