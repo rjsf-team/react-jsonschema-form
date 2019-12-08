@@ -494,16 +494,16 @@ describe("Validation", () => {
           return errors;
         }
 
-        const { comp } = createFormComponent({
+        const { onError, node } = createFormComponent({
           schema,
           validate,
-          liveValidate: true,
+          formData,
         });
-        comp.UNSAFE_componentWillReceiveProps({ formData });
 
-        expect(comp.state.errorSchema).eql({
-          __errors: ["Invalid"],
-        });
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          { stack: "root: Invalid" },
+        ]);
       });
 
       it("should submit form on valid data", () => {
@@ -576,25 +576,16 @@ describe("Validation", () => {
           return errors;
         }
 
-        const { comp } = createFormComponent({
+        const { node, onError } = createFormComponent({
           schema,
           validate,
-          liveValidate: true,
+          formData,
         });
-        comp.UNSAFE_componentWillReceiveProps({ formData });
-
-        expect(comp.state.errorSchema).eql({
-          __errors: [],
-          pass1: {
-            __errors: [],
-          },
-          pass2: {
-            __errors: [
-              "should NOT be shorter than 3 characters",
-              "Passwords don't match",
-            ],
-          },
-        });
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          { stack: "pass2: should NOT be shorter than 3 characters" },
+          { stack: "pass2: Passwords don't match" },
+        ]);
       });
 
       it("should validate an array of object", () => {
@@ -623,34 +614,16 @@ describe("Validation", () => {
           return errors;
         }
 
-        const { comp } = createFormComponent({
+        const { node, onError } = createFormComponent({
           schema,
           validate,
-          liveValidate: true,
+          formData,
         });
-        comp.UNSAFE_componentWillReceiveProps({ formData });
 
-        expect(comp.state.errorSchema).eql({
-          0: {
-            pass1: {
-              __errors: [],
-            },
-            pass2: {
-              __errors: ["Passwords don't match"],
-            },
-            __errors: [],
-          },
-          1: {
-            pass1: {
-              __errors: [],
-            },
-            pass2: {
-              __errors: [],
-            },
-            __errors: [],
-          },
-          __errors: [],
-        });
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          { stack: "pass2: Passwords don't match" },
+        ]);
       });
 
       it("should validate a simple array", () => {
@@ -670,19 +643,15 @@ describe("Validation", () => {
           return errors;
         }
 
-        const { comp } = createFormComponent({
+        const { node, onError } = createFormComponent({
           schema,
           validate,
-          liveValidate: true,
+          formData,
         });
-        comp.UNSAFE_componentWillReceiveProps({ formData });
-
-        expect(comp.state.errorSchema).eql({
-          0: { __errors: [] },
-          1: { __errors: [] },
-          2: { __errors: [] },
-          __errors: ["Forbidden value: bbb"],
-        });
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          { stack: "root: Forbidden value: bbb" },
+        ]);
       });
     });
 
@@ -784,9 +753,7 @@ describe("Validation", () => {
       });
     });
     describe("Custom meta schema", () => {
-      let onSubmit;
-      let onError;
-      let comp, node;
+      let onError, node;
       const formData = {
         datasetId: "no err",
       };
@@ -809,8 +776,6 @@ describe("Validation", () => {
       };
 
       beforeEach(() => {
-        onSubmit = sandbox.spy();
-        onError = sandbox.spy();
         const withMetaSchema = createFormComponent({
           schema,
           formData,
@@ -818,21 +783,30 @@ describe("Validation", () => {
           additionalMetaSchemas: [
             require("ajv/lib/refs/json-schema-draft-04.json"),
           ],
-          onSubmit,
-          onError,
         });
-        comp = withMetaSchema.comp;
         node = withMetaSchema.node;
+        onError = withMetaSchema.onError;
+        submitForm(node);
       });
       it("should be used to validate schema", () => {
         expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
-        expect(comp.state.errors).to.have.lengthOf(1);
-        expect(comp.state.errors[0].message).eql(`should match pattern "\\d+"`);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: 'should match pattern "\\d+"',
+            name: "pattern",
+            params: { pattern: "\\d+" },
+            property: ".datasetId",
+            schemaPath: "#/properties/datasetId/pattern",
+            stack: '.datasetId should match pattern "\\d+"',
+          },
+        ]);
+        onError.resetHistory();
+
         Simulate.change(node.querySelector("input"), {
           target: { value: "1234" },
         });
         expect(node.querySelectorAll(".errors li")).to.have.length.of(0);
-        expect(comp.state.errors).to.have.lengthOf(0);
+        sinon.assert.notCalled(onError);
       });
     });
   });
