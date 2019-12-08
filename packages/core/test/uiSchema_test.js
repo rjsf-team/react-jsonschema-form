@@ -1,9 +1,10 @@
 import { expect } from "chai";
 import React from "react";
+import sinon from "sinon";
 import { Simulate } from "react-dom/test-utils";
 import SelectWidget from "../src/components/widgets/SelectWidget";
 import RadioWidget from "../src/components/widgets/RadioWidget";
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("uiSchema", () => {
   let sandbox;
@@ -861,7 +862,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when text is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -875,7 +876,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: "b" });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: "b" },
+        });
       });
 
       it("should set a placeholder value", () => {
@@ -912,7 +915,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when text is updated is checked", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -926,7 +929,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: "b" });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: "b" },
+        });
       });
 
       it("should set a placeholder value", () => {
@@ -962,7 +967,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when text is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -975,8 +980,9 @@ describe("uiSchema", () => {
             value: "#001122",
           },
         });
-
-        expect(comp.state.formData).eql({ foo: "#001122" });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: "#001122" },
+        });
       });
     });
 
@@ -1006,7 +1012,7 @@ describe("uiSchema", () => {
       });
 
       it("should map widget value to a typed state one", () => {
-        const { comp } = createFormComponent({
+        const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1014,7 +1020,11 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData.foo).eql("a");
+        submitForm(node);
+
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: { foo: "a" },
+        });
       });
     });
   });
@@ -1056,7 +1066,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1070,7 +1080,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: "b" });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: "b" },
+        });
       });
     });
   });
@@ -1114,7 +1126,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1128,7 +1140,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: 6.28 });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: 6.28 },
+        });
       });
 
       describe("Constraint attributes", () => {
@@ -1195,7 +1209,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1209,7 +1223,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: 6.28 });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: 6.28 },
+        });
       });
 
       describe("Constraint attributes", () => {
@@ -1286,7 +1302,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1300,7 +1316,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: 1.4142 });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: 1.4142 },
+        });
       });
     });
 
@@ -1330,7 +1348,7 @@ describe("uiSchema", () => {
       });
 
       it("should map widget value to a typed state one", () => {
-        const { comp } = createFormComponent({
+        const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1338,7 +1356,11 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData.foo).eql(42);
+        submitForm(node);
+
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: { foo: 42 },
+        });
       });
     });
   });
@@ -1379,7 +1401,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1393,7 +1415,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: 6 });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: 6 },
+        });
       });
     });
 
@@ -1423,7 +1447,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1437,7 +1461,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: 6 });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: 6 },
+        });
       });
     });
 
@@ -1477,7 +1503,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when value is updated", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1491,7 +1517,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: 2 });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: 2 },
+        });
       });
     });
 
@@ -1521,7 +1549,7 @@ describe("uiSchema", () => {
       });
 
       it("should map widget value to a typed state one", () => {
-        const { comp } = createFormComponent({
+        const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1529,7 +1557,11 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData.foo).eql(42);
+        submitForm(node);
+
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: { foo: 42 },
+        });
       });
     });
   });
@@ -1582,7 +1614,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when false is checked", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1596,11 +1628,13 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: false });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: false },
+        });
       });
 
       it("should update state when true is checked", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1614,7 +1648,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: true });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: true },
+        });
       });
     });
 
@@ -1639,7 +1675,7 @@ describe("uiSchema", () => {
       });
 
       it("should update state when true is selected", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1654,11 +1690,13 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: true });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: true },
+        });
       });
 
       it("should update state when false is selected", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1673,7 +1711,9 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData).eql({ foo: false });
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: { foo: false },
+        });
       });
     });
 
@@ -1703,7 +1743,7 @@ describe("uiSchema", () => {
       });
 
       it("should map widget value to a typed state one", () => {
-        const { comp } = createFormComponent({
+        const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
           formData: {
@@ -1711,7 +1751,11 @@ describe("uiSchema", () => {
           },
         });
 
-        expect(comp.state.formData.foo).eql(true);
+        submitForm(node);
+
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: { foo: true },
+        });
       });
     });
   });
