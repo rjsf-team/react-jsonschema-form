@@ -506,6 +506,34 @@ describe("Validation", () => {
         ]);
       });
 
+      it("should live validate a simple string value when liveValidate is set to true", () => {
+        const schema = { type: "string" };
+        const formData = "a";
+
+        function validate(formData, errors) {
+          if (formData !== "hello") {
+            errors.addError("Invalid");
+          }
+          return errors;
+        }
+
+        const { onChange, node } = createFormComponent({
+          schema,
+          validate,
+          formData,
+          liveValidate: true,
+        });
+        Simulate.change(node.querySelector("input"), {
+          target: { value: "1234" },
+        });
+
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          errorSchema: { __errors: ["Invalid"] },
+          errors: [{ stack: "root: Invalid" }],
+          formData: "1234",
+        });
+      });
+
       it("should submit form on valid data", () => {
         const schema = { type: "string" };
         const formData = "hello";
