@@ -861,7 +861,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("textarea").value).eql("a");
       });
 
-      it("should update state when text is updated", () => {
+      it("should call onChange handler when text is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -914,7 +914,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=password]").value).eql("a");
       });
 
-      it("should update state when text is updated is checked", () => {
+      it("should call onChange handler when text is updated is checked", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -966,7 +966,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=color]").value).eql("#151ce6");
       });
 
-      it("should update state when text is updated", () => {
+      it("should call onChange handler when text is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1011,7 +1011,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=hidden]").value).eql("a");
       });
 
-      it("should map widget value to a typed state one", () => {
+      it("should map widget value to a typed event property", () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
@@ -1065,7 +1065,7 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll("[type=radio]")[1].checked).eql(true);
       });
 
-      it("should update state when value is updated", () => {
+      it("should call onChange handler when value is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1125,7 +1125,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=number]").value).eql("3.14");
       });
 
-      it("should update state when value is updated", () => {
+      it("should call onChange handler when value is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1208,7 +1208,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=range]").value).eql("3.14");
       });
 
-      it("should update state when value is updated", () => {
+      it("should call onChange handler when value is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1301,7 +1301,7 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll("[type=radio]")[1].checked).eql(true);
       });
 
-      it("should update state when value is updated", () => {
+      it("should call onChange handler when value is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1347,7 +1347,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=hidden]").value).eql("42");
       });
 
-      it("should map widget value to a typed state one", () => {
+      it("should map widget value to a typed event property", () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
@@ -1400,7 +1400,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=number]").value).eql("3");
       });
 
-      it("should update state when value is updated", () => {
+      it("should call onChange handler when value is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1446,7 +1446,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=range]").value).eql("3");
       });
 
-      it("should update state when value is updated", () => {
+      it("should call onChange handler when value is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1502,7 +1502,7 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll("[type=radio]")[1].checked).eql(true);
       });
 
-      it("should update state when value is updated", () => {
+      it("should call onChange handler when value is updated", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1548,7 +1548,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=hidden]").value).eql("42");
       });
 
-      it("should map widget value to a typed state one", () => {
+      it("should map widget value to a typed event property", () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
@@ -1613,7 +1613,7 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll("[type=radio]")[1].checked).eql(true);
       });
 
-      it("should update state when false is checked", () => {
+      it("should call onChange handler when false is checked", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1633,7 +1633,7 @@ describe("uiSchema", () => {
         });
       });
 
-      it("should update state when true is checked", () => {
+      it("should call onChange handler when true is checked", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1674,7 +1674,7 @@ describe("uiSchema", () => {
         expect(node.querySelectorAll("option")[2].textContent).eql("No");
       });
 
-      it("should update state when true is selected", () => {
+      it("should call onChange handler when true is selected", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1695,7 +1695,7 @@ describe("uiSchema", () => {
         });
       });
 
-      it("should update state when false is selected", () => {
+      it("should call onChange handler when false is selected", () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1742,7 +1742,7 @@ describe("uiSchema", () => {
         expect(node.querySelector("[type=hidden]").value).eql("true");
       });
 
-      it("should map widget value to a typed state one", () => {
+      it("should map widget value to a typed event property", () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,

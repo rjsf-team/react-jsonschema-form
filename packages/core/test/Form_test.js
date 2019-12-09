@@ -792,7 +792,7 @@ describeRepeated("Form common", createFormComponent => {
       },
     };
 
-    it("should propagate deeply nested defaults to form state", () => {
+    it("should propagate deeply nested defaults to submit handler", () => {
       const { node, onSubmit } = createFormComponent({ schema });
 
       Simulate.click(node.querySelector(".array-item-add button"));
@@ -1119,7 +1119,7 @@ describeRepeated("Form common", createFormComponent => {
         liveValidate: true,
       };
 
-      it("should update form state from new formData prop value", () => {
+      it("should call submit handler with new formData prop value", () => {
         const { comp, node, onSubmit } = createFormComponent(formProps);
 
         comp.UNSAFE_componentWillReceiveProps({ formData: "yo" });
@@ -1151,7 +1151,7 @@ describeRepeated("Form common", createFormComponent => {
     });
 
     describe("object level", () => {
-      it("should update form state from new formData prop value", () => {
+      it("should call submit handler with new formData prop value", () => {
         const { comp, onSubmit, node } = createFormComponent({
           schema: {
             type: "object",
@@ -1172,7 +1172,7 @@ describeRepeated("Form common", createFormComponent => {
     });
 
     describe("array level", () => {
-      it("should update form state from new formData prop value", () => {
+      it("should call submit handler with new formData prop value", () => {
         const schema = {
           type: "array",
           items: {
