@@ -524,18 +524,13 @@ class Playground extends Component {
             )}
           </div>
         </div>
-        <div className="col-sm-12">
+        <div className="">
           <p style={{ textAlign: "center" }}>
             Powered by{" "}
             <a href="https://github.com/mozilla-services/react-jsonschema-form">
               react-jsonschema-form
             </a>
-            . Bootstrap themes courtesy of{" "}
-            <a href="http://bootswatch.com/">Bootswatch</a> and{" "}
-            <a href="https://github.com/aalpern/bootstrap-solarized/">
-              bootstrap-solarized
-            </a>
-            . Bootstrap version v3.3.6.
+            .
             {process.env.SHOW_NETLIFY_BADGE === "true" && (
               <div style={{ float: "right" }}>
                 <a href="https://www.netlify.com">
