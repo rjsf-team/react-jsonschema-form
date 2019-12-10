@@ -41,6 +41,18 @@ module.exports = {
       "alt-datetime": {
         "ui:widget": "alt-datetime",
         "ui:options": {
+          placeholders: {
+            year: "Jahr",
+            month: "Monat",
+            day: "Tag",
+            hour: "Stunde",
+            minute: "Minute",
+            second: "Sekunde",
+          },
+          labels: {
+            clear: "Zurücksetzen",
+            now: "Jetzt",
+          },
           yearsRange: [1980, 2030],
         },
       },
