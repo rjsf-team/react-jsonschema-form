@@ -350,7 +350,7 @@ class Playground extends Component {
     // clear the field in all cases.
     const { uiSchema = {} } = data;
 
-    const { theme = "default" } = data;
+    const { theme = this.state.theme } = data;
     const { themes } = this.props;
     this.onThemeSelected(theme, themes[theme]);
 
