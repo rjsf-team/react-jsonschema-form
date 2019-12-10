@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import MonacoEditor from "react-monaco-editor";
 
-import { shouldRender } from "../src/utils";
+import { shouldRender } from "../../packages/core/src/utils";
 import { samples } from "./samples";
-import Form from "../src";
+import Form from "../../packages/core/src";
 import "react-app-polyfill/ie11";
+
+import MaterialUIForm from "../../packages/material-ui/src";
 
 const log = type => console.log.bind(console, type);
 const toJson = val => JSON.stringify(val, null, 2);
@@ -22,89 +24,12 @@ const themes = {
   default: {
     stylesheet:
       "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+    formComponent: Form
   },
-  cerulean: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cerulean/bootstrap.min.css",
-  },
-  cosmo: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cosmo/bootstrap.min.css",
-  },
-  cyborg: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cyborg/bootstrap.min.css",
-    editor: "blackboard",
-  },
-  darkly: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/darkly/bootstrap.min.css",
-    editor: "mbo",
-  },
-  flatly: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/flatly/bootstrap.min.css",
-    editor: "ttcn",
-  },
-  journal: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/journal/bootstrap.min.css",
-  },
-  lumen: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/lumen/bootstrap.min.css",
-  },
-  paper: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/paper/bootstrap.min.css",
-  },
-  readable: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/readable/bootstrap.min.css",
-  },
-  sandstone: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/sandstone/bootstrap.min.css",
-    editor: "solarized",
-  },
-  simplex: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/simplex/bootstrap.min.css",
-    editor: "ttcn",
-  },
-  slate: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/slate/bootstrap.min.css",
-    editor: "monokai",
-  },
-  spacelab: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/spacelab/bootstrap.min.css",
-  },
-  "solarized-dark": {
-    stylesheet:
-      "//cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-dark.css",
-    editor: "dracula",
-  },
-  "solarized-light": {
-    stylesheet:
-      "//cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-light.css",
-    editor: "solarized",
-  },
-  superhero: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/superhero/bootstrap.min.css",
-    editor: "dracula",
-  },
-  united: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/united/bootstrap.min.css",
-  },
-  yeti: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/yeti/bootstrap.min.css",
-    editor: "eclipse",
-  },
+  "material-ui": {
+    stylesheet: "",
+    formComponent: MaterialUIForm
+  }
 };
 
 const monacoEditorOptions = {
@@ -256,18 +181,18 @@ class Selector extends Component {
   }
 }
 
-function ThemeSelector({ theme, select }) {
+function ThemeSelector({ theme, select, FormComponent }) {
   const themeSchema = {
     type: "string",
     enum: Object.keys(themes),
   };
   return (
-    <Form
+    <FormComponent
       schema={themeSchema}
       formData={theme}
       onChange={({ formData }) => select(formData, themes[formData])}>
       <div />
-    </Form>
+    </FormComponent>
   );
 }
 
@@ -318,7 +243,6 @@ class App extends Component {
       uiSchema,
       formData,
       validate,
-      editor: "default",
       theme: "default",
       liveSettings: {
         validate: true,
@@ -327,6 +251,7 @@ class App extends Component {
         liveOmit: false,
       },
       shareURL: null,
+      formComponent: Form
     };
   }
 
@@ -375,8 +300,8 @@ class App extends Component {
   onExtraErrorsEdited = extraErrors =>
     this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (theme, { stylesheet, editor }) => {
-    this.setState({ theme, editor: editor ? editor : "default" });
+  onThemeSelected = (theme, { stylesheet, formComponent, editor }) => {
+    this.setState({ theme, formComponent, editor: editor ? editor : "default" });
     setImmediate(() => {
       // Side effect!
       document.getElementById("theme").setAttribute("href", stylesheet);
@@ -424,7 +349,7 @@ class App extends Component {
       liveSettings,
       validate,
       theme,
-      editor,
+      FormComponent,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
@@ -439,22 +364,23 @@ class App extends Component {
               <Selector onSelected={this.load} />
             </div>
             <div className="col-sm-2">
-              <Form
+              <FormComponent
                 schema={liveSettingsSchema}
                 formData={liveSettings}
                 onChange={this.setLiveSettings}>
                 <div />
-              </Form>
+              </FormComponent>
             </div>
             <div className="col-sm-2">
-              <ThemeSelector theme={theme} select={this.onThemeSelected} />
+              <ThemeSelector theme={theme} select={this.onThemeSelected}
+                FormComponent={FormComponent}
+              />
             </div>
           </div>
         </div>
         <div className="col-sm-7">
           <Editor
             title="JSONSchema"
-            theme={editor}
             code={toJson(schema)}
             onChange={this.onSchemaEdited}
           />
@@ -462,7 +388,6 @@ class App extends Component {
             <div className="col-sm-6">
               <Editor
                 title="UISchema"
-                theme={editor}
                 code={toJson(uiSchema)}
                 onChange={this.onUISchemaEdited}
               />
@@ -470,7 +395,6 @@ class App extends Component {
             <div className="col-sm-6">
               <Editor
                 title="formData"
-                theme={editor}
                 code={toJson(formData)}
                 onChange={this.onFormDataEdited}
               />
@@ -481,7 +405,6 @@ class App extends Component {
               <div className="col">
                 <Editor
                   title="extraErrors"
-                  theme={editor}
                   code={toJson(extraErrors || {})}
                   onChange={this.onExtraErrorsEdited}
                 />
@@ -491,7 +414,7 @@ class App extends Component {
         </div>
         <div className="col-sm-5">
           {this.state.form && (
-            <Form
+            <FormComponent
               ArrayFieldTemplate={ArrayFieldTemplate}
               ObjectFieldTemplate={ObjectFieldTemplate}
               liveValidate={liveSettings.validate}
@@ -530,7 +453,7 @@ class App extends Component {
                   />
                 </div>
               </div>
-            </Form>
+            </FormComponent>
           )}
         </div>
         <div className="col-sm-12">
