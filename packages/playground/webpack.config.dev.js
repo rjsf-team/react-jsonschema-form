@@ -34,13 +34,14 @@ module.exports = {
         ]
       },
       {
-        test: /\.css$/,
+        test: /\.s?css$/,
         use: [
           "style-loader",
           "css-loader",
+          "sass-loader"
         ],
         include: [
-          path.join(__dirname, "css"),
+          path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules"),
         ],

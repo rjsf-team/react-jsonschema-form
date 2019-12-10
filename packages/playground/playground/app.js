@@ -5,8 +5,8 @@ import { render } from "react-dom";
 
 const themes = {
   default: {
-    stylesheet:
-      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+    stylesheet: "",
+    // "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
     theme: {},
   },
   "material-ui": {

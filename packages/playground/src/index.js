@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
-import { withTheme } from "react-jsonschema-form";
+import Form, { withTheme } from "react-jsonschema-form";
+import "./index.scss";
 
 // deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
 
@@ -197,8 +198,8 @@ class Editor extends Component {
     const icon = this.state.valid ? "ok" : "remove";
     const cls = this.state.valid ? "valid" : "invalid";
     return (
-      <div className="panel panel-default">
-        <div className="panel-heading">
+      <div className="rjsf-editor">
+        <div className="rjsf-editor-heading">
           <span className={`${cls} glyphicon glyphicon-${icon}`} />
           {" " + title}
         </div>
@@ -235,7 +236,7 @@ class Selector extends Component {
 
   render() {
     return (
-      <ul className="nav nav-pills">
+      <ul className="rjsf-nav">
         {Object.keys(samples).map((label, i) => {
           return (
             <li
@@ -259,12 +260,14 @@ function ThemeSelector({ theme, themes, select, FormComponent }) {
     enum: Object.keys(themes),
   };
   return (
-    <FormComponent
+    <Form
+      className="form_rjsf_themeSelector"
+      idPrefix="rjsf_themeSelector"
       schema={themeSchema}
       formData={theme}
       onChange={({ formData }) => select(formData, themes[formData])}>
       <div />
-    </FormComponent>
+    </Form>
   );
 }
 
@@ -432,22 +435,24 @@ class Playground extends Component {
     const FormComponent = withTheme(themeObj);
 
     return (
-      <div className="container-fluid">
+      <div className="rjsf-main">
         <div className="page-header">
           <h1>react-jsonschema-form</h1>
-          <div className="row">
-            <div className="col-sm-8">
+          <div className="rjsf-selector-container">
+            <div className="rjsf-tabs">
               <Selector onSelected={this.load} />
             </div>
-            <div className="col-sm-2">
-              <FormComponent
+            <div className="rjsf-options">
+              <Form
+                className="form_rjsf_options"
+                idPrefix="rjsf_options"
                 schema={liveSettingsSchema}
                 formData={liveSettings}
                 onChange={this.setLiveSettings}>
                 <div />
-              </FormComponent>
+              </Form>
             </div>
-            <div className="col-sm-2">
+            <div className="rjsf-themes">
               <ThemeSelector
                 themes={themes}
                 theme={theme}
@@ -457,83 +462,81 @@ class Playground extends Component {
             </div>
           </div>
         </div>
-        <div className="col-sm-7">
-          <Editor
-            title="JSONSchema"
-            code={toJson(schema)}
-            onChange={this.onSchemaEdited}
-          />
-          <div className="row">
-            <div className="col-sm-6">
+        <div className="rjsf-editor-main">
+          <div className="rjsf-editors-container">
+            <div className="rjsf-editor-row">
+              <Editor
+                title="JSONSchema"
+                code={toJson(schema)}
+                onChange={this.onSchemaEdited}
+              />
+            </div>
+            <div className="rjsf-editor-row">
               <Editor
                 title="UISchema"
                 code={toJson(uiSchema)}
                 onChange={this.onUISchemaEdited}
               />
-            </div>
-            <div className="col-sm-6">
               <Editor
                 title="formData"
                 code={toJson(formData)}
                 onChange={this.onFormDataEdited}
               />
             </div>
-          </div>
-          {extraErrors && (
-            <div className="row">
-              <div className="col">
+            {extraErrors && (
+              <div className="rjsf-editor-row">
                 <Editor
                   title="extraErrors"
                   code={toJson(extraErrors || {})}
                   onChange={this.onExtraErrorsEdited}
                 />
               </div>
-            </div>
-          )}
-        </div>
-        <div className="col-sm-5">
-          {this.state.form && (
-            <FormComponent
-              ArrayFieldTemplate={ArrayFieldTemplate}
-              ObjectFieldTemplate={ObjectFieldTemplate}
-              liveValidate={liveSettings.validate}
-              disabled={liveSettings.disable}
-              omitExtraData={liveSettings.omitExtraData}
-              liveOmit={liveSettings.liveOmit}
-              schema={schema}
-              uiSchema={uiSchema}
-              formData={formData}
-              extraErrors={extraErrors}
-              onChange={this.onFormDataChange}
-              onSubmit={({ formData }, e) => {
-                console.log("submitted formData", formData);
-                console.log("submit event", e);
-              }}
-              fields={{ geo: GeoPosition }}
-              validate={validate}
-              onBlur={(id, value) =>
-                console.log(`Touched ${id} with value ${value}`)
-              }
-              onFocus={(id, value) =>
-                console.log(`Focused ${id} with value ${value}`)
-              }
-              transformErrors={transformErrors}
-              onError={log("errors")}>
-              <div className="row">
-                <div className="col-sm-3">
-                  <button className="btn btn-primary" type="submit">
-                    Submit
-                  </button>
+            )}
+          </div>
+          <div className="rjsf-form">
+            {this.state.form && (
+              <FormComponent
+                ArrayFieldTemplate={ArrayFieldTemplate}
+                ObjectFieldTemplate={ObjectFieldTemplate}
+                liveValidate={liveSettings.validate}
+                disabled={liveSettings.disable}
+                omitExtraData={liveSettings.omitExtraData}
+                liveOmit={liveSettings.liveOmit}
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={formData}
+                extraErrors={extraErrors}
+                onChange={this.onFormDataChange}
+                onSubmit={({ formData }, e) => {
+                  console.log("submitted formData", formData);
+                  console.log("submit event", e);
+                }}
+                fields={{ geo: GeoPosition }}
+                validate={validate}
+                onBlur={(id, value) =>
+                  console.log(`Touched ${id} with value ${value}`)
+                }
+                onFocus={(id, value) =>
+                  console.log(`Focused ${id} with value ${value}`)
+                }
+                transformErrors={transformErrors}
+                onError={log("errors")}>
+                <div className="row">
+                  <div className="col-sm-3">
+                    <button className="btn btn-primary" type="submit">
+                      Submit
+                    </button>
+                  </div>
+                  <div className="col-sm-9 text-right">
+                    <CopyLink
+                      shareURL={this.state.shareURL}
+                      onShare={this.onShare}
+                    />
+                  </div>
                 </div>
-                <div className="col-sm-9 text-right">
-                  <CopyLink
-                    shareURL={this.state.shareURL}
-                    onShare={this.onShare}
-                  />
-                </div>
-              </div>
-            </FormComponent>
-          )}
+              </FormComponent>
+            )}
+          </div>
         </div>
         <div className="col-sm-12">
           <p style={{ textAlign: "center" }}>
