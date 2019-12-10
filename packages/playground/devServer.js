@@ -24,7 +24,7 @@ app.get("/favicon.ico", function(req, res) {
 });
 
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "src", "index.html"));
+  res.sendFile(path.join(__dirname, "playground", "index.html"));
 });
 
 app.listen(port, host, function(err) {

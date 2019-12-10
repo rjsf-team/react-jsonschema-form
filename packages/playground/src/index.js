@@ -1,13 +1,96 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
 import MonacoEditor from "react-monaco-editor";
-
-import { shouldRender } from "../../packages/core/src/utils";
 import { samples } from "./samples";
-import Form from "../../packages/core/src";
 import "react-app-polyfill/ie11";
+import { withTheme } from "react-jsonschema-form";
 
-import MaterialUIForm from "../../packages/material-ui/src";
+// deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
+
+function isArguments(object) {
+  return Object.prototype.toString.call(object) === "[object Arguments]";
+}
+
+function deepEquals(a, b, ca = [], cb = []) {
+  // Partially extracted from node-deeper and adapted to exclude comparison
+  // checks for functions.
+  // https://github.com/othiym23/node-deeper
+  if (a === b) {
+    return true;
+  } else if (typeof a === "function" || typeof b === "function") {
+    // Assume all functions are equivalent
+    // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
+    return true;
+  } else if (typeof a !== "object" || typeof b !== "object") {
+    return false;
+  } else if (a === null || b === null) {
+    return false;
+  } else if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  } else if (a instanceof RegExp && b instanceof RegExp) {
+    return (
+      a.source === b.source &&
+      a.global === b.global &&
+      a.multiline === b.multiline &&
+      a.lastIndex === b.lastIndex &&
+      a.ignoreCase === b.ignoreCase
+    );
+  } else if (isArguments(a) || isArguments(b)) {
+    if (!(isArguments(a) && isArguments(b))) {
+      return false;
+    }
+    let slice = Array.prototype.slice;
+    return deepEquals(slice.call(a), slice.call(b), ca, cb);
+  } else {
+    if (a.constructor !== b.constructor) {
+      return false;
+    }
+
+    let ka = Object.keys(a);
+    let kb = Object.keys(b);
+    // don't bother with stack acrobatics if there's nothing there
+    if (ka.length === 0 && kb.length === 0) {
+      return true;
+    }
+    if (ka.length !== kb.length) {
+      return false;
+    }
+
+    let cal = ca.length;
+    while (cal--) {
+      if (ca[cal] === a) {
+        return cb[cal] === b;
+      }
+    }
+    ca.push(a);
+    cb.push(b);
+
+    ka.sort();
+    kb.sort();
+    for (var j = ka.length - 1; j >= 0; j--) {
+      if (ka[j] !== kb[j]) {
+        return false;
+      }
+    }
+
+    let key;
+    for (let k = ka.length - 1; k >= 0; k--) {
+      key = ka[k];
+      if (!deepEquals(a[key], b[key], ca, cb)) {
+        return false;
+      }
+    }
+
+    ca.pop();
+    cb.pop();
+
+    return true;
+  }
+}
+
+function shouldRender(comp, nextProps, nextState) {
+  const { props, state } = comp;
+  return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
+}
 
 const log = type => console.log.bind(console, type);
 const toJson = val => JSON.stringify(val, null, 2);
@@ -19,17 +102,6 @@ const liveSettingsSchema = {
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
   },
-};
-const themes = {
-  default: {
-    stylesheet:
-      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
-    formComponent: Form
-  },
-  "material-ui": {
-    stylesheet: "",
-    formComponent: MaterialUIForm
-  }
 };
 
 const monacoEditorOptions = {
@@ -181,7 +253,7 @@ class Selector extends Component {
   }
 }
 
-function ThemeSelector({ theme, select, FormComponent }) {
+function ThemeSelector({ theme, themes, select, FormComponent }) {
   const themeSchema = {
     type: "string",
     enum: Object.keys(themes),
@@ -232,7 +304,7 @@ class CopyLink extends Component {
   }
 }
 
-class App extends Component {
+class Playground extends Component {
   constructor(props) {
     super(props);
     // initialize state with Simple data sample
@@ -251,7 +323,7 @@ class App extends Component {
         liveOmit: false,
       },
       shareURL: null,
-      formComponent: Form
+      themeObj: {},
     };
   }
 
@@ -300,8 +372,8 @@ class App extends Component {
   onExtraErrorsEdited = extraErrors =>
     this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (theme, { stylesheet, formComponent, editor }) => {
-    this.setState({ theme, formComponent, editor: editor ? editor : "default" });
+  onThemeSelected = (theme, { stylesheet, theme: themeObj, editor }) => {
+    this.setState({ theme, themeObj, editor: editor ? editor : "default" });
     setImmediate(() => {
       // Side effect!
       document.getElementById("theme").setAttribute("href", stylesheet);
@@ -349,11 +421,15 @@ class App extends Component {
       liveSettings,
       validate,
       theme,
-      FormComponent,
+      themeObj,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
+
+    const { themes } = this.props;
+
+    const FormComponent = withTheme(themeObj);
 
     return (
       <div className="container-fluid">
@@ -372,7 +448,10 @@ class App extends Component {
               </FormComponent>
             </div>
             <div className="col-sm-2">
-              <ThemeSelector theme={theme} select={this.onThemeSelected}
+              <ThemeSelector
+                themes={themes}
+                theme={theme}
+                select={this.onThemeSelected}
                 FormComponent={FormComponent}
               />
             </div>
@@ -482,4 +561,4 @@ class App extends Component {
   }
 }
 
-render(<App />, document.getElementById("app"));
+export default Playground;
