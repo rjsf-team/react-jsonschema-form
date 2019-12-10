@@ -260,14 +260,14 @@ function ThemeSelector({ theme, themes, select, FormComponent }) {
     enum: Object.keys(themes),
   };
   return (
-    <Form
+    <FormComponent
       className="form_rjsf_themeSelector"
       idPrefix="rjsf_themeSelector"
       schema={themeSchema}
       formData={theme}
       onChange={({ formData }) => select(formData, themes[formData])}>
       <div />
-    </Form>
+    </FormComponent>
   );
 }
 
@@ -432,7 +432,7 @@ class Playground extends Component {
 
     return (
       <div className="rjsf-main">
-        <div className="page-header">
+        <div className="rjsf-header">
           <h1>react-jsonschema-form</h1>
           <div className="rjsf-selector-container">
             <div className="rjsf-tabs">

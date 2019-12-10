@@ -1,6 +1,7 @@
 body {
     font-family: sans-serif;
     font-size: 14px;
+    padding: 10px;
 }
 
 .form_rjsf_themeSelector, .form_rjsf_options {
@@ -9,7 +10,7 @@ body {
     }
 }
 
-.page-header > h1 {
+.rjsf-header > h1 {
     margin: 10px 0px;
     font-weight: normal;
     font-size: 1.5em;
