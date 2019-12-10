@@ -115,7 +115,7 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 You can customize the list of years displayed in the `year` dropdown by providing a `yearsRange` property to `ui:options` in your uiSchema. The labels and placeholders are customizable using the `labels` and `placeholder` options. It's also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 ```jsx
-uiSchema: {
+const uiSchema = {
   a_date: {
     "alt-datetime": {
       "ui:widget": "alt-datetime",
