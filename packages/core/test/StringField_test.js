@@ -996,6 +996,39 @@ describe("StringField", () => {
       ]);
     });
 
+    it("should use default placeholders as fallback", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+        uiSchema: {
+          ...uiSchema,
+          "ui:options": {
+            placeholders: {
+              year: "YYYY",
+              month: "MM",
+              day: "DD",
+            },
+          },
+        },
+      });
+
+      const placeholders = [].map.call(
+        node.querySelectorAll("select option:first-child"),
+        node => node.textContent
+      );
+
+      expect(placeholders).eql([
+        "YYYY",
+        "MM",
+        "DD",
+        "hour",
+        "minute",
+        "second",
+      ]);
+    });
+
     describe("Action buttons", () => {
       it("should render action buttons", () => {
         const { node } = createFormComponent({
@@ -1068,6 +1101,29 @@ describe("StringField", () => {
         );
         expect(buttonLabels).eql(["nun", "malplenigi"]);
       });
+    });
+
+    it("should use default labels as fallback", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+        uiSchema: {
+          ...uiSchema,
+          "ui:options": {
+            labels: {
+              clear: "Reset",
+            },
+          },
+        },
+      });
+
+      const buttonLabels = [].map.call(
+        node.querySelectorAll("a.btn"),
+        x => x.textContent
+      );
+      expect(buttonLabels).eql(["Now", "Reset"]);
     });
 
     it("should render customized AltDateWidget", () => {

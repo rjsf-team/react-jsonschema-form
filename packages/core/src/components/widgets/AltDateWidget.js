@@ -48,6 +48,20 @@ function DateElement(props) {
   );
 }
 
+const defaultLabels = {
+  now: "Now",
+  clear: "Clear",
+};
+
+const defaultPlaceholders = {
+  year: "year",
+  month: "month",
+  day: "day",
+  hour: "hour",
+  minute: "minute",
+  second: "second",
+};
+
 class AltDateWidget extends Component {
   static defaultProps = {
     time: false,
@@ -56,18 +70,8 @@ class AltDateWidget extends Component {
     autofocus: false,
     options: {
       yearsRange: [1900, new Date().getFullYear() + 2],
-      labels: {
-        now: "Now",
-        clear: "Clear",
-      },
-      placeholders: {
-        year: "year",
-        month: "month",
-        day: "day",
-        hour: "hour",
-        minute: "minute",
-        second: "second",
-      },
+      labels: defaultLabels,
+      placeholders: defaultPlaceholders,
     },
   };
 
@@ -124,19 +128,19 @@ class AltDateWidget extends Component {
     const data = [
       {
         type: "year",
-        placeholder: placeholders.year,
+        placeholder: placeholders.year || defaultPlaceholders.year,
         range: options.yearsRange,
         value: year,
       },
       {
         type: "month",
-        placeholder: placeholders.month,
+        placeholder: placeholders.month || defaultPlaceholders.month,
         range: [1, 12],
         value: month,
       },
       {
         type: "day",
-        placeholder: placeholders.day,
+        placeholder: placeholders.day || defaultPlaceholders.day,
         range: [1, 31],
         value: day,
       },
@@ -145,19 +149,19 @@ class AltDateWidget extends Component {
       data.push(
         {
           type: "hour",
-          placeholder: placeholders.hour,
+          placeholder: placeholders.hour || defaultPlaceholders.hour,
           range: [0, 23],
           value: hour,
         },
         {
           type: "minute",
-          placeholder: placeholders.minute,
+          placeholder: placeholders.minute || defaultPlaceholders.minute,
           range: [0, 59],
           value: minute,
         },
         {
           type: "second",
-          placeholder: placeholders.second,
+          placeholder: placeholders.second || defaultPlaceholders.second,
           range: [0, 59],
           value: second,
         }
@@ -197,7 +201,7 @@ class AltDateWidget extends Component {
           : true) && (
           <li>
             <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
-              {labels.now}
+              {labels.now || defaultLabels.now}
             </a>
           </li>
         )}
@@ -209,7 +213,7 @@ class AltDateWidget extends Component {
               href="#"
               className="btn btn-warning btn-clear"
               onClick={this.clear}>
-              {labels.clear}
+              {labels.clear || defaultLabels.clear}
             </a>
           </li>
         )}
