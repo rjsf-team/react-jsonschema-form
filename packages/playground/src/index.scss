@@ -1,5 +1,6 @@
 body {
     font-family: sans-serif;
+    font-size: 14px;
 }
 
 .form_rjsf_themeSelector, .form_rjsf_options {
@@ -8,6 +9,11 @@ body {
     }
 }
 
+.page-header > h1 {
+    margin: 10px 0px;
+    font-weight: normal;
+    font-size: 1.5em;
+}
 
 .rjsf-nav {
     list-style: none;
@@ -23,6 +29,10 @@ body {
         padding: 10px 15px;
         border-radius: 4px;
         text-decoration: none;
+        color: #337ab7;
+    }
+    > li > a:hover {
+        background-color: #ddd;
     }
     > li.active > a {
         color: #fff;

@@ -281,25 +281,21 @@ class CopyLink extends Component {
     const { shareURL, onShare } = this.props;
     if (!shareURL) {
       return (
-        <button className="btn btn-default" type="button" onClick={onShare}>
+        <button type="button" onClick={onShare}>
           Share
         </button>
       );
     }
     return (
-      <div className="input-group">
+      <div className="">
         <input
           type="text"
           ref={input => (this.input = input)}
-          className="form-control"
           defaultValue={shareURL}
         />
-        <span className="input-group-btn">
-          <button
-            className="btn btn-default"
-            type="button"
-            onClick={this.onCopyClick}>
-            <i className="glyphicon glyphicon-copy" />
+        <span className="">
+          <button type="button" onClick={this.onCopyClick}>
+            Copy
           </button>
         </span>
       </div>
@@ -459,6 +455,9 @@ class Playground extends Component {
                 select={this.onThemeSelected}
                 FormComponent={FormComponent}
               />
+              <br />
+              <br />
+              <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
           </div>
         </div>
@@ -520,21 +519,8 @@ class Playground extends Component {
                   console.log(`Focused ${id} with value ${value}`)
                 }
                 transformErrors={transformErrors}
-                onError={log("errors")}>
-                <div className="row">
-                  <div className="col-sm-3">
-                    <button className="btn btn-primary" type="submit">
-                      Submit
-                    </button>
-                  </div>
-                  <div className="col-sm-9 text-right">
-                    <CopyLink
-                      shareURL={this.state.shareURL}
-                      onShare={this.onShare}
-                    />
-                  </div>
-                </div>
-              </FormComponent>
+                onError={log("errors")}
+              />
             )}
           </div>
         </div>
