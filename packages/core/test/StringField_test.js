@@ -960,6 +960,42 @@ describe("StringField", () => {
       ]);
     });
 
+    it("should use the provided placeholders in dropdowns", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+        uiSchema: {
+          ...uiSchema,
+          "ui:options": {
+            placeholders: {
+              year: "jaro",
+              month: "monato",
+              day: "tago",
+              hour: "horo",
+              minute: "minuto",
+              second: "sekundo",
+            },
+          },
+        },
+      });
+
+      const placeholders = [].map.call(
+        node.querySelectorAll("select option:first-child"),
+        node => node.textContent
+      );
+
+      expect(placeholders).eql([
+        "jaro",
+        "monato",
+        "tago",
+        "horo",
+        "minuto",
+        "sekundo",
+      ]);
+    });
+
     describe("Action buttons", () => {
       it("should render action buttons", () => {
         const { node } = createFormComponent({
@@ -1007,6 +1043,30 @@ describe("StringField", () => {
         Simulate.click(node.querySelector("a.btn-clear"));
 
         expect(comp.state.formData).eql(undefined);
+      });
+
+      it("should use provided labels for action buttons", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "date-time",
+          },
+          uiSchema: {
+            ...uiSchema,
+            "ui:options": {
+              labels: {
+                now: "nun",
+                clear: "malplenigi",
+              },
+            },
+          },
+        });
+
+        const buttonLabels = [].map.call(
+          node.querySelectorAll("a.btn"),
+          x => x.textContent
+        );
+        expect(buttonLabels).eql(["nun", "malplenigi"]);
       });
     });
 
@@ -1204,6 +1264,32 @@ describe("StringField", () => {
       ]);
     });
 
+    it("should use the provided placeholders in dropdowns", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+        uiSchema: {
+          ...uiSchema,
+          "ui:options": {
+            placeholders: {
+              year: "jaro",
+              month: "monato",
+              day: "tago",
+            },
+          },
+        },
+      });
+
+      const placeholders = [].map.call(
+        node.querySelectorAll("select option:first-child"),
+        node => node.textContent
+      );
+
+      expect(placeholders).eql(["jaro", "monato", "tago"]);
+    });
+
     it("should accept a valid date", () => {
       const { comp } = createFormComponent({
         schema: {
@@ -1267,6 +1353,30 @@ describe("StringField", () => {
         Simulate.click(node.querySelector("a.btn-clear"));
 
         expect(comp.state.formData).eql(undefined);
+      });
+
+      it("should use provided labels for action buttons", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "string",
+            format: "date",
+          },
+          uiSchema: {
+            ...uiSchema,
+            "ui:options": {
+              labels: {
+                now: "nun",
+                clear: "malplenigi",
+              },
+            },
+          },
+        });
+
+        const buttonLabels = [].map.call(
+          node.querySelectorAll("a.btn"),
+          x => x.textContent
+        );
+        expect(buttonLabels).eql(["nun", "malplenigi"]);
       });
     });
 
