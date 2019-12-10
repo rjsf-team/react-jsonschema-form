@@ -56,14 +56,18 @@ class AltDateWidget extends Component {
     autofocus: false,
     options: {
       yearsRange: [1900, new Date().getFullYear() + 2],
-      now: "Now",
-      clear: "Clear",
-      year: "year",
-      month: "month",
-      day: "day",
-      hour: "hour",
-      minute: "minute",
-      second: "second",
+      labels: {
+        now: "Now",
+        clear: "Clear",
+      },
+      placeholders: {
+        year: "year",
+        month: "month",
+        day: "day",
+        hour: "hour",
+        minute: "minute",
+        second: "second",
+      },
     },
   };
 
@@ -112,40 +116,48 @@ class AltDateWidget extends Component {
   };
 
   get dateElementProps() {
-    const { time, options } = this.props;
+    const {
+      time,
+      options: { placeholders, ...options },
+    } = this.props;
     const { year, month, day, hour, minute, second } = this.state;
     const data = [
       {
         type: "year",
-        placeholder: options.year,
+        placeholder: placeholders.year,
         range: options.yearsRange,
         value: year,
       },
       {
         type: "month",
-        placeholder: options.month,
+        placeholder: placeholders.month,
         range: [1, 12],
         value: month,
       },
-      { type: "day", placeholder: options.day, range: [1, 31], value: day },
+      {
+        type: "day",
+        placeholder: placeholders.day,
+        range: [1, 31],
+        value: day,
+      },
     ];
     if (time) {
       data.push(
         {
           type: "hour",
-          placeholder: options.hour,
+          placeholder: placeholders.hour,
           range: [0, 23],
           value: hour,
         },
         {
           type: "minute",
-          placeholder: options.minute,
+          placeholder: placeholders.minute,
           range: [0, 59],
           value: minute,
         },
         {
           type: "second",
-          placeholder: options.second,
+          placeholder: placeholders.second,
           range: [0, 59],
           value: second,
         }
@@ -162,7 +174,7 @@ class AltDateWidget extends Component {
       autofocus,
       registry,
       onBlur,
-      options,
+      options: { labels, ...options },
     } = this.props;
     return (
       <ul className="list-inline">
@@ -185,7 +197,7 @@ class AltDateWidget extends Component {
           : true) && (
           <li>
             <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
-              {options.now}
+              {labels.now}
             </a>
           </li>
         )}
@@ -197,7 +209,7 @@ class AltDateWidget extends Component {
               href="#"
               className="btn btn-warning btn-clear"
               onClick={this.clear}>
-              {options.clear}
+              {labels.clear}
             </a>
           </li>
         )}
