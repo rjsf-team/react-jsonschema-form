@@ -56,7 +56,7 @@ render((
 
 ### Alternative widgets
 
-The uiSchema `ui:widget` property tells the form which UI widget should be used to render a field. 
+The uiSchema `ui:widget` property tells the form which UI widget should be used to render a field.
 
 Example:
 
@@ -112,7 +112,7 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 
 ![](https://i.imgur.com/VF5tY60.png)
 
-You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
+You can customize the list of years displayed in the `year` dropdown by providing a `yearsRange` property to `ui:options` in your uiSchema. The labels and placeholders are customizable using the `labels` and `placeholder` options. It's also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 ```jsx
 uiSchema: {
@@ -121,6 +121,18 @@ uiSchema: {
       "ui:widget": "alt-datetime",
       "ui:options": {
         yearsRange: [1980, 2030],
+        placeholders: {
+          year: "year",
+          month: "month",
+          day: "day",
+          hour: "hour",
+          minute: "minute",
+          second: "second",
+        },
+        labels: {
+          clear: "Clear",
+          now: "Now",
+        },
         hideNowButton: true,
         hideClearButton: true,
       },
@@ -735,7 +747,7 @@ The `Form` component supports the following html attributes:
 
 ### Disabling a form
 
-It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form. 
+It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
 
 ```jsx
 <Form
@@ -743,7 +755,7 @@ It's possible to disable the whole form by setting the `disabled` prop. The `dis
   schema={} />
 ```
 
-If you just want to disable some of the fields, see the [`ui:disabled`](#disabled-fields) parameter in the `uiSchema` directive. 
+If you just want to disable some of the fields, see the [`ui:disabled`](#disabled-fields) parameter in the `uiSchema` directive.
 
 
 ### Changing the tag name
