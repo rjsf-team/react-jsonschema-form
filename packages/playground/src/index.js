@@ -349,8 +349,13 @@ class Playground extends Component {
     // uiSchema is missing on some examples. Provide a default to
     // clear the field in all cases.
     const { uiSchema = {} } = data;
+
+    const { theme = "default" } = data;
+    const { themes } = this.props;
+    this.onThemeSelected(theme, themes[theme]);
+
     // force resetting form component instance
-    this.setState({ form: false }, _ =>
+    this.setState({ form: false }, () =>
       this.setState({
         ...data,
         form: true,
@@ -391,6 +396,7 @@ class Playground extends Component {
       uiSchema,
       liveSettings,
       errorSchema,
+      theme,
     } = this.state;
     const {
       location: { origin, pathname },
@@ -401,6 +407,7 @@ class Playground extends Component {
           formData,
           schema,
           uiSchema,
+          theme,
           liveSettings,
           errorSchema,
         })
