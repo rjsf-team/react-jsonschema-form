@@ -354,7 +354,7 @@ The following props are passed to custom widget components:
 - `readonly`: `true` if the widget is read-only;
 - `autofocus`: `true` if the widget should autofocus;
 - `onChange`: The value change event handler; call it with the new value everytime it changes;
-- `onKeyChange`: The change event handler for a field's key; pass the new value everytime it changes;
+- `onKeyChange`: The change event handler for a field with `additionalProperties`' key; pass the new value everytime it changes;
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
