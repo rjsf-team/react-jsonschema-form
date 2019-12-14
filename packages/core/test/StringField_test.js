@@ -1281,18 +1281,33 @@ describe("StringField", () => {
     });
 
     it("should accept a valid date", () => {
-      const { comp, onError } = createFormComponent({
+      const { onError } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
         },
         uiSchema,
         liveValidate: true,
+        formData: "2012-12-12",
       });
 
-      comp.UNSAFE_componentWillReceiveProps({ formData: "2012-12-12" });
-
       sinon.assert.notCalled(onError);
+    });
+
+    it("should throw on invalid date", () => {
+      try {
+        createFormComponent({
+          schema: {
+            type: "string",
+            format: "date",
+          },
+          uiSchema,
+          liveValidate: true,
+          formData: "2012-1212",
+        });
+      } catch (err) {
+        expect(err.message).eql("Unable to parse date 2012-1212");
+      }
     });
 
     describe("Action buttons", () => {
