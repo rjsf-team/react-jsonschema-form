@@ -987,7 +987,10 @@ describeRepeated("Form common", createFormComponent => {
 
     describe("when the form data is set to null", () => {
       beforeEach(() =>
-        comp.UNSAFE_componentWillReceiveProps({ formData: null })
+        setProps(comp, {
+          ...formProps,
+          formData: null,
+        })
       );
 
       it("should call onChange", () => {
@@ -1012,7 +1015,8 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       beforeEach(() =>
-        comp.UNSAFE_componentWillReceiveProps({
+        setProps(comp, {
+          ...formProps,
           schema: newSchema,
           formData: "some value",
         })
@@ -1030,7 +1034,8 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       beforeEach(() =>
-        comp.UNSAFE_componentWillReceiveProps({
+        setProps(comp, {
+          ...formProps,
           schema: newSchema,
           formData: "something else",
         })
@@ -1048,7 +1053,8 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       beforeEach(() =>
-        comp.UNSAFE_componentWillReceiveProps({
+        setProps(comp, {
+          ...formProps,
           schema: newSchema,
           formData: null,
         })
@@ -1122,7 +1128,11 @@ describeRepeated("Form common", createFormComponent => {
       it("should call submit handler with new formData prop value", () => {
         const { comp, node, onSubmit } = createFormComponent(formProps);
 
-        comp.UNSAFE_componentWillReceiveProps({ formData: "yo" });
+        setProps(comp, {
+          ...formProps,
+          onSubmit,
+          formData: "yo",
+        });
         submitForm(node);
         sinon.assert.calledWithMatch(onSubmit.lastCall, {
           formData: "yo",
@@ -1132,7 +1142,9 @@ describeRepeated("Form common", createFormComponent => {
       it("should validate formData when the schema is updated", () => {
         const { comp, node, onError } = createFormComponent(formProps);
 
-        comp.UNSAFE_componentWillReceiveProps({
+        setProps(comp, {
+          ...formProps,
+          onError,
           formData: "yo",
           schema: { type: "number" },
         });
@@ -1152,18 +1164,17 @@ describeRepeated("Form common", createFormComponent => {
 
     describe("object level", () => {
       it("should call submit handler with new formData prop value", () => {
-        const { comp, onSubmit, node } = createFormComponent({
-          schema: {
-            type: "object",
-            properties: {
-              foo: {
-                type: "string",
-              },
-            },
-          },
+        const formProps = {
+          schema: { type: "object", properties: { foo: { type: "string" } } },
+        };
+        const { comp, onSubmit, node } = createFormComponent(formProps);
+
+        setProps(comp, {
+          ...formProps,
+          onSubmit,
+          formData: { foo: "yo" },
         });
 
-        comp.UNSAFE_componentWillReceiveProps({ formData: { foo: "yo" } });
         submitForm(node);
         sinon.assert.calledWithMatch(onSubmit.lastCall, {
           formData: { foo: "yo" },
@@ -1181,7 +1192,7 @@ describeRepeated("Form common", createFormComponent => {
         };
         const { comp, node, onSubmit } = createFormComponent({ schema });
 
-        comp.UNSAFE_componentWillReceiveProps({ formData: ["yo"] });
+        setProps(comp, { schema, onSubmit, formData: ["yo"] });
 
         submitForm(node);
         sinon.assert.calledWithMatch(onSubmit.lastCall, {
@@ -1998,7 +2009,9 @@ describeRepeated("Form common", createFormComponent => {
         schema,
         formData,
       });
-      comp.UNSAFE_componentWillReceiveProps({
+
+      setProps(comp, {
+        onChange,
         schema: {
           type: "object",
           properties: {
@@ -2023,7 +2036,9 @@ describeRepeated("Form common", createFormComponent => {
         schema,
         formData,
       });
-      comp.UNSAFE_componentWillReceiveProps({
+
+      setProps(comp, {
+        onChange,
         schema: {
           type: "object",
           properties: {
@@ -2075,7 +2090,9 @@ describeRepeated("Form common", createFormComponent => {
         schema,
         formData,
       });
-      comp.UNSAFE_componentWillReceiveProps({
+
+      setProps(comp, {
+        onSubmit,
         schema: {
           type: "object",
           properties: {
@@ -2101,6 +2118,7 @@ describeRepeated("Form common", createFormComponent => {
         },
         formData: { a: "int" },
       });
+
       submitForm(node);
       sinon.assert.calledWithMatch(onSubmit.lastCall, {
         idSchema: { $id: "root", a: { $id: "root_a" } },
@@ -2115,7 +2133,8 @@ describeRepeated("Form common", createFormComponent => {
         schema,
         formData,
       });
-      comp.UNSAFE_componentWillReceiveProps({
+      setProps(comp, {
+        onSubmit,
         schema: {
           type: "object",
           properties: {
