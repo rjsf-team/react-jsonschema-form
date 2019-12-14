@@ -266,7 +266,10 @@ export default class Form extends Component {
     }
 
     if (!this.props.noValidate) {
-      let { errors, errorSchema } = this.validate(newFormData);
+      let { errors, errorSchema } = this.validate(
+        newFormData,
+        this.state.schema
+      );
       if (Object.keys(errors).length > 0) {
         if (this.props.extraErrors) {
           errorSchema = mergeObjects(errorSchema, this.props.extraErrors);

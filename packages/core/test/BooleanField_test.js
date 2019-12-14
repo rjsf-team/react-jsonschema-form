@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("BooleanField", () => {
   let sandbox;
@@ -195,14 +195,19 @@ describe("BooleanField", () => {
     expect(node.querySelector(".field input").checked).eql(true);
   });
 
-  it("should default state value to undefined", () => {
-    const { comp } = createFormComponent({ schema: { type: "boolean" } });
-
-    expect(comp.state.formData).eql(undefined);
+  it("formData should default to undefined", () => {
+    const { node, onSubmit } = createFormComponent({
+      schema: { type: "boolean" },
+      noValidate: true,
+    });
+    submitForm(node);
+    sinon.assert.calledWithMatch(onSubmit.lastCall, {
+      formData: undefined,
+    });
   });
 
   it("should handle a change event", () => {
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema: {
         type: "boolean",
         default: false,
@@ -212,8 +217,7 @@ describe("BooleanField", () => {
     Simulate.change(node.querySelector("input"), {
       target: { checked: true },
     });
-
-    expect(comp.state.formData).eql(true);
+    sinon.assert.calledWithMatch(onChange.lastCall, { formData: true });
   });
 
   it("should fill field with data", () => {
@@ -251,7 +255,7 @@ describe("BooleanField", () => {
       node.querySelectorAll(".field-radio-group label"),
       label => label.textContent
     );
-    expect(labels).eql(["yes", "no"]);
+    expect(labels).eql(["Yes", "No"]);
   });
 
   it("should support enum option ordering for radio widgets", () => {
@@ -268,7 +272,7 @@ describe("BooleanField", () => {
       node.querySelectorAll(".field-radio-group label"),
       label => label.textContent
     );
-    expect(labels).eql(["no", "yes"]);
+    expect(labels).eql(["No", "Yes"]);
   });
 
   it("should support enumNames for radio widgets", () => {
@@ -620,18 +624,19 @@ describe("BooleanField", () => {
     });
 
     it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: {
           enum: [true, false],
           default: true,
         },
       });
-
-      expect(comp.state.formData).eql(true);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: true,
+      });
     });
 
     it("should handle a change event", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           enum: [true, false],
         },
@@ -641,7 +646,9 @@ describe("BooleanField", () => {
         target: { value: "false" },
       });
 
-      expect(comp.state.formData).eql(false);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: false,
+      });
     });
 
     it("should render the widget with the expected id", () => {
