@@ -77,7 +77,11 @@ function AltDateWidget({
   onChange,
 }) {
   const [state, setState] = useReducer((state, action) => {
-    return { ...state, ...action };
+    const newState = { ...state, ...action };
+    if (newState.millisecond === -1) {
+      newState.millisecond = 0;
+    }
+    return newState;
   }, parseDateString(value, time));
 
   useEffect(
@@ -96,15 +100,7 @@ function AltDateWidget({
         onChange(toDateString(state, time));
       }
     },
-    [
-      state.year,
-      state.month,
-      state.day,
-      state.hour,
-      state.minute,
-      state.second,
-      time,
-    ]
+    [state, time]
   );
 
   const handleChangeProp = (prop, newValue) => {
@@ -126,6 +122,7 @@ function AltDateWidget({
       return;
     }
     setState(parseDateString("", time));
+    onChange(undefined);
   };
 
   return (

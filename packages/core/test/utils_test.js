@@ -3271,6 +3271,7 @@ describe("utils", () => {
         hour: -1,
         minute: -1,
         second: -1,
+        millisecond: -1,
       });
     });
 
@@ -3282,6 +3283,7 @@ describe("utils", () => {
         hour: 0,
         minute: 0,
         second: 0,
+        millisecond: 0,
       });
     });
 
@@ -3293,6 +3295,7 @@ describe("utils", () => {
         hour: 14,
         minute: 1,
         second: 30,
+        millisecond: 182,
       });
     });
 
@@ -3304,6 +3307,7 @@ describe("utils", () => {
         hour: 0,
         minute: 0,
         second: 0,
+        millisecond: 0,
       });
     });
   });

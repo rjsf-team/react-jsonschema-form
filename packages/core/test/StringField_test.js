@@ -1,6 +1,6 @@
 import React from "react";
 import { expect } from "chai";
-import { Simulate } from "react-dom/test-utils";
+import { Simulate, act } from "react-dom/test-utils";
 import sinon from "sinon";
 
 import { parseDateString, toDateString } from "../src/utils";
@@ -898,25 +898,26 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      Simulate.change(node.querySelector("#root_year"), {
-        target: { value: 2012 },
+      act(() => {
+        Simulate.change(node.querySelector("#root_year"), {
+          target: { value: 2012 },
+        });
+        Simulate.change(node.querySelector("#root_month"), {
+          target: { value: 10 },
+        });
+        Simulate.change(node.querySelector("#root_day"), {
+          target: { value: 2 },
+        });
+        Simulate.change(node.querySelector("#root_hour"), {
+          target: { value: 1 },
+        });
+        Simulate.change(node.querySelector("#root_minute"), {
+          target: { value: 2 },
+        });
+        Simulate.change(node.querySelector("#root_second"), {
+          target: { value: 3 },
+        });
       });
-      Simulate.change(node.querySelector("#root_month"), {
-        target: { value: 10 },
-      });
-      Simulate.change(node.querySelector("#root_day"), {
-        target: { value: 2 },
-      });
-      Simulate.change(node.querySelector("#root_hour"), {
-        target: { value: 1 },
-      });
-      Simulate.change(node.querySelector("#root_minute"), {
-        target: { value: 2 },
-      });
-      Simulate.change(node.querySelector("#root_second"), {
-        target: { value: 3 },
-      });
-
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: "2012-10-02T01:02:03.000Z",
       });
@@ -1054,7 +1055,9 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+        });
         const formValue = onChange.lastCall.args[0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
         const now = new Date().getTime();
@@ -1071,8 +1074,10 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
-        Simulate.click(node.querySelector("a.btn-clear"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+          Simulate.click(node.querySelector("a.btn-clear"));
+        });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: undefined,
@@ -1168,14 +1173,16 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      Simulate.change(node.querySelector("#root_year"), {
-        target: { value: 2012 },
-      });
-      Simulate.change(node.querySelector("#root_month"), {
-        target: { value: 10 },
-      });
-      Simulate.change(node.querySelector("#root_day"), {
-        target: { value: 2 },
+      act(() => {
+        Simulate.change(node.querySelector("#root_year"), {
+          target: { value: 2012 },
+        });
+        Simulate.change(node.querySelector("#root_month"), {
+          target: { value: 10 },
+        });
+        Simulate.change(node.querySelector("#root_day"), {
+          target: { value: 2 },
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1336,7 +1343,9 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+        });
 
         const expected = toDateString(
           parseDateString(new Date().toJSON()),
@@ -1357,8 +1366,10 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
-        Simulate.click(node.querySelector("a.btn-clear"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+          Simulate.click(node.querySelector("a.btn-clear"));
+        });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: undefined,

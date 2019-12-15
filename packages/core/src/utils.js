@@ -1024,6 +1024,7 @@ export function parseDateString(dateString, includeTime = true) {
       hour: includeTime ? -1 : 0,
       minute: includeTime ? -1 : 0,
       second: includeTime ? -1 : 0,
+      millisecond: includeTime ? -1 : 0,
     };
   }
   const date = new Date(dateString);
@@ -1037,14 +1038,23 @@ export function parseDateString(dateString, includeTime = true) {
     hour: includeTime ? date.getUTCHours() : 0,
     minute: includeTime ? date.getUTCMinutes() : 0,
     second: includeTime ? date.getUTCSeconds() : 0,
+    millisecond: includeTime ? date.getUTCMilliseconds() : 0,
   };
 }
 
 export function toDateString(
-  { year, month, day, hour = 0, minute = 0, second = 0 },
+  { year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0 },
   time = true
 ) {
-  const utcTime = Date.UTC(year, month - 1, day, hour, minute, second);
+  const utcTime = Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond
+  );
   const datetime = new Date(utcTime).toJSON();
   return time ? datetime : datetime.slice(0, 10);
 }

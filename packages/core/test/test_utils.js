@@ -11,14 +11,17 @@ export function createComponent(Component, props) {
   const onChange = sinon.spy();
   const onError = sinon.spy();
   const onSubmit = sinon.spy();
-  const comp = renderIntoDocument(
-    <Component
-      onSubmit={onSubmit}
-      onError={onError}
-      onChange={onChange}
-      {...props}
-    />
-  );
+  let comp;
+  act(() => {
+    comp = renderIntoDocument(
+      <Component
+        onSubmit={onSubmit}
+        onError={onError}
+        onChange={onChange}
+        {...props}
+      />
+    );
+  });
   const node = findDOMNode(comp);
   return { comp, node, onChange, onError, onSubmit };
 }
