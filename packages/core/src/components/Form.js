@@ -65,13 +65,11 @@ export default class Form extends Component {
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
-    const validationHandledExternally =
-      !props.noValidate && props.extraErrors === state.extraErrors;
     let { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
       : {
-          errors: (validationHandledExternally && state.errors) || [],
-          errorSchema: (validationHandledExternally && state.errorSchema) || {},
+          errors: (!props.noValidate && state.errors) || [],
+          errorSchema: (!props.noValidate && state.errorSchema) || {},
         };
     if (props.extraErrors) {
       errorSchema = mergeObjects(errorSchema, props.extraErrors);
