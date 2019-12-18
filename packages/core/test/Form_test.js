@@ -2918,15 +2918,20 @@ describe("Form omitExtraData and liveOmit", () => {
         },
       };
 
-      const { node, comp } = createFormComponent({
+      const props = {
         schema,
         noValidate: true,
+      };
+      const { comp } = createFormComponent({
+        ...props,
         extraErrors,
       });
-      Simulate.submit(node);
-      const { required, ...schemaWithoutRequired } = schema; // eslint-disable-line
-      //delete schema.required;
-      comp.UNSAFE_componentWillReceiveProps({ extraErrors: {} });
+
+      setProps(comp, {
+        ...props,
+        extraErrors: {},
+      });
+
       expect(comp.state.errorSchema).eql({});
       expect(comp.state.errors).eql([]);
     });
