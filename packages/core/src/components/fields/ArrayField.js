@@ -225,7 +225,9 @@ class ArrayField extends Component {
     const nextFormData = nextProps.formData;
     const previousKeyedFormData = prevState.keyedFormData;
     const newKeyedFormData =
-      nextFormData.length === previousKeyedFormData.length
+      nextFormData == null || previousKeyedFormData == null
+        ? nextFormData
+        : nextFormData.length === previousKeyedFormData.length
         ? previousKeyedFormData.map((previousKeyedFormDatum, index) => {
             return {
               key: previousKeyedFormDatum.key,
@@ -286,7 +288,10 @@ class ArrayField extends Component {
       key: generateRowId(),
       item: this._getNewFormDataRow(),
     };
-    const newKeyedFormData = [...this.state.keyedFormData, newKeyedFormDataRow];
+    const newKeyedFormData = [
+      ...(this.state.keyedFormData || []),
+      newKeyedFormDataRow,
+    ];
     this.setState(
       {
         keyedFormData: newKeyedFormData,
@@ -306,7 +311,7 @@ class ArrayField extends Component {
         key: generateRowId(),
         item: this._getNewFormDataRow(),
       };
-      let newKeyedFormData = [...this.state.keyedFormData];
+      let newKeyedFormData = [...(this.state.keyedFormData || [])];
       newKeyedFormData.splice(index, 0, newKeyedFormDataRow);
 
       this.setState(
@@ -340,7 +345,10 @@ class ArrayField extends Component {
           }
         }
       }
-      const newKeyedFormData = keyedFormData.filter((_, i) => i !== index);
+      const newKeyedFormData =
+        keyedFormData == null
+          ? keyedFormData
+          : keyedFormData.filter((_, i) => i !== index);
       this.setState(
         {
           keyedFormData: newKeyedFormData,
@@ -374,6 +382,9 @@ class ArrayField extends Component {
       }
 
       const { keyedFormData } = this.state;
+      if (keyedFormData == null) {
+        return;
+      }
       function reOrderArray() {
         // Copy item
         let _newKeyedFormData = keyedFormData.slice();
@@ -471,33 +482,42 @@ class ArrayField extends Component {
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const arrayProps = {
       canAdd: this.canAddItem(formData),
-      items: this.state.keyedFormData.map((keyedItem, index) => {
-        const { key, item } = keyedItem;
-        const itemSchema = retrieveSchema(schema.items, definitions, item);
-        const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-        const itemIdPrefix = idSchema.$id + "_" + index;
-        const itemIdSchema = toIdSchema(
-          itemSchema,
-          itemIdPrefix,
-          definitions,
-          item,
-          idPrefix
-        );
-        return this.renderArrayFieldItem({
-          key,
-          index,
-          canMoveUp: index > 0,
-          canMoveDown: index < formData.length - 1,
-          itemSchema: itemSchema,
-          itemIdSchema,
-          itemErrorSchema,
-          itemData: item,
-          itemUiSchema: uiSchema.items,
-          autofocus: autofocus && index === 0,
-          onBlur,
-          onFocus,
-        });
-      }),
+      items:
+        this.state.keyedFormData == null
+          ? this.state.keyedFormData
+          : this.state.keyedFormData.map((keyedItem, index) => {
+              const { key, item } = keyedItem;
+              const itemSchema = retrieveSchema(
+                schema.items,
+                definitions,
+                item
+              );
+              const itemErrorSchema = errorSchema
+                ? errorSchema[index]
+                : undefined;
+              const itemIdPrefix = idSchema.$id + "_" + index;
+              const itemIdSchema = toIdSchema(
+                itemSchema,
+                itemIdPrefix,
+                definitions,
+                item,
+                idPrefix
+              );
+              return this.renderArrayFieldItem({
+                key,
+                index,
+                canMoveUp: index > 0,
+                canMoveDown: formData != null && index < formData.length - 1,
+                itemSchema: itemSchema,
+                itemIdSchema,
+                itemErrorSchema,
+                itemData: item,
+                itemUiSchema: uiSchema.items,
+                autofocus: autofocus && index === 0,
+                onBlur,
+                onFocus,
+              });
+            }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
       DescriptionField,
       disabled,
@@ -653,43 +673,48 @@ class ArrayField extends Component {
       disabled,
       idSchema,
       formData,
-      items: this.state.keyedFormData.map((keyedItem, index) => {
-        const { key, item } = keyedItem;
-        const additional = index >= itemSchemas.length;
-        const itemSchema = additional
-          ? retrieveSchema(schema.additionalItems, definitions, item)
-          : itemSchemas[index];
-        const itemIdPrefix = idSchema.$id + "_" + index;
-        const itemIdSchema = toIdSchema(
-          itemSchema,
-          itemIdPrefix,
-          definitions,
-          item,
-          idPrefix
-        );
-        const itemUiSchema = additional
-          ? uiSchema.additionalItems || {}
-          : Array.isArray(uiSchema.items)
-          ? uiSchema.items[index]
-          : uiSchema.items || {};
-        const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+      items:
+        this.state.keyedFormData == null
+          ? this.state.keyedFormData
+          : this.state.keyedFormData.map((keyedItem, index) => {
+              const { key, item } = keyedItem;
+              const additional = index >= itemSchemas.length;
+              const itemSchema = additional
+                ? retrieveSchema(schema.additionalItems, definitions, item)
+                : itemSchemas[index];
+              const itemIdPrefix = idSchema.$id + "_" + index;
+              const itemIdSchema = toIdSchema(
+                itemSchema,
+                itemIdPrefix,
+                definitions,
+                item,
+                idPrefix
+              );
+              const itemUiSchema = additional
+                ? uiSchema.additionalItems || {}
+                : Array.isArray(uiSchema.items)
+                ? uiSchema.items[index]
+                : uiSchema.items || {};
+              const itemErrorSchema = errorSchema
+                ? errorSchema[index]
+                : undefined;
 
-        return this.renderArrayFieldItem({
-          key,
-          index,
-          canRemove: additional,
-          canMoveUp: index >= itemSchemas.length + 1,
-          canMoveDown: additional && index < items.length - 1,
-          itemSchema,
-          itemData: item,
-          itemUiSchema,
-          itemIdSchema,
-          itemErrorSchema,
-          autofocus: autofocus && index === 0,
-          onBlur,
-          onFocus,
-        });
-      }),
+              return this.renderArrayFieldItem({
+                key,
+                index,
+                canRemove: additional,
+                canMoveUp: index >= itemSchemas.length + 1,
+                canMoveDown: additional && index < items.length - 1,
+                itemSchema,
+                itemData: item,
+                itemUiSchema,
+                itemIdSchema,
+                itemErrorSchema,
+                autofocus: autofocus && index === 0,
+                onBlur,
+                onFocus,
+              });
+            }),
       onAddClick: this.onAddClick,
       readonly,
       required,
