@@ -63,6 +63,7 @@ function BaseInput(props) {
 
   return [
     <input
+      key={inputProps.id}
       className="form-control"
       readOnly={readonly}
       disabled={disabled}
