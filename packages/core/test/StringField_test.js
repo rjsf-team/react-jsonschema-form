@@ -1,6 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate, act } from "react-dom/test-utils";
+
 import sinon from "sinon";
 
 import { parseDateString, toDateString } from "../src/utils";
@@ -1058,6 +1059,7 @@ describe("StringField", () => {
         act(() => {
           Simulate.click(node.querySelector("a.btn-now"));
         });
+
         const formValue = onChange.lastCall.args[0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
         const now = new Date().getTime();
