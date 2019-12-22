@@ -26,7 +26,7 @@ describe("SchemaField", () => {
       const schema = {
         "type": "object",
         "definitions": {
-          "a": {"type": "string"}
+          "a": { "type": "string" }
         }
       };
       createFormComponent({
@@ -78,7 +78,7 @@ describe("SchemaField", () => {
         formContext: {}
       });
     });
-  })
+  });
 
   describe("Unsupported field", () => {
     it("should warn on invalid field type", () => {
