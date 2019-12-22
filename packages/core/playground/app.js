@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
-import Playground from "@rjsf-team/playground";
+import Playground from "@rjsf/playground";
 
 const themes = [
   {
