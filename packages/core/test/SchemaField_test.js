@@ -24,18 +24,18 @@ describe("SchemaField", () => {
     it("should provide expected registry as prop", () => {
       let receivedProps;
       const schema = {
-        "type": "object",
-        "definitions": {
-          "a": { "type": "string" }
-        }
+        type: "object",
+        definitions: {
+          a: { type: "string" },
+        },
       };
       createFormComponent({
         schema,
         uiSchema: {
           "ui:field": props => {
             receivedProps = props;
-            return null;  
-          }
+            return null;
+          },
         },
       });
 
@@ -48,21 +48,21 @@ describe("SchemaField", () => {
         ArrayFieldTemplate: undefined,
         FieldTemplate: undefined,
         ObjectFieldTemplate: undefined,
-        formContext: {}
+        formContext: {},
       });
     });
     it("should set definitions to empty object if it is undefined", () => {
       let receivedProps;
       const schema = {
-        "type": "object"
+        type: "object",
       };
       createFormComponent({
         schema,
         uiSchema: {
           "ui:field": props => {
             receivedProps = props;
-            return null;  
-          }
+            return null;
+          },
         },
       });
 
@@ -75,7 +75,7 @@ describe("SchemaField", () => {
         ArrayFieldTemplate: undefined,
         FieldTemplate: undefined,
         ObjectFieldTemplate: undefined,
-        formContext: {}
+        formContext: {},
       });
     });
   });
@@ -164,8 +164,8 @@ describe("SchemaField", () => {
         uiSchema: {
           "ui:field": props => {
             receivedProps = props;
-            return null;  
-          }
+            return null;
+          },
         },
       });
 
