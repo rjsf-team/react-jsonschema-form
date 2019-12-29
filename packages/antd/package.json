@@ -1,0 +1,79 @@
+{
+  "name": "@rjsf/antd",
+  "version": "2.0.0-alpha.1",
+  "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
+  "scripts": {
+    "build": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
+    "clean": "rimraf dist",
+    "test": "cross-env NODE_ENV=test jest"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+    }
+  },
+  "peerDependencies": {
+    "@babel/runtime-corejs2": "^7.4.5",
+    "antd": "^3.23.6",
+    "core-js": "^2.5.7",
+    "lodash": "^4.17.15",
+    "prop-types": "^15.7.2",
+    "react": ">=16",
+    "react-app-polyfill": "^1.0.4",
+    "react-jsonschema-form": "^2.0.0-alpha.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.4.4",
+    "antd": "^3.23.6",
+    "atob": "^2.0.3",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
+    "cross-env": "^2.0.1",
+    "css-loader": "^3.2.0",
+    "eslint": "^4.9.0",
+    "eslint-config-react-app": "^2.0.1",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.4.0",
+    "jest": "24.9.0",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-jsonschema-form": "^2.0.0-alpha.1",
+    "rimraf": "^2.6.3",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-hot-middleware": "^2.13.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
+  },
+  "keywords": [
+    "antd",
+    "ant-design",
+    "react",
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "rjsf-antd"
+  ],
+  "author": "Delyan Ruskov <d.ruskov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mozilla-services/react-jsonschema-form/issues"
+  },
+  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme"
+}

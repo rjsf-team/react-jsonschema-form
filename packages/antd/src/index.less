@@ -1,0 +1,20 @@
+@import '~antd/lib/style/themes/default.less';
+
+.field-hidden {
+  display: none;
+}
+
+.form-group.field-object {
+  margin-bottom: 0;
+}
+
+.form-group:not(.field) {
+  // Add margin below oneOf / anyOf dropdown.
+  margin-bottom: @form-item-margin-bottom;
+}
+
+// .panel.panel-default.panel-body > .ant-row > fieldset > .ant-col.ant-form-item-label {
+.panel.panel-default.panel-body fieldset > .ant-col.ant-form-item-label {
+  // Hide oneOf / anyOf  object title.
+  display: none;
+}
