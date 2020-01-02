@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-// import _isEqual from "lodash/isEqual";
 import _findIndex from "lodash/findIndex";
+import _indexOf from "lodash/indexOf";
 
 function getValue(event, enumOptions, multiple) {
   if (event.target.value === "") {
@@ -35,12 +35,13 @@ function SelectWidget(props) {
   } = props;
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
+  const find = typeof value === "object" ? _findIndex : _indexOf;
   const selectedIndices =
     typeof value === "undefined"
       ? emptyValue
       : multiple
-      ? value.map(value => _findIndex(enumOptions.map(el => el.value), value))
-      : _findIndex(enumOptions.map(el => el.value), value);
+      ? value.map(value => find(enumOptions.map(el => el.value), value))
+      : find(enumOptions.map(el => el.value), value);
   return (
     <select
       id={id}
