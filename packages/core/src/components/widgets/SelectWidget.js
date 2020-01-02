@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import _findIndex from "lodash/findIndex";
-import _indexOf from "lodash/indexOf";
+import _isEqual from "lodash/isEqual";
 
 function getValue(event, enumOptions, multiple) {
   if (event.target.value === "") {
@@ -15,6 +14,34 @@ function getValue(event, enumOptions, multiple) {
   } else {
     return enumOptions[event.target.value].value;
   }
+}
+
+function getOneSelected(value, enumOptions) {
+  if (typeof value === "undefined") {
+    return "";
+  }
+
+  for (const i in enumOptions) {
+    if (_isEqual(enumOptions[i].value, value)) {
+      return i;
+    }
+  }
+  return "";
+}
+
+function getMultipleSelected(values, enumOptions) {
+  if (!Array.isArray(values)) {
+    return [];
+  }
+  let selected = [];
+  for (const i in enumOptions) {
+    for (const value of values) {
+      if (_isEqual(enumOptions[i].value, value)) {
+        selected.push(i);
+      }
+    }
+  }
+  return selected;
 }
 
 function SelectWidget(props) {
@@ -34,20 +61,15 @@ function SelectWidget(props) {
     placeholder,
   } = props;
   const { enumOptions, enumDisabled } = options;
-  const emptyValue = multiple ? [] : "";
-  const find = typeof value === "object" ? _findIndex : _indexOf;
-  const selectedIndices =
-    typeof value === "undefined"
-      ? emptyValue
-      : multiple
-      ? value.map(value => find(enumOptions.map(el => el.value), value))
-      : find(enumOptions.map(el => el.value), value);
+  const selected = multiple
+    ? getMultipleSelected(value, enumOptions)
+    : getOneSelected(value, enumOptions);
   return (
     <select
       id={id}
       multiple={multiple}
       className="form-control"
-      value={selectedIndices}
+      value={selected}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
