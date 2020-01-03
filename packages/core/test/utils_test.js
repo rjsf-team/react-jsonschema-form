@@ -1150,6 +1150,55 @@ describe("utils", () => {
         };
         expect(getDefaultFormState(schema, formData)).to.eql(result);
       });
+
+      it("shouldn't add in default objects to formData", () => {
+        const schema = {
+          type: "object",
+          oneOf: [
+            {
+              properties: {
+                first: {
+                  type: "object",
+                  properties: {
+                    shared: {
+                      type: "string",
+                    },
+                  },
+                  default: {
+                    shared: "first",
+                  },
+                },
+              },
+            },
+            {
+              properties: {
+                second: {
+                  type: "object",
+                  properties: {
+                    shared: {
+                      type: "string",
+                    },
+                  },
+                  default: {
+                    shared: "first",
+                  },
+                },
+              },
+            },
+          ],
+        };
+        const formData = {
+          second: {
+            shared: "second",
+          },
+        };
+        const result = {
+          second: {
+            shared: "second",
+          },
+        };
+        expect(getDefaultFormState(schema, formData)).to.eql(result);
+      });
     });
   });
 
