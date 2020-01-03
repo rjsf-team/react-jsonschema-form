@@ -46,12 +46,20 @@ module.exports = {
         test: /\.js$/,
         use: [
           "babel-loader",
-        ],
-        exclude: [
-          path.join(__dirname, "node_modules", "core-js"),
-          path.join(__dirname, "node_modules", "babel-runtime"),
-        ],
+        ]
       },
+      {
+        test: /\.s?css$/,
+        use: [
+          "css-loader",
+          "sass-loader"
+        ],
+        include: [
+          path.join(__dirname, "src"),
+          path.join(__dirname, "playground"),
+          path.join(__dirname, "node_modules"),
+        ],
+      }
     ]
   }
 };
