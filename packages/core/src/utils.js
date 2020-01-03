@@ -199,10 +199,10 @@ function computeDefaults(
     );
   } else if ("oneOf" in schema) {
     schema =
-      schema.oneOf[getMatchingOption(undefined, schema.oneOf, definitions)];
+      schema.oneOf[getMatchingOption(formData, schema.oneOf, definitions)];
   } else if ("anyOf" in schema) {
     schema =
-      schema.anyOf[getMatchingOption(undefined, schema.anyOf, definitions)];
+      schema.anyOf[getMatchingOption(formData, schema.anyOf, definitions)];
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.
