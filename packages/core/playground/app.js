@@ -16,6 +16,7 @@ const liveSettingsSchema = {
     disable: { type: "boolean", title: "Disable whole form" },
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
+    omitDefaultLoad: { type: "boolean", title: "Omit default values on load" },
   },
 };
 const themes = {
@@ -325,6 +326,7 @@ class App extends Component {
         disable: false,
         omitExtraData: false,
         liveOmit: false,
+        omitDefaultLoad: true,
       },
       shareURL: null,
     };
@@ -498,6 +500,7 @@ class App extends Component {
               disabled={liveSettings.disable}
               omitExtraData={liveSettings.omitExtraData}
               liveOmit={liveSettings.liveOmit}
+              omitDefaultLoad={liveSettings.omitDefaultLoad}
               schema={schema}
               uiSchema={uiSchema}
               formData={formData}

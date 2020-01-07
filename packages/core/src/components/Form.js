@@ -27,6 +27,7 @@ export default class Form extends Component {
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
+    omitDefaultLoad: false,
   };
 
   constructor(props) {
@@ -53,15 +54,21 @@ export default class Form extends Component {
     this.setState(nextState);
   }
 
-  getStateFromProps(props, inputFormData) {
+  getStateFromProps(props, inputFormData, isOnChange = false) {
     const state = this.state || {};
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof inputFormData !== "undefined";
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
+    const omitDefaultLoad =
+      (props.omitDefaultLoad || this.props.omitDefaultLoad) && !isOnChange;
     const { definitions } = schema;
-    const formData = getDefaultFormState(schema, inputFormData, definitions);
+    const formData = getDefaultFormState(schema, inputFormData, definitions, {
+      useUndefinedDefaults: omitDefaultLoad,
+      includeUndefinedValues: omitDefaultLoad,
+    });
+
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
@@ -175,7 +182,7 @@ export default class Form extends Component {
 
   onChange = (formData, newErrorSchema) => {
     if (isObject(formData) || Array.isArray(formData)) {
-      const newState = this.getStateFromProps(this.props, formData);
+      const newState = this.getStateFromProps(this.props, formData, true);
       formData = newState.formData;
     }
     const mustValidate = !this.props.noValidate && this.props.liveValidate;

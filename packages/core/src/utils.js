@@ -151,12 +151,17 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
   }
 }
 
+const _defaultComputeDefaultsFlags = {
+  includeUndefinedValues: false,
+  useUndefinedDefaults: false,
+};
+
 function computeDefaults(
   schema,
   parentDefaults,
   definitions,
   rawFormData = {},
-  includeUndefinedValues = false
+  flags = _defaultComputeDefaultsFlags
 ) {
   const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes.
@@ -164,28 +169,25 @@ function computeDefaults(
   if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
-    defaults = mergeObjects(defaults, schema.default);
+    defaults = flags.useUndefinedDefaults
+      ? defaults
+      : mergeObjects(defaults, schema.default);
   } else if ("default" in schema) {
     // Use schema defaults for this node.
-    defaults = schema.default;
+    defaults = flags.useUndefinedDefaults ? defaults : schema.default;
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
-    return computeDefaults(
-      refSchema,
-      defaults,
-      definitions,
-      formData,
-      includeUndefinedValues
-    );
+    return computeDefaults(refSchema, defaults, definitions, formData, flags);
   } else if ("dependencies" in schema) {
+    // Use referenced schema defaults for this node.
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return computeDefaults(
       resolvedSchema,
       defaults,
       definitions,
       formData,
-      includeUndefinedValues
+      flags
     );
   } else if (isFixedItems(schema)) {
     defaults = schema.items.map((itemSchema, idx) =>
@@ -194,7 +196,7 @@ function computeDefaults(
         Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         definitions,
         formData,
-        includeUndefinedValues
+        flags
       )
     );
   } else if ("oneOf" in schema) {
@@ -206,7 +208,7 @@ function computeDefaults(
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.
-  if (typeof defaults === "undefined") {
+  if (typeof defaults === "undefined" && !flags.useUndefinedDefaults) {
     defaults = schema.default;
   }
 
@@ -221,9 +223,13 @@ function computeDefaults(
           (defaults || {})[key],
           definitions,
           (formData || {})[key],
-          includeUndefinedValues
+          flags
         );
-        if (includeUndefinedValues || computedDefault !== undefined) {
+        if (
+          flags.includeUndefinedValues ||
+          flags.useUndefinedDefaults ||
+          computedDefault !== undefined
+        ) {
           acc[key] = computedDefault;
         }
         return acc;
@@ -236,7 +242,9 @@ function computeDefaults(
           return computeDefaults(
             schema.items[idx] || schema.additionalItems || {},
             item,
-            definitions
+            definitions,
+            undefined,
+            flags
           );
         });
       }
@@ -248,7 +256,8 @@ function computeDefaults(
             schema.items,
             (defaults || {})[idx],
             definitions,
-            item
+            item,
+            flags
           );
         });
       }
@@ -281,18 +290,19 @@ export function getDefaultFormState(
   _schema,
   formData,
   definitions = {},
-  includeUndefinedValues = false
+  flags = _defaultComputeDefaultsFlags
 ) {
   if (!isObject(_schema)) {
     throw new Error("Invalid schema: " + _schema);
   }
+  const _flags = Object.assign({}, _defaultComputeDefaultsFlags, flags);
   const schema = retrieveSchema(_schema, definitions, formData);
   const defaults = computeDefaults(
     schema,
-    _schema.default,
+    flags.useUndefinedDefaults ? undefined : _schema.default,
     definitions,
     formData,
-    includeUndefinedValues
+    _flags
   );
   if (typeof formData === "undefined") {
     // No form data? Use schema defaults.

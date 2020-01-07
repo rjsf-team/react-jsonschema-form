@@ -37,13 +37,15 @@ export function setProps(comp, newProps) {
   render(React.createElement(comp.constructor, newProps), node.parentNode);
 }
 
-/* Run a group of tests with different combinations of omitExtraData and liveOmit as form props.
+/* Run a group of tests with different combinations of omitExtraData and liveOmit,
+ *  and omitDefaultLoad, as form props.
  */
 export function describeRepeated(title, fn) {
   const formExtraPropsList = [
     { omitExtraData: false },
     { omitExtraData: true },
     { omitExtraData: true, liveOmit: true },
+    { omitDefaultLoad: false },
   ];
   for (let formExtraProps of formExtraPropsList) {
     const createFormComponentFn = props =>

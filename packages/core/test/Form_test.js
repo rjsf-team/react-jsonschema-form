@@ -298,6 +298,7 @@ describeRepeated("Form common", createFormComponent => {
         formData,
         FieldTemplate,
         liveValidate: true,
+        omitDefaultLoad: true,
       }).node;
     });
 
@@ -1797,7 +1798,10 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       const formData = {
-        outer: [["good", "bad"], ["bad", "good"]],
+        outer: [
+          ["good", "bad"],
+          ["bad", "good"],
+        ],
       };
 
       const formProps = { schema, formData, liveValidate: true };
@@ -3056,6 +3060,195 @@ describe("Form omitExtraData and liveOmit", () => {
       const { node } = createFormComponent({ schema, extraErrors, onSubmit });
       Simulate.submit(node);
       sinon.assert.calledOnce(onSubmit);
+    });
+  });
+});
+
+describe("Form omitDefaultLoad", () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it("should not populate empty default for root property on load", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "string",
+          default: "lorem ipsum",
+        },
+      },
+    };
+    const formData = {};
+    const omitDefaultLoad = true;
+    const onChangeProp = sinon.spy();
+
+    createFormComponent({
+      schema,
+      onChange: onChangeProp,
+      formData,
+      omitDefaultLoad,
+    });
+
+    sinon.assert.calledWithMatch(onChangeProp, {
+      formData: {
+        foo: undefined,
+      },
+    });
+  });
+
+  it("should not populate empty default for array property on load", () => {
+    const schema = {
+      type: "object",
+      title: "lvl 1 obj",
+      properties: {
+        object: {
+          type: "object",
+          title: "lvl 2 obj",
+          properties: {
+            array: {
+              type: "array",
+              items: {
+                type: "object",
+                title: "lvl 3 obj",
+                properties: {
+                  bool: {
+                    type: "boolean",
+                    default: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const formData = {
+      object: {
+        array: [{}],
+      },
+    };
+
+    const omitDefaultLoad = true;
+    const onChangeProp = sinon.spy();
+
+    createFormComponent({
+      schema,
+      onChange: onChangeProp,
+      formData,
+      omitDefaultLoad,
+    });
+
+    sinon.assert.calledWithMatch(onChangeProp, {
+      formData: {
+        object: {
+          array: [{ bool: undefined }],
+        },
+      },
+    });
+  });
+
+  it("should populate newly inserted array item defaults", () => {
+    const schema = {
+      type: "object",
+      title: "lvl 1 obj",
+      properties: {
+        object: {
+          type: "object",
+          title: "lvl 2 obj",
+          properties: {
+            array: {
+              type: "array",
+              items: {
+                type: "object",
+                title: "lvl 3 obj",
+                properties: {
+                  bool: {
+                    type: "boolean",
+                    default: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const formData = {
+      object: {
+        array: [{}],
+      },
+    };
+    const omitDefaultLoad = true;
+
+    const { node, onSubmit } = createFormComponent({
+      schema,
+      formData,
+      omitDefaultLoad,
+    });
+
+    Simulate.click(node.querySelector(".array-item-add button"));
+    Simulate.submit(node);
+
+    sinon.assert.calledWithMatch(onSubmit.lastCall, {
+      formData: {
+        object: {
+          array: [
+            {
+              bool: undefined,
+            },
+            {
+              bool: true,
+            },
+          ],
+        },
+      },
+    });
+  });
+
+  it("should populate dependency defaults for uncontrolled components", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string", default: "lorem ipsum" },
+        firstName: { type: "string" },
+      },
+      dependencies: {
+        firstName: {
+          properties: {
+            lastName: { type: "string", default: "Norris" },
+          },
+        },
+      },
+    };
+    const formData = {};
+    const omitDefaultLoad = true;
+    const onChangeProp = sinon.spy();
+    const { node } = createFormComponent({
+      schema,
+      formData,
+      omitDefaultLoad,
+      onChange: onChangeProp,
+    });
+
+    Simulate.change(node.querySelector("#root_firstName"), {
+      target: { value: "Chuck" },
+    });
+    expect(node.querySelector("#root_lastName").value).eql("Norris");
+
+    sinon.assert.calledWithMatch(onChangeProp.lastCall, {
+      formData: {
+        foo: undefined,
+        firstName: "Chuck",
+        lastName: "Norris",
+      },
     });
   });
 });
