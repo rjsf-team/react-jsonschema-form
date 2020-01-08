@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import MonacoEditor from "react-monaco-editor";
-import Frame from "react-frame-component";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "react-jsonschema-form";
 import "./index.scss";
+import DemoFrame from "./DemoFrame";
 
 // deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
 
@@ -384,10 +384,6 @@ class Playground extends Component {
       stylesheet,
       editor: editor ? editor : "default",
     });
-    setImmediate(() => {
-      // Side effect!
-      // document.getElementById("theme").setAttribute("href", stylesheet);
-    });
   };
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
@@ -506,7 +502,7 @@ class Playground extends Component {
           </div>
           <div className="rjsf-form">
             {this.state.form && (
-              <Frame
+              <DemoFrame
                 head={
                   <link
                     rel="stylesheet"
@@ -518,7 +514,8 @@ class Playground extends Component {
                   width: "100%",
                   height: 1000,
                   border: 0,
-                }}>
+                }}
+                theme={theme}>
                 <FormComponent
                   ArrayFieldTemplate={ArrayFieldTemplate}
                   ObjectFieldTemplate={ObjectFieldTemplate}
@@ -546,7 +543,7 @@ class Playground extends Component {
                   transformErrors={transformErrors}
                   onError={log("errors")}
                 />
-              </Frame>
+              </DemoFrame>
             )}
           </div>
         </div>
