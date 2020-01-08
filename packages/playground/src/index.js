@@ -199,8 +199,8 @@ class Editor extends Component {
     const icon = this.state.valid ? "ok" : "remove";
     const cls = this.state.valid ? "valid" : "invalid";
     return (
-      <div className="rjsf-editor">
-        <div className="rjsf-editor-heading">
+      <div className="panel panel-default">
+        <div className="panel-heading">
           <span className={`${cls} glyphicon glyphicon-${icon}`} />
           {" " + title}
         </div>
@@ -237,7 +237,7 @@ class Selector extends Component {
 
   render() {
     return (
-      <ul className="rjsf-nav">
+      <ul className="nav nav-pills">
         {Object.keys(samples).map((label, i) => {
           return (
             <li
@@ -282,21 +282,25 @@ class CopyLink extends Component {
     const { shareURL, onShare } = this.props;
     if (!shareURL) {
       return (
-        <button type="button" onClick={onShare}>
+        <button className="btn btn-default" type="button" onClick={onShare}>
           Share
         </button>
       );
     }
     return (
-      <div className="">
+      <div className="input-group">
         <input
           type="text"
           ref={input => (this.input = input)}
+          className="form-control"
           defaultValue={shareURL}
         />
-        <span className="">
-          <button type="button" onClick={this.onCopyClick}>
-            Copy
+        <span className="input-group-btn">
+          <button
+            className="btn btn-default"
+            type="button"
+            onClick={this.onCopyClick}>
+            <i className="glyphicon glyphicon-copy" />
           </button>
         </span>
       </div>
@@ -440,16 +444,15 @@ class Playground extends Component {
     const FormComponent = withTheme(themeObj);
 
     return (
-      <div className="rjsf-main">
-        <div className="rjsf-header">
+      <div className="container-fluid">
+        <div className="page-header">
           <h1>react-jsonschema-form</h1>
-          <div className="rjsf-selector-container">
-            <div className="rjsf-tabs">
+          <div className="row">
+            <div className="col-sm-8">
               <Selector onSelected={this.load} />
             </div>
-            <div className="rjsf-options">
+            <div className="col-sm-2">
               <Form
-                className="form_rjsf_options"
                 idPrefix="rjsf_options"
                 schema={liveSettingsSchema}
                 formData={liveSettings}
@@ -457,7 +460,7 @@ class Playground extends Component {
                 <div />
               </Form>
             </div>
-            <div className="rjsf-themes">
+            <div className="col-sm-2">
               <ThemeSelector
                 themes={themes}
                 theme={theme}
@@ -469,85 +472,87 @@ class Playground extends Component {
             </div>
           </div>
         </div>
-        <div className="rjsf-editor-main">
-          <div className="rjsf-editors-container">
-            <div className="rjsf-editor-row">
-              <Editor
-                title="JSONSchema"
-                code={toJson(schema)}
-                onChange={this.onSchemaEdited}
-              />
-            </div>
-            <div className="rjsf-editor-row">
+        <div className="col-sm-7">
+          <Editor
+            title="JSONSchema"
+            code={toJson(schema)}
+            onChange={this.onSchemaEdited}
+          />
+          <div className="row">
+            <div className="col-sm-6">
               <Editor
                 title="UISchema"
                 code={toJson(uiSchema)}
                 onChange={this.onUISchemaEdited}
               />
+            </div>
+            <div className="col-sm-6">
               <Editor
                 title="formData"
                 code={toJson(formData)}
                 onChange={this.onFormDataEdited}
               />
             </div>
-            {extraErrors && (
-              <div className="rjsf-editor-row">
+          </div>
+          {extraErrors && (
+            <div className="row">
+              <div className="col">
                 <Editor
                   title="extraErrors"
                   code={toJson(extraErrors || {})}
                   onChange={this.onExtraErrorsEdited}
                 />
               </div>
-            )}
-          </div>
-          <div className="rjsf-form">
-            {this.state.form && (
-              <DemoFrame
-                head={
-                  <link
-                    rel="stylesheet"
-                    id="theme"
-                    href={this.state.stylesheet || ""}
-                  />
-                }
-                style={{
-                  width: "100%",
-                  height: 1000,
-                  border: 0,
-                }}
-                theme={theme}>
-                <FormComponent
-                  ArrayFieldTemplate={ArrayFieldTemplate}
-                  ObjectFieldTemplate={ObjectFieldTemplate}
-                  liveValidate={liveSettings.validate}
-                  disabled={liveSettings.disable}
-                  omitExtraData={liveSettings.omitExtraData}
-                  liveOmit={liveSettings.liveOmit}
-                  schema={schema}
-                  uiSchema={uiSchema}
-                  formData={formData}
-                  extraErrors={extraErrors}
-                  onChange={this.onFormDataChange}
-                  onSubmit={({ formData }, e) => {
-                    console.log("submitted formData", formData);
-                    console.log("submit event", e);
-                  }}
-                  fields={{ geo: GeoPosition }}
-                  validate={validate}
-                  onBlur={(id, value) =>
-                    console.log(`Touched ${id} with value ${value}`)
-                  }
-                  onFocus={(id, value) =>
-                    console.log(`Focused ${id} with value ${value}`)
-                  }
-                  transformErrors={transformErrors}
-                  onError={log("errors")}
-                />
-              </DemoFrame>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-        <div className="">
+        <div className="col-sm-5">
+          {this.state.form && (
+            <DemoFrame
+              head={
+                <link
+                  rel="stylesheet"
+                  id="theme"
+                  href={this.state.stylesheet || ""}
+                />
+              }
+              style={{
+                width: "100%",
+                height: 1000,
+                border: 0,
+              }}
+              theme={theme}>
+              <FormComponent
+                ArrayFieldTemplate={ArrayFieldTemplate}
+                ObjectFieldTemplate={ObjectFieldTemplate}
+                liveValidate={liveSettings.validate}
+                disabled={liveSettings.disable}
+                omitExtraData={liveSettings.omitExtraData}
+                liveOmit={liveSettings.liveOmit}
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={formData}
+                extraErrors={extraErrors}
+                onChange={this.onFormDataChange}
+                onSubmit={({ formData }, e) => {
+                  console.log("submitted formData", formData);
+                  console.log("submit event", e);
+                }}
+                fields={{ geo: GeoPosition }}
+                validate={validate}
+                onBlur={(id, value) =>
+                  console.log(`Touched ${id} with value ${value}`)
+                }
+                onFocus={(id, value) =>
+                  console.log(`Focused ${id} with value ${value}`)
+                }
+                transformErrors={transformErrors}
+                onError={log("errors")}
+              />
+            </DemoFrame>
+          )}
+        </div>
+        <div className="col-sm-12">
           <p style={{ textAlign: "center" }}>
             Powered by{" "}
             <a href="https://github.com/mozilla-services/react-jsonschema-form">
