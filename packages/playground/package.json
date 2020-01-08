@@ -15,7 +15,7 @@
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
     "publish-to-npm": "npm run dist && npm publish",
     "preversion": "npm run build:playground && npm run dist && npm run cs-check && npm run lint",
-    "start": "node devServer.js"
+    "start": "webpack-dev-server --open --config webpack.config.dev.js"
   },
   "lint-staged": {
     "{playground,src,test}/**/*.js": [
@@ -109,6 +109,7 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
+    "webpack-dev-server": "^3.10.1",
     "webpack-hot-middleware": "^2.13.2"
   },
   "directories": {
