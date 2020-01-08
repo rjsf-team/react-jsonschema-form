@@ -7,6 +7,7 @@ import {
   guessType,
   retrieveSchema,
   getDefaultFormState,
+  mergeDefaultsWithFormData,
   getMatchingOption,
   deepEquals,
 } from "../../utils";
@@ -64,33 +65,42 @@ class AnyOfField extends Component {
       formData
     );
 
+    // Populate all the defaults for the newly selected value
+    let newFormData = getDefaultFormState(
+      options[selectedOption],
+      undefined,
+      definitions
+    );
+
     // If the new option is of type object and the current data is an object,
     // discard properties added using the old option.
-    let newFormData = undefined;
     if (
       guessType(formData) === "object" &&
       (newOption.type === "object" || newOption.properties)
     ) {
-      newFormData = Object.assign({}, formData);
+      let previousOptionFormData = {};
 
-      const optionsToDiscard = options.slice();
-      optionsToDiscard.splice(selectedOption, 1);
-
-      // Discard any data added using other options
-      for (const option of optionsToDiscard) {
-        if (option.properties) {
-          for (const key in option.properties) {
-            if (newFormData.hasOwnProperty(key)) {
-              delete newFormData[key];
-            }
+      if (this.state.selectedOption !== selectedOption) {
+        const previousOption = options[this.state.selectedOption];
+        // get previous options with values cleared out
+        previousOptionFormData = getDefaultFormState(
+          previousOption,
+          undefined,
+          definitions,
+          {
+            useUndefinedDefaults: true,
           }
-        }
+        );
+        // clear out previous option form data; retain defaults from new option
+        newFormData = mergeDefaultsWithFormData(
+          previousOptionFormData,
+          newFormData
+        );
       }
+      // preserve any extra form data that was not in previous or current option
+      newFormData = mergeDefaultsWithFormData(formData, newFormData);
     }
-    // Call getDefaultFormState to make sure defaults are populated on change.
-    onChange(
-      getDefaultFormState(options[selectedOption], newFormData, definitions)
-    );
+    onChange(newFormData);
 
     this.setState({
       selectedOption: parseInt(option, 10),

@@ -271,6 +271,166 @@ describe("anyOf", () => {
     });
   });
 
+  it("should clear previous data when changing options with same key", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        buzz: { type: "string" },
+      },
+      anyOf: [
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+        },
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+        },
+      ],
+    };
+
+    const { node, onChange } = createFormComponent({
+      schema,
+    });
+
+    Simulate.change(node.querySelector("input#root_buzz"), {
+      target: { value: "Lorem ipsum dolor sit amet" },
+    });
+
+    Simulate.change(node.querySelector("input#root_foo"), {
+      target: { value: "Consectetur adipiscing elit" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        buzz: "Lorem ipsum dolor sit amet",
+        foo: "Consectetur adipiscing elit",
+      },
+    });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        buzz: "Lorem ipsum dolor sit amet",
+        foo: undefined,
+      },
+    });
+  });
+
+  it("should clear previous data when changing options with same key and default given", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        buzz: { type: "string" },
+      },
+      anyOf: [
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+          default: {
+            foo: "First Option Default",
+          },
+        },
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+        },
+      ],
+    };
+
+    const { node, onChange } = createFormComponent({
+      schema,
+    });
+
+    Simulate.change(node.querySelector("input#root_buzz"), {
+      target: { value: "Lorem ipsum dolor sit amet" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        buzz: "Lorem ipsum dolor sit amet",
+        foo: "First Option Default",
+      },
+    });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        buzz: "Lorem ipsum dolor sit amet",
+        foo: undefined,
+      },
+    });
+  });
+
+  it("should load correct default data when changing options with same key and different defaults", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        buzz: { type: "string" },
+      },
+      anyOf: [
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+          default: {
+            foo: "First Option Default",
+          },
+        },
+        {
+          properties: {
+            foo: { type: "string" },
+          },
+          default: {
+            foo: "Second Option Default",
+          },
+        },
+      ],
+    };
+
+    const { node, onChange } = createFormComponent({
+      schema,
+    });
+
+    Simulate.change(node.querySelector("input#root_buzz"), {
+      target: { value: "Lorem ipsum dolor sit amet" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        buzz: "Lorem ipsum dolor sit amet",
+        foo: "First Option Default",
+      },
+    });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        buzz: "Lorem ipsum dolor sit amet",
+        foo: "Second Option Default",
+      },
+    });
+  });
+
   it("should support options with different types", () => {
     const schema = {
       type: "object",
