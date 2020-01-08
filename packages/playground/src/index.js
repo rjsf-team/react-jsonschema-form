@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import MonacoEditor from "react-monaco-editor";
+import Frame from "react-frame-component";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "react-jsonschema-form";
@@ -254,20 +255,20 @@ class Selector extends Component {
   }
 }
 
-function ThemeSelector({ theme, themes, select, FormComponent }) {
+function ThemeSelector({ theme, themes, select }) {
   const themeSchema = {
     type: "string",
     enum: Object.keys(themes),
   };
   return (
-    <FormComponent
+    <Form
       className="form_rjsf_themeSelector"
       idPrefix="rjsf_themeSelector"
       schema={themeSchema}
       formData={theme}
       onChange={({ formData }) => select(formData, themes[formData])}>
       <div />
-    </FormComponent>
+    </Form>
   );
 }
 
@@ -377,10 +378,15 @@ class Playground extends Component {
     this.setState({ extraErrors, shareURL: null });
 
   onThemeSelected = (theme, { stylesheet, theme: themeObj, editor }) => {
-    this.setState({ theme, themeObj, editor: editor ? editor : "default" });
+    this.setState({
+      theme,
+      themeObj,
+      stylesheet,
+      editor: editor ? editor : "default",
+    });
     setImmediate(() => {
       // Side effect!
-      document.getElementById("theme").setAttribute("href", stylesheet);
+      // document.getElementById("theme").setAttribute("href", stylesheet);
     });
   };
 
@@ -460,7 +466,6 @@ class Playground extends Component {
                 themes={themes}
                 theme={theme}
                 select={this.onThemeSelected}
-                FormComponent={FormComponent}
               />
               <br />
               <br />
@@ -501,33 +506,47 @@ class Playground extends Component {
           </div>
           <div className="rjsf-form">
             {this.state.form && (
-              <FormComponent
-                ArrayFieldTemplate={ArrayFieldTemplate}
-                ObjectFieldTemplate={ObjectFieldTemplate}
-                liveValidate={liveSettings.validate}
-                disabled={liveSettings.disable}
-                omitExtraData={liveSettings.omitExtraData}
-                liveOmit={liveSettings.liveOmit}
-                schema={schema}
-                uiSchema={uiSchema}
-                formData={formData}
-                extraErrors={extraErrors}
-                onChange={this.onFormDataChange}
-                onSubmit={({ formData }, e) => {
-                  console.log("submitted formData", formData);
-                  console.log("submit event", e);
-                }}
-                fields={{ geo: GeoPosition }}
-                validate={validate}
-                onBlur={(id, value) =>
-                  console.log(`Touched ${id} with value ${value}`)
+              <Frame
+                head={
+                  <link
+                    rel="stylesheet"
+                    id="theme"
+                    href={this.state.stylesheet || ""}
+                  />
                 }
-                onFocus={(id, value) =>
-                  console.log(`Focused ${id} with value ${value}`)
-                }
-                transformErrors={transformErrors}
-                onError={log("errors")}
-              />
+                style={{
+                  width: "100%",
+                  height: 1000,
+                  border: 0,
+                }}>
+                <FormComponent
+                  ArrayFieldTemplate={ArrayFieldTemplate}
+                  ObjectFieldTemplate={ObjectFieldTemplate}
+                  liveValidate={liveSettings.validate}
+                  disabled={liveSettings.disable}
+                  omitExtraData={liveSettings.omitExtraData}
+                  liveOmit={liveSettings.liveOmit}
+                  schema={schema}
+                  uiSchema={uiSchema}
+                  formData={formData}
+                  extraErrors={extraErrors}
+                  onChange={this.onFormDataChange}
+                  onSubmit={({ formData }, e) => {
+                    console.log("submitted formData", formData);
+                    console.log("submit event", e);
+                  }}
+                  fields={{ geo: GeoPosition }}
+                  validate={validate}
+                  onBlur={(id, value) =>
+                    console.log(`Touched ${id} with value ${value}`)
+                  }
+                  onFocus={(id, value) =>
+                    console.log(`Focused ${id} with value ${value}`)
+                  }
+                  transformErrors={transformErrors}
+                  onError={log("errors")}
+                />
+              </Frame>
             )}
           </div>
         </div>
