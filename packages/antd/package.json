@@ -1,5 +1,5 @@
 {
-  "name": "@rjsf/antd",
+  "name": "@react-jsonschema-form/antd",
   "version": "2.0.0-alpha.1",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "scripts": {
