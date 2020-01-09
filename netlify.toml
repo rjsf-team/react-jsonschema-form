@@ -1,2 +1,5 @@
+[build]
+  base = "packages/playground"
+
 [build.environment]
   SHOW_NETLIFY_BADGE = "true"
