@@ -1,5 +1,7 @@
 [build]
   base = "packages/playground"
+  publish = "packages/playground/build"
+  command = "npm run build:playground"
 
 [build.environment]
   SHOW_NETLIFY_BADGE = "true"
