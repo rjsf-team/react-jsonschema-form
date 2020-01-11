@@ -271,7 +271,7 @@ describe("withTheme", () => {
         ref,
       });
 
-      expect(ref.current.submit).to.exist();
+      expect(ref.current.submit).not.eql(undefined);;
     });
   });
 });
