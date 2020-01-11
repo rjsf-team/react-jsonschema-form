@@ -68,8 +68,8 @@ export default class Form extends Component {
     let { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
       : {
-          errors: state.errors || [],
-          errorSchema: state.errorSchema || {},
+          errors: (!props.noValidate && state.errors) || [],
+          errorSchema: (!props.noValidate && state.errorSchema) || {},
         };
     if (props.extraErrors) {
       errorSchema = mergeObjects(errorSchema, props.extraErrors);
