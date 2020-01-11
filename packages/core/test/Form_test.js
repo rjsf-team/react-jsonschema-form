@@ -2904,7 +2904,7 @@ describe("Form omitExtraData and liveOmit", () => {
       sinon.assert.calledOnce(onSubmit);
     });
 
-    it("should reset when props extraErrors changes", () => {
+    it("should reset when props extraErrors changes and noValidate is true", () => {
       const schema = {
         type: "object",
         properties: {
@@ -2921,6 +2921,38 @@ describe("Form omitExtraData and liveOmit", () => {
       const props = {
         schema,
         noValidate: true,
+      };
+      const { comp } = createFormComponent({
+        ...props,
+        extraErrors,
+      });
+
+      setProps(comp, {
+        ...props,
+        extraErrors: {},
+      });
+
+      expect(comp.state.errorSchema).eql({});
+      expect(comp.state.errors).eql([]);
+    });
+
+    it("should reset when props extraErrors changes and liveValidate is false", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+
+      const extraErrors = {
+        foo: {
+          __errors: ["foo"],
+        },
+      };
+
+      const props = {
+        schema,
+        liveValidate: false,
       };
       const { comp } = createFormComponent({
         ...props,
