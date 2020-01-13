@@ -3,7 +3,7 @@
 
 <br />
 <p align="center">
-  <h3 align="center">@react-jsonschema-form/antd</h3>
+  <h3 align="center">@rjsf/antd</h3>
 
   <p align="center">
     Ant Design theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form"><code>react-jsonschema-form</code></a>.
@@ -34,29 +34,29 @@
 ### Prerequisites
 
 - `antd == 3` (not tested yet with version 4)
-- `react-jsonschema-form >= 1.6.0`
+- `react-jsonschema-form >= 2.0.0-alpha.1`
 
 ```sh
-npm install antd @react-jsonschema-form/core
+npm install antd react-jsonschema-form
 ```
 
 ### Installation
 
 ```sh
-npm install @react-jsonschema-form/antd
+npm install @rjsf/antd
 ```
 
 ## Usage
 
 ```javascript
-import Form from '@react-jsonschema-form/antd';
+import Form from '@rjsf/antd';
 ```
 
 or
 
 ```javascript
-import { withTheme } from '@react-jsonschema-form/core';
-import { Theme } from '@react-jsonschema-form/antd';
+import { withTheme } from 'react-jsonschema-form';
+import { Theme } from '@rjsf/antd';
 
 // Make modifications to the Theme with your own fields and widgets
 
