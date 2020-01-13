@@ -1,5 +1,5 @@
 {
-  "name": "@react-jsonschema-form/antd",
+  "name": "@rjsf/antd",
   "version": "2.0.0-alpha.1",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "scripts": {
@@ -13,13 +13,12 @@
     }
   },
   "peerDependencies": {
-    "@babel/runtime-corejs2": "^7.4.5",
-    "antd": "^3.23.6",
-    "core-js": "^2.5.7",
+    "antd": "^3.0.0",
+    "react": ">=16"
+  },
+  "dependencies": {
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
-    "react": ">=16",
-    "react-app-polyfill": "^1.0.4",
     "react-jsonschema-form": "^2.0.0-alpha.1"
   },
   "devDependencies": {
@@ -47,8 +46,8 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.4",
     "react-dom": "^16.8.6",
-    "react-jsonschema-form": "^2.0.0-alpha.1",
     "rimraf": "^2.6.3",
     "style-loader": "^1.0.0",
     "webpack": "^4.20.2",
