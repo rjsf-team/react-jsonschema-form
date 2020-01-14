@@ -56,6 +56,31 @@ class AsyncMultiselectDropdown extends Component {
     );
   };
 
+  onKeyDown = async e => {
+    if (e.keyCode === 8 && !this.state.searchText) {
+      this.setState({ selectedOptions: [] });
+      this.onDeleteChoice();
+        const {
+          searchText,
+          pageNumber,
+          pageSize,
+          loadOptions,
+          loadOptionsCount
+        } = this.state;
+
+        let searchValue = undefined;
+        let resLoadOptions = await loadOptions(searchValue, pageNumber, pageSize);
+        let resLoadOptionsCount = await loadOptionsCount(searchValue);
+
+        await this.setState({
+          options: resLoadOptions,
+          pageNumber: pageNumber,
+          pageSize,
+          totalOptionsCount: resLoadOptionsCount
+        })
+    }
+  }
+
   initStateFromProps = () => {
     const { cols, isMultiselect } = this.state;
     const value = this.props.value;
@@ -95,7 +120,7 @@ class AsyncMultiselectDropdown extends Component {
     this.setState({ selectedOptions });
   };
 
-  fetchData = () => {
+  fetchData = async () => {
     const {
       searchText,
       pageNumber,
@@ -105,25 +130,22 @@ class AsyncMultiselectDropdown extends Component {
     } = this.state;
 
     this.setState({ isLoading: true });
-    Promise.all([
-      loadOptions(searchText, pageNumber, pageSize),
-      loadOptionsCount(searchText),
-    ]).then(([resLoadOptions, resLoadOptionsCount]) =>
-      this.setState({
-        options: resLoadOptions,
-        pageNumber: pageNumber,
-        pageSize,
-        totalOptionsCount: resLoadOptionsCount,
-        isLoading: false,
-      })
-    );
+    let resLoadOptions = await loadOptions(searchText, pageNumber, pageSize);
+    let resLoadOptionsCount = await loadOptionsCount(searchText);
+    await this.setState({
+      options: resLoadOptions,
+      pageNumber: pageNumber,
+      pageSize,
+      totalOptionsCount: resLoadOptionsCount,
+      isLoading: false,
+    })
   };
 
   handleChangePage = (event, page) => {
     this.setState({ pageNumber: page }, () => this.fetchData());
   };
 
-  handleRowClick = (event, selectedRow) => {
+  handleRowClick = async (event, selectedRow) => {
     let { selectedOptions, isMultiselect, primaryColumn } = this.state;
     const indexOfSelectedOption = this.getIndexOfSelectedRowFromSelectedOptionsList(
       selectedRow
@@ -142,7 +164,7 @@ class AsyncMultiselectDropdown extends Component {
         selectedOptions.push(selectedRow);
       }
     }
-    this.setState({ selectedOptions });
+    await this.setState({ selectedOptions, searchText: '' });
 
     if (selectedOptions.length > 0) {
       if (!isMultiselect) {
@@ -214,7 +236,7 @@ class AsyncMultiselectDropdown extends Component {
   };
 
   render() {
-    const { label, classes, placeholder } = this.props;
+    const { label, classes, placeholder, disabled } = this.props;
     const {
       isSearching,
       searchText,
@@ -230,6 +252,7 @@ class AsyncMultiselectDropdown extends Component {
       isLoading,
       primaryColumn,
       getChipDisplayText,
+      maxLength
     } = this.state;
 
     const loader = isLoading && (
@@ -243,6 +266,7 @@ class AsyncMultiselectDropdown extends Component {
         selectionColumn={selectionColumn}
         onDeleteChoice={this.onDeleteChoice}
         getChipDisplayText={getChipDisplayText}
+        isDiabled={disabled}
       />
     );
     return (
@@ -259,8 +283,13 @@ class AsyncMultiselectDropdown extends Component {
               placeholder={placeholder}
               className={classes.inputField}
               margin="normal"
+              disabled={disabled}
               value={searchText}
               onChange={this.handleChange}
+              onKeyDown={this.onKeyDown}
+              inputProps={{
+                maxLength: maxLength
+              }}
               onFocus={() => this.setState({ isSearching: true })}
               InputProps={{
                 startAdornment: selected,

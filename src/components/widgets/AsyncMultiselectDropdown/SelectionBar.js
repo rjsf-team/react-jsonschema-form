@@ -9,6 +9,7 @@ const SelectionBar = props => {
     onDeleteChoice,
     primaryColumn,
     getChipDisplayText,
+    isDiabled
   } = props;
 
   if (isMultiselect) {
@@ -29,6 +30,7 @@ const SelectionBar = props => {
                   key={key}
                   label={displayText}
                   style={{ marginRight: 5, height: 30 }}
+                  disabled={isDiabled}
                   onDelete={() => onDeleteChoice(value[selectionColumn])}
                 />
               );
@@ -49,6 +51,7 @@ const SelectionBar = props => {
         <Chip
           label={displayText}
           style={{ marginRight: 5, height: 30 }}
+          disabled={isDiabled}
           onDelete={() => onDeleteChoice(selectedOptions[0][selectionColumn])}
         />
       );

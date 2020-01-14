@@ -210,11 +210,13 @@ module.exports = {
       "ui:emptyValue": "",
       "ui:placeholder": "Type your choice to search...",
       "ui:widget": "asyncMultiselectDropdown",
+      "ui:disabled": false
     },
     movie: {
       "ui:emptyValue": "",
       "ui:placeholder": "Type your choice to search....",
       "ui:widget": "asyncMultiselectDropdown",
+      "ui:disabled": false
     },
     firstName: {
       "ui:emptyValue": "",
