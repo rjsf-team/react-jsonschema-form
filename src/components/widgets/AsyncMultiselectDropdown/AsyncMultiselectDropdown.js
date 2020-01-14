@@ -58,7 +58,7 @@ class AsyncMultiselectDropdown extends Component {
 
   onKeyDown = async e => {
     if (e.keyCode === 8 && !this.state.searchText) {
-      this.setState({ selectedOptions: [] });
+      await this.setState({ selectedOptions: [] });
       this.onDeleteChoice();
         const {
           searchText,
