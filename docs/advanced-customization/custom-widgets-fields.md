@@ -133,7 +133,7 @@ The following props are passed to custom widget components:
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `formContext`: The `formContext` object that you passed to Form.
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
+- `rawErrors`: An array of the all generated error messages from encountered errors for this widget.
 
 > Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
 

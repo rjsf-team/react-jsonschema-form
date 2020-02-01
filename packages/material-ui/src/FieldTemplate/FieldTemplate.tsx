@@ -30,7 +30,7 @@ const FieldTemplate = ({
       ) : null}
       {rawErrors.length > 0 && (
         <List dense={true} disablePadding={true}>
-          {rawErrors.map((error, i: number) => {
+          {rawErrors.map((error: any, i: number) => {
             return (
               <ListItem key={i} disableGutters={true}>
                 <FormHelperText id={id}>{error}</FormHelperText>

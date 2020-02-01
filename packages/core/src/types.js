@@ -22,7 +22,7 @@ export const fieldProps = {
   onBlur: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
-  rawErrors: PropTypes.arrayOf(PropTypes.string),
+  rawErrors: PropTypes.arrayOf(PropTypes.any),
   readonly: PropTypes.bool,
   registry: registry.isRequired,
   required: PropTypes.bool,

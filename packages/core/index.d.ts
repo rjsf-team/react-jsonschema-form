@@ -112,7 +112,7 @@ declare module '@rjsf/core' {
         label: string;
         type: string;
         multiple: boolean;
-        rawErrors: string[];
+        rawErrors: any;
     }
 
     export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
@@ -151,7 +151,7 @@ declare module '@rjsf/core' {
         rawDescription: string;
         children: React.ReactElement;
         errors: React.ReactElement;
-        rawErrors: string[];
+        rawErrors: any;
         help: React.ReactElement;
         rawHelp: string;
         hidden: boolean;

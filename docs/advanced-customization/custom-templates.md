@@ -134,7 +134,7 @@ The following props are passed to a custom field template component:
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
 - `errors`: A component instance listing any encountered errors for this field.
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field.
+- `rawErrors`: An array of the all generated error messages from encountered errors for this field.
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined.
 - `rawHelp`: A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed `ui:help` is a React component instead of a string.
 - `hidden`: A boolean value stating if the field should be hidden.
