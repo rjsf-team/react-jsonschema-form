@@ -281,12 +281,12 @@ class ArrayField extends Component {
       item: this._getNewFormDataRow(),
     };
     const newKeyedFormData = [...this.state.keyedFormData, newKeyedFormDataRow];
+    onChange(keyedToPlainFormData(newKeyedFormData));
 
     this.setState(
       {
         keyedFormData: newKeyedFormData,
-      },
-      () => onChange(keyedToPlainFormData(newKeyedFormData))
+      }
     );
   };
 
@@ -302,12 +302,12 @@ class ArrayField extends Component {
       };
       let newKeyedFormData = [...this.state.keyedFormData];
       newKeyedFormData.splice(index, 0, newKeyedFormDataRow);
+      onChange(keyedToPlainFormData(newKeyedFormData));
 
       this.setState(
         {
           keyedFormData: newKeyedFormData,
-        },
-        () => onChange(keyedToPlainFormData(newKeyedFormData))
+        }
       );
     };
   };
@@ -334,11 +334,11 @@ class ArrayField extends Component {
         }
       }
       const newKeyedFormData = keyedFormData.filter((_, i) => i !== index);
+      onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema);
       this.setState(
         {
           keyedFormData: newKeyedFormData,
-        },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
+        }
       );
     };
   };
@@ -377,11 +377,12 @@ class ArrayField extends Component {
         return _newKeyedFormData;
       }
       const newKeyedFormData = reOrderArray();
+      onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema);
+
       this.setState(
         {
           keyedFormData: newKeyedFormData,
-        },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
+        }
       );
     };
   };
