@@ -16,7 +16,8 @@ module.exports = {
   },
   plugins: [
     new MonacoWebpackPlugin({
-      languages: ['json']
+      languages: ['json'],
+      features: ['!gotoSymbol'],
     }),
     new webpack.DefinePlugin({
       "process.env": {

@@ -13,7 +13,8 @@ module.exports = {
   },
   plugins: [
     new MonacoWebpackPlugin({
-      languages: ['json']
+      languages: ['json'],
+      features: ['!gotoSymbol'],
     }),
     new MiniCssExtractPlugin({filename: "styles.css", allChunks: true}),
     new webpack.DefinePlugin({
