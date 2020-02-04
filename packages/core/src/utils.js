@@ -4,6 +4,9 @@ import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
 import union from "lodash/union";
+import find from "lodash/find";
+import omit from "lodash/omit";
+import has from "lodash/has";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -58,6 +61,37 @@ const widgetMap = {
     hidden: "HiddenWidget",
   },
 };
+
+export function handleArrayType(schema) {
+  let output = schema;
+
+  if (has(schema, "properties")) {
+    find(schema.properties, property => {
+      if (property.type instanceof Array) {
+        let props = [];
+
+        property.type.forEach(type => {
+          props.push({
+            properties: {
+              [type]: {
+                title: type,
+                type: type,
+                ...omit(property, "type"),
+              },
+            },
+          });
+        });
+
+        output = {
+          ...omit(schema, "properties"),
+          anyOf: [...props],
+        };
+      }
+    });
+  }
+
+  return output;
+}
 
 export function getDefaultRegistry() {
   return {

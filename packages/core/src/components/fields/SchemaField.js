@@ -1,4 +1,4 @@
-import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
+import { ADDITIONAL_PROPERTY_FLAG, handleArrayType } from "../../utils";
 import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
@@ -241,7 +241,9 @@ function SchemaFieldRender(props) {
   const FieldTemplate =
     uiSchema["ui:FieldTemplate"] || registry.FieldTemplate || DefaultTemplate;
   let idSchema = props.idSchema;
-  const schema = retrieveSchema(props.schema, definitions, formData);
+  const schema = handleArrayType(
+    retrieveSchema(props.schema, definitions, formData)
+  );
   idSchema = mergeObjects(
     toIdSchema(schema, null, definitions, formData, idPrefix),
     idSchema
