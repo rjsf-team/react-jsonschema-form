@@ -152,12 +152,13 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
 }
 
 function computeDefaults(
-  schema,
+  _schema,
   parentDefaults,
   definitions,
   rawFormData = {},
   includeUndefinedValues = false
 ) {
+  let schema = isObject(_schema) ? _schema : {};
   const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults = parentDefaults;
@@ -655,6 +656,9 @@ function resolveReference(schema, definitions, formData) {
 }
 
 export function retrieveSchema(schema, definitions = {}, formData = {}) {
+  if (!isObject(schema)) {
+    return {};
+  }
   let resolvedSchema = resolveSchema(schema, definitions, formData);
   if ("allOf" in schema) {
     try {
@@ -971,7 +975,7 @@ export function toIdSchema(
     const field = schema.properties[name];
     const fieldId = idSchema.$id + "_" + name;
     idSchema[name] = toIdSchema(
-      field,
+      isObject(field) ? field : {},
       fieldId,
       definitions,
       // It's possible that formData is not an object -- this can happen if an
