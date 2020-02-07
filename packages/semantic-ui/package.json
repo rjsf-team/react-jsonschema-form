@@ -1,0 +1,94 @@
+{
+  "name": "@rjsf/semantic-ui",
+  "version": "2.0.0-alpha.1",
+  "module": "dist/rjsf-semantic-ui.esm.js",
+  "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
+  "lint-staged": {
+    "{src,test}/**/*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "main": "lib/index.js",
+  "files": [
+    "dist",
+    "lib"
+  ],
+  "engineStrict": false,
+  "engines": {
+    "npm": ">=2.14.7",
+    "node": ">=6"
+  },
+  "scripts": {
+    "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
+    "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
+    "dist": "npm run build:lib && npm run build:dist",
+    "lint": "eslint src test",
+    "prepare": "npm run dist",
+    "precommit": "lint-staged"
+  },
+  "peerDependencies": {
+    "semantic-ui-css": "2.4.1",
+    "semantic-ui-react": "^0.83.0",
+    "lodash": "^4.17.15",
+    "shortid": "^2.2.14",
+    "react": ">=16",
+    "react-jsonschema-form": "^1.6.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.4.4",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
+    "chai": "^3.3.0",
+    "eslint": "^4.9.0",
+    "eslint-config-react-app": "^2.0.1",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.4.0",
+    "np": "^5.0.3",
+    "npm-run-all": "^4.1.5",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-jsonschema-form": "^1.6.1",
+    "rimraf": "^2.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Jacques Nel <jacqueswho@gmail.com>",
+  "contributors": [
+    "Jacques Nel <jacqueswho@gmail.com>"
+  ],
+  "keywords": [
+    "Semantic UI",
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "semantic-ui",
+    "rjsf-semantic-ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.83.0"
+  }
+}
