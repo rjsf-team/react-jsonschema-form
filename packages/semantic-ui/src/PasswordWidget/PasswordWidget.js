@@ -19,7 +19,9 @@ function PasswordWidget({
   options,
   schema,
 }) {
-  const { displayError, semanticProps } = options;
+  const { errorOptions, semanticProps } = options;
+  const { showErrors, pointing } = errorOptions;
+  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () =>
@@ -34,7 +36,7 @@ function PasswordWidget({
         label={label || schema.title}
         autoFocus={autofocus}
         required={required}
-        error={rawErrors && rawErrors.length > 0}
+        error={error}
         disabled={disabled || readonly}
         name={name}
         {...semanticProps}
@@ -44,7 +46,7 @@ function PasswordWidget({
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
-      <RawErrors errors={rawErrors} displayError={displayError} />
+      <RawErrors errors={rawErrors} displayError={showErrors} />
     </React.Fragment>
   );
 }
@@ -55,7 +57,10 @@ PasswordWidget.defaultProps = {
       inverted: false,
       fluid: true,
     },
-    displayError: false,
+    errorOptions: {
+      showErrors: false,
+      pointing: 'above',
+    },
   },
 };
 

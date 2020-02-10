@@ -79,7 +79,10 @@ function SelectWidget({
     enumDisabled,
     enumOptions,
     semanticProps,
+    errorOptions,
   } = options;
+  const { pointing } = errorOptions;
+  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
   const emptyValue = multiple ? [] : '';
   const dropdownOptions = createDefaultValueOptionsForDropDown(enumOptions, enumDisabled);
   const checkTitle = label || schema.title;
@@ -111,7 +114,7 @@ function SelectWidget({
           value={typeof value === 'undefined' ? emptyValue : value}
           disabled={disabled}
           placeholder={placeholder}
-          error={rawErrors && rawErrors.length > 0}
+          error={error}
           scrolling
           {...semanticProps}
           required={required}
@@ -130,10 +133,14 @@ function SelectWidget({
 SelectWidget.defaultProps = {
   options: {
     semanticProps: {
-      inverted: 'true',
+      inverted: 'false',
       fluid: true,
       selection: true,
       scrolling: true,
+    },
+    errorOptions: {
+      showErrors: false,
+      pointing: 'above',
     },
   },
 };

@@ -121,7 +121,7 @@ import SemanticUIForm from 'rjsf-semantic-ui';
  - [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
  
 #### Custom Semantic Widget Properties
- - ``displayError`` - hides error or validation message below field.
+ - ``showErrors`` - hides errors or validation message below field.
 ```javascript
 const uiSchema = {
   "ui:options":  {
@@ -129,7 +129,10 @@ const uiSchema = {
       fluid: true,
       inverted: false,
     },
-    displayError: false
+    errorOptions: {
+      showErrors: false,
+      pointing: 'above',
+    }
   }
 };
 ```
@@ -141,7 +144,10 @@ Below is the current default options for all widgets
      fluid: true,
      inverted: false,
    },
-   displayError: false
+    errorOptions: {
+     showErrors: false,
+     pointing: 'above',
+   }
  }
 }
 ````

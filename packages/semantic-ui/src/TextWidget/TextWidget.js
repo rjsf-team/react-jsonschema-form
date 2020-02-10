@@ -19,7 +19,9 @@ function TextWidget({
   rawErrors,
   schema,
 }) {
-  const { displayError, semanticProps } = options;
+  const { errorOptions, semanticProps } = options;
+  const { showErrors, pointing } = errorOptions;
+  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () =>
@@ -30,20 +32,19 @@ function TextWidget({
       <Form.Input
         key={id}
         id={id}
-        error={rawErrors && rawErrors.length > 0}
+		    required={required}
+        error={error}
         label={label || schema.title}
         autoFocus={autofocus}
-        required={required}
         disabled={disabled || readonly}
         name={name}
         {...semanticProps}
-        type={schema.type}
         value={value || ''}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
-      <RawErrors errors={rawErrors} displayError={displayError} />
+      <RawErrors errors={rawErrors} displayError={showErrors} />
     </React.Fragment>
   );
 }
@@ -54,7 +55,10 @@ TextWidget.defaultProps = {
       inverted: false,
       fluid: true,
     },
-    displayError: false,
+    errorOptions: {
+      showErrors: false,
+      pointing: 'above',
+    },
   },
 };
 

@@ -14,15 +14,18 @@ function CheckboxWidget(props) {
     onChange,
     onBlur,
     options,
+    rawErrors,
     onFocus,
   } = props;
-  const { semanticProps } = options;
+  const { errorOptions, semanticProps } = options;
+  const { pointing } = errorOptions;
+  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
   const _onChange = (event, data) => onChange && onChange(data.checked);
   const _onBlur = () =>
     onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   return (
-    <Form.Field required={required}>
+    <Form.Field required={required} error={error}>
       <Checkbox
         id={id}
         checked={typeof value === 'undefined' ? false : value}
@@ -42,6 +45,9 @@ function CheckboxWidget(props) {
 CheckboxWidget.defaultProps = {
   options: {
     semanticProps: {},
+    errorOptions: {
+      pointing: 'left',
+    },
   },
 };
 

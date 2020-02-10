@@ -13,13 +13,16 @@ function RadioWidget({
   disabled,
   readonly,
   label,
+  rawErrors,
   onChange,
   onBlur,
   onFocus,
 }) {
 // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const { enumOptions, enumDisabled, semanticProps } = options;
+  const { errorOptions, enumOptions, enumDisabled, semanticProps } = options;
+  const { pointing } = errorOptions;
+  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(schema.type === 'boolean' ? value !== 'false' : value);
   const _onBlur = () =>
@@ -36,6 +39,7 @@ function RadioWidget({
           <Form.Field
             required={required}
             control={Radio}
+            error={error}
             name={name}
             {...semanticProps}
             onFocus={_onFocus}
@@ -58,6 +62,10 @@ RadioWidget.defaultProps = {
     semanticProps: {
       inverted: false,
       fluid: true,
+    },
+    errorOptions: {
+      showErrors: false,
+      pointing: 'above',
     },
   },
 };

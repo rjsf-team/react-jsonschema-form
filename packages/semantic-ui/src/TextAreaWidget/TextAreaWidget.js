@@ -20,7 +20,9 @@ function TextAreaWidget({
   schema,
   rawErrors,
 }) {
-  const { displayError, semanticProps } = options;
+  const { errorOptions, semanticProps } = options;
+  const { showErrors, pointing } = errorOptions;
+  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () =>
@@ -34,20 +36,19 @@ function TextAreaWidget({
         key={id}
         label={label || schema.title}
         placeholder={placeholder}
-        error={rawErrors && rawErrors.length > 0}
+        error={error}
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
         name={name}
         {...semanticProps}
-        type={schema.type}
         value={value || ''}
         rows={options.rows || 5}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
-      <RawErrors errors={rawErrors} displayError={displayError} />
+      <RawErrors errors={rawErrors} displayError={showErrors} />
     </React.Fragment>
   );
 }
@@ -58,7 +59,10 @@ TextAreaWidget.defaultProps = {
       inverted: false,
       fluid: true,
     },
-    displayError: false,
+     errorOptions: {
+      showErrors: false,
+      pointing: 'above',
+    },
   },
 };
 

@@ -18,13 +18,14 @@ function UpDownWidget({
   autofocus,
   rawErrors,
 }) {
-  const { displayError, semanticProps } = options;
+  const { errorOptions, semanticProps } = options;
+  const { showErrors, pointing } = errorOptions;
+  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
   const _onBlur = () =>
     onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-
   return (
     <React.Fragment>
       <Form.Input
@@ -32,7 +33,7 @@ function UpDownWidget({
         key={id}
         autoFocus={autofocus}
         required={required}
-        error={rawErrors && rawErrors.length > 0}
+        error={error}
         type="number"
         label={label}
         disabled={disabled || readonly}
@@ -43,7 +44,7 @@ function UpDownWidget({
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
-      <RawErrors errors={rawErrors} displayError={displayError} />
+      <RawErrors errors={rawErrors} displayError={showErrors} />
     </React.Fragment>
   );
 }
@@ -54,7 +55,10 @@ UpDownWidget.defaultProps = {
       inverted: false,
       fluid: true,
     },
-    displayError: false,
+    errorOptions: {
+      showErrors: false,
+      pointing: 'above',
+    },
   },
 };
 
