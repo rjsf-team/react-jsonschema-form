@@ -71,7 +71,7 @@ class AnyOfField extends Component {
       guessType(formData) === "object" &&
       (newOption.type === "object" || newOption.properties)
     ) {
-      newFormData = Object.assign({}, formData);
+      newFormData = Object.assign({});
 
       const optionsToDiscard = options.slice();
       optionsToDiscard.splice(selectedOption, 1);
