@@ -31,7 +31,8 @@
   "main": "lib/index.js",
   "files": [
     "dist",
-    "lib"
+		"lib",
+		"src"
   ],
   "engineStrict": false,
   "engines": {
