@@ -451,7 +451,6 @@ class ArrayField extends Component {
     const {
       schema,
       uiSchema,
-      formData,
       errorSchema,
       idSchema,
       name,
@@ -469,6 +468,7 @@ class ArrayField extends Component {
     const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
+    const formData = keyedToPlainFormData(this.state.keyedFormData);
     const arrayProps = {
       canAdd: this.canAddItem(formData),
       items: this.state.keyedFormData.map((keyedItem, index) => {
