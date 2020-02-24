@@ -1,5 +1,5 @@
 site_name: react-jsonschema-form documentation
-docs_dir: docs
+docs_dir: src
 theme: readthedocs
 
 nav:
