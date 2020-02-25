@@ -52,7 +52,7 @@ describeRepeated("Form common", createFormComponent => {
       expect(node.querySelectorAll("button[type=submit]")).to.have.length.of(2);
     });
 
-    it("should render errors if schema is't object", () => {
+    it("should render errors if schema isn't object", () => {
       const props = {
         schema: {
           type: "object",
