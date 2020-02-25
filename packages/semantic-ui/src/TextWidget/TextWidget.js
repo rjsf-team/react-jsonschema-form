@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
-import RawErrors from '../RawErrors';
+import React from "react";
+import PropTypes from "prop-types";
+import { Form } from "semantic-ui-react";
+import RawErrors from "../RawErrors";
 
 function TextWidget({
   id,
@@ -21,25 +21,28 @@ function TextWidget({
 }) {
   const { errorOptions, semanticProps } = options;
   const { showErrors, pointing } = errorOptions;
-  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
+  const error =
+    rawErrors && rawErrors.length > 0
+      ? { content: rawErrors[0], pointing }
+      : false;
   // eslint-disable-next-line no-shadow
-  const _onChange = ({ target: { value } }) => onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = () =>
-    onBlur && onBlur(id, value);
+  const _onChange = ({ target: { value } }) =>
+    onChange(value === "" ? options.emptyValue : value);
+  const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   return (
     <React.Fragment>
       <Form.Input
         key={id}
         id={id}
-		    required={required}
+        required={required}
         error={error}
         label={label || schema.title}
         autoFocus={autofocus}
         disabled={disabled || readonly}
         name={name}
         {...semanticProps}
-        value={value || ''}
+        value={value || ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
@@ -57,7 +60,7 @@ TextWidget.defaultProps = {
     },
     errorOptions: {
       showErrors: false,
-      pointing: 'above',
+      pointing: "above",
     },
   },
 };

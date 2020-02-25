@@ -1,0 +1,16 @@
+{
+  "env": {
+    "mocha": true,
+  },
+  "globals": {
+    d: true
+  },
+  "rules": {
+    "no-unused-vars": [
+      2,
+      {
+        "varsIgnorePattern": "^d$"
+      }
+    ]
+  }
+}
