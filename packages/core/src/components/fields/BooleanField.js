@@ -26,7 +26,7 @@ function BooleanField(props) {
     rawErrors,
   } = props;
   const { title } = schema;
-  const { widgets, formContext } = registry;
+  const { widgets, formContext, fields } = registry;
   const { widget = "checkbox", ...options } = getUiOptions(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
 
@@ -36,7 +36,7 @@ function BooleanField(props) {
     enumOptions = optionsList({
       oneOf: schema.oneOf.map(option => ({
         ...option,
-        title: option.title || (option.const === true ? "yes" : "no"),
+        title: option.title || (option.const === true ? "Yes" : "No"),
       })),
     });
   } else {
@@ -45,8 +45,8 @@ function BooleanField(props) {
       enumNames:
         schema.enumNames ||
         (schema.enum && schema.enum[0] === false
-          ? ["no", "yes"]
-          : ["yes", "no"]),
+          ? ["No", "Yes"]
+          : ["Yes", "No"]),
     });
   }
 
@@ -67,6 +67,7 @@ function BooleanField(props) {
       formContext={formContext}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      DescriptionField={fields.DescriptionField}
     />
   );
 }

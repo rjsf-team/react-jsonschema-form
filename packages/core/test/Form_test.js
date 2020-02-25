@@ -13,6 +13,7 @@ import {
   createSandbox,
   setProps,
   describeRepeated,
+  submitForm,
 } from "./test_utils";
 
 describeRepeated("Form common", createFormComponent => {
@@ -53,13 +54,12 @@ describeRepeated("Form common", createFormComponent => {
   });
 
   describe("on component creation", () => {
-    let comp;
     let onChangeProp;
     let formData;
     let schema;
 
     function createComponent() {
-      comp = renderIntoDocument(
+      renderIntoDocument(
         <Form schema={schema} onChange={onChangeProp} formData={formData}>
           <button type="submit">Submit</button>
           <button type="submit">Another submit</button>
@@ -92,7 +92,16 @@ describeRepeated("Form common", createFormComponent => {
 
       it("should call props.onChange with current state", () => {
         sinon.assert.calledOnce(onChangeProp);
-        sinon.assert.calledWith(onChangeProp, comp.state);
+        sinon.assert.calledWith(onChangeProp, {
+          formData: { ...formData, count: 789 },
+          schema,
+          errorSchema: {},
+          errors: [],
+          edit: true,
+          uiSchema: {},
+          idSchema: { $id: "root", count: { $id: "root_count" } },
+          additionalMetaSchemas: undefined,
+        });
       });
     });
 
@@ -732,19 +741,21 @@ describeRepeated("Form common", createFormComponent => {
       },
     };
 
-    it("should propagate deeply nested defaults to form state", () => {
-      const { comp, node } = createFormComponent({ schema });
+    it("should propagate deeply nested defaults to submit handler", () => {
+      const { node, onSubmit } = createFormComponent({ schema });
 
       Simulate.click(node.querySelector(".array-item-add button"));
       Simulate.submit(node);
 
-      expect(comp.state.formData).eql({
-        object: {
-          array: [
-            {
-              bool: true,
-            },
-          ],
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          object: {
+            array: [
+              {
+                bool: true,
+              },
+            ],
+          },
         },
       });
     });
@@ -763,14 +774,14 @@ describeRepeated("Form common", createFormComponent => {
       };
       const onSubmit = sandbox.spy();
       const event = { type: "submit" };
-      const { comp, node } = createFormComponent({
+      const { node } = createFormComponent({
         schema,
         formData,
         onSubmit,
       });
 
       Simulate.submit(node, event);
-      sinon.assert.calledWithMatch(onSubmit, comp.state, event);
+      sinon.assert.calledWithMatch(onSubmit, { formData, schema }, event);
     });
 
     it("should not call provided submit handler on validation errors", () => {
@@ -908,10 +919,11 @@ describeRepeated("Form common", createFormComponent => {
   describe("Schema and external formData updates", () => {
     let comp;
     let onChangeProp;
+    let formProps;
 
     beforeEach(() => {
       onChangeProp = sinon.spy();
-      const formProps = {
+      formProps = {
         schema: {
           type: "string",
           default: "foobar",
@@ -924,13 +936,24 @@ describeRepeated("Form common", createFormComponent => {
 
     describe("when the form data is set to null", () => {
       beforeEach(() =>
-        comp.UNSAFE_componentWillReceiveProps({ formData: null })
+        setProps(comp, {
+          ...formProps,
+          formData: null,
+        })
       );
 
       it("should call onChange", () => {
         sinon.assert.calledOnce(onChangeProp);
-        sinon.assert.calledWith(onChangeProp, comp.state);
-        expect(comp.state.formData).eql("foobar");
+        sinon.assert.calledWith(onChangeProp, {
+          additionalMetaSchemas: undefined,
+          edit: true,
+          errorSchema: {},
+          errors: [],
+          formData: "foobar",
+          idSchema: { $id: "root" },
+          schema: formProps.schema,
+          uiSchema: {},
+        });
       });
     });
 
@@ -941,7 +964,8 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       beforeEach(() =>
-        comp.UNSAFE_componentWillReceiveProps({
+        setProps(comp, {
+          ...formProps,
           schema: newSchema,
           formData: "some value",
         })
@@ -949,8 +973,6 @@ describeRepeated("Form common", createFormComponent => {
 
       it("should not call onChange", () => {
         sinon.assert.notCalled(onChangeProp);
-        expect(comp.state.formData).eql("some value");
-        expect(comp.state.schema).deep.eql(newSchema);
       });
     });
 
@@ -961,7 +983,8 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       beforeEach(() =>
-        comp.UNSAFE_componentWillReceiveProps({
+        setProps(comp, {
+          ...formProps,
           schema: newSchema,
           formData: "something else",
         })
@@ -969,8 +992,6 @@ describeRepeated("Form common", createFormComponent => {
 
       it("should not call onChange", () => {
         sinon.assert.notCalled(onChangeProp);
-        expect(comp.state.formData).eql("something else");
-        expect(comp.state.schema).deep.eql(newSchema);
       });
     });
 
@@ -981,7 +1002,8 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       beforeEach(() =>
-        comp.UNSAFE_componentWillReceiveProps({
+        setProps(comp, {
+          ...formProps,
           schema: newSchema,
           formData: null,
         })
@@ -989,8 +1011,10 @@ describeRepeated("Form common", createFormComponent => {
 
       it("should call onChange", () => {
         sinon.assert.calledOnce(onChangeProp);
-        sinon.assert.calledWith(onChangeProp, comp.state);
-        expect(comp.state.formData).eql("the new default");
+        sinon.assert.calledWithMatch(onChangeProp, {
+          schema: newSchema,
+          formData: "the new default",
+        });
       });
     });
 
@@ -1050,59 +1074,79 @@ describeRepeated("Form common", createFormComponent => {
         liveValidate: true,
       };
 
-      it("should update form state from new formData prop value", () => {
-        const { comp } = createFormComponent(formProps);
+      it("should call submit handler with new formData prop value", () => {
+        const { comp, node, onSubmit } = createFormComponent(formProps);
 
-        comp.UNSAFE_componentWillReceiveProps({ formData: "yo" });
-
-        expect(comp.state.formData).eql("yo");
+        setProps(comp, {
+          ...formProps,
+          onSubmit,
+          formData: "yo",
+        });
+        submitForm(node);
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: "yo",
+        });
       });
 
       it("should validate formData when the schema is updated", () => {
-        const { comp } = createFormComponent(formProps);
+        const { comp, node, onError } = createFormComponent(formProps);
 
-        comp.UNSAFE_componentWillReceiveProps({
+        setProps(comp, {
+          ...formProps,
+          onError,
           formData: "yo",
           schema: { type: "number" },
         });
-
-        expect(comp.state.errors).to.have.length.of(1);
-        expect(comp.state.errors[0].stack).to.eql("should be number");
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should be number",
+            name: "type",
+            params: { type: "number" },
+            property: "",
+            schemaPath: "#/type",
+            stack: "should be number",
+          },
+        ]);
       });
     });
 
     describe("object level", () => {
-      it("should update form state from new formData prop value", () => {
-        const { comp } = createFormComponent({
-          schema: {
-            type: "object",
-            properties: {
-              foo: {
-                type: "string",
-              },
-            },
-          },
+      it("should call submit handler with new formData prop value", () => {
+        const formProps = {
+          schema: { type: "object", properties: { foo: { type: "string" } } },
+        };
+        const { comp, onSubmit, node } = createFormComponent(formProps);
+
+        setProps(comp, {
+          ...formProps,
+          onSubmit,
+          formData: { foo: "yo" },
         });
 
-        comp.UNSAFE_componentWillReceiveProps({ formData: { foo: "yo" } });
-
-        expect(comp.state.formData).eql({ foo: "yo" });
+        submitForm(node);
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: { foo: "yo" },
+        });
       });
     });
 
     describe("array level", () => {
-      it("should update form state from new formData prop value", () => {
+      it("should call submit handler with new formData prop value", () => {
         const schema = {
           type: "array",
           items: {
             type: "string",
           },
         };
-        const { comp } = createFormComponent({ schema });
+        const { comp, node, onSubmit } = createFormComponent({ schema });
 
-        comp.UNSAFE_componentWillReceiveProps({ formData: ["yo"] });
+        setProps(comp, { schema, onSubmit, formData: ["yo"] });
 
-        expect(comp.state.formData).eql(["yo"]);
+        submitForm(node);
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          formData: ["yo"],
+        });
       });
     });
   });
@@ -1113,16 +1157,18 @@ describeRepeated("Form common", createFormComponent => {
         schema: { type: "string" },
         liveValidate: true,
       };
-      const { comp, node } = createFormComponent(formProps);
+      const { node, onChange } = createFormComponent(formProps);
 
       Simulate.change(node.querySelector("input[type=text]"), {
         target: { value: "yo" },
       });
 
-      expect(comp.state.formData).eql("yo");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "yo",
+      });
     });
     it("object", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "object",
           properties: {
@@ -1137,7 +1183,9 @@ describeRepeated("Form common", createFormComponent => {
         target: { value: "yo" },
       });
 
-      expect(comp.state.formData).eql({ foo: "yo" });
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { foo: "yo" },
+      });
     });
     it("array of strings", () => {
       const schema = {
@@ -1146,15 +1194,16 @@ describeRepeated("Form common", createFormComponent => {
           type: "string",
         },
       };
-      const { comp, node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
       Simulate.change(node.querySelector("input[type=text]"), {
         target: { value: "yo" },
       });
-
-      expect(comp.state.formData).eql(["yo"]);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: ["yo"],
+      });
     });
     it("array of objects", () => {
       const schema = {
@@ -1166,7 +1215,7 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
-      const { comp, node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
@@ -1174,7 +1223,9 @@ describeRepeated("Form common", createFormComponent => {
         target: { value: "yo" },
       });
 
-      expect(comp.state.formData).eql([{ name: "yo" }]);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: [{ name: "yo" }],
+      });
     });
     it("dependency with array of objects", () => {
       const schema = {
@@ -1210,7 +1261,7 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
-      const { comp, node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
 
       Simulate.change(node.querySelector("[type=checkbox]"), {
         target: { checked: true },
@@ -1222,9 +1273,11 @@ describeRepeated("Form common", createFormComponent => {
         target: { value: "yo" },
       });
 
-      expect(comp.state.formData).eql({
-        show: true,
-        participants: [{ name: "yo" }],
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          show: true,
+          participants: [{ name: "yo" }],
+        },
       });
     });
   });
@@ -1238,13 +1291,14 @@ describeRepeated("Form common", createFormComponent => {
 
       describe("Lazy validation", () => {
         it("should not update the errorSchema when the formData changes", () => {
-          const { comp, node } = createFormComponent({ schema });
+          const { node, onChange } = createFormComponent({ schema });
 
           Simulate.change(node.querySelector("input[type=text]"), {
             target: { value: "short" },
           });
-
-          expect(comp.state.errorSchema).eql({});
+          sinon.assert.calledWithMatch(onChange.lastCall, {
+            errorSchema: undefined,
+          });
         });
 
         it("should not denote an error in the field", () => {
@@ -1298,7 +1352,7 @@ describeRepeated("Form common", createFormComponent => {
 
       describe("Live validation", () => {
         it("should update the errorSchema when the formData changes", () => {
-          const { comp, node } = createFormComponent({
+          const { node, onChange } = createFormComponent({
             schema,
             liveValidate: true,
           });
@@ -1307,8 +1361,10 @@ describeRepeated("Form common", createFormComponent => {
             target: { value: "short" },
           });
 
-          expect(comp.state.errorSchema).eql({
-            __errors: ["should NOT be shorter than 8 characters"],
+          sinon.assert.calledWithMatch(onChange.lastCall, {
+            errorSchema: {
+              __errors: ["should NOT be shorter than 8 characters"],
+            },
           });
         });
 
@@ -1331,7 +1387,7 @@ describeRepeated("Form common", createFormComponent => {
 
       describe("Disable validation onChange event", () => {
         it("should not update errorSchema when the formData changes", () => {
-          const { comp, node } = createFormComponent({
+          const { node, onChange } = createFormComponent({
             schema,
             noValidate: true,
             liveValidate: true,
@@ -1341,13 +1397,15 @@ describeRepeated("Form common", createFormComponent => {
             target: { value: "short" },
           });
 
-          expect(comp.state.errorSchema).eql({});
+          sinon.assert.calledWithMatch(onChange.lastCall, {
+            errorSchema: undefined,
+          });
         });
       });
 
       describe("Disable validation onSubmit event", () => {
         it("should not update errorSchema when the formData changes", () => {
-          const { comp, node } = createFormComponent({
+          const { node, onSubmit } = createFormComponent({
             schema,
             noValidate: true,
           });
@@ -1357,7 +1415,9 @@ describeRepeated("Form common", createFormComponent => {
           });
           Simulate.submit(node);
 
-          expect(comp.state.errorSchema).eql({});
+          sinon.assert.calledWithMatch(onSubmit.lastCall, {
+            errorSchema: {},
+          });
         });
       });
     });
@@ -1367,22 +1427,6 @@ describeRepeated("Form common", createFormComponent => {
         type: "string",
         minLength: 8,
       };
-
-      it("should update the errorSchema on form submission", () => {
-        const { comp, node } = createFormComponent({
-          schema,
-          onError: () => {},
-        });
-
-        Simulate.change(node.querySelector("input[type=text]"), {
-          target: { value: "short" },
-        });
-        Simulate.submit(node);
-
-        expect(comp.state.errorSchema).eql({
-          __errors: ["should NOT be shorter than 8 characters"],
-        });
-      });
 
       it("should call the onError handler", () => {
         const onError = sandbox.spy();
@@ -1405,10 +1449,8 @@ describeRepeated("Form common", createFormComponent => {
       });
 
       it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
-        const onError = sandbox.spy();
-        const { comp, node } = createFormComponent({
+        const { node, onError } = createFormComponent({
           schema,
-          onError,
         });
 
         Simulate.change(node.querySelector("input[type=text]"), {
@@ -1416,20 +1458,24 @@ describeRepeated("Form common", createFormComponent => {
         });
         Simulate.submit(node);
 
-        expect(comp.state.errorSchema).eql({
-          __errors: ["should NOT be shorter than 8 characters"],
-        });
-        expect(comp.state.errors.length).eql(1);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should NOT be shorter than 8 characters",
+            name: "minLength",
+            params: { limit: 8 },
+            property: "",
+            schemaPath: "#/minLength",
+            stack: "should NOT be shorter than 8 characters",
+          },
+        ]);
         sinon.assert.calledOnce(onError);
+        sinon.resetHistory(onError);
 
         Simulate.change(node.querySelector("input[type=text]"), {
           target: { value: "long enough" },
         });
         Simulate.submit(node);
-
-        expect(comp.state.errorSchema).eql({});
-        expect(comp.state.errors).eql([]);
-        sinon.assert.calledOnce(onError);
+        sinon.assert.notCalled(onError);
       });
     });
 
@@ -1444,11 +1490,18 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       it("should reflect the contextualized error in state", () => {
-        const { comp } = createFormComponent(formProps);
-
-        expect(comp.state.errorSchema).eql({
-          __errors: ["should NOT be shorter than 8 characters"],
-        });
+        const { node, onError } = createFormComponent(formProps);
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should NOT be shorter than 8 characters",
+            name: "minLength",
+            params: { limit: 8 },
+            property: "",
+            schemaPath: "#/minLength",
+            stack: "should NOT be shorter than 8 characters",
+          },
+        ]);
       });
 
       it("should denote the error in the field", () => {
@@ -1473,13 +1526,26 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       it("should reflect the contextualized error in state", () => {
-        const { comp } = createFormComponent(formProps);
-        expect(comp.state.errorSchema).eql({
-          __errors: [
-            "should NOT be shorter than 8 characters",
-            'should match pattern "d+"',
-          ],
-        });
+        const { node, onError } = createFormComponent(formProps);
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should NOT be shorter than 8 characters",
+            name: "minLength",
+            params: { limit: 8 },
+            property: "",
+            schemaPath: "#/minLength",
+            stack: "should NOT be shorter than 8 characters",
+          },
+          {
+            message: 'should match pattern "d+"',
+            name: "pattern",
+            params: { pattern: "d+" },
+            property: "",
+            schemaPath: "#/pattern",
+            stack: 'should match pattern "d+"',
+          },
+        ]);
       });
 
       it("should denote the error in the field", () => {
@@ -1522,15 +1588,19 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       it("should reflect the contextualized error in state", () => {
-        const { comp } = createFormComponent(formProps);
+        const { node, onError } = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema).eql({
-          level1: {
-            level2: {
-              __errors: ["should NOT be shorter than 8 characters"],
-            },
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should NOT be shorter than 8 characters",
+            name: "minLength",
+            params: { limit: 8 },
+            property: ".level1.level2",
+            schemaPath: "#/properties/level1/properties/level2/minLength",
+            stack: ".level1.level2 should NOT be shorter than 8 characters",
           },
-        });
+        ]);
       });
 
       it("should denote the error in the field", () => {
@@ -1562,13 +1632,19 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       it("should contextualize the error for array indices", () => {
-        const { comp } = createFormComponent(formProps);
+        const { node, onError } = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema).eql({
-          1: {
-            __errors: ["should NOT be shorter than 4 characters"],
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should NOT be shorter than 4 characters",
+            name: "minLength",
+            params: { limit: 4 },
+            property: "[1]",
+            schemaPath: "#/items/minLength",
+            stack: "[1] should NOT be shorter than 4 characters",
           },
-        });
+        ]);
       });
 
       it("should denote the error in the item field in error", () => {
@@ -1610,23 +1686,31 @@ describeRepeated("Form common", createFormComponent => {
       const formProps = { schema, liveValidate: true };
 
       it("should contextualize the error for nested array indices", () => {
-        const { comp } = createFormComponent({
+        const { node, onError } = createFormComponent({
           ...formProps,
           formData: {
             level1: ["good", "bad", "good", "bad"],
           },
         });
-
-        expect(comp.state.errorSchema).eql({
-          level1: {
-            1: {
-              __errors: ["should NOT be shorter than 4 characters"],
-            },
-            3: {
-              __errors: ["should NOT be shorter than 4 characters"],
-            },
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should NOT be shorter than 4 characters",
+            name: "minLength",
+            params: { limit: 4 },
+            property: ".level1[1]",
+            schemaPath: "#/properties/level1/items/minLength",
+            stack: ".level1[1] should NOT be shorter than 4 characters",
           },
-        });
+          {
+            message: "should NOT be shorter than 4 characters",
+            name: "minLength",
+            params: { limit: 4 },
+            property: ".level1[3]",
+            schemaPath: "#/properties/level1/items/minLength",
+            stack: ".level1[3] should NOT be shorter than 4 characters",
+          },
+        ]);
       });
 
       it("should denote the error in the nested item field in error", () => {
@@ -1668,22 +1752,27 @@ describeRepeated("Form common", createFormComponent => {
       const formProps = { schema, formData, liveValidate: true };
 
       it("should contextualize the error for nested array indices", () => {
-        const { comp } = createFormComponent(formProps);
+        const { node, onError } = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema).eql({
-          outer: {
-            0: {
-              1: {
-                __errors: ["should NOT be shorter than 4 characters"],
-              },
-            },
-            1: {
-              0: {
-                __errors: ["should NOT be shorter than 4 characters"],
-              },
-            },
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should NOT be shorter than 4 characters",
+            name: "minLength",
+            params: { limit: 4 },
+            property: ".outer[0][1]",
+            schemaPath: "#/properties/outer/items/items/minLength",
+            stack: ".outer[0][1] should NOT be shorter than 4 characters",
           },
-        });
+          {
+            message: "should NOT be shorter than 4 characters",
+            name: "minLength",
+            params: { limit: 4 },
+            property: ".outer[1][0]",
+            schemaPath: "#/properties/outer/items/items/minLength",
+            stack: ".outer[1][0] should NOT be shorter than 4 characters",
+          },
+        ]);
       });
 
       it("should denote the error in the nested item field in error", () => {
@@ -1724,15 +1813,19 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       it("should contextualize the error for array nested items", () => {
-        const { comp } = createFormComponent(formProps);
+        const { node, onError } = createFormComponent(formProps);
 
-        expect(comp.state.errorSchema).eql({
-          1: {
-            foo: {
-              __errors: ["should NOT be shorter than 4 characters"],
-            },
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: "should NOT be shorter than 4 characters",
+            name: "minLength",
+            params: { limit: 4 },
+            property: "[1].foo",
+            schemaPath: "#/items/properties/foo/minLength",
+            stack: "[1].foo should NOT be shorter than 4 characters",
           },
-        });
+        ]);
       });
 
       it("should denote the error in the array nested item", () => {
@@ -1794,7 +1887,7 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       it("should only show error for property in selected branch", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           liveValidate: true,
         });
@@ -1803,15 +1896,13 @@ describeRepeated("Form common", createFormComponent => {
           target: { value: "not a number" },
         });
 
-        expect(comp.state.errorSchema).eql({
-          field1: {
-            __errors: ["should be number"],
-          },
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          errorSchema: { field1: { __errors: ["should be number"] } },
         });
       });
 
       it("should only show errors for properties in selected branch", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           liveValidate: true,
           formData: { branch: 2 },
@@ -1821,18 +1912,20 @@ describeRepeated("Form common", createFormComponent => {
           target: { value: "not a number" },
         });
 
-        expect(comp.state.errorSchema).eql({
-          field1: {
-            __errors: ["should be number"],
-          },
-          field2: {
-            __errors: ["is a required property"],
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          errorSchema: {
+            field1: {
+              __errors: ["should be number"],
+            },
+            field2: {
+              __errors: ["is a required property"],
+            },
           },
         });
       });
 
       it("should not show any errors when branch is empty", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           liveValidate: true,
           formData: { branch: 3 },
@@ -1842,7 +1935,9 @@ describeRepeated("Form common", createFormComponent => {
           target: { value: 3 },
         });
 
-        expect(comp.state.errorSchema).eql({});
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          errorSchema: {},
+        });
       });
     });
   });
@@ -1859,8 +1954,13 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should replace state when props remove formData keys", () => {
       const formData = { foo: "foo", bar: "bar" };
-      const { comp, node } = createFormComponent({ schema, formData });
-      comp.UNSAFE_componentWillReceiveProps({
+      const { comp, node, onChange } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      setProps(comp, {
+        onChange,
         schema: {
           type: "object",
           properties: {
@@ -1874,13 +1974,20 @@ describeRepeated("Form common", createFormComponent => {
         target: { value: "baz" },
       });
 
-      expect(comp.state.formData).eql({ bar: "baz" });
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { bar: "baz" },
+      });
     });
 
     it("should replace state when props change formData keys", () => {
       const formData = { foo: "foo", bar: "bar" };
-      const { comp, node } = createFormComponent({ schema, formData });
-      comp.UNSAFE_componentWillReceiveProps({
+      const { comp, node, onChange } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      setProps(comp, {
+        onChange,
         schema: {
           type: "object",
           properties: {
@@ -1895,7 +2002,9 @@ describeRepeated("Form common", createFormComponent => {
         target: { value: "baz" },
       });
 
-      expect(comp.state.formData).eql({ foo: "foo", baz: "baz" });
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { foo: "foo", baz: "baz" },
+      });
     });
   });
 
@@ -1926,8 +2035,13 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should not update idSchema for a falsey value", () => {
       const formData = { a: "int" };
-      const { comp } = createFormComponent({ schema, formData });
-      comp.UNSAFE_componentWillReceiveProps({
+      const { comp, node, onSubmit } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      setProps(comp, {
+        onSubmit,
         schema: {
           type: "object",
           properties: {
@@ -1953,15 +2067,23 @@ describeRepeated("Form common", createFormComponent => {
         },
         formData: { a: "int" },
       });
-      expect(comp.state.idSchema).eql({ $id: "root", a: { $id: "root_a" } });
+
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        idSchema: { $id: "root", a: { $id: "root_a" } },
+      });
     });
 
     it("should update idSchema based on truthy value", () => {
       const formData = {
         a: "int",
       };
-      const { comp } = createFormComponent({ schema, formData });
-      comp.UNSAFE_componentWillReceiveProps({
+      const { comp, node, onSubmit } = createFormComponent({
+        schema,
+        formData,
+      });
+      setProps(comp, {
+        onSubmit,
         schema: {
           type: "object",
           properties: {
@@ -1987,10 +2109,13 @@ describeRepeated("Form common", createFormComponent => {
         },
         formData: { a: "bool" },
       });
-      expect(comp.state.idSchema).eql({
-        $id: "root",
-        a: { $id: "root_a" },
-        b: { $id: "root_b" },
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        idSchema: {
+          $id: "root",
+          a: { $id: "root_a" },
+          b: { $id: "root_b" },
+        },
       });
     });
   });
@@ -2144,22 +2269,30 @@ describeRepeated("Form common", createFormComponent => {
         },
       };
 
-      const { comp } = createFormComponent(formProps);
+      const { comp, node, onError } = createFormComponent(formProps);
 
-      expect(comp.state.errorSchema).eql({});
+      submitForm(node);
+      sinon.assert.notCalled(onError);
 
       setProps(comp, {
         ...formProps,
+        onError,
         customFormats: {
           "area-code": /^\d{3}$/,
         },
       });
 
-      expect(comp.state.errorSchema).eql({
-        areaCode: {
-          __errors: ['should match format "area-code"'],
+      submitForm(node);
+      sinon.assert.calledWithMatch(onError.lastCall, [
+        {
+          message: 'should match format "area-code"',
+          name: "format",
+          params: { format: "area-code" },
+          property: ".areaCode",
+          schemaPath: "#/properties/areaCode/format",
+          stack: '.areaCode should match format "area-code"',
         },
-      });
+      ]);
     });
   });
 
@@ -2177,39 +2310,52 @@ describeRepeated("Form common", createFormComponent => {
         additionalMetaSchemas: [],
       };
 
-      const { comp } = createFormComponent(formProps);
-
-      expect(comp.state.errorSchema).eql({
-        $schema: {
-          __errors: [
+      const { comp, node, onError } = createFormComponent(formProps);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onError.lastCall, [
+        {
+          stack:
             'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
-          ],
         },
-      });
+      ]);
 
       setProps(comp, {
         ...formProps,
+        onError,
         additionalMetaSchemas: [
           require("ajv/lib/refs/json-schema-draft-04.json"),
         ],
       });
 
-      expect(comp.state.errorSchema).eql({
-        __errors: [
-          "should NOT be shorter than 8 characters",
-          'should match pattern "d+"',
-        ],
-      });
-
-      setProps(comp, formProps);
-
-      expect(comp.state.errorSchema).eql({
-        $schema: {
-          __errors: [
-            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
-          ],
+      submitForm(node);
+      sinon.assert.calledWithMatch(onError.lastCall, [
+        {
+          message: "should NOT be shorter than 8 characters",
+          name: "minLength",
+          params: { limit: 8 },
+          property: "",
+          schemaPath: "#/minLength",
+          stack: "should NOT be shorter than 8 characters",
         },
-      });
+        {
+          message: 'should match pattern "d+"',
+          name: "pattern",
+          params: { pattern: "d+" },
+          property: "",
+          schemaPath: "#/pattern",
+          stack: 'should match pattern "d+"',
+        },
+      ]);
+
+      setProps(comp, { ...formProps, onError });
+
+      submitForm(node);
+      sinon.assert.calledWithMatch(onError.lastCall, [
+        {
+          stack:
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+        },
+      ]);
     });
   });
 
@@ -2314,9 +2460,9 @@ describeRepeated("Form common", createFormComponent => {
       const formData = {
         type1: "FOO",
       };
-      const { node, comp } = createFormComponent({ schema, formData });
+      const { node, onError } = createFormComponent({ schema, formData });
       Simulate.submit(node);
-      expect(comp.state.errors).to.have.length.of(0);
+      sinon.assert.notCalled(onError);
     });
     it("should show dependency defaults for uncontrolled components", () => {
       const schema = {
@@ -2713,7 +2859,7 @@ describe("Form omitExtraData and liveOmit", () => {
       },
     };
     const formData = { foo: "foo", baz: "baz" };
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema,
       formData,
       omitExtraData,
@@ -2724,7 +2870,9 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    expect(comp.state.formData).eql({ foo: "foobar", baz: "baz" });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "foobar", baz: "baz" },
+    });
   });
 
   it("should not omit data on change with omitExtraData=true and liveOmit=false", () => {
@@ -2738,7 +2886,7 @@ describe("Form omitExtraData and liveOmit", () => {
       },
     };
     const formData = { foo: "foo", baz: "baz" };
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema,
       formData,
       omitExtraData,
@@ -2749,7 +2897,9 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    expect(comp.state.formData).eql({ foo: "foobar", baz: "baz" });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "foobar", baz: "baz" },
+    });
   });
 
   it("should not omit data on change with omitExtraData=false and liveOmit=true", () => {
@@ -2763,7 +2913,7 @@ describe("Form omitExtraData and liveOmit", () => {
       },
     };
     const formData = { foo: "foo", baz: "baz" };
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema,
       formData,
       omitExtraData,
@@ -2774,7 +2924,9 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    expect(comp.state.formData).eql({ foo: "foobar", baz: "baz" });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "foobar", baz: "baz" },
+    });
   });
 
   it("should omit data on change with omitExtraData=true and liveOmit=true", () => {
@@ -2788,7 +2940,7 @@ describe("Form omitExtraData and liveOmit", () => {
       },
     };
     const formData = { foo: "foo", baz: "baz" };
-    const { comp, node } = createFormComponent({
+    const { node, onChange } = createFormComponent({
       schema,
       formData,
       omitExtraData,
@@ -2799,7 +2951,9 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    expect(comp.state.formData).eql({ foo: "foobar" });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "foobar" },
+    });
   });
 
   describe("Async errors", () => {
