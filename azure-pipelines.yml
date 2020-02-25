@@ -14,19 +14,14 @@ strategy:
     node_12_x:
       node_version: 12.x
 
-stages:
-- stage: test
-  jobs:
-  - job: test
-    steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: $(node_version)
-      displayName: 'Install Node.js'
-
-    - script: |
-        npm install
-        npm run lint
-        npm run cs-check
-        npm run dist
-      displayName: 'npm install and build'
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: $(node_version)
+  displayName: 'Install Node.js'
+- script: |
+    npm install
+    npm run lint
+    npm run cs-check
+    npm run dist
+  displayName: 'npm install and build'
