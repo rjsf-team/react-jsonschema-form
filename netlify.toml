@@ -1,6 +1,6 @@
 [build]
   base = "packages/playground"
-  publish = "packages/playground/build"
+  publish = "build"
   command = "npm run build:playground"
 
 [build.environment]
