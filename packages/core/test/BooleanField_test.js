@@ -184,6 +184,23 @@ describe("BooleanField", () => {
     expect(description.textContent).eql("my description");
   });
 
+  it("should render the description using provided description field", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        description: "my description",
+      },
+      fields: {
+        DescriptionField: ({ description }) => (
+          <div className="field-description">{description} overridden</div>
+        ),
+      },
+    });
+
+    const description = node.querySelector(".field-description");
+    expect(description.textContent).eql("my description overridden");
+  });
+
   it("should assign a default value", () => {
     const { node } = createFormComponent({
       schema: {
