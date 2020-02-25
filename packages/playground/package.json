@@ -10,7 +10,6 @@
     "cs-format": "prettier \"{playground,src,test}/**/*.js\" --write",
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test playground",
-    "prepare": "npm run dist",
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
     "publish-to-npm": "npm run dist && npm publish",
