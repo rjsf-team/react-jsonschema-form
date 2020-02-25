@@ -1,18 +1,14 @@
 var path = require("path");
-var webpack = require("webpack");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
   mode: "production",
-  cache: true,
-  context: __dirname + "/src",
-  entry: "./index.js",
+  devtool: "source-map",
+  entry: [
+    "./src/index"
+  ],
   output: {
     path: path.join(__dirname, "dist"),
-    publicPath: "/dist/",
-    filename: "react-jsonschema-form.js",
-    library: "JSONSchemaForm",
-    libraryTarget: "umd"
   },
   plugins: [
     new MonacoWebpackPlugin({
@@ -24,38 +20,23 @@ module.exports = {
       }
     })
   ],
-  devtool: "source-map",
-  externals: {
-    react: {
-      root: "React",
-      commonjs: "react",
-      commonjs2: "react",
-      amd: "react"
-    },
-    'react-dom': {
-      root: "ReactDOM",
-      commonjs2: 'react-dom',
-      commonjs: 'react-dom',
-      amd: 'react-dom',
-      umd: 'react-dom',
-    }
-  },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         use: [
           "babel-loader",
         ],
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
+          path.join(__dirname, "node_modules", "codemirror", "mode", "javascript"),
         ]
       },
       {
         test: /\.s?css$/,
         use: [
+          "style-loader",
           "css-loader",
           "sass-loader"
         ],
@@ -64,7 +45,7 @@ module.exports = {
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules"),
         ],
-      }
+      },
     ]
   }
 };
