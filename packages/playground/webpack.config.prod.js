@@ -1,7 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
-var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: "production",
@@ -15,12 +15,15 @@ module.exports = {
     new MonacoWebpackPlugin({
       languages: ['json']
     }),
-    new MiniCssExtractPlugin({filename: "styles.css", allChunks: true}),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("production"),
         SHOW_NETLIFY_BADGE: JSON.stringify(process.env.SHOW_NETLIFY_BADGE)
       }
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'playground/index.html'
     })
   ],
   resolve: {
@@ -42,9 +45,6 @@ module.exports = {
       {
         test: /\.s?css$/,
         use: [
-          // {
-          //   loader: MiniCssExtractPlugin.loader,
-          // },
           "style-loader",
           "css-loader",
           "sass-loader"
