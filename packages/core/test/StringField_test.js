@@ -1,10 +1,11 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
+import sinon from "sinon";
 
 import { parseDateString, toDateString } from "../src/utils";
 import { utcToLocal } from "../src/components/widgets/DateTimeWidget";
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("StringField", () => {
   let sandbox;
@@ -119,16 +120,20 @@ describe("StringField", () => {
       );
     });
 
-    it("should default state value to undefined", () => {
-      const { comp } = createFormComponent({
+    it("should default submit value to undefined", () => {
+      const { node, onSubmit } = createFormComponent({
         schema: { type: "string" },
+        noValidate: true,
       });
+      submitForm(node);
 
-      expect(comp.state.formData).eql(undefined);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: undefined,
+      });
     });
 
     it("should handle a change event", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
         },
@@ -138,7 +143,9 @@ describe("StringField", () => {
         target: { value: "yo" },
       });
 
-      expect(comp.state.formData).eql("yo");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "yo",
+      });
     });
 
     it("should handle a blur event", () => {
@@ -174,7 +181,7 @@ describe("StringField", () => {
     });
 
     it("should handle an empty string change event", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: { type: "string" },
         formData: "x",
       });
@@ -183,11 +190,11 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).eql(undefined);
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: undefined });
     });
 
-    it("should handle an empty string change event with custom ui:defaultValue", () => {
-      const { comp, node } = createFormComponent({
+    it("should handle an empty string change event with custom ui:emptyValue", () => {
+      const { node, onChange } = createFormComponent({
         schema: { type: "string" },
         uiSchema: { "ui:emptyValue": "default" },
         formData: "x",
@@ -197,11 +204,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).eql("default");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "default",
+      });
     });
 
     it("should handle an empty string change event with defaults set", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           default: "a",
@@ -212,7 +221,9 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).eql(undefined);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: undefined,
+      });
     });
 
     it("should fill field with data", () => {
@@ -312,7 +323,7 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           enum: ["foo", "bar"],
@@ -320,11 +331,15 @@ describe("StringField", () => {
         },
       });
 
-      expect(comp.state.formData).eql("bar");
+      submitForm(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: "bar",
+      });
     });
 
-    it("should reflect the change into the form state", () => {
-      const { comp, node } = createFormComponent({
+    it("should reflect the change in the change event", () => {
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           enum: ["foo", "bar"],
@@ -334,12 +349,13 @@ describe("StringField", () => {
       Simulate.change(node.querySelector("select"), {
         target: { value: "foo" },
       });
-
-      expect(comp.state.formData).eql("foo");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "foo",
+      });
     });
 
-    it("should reflect undefined into form state if empty option selected", () => {
-      const { comp, node } = createFormComponent({
+    it("should reflect undefined in change event if empty option selected", () => {
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           enum: ["foo", "bar"],
@@ -350,7 +366,9 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).to.be.undefined;
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: undefined,
+      });
     });
 
     it("should reflect the change into the dom", () => {
@@ -384,15 +402,18 @@ describe("StringField", () => {
     });
 
     it("should fill field with data", () => {
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           enum: ["foo", "bar"],
         },
         formData: "bar",
       });
+      submitForm(node);
 
-      expect(comp.state.formData).eql("bar");
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: "bar",
+      });
     });
 
     it("should render the widget with the expected id", () => {
@@ -486,7 +507,7 @@ describe("StringField", () => {
 
   describe("TextareaWidget", () => {
     it("should handle an empty string change event", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: { type: "string" },
         uiSchema: { "ui:widget": "textarea" },
         formData: "x",
@@ -496,11 +517,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).eql(undefined);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: undefined,
+      });
     });
 
-    it("should handle an empty string change event with custom ui:defaultValue", () => {
-      const { comp, node } = createFormComponent({
+    it("should handle an empty string change event with custom ui:emptyValue", () => {
+      const { node, onChange } = createFormComponent({
         schema: { type: "string" },
         uiSchema: {
           "ui:widget": "textarea",
@@ -513,7 +536,9 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).eql("default");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "default",
+      });
     });
 
     it("should render a textarea field with rows", () => {
@@ -546,15 +571,17 @@ describe("StringField", () => {
 
     it("should assign a default value", () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "date-time",
           default: datetime,
         },
       });
-
-      expect(comp.state.formData).eql(datetime);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: datetime,
+      });
     });
 
     it("should reflect the change into the dom", () => {
@@ -578,15 +605,17 @@ describe("StringField", () => {
 
     it("should fill field with data", () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "date-time",
         },
         formData: datetime,
       });
-
-      expect(comp.state.formData).eql(datetime);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: datetime,
+      });
     });
 
     it("should render the widget with the expected id", () => {
@@ -601,7 +630,7 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered datetime", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "date-time",
@@ -613,7 +642,19 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        errorSchema: { __errors: ["should be string"] },
+        errors: [
+          {
+            message: "should be string",
+            name: "type",
+            params: { type: "string" },
+            property: "",
+            schemaPath: "#/type",
+            stack: "should be string",
+          },
+        ],
+      });
     });
 
     it("should render customized DateTimeWidget", () => {
@@ -662,16 +703,19 @@ describe("StringField", () => {
 
     it("should assign a default value", () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
           default: datetime,
         },
         uiSchema,
+        noValidate: true,
       });
-
-      expect(comp.state.formData).eql(datetime);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: datetime,
+      });
     });
 
     it("should reflect the change into the dom", () => {
@@ -696,15 +740,18 @@ describe("StringField", () => {
 
     it("should fill field with data", () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
         },
         formData: datetime,
+        noValidate: true,
       });
-
-      expect(comp.state.formData).eql(datetime);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: datetime,
+      });
     });
 
     it("should render the widget with the expected id", () => {
@@ -720,7 +767,7 @@ describe("StringField", () => {
     });
 
     it("should accept a valid entered date", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onError, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
@@ -733,12 +780,15 @@ describe("StringField", () => {
         target: { value: "2012-12-12" },
       });
 
-      expect(comp.state.errors).to.have.length.of(0);
-      expect(comp.state.formData).eql("2012-12-12");
+      sinon.assert.notCalled(onError);
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "2012-12-12",
+      });
     });
 
     it("should reject an invalid entered date", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
@@ -751,7 +801,19 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        errorSchema: { __errors: ['should match format "date"'] },
+        errors: [
+          {
+            message: 'should match format "date"',
+            name: "format",
+            params: { format: "date" },
+            property: "",
+            schemaPath: "#/format",
+            stack: 'should match format "date"',
+          },
+        ],
+      });
     });
 
     it("should render customized DateWidget", () => {
@@ -813,7 +875,7 @@ describe("StringField", () => {
 
     it("should assign a default value", () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "date-time",
@@ -821,12 +883,14 @@ describe("StringField", () => {
         },
         uiSchema,
       });
-
-      expect(comp.state.formData).eql(datetime);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: datetime,
+      });
     });
 
     it("should reflect the change into the dom", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "date-time",
@@ -853,20 +917,24 @@ describe("StringField", () => {
         target: { value: 3 },
       });
 
-      expect(comp.state.formData).eql("2012-10-02T01:02:03.000Z");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "2012-10-02T01:02:03.000Z",
+      });
     });
 
     it("should fill field with data", () => {
       const datetime = new Date().toJSON();
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "date-time",
         },
         formData: datetime,
       });
-
-      expect(comp.state.formData).eql(datetime);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: datetime,
+      });
     });
 
     it("should render the widgets with the expected ids", () => {
@@ -978,7 +1046,7 @@ describe("StringField", () => {
       });
 
       it("should set current date when pressing the Now button", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "string",
             format: "date-time",
@@ -987,15 +1055,15 @@ describe("StringField", () => {
         });
 
         Simulate.click(node.querySelector("a.btn-now"));
-
+        const formValue = onChange.lastCall.args[0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
         const now = new Date().getTime();
-        const timeDiff = now - new Date(comp.state.formData).getTime();
+        const timeDiff = now - new Date(formValue).getTime();
         expect(timeDiff).to.be.at.most(5000);
       });
 
       it("should clear current date when pressing the Clear button", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "string",
             format: "date-time",
@@ -1006,7 +1074,9 @@ describe("StringField", () => {
         Simulate.click(node.querySelector("a.btn-now"));
         Simulate.click(node.querySelector("a.btn-clear"));
 
-        expect(comp.state.formData).eql(undefined);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: undefined,
+        });
       });
     });
 
@@ -1075,7 +1145,7 @@ describe("StringField", () => {
 
     it("should assign a default value", () => {
       const datetime = "2012-12-12";
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
@@ -1083,12 +1153,14 @@ describe("StringField", () => {
         },
         uiSchema,
       });
-
-      expect(comp.state.formData).eql(datetime);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: datetime,
+      });
     });
 
     it("should reflect the change into the dom", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
@@ -1106,12 +1178,14 @@ describe("StringField", () => {
         target: { value: 2 },
       });
 
-      expect(comp.state.formData).eql("2012-10-02");
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "2012-10-02",
+      });
     });
 
     it("should fill field with data", () => {
       const datetime = "2012-12-12";
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
@@ -1119,8 +1193,10 @@ describe("StringField", () => {
         uiSchema,
         formData: datetime,
       });
-
-      expect(comp.state.formData).eql(datetime);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: datetime,
+      });
     });
 
     it("should render the widgets with the expected ids", () => {
@@ -1205,18 +1281,33 @@ describe("StringField", () => {
     });
 
     it("should accept a valid date", () => {
-      const { comp } = createFormComponent({
+      const { onError } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
         },
         uiSchema,
         liveValidate: true,
+        formData: "2012-12-12",
       });
 
-      comp.UNSAFE_componentWillReceiveProps({ formData: "2012-12-12" });
+      sinon.assert.notCalled(onError);
+    });
 
-      expect(comp.state.errors).to.have.length.of(0);
+    it("should throw on invalid date", () => {
+      try {
+        createFormComponent({
+          schema: {
+            type: "string",
+            format: "date",
+          },
+          uiSchema,
+          liveValidate: true,
+          formData: "2012-1212",
+        });
+      } catch (err) {
+        expect(err.message).eql("Unable to parse date 2012-1212");
+      }
     });
 
     describe("Action buttons", () => {
@@ -1237,7 +1328,7 @@ describe("StringField", () => {
       });
 
       it("should set current date when pressing the Now button", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "string",
             format: "date",
@@ -1251,11 +1342,14 @@ describe("StringField", () => {
           parseDateString(new Date().toJSON()),
           false
         );
-        expect(comp.state.formData).eql(expected);
+
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: expected,
+        });
       });
 
       it("should clear current date when pressing the Clear button", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema: {
             type: "string",
             format: "date",
@@ -1266,7 +1360,9 @@ describe("StringField", () => {
         Simulate.click(node.querySelector("a.btn-now"));
         Simulate.click(node.querySelector("a.btn-clear"));
 
-        expect(comp.state.formData).eql(undefined);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: undefined,
+        });
       });
     });
 
@@ -1326,7 +1422,7 @@ describe("StringField", () => {
 
     it("should assign a default value", () => {
       const email = "foo@bar.baz";
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "email",
@@ -1334,7 +1430,11 @@ describe("StringField", () => {
         },
       });
 
-      expect(comp.state.formData).eql(email);
+      submitForm(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: email,
+      });
     });
 
     it("should reflect the change into the dom", () => {
@@ -1356,7 +1456,7 @@ describe("StringField", () => {
 
     it("should fill field with data", () => {
       const email = "foo@bar.baz";
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "email",
@@ -1364,7 +1464,10 @@ describe("StringField", () => {
         formData: email,
       });
 
-      expect(comp.state.formData).eql(email);
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: email,
+      });
     });
 
     it("should render the widget with the expected id", () => {
@@ -1379,7 +1482,7 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered email", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "email",
@@ -1391,7 +1494,19 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        errorSchema: { __errors: ['should match format "email"'] },
+        errors: [
+          {
+            message: 'should match format "email"',
+            name: "format",
+            params: { format: "email" },
+            property: "",
+            schemaPath: "#/format",
+            stack: 'should match format "email"',
+          },
+        ],
+      });
     });
 
     it("should render customized EmailWidget", () => {
@@ -1447,7 +1562,7 @@ describe("StringField", () => {
 
     it("should assign a default value", () => {
       const url = "http://foo.bar/baz";
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "uri",
@@ -1455,7 +1570,11 @@ describe("StringField", () => {
         },
       });
 
-      expect(comp.state.formData).eql(url);
+      submitForm(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: url,
+      });
     });
 
     it("should reflect the change into the dom", () => {
@@ -1476,7 +1595,7 @@ describe("StringField", () => {
 
     it("should fill field with data", () => {
       const url = "http://foo.bar/baz";
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "uri",
@@ -1484,7 +1603,11 @@ describe("StringField", () => {
         formData: url,
       });
 
-      expect(comp.state.formData).eql(url);
+      submitForm(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: url,
+      });
     });
 
     it("should render the widget with the expected id", () => {
@@ -1499,7 +1622,7 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered url", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "uri",
@@ -1511,7 +1634,19 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        errorSchema: { __errors: ['should match format "uri"'] },
+        errors: [
+          {
+            message: 'should match format "uri"',
+            name: "format",
+            params: { format: "uri" },
+            property: "",
+            schemaPath: "#/format",
+            stack: 'should match format "uri"',
+          },
+        ],
+      });
     });
 
     it("should render customized URLWidget", () => {
@@ -1546,7 +1681,7 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "color",
@@ -1554,8 +1689,9 @@ describe("StringField", () => {
         },
         uiSchema,
       });
+      submitForm(node);
 
-      expect(comp.state.formData).eql(color);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: color });
     });
 
     it("should reflect the change into the dom", () => {
@@ -1577,15 +1713,16 @@ describe("StringField", () => {
     });
 
     it("should fill field with data", () => {
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "color",
         },
         formData: color,
       });
+      submitForm(node);
 
-      expect(comp.state.formData).eql(color);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: color });
     });
 
     it("should render the widget with the expected id", () => {
@@ -1601,7 +1738,7 @@ describe("StringField", () => {
     });
 
     it("should reject an invalid entered color", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "color",
@@ -1614,7 +1751,19 @@ describe("StringField", () => {
         target: { value: "invalid" },
       });
 
-      expect(comp.state.errors).to.have.length.of(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        errorSchema: { __errors: ['should match format "color"'] },
+        errors: [
+          {
+            message: 'should match format "color"',
+            name: "format",
+            params: { format: "color" },
+            property: "",
+            schemaPath: "#/format",
+            stack: 'should match format "color"',
+          },
+        ],
+      });
     });
 
     it("should render customized ColorWidget", () => {
@@ -1647,17 +1796,21 @@ describe("StringField", () => {
     });
 
     it("should assign a default value", () => {
-      const { comp } = createFormComponent({
+      const { node, onSubmit } = createFormComponent({
         schema: {
           type: "string",
           format: "data-url",
           default: initialValue,
         },
       });
-      expect(comp.state.formData).eql(initialValue);
+      submitForm(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: initialValue,
+      });
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should reflect the change into the dom", async () => {
       sandbox.stub(window, "FileReader").returns({
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
@@ -1665,7 +1818,7 @@ describe("StringField", () => {
         readAsDataUrl() {},
       });
 
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "data-url",
@@ -1678,14 +1831,14 @@ describe("StringField", () => {
         },
       });
 
-      return new Promise(setImmediate).then(() =>
-        expect(comp.state.formData).eql(
-          "data:text/plain;name=file1.txt;base64,x="
-        )
-      );
+      await new Promise(setImmediate);
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "data:text/plain;name=file1.txt;base64,x=",
+      });
     });
 
-    it("should encode file name with encodeURIComponent", () => {
+    it("should encode file name with encodeURIComponent", async () => {
       const nonUriEncodedValue = "fileáéí óú1.txt";
       const uriEncodedValue = "file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt";
 
@@ -1696,7 +1849,7 @@ describe("StringField", () => {
         readAsDataUrl() {},
       });
 
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
           format: "data-url",
@@ -1709,11 +1862,11 @@ describe("StringField", () => {
         },
       });
 
-      return new Promise(setImmediate).then(() =>
-        expect(comp.state.formData).eql(
-          "data:text/plain;name=" + uriEncodedValue + ";base64,x="
-        )
-      );
+      await new Promise(setImmediate);
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "data:text/plain;name=" + uriEncodedValue + ";base64,x=",
+      });
     });
 
     it("should render the widget with the expected id", () => {
