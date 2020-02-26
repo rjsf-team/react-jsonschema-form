@@ -301,7 +301,7 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 $ edit package.json # update version number
 $ git commit -m "Bump version $VERSION"
 $ git tag v$VERSION
-$ npm run dist
+$ npm run build
 $ npm publish
 $ git push --tags origin master
 ```
