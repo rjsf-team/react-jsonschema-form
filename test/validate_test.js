@@ -252,6 +252,7 @@ describe("Validation", () => {
         expect(errors[0].property).eql(".numberWithMinimum");
         expect(errors[0].message).eql("should be >= 5");
 
+        expect(errors[1].property).eql(".pass2");
         expect(errors[1].stack).eql("pass2: passwords don't match.");
       });
 
@@ -343,11 +344,11 @@ describe("Validation", () => {
           },
         })
       ).eql([
-        { stack: "root: err1" },
-        { stack: "root: err2" },
-        { stack: "b: err3" },
-        { stack: "b: err4" },
-        { stack: "c: err5" },
+        { property: ".", stack: "root: err1" },
+        { property: ".", stack: "root: err2" },
+        { property: ".a.b", stack: "b: err3" },
+        { property: ".a.b", stack: "b: err4" },
+        { property: ".c", stack: "c: err5" },
       ]);
     });
   });
