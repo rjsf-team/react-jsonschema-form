@@ -252,10 +252,8 @@ export default function validateFormData(
   const errorHandler = customValidate(formData, createErrorHandler(formData));
   const userErrorSchema = unwrapErrorHandler(errorHandler);
   const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
-  // XXX: The errors list produced is not fully compliant with the format
-  // exposed by the jsonschema lib, which contains full field paths and other
-  // properties.
-  const newErrors = toErrorList(newErrorSchema);
+  // Append the custom errors to the current error list.
+  const newErrors = [].concat(errors, toErrorList(userErrorSchema));
 
   return {
     errors: newErrors,

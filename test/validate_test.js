@@ -220,7 +220,7 @@ describe("Validation", () => {
       });
     });
 
-    describe.only("Custom validate function", () => {
+    describe("Custom validate function", () => {
       let errors, errorSchema;
 
       const schema = {
@@ -248,7 +248,10 @@ describe("Validation", () => {
 
       it("should return an error list", () => {
         expect(errors).to.have.length.of(2);
-        expect(errors[0].message).eql("test");
+
+        expect(errors[0].property).eql(".numberWithMinimum");
+        expect(errors[0].message).eql("should be >= 5");
+
         expect(errors[1].stack).eql("pass2: passwords don't match.");
       });
 
@@ -256,8 +259,8 @@ describe("Validation", () => {
         expect(errorSchema.pass2.__errors).to.have.length.of(1);
         expect(errorSchema.pass2.__errors[0]).eql("passwords don't match.");
 
-        expect(errorSchema.numberWithMinimum._errors).to.have.length.of(1);
-        expect(errorSchema.numberWithMinimum._errors[0]).eql("test");
+        expect(errorSchema.numberWithMinimum.__errors).to.have.length.of(1);
+        expect(errorSchema.numberWithMinimum.__errors[0]).eql("should be >= 5");
       });
     });
 
