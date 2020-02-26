@@ -3,7 +3,6 @@ import MonacoEditor from "react-monaco-editor";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "react-jsonschema-form";
-import "./index.scss";
 import DemoFrame from "./DemoFrame";
 
 // deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
@@ -340,7 +339,7 @@ class Playground extends Component {
         alert("Unable to load form setup data.");
       }
     } else {
-      this.load(samples.Simple);
+      this.load({ theme: Object.keys(this.props.themes)[0] });
     }
   }
 
@@ -381,7 +380,7 @@ class Playground extends Component {
   onExtraErrorsEdited = extraErrors =>
     this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (theme, { stylesheet, theme: themeObj, editor }) => {
+  onThemeSelected = (theme, { stylesheet, theme: themeObj, editor } = {}) => {
     this.setState({
       theme,
       themeObj,
