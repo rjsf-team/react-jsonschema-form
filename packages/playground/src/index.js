@@ -339,7 +339,7 @@ class Playground extends Component {
         alert("Unable to load form setup data.");
       }
     } else {
-      this.load(samples.Simple);
+      this.load({ theme: Object.keys(this.props.themes)[0] });
     }
   }
 
@@ -356,9 +356,6 @@ class Playground extends Component {
 
     const { theme = this.state.theme } = data;
     const { themes } = this.props;
-    if (!theme) {
-      throw "No theme specified";
-    }
     this.onThemeSelected(theme, themes[theme]);
 
     // force resetting form component instance

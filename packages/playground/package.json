@@ -1,9 +1,10 @@
 {
   "name": "@rjsf/playground",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.2",
   "description": "rjsf playground",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
+    "prepublishOnly": "npm run build:lib",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
     "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "cs-check": "prettier -l \"{playground,src,test}/**/*.js\"",

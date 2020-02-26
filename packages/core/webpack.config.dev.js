@@ -20,6 +20,13 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
   ],
+  resolve: {
+    symlinks: false,
+    alias: {
+      react: path.resolve('./node_modules/react'),
+      'react-dom': path.resolve('./node_modules/react-dom')
+    }
+  },
   module: {
     rules: [
       {
@@ -42,7 +49,8 @@ module.exports = {
         include: [
           path.join(__dirname, "css"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
+          path.join(__dirname, "node_modules", "monaco-editor"),
+          path.join(__dirname, "node_modules", "@rjsf/playground", "node_modules", "monaco-editor"),
         ],
       },
     ]
