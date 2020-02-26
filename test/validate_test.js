@@ -220,7 +220,7 @@ describe("Validation", () => {
       });
     });
 
-    describe("Custom validate function", () => {
+    describe.only("Custom validate function", () => {
       let errors, errorSchema;
 
       const schema = {
@@ -229,6 +229,7 @@ describe("Validation", () => {
         properties: {
           pass1: { type: "string" },
           pass2: { type: "string" },
+          numberWithMinimum: { type: "number", minimum: 5 },
         },
       };
 
@@ -239,20 +240,24 @@ describe("Validation", () => {
           }
           return errors;
         };
-        const formData = { pass1: "a", pass2: "b" };
+        const formData = { pass1: "a", pass2: "b", numberWithMinimum: 2 };
         const result = validateFormData(formData, schema, validate);
         errors = result.errors;
         errorSchema = result.errorSchema;
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(1);
-        expect(errors[0].stack).eql("pass2: passwords don't match.");
+        expect(errors).to.have.length.of(2);
+        expect(errors[0].message).eql("test");
+        expect(errors[1].stack).eql("pass2: passwords don't match.");
       });
 
       it("should return an errorSchema", () => {
         expect(errorSchema.pass2.__errors).to.have.length.of(1);
         expect(errorSchema.pass2.__errors[0]).eql("passwords don't match.");
+
+        expect(errorSchema.numberWithMinimum._errors).to.have.length.of(1);
+        expect(errorSchema.numberWithMinimum._errors[0]).eql("test");
       });
     });
 
