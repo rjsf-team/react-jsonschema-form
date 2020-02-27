@@ -1,6 +1,5 @@
 import React from "react";
 import * as ReactIs from "react-is";
-import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
 import union from "lodash/union";
@@ -655,18 +654,7 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
     return {};
   }
   let resolvedSchema = resolveSchema(schema, rootSchema, formData);
-  if ("allOf" in schema) {
-    try {
-      resolvedSchema = mergeAllOf({
-        ...resolvedSchema,
-        allOf: resolvedSchema.allOf,
-      });
-    } catch (e) {
-      console.warn("could not merge subschemas in allOf:\n" + e);
-      const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
-      return resolvedSchemaWithoutAllOf;
-    }
-  }
+
   const hasAdditionalProperties =
     resolvedSchema.hasOwnProperty("additionalProperties") &&
     resolvedSchema.additionalProperties !== false;
@@ -956,7 +944,7 @@ export function toIdSchema(
   const idSchema = {
     $id: id || idPrefix,
   };
-  if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
+  if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
     return toIdSchema(_schema, id, rootSchema, formData, idPrefix);
   }

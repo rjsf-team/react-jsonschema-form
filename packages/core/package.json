@@ -13,7 +13,7 @@
     "publish-to-npm": "npm run dist && npm publish",
     "preversion": "npm run build:playground && npm run dist && npm run cs-check && npm run lint",
     "start": "node devServer.js",
-    "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
+    "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js --inspect",
     "test": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
     "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
     "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
@@ -42,7 +42,6 @@
     "@babel/runtime-corejs2": "^7.4.5",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
-    "json-schema-merge-allof": "^0.6.0",
     "jsonpointer": "^4.0.1",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",

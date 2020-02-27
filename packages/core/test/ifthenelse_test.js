@@ -57,14 +57,14 @@ describe("conditional items", () => {
       // not support switch style with allOf
       // reason being is that the allOf is merged and it cannot merge this configuration
       // need to come up with a solution here
-      /* , {
-        "if": {
-          "properties": { "country": { "const": "United Kingdom" } }
+      {
+        if: {
+          properties: { country: { const: "United Kingdom" } },
         },
-        "then": {
-          "properties": { "postcode": { "type":"string" } }
-        }
-      } */
+        then: {
+          properties: { postcode: { type: "string" } },
+        },
+      },
     ],
   };
 

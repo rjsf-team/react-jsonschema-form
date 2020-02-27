@@ -35,7 +35,7 @@ describe("allOf", () => {
       type: "object",
       properties: {
         foo: {
-          allOf: [{ type: "string" }, { type: "boolean" }],
+          allOf: [{ type: "string" }, { type: "boolean" }], // this will basically pick up the last entry
         },
       },
     };
@@ -44,6 +44,6 @@ describe("allOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("input")).to.have.length.of(0);
+    expect(node.querySelectorAll("input")).to.have.length.of(1);
   });
 });
