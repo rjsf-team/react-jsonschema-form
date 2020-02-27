@@ -42,7 +42,6 @@
     "@rjsf/core": "^2.0.0-alpha.2",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
-    "json-schema-merge-allof": "^0.6.0",
     "jss": "^10.0.3",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
