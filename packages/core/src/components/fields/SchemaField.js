@@ -356,12 +356,34 @@ function SchemaFieldRender(props) {
   const _AnyOfField = registry.fields.AnyOfField;
   const _OneOfField = registry.fields.OneOfField;
 
-  let conditionalSchema = null;
+  let conditionalSchemaResult = null;
+
   if (schema.if) {
-    if (isValid(schema.if, formData)) {
-      conditionalSchema = schema.then;
-    } else {
-      conditionalSchema = schema.else;
+    var conditionalSchema = isValid(schema.if, formData)
+      ? schema.then
+      : schema.else;
+    if (conditionalSchema) {
+      var ConditionalSchemaComponent = getFieldComponent(
+        conditionalSchema,
+        uiSchema,
+        idSchema,
+        fields
+      );
+
+      conditionalSchemaResult = (
+        <ConditionalSchemaComponent
+          {...props}
+          idSchema={idSchema}
+          schema={conditionalSchema}
+          uiSchema={{ ...uiSchema, classNames: undefined }}
+          disabled={disabled}
+          readonly={readonly}
+          autofocus={autofocus}
+          errorSchema={fieldErrorSchema}
+          formContext={formContext}
+          rawErrors={__errors}
+        />
+      );
     }
   }
 
@@ -410,27 +432,10 @@ function SchemaFieldRender(props) {
         />
       )}
 
-      {conditionalSchema && (
-        <SchemaField
-          disabled={disabled}
-          errorSchema={errorSchema}
-          formData={formData}
-          idPrefix={"if"}
-          idSchema={idSchema}
-          onBlur={props.onBlur}
-          onChange={props.onChange}
-          onFocus={props.onFocus}
-          options={schema.oneOf}
-          baseType={schema.type}
-          registry={registry}
-          schema={conditionalSchema}
-          uiSchema={uiSchema}
-        />
-      )}
+      {conditionalSchemaResult}
     </FieldTemplate>
   );
 }
-
 class SchemaField extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !deepEquals(this.props, nextProps);

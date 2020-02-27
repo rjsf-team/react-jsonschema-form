@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 
-describe.only("conditional items", () => {
+describe("conditional items", () => {
   let sandbox;
 
   beforeEach(() => {
@@ -96,7 +96,7 @@ describe.only("conditional items", () => {
     expect(node.querySelector("input[label=postal_code]")).not.eql(null);
   });
 
-  it.only("should render correctly when condition is true in allOf (1)", () => {
+  it("should render correctly when condition is true in allOf (1)", () => {
     const formData = {
       country: "United States of America",
     };
