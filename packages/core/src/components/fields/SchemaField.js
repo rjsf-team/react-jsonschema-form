@@ -17,6 +17,7 @@ import {
   getSchemaType,
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
+import { isValid } from "../../validate";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -355,6 +356,15 @@ function SchemaFieldRender(props) {
   const _AnyOfField = registry.fields.AnyOfField;
   const _OneOfField = registry.fields.OneOfField;
 
+  let conditionalSchema = null;
+  if (schema.if) {
+    if (isValid(schema.if, formData)) {
+      conditionalSchema = schema.then;
+    } else {
+      conditionalSchema = schema.else;
+    }
+  }
+
   return (
     <FieldTemplate {...fieldProps}>
       {field}
@@ -396,6 +406,24 @@ function SchemaFieldRender(props) {
           baseType={schema.type}
           registry={registry}
           schema={schema}
+          uiSchema={uiSchema}
+        />
+      )}
+
+      {conditionalSchema && (
+        <SchemaField
+          disabled={disabled}
+          errorSchema={errorSchema}
+          formData={formData}
+          idPrefix={"if"}
+          idSchema={idSchema}
+          onBlur={props.onBlur}
+          onChange={props.onChange}
+          onFocus={props.onFocus}
+          options={schema.oneOf}
+          baseType={schema.type}
+          registry={registry}
+          schema={conditionalSchema}
           uiSchema={uiSchema}
         />
       )}
