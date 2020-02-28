@@ -3,7 +3,11 @@ import { expect } from "chai";
 import sinon from "sinon";
 import { Simulate } from "react-dom/test-utils";
 
-import validateFormData, { isValid, toErrorList } from "../src/validate";
+import validateFormData, {
+  isValid,
+  toErrorList,
+  isValidAddDefaults,
+} from "../src/validate";
 import { createFormComponent, submitForm } from "./test_utils";
 
 describe("Validation", () => {
@@ -28,6 +32,18 @@ describe("Validation", () => {
       };
 
       expect(isValid(schema, { foo: 12345 })).to.be.false;
+    });
+
+    it("isValidAddDefaults should return false if field in schema is undefined", () => {
+      const schema = {
+        properties: {
+          country: {
+            const: "United States of America",
+          },
+        },
+      };
+
+      expect(isValidAddDefaults(schema, {})).to.be.false;
     });
 
     it("should return false if the schema is invalid", () => {

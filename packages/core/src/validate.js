@@ -15,6 +15,7 @@ function createAjvInstance() {
     multipleOfPrecision: 8,
     schemaId: "auto",
     unknownFormats: "ignore",
+    useDefaults: true,
   });
 
   // add custom formats
@@ -270,6 +271,30 @@ export default function validateFormData(
  */
 export function isValid(schema, data) {
   try {
+    return ajv.validate(schema, data);
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Validates data against a schema, returning true if the data is valid, or
+ * false otherwise. If the schema is invalid, then this function will return
+ * false.
+ */
+export function isValidAddDefaults(schema, data) {
+  try {
+    if ("properties" in schema) {
+      // This is a bit of a hack, ajv seems to ignore undefined values in validate, this needs to
+      // be looked into further, but setting default and option turned on to populate defaults
+      for (var key in schema.properties) {
+        // kind of fixes this validation for now
+        var property = schema.properties[key];
+        if (!("default" in property)) {
+          property["default"] = "";
+        }
+      }
+    }
     return ajv.validate(schema, data);
   } catch (e) {
     return false;

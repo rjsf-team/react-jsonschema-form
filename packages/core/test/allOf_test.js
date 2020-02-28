@@ -14,6 +14,7 @@ describe("allOf", () => {
   });
 
   it("should render a regular input element with a single type, when multiple types specified", () => {
+    // I think that this is wrong
     const schema = {
       type: "object",
       properties: {
@@ -28,6 +29,38 @@ describe("allOf", () => {
     });
 
     expect(node.querySelectorAll("input")).to.have.length.of(1);
+  });
+
+  it("should properly merge multiple schemas as per https://json-schema.org/understanding-json-schema/reference/combining.html", () => {
+    const schema = {
+      definitions: {
+        address: {
+          type: "object",
+          properties: {
+            street_address: { type: "string" },
+            city: { type: "string" },
+            state: { type: "string" },
+          },
+          required: ["street_address", "city", "state"],
+        },
+      },
+
+      allOf: [
+        { $ref: "#/definitions/address" },
+        {
+          properties: {
+            type: { enum: ["residential", "business"] },
+          },
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    expect(node.querySelectorAll("input")).to.have.length.of(3); // Schema 1
+    expect(node.querySelectorAll("select")).to.have.length.of(1); // Schema 2
   });
 
   it("should be able to handle incompatible types and not crash", () => {

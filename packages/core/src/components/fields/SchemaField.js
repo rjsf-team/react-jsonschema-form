@@ -17,7 +17,7 @@ import {
   getSchemaType,
 } from "../../utils";
 import UnsupportedField from "./UnsupportedField";
-import { isValid } from "../../validate";
+import { isValidAddDefaults } from "../../validate";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -246,7 +246,18 @@ function SchemaFieldRender(props) {
 
   if (schema.allOf) {
     for (var i = 0; i < schema.allOf.length; i++) {
-      schema = mergeSchemas(schema, schema.allOf[i]);
+      let allOfSchema = schema.allOf[i];
+
+      // if we see an if in our all of schema then evaluate the if schema and select the then / else, not sure if we should still merge without our if then else
+      if ("if" in allOfSchema) {
+        allOfSchema = isValidAddDefaults(allOfSchema.if, formData)
+          ? allOfSchema.then
+          : allOfSchema.else;
+      }
+
+      if (allOfSchema) {
+        schema = mergeSchemas(schema, allOfSchema);
+      }
     }
   }
 
@@ -366,7 +377,7 @@ function SchemaFieldRender(props) {
   let conditionalSchemaResult = null;
 
   if (schema.if) {
-    var conditionalSchema = isValid(schema.if, formData)
+    var conditionalSchema = isValidAddDefaults(schema.if, formData)
       ? schema.then
       : schema.else;
     if (conditionalSchema) {
