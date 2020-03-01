@@ -356,7 +356,7 @@ class Playground extends Component {
         liveOmit: false,
       },
       shareURL: null,
-      themeObj: {},
+      FormComponent: withTheme({}),
     };
   }
 
@@ -418,7 +418,7 @@ class Playground extends Component {
       theme,
       subthemes,
       subtheme: null,
-      themeObj,
+      FormComponent: withTheme(themeObj),
       stylesheet,
     });
   };
@@ -474,15 +474,13 @@ class Playground extends Component {
       validate,
       theme,
       subtheme,
-      themeObj,
+      FormComponent,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
 
     const { themes } = this.props;
-
-    const FormComponent = withTheme(themeObj);
 
     return (
       <div className="container-fluid">
