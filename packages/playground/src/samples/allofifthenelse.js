@@ -11,6 +11,15 @@ module.exports = {
         ],
       },
     },
+    definitions: {
+      uk: {
+        properties: {
+          post_code: {
+            type: "string",
+          },
+        },
+      },
+    },
     allOf: [
       // USA
       {
@@ -39,11 +48,7 @@ module.exports = {
           },
         },
         then: {
-          properties: {
-            post_code: {
-              type: "string",
-            },
-          },
+          $ref: "#/definitions/uk",
         },
       },
       // United Kingdom

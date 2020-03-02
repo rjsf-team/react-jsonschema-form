@@ -1,4 +1,8 @@
-import { ADDITIONAL_PROPERTY_FLAG, mergeSchemas } from "../../utils";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  mergeSchemas,
+  resolveSchema,
+} from "../../utils";
 import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
@@ -244,19 +248,29 @@ function SchemaFieldRender(props) {
   let idSchema = props.idSchema;
   var schema = retrieveSchema(props.schema, rootSchema, formData);
 
-  if (schema.allOf) {
-    for (var i = 0; i < schema.allOf.length; i++) {
-      let allOfSchema = schema.allOf[i];
+  let allOf = schema.allOf;
+
+  if (allOf) {
+    for (var i = 0; i < allOf.length; i++) {
+      let allOfSchema = allOf[i];
 
       // if we see an if in our all of schema then evaluate the if schema and select the then / else, not sure if we should still merge without our if then else
       if ("if" in allOfSchema) {
         allOfSchema = isValidAddDefaults(allOfSchema.if, formData)
           ? allOfSchema.then
           : allOfSchema.else;
+
+        console.log(allOfSchema);
+
+        if (allOfSchema) {
+          allOfSchema = resolveSchema(allOfSchema, rootSchema, formData); // resolve references etc.
+          console.log(allOfSchema);
+        }
       }
 
       if (allOfSchema) {
         schema = mergeSchemas(schema, allOfSchema);
+        delete schema.allOf;
       }
     }
   }
@@ -380,7 +394,14 @@ function SchemaFieldRender(props) {
     var conditionalSchema = isValidAddDefaults(schema.if, formData)
       ? schema.then
       : schema.else;
+
     if (conditionalSchema) {
+      conditionalSchema = resolveSchema(
+        conditionalSchema,
+        rootSchema,
+        formData
+      );
+
       var ConditionalSchemaComponent = getFieldComponent(
         conditionalSchema,
         uiSchema,
