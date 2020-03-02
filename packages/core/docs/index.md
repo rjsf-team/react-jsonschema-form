@@ -194,7 +194,7 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 
     You can also use `oneOf` with [schema dependencies](dependencies.md#schema-dependencies) to dynamically add schema properties based on input data.
 
-    The `allOf` keyword is partually supported. 
+    The `allOf` keyword is partially supported. 
 
 * `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/mozilla-services/react-jsonschema-form/issues/848) [#902](https://github.com/mozilla-services/react-jsonschema-form/issues/902) [#992](https://github.com/mozilla-services/react-jsonschema-form/issues/992)
 
