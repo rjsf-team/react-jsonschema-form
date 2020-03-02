@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
-import Form, { withTheme } from "react-jsonschema-form";
+import Form, { withTheme } from "@rjsf/core";
 import DemoFrame from "./DemoFrame";
 
 // deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
@@ -255,17 +255,46 @@ class Selector extends Component {
 }
 
 function ThemeSelector({ theme, themes, select }) {
-  const themeSchema = {
+  const schema = {
     type: "string",
     enum: Object.keys(themes),
+  };
+  const uiSchema = {
+    "ui:placeholder": "Select theme",
   };
   return (
     <Form
       className="form_rjsf_themeSelector"
       idPrefix="rjsf_themeSelector"
-      schema={themeSchema}
+      schema={schema}
+      uiSchema={uiSchema}
       formData={theme}
-      onChange={({ formData }) => select(formData, themes[formData])}>
+      onChange={({ formData }) =>
+        formData && select(formData, themes[formData])
+      }>
+      <div />
+    </Form>
+  );
+}
+
+function SubthemeSelector({ subtheme, subthemes, select }) {
+  const schema = {
+    type: "string",
+    enum: Object.keys(subthemes),
+  };
+  const uiSchema = {
+    "ui:placeholder": "Select subtheme",
+  };
+  return (
+    <Form
+      className="form_rjsf_subthemeSelector"
+      idPrefix="rjsf_subthemeSelector"
+      schema={schema}
+      uiSchema={uiSchema}
+      formData={subtheme}
+      onChange={({ formData }) =>
+        formData && select(formData, subthemes[formData])
+      }>
       <div />
     </Form>
   );
@@ -319,6 +348,7 @@ class Playground extends Component {
       formData,
       validate,
       theme: "default",
+      subtheme: null,
       liveSettings: {
         validate: true,
         disable: false,
@@ -326,7 +356,7 @@ class Playground extends Component {
         liveOmit: false,
       },
       shareURL: null,
-      themeObj: {},
+      FormComponent: withTheme({}),
     };
   }
 
@@ -380,12 +410,23 @@ class Playground extends Component {
   onExtraErrorsEdited = extraErrors =>
     this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (theme, { stylesheet, theme: themeObj, editor } = {}) => {
+  onThemeSelected = (
+    theme,
+    { subthemes, stylesheet, theme: themeObj } = {}
+  ) => {
     this.setState({
       theme,
-      themeObj,
+      subthemes,
+      subtheme: null,
+      FormComponent: withTheme(themeObj),
       stylesheet,
-      editor: editor ? editor : "default",
+    });
+  };
+
+  onSubthemeSelected = (subtheme, { stylesheet }) => {
+    this.setState({
+      subtheme,
+      stylesheet,
     });
   };
 
@@ -432,15 +473,14 @@ class Playground extends Component {
       liveSettings,
       validate,
       theme,
-      themeObj,
+      subtheme,
+      FormComponent,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
 
     const { themes } = this.props;
-
-    const FormComponent = withTheme(themeObj);
 
     return (
       <div className="container-fluid">
@@ -465,8 +505,13 @@ class Playground extends Component {
                 theme={theme}
                 select={this.onThemeSelected}
               />
-              <br />
-              <br />
+              {themes[theme].subthemes && (
+                <SubthemeSelector
+                  subthemes={themes[theme].subthemes}
+                  subtheme={subtheme}
+                  select={this.onSubthemeSelected}
+                />
+              )}
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
           </div>
