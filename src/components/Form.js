@@ -32,7 +32,7 @@ export default class Form extends Component {
 
   constructor(props) {
     super(props);
-    this.state = this.getStateFromProps(props, props.formData);
+    this.state = this.getStateFromProps(null, props.formData);
     if (
       this.props.onChange &&
       !deepEquals(this.state.formData, this.props.formData)
@@ -54,18 +54,28 @@ export default class Form extends Component {
     this.setState(nextState);
   }
 
-  getStateFromProps(props, inputFormData) {
+  getStateFromProps(nextProps, inputFormData) {
     const state = this.state || {};
-    const schema = "schema" in props ? props.schema : this.props.schema;
-    const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
+
+    const schema = nextProps ? nextProps.schema : this.props.schema;
+    const uiSchema = nextProps ? nextProps.uiSchema : this.props.uiSchema;
+    const liveValidate = nextProps
+      ? nextProps.liveValidate
+      : this.props.liveValidate;
+    const customFormats = nextProps
+      ? nextProps.customFormats
+      : this.props.customFormats;
+    const additionalMetaSchemas = nextProps
+      ? nextProps.additionalMetaSchemas
+      : this.props.additionalMetaSchemas;
+    const noValidate = nextProps ? nextProps.noValidate : this.props.noValidate;
+    const idPrefix = nextProps ? nextProps.idPrefix : this.props.idPrefix;
+
     const edit = typeof inputFormData !== "undefined";
-    const liveValidate = props.liveValidate || this.props.liveValidate;
-    const mustValidate = edit && !props.noValidate && liveValidate;
+    const mustValidate = edit && !noValidate && liveValidate;
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, inputFormData, definitions);
     const retrievedSchema = retrieveSchema(schema, definitions, formData);
-    const customFormats = props.customFormats;
-    const additionalMetaSchemas = props.additionalMetaSchemas;
     const { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
       : {
@@ -77,7 +87,7 @@ export default class Form extends Component {
       uiSchema["ui:rootFieldId"],
       definitions,
       formData,
-      props.idPrefix
+      idPrefix
     );
     return {
       schema,
@@ -172,7 +182,7 @@ export default class Form extends Component {
 
   onChange = (formData, newErrorSchema) => {
     if (isObject(formData) || Array.isArray(formData)) {
-      const newState = this.getStateFromProps(this.props, formData);
+      const newState = this.getStateFromProps(null, formData);
       formData = newState.formData;
     }
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
