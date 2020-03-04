@@ -689,9 +689,6 @@ describe("Validation", () => {
           validate,
           liveValidate: true,
         });
-        const newProps = { ...comp.props, formData };
-        console.log(comp.props);
-        console.log(newProps);
         comp.componentWillReceiveProps({ ...comp.props, formData });
 
         expect(comp.state.errorSchema).eql({
