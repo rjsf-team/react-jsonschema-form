@@ -57,6 +57,21 @@ export default class Form extends Component {
   getStateFromProps(nextProps, inputFormData) {
     const state = this.state || {};
 
+    if (
+      nextProps &&
+      inputFormData === state.formData &&
+      nextProps.schema === this.props.schema &&
+      nextProps.uiSchema === this.props.uiSchema &&
+      nextProps.liveValidate === this.props.liveValidate &&
+      nextProps.customFormats === this.props.customFormats &&
+      nextProps.additionalMetaSchemas === this.props.additionalMetaSchemas &&
+      nextProps.noValidate === this.props.noValidate &&
+      nextProps.idPrefix === this.props.idPrefix
+    ) {
+      // No data has changed, maintain state.
+      return state;
+    }
+
     const schema = nextProps ? nextProps.schema : this.props.schema;
     const uiSchema = nextProps ? nextProps.uiSchema : this.props.uiSchema;
     const liveValidate = nextProps
