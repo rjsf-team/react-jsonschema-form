@@ -29,7 +29,7 @@ describe("Rendering performance optimizations", () => {
       const { comp } = createFormComponent({ schema, uiSchema });
       sandbox.stub(comp, "render").returns(<div />);
 
-      comp.componentWillReceiveProps({ schema });
+      comp.componentWillReceiveProps({ ...comp.props, schema });
 
       sinon.assert.notCalled(comp.render);
     });
@@ -41,7 +41,7 @@ describe("Rendering performance optimizations", () => {
       const { comp } = createFormComponent({ schema, formData });
       sandbox.stub(comp, "render").returns(<div />);
 
-      comp.componentWillReceiveProps({ formData });
+      comp.componentWillReceiveProps({ ...comp.props, formData });
 
       sinon.assert.notCalled(comp.render);
     });

@@ -1145,7 +1145,7 @@ describe("StringField", () => {
         liveValidate: true,
       });
 
-      comp.componentWillReceiveProps({ formData: "2012-12-12" });
+      comp.componentWillReceiveProps({ ...comp.props, formData: "2012-12-12" });
 
       expect(comp.state.errors).to.have.length.of(0);
     });

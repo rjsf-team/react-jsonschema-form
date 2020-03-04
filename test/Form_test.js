@@ -974,7 +974,9 @@ describeRepeated("Form common", createFormComponent => {
     });
 
     describe("when the form data is set to null", () => {
-      beforeEach(() => comp.componentWillReceiveProps({ formData: null }));
+      beforeEach(() =>
+        comp.componentWillReceiveProps({ ...comp.props, formData: null })
+      );
 
       it("should call onChange", () => {
         sinon.assert.calledOnce(onChangeProp);
@@ -991,6 +993,7 @@ describeRepeated("Form common", createFormComponent => {
 
       beforeEach(() =>
         comp.componentWillReceiveProps({
+          ...comp.props,
           schema: newSchema,
           formData: "some value",
         })
@@ -1011,6 +1014,7 @@ describeRepeated("Form common", createFormComponent => {
 
       beforeEach(() =>
         comp.componentWillReceiveProps({
+          ...comp.props,
           schema: newSchema,
           formData: "something else",
         })
@@ -1030,7 +1034,11 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       beforeEach(() =>
-        comp.componentWillReceiveProps({ schema: newSchema, formData: null })
+        comp.componentWillReceiveProps({
+          ...comp.props,
+          schema: newSchema,
+          formData: null,
+        })
       );
 
       it("should call onChange", () => {
@@ -1099,7 +1107,7 @@ describeRepeated("Form common", createFormComponent => {
       it("should update form state from new formData prop value", () => {
         const { comp } = createFormComponent(formProps);
 
-        comp.componentWillReceiveProps({ formData: "yo" });
+        comp.componentWillReceiveProps({ ...comp.props, formData: "yo" });
 
         expect(comp.state.formData).eql("yo");
       });
@@ -1108,6 +1116,7 @@ describeRepeated("Form common", createFormComponent => {
         const { comp } = createFormComponent(formProps);
 
         comp.componentWillReceiveProps({
+          ...comp.props,
           formData: "yo",
           schema: { type: "number" },
         });
@@ -1130,7 +1139,10 @@ describeRepeated("Form common", createFormComponent => {
           },
         });
 
-        comp.componentWillReceiveProps({ formData: { foo: "yo" } });
+        comp.componentWillReceiveProps({
+          ...comp.props,
+          formData: { foo: "yo" },
+        });
 
         expect(comp.state.formData).eql({ foo: "yo" });
       });
@@ -1146,7 +1158,7 @@ describeRepeated("Form common", createFormComponent => {
         };
         const { comp } = createFormComponent({ schema });
 
-        comp.componentWillReceiveProps({ formData: ["yo"] });
+        comp.componentWillReceiveProps({ ...comp.props, formData: ["yo"] });
 
         expect(comp.state.formData).eql(["yo"]);
       });
@@ -1916,6 +1928,7 @@ describeRepeated("Form common", createFormComponent => {
       const formData = { foo: "foo", bar: "bar" };
       const { comp, node } = createFormComponent({ schema, formData });
       comp.componentWillReceiveProps({
+        ...comp.props,
         schema: {
           type: "object",
           properties: {
@@ -1936,6 +1949,7 @@ describeRepeated("Form common", createFormComponent => {
       const formData = { foo: "foo", bar: "bar" };
       const { comp, node } = createFormComponent({ schema, formData });
       comp.componentWillReceiveProps({
+        ...comp.props,
         schema: {
           type: "object",
           properties: {
@@ -1983,6 +1997,7 @@ describeRepeated("Form common", createFormComponent => {
       const formData = { a: "int" };
       const { comp } = createFormComponent({ schema, formData });
       comp.componentWillReceiveProps({
+        ...comp.props,
         schema: {
           type: "object",
           properties: {
@@ -2017,6 +2032,7 @@ describeRepeated("Form common", createFormComponent => {
       };
       const { comp } = createFormComponent({ schema, formData });
       comp.componentWillReceiveProps({
+        ...comp.props,
         schema: {
           type: "object",
           properties: {
