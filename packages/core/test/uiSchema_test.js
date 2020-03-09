@@ -2688,4 +2688,35 @@ describe("uiSchema", () => {
       });
     });
   });
+
+  describe("uiSchema from schema", () => {
+    it("get get uiSchema directly from schama", () => {
+      const schema = {
+        properties: {
+          test: {
+            $ref: "#/definitions/test",
+          },
+        },
+
+        definitions: {
+          test: {
+            type: "string",
+            ui: {
+              widget: "hidden",
+            },
+          },
+        },
+      };
+      const uiSchema = {};
+
+      const formData = ["a", "b"];
+
+      let { node } = createFormComponent({ schema, uiSchema, formData });
+
+      let input = node.querySelector("input");
+
+      expect(input).not.eql(null);
+      expect(input.type).to.eql("hidden");
+    });
+  });
 });
