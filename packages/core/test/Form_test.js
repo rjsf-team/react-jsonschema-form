@@ -27,6 +27,44 @@ describeRepeated("Form common", createFormComponent => {
     sandbox.restore();
   });
 
+  describe("Schema with ui", () => {
+    it("should use the correct widget", () => {
+      let schema = {
+        type: "string",
+        ui: {
+          widget: "hidden",
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      let input = node.querySelector("input");
+      expect(input.type).to.eql("hidden");
+    });
+
+    it("should use the correct widget for refs", () => {
+      let schema = {
+        type: "object",
+        properties: {
+          foo: { $ref: "#/definitions/foo" },
+        },
+        definitions: {
+          foo: {
+            type: "string",
+            ui: {
+              widget: "hidden",
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      let input = node.querySelector("input");
+      expect(input.type).to.eql("hidden");
+    });
+  });
+
   describe("Empty schema", () => {
     it("should render a form tag", () => {
       const { node } = createFormComponent({ schema: {} });

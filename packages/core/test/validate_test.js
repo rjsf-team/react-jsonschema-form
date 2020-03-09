@@ -49,6 +49,26 @@ describe("Validation", () => {
 
       expect(isValid(schema, { foo: "Test" })).to.be.true;
     });
+
+    it("should allow extra ui fields with ref", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            $ref: "#/definitions/foo",
+          },
+        },
+        definitions: {
+          foo: {
+            ui: {
+              widget: "hidden",
+            },
+          },
+        },
+      };
+
+      expect(isValid(schema, { foo: "Test" })).to.be.true;
+    });
   });
 
   describe("validate.validateFormData()", () => {
