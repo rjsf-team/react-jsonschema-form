@@ -67,6 +67,10 @@ git push --tags origin master
 
 Make sure you use [semver](https://semver.org/) for version numbering. Once a new version has been released, create a release in the Github "Releases" tab and add the version history.
 
+#### Releasing docs
+
+Docs are automatically released using [Read The Docs](https://readthedocs.org/) based on the latest commits from the `master` branch.
+
 #### Releasing the playground
 
 Note that publishing the `@rjsf/playground` package will update the version of the playground used in the local development playgrounds for packages such as `@rjsf/core`, etc. However, in order to publish the latest playground to [https://rjsf-team.github.io/react-jsonschema-form/](https://rjsf-team.github.io/react-jsonschema-form/) after a new rjsf release, run:
