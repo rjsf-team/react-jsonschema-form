@@ -1,4 +1,4 @@
-import { withTheme } from 'react-jsonschema-form';
+import { withTheme } from '@rjsf/core';
 
 import Theme from '../Theme';
 
