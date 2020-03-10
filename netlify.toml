@@ -1,5 +1,5 @@
 [build]
-  base = "packages/playground"
+  base = ""
   publish = "packages/playground/build"
   command = "npm run bootstrap && npm run build && cd packages/playground && npm run publish-to-gh-pages"
 
