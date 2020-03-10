@@ -21,8 +21,8 @@ jobs:
         versionSpec: $(node_version)
       displayName: 'Install Node.js'
     - script: |
-        npm install
-        npm test
+        npm run bootstrap
+        npm run test
         npm run lint
         npm run cs-check
         npm run build
