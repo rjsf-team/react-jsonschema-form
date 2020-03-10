@@ -1,4 +1,5 @@
 import React from "react";
+import { Theme as AntdTheme } from "@rjsf/antd";
 import { Theme as MuiTheme } from "rjsf-material-ui";
 import Playground from "../src/index";
 import { render } from "react-dom";
@@ -86,6 +87,10 @@ const themes = {
   "material-ui": {
     stylesheet: "",
     theme: MuiTheme,
+  },
+  "ant-design": {
+    stylesheet: "",
+    theme: AntdTheme,
   },
 };
 
