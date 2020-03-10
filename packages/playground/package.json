@@ -9,12 +9,12 @@
     "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "cs-check": "prettier -l \"{playground,src,test}/**/*.js\"",
     "cs-format": "prettier \"{playground,src,test}/**/*.js\" --write",
-    "dist": "npm run build:lib && npm run build:dist",
+    "build": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test playground",
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "publish-to-npm": "npm run dist && npm publish",
-    "preversion": "npm run build:playground && npm run dist && npm run cs-check && npm run lint",
+    "publish-to-npm": "npm run build && npm publish",
+    "preversion": "npm run build:playground && npm run build && npm run cs-check && npm run lint",
     "start": "webpack-dev-server --open --config webpack.config.dev.js"
   },
   "lint-staged": {
