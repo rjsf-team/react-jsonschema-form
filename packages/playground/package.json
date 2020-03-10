@@ -51,8 +51,7 @@
     "react-bootstrap": "^0.33.1",
     "react-frame-component": "^4.1.1",
     "react-is": "^16.9.0",
-    "react-jsonschema-form": "^2.0.0-alpha.1",
-    "rjsf-material-ui": "^0.3.9",
+    "@rjsf/material-ui": "^2.0.0-alpha.2",
     "shortid": "^2.2.14"
   },
   "devDependencies": {

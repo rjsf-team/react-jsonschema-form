@@ -97,7 +97,7 @@ yarn add rjsf-material-ui
 ## Usage
 
 ```javascript
-import { withTheme } from 'react-jsonschema-form';
+import { withTheme } from '@rjsf/core';
 import { Theme as MuiTheme } from 'rjsf-material-ui';
 
 const Form = withTheme(MuiTheme);
