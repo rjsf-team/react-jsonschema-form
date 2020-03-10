@@ -1,7 +1,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import { ErrorListProps } from 'react-jsonschema-form';
+import { ErrorListProps } from '@rjsf/core';
 
 const ErrorList = ({
   // errorSchema,

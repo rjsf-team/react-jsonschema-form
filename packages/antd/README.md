@@ -34,10 +34,10 @@
 ### Prerequisites
 
 - `antd == 3` (not tested yet with version 4)
-- `react-jsonschema-form >= 2.0.0-alpha.1`
+- `react-jsonschema-form >= 2.0.0-alpha.2`
 
 ```sh
-npm install antd react-jsonschema-form
+npm install antd @rjsf/core
 ```
 
 ### Installation
@@ -55,7 +55,7 @@ import Form from '@rjsf/antd';
 or
 
 ```javascript
-import { withTheme } from 'react-jsonschema-form';
+import { withTheme } from '@rjsf/core';
 import { Theme } from '@rjsf/antd';
 
 // Make modifications to the Theme with your own fields and widgets

@@ -2,7 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { FieldProps } from 'react-jsonschema-form';
+import { FieldProps } from '@rjsf/core';
 
 import { Col } from 'antd';
 import { withConfigConsumer } from 'antd/lib/config-provider/context';

@@ -1,7 +1,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import { ArrayFieldTemplateProps } from 'react-jsonschema-form';
+import { ArrayFieldTemplateProps } from '@rjsf/core';
 import { Button, Col, Icon, Row } from 'antd';
 
 import ArrayFieldTemplateItem from './ArrayFieldTemplateItem';

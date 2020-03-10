@@ -1,5 +1,5 @@
-// import { withTheme } from 'react-jsonschema-form';
-import { getDefaultRegistry } from 'react-jsonschema-form/lib/utils';
+// import { withTheme } from '@rjsf/core';
+import { getDefaultRegistry } from '@rjsf/core/lib/utils';
 
 import DescriptionField from './fields/DescriptionField';
 import TitleField from './fields/TitleField';

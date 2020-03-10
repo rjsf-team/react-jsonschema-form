@@ -1,7 +1,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import { FieldProps } from 'react-jsonschema-form';
+import { FieldProps } from '@rjsf/core';
 
 const DescriptionField = ({
   // autofocus,

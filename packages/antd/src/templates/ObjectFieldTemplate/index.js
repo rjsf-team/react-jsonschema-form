@@ -2,7 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { ObjectFieldTemplateProps } from 'react-jsonschema-form';
+import { ObjectFieldTemplateProps } from '@rjsf/core';
 
 import { Col, Row } from 'antd';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import { WidgetProps } from 'react-jsonschema-form';
+import { WidgetProps } from '@rjsf/core';
 import { Input, InputNumber } from 'antd';
 
 const TextWidget = ({

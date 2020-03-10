@@ -2,7 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { WidgetProps } from 'react-jsonschema-form';
+import { WidgetProps } from '@rjsf/core';
 import { DatePicker } from 'antd';
 
 const DateWidget = ({

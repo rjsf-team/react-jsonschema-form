@@ -2,7 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { WidgetProps } from 'react-jsonschema-form';
+import { WidgetProps } from '@rjsf/core';
 import { Checkbox } from 'antd';
 
 const CheckboxesWidget = ({

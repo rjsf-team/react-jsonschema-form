@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "scripts": {
     "build": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
@@ -17,9 +17,11 @@
     "react": ">=16"
   },
   "dependencies": {
+    "@babel/runtime-corejs2": "^7.4.5",
+    "@rjsf/core": "^2.0.0-alpha.2",
+    "core-js": "^2.5.7",
     "lodash": "^4.17.15",
-    "prop-types": "^15.7.2",
-    "react-jsonschema-form": "^2.0.0-alpha.1"
+    "prop-types": "^15.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",

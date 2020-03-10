@@ -1,8 +1,8 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import { WidgetProps } from 'react-jsonschema-form';
-import { asNumber, guessType } from 'react-jsonschema-form/lib/utils';
+import { WidgetProps } from '@rjsf/core';
+import { asNumber, guessType } from '@rjsf/core/lib/utils';
 import { Select } from 'antd';
 
 const nums = new Set(['number', 'integer']);

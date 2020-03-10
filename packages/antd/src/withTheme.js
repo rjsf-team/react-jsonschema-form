@@ -5,7 +5,7 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
-import Form from 'react-jsonschema-form';
+import Form from '@rjsf/core';
 
 const withTheme = themeProps =>
   forwardRef(({ fields, widgets, ...directProps }, forwardedRef) => {

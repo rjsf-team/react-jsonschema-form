@@ -1,8 +1,8 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import { WidgetProps } from 'react-jsonschema-form';
-import { rangeSpec } from 'react-jsonschema-form/lib/utils';
+import { WidgetProps } from '@rjsf/core';
+import { rangeSpec } from '@rjsf/core/lib/utils';
 import { Slider } from 'antd';
 
 const RangeWidget = ({

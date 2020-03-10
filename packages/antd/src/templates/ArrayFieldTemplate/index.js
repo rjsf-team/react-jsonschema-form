@@ -4,7 +4,7 @@ import React from 'react';
 import {
   ArrayFieldTemplateProps,
   UnsupportedField,
-} from 'react-jsonschema-form';
+} from '@rjsf/core';
 import {
   getDefaultRegistry,
   getUiOptions,
@@ -14,7 +14,7 @@ import {
   isMultiSelect,
   optionsList,
   retrieveSchema,
-} from 'react-jsonschema-form/lib/utils';
+} from '@rjsf/core/lib/utils';
 
 import FixedArrayFieldTemplate from './FixedArrayFieldTemplate';
 import NormalArrayFieldTemplate from './NormalArrayFieldTemplate';
