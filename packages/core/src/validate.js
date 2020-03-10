@@ -229,7 +229,7 @@ export default function validateFormData(
     ];
   }
   if (typeof transformErrors === "function") {
-    errors = transformErrors(errors);
+    errors = transformErrors(errors, formData);
   }
 
   let errorSchema = toErrorSchema(errors);
