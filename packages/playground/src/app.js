@@ -442,6 +442,16 @@ class Playground extends Component {
 
     const FormComponent = withTheme(themeObj);
 
+    let templateProps = {};
+    if (ArrayFieldTemplate) {
+      templateProps.ArrayFieldTemplate = ArrayFieldTemplate;
+    }
+    if (ObjectFieldTemplate) {
+      templateProps.ObjectFieldTemplate = ObjectFieldTemplate;
+    }
+    if (extraErrors) {
+      templateProps.extraErrors = extraErrors;
+    }
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -522,8 +532,7 @@ class Playground extends Component {
               }}
               theme={theme}>
               <FormComponent
-                ArrayFieldTemplate={ArrayFieldTemplate}
-                ObjectFieldTemplate={ObjectFieldTemplate}
+                {...templateProps}
                 liveValidate={liveSettings.validate}
                 disabled={liveSettings.disable}
                 omitExtraData={liveSettings.omitExtraData}
@@ -531,7 +540,6 @@ class Playground extends Component {
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
-                extraErrors={extraErrors}
                 onChange={this.onFormDataChange}
                 onSubmit={({ formData }, e) => {
                   console.log("submitted formData", formData);
