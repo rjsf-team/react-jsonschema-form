@@ -237,13 +237,13 @@ function SchemaFieldRender(props) {
     registry = getDefaultRegistry(),
     wasPropertyKeyModified = false,
   } = props;
-  const { definitions, fields, formContext } = registry;
+  const { rootSchema, fields, formContext } = registry;
   const FieldTemplate =
     uiSchema["ui:FieldTemplate"] || registry.FieldTemplate || DefaultTemplate;
   let idSchema = props.idSchema;
-  const schema = retrieveSchema(props.schema, definitions, formData);
+  const schema = retrieveSchema(props.schema, rootSchema, formData);
   idSchema = mergeObjects(
-    toIdSchema(schema, null, definitions, formData, idPrefix),
+    toIdSchema(schema, null, rootSchema, formData, idPrefix),
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
@@ -264,8 +264,8 @@ function SchemaFieldRender(props) {
   let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
     displayLabel =
-      isMultiSelect(schema, definitions) ||
-      isFilesArray(schema, uiSchema, definitions);
+      isMultiSelect(schema, rootSchema) ||
+      isFilesArray(schema, uiSchema, rootSchema);
   }
   if (schema.type === "object") {
     displayLabel = false;

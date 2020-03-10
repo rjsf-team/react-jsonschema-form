@@ -1,31 +1,33 @@
 var path = require("path");
 var webpack = require("webpack");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: "development",
-  devtool: "source-map",
-  entry: [
-    "webpack-hot-middleware/client?reload=true",
-    "./playground/app"
-  ],
+  mode: "production",
+  entry: "./playground/app",
   output: {
     path: path.join(__dirname, "build"),
     filename: "bundle.js",
-    publicPath: "/static/"
+    publicPath: process.env.SHOW_NETLIFY_BADGE ? "": "/react-jsonschema-form/"
   },
   plugins: [
     new MonacoWebpackPlugin({
       languages: ['json']
     }),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify("production"),
+        SHOW_NETLIFY_BADGE: JSON.stringify(process.env.SHOW_NETLIFY_BADGE)
+      }
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'playground/index.html'
+    })
   ],
   resolve: {
-    symlinks: false,
-    alias: {
-      react: path.resolve('./node_modules/react'),
-      'react-dom': path.resolve('./node_modules/react-dom')
-    }
+    extensions: [".js", ".jsx", ".css"]
   },
   module: {
     rules: [
@@ -38,21 +40,21 @@ module.exports = {
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "codemirror", "mode", "javascript"),
-        ]
+        ],
       },
       {
-        test: /\.css$/,
+        test: /\.s?css$/,
         use: [
           "style-loader",
           "css-loader",
+          "sass-loader"
         ],
         include: [
-          path.join(__dirname, "css"),
+          path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules", "monaco-editor"),
-          path.join(__dirname, "node_modules", "@rjsf/playground", "node_modules", "monaco-editor"),
+          path.join(__dirname, "node_modules"),
         ],
-      },
+      }
     ]
   }
 };

@@ -51,6 +51,35 @@ describeRepeated("Form common", createFormComponent => {
       const node = findDOMNode(comp);
       expect(node.querySelectorAll("button[type=submit]")).to.have.length.of(2);
     });
+
+    it("should render errors if schema isn't object", () => {
+      const props = {
+        schema: {
+          type: "object",
+          title: "object",
+          properties: {
+            firstName: "some mame",
+            address: {
+              $ref: "#/definitions/address",
+            },
+          },
+          definitions: {
+            address: {
+              street: "some street",
+            },
+          },
+        },
+      };
+      const comp = renderIntoDocument(
+        <Form {...props}>
+          <button type="submit">Submit</button>
+        </Form>
+      );
+      const node = findDOMNode(comp);
+      expect(node.querySelector(".unsupported-field").textContent).to.contain(
+        "Unknown field type undefined"
+      );
+    });
   });
 
   describe("on component creation", () => {
@@ -623,57 +652,6 @@ describeRepeated("Form common", createFormComponent => {
           foo: { $ref: "#/definitions/bar" },
         },
       };
-      const { node } = createFormComponent({ schema });
-
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
-    });
-
-    it("should handle recursive references to deep schema definitions", () => {
-      const schema = {
-        definitions: {
-          testdef: {
-            $ref: "#/definitions/testdefref",
-          },
-          testdefref: {
-            type: "object",
-            properties: {
-              bar: { type: "string" },
-            },
-          },
-        },
-        type: "object",
-        properties: {
-          foo: { $ref: "#/definitions/testdef/properties/bar" },
-        },
-      };
-
-      const { node } = createFormComponent({ schema });
-
-      expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
-    });
-
-    it("should handle multiple recursive references to deep schema definitions", () => {
-      const schema = {
-        definitions: {
-          testdef: {
-            $ref: "#/definitions/testdefref1",
-          },
-          testdefref1: {
-            $ref: "#/definitions/testdefref2",
-          },
-          testdefref2: {
-            type: "object",
-            properties: {
-              bar: { type: "string" },
-            },
-          },
-        },
-        type: "object",
-        properties: {
-          foo: { $ref: "#/definitions/testdef/properties/bar" },
-        },
-      };
-
       const { node } = createFormComponent({ schema });
 
       expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
