@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { withTheme } from '@rjsf/core';
-import Theme from '../src';
+import { Theme } from '../src';
 
 const { describe, it } = global;
 
