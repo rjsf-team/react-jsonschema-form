@@ -54,5 +54,3 @@ export const Theme = {
   widgets: { ...widgets, ...Widgets },
   ErrorList,
 };
-
-export default Theme;
