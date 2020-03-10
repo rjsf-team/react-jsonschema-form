@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/cybertec-postgresql/rjsf-material-ui/master/rjsf-material-ui-logo.png" alt="Logo" width="140" height="120">
   </a>
 
-  <h3 align="center">rjsf-material-ui</h3>
+  <h3 align="center">@rjsf/material-ui</h3>
 
   <p align="center">
   Material-UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.

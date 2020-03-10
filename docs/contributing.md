@@ -56,6 +56,7 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 To release, run:
 
 ```bash
+lerna build
 lerna version
 lerna publish
 git push --tags origin master
