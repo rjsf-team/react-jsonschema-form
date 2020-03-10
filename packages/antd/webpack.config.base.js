@@ -50,6 +50,25 @@ module.exports = options => ({
           },
         ],
       },
+      {
+        test: /\.less$/,
+        include: /node_modules/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
+          },
+        ],
+      },
     ]
   },
+  externals: options.externals,
 });
