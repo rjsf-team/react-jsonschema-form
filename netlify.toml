@@ -1,7 +1,7 @@
 [build]
   base = "packages/playground"
-  publish = "build"
-  command = "npm run build:playground"
+  publish = "packages/playground/build"
+  command = "npm run bootstrap && npm run build && cd packages/playground && npm run publish-to-gh-pages"
 
 [build.environment]
   SHOW_NETLIFY_BADGE = "true"
