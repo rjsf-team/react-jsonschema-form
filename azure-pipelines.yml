@@ -23,10 +23,10 @@ jobs:
     - script: |
         npm install
         npm run bootstrap
+        npm run build
         npm run test
         npm run lint
         npm run cs-check
-        npm run build
       displayName: 'npm install and build'
   - job: Docs
     steps:
