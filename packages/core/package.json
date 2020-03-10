@@ -28,7 +28,8 @@
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
   "files": [
-    "dist"
+    "dist",
+    "index.d.ts"
   ],
   "engineStrict": false,
   "engines": {
@@ -39,6 +40,7 @@
     "react": ">=16"
   },
   "dependencies": {
+    "@types/json-schema": "^7.0.4",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
     "json-schema-merge-allof": "^0.6.0",
@@ -125,5 +127,6 @@
   "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "types": "index.d.ts"
 }

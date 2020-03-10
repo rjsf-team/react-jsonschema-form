@@ -17,6 +17,13 @@ module.exports = {
     compress: true,
     port: 8080
   },
+  resolve: {
+    alias: {
+      "@material-ui/styles": path.resolve("node_modules", "@material-ui/styles"),
+      react: path.resolve('./node_modules/react'),
+      'react-dom': path.resolve('./node_modules/react-dom')
+    }
+  },
   plugins: [
     new MonacoWebpackPlugin({
       languages: ['json']

@@ -255,8 +255,6 @@ class Selector extends Component {
 }
 
 function ThemeSelector({ theme, themes, select }) {
-  console.log(themes);
-
   const themeSchema = {
     type: "string",
     enum: Object.keys(themes),
