@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Form from '../src';
+import { withTheme } from '@rjsf/core';
+import Theme from '../src';
 
 const { describe, it } = global;
+
+const Form = withTheme(Theme);
 
 describe('it', () => {
   it('renders without crashing', () => {

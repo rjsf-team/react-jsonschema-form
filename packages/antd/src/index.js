@@ -1,4 +1,3 @@
-// import { withTheme } from '@rjsf/core';
 import { getDefaultRegistry } from '@rjsf/core/lib/utils';
 
 import DescriptionField from './fields/DescriptionField';
@@ -22,7 +21,6 @@ import TextWidget from './widgets/TextWidget';
 import UpDownWidget from './widgets/UpDownWidget';
 
 import ErrorList from './ErrorList';
-import withTheme from './withTheme';
 
 import './index.less';
 
@@ -57,5 +55,4 @@ export const Theme = {
   ErrorList,
 };
 
-const Form = withTheme(Theme);
-export default Form;
+export default Theme;
