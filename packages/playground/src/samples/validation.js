@@ -5,11 +5,13 @@ function validate({ pass1, pass2 }, errors) {
   return errors;
 }
 
-function transformErrors(errors) {
+function transformErrors(errors, formData) {
   return errors.map(error => {
     if (error.name === "minimum" && error.property === "instance.age") {
       return Object.assign({}, error, {
-        message: "You need to be 18 because of some legal thing",
+        message:
+          "You need to be 18 because of some legal thing, current value: " +
+          formData.age,
       });
     }
     return error;
