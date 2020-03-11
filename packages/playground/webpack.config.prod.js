@@ -52,7 +52,7 @@ module.exports = {
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
+          path.join(__dirname, "node_modules", "monaco-editor"),
         ],
       }
     ]

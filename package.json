@@ -12,7 +12,7 @@
     "lint": "lerna run lint",
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",
-    "build": "lerna run --no-bail --stream build",
+    "build": "lerna run --stream build",
     "start": "lerna run start --stream --parallel"
   },
   "dependencies": {
