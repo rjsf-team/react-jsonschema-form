@@ -353,9 +353,14 @@ describe("Validation", () => {
         [illFormedKey]: { type: "string" },
       },
     };
-    const newErrorMessage = "Better error message";
-    const transformErrors = errors => {
-      return [Object.assign({}, errors[0], { message: newErrorMessage })];
+    const getNewErrorMessage = value =>
+      `Better error message with value: ${value}`;
+    const transformErrors = (errors, formData) => {
+      formData;
+      const value = eval("formData" + errors[0].property);
+      return [
+        Object.assign({}, errors[0], { message: getNewErrorMessage(value) }),
+      ];
     };
 
     let errors;
@@ -372,7 +377,7 @@ describe("Validation", () => {
 
     it("should use transformErrors function", () => {
       expect(errors).not.to.be.empty;
-      expect(errors[0].message).to.equal(newErrorMessage);
+      expect(errors[0].message).to.equal(getNewErrorMessage(42));
     });
   });
 

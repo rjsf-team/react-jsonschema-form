@@ -109,7 +109,7 @@ render((
 Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
 
 ```js
-function transformErrors(errors) {
+function transformErrors(errors, formData) {
   return errors.map(error => {
     if (error.name === "pattern") {
       error.message = "Only digits are allowed"
