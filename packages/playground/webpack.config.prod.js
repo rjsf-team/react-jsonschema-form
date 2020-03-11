@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: "production",
-  entry: "./playground/app",
+  entry: "./src/index",
   output: {
     path: path.join(__dirname, "build"),
     filename: "bundle.js",
@@ -23,7 +23,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'playground/index.html'
+      template: 'index.html'
     })
   ],
   resolve: {

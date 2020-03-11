@@ -31,7 +31,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'playground/index.html'
+      template: 'index.html'
     }),
   ],
   module: {
