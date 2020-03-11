@@ -1,7 +1,7 @@
 [build]
   base = ""
   publish = "packages/playground/build"
-  command = "npm run bootstrap && (npm run build || { sleep 120; false; }) && cd packages/playground && npm run build:playground"
+  command = "npm run bootstrap && (npm run build || { sleep 120; false; })"
 
 [build.environment]
   SHOW_NETLIFY_BADGE = "true"
