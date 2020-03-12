@@ -27,7 +27,12 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: [".js", ".jsx", ".css"]
+    extensions: [".js", ".jsx", ".css"],
+    alias: {
+      "@material-ui/styles": path.resolve("node_modules", "@material-ui/styles"),
+      react: path.resolve('./node_modules/react'),
+      'react-dom': path.resolve('./node_modules/react-dom')
+    }
   },
   module: {
     rules: [
