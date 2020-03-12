@@ -62,6 +62,24 @@ describe("ObjectFieldTemplate", () => {
     }).node;
     sharedIts();
   });
+  describe("with template configured by name in ui:ObjectFieldTemplate", () => {
+    node = createFormComponent({
+      schema: {
+        type: "object",
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
+      },
+      uiSchema: {
+        "ui:description": "foobar",
+        "ui:ObjectFieldTemplate": "VerticalPillObjectFieldTemplate",
+      },
+      formData,
+      fields: {
+        TitleField,
+        DescriptionField,
+      },
+    }).node;
+    sharedIts();
+  });
   describe("with template configured in ui:ObjectFieldTemplate", () => {
     node = createFormComponent({
       schema: {

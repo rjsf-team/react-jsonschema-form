@@ -2,6 +2,8 @@ import AddButton from "../AddButton";
 import React, { Component } from "react";
 import * as types from "../../types";
 
+import VerticalPillObjectFieldTemplate from "../templates/VerticalPillObjectFieldTemplate";
+
 import {
   orderProperties,
   retrieveSchema,
@@ -152,6 +154,21 @@ class ObjectField extends Component {
     };
   };
 
+  getObjectFieldTemplate(template) {
+    if (typeof template === "string" || template instanceof String) {
+      const templates = {
+        VerticalPillObjectFieldTemplate: VerticalPillObjectFieldTemplate,
+      };
+      if (template in templates) {
+        return templates[template];
+      } else {
+        throw new Error("Template name is not registered: " + template);
+      }
+    } else {
+      return template;
+    }
+  }
+
   getDefaultValue(type) {
     switch (type) {
       case "string":
@@ -240,9 +257,9 @@ class ObjectField extends Component {
     }
 
     const Template =
-      uiSchema["ui:ObjectFieldTemplate"] ||
-      registry.ObjectFieldTemplate ||
-      DefaultObjectFieldTemplate;
+      this.getObjectFieldTemplate(
+        uiSchema["ui:ObjectFieldTemplate"] || registry.ObjectFieldTemplate
+      ) || DefaultObjectFieldTemplate;
 
     const templateProps = {
       title: uiSchema["ui:title"] || title,
