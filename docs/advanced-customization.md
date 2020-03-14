@@ -247,6 +247,50 @@ The following props are passed to `ErrorList`
 - `uiSchema`: The uiSchema that was passed to `Form`.
 - `formContext`: The `formContext` object that you passed to Form.
 
+
+### Async Errors
+
+Handling async errors is an important part of many applications. Support for this is added in the form of the `errorSchema` prop.
+
+For example, a request could be made to some backend when the user submits the form. If that request fails, the errors returned by the backend should be formatted like in the following example.
+
+```jsx
+const schema = {
+  type: "object",
+  properties: {
+    foo: {
+      type: "string",
+    },
+    candy: {
+      type: "object",
+      properties: {
+        bar: {
+          type: "string",
+        }
+      }
+    },
+  },
+}
+
+const extraErrors = {
+  foo: {
+    __errors: ["some error that got added as a prop"],
+  },
+  candy: {
+    bar: {
+    __errors: ["some error that got added as a prop"],
+    }
+  }
+}
+
+render((
+  <Form schema={schema}
+        extraErrors={extraErrors} />,
+), document.getElementById("app"));
+```
+
+An important note is that these errors are 'display only' and will not block the user from submitting the form again.
+
 ### Id prefix
 
 To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
@@ -309,7 +353,8 @@ The following props are passed to custom widget components:
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
 - `autofocus`: `true` if the widget should autofocus;
-- `onChange`: The value change event handler; call it with the new value everytime it changes;
+- `onChange`: The value change event handler; call it with the new value every time it changes;
+- `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
@@ -470,12 +515,13 @@ A field component will always be passed the following props:
 
 #### The `registry` object
 
-The `registry` is an object containing the registered custom fields and widgets as well as root schema definitions.
+The `registry` is an object containing the registered custom fields and widgets as well as the root schema definitions.
 
  - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField`, `TitleField` and `DescriptionField` components;
  - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
- - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
- - `formContext`: The [formContext](#the-formcontext-object) object.
+ - `rootSchema`: The root schema, which can contain referenced [definitions](#schema-definitions-and-references);
+ - `formContext`: The [formContext](#the-formcontext-object) object;
+ - `definitions` (deprecated since v2): Equal to `rootSchema.definitions`.
 
 The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
 

@@ -728,7 +728,7 @@ The `Form` component supports the following html attributes:
   method="post"
   target="_blank"
   action="/users/list"
-  autocomplete="off"
+  autoComplete="off"
   enctype="multipart/form-data"
   acceptcharset="ISO-8859-1" />
 ```
@@ -754,5 +754,16 @@ It's possible to change the default `form` tag name to a different HTML tag, whi
 ```jsx
 <Form
   tagName="div"
+/>
+```
+
+You can also provide a class/function component.
+
+
+```jsx
+const CustomForm = props => <form {...props} style={...} className={...} />
+// ...
+<Form
+  tagName={CustomForm}
 />
 ```
