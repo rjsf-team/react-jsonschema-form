@@ -7,7 +7,7 @@
     "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/cjs",
     "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/es",
     "dist:build:es:lib": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./lib",
-    "dist:build:umd": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
+    "dist:build:umd": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",

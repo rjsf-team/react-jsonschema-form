@@ -25,6 +25,10 @@ module.exports = {
       plugins: defaultPlugins,
       ignore: ['test/**/*.js']
     },
+    umd: {
+      plugins: defaultPlugins,
+      ignore: ['test/**/*.js']
+    },
     es: {
       plugins: [
         ...defaultPlugins,
