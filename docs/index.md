@@ -120,6 +120,20 @@ render((
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, then set the `omitExtraData` prop to `true`. Set the `liveOmit` prop to true in order to remove extra data upon form data change.
 
+#### Prevent early form submission (via enter key press)
+
+You can set the `submitOnEnter` prop to `false` to prevent the submit event from firing when the `enter` key is pressed inside the form (on a field, misc. button, etc.):
+
+```js
+const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
+
+render((
+  <Form schema={schema}
+        submitOnEnter={false}
+        onSubmit={onSubmit} />
+), document.getElementById("app"));
+```
+
 #### Form error event handler
 
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:

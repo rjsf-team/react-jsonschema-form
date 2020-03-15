@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
@@ -27,6 +28,7 @@ export default class Form extends Component {
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
+    submitOnEnter: true,
   };
 
   constructor(props) {
@@ -40,6 +42,33 @@ export default class Form extends Component {
     }
     this.formElement = null;
   }
+
+  componentDidMount() {
+    const root = findDOMNode(this);
+    this.props.submitOnEnter === false &&
+      root &&
+      root.addEventListener("keydown", this.preventEnterKeyFromSubmittingForm);
+  }
+
+  componentWillUnmount() {
+    const root = findDOMNode(this);
+    this.props.submitOnEnter === false &&
+      root &&
+      root.removeEventListener(
+        "keydown",
+        this.preventEnterKeyFromSubmittingForm
+      );
+  }
+
+  preventEnterKeyFromSubmittingForm = event => {
+    // Prevent Enter keypress event from activating submit action
+    if (event.keyCode === 13) {
+      const target = event.target;
+      event.preventDefault();
+      // Emulate a click in case that helps with anything like custom dropdowns' selection of options
+      target.click();
+    }
+  };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const nextState = this.getStateFromProps(nextProps, nextProps.formData);
