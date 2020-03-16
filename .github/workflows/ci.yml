@@ -21,17 +21,22 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm run bootstrap
+    - run: npm run build
+    - run: npm test
+    - run: npm run lint
+    - run: npm run cs-check
+      env:
+        CI: true
+  docs:
+      
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
     - name: Setup Python
       uses: actions/setup-python@v1.2.0
       with:
         python-version: 3.6
-    - run: npm ci
-    - run: npm test
-    - run: npm run lint
-    - run: npm run cs-check
-    - run: npm run dist
     - run: pip install mkdocs==1.0.4
     - run: mkdocs build --clean
-      env:
-        CI: true
-      
