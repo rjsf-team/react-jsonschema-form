@@ -20,7 +20,7 @@
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
     "react": ">=16",
-    "react-jsonschema-form": "^1.6.1"
+    "@rjsf/core": "^2.0.0-alpha.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
@@ -31,16 +31,15 @@
     "@babel/preset-react": "^7.0.0",
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
+    "@rjsf/core": "^2.0.0-alpha.2",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.3",
-    "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.4",
-    "@types/react-jsonschema-form": "^1.6.2",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
     "np": "^5.0.3",
     "npm-run-all": "^4.1.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-jsonschema-form": "^1.6.1",
     "rimraf": "^2.6.3",
     "tsdx": "^0.12.3",
     "tslib": "^1.10.0",

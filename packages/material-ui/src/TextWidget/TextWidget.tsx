@@ -3,7 +3,7 @@ import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
-import { WidgetProps } from 'react-jsonschema-form';
+import { WidgetProps } from '@rjsf/core';
 
 const TextWidget = ({
   id,
