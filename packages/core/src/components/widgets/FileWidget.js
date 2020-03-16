@@ -80,7 +80,7 @@ class FileWidget extends Component {
 
       // If a file is too large the browser will crash, so parse a small string instead
       const dataURL =
-        file.size < mbInBytes
+        file.size < mbInBytes * 5
           ? await toBase64(file)
           : `data:text/plain;base64,${btoa(
               "File too large for parsing to base64"
