@@ -29,9 +29,9 @@
   },
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
+  "typings": "index.d.ts",
   "files": [
-    "dist",
-    "index.d.ts"
+    "dist"
   ],
   "engineStrict": false,
   "engines": {
