@@ -24,7 +24,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v1.2.0
       with:
-        python-version: 3.8
+        python-version: 3.6
     - run: npm ci
     - run: npm test
     - run: npm run lint
