@@ -108,6 +108,7 @@ declare module '@rjsf/core' {
         onBlur: (id: string, value: boolean | number | string | null) => void;
         onFocus: (id: string, value: boolean | number | string | null) => void;
         label: string;
+        multiple: boolean;
     }
 
     export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
