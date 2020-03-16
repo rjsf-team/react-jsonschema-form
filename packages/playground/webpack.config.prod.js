@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: "production",
-  entry: "./playground/app",
+  entry: "./src/index",
   output: {
     path: path.join(__dirname, "build"),
     filename: "bundle.js",
@@ -23,11 +23,16 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'playground/index.html'
+      template: 'index.html'
     })
   ],
   resolve: {
-    extensions: [".js", ".jsx", ".css"]
+    extensions: [".js", ".jsx", ".css"],
+    alias: {
+      "@material-ui/styles": path.resolve("node_modules", "@material-ui/styles"),
+      react: path.resolve('./node_modules/react'),
+      'react-dom': path.resolve('./node_modules/react-dom')
+    }
   },
   module: {
     rules: [
@@ -52,7 +57,7 @@ module.exports = {
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules"),
+          path.join(__dirname, "node_modules", "monaco-editor"),
         ],
       }
     ]

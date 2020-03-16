@@ -3,13 +3,13 @@ import React from 'react';
 import {
   isMultiSelect,
   getDefaultRegistry,
-} from 'react-jsonschema-form/lib/utils';
+} from '@rjsf/core/lib/utils';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
-import { ArrayFieldTemplateProps, IdSchema } from 'react-jsonschema-form';
+import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
 
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
