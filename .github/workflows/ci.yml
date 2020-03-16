@@ -29,9 +29,11 @@ jobs:
     - run: npm run cs-check
       env:
         CI: true
+  
   docs:
       
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python
