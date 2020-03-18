@@ -16,7 +16,6 @@ import {
   deepEquals,
   getSchemaType,
 } from "../../utils";
-import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -29,7 +28,7 @@ const COMPONENT_TYPES = {
   null: "NullField",
 };
 
-function getFieldComponent(schema, uiSchema, idSchema, fields) {
+function getFieldComponent(schema, uiSchema, idSchema, fields, registry) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -49,6 +48,9 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   return componentName in fields
     ? fields[componentName]
     : () => {
+        const { fields } = registry;
+        const { UnsupportedField } = fields;
+
         return (
           <UnsupportedField
             schema={schema}
@@ -246,7 +248,13 @@ function SchemaFieldRender(props) {
     toIdSchema(schema, null, rootSchema, formData, idPrefix),
     idSchema
   );
-  const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
+  const FieldComponent = getFieldComponent(
+    schema,
+    uiSchema,
+    idSchema,
+    fields,
+    registry
+  );
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(
