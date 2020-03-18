@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 
 import { dataURItoBlob, shouldRender } from "../../utils";
 
-const mbInBytes = 1000000;
-
 function addNameToDataURL(dataURL, name) {
   return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
 }
@@ -63,7 +61,8 @@ class FileWidget extends Component {
 
   onChange = async event => {
     const filesList = event.target.files;
-    const { multiple, onChange } = this.props;
+    const { multiple, onChange, options } = this.props;
+    const maxBytes = options && options.maxBytes ? options.maxBytes : Infinity;
 
     if (!filesList) {
       onChange(undefined);
@@ -79,8 +78,7 @@ class FileWidget extends Component {
       const file = filesList[i];
 
       // If a file is too large the browser will crash, so parse a small string instead
-      const dataURL =
-        file.size < mbInBytes * 5
+      const dataURL = file.size < maxBytes
           ? await toBase64(file)
           : `data:text/plain;base64,${btoa(
               "File too large for parsing to base64"

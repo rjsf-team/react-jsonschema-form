@@ -21,11 +21,19 @@ module.exports = {
         format: "data-url",
         title: "Single File with Accept attribute",
       },
+      maxFileSize: {
+        type: "string",
+        format: "data-url",
+        title: "Max size of 3000000 bytes will be parsed to base64",
+      },
     },
   },
   uiSchema: {
     filesAccept: {
       "ui:options": { accept: ".pdf" },
+    },
+    maxFileSize: {
+      "ui:options": { maxBytes: 3000000 },
     },
   },
   formData: {},
