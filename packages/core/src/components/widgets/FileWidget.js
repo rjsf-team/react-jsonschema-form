@@ -41,10 +41,14 @@ function extractFileInfo(dataURLs) {
 
 const toBase64 = file =>
   new Promise((resolve, reject) => {
-    const reader = new FileReader();
+    const reader = new window.FileReader();
+    reader.onerror = error => {
+      reject(error);
+    };
+    reader.onload = event => {
+      resolve(event.target.result);
+    };
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
   });
 
 class FileWidget extends Component {
@@ -78,18 +82,23 @@ class FileWidget extends Component {
       const file = filesList[i];
 
       // If a file is too large the browser will crash, so parse a small string instead
-      const dataURL = file.size < maxBytes
+      const dataURL =
+        file.size < maxBytes
           ? await toBase64(file)
           : `data:text/plain;base64,${btoa(
               "File too large for parsing to base64"
             )}`;
 
-      files.push({
-        dataURL: addNameToDataURL(dataURL, file.name),
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      });
+      debugger;
+
+      if (dataURL) {
+        files.push({
+          dataURL: addNameToDataURL(dataURL, file.name),
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        });
+      }
     }
 
     this.setState(
