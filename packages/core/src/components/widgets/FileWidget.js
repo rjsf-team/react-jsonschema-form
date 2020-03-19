@@ -89,8 +89,6 @@ class FileWidget extends Component {
               "File too large for parsing to base64"
             )}`;
 
-      debugger;
-
       if (dataURL) {
         files.push({
           dataURL: addNameToDataURL(dataURL, file.name),
