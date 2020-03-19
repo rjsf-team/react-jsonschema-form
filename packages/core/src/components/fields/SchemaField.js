@@ -28,7 +28,7 @@ const COMPONENT_TYPES = {
   null: "NullField",
 };
 
-function getFieldComponent(schema, uiSchema, idSchema, fields, registry) {
+function getFieldComponent(schema, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -48,7 +48,6 @@ function getFieldComponent(schema, uiSchema, idSchema, fields, registry) {
   return componentName in fields
     ? fields[componentName]
     : () => {
-        const { fields } = registry;
         const { UnsupportedField } = fields;
 
         return (
@@ -248,13 +247,7 @@ function SchemaFieldRender(props) {
     toIdSchema(schema, null, rootSchema, formData, idPrefix),
     idSchema
   );
-  const FieldComponent = getFieldComponent(
-    schema,
-    uiSchema,
-    idSchema,
-    fields,
-    registry
-  );
+  const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(
