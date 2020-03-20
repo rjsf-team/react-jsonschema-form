@@ -620,7 +620,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-The default fields you can overwrite are:
+The default fields you can override are:
 
  - `ArrayField`
  - `BooleanField`
@@ -634,7 +634,7 @@ The default fields you can overwrite are:
  - `TitleField`
  - `UnsupportedField`
 
-The default widgets you can overwrite are:
+The default widgets you can override are:
 
  - `AltDateTimeWidget`
  - `AltDateWidget`
