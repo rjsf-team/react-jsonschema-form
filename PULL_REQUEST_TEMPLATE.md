@@ -1,6 +1,6 @@
 ### Reasons for making this change
 
-[Please describe them here]
+- added `$data: true` to AJV options
 
 If this is related to existing tickets, include links to them as well.
 

@@ -15,7 +15,7 @@ function createAjvInstance() {
     multipleOfPrecision: 8,
     schemaId: "auto",
     unknownFormats: "ignore",
-    data: true,
+    $data: true,
   });
 
   // add custom formats
@@ -204,7 +204,9 @@ export default function validateFormData(
   }
 
   let validationError = null;
+  console.log("BBBBBBBBBBBBBBBBBBBBBBBBB");
   try {
+    console.log("SSSSSSSSSSSSSSSSSSSSSSSS", schema, formData);
     ajv.validate(schema, formData);
   } catch (err) {
     validationError = err;
