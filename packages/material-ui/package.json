@@ -10,11 +10,8 @@
   ],
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
-    "clean": "rimraf dist",
-    "test": "echo 'skipping tests' || tsdx test --env=jsdom",
-    "npm": "np",
-    "publish-to-npm": "run-s clean build npm"
+    "build": "rimraf dist && tsdx build",
+    "test": "echo 'skipping tests' || tsdx test --env=jsdom"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.2.0",
@@ -37,8 +34,6 @@
     "@types/json-schema": "^7.0.3",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
-    "np": "^5.0.3",
-    "npm-run-all": "^4.1.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "rimraf": "^2.6.3",
