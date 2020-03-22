@@ -57,9 +57,7 @@ To release, run:
 
 ```bash
 lerna run build
-lerna version
 lerna publish
-git push --tags origin master
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering. Once a new version has been released, create a release in the Github "Releases" tab and add the version history.
