@@ -13,7 +13,6 @@
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
-    "preversion": "npm run build && npm run cs-check && npm run lint",
     "start": "concurrently \"npm:build:* -- --watch\"",
     "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
     "test": "cross-env BABEL_ENV=test NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",

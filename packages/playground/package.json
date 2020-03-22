@@ -13,7 +13,6 @@
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build && gh-pages --dist build/",
     "publish-to-npm": "npm run build && npm publish",
-    "preversion": "npm run build && npm run build && npm run cs-check && npm run lint",
     "start": "webpack-dev-server --open --config webpack.config.dev.js"
   },
   "lint-staged": {
