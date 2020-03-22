@@ -2,6 +2,7 @@
   "name": "@rjsf/playground",
   "version": "2.0.0-alpha.3",
   "description": "rjsf playground",
+  "private": true,
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "prepublishOnly": "npm run build:lib",
