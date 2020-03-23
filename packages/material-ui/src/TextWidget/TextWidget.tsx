@@ -19,6 +19,7 @@ const TextWidget = ({
   options,
   schema,
 }: WidgetProps) => {
+  const uiProps = options["props"];
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -47,6 +48,7 @@ const TextWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        {...uiProps}
       />
     </FormControl>
   );

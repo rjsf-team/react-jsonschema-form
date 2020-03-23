@@ -55,6 +55,7 @@ const SelectWidget = ({
   onBlur,
   onFocus,
 }: WidgetProps) => {
+  const uiProps = options["props"];
   const { enumOptions, enumDisabled } = options;
 
   const emptyValue = multiple ? [] : '';
@@ -88,6 +89,7 @@ const SelectWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        {...uiProps}
       >
         {(enumOptions as any).map(({ value, label }: any, i: number) => {
           const disabled: any =

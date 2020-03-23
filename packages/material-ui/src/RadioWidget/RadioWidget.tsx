@@ -21,6 +21,7 @@ const RadioWidget = ({
   onBlur,
   onFocus,
 }: WidgetProps) => {
+  const uiProps = options["props"];
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   const { enumOptions, enumDisabled } = options;
@@ -52,7 +53,7 @@ const RadioWidget = ({
 
           const radio = (
             <FormControlLabel
-              control={<Radio color="primary" key={i} />}
+              control={<Radio color="primary" key={i} {...uiProps} />}
               label={`${option.label}`}
               value={`${option.value}`}
               key={i}

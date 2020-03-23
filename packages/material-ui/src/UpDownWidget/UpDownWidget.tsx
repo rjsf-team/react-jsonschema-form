@@ -17,7 +17,10 @@ const UpDownWidget = ({
   onBlur,
   onFocus,
   autofocus,
+  options,
+  schema
 }: WidgetProps) => {
+  const uiProps = options["props"];
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(value);
@@ -33,7 +36,7 @@ const UpDownWidget = ({
       //error={!!rawErrors}
       required={required}
     >
-      <InputLabel>{label}</InputLabel>
+      <InputLabel>{label || schema.title}</InputLabel>
       <Input
         id={id}
         autoFocus={autofocus}
@@ -45,6 +48,7 @@ const UpDownWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        {...uiProps}
       />
     </FormControl>
   );

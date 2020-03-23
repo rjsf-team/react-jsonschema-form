@@ -20,6 +20,7 @@ const PasswordWidget = ({
   autofocus,
   schema,
 }: WidgetProps) => {
+  const uiProps = options["props"];
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -46,6 +47,7 @@ const PasswordWidget = ({
         onFocus={_onFocus}
         onBlur={_onBlur}
         onChange={_onChange}
+        {...uiProps}
       />
     </FormControl>
   );

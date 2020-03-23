@@ -6,20 +6,22 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { WidgetProps } from '@rjsf/core';
 
-const CheckboxWidget = (props: WidgetProps) => {
-  const {
-    id,
-    value,
-    required,
-    disabled,
-    readonly,
-    label,
-    autofocus,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
-
+const CheckboxWidget = ({
+  id,
+  value,
+  required,
+  disabled,
+  readonly,
+  label,
+  autofocus,
+  onChange,
+  onBlur,
+  onFocus,
+  options,
+  schema
+}: WidgetProps) => {
+  const uiProps = options["props"];
+  
   const _onChange = ({}, checked: boolean) => onChange(checked);
   const _onBlur = ({
     target: { value },
@@ -41,9 +43,10 @@ const CheckboxWidget = (props: WidgetProps) => {
             onChange={_onChange}
             onBlur={_onBlur}
             onFocus={_onFocus}
+            {...uiProps}
           />
         }
-        label={label}
+        label={label || schema.title}
       />
     </FormControl>
   );

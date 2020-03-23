@@ -35,7 +35,8 @@ const CheckboxesWidget = ({
   onBlur,
   onFocus,
 }: WidgetProps) => {
-  const { enumOptions, enumDisabled, inline } = options;
+  const uiProps = options["props"];
+  const { enumOptions, enumDisabled } = options;
 
   const _onChange = (option: any) => ({
     target: { checked },
@@ -73,21 +74,15 @@ const CheckboxesWidget = ({
               onChange={_onChange(option)}
               onBlur={_onBlur}
               onFocus={_onFocus}
+              {...uiProps}
             />
           );
-          return inline ? (
-            <FormControlLabel
+          
+          return <FormControlLabel
               control={checkbox}
               key={index}
               label={option.label}
-            />
-          ) : (
-            <FormControlLabel
-              control={checkbox}
-              key={index}
-              label={option.label}
-            />
-          );
+            />;
         })}
       </FormGroup>
     </FormControl>

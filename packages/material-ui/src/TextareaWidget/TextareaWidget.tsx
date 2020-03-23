@@ -24,6 +24,7 @@ const TextareaWidget = ({
   options,
   schema,
 }: CustomWidgetProps) => {
+  const uiProps = options["props"];
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -53,6 +54,7 @@ const TextareaWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        {...uiProps}
       />
     </FormControl>
   );
