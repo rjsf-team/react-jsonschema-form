@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-no-undef,react/no-array-index-key,react/prop-types */
-import React from 'react';
-import { Form, Radio } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
-
+import React from "react";
+import { Form, Radio } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 function RadioWidget({
   id,
@@ -18,15 +17,18 @@ function RadioWidget({
   onBlur,
   onFocus,
 }) {
-// Generating a unique field name to identify this set of radio buttons
+  // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   const { errorOptions, enumOptions, enumDisabled, semanticProps } = options;
   const { pointing } = errorOptions;
-  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
+  const error =
+    rawErrors && rawErrors.length > 0
+      ? { content: rawErrors[0], pointing }
+      : false;
   // eslint-disable-next-line no-shadow
-  const _onChange = ({ target: { value } }) => onChange && onChange(schema.type === 'boolean' ? value !== 'false' : value);
-  const _onBlur = () =>
-    onBlur && onBlur(id, value);
+  const _onChange = ({ target: { value } }) =>
+    onChange && onChange(schema.type === "boolean" ? value !== "false" : value);
+  const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const inlineOption = options.inline ? { inline: true } : { grouped: true };
   return (
@@ -65,7 +67,7 @@ RadioWidget.defaultProps = {
     },
     errorOptions: {
       showErrors: false,
-      pointing: 'above',
+      pointing: "above",
     },
   },
 };

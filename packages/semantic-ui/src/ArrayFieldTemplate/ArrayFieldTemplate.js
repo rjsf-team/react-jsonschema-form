@@ -1,17 +1,13 @@
 /* eslint-disable react/prop-types,react/destructuring-assignment */
-import React from 'react';
+import React from "react";
 import {
   isMultiSelect,
   getDefaultRegistry,
-} from 'react-jsonschema-form/lib/utils';
-import { Button, Segment, Grid } from 'semantic-ui-react';
-import AddButton from '../AddButton';
+} from "react-jsonschema-form/lib/utils";
+import { Button, Segment, Grid } from "semantic-ui-react";
+import AddButton from "../AddButton";
 
-const ArrayFieldTitle = ({
-  TitleField,
-  idSchema,
-  title,
-}) => {
+const ArrayFieldTitle = ({ TitleField, idSchema, title }) => {
   if (!title) {
     return <div />;
   }
@@ -30,23 +26,23 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
 }
 
 const sharedStyle = {
-  marginBottom: '0px',
+  marginBottom: "0px",
 };
 
 const sharedNestedStyle = {
-  border: '2px solid rgb(35, 39, 51)',
-  marginBottom: '10px',
+  border: "2px solid rgb(35, 39, 51)",
+  marginBottom: "10px",
 };
 
 const defaultGrid = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 65px',
+  display: "grid",
+  gridTemplateColumns: "1fr 65px",
 };
 
 // checks if its the first array item
 function isInitialArrayItem(props) {
   // no underscore because im not sure if we want to import a library here
-  const idSchema = props.children.props.idSchema;
+  const { idSchema } = props.children.props;
   return idSchema.target && idSchema.conditions;
 }
 
@@ -57,23 +53,18 @@ function DefaultArrayItem(props) {
   };
 
   return (
-    <div
-      style={sharedNestedStyle}
-      key={props.key}
-    >
+    <div style={sharedNestedStyle} key={props.key}>
       <div
         // this will prevent the nested items from getting styles the parent has
-        style={isInitialArrayItem(props) && sharedStyle}
-      >
-        <Segment
-          fluid="true"
-          inverted
-          padded
-        >
+        style={isInitialArrayItem(props) && sharedStyle}>
+        <Segment fluid="true" inverted padded>
           <Segment.Group>
             <Grid
-              style={!isInitialArrayItem(props) ? { ...defaultGrid, alignItems: 'center' } : defaultGrid}
-            >
+              style={
+                !isInitialArrayItem(props)
+                  ? { ...defaultGrid, alignItems: "center" }
+                  : defaultGrid
+              }>
               <Grid.Column width={16} verticalAlign="middle">
                 <div>{props.children}</div>
               </Grid.Column>
@@ -94,7 +85,7 @@ function DefaultArrayItem(props) {
                         }
                         onClick={props.onReorderClick(
                           props.index,
-                          props.index - 1,
+                          props.index - 1
                         )}
                       />
                     )}
@@ -112,7 +103,7 @@ function DefaultArrayItem(props) {
                         }
                         onClick={props.onReorderClick(
                           props.index,
-                          props.index + 1,
+                          props.index + 1
                         )}
                       />
                     )}
@@ -147,31 +138,27 @@ function DefaultFixedArrayFieldTemplate(props) {
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
         idSchema={props.idSchema}
-        title={props.uiSchema['ui:title'] || props.title}
+        title={props.uiSchema["ui:title"] || props.title}
         required={props.required}
       />
 
-      {(props.uiSchema['ui:description'] || props.schema.description) && (
+      {(props.uiSchema["ui:description"] || props.schema.description) && (
         <div
           className="field-description"
-          key={`field-description-${props.idSchema.$id}`}
-        >
-          {props.uiSchema['ui:description'] || props.schema.description}
+          key={`field-description-${props.idSchema.$id}`}>
+          {props.uiSchema["ui:description"] || props.schema.description}
         </div>
       )}
 
       <div
         style={sharedNestedStyle}
-        key={`array-item-list-${props.idSchema.$id}`}
-      >
-        <div
-          className="row array-item-list"
-        >
+        key={`array-item-list-${props.idSchema.$id}`}>
+        <div className="row array-item-list">
           {props.items && props.items.map(DefaultArrayItem)}
         </div>
 
         {props.canAdd && (
-          <div style={{ position: 'relative', textAlign: 'right' }}>
+          <div style={{ position: "relative", textAlign: "right" }}>
             <AddButton
               onClick={props.onAddClick}
               disabled={props.disabled || props.readOnly}
@@ -191,32 +178,28 @@ function DefaultNormalArrayFieldTemplate(props) {
           key={`array-field-title-${props.idSchema.$id}`}
           TitleField={props.TitleField}
           idSchema={props.idSchema}
-          title={props.uiSchema['ui:title'] || props.title}
+          title={props.uiSchema["ui:title"] || props.title}
           required={props.required}
         />
 
-        {(props.uiSchema['ui:description'] || props.schema.description) && (
+        {(props.uiSchema["ui:description"] || props.schema.description) && (
           <ArrayFieldDescription
             key={`array-field-description-${props.idSchema.$id}`}
             DescriptionField={props.DescriptionField}
             idSchema={props.idSchema}
             description={
-              props.uiSchema['ui:description'] || props.schema.description
+              props.uiSchema["ui:description"] || props.schema.description
             }
           />
         )}
 
         <div key={`array-item-list-${props.idSchema.$id}`}>
-          <div
-            className="row array-item-list"
-          >
-            {props.items && props.items.map((p) => (
-              DefaultArrayItem(p)
-            ))}
+          <div className="row array-item-list">
+            {props.items && props.items.map(p => DefaultArrayItem(p))}
           </div>
 
           {props.canAdd && (
-            <div style={{ position: 'relative', textAlign: 'right' }}>
+            <div style={{ position: "relative", textAlign: "right" }}>
               <AddButton
                 onClick={props.onAddClick}
                 disabled={props.disabled || props.readOnly}

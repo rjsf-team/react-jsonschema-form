@@ -1,8 +1,8 @@
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
-import PropTypes from 'prop-types';
-import shortid from 'shortid';
-import { Message } from 'semantic-ui-react';
+import React from "react";
+import PropTypes from "prop-types";
+import shortid from "shortid";
+import { Message } from "semantic-ui-react";
 
 /**
  *
@@ -17,8 +17,9 @@ function RawErrors({ errors, displayError }) {
     return (
       <Message negative size="mini">
         <Message.List>
-          {errors.map((error) => (
-            <Message.Item key={shortid.generate()}>{error}</Message.Item>))}
+          {errors.map(error => (
+            <Message.Item key={shortid.generate()}>{error}</Message.Item>
+          ))}
         </Message.List>
       </Message>
     );

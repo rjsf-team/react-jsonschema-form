@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { Form } from "semantic-ui-react";
+import { Form, Grid } from "semantic-ui-react";
 import RawErrors from "../RawErrors";
 
 function TextWidget({
@@ -10,6 +10,7 @@ function TextWidget({
   readonly,
   disabled,
   label,
+  name,
   value,
   onChange,
   onBlur,
@@ -31,24 +32,28 @@ function TextWidget({
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   return (
-    <React.Fragment>
-      <Form.Input
-        key={id}
-        id={id}
-        required={required}
-        error={error}
-        label={label || schema.title}
-        autoFocus={autofocus}
-        disabled={disabled || readonly}
-        name={name}
-        {...semanticProps}
-        value={value || ""}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-      />
-      <RawErrors errors={rawErrors} displayError={showErrors} />
-    </React.Fragment>
+    <Grid>
+      <Grid.Column width={3} verticalAlign="middle">
+        <label htmlFor={id}>{label || schema.title}</label>
+      </Grid.Column>
+      <Grid.Column width={13}>
+        <Form.Input
+          key={id}
+          id={id}
+          required={required}
+          error={error}
+          autoFocus={autofocus}
+          disabled={disabled || readonly}
+          name={name}
+          {...semanticProps}
+          value={value || ""}
+          onChange={_onChange}
+          onBlur={_onBlur}
+          onFocus={_onFocus}
+        />
+        <RawErrors errors={rawErrors} displayError={showErrors} />
+      </Grid.Column>
+    </Grid>
   );
 }
 

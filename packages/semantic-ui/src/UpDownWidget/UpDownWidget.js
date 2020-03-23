@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
-import RawErrors from '../RawErrors';
+import React from "react";
+import PropTypes from "prop-types";
+import { Form } from "semantic-ui-react";
+import RawErrors from "../RawErrors";
 
 function UpDownWidget({
   id,
@@ -10,6 +10,7 @@ function UpDownWidget({
   readonly,
   disabled,
   label,
+  name,
   value,
   options,
   onChange,
@@ -20,11 +21,13 @@ function UpDownWidget({
 }) {
   const { errorOptions, semanticProps } = options;
   const { showErrors, pointing } = errorOptions;
-  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
+  const error =
+    rawErrors && rawErrors.length > 0
+      ? { content: rawErrors[0], pointing }
+      : false;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
-  const _onBlur = () =>
-    onBlur && onBlur(id, value);
+  const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   return (
     <React.Fragment>
@@ -39,7 +42,7 @@ function UpDownWidget({
         disabled={disabled || readonly}
         name={name}
         {...semanticProps}
-        value={value || ''}
+        value={value || ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
@@ -57,7 +60,7 @@ UpDownWidget.defaultProps = {
     },
     errorOptions: {
       showErrors: false,
-      pointing: 'above',
+      pointing: "above",
     },
   },
 };

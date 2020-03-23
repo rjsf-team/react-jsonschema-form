@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Form, Checkbox } from 'semantic-ui-react';
+import React from "react";
+import { Form, Checkbox } from "semantic-ui-react";
 
 function CheckboxWidget(props) {
   const {
@@ -10,6 +10,7 @@ function CheckboxWidget(props) {
     disabled,
     readonly,
     label,
+    name,
     autofocus,
     onChange,
     onBlur,
@@ -19,16 +20,18 @@ function CheckboxWidget(props) {
   } = props;
   const { errorOptions, semanticProps } = options;
   const { pointing } = errorOptions;
-  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
+  const error =
+    rawErrors && rawErrors.length > 0
+      ? { content: rawErrors[0], pointing }
+      : false;
   const _onChange = (event, data) => onChange && onChange(data.checked);
-  const _onBlur = () =>
-    onBlur && onBlur(id, value);
+  const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   return (
     <Form.Field required={required} error={error}>
       <Checkbox
         id={id}
-        checked={typeof value === 'undefined' ? false : value}
+        checked={typeof value === "undefined" ? false : value}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         {...semanticProps}
@@ -37,6 +40,7 @@ function CheckboxWidget(props) {
         onFocus={_onFocus}
         required={required}
         label={label}
+        name={name}
       />
     </Form.Field>
   );
@@ -46,7 +50,7 @@ CheckboxWidget.defaultProps = {
   options: {
     semanticProps: {},
     errorOptions: {
-      pointing: 'left',
+      pointing: "left",
     },
   },
 };

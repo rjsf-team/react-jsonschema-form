@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import _ from 'lodash';
-import { Form, Grid } from 'semantic-ui-react';
-import { asNumber, guessType } from 'react-jsonschema-form/lib/utils';
-import PropTypes from 'prop-types';
+import React from "react";
+import _ from "lodash";
+import { Form, Grid } from "semantic-ui-react";
+import { asNumber, guessType } from "react-jsonschema-form/lib/utils";
+import PropTypes from "prop-types";
 
-const nums = new Set(['number', 'integer']);
-
+const nums = new Set(["number", "integer"]);
 
 /**
  * * Returns and creates an array format required for semantic drop down
@@ -34,35 +33,39 @@ function createDefaultValueOptionsForDropDown(enumOptions, enumDisabled) {
 const processValue = (schema, value) => {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
   const { type, items } = schema;
-  if (value === '') {
+  if (value === "") {
     return undefined;
-  } else if (type === 'array' && items && nums.has(items.type)) {
+  }
+  if (type === "array" && items && nums.has(items.type)) {
     return value.map(asNumber);
-  } else if (type === 'boolean') {
-    return value === 'true';
-  } else if (type === 'number') {
+  }
+  if (type === "boolean") {
+    return value === "true";
+  }
+  if (type === "number") {
     return asNumber(value);
   }
 
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (schema.enum) {
-    if (schema.enum.every((x) => guessType(x) === 'number')) {
+    if (schema.enum.every(x => guessType(x) === "number")) {
       return asNumber(value);
-    } else if (schema.enum.every((x) => guessType(x) === 'boolean')) {
-      return value === 'true';
+    }
+    if (schema.enum.every(x => guessType(x) === "boolean")) {
+      return value === "true";
     }
   }
 
   return value;
 };
 
-
 function SelectWidget({
   schema,
   id,
   options,
   label,
+  name,
   required,
   disabled,
   readonly,
@@ -75,43 +78,43 @@ function SelectWidget({
   onBlur,
   onFocus,
 }) {
-  const {
-    enumDisabled,
-    enumOptions,
-    semanticProps,
-    errorOptions,
-  } = options;
+  const { enumDisabled, enumOptions, semanticProps, errorOptions } = options;
   const { pointing } = errorOptions;
-  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
-  const emptyValue = multiple ? [] : '';
-  const dropdownOptions = createDefaultValueOptionsForDropDown(enumOptions, enumDisabled);
+  const error =
+    rawErrors && rawErrors.length > 0
+      ? { content: rawErrors[0], pointing }
+      : false;
+  const emptyValue = multiple ? [] : "";
+  const dropdownOptions = createDefaultValueOptionsForDropDown(
+    enumOptions,
+    enumDisabled
+  );
   const checkTitle = label || schema.title;
-  const _onChange = (event,
+  const _onChange = (
+    event,
     // eslint-disable-next-line no-shadow
-    { value },
-  ) =>
-    onChange && onChange(processValue(schema, value));
+    { value }
+  ) => onChange && onChange(processValue(schema, value));
   // eslint-disable-next-line no-shadow
   const _onBlur = ({ target: { value } }) =>
     onBlur && onBlur(id, processValue(schema, value));
   const _onFocus = ({
     // eslint-disable-next-line no-shadow
     target: { value },
-  }) =>
-    onFocus && onFocus(id, processValue(schema, value));
+  }) => onFocus && onFocus(id, processValue(schema, value));
   return (
     <Grid>
-      {
-        checkTitle &&
+      {checkTitle && (
         <Grid.Column verticalAlign="middle" width={3}>
           <label htmlFor={id}>{label || schema.title}</label>
         </Grid.Column>
-      }
+      )}
       <Grid.Column width={checkTitle ? 13 : 16}>
         <Form.Dropdown
           key={id}
-          multiple={typeof multiple === 'undefined' ? false : multiple}
-          value={typeof value === 'undefined' ? emptyValue : value}
+          name={name}
+          multiple={typeof multiple === "undefined" ? false : multiple}
+          value={typeof value === "undefined" ? emptyValue : value}
           disabled={disabled}
           placeholder={placeholder}
           error={error}
@@ -133,14 +136,15 @@ function SelectWidget({
 SelectWidget.defaultProps = {
   options: {
     semanticProps: {
-      inverted: 'false',
+      inverted: "false",
       fluid: true,
       selection: true,
       scrolling: true,
+      upward: false,
     },
     errorOptions: {
       showErrors: false,
-      pointing: 'above',
+      pointing: "above",
     },
   },
 };

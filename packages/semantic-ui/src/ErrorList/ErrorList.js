@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Message } from 'semantic-ui-react';
+import React from "react";
+import PropTypes from "prop-types";
+import { Message } from "semantic-ui-react";
 
 /**
  *
@@ -15,7 +15,8 @@ function ErrorList({ errors }) {
       <Message.Header>Errors</Message.Header>
       <Message.List>
         {errors.map((error, index) => (
-          <Message.Item key={`error-${index}`}>{error.stack}</Message.Item>))}
+          <Message.Item key={`error-${index}`}>{error.stack}</Message.Item>
+        ))}
       </Message.List>
     </Message>
   );

@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
-import { rangeSpec } from 'react-jsonschema-form/lib/utils';
-import RawErrors from '../RawErrors';
-
+import React from "react";
+import PropTypes from "prop-types";
+import { Form } from "semantic-ui-react";
+import { rangeSpec } from "react-jsonschema-form/lib/utils";
+import RawErrors from "../RawErrors";
 
 function RangeWidget({
   value,
@@ -18,15 +17,19 @@ function RangeWidget({
   required,
   rawErrors,
   label,
+  name,
   id,
 }) {
   const { errorOptions, semanticProps } = options;
   const { showErrors, pointing } = errorOptions;
-  const error = rawErrors && rawErrors.length > 0 ? { content: rawErrors[0], pointing } : false;
+  const error =
+    rawErrors && rawErrors.length > 0
+      ? { content: rawErrors[0], pointing }
+      : false;
   // eslint-disable-next-line no-shadow
-  const _onChange = ({ target: { value } }) => onChange && onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = () =>
-    onBlur && onBlur(id, value);
+  const _onChange = ({ target: { value } }) =>
+    onChange && onChange(value === "" ? options.emptyValue : value);
+  const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const sliderProps = { value, label, id, ...rangeSpec(schema) };
   return (
@@ -42,7 +45,7 @@ function RangeWidget({
         name={name}
         {...semanticProps}
         type="range"
-        value={value || ''}
+        value={value || ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
@@ -60,7 +63,7 @@ RangeWidget.defaultProps = {
     },
     errorOptions: {
       showErrors: false,
-      pointing: 'above',
+      pointing: "above",
     },
   },
 };
