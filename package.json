@@ -12,7 +12,8 @@
     "lint": "lerna run lint",
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",
-    "dist": "lerna run dist"
+    "build": "lerna run --stream build",
+    "start": "lerna run start --stream --parallel"
   },
   "dependencies": {
     "prettier": "^1.18.2",
