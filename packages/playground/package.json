@@ -1,34 +1,29 @@
 {
-  "name": "@rjsf/core",
+  "name": "@rjsf/playground",
   "version": "2.0.0-alpha.4",
-  "description": "A simple React component capable of building HTML forms out of a JSON schema.",
+  "description": "rjsf playground",
+  "private": true,
   "scripts": {
-    "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
-    "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/cjs",
-    "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/es",
-    "build:es:lib": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./lib",
-    "dist:build:umd": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
-    "cs-check": "prettier -l \"{src,test}/**/*.js\"",
-    "cs-format": "prettier \"{src,test}/**/*.js\" --write",
-    "lint": "eslint src test",
+    "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
+    "prepublishOnly": "npm run build:lib",
+    "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
+    "cs-check": "prettier -l \"{playground,src,test}/**/*.js\"",
+    "cs-format": "prettier \"{playground,src,test}/**/*.js\" --write",
+    "build": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "lint": "eslint src test playground",
     "precommit": "lint-staged",
+    "publish-to-gh-pages": "npm run build && gh-pages --dist build/",
     "publish-to-npm": "npm run build && npm publish",
-    "start": "concurrently \"npm:build:* -- --watch\"",
-    "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test": "cross-env BABEL_ENV=test NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
+    "start": "webpack-dev-server --open --config webpack.config.dev.js"
   },
   "lint-staged": {
-    "{src,test}/**/*.js": [
+    "{playground,src,test}/**/*.js": [
       "eslint --fix",
       "prettier --write",
       "git add"
     ]
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/es/index.js",
-  "typings": "index.d.ts",
+  "main": "lib/index.js",
   "files": [
     "dist",
     "lib"
@@ -42,15 +37,19 @@
     "react": ">=16"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.8.7",
-    "@types/json-schema": "^7.0.4",
+    "@babel/runtime-corejs2": "^7.4.5",
+    "@material-ui/core": "^4.9.4",
+    "@rjsf/core": "^2.0.0-alpha.4",
+    "@rjsf/material-ui": "^2.0.0-alpha.4",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
     "json-schema-merge-allof": "^0.6.0",
-    "jsonpointer": "^4.0.1",
+    "jss": "^10.0.3",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react-app-polyfill": "^1.0.4",
+    "react-bootstrap": "^0.33.1",
+    "react-frame-component": "^4.1.1",
     "react-is": "^16.9.0",
     "shortid": "^2.2.14"
   },
@@ -59,19 +58,18 @@
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
-    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
-    "@babel/plugin-transform-object-assign": "^7.8.3",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
+    "@material-ui/icons": "^4.5.1",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
     "chai": "^3.3.0",
     "codemirror": "^5.30.0",
-    "concurrently": "^5.1.0",
     "create-react-ref": "^0.1.0",
     "cross-env": "^2.0.1",
     "css-loader": "^0.23.1",
@@ -86,6 +84,7 @@
     "express": "^4.14.0",
     "gh-pages": "^0.11.0",
     "html": "^1.0.0",
+    "html-webpack-plugin": "^3.2.0",
     "husky": "^0.13.2",
     "jsdom": "^8.3.0",
     "json-loader": "^0.5.7",
@@ -105,11 +104,14 @@
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.3.3",
     "rimraf": "^2.5.4",
+    "sass": "^1.23.7",
+    "sass-loader": "^7.3.1",
     "sinon": "^7.5.0",
     "style-loader": "^0.13.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
+    "webpack-dev-server": "^3.10.1",
     "webpack-hot-middleware": "^2.13.2"
   },
   "directories": {
@@ -129,6 +131,5 @@
   "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme",
   "publishConfig": {
     "access": "public"
-  },
-  "types": "index.d.ts"
+  }
 }
