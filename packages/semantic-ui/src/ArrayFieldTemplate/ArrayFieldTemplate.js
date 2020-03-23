@@ -3,6 +3,7 @@ import React from "react";
 import { isMultiSelect, getDefaultRegistry } from "../../../core/lib/utils";
 import { Button, Segment, Grid } from "semantic-ui-react";
 import AddButton from "../AddButton";
+import PropTypes from "prop-types";
 
 const ArrayFieldTitle = ({ TitleField, idSchema, title }) => {
   if (!title) {
@@ -26,7 +27,7 @@ const sharedStyle = {
   marginBottom: "0px",
 };
 
-const sharedNestedStyle = {
+let sharedNestedStyle = {
   border: "2px solid rgb(35, 39, 51)",
   marginBottom: "10px",
 };
@@ -224,12 +225,25 @@ function DefaultNormalArrayFieldTemplate(props) {
 }
 
 function ArrayFieldTemplate(props) {
-  const { schema, registry = getDefaultRegistry() } = props;
-
+  const { schema, registry = getDefaultRegistry(), options } = props;
+  const { showNesting } = options;
+  if (!showNesting) {
+    delete sharedNestedStyle["border"];
+  }
   if (isMultiSelect(schema, registry.definitions)) {
     return <DefaultFixedArrayFieldTemplate {...props} />;
   }
   return <DefaultNormalArrayFieldTemplate {...props} />;
 }
+
+ArrayFieldTemplate.defaultProps = {
+  options: {
+    showNesting: true,
+  },
+};
+
+ArrayFieldTemplate.propTypes = {
+  options: PropTypes.object,
+};
 
 export default ArrayFieldTemplate;
