@@ -20,6 +20,66 @@ describe("SchemaField", () => {
     sandbox.restore();
   });
 
+  describe("registry", () => {
+    it("should provide expected registry as prop", () => {
+      let receivedProps;
+      const schema = {
+        type: "object",
+        definitions: {
+          a: { type: "string" },
+        },
+      };
+      createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:field": props => {
+            receivedProps = props;
+            return null;
+          },
+        },
+      });
+
+      const { registry } = receivedProps;
+      expect(registry).eql({
+        widgets: getDefaultRegistry().widgets,
+        fields: getDefaultRegistry().fields,
+        definitions: schema.definitions,
+        rootSchema: schema,
+        ArrayFieldTemplate: undefined,
+        FieldTemplate: undefined,
+        ObjectFieldTemplate: undefined,
+        formContext: {},
+      });
+    });
+    it("should set definitions to empty object if it is undefined", () => {
+      let receivedProps;
+      const schema = {
+        type: "object",
+      };
+      createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:field": props => {
+            receivedProps = props;
+            return null;
+          },
+        },
+      });
+
+      const { registry } = receivedProps;
+      expect(registry).eql({
+        widgets: getDefaultRegistry().widgets,
+        fields: getDefaultRegistry().fields,
+        definitions: {},
+        rootSchema: schema,
+        ArrayFieldTemplate: undefined,
+        FieldTemplate: undefined,
+        ObjectFieldTemplate: undefined,
+        formContext: {},
+      });
+    });
+  });
+
   describe("Unsupported field", () => {
     it("should warn on invalid field type", () => {
       const { node } = createFormComponent({
@@ -102,21 +162,16 @@ describe("SchemaField", () => {
       createFormComponent({
         schema,
         uiSchema: {
-          "ui:field": class extends React.Component {
-            constructor(props) {
-              super(props);
-              receivedProps = props;
-            }
-            render() {
-              return null;
-            }
+          "ui:field": props => {
+            receivedProps = props;
+            return null;
           },
         },
       });
 
       const { registry } = receivedProps;
       expect(registry.widgets).eql(getDefaultRegistry().widgets);
-      expect(registry.definitions).eql({});
+      expect(registry.rootSchema).eql(schema);
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
       expect(registry.fields.TitleField).eql(TitleField);

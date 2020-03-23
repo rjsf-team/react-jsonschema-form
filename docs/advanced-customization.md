@@ -353,7 +353,8 @@ The following props are passed to custom widget components:
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
 - `autofocus`: `true` if the widget should autofocus;
-- `onChange`: The value change event handler; call it with the new value everytime it changes;
+- `onChange`: The value change event handler; call it with the new value every time it changes;
+- `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
@@ -514,12 +515,13 @@ A field component will always be passed the following props:
 
 #### The `registry` object
 
-The `registry` is an object containing the registered custom fields and widgets as well as root schema definitions.
+The `registry` is an object containing the registered custom fields and widgets as well as the root schema definitions.
 
  - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField`, `TitleField` and `DescriptionField` components;
  - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
- - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
- - `formContext`: The [formContext](#the-formcontext-object) object.
+ - `rootSchema`: The root schema, which can contain referenced [definitions](#schema-definitions-and-references);
+ - `formContext`: The [formContext](#the-formcontext-object) object;
+ - `definitions` (deprecated since v2): Equal to `rootSchema.definitions`.
 
 The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
 
@@ -548,7 +550,7 @@ You can provide your own implementation of the `SchemaField` base React componen
 To proceed so, pass a `fields` object having a `SchemaField` property to your `Form` component; here's a rather silly example wrapping the standard `SchemaField` lib component:
 
 ```jsx
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import SchemaField from "@rjsf/core/lib/components/fields/SchemaField";
 
 const CustomSchemaField = function(props) {
   return (

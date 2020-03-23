@@ -6,7 +6,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 
-import { WidgetProps } from 'react-jsonschema-form';
+import { WidgetProps } from '@rjsf/core';
 
 const RadioWidget = ({
   id,
