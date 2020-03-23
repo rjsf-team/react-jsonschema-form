@@ -1,16 +1,10 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Header } from 'semantic-ui-react';
+import React from "react";
+import { Message } from "semantic-ui-react";
 
 function DescriptionField({ description }) {
   if (description) {
-    return (
-      <Header inverted as="h5">
-        <Header.Subheader>
-          {description}
-        </Header.Subheader>
-      </Header>
-    );
+    return <Message content={description} attached="bottom" size="tiny" />;
   }
   return null;
 }

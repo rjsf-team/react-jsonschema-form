@@ -2,7 +2,7 @@
 import React from "react";
 import _ from "lodash";
 import { Form, Grid } from "semantic-ui-react";
-import { asNumber, guessType } from "react-jsonschema-form/lib/utils";
+import { asNumber, guessType } from "../../../core/lib/utils";
 import PropTypes from "prop-types";
 
 const nums = new Set(["number", "integer"]);
@@ -35,14 +35,11 @@ const processValue = (schema, value) => {
   const { type, items } = schema;
   if (value === "") {
     return undefined;
-  }
-  if (type === "array" && items && nums.has(items.type)) {
+  } else if (type === "array" && items && nums.has(items.type)) {
     return value.map(asNumber);
-  }
-  if (type === "boolean") {
+  } else if (type === "boolean") {
     return value === "true";
-  }
-  if (type === "number") {
+  } else if (type === "number") {
     return asNumber(value);
   }
 
@@ -51,8 +48,7 @@ const processValue = (schema, value) => {
   if (schema.enum) {
     if (schema.enum.every(x => guessType(x) === "number")) {
       return asNumber(value);
-    }
-    if (schema.enum.every(x => guessType(x) === "boolean")) {
+    } else if (schema.enum.every(x => guessType(x) === "boolean")) {
       return value === "true";
     }
   }

@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
-import { rangeSpec } from "react-jsonschema-form/lib/utils";
+import { rangeSpec } from "../../../core/lib/utils";
 import RawErrors from "../RawErrors";
 
 function RangeWidget({

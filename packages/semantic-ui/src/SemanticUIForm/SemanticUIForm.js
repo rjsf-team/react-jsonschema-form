@@ -1,6 +1,6 @@
-import { withTheme } from 'react-jsonschema-form';
+import { withTheme } from "../../../core";
 
-import Theme from '../Theme';
+import Theme from "../Theme";
 
 const SemanticUIForm = withTheme(Theme);
 

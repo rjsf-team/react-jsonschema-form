@@ -10,7 +10,6 @@ function CheckboxWidget(props) {
     disabled,
     readonly,
     label,
-    name,
     autofocus,
     onChange,
     onBlur,
@@ -40,7 +39,6 @@ function CheckboxWidget(props) {
         onFocus={_onFocus}
         required={required}
         label={label}
-        name={name}
       />
     </Form.Field>
   );

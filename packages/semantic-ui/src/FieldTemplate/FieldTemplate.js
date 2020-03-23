@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Form } from 'semantic-ui-react';
-import HelpField from '../HelpField';
-import DescriptionField from '../DescriptionField';
-import RawErrors from '../RawErrors';
+import React from "react";
+import { Form } from "semantic-ui-react";
+import HelpField from "../HelpField";
+import DescriptionField from "../DescriptionField";
+import RawErrors from "../RawErrors";
 
 function FieldTemplate({
   id,
@@ -15,7 +15,9 @@ function FieldTemplate({
 }) {
   return (
     <Form.Group key={id} widths="equal" grouped>
-      {displayLabel && <DescriptionField description={rawDescription} />}
+      {displayLabel && rawDescription && (
+        <DescriptionField description={rawDescription} />
+      )}
       {children}
       <RawErrors errors={rawErrors} />
       <HelpField helpText={rawHelp} id={id} />
