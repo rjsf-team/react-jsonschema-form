@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FieldProps } from 'react-jsonschema-form';
+import { FieldProps } from '@rjsf/core';
 
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';

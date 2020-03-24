@@ -18,7 +18,7 @@ Documentation is hosted on: https://react-jsonschema-form.readthedocs.io/
 A [live playground](https://rjsf-team.github.io/react-jsonschema-form/) is hosted on gh-pages.
 
 ## Contributing
-Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/#contributing) to get started.
+Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/contributing/) to get started.
 
 ## License
 Apache 2

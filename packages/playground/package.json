@@ -1,20 +1,19 @@
 {
   "name": "@rjsf/playground",
-  "version": "2.0.0-alpha.2.2",
+  "version": "2.0.0-alpha.4",
   "description": "rjsf playground",
+  "private": true,
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "prepublishOnly": "npm run build:lib",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
-    "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "cs-check": "prettier -l \"{playground,src,test}/**/*.js\"",
     "cs-format": "prettier \"{playground,src,test}/**/*.js\" --write",
-    "dist": "npm run build:lib && npm run build:dist",
+    "build": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "lint": "eslint src test playground",
     "precommit": "lint-staged",
-    "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "publish-to-npm": "npm run dist && npm publish",
-    "preversion": "npm run build:playground && npm run dist && npm run cs-check && npm run lint",
+    "publish-to-gh-pages": "npm run build && gh-pages --dist build/",
+    "publish-to-npm": "npm run build && npm publish",
     "start": "webpack-dev-server --open --config webpack.config.dev.js"
   },
   "lint-staged": {
@@ -40,7 +39,8 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.4.5",
     "@material-ui/core": "^4.9.4",
-    "@rjsf/core": "^2.0.0-alpha.2",
+    "@rjsf/core": "^2.0.0-alpha.4",
+    "@rjsf/material-ui": "^2.0.0-alpha.4",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
     "json-schema-merge-allof": "^0.6.0",
@@ -51,8 +51,6 @@
     "react-bootstrap": "^0.33.1",
     "react-frame-component": "^4.1.1",
     "react-is": "^16.9.0",
-    "react-jsonschema-form": "^2.0.0-alpha.1",
-    "rjsf-material-ui": "^0.3.9",
     "shortid": "^2.2.14"
   },
   "devDependencies": {

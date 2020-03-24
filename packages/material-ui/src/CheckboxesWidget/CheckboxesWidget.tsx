@@ -6,7 +6,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { WidgetProps } from 'react-jsonschema-form';
+import { WidgetProps } from '@rjsf/core';
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);

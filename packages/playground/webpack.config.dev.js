@@ -7,8 +7,7 @@ module.exports = {
   mode: "development",
   devtool: "source-map",
   entry: [
-    "webpack-hot-middleware/client?reload=true",
-    "./playground/app"
+    "./src/index"
   ],
   output: {
     path: path.join(__dirname, "build"),
@@ -18,6 +17,13 @@ module.exports = {
     compress: true,
     port: 8080
   },
+  resolve: {
+    alias: {
+      "@material-ui/styles": path.resolve("node_modules", "@material-ui/styles"),
+      react: path.resolve('./node_modules/react'),
+      'react-dom': path.resolve('./node_modules/react-dom')
+    }
+  },
   plugins: [
     new MonacoWebpackPlugin({
       languages: ['json']
@@ -25,7 +31,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'playground/index.html'
+      template: 'index.html'
     }),
   ],
   module: {
@@ -51,7 +57,7 @@ module.exports = {
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules")
+          path.join(__dirname, "node_modules", "monaco-editor")
         ],
       },
     ]
