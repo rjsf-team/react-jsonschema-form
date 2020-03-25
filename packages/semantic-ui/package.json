@@ -22,7 +22,7 @@
   },
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
-    "build:dist": "rimraf dist && cross-env NODE_ENV=production",
+    "build:dist": "rimraf dist && cross-env NODE_ENV=production babel -d dist/ src/",
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test",
     "prepare": "npm run dist",
