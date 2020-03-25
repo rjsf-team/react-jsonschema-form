@@ -238,7 +238,7 @@ function ArrayFieldTemplate(props) {
 
 ArrayFieldTemplate.defaultProps = {
   options: {
-    showNesting: true,
+    showNesting: false,
   },
 };
 
