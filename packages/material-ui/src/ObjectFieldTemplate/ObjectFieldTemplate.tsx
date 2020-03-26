@@ -3,7 +3,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
-import { ObjectFieldTemplateProps } from 'react-jsonschema-form';
+import { ObjectFieldTemplateProps } from '@rjsf/core';
 
 const useStyles = makeStyles({
   root: {

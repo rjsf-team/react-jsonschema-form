@@ -1,8 +1,17 @@
 import { expect } from "chai";
-import React from "react";
+import React, { Component, createRef } from "react";
 
 import { withTheme } from "../src";
 import { createComponent, createSandbox } from "./test_utils";
+
+const WrapperClassComponent = (...args) => {
+  return class extends Component {
+    render() {
+      const Cmp = withTheme(...args);
+      return <Cmp {...this.props} />;
+    }
+  };
+};
 
 describe("withTheme", () => {
   let sandbox;
@@ -34,7 +43,7 @@ describe("withTheme", () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(withTheme({ fields }), {
+      let { node } = createComponent(WrapperClassComponent({ fields }), {
         schema,
         uiSchema,
       });
@@ -64,11 +73,14 @@ describe("withTheme", () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(withTheme({ fields: themeFields }), {
-        schema,
-        uiSchema,
-        fields: userFields,
-      });
+      let { node } = createComponent(
+        WrapperClassComponent({ fields: themeFields }),
+        {
+          schema,
+          uiSchema,
+          fields: userFields,
+        }
+      );
       expect(node.querySelectorAll(".string-field")).to.have.length.of(1);
       expect(node.querySelectorAll(".number-field")).to.have.length.of(1);
     });
@@ -96,11 +108,14 @@ describe("withTheme", () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(withTheme({ fields: themeFields }), {
-        schema,
-        uiSchema,
-        fields: userFields,
-      });
+      let { node } = createComponent(
+        WrapperClassComponent({ fields: themeFields }),
+        {
+          schema,
+          uiSchema,
+          fields: userFields,
+        }
+      );
       expect(node.querySelectorAll(".string-field")).to.have.length.of(0);
       expect(node.querySelectorAll(".form-control")).to.have.length.of(2);
     });
@@ -115,7 +130,7 @@ describe("withTheme", () => {
         type: "string",
       };
       const uiSchema = {};
-      let { node } = createComponent(withTheme({ widgets }), {
+      let { node } = createComponent(WrapperClassComponent({ widgets }), {
         schema,
         uiSchema,
       });
@@ -142,11 +157,14 @@ describe("withTheme", () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(withTheme({ widgets: themeWidgets }), {
-        schema,
-        uiSchema,
-        widgets: userWidgets,
-      });
+      let { node } = createComponent(
+        WrapperClassComponent({ widgets: themeWidgets }),
+        {
+          schema,
+          uiSchema,
+          widgets: userWidgets,
+        }
+      );
       expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(1);
       expect(node.querySelectorAll("#test-user-widget")).to.have.length.of(1);
     });
@@ -167,11 +185,14 @@ describe("withTheme", () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(withTheme({ widgets: themeWidgets }), {
-        schema,
-        uiSchema,
-        widgets: userWidgets,
-      });
+      let { node } = createComponent(
+        WrapperClassComponent({ widgets: themeWidgets }),
+        {
+          schema,
+          uiSchema,
+          widgets: userWidgets,
+        }
+      );
       expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(0);
       expect(node.querySelectorAll("#test-user-widget")).to.have.length.of(1);
     });
@@ -196,10 +217,13 @@ describe("withTheme", () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(withTheme({ ...themeTemplates }), {
-        schema,
-        uiSchema,
-      });
+      let { node } = createComponent(
+        WrapperClassComponent({ ...themeTemplates }),
+        {
+          schema,
+          uiSchema,
+        }
+      );
       expect(
         node.querySelectorAll(".with-theme-field-template")
       ).to.have.length.of(1);
@@ -221,16 +245,33 @@ describe("withTheme", () => {
         type: "object",
         properties: { foo: { type: "string" }, bar: { type: "string" } },
       };
-      let { node } = createComponent(withTheme({ ...themeTemplates }), {
-        schema,
-        ...userTemplates,
-      });
+      let { node } = createComponent(
+        WrapperClassComponent({ ...themeTemplates }),
+        {
+          schema,
+          ...userTemplates,
+        }
+      );
       expect(
         node.querySelectorAll(".with-theme-field-template")
       ).to.have.length.of(0);
       expect(node.querySelectorAll(".user-field-template")).to.have.length.of(
         1
       );
+    });
+
+    it("should forward the ref", () => {
+      const ref = createRef();
+      const schema = {};
+      const uiSchema = {};
+
+      createComponent(withTheme({}), {
+        schema,
+        uiSchema,
+        ref,
+      });
+
+      expect(ref.current.submit).not.eql(undefined);
     });
   });
 });

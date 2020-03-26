@@ -180,7 +180,7 @@ class ObjectField extends Component {
       const { registry = getDefaultRegistry() } = this.props;
       const refSchema = retrieveSchema(
         { $ref: schema.additionalProperties["$ref"] },
-        registry.definitions,
+        registry.rootSchema,
         this.props.formData
       );
 
@@ -210,9 +210,9 @@ class ObjectField extends Component {
       registry = getDefaultRegistry(),
     } = this.props;
 
-    const { definitions, fields, formContext } = registry;
+    const { rootSchema, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
-    const schema = retrieveSchema(this.props.schema, definitions, formData);
+    const schema = retrieveSchema(this.props.schema, rootSchema, formData);
 
     // If this schema has a title defined, but the user has set a new key/label, retain their input.
     let title;
