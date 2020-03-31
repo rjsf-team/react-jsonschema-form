@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
 
 function rangeOptions(start, stop) {
+  if (start < 0) start = new Date().getFullYear() + start;
+  if (stop < 0) stop = new Date().getFullYear() + stop;
   if (start > stop) return rangeOptions(stop, start).reverse();
   let options = [];
   for (let i = start; i <= stop; i++) {

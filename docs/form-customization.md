@@ -129,6 +129,14 @@ uiSchema: {
 },
 ```
 
+You can also specify negative values which will be treated relative to the current year, so if it is 2020 and the range is set as follows.
+
+```
+   yearsRange: [-18, -120],
+```
+
+Years from 2002-1900 will be shown.
+
 #### For `number` and `integer` fields
 
   * `updown`: an `input[type=number]` updown selector;
