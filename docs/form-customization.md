@@ -112,7 +112,7 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 
 ![](https://i.imgur.com/VF5tY60.png)
 
-You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
+You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. The range can be descending by specifying the larger value first. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 ```jsx
 uiSchema: {
