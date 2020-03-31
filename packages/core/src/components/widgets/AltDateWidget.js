@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
 
 function rangeOptions(start, stop) {
+  if (start > stop) return rangeOptions(stop, start).reverse();
   let options = [];
   for (let i = start; i <= stop; i++) {
     options.push({ value: i, label: pad(i, 2) });
