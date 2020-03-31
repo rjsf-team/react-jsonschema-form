@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import RawErrors from "../RawErrors";
 
-function TextAreaWidget({
+function TextareaWidget({
   id,
   placeholder,
   value,
@@ -57,7 +57,7 @@ function TextAreaWidget({
   );
 }
 
-TextAreaWidget.defaultProps = {
+TextareaWidget.defaultProps = {
   options: {
     semanticProps: {
       inverted: false,
@@ -70,8 +70,8 @@ TextAreaWidget.defaultProps = {
   },
 };
 
-TextAreaWidget.propTypes = {
+TextareaWidget.propTypes = {
   options: PropTypes.object,
 };
 
-export default TextAreaWidget;
+export default TextareaWidget;
