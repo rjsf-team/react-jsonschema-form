@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types,react/destructuring-assignment */
 import React from "react";
-import { isMultiSelect, getDefaultRegistry } from "../../../core/lib/utils";
-import { Button, Segment, Grid } from "semantic-ui-react";
-import AddButton from "../AddButton";
 import PropTypes from "prop-types";
+import { Button, Grid, Segment } from "semantic-ui-react";
+import { isMultiSelect, getDefaultRegistry } from "../../../core/lib/utils";
+import AddButton from "../AddButton";
 
 const ArrayFieldTitle = ({ TitleField, idSchema, title }) => {
   if (!title) {
@@ -135,6 +135,8 @@ function DefaultArrayItem(props) {
   );
 }
 
+// Used for arrays that are represented as multiple selection fields
+// (displayed as a multi select or checkboxes)
 function DefaultFixedArrayFieldTemplate(props) {
   const title = props.uiSchema["ui:title"] || props.title;
   const description =
