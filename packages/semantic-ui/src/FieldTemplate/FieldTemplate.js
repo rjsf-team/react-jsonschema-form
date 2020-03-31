@@ -1,10 +1,14 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Form } from "semantic-ui-react";
-import HelpField from "../HelpField";
 import DescriptionField from "../DescriptionField";
+import HelpField from "../HelpField";
 import RawErrors from "../RawErrors";
 import { getSemanticProps } from "../util";
+
+function MaybeWrap({ wrap, Component = "div", ...props }) {
+  return wrap ? <Component {...props} /> : props.children;
+}
 
 function FieldTemplate({
   id,
@@ -18,30 +22,25 @@ function FieldTemplate({
   ...props
 }) {
   const semanticProps = getSemanticProps(props);
-
-  const labelElement = (
-    <React.Fragment>
-      {displayLabel && label && <label htmlFor={id}>{label}</label>}
-      {displayLabel && rawDescription && (
-        <DescriptionField
-          description={rawDescription}
-          size={semanticProps.size}
-        />
-      )}
-    </React.Fragment>
-  );
+  const { wrapLabel, wrapInput } = semanticProps;
 
   return (
     <Form.Field
-      className={className || "sui-field"}
+      className={`sui-field-${id} ${className || ""}`}
       key={id}
       style={{ position: "relative" }}>
-      {semanticProps.wrapLabel ? (
-        <div className="sui-field-label">{labelElement}</div>
-      ) : (
-        labelElement
+      {displayLabel && (label || rawDescription) && (
+        <MaybeWrap wrap={wrapLabel} className="sui-field-label">
+          {label && <label htmlFor={id}>{label}</label>}
+          {rawDescription && (
+            <DescriptionField
+              description={rawDescription}
+              size={semanticProps.size}
+            />
+          )}
+        </MaybeWrap>
       )}
-      <div className="sui-field-inner">
+      <MaybeWrap wrap={wrapInput} className="sui-field-input">
         {children}
         <HelpField
           helpText={rawHelp}
@@ -49,7 +48,7 @@ function FieldTemplate({
           inline={semanticProps.inlineHelp}
         />
         <RawErrors errors={rawErrors} />
-      </div>
+      </MaybeWrap>
     </Form.Field>
   );
 }
