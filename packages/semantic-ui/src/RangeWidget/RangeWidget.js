@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { Form } from "semantic-ui-react";
+import { Input } from "semantic-ui-react";
 import { rangeSpec } from "../../../core/lib/utils";
-import RawErrors from "../RawErrors";
+import { getSemanticProps } from "../util";
 
 function RangeWidget({
   value,
@@ -15,42 +15,36 @@ function RangeWidget({
   schema,
   onChange,
   required,
-  rawErrors,
   label,
   name,
   id,
+  formContext,
 }) {
-  const { errorOptions, semanticProps } = options;
-  const { showErrors, pointing } = errorOptions;
-  const error =
-    rawErrors && rawErrors.length > 0
-      ? { content: rawErrors[0], pointing }
-      : false;
+  const semanticProps = getSemanticProps({ formContext, options });
+
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange && onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const sliderProps = { value, label, id, ...rangeSpec(schema) };
+
   return (
     <React.Fragment>
-      <Form.Input
+      <Input
         id={id}
         key={id}
-        {...sliderProps}
-        error={error}
-        label={label || schema.title}
+        name={name}
+        type="range"
         required={required}
         disabled={disabled || readonly}
-        name={name}
+        {...rangeSpec(schema)}
         {...semanticProps}
-        type="range"
         value={value || ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
-      <RawErrors errors={rawErrors} displayError={showErrors} />
+      <span>{value}</span>
     </React.Fragment>
   );
 }
@@ -58,12 +52,7 @@ function RangeWidget({
 RangeWidget.defaultProps = {
   options: {
     semanticProps: {
-      inverted: false,
       fluid: true,
-    },
-    errorOptions: {
-      showErrors: false,
-      pointing: "above",
     },
   },
 };
