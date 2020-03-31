@@ -230,6 +230,7 @@ function ArrayFieldTemplate(props) {
   if (!showNesting) {
     delete sharedNestedStyle["border"];
   }
+
   if (isMultiSelect(schema, registry.definitions)) {
     return <DefaultFixedArrayFieldTemplate {...props} />;
   }

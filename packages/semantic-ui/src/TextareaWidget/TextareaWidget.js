@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { Form } from "semantic-ui-react";
-import RawErrors from "../RawErrors";
+import { TextArea } from "semantic-ui-react";
+import { getSemanticProps } from "../util";
 
 function TextareaWidget({
   id,
@@ -19,14 +19,9 @@ function TextareaWidget({
   onChange,
   options,
   schema,
-  rawErrors,
+  formContext,
 }) {
-  const { errorOptions, semanticProps } = options;
-  const { showErrors, pointing } = errorOptions;
-  const error =
-    rawErrors && rawErrors.length > 0
-      ? { content: rawErrors[0], pointing }
-      : false;
+  const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange && onChange(value === "" ? options.emptyValue : value);
@@ -34,40 +29,26 @@ function TextareaWidget({
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <React.Fragment>
-      <Form.TextArea
-        id={id}
-        key={id}
-        label={label || schema.title}
-        placeholder={placeholder}
-        error={error}
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled || readonly}
-        name={name}
-        {...semanticProps}
-        value={value || ""}
-        rows={options.rows || 5}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-      />
-      <RawErrors errors={rawErrors} displayError={showErrors} />
-    </React.Fragment>
+    <TextArea
+      id={id}
+      key={id}
+      placeholder={placeholder}
+      autoFocus={autofocus}
+      required={required}
+      disabled={disabled || readonly}
+      name={name}
+      {...semanticProps}
+      value={value || ""}
+      rows={options.rows || 5}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 }
 
 TextareaWidget.defaultProps = {
-  options: {
-    semanticProps: {
-      inverted: false,
-      fluid: true,
-    },
-    errorOptions: {
-      showErrors: false,
-      pointing: "above",
-    },
-  },
+  options: {},
 };
 
 TextareaWidget.propTypes = {

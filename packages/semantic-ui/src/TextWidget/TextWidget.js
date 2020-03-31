@@ -1,15 +1,14 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { Form, Grid } from "semantic-ui-react";
-import RawErrors from "../RawErrors";
+import { Input } from "semantic-ui-react";
+import { getSemanticProps } from "../util";
 
 function TextWidget({
   id,
   required,
   readonly,
   disabled,
-  label,
   name,
   value,
   onChange,
@@ -17,55 +16,36 @@ function TextWidget({
   onFocus,
   autofocus,
   options,
-  rawErrors,
-  schema,
+  formContext,
 }) {
-  const { errorOptions, semanticProps } = options;
-  const { showErrors, pointing } = errorOptions;
-  const error =
-    rawErrors && rawErrors.length > 0
-      ? { content: rawErrors[0], pointing }
-      : false;
+  const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
+
   return (
-    <Grid>
-      <Grid.Column width={3} verticalAlign="middle">
-        <label htmlFor={id}>{label || schema.title}</label>
-      </Grid.Column>
-      <Grid.Column width={13}>
-        <Form.Input
-          key={id}
-          id={id}
-          required={required}
-          error={error}
-          autoFocus={autofocus}
-          disabled={disabled || readonly}
-          name={name}
-          {...semanticProps}
-          value={value || ""}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-        <RawErrors errors={rawErrors} displayError={showErrors} />
-      </Grid.Column>
-    </Grid>
+    <Input
+      key={id}
+      id={id}
+      required={required}
+      autoFocus={autofocus}
+      disabled={disabled || readonly}
+      name={name}
+      {...semanticProps}
+      value={value || ""}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 }
 
 TextWidget.defaultProps = {
   options: {
     semanticProps: {
-      inverted: false,
       fluid: true,
-    },
-    errorOptions: {
-      showErrors: false,
-      pointing: "above",
     },
   },
 };
