@@ -2,8 +2,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button, Grid, Segment } from "semantic-ui-react";
-import { isMultiSelect, getDefaultRegistry } from "../../../core/lib/utils";
+import { isFixedItems } from "../../../core/lib/utils";
 import AddButton from "../AddButton";
+import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
 
 const ArrayFieldTitle = ({ TitleField, idSchema, title }) => {
   if (!title) {
@@ -23,23 +24,10 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   return <DescriptionField id={id} description={description} />;
 }
 
-const sharedStyle = {
-  marginBottom: "0px",
-};
-
-let sharedNestedStyle = {
-  border: "2px solid rgb(35, 39, 51)",
-  marginBottom: "10px",
-};
-
-const defaultGrid = {
+const gridStyle = vertical => ({
   display: "grid",
-  gridTemplateColumns: "1fr 65px",
-};
-
-const containerStyle = {
-  padding: "1.5em",
-};
+  gridTemplateColumns: `1fr ${vertical ? 65 : 110}px`,
+});
 
 // checks if its the first array item
 function isInitialArrayItem(props) {
@@ -50,130 +38,124 @@ function isInitialArrayItem(props) {
 
 // Used in the two templates
 function DefaultArrayItem(props) {
-  const btnStyle = {
-    flex: 1,
-  };
-
   return (
-    <div className="array-item" style={sharedNestedStyle} key={props.key}>
-      <div
-        // this will prevent the nested items from getting styles the parent has
-        style={isInitialArrayItem(props) && sharedStyle}>
-        <Segment.Group>
-          <Grid
-            style={
-              !isInitialArrayItem(props)
-                ? { ...defaultGrid, alignItems: "center" }
-                : defaultGrid
-            }>
-            <Grid.Column
-              width={16}
-              verticalAlign="middle"
-              style={containerStyle}>
-              {props.children}
+    <div className="array-item" key={props.key}>
+      <MaybeWrap wrap={props.wrapItem} component={Segment}>
+        <Grid
+          style={
+            !isInitialArrayItem(props)
+              ? { ...gridStyle(!props.horizontalButtons), alignItems: "center" }
+              : gridStyle(!props.horizontalButtons)
+          }>
+          <Grid.Column width={16} verticalAlign="middle">
+            {props.children}
+          </Grid.Column>
+
+          {props.hasToolbar && (
+            <Grid.Column>
+              {(props.hasMoveUp || props.hasMoveDown || props.hasRemove) && (
+                <Button.Group size="mini" vertical={!props.horizontalButtons}>
+                  {(props.hasMoveUp || props.hasMoveDown) && (
+                    <Button
+                      icon="angle up"
+                      className="array-item-move-up"
+                      tabIndex="-1"
+                      disabled={
+                        props.disabled || props.readOnly || !props.hasMoveUp
+                      }
+                      onClick={props.onReorderClick(
+                        props.index,
+                        props.index - 1
+                      )}
+                    />
+                  )}
+
+                  {(props.hasMoveUp || props.hasMoveDown) && (
+                    <Button
+                      icon="angle down"
+                      className="array-item-move-down"
+                      tabIndex="-1"
+                      disabled={
+                        props.disabled || props.readOnly || !props.hasMoveDown
+                      }
+                      onClick={props.onReorderClick(
+                        props.index,
+                        props.index + 1
+                      )}
+                    />
+                  )}
+
+                  {props.hasRemove && (
+                    <Button
+                      icon="trash"
+                      className="array-item-remove"
+                      tabIndex="-1"
+                      disabled={props.disabled || props.readOnly}
+                      onClick={props.onDropIndexClick(props.index)}
+                    />
+                  )}
+                </Button.Group>
+              )}
             </Grid.Column>
-
-            {props.hasToolbar && (
-              <Grid.Column>
-                {(props.hasMoveUp || props.hasMoveDown) && (
-                  <Button.Group vertical size="mini">
-                    {(props.hasMoveUp ||
-                      props.hasMoveDown ||
-                      props.hasRemove) && (
-                      <Button
-                        secondary
-                        icon="angle up"
-                        className="array-item-move-up"
-                        tabIndex="-1"
-                        style={btnStyle}
-                        disabled={
-                          props.disabled || props.readOnly || !props.hasMoveUp
-                        }
-                        onClick={props.onReorderClick(
-                          props.index,
-                          props.index - 1
-                        )}
-                      />
-                    )}
-
-                    {props.hasRemove && (
-                      <Button
-                        secondary
-                        icon="trash"
-                        className="array-item-remove"
-                        tabIndex="-1"
-                        style={btnStyle}
-                        disabled={props.disabled || props.readOnly}
-                        onClick={props.onDropIndexClick(props.index)}
-                      />
-                    )}
-
-                    {(props.hasMoveUp || props.hasMoveDown) && (
-                      <Button
-                        secondary
-                        icon="angle down"
-                        className="array-item-move-down"
-                        tabIndex="-1"
-                        style={btnStyle}
-                        disabled={
-                          props.disabled || props.readOnly || !props.hasMoveDown
-                        }
-                        onClick={props.onReorderClick(
-                          props.index,
-                          props.index + 1
-                        )}
-                      />
-                    )}
-                  </Button.Group>
-                )}
-              </Grid.Column>
-            )}
-          </Grid>
-        </Segment.Group>
-      </div>
+          )}
+        </Grid>
+      </MaybeWrap>
     </div>
   );
 }
 
 // Used for arrays that are represented as multiple selection fields
 // (displayed as a multi select or checkboxes)
-function DefaultFixedArrayFieldTemplate(props) {
-  const title = props.uiSchema["ui:title"] || props.title;
-  const description =
-    props.uiSchema["ui:description"] || props.schema.description;
-  return (
-    <div className={props.className}>
-      {props.displayLabel && title && (
-        <ArrayFieldTitle
-          key={`array-field-title-${props.idSchema.$id}`}
-          TitleField={props.TitleField}
-          idSchema={props.idSchema}
-          title={title}
-          required={props.required}
-        />
-      )}
+function DefaultFixedArrayFieldTemplate({
+  uiSchema,
+  idSchema,
+  canAdd,
+  className,
+  classNames,
+  disabled,
+  items,
+  onAddClick,
+  readOnly,
+  required,
+  schema,
+  title,
+  TitleField,
+  itemProps,
+}) {
+  const fieldTitle = uiSchema["ui:title"] || title;
+  const fieldDescription = uiSchema["ui:description"] || schema.description;
 
-      {props.displayLabel && description && (
+  return (
+    <div className={cleanClassNames([className, classNames])}>
+      <ArrayFieldTitle
+        key={`array-field-title-${idSchema.$id}`}
+        TitleField={TitleField}
+        idSchema={idSchema}
+        title={fieldTitle}
+        required={required}
+      />
+
+      {fieldDescription && (
         <div
           className="field-description"
-          key={`field-description-${props.idSchema.$id}`}>
-          {description}
+          key={`field-description-${idSchema.$id}`}>
+          {fieldDescription}
         </div>
       )}
 
-      <div
-        style={sharedNestedStyle}
-        key={`array-item-list-${props.idSchema.$id}`}>
+      <div key={`array-item-list-${idSchema.$id}`}>
         <div className="row array-item-list">
-          {props.items && props.items.map(DefaultArrayItem)}
+          {items && items.map(p => DefaultArrayItem({ ...p, ...itemProps }))}
         </div>
 
-        {props.canAdd && (
-          <div style={{ position: "relative", textAlign: "right" }}>
-            <AddButton
-              onClick={props.onAddClick}
-              disabled={props.disabled || props.readOnly}
-            />
+        {canAdd && (
+          <div
+            style={{
+              marginTop: "1rem",
+              position: "relative",
+              textAlign: "right",
+            }}>
+            <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
           </div>
         )}
       </div>
@@ -181,68 +163,82 @@ function DefaultFixedArrayFieldTemplate(props) {
   );
 }
 
-function DefaultNormalArrayFieldTemplate(props) {
-  const title = props.uiSchema["ui:title"] || props.title;
-  const description =
-    props.uiSchema["ui:description"] || props.schema.description;
+function DefaultNormalArrayFieldTemplate({
+  uiSchema,
+  idSchema,
+  canAdd,
+  className,
+  classNames,
+  disabled,
+  DescriptionField,
+  items,
+  onAddClick,
+  readOnly,
+  required,
+  schema,
+  title,
+  TitleField,
+  itemProps,
+}) {
+  const fieldTitle = uiSchema["ui:title"] || title;
+  const fieldDescription = uiSchema["ui:description"] || schema.description;
   return (
-    <div className="sortable-form-fields">
-      <div className={props.className}>
-        {props.displayLabel && title && (
-          <ArrayFieldTitle
-            key={`array-field-title-${props.idSchema.$id}`}
-            TitleField={props.TitleField}
-            idSchema={props.idSchema}
-            title={props.uiSchema["ui:title"] || props.title}
-            required={props.required}
-          />
-        )}
+    <div
+      className={cleanClassNames([
+        className,
+        classNames,
+        "sortable-form-fields",
+      ])}>
+      <ArrayFieldTitle
+        key={`array-field-title-${idSchema.$id}`}
+        TitleField={TitleField}
+        idSchema={idSchema}
+        title={fieldTitle}
+        required={required}
+      />
 
-        {props.displayLabel && description && (
-          <ArrayFieldDescription
-            key={`array-field-description-${props.idSchema.$id}`}
-            DescriptionField={props.DescriptionField}
-            idSchema={props.idSchema}
-            description={description}
-          />
-        )}
+      {fieldDescription && (
+        <ArrayFieldDescription
+          key={`array-field-description-${idSchema.$id}`}
+          DescriptionField={DescriptionField}
+          idSchema={idSchema}
+          description={fieldDescription}
+        />
+      )}
 
-        <div key={`array-item-list-${props.idSchema.$id}`}>
-          <div className="row array-item-list">
-            {props.items && props.items.map(p => DefaultArrayItem(p))}
-          </div>
-
-          {props.canAdd && (
-            <div style={{ position: "relative", textAlign: "right" }}>
-              <AddButton
-                onClick={props.onAddClick}
-                disabled={props.disabled || props.readOnly}
-              />
-            </div>
-          )}
+      <div key={`array-item-list-${idSchema.$id}`}>
+        <div className="row array-item-list">
+          {items && items.map(p => DefaultArrayItem({ ...p, ...itemProps }))}
         </div>
+
+        {canAdd && (
+          <div
+            style={{
+              marginTop: "1rem",
+              position: "relative",
+              textAlign: "right",
+            }}>
+            <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 function ArrayFieldTemplate(props) {
-  const { schema, registry = getDefaultRegistry(), options } = props;
-  const { showNesting } = options;
-  if (!showNesting) {
-    delete sharedNestedStyle["border"];
-  }
+  const { schema } = props;
+  const { horizontalButtons, wrapItem } = getSemanticProps(props);
+  const itemProps = { horizontalButtons, wrapItem };
 
-  if (isMultiSelect(schema, registry.definitions)) {
-    return <DefaultFixedArrayFieldTemplate {...props} />;
+  if (isFixedItems(schema)) {
+    return <DefaultFixedArrayFieldTemplate {...props} itemProps={itemProps} />;
   }
-  return <DefaultNormalArrayFieldTemplate {...props} />;
+  return <DefaultNormalArrayFieldTemplate {...props} itemProps={itemProps} />;
 }
 
 ArrayFieldTemplate.defaultProps = {
-  options: {
-    showNesting: false,
-  },
+  options: {},
 };
 
 ArrayFieldTemplate.propTypes = {
