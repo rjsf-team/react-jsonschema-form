@@ -4,16 +4,13 @@ import { Form } from "semantic-ui-react";
 import DescriptionField from "../DescriptionField";
 import HelpField from "../HelpField";
 import RawErrors from "../RawErrors";
-import { getSemanticProps } from "../util";
-
-function MaybeWrap({ wrap, Component = "div", ...props }) {
-  return wrap ? <Component {...props} /> : props.children;
-}
+import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
 
 function FieldTemplate({
   id,
   children,
-  className,
+  className, // pass className for styling libs (like styled-components)
+  classNames,
   displayLabel,
   label,
   rawErrors = [],
@@ -26,7 +23,7 @@ function FieldTemplate({
 
   return (
     <Form.Field
-      className={`sui-field-${id} ${className || ""}`}
+      className={cleanClassNames([className, classNames], ["field"])}
       key={id}
       style={{ position: "relative" }}>
       {displayLabel && (label || rawDescription) && (
@@ -40,7 +37,7 @@ function FieldTemplate({
           )}
         </MaybeWrap>
       )}
-      <MaybeWrap wrap={wrapInput} className="sui-field-input">
+      <MaybeWrap wrap={wrapInput} className="sui-field-content">
         {children}
         <HelpField
           helpText={rawHelp}
