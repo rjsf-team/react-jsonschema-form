@@ -19,7 +19,7 @@ function FieldTemplate({
   ...props
 }) {
   const semanticProps = getSemanticProps(props);
-  const { wrapLabel, wrapInput } = semanticProps;
+  const { wrapLabel, wrapContent } = semanticProps;
 
   return (
     <Form.Field
@@ -37,7 +37,7 @@ function FieldTemplate({
           )}
         </MaybeWrap>
       )}
-      <MaybeWrap wrap={wrapInput} className="sui-field-content">
+      <MaybeWrap wrap={wrapContent} className="sui-field-content">
         {children}
         <HelpField
           helpText={rawHelp}
