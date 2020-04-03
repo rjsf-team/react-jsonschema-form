@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/playground",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "rjsf playground",
   "private": true,
   "scripts": {
@@ -39,8 +39,8 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.4.5",
     "@material-ui/core": "^4.9.4",
-    "@rjsf/core": "^2.0.0-alpha.4",
-    "@rjsf/material-ui": "^2.0.0-alpha.4",
+    "@rjsf/core": "^2.0.0-alpha.5",
+    "@rjsf/material-ui": "^2.0.0-alpha.5",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
     "json-schema-merge-allof": "^0.6.0",
