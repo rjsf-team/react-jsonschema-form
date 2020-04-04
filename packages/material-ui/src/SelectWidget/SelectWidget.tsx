@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 
-// import { WidgetProps } from '@rjsf/core';
+import { WidgetProps } from '@rjsf/core';
 import { asNumber, guessType } from '@rjsf/core/lib/utils';
 
 const nums = new Set(['number', 'integer']);
@@ -54,7 +54,7 @@ const SelectWidget = ({
   onChange,
   onBlur,
   onFocus,
-}: any) => {
+}: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
   const emptyValue = multiple ? [] : '';

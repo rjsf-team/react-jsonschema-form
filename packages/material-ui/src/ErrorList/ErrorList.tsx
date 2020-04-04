@@ -14,7 +14,7 @@ import { ErrorListProps } from '@rjsf/core';
 const ErrorList = ({ errors }: ErrorListProps) => (
   <Paper elevation={2}>
     <Box mb={2} p={2}>
-      <Typography variant="h6" component="h6">
+      <Typography variant="h6">
         Errors
       </Typography>
       <List dense={true}>

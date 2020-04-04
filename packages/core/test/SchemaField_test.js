@@ -90,6 +90,22 @@ describe("SchemaField", () => {
         "Unknown field type invalid"
       );
     });
+
+    it("should be able to be overwritten with a custom UnsupportedField component", () => {
+      const CustomUnsupportedField = function() {
+        return <span id="custom">Custom UnsupportedField</span>;
+      };
+
+      const fields = { UnsupportedField: CustomUnsupportedField };
+      const { node } = createFormComponent({
+        schema: { type: "invalid" },
+        fields,
+      });
+
+      expect(node.querySelectorAll("#custom")[0].textContent).to.eql(
+        "Custom UnsupportedField"
+      );
+    });
   });
 
   describe("Custom SchemaField component", () => {

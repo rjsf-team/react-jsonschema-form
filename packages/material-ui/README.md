@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/cybertec-postgresql/rjsf-material-ui/master/rjsf-material-ui-logo.png" alt="Logo" width="140" height="120">
   </a>
 
-  <h3 align="center">rjsf-material-ui</h3>
+  <h3 align="center">@rjsf/material-ui</h3>
 
   <p align="center">
   Material-UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -69,26 +69,6 @@ import { Theme as MuiTheme } from '@rjsf/material-ui';
 
 const Form = withTheme(MuiTheme);
 ```
-
-## Local development
-
-To run the local playground, run:
-
-```bash
-cd packages/material-ui
-npm link
-npm start
-```
-
-In another terminal, run:
-
-```bash
-cd packages/playground
-npm link @rjsf/material-ui
-npm start
-```
-
-Then open http://localhost:8000.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

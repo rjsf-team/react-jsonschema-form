@@ -540,7 +540,7 @@ export function optionsList(schema) {
   }
 }
 
-function findSchemaDefinition($ref, rootSchema = {}) {
+export function findSchemaDefinition($ref, rootSchema = {}) {
   const origRef = $ref;
   if ($ref.startsWith("#")) {
     // Decode URI fragment representation.

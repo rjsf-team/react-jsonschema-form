@@ -7,8 +7,7 @@ module.exports = {
   mode: "development",
   devtool: "source-map",
   entry: [
-    "webpack-hot-middleware/client?reload=true",
-    "./playground/app"
+    "./src/index"
   ],
   output: {
     path: path.join(__dirname, "build"),
@@ -32,7 +31,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'playground/index.html'
+      template: 'index.html'
     }),
   ],
   module: {
@@ -58,7 +57,7 @@ module.exports = {
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules")
+          path.join(__dirname, "node_modules", "monaco-editor")
         ],
       },
     ]

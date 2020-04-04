@@ -57,7 +57,7 @@ const {default: Form} = JSONSchemaForm;
 import React, { Component } from "react";
 import { render } from "react-dom";
 
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 
 const schema = {
   title: "Todo",
@@ -237,74 +237,6 @@ For arrays this is not the case. Defining an array, when a parent also defines a
  - Validate and submit form from external control: <https://jsfiddle.net/spacebaboon/g5a1re63/>
  - Custom component for Help text with `ui:help`: <https://codesandbox.io/s/14pqx97xl7/>
  - Collapsing / Showing and Hiding individual fields: <https://codesandbox.io/s/examplereactjsonschemaformcollapsefieldtemplate-t41dn>
-
-## Contributing
-
-### Coding style
-
-All the JavaScript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style. A command is provided to ensure your code is always formatted accordingly:
-
-```
-$ npm run cs-format
-```
-
-The `cs-check` command ensures all files conform to that style:
-
-```
-$ npm run cs-check
-```
-
-### Development server
-
-```
-$ npm start
-```
-
-A live development server showcasing components with hot reload enabled is available at [localhost:8080](http://localhost:8080).
-
-If you want the development server to listen on another host or port, you can use the RJSF_DEV_SERVER env variable:
-
-```
-$ RJSF_DEV_SERVER=0.0.0.0:8000 npm start
-```
-
-### Build documentation
-
-We use [mkdocs](https://www.mkdocs.org/) to build our documentation. To run documentation locally, run:
-```
-$ pip install mkdocs==1.0.4
-$ mkdocs serve
-```
-
-Documentation will be served by [localhost:8000](http://localhost:8000).
-
-### Tests
-
-```
-$ npm test
-```
-
-#### TDD
-
-```
-$ npm run tdd
-```
-
-#### Code coverage
-
-Code coverage reports are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
-The full report can be seen by opening `./coverage/lcov-report/index.html`.
-
-### Releasing
-
-```
-$ edit package.json # update version number
-$ git commit -m "Bump version $VERSION"
-$ git tag v$VERSION
-$ npm run dist
-$ npm publish
-$ git push --tags origin master
-```
 
 ## FAQ
 
