@@ -19,7 +19,7 @@ import Form from "@rjsf/material-ui";
  Theme Name | Status | Package Name / Link
  ---------- | ------- | -----------
  Bootstrap 3 (default) | Published | `@rjsf/core`
- material-ui | To-be-published very soon | `@rjsf/material-ui` 
+ material-ui | Published | `@rjsf/material-ui` 
  antd | Draft | [#1561](https://github.com/rjsf-team/react-jsonschema-form/pull/1561)
  Semantic UI | Draft | [#1585](https://github.com/rjsf-team/react-jsonschema-form/pull/1585)
 
