@@ -6,7 +6,8 @@ import ObjectFieldTemplate from '../ObjectFieldTemplate';
 import Widgets from '../Widgets';
 
 import { ThemeProps } from '@rjsf/core';
-import { getDefaultRegistry } from '@rjsf/core/lib/utils';
+import { utils } from '@rjsf/core';
+const { getDefaultRegistry } = utils;
 
 const { fields, widgets } = getDefaultRegistry();
 

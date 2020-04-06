@@ -2,7 +2,7 @@
 
 declare module '@rjsf/core' {
     import * as React from 'react';
-    import { JSONSchema7, JSONSchema7Type } from 'json-schema';
+    import { JSONSchema7, JSONSchema7Definition, JSONSchema7Type, JSONSchema7TypeName } from 'json-schema';
 
     type ErrorSchema = {
         [k: string]: ErrorSchema;
@@ -267,6 +267,144 @@ declare module '@rjsf/core' {
         onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
         disabled: boolean;
     };
+
+    export module utils {
+
+        export const ADDITIONAL_PROPERTY_FLAG: string;
+    
+        export function getDefaultRegistry(): FieldProps['registry'];
+    
+        export function getSchemaType(schema: JSONSchema7): string;
+    
+        export function getWidget(
+            schema: JSONSchema7,
+            widget: Widget,
+            registeredWidgets?: { [name: string]: Widget },
+        ): Widget | Error;
+    
+        export function hasWidget(
+            schema: JSONSchema7,
+            widget: Widget,
+            registeredWidgets?: { [name: string]: Widget },
+        ): boolean;
+    
+        export function computeDefaults<T = any>(
+            schema: JSONSchema7,
+            parentDefaults: JSONSchema7['default'][],
+            definitions: FieldProps['registry']['definitions'],
+            rawFormData?: T,
+            includeUndefinedValues?: boolean,
+        ): JSONSchema7['default'][];
+    
+        export function getDefaultFormState<T = any>(
+            schema: JSONSchema7,
+            formData: T,
+            definitions?: FieldProps['registry']['definitions'],
+            includeUndefinedValues?: boolean,
+        ): T | JSONSchema7['default'][];
+    
+        export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
+    
+        export function isObject(thing: any): boolean;
+    
+        export function mergeObjects(obj1: object, obj2: object, concatArrays?: boolean): object;
+    
+        export function asNumber(value: string | null): number | string | undefined | null;
+    
+        export function orderProperties(properties: [], order: []): [];
+    
+        export function isConstant(schema: JSONSchema7): boolean;
+    
+        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'] | Error;
+    
+        export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+    
+        export function isMultiSelect(schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+    
+        export function isFilesArray(
+            schema: JSONSchema7,
+            uiSchema: UiSchema,
+            definitions?: FieldProps['registry']['definitions'],
+        ): boolean;
+    
+        export function isFixedItems(schema: JSONSchema7): boolean;
+    
+        export function allowAdditionalItems(schema: JSONSchema7): boolean;
+    
+        export function optionsList(schema: JSONSchema7): { label: string; value: string }[];
+    
+        export function guessType(value: any): JSONSchema7TypeName;
+    
+        export function stubExistingAdditionalProperties<T = any>(
+            schema: JSONSchema7,
+            definitions?: FieldProps['registry']['definitions'],
+            formData?: T,
+        ): JSONSchema7;
+    
+        export function resolveSchema<T = any>(
+            schema: JSONSchema7Definition,
+            definitions?: FieldProps['registry']['definitions'],
+            formData?: T,
+        ): JSONSchema7;
+    
+        export function retrieveSchema<T = any>(
+            schema: JSONSchema7Definition,
+            definitions?: FieldProps['registry']['definitions'],
+            formData?: T,
+        ): JSONSchema7;
+    
+        export function deepEquals<T>(a: T, b: T): boolean;
+    
+        export function shouldRender(comp: React.Component, nextProps: any, nextState: any): boolean;
+    
+        export function toIdSchema<T = any>(
+            schema: JSONSchema7Definition,
+            id: string,
+            definitions: FieldProps['registry']['definitions'],
+            formData?: T,
+            idPredix?: string,
+        ): IdSchema | IdSchema[];
+    
+        export function toPathSchema<T = any>(
+            schema: JSONSchema7Definition,
+            name: string | undefined,
+            definitions: FieldProps['registry']['definitions'],
+            formData?: T,
+        ): PathSchema | PathSchema[];
+    
+        export interface DateObject {
+            year: number;
+            month: number;
+            day: number;
+            hour: number;
+            minute: number;
+            second: number;
+        }
+    
+        export function parseDateString(dateString: string, includeTime?: boolean): DateObject;
+    
+        export function toDateString(dateObject: DateObject, time?: boolean): string;
+    
+        export function pad(num: number, size: number): string;
+    
+        export function setState(instance: React.Component, state: any, callback: Function): void;
+    
+        export function dataURItoBlob(dataURI: string): { name: string; blob: Blob };
+    
+        export interface IRangeSpec {
+            min?: number;
+            max?: number;
+            step?: number;
+        }
+    
+        export function rangeSpec(schema: JSONSchema7): IRangeSpec;
+    
+        export function getMatchingOption(
+            formData: any,
+            options: JSONSchema7[],
+            definitions: FieldProps['registry']['definitions'],
+        ): number;
+    }
 }
 
 declare module '@rjsf/core/lib/components/fields/SchemaField' {
@@ -279,146 +417,6 @@ declare module '@rjsf/core/lib/components/fields/SchemaField' {
     >;
 
     export default class SchemaField extends React.Component<SchemaFieldProps> {}
-}
-
-declare module '@rjsf/core/lib/utils' {
-    import { JSONSchema7, JSONSchema7Definition, JSONSchema7Type, JSONSchema7TypeName } from 'json-schema';
-    import { FieldProps, UiSchema, IdSchema, PathSchema, Widget } from '@rjsf/core';
-
-    export const ADDITIONAL_PROPERTY_FLAG: string;
-
-    export function getDefaultRegistry(): FieldProps['registry'];
-
-    export function getSchemaType(schema: JSONSchema7): string;
-
-    export function getWidget(
-        schema: JSONSchema7,
-        widget: Widget,
-        registeredWidgets?: { [name: string]: Widget },
-    ): Widget | Error;
-
-    export function hasWidget(
-        schema: JSONSchema7,
-        widget: Widget,
-        registeredWidgets?: { [name: string]: Widget },
-    ): boolean;
-
-    export function computeDefaults<T = any>(
-        schema: JSONSchema7,
-        parentDefaults: JSONSchema7['default'][],
-        definitions: FieldProps['registry']['definitions'],
-        rawFormData?: T,
-        includeUndefinedValues?: boolean,
-    ): JSONSchema7['default'][];
-
-    export function getDefaultFormState<T = any>(
-        schema: JSONSchema7,
-        formData: T,
-        definitions?: FieldProps['registry']['definitions'],
-        includeUndefinedValues?: boolean,
-    ): T | JSONSchema7['default'][];
-
-    export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
-
-    export function isObject(thing: any): boolean;
-
-    export function mergeObjects(obj1: object, obj2: object, concatArrays?: boolean): object;
-
-    export function asNumber(value: string | null): number | string | undefined | null;
-
-    export function orderProperties(properties: [], order: []): [];
-
-    export function isConstant(schema: JSONSchema7): boolean;
-
-    export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'] | Error;
-
-    export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
-
-    export function isMultiSelect(schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
-
-    export function isFilesArray(
-        schema: JSONSchema7,
-        uiSchema: UiSchema,
-        definitions?: FieldProps['registry']['definitions'],
-    ): boolean;
-
-    export function isFixedItems(schema: JSONSchema7): boolean;
-
-    export function allowAdditionalItems(schema: JSONSchema7): boolean;
-
-    export function optionsList(schema: JSONSchema7): { label: string; value: string }[];
-
-    export function guessType(value: any): JSONSchema7TypeName;
-
-    export function stubExistingAdditionalProperties<T = any>(
-        schema: JSONSchema7,
-        definitions?: FieldProps['registry']['definitions'],
-        formData?: T,
-    ): JSONSchema7;
-
-    export function resolveSchema<T = any>(
-        schema: JSONSchema7Definition,
-        definitions?: FieldProps['registry']['definitions'],
-        formData?: T,
-    ): JSONSchema7;
-
-    export function retrieveSchema<T = any>(
-        schema: JSONSchema7Definition,
-        definitions?: FieldProps['registry']['definitions'],
-        formData?: T,
-    ): JSONSchema7;
-
-    export function deepEquals<T>(a: T, b: T): boolean;
-
-    export function shouldRender(comp: React.Component, nextProps: any, nextState: any): boolean;
-
-    export function toIdSchema<T = any>(
-        schema: JSONSchema7Definition,
-        id: string,
-        definitions: FieldProps['registry']['definitions'],
-        formData?: T,
-        idPredix?: string,
-    ): IdSchema | IdSchema[];
-
-    export function toPathSchema<T = any>(
-        schema: JSONSchema7Definition,
-        name: string | undefined,
-        definitions: FieldProps['registry']['definitions'],
-        formData?: T,
-    ): PathSchema | PathSchema[];
-
-    export interface DateObject {
-        year: number;
-        month: number;
-        day: number;
-        hour: number;
-        minute: number;
-        second: number;
-    }
-
-    export function parseDateString(dateString: string, includeTime?: boolean): DateObject;
-
-    export function toDateString(dateObject: DateObject, time?: boolean): string;
-
-    export function pad(num: number, size: number): string;
-
-    export function setState(instance: React.Component, state: any, callback: Function): void;
-
-    export function dataURItoBlob(dataURI: string): { name: string; blob: Blob };
-
-    export interface IRangeSpec {
-        min?: number;
-        max?: number;
-        step?: number;
-    }
-
-    export function rangeSpec(schema: JSONSchema7): IRangeSpec;
-
-    export function getMatchingOption(
-        formData: any,
-        options: JSONSchema7[],
-        definitions: FieldProps['registry']['definitions'],
-    ): number;
 }
 
 declare module '@rjsf/core/lib/validate' {
