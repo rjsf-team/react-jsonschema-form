@@ -4,8 +4,7 @@ theme: readthedocs
 
 nav:
   - Introduction: index.md
-  - Playground: https://rjsf-team.github.io/react-jsonschema-form/
-  - Basics: basics.md
+  - Tutorial: tutorial.md
   - Custom Widgets and Fields: custom-widgets-fields.md
   - Custom Templates: custom-templates.md
   - Theme Customization: theme-customization.md
@@ -14,15 +13,7 @@ nav:
   - Widget Reference: api-reference-widgets.md
   - Form Props Reference: api-reference-props.md
   - Other Internals: internals.md
-
-  # - Advanced Customization: advanced-customization.md
-  # - Definitions: definitions.md
-  # - Dependencies: dependencies.md
-  # - Form Customization: form-customization.md
-  # - Theme Customization: theme-customization.md
-  # - Validation: validation.md
-  # - Contributing: contributing.md
-  # - Playground: https://rjsf-team.github.io/react-jsonschema-form/
+  - Contributing: contributing.md
 
 markdown_extensions:
   - toc:
