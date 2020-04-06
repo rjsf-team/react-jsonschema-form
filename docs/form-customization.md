@@ -56,233 +56,16 @@ render((
 
 ### Alternative widgets
 
-The uiSchema `ui:widget` property tells the form which UI widget should be used to render a field. 
 
-Example:
 
-```jsx
-const uiSchema =  {
-  done: {
-    "ui:widget": "radio" // could also be "select"
-  }
-};
 
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema}
-        formData={formData} />
-), document.getElementById("app"));
-```
 
-Here's a list of supported alternative widgets for different JSONSchema data types:
 
-#### For `boolean` fields
 
-  * `radio`: a radio button group with `true` and `false` as selectable values;
-  * `select`: a select box with `true` and `false` as options;
-  * by default, a checkbox is used
-
-> Note: To set the labels for a boolean field, instead of using `true` and `false` you can set `enumNames` in your schema. Note that `enumNames` belongs in your `schema`, not the `uiSchema`, and the order is always `[true, false]`.
-
-#### For `string` fields
-
-  * `textarea`: a `textarea` element is used;
-  * `password`: an `input[type=password]` element is used;
-  * `color`: an `input[type=color]` element is used;
-  * by default, a regular `input[type=text]` element is used.
-
-##### String formats
-
-The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following string formats:
-
-- `email`: An `input[type=email]` element is used;
-- `uri`: An `input[type=url]` element is used;
-- `data-url`: By default, an `input[type=file]` element is used; in case the string is part of an array, multiple files will be handled automatically (see [File widgets](#file-widgets)).
-- `date`: By default, an `input[type=date]` element is used;
-- `date-time`: By default, an `input[type=datetime-local]` element is used.
-
-![](https://i.imgur.com/xqu6Lcp.png)
-
-Please note that, even though they are standardized, `datetime-local` and `date` input elements are not yet supported by Firefox and IE. If you plan on targeting these platforms, two alternative widgets are available:
-
-- `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
-- `alt-date`: Three `select` elements are used to select the year, month and the day.
-
-> **Firefox 57 - 66**: Firefox partially supporting `date` and `time` input types, but not `datetime-local`, `month` or `week`
-
-![](https://i.imgur.com/VF5tY60.png)
-
-You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
-
-```jsx
-uiSchema: {
-  a_date: {
-    "alt-datetime": {
-      "ui:widget": "alt-datetime",
-      "ui:options": {
-        yearsRange: [1980, 2030],
-        hideNowButton: true,
-        hideClearButton: true,
-      },
-    },
-  },
-},
-```
-
-#### For `number` and `integer` fields
-
-  * `updown`: an `input[type=number]` updown selector;
-  * `range`: an `input[type=range]` slider;
-  * `radio`: a radio button group with enum values. This can only be used when `enum` values are specified for this input.
-  * By default, a regular `input[type=text]` element is used.
-
-> Note: If JSONSchema's `minimum`, `maximum` and `multipleOf` values are defined, the `min`, `max` and `step` input attributes values will take those values.
-
-#### Disabled fields
-
-The `ui:disabled` uiSchema directive will disable all child widgets from a given field.
-
-#### Read-only fields
-
-The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only.
-
-You can also set specific fields to read-only by setting the `readOnly` property in the schema.
-
-```js
-const schema = {
-  type: "object",
-  properties: {
-    foo: {
-      type: "string",
-      readOnly: true
-    }
-  }
-};
-```
-
-> Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
-
-#### Hidden widgets
-
-It's possible to use a hidden widget for a field by setting its `ui:widget` uiSchema directive to `hidden`:
-
-```js
-const schema = {
-  type: "object",
-  properties: {
-    foo: {type: "boolean"}
-  }
-};
-
-const uiSchema = {
-  foo: {"ui:widget": "hidden"}
-};
-```
-
-Notes:
-
- - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
- - A hidden widget takes its value from the `formData` prop.
-
-#### File widgets
-
-This library supports a limited form of `input[type=file]` widgets, in the sense that it will propagate file contents to form data state as [data-url](http://dataurl.net/#about)s.
-
-There are two ways to use file widgets.
-
-1. By declaring a `string` json schema type along a `data-url` [format](#string-formats):
-```js
-const schema = {
-  type: "string",
-  format: "data-url",
-};
-```
-
-2. By specifying a `ui:widget` field uiSchema directive as `file`:
-```js
-const schema = {
-  type: "string",
-};
-
-const uiSchema = {
-  "ui:widget": "file",
-};
-```
-
-##### Multiple files
-
-Multiple files selectors are supported by defining an array of strings having `data-url` as a format:
-
-```js
-const schema = {
-  type: "array",
-  items: {
-    type: "string",
-    format: "data-url",
-  }
-};
-```
-
-> Note that storing large dataURIs into form state might slow rendering.
-
-##### File widget input ref
-
-The included `FileWidget` exposes a reference to the `<input type="file" />` element node as an `inputRef` component property.
-
-This allows you to programmatically trigger the browser's file selector, which can be used in a custom file widget.
-
-#### File widget options
-
-##### `accept` option
-
-You can use the accept attribute to specify a filter for what file types the user can upload:
-
-```jsx
-const schema = {
-  type: "string",
-  format: "data-url"
-};
-
-const uiSchema = {
-  "ui:options": { accept: ".pdf" }
-};
-
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
-), document.getElementById("app"));
-```
 
 ### Object fields ordering
 
-Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
 
-```jsx
-const schema = {
-  type: "object",
-  properties: {
-    foo: {type: "string"},
-    bar: {type: "string"}
-  }
-};
-
-const uiSchema = {
-  "ui:order": ["bar", "foo"]
-};
-
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
-), document.getElementById("app"));
-```
-
-If a guaranteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
-
-```js
-const uiSchema = {
-  "ui:order": ["bar", "*"]
-};
-```
 
 ### Object additional properties
 
@@ -359,26 +142,6 @@ const uiSchema = {
 
 ### Custom CSS class names
 
-The uiSchema object accepts a `classNames` property for each field of the schema:
-
-```jsx
-const uiSchema = {
-  title: {
-    classNames: "task-title foo-bar"
-  }
-};
-```
-
-Will result in:
-
-```html
-<div class="field field-string task-title foo-bar" >
-  <label>
-    <span>Title*</span>
-    <input value="My task" required="" type="text">
-  </label>
-</div>
-```
 
 ### Custom labels for `enum` fields
 
@@ -494,28 +257,7 @@ A live example of both approaches side-by-side can be found in the **Alternative
 
 ### Disabled attribute for `enum` fields
 
-To disable an option, use the `enumDisabled` property in uiSchema.
 
-```js
-const schema = {
-  type: "string",
-  enum: ["one", "two", "three"],
-};
-
-const uiSchema={
-  "ui:enumDisabled": ['two'],
-}
-```
-
-This will be rendered using a select box as follows:
-
-```html
-<select>
-  <option value="one">one</option>
-  <option value="two" disabled>two</option>
-  <option value="three">three</option>
-</select>
-```
 
 ### Multiple-choice list
 
@@ -575,195 +317,33 @@ See the "Arrays" section of the [playground](https://rjsf-team.github.io/react-j
 
 ### Autogenerated widget ids
 
-By default, this library will generate ids unique to the form for all rendered widgets. If you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:
 
-```js
-const uiSchema = {
-  "ui:rootFieldId": "myform"
-};
-```
-
-So all widgets will have an id prefixed with `myform`.
 
 ### Form action buttons
 
-You can provide custom buttons to your form via the `Form` component's `children`. Otherwise a default submit button will be rendered.
-
-```jsx
-render((
-  <Form schema={schema}>
-    <div>
-      <button type="submit">Submit</button>
-      <button type="button">Cancel</button>
-    </div>
-  </Form>
-), document.getElementById("app"));
-```
-
-> **Warning:** There needs to be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
-
 ### Help text
 
-Sometimes it's convenient to add text next to a field to guide the end user filling it. This is the purpose of the `ui:help` uiSchema directive:
-
-```js
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:widget": "password",
-  "ui:help": "Hint: Make it strong!"
-};
-```
-
-![](https://i.imgur.com/scJUuZo.png)
-
-Help texts work for any kind of field at any level, and will always be rendered immediately below the field component widget(s) (after contextualized errors, if any).
 
 ### Title texts
 
-Sometimes it's convenient to change a field's title. this is the purpose of the `ui:title` uiSchema directive:
-
-```js
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:widget": "password",
-  "ui:title": "Your password"
-};
-```
-
 ### Description texts
 
-Sometimes it's convenient to change the description of a field. This is the purpose of the `ui:description` uiSchema directive:
 
-```js
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:widget": "password",
-  "ui:description": "The best password"
-};
-```
 
 ### Auto focus
 
-If you want to automatically focus on a text input or textarea input, set the `ui:autofocus` uiSchema directive to `true`.
 
-```js
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:widget": "textarea",
-  "ui:autofocus": true
-}
-```
 
 ### Textarea `rows` option
 
-You can set the initial height of a textarea widget by specifying `rows` option.
 
-```js
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:widget": "textarea",
-  "ui:options": {
-    rows: 15
-  }
-}
-```
 
 ### Placeholders
 
-You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
-```jsx
-const schema = {type: "string", format: "uri"};
-const uiSchema = {
-  "ui:placeholder": "http://"
-};
-```
-
-![](https://i.imgur.com/MbHypKg.png)
-
-Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
-
-```jsx
-const schema = {type: "string", enum: ["First", "Second"]};
-const uiSchema = {
-  "ui:placeholder": "Choose an option"
-};
-```
 
 ### Field labels
 
-Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
-```jsx
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:options": {
-    label: false
-  }
-};
-```
 
 ### HTML5 Input Types
-
-To change the input type (for example, `tel` or `email`) you can specify the `inputType` in the `ui:options` uiSchema directive.
-
-```jsx
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:options": {
-    inputType: 'tel'
-  }
-};
-```
-
-### Form attributes
-
-The `Form` component supports the following html attributes:
-
-```jsx
-<Form
-  id="edit-form"
-  className="form form-wide"
-  name="awesomeForm"
-  method="post"
-  target="_blank"
-  action="/users/list"
-  autoComplete="off"
-  enctype="multipart/form-data"
-  acceptcharset="ISO-8859-1" />
-```
-
-### Disabling a form
-
-It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form. 
-
-```jsx
-<Form
-  disabled
-  schema={} />
-```
-
-If you just want to disable some of the fields, see the [`ui:disabled`](#disabled-fields) parameter in the `uiSchema` directive. 
-
-
-### Changing the tag name
-
-
-It's possible to change the default `form` tag name to a different HTML tag, which can be helpful if you are nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no longer work.
-
-```jsx
-<Form
-  tagName="div"
-/>
-```
-
-You can also provide a class/function component.
-
-
-```jsx
-const CustomForm = props => <form {...props} style={...} className={...} />
-// ...
-<Form
-  tagName={CustomForm}
-/>
-```

@@ -14,17 +14,6 @@ To use the material-ui form, you should first install both `@rjsf/core` and `@rj
 import Form from "@rjsf/material-ui";
 ```
 
-### Available themes
-
- Theme Name | Status | Package Name / Link
- ---------- | ------- | -----------
- Bootstrap 3 (default) | Published | `@rjsf/core`
- material-ui | Published | `@rjsf/material-ui` 
- antd | Draft | [#1561](https://github.com/rjsf-team/react-jsonschema-form/pull/1561)
- Semantic UI | Draft | [#1585](https://github.com/rjsf-team/react-jsonschema-form/pull/1585)
-
-If you would like to contribute a theme with a new framework, please develop the theme using the `withTheme` component described below.
-
 ### withTheme Higher-Order Component
 The `withTheme` component provides an easy way to extend the functionality of react-jsonschema-form by passing in a theme object that defines custom/overridden widgets and fields, as well as any of the other possible properties of the standard rjsf `Form` component. This theme-defining object is passed as the only parameter to the HOC (`withTheme(ThemeObj)`), and the HOC will return a themed-component which you use instead of the standard `Form` component.
 
