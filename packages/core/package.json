@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.6",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
@@ -28,10 +28,10 @@
   },
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
-  "typings": "index.d.ts",
   "files": [
     "dist",
-    "lib"
+    "lib",
+    "index.d.ts"
   ],
   "engineStrict": false,
   "engines": {
@@ -107,7 +107,7 @@
     "rimraf": "^2.5.4",
     "sinon": "^7.5.0",
     "style-loader": "^0.13.1",
-    "webpack": "^4.20.2",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.13.2"
@@ -129,6 +129,5 @@
   "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme",
   "publishConfig": {
     "access": "public"
-  },
-  "types": "index.d.ts"
+  }
 }
