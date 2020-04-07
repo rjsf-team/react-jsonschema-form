@@ -11,7 +11,7 @@ import { Message } from "semantic-ui-react";
  */
 function ErrorList({ errors }) {
   return (
-    <Message error>
+    <Message negative>
       <Message.Header>Errors</Message.Header>
       <Message.List>
         {errors.map((error, index) => (
