@@ -7,43 +7,6 @@ function addNameToDataURL(dataURL, name) {
   return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
 }
 
-function FilesInfo(props) {
-  const { filesInfo } = props;
-  if (filesInfo.length === 0) {
-    return null;
-  }
-  return (
-    <ul className="file-info">
-      {filesInfo.map((fileInfo, key) => {
-        const { name, size, type } = fileInfo;
-        return (
-          <li key={key}>
-            <strong>{name}</strong>{" "}
-            {type && size && (
-              <>
-                ({type}, {size} bytes)
-              </>
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-function extractFileInfo(dataURLs) {
-  return dataURLs
-    .filter(dataURL => typeof dataURL !== "undefined")
-    .map(dataURL => {
-      const { blob, name } = dataURItoBlob(dataURL);
-      return {
-        name: name,
-        size: blob.size,
-        type: blob.type,
-      };
-    });
-}
-
 const processFiles = async (filesList, maxBytes) => {
   const files = [];
 
@@ -83,6 +46,42 @@ const processFile = file =>
     reader.readAsDataURL(file);
   });
 
+function FilesInfo(props) {
+  const { filesInfo } = props;
+  if (filesInfo.length === 0) {
+    return null;
+  }
+  return (
+    <ul className="file-info">
+      {filesInfo.map((fileInfo, key) => {
+        const { name, size, type } = fileInfo;
+        return (
+          <li key={key}>
+            <strong>{name}</strong>{" "}
+            {type && size && (
+              <>
+                ({type}, {size} bytes)
+              </>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function extractFileInfo(dataURLs) {
+  return dataURLs
+    .filter(dataURL => typeof dataURL !== "undefined")
+    .map(dataURL => {
+      const { blob, name } = dataURItoBlob(dataURL);
+      return {
+        name: name,
+        size: blob.size,
+        type: blob.type,
+      };
+    });
+}
 class FileWidget extends Component {
   constructor(props) {
     super(props);
