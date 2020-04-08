@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import shortid from "shortid";
-import { Message } from "semantic-ui-react";
+import { Label, List } from "semantic-ui-react";
 
 /**
  *
@@ -12,28 +12,28 @@ import { Message } from "semantic-ui-react";
  * @constructor
  * @return {null}
  */
-function RawErrors({ errors, displayError }) {
-  if (displayError && errors && errors.length > 0) {
+function RawErrors({ errors, size }) {
+  if (errors && errors.length > 0) {
     return (
-      <Message negative size="mini">
-        <Message.List>
+      <Label color="red" pointing="above" size={size} basic>
+        <List bulleted>
           {errors.map(error => (
-            <Message.Item key={shortid.generate()}>{error}</Message.Item>
+            <List.Item key={shortid.generate()} content={error} />
           ))}
-        </Message.List>
-      </Message>
+        </List>
+      </Label>
     );
   }
   return null;
 }
 
 RawErrors.defaultProps = {
-  displayError: false,
+  size: "small",
 };
 
 RawErrors.propTypes = {
   errors: PropTypes.array,
-  displayError: PropTypes.bool,
+  size: PropTypes.string,
 };
 
 export default RawErrors;

@@ -2,6 +2,7 @@
 import React from "react";
 import { Form, Radio } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import { getSemanticProps } from "../util";
 
 function RadioWidget({
   id,
@@ -11,20 +12,15 @@ function RadioWidget({
   required,
   disabled,
   readonly,
-  label,
-  rawErrors,
   onChange,
   onBlur,
   onFocus,
+  formContext,
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const { errorOptions, enumOptions, enumDisabled, semanticProps } = options;
-  const { pointing } = errorOptions;
-  const error =
-    rawErrors && rawErrors.length > 0
-      ? { content: rawErrors[0], pointing }
-      : false;
+  const { enumOptions, enumDisabled } = options;
+  const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange && onChange(schema.type === "boolean" ? value !== "false" : value);
@@ -33,7 +29,6 @@ function RadioWidget({
   const inlineOption = options.inline ? { inline: true } : { grouped: true };
   return (
     <Form.Group {...inlineOption}>
-      <label htmlFor={id}>{label || schema.title}</label>
       {enumOptions.map((option, i) => {
         const itemDisabled =
           enumDisabled && enumDisabled.indexOf(option.value) !== -1;
@@ -41,7 +36,6 @@ function RadioWidget({
           <Form.Field
             required={required}
             control={Radio}
-            error={error}
             name={name}
             {...semanticProps}
             onFocus={_onFocus}

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import _ from "lodash";
-import { Form, Grid } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { asNumber, guessType } from "../../../core/lib/utils";
 import PropTypes from "prop-types";
 
@@ -60,7 +60,6 @@ function SelectWidget({
   schema,
   id,
   options,
-  label,
   name,
   required,
   disabled,
@@ -68,24 +67,17 @@ function SelectWidget({
   value,
   multiple,
   placeholder,
-  rawErrors,
   autofocus,
   onChange,
   onBlur,
   onFocus,
 }) {
-  const { enumDisabled, enumOptions, semanticProps, errorOptions } = options;
-  const { pointing } = errorOptions;
-  const error =
-    rawErrors && rawErrors.length > 0
-      ? { content: rawErrors[0], pointing }
-      : false;
+  const { enumDisabled, enumOptions, semanticProps } = options;
   const emptyValue = multiple ? [] : "";
   const dropdownOptions = createDefaultValueOptionsForDropDown(
     enumOptions,
     enumDisabled
   );
-  const checkTitle = label || schema.title;
   const _onChange = (
     event,
     // eslint-disable-next-line no-shadow
@@ -99,33 +91,23 @@ function SelectWidget({
     target: { value },
   }) => onFocus && onFocus(id, processValue(schema, value));
   return (
-    <Grid>
-      {checkTitle && (
-        <Grid.Column verticalAlign="middle" width={3}>
-          <label htmlFor={id}>{label || schema.title}</label>
-        </Grid.Column>
-      )}
-      <Grid.Column width={checkTitle ? 13 : 16}>
-        <Form.Dropdown
-          key={id}
-          name={name}
-          multiple={typeof multiple === "undefined" ? false : multiple}
-          value={typeof value === "undefined" ? emptyValue : value}
-          disabled={disabled}
-          placeholder={placeholder}
-          error={error}
-          scrolling
-          {...semanticProps}
-          required={required}
-          autoFocus={autofocus}
-          readOnly={readonly}
-          options={dropdownOptions}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-      </Grid.Column>
-    </Grid>
+    <Form.Dropdown
+      key={id}
+      name={name}
+      multiple={typeof multiple === "undefined" ? false : multiple}
+      value={typeof value === "undefined" ? emptyValue : value}
+      disabled={disabled}
+      placeholder={placeholder}
+      scrolling
+      {...semanticProps}
+      required={required}
+      autoFocus={autofocus}
+      readOnly={readonly}
+      options={dropdownOptions}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 }
 

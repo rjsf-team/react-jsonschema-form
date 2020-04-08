@@ -1,40 +1,45 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { Input } from "semantic-ui-react";
+import { TextArea } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
-function TextWidget({
+function TextareaWidget({
   id,
-  required,
-  readonly,
-  disabled,
-  name,
+  placeholder,
   value,
-  onChange,
+  required,
+  disabled,
+  autofocus,
+  label,
+  name,
+  readonly,
   onBlur,
   onFocus,
-  autofocus,
+  onChange,
   options,
+  schema,
   formContext,
 }) {
   const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
-    onChange(value === "" ? options.emptyValue : value);
+    onChange && onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <Input
-      key={id}
+    <TextArea
       id={id}
-      required={required}
+      key={id}
+      placeholder={placeholder}
       autoFocus={autofocus}
+      required={required}
       disabled={disabled || readonly}
       name={name}
       {...semanticProps}
       value={value || ""}
+      rows={options.rows || 5}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
@@ -42,16 +47,12 @@ function TextWidget({
   );
 }
 
-TextWidget.defaultProps = {
-  options: {
-    semanticProps: {
-      fluid: true,
-    },
-  },
+TextareaWidget.defaultProps = {
+  options: {},
 };
 
-TextWidget.propTypes = {
+TextareaWidget.propTypes = {
   options: PropTypes.object,
 };
 
-export default TextWidget;
+export default TextareaWidget;

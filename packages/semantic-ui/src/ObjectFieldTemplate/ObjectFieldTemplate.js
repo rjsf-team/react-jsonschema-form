@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React from "react";
 
 function ObjectFieldTemplate({
   DescriptionField,
@@ -11,22 +11,24 @@ function ObjectFieldTemplate({
   uiSchema,
   idSchema,
 }) {
-  return (<div>
-    {(uiSchema['ui:title'] || title) && (
-      <TitleField
-        id={`${idSchema.$id}-title`}
-        title={title}
-        required={required}
-      />
-    )}
-    {description && (
-      <DescriptionField
-        id={`${idSchema.$id}-description`}
-        description={description}
-      />
-    )}
-    {properties.map((prop) => prop.content)}
-  </div>);
+  return (
+    <React.Fragment>
+      {(uiSchema["ui:title"] || title) && (
+        <TitleField
+          id={`${idSchema.$id}-title`}
+          title={title}
+          required={required}
+        />
+      )}
+      {description && (
+        <DescriptionField
+          id={`${idSchema.$id}-description`}
+          description={description}
+        />
+      )}
+      {properties.map(prop => prop.content)}
+    </React.Fragment>
+  );
 }
 
 export default ObjectFieldTemplate;

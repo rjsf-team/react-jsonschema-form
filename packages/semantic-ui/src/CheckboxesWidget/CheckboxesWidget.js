@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types,react/no-array-index-key */
-import React from 'react';
-import { Form, Checkbox } from 'semantic-ui-react';
-
+import React from "react";
+import { Form, Checkbox } from "semantic-ui-react";
+import { getSemanticProps } from "../util";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -12,13 +12,10 @@ function selectValue(value, selected, all) {
 }
 
 function deselectValue(value, selected) {
-  return selected.filter((v) => v !== value);
+  return selected.filter(v => v !== value);
 }
 
-
 function CheckboxesWidget({
-  schema,
-  label,
   id,
   disabled,
   options,
@@ -28,12 +25,12 @@ function CheckboxesWidget({
   onChange,
   onBlur,
   onFocus,
+  formContext,
 }) {
   const { enumOptions, enumDisabled, inline } = options;
+  const semanticProps = getSemanticProps({ formContext, options });
 
-  const _onChange = (option) => ({
-    target: { checked },
-  }) => {
+  const _onChange = option => ({ target: { checked } }) => {
     // eslint-disable-next-line no-shadow
     const all = enumOptions.map(({ value }) => value);
     if (checked) {
@@ -43,13 +40,11 @@ function CheckboxesWidget({
     }
   };
 
-  const _onBlur = () =>
-    onBlur && onBlur(id, value);
+  const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <Form.Group {...inlineOption}>
-      <label htmlFor={id}>{label || schema.title}</label>
       {enumOptions.map((option, index) => {
         const checked = value.indexOf(option.value) !== -1;
         const itemDisabled =
@@ -59,13 +54,15 @@ function CheckboxesWidget({
             id={`${id}_${index}`}
             key={`${id}_${index}`}
             label={option.label}
+            {...semanticProps}
             checked={checked}
             disabled={disabled || itemDisabled || readonly}
             autoFocus={autofocus && index === 0}
             onChange={_onChange(option)}
             onBlur={_onBlur}
             onFocus={_onFocus}
-          />);
+          />
+        );
       })}
     </Form.Group>
   );
