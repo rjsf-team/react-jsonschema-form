@@ -1,9 +1,6 @@
 import React from 'react';
 
-import {
-  isMultiSelect,
-  getDefaultRegistry,
-} from '@rjsf/core/lib/utils';
+import { utils } from '@rjsf/core';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -13,6 +10,11 @@ import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
 
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
+
+const {
+  isMultiSelect,
+  getDefaultRegistry,
+} = utils;
 
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { schema, registry = getDefaultRegistry() } = props;
