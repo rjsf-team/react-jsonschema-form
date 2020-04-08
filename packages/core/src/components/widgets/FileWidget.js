@@ -18,7 +18,12 @@ function FilesInfo(props) {
         const { name, size, type } = fileInfo;
         return (
           <li key={key}>
-            <strong>{name}</strong> ({type}, {size} bytes)
+            <strong>{name}</strong>{" "}
+            {type && size && (
+              <>
+                ({type}, {size} bytes)
+              </>
+            )}
           </li>
         );
       })}
@@ -39,7 +44,34 @@ function extractFileInfo(dataURLs) {
     });
 }
 
-const toBase64 = file =>
+const processFiles = async (filesList, maxBytes) => {
+  const files = [];
+
+  for (var i = 0; i < filesList.length; i++) {
+    const file = filesList[i];
+    const isFileTooLarge = file.size > maxBytes;
+
+    // If a file is too large the browser will crash, so parse a small string instead
+    const dataURL = !isFileTooLarge
+      ? await processFile(file)
+      : `data:text/plain;base64,${btoa(
+          "File too large for parsing to base64"
+        )}`;
+
+    if (dataURL) {
+      files.push({
+        dataURL: addNameToDataURL(dataURL, file.name),
+        name: file.name,
+        size: !isFileTooLarge ? file.size : undefined,
+        type: !isFileTooLarge ? file.type : undefined,
+      });
+    }
+  }
+
+  return files;
+};
+
+const processFile = file =>
   new Promise((resolve, reject) => {
     const reader = new window.FileReader();
     reader.onerror = error => {
@@ -76,28 +108,7 @@ class FileWidget extends Component {
       });
     }
 
-    const files = [];
-
-    for (var i = 0; i < filesList.length; i++) {
-      const file = filesList[i];
-
-      // If a file is too large the browser will crash, so parse a small string instead
-      const dataURL =
-        file.size < maxBytes
-          ? await toBase64(file)
-          : `data:text/plain;base64,${btoa(
-              "File too large for parsing to base64"
-            )}`;
-
-      if (dataURL) {
-        files.push({
-          dataURL: addNameToDataURL(dataURL, file.name),
-          name: file.name,
-          size: file.size,
-          type: file.type,
-        });
-      }
-    }
+    const files = await processFiles(filesList, maxBytes);
 
     this.setState(
       {
