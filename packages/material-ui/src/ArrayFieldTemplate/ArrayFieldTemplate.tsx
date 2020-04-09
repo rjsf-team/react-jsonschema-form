@@ -1,23 +1,26 @@
 import React from 'react';
 
-import {
-  isMultiSelect,
-  getDefaultRegistry,
-} from 'react-jsonschema-form/lib/utils';
+import { utils } from '@rjsf/core';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
-import { ArrayFieldTemplateProps, IdSchema } from 'react-jsonschema-form';
+import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
 
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
 
+const {
+  isMultiSelect,
+  getDefaultRegistry,
+} = utils;
+
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { schema, registry = getDefaultRegistry() } = props;
 
-  if (isMultiSelect(schema, registry.definitions)) {
+  // TODO: update types so we don't have to cast registry as any
+  if (isMultiSelect(schema, (registry as any).rootSchema)) {
     return <DefaultFixedArrayFieldTemplate {...props} />;
   } else {
     return <DefaultNormalArrayFieldTemplate {...props} />;
