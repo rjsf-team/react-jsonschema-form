@@ -1,9 +1,13 @@
-/*
- * Extract props meant for semantic UI components from props that are
- * passed to Widgets, Templates and Fields.
- */
 import React from "react";
 
+/**
+ * Extract props meant for semantic UI components from props that are
+ * passed to Widgets, Templates and Fields.
+ * @param formContext
+ * @param {Object} uiSchema
+ * @param {Object} options
+ * @returns {any}
+ */
 export function getSemanticProps({
   formContext = {},
   uiSchema = {},
@@ -17,11 +21,14 @@ export function getSemanticProps({
   );
 }
 
-/*
+/**
  * Combine multiple strings containing class names into a single string,
  * removing duplicates. E.g.
  * cleanClassNames('bar', 'baz bar', 'x y ', undefined)
  * // 'bar baz x y'
+ * @param {Array} classNameArr
+ * @param {Array} omit
+ * @returns {string}
  */
 export function cleanClassNames(classNameArr, omit = []) {
   // Split each arg on whitespace, and add it to an array. Skip false-y args
@@ -38,6 +45,14 @@ export function cleanClassNames(classNameArr, omit = []) {
   return [...new Set(classList.filter(cn => !omit.includes(cn)))].join(" ");
 }
 
+/**
+ *
+ * @param wrap
+ * @param Component
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 export function MaybeWrap({ wrap, component: Component = "div", ...props }) {
   return wrap ? <Component {...props} /> : props.children;
 }
