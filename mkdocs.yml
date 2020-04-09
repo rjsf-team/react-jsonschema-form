@@ -5,10 +5,10 @@ theme: readthedocs
 nav:
   - Introduction: index.md
   - Tutorial: tutorial.md
+  - Schema Reference: api-reference-schema.md
   - Custom Widgets and Fields: custom-widgets-fields.md
   - Custom Templates: custom-templates.md
   - Theme Customization: theme-customization.md
-  - Schema Reference: api-reference-schema.md
   - uiSchema Reference: api-reference-uischema.md
   - Widget Reference: api-reference-widgets.md
   - Form Props Reference: api-reference-props.md
