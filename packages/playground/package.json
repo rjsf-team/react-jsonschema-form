@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/playground",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.6",
   "description": "rjsf playground",
   "private": true,
   "scripts": {

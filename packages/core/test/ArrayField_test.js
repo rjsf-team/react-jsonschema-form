@@ -84,6 +84,22 @@ describe("ArrayField", () => {
         node.querySelector(".field-array > .unsupported-field").textContent
       ).to.contain("Missing items definition");
     });
+
+    it("should be able to be overwritten with a custom UnsupportedField component", () => {
+      const CustomUnsupportedField = function() {
+        return <span id="custom">Custom UnsupportedField</span>;
+      };
+
+      const fields = { UnsupportedField: CustomUnsupportedField };
+      const { node } = createFormComponent({
+        schema: { type: "array" },
+        fields,
+      });
+
+      expect(node.querySelectorAll("#custom")[0].textContent).to.eql(
+        "Custom UnsupportedField"
+      );
+    });
   });
 
   describe("List of inputs", () => {
