@@ -50,6 +50,7 @@ function BooleanField(props) {
     });
   }
 
+  console.log(eval("`BooleanField, name=${name} title=${title} !`"));
   return (
     <Widget
       options={{ ...options, enumOptions }}

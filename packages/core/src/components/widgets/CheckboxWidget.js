@@ -49,7 +49,9 @@ function CheckboxWidget(props) {
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
-
+  console.log(
+    "rendering checkbox with desc " + schema.description + " label= " + label
+  );
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description && (

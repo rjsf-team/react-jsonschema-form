@@ -81,7 +81,8 @@ class NumberField extends React.Component {
         value = lastValue;
       }
     }
-
+    console.log("Number field props");
+    console.log(props);
     return (
       <StringField {...props} formData={value} onChange={this.handleChange} />
     );
