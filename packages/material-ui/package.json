@@ -11,13 +11,13 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build",
-    "test": "echo 'skipping tests' || tsdx test --env=jsdom"
+    "test": "tsdx test"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^2.0.0-alpha.2",
-    "react": ">=16"
+    "react": ">=16",
+    "@rjsf/core": "^2.0.0-alpha.6"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
@@ -34,10 +34,13 @@
     "@types/json-schema": "^7.0.3",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
+    "@types/react-test-renderer": "^16.9.2",
+    "@types/sinon": "^9.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-test-renderer": "^16.13.1",
     "rimraf": "^2.6.3",
-    "tsdx": "^0.12.3",
+    "tsdx": "^0.13.1",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"
   },

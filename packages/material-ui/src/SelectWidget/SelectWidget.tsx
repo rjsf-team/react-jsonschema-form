@@ -6,7 +6,9 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 
 import { WidgetProps } from '@rjsf/core';
-import { asNumber, guessType } from '@rjsf/core/lib/utils';
+import { utils } from '@rjsf/core';
+
+const { asNumber, guessType } = utils;
 
 const nums = new Set(['number', 'integer']);
 
