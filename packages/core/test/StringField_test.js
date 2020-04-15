@@ -267,9 +267,9 @@ describe("StringField", () => {
         formData: undefined,
       });
 
-      expect(
-        node.querySelector("input").getAttribute("autocomplete").textContent
-      ).eql("family-name");
+      expect(node.querySelector("input").getAttribute("autocomplete")).eql(
+        "family-name"
+      );
     });
   });
 
