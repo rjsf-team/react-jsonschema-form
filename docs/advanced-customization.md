@@ -3,11 +3,11 @@
 
 _ | Custom Field  | Custom Template | Custom Widget
 --|---------- | ------------- | ----
-What it does | Overrides all behaviour | Overrides just the layout | Overrides just the input box (not layout, labels, or help, or validation)
-Usage | Global or per-field | Only global | Global or per-field
-Global Example | `<Form fields={MyCustomFields} />` |  `<Form ArrayFieldTemplate={ArrayFieldTemplate} />` | `<Form widgets={MyCustomWidgets} />`
-Per-Field Example | `"ui:field": MyField` |  N/A | `"ui:widget":MyWidget`
-Documentation | [Field](#field-props) | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)
+**What it does** | Overrides all behaviour | Overrides just the layout (not behaviour) | Overrides just the input box (not layout, labels, or help, or validation)
+**Usage** | Global or per-field | Global or per-field | Global or per-field
+**Global Example** | `<Form fields={MyCustomField} />` |  `<Form ArrayFieldTemplate={MyArrayTemplate} />` | `<Form widgets={MyCustomWidget} />`
+**Per-Field Example** | `"ui:field": MyCustomField` |  `"ui:ArrayFieldTemplate": MyArrayTemplate` | `"ui:widget":MyCustomWidget`
+**Documentation** | [Field](#field-props) | [Field Template](#field-template) - [Array Template](#array-field-template) - [Object Template](#object-field-template) - [Error List Template](#error-list-template) | [Custom Widgets](#custom-widget-components)
 
 ### Field template
 
@@ -35,6 +35,19 @@ render((
 ), document.getElementById("app"));
 ```
 
+You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property.
+
+```jsx
+const uiSchema = {
+  "ui:FieldTemplate": CustomFieldTemplate
+}
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />,
+), document.getElementById("app"));
+```
+
 If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`.
 
 The following props are passed to a custom field template component:
@@ -59,7 +72,7 @@ The following props are passed to a custom field template component:
 - `uiSchema`: The uiSchema object for this field.
 - `formContext`: The `formContext` object that you passed to Form.
 
-> Note: you can only define a single field template for a form. If you need many, it's probably time to look at [custom fields](#custom-field-components) instead.
+> Note: you can only define a single global field template for a form, but you can set individual field templates per property using `"ui:FieldTemplate"`.
 
 ### Array Field Template
 
@@ -82,7 +95,21 @@ render((
 ), document.getElementById("app"));
 ```
 
+You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property.
+
+```jsx
+const uiSchema = {
+  "ui:ArrayFieldTemplate": ArrayFieldTemplate
+}
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />,
+), document.getElementById("app"));
+```
+
 Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -112,9 +139,13 @@ The following props are part of each element in `items`:
 - `hasRemove`: A boolean value stating whether the array item can be removed.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
+- `key`: A stable, unique key for the array item.
+- `onAddIndexClick: (index) => (event) => void`: Returns a function that adds a new item at `index`.
 - `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
+
+> Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
 
 ### Object Field Template
 
@@ -135,6 +166,19 @@ function ObjectFieldTemplate(props) {
 render((
   <Form schema={schema}
         ObjectFieldTemplate={ObjectFieldTemplate} />,
+), document.getElementById("app"));
+```
+
+You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property.
+
+```jsx
+const uiSchema = {
+  "ui:ObjectFieldTemplate": ObjectFieldTemplate
+}
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />,
 ), document.getElementById("app"));
 ```
 
@@ -162,6 +206,9 @@ The following props are part of each element in `properties`:
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `readonly`: A boolean value stating if the property is read-only.
+
+> Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an object field template, you may need to specify both `ui:FieldTemplate` and `ui:ObjectFieldTemplate`.
+
 
 ### Error List template
 
@@ -199,6 +246,50 @@ The following props are passed to `ErrorList`
 - `schema`: The schema that was passed to `Form`.
 - `uiSchema`: The uiSchema that was passed to `Form`.
 - `formContext`: The `formContext` object that you passed to Form.
+
+
+### Async Errors
+
+Handling async errors is an important part of many applications. Support for this is added in the form of the `errorSchema` prop.
+
+For example, a request could be made to some backend when the user submits the form. If that request fails, the errors returned by the backend should be formatted like in the following example.
+
+```jsx
+const schema = {
+  type: "object",
+  properties: {
+    foo: {
+      type: "string",
+    },
+    candy: {
+      type: "object",
+      properties: {
+        bar: {
+          type: "string",
+        }
+      }
+    },
+  },
+}
+
+const extraErrors = {
+  foo: {
+    __errors: ["some error that got added as a prop"],
+  },
+  candy: {
+    bar: {
+    __errors: ["some error that got added as a prop"],
+    }
+  }
+}
+
+render((
+  <Form schema={schema}
+        extraErrors={extraErrors} />,
+), document.getElementById("app"));
+```
+
+An important note is that these errors are 'display only' and will not block the user from submitting the form again.
 
 ### Id prefix
 
@@ -262,7 +353,8 @@ The following props are passed to custom widget components:
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
 - `autofocus`: `true` if the widget should autofocus;
-- `onChange`: The value change event handler; call it with the new value everytime it changes;
+- `onChange`: The value change event handler; call it with the new value every time it changes;
+- `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
@@ -423,12 +515,13 @@ A field component will always be passed the following props:
 
 #### The `registry` object
 
-The `registry` is an object containing the registered custom fields and widgets as well as root schema definitions.
+The `registry` is an object containing the registered custom fields and widgets as well as the root schema definitions.
 
  - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField`, `TitleField` and `DescriptionField` components;
  - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
- - `definitions`: The root schema [definitions](#schema-definitions-and-references), if any.
- - `formContext`: The [formContext](#the-formcontext-object) object.
+ - `rootSchema`: The root schema, which can contain referenced [definitions](#schema-definitions-and-references);
+ - `formContext`: The [formContext](#the-formcontext-object) object;
+ - `definitions` (deprecated since v2): Equal to `rootSchema.definitions`.
 
 The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
 
@@ -457,7 +550,7 @@ You can provide your own implementation of the `SchemaField` base React componen
 To proceed so, pass a `fields` object having a `SchemaField` property to your `Form` component; here's a rather silly example wrapping the standard `SchemaField` lib component:
 
 ```jsx
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import SchemaField from "@rjsf/core/lib/components/fields/SchemaField";
 
 const CustomSchemaField = function(props) {
   return (
@@ -526,6 +619,41 @@ render((
     formData={formData} />
 ), document.getElementById("app"));
 ```
+
+The default fields you can override are:
+
+ - `ArrayField`
+ - `BooleanField`
+ - `DescriptionField`
+ - `MultiSchemaField`
+ - `NullField`
+ - `NumberField`
+ - `ObjectField`
+ - `SchemaField`
+ - `StringField`
+ - `TitleField`
+ - `UnsupportedField`
+
+The default widgets you can override are:
+
+ - `AltDateTimeWidget`
+ - `AltDateWidget`
+ - `CheckboxesWidget`
+ - `CheckboxWidget`
+ - `ColorWidget`
+ - `DateTimeWidget`
+ - `DateWidget`
+ - `EmailWidget`
+ - `FileWidget`
+ - `HiddenWidget`
+ - `PasswordWidget`
+ - `RadioWidget`
+ - `RangeWidget`
+ - `SelectWidget`
+ - `TextareaWidget`
+ - `TextWidget`
+ - `UpDownWidget`
+ - `URLWidget`
 
 ### Custom titles
 
