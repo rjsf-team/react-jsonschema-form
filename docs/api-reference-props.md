@@ -1,6 +1,6 @@
 ## acceptcharset
 
-The value of this prop will be passed to the `acceptcharset` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
+The value of this prop will be passed to the `accept-charset` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-accept-charset).
 
 ## action
 
