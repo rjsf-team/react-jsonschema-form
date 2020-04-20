@@ -60,6 +60,7 @@ function DefaultArrayItem(props) {
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconButton
                 icon="arrow-up"
+                title="Move up"
                 className="array-item-move-up"
                 tabIndex="-1"
                 style={btnStyle}
@@ -72,6 +73,7 @@ function DefaultArrayItem(props) {
               <IconButton
                 icon="arrow-down"
                 className="array-item-move-down"
+                title="Move down"
                 tabIndex="-1"
                 style={btnStyle}
                 disabled={
@@ -85,6 +87,7 @@ function DefaultArrayItem(props) {
               <IconButton
                 type="danger"
                 icon="remove"
+                title="Remove"
                 className="array-item-remove"
                 tabIndex="-1"
                 style={btnStyle}
