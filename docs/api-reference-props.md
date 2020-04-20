@@ -101,7 +101,7 @@ If you just want to disable some of the fields, see the `ui:disabled` parameter 
 
 ## enctype
 
-The value of this prop will be passed to the `enctype` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
+The value of this prop will be passed to the `enctype` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-enctype).
 
 ## extraErrors
 
