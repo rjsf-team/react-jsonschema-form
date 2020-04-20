@@ -358,7 +358,7 @@ function SchemaFieldRender(props) {
 
   return (
     <FieldTemplate {...fieldProps}>
-      <div>
+      <React.Fragment>
         {field}
 
         {/*
@@ -403,7 +403,7 @@ function SchemaFieldRender(props) {
             uiSchema={uiSchema}
           />
         )}
-      </div>
+      </React.Fragment>
     </FieldTemplate>
   );
 }
