@@ -26,7 +26,6 @@ describe("FieldTemplate", () => {
       uiSchema: { "ui:disabled": true },
       FieldTemplate,
     });
-    expect();
   });
 
   describe("Custom FieldTemplate for disabled property", () => {
