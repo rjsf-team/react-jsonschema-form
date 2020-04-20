@@ -22,7 +22,7 @@ This library automatically fills default values defined in the [JSON Schema](htt
 
 Since there is a complex interaction between any supplied original form data and any injected defaults, this library tries to do the injection in a way which keeps the original intention of the original form data.
 
-Check out the defaults example on the [live playground](https://mozilla-services.github.io/react-jsonschema-form/) to see this in action.
+Check out the defaults example on the [live playground](https://rjsf-team.github.io/react-jsonschema-form/) to see this in action.
 
 ### Merging of defaults into the form data
 
