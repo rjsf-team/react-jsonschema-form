@@ -14,7 +14,7 @@ describe("FieldTemplate", () => {
     sandbox.restore();
   });
 
-  describe.only("FieldTemplate should only have one child", () => {
+  describe("FieldTemplate should only have one child", () => {
     function FieldTemplate(props) {
       if (React.Children.count(props.children) !== 1) {
         throw "Got wrong number of children";
