@@ -1,13 +1,11 @@
-import { getDefaultRegistry } from "react-jsonschema-form/lib/utils";
+import { getDefaultRegistry } from '@rjsf/core/lib/utils';
 import { Form as SuiForm } from "semantic-ui-react";
-
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
 import ErrorList from "../ErrorList";
 import Fields from "../Fields";
 import FieldTemplate from "../FieldTemplate";
 import ObjectFieldTemplate from "../ObjectFieldTemplate";
 import Widgets from "../Widgets";
-
 const { fields, widgets } = getDefaultRegistry();
 
 const Theme = {

@@ -1,4 +1,4 @@
-import { withTheme } from "../../../core";
+import { withTheme } from '@rjsf/core';
 
 import Theme from "../Theme";
 

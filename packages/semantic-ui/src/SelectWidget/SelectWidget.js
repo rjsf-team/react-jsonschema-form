@@ -2,7 +2,7 @@
 import React from "react";
 import _ from "lodash";
 import { Form } from "semantic-ui-react";
-import { asNumber, guessType } from "../../../core/lib/utils";
+import { asNumber, guessType } from '@rjsf/core/lib/utils';
 import PropTypes from "prop-types";
 
 const nums = new Set(["number", "integer"]);

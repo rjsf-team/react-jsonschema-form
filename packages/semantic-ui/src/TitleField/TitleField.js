@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { Header } from "semantic-ui-react";
 
 function TitleField({ title, options }) {
-  const { semanticProps } = options;
+  const { semantic } = options;
   if (title) {
     return (
-      <Header {...semanticProps} as="h5">
+      <Header {...semantic} as="h5">
         {title}
       </Header>
     );
@@ -15,7 +15,7 @@ function TitleField({ title, options }) {
 
 TitleField.defaultProps = {
   options: {
-    semanticProps: {
+    semantic: {
       inverted: false,
       dividing: true,
     },

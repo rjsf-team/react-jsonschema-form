@@ -26,9 +26,9 @@ function FieldTemplate({
       className={cleanClassNames([className, classNames], ["field"])}
       key={id}
       style={{ position: "relative" }}>
-      {displayLabel && (label || rawDescription) && (
+      {displayLabel && rawDescription && (
         <MaybeWrap wrap={wrapLabel} className="sui-field-label">
-          {label && <label htmlFor={id}>{label}</label>}
+          
           {rawDescription && (
             <DescriptionField
               description={rawDescription}

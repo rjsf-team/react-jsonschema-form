@@ -2,9 +2,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button, Grid, Segment } from "semantic-ui-react";
-import { isFixedItems } from "../../../core/lib/utils";
+import { isFixedItems } from '@rjsf/core/lib/utils';
 import AddButton from "../AddButton";
 import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
+
 
 const ArrayFieldTitle = ({ TitleField, idSchema, title }) => {
   if (!title) {
