@@ -26,8 +26,7 @@
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test",
     "prepare": "npm run dist",
-    "precommit": "lint-staged",
-    "test": "jest"
+    "precommit": "lint-staged"
   },
   "peerDependencies": {
     "semantic-ui-react": "^0.87.3",
