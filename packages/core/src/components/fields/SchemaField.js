@@ -62,12 +62,13 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
 
 function Label(props) {
   const { label, required, id } = props;
+
   if (!label) {
     return null;
   }
   return (
     <label className="control-label" htmlFor={id}>
-      {label}
+      {label}this is a label
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
   );
@@ -131,6 +132,7 @@ function DefaultTemplate(props) {
     required,
     displayLabel,
   } = props;
+
   if (hidden) {
     return <div className="hidden">{children}</div>;
   }
@@ -268,7 +270,7 @@ function SchemaFieldRender(props) {
       isMultiSelect(schema, rootSchema) ||
       isFilesArray(schema, uiSchema, rootSchema);
   }
-  if (schema.type === "object") {
+  if (schema.type === "object" || schema.type === undefined) {
     displayLabel = false;
   }
   if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
