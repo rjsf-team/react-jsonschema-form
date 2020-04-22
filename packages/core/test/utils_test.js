@@ -2007,6 +2007,129 @@ describe("utils", () => {
         });
 
         describe("with $ref in oneOf", () => {
+          it("should retrieve referenced properties within schema definitions", () => {
+            const definitions = {
+              awithb: {
+                type: 'string',
+                enum: ['a', 'b'],
+              },
+              a: {
+                type: 'string',
+                enum: ['a'],
+              }
+            };
+            const schema = {
+              type: "object",
+              properties: {
+                a: { 
+                  $ref: '#/definitions/awithb'
+                },
+              },
+              dependencies: {
+                a: {
+                  oneOf: [
+                    { 
+                      properties: {
+                        a: {
+                          $ref: '#/definitions/a'
+                        }
+                      }
+                    },
+                    { 
+                      properties: {
+                        a: {
+                          type: "string",
+                          enum: ['b']
+                        },
+                        extraField: {
+                          type: "string"
+                        }
+                      }
+                    },
+                  ],
+                },
+              },
+              definitions: definitions
+            };
+            const formData = { a: "a" };
+            expect(retrieveSchema(schema, { }, formData)).eql({
+              type: "object",
+              definitions: definitions,
+              properties: {
+                a: { $ref: "#/definitions/awithb" },
+              },
+            });
+            formData.a = "b";
+            expect(retrieveSchema(schema, { }, formData)).eql({
+              type: "object",
+              definitions: definitions,
+              properties: {
+                a: { $ref: "#/definitions/awithb" },
+                extraField: { type: "string" },
+              },
+            });
+          });
+
+          it("should retrieve referenced properties from root schema definitions", () => {
+            const definitions = {
+              awithb: {
+                type: 'string',
+                enum: ['a', 'b'],
+              },
+              a: {
+                type: 'string',
+                enum: ['a'],
+              }
+            };
+            const schema = {
+              type: "object",
+              properties: {
+                a: { 
+                  $ref: '#/definitions/awithb'
+                },
+              },
+              dependencies: {
+                a: {
+                  oneOf: [
+                    { 
+                      properties: {
+                        a: {
+                          $ref: '#/definitions/a'
+                        }
+                      }
+                    },
+                    { 
+                      properties: {
+                        a: {
+                          type: "string",
+                          enum: ['b']
+                        },
+                        extraField: {
+                          type: "string"
+                        }
+                      }
+                    },
+                  ],
+                },
+              },
+            };
+            const formData = { a: "a" };
+            expect(retrieveSchema(schema, { definitions: definitions }, formData)).eql({
+              type: "object",
+              properties: {
+                a: { $ref: "#/definitions/awithb" },
+              },
+            });
+            formData.a = "b";
+            expect(retrieveSchema(schema, { definitions: definitions }, formData)).eql({
+              type: "object",
+              properties: {
+                a: { $ref: "#/definitions/awithb" },
+                extraField: { type: "string" },
+              },
+            });
+          });
+     
           it("should retrieve referenced schemas", () => {
             const schema = {
               type: "object",
