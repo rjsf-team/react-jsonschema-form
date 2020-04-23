@@ -3016,8 +3016,8 @@ describe("Form omitExtraData and liveOmit", () => {
       expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
     });
 
-    it("should not block form submission", () => {
-      const onSubmit = sinon.spy();
+    it("should block form submission", () => {
+      const onError = sinon.spy();
       const schema = {
         type: "object",
         properties: {
@@ -3031,9 +3031,9 @@ describe("Form omitExtraData and liveOmit", () => {
         },
       };
 
-      const { node } = createFormComponent({ schema, extraErrors, onSubmit });
+      const { node } = createFormComponent({ schema, extraErrors, onError });
       Simulate.submit(node);
-      sinon.assert.calledOnce(onSubmit);
+      sinon.assert.calledOnce(onError);
     });
   });
 });

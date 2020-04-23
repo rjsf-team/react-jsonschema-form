@@ -723,7 +723,7 @@ describe("ArrayField", () => {
       });
 
       Simulate.change(node.querySelector("#root_1"), {
-        target: { value: "" },
+        target: { value: "hello" },
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -738,7 +738,7 @@ describe("ArrayField", () => {
             stack: "[1] should be integer",
           },
         ],
-        formData: [1, null, 3],
+        formData: [1, "hello", 3],
       });
 
       submitForm(node);

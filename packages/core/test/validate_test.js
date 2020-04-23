@@ -403,7 +403,7 @@ describe("Validation", () => {
           const compInfo = createFormComponent({
             schema,
             formData: {
-              foo: undefined,
+              bar: "proof",
             },
           });
           onError = compInfo.onError;
@@ -699,7 +699,7 @@ describe("Validation", () => {
           const compInfo = createFormComponent({
             schema,
             formData: {
-              foo: undefined,
+              bar: "proof",
             },
             showErrorList: false,
           });

@@ -108,7 +108,7 @@
     "sass-loader": "^7.3.1",
     "sinon": "^7.5.0",
     "style-loader": "^0.13.1",
-    "webpack": "^4.20.2",
+    "webpack": "^4.43.0",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-dev-server": "^3.10.1",

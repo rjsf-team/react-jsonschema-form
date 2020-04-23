@@ -378,8 +378,8 @@ describe("SchemaField", () => {
       const matches = node.querySelectorAll(
         "form > .form-group > div > .error-detail .text-danger"
       );
-      expect(matches).to.have.length.of(1);
-      expect(matches[0].textContent).to.eql("container");
+      expect(matches).to.have.length.of(2);
+      expect(matches[1].textContent).to.eql("container");
     });
 
     it("should pass errors to child component", () => {

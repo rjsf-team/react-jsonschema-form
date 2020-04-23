@@ -6,7 +6,7 @@ import { deepEquals, getDefaultFormState } from "./utils";
 let formerCustomFormats = null;
 let formerMetaSchema = null;
 
-import { isObject, mergeObjects } from "./utils";
+import { isObject, mergeObjects, trimEmptyValues } from "./utils";
 
 function createAjvInstance() {
   const ajv = new Ajv({
@@ -204,7 +204,9 @@ export default function validateFormData(
 
   let validationError = null;
   try {
-    ajv.validate(schema, formData);
+    // 675 - deal with optional objects with required values
+    const trimmedData = trimEmptyValues(formData);
+    ajv.validate(schema, trimmedData);
   } catch (err) {
     validationError = err;
   }
@@ -270,7 +272,9 @@ export default function validateFormData(
  */
 export function isValid(schema, data) {
   try {
-    return ajv.validate(schema, data);
+    // 675 - deal with optional objects with required values
+    const trimmedData = trimEmptyValues(data);
+    return ajv.validate(schema, trimmedData);
   } catch (e) {
     return false;
   }
