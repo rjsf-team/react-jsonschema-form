@@ -104,7 +104,7 @@ module.exports = {
         },
       },
       noToolbar: {
-        title: "No add, remove and order buttons",
+        title: "No add, remove, copy and order buttons",
         type: "array",
         items: {
           type: "string",
@@ -167,6 +167,7 @@ module.exports = {
         addable: false,
         orderable: false,
         removable: false,
+        copyable: false,
       },
     },
     fixedNoToolbar: {
@@ -174,6 +175,7 @@ module.exports = {
         addable: false,
         orderable: false,
         removable: false,
+        copyable: false,
       },
     },
   },
