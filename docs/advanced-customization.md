@@ -137,6 +137,7 @@ The following props are part of each element in `items`:
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
 - `hasMoveUp`: A boolean value stating whether the array item can be moved up.
 - `hasRemove`: A boolean value stating whether the array item can be removed.
+- `hasCopy`: A boolean value stating whether the array item can be copied.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
 - `key`: A stable, unique key for the array item.
