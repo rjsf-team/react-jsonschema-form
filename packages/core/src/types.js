@@ -31,6 +31,7 @@ export const fieldProps = {
     "ui:options": PropTypes.shape({
       addable: PropTypes.bool,
       orderable: PropTypes.bool,
+      copyable: PropTypes.bool,
       removable: PropTypes.bool,
     }),
   }),

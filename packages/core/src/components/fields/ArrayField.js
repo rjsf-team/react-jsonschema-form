@@ -81,6 +81,17 @@ function DefaultArrayItem(props) {
               />
             )}
 
+            {props.hasCopy && (
+              <IconButton
+                icon="copy"
+                className="array-item-copy"
+                tabIndex="-1"
+                style={btnStyle}
+                disabled={props.disabled || props.readonly}
+                onClick={props.onCopyIndexClick(props.index)}
+              />
+            )}
+
             {props.hasRemove && (
               <IconButton
                 type="danger"
@@ -393,6 +404,31 @@ class ArrayField extends Component {
     };
   };
 
+  onCopyIndexClick = index => {
+    return event => {
+      if (event) {
+        event.preventDefault();
+      }
+      const { onChange } = this.props;
+      const { keyedFormData } = this.state;
+      const newKeyedFormDataRow = {
+        key: generateRowId(),
+        item: keyedFormData[index].item,
+      };
+      const newKeyedFormData = [
+        ...this.state.keyedFormData,
+        newKeyedFormDataRow,
+      ];
+      this.setState(
+        {
+          keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
+        },
+        () => onChange(keyedToPlainFormData(newKeyedFormData))
+      );
+    };
+  };
+
   onChangeForIndex = index => {
     return (value, errorSchema) => {
       const { formData, onChange } = this.props;
@@ -680,6 +716,7 @@ class ArrayField extends Component {
           key,
           index,
           canRemove: additional,
+          canCopy: additional,
           canMoveUp: index >= itemSchemas.length + 1,
           canMoveDown: additional && index < items.length - 1,
           itemSchema,
@@ -718,6 +755,7 @@ class ArrayField extends Component {
       canRemove = true,
       canMoveUp = true,
       canMoveDown = true,
+      canCopy = true,
       itemSchema,
       itemData,
       itemUiSchema,
@@ -737,14 +775,16 @@ class ArrayField extends Component {
     const {
       fields: { SchemaField },
     } = registry;
-    const { orderable, removable } = {
+    const { orderable, copyable, removable } = {
       orderable: true,
+      copyable: true,
       removable: true,
       ...uiSchema["ui:options"],
     };
     const has = {
       moveUp: orderable && canMoveUp,
       moveDown: orderable && canMoveDown,
+      copy: copyable && canCopy,
       remove: removable && canRemove,
     };
     has.toolbar = Object.keys(has).some(key => has[key]);
@@ -774,12 +814,14 @@ class ArrayField extends Component {
       hasToolbar: has.toolbar,
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
+      hasCopy: has.copy,
       hasRemove: has.remove,
       index,
       key,
       onAddIndexClick: this.onAddIndexClick,
       onDropIndexClick: this.onDropIndexClick,
       onReorderClick: this.onReorderClick,
+      onCopyIndexClick: this.onCopyIndexClick,
       readonly,
     };
   }
