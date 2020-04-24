@@ -357,6 +357,18 @@ const uiSchema = {
 };
 ```
 
+#### `copyable` option
+
+A copy button is shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance. You can turn this off with the `copyable` option in `uiSchema`:
+
+```jsx
+const uiSchema = {
+  "ui:options":  {
+    copyable: false
+  }
+};
+```
+
 ### Custom CSS class names
 
 The uiSchema object accepts a `classNames` property for each field of the schema:
