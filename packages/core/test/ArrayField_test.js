@@ -984,6 +984,16 @@ describe("ArrayField", () => {
       expect(inputs.length).eql(0);
     });
 
+    it("should show copy buttons", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar"],
+      });
+      const copyBtns = node.querySelector(".array-item-copy");
+
+      expect(copyBtns).not.eql(null);
+    });
+
     it("should not show copy buttons if copyable is false", () => {
       const { node } = createFormComponent({
         schema,
