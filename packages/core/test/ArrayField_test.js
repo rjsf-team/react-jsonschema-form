@@ -1026,6 +1026,24 @@ describe("ArrayField", () => {
       expect(node.querySelector(".array-item").hasAttribute(ArrayKeyDataAttr))
         .to.be.true;
     });
+
+    it("should have same value when clicking the copy button on bar value", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar", "baz"],
+      });
+
+      const copyBtns = node.querySelectorAll(".array-item-copy");
+
+      Simulate.click(copyBtns[1]);
+
+      const inputs = node.querySelectorAll(".field-string input[type=text]");
+      expect(inputs).to.have.length.of(4);
+      expect(inputs[0].value).eql("foo");
+      expect(inputs[1].value).eql("bar");
+      expect(inputs[2].value).eql("baz");
+      expect(inputs[3].value).eql("bar");
+    });
   });
 
   describe("Multiple choices list", () => {
