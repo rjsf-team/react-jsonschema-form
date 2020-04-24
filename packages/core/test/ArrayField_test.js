@@ -37,6 +37,13 @@ const ExposedArrayKeyTemplate = function(props) {
                 Up
               </button>
             )}
+            {element.hasCopy && (
+              <button
+                className="array-item-copy"
+                onClick={element.onCopyIndexClick(element.index)}>
+                Remove
+              </button>
+            )}
             {element.hasRemove && (
               <button
                 className="array-item-remove"
@@ -1004,6 +1011,21 @@ describe("ArrayField", () => {
 
       expect(copyBtns).to.be.null;
     });
+
+    it("should assign new keys/ids when clicking the copy button", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar", "baz"],
+        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+      });
+
+      const copyBtns = node.querySelectorAll(".array-item-copy");
+
+      Simulate.click(copyBtns[2]);
+
+      expect(node.querySelector(".array-item").hasAttribute(ArrayKeyDataAttr))
+        .to.be.true;
+    });
   });
 
   describe("Multiple choices list", () => {
@@ -1237,7 +1259,6 @@ describe("ArrayField", () => {
       });
     });
   });
-
   describe("Multiple files field", () => {
     const schema = {
       type: "array",
