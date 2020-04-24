@@ -95,6 +95,14 @@ module.exports = {
           default: "lorem ipsum",
         },
       },
+      uncopyable: {
+        title: "Uncopyable items",
+        type: "array",
+        items: {
+          type: "string",
+          default: "lorem ipsum",
+        },
+      },
       noToolbar: {
         title: "No add, remove and order buttons",
         type: "array",
@@ -149,6 +157,11 @@ module.exports = {
         removable: false,
       },
     },
+    uncopyable: {
+      "ui:options": {
+        copyable: false,
+      },
+    },
     noToolbar: {
       "ui:options": {
         addable: false,
@@ -171,6 +184,7 @@ module.exports = {
     nestedList: [["lorem", "ipsum"], ["dolor"]],
     unorderable: ["one", "two"],
     unremovable: ["one", "two"],
+    uncopyable: ["one", "two"],
     noToolbar: ["one", "two"],
     fixedNoToolbar: [42, true, "additional item one", "additional item two"],
   },
