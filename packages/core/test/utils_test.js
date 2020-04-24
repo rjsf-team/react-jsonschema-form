@@ -3072,8 +3072,16 @@ describe("utils", () => {
               default: "lorem ipsum",
             },
           },
+          uncopyable: {
+            title: "Uncopyable items",
+            type: "array",
+            items: {
+              type: "string",
+              default: "lorem ipsum",
+            },
+          },
           noToolbar: {
-            title: "No add, remove and order buttons",
+            title: "No add, remove, copy and order buttons",
             type: "array",
             items: {
               type: "string",
@@ -3134,6 +3142,7 @@ describe("utils", () => {
         ],
         unorderable: ["one", "two"],
         unremovable: ["one", "two"],
+        uncopyable: ["one", "two"],
         noToolbar: ["one", "two"],
         fixedNoToolbar: [
           42,
@@ -3302,6 +3311,15 @@ describe("utils", () => {
           },
           "1": {
             $name: "unremovable.1",
+          },
+        },
+        uncopyable: {
+          $name: "uncopyable",
+          "0": {
+            $name: "uncopyable.0",
+          },
+          "1": {
+            $name: "uncopyable.1",
           },
         },
       });
