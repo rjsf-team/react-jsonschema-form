@@ -108,6 +108,16 @@ const DefaultArrayItem = (props: any) => {
             />
           )}
 
+          {props.hasCopy && (
+            <IconButton
+              icon="file-copy"
+              tabIndex={-1}
+              style={btnStyle as any}
+              disabled={props.disabled || props.readonly}
+              onClick={props.onCopyIndexClick(props.index)}
+            />
+          )}
+
           {props.hasRemove && (
             <IconButton
               icon="remove"
