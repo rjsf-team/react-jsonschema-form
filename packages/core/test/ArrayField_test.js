@@ -983,6 +983,17 @@ describe("ArrayField", () => {
       const inputs = form.node.querySelectorAll("input[type=text]");
       expect(inputs.length).eql(0);
     });
+
+    it("should not show copy buttons if copyable is false", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar"],
+        uiSchema: { "ui:options": { copyable: false } },
+      });
+      const copyBtns = node.querySelector(".array-item-copy");
+
+      expect(copyBtns).to.be.null;
+    });
   });
 
   describe("Multiple choices list", () => {
