@@ -1,19 +1,3 @@
-## Customizing with other frameworks
-
-The default theme is bootstrap 3. In order to use another theme, you must first install `@rjsf/core`.
-
-For example, to use the standard bootstrap 3 form, you can run:
-
-```jsx
-import Form from "@rjsf/core";
-```
-
-To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/material-ui`. Then, you can run:
-
-```jsx
-import Form from "@rjsf/material-ui";
-```
-
 ### withTheme Higher-Order Component
 The `withTheme` component provides an easy way to extend the functionality of react-jsonschema-form by passing in a theme object that defines custom/overridden widgets and fields, as well as any of the other possible properties of the standard rjsf `Form` component. This theme-defining object is passed as the only parameter to the HOC (`withTheme(ThemeObj)`), and the HOC will return a themed-component which you use instead of the standard `Form` component.
 

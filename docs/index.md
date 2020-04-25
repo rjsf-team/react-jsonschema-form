@@ -76,30 +76,10 @@ This will generate a form like this:
 ![](https://i.imgur.com/DZQYPyu.png)
 
 
-## Styling your forms
+## Theming
 
-By default, library renders form fields and widgets leveraging the [Bootstrap](http://getbootstrap.com/) semantics,
-meaning that you must load the Bootstrap stylesheet on the page to view the form properly.
+For more information on what themes we support, see [Using Themes](/usage/themes.md)
 
-We also support the following themes:
-
- Theme Name | Status | Package Name / Link
- ---------- | ------- | -----------
- Bootstrap 3 (default) | Published | `@rjsf/core`
- material-ui | Published | `@rjsf/material-ui` 
- antd | Draft | [#1561](https://github.com/rjsf-team/react-jsonschema-form/pull/1561)
- Semantic UI | Draft | [#1585](https://github.com/rjsf-team/react-jsonschema-form/pull/1585)
-
-To use a theme from a package, just import the `<Form />` component from that package. For example, to use the material ui form,
-first install both `@rjsf/core` and `@rjsf/material-ui`. Then you can import the form by doing:
-
-```jsx
-import Form from "@rjsf/material-ui";
-```
-
-If you would like to contribute a theme with a new UI framework, please develop the theme using the `withTheme` component described in [Theme Customization](theme-customization.md) and make a PR!
-
-You can also use the uiSchema to add custom CSS class names to your form.
 
 ## Useful samples
 

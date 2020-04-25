@@ -6,14 +6,15 @@ nav:
   - Introduction: index.md
   - Tutorial: tutorial.md
   - Usage:
-    - JSON Schema: usage/schema.md
-    - uiSchema: usage/uiSchema.md
+    - Using JSON Schema: usage/schema.md
+    - Using uiSchema: usage/uiSchema.md
     - Using widgets: usage/widgets.md
-    - "&lt;Form /&gt;": usage/form-props.md
+    - Using themes: usage/themes.md
+    - "&lt;Form /&gt; props": usage/form-props.md
   - Advanced Customization:
     - Custom Widgets and Fields: advanced-customization/custom-widgets-fields.md
     - Custom Templates: advanced-customization/custom-templates.md
-    - Theme Customization: advanced-customization/theme-customization.md
+    - Custom Themes: advanced-customization/custom-themes.md
     - Other Internals: advanced-customization/internals.md
   - Contributing: contributing.md
 
