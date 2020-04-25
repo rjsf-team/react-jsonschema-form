@@ -255,17 +255,46 @@ class Selector extends Component {
 }
 
 function ThemeSelector({ theme, themes, select }) {
-  const themeSchema = {
+  const schema = {
     type: "string",
     enum: Object.keys(themes),
+  };
+  const uiSchema = {
+    "ui:placeholder": "Select theme",
   };
   return (
     <Form
       className="form_rjsf_themeSelector"
       idPrefix="rjsf_themeSelector"
-      schema={themeSchema}
+      schema={schema}
+      uiSchema={uiSchema}
       formData={theme}
-      onChange={({ formData }) => select(formData, themes[formData])}>
+      onChange={({ formData }) =>
+        formData && select(formData, themes[formData])
+      }>
+      <div />
+    </Form>
+  );
+}
+
+function SubthemeSelector({ subtheme, subthemes, select }) {
+  const schema = {
+    type: "string",
+    enum: Object.keys(subthemes),
+  };
+  const uiSchema = {
+    "ui:placeholder": "Select subtheme",
+  };
+  return (
+    <Form
+      className="form_rjsf_subthemeSelector"
+      idPrefix="rjsf_subthemeSelector"
+      schema={schema}
+      uiSchema={uiSchema}
+      formData={subtheme}
+      onChange={({ formData }) =>
+        formData && select(formData, subthemes[formData])
+      }>
       <div />
     </Form>
   );
@@ -319,6 +348,7 @@ class Playground extends Component {
       formData,
       validate,
       theme: "default",
+      subtheme: null,
       liveSettings: {
         validate: true,
         disable: false,
@@ -326,7 +356,7 @@ class Playground extends Component {
         liveOmit: false,
       },
       shareURL: null,
-      themeObj: {},
+      FormComponent: withTheme({}),
     };
   }
 
@@ -339,7 +369,7 @@ class Playground extends Component {
         alert("Unable to load form setup data.");
       }
     } else {
-      this.load(samples.Simple);
+      this.load({ theme: Object.keys(this.props.themes)[0] });
     }
   }
 
@@ -380,12 +410,23 @@ class Playground extends Component {
   onExtraErrorsEdited = extraErrors =>
     this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (theme, { stylesheet, theme: themeObj, editor }) => {
+  onThemeSelected = (
+    theme,
+    { subthemes, stylesheet, theme: themeObj } = {}
+  ) => {
     this.setState({
       theme,
-      themeObj,
+      subthemes,
+      subtheme: null,
+      FormComponent: withTheme(themeObj),
       stylesheet,
-      editor: editor ? editor : "default",
+    });
+  };
+
+  onSubthemeSelected = (subtheme, { stylesheet }) => {
+    this.setState({
+      subtheme,
+      stylesheet,
     });
   };
 
@@ -432,7 +473,8 @@ class Playground extends Component {
       liveSettings,
       validate,
       theme,
-      themeObj,
+      subtheme,
+      FormComponent,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
@@ -440,18 +482,6 @@ class Playground extends Component {
 
     const { themes } = this.props;
 
-    const FormComponent = withTheme(themeObj);
-
-    let templateProps = {};
-    if (ArrayFieldTemplate) {
-      templateProps.ArrayFieldTemplate = ArrayFieldTemplate;
-    }
-    if (ObjectFieldTemplate) {
-      templateProps.ObjectFieldTemplate = ObjectFieldTemplate;
-    }
-    if (extraErrors) {
-      templateProps.extraErrors = extraErrors;
-    }
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -475,8 +505,13 @@ class Playground extends Component {
                 theme={theme}
                 select={this.onThemeSelected}
               />
-              <br />
-              <br />
+              {themes[theme].subthemes && (
+                <SubthemeSelector
+                  subthemes={themes[theme].subthemes}
+                  subtheme={subtheme}
+                  select={this.onSubthemeSelected}
+                />
+              )}
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
           </div>
@@ -532,7 +567,8 @@ class Playground extends Component {
               }}
               theme={theme}>
               <FormComponent
-                {...templateProps}
+                ArrayFieldTemplate={ArrayFieldTemplate}
+                ObjectFieldTemplate={ObjectFieldTemplate}
                 liveValidate={liveSettings.validate}
                 disabled={liveSettings.disable}
                 omitExtraData={liveSettings.omitExtraData}
@@ -540,6 +576,7 @@ class Playground extends Component {
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
+                extraErrors={extraErrors}
                 onChange={this.onFormDataChange}
                 onSubmit={({ formData }, e) => {
                   console.log("submitted formData", formData);
