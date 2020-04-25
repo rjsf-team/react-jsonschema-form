@@ -1,6 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
 import { Theme as MuiTheme } from "@rjsf/material-ui";
+import { Theme as SuiTheme } from "../../semantic-ui/dist";
 import Playground from "./app";
 
 const themes = {
@@ -12,6 +13,11 @@ const themes = {
   "material-ui": {
     stylesheet: "",
     theme: MuiTheme,
+  },
+  "semantic-ui": {
+    stylesheet:
+      "//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css",
+    theme: SuiTheme,
   },
 };
 
