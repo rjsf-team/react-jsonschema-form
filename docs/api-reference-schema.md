@@ -1,6 +1,6 @@
 ## Schema definitions and references
 
-This library partially supports [inline schema definition dereferencing]( http://json-schema.org/latest/json-schema-core.html#rfc.section.7.2.3), which is Barbarian for *avoiding to copy and paste commonly used field schemas*:
+This library partially supports [inline schema definition dereferencing](http://json-schema.org/draft/2019-09/json-schema-core.html#ref), which is Barbarian for *avoiding to copy and paste commonly used field schemas*:
 
 ```json
 {

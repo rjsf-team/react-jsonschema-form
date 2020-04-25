@@ -107,7 +107,7 @@ Notes:
 
 ## File widgets
 
-This library supports a limited form of `input[type=file]` widgets, in the sense that it will propagate file contents to form data state as [data-url](http://dataurl.net/#about)s.
+This library supports a limited form of `input[type=file]` widgets, in the sense that it will propagate file contents to form data state as [data-url](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs)s.
 
 There are two ways to use file widgets.
 
