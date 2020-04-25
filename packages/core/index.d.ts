@@ -40,7 +40,6 @@ declare module '@rjsf/core' {
         onError?: (e: any) => any;
         onFocus?: (id: string, value: boolean | number | string | null) => void;
         onSubmit?: (e: ISubmitEvent<T>) => any;
-        safeRenderCompletion?: boolean;
         schema: JSONSchema7;
         showErrorList?: boolean;
         tagName?: keyof JSX.IntrinsicElements | React.ComponentType;
