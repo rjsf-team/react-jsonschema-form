@@ -292,10 +292,6 @@ render((
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
 
-## safeRenderCompletion
-
-Todo
-
 ## schema
 
 Form schema. We support JSON schema draft-07 by default. See [Schema Reference](api-reference-schema.md) for more information.
