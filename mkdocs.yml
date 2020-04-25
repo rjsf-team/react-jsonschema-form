@@ -5,14 +5,16 @@ theme: readthedocs
 nav:
   - Introduction: index.md
   - Tutorial: tutorial.md
-  - Schema Reference: api-reference-schema.md
-  - Custom Widgets and Fields: custom-widgets-fields.md
-  - Custom Templates: custom-templates.md
-  - Theme Customization: theme-customization.md
-  - uiSchema Reference: api-reference-uischema.md
-  - Widget Reference: api-reference-widgets.md
-  - Form Props Reference: api-reference-props.md
-  - Other Internals: internals.md
+  - Usage:
+    - JSON Schema: usage/schema.md
+    - uiSchema: usage/uiSchema.md
+    - Using widgets: usage/widgets.md
+    - "&lt;Form /&gt;": usage/form-props.md
+  - Advanced Customization:
+    - Custom Widgets and Fields: advanced-customization/custom-widgets-fields.md
+    - Custom Templates: advanced-customization/custom-templates.md
+    - Theme Customization: advanced-customization/theme-customization.md
+    - Other Internals: advanced-customization/internals.md
   - Contributing: contributing.md
 
 markdown_extensions:
