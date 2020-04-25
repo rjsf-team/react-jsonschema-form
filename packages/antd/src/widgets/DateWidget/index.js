@@ -1,9 +1,11 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
-import { WidgetProps } from '@rjsf/core';
 import { DatePicker } from 'antd';
+
+const DATE_PICKER_STYLE = {
+  width: '100%',
+};
 
 const DateWidget = ({
   // autofocus,
@@ -23,7 +25,7 @@ const DateWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = nextValue =>
+  const handleChange = (nextValue) =>
     onChange(nextValue && nextValue.format('YYYY-MM-DD'));
 
   const handleBlur = () => onBlur(id, value);
@@ -40,12 +42,10 @@ const DateWidget = ({
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       showTime={false}
-      style={{ width: '100%' }}
-      value={value && moment(value)}
+      style={DATE_PICKER_STYLE}
+      value={value && dayjs(value)}
     />
   );
 };
-
-DateWidget.propTypes = WidgetProps;
 
 export default DateWidget;

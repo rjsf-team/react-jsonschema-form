@@ -1,8 +1,10 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
 import { Input, InputNumber } from 'antd';
+
+const INPUT_STYLE = {
+  width: '100%',
+};
 
 const TextWidget = ({
   // autofocus,
@@ -22,7 +24,7 @@ const TextWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleNumberChange = nextValue => onChange(nextValue);
+  const handleNumberChange = (nextValue) => onChange(nextValue);
 
   const handleTextChange = ({ target }) =>
     onChange(target.value === '' ? options.emptyValue : target.value);
@@ -40,7 +42,7 @@ const TextWidget = ({
       onChange={!readonly ? handleNumberChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      style={{ width: '100%' }}
+      style={INPUT_STYLE}
       type="number"
       value={value}
     />
@@ -53,12 +55,11 @@ const TextWidget = ({
       onChange={!readonly ? handleTextChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      style={INPUT_STYLE}
       type={options.inputType || 'text'}
       value={value}
     />
   );
 };
-
-TextWidget.propTypes = WidgetProps;
 
 export default TextWidget;

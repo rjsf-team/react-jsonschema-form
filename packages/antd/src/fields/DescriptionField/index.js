@@ -1,7 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-
-import { FieldProps } from '@rjsf/core';
 
 const DescriptionField = ({
   // autofocus,
@@ -20,7 +17,5 @@ const DescriptionField = ({
   // schema,
   // uiSchema,
 }) => <span id={id}>{description}</span>;
-
-DescriptionField.propTypes = FieldProps;
 
 export default DescriptionField;

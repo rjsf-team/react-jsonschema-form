@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 var webpack = require('webpack');
 
+var AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
+
 module.exports = options => ({
   mode: options.mode,
   devtool: options.devtool,
@@ -10,6 +12,7 @@ module.exports = options => ({
   output: options.output,
   plugins: options.plugins.concat([
     // Add common plugins here.
+    new AntdDayjsWebpackPlugin(),
   ]),
   module: {
     rules: [

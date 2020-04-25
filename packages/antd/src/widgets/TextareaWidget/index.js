@@ -1,8 +1,10 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
 import { Input } from 'antd';
+
+const INPUT_STYLE = {
+  width: '100%',
+};
 
 const TextareaWidget = ({
   // autofocus,
@@ -39,12 +41,11 @@ const TextareaWidget = ({
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       rows={options.rows || 4}
+      style={INPUT_STYLE}
       type="textarea"
       value={value}
     />
   );
 };
-
-TextareaWidget.propTypes = WidgetProps;
 
 export default TextareaWidget;

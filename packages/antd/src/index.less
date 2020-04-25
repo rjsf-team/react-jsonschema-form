@@ -18,3 +18,16 @@
   // Hide oneOf / anyOf  object title.
   display: none;
 }
+
+.panel.panel-danger.errors {
+  margin-bottom: @form-item-margin-bottom;
+
+  .list-group .ant-list-item {
+    margin-left: 0;
+    margin-right: 0;
+
+    .anticon.anticon-exclamation-circle {
+      color: @red-6;
+    }
+  }
+}

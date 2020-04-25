@@ -1,9 +1,14 @@
+/* eslint-disable no-else-return */
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
-import { asNumber, guessType } from '@rjsf/core/lib/utils';
+import { utils } from '@rjsf/core';
 import { Select } from 'antd';
+
+const { asNumber, guessType } = utils;
+
+const SELECT_STYLE = {
+  width: '100%',
+};
 
 const nums = new Set(['number', 'integer']);
 
@@ -28,9 +33,9 @@ const processValue = (schema, value) => {
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (schema.enum) {
-    if (schema.enum.every(x => guessType(x) === 'number')) {
+    if (schema.enum.every((x) => guessType(x) === 'number')) {
       return asNumber(value);
-    } else if (schema.enum.every(x => guessType(x) === 'boolean')) {
+    } else if (schema.enum.every((x) => guessType(x) === 'boolean')) {
       return value === 'true';
     }
   }
@@ -61,13 +66,13 @@ const SelectWidget = ({
 
   const emptyValue = multiple ? [] : '';
 
-  const handleChange = nextValue => onChange(processValue(schema, nextValue));
+  const handleChange = (nextValue) => onChange(processValue(schema, nextValue));
 
   const handleBlur = () => onBlur(id, processValue(schema, value));
 
   const handleFocus = () => onFocus(id, processValue(schema, value));
 
-  const stringify = currentValue =>
+  const stringify = (currentValue) =>
     Array.isArray(currentValue) ? value.map(String) : String(value);
 
   return (
@@ -81,6 +86,7 @@ const SelectWidget = ({
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      style={SELECT_STYLE}
       value={typeof value !== 'undefined' ? stringify(value) : emptyValue}
     >
       {enumOptions.map(({ value: optionValue, label: optionLabel }) => (
@@ -96,9 +102,6 @@ const SelectWidget = ({
   );
 };
 
-SelectWidget.propTypes = WidgetProps;
-
-// TODO: Select does not receive formContext properly.
 SelectWidget.defaultProps = {
   formContext: {},
 };

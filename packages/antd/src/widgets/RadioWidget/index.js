@@ -1,7 +1,6 @@
+/* eslint-disable no-else-return */
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
 import { Radio } from 'antd';
 
 const RadioWidget = ({
@@ -54,7 +53,5 @@ const RadioWidget = ({
     </Radio.Group>
   );
 };
-
-RadioWidget.propTypes = WidgetProps;
 
 export default RadioWidget;

@@ -1,10 +1,6 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { FieldProps } from '@rjsf/core';
-
-import { Col } from 'antd';
 import { withConfigConsumer } from 'antd/lib/config-provider/context';
 
 const TitleField = ({
@@ -25,18 +21,7 @@ const TitleField = ({
   title,
   // uiSchema,
 }) => {
-  const {
-    colon = true,
-    labelAlign = 'right',
-    labelCol = {},
-  } = formContext;
-
-  const labelClsBasic = `${prefixCls}-item-label`;
-  const labelColClassName = classNames(
-    labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`,
-    labelCol.className,
-  );
+  const { colon = true } = formContext;
 
   let labelChildren = title;
   if (colon && typeof title === 'string' && title.trim() !== '') {
@@ -60,20 +45,16 @@ const TitleField = ({
   };
 
   return title ? (
-    <Col {...labelCol} className={labelColClassName}>
-      <label
-        className={labelClassName}
-        htmlFor={id}
-        onClick={handleLabelClick}
-        title={typeof title === 'string' ? title : ''}
-      >
-        {labelChildren}
-      </label>
-    </Col>
+    <label
+      className={labelClassName}
+      htmlFor={id}
+      onClick={handleLabelClick}
+      title={typeof title === 'string' ? title : ''}
+    >
+      {labelChildren}
+    </label>
   ) : null;
 };
-
-TitleField.propTypes = FieldProps;
 
 TitleField.defaultProps = {
   formContext: {},

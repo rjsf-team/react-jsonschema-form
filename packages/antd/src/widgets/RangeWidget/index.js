@@ -1,9 +1,10 @@
+/* eslint-disable no-else-return */
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
-import { rangeSpec } from '@rjsf/core/lib/utils';
+import { utils } from '@rjsf/core';
 import { Slider } from 'antd';
+
+const { rangeSpec } = utils;
 
 const RangeWidget = ({
   autofocus,
@@ -27,7 +28,7 @@ const RangeWidget = ({
 
   const emptyValue = options.emptyValue || '';
 
-  const handleChange = nextValue =>
+  const handleChange = (nextValue) =>
     onChange(nextValue === '' ? emptyValue : nextValue);
 
   const handleBlur = () => onBlur(id, value);
@@ -51,7 +52,5 @@ const RangeWidget = ({
     />
   );
 };
-
-RangeWidget.propTypes = WidgetProps;
 
 export default RangeWidget;

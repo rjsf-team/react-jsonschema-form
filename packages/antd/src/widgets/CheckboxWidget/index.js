@@ -1,7 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
 import { Checkbox } from 'antd';
 
 const CheckboxWidget = ({
@@ -43,7 +41,5 @@ const CheckboxWidget = ({
     </Checkbox>
   );
 };
-
-CheckboxWidget.propTypes = WidgetProps;
 
 export default CheckboxWidget;

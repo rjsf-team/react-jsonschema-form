@@ -33,8 +33,8 @@
 
 ### Prerequisites
 
-- `antd == 3` (not tested yet with version 4)
-- `react-jsonschema-form >= 2.0.0-alpha.2`
+- `antd >= 4.0.0`
+- `react-jsonschema-form >= 2.0.0-alpha.6`
 
 ```sh
 npm install antd @rjsf/core

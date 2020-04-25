@@ -1,11 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Button, Col, Row } from 'antd';
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
+
+const BTN_GRP_STYLE = {
+  width: '100%',
+};
+
+const BTN_STYLE = {
+  width: 'calc(100% / 3)',
+};
 
 const ArrayFieldTemplateItem = ({
   children,
   disabled,
+  formContext,
   hasMoveDown,
   hasMoveUp,
   hasRemove,
@@ -15,23 +28,21 @@ const ArrayFieldTemplateItem = ({
   onReorderClick,
   readonly,
 }) => {
-  const btnStyle = {
-    width: 'calc(100% / 3)',
-  };
+  const { rowGutter = 24, toolbarAlign = 'top' } = formContext;
 
   return (
-    <Row align="bottom" key={`array-item-${index}`} gutter={24} type="flex">
-      <Col style={{ flex: '1' }}>{children}</Col>
+    <Row align={toolbarAlign} key={`array-item-${index}`} gutter={rowGutter}>
+      <Col flex="1">{children}</Col>
 
       {hasToolbar && (
-        <Col style={{ width: '192px' }}>
-          <Button.Group style={{ width: '100%' }}>
+        <Col flex="192px">
+          <Button.Group style={BTN_GRP_STYLE}>
             {(hasMoveUp || hasMoveDown) && (
               <Button
                 disabled={disabled || readonly || !hasMoveUp}
-                icon="arrow-up"
+                icon={<ArrowUpOutlined />}
                 onClick={onReorderClick(index, index - 1)}
-                style={btnStyle}
+                style={BTN_STYLE}
                 type="default"
               />
             )}
@@ -39,20 +50,21 @@ const ArrayFieldTemplateItem = ({
             {(hasMoveUp || hasMoveDown) && (
               <Button
                 disabled={disabled || readonly || !hasMoveDown}
-                icon="arrow-down"
+                icon={<ArrowDownOutlined />}
                 onClick={onReorderClick(index, index + 1)}
-                style={btnStyle}
+                style={BTN_STYLE}
                 type="default"
               />
             )}
 
             {hasRemove && (
               <Button
+                danger
                 disabled={disabled || readonly}
-                icon="delete"
+                icon={<DeleteOutlined />}
                 onClick={onDropIndexClick(index)}
-                style={btnStyle}
-                type="danger"
+                style={BTN_STYLE}
+                type="primary"
               />
             )}
           </Button.Group>
@@ -62,28 +74,8 @@ const ArrayFieldTemplateItem = ({
   );
 };
 
-ArrayFieldTemplateItem.propTypes = {
-  children: PropTypes.node.isRequired,
-  disabled: PropTypes.bool,
-  hasMoveDown: PropTypes.bool,
-  hasMoveUp: PropTypes.bool,
-  hasRemove: PropTypes.bool,
-  hasToolbar: PropTypes.bool,
-  index: PropTypes.number.isRequired,
-  onDropIndexClick: PropTypes.func,
-  onReorderClick: PropTypes.func,
-  readonly: PropTypes.bool,
-};
-
 ArrayFieldTemplateItem.defaultProps = {
-  disabled: false,
-  hasMoveDown: true,
-  hasMoveUp: true,
-  hasRemove: true,
-  hasToolbar: true,
-  onDropIndexClick: () => {},
-  onReorderClick: () => {},
-  readonly: false,
+  formContext: {},
 };
 
 export default ArrayFieldTemplateItem;

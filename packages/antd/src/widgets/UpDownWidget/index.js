@@ -1,8 +1,10 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
 import { InputNumber } from 'antd';
+
+const INPUT_STYLE = {
+  width: '100%',
+};
 
 const UpDownWidget = ({
   // autofocus,
@@ -21,7 +23,7 @@ const UpDownWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = nextValue => onChange(nextValue);
+  const handleChange = (nextValue) => onChange(nextValue);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 
@@ -36,13 +38,11 @@ const UpDownWidget = ({
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      style={{ width: '100%' }}
+      style={INPUT_STYLE}
       type="number"
       value={value}
     />
   );
 };
-
-UpDownWidget.propTypes = WidgetProps;
 
 export default UpDownWidget;

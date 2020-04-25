@@ -1,7 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
 import { Input } from 'antd';
 
 const PasswordWidget = ({
@@ -44,7 +42,5 @@ const PasswordWidget = ({
     />
   );
 };
-
-PasswordWidget.propTypes = WidgetProps;
 
 export default PasswordWidget;

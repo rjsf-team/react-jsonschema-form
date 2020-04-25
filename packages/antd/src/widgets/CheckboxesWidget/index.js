@@ -1,8 +1,6 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { WidgetProps } from '@rjsf/core';
 import { Checkbox } from 'antd';
 
 const CheckboxesWidget = ({
@@ -25,7 +23,7 @@ const CheckboxesWidget = ({
 
   const { enumOptions, enumDisabled, inline } = options;
 
-  const handleChange = nextValue => onChange(nextValue);
+  const handleChange = (nextValue) => onChange(nextValue);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 
@@ -56,7 +54,5 @@ const CheckboxesWidget = ({
     </Checkbox.Group>
   ) : null;
 };
-
-CheckboxesWidget.propTypes = WidgetProps;
 
 export default CheckboxesWidget;

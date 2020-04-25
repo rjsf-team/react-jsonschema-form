@@ -1,8 +1,10 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { WidgetProps } from '@rjsf/core';
 import { Input } from 'antd';
+
+const INPUT_STYLE = {
+  width: '100%',
+};
 
 const ColorWidget = ({
   // autofocus,
@@ -37,13 +39,11 @@ const ColorWidget = ({
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      style={{ width: '100%' }}
+      style={INPUT_STYLE}
       type="color"
       value={value}
     />
   );
 };
-
-ColorWidget.propTypes = WidgetProps;
 
 export default ColorWidget;

@@ -1,11 +1,11 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import {
-  ArrayFieldTemplateProps,
-  UnsupportedField,
-} from '@rjsf/core';
-import {
+import { utils } from '@rjsf/core';
+
+import FixedArrayFieldTemplate from './FixedArrayFieldTemplate';
+import NormalArrayFieldTemplate from './NormalArrayFieldTemplate';
+
+const {
   getDefaultRegistry,
   getUiOptions,
   getWidget,
@@ -14,10 +14,7 @@ import {
   isMultiSelect,
   optionsList,
   retrieveSchema,
-} from '@rjsf/core/lib/utils';
-
-import FixedArrayFieldTemplate from './FixedArrayFieldTemplate';
-import NormalArrayFieldTemplate from './NormalArrayFieldTemplate';
+} = utils;
 
 const ArrayFieldTemplate = ({
   DescriptionField,
@@ -45,7 +42,8 @@ const ArrayFieldTemplate = ({
   title,
   uiSchema,
 }) => {
-  const { definitions, widgets } = registry;
+  const { fields, rootSchema, widgets } = registry;
+  const { UnsupportedField } = fields;
 
   const renderFiles = () => {
     const { widget = 'files', ...options } = getUiOptions(uiSchema);
@@ -73,7 +71,7 @@ const ArrayFieldTemplate = ({
   };
 
   const renderMultiSelect = () => {
-    const itemsSchema = retrieveSchema(schema.items, definitions, formData);
+    const itemsSchema = retrieveSchema(schema.items, rootSchema, formData);
     const enumOptions = optionsList(itemsSchema);
     const { widget = 'select', ...options } = {
       ...getUiOptions(uiSchema),
@@ -137,10 +135,10 @@ const ArrayFieldTemplate = ({
       />
     );
   }
-  if (isFilesArray(schema, uiSchema, definitions)) {
+  if (isFilesArray(schema, uiSchema, rootSchema)) {
     return renderFiles();
   }
-  if (isMultiSelect(schema, definitions)) {
+  if (isMultiSelect(schema, rootSchema)) {
     return renderMultiSelect();
   }
 
@@ -165,7 +163,5 @@ const ArrayFieldTemplate = ({
     />
   );
 };
-
-ArrayFieldTemplate.propTypes = ArrayFieldTemplateProps;
 
 export default ArrayFieldTemplate;

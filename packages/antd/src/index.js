@@ -1,4 +1,4 @@
-import { getDefaultRegistry } from '@rjsf/core/lib/utils';
+import { utils } from '@rjsf/core';
 
 import DescriptionField from './fields/DescriptionField';
 import TitleField from './fields/TitleField';
@@ -12,6 +12,7 @@ import CheckboxWidget from './widgets/CheckboxWidget';
 import ColorWidget from './widgets/ColorWidget';
 import DateTimeWidget from './widgets/DateTimeWidget';
 import DateWidget from './widgets/DateWidget';
+import EmailWidget from './widgets/EmailWidget';
 import PasswordWidget from './widgets/PasswordWidget';
 import RadioWidget from './widgets/RadioWidget';
 import RangeWidget from './widgets/RangeWidget';
@@ -19,11 +20,13 @@ import SelectWidget from './widgets/SelectWidget';
 import TextareaWidget from './widgets/TextareaWidget';
 import TextWidget from './widgets/TextWidget';
 import UpDownWidget from './widgets/UpDownWidget';
+import URLWidget from './widgets/URLWidget';
 
 import ErrorList from './ErrorList';
 
 import './index.less';
 
+const { getDefaultRegistry } = utils;
 const { fields, widgets } = getDefaultRegistry();
 
 export const Fields = {
@@ -37,6 +40,7 @@ export const Widgets = {
   ColorWidget,
   DateTimeWidget,
   DateWidget,
+  EmailWidget,
   PasswordWidget,
   RadioWidget,
   RangeWidget,
@@ -44,6 +48,7 @@ export const Widgets = {
   TextareaWidget,
   TextWidget,
   UpDownWidget,
+  URLWidget,
 };
 
 export const Theme = {

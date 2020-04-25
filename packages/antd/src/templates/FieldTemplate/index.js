@@ -1,10 +1,9 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-// import _ from 'lodash';
-
-import { FieldTemplateProps } from '@rjsf/core';
 
 import { Form } from 'antd';
+
+const VERTICAL_LABEL_COL = { span: 24 };
+const VERTICAL_WRAPPER_COL = { span: 24 };
 
 const FieldTemplate = ({
   children,
@@ -27,14 +26,19 @@ const FieldTemplate = ({
   schema,
   // uiSchema,
 }) => {
-  const { colon, labelCol, wrapperCol, wrapperStyle } = formContext;
+  const {
+    colon,
+    labelCol = VERTICAL_LABEL_COL,
+    wrapperCol = VERTICAL_WRAPPER_COL,
+    wrapperStyle,
+  } = formContext;
 
   if (hidden) {
     return <div className="field-hidden">{children}</div>;
   }
 
   const renderFieldErrors = () =>
-    rawErrors.map(error => (
+    [...new Set(rawErrors)].map((error) => (
       <div key={`field-${id}-error-${error}`}>{error}</div>
     ));
 
@@ -52,7 +56,6 @@ const FieldTemplate = ({
       labelCol={labelCol}
       required={required}
       style={wrapperStyle}
-      // validateStatus={validateStatus}
       validateStatus={rawErrors ? 'error' : undefined}
       wrapperCol={wrapperCol}
     >
@@ -60,7 +63,5 @@ const FieldTemplate = ({
     </Form.Item>
   );
 };
-
-FieldTemplate.propTypes = FieldTemplateProps;
 
 export default FieldTemplate;

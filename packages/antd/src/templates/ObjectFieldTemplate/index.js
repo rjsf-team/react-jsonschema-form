@@ -1,10 +1,9 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import _ from 'lodash';
 
-import { ObjectFieldTemplateProps } from '@rjsf/core';
-
 import { Col, Row } from 'antd';
+import { withConfigConsumer } from 'antd/lib/config-provider/context';
 
 const ObjectFieldTemplate = ({
   DescriptionField,
@@ -13,29 +12,33 @@ const ObjectFieldTemplate = ({
   formContext,
   // formData,
   idSchema,
+  prefixCls,
   properties,
   required,
   // schema,
   title,
   uiSchema,
 }) => {
-  const { colSpan, rowGutter = 24 } = formContext;
+  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = formContext;
 
-  const findSchema = element => element.content.props.schema;
+  const labelClsBasic = `${prefixCls}-item-label`;
+  const labelColClassName = classNames(
+    labelClsBasic,
+    labelAlign === 'left' && `${labelClsBasic}-left`,
+    // labelCol.className,
+  );
 
-  const findSchemaType = element => findSchema(element).type;
+  const findSchema = (element) => element.content.props.schema;
 
-  const findUiSchema = element => element.content.props.uiSchema;
+  const findSchemaType = (element) => findSchema(element).type;
 
-  const findUiSchemaField = element => findUiSchema(element)['ui:field'];
+  const findUiSchema = (element) => element.content.props.uiSchema;
 
-  const findUiSchemaWidget = element => findUiSchema(element)['ui:widget'];
+  const findUiSchemaField = (element) => findUiSchema(element)['ui:field'];
 
-  const calculateColSpan = element => {
-    if (Number.isInteger(colSpan)) {
-      return colSpan;
-    }
+  const findUiSchemaWidget = (element) => findUiSchema(element)['ui:widget'];
 
+  const calculateColSpan = (element) => {
     const type = findSchemaType(element);
     const field = findUiSchemaField(element);
     const widget = findUiSchemaWidget(element);
@@ -53,39 +56,44 @@ const ObjectFieldTemplate = ({
         colSpan[widget] || colSpan[field] || colSpan[type] || defaultColSpan
       );
     }
+    if (_.isNumber(colSpan)) {
+      return colSpan;
+    }
     return defaultColSpan;
   };
 
-  const filterHidden = element =>
+  const filterHidden = (element) =>
     element.content.props.uiSchema['ui:widget'] !== 'hidden';
 
   return (
-    <Row gutter={rowGutter}>
-      <fieldset id={idSchema.$id}>
+    <fieldset id={idSchema.$id}>
+      <Row gutter={rowGutter}>
         {uiSchema['ui:title'] !== false && (uiSchema['ui:title'] || title) && (
-          <TitleField
-            id={`${idSchema.$id}-title`}
-            required={required}
-            title={uiSchema['ui:title'] || title}
-          />
+          <Col className={labelColClassName} span={24}>
+            <TitleField
+              id={`${idSchema.$id}-title`}
+              required={required}
+              title={uiSchema['ui:title'] || title}
+            />
+          </Col>
         )}
         {uiSchema['ui:description'] !== false &&
           (uiSchema['ui:description'] || description) && (
-            <DescriptionField
-              description={uiSchema['ui:description'] || description}
-              id={`${idSchema.$id}-description`}
-            />
+            <Col span={24}>
+              <DescriptionField
+                description={uiSchema['ui:description'] || description}
+                id={`${idSchema.$id}-description`}
+              />
+            </Col>
           )}
-        {properties.filter(filterHidden).map(element => (
+        {properties.filter(filterHidden).map((element) => (
           <Col key={element.name} span={calculateColSpan(element)}>
             {element.content}
           </Col>
         ))}
-      </fieldset>
-    </Row>
+      </Row>
+    </fieldset>
   );
 };
 
-ObjectFieldTemplate.propTypes = ObjectFieldTemplateProps;
-
-export default ObjectFieldTemplate;
+export default withConfigConsumer({ prefixCls: 'form' })(ObjectFieldTemplate);

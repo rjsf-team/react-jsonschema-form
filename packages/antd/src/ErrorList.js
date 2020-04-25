@@ -1,7 +1,7 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
-import { ErrorListProps } from '@rjsf/core';
+import { Alert, List, Space } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const ErrorList = ({
   // errorSchema,
@@ -9,18 +9,28 @@ const ErrorList = ({
   // formContext,
   // schema,
   // uiSchema,
-}) => (
-  <div>
-    <ul>
+}) => {
+  const renderErrors = () => (
+    <List className="list-group" size="small">
       {errors.map((error, index) => (
-        <li key={index} style={{ margin: '3px' }}>
-          {error.stack}
-        </li>
+        <List.Item key={index}>
+          <Space>
+            <ExclamationCircleOutlined />
+            {error.stack}
+          </Space>
+        </List.Item>
       ))}
-    </ul>
-  </div>
-);
+    </List>
+  );
 
-ErrorList.propTypes = ErrorListProps;
+  return (
+    <Alert
+      className="panel panel-danger errors"
+      description={renderErrors()}
+      message="Errors"
+      type="error"
+    />
+  );
+};
 
 export default ErrorList;
