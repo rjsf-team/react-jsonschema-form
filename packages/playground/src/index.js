@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
 import { Theme as MuiTheme } from "@rjsf/material-ui";
-import { Theme as SuiTheme } from "../../semantic-ui/dist";
+import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import Playground from "./app";
 
 const themes = {
