@@ -9,12 +9,12 @@ import ErrorIcon from '@material-ui/icons/Error';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 
-import { ErrorListProps } from 'react-jsonschema-form';
+import { ErrorListProps } from '@rjsf/core';
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <Paper elevation={2}>
     <Box mb={2} p={2}>
-      <Typography variant="h6" component="h6">
+      <Typography variant="h6">
         Errors
       </Typography>
       <List dense={true}>

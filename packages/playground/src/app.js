@@ -1,11 +1,97 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
 import MonacoEditor from "react-monaco-editor";
-
-import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
-import Form from "../src";
 import "react-app-polyfill/ie11";
+import Form, { withTheme } from "@rjsf/core";
+import DemoFrame from "./DemoFrame";
+
+// deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
+
+function isArguments(object) {
+  return Object.prototype.toString.call(object) === "[object Arguments]";
+}
+
+function deepEquals(a, b, ca = [], cb = []) {
+  // Partially extracted from node-deeper and adapted to exclude comparison
+  // checks for functions.
+  // https://github.com/othiym23/node-deeper
+  if (a === b) {
+    return true;
+  } else if (typeof a === "function" || typeof b === "function") {
+    // Assume all functions are equivalent
+    // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
+    return true;
+  } else if (typeof a !== "object" || typeof b !== "object") {
+    return false;
+  } else if (a === null || b === null) {
+    return false;
+  } else if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  } else if (a instanceof RegExp && b instanceof RegExp) {
+    return (
+      a.source === b.source &&
+      a.global === b.global &&
+      a.multiline === b.multiline &&
+      a.lastIndex === b.lastIndex &&
+      a.ignoreCase === b.ignoreCase
+    );
+  } else if (isArguments(a) || isArguments(b)) {
+    if (!(isArguments(a) && isArguments(b))) {
+      return false;
+    }
+    let slice = Array.prototype.slice;
+    return deepEquals(slice.call(a), slice.call(b), ca, cb);
+  } else {
+    if (a.constructor !== b.constructor) {
+      return false;
+    }
+
+    let ka = Object.keys(a);
+    let kb = Object.keys(b);
+    // don't bother with stack acrobatics if there's nothing there
+    if (ka.length === 0 && kb.length === 0) {
+      return true;
+    }
+    if (ka.length !== kb.length) {
+      return false;
+    }
+
+    let cal = ca.length;
+    while (cal--) {
+      if (ca[cal] === a) {
+        return cb[cal] === b;
+      }
+    }
+    ca.push(a);
+    cb.push(b);
+
+    ka.sort();
+    kb.sort();
+    for (var j = ka.length - 1; j >= 0; j--) {
+      if (ka[j] !== kb[j]) {
+        return false;
+      }
+    }
+
+    let key;
+    for (let k = ka.length - 1; k >= 0; k--) {
+      key = ka[k];
+      if (!deepEquals(a[key], b[key], ca, cb)) {
+        return false;
+      }
+    }
+
+    ca.pop();
+    cb.pop();
+
+    return true;
+  }
+}
+
+function shouldRender(comp, nextProps, nextState) {
+  const { props, state } = comp;
+  return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
+}
 
 const log = type => console.log.bind(console, type);
 const toJson = val => JSON.stringify(val, null, 2);
@@ -16,94 +102,6 @@ const liveSettingsSchema = {
     disable: { type: "boolean", title: "Disable whole form" },
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
-  },
-};
-const themes = {
-  default: {
-    stylesheet:
-      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
-  },
-  cerulean: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cerulean/bootstrap.min.css",
-  },
-  cosmo: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cosmo/bootstrap.min.css",
-  },
-  cyborg: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cyborg/bootstrap.min.css",
-    editor: "blackboard",
-  },
-  darkly: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/darkly/bootstrap.min.css",
-    editor: "mbo",
-  },
-  flatly: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/flatly/bootstrap.min.css",
-    editor: "ttcn",
-  },
-  journal: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/journal/bootstrap.min.css",
-  },
-  lumen: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/lumen/bootstrap.min.css",
-  },
-  paper: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/paper/bootstrap.min.css",
-  },
-  readable: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/readable/bootstrap.min.css",
-  },
-  sandstone: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/sandstone/bootstrap.min.css",
-    editor: "solarized",
-  },
-  simplex: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/simplex/bootstrap.min.css",
-    editor: "ttcn",
-  },
-  slate: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/slate/bootstrap.min.css",
-    editor: "monokai",
-  },
-  spacelab: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/spacelab/bootstrap.min.css",
-  },
-  "solarized-dark": {
-    stylesheet:
-      "//cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-dark.css",
-    editor: "dracula",
-  },
-  "solarized-light": {
-    stylesheet:
-      "//cdn.rawgit.com/aalpern/bootstrap-solarized/master/bootstrap-solarized-light.css",
-    editor: "solarized",
-  },
-  superhero: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/superhero/bootstrap.min.css",
-    editor: "dracula",
-  },
-  united: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/united/bootstrap.min.css",
-  },
-  yeti: {
-    stylesheet:
-      "//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/yeti/bootstrap.min.css",
-    editor: "eclipse",
   },
 };
 
@@ -256,13 +254,15 @@ class Selector extends Component {
   }
 }
 
-function ThemeSelector({ theme, select }) {
+function ThemeSelector({ theme, themes, select }) {
   const themeSchema = {
     type: "string",
     enum: Object.keys(themes),
   };
   return (
     <Form
+      className="form_rjsf_themeSelector"
+      idPrefix="rjsf_themeSelector"
       schema={themeSchema}
       formData={theme}
       onChange={({ formData }) => select(formData, themes[formData])}>
@@ -307,7 +307,7 @@ class CopyLink extends Component {
   }
 }
 
-class App extends Component {
+class Playground extends Component {
   constructor(props) {
     super(props);
     // initialize state with Simple data sample
@@ -318,7 +318,6 @@ class App extends Component {
       uiSchema,
       formData,
       validate,
-      editor: "default",
       theme: "default",
       liveSettings: {
         validate: true,
@@ -327,6 +326,7 @@ class App extends Component {
         liveOmit: false,
       },
       shareURL: null,
+      themeObj: {},
     };
   }
 
@@ -353,8 +353,13 @@ class App extends Component {
     // uiSchema is missing on some examples. Provide a default to
     // clear the field in all cases.
     const { uiSchema = {} } = data;
+
+    const { theme = this.state.theme } = data;
+    const { themes } = this.props;
+    this.onThemeSelected(theme, themes[theme]);
+
     // force resetting form component instance
-    this.setState({ form: false }, _ =>
+    this.setState({ form: false }, () =>
       this.setState({
         ...data,
         form: true,
@@ -375,11 +380,12 @@ class App extends Component {
   onExtraErrorsEdited = extraErrors =>
     this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (theme, { stylesheet, editor }) => {
-    this.setState({ theme, editor: editor ? editor : "default" });
-    setImmediate(() => {
-      // Side effect!
-      document.getElementById("theme").setAttribute("href", stylesheet);
+  onThemeSelected = (theme, { stylesheet, theme: themeObj, editor }) => {
+    this.setState({
+      theme,
+      themeObj,
+      stylesheet,
+      editor: editor ? editor : "default",
     });
   };
 
@@ -395,6 +401,7 @@ class App extends Component {
       uiSchema,
       liveSettings,
       errorSchema,
+      theme,
     } = this.state;
     const {
       location: { origin, pathname },
@@ -405,6 +412,7 @@ class App extends Component {
           formData,
           schema,
           uiSchema,
+          theme,
           liveSettings,
           errorSchema,
         })
@@ -424,12 +432,26 @@ class App extends Component {
       liveSettings,
       validate,
       theme,
-      editor,
+      themeObj,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
 
+    const { themes } = this.props;
+
+    const FormComponent = withTheme(themeObj);
+
+    let templateProps = {};
+    if (ArrayFieldTemplate) {
+      templateProps.ArrayFieldTemplate = ArrayFieldTemplate;
+    }
+    if (ObjectFieldTemplate) {
+      templateProps.ObjectFieldTemplate = ObjectFieldTemplate;
+    }
+    if (extraErrors) {
+      templateProps.extraErrors = extraErrors;
+    }
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -440,6 +462,7 @@ class App extends Component {
             </div>
             <div className="col-sm-2">
               <Form
+                idPrefix="rjsf_options"
                 schema={liveSettingsSchema}
                 formData={liveSettings}
                 onChange={this.setLiveSettings}>
@@ -447,14 +470,20 @@ class App extends Component {
               </Form>
             </div>
             <div className="col-sm-2">
-              <ThemeSelector theme={theme} select={this.onThemeSelected} />
+              <ThemeSelector
+                themes={themes}
+                theme={theme}
+                select={this.onThemeSelected}
+              />
+              <br />
+              <br />
+              <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
           </div>
         </div>
         <div className="col-sm-7">
           <Editor
             title="JSONSchema"
-            theme={editor}
             code={toJson(schema)}
             onChange={this.onSchemaEdited}
           />
@@ -462,7 +491,6 @@ class App extends Component {
             <div className="col-sm-6">
               <Editor
                 title="UISchema"
-                theme={editor}
                 code={toJson(uiSchema)}
                 onChange={this.onUISchemaEdited}
               />
@@ -470,7 +498,6 @@ class App extends Component {
             <div className="col-sm-6">
               <Editor
                 title="formData"
-                theme={editor}
                 code={toJson(formData)}
                 onChange={this.onFormDataEdited}
               />
@@ -481,7 +508,6 @@ class App extends Component {
               <div className="col">
                 <Editor
                   title="extraErrors"
-                  theme={editor}
                   code={toJson(extraErrors || {})}
                   onChange={this.onExtraErrorsEdited}
                 />
@@ -491,46 +517,46 @@ class App extends Component {
         </div>
         <div className="col-sm-5">
           {this.state.form && (
-            <Form
-              ArrayFieldTemplate={ArrayFieldTemplate}
-              ObjectFieldTemplate={ObjectFieldTemplate}
-              liveValidate={liveSettings.validate}
-              disabled={liveSettings.disable}
-              omitExtraData={liveSettings.omitExtraData}
-              liveOmit={liveSettings.liveOmit}
-              schema={schema}
-              uiSchema={uiSchema}
-              formData={formData}
-              extraErrors={extraErrors}
-              onChange={this.onFormDataChange}
-              onSubmit={({ formData }, e) => {
-                console.log("submitted formData", formData);
-                console.log("submit event", e);
+            <DemoFrame
+              head={
+                <link
+                  rel="stylesheet"
+                  id="theme"
+                  href={this.state.stylesheet || ""}
+                />
+              }
+              style={{
+                width: "100%",
+                height: 1000,
+                border: 0,
               }}
-              fields={{ geo: GeoPosition }}
-              validate={validate}
-              onBlur={(id, value) =>
-                console.log(`Touched ${id} with value ${value}`)
-              }
-              onFocus={(id, value) =>
-                console.log(`Focused ${id} with value ${value}`)
-              }
-              transformErrors={transformErrors}
-              onError={log("errors")}>
-              <div className="row">
-                <div className="col-sm-3">
-                  <button className="btn btn-primary" type="submit">
-                    Submit
-                  </button>
-                </div>
-                <div className="col-sm-9 text-right">
-                  <CopyLink
-                    shareURL={this.state.shareURL}
-                    onShare={this.onShare}
-                  />
-                </div>
-              </div>
-            </Form>
+              theme={theme}>
+              <FormComponent
+                {...templateProps}
+                liveValidate={liveSettings.validate}
+                disabled={liveSettings.disable}
+                omitExtraData={liveSettings.omitExtraData}
+                liveOmit={liveSettings.liveOmit}
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={formData}
+                onChange={this.onFormDataChange}
+                onSubmit={({ formData }, e) => {
+                  console.log("submitted formData", formData);
+                  console.log("submit event", e);
+                }}
+                fields={{ geo: GeoPosition }}
+                validate={validate}
+                onBlur={(id, value) =>
+                  console.log(`Touched ${id} with value ${value}`)
+                }
+                onFocus={(id, value) =>
+                  console.log(`Focused ${id} with value ${value}`)
+                }
+                transformErrors={transformErrors}
+                onError={log("errors")}
+              />
+            </DemoFrame>
           )}
         </div>
         <div className="col-sm-12">
@@ -539,12 +565,7 @@ class App extends Component {
             <a href="https://github.com/mozilla-services/react-jsonschema-form">
               react-jsonschema-form
             </a>
-            . Bootstrap themes courtesy of{" "}
-            <a href="http://bootswatch.com/">Bootswatch</a> and{" "}
-            <a href="https://github.com/aalpern/bootstrap-solarized/">
-              bootstrap-solarized
-            </a>
-            . Bootstrap version v3.3.6.
+            .
             {process.env.SHOW_NETLIFY_BADGE === "true" && (
               <div style={{ float: "right" }}>
                 <a href="https://www.netlify.com">
@@ -559,4 +580,4 @@ class App extends Component {
   }
 }
 
-render(<App />, document.getElementById("app"));
+export default Playground;

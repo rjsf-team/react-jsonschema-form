@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FieldProps } from 'react-jsonschema-form';
+import { FieldProps } from '@rjsf/core';
 
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';

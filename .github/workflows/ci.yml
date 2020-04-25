@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x, 9.x, 10.x, 11.x, 12.x, 13.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - run: npm run bootstrap
+    - run: npm run build
+    - run: npm test
+    - run: npm run lint
+    - run: npm run cs-check
+      env:
+        CI: true
+  
+  docs:
+      
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v1.2.0
+      with:
+        python-version: 3.6
+    - run: pip install mkdocs==1.0.4
+    - run: mkdocs build --clean
