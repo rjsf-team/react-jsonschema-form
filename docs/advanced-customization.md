@@ -108,7 +108,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/master/packages/playground/src/samples/customArray.js) for a better example.
 
 
 The following props are passed to each `ArrayFieldTemplate`:
@@ -550,7 +550,7 @@ You can provide your own implementation of the `SchemaField` base React componen
 To proceed so, pass a `fields` object having a `SchemaField` property to your `Form` component; here's a rather silly example wrapping the standard `SchemaField` lib component:
 
 ```jsx
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import SchemaField from "@rjsf/core/lib/components/fields/SchemaField";
 
 const CustomSchemaField = function(props) {
   return (
@@ -620,7 +620,21 @@ render((
 ), document.getElementById("app"));
 ```
 
-The default widgets you can overwrite are:
+The default fields you can override are:
+
+ - `ArrayField`
+ - `BooleanField`
+ - `DescriptionField`
+ - `MultiSchemaField`
+ - `NullField`
+ - `NumberField`
+ - `ObjectField`
+ - `SchemaField`
+ - `StringField`
+ - `TitleField`
+ - `UnsupportedField`
+
+The default widgets you can override are:
 
  - `AltDateTimeWidget`
  - `AltDateWidget`

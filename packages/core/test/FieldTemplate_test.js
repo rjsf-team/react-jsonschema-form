@@ -14,6 +14,20 @@ describe("FieldTemplate", () => {
     sandbox.restore();
   });
 
+  describe("FieldTemplate should only have one child", () => {
+    function FieldTemplate(props) {
+      if (React.Children.count(props.children) !== 1) {
+        throw "Got wrong number of children";
+      }
+      return null;
+    }
+    createFormComponent({
+      schema: { type: "string" },
+      uiSchema: { "ui:disabled": true },
+      FieldTemplate,
+    });
+  });
+
   describe("Custom FieldTemplate for disabled property", () => {
     function FieldTemplate(props) {
       return <div className={props.disabled ? "disabled" : "foo"} />;

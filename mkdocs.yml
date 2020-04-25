@@ -10,6 +10,7 @@ nav:
   - Form Customization: form-customization.md
   - Theme Customization: theme-customization.md
   - Validation: validation.md
+  - Contributing: contributing.md
   - Playground: https://rjsf-team.github.io/react-jsonschema-form/
 
 markdown_extensions:
