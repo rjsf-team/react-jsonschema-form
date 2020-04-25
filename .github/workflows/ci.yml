@@ -29,6 +29,15 @@ jobs:
     - run: npm run cs-check
       env:
         CI: true
+    - name: Deploy playground to GitHub Pages
+      if: github.ref == 'refs/head/master'
+      uses: crazy-max/ghaction-github-pages@v1.4.0
+      with:
+        keep_history: true
+        target-branch: gh-pages
+        build_dir: packages/playground/build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   docs:
       
