@@ -1,3 +1,153 @@
+## Basic schema types
+
+## Object schema types
+
+## Object additional properties
+
+You can define `additionalProperties` by setting its value to a schema object, such as the following:
+
+```js
+const schema = {
+  "type": "object",
+  "properties": {"type": "string"},
+  "additionalProperties": {"type": "number"}
+}
+```
+
+In this way, an add button for new properties is shown by default. The UX for editing properties whose names are user-defined is still experimental.
+
+You can also define `uiSchema` options for `additionalProperties` by setting the `additionalProperties` attribute in the `uiSchema`.
+
+### `expandable` option
+
+You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
+
+```jsx
+const uiSchema = {
+  "ui:options":  {
+    expandable: false
+  }
+};
+```
+
+## `enum` fields
+
+### Custom labels for `enum` fields
+
+This library supports the [`enumNames`](https://github.com/json-schema/json-schema/wiki/enumNames-%28v5-proposal%29) property for `enum` fields, which allows defining custom labels for each option of an `enum`:
+
+```js
+const schema = {
+  type: "number",
+  enum: [1, 2, 3],
+  enumNames: ["one", "two", "three"]
+};
+```
+
+This will be rendered using a select box like this:
+
+```html
+<select>
+  <option value="1">one</option>
+  <option value="2">two</option>
+  <option value="3">three</option>
+</select>
+```
+
+Note that string representations of numbers will be cast back and reflected as actual numbers into form state.
+
+#### Alternative JSON-Schema compliant approach
+
+JSON Schema has an alternative approach to enumerations; react-jsonschema-form supports it as well.
+
+```js
+const schema = {
+  "type": "number",
+  "anyOf": [
+    {
+      "type": "number",
+      "title": "one",
+      "enum": [
+        1
+      ]
+    },
+    {
+      "type": "number",
+      "title": "two",
+      "enum": [
+        2
+      ]
+    },
+    {
+      "type": "number",
+      "title": "three",
+      "enum": [
+        3
+      ]
+    }
+  ]
+};
+```
+
+This will be rendered as follows:
+
+```html
+<select>
+  <option value="1">one</option>
+  <option value="2">two</option>
+  <option value="3">three</option>
+</select>
+```
+
+This also works for radio buttons:
+
+```js
+const schema = {
+  "type": "boolean",
+  "oneOf": [
+    {
+      "const": true,
+      "title": "Yes"
+    },
+    {
+      "const": false,
+      "title": "No"
+    }
+  ]
+};
+
+const uiSchema = {
+  "ui:widget": "radio"
+};
+```
+
+This will be rendered as follows:
+
+```html
+<div class="field-radio-group">
+  <div class="radio">
+    <label>
+      <span>
+        <input type="radio" name="0.005549338200675935" value="true"><span>Enable</span>
+      </span>
+    </label>
+  </div>
+  <div class="radio">
+    <label>
+      <span>
+        <input type="radio" name="0.005549338200675935" value="false"><span>Disable</span>
+      </span>
+    </label>
+  </div>
+</div>
+```
+
+A live example of both approaches side-by-side can be found in the **Alternatives** tab of the [playground](https://rjsf-team.github.io/react-jsonschema-form/).
+
+### Disabled attribute for `enum` fields
+
+
+
 ## Schema definitions and references
 
 This library partially supports [inline schema definition dereferencing](http://json-schema.org/draft/2019-09/json-schema-core.html#ref), which is Barbarian for *avoiding to copy and paste commonly used field schemas*:

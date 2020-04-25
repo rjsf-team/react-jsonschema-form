@@ -1,3 +1,56 @@
+JSON Schema is limited for describing how a given data type should be rendered as a form input component. That's why this library introduces the concept of *UI schema*.
+
+A UI schema is basically an object literal providing information on **how** the form should be rendered, while the JSON schema tells **what**.
+
+The uiSchema object follows the tree structure of the form field hierarchy, and defines how each property should be rendered:
+
+```js
+const schema = {
+  type: "object",
+  properties: {
+    foo: {
+      type: "object",
+      properties: {
+        bar: {type: "string"}
+      }
+    },
+    baz: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          description: {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
+
+const uiSchema = {
+  foo: {
+    bar: {
+      "ui:widget": "textarea"
+    },
+  },
+  baz: {
+    // note the "items" for an array
+    items: {
+      description: {
+        "ui:widget": "textarea"
+      }
+    }
+  }
+}
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
+```
+
+
 ## classNames
 
 The uiSchema object accepts a `classNames` property for each field of the schema:
