@@ -20,7 +20,7 @@ react-jsonschema-form validates that the data conforms to the given schema, but 
 
 ## Installation
 
-Requires React 15.0.0+.
+Requires React 16.0.0+.
 
 > Note: The `master` branch of the repository reflects ongoing development. Releases are published as [tags](https://github.com/mozilla-services/react-jsonschema-form/releases). You should never blindly install from `master`, but rather check what the available stable releases are.
 
@@ -28,7 +28,7 @@ Requires React 15.0.0+.
 ### As a npm-based project dependency
 
 ```bash
-$ npm install react-jsonschema-form --save
+$ npm install @rjsf/core --save
 ```
 
 > Note: While the library renders [Bootstrap](http://getbootstrap.com/) HTML semantics, you have to build and load the Bootstrap styles on your own.

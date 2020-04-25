@@ -29,7 +29,6 @@ declare module '@rjsf/core' {
         FieldTemplate?: React.StatelessComponent<FieldTemplateProps>;
         ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
         ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
-        safeRenderCompletion?: boolean;
         transformErrors?: (errors: AjvError[]) => AjvError[];
         idPrefix?: string;
         additionalMetaSchemas?: ReadonlyArray<object>;

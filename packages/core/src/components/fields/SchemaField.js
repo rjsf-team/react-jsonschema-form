@@ -379,7 +379,6 @@ function SchemaFieldRender(props) {
             options={schema.anyOf}
             baseType={schema.type}
             registry={registry}
-            safeRenderCompletion={props.safeRenderCompletion}
             schema={schema}
             uiSchema={uiSchema}
           />
@@ -398,7 +397,6 @@ function SchemaFieldRender(props) {
             options={schema.oneOf}
             baseType={schema.type}
             registry={registry}
-            safeRenderCompletion={props.safeRenderCompletion}
             schema={schema}
             uiSchema={uiSchema}
           />
