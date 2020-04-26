@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/semantic-ui",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0",
   "module": "dist/rjsf-semantic-ui.esm.js",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
   "lint-staged": {
