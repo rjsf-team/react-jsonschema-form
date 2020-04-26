@@ -5,9 +5,8 @@
   "main": "dist/index.js",
   "module": "dist/rjsf-antd.js",
   "scripts": {
-    "build": "npm run build:dist && npm run build:lib",
+    "build": "npm run build:dist",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
-    "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "clean": "rimraf dist",
     "lint": "eslint src test",
     "start": "concurrently \"npm:build:* -- --watch\"",
