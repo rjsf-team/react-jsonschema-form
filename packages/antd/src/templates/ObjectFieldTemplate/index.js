@@ -2,20 +2,27 @@ import React from 'react';
 import classNames from 'classnames';
 import _ from 'lodash';
 
-import { Col, Row } from 'antd';
+import { utils } from '@rjsf/core';
+import { Button, Col, Row } from 'antd';
 import { withConfigConsumer } from 'antd/lib/config-provider/context';
+import { PlusCircleOutlined } from '@ant-design/icons';
+
+const { getUiOptions } = utils;
 
 const ObjectFieldTemplate = ({
   DescriptionField,
   TitleField,
   description,
+  disabled,
   formContext,
-  // formData,
+  formData,
   idSchema,
+  onAddClick,
   prefixCls,
   properties,
+  readonly,
   required,
-  // schema,
+  schema,
   title,
   uiSchema,
 }) => {
@@ -65,6 +72,23 @@ const ObjectFieldTemplate = ({
   const filterHidden = (element) =>
     element.content.props.uiSchema['ui:widget'] !== 'hidden';
 
+  const canExpand = () => {
+    if (!schema.additionalProperties) {
+      return false;
+    }
+
+    const { expandable } = getUiOptions(uiSchema);
+    if (expandable === false) {
+      return expandable;
+    }
+
+    if (schema.maxProperties !== undefined) {
+      return Object.keys(formData).length < schema.maxProperties;
+    }
+
+    return true;
+  };
+
   return (
     <fieldset id={idSchema.$id}>
       <Row gutter={rowGutter}>
@@ -92,6 +116,24 @@ const ObjectFieldTemplate = ({
           </Col>
         ))}
       </Row>
+
+      {canExpand() && (
+        <Col span={24}>
+          <Row gutter={rowGutter} justify="end">
+            <Col flex="192px">
+              <Button
+                block
+                className="object-property-expand"
+                disabled={disabled || readonly}
+                onClick={onAddClick(schema)}
+                type="primary"
+              >
+                <PlusCircleOutlined /> Add Item
+              </Button>
+            </Col>
+          </Row>
+        </Col>
+      )}
     </fieldset>
   );
 };

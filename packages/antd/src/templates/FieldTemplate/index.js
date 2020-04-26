@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Form } from 'antd';
 
+import WrapIfAdditional from './WrapIfAdditional';
+
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
 
@@ -9,7 +11,7 @@ const FieldTemplate = ({
   children,
   classNames,
   description,
-  // disabled,
+  disabled,
   displayLabel,
   // errors,
   // fields,
@@ -18,10 +20,12 @@ const FieldTemplate = ({
   hidden,
   id,
   label,
+  onDropPropertyClick,
+  onKeyChange,
   rawDescription,
   rawErrors,
   rawHelp,
-  // readonly,
+  readonly,
   required,
   schema,
   // uiSchema,
@@ -42,25 +46,39 @@ const FieldTemplate = ({
       <div key={`field-${id}-error-${error}`}>{error}</div>
     ));
 
-  return id === 'root' ? (
-    children
-  ) : (
-    <Form.Item
+  return (
+    <WrapIfAdditional
       className={classNames}
-      colon={colon}
-      extra={!!rawDescription && description}
-      hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-      help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
-      htmlFor={id}
-      label={displayLabel && label}
-      labelCol={labelCol}
+      disabled={disabled}
+      formContext={formContext}
+      id={id}
+      label={label}
+      onDropPropertyClick={onDropPropertyClick}
+      onKeyChange={onKeyChange}
+      readonly={readonly}
       required={required}
-      style={wrapperStyle}
-      validateStatus={rawErrors ? 'error' : undefined}
-      wrapperCol={wrapperCol}
+      schema={schema}
     >
-      {children}
-    </Form.Item>
+      {id === 'root' ? (
+        children
+      ) : (
+        <Form.Item
+          colon={colon}
+          extra={!!rawDescription && description}
+          hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
+          help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
+          htmlFor={id}
+          label={displayLabel && label}
+          labelCol={labelCol}
+          required={required}
+          style={wrapperStyle}
+          validateStatus={rawErrors ? 'error' : undefined}
+          wrapperCol={wrapperCol}
+        >
+          {children}
+        </Form.Item>
+      )}
+    </WrapIfAdditional>
   );
 };
 
