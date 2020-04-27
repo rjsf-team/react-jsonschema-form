@@ -278,7 +278,9 @@ class ArrayField extends Component {
   };
 
   onAddClick = event => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
 
     const { onChange } = this.props;
     const newKeyedFormDataRow = {

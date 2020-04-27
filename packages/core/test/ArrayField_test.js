@@ -62,6 +62,30 @@ const ExposedArrayKeyTemplate = function(props) {
   );
 };
 
+const CustomOnAddClickTemplate = function(props) {
+  return (
+    <div className="array">
+      {props.items &&
+        props.items.map(element => (
+          <div
+            key={element.key}
+            className="array-item"
+            data-rjsf-itemkey={element.key}>
+            <div>{element.children}</div>
+          </div>
+        ))}
+
+      {props.canAdd && (
+        <div className="array-item-add">
+          <button onClick={() => props.onAddClick()} type="button">
+            Add New
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 describe("ArrayField", () => {
   let sandbox;
   const CustomComponent = props => {
@@ -241,6 +265,18 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         ArrayFieldTemplate: ExposedArrayKeyTemplate,
+      });
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector(".array-item").hasAttribute(ArrayKeyDataAttr))
+        .to.be.true;
+    });
+
+    it("should add a field when clicking add button even if event is not passed to onAddClick", () => {
+      const { node } = createFormComponent({
+        schema,
+        ArrayFieldTemplate: CustomOnAddClickTemplate,
       });
 
       Simulate.click(node.querySelector(".array-item-add button"));
