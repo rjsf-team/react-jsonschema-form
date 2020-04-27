@@ -9,7 +9,7 @@ export default function AddButton({ className, onClick, disabled }) {
           type="info"
           icon="plus"
           className="btn-add col-xs-12"
-          title="Add"
+          aria-label="Add"
           tabIndex="0"
           onClick={onClick}
           disabled={disabled}
