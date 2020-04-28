@@ -281,8 +281,7 @@ describe("ArrayField", () => {
 
       Simulate.click(node.querySelector(".array-item-add button"));
 
-      expect(node.querySelector(".array-item").hasAttribute(ArrayKeyDataAttr))
-        .to.be.true;
+      expect(node.querySelector(".array-item")).not.to.be.null;
     });
 
     it("should not provide an add button if length equals maxItems", () => {
