@@ -67,10 +67,7 @@ const CustomOnAddClickTemplate = function(props) {
     <div className="array">
       {props.items &&
         props.items.map(element => (
-          <div
-            key={element.key}
-            className="array-item"
-            data-rjsf-itemkey={element.key}>
+          <div key={element.key} className="array-item">
             <div>{element.children}</div>
           </div>
         ))}
