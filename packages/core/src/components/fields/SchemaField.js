@@ -2,6 +2,7 @@ import { ADDITIONAL_PROPERTY_FLAG } from "../../utils";
 import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
+import * as ReactIs from "react-is";
 import * as types from "../../types";
 
 import {
@@ -30,7 +31,7 @@ const COMPONENT_TYPES = {
 
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
-  if (typeof field === "function") {
+  if (typeof field !== "string" && ReactIs.isValidElementType(field)) {
     return field;
   }
   if (typeof field === "string" && field in fields) {
