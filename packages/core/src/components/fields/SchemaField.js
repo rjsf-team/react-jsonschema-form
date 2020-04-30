@@ -359,7 +359,7 @@ function SchemaFieldRender(props) {
   return (
     <FieldTemplate {...fieldProps}>
       <React.Fragment>
-        {field}
+        {!schema.anyOf && !schema.oneOf && field}
 
         {/*
         If the schema `anyOf` or 'oneOf' can be rendered as a select control, don't

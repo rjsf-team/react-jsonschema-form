@@ -9,6 +9,7 @@ import {
   getDefaultFormState,
   getMatchingOption,
   deepEquals,
+  mergeSchemas,
 } from "../../utils";
 
 class AnyOfField extends Component {
@@ -129,6 +130,14 @@ class AnyOfField extends Component {
       optionSchema = option.type
         ? option
         : Object.assign({}, option, { type: baseType });
+    }
+
+    if (schema.oneOf) {
+      const {oneOf, ...restOfSchema} = schema;
+      optionSchema = mergeSchemas(option, restOfSchema);
+    } else {
+      const {anyOf, ...restOfSchema} = schema;
+      optionSchema = mergeSchemas(option, restOfSchema);
     }
 
     const enumOptions = options.map((option, index) => ({
