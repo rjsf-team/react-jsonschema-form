@@ -72,6 +72,8 @@ const SelectWidget = ({
 
   const handleFocus = () => onFocus(id, processValue(schema, value));
 
+  const getPopupContainer = (node) => node.parentNode;
+
   const stringify = (currentValue) =>
     Array.isArray(currentValue) ? value.map(String) : String(value);
 
@@ -79,6 +81,7 @@ const SelectWidget = ({
     <Select
       autoFocus={autofocus}
       disabled={disabled || (readonlyAsDisabled && readonly)}
+      getPopupContainer={getPopupContainer}
       id={id}
       mode={typeof multiple !== 'undefined' ? 'multiple' : undefined}
       name={id}

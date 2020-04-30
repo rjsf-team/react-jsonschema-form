@@ -32,9 +32,12 @@ const DateWidget = ({
 
   const handleFocus = () => onFocus(id, value);
 
+  const getPopupContainer = (node) => node.parentNode;
+
   return (
     <DatePicker
       disabled={disabled || (readonlyAsDisabled && readonly)}
+      getPopupContainer={getPopupContainer}
       id={id}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}
