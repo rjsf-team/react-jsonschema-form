@@ -7,6 +7,10 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 
 import ArrayFieldTemplateItem from './ArrayFieldTemplateItem';
 
+const DESCRIPTION_COL_STYLE = {
+  paddingBottom: '8px',
+};
+
 const FixedArrayFieldTemplate = ({
   canAdd,
   className,
@@ -50,7 +54,7 @@ const FixedArrayFieldTemplate = ({
         )}
 
         {(uiSchema['ui:description'] || schema.description) && (
-          <Col span={24}>
+          <Col span={24} style={DESCRIPTION_COL_STYLE}>
             <DescriptionField
               description={uiSchema['ui:description'] || schema.description}
               id={`${idSchema.$id}-description`}

@@ -9,6 +9,10 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 
 const { getUiOptions } = utils;
 
+const DESCRIPTION_COL_STYLE = {
+  paddingBottom: '8px',
+};
+
 const ObjectFieldTemplate = ({
   DescriptionField,
   TitleField,
@@ -103,7 +107,7 @@ const ObjectFieldTemplate = ({
         )}
         {uiSchema['ui:description'] !== false &&
           (uiSchema['ui:description'] || description) && (
-            <Col span={24}>
+            <Col span={24} style={DESCRIPTION_COL_STYLE}>
               <DescriptionField
                 description={uiSchema['ui:description'] || description}
                 id={`${idSchema.$id}-description`}
