@@ -7,6 +7,8 @@ import FieldTemplate from './templates/FieldTemplate';
 import ObjectFieldTemplate from './templates/ObjectFieldTemplate';
 import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
 
+import AltDateTimeWidget from './widgets/AltDateTimeWidget';
+import AltDateWidget from './widgets/AltDateWidget';
 import CheckboxesWidget from './widgets/CheckboxesWidget';
 import CheckboxWidget from './widgets/CheckboxWidget';
 import ColorWidget from './widgets/ColorWidget';
@@ -35,6 +37,8 @@ export const Fields = {
 };
 
 export const Widgets = {
+  AltDateTimeWidget,
+  AltDateWidget,
   CheckboxesWidget,
   CheckboxWidget,
   ColorWidget,
