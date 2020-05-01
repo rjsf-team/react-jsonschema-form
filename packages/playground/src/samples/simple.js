@@ -38,6 +38,11 @@ module.exports = {
     firstName: {
       "ui:autofocus": true,
       "ui:emptyValue": "",
+      "ui:autocomplete": "family-name",
+    },
+    lastName: {
+      "ui:emptyValue": "",
+      "ui:autocomplete": "given-name",
     },
     age: {
       "ui:widget": "updown",

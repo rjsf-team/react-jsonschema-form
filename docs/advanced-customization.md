@@ -108,7 +108,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-Please see [customArray.js](https://github.com/mozilla-services/react-jsonschema-form/blob/master/playground/samples/customArray.js) for a better example.
+Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/master/packages/playground/src/samples/customArray.js) for a better example.
 
 
 The following props are passed to each `ArrayFieldTemplate`:
@@ -120,7 +120,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `disabled`: A boolean value stating if the array is disabled.
 - `idSchema`: Object
 - `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
-- `onAddClick: (event) => void`: A function that adds a new item to the array.
+- `onAddClick: (event?) => void`: A function that adds a new item to the array. `event` is optional.
 - `readonly`: A boolean value stating if the array is read-only.
 - `required`: A boolean value stating if the array is required.
 - `schema`: The schema object for this array.
@@ -620,7 +620,21 @@ render((
 ), document.getElementById("app"));
 ```
 
-The default widgets you can overwrite are:
+The default fields you can override are:
+
+ - `ArrayField`
+ - `BooleanField`
+ - `DescriptionField`
+ - `MultiSchemaField`
+ - `NullField`
+ - `NumberField`
+ - `ObjectField`
+ - `SchemaField`
+ - `StringField`
+ - `TitleField`
+ - `UnsupportedField`
+
+The default widgets you can override are:
 
  - `AltDateTimeWidget`
  - `AltDateWidget`
