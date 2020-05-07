@@ -5,8 +5,10 @@ import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
 import FormLabel from '@material-ui/core/FormLabel';
 
-import { rangeSpec } from '@rjsf/core/lib/utils';
+import { utils } from '@rjsf/core';
 import { WidgetProps } from '@rjsf/core';
+
+const { rangeSpec } = utils;
 
 const RangeWidget = ({
   value,

@@ -259,6 +259,18 @@ describe("StringField", () => {
 
       expect(node.querySelector("#custom")).to.exist;
     });
+
+    it("should create and set autocomplete attribute", () => {
+      const { node } = createFormComponent({
+        schema: { type: "string" },
+        uiSchema: { "ui:autocomplete": "family-name" },
+        formData: undefined,
+      });
+
+      expect(node.querySelector("input").getAttribute("autocomplete")).eql(
+        "family-name"
+      );
+    });
   });
 
   describe("SelectWidget", () => {

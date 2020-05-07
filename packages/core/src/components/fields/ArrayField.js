@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import includes from "core-js/library/fn/array/includes";
 import * as types from "../../types";
 
-import UnsupportedField from "./UnsupportedField";
 import {
   getWidget,
   getDefaultFormState,
@@ -61,6 +60,7 @@ function DefaultArrayItem(props) {
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconButton
                 icon="arrow-up"
+                aria-label="Move up"
                 className="array-item-move-up"
                 tabIndex="-1"
                 style={btnStyle}
@@ -73,6 +73,7 @@ function DefaultArrayItem(props) {
               <IconButton
                 icon="arrow-down"
                 className="array-item-move-down"
+                aria-label="Move down"
                 tabIndex="-1"
                 style={btnStyle}
                 disabled={
@@ -86,6 +87,7 @@ function DefaultArrayItem(props) {
               <IconButton
                 type="danger"
                 icon="remove"
+                aria-label="Remove"
                 className="array-item-remove"
                 tabIndex="-1"
                 style={btnStyle}
@@ -279,7 +281,9 @@ class ArrayField extends Component {
   };
 
   onAddClick = event => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
 
     const { onChange } = this.props;
     const newKeyedFormDataRow = {
@@ -427,6 +431,9 @@ class ArrayField extends Component {
     } = this.props;
     const { rootSchema } = registry;
     if (!schema.hasOwnProperty("items")) {
+      const { fields } = registry;
+      const { UnsupportedField } = fields;
+
       return (
         <UnsupportedField
           schema={schema}
