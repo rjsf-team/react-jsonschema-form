@@ -7,6 +7,7 @@ import { WidgetProps } from '@rjsf/core';
 
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -38,6 +39,7 @@ const TextWidget = ({
       <TextField
         id={id}
         label={label || schema.title}
+        placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
