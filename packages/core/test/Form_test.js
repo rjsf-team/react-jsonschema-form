@@ -2968,4 +2968,40 @@ describe("Form omitExtraData and liveOmit", () => {
       expect(comp.state.errors).eql([]);
     });
   });
+
+  it("should keep schema errors when extraErrors set after submit and liveValidate is false", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+      },
+      required: ["foo"],
+    };
+
+    const extraErrors = {
+      foo: {
+        __errors: ["foo"],
+      },
+    };
+
+    const onSubmit = sinon.spy();
+
+    const props = {
+      schema,
+      onSubmit,
+      liveValidate: false,
+    };
+    const event = { type: "submit" };
+    const { comp, node } = createFormComponent(props);
+
+    Simulate.submit(node, event);
+    expect(node.querySelectorAll(".error-detail li")).to.have.length.of(1);
+
+    setProps(comp, {
+      ...props,
+      extraErrors,
+    });
+
+    expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
+  });
 });

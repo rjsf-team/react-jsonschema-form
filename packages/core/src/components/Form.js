@@ -58,7 +58,8 @@ export default class Form extends Component {
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof inputFormData !== "undefined";
-    const liveValidate = props.liveValidate || this.props.liveValidate;
+    const liveValidate =
+      "liveValidate" in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const { definitions } = schema;
     const formData = getDefaultFormState(schema, inputFormData, definitions);
@@ -67,19 +68,48 @@ export default class Form extends Component {
     const additionalMetaSchemas = props.additionalMetaSchemas;
 
     const getCurrentErrors = () => {
-      const useStateErrors = !props.noValidate && liveValidate;
-      const { errors = [], errorSchema = {} } = state;
+      if (props.noValidate) {
+        return { errors: [], errorSchema: {} };
+      } else if (!props.liveValidate) {
+        return {
+          errors: state.schemaValidationErrors || [],
+          errorSchema: state.schemaValidationErrorSchema || {},
+        };
+      }
       return {
-        errors: useStateErrors ? errors : [],
-        errorSchema: useStateErrors ? errorSchema : {},
+        errors: state.errors || [],
+        errorSchema: state.errorSchema || {},
       };
     };
 
-    let { errors, errorSchema } = mustValidate
-      ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
-      : getCurrentErrors();
+    let errors,
+      errorSchema,
+      schemaValidationErrors,
+      schemaValidationErrorSchema;
+    if (mustValidate) {
+      const schemaValidation = this.validate(
+        formData,
+        schema,
+        additionalMetaSchemas,
+        customFormats
+      );
+      errors = schemaValidation.errors;
+      errorSchema = schemaValidation.errorSchema;
+      schemaValidationErrors = errors;
+      schemaValidationErrorSchema = errorSchema;
+    } else {
+      const currentErrors = getCurrentErrors();
+      errors = currentErrors.errors;
+      errorSchema = currentErrors.errorSchema;
+      schemaValidationErrors = state.schemaValidationErrors;
+      schemaValidationErrorSchema = state.schemaValidationErrorSchema;
+    }
     if (props.extraErrors) {
-      errorSchema = mergeObjects(errorSchema, props.extraErrors);
+      errorSchema = mergeObjects(
+        errorSchema,
+        props.extraErrors,
+        !!"concat arrays"
+      );
       errors = toErrorList(errorSchema);
     }
     const idSchema = toIdSchema(
@@ -98,6 +128,8 @@ export default class Form extends Component {
       errors,
       errorSchema,
       additionalMetaSchemas,
+      schemaValidationErrors,
+      schemaValidationErrorSchema,
     };
   }
 
@@ -211,15 +243,33 @@ export default class Form extends Component {
     }
 
     if (mustValidate) {
-      let { errors, errorSchema } = this.validate(newFormData);
+      let schemaValidation = this.validate(newFormData);
+      let errors = schemaValidation.errors;
+      let errorSchema = schemaValidation.errorSchema;
+      const schemaValidationErrors = errors;
+      const schemaValidationErrorSchema = errorSchema;
       if (this.props.extraErrors) {
-        errorSchema = mergeObjects(errorSchema, this.props.extraErrors);
+        errorSchema = mergeObjects(
+          errorSchema,
+          this.props.extraErrors,
+          !!"concat arrays"
+        );
         errors = toErrorList(errorSchema);
       }
-      state = { formData: newFormData, errors, errorSchema };
+      state = {
+        formData: newFormData,
+        errors,
+        errorSchema,
+        schemaValidationErrors,
+        schemaValidationErrorSchema,
+      };
     } else if (!this.props.noValidate && newErrorSchema) {
       const errorSchema = this.props.extraErrors
-        ? mergeObjects(newErrorSchema, this.props.extraErrors)
+        ? mergeObjects(
+            newErrorSchema,
+            this.props.extraErrors,
+            !!"concat arrays"
+          )
         : newErrorSchema;
       state = {
         formData: newFormData,
@@ -273,19 +323,35 @@ export default class Form extends Component {
     }
 
     if (!this.props.noValidate) {
-      let { errors, errorSchema } = this.validate(newFormData);
+      let schemaValidation = this.validate(newFormData);
+      let errors = schemaValidation.errors;
+      let errorSchema = schemaValidation.errorSchema;
+      const schemaValidationErrors = errors;
+      const schemaValidationErrorSchema = errorSchema;
       if (Object.keys(errors).length > 0) {
         if (this.props.extraErrors) {
-          errorSchema = mergeObjects(errorSchema, this.props.extraErrors);
+          errorSchema = mergeObjects(
+            errorSchema,
+            this.props.extraErrors,
+            !!"concat arrays"
+          );
           errors = toErrorList(errorSchema);
         }
-        this.setState({ errors, errorSchema }, () => {
-          if (this.props.onError) {
-            this.props.onError(errors);
-          } else {
-            console.error("Form validation failed", errors);
+        this.setState(
+          {
+            errors,
+            errorSchema,
+            schemaValidationErrors,
+            schemaValidationErrorSchema,
+          },
+          () => {
+            if (this.props.onError) {
+              this.props.onError(errors);
+            } else {
+              console.error("Form validation failed", errors);
+            }
           }
-        });
+        );
         return;
       }
     }
