@@ -482,15 +482,15 @@ class Playground extends Component {
 
     const { themes } = this.props;
 
-    let templateProps = {};	
-    if (ArrayFieldTemplate) {	
-      templateProps.ArrayFieldTemplate = ArrayFieldTemplate;	
-    }	
-    if (ObjectFieldTemplate) {	
-      templateProps.ObjectFieldTemplate = ObjectFieldTemplate;	
-    }	
-    if (extraErrors) {	
-      templateProps.extraErrors = extraErrors;	
+    let templateProps = {};
+    if (ArrayFieldTemplate) {
+      templateProps.ArrayFieldTemplate = ArrayFieldTemplate;
+    }
+    if (ObjectFieldTemplate) {
+      templateProps.ObjectFieldTemplate = ObjectFieldTemplate;
+    }
+    if (extraErrors) {
+      templateProps.extraErrors = extraErrors;
     }
 
     return (
