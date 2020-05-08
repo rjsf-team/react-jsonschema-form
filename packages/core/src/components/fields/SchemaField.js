@@ -16,7 +16,6 @@ import {
   deepEquals,
   getSchemaType,
 } from "../../utils";
-import UnsupportedField from "./UnsupportedField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -49,6 +48,8 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   return componentName in fields
     ? fields[componentName]
     : () => {
+        const { UnsupportedField } = fields;
+
         return (
           <UnsupportedField
             schema={schema}
@@ -237,13 +238,13 @@ function SchemaFieldRender(props) {
     registry = getDefaultRegistry(),
     wasPropertyKeyModified = false,
   } = props;
-  const { definitions, fields, formContext } = registry;
+  const { rootSchema, fields, formContext } = registry;
   const FieldTemplate =
     uiSchema["ui:FieldTemplate"] || registry.FieldTemplate || DefaultTemplate;
   let idSchema = props.idSchema;
-  const schema = retrieveSchema(props.schema, definitions, formData);
+  const schema = retrieveSchema(props.schema, rootSchema, formData);
   idSchema = mergeObjects(
-    toIdSchema(schema, null, definitions, formData, idPrefix),
+    toIdSchema(schema, null, rootSchema, formData, idPrefix),
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
@@ -264,8 +265,8 @@ function SchemaFieldRender(props) {
   let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
     displayLabel =
-      isMultiSelect(schema, definitions) ||
-      isFilesArray(schema, uiSchema, definitions);
+      isMultiSelect(schema, rootSchema) ||
+      isFilesArray(schema, uiSchema, rootSchema);
   }
   if (schema.type === "object") {
     displayLabel = false;
@@ -357,48 +358,50 @@ function SchemaFieldRender(props) {
 
   return (
     <FieldTemplate {...fieldProps}>
-      {field}
+      <React.Fragment>
+        {field}
 
-      {/*
+        {/*
         If the schema `anyOf` or 'oneOf' can be rendered as a select control, don't
         render the selection and let `StringField` component handle
         rendering
       */}
-      {schema.anyOf && !isSelect(schema) && (
-        <_AnyOfField
-          disabled={disabled}
-          errorSchema={errorSchema}
-          formData={formData}
-          idPrefix={idPrefix}
-          idSchema={idSchema}
-          onBlur={props.onBlur}
-          onChange={props.onChange}
-          onFocus={props.onFocus}
-          options={schema.anyOf}
-          baseType={schema.type}
-          registry={registry}
-          schema={schema}
-          uiSchema={uiSchema}
-        />
-      )}
+        {schema.anyOf && !isSelect(schema) && (
+          <_AnyOfField
+            disabled={disabled}
+            errorSchema={errorSchema}
+            formData={formData}
+            idPrefix={idPrefix}
+            idSchema={idSchema}
+            onBlur={props.onBlur}
+            onChange={props.onChange}
+            onFocus={props.onFocus}
+            options={schema.anyOf}
+            baseType={schema.type}
+            registry={registry}
+            schema={schema}
+            uiSchema={uiSchema}
+          />
+        )}
 
-      {schema.oneOf && !isSelect(schema) && (
-        <_OneOfField
-          disabled={disabled}
-          errorSchema={errorSchema}
-          formData={formData}
-          idPrefix={idPrefix}
-          idSchema={idSchema}
-          onBlur={props.onBlur}
-          onChange={props.onChange}
-          onFocus={props.onFocus}
-          options={schema.oneOf}
-          baseType={schema.type}
-          registry={registry}
-          schema={schema}
-          uiSchema={uiSchema}
-        />
-      )}
+        {schema.oneOf && !isSelect(schema) && (
+          <_OneOfField
+            disabled={disabled}
+            errorSchema={errorSchema}
+            formData={formData}
+            idPrefix={idPrefix}
+            idSchema={idSchema}
+            onBlur={props.onBlur}
+            onChange={props.onChange}
+            onFocus={props.onFocus}
+            options={schema.oneOf}
+            baseType={schema.type}
+            registry={registry}
+            schema={schema}
+            uiSchema={uiSchema}
+          />
+        )}
+      </React.Fragment>
     </FieldTemplate>
   );
 }

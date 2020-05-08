@@ -61,9 +61,9 @@ export default class Form extends Component {
     const liveValidate =
       "liveValidate" in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
-    const { definitions } = schema;
-    const formData = getDefaultFormState(schema, inputFormData, definitions);
-    const retrievedSchema = retrieveSchema(schema, definitions, formData);
+    const rootSchema = schema;
+    const formData = getDefaultFormState(schema, inputFormData, rootSchema);
+    const retrievedSchema = retrieveSchema(schema, rootSchema, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
 
@@ -115,7 +115,7 @@ export default class Form extends Component {
     const idSchema = toIdSchema(
       retrievedSchema,
       uiSchema["ui:rootFieldId"],
-      definitions,
+      rootSchema,
       formData,
       props.idPrefix
     );
@@ -144,8 +144,8 @@ export default class Form extends Component {
     customFormats = this.props.customFormats
   ) {
     const { validate, transformErrors } = this.props;
-    const { definitions } = this.getRegistry();
-    const resolvedSchema = retrieveSchema(schema, definitions, formData);
+    const { rootSchema } = this.getRegistry();
+    const resolvedSchema = retrieveSchema(schema, rootSchema, formData);
     return validateFormData(
       formData,
       resolvedSchema,
@@ -224,13 +224,13 @@ export default class Form extends Component {
     if (this.props.omitExtraData === true && this.props.liveOmit === true) {
       const retrievedSchema = retrieveSchema(
         this.state.schema,
-        this.state.schema.definitions,
+        this.state.schema,
         formData
       );
       const pathSchema = toPathSchema(
         retrievedSchema,
         "",
-        this.state.schema.definitions,
+        this.state.schema,
         formData
       );
 
@@ -307,13 +307,13 @@ export default class Form extends Component {
     if (this.props.omitExtraData === true) {
       const retrievedSchema = retrieveSchema(
         this.state.schema,
-        this.state.schema.definitions,
+        this.state.schema,
         newFormData
       );
       const pathSchema = toPathSchema(
         retrievedSchema,
         "",
-        this.state.schema.definitions,
+        this.state.schema,
         newFormData
       );
 
@@ -390,6 +390,7 @@ export default class Form extends Component {
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
       definitions: this.props.schema.definitions || {},
+      rootSchema: this.props.schema,
       formContext: this.props.formContext || {},
     };
   }

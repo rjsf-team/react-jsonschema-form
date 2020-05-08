@@ -5,7 +5,8 @@ module.exports = {
       {
         properties: {
           lorem: {
-            type: ["string", "number"],
+            type: ["string", "boolean"],
+            default: true,
           },
         },
       },
@@ -13,7 +14,6 @@ module.exports = {
         properties: {
           lorem: {
             type: "boolean",
-            minLength: 5,
           },
           ipsum: {
             type: "string",

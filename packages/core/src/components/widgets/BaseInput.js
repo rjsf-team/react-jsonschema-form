@@ -43,6 +43,10 @@ function BaseInput(props) {
     }
   }
 
+  if (options.autocomplete) {
+    inputProps.autoComplete = options.autocomplete;
+  }
+
   // If multipleOf is defined, use this as the step value. This mainly improves
   // the experience for keyboard users (who can use the up/down KB arrows).
   if (schema.multipleOf) {
@@ -63,6 +67,7 @@ function BaseInput(props) {
 
   return [
     <input
+      key={inputProps.id}
       className="form-control"
       readOnly={readonly}
       disabled={disabled}

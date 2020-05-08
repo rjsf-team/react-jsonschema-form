@@ -2,8 +2,9 @@ import React from "react";
 
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
+import sinon from "sinon";
 
-import { createFormComponent, createSandbox } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 const ArrayKeyDataAttr = "data-rjsf-itemkey";
 const ExposedArrayKeyTemplate = function(props) {
@@ -61,6 +62,27 @@ const ExposedArrayKeyTemplate = function(props) {
   );
 };
 
+const CustomOnAddClickTemplate = function(props) {
+  return (
+    <div className="array">
+      {props.items &&
+        props.items.map(element => (
+          <div key={element.key} className="array-item">
+            <div>{element.children}</div>
+          </div>
+        ))}
+
+      {props.canAdd && (
+        <div className="array-item-add">
+          <button onClick={() => props.onAddClick()} type="button">
+            Add New
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 describe("ArrayField", () => {
   let sandbox;
   const CustomComponent = props => {
@@ -82,6 +104,22 @@ describe("ArrayField", () => {
       expect(
         node.querySelector(".field-array > .unsupported-field").textContent
       ).to.contain("Missing items definition");
+    });
+
+    it("should be able to be overwritten with a custom UnsupportedField component", () => {
+      const CustomUnsupportedField = function() {
+        return <span id="custom">Custom UnsupportedField</span>;
+      };
+
+      const fields = { UnsupportedField: CustomUnsupportedField };
+      const { node } = createFormComponent({
+        schema: { type: "array" },
+        fields,
+      });
+
+      expect(node.querySelectorAll("#custom")[0].textContent).to.eql(
+        "Custom UnsupportedField"
+      );
     });
   });
 
@@ -230,6 +268,17 @@ describe("ArrayField", () => {
 
       expect(node.querySelector(".array-item").hasAttribute(ArrayKeyDataAttr))
         .to.be.true;
+    });
+
+    it("should add a field when clicking add button even if event is not passed to onAddClick", () => {
+      const { node } = createFormComponent({
+        schema,
+        ArrayFieldTemplate: CustomOnAddClickTemplate,
+      });
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector(".array-item")).not.to.be.null;
     });
 
     it("should not provide an add button if length equals maxItems", () => {
@@ -699,7 +748,7 @@ describe("ArrayField", () => {
         items: { type: "integer" },
       };
       const formData = [1, 2, 3];
-      const { comp, node } = createFormComponent({
+      const { node, onChange, onError } = createFormComponent({
         liveValidate: true,
         schema,
         formData,
@@ -709,8 +758,32 @@ describe("ArrayField", () => {
         target: { value: "" },
       });
 
-      expect(comp.state.formData).eql([1, null, 3]);
-      expect(comp.state.errors).to.have.length.of(1);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        errorSchema: { 1: { __errors: ["should be integer"] } },
+        errors: [
+          {
+            message: "should be integer",
+            name: "type",
+            params: { type: "integer" },
+            property: "[1]",
+            schemaPath: "#/items/type",
+            stack: "[1] should be integer",
+          },
+        ],
+        formData: [1, null, 3],
+      });
+
+      submitForm(node);
+      sinon.assert.calledWithMatch(onError.lastCall, [
+        {
+          message: "should be integer",
+          name: "type",
+          params: { type: "integer" },
+          property: "[1]",
+          schemaPath: "#/items/type",
+          stack: "[1] should be integer",
+        },
+      ]);
     });
 
     it("should render the input widgets with the expected ids", () => {
@@ -877,18 +950,38 @@ describe("ArrayField", () => {
           "ui:widget": "checkboxes",
         },
       };
-      const form = createFormComponent({
+      let form = createFormComponent({
         schema: schema,
         uiSchema: uiSchema,
         formData: {},
         liveValidate: true,
-      }).comp;
+        noValidate: true,
+      });
+      submitForm(form.node);
 
-      expect(form.state.formData).to.have.property("multipleChoicesList");
-      expect(form.state.formData.multipleChoicesList).to.be.empty;
-      expect(form.state.errors.length).to.equal(1);
-      expect(form.state.errors[0].name).to.equal("minItems");
-      expect(form.state.errors[0].params.limit).to.equal(3);
+      sinon.assert.calledWithMatch(form.onSubmit.lastCall, {
+        formData: { multipleChoicesList: [] },
+      });
+
+      form = createFormComponent({
+        schema: schema,
+        uiSchema: uiSchema,
+        formData: {},
+        liveValidate: true,
+        noValidate: false,
+      });
+      submitForm(form.node);
+
+      sinon.assert.calledWithMatch(form.onError.lastCall, [
+        {
+          message: "should NOT have fewer than 3 items",
+          name: "minItems",
+          params: { limit: 3 },
+          property: ".multipleChoicesList",
+          schemaPath: "#/properties/multipleChoicesList/minItems",
+          stack: ".multipleChoicesList should NOT have fewer than 3 items",
+        },
+      ]);
     });
 
     it("should honor given formData, even when it does not meet ths minItems-requirement", () => {
@@ -962,7 +1055,7 @@ describe("ArrayField", () => {
       });
 
       it("should handle a change event", () => {
-        const { comp, node } = createFormComponent({ schema });
+        const { node, onChange } = createFormComponent({ schema });
 
         Simulate.change(node.querySelector(".field select"), {
           target: {
@@ -974,7 +1067,9 @@ describe("ArrayField", () => {
           },
         });
 
-        expect(comp.state.formData).eql(["foo", "bar"]);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: ["foo", "bar"],
+        });
       });
 
       it("should handle a blur event", () => {
@@ -1072,7 +1167,7 @@ describe("ArrayField", () => {
       });
 
       it("should handle a change event", () => {
-        const { comp, node } = createFormComponent({
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
         });
@@ -1084,7 +1179,9 @@ describe("ArrayField", () => {
           target: { checked: true },
         });
 
-        expect(comp.state.formData).eql(["foo", "fuzz"]);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: ["foo", "fuzz"],
+        });
       });
 
       it("should fill field with data", () => {
@@ -1181,7 +1278,7 @@ describe("ArrayField", () => {
         .not.to.be.null;
     });
 
-    it("should handle a change event", () => {
+    it("should handle a change event", async () => {
       sandbox.stub(window, "FileReader").returns({
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
@@ -1189,7 +1286,7 @@ describe("ArrayField", () => {
         readAsDataUrl() {},
       });
 
-      const { comp, node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
 
       Simulate.change(node.querySelector(".field input[type=file]"), {
         target: {
@@ -1200,12 +1297,14 @@ describe("ArrayField", () => {
         },
       });
 
-      return new Promise(setImmediate).then(() =>
-        expect(comp.state.formData).eql([
+      await new Promise(setImmediate);
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: [
           "data:text/plain;name=file1.txt;base64,x=",
           "data:text/plain;name=file2.txt;base64,x=",
-        ])
-      );
+        ],
+      });
     });
 
     it("should fill field with data", () => {
@@ -1422,7 +1521,7 @@ describe("ArrayField", () => {
     });
 
     it("should handle change events", () => {
-      const { comp, node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
       const strInput = node.querySelector(
         "fieldset .field-string input[type=text]"
       );
@@ -1433,7 +1532,9 @@ describe("ArrayField", () => {
       Simulate.change(strInput, { target: { value: "bar" } });
       Simulate.change(numInput, { target: { value: "101" } });
 
-      expect(comp.state.formData).eql(["bar", 101]);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: ["bar", 101],
+      });
     });
 
     it("should generate additional fields and fill data", () => {
@@ -1533,7 +1634,7 @@ describe("ArrayField", () => {
     });
 
     describe("operations for additional items", () => {
-      const { comp, node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: schemaAdditional,
         formData: [1, 2, "foo"],
         ArrayFieldTemplate: ExposedArrayKeyTemplate,
@@ -1553,7 +1654,10 @@ describe("ArrayField", () => {
         Simulate.click(addBtn);
 
         expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
-        expect(comp.state.formData).eql([1, 2, "foo", undefined]);
+
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: [1, 2, "foo", undefined],
+        });
       });
 
       it("should retain existing row keys/ids when adding additional items", () => {
@@ -1581,7 +1685,9 @@ describe("ArrayField", () => {
         Simulate.change(inputs[0], { target: { value: "bar" } });
         Simulate.change(inputs[1], { target: { value: "baz" } });
 
-        expect(comp.state.formData).eql([1, 2, "bar", "baz"]);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: [1, 2, "bar", "baz"],
+        });
       });
 
       it("should remove array items when clicking remove buttons", () => {
@@ -1590,13 +1696,18 @@ describe("ArrayField", () => {
         Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
-        expect(comp.state.formData).eql([1, 2, "baz"]);
+
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: [1, 2, "baz"],
+        });
 
         dropBtns = node.querySelectorAll(".array-item-remove");
         Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.be.empty;
-        expect(comp.state.formData).eql([1, 2]);
+        sinon.assert.calledWithMatch(onChange.lastCall, {
+          formData: [1, 2],
+        });
       });
     });
   });
@@ -1613,7 +1724,7 @@ describe("ArrayField", () => {
     };
 
     it("should convert array of strings to numbers if type of items is 'number'", () => {
-      const { comp, node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
 
       Simulate.change(node.querySelector(".field select"), {
         target: {
@@ -1625,7 +1736,9 @@ describe("ArrayField", () => {
         },
       });
 
-      expect(comp.state.formData).eql([1, 2]);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: [1, 2],
+      });
     });
   });
 

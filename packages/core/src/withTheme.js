@@ -1,23 +1,22 @@
-import React, { Component } from "react";
+import React, { forwardRef } from "react";
 import PropTypes from "prop-types";
 import Form from "./";
 
 function withTheme(themeProps) {
-  return class extends Component {
-    render() {
-      let { fields, widgets, ...directProps } = this.props;
-      fields = { ...themeProps.fields, ...fields };
-      widgets = { ...themeProps.widgets, ...widgets };
-      return (
-        <Form
-          {...themeProps}
-          {...directProps}
-          fields={fields}
-          widgets={widgets}
-        />
-      );
-    }
-  };
+  return forwardRef(({ fields, widgets, ...directProps }, ref) => {
+    fields = { ...themeProps.fields, ...fields };
+    widgets = { ...themeProps.widgets, ...widgets };
+
+    return (
+      <Form
+        {...themeProps}
+        {...directProps}
+        fields={fields}
+        widgets={widgets}
+        ref={ref}
+      />
+    );
+  });
 }
 
 withTheme.propTypes = {

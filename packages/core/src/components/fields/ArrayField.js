@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import includes from "core-js/library/fn/array/includes";
 import * as types from "../../types";
 
-import UnsupportedField from "./UnsupportedField";
 import {
   getWidget,
   getDefaultFormState,
@@ -61,6 +60,7 @@ function DefaultArrayItem(props) {
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconButton
                 icon="arrow-up"
+                aria-label="Move up"
                 className="array-item-move-up"
                 tabIndex="-1"
                 style={btnStyle}
@@ -73,6 +73,7 @@ function DefaultArrayItem(props) {
               <IconButton
                 icon="arrow-down"
                 className="array-item-move-down"
+                aria-label="Move down"
                 tabIndex="-1"
                 style={btnStyle}
                 disabled={
@@ -86,6 +87,7 @@ function DefaultArrayItem(props) {
               <IconButton
                 type="danger"
                 icon="remove"
+                aria-label="Remove"
                 className="array-item-remove"
                 tabIndex="-1"
                 style={btnStyle}
@@ -270,16 +272,18 @@ class ArrayField extends Component {
 
   _getNewFormDataRow = () => {
     const { schema, registry = getDefaultRegistry() } = this.props;
-    const { definitions } = registry;
+    const { rootSchema } = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    return getDefaultFormState(itemSchema, undefined, definitions);
+    return getDefaultFormState(itemSchema, undefined, rootSchema);
   };
 
   onAddClick = event => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
 
     const { onChange } = this.props;
     const newKeyedFormDataRow = {
@@ -425,8 +429,11 @@ class ArrayField extends Component {
       idSchema,
       registry = getDefaultRegistry(),
     } = this.props;
-    const { definitions } = registry;
+    const { rootSchema } = registry;
     if (!schema.hasOwnProperty("items")) {
+      const { fields } = registry;
+      const { UnsupportedField } = fields;
+
       return (
         <UnsupportedField
           schema={schema}
@@ -438,10 +445,10 @@ class ArrayField extends Component {
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
-    if (isFilesArray(schema, uiSchema, definitions)) {
+    if (isFilesArray(schema, uiSchema, rootSchema)) {
       return this.renderFiles();
     }
-    if (isMultiSelect(schema, definitions)) {
+    if (isMultiSelect(schema, rootSchema)) {
       return this.renderMultiSelect();
     }
     return this.renderNormalArray();
@@ -451,7 +458,6 @@ class ArrayField extends Component {
     const {
       schema,
       uiSchema,
-      formData,
       errorSchema,
       idSchema,
       name,
@@ -466,20 +472,21 @@ class ArrayField extends Component {
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
-    const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
+    const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
     const { TitleField, DescriptionField } = fields;
-    const itemsSchema = retrieveSchema(schema.items, definitions);
+    const itemsSchema = retrieveSchema(schema.items, rootSchema);
+    const formData = keyedToPlainFormData(this.state.keyedFormData);
     const arrayProps = {
       canAdd: this.canAddItem(formData),
       items: this.state.keyedFormData.map((keyedItem, index) => {
         const { key, item } = keyedItem;
-        const itemSchema = retrieveSchema(schema.items, definitions, item);
+        const itemSchema = retrieveSchema(schema.items, rootSchema, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
-          definitions,
+          rootSchema,
           item,
           idPrefix
         );
@@ -541,8 +548,8 @@ class ArrayField extends Component {
       rawErrors,
     } = this.props;
     const items = this.props.formData;
-    const { widgets, definitions, formContext } = registry;
-    const itemsSchema = retrieveSchema(schema.items, definitions, formData);
+    const { widgets, rootSchema, formContext } = registry;
+    const itemsSchema = retrieveSchema(schema.items, rootSchema, formData);
     const enumOptions = optionsList(itemsSchema);
     const { widget = "select", ...options } = {
       ...getUiOptions(uiSchema),
@@ -631,13 +638,13 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
-    const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
+    const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
-      retrieveSchema(item, definitions, formData[index])
+      retrieveSchema(item, rootSchema, formData[index])
     );
     const additionalSchema = allowAdditionalItems(schema)
-      ? retrieveSchema(schema.additionalItems, definitions, formData)
+      ? retrieveSchema(schema.additionalItems, rootSchema, formData)
       : null;
 
     if (!items || items.length < itemSchemas.length) {
@@ -657,13 +664,13 @@ class ArrayField extends Component {
         const { key, item } = keyedItem;
         const additional = index >= itemSchemas.length;
         const itemSchema = additional
-          ? retrieveSchema(schema.additionalItems, definitions, item)
+          ? retrieveSchema(schema.additionalItems, rootSchema, item)
           : itemSchemas[index];
         const itemIdPrefix = idSchema.$id + "_" + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
-          definitions,
+          rootSchema,
           item,
           idPrefix
         );
