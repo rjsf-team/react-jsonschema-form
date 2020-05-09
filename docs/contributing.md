@@ -33,7 +33,7 @@ All the JavaScript code in this project conforms to the [prettier](https://githu
 We use [mkdocs](https://www.mkdocs.org/) to build our documentation. To run documentation locally, run:
 
 ```bash
-pip install mkdocs==1.0.4
+pip install -r requirements.docs.txt
 mkdocs serve
 ```
 

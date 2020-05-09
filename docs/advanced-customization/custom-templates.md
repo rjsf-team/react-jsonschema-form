@@ -55,7 +55,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `disabled`: A boolean value stating if the array is disabled.
 - `idSchema`: Object
 - `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
-- `onAddClick: (event) => void`: A function that adds a new item to the array.
+- `onAddClick: (event?) => void`: A function that adds a new item to the array.
 - `readonly`: A boolean value stating if the array is read-only.
 - `required`: A boolean value stating if the array is required.
 - `schema`: The schema object for this array.
