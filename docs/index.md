@@ -19,7 +19,7 @@ react-jsonschema-form also comes with tools such as `uiSchema` and other form pr
 
 First install the dependency from npm:
 
-```bash
+```
 $ npm install @rjsf/core --save
 ```
 

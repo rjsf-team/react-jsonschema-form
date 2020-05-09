@@ -2,9 +2,7 @@ site_name: react-jsonschema-form documentation
 docs_dir: docs
 theme: readthedocs
 
-markdown_extensions:
-  - markdown_include.include:
-      base_path: docs
+extra_javascript: [main.js]
 
 nav:
   - Introduction: index.md
