@@ -23,6 +23,12 @@ First install the dependency from npm:
 $ npm install @rjsf/core --save
 ```
 
+Then import the dependency as follows:
+
+```js
+import Form from "@rjsf/core";
+```
+
 Our latest version requires React 16+. You can also install `react-jsonschema-form` (the 1.x version) which works with React 15+.
 
 ### As a script served from a CDN
@@ -46,11 +52,6 @@ const {default: Form} = JSONSchemaForm;
 ## Usage
 
 ```jsx
-import React, { Component } from "react";
-import { render } from "react-dom";
-
-import Form from "@rjsf/core";
-
 const schema = {
   title: "Todo",
   type: "object",
@@ -71,14 +72,10 @@ render((
 ), document.getElementById("app"));
 ```
 
-This will generate a form like this:
-
-![](https://i.imgur.com/DZQYPyu.png)
-
 
 ## Theming
 
-For more information on what themes we support, see [Using Themes](/usage/themes.md)
+For more information on what themes we support, see [Using Themes](/usage/themes.md).
 
 
 ## Useful samples

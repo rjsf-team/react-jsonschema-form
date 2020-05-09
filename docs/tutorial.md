@@ -133,12 +133,8 @@ By default, `<Form />` is an [uncontrolled component](https://reactjs.org/docs/u
 `onChange` and `formData` props as in the below example:
 
 ```jsx
-import { useState } from "react";
-import { render } from "react-dom";
-import Form from "@rjsf/core";
-
 const App = () => {
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = React.useState(null);
   return (<Form
     schema={{type: "string"}}
     formData={formData}
