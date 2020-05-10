@@ -6,7 +6,7 @@ extra_javascript: [main.js]
 
 nav:
   - Introduction: index.md
-  - Tutorial: tutorial.md
+  - Quickstart: quickstart.md
   - Usage:
     - Using JSON Schema: usage/schema.md
     - Using uiSchema: usage/uiSchema.md
