@@ -1,5 +1,7 @@
 # Validation
 
+When the form is submitted, the form data is validated to conform to the given JSON schema; this library uses the [ajv](https://github.com/epoberezkin/ajv) validator by default.
+
 ## Live validation
 
 By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.
@@ -10,11 +12,14 @@ Be warned that this is an expensive strategy, with possibly strong impact on per
 
 ```jsx
 const schema = {
-  type: ["string", "null"]
+  type: ["string"],
+  const: "test"
 };
 
+const formData = "a";
+
 render((
-  <Form schema={schema} liveValidate />
+  <Form schema={schema} formData={formData} liveValidate />
 ), document.getElementById("app"));
 ```
 
@@ -71,19 +76,6 @@ render((
 >   received as second argument.
 > - The `validate()` function is called **after** the JSON schema validation.
 
-## Custom metaschema validation
-
-To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has a `$schema` attribute that enables the validator to use the correct meta schema. For example:
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  ...
-}
-```
-
-Note that react-jsonschema-form only supports the latest version of JSON Schema, draft-07, by default. To support additional meta schemas pass them through the `additionalMetaSchemas` prop to the `Form` component.
-
 ## Custom error messages
 
 Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
@@ -131,29 +123,32 @@ An error list template is basically a React stateless component being passed err
 
 ```jsx
 function ErrorListTemplate(props) {
-  const {errors} = props;
+  const { errors } = props;
   return (
-    <ul>
-      {errors.map(error => (
-          <li key={error.stack}>
-            {error.stack}
-          </li>
-        ))}
-    </ul>
+    <div>
+      <h2>Custom error list</h2>
+      <ul>
+        {errors.map(error => (
+            <li key={error.stack}>
+              {error.stack}
+            </li>
+          ))}
+      </ul>
+    </div>
   );
 }
 
 const schema = {
   type: "string",
-  minLength: 5,
-  maxLength: 6,
-  required: true
+  const: "test"
 };
 
 render((
   <Form schema={schema}
         showErrorList={true}
-        ErrorList={ErrorListTemplate} />,
+        formData={""}
+        liveValidate
+        ErrorList={ErrorListTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -176,42 +171,47 @@ One consequence of this is that if you have an empty string in your `enum` array
 
 If you want to have the field set to a default value when empty you can provide a `ui:emptyValue` field in the `uiSchema` object.
 
-## additionalMetaSchemas
+## Custom meta schema validation
 
-The `additionalMetaSchemas` prop allows you to validate the form data against another JSON Schema meta schema, for example, JSON Schema draft-04.
+To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has a `$schema` attribute that enables the validator to use the correct meta schema. For example:
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  ...
+}
+```
+
+Note that react-jsonschema-form only supports the latest version of JSON Schema, draft-07, by default. To support additional meta schemas pass them through the `additionalMetaSchemas` prop to the `Form` component.
+
+### additionalMetaSchemas
+
+The `additionalMetaSchemas` prop allows you to validate the form data against one (or more than one) JSON Schema meta schema, for example, JSON Schema draft-04. You can import a meta schema as follows:
 
 ```jsx
-const additionalMetaSchemas = require("ajv/lib/refs/json-schema-draft-04.json");
-
-const schema = {
-  type: "string"
-};
-
-render((
-  <Form schema={schema} 
-        additionalMetaSchemas={[additionalMetaSchemas]}/>
-), document.getElementById("app"));
+const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
 ```
 
 In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
 
-`additionalMetaSchemas` also accepts more than one meta schema:
-
 ```jsx
-<Form schema={schema} 
-  additionalMetaSchemas={[metaSchema1, metaSchema2]} />
+const schema = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  type: "string"
+};
+
+return (<Form schema={schema} 
+  additionalMetaSchemas={[metaSchemaDraft04]} />);
 ```
 
 ## customFormats
 
-[Pre-defined semantic formats](https://json-schema.org/draft/2019-09/json-schema-validation.html#rfc.section.7) are limited. react-jsonschema-form adds two formats, `color` and `data-url`, to support certain [alternative widgets](form-customization.md#alternative-widgets). You can add formats of your own through the `customFormats` prop to your `Form` component:
+[Pre-defined semantic formats](https://json-schema.org/draft/2019-09/json-schema-validation.html#rfc.section.7) are limited. react-jsonschema-form adds two formats, `color` and `data-url`, to support certain [alternative widgets](../usage/widgets.md). You can add formats of your own through the `customFormats` prop to your `Form` component:
 
 ```jsx
 const schema = {
-  phoneNumber: {
-    type: 'string',
-    format: 'phone-us'
-  }
+  type: 'string',
+  format: 'phone-us'
 };
 
 const customFormats = {

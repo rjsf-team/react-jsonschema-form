@@ -24,7 +24,32 @@ render((
 ), document.getElementById("app"));
 ```
 
-## Object additional properties
+## Required properties
+
+You can specify which properties are required using the `required` attribute:
+
+```jsx
+const schema = {
+  "title": "My title",
+  "description": "My description",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "age": {
+      "type": "number"
+    }
+  },
+  "required": ["name"]
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
+```
+
+## Additional properties
 
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:
 
