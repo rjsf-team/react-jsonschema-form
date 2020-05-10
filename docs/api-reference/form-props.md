@@ -10,29 +10,7 @@ The value of this prop will be passed to the `action` [HTML attribute on the for
 
 ## additionalMetaSchemas
 
-This prop allows you to validate the form data against another JSON Schema meta schema, for example, JSON Schema draft-04.
-
-```jsx
-const additionalMetaSchemas = require("ajv/lib/refs/json-schema-draft-04.json");
-
-const schema = {
-  type: "string"
-};
-
-render((
-  <Form schema={schema} 
-        additionalMetaSchemas={[additionalMetaSchemas]}/>
-), document.getElementById("app"));
-```
-
-In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
-
-`additionalMetaSchemas` also accepts more than one meta schema:
-
-```jsx
-<Form schema={schema} 
-  additionalMetaSchemas={[metaSchema1, metaSchema2]} />
-```
+This prop allows you to validate the form data against another JSON Schema meta schema, for example, JSON Schema draft-04. See [Validation](usage/validation.md) for more information.
 
 ## ArrayFieldTemplate
 
@@ -73,27 +51,7 @@ render((
 
 ## customFormats
 
-[Pre-defined semantic formats](https://json-schema.org/draft/2019-09/json-schema-validation.html#rfc.section.7) are limited. react-jsonschema-form adds two formats, `color` and `data-url`, to support certain [alternative widgets](form-customization.md#alternative-widgets). You can add formats of your own through the `customFormats` prop to your `Form` component:
-
-```jsx
-const schema = {
-  phoneNumber: {
-    type: 'string',
-    format: 'phone-us'
-  }
-};
-
-const customFormats = {
-  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
-};
-
-render((
-  <Form schema={schema} 
-        customFormats={customFormats}/>
-), document.getElementById("app"));
-```
-
-Format values can be anything AJV’s [`addFormat` method](https://github.com/epoberezkin/ajv#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
+This prop allows you to define custom formats for validation. See [Validation](usage/validation.md) for more information.
 
 ## disabled
 
@@ -161,47 +119,7 @@ An important note is that these errors are 'display only' and will not block the
 
 ## ErrorList
 
-To take control over how the form errors are displayed, you can define an *error list template* for your form. This list is the form global error list that appears at the top of your forms.
-
-An error list template is basically a React stateless component being passed errors as props so you can render them as you like:
-
-```jsx
-function ErrorListTemplate(props) {
-  const {errors} = props;
-  return (
-    <ul>
-      {errors.map(error => (
-          <li key={error.stack}>
-            {error.stack}
-          </li>
-        ))}
-    </ul>
-  );
-}
-
-const schema = {
-  type: "string",
-  minLength: 5,
-  maxLength: 6,
-  required: true
-};
-
-render((
-  <Form schema={schema}
-        showErrorList={true}
-        ErrorList={ErrorListTemplate} />,
-), document.getElementById("app"));
-```
-
-> Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
-
-The following props are passed to `ErrorList`
-
-- `errors`: An array of the errors.
-- `errorSchema`: The errorSchema constructed by `Form`.
-- `schema`: The schema that was passed to `Form`.
-- `uiSchema`: The uiSchema that was passed to `Form`.
-- `formContext`: The `formContext` object that you passed to Form.
+You can pass a React component to this prop to customize how form errors are displayed. See [Validation](usage/validation.md) for more information.
 
 ## fields
 
@@ -246,11 +164,7 @@ If `omitExtraData` and `liveOmit` are both set to true, then extra form data val
 
 ## liveValidate
 
-By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.
-
-You can enable live form data validation by passing a `liveValidate` prop to the `Form` component, and set it to `true`. Then, everytime a value changes within the form data tree (eg. the user entering a character in a field), a validation operation is performed, and the validation results are reflected into the form state.
-
-Be warned that this is an expensive strategy, with possibly strong impact on performances.
+If set to true, the form will perform validation and show any validation errors whenever the form data is changed, rather than just on submit.
 
 ## method
 
@@ -328,7 +242,7 @@ Form schema. We support JSON schema draft-07 by default. See [Schema Reference](
 
 ## showErrorList
 
-When this prop is set to true, a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `true` by default.
+When this prop is set to true, a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `true` by default. See [Validation](usage/validation.md) for more information.
 
 ## tagName
 
@@ -357,42 +271,7 @@ The value of this prop will be passed to the `target` [HTML attribute on the for
 
 ## transformErrors
 
-Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
-
-```jsx
-function transformErrors(errors) {
-  return errors.map(error => {
-    if (error.name === "pattern") {
-      error.message = "Only digits are allowed"
-    }
-    return error;
-  });
-}
-
-const schema = {
-  type: "object",
-  properties: {
-    onlyNumbersString: {type: "string", pattern: "^\\d*$"},
-  }
-};
-
-render((
-  <Form schema={schema}
-        transformErrors={transformErrors} />
-), document.getElementById("app"));
-```
-
-> Notes:
-> - The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
-
-Each element in the `errors` list passed to `transformErrors` has the following properties:
-
-- `name`: name of the error, for example, "required" or "minLength"
-- `message`: message, for example, "is a required property" or "should NOT be shorter than 3 characters"
-- `params`: an object with the error params returned by ajv ([see doc](https://github.com/epoberezkin/ajv#error-parameters) for more info).
-- `property`: a string in Javascript property accessor notation to the data path of the field with the error. For example, `.name` or `['first-name']`.
-- `stack`: full error name, for example ".name is a required property".
-- `schemaPath`: JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`. (Note: this may sometimes be wrong due to a [https://github.com/epoberezkin/ajv/issues/512](bug in ajv)).
+A function can be passed to this prop in order to make modifications to the default errors resulting from JSON Schema validation. See [Validation](usage/validation.md) for more information.
 
 ## uiSchema
 
@@ -400,36 +279,7 @@ Form uiSchema. See [uiSchema Reference](api-reference-uischema.md) for more info
 
 ## validate
 
-Form data is always validated against the JSON schema.
-
-But it is possible to define your own custom validation rules. This is especially useful when the validation depends on several interdependent fields.
-
-```jsx
-function validate(formData, errors) {
-  if (formData.pass1 !== formData.pass2) {
-    errors.pass2.addError("Passwords don't match");
-  }
-  return errors;
-}
-
-const schema = {
-  type: "object",
-  properties: {
-    pass1: {type: "string", minLength: 3},
-    pass2: {type: "string", minLength: 3},
-  }
-};
-
-render((
-  <Form schema={schema}
-        validate={validate} />
-), document.getElementById("app"));
-```
-
-> Notes:
-> - The `validate()` function must **always** return the `errors` object
->   received as second argument.
-> - The `validate()` function is called **after** the JSON schema validation.
+The `validate` prop requires a function that specifies custom validation rules for the form. See [Validation](usage/validation.md) for more information.
 
 ## widgets
 
