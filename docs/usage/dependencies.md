@@ -35,7 +35,7 @@ render((
 ### Bidirectional
 
 In the following example the `billing_address` field will be required if `credit_card` is defined and the `credit_card`
-field will be required if `billing_address` is defined making them both required if either is defined.
+field will be required if `billing_address` is defined, making them both required if either is defined.
 
 ```jsx
 const schema = {

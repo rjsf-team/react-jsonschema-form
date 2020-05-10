@@ -36,7 +36,10 @@ const schema = {
       "type": "string"
     }
   },
-  "additionalProperties": {"type": "number", "enum": [1, 2, 3]}
+  "additionalProperties": {
+    "type": "number",
+    "enum": [1, 2, 3]
+  }
 };
 
 render((
