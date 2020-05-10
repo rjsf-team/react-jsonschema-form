@@ -253,7 +253,7 @@ In this example the `billing_address` field will be displayed in the form if `cr
 The JSON Schema standard says that the dependency is triggered if the property is present. However, sometimes it's useful to have more sophisticated rules guiding the application of the dependency. For example, maybe you have three possible values for a field, and each one should lead to adding a different question. For this, we support a very restricted use of the `oneOf` keyword.
 
 ```jsx
-{
+const schema = {
   "title": "Person",
   "type": "object",
   "properties": {
