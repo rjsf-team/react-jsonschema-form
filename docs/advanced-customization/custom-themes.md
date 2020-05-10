@@ -8,14 +8,13 @@ The `withTheme` component provides an easy way to extend the functionality of re
 import React, { Component } from 'react';
 import { withTheme } from '@rjsf/core';
 
-const theme = { widgets: {test: () => <div>test</div> } };
+const theme = { widgets: {test: () => (<div>test</div>) } };
 
 const ThemedForm = withTheme(theme); 
-class Demo extends Component {
-    render() {
-        return <ThemedForm schema={{...}} uiSchema={{...}} />
-    }
-}
+
+const Demo = () => (
+  <ThemedForm schema={schema} uiSchema={uiSchema} />
+);
 ```
 
 ## Theme object properties

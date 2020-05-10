@@ -11,7 +11,8 @@ You can override any default field and widget, including the internal widgets li
 
 ```jsx
 const schema = {
-  type: "boolean"
+  type: "boolean",
+  default: true
 };
 
 const uiSchema = {
@@ -21,7 +22,7 @@ const uiSchema = {
 const CustomCheckbox = function(props) {
   return (
     <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
-    	{props.value}
+    	{String(props.value)}
     </button>
   );
 };
