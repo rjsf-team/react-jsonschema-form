@@ -7,8 +7,14 @@ extra_javascript: [main.js]
 nav:
   - Introduction: index.md
   - Quickstart: quickstart.md
+  - JSON schema:
+    - Single fields: usage/single.md
+    - Objects: usage/objects.md
+    - Arrays: usage/arrays.md
+    - Definitions: usage/definitions.md
+    - Dependencies: usage/dependencies.md
+    - oneOf / anyOf / allOf: usage/oneof.md
   - Usage:
-    - JSON Schema: usage/schema.md
     - Widgets: usage/widgets.md
     - Themes: usage/themes.md
     - Validation: usage/validation.md

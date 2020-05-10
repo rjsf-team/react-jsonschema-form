@@ -121,16 +121,6 @@ const uiSchema={
 }
 ```
 
-This will be rendered using a select box as follows:
-
-```html
-<select>
-  <option value="one">one</option>
-  <option value="two" disabled>two</option>
-  <option value="three">three</option>
-</select>
-```
-
 ## ui:help
 
 Sometimes it's convenient to add text next to a field to guide the end user filling it. This is the purpose of the `ui:help` uiSchema directive:
