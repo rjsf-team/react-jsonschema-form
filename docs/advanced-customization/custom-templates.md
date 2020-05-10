@@ -16,6 +16,13 @@ You can use an `ArrayFieldTemplate` to customize how your arrays are rendered.
 This allows you to customize your array, and each element in the array.
 
 ```jsx
+const schema = {
+  type: "array",
+  items: {
+    type: "string"
+  }
+};
+
 function ArrayFieldTemplate(props) {
   return (
     <div>
@@ -33,15 +40,10 @@ render((
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property.
 
-```jsx
+```js
 const uiSchema = {
   "ui:ArrayFieldTemplate": ArrayFieldTemplate
 }
-
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />,
-), document.getElementById("app"));
 ```
 
 Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/4542cd254ffdc6dfaf55e8c9f6f17dc900d0d041/packages/playground/src/samples/customArray.js) for another example.
@@ -89,6 +91,10 @@ To take control over the inner organization of each field (each form row), you c
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
 ```jsx
+const schema = {
+  type: "string"
+};
+
 function CustomFieldTemplate(props) {
   const {id, classNames, label, help, required, description, errors, children} = props;
   return (
@@ -110,15 +116,10 @@ render((
 
 You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property.
 
-```jsx
+```js
 const uiSchema = {
   "ui:FieldTemplate": CustomFieldTemplate
 }
-
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />,
-), document.getElementById("app"));
 ```
 
 If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`.
@@ -150,6 +151,20 @@ The following props are passed to a custom field template component:
 ## ObjectFieldTemplate
 
 ```jsx
+const schema = {
+  type: "object",
+  title: "Object title",
+  description: "Object description",
+  properties: {
+    name: {
+      type: "string"
+    },
+    age: {
+      type: "number"
+    }
+  }
+};
+
 function ObjectFieldTemplate(props) {
   return (
     <div>
@@ -168,15 +183,10 @@ render((
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property.
 
-```jsx
+```js
 const uiSchema = {
   "ui:ObjectFieldTemplate": ObjectFieldTemplate
-}
-
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />,
-), document.getElementById("app"));
+};
 ```
 
 Please see [customObject.js](https://github.com/rjsf-team/react-jsonschema-form/blob/4542cd254ffdc6dfaf55e8c9f6f17dc900d0d041/packages/playground/src/samples/customObject.js) for a better example.

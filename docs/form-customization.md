@@ -20,6 +20,10 @@ const uiSchema = {
     orderable: false
   }
 };
+
+render((
+  <Form schema={schema} uiSchema={schema} />
+), document.getElementById("app"));
 ```
 
 #### `addable` option
@@ -27,11 +31,22 @@ const uiSchema = {
 If either `items` or `additionalItems` contains a schema object, an add button for new items is shown by default. You can turn this off with the `addable` option in `uiSchema`:
 
 ```jsx
+const schema = {
+  type: "array",
+  items: {
+    type: "string"
+  }
+};
+
 const uiSchema = {
   "ui:options":  {
     addable: false
   }
 };
+
+render((
+  <Form schema={schema} uiSchema={schema} />
+), document.getElementById("app"));
 ```
 
 #### `removable` option
@@ -39,11 +54,22 @@ const uiSchema = {
 A remove button is shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance. You can turn this off with the `removable` option in `uiSchema`:
 
 ```jsx
+const schema = {
+  type: "array",
+  items: {
+    type: "string"
+  }
+};
+
 const uiSchema = {
   "ui:options":  {
     removable: false
   }
 };
+
+render((
+  <Form schema={schema} uiSchema={schema} />
+), document.getElementById("app"));
 ```
 
 ### Custom CSS class names
@@ -55,6 +81,24 @@ The default behavior for array fields is a list of text inputs with add/remove b
 
 Example:
 
+```jsx
+const schema = {
+  type: "array",
+  title: "A multiple-choice list",
+  items: {
+    type: "string",
+    enum: ["foo", "bar", "fuzz", "qux"],
+  },
+  uniqueItems: true
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
+```
+
+By default, this will render a multiple select box. If you prefer a list of checkboxes, just set the uiSchema `ui:widget` directive to `checkboxes` for that field:
+
 ```js
 const schema = {
   type: "array",
@@ -65,19 +109,38 @@ const schema = {
   },
   uniqueItems: true
 };
-```
 
-By default, this will render a multiple select box. If you prefer a list of checkboxes, just set the uiSchema `ui:widget` directive to `checkboxes` for that field:
-
-```js
 const uiSchema = {
   "ui:widget": "checkboxes"
 };
+
+render((
+  <Form schema={schema} uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 Note that when an array property is marked as `required`, an empty array is considered valid. If array needs to be populated, you can specify the minimum number of items using the `minItems` property.
 
 Example:
+
+```jsx
+const schema = {
+  type: "array",
+  minItems: 2,
+  title: "A multiple-choice list",
+  items: {
+    type: "string",
+    enum: ["foo", "bar", "fuzz", "qux"],
+  },
+  uniqueItems: true
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
+```
+
+By default, checkboxes are stacked. If you prefer them inline, set the `inline` property to `true`:
 
 ```js
 const schema = {
@@ -90,17 +153,17 @@ const schema = {
   },
   uniqueItems: true
 };
-```
 
-By default, checkboxes are stacked. If you prefer them inline, set the `inline` property to `true`:
-
-```js
 const uiSchema = {
   "ui:widget": "checkboxes",
   "ui:options": {
     inline: true
   }
 };
+
+render((
+  <Form schema={schema} uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 See the "Arrays" section of the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for cool demos.

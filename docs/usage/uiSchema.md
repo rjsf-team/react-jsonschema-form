@@ -4,7 +4,7 @@ A UI schema is basically an object literal providing information on **how** the 
 
 The uiSchema object follows the tree structure of the form field hierarchy, and defines how each property should be rendered:
 
-```js
+```jsx
 const schema = {
   type: "object",
   properties: {
@@ -26,7 +26,7 @@ const schema = {
       }
     }
   }
-}
+};
 
 const uiSchema = {
   foo: {
@@ -42,7 +42,7 @@ const uiSchema = {
       }
     }
   }
-}
+};
 
 render((
   <Form schema={schema}
@@ -185,9 +185,11 @@ const schema = {type: "string", format: "uri"};
 const uiSchema = {
   "ui:placeholder": "http://"
 };
-```
 
-![](https://i.imgur.com/MbHypKg.png)
+render((
+  <Form schema={schema} uiSchema={uiSchema} />
+), document.getElementById("app"));
+```
 
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
 
@@ -196,6 +198,10 @@ const schema = {type: "string", enum: ["First", "Second"]};
 const uiSchema = {
   "ui:placeholder": "Choose an option"
 };
+
+render((
+  <Form schema={schema} uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 ## ui:readonly
@@ -252,6 +258,10 @@ const uiSchema = {
     label: false
   }
 };
+
+render((
+  <Form schema={schema} uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 ## ui:options["rows"]
@@ -265,5 +275,9 @@ const uiSchema = {
   "ui:options": {
     rows: 15
   }
-}
+};
+
+render((
+  <Form schema={schema} uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```

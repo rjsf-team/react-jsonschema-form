@@ -5,6 +5,15 @@ The uiSchema `ui:widget` property tells the form which UI widget should be used 
 Example:
 
 ```jsx
+const schema = {
+  type: "object",
+  properties: {
+    done: {
+      type: "boolean"
+    }
+  }
+};
+
 const uiSchema =  {
   done: {
     "ui:widget": "radio" // could also be "select"
@@ -13,8 +22,7 @@ const uiSchema =  {
 
 render((
   <Form schema={schema}
-        uiSchema={uiSchema}
-        formData={formData} />
+        uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 
@@ -59,18 +67,23 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 ```jsx
-uiSchema: {
-  a_date: {
-    "alt-datetime": {
-      "ui:widget": "alt-datetime",
-      "ui:options": {
-        yearsRange: [1980, 2030],
-        hideNowButton: true,
-        hideClearButton: true,
-      },
-    },
-  },
-},
+const schema = {
+  type: "string"
+};
+
+const uiSchema = {
+  "ui:widget": "alt-datetime",
+  "ui:options": {
+    yearsRange: [1980, 2030],
+    hideNowButton: true,
+    hideClearButton: true,
+  }
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 #### For `number` and `integer` fields
@@ -87,7 +100,7 @@ uiSchema: {
 
 It's possible to use a hidden widget for a field by setting its `ui:widget` uiSchema directive to `hidden`:
 
-```js
+```jsx
 const schema = {
   type: "object",
   properties: {
@@ -98,6 +111,11 @@ const schema = {
 const uiSchema = {
   foo: {"ui:widget": "hidden"}
 };
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
 
 Notes:
@@ -112,11 +130,15 @@ This library supports a limited form of `input[type=file]` widgets, in the sense
 There are two ways to use file widgets.
 
 1. By declaring a `string` json schema type along a `data-url` [format](#string-formats):
-```js
+```jsx
 const schema = {
   type: "string",
   format: "data-url",
 };
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 2. By specifying a `ui:widget` field uiSchema directive as `file`:
@@ -167,9 +189,4 @@ const schema = {
 const uiSchema = {
   "ui:options": { accept: ".pdf" }
 };
-
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
-), document.getElementById("app"));
 ```

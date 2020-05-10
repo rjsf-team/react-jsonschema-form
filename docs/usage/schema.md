@@ -6,12 +6,16 @@
 
 You can define `additionalProperties` by setting its value to a schema object, such as the following:
 
-```js
+```jsx
 const schema = {
   "type": "object",
   "properties": {"type": "string"},
   "additionalProperties": {"type": "number"}
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 In this way, an add button for new properties is shown by default. The UX for editing properties whose names are user-defined is still experimental.
@@ -22,7 +26,7 @@ You can also define `uiSchema` options for `additionalProperties` by setting the
 
 You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
 
-```jsx
+```js
 const uiSchema = {
   "ui:options":  {
     expandable: false
@@ -36,31 +40,23 @@ const uiSchema = {
 
 This library supports the [`enumNames`](https://github.com/json-schema/json-schema/wiki/enumNames-%28v5-proposal%29) property for `enum` fields, which allows defining custom labels for each option of an `enum`:
 
-```js
+```jsx
 const schema = {
   type: "number",
   enum: [1, 2, 3],
   enumNames: ["one", "two", "three"]
 };
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
-
-This will be rendered using a select box like this:
-
-```html
-<select>
-  <option value="1">one</option>
-  <option value="2">two</option>
-  <option value="3">three</option>
-</select>
-```
-
-Note that string representations of numbers will be cast back and reflected as actual numbers into form state.
 
 #### Alternative JSON-Schema compliant approach
 
 JSON Schema has an alternative approach to enumerations; react-jsonschema-form supports it as well.
 
-```js
+```jsx
 const schema = {
   "type": "number",
   "anyOf": [
@@ -87,16 +83,10 @@ const schema = {
     }
   ]
 };
-```
 
-This will be rendered as follows:
-
-```html
-<select>
-  <option value="1">one</option>
-  <option value="2">two</option>
-  <option value="3">three</option>
-</select>
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 This also works for radio buttons:
@@ -119,30 +109,11 @@ const schema = {
 const uiSchema = {
   "ui:widget": "radio"
 };
+
+render((
+  <Form schema={schema} uiSchema={uiSchema} />
+), document.getElementById("app"));
 ```
-
-This will be rendered as follows:
-
-```html
-<div class="field-radio-group">
-  <div class="radio">
-    <label>
-      <span>
-        <input type="radio" name="0.005549338200675935" value="true"><span>Enable</span>
-      </span>
-    </label>
-  </div>
-  <div class="radio">
-    <label>
-      <span>
-        <input type="radio" name="0.005549338200675935" value="false"><span>Disable</span>
-      </span>
-    </label>
-  </div>
-</div>
-```
-
-A live example of both approaches side-by-side can be found in the **Alternatives** tab of the [playground](https://rjsf-team.github.io/react-jsonschema-form/).
 
 ### Disabled attribute for `enum` fields
 
@@ -152,8 +123,8 @@ A live example of both approaches side-by-side can be found in the **Alternative
 
 This library partially supports [inline schema definition dereferencing](http://json-schema.org/draft/2019-09/json-schema-core.html#ref), which is Barbarian for *avoiding to copy and paste commonly used field schemas*:
 
-```json
-{
+```jsx
+const schema = {
   "definitions": {
     "address": {
       "type": "object",
@@ -170,7 +141,11 @@ This library partially supports [inline schema definition dereferencing](http://
     "billing_address": { "$ref": "#/definitions/address" },
     "shipping_address": { "$ref": "#/definitions/address" }
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 Note that this library only supports local definition referencing. The value in the `$ref` keyword should be a [JSON Pointer](https://tools.ietf.org/html/rfc6901) in URI fragment identifier format.
@@ -183,8 +158,8 @@ This library supports conditionally making fields required based on the presence
 
 In the following example the `billing_address` field will be required if `credit_card` is defined.
 
-```json
-{
+```jsx
+const schema = {
   "type": "object",
 
   "properties": {
@@ -198,7 +173,11 @@ In the following example the `billing_address` field will be required if `credit
   "dependencies": {
     "credit_card": ["billing_address"]
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 ### Bidirectional
@@ -206,8 +185,8 @@ In the following example the `billing_address` field will be required if `credit
 In the following example the `billing_address` field will be required if `credit_card` is defined and the `credit_card`
 field will be required if `billing_address` is defined making them both required if either is defined.
 
-```json
-{
+```jsx
+const schema = {
   "type": "object",
 
   "properties": {
@@ -222,7 +201,11 @@ field will be required if `billing_address` is defined making them both required
     "credit_card": ["billing_address"],
     "billing_address": ["credit_card"]
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 *(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#property-dependencies))*
@@ -233,8 +216,8 @@ This library also supports modifying portions of a schema based on form data.
 
 ### Conditional
 
-```json
-{
+```jsx
+const schema = {
   "type": "object",
 
   "properties": {
@@ -252,7 +235,11 @@ This library also supports modifying portions of a schema based on form data.
       "required": ["billing_address"]
     }
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 In this example the `billing_address` field will be displayed in the form if `credit_card` is defined.
@@ -263,7 +250,7 @@ In this example the `billing_address` field will be displayed in the form if `cr
 
 The JSON Schema standard says that the dependency is triggered if the property is present. However, sometimes it's useful to have more sophisticated rules guiding the application of the dependency. For example, maybe you have three possible values for a field, and each one should lead to adding a different question. For this, we support a very restricted use of the `oneOf` keyword.
 
-```json
+```jsx
 {
   "title": "Person",
   "type": "object",
@@ -326,7 +313,11 @@ The JSON Schema standard says that the dependency is triggered if the property i
       ]
     }
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 In this example the user is prompted with different follow-up questions dynamically based on their answer to the first question.

@@ -19,7 +19,7 @@ react-jsonschema-form also comes with tools such as `uiSchema` and other form pr
 
 First install the dependency from npm:
 
-```
+```bash
 $ npm install @rjsf/core --save
 ```
 
@@ -43,7 +43,7 @@ Source maps are available at [this url](https://unpkg.com/@rjsf/core/dist/react-
 
 You'll also need to alias the default export property to use the Form component:
 
-```jsx
+```js
 const Form = JSONSchemaForm.default;
 // or
 const {default: Form} = JSONSchemaForm;

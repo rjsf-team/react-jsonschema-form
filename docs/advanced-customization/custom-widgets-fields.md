@@ -10,6 +10,13 @@ The API allows to specify your own custom *widget* and *field* components:
 You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
 
 ```jsx
+const schema = {
+  type: "boolean"
+};
+
+const uiSchema = {
+  "ui:widget": "checkbox"
+};
 
 const CustomCheckbox = function(props) {
   return (
@@ -26,7 +33,6 @@ const widgets = {
 render((
   <Form schema={schema}
         uiSchema={uiSchema}
-        formData={formData}
         widgets={widgets} />
 ), document.getElementById("app"));
 ```
@@ -40,12 +46,6 @@ const customWidgets = {CheckboxWidget: CustomCheckbox};
 function MyForm(props) {
   return <Form fields={customFields} widgets={customWidgets} {...props} />;
 }
-
-render((
-  <MyForm schema={schema}
-    uiSchema={uiSchema}
-    formData={formData} />
-), document.getElementById("app"));
 ```
 
 The default fields you can override are:
@@ -152,6 +152,10 @@ const MyCustomWidget = (props) => {
 
 const widgets = {
   myCustomWidget: MyCustomWidget
+};
+
+const schema = {
+  type: "string"
 };
 
 const uiSchema = {
@@ -302,16 +306,15 @@ The registry is passed down the component tree, so you can access it from your c
 
 You can provide your own implementation of the `SchemaField` base React component for rendering any JSONSchema field type, including objects and arrays. This is useful when you want to augment a given field type with supplementary powers.
 
-To proceed so, pass a `fields` object having a `SchemaField` property to your `Form` component; here's a rather silly example wrapping the standard `SchemaField` lib component:
+To proceed so, pass a `fields` object having a `SchemaField` property to your `Form` component; here's an example:
 
 ```jsx
-import SchemaField from "@rjsf/core/lib/components/fields/SchemaField";
 
 const CustomSchemaField = function(props) {
   return (
     <div id="custom">
       <p>Yeah, I'm pretty dumb.</p>
-      <SchemaField {...props} />
+      <div>My props are: {JSON.stringify(props)}</div>
     </div>
   );
 };
@@ -320,10 +323,12 @@ const fields = {
   SchemaField: CustomSchemaField
 };
 
+const schema = {
+  type: "string"
+};
+
 render((
   <Form schema={schema}
-        uiSchema={uiSchema}
-        formData={formData}
         fields={fields} />
 ), document.getElementById("app"));
 ```

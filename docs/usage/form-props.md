@@ -13,6 +13,10 @@ This prop allows you to validate the form data against another JSON Schema meta 
 ```jsx
 const additionalMetaSchemas = require("ajv/lib/refs/json-schema-draft-04.json");
 
+const schema = {
+  type: "string"
+};
+
 render((
   <Form schema={schema} 
         additionalMetaSchemas={[additionalMetaSchemas]}/>
@@ -24,10 +28,8 @@ In this example `schema` passed as props to `Form` component can be validated ag
 `additionalMetaSchemas` also accepts more than one meta schema:
 
 ```jsx
-render((
-  <Form schema={schema} 
-        additionalMetaSchemas={[metaSchema1, metaSchema2]} />
-), document.getElementById("app"));
+<Form schema={schema} 
+  additionalMetaSchemas={[metaSchema1, metaSchema2]} />
 ```
 
 ## ArrayFieldTemplate
@@ -51,6 +53,10 @@ The value of this prop will be passed to the `class` [HTML attribute on the form
 You can provide custom buttons to your form via the `Form` component's `children`. Otherwise a default submit button will be rendered.
 
 ```jsx
+const schema = {
+  type: "string"
+};
+
 render((
   <Form schema={schema}>
     <div>
@@ -92,9 +98,14 @@ Format values can be anything AJV’s [`addFormat` method](https://github.com/ep
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form. 
 
 ```jsx
-<Form
-  disabled
-  schema={} />
+const schema = {
+  type: "string"
+};
+
+render((
+  <Form schema={schema} 
+        disabled />
+), document.getElementById("app"));
 ```
 
 If you just want to disable some of the fields, see the `ui:disabled` parameter in `uiSchema`. 
@@ -166,6 +177,13 @@ function ErrorListTemplate(props) {
   );
 }
 
+const schema = {
+  type: "string",
+  minLength: 5,
+  maxLength: 6,
+  required: true
+};
+
 render((
   <Form schema={schema}
         showErrorList={true}
@@ -208,6 +226,10 @@ The value of this prop will be passed to the `id` [HTML attribute on the form](h
 To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
 
 ```jsx
+const schema = {
+  type: "string"
+};
+
 render((
   <Form schema={schema}
         idPrefix={"rjsf_prefix"}/>,
@@ -265,6 +287,9 @@ If you plan on being notified every time the form data are updated, you can pass
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
 
 ```jsx
+const schema = {
+  type: "string"
+};
 const onError = (errors) => console.log("I have", errors.length, "errors to fix");
 
 render((
@@ -281,7 +306,10 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after. The original event will also be passed as a second parameter:
 
-```js
+```jsx
+const schema = {
+  type: "string"
+};
 const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
 
 render((
@@ -329,7 +357,7 @@ The value of this prop will be passed to the `target` [HTML attribute on the for
 
 Validation error messages are provided by the JSON Schema validation by default. If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
 
-```js
+```jsx
 function transformErrors(errors) {
   return errors.map(error => {
     if (error.name === "pattern") {
@@ -374,7 +402,7 @@ Form data is always validated against the JSON schema.
 
 But it is possible to define your own custom validation rules. This is especially useful when the validation depends on several interdependent fields.
 
-```js
+```jsx
 function validate(formData, errors) {
   if (formData.pass1 !== formData.pass2) {
     errors.pass2.addError("Passwords don't match");

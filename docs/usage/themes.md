@@ -15,7 +15,7 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 To use a theme from a package, just import the `<Form />` component from that package. For example, to use the material ui form,
 first install both `@rjsf/core` and `@rjsf/material-ui`. Then you can import the form by doing:
 
-```jsx
+```js
 import Form from "@rjsf/material-ui";
 ```
 
@@ -29,13 +29,13 @@ The default theme is bootstrap 3. In order to use another theme, you must first 
 
 For example, to use the standard bootstrap 3 form, you can run:
 
-```jsx
+```js
 import Form from "@rjsf/core";
 ```
 
 To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/material-ui`. Then, you can run:
 
-```jsx
+```js
 import Form from "@rjsf/material-ui";
 ```
 

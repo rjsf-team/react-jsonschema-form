@@ -57,9 +57,13 @@ i.glyphicon { display: none; }
 You can use the reference to get your `Form` component and call the `submit` method to submit the form programmatically without a submit button.
 This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
 
-```js
+```jsx
 const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
 let yourForm;
+
+const schema = {
+    type: "string"
+};
 
 render((
   <Form schema={schema}

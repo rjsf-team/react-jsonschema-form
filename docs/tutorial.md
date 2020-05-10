@@ -139,7 +139,7 @@ const App = () => {
     schema={{type: "string"}}
     formData={formData}
     onChange={e => setFormData(e.formData)}
-  >);
+  />);
 };
 
 render((
