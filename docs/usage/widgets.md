@@ -26,7 +26,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-Here's a list of supported alternative widgets for different JSONSchema data types:
+Here's a list of supported alternative widgets for different JSON Schema data types:
 
 ## For `boolean` fields
 
@@ -45,7 +45,7 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 ### String formats
 
-The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following string formats:
+The built-in string field also supports the JSON Schema `format` property, and will render an appropriate widget by default for the following string formats:
 
 - `email`: An `input[type=email]` element is used;
 - `uri`: An `input[type=url]` element is used;
@@ -93,7 +93,7 @@ render((
   * `radio`: a radio button group with enum values. This can only be used when `enum` values are specified for this input.
   * By default, a regular `input[type=text]` element is used.
 
-> Note: If JSONSchema's `minimum`, `maximum` and `multipleOf` values are defined, the `min`, `max` and `step` input attributes values will take those values.
+> Note: If JSON Schema's `minimum`, `maximum` and `multipleOf` values are defined, the `min`, `max` and `step` input attributes values will take those values.
 
 
 ## Hidden widgets
