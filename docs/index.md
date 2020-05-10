@@ -77,6 +77,10 @@ render((
 For more information on what themes we support, see [Using Themes](/usage/themes.md).
 
 
+<!--
+
+disabled until https://github.com/rjsf-team/react-jsonschema-form/issues/1584 is resolved
+
 ## Useful samples
 
  - Custom field template: <https://jsfiddle.net/hdp1kgn6/1/>
@@ -92,6 +96,7 @@ For more information on what themes we support, see [Using Themes](/usage/themes
  - Custom component for Help text with `ui:help`: <https://codesandbox.io/s/14pqx97xl7/>
  - Collapsing / Showing and Hiding individual fields: <https://codesandbox.io/s/examplereactjsonschemaformcollapsefieldtemplate-t41dn>
 
+-->
 
 ## License
 
