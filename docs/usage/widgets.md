@@ -1,4 +1,4 @@
-# ui:widget
+# Widgets
 
 The uiSchema `ui:widget` property tells the form which UI widget should be used to render a field. 
 

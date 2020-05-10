@@ -8,17 +8,19 @@ nav:
   - Introduction: index.md
   - Quickstart: quickstart.md
   - Usage:
-    - Using JSON Schema: usage/schema.md
-    - Using uiSchema: usage/uiSchema.md
-    - Using widgets: usage/widgets.md
-    - Using themes: usage/themes.md
-    - "&lt;Form /&gt; props": usage/form-props.md
+    - JSON Schema: usage/schema.md
+    - uiSchema: usage/uiSchema.md
+    - Widgets: usage/widgets.md
+    - Themes: usage/themes.md
+    - Validation: usage/validation.md
   - Advanced Customization:
     - Custom Widgets and Fields: advanced-customization/custom-widgets-fields.md
     - Custom Templates: advanced-customization/custom-templates.md
     - Custom Themes: advanced-customization/custom-themes.md
     - Other Internals: advanced-customization/internals.md
-  - Contributing: contributing.md
+    - Contributing: contributing.md
+  - API Reference:
+    - "&lt;Form /&gt; props": api-reference/form-props.md
 
 markdown_extensions:
   - toc:
