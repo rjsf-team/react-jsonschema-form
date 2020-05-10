@@ -1,6 +1,6 @@
 # react-jsonschema-form
 
-[![Build Status](https://travis-ci.org/mozilla-services/react-jsonschema-form.svg)](https://travis-ci.org/mozilla-services/react-jsonschema-form)
+![Build Status](https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg)
 
 A simple [React](https://reactjs.org/) component capable of building HTML forms out of a [JSON schema](http://json-schema.org/).
 
