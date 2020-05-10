@@ -1,4 +1,4 @@
-# Custom templates
+# Custom Templates
 
 This is an advanced feature that lets you customize even more aspects of the form:
 

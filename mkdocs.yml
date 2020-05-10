@@ -2,7 +2,7 @@ site_name: react-jsonschema-form documentation
 docs_dir: docs
 theme: readthedocs
 
-extra_javascript: [main.js]
+# extra_javascript: [main.js]
 
 nav:
   - Introduction: index.md

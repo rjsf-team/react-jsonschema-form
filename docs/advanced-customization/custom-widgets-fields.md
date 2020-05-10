@@ -1,4 +1,4 @@
-## Widgets vs fields
+# Custom Widgets and Fields
 
 The API allows to specify your own custom *widget* and *field* components:
 

@@ -1,3 +1,7 @@
+# Internals
+
+Miscellaneous internals of react-jsonschema-form are listed here.
+
 ## JSON Schema supporting status
 
 This component follows [JSON Schema](http://json-schema.org/documentation.html) specs. We currently support JSON Schema-07 by default, but we also support other JSON schema versions through the [custom schema validation](https://react-jsonschema-form.readthedocs.io/en/latest/validation/#custom-schema-validation) feature. Due to the limitation of form widgets, there are some exceptions as follows:

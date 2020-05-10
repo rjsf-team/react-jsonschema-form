@@ -1,4 +1,4 @@
-## ui:widget
+# ui:widget
 
 The uiSchema `ui:widget` property tells the form which UI widget should be used to render a field. 
 
@@ -28,7 +28,7 @@ render((
 
 Here's a list of supported alternative widgets for different JSONSchema data types:
 
-#### For `boolean` fields
+## For `boolean` fields
 
   * `radio`: a radio button group with `true` and `false` as selectable values;
   * `select`: a select box with `true` and `false` as options;
@@ -36,14 +36,14 @@ Here's a list of supported alternative widgets for different JSONSchema data typ
 
 > Note: To set the labels for a boolean field, instead of using `true` and `false` you can set `enumNames` in your schema. Note that `enumNames` belongs in your `schema`, not the `uiSchema`, and the order is always `[true, false]`.
 
-#### For `string` fields
+## For `string` fields
 
   * `textarea`: a `textarea` element is used;
   * `password`: an `input[type=password]` element is used;
   * `color`: an `input[type=color]` element is used;
   * by default, a regular `input[type=text]` element is used.
 
-##### String formats
+### String formats
 
 The built-in string field also supports the JSONSchema `format` property, and will render an appropriate widget by default for the following string formats:
 
@@ -86,7 +86,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-#### For `number` and `integer` fields
+## For `number` and `integer` fields
 
   * `updown`: an `input[type=number]` updown selector;
   * `range`: an `input[type=range]` slider;
@@ -174,9 +174,7 @@ The included `FileWidget` exposes a reference to the `<input type="file" />` ele
 
 This allows you to programmatically trigger the browser's file selector, which can be used in a custom file widget.
 
-### File widget options
-
-#### `accept` option
+### `accept` option
 
 You can use the accept attribute to specify a filter for what file types the user can upload:
 

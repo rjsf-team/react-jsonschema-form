@@ -1,3 +1,5 @@
+# Themes
+
 By default, this library renders form fields and widgets leveraging the [Bootstrap](http://getbootstrap.com/) semantics,
 meaning that you must load the Bootstrap stylesheet on the page to view the form properly. You can use another theme by importing one of the packages listed below.
 
@@ -9,6 +11,7 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
  material-ui | Published | `@rjsf/material-ui` 
  antd | Draft | [#1561](https://github.com/rjsf-team/react-jsonschema-form/pull/1561)
  Semantic UI | Draft | [#1585](https://github.com/rjsf-team/react-jsonschema-form/pull/1585)
+
 
 ## Using themes
 
@@ -39,5 +42,4 @@ To use the material-ui form, you should first install both `@rjsf/core` and `@rj
 import Form from "@rjsf/material-ui";
 ```
 
-
-For more information on how to create a custom theme, see 
+For more information on how to create a custom theme, see documentation on the `withTheme` component.

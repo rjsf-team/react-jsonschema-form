@@ -1,3 +1,5 @@
+# JSON Schema
+
 ## Basic schema types
 
 ## Object schema types

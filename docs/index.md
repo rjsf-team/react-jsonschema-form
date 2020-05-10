@@ -1,5 +1,4 @@
-react-jsonschema-form
-=====================
+# react-jsonschema-form
 
 [![Build Status](https://travis-ci.org/mozilla-services/react-jsonschema-form.svg)](https://travis-ci.org/mozilla-services/react-jsonschema-form)
 
