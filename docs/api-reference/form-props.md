@@ -6,7 +6,7 @@ The value of this prop will be passed to the `accept-charset` [HTML attribute on
 
 ## action
 
-The value of this prop will be passed to the `action` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
+The value of this prop will be passed to the `action` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-action).
 
 ## additionalMetaSchemas
 
@@ -129,11 +129,11 @@ If set to true, the form will perform validation and show any validation errors 
 
 ## method
 
-The value of this prop will be passed to the `method` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
+The value of this prop will be passed to the `method` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-method).
 
 ## name
 
-The value of this prop will be passed to the `name` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
+The value of this prop will be passed to the `name` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-name).
 
 ## noHtml5Validate
 
@@ -228,7 +228,7 @@ const CustomForm = props => <form {...props} style={...} className={...} />
 
 ## target
 
-The value of this prop will be passed to the `target` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
+The value of this prop will be passed to the `target` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-target).
 
 ## transformErrors
 
