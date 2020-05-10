@@ -225,3 +225,46 @@ render((
 ```
 
 Format values can be anything AJV’s [`addFormat` method](https://github.com/epoberezkin/ajv#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
+
+## Async validation
+
+Handling async errors is an important part of many applications. Support for this is added in the form of the `extraErrors` prop.
+
+For example, a request could be made to some backend when the user submits the form. If that request fails, the errors returned by the backend should be formatted like in the following example.
+
+```jsx
+const schema = {
+  type: "object",
+  properties: {
+    foo: {
+      type: "string",
+    },
+    candy: {
+      type: "object",
+      properties: {
+        bar: {
+          type: "string",
+        }
+      }
+    }
+  }
+};
+
+const extraErrors = {
+  foo: {
+    __errors: ["some error that got added as a prop"],
+  },
+  candy: {
+    bar: {
+    __errors: ["some error that got added as a prop"],
+    }
+  }
+};
+
+render((
+  <Form schema={schema}
+        extraErrors={extraErrors} />,
+), document.getElementById("app"));
+```
+
+An important note is that these errors are "display only" and will not block the user from submitting the form again.

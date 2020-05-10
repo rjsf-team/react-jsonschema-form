@@ -49,6 +49,37 @@ render((
 ), document.getElementById("app"));
 ```
 
+## Specifying property order
+
+Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
+
+```jsx
+const schema = {
+  type: "object",
+  properties: {
+    foo: {type: "string"},
+    bar: {type: "string"}
+  }
+};
+
+const uiSchema = {
+  "ui:order": ["bar", "foo"]
+};
+
+render((
+  <Form schema={schema}
+        uiSchema={uiSchema} />
+), document.getElementById("app"));
+```
+
+If a guaranteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
+
+```js
+const uiSchema = {
+  "ui:order": ["bar", "*"]
+};
+```
+
 ## Additional properties
 
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:

@@ -76,46 +76,7 @@ The value of this prop will be passed to the `enctype` [HTML attribute on the fo
 
 ## extraErrors
 
-Handling async errors is an important part of many applications. Support for this is added in the form of the `extraErrors` prop.
-
-For example, a request could be made to some backend when the user submits the form. If that request fails, the errors returned by the backend should be formatted like in the following example.
-
-```jsx
-const schema = {
-  type: "object",
-  properties: {
-    foo: {
-      type: "string",
-    },
-    candy: {
-      type: "object",
-      properties: {
-        bar: {
-          type: "string",
-        }
-      }
-    },
-  },
-}
-
-const extraErrors = {
-  foo: {
-    __errors: ["some error that got added as a prop"],
-  },
-  candy: {
-    bar: {
-    __errors: ["some error that got added as a prop"],
-    }
-  }
-}
-
-render((
-  <Form schema={schema}
-        extraErrors={extraErrors} />,
-), document.getElementById("app"));
-```
-
-An important note is that these errors are 'display only' and will not block the user from submitting the form again.
+This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it can be used to implement asynchronous validation. See [Validation](../usage/validation.md) for more information. 
 
 ## ErrorList
 
@@ -123,11 +84,11 @@ You can pass a React component to this prop to customize how form errors are dis
 
 ## fields
 
-Dictionary of registered fields in the form. See [Custom Widgets and Fields](custom-widgets-fields.md) for more information.
+Dictionary of registered fields in the form. See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information.
 
 ## FieldTemplate
 
-React component used to customize each field of the form. See [Custom Templates](custom-templates.md) for more information.
+React component used to customize each field of the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
 
 ## formContext
 
@@ -283,4 +244,4 @@ The `validate` prop requires a function that specifies custom validation rules f
 
 ## widgets
 
-Dictionary of registered widgets in the form. See [Custom Widgets and Fields](custom-widgets-fields.md) for more information.
+Dictionary of registered widgets in the form. See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information.

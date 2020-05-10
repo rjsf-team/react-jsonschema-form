@@ -1,57 +1,30 @@
 # uiSchema
 
-JSON Schema is limited for describing how a given data type should be rendered as a form input component. That's why this library introduces the concept of *UI schema*.
+JSON Schema is limited for describing how a given data type should be rendered as a form input component. That's why this library introduces the concept of uiSchema.
 
 A UI schema is basically an object literal providing information on **how** the form should be rendered, while the JSON schema tells **what**.
 
-The uiSchema object follows the tree structure of the form field hierarchy, and defines how each property should be rendered:
+The uiSchema object follows the tree structure of the form field hierarchy, and defines how each property should be rendered.
 
-```jsx
-const schema = {
-  type: "object",
-  properties: {
-    foo: {
-      type: "object",
-      properties: {
-        bar: {type: "string"}
-      }
-    },
-    baz: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          description: {
-            "type": "string"
-          }
-        }
-      }
-    }
-  }
-};
+Note that every property within uiSchema can be rendered in one of two ways: `{"ui:options": {[property]: [value]}}`, or `{"ui:[property]": value}`.
 
-const uiSchema = {
-  foo: {
-    bar: {
-      "ui:widget": "textarea"
-    },
-  },
-  baz: {
-    // note the "items" for an array
-    items: {
-      description: {
-        "ui:widget": "textarea"
-      }
-    }
-  }
-};
+In other words, the following uiSchemas are equivalent:
 
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
-), document.getElementById("app"));
+```json
+{
+  "ui:title": "Title",
+  "ui:description": "Description"
+}
 ```
 
+```json
+{
+  "ui:options": {
+    "title": "Title",
+    "description": "Description"
+  }
+}
+```
 
 ## classNames
 
@@ -76,7 +49,7 @@ Will result in:
 </div>
 ```
 
-## ui:autofocus
+## autofocus
 
 If you want to automatically focus on a text input or textarea input, set the `ui:autofocus` uiSchema directive to `true`.
 
@@ -88,7 +61,7 @@ const uiSchema = {
 }
 ```
 
-## ui:description
+## description
 
 Sometimes it's convenient to change the description of a field. This is the purpose of the `ui:description` uiSchema directive:
 
@@ -100,13 +73,13 @@ const uiSchema = {
 };
 ```
 
-## ui:disabled
+## disabled
 
 The `ui:disabled` uiSchema directive will disable all child widgets from a given field.
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
-## ui:enumDisabled
+## enumDisabled
 
 To disable an option, use the `enumDisabled` property in uiSchema.
 
@@ -121,7 +94,7 @@ const uiSchema={
 }
 ```
 
-## ui:help
+## help
 
 Sometimes it's convenient to add text next to a field to guide the end user filling it. This is the purpose of the `ui:help` uiSchema directive:
 
@@ -137,38 +110,41 @@ const uiSchema = {
 
 Help texts work for any kind of field at any level, and will always be rendered immediately below the field component widget(s) (after contextualized errors, if any).
 
-## ui:order
+## inputType
 
-Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
+To change the input type (for example, `tel` or `email`) you can specify the `inputType` in the `ui:options` uiSchema directive.
 
 ```jsx
-const schema = {
-  type: "object",
-  properties: {
-    foo: {type: "string"},
-    bar: {type: "string"}
+const schema = {type: "string"};
+const uiSchema = {
+  "ui:options": {
+    inputType: 'tel'
+  }
+};
+```
+
+## label
+
+Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` in the `ui:options` uiSchema directive.
+
+```jsx
+const schema = {type: "string"};
+const uiSchema = {
+  "ui:options": {
+    label: false
   }
 };
 
-const uiSchema = {
-  "ui:order": ["bar", "foo"]
-};
-
 render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 
-If a guaranteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
+## order
 
-```js
-const uiSchema = {
-  "ui:order": ["bar", "*"]
-};
-```
+This property allows you to reorder the properties that are shown for a particular object. See [Objects](../usage/objects.md) for more information.
 
-## ui:placeholder
+## placeholder
 
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
@@ -196,13 +172,13 @@ render((
 ), document.getElementById("app"));
 ```
 
-## ui:readonly
+## readonly
 
 The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only. This is equivalent to setting the `readOnly` property in the schema.
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
-## ui:rootFieldId
+## rootFieldId
 
 By default, this library will generate ids unique to the form for all rendered widgets. If you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:
 
@@ -212,51 +188,9 @@ const uiSchema = {
 };
 ```
 
-So all widgets will have an id prefixed with `myform`.
+This will make all widgets have an id prefixed with `myform`.
 
-## ui:title
-
-Sometimes it's convenient to change a field's title. this is the purpose of the `ui:title` uiSchema directive:
-
-```js
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:widget": "password",
-  "ui:title": "Your password"
-};
-```
-
-## ui:options["inputType"]
-
-To change the input type (for example, `tel` or `email`) you can specify the `inputType` in the `ui:options` uiSchema directive.
-
-```jsx
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:options": {
-    inputType: 'tel'
-  }
-};
-```
-
-## ui:options["label"]
-
-Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` in the `ui:options` uiSchema directive.
-
-```jsx
-const schema = {type: "string"};
-const uiSchema = {
-  "ui:options": {
-    label: false
-  }
-};
-
-render((
-  <Form schema={schema} uiSchema={uiSchema} />
-), document.getElementById("app"));
-```
-
-## ui:options["rows"]
+## rows
 
 You can set the initial height of a textarea widget by specifying `rows` option.
 
@@ -272,4 +206,16 @@ const uiSchema = {
 render((
   <Form schema={schema} uiSchema={uiSchema} />
 ), document.getElementById("app"));
+```
+
+## title
+
+Sometimes it's convenient to change a field's title. This is the purpose of the `ui:title` uiSchema directive:
+
+```js
+const schema = {type: "string"};
+const uiSchema = {
+  "ui:widget": "password",
+  "ui:title": "Your password"
+};
 ```

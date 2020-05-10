@@ -41,6 +41,29 @@ render((
 ), document.getElementById("app"));
 ```
 
+## uiSchema for array items
+
+To specify a uiSchema that applies to array items, specify the uiSchema value within the `items` property:
+
+```jsx
+const schema = {
+  type: "array",
+  items: {
+    type: "string"
+  }
+};
+
+const uiSchema = {
+  items: {
+    "ui:widget": "textarea"
+  }
+};
+
+render((
+  <Form schema={schema} uiSchema={uiSchema} />
+), document.getElementById("app"));
+```
+
 ## The `additionalItems` keyword
 
 The `additionalItems` keyword allows the user to add additional items of a given schema. For example:

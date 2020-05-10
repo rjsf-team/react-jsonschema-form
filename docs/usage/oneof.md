@@ -70,19 +70,19 @@ render((
 
 ## allOf
 
-When `allOf` is specified in a schema, react-jsonschema-form uses the `json-schema-merge-allof` library to merge the specified subschemas to create a combined subschema that is valid. For example, see the below schema:
+When `allOf` is specified in a schema, react-jsonschema-form uses the [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) library to merge the specified subschemas to create a combined subschema that is valid. For example, the below schema evaluates to a combined subschema of `{type: "boolean"}`:
 
 ```jsx
 const schema = {
-    type: "object",
-    allOf: [
-      {
-        type: ["string", "boolean"]
-      },
-      {
-        type: "boolean"
-      },
-    ],
+  title: "Field",
+  allOf: [
+    {
+      type: ["string", "boolean"]
+    },
+    {
+      type: "boolean"
+    },
+  ],
   };
 
 render((
