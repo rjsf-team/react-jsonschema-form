@@ -36,7 +36,7 @@ export default class Form extends Component {
       this.props.onChange &&
       !deepEquals(this.state.formData, this.props.formData)
     ) {
-      this.props.onChange(this.state);
+      this.props.onChange(this.getStateForEmit(this.state));
     }
     this.formElement = null;
   }
@@ -48,7 +48,7 @@ export default class Form extends Component {
       !deepEquals(nextState.formData, this.state.formData) &&
       this.props.onChange
     ) {
-      this.props.onChange(nextState);
+      this.props.onChange(this.getStateForEmit(nextState));
     }
     this.setState(nextState);
   }
@@ -119,7 +119,7 @@ export default class Form extends Component {
       formData,
       props.idPrefix
     );
-    return {
+    const nextState = {
       schema,
       uiSchema,
       idSchema,
@@ -131,6 +131,23 @@ export default class Form extends Component {
       schemaValidationErrors,
       schemaValidationErrorSchema,
     };
+    if (schemaValidationErrors) {
+      nextState.schemaValidationErrors = schemaValidationErrors;
+      nextState.schemaValidationErrorSchema = schemaValidationErrorSchema;
+    }
+    return nextState;
+  }
+
+  getStateForEmit(state) {
+    if (!state) {
+      return state;
+    }
+    const {
+      schemaValidationErrors,
+      schemaValidationErrorSchema,
+      ...stateForEmit
+    } = state;
+    return stateForEmit;
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -279,7 +296,8 @@ export default class Form extends Component {
     }
     this.setState(
       state,
-      () => this.props.onChange && this.props.onChange(state)
+      () =>
+        this.props.onChange && this.props.onChange(this.getStateForEmit(state))
     );
   };
 
