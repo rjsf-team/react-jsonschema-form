@@ -36,7 +36,7 @@ export default class Form extends Component {
       this.props.onChange &&
       !deepEquals(this.state.formData, this.props.formData)
     ) {
-      this.props.onChange(this.getStateForEmit(this.state));
+      this.props.onChange(this.state);
     }
     this.formElement = null;
   }
@@ -48,7 +48,7 @@ export default class Form extends Component {
       !deepEquals(nextState.formData, this.state.formData) &&
       this.props.onChange
     ) {
-      this.props.onChange(this.getStateForEmit(nextState));
+      this.props.onChange(nextState);
     }
     this.setState(nextState);
   }
@@ -128,26 +128,12 @@ export default class Form extends Component {
       errors,
       errorSchema,
       additionalMetaSchemas,
-      schemaValidationErrors,
-      schemaValidationErrorSchema,
     };
     if (schemaValidationErrors) {
       nextState.schemaValidationErrors = schemaValidationErrors;
       nextState.schemaValidationErrorSchema = schemaValidationErrorSchema;
     }
     return nextState;
-  }
-
-  getStateForEmit(state) {
-    if (!state) {
-      return state;
-    }
-    const {
-      schemaValidationErrors,
-      schemaValidationErrorSchema,
-      ...stateForEmit
-    } = state;
-    return stateForEmit;
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -296,8 +282,7 @@ export default class Form extends Component {
     }
     this.setState(
       state,
-      () =>
-        this.props.onChange && this.props.onChange(this.getStateForEmit(state))
+      () => this.props.onChange && this.props.onChange(state)
     );
   };
 
