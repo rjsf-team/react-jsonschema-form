@@ -62,5 +62,5 @@ jobs:
       uses: actions/setup-python@v1.2.0
       with:
         python-version: 3.6
-    - run: pip install mkdocs==1.0.4
+    - run: pip install -r requirements.docs.txt
     - run: mkdocs build --clean
