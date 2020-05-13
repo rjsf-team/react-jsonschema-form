@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox, submitForm } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm, describeRepeated } from "./test_utils";
 
 describe("ObjectField", () => {
   let sandbox;
@@ -565,7 +565,7 @@ describe("ObjectField", () => {
       });
     });
 
-    it("should retain user-input data if key-value pair has a title present in the schema", () => {
+    it("should retain and display user-input data if key-value pair has a title present in the schema when renaming key", () => {
       const { node, onChange } = createFormComponent({
         schema: {
           type: "object",
@@ -585,6 +585,34 @@ describe("ObjectField", () => {
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: { "Renamed custom title": 1 },
       });
+
+      const keyInput = node.querySelector("#root_Renamed\\ custom\\ title-key");
+      expect(keyInput.value).eql("Renamed custom title");
+
+      const keyInputLabel = node.querySelector("label[for=\"root_Renamed\\ custom\\ title-key\"]");
+      expect(keyInputLabel.textContent).eql("Renamed custom title Key");
+      
+    });
+
+    it("should retain object title when renaming key", () => {
+      const { node } = createFormComponent({
+        schema: {
+          title: "Object title",
+          type: "object",
+          additionalProperties: {
+            type: "string",
+          },
+        },
+        formData: { "Custom title": 1 },
+      });
+
+      const textNode = node.querySelector("#root_Custom\\ title-key");
+      Simulate.blur(textNode, {
+        target: { value: "Renamed custom title" },
+      });
+
+      const title = node.querySelector("#root__title");
+      expect(title.textContent).eql("Object title");
     });
 
     it("should keep order of renamed key-value pairs while renaming key", () => {
