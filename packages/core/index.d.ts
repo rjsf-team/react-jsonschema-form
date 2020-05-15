@@ -9,43 +9,45 @@ declare module '@rjsf/core' {
     };
 
     export interface FormProps<T> {
-        schema: JSONSchema7;
+        acceptcharset?: string;
+        action?: string;
+        additionalMetaSchemas?: ReadonlyArray<object>;
+        ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
+        autoComplete?: string;
+        autocomplete?: string; // deprecated
+        className?: string;
+        customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
-        uiSchema?: UiSchema;
-        formData?: T;
-        formContext?: any;
-        widgets?: { [name: string]: Widget };
-        fields?: { [name: string]: Field };
-        noValidate?: boolean;
-        noHtml5Validate?: boolean;
-        showErrorList?: boolean;
+        enctype?: string;
+        extraErrors?: any;
         ErrorList?: React.StatelessComponent<ErrorListProps>;
-        validate?: (formData: T, errors: FormValidation) => FormValidation;
+        fields?: { [name: string]: Field };
+        FieldTemplate?: React.StatelessComponent<FieldTemplateProps>;
+        formContext?: any;
+        formData?: T;
+        id?: string;
+        idPrefix?: string;
+        liveOmit?: boolean;
+        liveValidate?: boolean;
+        method?: string;
+        name?: string;
+        noHtml5Validate?: boolean;
+        noValidate?: boolean;
+        ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        omitExtraData?: boolean;
         onBlur?: (id: string, value: boolean | number | string | null) => void;
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
         onError?: (e: any) => any;
+        onFocus?: (id: string, value: boolean | number | string | null) => void;
         onSubmit?: (e: ISubmitEvent<T>) => any;
-        liveValidate?: boolean;
-        FieldTemplate?: React.StatelessComponent<FieldTemplateProps>;
-        ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
-        ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
-        transformErrors?: (errors: AjvError[]) => AjvError[];
-        idPrefix?: string;
-        additionalMetaSchemas?: ReadonlyArray<object>;
-        customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
-        // HTML Attributes
-        id?: string;
-        className?: string;
-        name?: string;
-        method?: string;
-        target?: string;
-        action?: string;
-        autocomplete?: string;
-        enctype?: string;
-        acceptcharset?: string;
-        omitExtraData?: boolean;
-        liveOmit?: boolean;
+        schema: JSONSchema7;
+        showErrorList?: boolean;
         tagName?: keyof JSX.IntrinsicElements | React.ComponentType;
+        target?: string;
+        transformErrors?: (errors: AjvError[]) => AjvError[];
+        uiSchema?: UiSchema;
+        validate?: (formData: T, errors: FormValidation) => FormValidation;
+        widgets?: { [name: string]: Widget };
     }
 
     export default class Form<T> extends React.Component<FormProps<T>> {
