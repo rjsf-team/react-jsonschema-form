@@ -2,9 +2,9 @@
 
 react-jsonschema-form supports custom widgets for oneOf, anyOf, and allOf.
 
-- A schema with oneOf is valid if *exactly one* of the subschemas is valid.
-- A schema with allOf is valid if *at least one* of the subschemas is valid.
-- A schema with allOf is valid if *all* of the subschemas are valid.
+- A schema with `oneOf` is valid if *exactly one* of the subschemas is valid.
+- A schema with `anyOf` is valid if *at least one* of the subschemas is valid.
+- A schema with `allOf` is valid if *all* of the subschemas are valid.
 
 ## oneOf
 
