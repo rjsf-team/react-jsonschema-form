@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import React from "react";
-import { renderIntoDocument, Simulate } from "react-dom/test-utils";
+import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
 import { findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
 import { createRef } from "create-react-ref";
@@ -871,7 +871,55 @@ describeRepeated("Form common", createFormComponent => {
         },
       });
     });
+
+    it("should call last provided change handler", async () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            default: "bar",
+          },
+        },
+      };
+
+      const secondOnChange = sandbox.spy();
+
+      const { comp, onChange } = createFormComponent({
+        schema,
+        formData: { foo: "bar1" },
+      });
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: {},
+          onChange,
+        });
+      });
+
+      sinon.assert.callCount(onChange, 1);
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: { foo: "bar2" },
+        });
+      });
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: {},
+          onChange: secondOnChange,
+        });
+      });
+
+      sinon.assert.callCount(onChange, 1);
+      sinon.assert.callCount(secondOnChange, 1);
+    });
   });
+
   describe("Blur handler", () => {
     it("should call provided blur handler on form input blur event", () => {
       const schema = {
