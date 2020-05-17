@@ -1,0 +1,6 @@
+{
+  "public": "build",
+  "rewrites": [
+    {"source": "react-jsonschema-form/:path", "destination": ":path" }
+  ]
+}

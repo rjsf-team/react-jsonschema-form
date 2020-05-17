@@ -57,3 +57,5 @@ export const samples = {
   ErrorSchema: errorSchema,
   Defaults: defaults,
 };
+
+export const sampleNames = Object.keys(samples);
