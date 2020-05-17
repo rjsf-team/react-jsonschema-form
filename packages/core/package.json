@@ -14,10 +14,9 @@
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
     "start": "concurrently \"npm:build:* -- --watch\"",
-    "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test": "cross-env BABEL_ENV=test NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
+    "tdd": "cross-env NODE_ENV=test jest",
+    "test": "cross-env BABEL_ENV=test NODE_ENV=test jest",
+    "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js"
   },
   "lint-staged": {
     "{src,test}/**/*.js": [
@@ -68,6 +67,7 @@
     "@babel/register": "^7.4.4",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^26.0.1",
     "babel-loader": "^8.0.6",
     "chai": "^3.3.0",
     "codemirror": "^5.30.0",
@@ -87,6 +87,7 @@
     "gh-pages": "^0.11.0",
     "html": "^1.0.0",
     "husky": "^0.13.2",
+    "jest": "^26.0.1",
     "jsdom": "^8.3.0",
     "json-loader": "^0.5.7",
     "lint-staged": "^10.1.3",
