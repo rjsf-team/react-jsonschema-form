@@ -1,4 +1,4 @@
-rjsf playground. Deploys to
+rjsf playground. Deploys to [https://rjsf-team.github.io/react-jsonschema-form/](https://rjsf-team.github.io/react-jsonschema-form/).
 
 ## Running tests
 
