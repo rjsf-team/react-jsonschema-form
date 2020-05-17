@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox, submitForm, describeRepeated } from "./test_utils";
+import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("ObjectField", () => {
   let sandbox;
@@ -589,9 +589,10 @@ describe("ObjectField", () => {
       const keyInput = node.querySelector("#root_Renamed\\ custom\\ title-key");
       expect(keyInput.value).eql("Renamed custom title");
 
-      const keyInputLabel = node.querySelector("label[for=\"root_Renamed\\ custom\\ title-key\"]");
+      const keyInputLabel = node.querySelector(
+        'label[for="root_Renamed\\ custom\\ title-key"]'
+      );
       expect(keyInputLabel.textContent).eql("Renamed custom title Key");
-      
     });
 
     it("should retain object title when renaming key", () => {
