@@ -26,6 +26,9 @@ import nullable from "./nullable";
 import nullField from "./null";
 import errorSchema from "./errorSchema";
 import defaults from "./defaults";
+import ifthenelse from "./ifthenelse";
+import ifthenelserefs from "./ifthenelserefs";
+import allofifthenelse from "./allofifthenelse";
 
 export const samples = {
   Simple: simple,
@@ -56,4 +59,7 @@ export const samples = {
   Nullable: nullable,
   ErrorSchema: errorSchema,
   Defaults: defaults,
+  "If Then Else": ifthenelse,
+  "If Then Else ($ref)": ifthenelserefs,
+  "All of If Then Else": allofifthenelse,
 };

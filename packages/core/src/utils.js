@@ -1,6 +1,5 @@
 import React from "react";
 import * as ReactIs from "react-is";
-import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js/library/fn/array/fill";
 import validateFormData, { isValid } from "./validate";
 import union from "lodash/union";
@@ -171,6 +170,8 @@ function computeDefaults(
   } else if ("default" in schema) {
     // Use schema defaults for this node.
     defaults = schema.default;
+  } else if ("const" in schema) {
+    defaults = schema.const;
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, rootSchema);
@@ -655,28 +656,63 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
     return {};
   }
   let resolvedSchema = resolveSchema(schema, rootSchema, formData);
-  if ("allOf" in schema) {
-    try {
-      resolvedSchema = mergeAllOf({
-        ...resolvedSchema,
-        allOf: resolvedSchema.allOf,
-      });
-    } catch (e) {
-      console.warn("could not merge subschemas in allOf:\n" + e);
-      const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
-      return resolvedSchemaWithoutAllOf;
-    }
-  }
+
   const hasAdditionalProperties =
     resolvedSchema.hasOwnProperty("additionalProperties") &&
     resolvedSchema.additionalProperties !== false;
+
   if (hasAdditionalProperties) {
-    return stubExistingAdditionalProperties(
+    resolvedSchema = stubExistingAdditionalProperties(
       resolvedSchema,
       rootSchema,
       formData
     );
   }
+
+  if ("if" in resolvedSchema) {
+    // Note that if and else are key words in javascript so extract to variable names which are allowed
+    var {
+      if: expression,
+      then,
+      else: otherwise,
+      ...resolvedSchemaLessConditional
+    } = resolvedSchema;
+    var conditionalSchema = isValid(expression, formData) ? then : otherwise;
+
+    if (conditionalSchema) {
+      conditionalSchema = resolveSchema(
+        conditionalSchema,
+        rootSchema,
+        formData
+      );
+      resolvedSchema = mergeSchemas(
+        resolvedSchemaLessConditional,
+        conditionalSchema
+      );
+    }
+  }
+
+  let allOf = resolvedSchema.allOf;
+
+  if (allOf) {
+    for (var i = 0; i < allOf.length; i++) {
+      let allOfSchema = allOf[i];
+
+      // if we see an if in our all of schema then evaluate the if schema and select the then / else, not sure if we should still merge without our if then else
+      if ("if" in allOfSchema) {
+        allOfSchema = isValid(allOfSchema.if, formData)
+          ? allOfSchema.then
+          : allOfSchema.else;
+      }
+
+      if (allOfSchema) {
+        allOfSchema = resolveSchema(allOfSchema, rootSchema, formData); // resolve references etc.
+        resolvedSchema = mergeSchemas(resolvedSchema, allOfSchema);
+        delete resolvedSchema.allOf;
+      }
+    }
+  }
+
   return resolvedSchema;
 }
 
@@ -956,7 +992,7 @@ export function toIdSchema(
   const idSchema = {
     $id: id || idPrefix,
   };
-  if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
+  if ("$ref" in schema || "dependencies" in schema) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
     return toIdSchema(_schema, id, rootSchema, formData, idPrefix);
   }

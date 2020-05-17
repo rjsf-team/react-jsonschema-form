@@ -19,7 +19,7 @@ module.exports = {
         title: "Age",
       },
       bio: {
-        type: "string",
+        const: "Roundhouse kicking asses since 1940",
         title: "Bio",
       },
       password: {
@@ -68,7 +68,6 @@ module.exports = {
   formData: {
     lastName: "Norris",
     age: 75,
-    bio: "Roundhouse kicking asses since 1940",
     password: "noneed",
   },
 };
