@@ -1,5 +1,6 @@
 import React from "react";
 import { Theme as MuiTheme } from "@rjsf/material-ui";
+import { Theme as FluentUITheme } from "@rjsf/fluent-ui";
 import Playground from "./app";
 import { render } from "react-dom";
 
@@ -86,6 +87,10 @@ const themes = {
   "material-ui": {
     stylesheet: "",
     theme: MuiTheme,
+  },
+  "fluent-ui": {
+    stylesheet: "",
+    theme: FluentUITheme,
   },
 };
 
