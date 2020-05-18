@@ -15,7 +15,7 @@
     "publish-to-gh-pages": "npm run build && gh-pages --dist build/",
     "publish-to-npm": "npm run build && npm publish",
     "start": "webpack-dev-server --open --config webpack.config.dev.js",
-    "test": "jest"
+    "test": "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true jest"
   },
   "lint-staged": {
     "{playground,src,test}/**/*.js": [
@@ -91,6 +91,7 @@
     "jest": "^26.0.1",
     "jest-image-snapshot": "^4.0.0",
     "jest-puppeteer": "^4.4.0",
+    "jest-puppeteer-docker": "^1.3.2",
     "jsdom": "^8.3.0",
     "json-loader": "^0.5.7",
     "lint-staged": "^9.4.2",
