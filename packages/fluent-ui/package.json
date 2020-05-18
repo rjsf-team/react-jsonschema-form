@@ -1,5 +1,5 @@
 {
-  "name": "@rjsf/material-ui",
+  "name": "@rjsf/fluent-ui",
   "version": "2.0.0",
   "main": "dist/index.js",
   "module": "dist/rjsf-material-ui.esm.js",
@@ -47,12 +47,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Agustin N. R. Ramirez <agustin.ramirez@cybertec.at>",
-  "contributors": [
-    "Lorenz Henk <lorenz.henk@cybertec.at>"
-  ],
+  "author": "",
   "keywords": [
-    "Material UI",
+    "Fluent UI",
     "react-jsonschema-form",
     "jsonschema",
     "json-schema",
@@ -65,9 +62,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cybertec-postgresql/rjsf-material-ui.git"
+    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
   },
-  "license": "MIT",
+  "license": "Apache 2",
   "dependencies": {
     "@fluentui/react": "^7.114.2"
   }

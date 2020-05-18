@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/cybertec-postgresql/rjsf-material-ui/master/rjsf-material-ui-logo.png" alt="Logo" width="140" height="120">
   </a>
 
-  <h3 align="center">@rjsf/material-ui</h3>
+  <h3 align="center">@rjsf/fluent-ui</h3>
 
   <p align="center">
   Material-UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -52,20 +52,20 @@ yarn add @material-ui/core @material-ui/icons @rjsf/core
 ### Installation
 
 ```bash
-yarn add @rjsf/material-ui
+yarn add @rjsf/fluent-ui
 ```
 
 ## Usage
 
 ```js
-import Form from '@rjsf/material-ui';
+import Form from '@rjsf/fluent-ui';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as MuiTheme } from '@rjsf/material-ui';
+import { Theme as MuiTheme } from '@rjsf/fluent-ui';
 
 const Form = withTheme(MuiTheme);
 ```
