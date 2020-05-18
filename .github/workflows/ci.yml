@@ -29,6 +29,12 @@ jobs:
     - run: npm run cs-check
       env:
         CI: true
+    - name: Upload spanshot diffs on failure
+      uses: actions/upload-artifact@v1
+      if: failure()
+      with:
+        name: __diff_output__
+        path: ./packages/playground/test/__image_snapshots__/__diff_output__
 
   deploy:
     runs-on: ubuntu-latest
