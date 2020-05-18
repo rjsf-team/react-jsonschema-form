@@ -562,22 +562,22 @@ class Playground extends Component {
           )}
         </div>
         <div className="col-sm-5">
-          {this.state.form && (
-            <DemoFrame
-              head={
-                <link
-                  rel="stylesheet"
-                  id="theme"
-                  href={this.state.stylesheet || ""}
-                />
-              }
-              style={{
-                width: "100%",
-                height: 1000,
-                border: 0,
-              }}
-              theme={theme}>
-              <FormComponent
+          {this.state.form &&
+            // <DemoFrame
+            //   head={
+            //     <link
+            //       rel="stylesheet"
+            //       id="theme"
+            //       href={this.state.stylesheet || ""}
+            //     />
+            //   }
+            //   style={{
+            //     width: "100%",
+            //     height: 1000,
+            //     border: 0,
+            //   }}
+            // theme={theme}>
+              (<FormComponent
                 {...templateProps}
                 liveValidate={liveSettings.validate}
                 disabled={liveSettings.disable}
@@ -602,7 +602,7 @@ class Playground extends Component {
                 transformErrors={transformErrors}
                 onError={log("errors")}
               />
-            </DemoFrame>
+            // </DemoFrame>
           )}
         </div>
         <div className="col-sm-12">
