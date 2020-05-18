@@ -12,7 +12,7 @@ declare module '@rjsf/core' {
         acceptcharset?: string;
         action?: string;
         additionalMetaSchemas?: ReadonlyArray<object>;
-        ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
+        ArrayFieldTemplate?: React.Component<ArrayFieldTemplateProps>;
         autoComplete?: string;
         autocomplete?: string; // deprecated
         className?: string;
@@ -20,9 +20,9 @@ declare module '@rjsf/core' {
         disabled?: boolean;
         enctype?: string;
         extraErrors?: any;
-        ErrorList?: React.StatelessComponent<ErrorListProps>;
+        ErrorList?: React.Component<ErrorListProps>;
         fields?: { [name: string]: Field };
-        FieldTemplate?: React.StatelessComponent<FieldTemplateProps>;
+        FieldTemplate?: React.Component<FieldTemplateProps>;
         formContext?: any;
         formData?: T;
         id?: string;
@@ -33,7 +33,7 @@ declare module '@rjsf/core' {
         name?: string;
         noHtml5Validate?: boolean;
         noValidate?: boolean;
-        ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        ObjectFieldTemplate?: React.Component<ObjectFieldTemplateProps>;
         omitExtraData?: boolean;
         onBlur?: (id: string, value: boolean | number | string | null) => void;
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
@@ -67,9 +67,9 @@ declare module '@rjsf/core' {
         'ui:widget'?: Widget | string;
         'ui:options'?: { [key: string]: boolean | number | string | object | any[] | null };
         'ui:order'?: string[];
-        'ui:FieldTemplate'?: React.StatelessComponent<FieldTemplateProps>;
-        'ui:ArrayFieldTemplate'?: React.StatelessComponent<ArrayFieldTemplateProps>;
-        'ui:ObjectFieldTemplate'?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        'ui:FieldTemplate'?: React.Component<FieldTemplateProps>;
+        'ui:ArrayFieldTemplate'?: React.Component<ArrayFieldTemplateProps>;
+        'ui:ObjectFieldTemplate'?: React.Component<ObjectFieldTemplateProps>;
         [name: string]: any;
     };
 
@@ -113,7 +113,7 @@ declare module '@rjsf/core' {
         rawErrors: string[];
     }
 
-    export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
+    export type Widget = React.Component<WidgetProps>;
 
     export interface FieldProps<T = any>
         extends Pick<React.HTMLAttributes<HTMLElement>, Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur'>> {
@@ -139,7 +139,7 @@ declare module '@rjsf/core' {
         [prop: string]: any;
     }
 
-    export type Field = React.StatelessComponent<FieldProps> | React.ComponentClass<FieldProps>;
+    export type Field = React.Component<FieldProps>;
 
     export type FieldTemplateProps = {
         id: string;
@@ -164,8 +164,8 @@ declare module '@rjsf/core' {
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
-        DescriptionField: React.StatelessComponent<{ id: string; description: string | React.ReactElement }>;
-        TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
+        DescriptionField: React.Component<{ id: string; description: string | React.ReactElement }>;
+        TitleField: React.Component<{ id: string; title: string; required: boolean }>;
         canAdd: boolean;
         className: string;
         disabled: boolean;
@@ -196,8 +196,8 @@ declare module '@rjsf/core' {
     };
 
     export type ObjectFieldTemplateProps<T = any> = {
-        DescriptionField: React.StatelessComponent<{ id: string; description: string | React.ReactElement }>;
-        TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
+        DescriptionField: React.Component<{ id: string; description: string | React.ReactElement }>;
+        TitleField: React.Component<{ id: string; title: string; required: boolean }>;
         title: string;
         description: string;
         properties: {
@@ -262,7 +262,7 @@ declare module '@rjsf/core' {
 
     export function withTheme<T = any>(
         themeProps: ThemeProps<T>,
-    ): React.ComponentClass<FormProps<T>> | React.StatelessComponent<FormProps<T>>;
+    ): React.Component<FormProps<T>>;
 
     export type AddButtonProps = {
         className: string;
