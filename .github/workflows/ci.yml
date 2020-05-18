@@ -29,6 +29,28 @@ jobs:
     - run: npm run cs-check
       env:
         CI: true
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 13.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 13.x
+    - run: npm install
+    - run: npm run bootstrap
+    - run: npm run build
+    - name: Deploy playground to GitHub Pages
+      uses: crazy-max/ghaction-github-pages@v1.4.0
+      with:
+        keep_history: true
+        target-branch: gh-pages
+        build_dir: packages/playground/build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   docs:
       
@@ -40,5 +62,5 @@ jobs:
       uses: actions/setup-python@v1.2.0
       with:
         python-version: 3.6
-    - run: pip install mkdocs==1.0.4
+    - run: pip install -r requirements.docs.txt
     - run: mkdocs build --clean
