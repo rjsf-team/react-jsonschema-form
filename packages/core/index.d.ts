@@ -179,8 +179,9 @@ declare module '@rjsf/core' {
             hasRemove: boolean;
             hasToolbar: boolean;
             index: number;
-            onDropIndexClick: (index: number) => (event: any) => void;
-            onReorderClick: (index: number, newIndex: number) => (event: any) => void;
+            onAddIndexClick: (index: number) => (event?: any) => void;
+            onDropIndexClick: (index: number) => (event?: any) => void;
+            onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
             readonly: boolean;
             key: string;
         }[];
