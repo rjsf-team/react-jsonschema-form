@@ -1,5 +1,5 @@
-import { toMatchImageSnapshot } from "jest-image-snapshot";
-import { sampleNames } from "../src/samples";
+const { toMatchImageSnapshot } = require("jest-image-snapshot");
+const { sampleNames } =  require("../src/samples");
 expect.extend({ toMatchImageSnapshot });
 
 const url = "http://localhost:8080";
