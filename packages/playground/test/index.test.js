@@ -4,8 +4,6 @@ expect.extend({ toMatchImageSnapshot });
 
 const url = "http://localhost:8080";
 
-const opts = { blur: 2 };
-
 describe("test", () => {
   beforeAll(async () => {
     await page.goto(url);
@@ -14,7 +12,7 @@ describe("test", () => {
 
   it("full page", async () => {
     const image = await page.screenshot({ fullPage: true });
-    expect(image).toMatchImageSnapshot(opts);
+    expect(image).toMatchImageSnapshot();
   });
   
   async function sampleTest(themeName, sampleName) {
@@ -23,7 +21,7 @@ describe("test", () => {
     await page.select("#rjsf_themeSelector", themeName);
     const frame = await page.$("iframe");
     const image = await frame.screenshot();
-    expect(image).toMatchImageSnapshot(opts);
+    expect(image).toMatchImageSnapshot();
   }
 
   for (let themeName of ["default", "material-ui"]) {
