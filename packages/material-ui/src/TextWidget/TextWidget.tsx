@@ -1,8 +1,7 @@
 import React from 'react';
 
 import FormControl from '@material-ui/core/FormControl';
-// import TextField from '@material-ui/core/TextField';
-import { TextField } from '@fluentui/react';
+import TextField from '@material-ui/core/TextField';
 
 import { WidgetProps } from '@rjsf/core';
 
@@ -45,7 +44,7 @@ const TextWidget = ({
         name={name}
         type={schema.type as string}
         value={value ? value : ''}
-        onChange={_onChange as any}
+        onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
