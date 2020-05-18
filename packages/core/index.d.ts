@@ -110,6 +110,7 @@ declare module '@rjsf/core' {
         onFocus: (id: string, value: boolean | number | string | null) => void;
         label: string;
         multiple: boolean;
+        rawErrors: string[];
     }
 
     export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
