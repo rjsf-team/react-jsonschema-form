@@ -2,27 +2,15 @@
 
 ## Development server
 
-When developing a package, first run from the root-level directory:
+When developing, run the following from the root-level directory:
 
 ```bash
+npm install
 lerna bootstrap
-```
-
-Then, go to the package directory and then run `npm start` to live-recompile the files for that package. For example, to edit the core package:
-
-```bash
-cd packages/core
 npm start
 ```
 
-Finally, to run the playground, go to the playground directory and run `npm start` in another terminal.
-
-```bash
-cd packages/playground
-npm start
-```
-
-A live development server showcasing components with hot reload enabled will then run at [localhost:8080](http://localhost:8080).
+All packages will be live-built, and a live development server showcasing components with hot reload enabled will then run at [localhost:8080](http://localhost:8080).
 
 ## Coding style
 
