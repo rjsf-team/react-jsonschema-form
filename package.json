@@ -8,7 +8,7 @@
     "bootstrap": "lerna bootstrap",
     "publish": "lerna publish",
     "changed": "lerna changed",
-    "test": "lerna run test",
+    "test": "lerna run test --stream --parallel",
     "lint": "lerna run lint",
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",
