@@ -201,11 +201,21 @@ function computeDefaults(
       )
     );
   } else if ("oneOf" in schema) {
-    schema =
-      schema.oneOf[getMatchingOption(undefined, schema.oneOf, rootSchema)];
+    const matchingKey = getMatchingOption(undefined, schema.oneOf, rootSchema);
+    if (schema.oneOf.hasOwnProperty(matchingKey) === false) {
+      // oneOf is an empty array so there is no schema available.
+      // Exit to prevent a "Cannot read property 'default' of undefined" error.
+      return undefined;
+    }
+    schema = schema.oneOf[matchingKey];
   } else if ("anyOf" in schema) {
-    schema =
-      schema.anyOf[getMatchingOption(undefined, schema.anyOf, rootSchema)];
+    const matchingKey = getMatchingOption(undefined, schema.anyOf, rootSchema);
+    if (schema.anyOf.hasOwnProperty(matchingKey) === false) {
+      // anyOf is an empty array so there is no schema available.
+      // Exit to prevent a "Cannot read property 'default' of undefined" error.
+      return undefined;
+    }
+    schema = schema.anyOf[matchingKey];
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.
@@ -603,7 +613,11 @@ export function stubExistingAdditionalProperties(
         rootSchema,
         formData
       );
-    } else if (schema.additionalProperties.hasOwnProperty("type")) {
+    } else if (
+      schema.additionalProperties.hasOwnProperty("type") ||
+      schema.additionalProperties.hasOwnProperty("oneOf") ||
+      schema.additionalProperties.hasOwnProperty("anyOf")
+    ) {
       additionalProperties = { ...schema.additionalProperties };
     } else {
       additionalProperties = { type: guessType(formData[key]) };

@@ -522,6 +522,48 @@ describe("ObjectField", () => {
       expect(node.querySelector("[for='root_first-key']")).eql(null);
     });
 
+    it("should render oneOf options inside additionalProperties", () => {
+      const { node } = createFormComponent({
+        schema: {
+          ...schema,
+          additionalProperties: {
+            oneOf: [
+              {
+                type: "number",
+              },
+              {
+                type: "boolean",
+              },
+            ],
+          },
+        },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelectorAll("option").length).eql(2);
+    });
+
+    it("should render anyOf options inside additionalProperties", () => {
+      const { node } = createFormComponent({
+        schema: {
+          ...schema,
+          additionalProperties: {
+            anyOf: [
+              {
+                type: "number",
+              },
+              {
+                type: "boolean",
+              },
+            ],
+          },
+        },
+        formData: { first: 1 },
+      });
+
+      expect(node.querySelectorAll("option").length).eql(2);
+    });
+
     it("should render a text input for the additional property key", () => {
       const { node } = createFormComponent({
         schema,
