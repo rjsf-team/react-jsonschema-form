@@ -55,6 +55,7 @@ function BooleanField(props) {
       options={{ ...options, enumOptions }}
       schema={schema}
       id={idSchema && idSchema.$id}
+      name={name}
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}

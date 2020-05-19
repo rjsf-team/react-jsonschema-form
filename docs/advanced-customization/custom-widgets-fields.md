@@ -121,6 +121,7 @@ The following props are passed to custom widget components:
 
 - `id`: The generated id for this field;
 - `schema`: The JSONSchema subschema object for this field;
+- `name`: If the field is a child on an Object field, contains the name of the property;
 - `value`: The current value for this field;
 - `placeholder`: the placeholder for the field, if any;
 - `required`: The required status of this field;
@@ -285,6 +286,7 @@ A field component will always be passed the following props:
  - `schema`: The JSON schema for this field;
  - `uiSchema`: The [uiSchema](#the-uischema-object) for this field;
  - `idSchema`: The tree of unique ids for every child field;
+ - `name`: If the field is a child on an Object field, contains the name of the property;
  - `formData`: The data for this field;
  - `errorSchema`: The tree of errors for this field and its children;
  - `registry`: A [registry](#the-registry-object) object (read next).
