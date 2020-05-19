@@ -56,8 +56,9 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 To release, run:
 
 ```bash
+lerna version
 lerna run build
-lerna publish
+lerna publish from-git
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering. Once a new version has been released, create a release in the Github "Releases" tab and add the version history.
