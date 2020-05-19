@@ -27,35 +27,38 @@ exports[`object fields object 1`] = `
             className="MuiFormControl-root MuiFormControl-fullWidth"
           >
             <div
-              className="MuiFormControl-root MuiTextField-root"
+              className="ms-TextField root-41"
             >
-              <label
-                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                data-shrink={false}
-                htmlFor="root_a"
-                id="root_a-label"
-              >
-                a
-              </label>
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-                onClick={[Function]}
+                className="ms-TextField-wrapper"
               >
-                <input
-                  aria-invalid={false}
-                  autoFocus={false}
-                  className="MuiInputBase-input MuiInput-input"
-                  disabled={false}
-                  id="root_a"
-                  name="nodejs"
-                  onAnimationStart={[Function]}
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="string"
-                  value=""
-                />
+                <label
+                  className="ms-Label root-49"
+                  htmlFor="root_a"
+                  id="TextFieldLabel3"
+                >
+                  a
+                </label>
+                <div
+                  className="ms-TextField-fieldGroup fieldGroup-42"
+                >
+                  <input
+                    aria-invalid={false}
+                    aria-labelledby="TextFieldLabel3"
+                    autoFocus={false}
+                    className="ms-TextField-field field-43"
+                    disabled={false}
+                    id="root_a"
+                    name="nodejs"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    required={false}
+                    type="string"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -76,35 +79,38 @@ exports[`object fields object 1`] = `
             className="MuiFormControl-root MuiFormControl-fullWidth"
           >
             <div
-              className="MuiFormControl-root MuiTextField-root"
+              className="ms-TextField root-41"
             >
-              <label
-                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                data-shrink={false}
-                htmlFor="root_b"
-                id="root_b-label"
-              >
-                b
-              </label>
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-                onClick={[Function]}
+                className="ms-TextField-wrapper"
               >
-                <input
-                  aria-invalid={false}
-                  autoFocus={false}
-                  className="MuiInputBase-input MuiInput-input"
-                  disabled={false}
-                  id="root_b"
-                  name="nodejs"
-                  onAnimationStart={[Function]}
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="number"
-                  value=""
-                />
+                <label
+                  className="ms-Label root-49"
+                  htmlFor="root_b"
+                  id="TextFieldLabel6"
+                >
+                  b
+                </label>
+                <div
+                  className="ms-TextField-fieldGroup fieldGroup-42"
+                >
+                  <input
+                    aria-invalid={false}
+                    aria-labelledby="TextFieldLabel6"
+                    autoFocus={false}
+                    className="ms-TextField-field field-43"
+                    disabled={false}
+                    id="root_b"
+                    name="nodejs"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    required={false}
+                    type="number"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
