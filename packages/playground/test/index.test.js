@@ -1,5 +1,6 @@
 const { toMatchImageSnapshot } = require("jest-image-snapshot");
 const { sampleNames } =  require("../src/samples");
+const { themeNames } = require("../src/themes");
 expect.extend({ toMatchImageSnapshot });
 
 const url = "http://localhost:8080";
@@ -20,11 +21,13 @@ describe("test", () => {
     await tab[0].click();
     await page.select("#rjsf_themeSelector", themeName);
     const frame = await page.$("iframe");
-    const image = await frame.screenshot();
+    const image = await page.screenshot({
+      clip: await frame.boundingBox()
+    });
     expect(image).toMatchImageSnapshot();
   }
 
-  for (let themeName of ["default", "material-ui"]) {
+  for (let themeName of themeNames) {
     for (let sampleName of sampleNames) {
       it(`${themeName} ${sampleName}`, async () => {
         await sampleTest(themeName, sampleName);
