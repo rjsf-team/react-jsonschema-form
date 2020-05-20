@@ -1,15 +1,5 @@
-import React from 'react';
-
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/styles';
-
-import { ObjectFieldTemplateProps } from '@rjsf/core';
-
-const useStyles = makeStyles({
-  root: {
-    marginTop: 10,
-  },
-});
+import React from "react";
+import { ObjectFieldTemplateProps } from "@rjsf/core";
 
 const ObjectFieldTemplate = ({
   DescriptionField,
@@ -21,11 +11,9 @@ const ObjectFieldTemplate = ({
   uiSchema,
   idSchema,
 }: ObjectFieldTemplateProps) => {
-  const classes = useStyles();
-
   return (
     <>
-      {(uiSchema['ui:title'] || title) && (
+      {(uiSchema["ui:title"] || title) && (
         <TitleField
           id={`${idSchema.$id}-title`}
           title={title}
@@ -38,18 +26,12 @@ const ObjectFieldTemplate = ({
           description={description}
         />
       )}
-      <Grid container={true} spacing={2} className={classes.root}>
-        {properties.map((element: any, index: number) => (
-          <Grid
-            item={true}
-            xs={12}
-            key={index}
-            style={{ marginBottom: '10px' }}
-          >
-            {element.content}
-          </Grid>
+
+      <div className="ms-Grid" dir="ltr">
+        {properties.map((element: any) => (
+          <div className="ms-Grid-col">{element.content}</div>
         ))}
-      </Grid>
+      </div>
     </>
   );
 };
