@@ -11,10 +11,9 @@ exports[`single fields null field 1`] = `
   />
   <div>
     <button
-      className="btn btn-info"
       type="submit"
     >
-      Submit
+      Submit test TODO fix
     </button>
   </div>
 </form>
@@ -62,10 +61,9 @@ exports[`single fields number field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info"
       type="submit"
     >
-      Submit
+      Submit test TODO fix
     </button>
   </div>
 </form>
@@ -95,10 +93,9 @@ exports[`single fields string field format data-url 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info"
       type="submit"
     >
-      Submit
+      Submit test TODO fix
     </button>
   </div>
 </form>
@@ -131,10 +128,9 @@ exports[`single fields string field format email 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info"
       type="submit"
     >
-      Submit
+      Submit test TODO fix
     </button>
   </div>
 </form>
@@ -167,10 +163,9 @@ exports[`single fields string field format uri 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info"
       type="submit"
     >
-      Submit
+      Submit test TODO fix
     </button>
   </div>
 </form>
@@ -218,10 +213,9 @@ exports[`single fields string field regular 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info"
       type="submit"
     >
-      Submit
+      Submit test TODO fix
     </button>
   </div>
 </form>
@@ -261,10 +255,9 @@ exports[`single fields unsupported field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info"
       type="submit"
     >
-      Submit
+      Submit test TODO fix
     </button>
   </div>
 </form>
