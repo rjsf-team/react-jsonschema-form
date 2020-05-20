@@ -10,15 +10,11 @@ exports[`object fields object 1`] = `
     className="MuiFormControl-root MuiFormControl-fullWidth"
   >
     <div
-      className="MuiGrid-root makeStyles-root-5 MuiGrid-container MuiGrid-spacing-xs-2"
+      className="ms-Grid"
+      dir="ltr"
     >
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="ms-Grid-col"
       >
         <div
           className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -65,12 +61,7 @@ exports[`object fields object 1`] = `
         </div>
       </div>
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="ms-Grid-col"
       >
         <div
           className="MuiFormControl-root MuiFormControl-fullWidth"
