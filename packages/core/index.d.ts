@@ -48,6 +48,8 @@ declare module '@rjsf/core' {
         uiSchema?: UiSchema;
         validate?: (formData: T, errors: FormValidation) => FormValidation;
         widgets?: { [name: string]: Widget };
+
+        children?: any;
     }
 
     export default class Form<T> extends React.Component<FormProps<T>> {
