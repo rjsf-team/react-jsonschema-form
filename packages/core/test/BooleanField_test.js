@@ -504,6 +504,51 @@ describe("BooleanField", () => {
     expect(node.querySelector("#custom")).to.exist;
   });
 
+  it("should provide a name prop to a customized CheckboxWidget if the field is a child of an Object field", () => {
+    let receivedProps;
+
+    createFormComponent({
+      schema: {
+        type: "object",
+        properties: {
+          accept: {
+            type: "boolean",
+          },
+        },
+      },
+      widgets: {
+        CheckboxWidget: props => {
+          receivedProps = props;
+          return CustomWidget(props);
+        },
+      },
+    });
+
+    const { name } = receivedProps;
+
+    expect(name).eql("accept");
+  });
+
+  it("should not provide a name prop to a customized CheckboxWidget if the field is not a child of an Object field", () => {
+    let receivedProps;
+
+    createFormComponent({
+      schema: {
+        type: "boolean",
+      },
+      widgets: {
+        CheckboxWidget: props => {
+          receivedProps = props;
+          return CustomWidget(props);
+        },
+      },
+    });
+
+    const { name } = receivedProps;
+
+    expect(name).eql(undefined);
+  });
+
   it("should handle a focus event with checkbox", () => {
     const onFocus = sandbox.spy();
     const { node } = createFormComponent({

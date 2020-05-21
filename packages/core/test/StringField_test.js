@@ -260,6 +260,51 @@ describe("StringField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
+    it("should provide a name prop to a customized TextWidget if the field is a child of an Object field", () => {
+      let receivedProps;
+
+      createFormComponent({
+        schema: {
+          type: "object",
+          properties: {
+            title: {
+              type: "string",
+            },
+          },
+        },
+        widgets: {
+          TextWidget: props => {
+            receivedProps = props;
+            return CustomWidget(props);
+          },
+        },
+      });
+
+      const { name } = receivedProps;
+
+      expect(name).eql("title");
+    });
+
+    it("should not provide a name prop to a customized TextWidget if the field is not a child of an Object field", () => {
+      let receivedProps;
+
+      createFormComponent({
+        schema: {
+          type: "string",
+        },
+        widgets: {
+          TextWidget: props => {
+            receivedProps = props;
+            return CustomWidget(props);
+          },
+        },
+      });
+
+      const { name } = receivedProps;
+
+      expect(name).eql(undefined);
+    });
+
     it("should create and set autocomplete attribute", () => {
       const { node } = createFormComponent({
         schema: { type: "string" },
