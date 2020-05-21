@@ -6,14 +6,12 @@ exports[`array fields array 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <div
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
       <div
-        className="MuiBox-root MuiBox-root-33"
+        className="MuiBox-root MuiBox-root-29"
       >
         <div />
         <div
@@ -26,7 +24,7 @@ exports[`array fields array 1`] = `
               className="MuiGrid-root MuiGrid-item"
             >
               <div
-                className="MuiBox-root MuiBox-root-137"
+                className="MuiBox-root MuiBox-root-133"
               >
                 <button
                   className="MuiButtonBase-root MuiButton-root MuiButton-text array-item-add MuiButton-textSecondary"
@@ -109,9 +107,7 @@ exports[`array fields checkboxes 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
@@ -203,14 +199,12 @@ exports[`array fields fixed array 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <div
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
       <div
-        className="MuiBox-root MuiBox-root-178"
+        className="MuiBox-root MuiBox-root-174"
       >
         <div />
         <div
@@ -223,17 +217,15 @@ exports[`array fields fixed array 1`] = `
               className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
             >
               <div
-                className="MuiBox-root MuiBox-root-179"
+                className="MuiBox-root MuiBox-root-175"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-180"
+                    className="MuiBox-root MuiBox-root-176"
                   >
-                    <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth"
-                    >
+                    <div>
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth"
                       >
@@ -286,9 +278,7 @@ exports[`array fields fixed array 1`] = `
                   <div
                     className="MuiBox-root MuiBox-root-182"
                   >
-                    <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth"
-                    >
+                    <div>
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth"
                       >

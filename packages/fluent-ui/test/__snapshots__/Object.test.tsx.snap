@@ -6,9 +6,7 @@ exports[`object fields object 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <div
       className="ms-Grid"
       dir="ltr"
@@ -16,9 +14,7 @@ exports[`object fields object 1`] = `
       <div
         className="ms-Grid-col"
       >
-        <div
-          className="MuiFormControl-root MuiFormControl-fullWidth"
-        >
+        <div>
           <div
             className="MuiFormControl-root MuiFormControl-fullWidth"
           >
@@ -63,9 +59,7 @@ exports[`object fields object 1`] = `
       <div
         className="ms-Grid-col"
       >
-        <div
-          className="MuiFormControl-root MuiFormControl-fullWidth"
-        >
+        <div>
           <div
             className="MuiFormControl-root MuiFormControl-fullWidth"
           >

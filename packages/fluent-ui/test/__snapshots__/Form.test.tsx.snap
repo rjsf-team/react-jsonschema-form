@@ -6,9 +6,7 @@ exports[`single fields null field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  />
+  <div />
   <div>
     <br />
     <button
@@ -48,9 +46,7 @@ exports[`single fields number field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
@@ -121,9 +117,7 @@ exports[`single fields string field format data-url 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <div>
       <p>
         <input
@@ -176,9 +170,7 @@ exports[`single fields string field format email 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <input
       autoFocus={false}
       className="form-control"
@@ -234,9 +226,7 @@ exports[`single fields string field format uri 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <input
       autoFocus={false}
       className="form-control"
@@ -292,9 +282,7 @@ exports[`single fields string field regular 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
@@ -365,9 +353,7 @@ exports[`single fields unsupported field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
+  <div>
     <div
       className="unsupported-field"
     >

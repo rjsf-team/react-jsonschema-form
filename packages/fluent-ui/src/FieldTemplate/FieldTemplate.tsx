@@ -1,12 +1,7 @@
-import React from 'react';
-
-import { FieldTemplateProps } from '@rjsf/core';
-
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
+import React from "react";
+import { FieldTemplateProps } from "@rjsf/core";
+import { Text } from "@fluentui/react";
+import { List } from "@fluentui/react";
 
 const FieldTemplate = ({
   id,
@@ -17,26 +12,12 @@ const FieldTemplate = ({
   rawDescription,
 }: FieldTemplateProps) => {
   return (
-    <FormControl fullWidth={true} error={rawErrors.length ? true : false}>
+    <div>
       {children}
-      {displayLabel && rawDescription ? (
-        <Typography variant="caption" color="textSecondary">
-          {rawDescription}
-        </Typography>
-      ) : null}
-      {rawErrors.length > 0 && (
-        <List dense={true}>
-          {rawErrors.map((error, i: number) => {
-            return (
-              <ListItem key={i}>
-                <FormHelperText id={id}>- {error}</FormHelperText>
-              </ListItem>
-            );
-          })}
-        </List>
-      )}
-      {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
-    </FormControl>
+      {displayLabel && rawDescription ? <Text>{rawDescription}</Text> : null}
+      {rawErrors.length > 0 && <List items={rawErrors}>})}</List>}
+      {rawHelp && <Text id={id}>{rawHelp}</Text>}
+    </div>
   );
 };
 

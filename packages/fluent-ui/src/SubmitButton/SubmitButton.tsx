@@ -1,5 +1,5 @@
 import React from "react";
-import { PrimaryButton } from "office-ui-fabric-react";
+import { PrimaryButton } from "@fluentui/react";
 export default () => (
   <div>
     <br />
