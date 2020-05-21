@@ -71,10 +71,33 @@ exports[`array fields array 1`] = `
     </div>
   </div>
   <div>
+    <br />
     <button
-      type="submit"
+      className="ms-Button ms-Button--primary root-40"
+      data-is-focusable={true}
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      onKeyPress={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseUp={[Function]}
+      type="button"
     >
-      Submit test TODO fix
+      <span
+        className="ms-Button-flexContainer flexContainer-41"
+        data-automationid="splitbuttonprimary"
+      >
+        <span
+          className="ms-Button-textContainer textContainer-42"
+        >
+          <span
+            className="ms-Button-label label-44"
+            id="id__1"
+          >
+            Submit
+          </span>
+        </span>
+      </span>
     </button>
   </div>
 </form>
@@ -142,10 +165,33 @@ exports[`array fields checkboxes 1`] = `
     </div>
   </div>
   <div>
+    <br />
     <button
-      type="submit"
+      className="ms-Button ms-Button--primary root-40"
+      data-is-focusable={true}
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      onKeyPress={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseUp={[Function]}
+      type="button"
     >
-      Submit test TODO fix
+      <span
+        className="ms-Button-flexContainer flexContainer-41"
+        data-automationid="splitbuttonprimary"
+      >
+        <span
+          className="ms-Button-textContainer textContainer-42"
+        >
+          <span
+            className="ms-Button-label label-44"
+            id="id__13"
+          >
+            Submit
+          </span>
+        </span>
+      </span>
     </button>
   </div>
 </form>
@@ -192,18 +238,18 @@ exports[`array fields fixed array 1`] = `
                         className="MuiFormControl-root MuiFormControl-fullWidth"
                       >
                         <div
-                          className="ms-TextField is-required root-41"
+                          className="ms-TextField is-required root-49"
                         >
                           <div
                             className="ms-TextField-wrapper"
                           >
                             <div
-                              className="ms-TextField-fieldGroup fieldGroup-42"
+                              className="ms-TextField-fieldGroup fieldGroup-50"
                             >
                               <input
                                 aria-invalid={false}
                                 autoFocus={false}
-                                className="ms-TextField-field field-43"
+                                className="ms-TextField-field field-51"
                                 disabled={false}
                                 id="root_0"
                                 name="nodejs"
@@ -247,18 +293,18 @@ exports[`array fields fixed array 1`] = `
                         className="MuiFormControl-root MuiFormControl-fullWidth"
                       >
                         <div
-                          className="ms-TextField is-required root-41"
+                          className="ms-TextField is-required root-49"
                         >
                           <div
                             className="ms-TextField-wrapper"
                           >
                             <div
-                              className="ms-TextField-fieldGroup fieldGroup-42"
+                              className="ms-TextField-fieldGroup fieldGroup-50"
                             >
                               <input
                                 aria-invalid={false}
                                 autoFocus={false}
-                                className="ms-TextField-field field-43"
+                                className="ms-TextField-field field-51"
                                 disabled={false}
                                 id="root_1"
                                 name="nodejs"
@@ -285,10 +331,33 @@ exports[`array fields fixed array 1`] = `
     </div>
   </div>
   <div>
+    <br />
     <button
-      type="submit"
+      className="ms-Button ms-Button--primary root-40"
+      data-is-focusable={true}
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      onKeyPress={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseUp={[Function]}
+      type="button"
     >
-      Submit test TODO fix
+      <span
+        className="ms-Button-flexContainer flexContainer-41"
+        data-automationid="splitbuttonprimary"
+      >
+        <span
+          className="ms-Button-textContainer textContainer-42"
+        >
+          <span
+            className="ms-Button-label label-44"
+            id="id__10"
+          >
+            Submit
+          </span>
+        </span>
+      </span>
     </button>
   </div>
 </form>
