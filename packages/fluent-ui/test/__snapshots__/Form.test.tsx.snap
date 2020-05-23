@@ -48,32 +48,28 @@ exports[`single fields number field 1`] = `
 >
   <div>
     <div
-      className="MuiFormControl-root MuiFormControl-fullWidth"
+      className="ms-TextField root-41"
     >
       <div
-        className="ms-TextField root-41"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-42"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-42"
-          >
-            <input
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-43"
-              disabled={false}
-              id="root"
-              name="nodejs"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              type="number"
-              value=""
-            />
-          </div>
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-43"
+            disabled={false}
+            id="root"
+            name="nodejs"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            type="number"
+            value=""
+          />
         </div>
       </div>
     </div>
@@ -284,32 +280,28 @@ exports[`single fields string field regular 1`] = `
 >
   <div>
     <div
-      className="MuiFormControl-root MuiFormControl-fullWidth"
+      className="ms-TextField root-41"
     >
       <div
-        className="ms-TextField root-41"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-42"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-42"
-          >
-            <input
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-43"
-              disabled={false}
-              id="root"
-              name="nodejs"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              type="string"
-              value=""
-            />
-          </div>
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-43"
+            disabled={false}
+            id="root"
+            name="nodejs"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            type="string"
+            value=""
+          />
         </div>
       </div>
     </div>

@@ -1,9 +1,6 @@
 import React from "react";
-
 import { FieldProps } from "@rjsf/core";
-
-import { Label } from "office-ui-fabric-react/lib/Label";
-//import color from "@material-ui/core/colors/yellow";
+import { Label } from "@fluentui/react";
 
 const styles = {
   root: [
