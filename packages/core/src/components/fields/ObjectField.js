@@ -83,7 +83,7 @@ class ObjectField extends Component {
 
   onPropertyChange = (name, addedByAdditionalProperties = false) => {
     return (value, errorSchema) => {
-      if (typeof value === "undefined" && addedByAdditionalProperties) {
+      if (value === undefined && addedByAdditionalProperties) {
         // Don't set value = undefined for fields added by
         // additionalProperties. Doing so removes them from the
         // formData, which causes them to completely disappear
