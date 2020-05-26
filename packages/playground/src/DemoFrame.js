@@ -61,7 +61,7 @@ function DemoFrame(props) {
     return (
       <>
         {head}
-        {children};
+        {children}
       </>
     );
   }

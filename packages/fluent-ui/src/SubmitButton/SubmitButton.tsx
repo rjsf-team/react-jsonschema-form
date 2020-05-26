@@ -3,6 +3,8 @@ import { PrimaryButton } from "@fluentui/react";
 export default () => (
   <div>
     <br />
-    <PrimaryButton text="Submit" />
+    <div className="ms-Grid-col ms-sm12">
+      <PrimaryButton text="Submit" />
+    </div>
   </div>
 );
