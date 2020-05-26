@@ -8,6 +8,11 @@ exports[`array fields array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
@@ -72,33 +77,37 @@ exports[`array fields array 1`] = `
   </div>
   <div>
     <br />
-    <button
-      className="ms-Button ms-Button--primary root-40"
-      data-is-focusable={true}
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      onKeyPress={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseUp={[Function]}
-      type="button"
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      <span
-        className="ms-Button-flexContainer flexContainer-41"
-        data-automationid="splitbuttonprimary"
+      <button
+        className="ms-Button ms-Button--primary root-40"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="button"
       >
         <span
-          className="ms-Button-textContainer textContainer-42"
+          className="ms-Button-flexContainer flexContainer-41"
+          data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-label label-44"
-            id="id__1"
+            className="ms-Button-textContainer textContainer-42"
           >
-            Submit
+            <span
+              className="ms-Button-label label-44"
+              id="id__1"
+            >
+              Submit
+            </span>
           </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -111,6 +120,11 @@ exports[`array fields checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -166,33 +180,37 @@ exports[`array fields checkboxes 1`] = `
   </div>
   <div>
     <br />
-    <button
-      className="ms-Button ms-Button--primary root-40"
-      data-is-focusable={true}
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      onKeyPress={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseUp={[Function]}
-      type="button"
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      <span
-        className="ms-Button-flexContainer flexContainer-41"
-        data-automationid="splitbuttonprimary"
+      <button
+        className="ms-Button ms-Button--primary root-40"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="button"
       >
         <span
-          className="ms-Button-textContainer textContainer-42"
+          className="ms-Button-flexContainer flexContainer-41"
+          data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-label label-44"
-            id="id__13"
+            className="ms-Button-textContainer textContainer-42"
           >
-            Submit
+            <span
+              className="ms-Button-label label-44"
+              id="id__13"
+            >
+              Submit
+            </span>
           </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -205,6 +223,11 @@ exports[`array fields fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
@@ -233,6 +256,11 @@ exports[`array fields fixed array 1`] = `
                   >
                     <div
                       className="ms-Grid-col ms-sm12  field field-string"
+                      style={
+                        Object {
+                          "marginBottom": 15,
+                        }
+                      }
                     >
                       <div
                         className="ms-TextField is-required root-49"
@@ -285,6 +313,11 @@ exports[`array fields fixed array 1`] = `
                   >
                     <div
                       className="ms-Grid-col ms-sm12  field field-number"
+                      style={
+                        Object {
+                          "marginBottom": 15,
+                        }
+                      }
                     >
                       <div
                         className="ms-TextField is-required root-49"
@@ -326,33 +359,37 @@ exports[`array fields fixed array 1`] = `
   </div>
   <div>
     <br />
-    <button
-      className="ms-Button ms-Button--primary root-40"
-      data-is-focusable={true}
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      onKeyPress={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseUp={[Function]}
-      type="button"
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      <span
-        className="ms-Button-flexContainer flexContainer-41"
-        data-automationid="splitbuttonprimary"
+      <button
+        className="ms-Button ms-Button--primary root-40"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="button"
       >
         <span
-          className="ms-Button-textContainer textContainer-42"
+          className="ms-Button-flexContainer flexContainer-41"
+          data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-label label-44"
-            id="id__10"
+            className="ms-Button-textContainer textContainer-42"
           >
-            Submit
+            <span
+              className="ms-Button-label label-44"
+              id="id__10"
+            >
+              Submit
+            </span>
           </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
   </div>
 </form>
 `;
