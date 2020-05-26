@@ -6,7 +6,9 @@ exports[`array fields array 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+  >
     <div
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
@@ -107,7 +109,9 @@ exports[`array fields checkboxes 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+  >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
@@ -199,7 +203,9 @@ exports[`array fields fixed array 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+  >
     <div
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
@@ -225,7 +231,9 @@ exports[`array fields fixed array 1`] = `
                   <div
                     className="MuiBox-root MuiBox-root-176"
                   >
-                    <div>
+                    <div
+                      className="ms-Grid-col ms-sm12  field field-string"
+                    >
                       <div
                         className="ms-TextField is-required root-49"
                       >
@@ -246,6 +254,7 @@ exports[`array fields fixed array 1`] = `
                               onChange={[Function]}
                               onFocus={[Function]}
                               onInput={[Function]}
+                              readOnly={false}
                               required={true}
                               type="string"
                               value=""
@@ -274,7 +283,9 @@ exports[`array fields fixed array 1`] = `
                   <div
                     className="MuiBox-root MuiBox-root-178"
                   >
-                    <div>
+                    <div
+                      className="ms-Grid-col ms-sm12  field field-number"
+                    >
                       <div
                         className="ms-TextField is-required root-49"
                       >
@@ -295,6 +306,7 @@ exports[`array fields fixed array 1`] = `
                               onChange={[Function]}
                               onFocus={[Function]}
                               onInput={[Function]}
+                              readOnly={false}
                               required={true}
                               type="number"
                               value=""

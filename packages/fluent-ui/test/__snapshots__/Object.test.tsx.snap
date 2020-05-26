@@ -6,15 +6,19 @@ exports[`object fields object 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-object"
+  >
     <div
       className="ms-Grid"
       dir="ltr"
     >
       <div
-        className="ms-Grid-col"
+        className="ms-Grid-row"
       >
-        <div>
+        <div
+          className="ms-Grid-col ms-sm12  field field-string"
+        >
           <div
             className="ms-TextField root-41"
           >
@@ -43,6 +47,7 @@ exports[`object fields object 1`] = `
                   onChange={[Function]}
                   onFocus={[Function]}
                   onInput={[Function]}
+                  readOnly={false}
                   required={false}
                   type="string"
                   value=""
@@ -51,11 +56,9 @@ exports[`object fields object 1`] = `
             </div>
           </div>
         </div>
-      </div>
-      <div
-        className="ms-Grid-col"
-      >
-        <div>
+        <div
+          className="ms-Grid-col ms-sm12  field field-number"
+        >
           <div
             className="ms-TextField root-41"
           >
@@ -84,6 +87,7 @@ exports[`object fields object 1`] = `
                   onChange={[Function]}
                   onFocus={[Function]}
                   onInput={[Function]}
+                  readOnly={false}
                   required={false}
                   type="number"
                   value=""

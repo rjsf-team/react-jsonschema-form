@@ -6,7 +6,9 @@ exports[`single fields null field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div />
+  <div
+    className="ms-Grid-col ms-sm12  field field-null"
+  />
   <div>
     <br />
     <button
@@ -46,7 +48,9 @@ exports[`single fields number field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-number"
+  >
     <div
       className="ms-TextField root-41"
     >
@@ -67,6 +71,7 @@ exports[`single fields number field 1`] = `
             onChange={[Function]}
             onFocus={[Function]}
             onInput={[Function]}
+            readOnly={false}
             type="number"
             value=""
           />
@@ -113,7 +118,9 @@ exports[`single fields string field format data-url 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string"
+  >
     <div>
       <p>
         <input
@@ -166,7 +173,9 @@ exports[`single fields string field format email 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string"
+  >
     <input
       autoFocus={false}
       className="form-control"
@@ -222,7 +231,9 @@ exports[`single fields string field format uri 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string"
+  >
     <input
       autoFocus={false}
       className="form-control"
@@ -278,7 +289,9 @@ exports[`single fields string field regular 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string"
+  >
     <div
       className="ms-TextField root-41"
     >
@@ -299,6 +312,7 @@ exports[`single fields string field regular 1`] = `
             onChange={[Function]}
             onFocus={[Function]}
             onInput={[Function]}
+            readOnly={false}
             type="string"
             value=""
           />
@@ -345,7 +359,9 @@ exports[`single fields unsupported field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-undefined"
+  >
     <div
       className="unsupported-field"
     >

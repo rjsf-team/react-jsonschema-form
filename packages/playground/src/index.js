@@ -89,7 +89,8 @@ const themes = {
     theme: MuiTheme,
   },
   "fluent-ui": {
-    stylesheet: "",
+    stylesheet:
+      "//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css",
     theme: FluentUITheme,
   },
 };

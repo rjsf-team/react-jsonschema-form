@@ -57,7 +57,13 @@ function DemoFrame(props) {
   };
   if (theme === "fluent-ui") {
     // TODO: find a better way to render fluent-ui in an iframe, if we need to do so.
-    return children;
+    const { head } = props;
+    return (
+      <>
+        {head}
+        {children};
+      </>
+    );
   }
   return (
     <Frame ref={handleRef} contentDidMount={onContentDidMount} {...other}>
