@@ -3,7 +3,7 @@ import MonacoEditor from "react-monaco-editor";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
-// import DemoFrame from "./DemoFrame";
+import DemoFrame from "./DemoFrame";
 
 // deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
 
@@ -563,46 +563,46 @@ class Playground extends Component {
         </div>
         <div className="col-sm-5">
           {this.state.form && (
-            // <DemoFrame
-            //   head={
-            //     <link
-            //       rel="stylesheet"
-            //       id="theme"
-            //       href={this.state.stylesheet || ""}
-            //     />
-            //   }
-            //   style={{
-            //     width: "100%",
-            //     height: 1000,
-            //     border: 0,
-            //   }}
-            // theme={theme}>
-            <FormComponent
-              {...templateProps}
-              liveValidate={liveSettings.validate}
-              disabled={liveSettings.disable}
-              omitExtraData={liveSettings.omitExtraData}
-              liveOmit={liveSettings.liveOmit}
-              schema={schema}
-              uiSchema={uiSchema}
-              formData={formData}
-              onChange={this.onFormDataChange}
-              onSubmit={({ formData }, e) => {
-                console.log("submitted formData", formData);
-                console.log("submit event", e);
+            <DemoFrame
+              head={
+                <link
+                  rel="stylesheet"
+                  id="theme"
+                  href={this.state.stylesheet || ""}
+                />
+              }
+              style={{
+                width: "100%",
+                height: 1000,
+                border: 0,
               }}
-              fields={{ geo: GeoPosition }}
-              validate={validate}
-              onBlur={(id, value) =>
-                console.log(`Touched ${id} with value ${value}`)
-              }
-              onFocus={(id, value) =>
-                console.log(`Focused ${id} with value ${value}`)
-              }
-              transformErrors={transformErrors}
-              onError={log("errors")}
-            />
-            // </DemoFrame>
+              theme={theme}>
+              <FormComponent
+                {...templateProps}
+                liveValidate={liveSettings.validate}
+                disabled={liveSettings.disable}
+                omitExtraData={liveSettings.omitExtraData}
+                liveOmit={liveSettings.liveOmit}
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={formData}
+                onChange={this.onFormDataChange}
+                onSubmit={({ formData }, e) => {
+                  console.log("submitted formData", formData);
+                  console.log("submit event", e);
+                }}
+                fields={{ geo: GeoPosition }}
+                validate={validate}
+                onBlur={(id, value) =>
+                  console.log(`Touched ${id} with value ${value}`)
+                }
+                onFocus={(id, value) =>
+                  console.log(`Focused ${id} with value ${value}`)
+                }
+                transformErrors={transformErrors}
+                onError={log("errors")}
+              />
+            </DemoFrame>
           )}
         </div>
         <div className="col-sm-12">
