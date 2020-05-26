@@ -32,7 +32,6 @@ const TextWidget = ({
   const uiProps = _pick(options.props || {}, allowedProps);
   
   return (
-    <div style={{marginTop: 10}} >
     <TextField
       id={id}
       label={label || schema.title}
@@ -48,7 +47,6 @@ const TextWidget = ({
       onFocus={_onFocus}
       {...uiProps}
     />
-    </div>
   );
 };
 

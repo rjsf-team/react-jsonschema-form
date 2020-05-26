@@ -16,7 +16,7 @@ const FieldTemplate = ({
   // TODO: do this better by not returning the form-group class from master.
   classNames = "ms-Grid-col ms-sm12 " + classNames.replace("form-group", "");
   return (
-    <div className={classNames}>
+    <div className={classNames} style={{marginBottom: 15}}>
       {children}
       {displayLabel && rawDescription ? <Text>{rawDescription}</Text> : null}
       {rawErrors.length > 0 && <List items={rawErrors}>})}</List>}
