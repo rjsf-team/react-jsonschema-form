@@ -1,10 +1,7 @@
 import React from "react";
-import { MessageBar, MessageBarType, initializeIcons } from "@fluentui/react";
+import { MessageBar, MessageBarType } from "@fluentui/react";
 import { Label } from "@fluentui/react";
 import { ErrorListProps } from "@rjsf/core";
-
-initializeIcons();
-
 const styles = {
   root: [
     {
