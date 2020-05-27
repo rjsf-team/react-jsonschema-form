@@ -2808,6 +2808,53 @@ describe("Form omitExtraData and liveOmit", () => {
       );
     });
 
+    it("should get field marked as additionalProperties", () => {
+      const schema = {};
+
+      const formData = {
+        extra: {
+          foo: "bar",
+        },
+        level1: {
+          level2: "test",
+          extra: "foo",
+          mixedMap: {
+            namedField: "foo",
+            key1: "val1",
+          },
+        },
+        level1a: 1.23,
+      };
+
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const pathSchema = {
+        $name: "",
+        level1: {
+          $name: "level1",
+          level2: { $name: "level1.level2" },
+          mixedMap: {
+            $name: "level1.mixedMap",
+            $additionalProperties: true,
+            namedField: { $name: "level1.mixedMap.namedField" }, // this should not be returned as additionalProperties include all
+          },
+        },
+        level1a: {
+          $name: "level1a",
+        },
+      };
+
+      const fieldNames = comp.getFieldNames(pathSchema, formData);
+      expect(fieldNames.sort()).eql(
+        ["level1a", "level1.level2", "level1.mixedMap"].sort()
+      );
+    });
+
     it("should get field names from pathSchema with array", () => {
       const schema = {};
 
@@ -2966,9 +3013,13 @@ describe("Form omitExtraData and liveOmit", () => {
       properties: {
         foo: { type: "string" },
         bar: { type: "string" },
+        add: {
+          type: "object",
+          additionalProperties: {},
+        },
       },
     };
-    const formData = { foo: "foo", baz: "baz" };
+    const formData = { foo: "foo", baz: "baz", add: { prop: 123 } };
     const { node, onChange } = createFormComponent({
       schema,
       formData,
@@ -2981,7 +3032,7 @@ describe("Form omitExtraData and liveOmit", () => {
     });
 
     sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar" },
+      formData: { foo: "foobar", add: { prop: 123 } },
     });
   });
 
