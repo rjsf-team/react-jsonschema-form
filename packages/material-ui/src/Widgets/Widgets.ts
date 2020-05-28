@@ -1,5 +1,6 @@
 import CheckboxWidget from '../CheckboxWidget/CheckboxWidget';
 import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget';
+import DateWidget from '../DateWidget/DateWidget';
 import PasswordWidget from '../PasswordWidget/PasswordWidget';
 import RadioWidget from '../RadioWidget/RadioWidget';
 import RangeWidget from '../RangeWidget/RangeWidget';
@@ -11,6 +12,7 @@ import UpDownWidget from '../UpDownWidget/UpDownWidget';
 export default {
   CheckboxWidget,
   CheckboxesWidget,
+  DateWidget,
   PasswordWidget,
   RadioWidget,
   RangeWidget,
