@@ -354,8 +354,19 @@ describe("Validation", () => {
       },
     };
     const newErrorMessage = "Better error message";
+    const newObjectErrorMessage = {
+      message: "Better error message with params",
+      params: {
+        type: "string",
+        property: ".foo",
+      },
+    };
+
     const transformErrors = errors => {
-      return [Object.assign({}, errors[0], { message: newErrorMessage })];
+      return [
+        Object.assign({}, errors[0], { message: newErrorMessage }),
+        { message: newObjectErrorMessage },
+      ];
     };
 
     let errors;
@@ -373,6 +384,11 @@ describe("Validation", () => {
     it("should use transformErrors function", () => {
       expect(errors).not.to.be.empty;
       expect(errors[0].message).to.equal(newErrorMessage);
+    });
+
+    it("should allow object error messages", () => {
+      expect(errors).not.to.be.empty;
+      expect(errors[1].message).to.equal(newObjectErrorMessage);
     });
   });
 

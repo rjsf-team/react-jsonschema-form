@@ -152,7 +152,7 @@ if (process.env.NODE_ENV !== "production") {
     label: PropTypes.string,
     children: PropTypes.node.isRequired,
     errors: PropTypes.element,
-    rawErrors: PropTypes.arrayOf(PropTypes.string),
+    rawErrors: PropTypes.arrayOf(PropTypes.any),
     help: PropTypes.element,
     rawHelp: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     description: PropTypes.element,
