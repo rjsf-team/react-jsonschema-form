@@ -789,7 +789,7 @@ function withDependentSchema(
   );
 }
 
-function withExactlyOneSubschema(
+export function withExactlyOneSubschema(
   schema,
   rootSchema,
   formData,
@@ -812,9 +812,17 @@ function withExactlyOneSubschema(
       return errors.length === 0;
     }
   });
-  if (validSubschemas.length !== 1) {
+
+  if (validSubschemas.length === 0) {
     console.warn(
-      "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid"
+      `ignoring oneOf in dependencies for "${dependencyKey}" because there is no subSchema that is valid`
+    );
+    return schema;
+  }
+
+  if (validSubschemas.length > 1) {
+    console.warn(
+      `ignoring oneOf in dependencies for "${dependencyKey}" because there isn't exactly one subschema that is valid`
     );
     return schema;
   }

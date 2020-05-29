@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import React from "react";
+import sinon from "sinon";
 
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -25,6 +26,7 @@ import {
   toPathSchema,
   guessType,
   mergeSchemas,
+  withExactlyOneSubschema,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3597,5 +3599,227 @@ describe("utils", () => {
       const Widget = React.memo(props => <div {...props} />);
       expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
+  });
+});
+
+describe("withExactlyOneSubschema()", () => {
+  it("should not warn if exactly one valid subschema is found", () => {
+    const schema = {
+      properties: {
+        foo: { type: "string", enum: ["a", "b"] },
+      },
+    };
+
+    const rootSchema = {
+      type: "object",
+      properties: {
+        foo: { type: "string", enum: ["a", "b"] },
+      },
+      dependencies: {
+        foo: {
+          oneOf: [
+            {
+              properties: {
+                foo: { enum: ["a"] },
+                fooAField: { type: "string" },
+              },
+            },
+            {
+              properties: {
+                foo: { enum: ["b"] },
+                fooBField: { type: "string" },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    const formData = {
+      foo: "a",
+    };
+
+    const dependencyKey = "foo";
+
+    const oneOf = [
+      {
+        properties: {
+          foo: { enum: ["a"] },
+        },
+      },
+      {
+        properties: {
+          foo: { enum: ["b"] },
+          fooBField: { type: "string" },
+        },
+      },
+    ];
+
+    let spy = sinon.spy(console, "warn");
+
+    withExactlyOneSubschema(schema, rootSchema, formData, dependencyKey, oneOf);
+
+    expect(spy.notCalled).eql(true);
+
+    spy.restore();
+  });
+
+  it("should warn if no valid subschema is found", () => {
+    const schema = {
+      properties: {
+        foo: { type: "string", enum: ["a", "b"] },
+      },
+    };
+
+    const rootSchema = {
+      type: "object",
+      properties: {
+        foo: { type: "string", enum: ["a", "b"] },
+      },
+      dependencies: {
+        foo: {
+          oneOf: [
+            {
+              properties: {
+                foo: { enum: ["a"] },
+                fooAField: { type: "string" },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    const formData = {
+      foo: "b",
+    };
+
+    const dependencyKey = "foo";
+
+    const oneOf = [
+      {
+        properties: {
+          foo: { enum: ["a"] },
+        },
+      },
+    ];
+
+    let spy = sinon.spy(console, "warn");
+
+    withExactlyOneSubschema(schema, rootSchema, formData, dependencyKey, oneOf);
+
+    expect(
+      spy.calledWith(
+        'ignoring oneOf in dependencies for "foo" because there is no subSchema that is valid'
+      )
+    ).eql(true);
+
+    spy.restore();
+  });
+
+  it("should warn if oneOf has no properties", () => {
+    const schema = {
+      properties: {
+        foo: { type: "string", enum: ["a", "b"] },
+      },
+    };
+
+    const rootSchema = {
+      type: "object",
+      properties: {
+        foo: { type: "string", enum: ["a", "b"] },
+      },
+      dependencies: {
+        foo: {
+          oneOf: [{}],
+        },
+      },
+    };
+
+    const formData = {
+      foo: "a",
+    };
+
+    const dependencyKey = "foo";
+
+    const oneOf = [{}];
+
+    let spy = sinon.spy(console, "warn");
+
+    withExactlyOneSubschema(schema, rootSchema, formData, dependencyKey, oneOf);
+
+    expect(
+      spy.calledWith(
+        'ignoring oneOf in dependencies for "foo" because there is no subSchema that is valid'
+      )
+    ).eql(true);
+
+    spy.restore();
+  });
+
+  it("should warn if more than one valid subschema is found", () => {
+    const schema = {
+      properties: {
+        foo: { type: "string", enum: ["a", "b"] },
+      },
+    };
+
+    const rootSchema = {
+      type: "object",
+      properties: {
+        foo: { type: "string", enum: ["a", "b"] },
+      },
+      dependencies: {
+        foo: {
+          oneOf: [
+            {
+              properties: {
+                foo: { enum: ["a"] },
+                fooAField: { type: "string" },
+              },
+            },
+            {
+              properties: {
+                foo: { enum: ["b"] },
+                fooBField: { type: "string" },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    const formData = {
+      foo: "a",
+    };
+
+    const dependencyKey = "foo";
+
+    const oneOf = [
+      {
+        properties: {
+          foo: { enum: ["a"] },
+          fooAField: { type: "string" },
+        },
+      },
+      {
+        properties: {
+          foo: { enum: ["a"] },
+          fooBField: { type: "string" },
+        },
+      },
+    ];
+
+    let spy = sinon.spy(console, "warn");
+
+    withExactlyOneSubschema(schema, rootSchema, formData, dependencyKey, oneOf);
+
+    expect(
+      spy.calledWith(
+        'ignoring oneOf in dependencies for "foo" because there isn\'t exactly one subschema that is valid'
+      )
+    ).eql(true);
+
+    spy.restore();
   });
 });
