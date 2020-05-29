@@ -1,10 +1,7 @@
-import React from 'react';
-
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-
-import { WidgetProps } from '@rjsf/core';
+import React from "react";
+import { Label } from "@fluentui/react";
+import { SpinButton } from "@fluentui/react";
+import { WidgetProps } from "@rjsf/core";
 
 const UpDownWidget = ({
   id,
@@ -16,8 +13,8 @@ const UpDownWidget = ({
   onChange,
   onBlur,
   onFocus,
-  autofocus,
-}: WidgetProps) => {
+}: // autofocus,
+WidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(value);
@@ -27,26 +24,25 @@ const UpDownWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
+  const requiredSymbol = required ? "*" : "";
+
   return (
-    <FormControl
-      fullWidth={true}
-      //error={!!rawErrors}
-      required={required}
-    >
-      <InputLabel>{label}</InputLabel>
-      <Input
-        id={id}
-        autoFocus={autofocus}
-        required={required}
-        type="number"
+    <>
+      <Label>{label + requiredSymbol}</Label>
+      <SpinButton
+        defaultValue="0"
+        min={1}
+        max={100}
+        step={1}
+        incrementButtonAriaLabel={"Increase value by 1"}
+        decrementButtonAriaLabel={"Decrease value by 1"}
         disabled={disabled || readonly}
-        name={name}
-        value={value ? value : ''}
-        onChange={_onChange}
+        value={value ? value : ""}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        onChange={_onChange}
       />
-    </FormControl>
+    </>
   );
 };
 
