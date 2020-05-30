@@ -1,12 +1,16 @@
-import React from 'react';
+import React from "react";
+import { Label } from "@fluentui/react";
+import { Checkbox } from "@fluentui/react";
 
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import { WidgetProps } from "@rjsf/core";
 
-import { WidgetProps } from '@rjsf/core';
+const styles = {
+  root: [
+    {
+      fontSize: 24,
+    },
+  ],
+};
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -30,16 +34,17 @@ const CheckboxesWidget = ({
   value,
   autofocus,
   readonly,
-  required,
+  // required,
   onChange,
   onBlur,
   onFocus,
 }: WidgetProps) => {
-  const { enumOptions, enumDisabled, inline } = options;
+  const { enumOptions, enumDisabled } = options;
 
-  const _onChange = (option: any) => ({
-    target: { checked },
-  }: React.ChangeEvent<HTMLInputElement>) => {
+  const _onChange = (option: any) => (
+    _ev?: React.FormEvent<HTMLElement>,
+    checked?: boolean
+  ) => {
     const all = (enumOptions as any).map(({ value }: any) => value);
 
     if (checked) {
@@ -52,45 +57,33 @@ const CheckboxesWidget = ({
   const _onBlur = ({
     target: { value },
   }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
-    <FormControl fullWidth={true} required={required}>
-      <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
-      <FormGroup>
-        {(enumOptions as any).map((option: any, index: number) => {
-          const checked = value.indexOf(option.value) !== -1;
-          const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
-          const checkbox = (
-            <Checkbox
-              id={`${id}_${index}`}
-              checked={checked}
-              disabled={disabled || itemDisabled || readonly}
-              autoFocus={autofocus && index === 0}
-              onChange={_onChange(option)}
-              onBlur={_onBlur}
-              onFocus={_onFocus}
-            />
-          );
-          return inline ? (
-            <FormControlLabel
-              control={checkbox}
-              key={index}
-              label={option.label}
-            />
-          ) : (
-            <FormControlLabel
-              control={checkbox}
-              key={index}
-              label={option.label}
-            />
-          );
-        })}
-      </FormGroup>
-    </FormControl>
+    <>
+      <Label styles={styles}>{label || schema.title}</Label>
+      {(enumOptions as any).map((option: any, index: number) => {
+        const checked = value.indexOf(option.value) !== -1;
+        const itemDisabled =
+          enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
+        return (
+          <Checkbox
+            id={`${id}_${index}`}
+            checked={checked}
+            label={option.label}
+            disabled={disabled || itemDisabled || readonly}
+            autoFocus={autofocus && index === 0}
+            onChange={_onChange(option)}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
+            key={index}
+          />
+        );
+      })}
+    </>
   );
 };
 
