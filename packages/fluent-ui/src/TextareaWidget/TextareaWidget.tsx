@@ -22,6 +22,7 @@ const TextareaWidget = ({
   onChange,
   options,
   schema,
+  rawErrors,
 }: CustomWidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -49,6 +50,7 @@ const TextareaWidget = ({
         onChange={_onChange as any}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        errorMessage={(rawErrors || []).join("\n")}
       />
     </>
   );

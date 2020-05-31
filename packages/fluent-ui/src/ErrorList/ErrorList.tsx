@@ -15,14 +15,12 @@ const ErrorList = ({ errors }: ErrorListProps) => (
     <Label styles={styles}>Errors</Label>
     {errors.map(error => {
       return (
-        <div id="container">
-          <MessageBar
-            messageBarType={MessageBarType.error}
-            isMultiline={false}
-            dismissButtonAriaLabel="Close">
-            {error.stack}
-          </MessageBar>
-        </div>
+        <MessageBar
+          messageBarType={MessageBarType.error}
+          isMultiline={false}
+          dismissButtonAriaLabel="Close">
+          {error.stack}
+        </MessageBar>
       );
     })}
   </>
