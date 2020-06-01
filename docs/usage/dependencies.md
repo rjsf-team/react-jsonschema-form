@@ -1,3 +1,7 @@
+# Dependencies
+
+react-jsonschema-form supports the `dependencies` keyword from an earlier draft of JSON Schema (note that this is not part of the latest JSON Schema spec, though). Dependencies can be used to create dynamic schemas that change fields based on what data is entered.
+
 ## Property dependencies
 
 This library supports conditionally making fields required based on the presence of other fields.
@@ -6,8 +10,8 @@ This library supports conditionally making fields required based on the presence
 
 In the following example the `billing_address` field will be required if `credit_card` is defined.
 
-```json
-{
+```jsx
+const schema = {
   "type": "object",
 
   "properties": {
@@ -21,16 +25,20 @@ In the following example the `billing_address` field will be required if `credit
   "dependencies": {
     "credit_card": ["billing_address"]
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 ### Bidirectional
 
 In the following example the `billing_address` field will be required if `credit_card` is defined and the `credit_card`
-field will be required if `billing_address` is defined making them both required if either is defined.
+field will be required if `billing_address` is defined, making them both required if either is defined.
 
-```json
-{
+```jsx
+const schema = {
   "type": "object",
 
   "properties": {
@@ -45,7 +53,11 @@ field will be required if `billing_address` is defined making them both required
     "credit_card": ["billing_address"],
     "billing_address": ["credit_card"]
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 *(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#property-dependencies))*
@@ -56,8 +68,8 @@ This library also supports modifying portions of a schema based on form data.
 
 ### Conditional
 
-```json
-{
+```jsx
+const schema = {
   "type": "object",
 
   "properties": {
@@ -75,7 +87,11 @@ This library also supports modifying portions of a schema based on form data.
       "required": ["billing_address"]
     }
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 In this example the `billing_address` field will be displayed in the form if `credit_card` is defined.
@@ -86,8 +102,8 @@ In this example the `billing_address` field will be displayed in the form if `cr
 
 The JSON Schema standard says that the dependency is triggered if the property is present. However, sometimes it's useful to have more sophisticated rules guiding the application of the dependency. For example, maybe you have three possible values for a field, and each one should lead to adding a different question. For this, we support a very restricted use of the `oneOf` keyword.
 
-```json
-{
+```jsx
+const schema = {
   "title": "Person",
   "type": "object",
   "properties": {
@@ -149,7 +165,11 @@ The JSON Schema standard says that the dependency is triggered if the property i
       ]
     }
   }
-}
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
 ```
 
 In this example the user is prompted with different follow-up questions dynamically based on their answer to the first question.

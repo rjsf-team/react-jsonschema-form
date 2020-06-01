@@ -2,16 +2,31 @@ site_name: react-jsonschema-form documentation
 docs_dir: docs
 theme: readthedocs
 
+extra_javascript: [main.js]
+
 nav:
   - Introduction: index.md
-  - Advanced Customization: advanced-customization.md
-  - Definitions: definitions.md
-  - Dependencies: dependencies.md
-  - Form Customization: form-customization.md
-  - Theme Customization: theme-customization.md
-  - Validation: validation.md
-  - Contributing: contributing.md
-  - Playground: https://rjsf-team.github.io/react-jsonschema-form/
+  - Quickstart: quickstart.md
+  - JSON schema:
+    - Single fields: usage/single.md
+    - Objects: usage/objects.md
+    - Arrays: usage/arrays.md
+    - Definitions: usage/definitions.md
+    - Dependencies: usage/dependencies.md
+    - oneOf / anyOf / allOf: usage/oneof.md
+  - Usage:
+    - Widgets: usage/widgets.md
+    - Themes: usage/themes.md
+    - Validation: usage/validation.md
+  - Advanced Customization:
+    - Custom Widgets and Fields: advanced-customization/custom-widgets-fields.md
+    - Custom Templates: advanced-customization/custom-templates.md
+    - Custom Themes: advanced-customization/custom-themes.md
+    - Other Internals: advanced-customization/internals.md
+    - Contributing: contributing.md
+  - API Reference:
+    - uiSchema: api-reference/uiSchema.md
+    - "&lt;Form /&gt; props": api-reference/form-props.md
 
 markdown_extensions:
   - toc:
