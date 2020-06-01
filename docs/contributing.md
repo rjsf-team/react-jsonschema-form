@@ -1,72 +1,61 @@
-## Contributing
+# Contributing
 
-### Development server
+## Development server
 
-When developing a package, first run from the root-level directory:
+When developing, run the following from the root-level directory:
 
 ```bash
+npm install
 lerna bootstrap
-```
-
-Then, go to the package directory and then run `npm start` to live-recompile the files for that package. For example, to edit the core package:
-
-```bash
-cd packages/core
 npm start
 ```
 
-Finally, to run the playground, go to the playground directory and run `npm start` in another terminal.
+All packages will be live-built, and a live development server showcasing components with hot reload enabled will then run at [localhost:8080](http://localhost:8080).
 
-```bash
-cd packages/playground
-npm start
-```
-
-A live development server showcasing components with hot reload enabled will then run at [localhost:8080](http://localhost:8080).
-
-### Coding style
+## Coding style
 
 All the JavaScript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style. Code is automatically prettified upon commit using precommit hooks.
 
-### Documentation
+## Documentation
 
 We use [mkdocs](https://www.mkdocs.org/) to build our documentation. To run documentation locally, run:
 
 ```bash
-pip install mkdocs==1.0.4
+pip install -r requirements.docs.txt
 mkdocs serve
 ```
 
 Documentation will be served on [localhost:8000](http://localhost:8000).
 
-### Tests
+## Tests
 
 ```bash
 npm test
 ```
 
-#### Code coverage
+### Code coverage
 
 Code coverage reports are currently available only for the `@rjsf/core` package. They are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
 The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 
-### Releasing
+## Releasing
 
 To release, run:
 
 ```bash
+lerna version
 lerna run build
-lerna publish
+lerna publish from-git
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering. Once a new version has been released, create a release in the Github "Releases" tab and add the version history.
 
-#### Releasing docs
+### Releasing docs
 
 Docs are automatically released using [Read The Docs](https://readthedocs.org/) based on the latest commits from the `master` branch.
 
-#### Releasing the playground
+### Releasing the playground
 
 In order to publish the latest playground to [https://rjsf-team.github.io/react-jsonschema-form/](https://rjsf-team.github.io/react-jsonschema-form/) after a new rjsf release, run:
 

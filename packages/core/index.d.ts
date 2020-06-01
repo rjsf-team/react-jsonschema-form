@@ -9,44 +9,45 @@ declare module '@rjsf/core' {
     };
 
     export interface FormProps<T> {
-        schema: JSONSchema7;
+        acceptcharset?: string;
+        action?: string;
+        additionalMetaSchemas?: ReadonlyArray<object>;
+        ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
+        autoComplete?: string;
+        autocomplete?: string; // deprecated
+        className?: string;
+        customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
-        uiSchema?: UiSchema;
-        formData?: T;
-        formContext?: any;
-        widgets?: { [name: string]: Widget };
-        fields?: { [name: string]: Field };
-        noValidate?: boolean;
-        noHtml5Validate?: boolean;
-        showErrorList?: boolean;
+        enctype?: string;
+        extraErrors?: any;
         ErrorList?: React.StatelessComponent<ErrorListProps>;
-        validate?: (formData: T, errors: FormValidation) => FormValidation;
+        fields?: { [name: string]: Field };
+        FieldTemplate?: React.StatelessComponent<FieldTemplateProps>;
+        formContext?: any;
+        formData?: T;
+        id?: string;
+        idPrefix?: string;
+        liveOmit?: boolean;
+        liveValidate?: boolean;
+        method?: string;
+        name?: string;
+        noHtml5Validate?: boolean;
+        noValidate?: boolean;
+        ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        omitExtraData?: boolean;
         onBlur?: (id: string, value: boolean | number | string | null) => void;
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
         onError?: (e: any) => any;
+        onFocus?: (id: string, value: boolean | number | string | null) => void;
         onSubmit?: (e: ISubmitEvent<T>) => any;
-        liveValidate?: boolean;
-        FieldTemplate?: React.StatelessComponent<FieldTemplateProps>;
-        ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
-        ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
-        safeRenderCompletion?: boolean;
-        transformErrors?: (errors: AjvError[]) => AjvError[];
-        idPrefix?: string;
-        additionalMetaSchemas?: ReadonlyArray<object>;
-        customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
-        // HTML Attributes
-        id?: string;
-        className?: string;
-        name?: string;
-        method?: string;
-        target?: string;
-        action?: string;
-        autocomplete?: string;
-        enctype?: string;
-        acceptcharset?: string;
-        omitExtraData?: boolean;
-        liveOmit?: boolean;
+        schema: JSONSchema7;
+        showErrorList?: boolean;
         tagName?: keyof JSX.IntrinsicElements | React.ComponentType;
+        target?: string;
+        transformErrors?: (errors: AjvError[]) => AjvError[];
+        uiSchema?: UiSchema;
+        validate?: (formData: T, errors: FormValidation) => FormValidation;
+        widgets?: { [name: string]: Widget };
     }
 
     export default class Form<T> extends React.Component<FormProps<T>> {
@@ -109,6 +110,7 @@ declare module '@rjsf/core' {
         onFocus: (id: string, value: boolean | number | string | null) => void;
         label: string;
         multiple: boolean;
+        rawErrors: string[];
     }
 
     export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
@@ -182,7 +184,7 @@ declare module '@rjsf/core' {
             readonly: boolean;
             key: string;
         }[];
-        onAddClick: (event: any) => (event: any) => void;
+        onAddClick: (event?: any) => void;
         readonly: boolean;
         required: boolean;
         schema: JSONSchema7;
@@ -271,23 +273,23 @@ declare module '@rjsf/core' {
     export module utils {
 
         export const ADDITIONAL_PROPERTY_FLAG: string;
-    
+
         export function getDefaultRegistry(): FieldProps['registry'];
-    
+
         export function getSchemaType(schema: JSONSchema7): string;
-    
+
         export function getWidget(
             schema: JSONSchema7,
             widget: Widget,
             registeredWidgets?: { [name: string]: Widget },
         ): Widget | Error;
-    
+
         export function hasWidget(
             schema: JSONSchema7,
             widget: Widget,
             registeredWidgets?: { [name: string]: Widget },
         ): boolean;
-    
+
         export function computeDefaults<T = any>(
             schema: JSONSchema7,
             parentDefaults: JSONSchema7['default'][],
@@ -295,68 +297,68 @@ declare module '@rjsf/core' {
             rawFormData?: T,
             includeUndefinedValues?: boolean,
         ): JSONSchema7['default'][];
-    
+
         export function getDefaultFormState<T = any>(
             schema: JSONSchema7,
             formData: T,
             definitions?: FieldProps['registry']['definitions'],
             includeUndefinedValues?: boolean,
         ): T | JSONSchema7['default'][];
-    
+
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
-    
+
         export function isObject(thing: any): boolean;
-    
+
         export function mergeObjects(obj1: object, obj2: object, concatArrays?: boolean): object;
-    
+
         export function asNumber(value: string | null): number | string | undefined | null;
-    
+
         export function orderProperties(properties: [], order: []): [];
-    
+
         export function isConstant(schema: JSONSchema7): boolean;
-    
+
         export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'] | Error;
-    
+
         export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
-    
+
         export function isMultiSelect(schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
-    
+
         export function isFilesArray(
             schema: JSONSchema7,
             uiSchema: UiSchema,
             definitions?: FieldProps['registry']['definitions'],
         ): boolean;
-    
+
         export function isFixedItems(schema: JSONSchema7): boolean;
-    
+
         export function allowAdditionalItems(schema: JSONSchema7): boolean;
-    
+
         export function optionsList(schema: JSONSchema7): { label: string; value: string }[];
-    
+
         export function guessType(value: any): JSONSchema7TypeName;
-    
+
         export function stubExistingAdditionalProperties<T = any>(
             schema: JSONSchema7,
             definitions?: FieldProps['registry']['definitions'],
             formData?: T,
         ): JSONSchema7;
-    
+
         export function resolveSchema<T = any>(
             schema: JSONSchema7Definition,
             definitions?: FieldProps['registry']['definitions'],
             formData?: T,
         ): JSONSchema7;
-    
+
         export function retrieveSchema<T = any>(
             schema: JSONSchema7Definition,
             definitions?: FieldProps['registry']['definitions'],
             formData?: T,
         ): JSONSchema7;
-    
+
         export function deepEquals<T>(a: T, b: T): boolean;
-    
+
         export function shouldRender(comp: React.Component, nextProps: any, nextState: any): boolean;
-    
+
         export function toIdSchema<T = any>(
             schema: JSONSchema7Definition,
             id: string,
@@ -364,14 +366,14 @@ declare module '@rjsf/core' {
             formData?: T,
             idPredix?: string,
         ): IdSchema | IdSchema[];
-    
+
         export function toPathSchema<T = any>(
             schema: JSONSchema7Definition,
             name: string | undefined,
             definitions: FieldProps['registry']['definitions'],
             formData?: T,
         ): PathSchema | PathSchema[];
-    
+
         export interface DateObject {
             year: number;
             month: number;
@@ -380,25 +382,25 @@ declare module '@rjsf/core' {
             minute: number;
             second: number;
         }
-    
+
         export function parseDateString(dateString: string, includeTime?: boolean): DateObject;
-    
+
         export function toDateString(dateObject: DateObject, time?: boolean): string;
-    
+
         export function pad(num: number, size: number): string;
-    
+
         export function setState(instance: React.Component, state: any, callback: Function): void;
-    
+
         export function dataURItoBlob(dataURI: string): { name: string; blob: Blob };
-    
+
         export interface IRangeSpec {
             min?: number;
             max?: number;
             step?: number;
         }
-    
+
         export function rangeSpec(schema: JSONSchema7): IRangeSpec;
-    
+
         export function getMatchingOption(
             formData: any,
             options: JSONSchema7[],
