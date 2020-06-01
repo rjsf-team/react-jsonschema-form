@@ -339,6 +339,9 @@ class CopyLink extends Component {
 class Playground extends Component {
   constructor(props) {
     super(props);
+
+    // set default theme
+    const theme = "default";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.state = {
@@ -347,7 +350,7 @@ class Playground extends Component {
       uiSchema,
       formData,
       validate,
-      theme: "default",
+      theme,
       subtheme: null,
       liveSettings: {
         validate: true,
@@ -361,6 +364,8 @@ class Playground extends Component {
   }
 
   componentDidMount() {
+    const { themes } = this.props;
+    const { theme } = this.state;
     const hash = document.location.hash.match(/#(.*)/);
     if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
       try {
@@ -369,7 +374,10 @@ class Playground extends Component {
         alert("Unable to load form setup data.");
       }
     } else {
-      this.load({ theme: Object.keys(this.props.themes)[0] });
+      // initialize theme
+      this.onThemeSelected(theme, themes[theme]);
+
+      this.setState({ form: true });
     }
   }
 
