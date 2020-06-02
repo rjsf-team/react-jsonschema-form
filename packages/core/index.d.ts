@@ -213,6 +213,7 @@ declare module '@rjsf/core' {
         idSchema: IdSchema;
         formData: T;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type AjvError = {

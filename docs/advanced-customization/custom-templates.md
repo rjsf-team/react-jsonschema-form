@@ -65,6 +65,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `title`: A string value containing the title for the array.
 - `formContext`: The `formContext` object that you passed to Form.
 - `formData`: The formData for this array.
+- `registry`: The `registry` object.
 
 The following props are part of each element in `items`:
 
@@ -207,6 +208,7 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `idSchema`: An object containing the id for this object & ids for it's properties.
 - `formData`: The form data for the object.
 - `formContext`: The `formContext` object that you passed to Form.
+- `registry`: The `registry` object.
 
 The following props are part of each element in `properties`:
 
