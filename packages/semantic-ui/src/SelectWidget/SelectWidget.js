@@ -2,9 +2,9 @@
 import React from "react";
 import _ from "lodash";
 import { Form } from "semantic-ui-react";
-import { asNumber, guessType } from '@rjsf/core/lib/utils';
+import { asNumber, guessType } from "@rjsf/core/lib/utils";
 import PropTypes from "prop-types";
-import { getSemanticProps } from '../util';
+import { getSemanticProps } from "../util";
 
 const nums = new Set(["number", "integer"]);
 
@@ -73,7 +73,7 @@ function SelectWidget({
   onBlur,
   onFocus,
 }) {
-  const semanticProps = getSemanticProps(options);
+  const semanticProps = getSemanticProps({ options });
   const { enumDisabled, enumOptions } = options;
   const emptyValue = multiple ? [] : "";
   const dropdownOptions = createDefaultValueOptionsForDropDown(
@@ -118,7 +118,7 @@ SelectWidget.defaultProps = {
       inverted: "false",
       fluid: true,
       selection: true,
-      scrolling:true,
+      scrolling: true,
       upward: false,
     },
   },
