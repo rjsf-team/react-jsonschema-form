@@ -160,21 +160,34 @@ exports[`single fields string field format email 1`] = `
   <div
     className="MuiFormControl-root MuiFormControl-fullWidth"
   >
-    <input
-      autoFocus={false}
-      className="form-control"
-      disabled={false}
-      id="root"
-      list={null}
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      placeholder=""
-      readOnly={false}
-      required={false}
-      type="email"
-      value=""
-    />
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <div
+        className="MuiFormControl-root MuiTextField-root"
+      >
+        <div
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiInput-input"
+            disabled={false}
+            id="root"
+            name="nodejs"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="email"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
   </div>
   <div>
     <button
@@ -196,21 +209,34 @@ exports[`single fields string field format uri 1`] = `
   <div
     className="MuiFormControl-root MuiFormControl-fullWidth"
   >
-    <input
-      autoFocus={false}
-      className="form-control"
-      disabled={false}
-      id="root"
-      list={null}
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      placeholder=""
-      readOnly={false}
-      required={false}
-      type="url"
-      value=""
-    />
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <div
+        className="MuiFormControl-root MuiTextField-root"
+      >
+        <div
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiInput-input"
+            disabled={false}
+            id="root"
+            name="nodejs"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="url"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
   </div>
   <div>
     <button
