@@ -32,6 +32,7 @@ function TextareaWidget({
     <TextArea
       id={id}
       key={id}
+      label={schema.title || label}
       placeholder={placeholder}
       autoFocus={autofocus}
       required={required}
@@ -48,7 +49,11 @@ function TextareaWidget({
 }
 
 TextareaWidget.defaultProps = {
-  options: {},
+  options: {
+    semantic: {
+      inverted: false,
+    }
+  },
 };
 
 TextareaWidget.propTypes = {

@@ -50,7 +50,7 @@ function RangeWidget({
 
 RangeWidget.defaultProps = {
   options: {
-    semanticProps: {
+    semantic: {
       fluid: true,
     },
   },

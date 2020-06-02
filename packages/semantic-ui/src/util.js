@@ -3,9 +3,10 @@ import React from "react";
 /**
  * Extract props meant for semantic UI components from props that are
  * passed to Widgets, Templates and Fields.
- * @param formContext
- * @param {Object} uiSchema
- * @param {Object} options
+ * @param {Object} params
+ * @param {Object} params.formContext
+ * @param {Object} params.uiSchema
+ * @param {Object} params.options
  * @returns {any}
  */
 export function getSemanticProps({

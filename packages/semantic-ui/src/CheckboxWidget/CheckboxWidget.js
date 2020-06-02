@@ -22,13 +22,14 @@ function CheckboxWidget(props) {
   const _onChange = (event, data) => onChange && onChange(data.checked);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
+  const checked = value == 'true' || value == true;
   return (
     <Checkbox
       id={id}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       {...semanticProps}
-      checked={typeof value === "undefined" ? false : value}
+      checked={typeof value === "undefined" ? false : checked}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
@@ -39,7 +40,11 @@ function CheckboxWidget(props) {
 }
 
 CheckboxWidget.defaultProps = {
-  options: {},
+  options: {
+    semantic: {
+      inverted: false,
+    },
+  },
 };
 
 export default CheckboxWidget;

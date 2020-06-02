@@ -29,7 +29,6 @@ function CheckboxesWidget({
 }) {
   const { enumOptions, enumDisabled, inline } = options;
   const semanticProps = getSemanticProps({ formContext, options });
-
   const _onChange = option => ({ target: { checked } }) => {
     // eslint-disable-next-line no-shadow
     const all = enumOptions.map(({ value }) => value);
@@ -67,5 +66,13 @@ function CheckboxesWidget({
     </Form.Group>
   );
 }
+
+CheckboxesWidget.defaultProps = {
+  options: {
+    semantic: {
+      inverted: false,
+    },
+  },
+};
 
 export default CheckboxesWidget;

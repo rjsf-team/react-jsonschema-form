@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { Input } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
 function PasswordWidget({
@@ -28,7 +28,7 @@ function PasswordWidget({
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <Input
+    <Form.Input
       id={id}
       key={id}
       label={label || schema.title}
@@ -48,13 +48,9 @@ function PasswordWidget({
 
 PasswordWidget.defaultProps = {
   options: {
-    semanticProps: {
+    semantic: {
       inverted: false,
       fluid: true,
-    },
-    errorOptions: {
-      showErrors: false,
-      pointing: "above",
     },
   },
 };

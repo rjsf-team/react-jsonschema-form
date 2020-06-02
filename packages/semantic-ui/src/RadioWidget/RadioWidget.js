@@ -22,7 +22,7 @@ function RadioWidget({
   const { enumOptions, enumDisabled } = options;
   const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
-  const _onChange = ({ target: { value } }) =>
+  const _onChange = (event, { value }) =>
     onChange && onChange(schema.type === "boolean" ? value !== "false" : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
@@ -55,13 +55,9 @@ function RadioWidget({
 
 RadioWidget.defaultProps = {
   options: {
-    semanticProps: {
+    semantic: {
       inverted: false,
       fluid: true,
-    },
-    errorOptions: {
-      showErrors: false,
-      pointing: "above",
     },
   },
 };

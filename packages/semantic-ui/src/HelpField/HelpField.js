@@ -14,6 +14,7 @@ function HelpField({ className, helpText, inline, inlineStyle }) {
       <Popup
         className={className || "sui-help"}
         content={helpText}
+        position='left center'
         trigger={<Icon color="grey" name="help circle" style={inlineStyle} />}
       />
     );

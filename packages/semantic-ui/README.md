@@ -44,16 +44,17 @@
 
 ## Table of Contents
 
-- [About the Project](#about-the-project)
+- [Table of Contents](#table-of-contents)
+- [About The Project](#about-the-project)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-  - [optional semantic ui properties](#optional-semntic-ui-properties) 
-- [Road map](#roadmap)
+    - [Semantic Widget Optional Properties](#semantic-widget-optional-properties)
+    - [Custom Semantic Widget Properties](#custom-semantic-widget-properties)
+- [Roadmap](#roadmap)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 <!-- ABOUT THE PROJECT -->
@@ -75,7 +76,7 @@ Exports `semantic-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@semantic-ui-react >= 0.83.0` ([V0.83.0](https://github.com/Semantic-Org/Semantic-UI-React/releases/tag/v0.83.0))
+- `@semantic-ui-react >= 0.87.0` ([V0.87.0](https://github.com/Semantic-Org/Semantic-UI-React/releases/tag/v0.87.0))
 - `@semantic-ui-css >= 2.4.1` ([default theme for semantic-ui](https://github.com/Semantic-Org/Semantic-UI-CSS))
 - see [theming guide](https://react.semantic-ui.com/theming) if you wish to customize
 - `react-jsonschema-form >= 1.6.0` ([in 1.6.0, the `withTheme` HOC was added](https://github.com/mozilla-services/react-jsonschema-form/pull/1226))
@@ -109,30 +110,29 @@ import SemanticUIForm from 'rjsf-semantic-ui';
 
 ##Optional Semantic-UI Theme properties
 - To pass additional properties to widgets see [guide](https://react-jsonschema-form.readthedocs.io/en/latest/form-customization/#object-additional-properties).
- 
-#### Semantic Widget Optional Properties 
+
+#### Semantic Widget Optional Properties
  - [Semantic props for TextWidget](https://react.semantic-ui.com/elements/input/)
  - [Semantic props for CheckboxWidget](https://react.semantic-ui.com/modules/checkbox/)
  - [Semantic props for SelectWidget](https://react.semantic-ui.com/modules/dropdown/)
  - [Semantic props for RangeWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for RadioWidget](https://react.semantic-ui.com/addons/radio/)  
+ - [Semantic props for RadioWidget](https://react.semantic-ui.com/addons/radio/)
  - [Semantic props for PasswordWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for UpDownWidget](https://react.semantic-ui.com/elements/input/) 
+ - [Semantic props for UpDownWidget](https://react.semantic-ui.com/elements/input/)
  - [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
- 
+
 #### Custom Semantic Widget Properties
- - ``showErrors`` - hides errors or validation message below field.
 ```javascript
 const uiSchema = {
   "ui:options":  {
-    semanticProps: {
+    semantic: {
       fluid: true,
       inverted: false,
+      errorOptions: {
+        size: 'small',
+        pointing: 'above',
+      }
     },
-    errorOptions: {
-      showErrors: false,
-      pointing: 'above',
-    }
   }
 };
 ```
@@ -140,14 +140,14 @@ Below is the current default options for all widgets
 ```json5
 {
   "ui:options":  {
-   semanticProps: {
+   semantic: {
      fluid: true,
      inverted: false,
+     errorOptions: {
+      size: 'small',
+      pointing: 'above',
+    }
    },
-    errorOptions: {
-     showErrors: false,
-     pointing: 'above',
-   }
  }
 }
 ````

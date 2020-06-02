@@ -11,19 +11,22 @@ function ObjectFieldTemplate({
   uiSchema,
   idSchema,
 }) {
+  const fieldTitle = uiSchema["ui:title"] || title;
+  const fieldDescription = uiSchema["ui:description"] || description;
   return (
     <React.Fragment>
-      {(uiSchema["ui:title"] || title) && (
+      {(fieldTitle) && (
         <TitleField
           id={`${idSchema.$id}-title`}
-          title={title}
+          title={fieldTitle}
+          options={uiSchema["ui:options"]}
           required={required}
         />
       )}
-      {description && (
+      {(fieldDescription) && (
         <DescriptionField
           id={`${idSchema.$id}-description`}
-          description={description}
+          description={fieldDescription}
         />
       )}
       {properties.map(prop => prop.content)}

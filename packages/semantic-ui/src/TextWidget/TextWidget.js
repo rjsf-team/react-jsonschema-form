@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { Input } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
 function TextWidget({
@@ -10,6 +10,8 @@ function TextWidget({
   readonly,
   disabled,
   name,
+  label,
+  schema,
   value,
   onChange,
   onBlur,
@@ -26,9 +28,11 @@ function TextWidget({
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <Input
+    <Form.Input
       key={id}
       id={id}
+      type={schema.type}
+      label={schema.title || label}
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
@@ -44,8 +48,9 @@ function TextWidget({
 
 TextWidget.defaultProps = {
   options: {
-    semanticProps: {
+    semantic: {
       fluid: true,
+      inverted: false,
     },
   },
 };

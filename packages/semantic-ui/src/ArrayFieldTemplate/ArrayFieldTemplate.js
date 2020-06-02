@@ -7,19 +7,19 @@ import AddButton from "../AddButton";
 import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
 
 
-const ArrayFieldTitle = ({ TitleField, idSchema, title }) => {
+const ArrayFieldTitle = ({ TitleField, idSchema, uiSchema, title }) => {
   if (!title) {
-    return <div />;
+    return null;
   }
 
   const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} />;
+  return <TitleField id={id} title={title} options={uiSchema["ui:options"]} />;
 };
 
 function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   if (!description) {
     // See #312: Ensure compatibility with old versions of React.
-    return <div />;
+    return null;
   }
   const id = `${idSchema.$id}__description`;
   return <DescriptionField id={id} description={description} />;
@@ -132,6 +132,7 @@ function DefaultFixedArrayFieldTemplate({
         key={`array-field-title-${idSchema.$id}`}
         TitleField={TitleField}
         idSchema={idSchema}
+        uiSchema={uiSchema}
         title={fieldTitle}
         required={required}
       />
@@ -194,6 +195,7 @@ function DefaultNormalArrayFieldTemplate({
         key={`array-field-title-${idSchema.$id}`}
         TitleField={TitleField}
         idSchema={idSchema}
+        uiSchema={uiSchema}
         title={fieldTitle}
         required={required}
       />

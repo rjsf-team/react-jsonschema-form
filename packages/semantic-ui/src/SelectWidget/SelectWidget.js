@@ -4,6 +4,7 @@ import _ from "lodash";
 import { Form } from "semantic-ui-react";
 import { asNumber, guessType } from '@rjsf/core/lib/utils';
 import PropTypes from "prop-types";
+import { getSemanticProps } from '../util';
 
 const nums = new Set(["number", "integer"]);
 
@@ -38,7 +39,7 @@ const processValue = (schema, value) => {
   } else if (type === "array" && items && nums.has(items.type)) {
     return value.map(asNumber);
   } else if (type === "boolean") {
-    return value === "true";
+    return value === "true" || value === true;
   } else if (type === "number") {
     return asNumber(value);
   }
@@ -72,7 +73,8 @@ function SelectWidget({
   onBlur,
   onFocus,
 }) {
-  const { enumDisabled, enumOptions, semanticProps } = options;
+  const semanticProps = getSemanticProps(options);
+  const { enumDisabled, enumOptions } = options;
   const emptyValue = multiple ? [] : "";
   const dropdownOptions = createDefaultValueOptionsForDropDown(
     enumOptions,
@@ -98,7 +100,6 @@ function SelectWidget({
       value={typeof value === "undefined" ? emptyValue : value}
       disabled={disabled}
       placeholder={placeholder}
-      scrolling
       {...semanticProps}
       required={required}
       autoFocus={autofocus}
@@ -113,16 +114,12 @@ function SelectWidget({
 
 SelectWidget.defaultProps = {
   options: {
-    semanticProps: {
+    semantic: {
       inverted: "false",
       fluid: true,
       selection: true,
-      scrolling: true,
+      scrolling:true,
       upward: false,
-    },
-    errorOptions: {
-      showErrors: false,
-      pointing: "above",
     },
   },
 };

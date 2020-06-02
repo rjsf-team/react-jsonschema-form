@@ -19,7 +19,7 @@ function FieldTemplate({
   ...props
 }) {
   const semanticProps = getSemanticProps(props);
-  const { wrapLabel, wrapContent } = semanticProps;
+  const { wrapLabel, wrapContent, inlineHelp,errorOptions } = semanticProps;
 
   return (
     <Form.Field
@@ -28,11 +28,9 @@ function FieldTemplate({
       style={{ position: "relative" }}>
       {displayLabel && rawDescription && (
         <MaybeWrap wrap={wrapLabel} className="sui-field-label">
-          
           {rawDescription && (
             <DescriptionField
               description={rawDescription}
-              size={semanticProps.size}
             />
           )}
         </MaybeWrap>
@@ -42,9 +40,9 @@ function FieldTemplate({
         <HelpField
           helpText={rawHelp}
           id={id}
-          inline={semanticProps.inlineHelp}
+          inline={inlineHelp}
         />
-        <RawErrors errors={rawErrors} />
+        <RawErrors errors={rawErrors} options={errorOptions} />
       </MaybeWrap>
     </Form.Field>
   );

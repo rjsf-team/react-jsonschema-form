@@ -2,7 +2,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
-import RawErrors from "../RawErrors";
+import { getSemanticProps } from
+'../util';
 
 function UpDownWidget({
   id,
@@ -18,13 +19,9 @@ function UpDownWidget({
   onFocus,
   autofocus,
   rawErrors,
+  formContext,
 }) {
-  const { errorOptions, semanticProps } = options;
-  const { showErrors, pointing } = errorOptions;
-  const error =
-    rawErrors && rawErrors.length > 0
-      ? { content: rawErrors[0], pointing }
-      : false;
+  const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
   const _onBlur = () => onBlur && onBlur(id, value);
@@ -36,7 +33,6 @@ function UpDownWidget({
         key={id}
         autoFocus={autofocus}
         required={required}
-        error={error}
         type="number"
         label={label}
         disabled={disabled || readonly}
@@ -47,20 +43,15 @@ function UpDownWidget({
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
-      <RawErrors errors={rawErrors} displayError={showErrors} />
     </React.Fragment>
   );
 }
 
 UpDownWidget.defaultProps = {
   options: {
-    semanticProps: {
+    semantic: {
       inverted: false,
       fluid: true,
-    },
-    errorOptions: {
-      showErrors: false,
-      pointing: "above",
     },
   },
 };
