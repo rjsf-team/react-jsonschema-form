@@ -2,6 +2,7 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
+import TitleField from "../TitleField";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -26,8 +27,10 @@ function CheckboxesWidget({
   onBlur,
   onFocus,
   formContext,
+  schema,
 }) {
   const { enumOptions, enumDisabled, inline } = options;
+  const { title } = schema;
   const semanticProps = getSemanticProps({ formContext, options });
   const _onChange = option => ({ target: { checked } }) => {
     // eslint-disable-next-line no-shadow
@@ -43,27 +46,30 @@ function CheckboxesWidget({
   const _onFocus = () => onFocus && onFocus(id, value);
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
-    <Form.Group {...inlineOption}>
-      {enumOptions.map((option, index) => {
-        const checked = value.indexOf(option.value) !== -1;
-        const itemDisabled =
-          enumDisabled && enumDisabled.indexOf(option.value) !== -1;
-        return (
-          <Form.Checkbox
-            id={`${id}_${index}`}
-            key={`${id}_${index}`}
-            label={option.label}
-            {...semanticProps}
-            checked={checked}
-            disabled={disabled || itemDisabled || readonly}
-            autoFocus={autofocus && index === 0}
-            onChange={_onChange(option)}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
-          />
-        );
-      })}
-    </Form.Group>
+    <React.Fragment>
+      {title && <TitleField title={title} />}
+      <Form.Group {...inlineOption}>
+        {enumOptions.map((option, index) => {
+          const checked = value.indexOf(option.value) !== -1;
+          const itemDisabled =
+            enumDisabled && enumDisabled.indexOf(option.value) !== -1;
+          return (
+            <Form.Checkbox
+              id={`${id}_${index}`}
+              key={`${id}_${index}`}
+              label={option.label}
+              {...semanticProps}
+              checked={checked}
+              disabled={disabled || itemDisabled || readonly}
+              autoFocus={autofocus && index === 0}
+              onChange={_onChange(option)}
+              onBlur={_onBlur}
+              onFocus={_onFocus}
+            />
+          );
+        })}
+      </Form.Group>
+    </React.Fragment>
   );
 }
 
