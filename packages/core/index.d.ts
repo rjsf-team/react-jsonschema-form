@@ -161,6 +161,7 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
@@ -212,6 +213,7 @@ declare module '@rjsf/core' {
         idSchema: IdSchema;
         formData: T;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type AjvError = {
