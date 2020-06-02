@@ -351,6 +351,7 @@ function SchemaFieldRender(props) {
     fields,
     schema,
     uiSchema,
+    registry,
   };
 
   const _AnyOfField = registry.fields.AnyOfField;
