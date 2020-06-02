@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { Checkbox } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
 function CheckboxWidget(props) {
@@ -22,9 +22,9 @@ function CheckboxWidget(props) {
   const _onChange = (event, data) => onChange && onChange(data.checked);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const checked = value == 'true' || value == true;
+  const checked = value == "true" || value == true;
   return (
-    <Checkbox
+    <Form.Checkbox
       id={id}
       disabled={disabled || readonly}
       autoFocus={autofocus}

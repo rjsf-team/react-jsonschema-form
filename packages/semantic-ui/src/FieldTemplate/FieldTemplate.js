@@ -20,9 +20,6 @@ function FieldTemplate({
 }) {
   const semanticProps = getSemanticProps(props);
   const { wrapLabel, wrapContent, inlineHelp, errorOptions } = semanticProps;
-  // console.info('inlineHelp', inlineHelp);
-  // console.info('semanticProps', semanticProps);
-  // console.info('props', props);
   return (
     <Form.Field
       className={cleanClassNames([className, classNames], ["field"])}
