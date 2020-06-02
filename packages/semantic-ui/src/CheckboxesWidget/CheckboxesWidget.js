@@ -29,7 +29,6 @@ function CheckboxesWidget({
 }) {
   const { enumOptions, enumDisabled, inline } = options;
   const semanticProps = getSemanticProps({ formContext, options });
-  console.info("options for the semanticProps", options);
   const _onChange = option => ({ target: { checked } }) => {
     // eslint-disable-next-line no-shadow
     const all = enumOptions.map(({ value }) => value);
@@ -50,24 +49,17 @@ function CheckboxesWidget({
         const itemDisabled =
           enumDisabled && enumDisabled.indexOf(option.value) !== -1;
         return (
-          <Popup
-            className={"sui-help"}
-            content={"this is a test"}
-            position="left center"
-            trigger={
-              <Form.Checkbox
-                id={`${id}_${index}`}
-                key={`${id}_${index}`}
-                label={option.label}
-                {...semanticProps}
-                checked={checked}
-                disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
-                onChange={_onChange(option)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
-              />
-            }
+          <Form.Checkbox
+            id={`${id}_${index}`}
+            key={`${id}_${index}`}
+            label={option.label}
+            {...semanticProps}
+            checked={checked}
+            disabled={disabled || itemDisabled || readonly}
+            autoFocus={autofocus && index === 0}
+            onChange={_onChange(option)}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
           />
         );
       })}
