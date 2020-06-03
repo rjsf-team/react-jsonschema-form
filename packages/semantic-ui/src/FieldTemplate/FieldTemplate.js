@@ -19,7 +19,7 @@ function FieldTemplate({
   ...props
 }) {
   const semanticProps = getSemanticProps(props);
-  const { wrapLabel, wrapContent, inlineHelp, errorOptions } = semanticProps;
+  const { wrapLabel, wrapContent, errorOptions } = semanticProps;
   return (
     <Form.Group key={id} widths="equal" grouped>
       <MaybeWrap wrap={wrapContent} className="sui-field-content">
@@ -31,7 +31,7 @@ function FieldTemplate({
             )}
           </MaybeWrap>
         )}
-        <HelpField helpText={rawHelp} id={id} inline={inlineHelp} />
+        <HelpField helpText={rawHelp} id={id} />
         <RawErrors errors={rawErrors} options={errorOptions} />
       </MaybeWrap>
     </Form.Group>
