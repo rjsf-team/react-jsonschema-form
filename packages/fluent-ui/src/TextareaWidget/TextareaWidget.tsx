@@ -8,7 +8,7 @@ const TextareaWidget = (props: WidgetProps) => {
   const uiProps: any = props.options["props"] || {};
   let options = {
     ...props.options,
-      "ui:props": {
+    "props": {
       multiline: true,
       ...uiProps
     }
