@@ -1,14 +1,16 @@
-import React from 'react';
+import React from "react";
 
-import { AddButtonProps } from '@rjsf/core';
+import { AddButtonProps } from "@rjsf/core";
 
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import { IconButton, IIconProps } from "@fluentui/react";
+
+const addIcon: IIconProps = { iconName: "BoxAdditionSolid" };
 
 const AddButton: React.FC<AddButtonProps> = props => (
-  <Button {...props} color="secondary">
-    <AddIcon /> Add Item
-  </Button>
+  <IconButton
+    onClick={e => props.onClick(e as any)}
+    iconProps={addIcon}
+    color="secondary"></IconButton>
 );
 
 export default AddButton;
