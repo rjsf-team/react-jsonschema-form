@@ -90,22 +90,17 @@ exports[`array fields checkboxes 1`] = `
     className="MuiFormControl-root MuiFormControl-fullWidth"
   >
     <div
-      className="MuiFormControl-root MuiFormControl-fullWidth"
+      className="MuiFormControl-root MuiTextField-root"
     >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
-        data-shrink={true}
-        htmlFor="root"
-      />
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
         onClick={[Function]}
-        required={false}
       >
         <div
           aria-haspopup="listbox"
-          aria-labelledby=" "
+          aria-labelledby=" root"
           className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+          id="root"
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}
@@ -123,6 +118,7 @@ exports[`array fields checkboxes 1`] = `
         </div>
         <input
           autoFocus={false}
+          name="nodejs"
           onAnimationStart={[Function]}
           type="hidden"
           value=""
