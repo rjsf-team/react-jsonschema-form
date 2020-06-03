@@ -17,11 +17,11 @@ const UpDownWidget = ({
 WidgetProps) => {
   const _onChange = ({
     target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => onChange(value);
+  }: React.ChangeEvent<HTMLInputElement>) => onChange(Number(value));
 
-  const _onIncrement = (value: string) => onChange(value + 1);
+  const _onIncrement = (value: string) => onChange(Number(value) + 1);
 
-  const _onDecrement = (value: string) => onChange(+value - 1);
+  const _onDecrement = (value: string) => onChange(Number(value) - 1);
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
