@@ -1,6 +1,6 @@
 import React from "react";
 import { Theme as MuiTheme } from "@rjsf/material-ui";
-import { Theme as FluentUITheme } from "@rjsf/fluent-ui";
+import { Theme as FluentUITheme } from "@epicfaace/rjsf-fluent-ui";
 import Playground from "./app";
 import { render } from "react-dom";
 
