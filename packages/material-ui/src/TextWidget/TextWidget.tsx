@@ -22,6 +22,7 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
+  rawErrors = [],
   ...textFieldProps
 }: TextWidgetProps) => {
   const _onChange = ({
@@ -44,6 +45,7 @@ const TextWidget = ({
       name={name}
       type={type || (schema.type as string)}
       value={value || value === 0 ? value : ""}
+      error={rawErrors.length > 0 ? true : false}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
