@@ -54,6 +54,7 @@ const SelectWidget = ({
   onChange,
   onBlur,
   onFocus,
+  rawErrors = [],
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
@@ -80,6 +81,7 @@ const SelectWidget = ({
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
+      error={rawErrors.length > 0 ? true : false}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
