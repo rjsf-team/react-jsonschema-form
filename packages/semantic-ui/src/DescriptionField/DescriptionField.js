@@ -8,7 +8,7 @@ function checkDescRender({ description, children }) {
   console.info("children", children);
   console.info("query selector", props.children);
   // return dom update
-  return children;
+  return false;
 }
 
 function DescriptionField({ className, description, children }) {

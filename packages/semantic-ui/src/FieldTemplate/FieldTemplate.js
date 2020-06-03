@@ -21,21 +21,6 @@ function FieldTemplate({
   const semanticProps = getSemanticProps(props);
   const { wrapLabel, wrapContent, inlineHelp, errorOptions } = semanticProps;
   return (
-    // <Form.Group
-    //   className={cleanClassNames([className, classNames], ["field"])}
-    //   key={id}
-    //   style={{ position: "relative" }}>
-    //   {displayLabel && rawDescription && (
-    //     <MaybeWrap wrap={wrapLabel} className="sui-field-label">
-    //       {rawDescription && <DescriptionField description={rawDescription} />}
-    //     </MaybeWrap>
-    //   )}
-    //   <MaybeWrap wrap={wrapContent} className="sui-field-content">
-    //     {children}
-    //     <HelpField helpText={rawHelp} id={id} inline={inlineHelp} />
-    //     <RawErrors errors={rawErrors} options={errorOptions} />
-    //   </MaybeWrap>
-    // </Form.Group>
     <Form.Group key={id} widths="equal" grouped>
       {displayLabel && rawDescription && (
         <MaybeWrap wrap={wrapLabel} className="sui-field-label">
