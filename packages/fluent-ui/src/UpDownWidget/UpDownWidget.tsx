@@ -17,7 +17,12 @@ const UpDownWidget = ({
 WidgetProps) => {
   const _onChange = ({
     target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => onChange(value);
+  }: React.ChangeEvent<HTMLInputElement>) => onChange(Number(value));
+
+  const _onIncrement = (value: string) => onChange(Number(value) + 1);
+
+  const _onDecrement = (value: string) => onChange(Number(value) - 1);
+
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -30,7 +35,6 @@ WidgetProps) => {
     <>
       <Label>{label + requiredSymbol}</Label>
       <SpinButton
-        defaultValue="0"
         min={1}
         max={100}
         step={1}
@@ -41,6 +45,8 @@ WidgetProps) => {
         onBlur={_onBlur}
         onFocus={_onFocus}
         onChange={_onChange}
+        onIncrement={_onIncrement}
+        onDecrement={_onDecrement}
       />
     </>
   );
