@@ -1,6 +1,31 @@
 import React from "react";
-import { Checkbox } from "@fluentui/react";
+import { Checkbox, Label } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/core";
+import _pick from "lodash/pick";
+
+// Keys of ICheckboxProps from @fluentui/react
+export const allowedProps = [
+  "ariaDescribedBy",
+  "ariaLabel",
+  "ariaPositionInSet",
+  "ariaSetSize",
+  "boxSide",
+  "checked",
+  "checkmarkIconProps",
+  "className",
+  "componentRef",
+  "defaultChecked",
+  "defaultIndeterminate",
+  "disabled",
+  "indeterminate",
+  "inputProps",
+  "keytipProps",
+  "label",
+  "onChange",
+  "onRenderLabel",
+  "styles",
+  "theme"
+];
 
 const CheckboxWidget = (props: WidgetProps) => {
   const {
@@ -15,6 +40,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     onChange,
     onBlur,
     onFocus,
+    options,
   } = props;
 
   const _onChange = React.useCallback(({}, checked?: boolean): void => {
@@ -28,9 +54,10 @@ const CheckboxWidget = (props: WidgetProps) => {
     target: { value },
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
+  const uiProps = _pick(options.props || {}, allowedProps);
+
   return (
     <>
-      <>
         <Checkbox
           id={id}
           label={label || schema.title}
@@ -40,8 +67,8 @@ const CheckboxWidget = (props: WidgetProps) => {
           onFocus={_onFocus}
           checked={typeof value === "undefined" ? false : value}
           onChange={_onChange}
+          {...uiProps}
         />
-      </>
     </>
   );
 };

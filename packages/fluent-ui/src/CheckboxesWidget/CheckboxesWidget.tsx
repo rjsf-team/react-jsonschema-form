@@ -1,8 +1,8 @@
 import React from "react";
-import { Label } from "@fluentui/react";
-import { Checkbox } from "@fluentui/react";
-
+import { Checkbox, Label } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/core";
+import { allowedProps } from "../CheckboxWidget";
+import _pick from "lodash/pick";
 
 const styles_red = {
       // TODO: get this color from theme.
@@ -33,7 +33,7 @@ const CheckboxesWidget = ({
   value,
   autofocus,
   readonly,
-  // required,
+  required,
   onChange,
   onBlur,
   onFocus,
@@ -62,8 +62,14 @@ const CheckboxesWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
+  const uiProps = _pick(options.props || {}, allowedProps);
+
   return (
     <>
+      <Label>
+        {label || schema.title}
+        {required && <span style={{color: "rgb(164, 38, 44)", fontSize: "12px", fontWeight: "normal"}}>*</span>}
+      </Label>
       {(enumOptions as any).map((option: any, index: number) => {
         const checked = value.indexOf(option.value) !== -1;
         const itemDisabled =
@@ -79,6 +85,7 @@ const CheckboxesWidget = ({
             onBlur={_onBlur}
             onFocus={_onFocus}
             key={index}
+            {...uiProps}
           />
         );
       })}

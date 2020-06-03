@@ -73,7 +73,6 @@ WidgetProps) => {
 
   const requiredSymbol = required ? "*" : "";
   
-  
   const uiProps = _pick(options.props || {}, allowedProps);
 
   return (

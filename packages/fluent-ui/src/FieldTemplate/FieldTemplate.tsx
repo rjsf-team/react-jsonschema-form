@@ -27,11 +27,10 @@ const FieldTemplate = ({
   return (
     <div className={classNames} style={{marginBottom: 15}}>
       {children}
-      {displayLabel && <Label>
+      {/* {displayLabel && <Label>
         {label}
-        {/* TODO: get this color from theme */}
         {required && <span style={{color: "rgb(164, 38, 44)", fontSize: "12px", fontWeight: "normal"}}>*</span>}
-      </Label>}
+      </Label>} */}
       {rawDescription && <Text>{rawDescription}</Text>}
       {rawErrors.length > 0 && <List items={rawErrors}>})}</List>}
       {rawHelp && <Text id={id}>{rawHelp}</Text>}
