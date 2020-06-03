@@ -22,17 +22,15 @@ function FieldTemplate({
   const { wrapLabel, wrapContent, inlineHelp, errorOptions } = semanticProps;
   return (
     <Form.Group key={id} widths="equal" grouped>
-      {displayLabel && rawDescription && (
-        <MaybeWrap wrap={wrapLabel} className="sui-field-label">
-          {rawDescription && (
-            <DescriptionField description={rawDescription}>
-              {children}
-            </DescriptionField>
-          )}
-        </MaybeWrap>
-      )}
       <MaybeWrap wrap={wrapContent} className="sui-field-content">
         {children}
+        {displayLabel && rawDescription && (
+          <MaybeWrap wrap={wrapLabel} className="sui-field-label">
+            {rawDescription && (
+              <DescriptionField description={rawDescription} />
+            )}
+          </MaybeWrap>
+        )}
         <HelpField helpText={rawHelp} id={id} inline={inlineHelp} />
         <RawErrors errors={rawErrors} options={errorOptions} />
       </MaybeWrap>

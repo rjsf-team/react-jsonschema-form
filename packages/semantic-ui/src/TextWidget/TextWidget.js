@@ -26,14 +26,13 @@ function TextWidget({
     onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-
   return (
     <Form.Input
       key={id}
       id={id}
       type={schema.type}
-      required={required}
       label={schema.title || label}
+      required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
       name={name}

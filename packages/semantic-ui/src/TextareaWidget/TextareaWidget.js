@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { TextArea } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
 function TextareaWidget({
@@ -29,7 +29,7 @@ function TextareaWidget({
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <TextArea
+    <Form.TextArea
       id={id}
       key={id}
       label={schema.title || label}
@@ -52,7 +52,7 @@ TextareaWidget.defaultProps = {
   options: {
     semantic: {
       inverted: false,
-    }
+    },
   },
 };
 
