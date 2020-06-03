@@ -12,10 +12,10 @@ const styles = {
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <>
-    <Label styles={styles}>Errors</Label>
-    {errors.map(error => {
+    {errors.map((error, i) => {
       return (
         <MessageBar
+          key={i}
           messageBarType={MessageBarType.error}
           isMultiline={false}
           dismissButtonAriaLabel="Close">

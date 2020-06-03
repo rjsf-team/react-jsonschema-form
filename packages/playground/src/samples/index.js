@@ -27,6 +27,7 @@ import nullField from "./null";
 import errorSchema from "./errorSchema";
 import defaults from "./defaults";
 import fluentUI from "./fluent-ui";
+import fluentUI2 from "./fluent-ui-2";
 
 export const samples = {
   Simple: simple,
@@ -58,4 +59,5 @@ export const samples = {
   ErrorSchema: errorSchema,
   Defaults: defaults,
   "Fluent UI demos": fluentUI,
+  "Fluent UI demos 2": fluentUI2,
 };

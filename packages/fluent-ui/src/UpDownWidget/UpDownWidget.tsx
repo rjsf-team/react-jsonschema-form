@@ -2,6 +2,47 @@ import React from "react";
 import { Label } from "@fluentui/react";
 import { SpinButton } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/core";
+import _pick from "lodash/pick";
+
+// Keys of ISpinButtonProps from @fluentui/react
+const allowedProps = [
+  "ariaDescribedBy",
+  "ariaLabel",
+  "ariaPositionInSet",
+  "ariaSetSize",
+  "ariaValueNow",
+  "ariaValueText",
+  "className",
+  "componentRef",
+  "decrementButtonAriaLabel",
+  "decrementButtonIcon",
+  "defaultValue",
+  "disabled",
+  "downArrowButtonStyles",
+  "getClassNames",
+  "iconButtonProps",
+  "iconProps",
+  "incrementButtonAriaLabel",
+  "incrementButtonIcon",
+  "inputProps",
+  "keytipProps",
+  "label",
+  "labelPosition",
+  "max",
+  "min",
+  "onBlur",
+  "onDecrement",
+  "onFocus",
+  "onIncrement",
+  "onValidate",
+  "precision",
+  "step",
+  "styles",
+  "theme",
+  "title",
+  "upArrowButtonStyles",
+  "value"
+];
 
 const UpDownWidget = ({
   id,
@@ -13,6 +54,7 @@ const UpDownWidget = ({
   onChange,
   onBlur,
   onFocus,
+  options,
 }: // autofocus,
 WidgetProps) => {
   const _onChange = ({
@@ -30,6 +72,9 @@ WidgetProps) => {
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const requiredSymbol = required ? "*" : "";
+  
+  
+  const uiProps = _pick(options.props || {}, allowedProps);
 
   return (
     <>
@@ -47,6 +92,7 @@ WidgetProps) => {
         onChange={_onChange}
         onIncrement={_onIncrement}
         onDecrement={_onDecrement}
+        {...uiProps}
       />
     </>
   );

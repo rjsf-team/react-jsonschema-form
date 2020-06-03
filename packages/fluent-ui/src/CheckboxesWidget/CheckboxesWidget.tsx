@@ -4,21 +4,12 @@ import { Checkbox } from "@fluentui/react";
 
 import { WidgetProps } from "@rjsf/core";
 
-const styles = {
-  root: [
-    {
-      fontSize: 24,
-    },
-  ],
-};
-
 const styles_red = {
-  root: [
-    {
-      color: "#FF0000",
-    },
-  ],
-};
+      // TODO: get this color from theme.
+      color: "rgb(164, 38, 44)",
+      fontSize: 12,
+      fontWeight: "normal" as any
+    };
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -73,7 +64,6 @@ const CheckboxesWidget = ({
 
   return (
     <>
-      <Label styles={styles}>{label || schema.title}</Label>
       {(enumOptions as any).map((option: any, index: number) => {
         const checked = value.indexOf(option.value) !== -1;
         const itemDisabled =
@@ -92,7 +82,7 @@ const CheckboxesWidget = ({
           />
         );
       })}
-      <Label styles={styles_red}>{(rawErrors || []).join("\n")}</Label>
+      <span style={styles_red}>{(rawErrors || []).join("\n")}</span>
     </>
   );
 };

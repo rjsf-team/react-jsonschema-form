@@ -10,6 +10,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     disabled,
     readonly,
     label,
+    schema,
     autofocus,
     onChange,
     onBlur,
@@ -29,10 +30,10 @@ const CheckboxWidget = (props: WidgetProps) => {
 
   return (
     <>
-      <div className="col-sm-6">
+      <>
         <Checkbox
           id={id}
-          label={label}
+          label={label || schema.title}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onBlur={_onBlur}
@@ -40,7 +41,7 @@ const CheckboxWidget = (props: WidgetProps) => {
           checked={typeof value === "undefined" ? false : value}
           onChange={_onChange}
         />
-      </div>
+      </>
     </>
   );
 };
