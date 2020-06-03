@@ -8,7 +8,8 @@ const styles_red = {
       // TODO: get this color from theme.
       color: "rgb(164, 38, 44)",
       fontSize: 12,
-      fontWeight: "normal" as any
+      fontWeight: "normal" as any,
+      fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`
     };
 
 const selectValue = (value: any, selected: any, all: any) => {
@@ -63,12 +64,12 @@ const CheckboxesWidget = ({
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   const uiProps = _pick(options.props || {}, allowedProps);
-  
+
   return (
     <>
       <Label>
         {label || schema.title}
-        {required && <span style={{color: "rgb(164, 38, 44)", fontSize: "12px", fontWeight: "normal"}}>*</span>}
+        {required && <span style={styles_red}>&nbsp;*</span>}
       </Label>
       {(enumOptions as any).map((option: any, index: number) => {
         const checked = value.indexOf(option.value) !== -1;

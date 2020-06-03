@@ -12,12 +12,12 @@ module.exports = {
         minimum: 0,
         maximum: 100,
       },
-      amount: {
-        type: "number",
-        minimum: 5,
-        maximum: 500,
-        multipleOf: 0.1,
-      },
+      // amount: {
+      //   type: "number",
+      //   minimum: 5,
+      //   maximum: 500,
+      //   multipleOf: 0.1,
+      // },
       agree: {
         type: "boolean",
         title: "I agree to the terms and conditions.",
