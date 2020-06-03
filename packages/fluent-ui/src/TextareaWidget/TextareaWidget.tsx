@@ -2,7 +2,7 @@ import React from "react";
 
 import { WidgetProps } from "@rjsf/core";
 
-import TextWidget from 'TextWidget';
+import TextWidget from '../TextWidget';
 
 const TextareaWidget = (props: WidgetProps) => {
   const uiProps: any = props.options["props"] || {};

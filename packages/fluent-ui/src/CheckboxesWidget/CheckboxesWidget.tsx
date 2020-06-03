@@ -63,7 +63,7 @@ const CheckboxesWidget = ({
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   const uiProps = _pick(options.props || {}, allowedProps);
-
+  
   return (
     <>
       <Label>
