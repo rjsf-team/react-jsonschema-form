@@ -4,23 +4,25 @@ import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
-function TextWidget({
-  id,
-  required,
-  readonly,
-  disabled,
-  name,
-  label,
-  schema,
-  value,
-  onChange,
-  onBlur,
-  onFocus,
-  autofocus,
-  options,
-  formContext,
-}) {
+function TextWidget(props) {
+  const {
+    id,
+    required,
+    readonly,
+    disabled,
+    name,
+    label,
+    schema,
+    value,
+    onChange,
+    onBlur,
+    onFocus,
+    autofocus,
+    options,
+    formContext,
+  } = props;
   const semanticProps = getSemanticProps({ formContext, options });
+  console.info("props - text widget", props);
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange(value === "" ? options.emptyValue : value);
@@ -28,21 +30,26 @@ function TextWidget({
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <Form.Input
-      key={id}
-      id={id}
-      type={schema.type}
-      label={schema.title || label}
-      required={required}
-      autoFocus={autofocus}
-      disabled={disabled || readonly}
-      name={name}
-      {...semanticProps}
-      value={value || ""}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-    />
+    <React.Fragment>
+      <Form.Field>
+        <label required={required}>{schema.title || label}</label>
+        <Form.Input
+          key={id}
+          id={id}
+          type={schema.type}
+          required={required}
+          label={schema.title || label}
+          autoFocus={autofocus}
+          disabled={disabled || readonly}
+          name={name}
+          {...semanticProps}
+          value={value || ""}
+          onChange={_onChange}
+          onBlur={_onBlur}
+          onFocus={_onFocus}
+        />
+      </Form.Field>
+    </React.Fragment>
   );
 }
 

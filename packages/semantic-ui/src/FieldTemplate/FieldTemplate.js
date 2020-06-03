@@ -4,7 +4,7 @@ import { Form } from "semantic-ui-react";
 import DescriptionField from "../DescriptionField";
 import HelpField from "../HelpField";
 import RawErrors from "../RawErrors";
-import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
+import { getSemanticProps, MaybeWrap } from "../util";
 
 function FieldTemplate({
   id,
@@ -21,13 +21,29 @@ function FieldTemplate({
   const semanticProps = getSemanticProps(props);
   const { wrapLabel, wrapContent, inlineHelp, errorOptions } = semanticProps;
   return (
-    <Form.Field
-      className={cleanClassNames([className, classNames], ["field"])}
-      key={id}
-      style={{ position: "relative" }}>
+    // <Form.Group
+    //   className={cleanClassNames([className, classNames], ["field"])}
+    //   key={id}
+    //   style={{ position: "relative" }}>
+    //   {displayLabel && rawDescription && (
+    //     <MaybeWrap wrap={wrapLabel} className="sui-field-label">
+    //       {rawDescription && <DescriptionField description={rawDescription} />}
+    //     </MaybeWrap>
+    //   )}
+    //   <MaybeWrap wrap={wrapContent} className="sui-field-content">
+    //     {children}
+    //     <HelpField helpText={rawHelp} id={id} inline={inlineHelp} />
+    //     <RawErrors errors={rawErrors} options={errorOptions} />
+    //   </MaybeWrap>
+    // </Form.Group>
+    <Form.Group key={id} widths="equal" grouped>
       {displayLabel && rawDescription && (
         <MaybeWrap wrap={wrapLabel} className="sui-field-label">
-          {rawDescription && <DescriptionField description={rawDescription} />}
+          {rawDescription && (
+            <DescriptionField description={rawDescription}>
+              {children}
+            </DescriptionField>
+          )}
         </MaybeWrap>
       )}
       <MaybeWrap wrap={wrapContent} className="sui-field-content">
@@ -35,7 +51,7 @@ function FieldTemplate({
         <HelpField helpText={rawHelp} id={id} inline={inlineHelp} />
         <RawErrors errors={rawErrors} options={errorOptions} />
       </MaybeWrap>
-    </Form.Field>
+    </Form.Group>
   );
 }
 
