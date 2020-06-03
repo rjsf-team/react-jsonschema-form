@@ -65,9 +65,24 @@ WidgetProps) => {
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(Number(value));
 
-  const _onIncrement = (value: string) => onChange(Number(value) + 1);
+  let { min, max, step } = rangeSpec(schema);
+  if (min === undefined) {
+    min = -1 * Infinity;
+  }
+  if (max === undefined) {
+    max = Infinity;
+  }
+  if (step === undefined) {
+    step = 1;
+  }
 
-  const _onDecrement = (value: string) => onChange(Number(value) - 1);
+  const _onIncrement = (value: string) => {
+    if (Number(value) + step! <= max!) onChange(Number(value) + step!);
+  }
+
+  const _onDecrement = (value: string) => {
+    if (Number(value) - step! >= min!) onChange(Number(value) - step!);
+  }
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
@@ -78,10 +93,6 @@ WidgetProps) => {
   const requiredSymbol = required ? "*" : "";
   
   const uiProps = _pick(options.props || {}, allowedProps);
-
-  const { min, max, step } = rangeSpec(schema);
-
-  console.error(min, max, step);
 
   return (
     <>
@@ -94,7 +105,7 @@ WidgetProps) => {
         incrementButtonAriaLabel={"Increase value by 1"}
         decrementButtonAriaLabel={"Decrease value by 1"}
         disabled={disabled || readonly}
-        value={value ? value : ""}
+        value={value || (value === 0) ? value : ""}
         onBlur={_onBlur}
         onFocus={_onFocus}
         onChange={_onChange}
