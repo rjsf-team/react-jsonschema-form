@@ -14,6 +14,55 @@ exports[`single fields format color 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
+        formContext={Object {}}
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "color",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -25,11 +74,11 @@ exports[`single fields format color 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            name="nodejs"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
             type="color"
             value=""
@@ -63,6 +112,55 @@ exports[`single fields format date 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
+        formContext={Object {}}
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "date",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -74,11 +172,11 @@ exports[`single fields format date 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            name="nodejs"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
             type="date"
             value=""
@@ -112,6 +210,55 @@ exports[`single fields format datetime 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
+        formContext={Object {}}
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "datetime",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -123,11 +270,11 @@ exports[`single fields format datetime 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            name="nodejs"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
             type="datetime-local"
             value=""
@@ -181,6 +328,54 @@ exports[`single fields number field 0 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
+        formContext={Object {}}
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "type": "number",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -230,6 +425,55 @@ exports[`single fields number field 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
+        formContext={Object {}}
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "email",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -241,11 +485,11 @@ exports[`single fields number field 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            name="nodejs"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
             type="number"
             value=""
@@ -312,6 +556,55 @@ exports[`single fields string field format email 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
+        formContext={Object {}}
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "uri",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -323,11 +616,11 @@ exports[`single fields string field format email 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            name="nodejs"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
             type="email"
             value=""
@@ -361,6 +654,54 @@ exports[`single fields string field format uri 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
+        formContext={Object {}}
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -372,11 +713,11 @@ exports[`single fields string field format uri 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            name="nodejs"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
             type="url"
             value=""
@@ -421,11 +762,11 @@ exports[`single fields string field regular 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            name="nodejs"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
             type="string"
             value=""

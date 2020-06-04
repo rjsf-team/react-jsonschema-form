@@ -1,8 +1,7 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/core";
-import TextWidget from "../TextWidget";
+import TextWidget, { TextWidgetProps } from "../TextWidget";
 
-const DateTimeWidget = (props: WidgetProps) => {
+const DateTimeWidget = (props: TextWidgetProps) => {
   return (
     <TextWidget
       type="datetime-local"

@@ -7,7 +7,7 @@ import TextField, {
 
 import { WidgetProps } from "@rjsf/core";
 
-type TextWidgetProps = WidgetProps & TextFieldProps;
+export type TextWidgetProps = WidgetProps & TextFieldProps;
 
 const TextWidget = ({
   id,

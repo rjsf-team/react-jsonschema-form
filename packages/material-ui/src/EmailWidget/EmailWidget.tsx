@@ -1,8 +1,7 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/core";
-import TextWidget from "../TextWidget";
+import TextWidget, { TextWidgetProps } from "../TextWidget";
 
-const EmailWidget = (props: WidgetProps) => {
+const EmailWidget = (props: TextWidgetProps) => {
   return <TextWidget type="email" {...props} />;
 };
 
