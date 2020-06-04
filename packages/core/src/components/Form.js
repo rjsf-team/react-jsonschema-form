@@ -335,7 +335,7 @@ export default class Form extends Component {
         const firstErrorElement = this.getFirstErrorField(
           schemaValidation.errors[0]
         );
-        firstErrorElement.focus(); // Focus on first error field
+        firstErrorElement && firstErrorElement.focus(); // Focus on first error field
 
         if (this.props.extraErrors) {
           errorSchema = mergeObjects(
