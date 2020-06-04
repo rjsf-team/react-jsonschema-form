@@ -15,7 +15,6 @@ exports[`array fields array 1`] = `
       <div
         className="MuiBox-root MuiBox-root-33"
       >
-        <div />
         <div
           className="MuiGrid-root MuiGrid-container"
         >
@@ -168,7 +167,6 @@ exports[`array fields fixed array 1`] = `
       <div
         className="MuiBox-root MuiBox-root-178"
       >
-        <div />
         <div
           className="MuiGrid-root MuiGrid-container"
         >

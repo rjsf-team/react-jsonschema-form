@@ -255,17 +255,46 @@ class Selector extends Component {
 }
 
 function ThemeSelector({ theme, themes, select }) {
-  const themeSchema = {
+  const schema = {
     type: "string",
     enum: Object.keys(themes),
+  };
+  const uiSchema = {
+    "ui:placeholder": "Select theme",
   };
   return (
     <Form
       className="form_rjsf_themeSelector"
       idPrefix="rjsf_themeSelector"
-      schema={themeSchema}
+      schema={schema}
+      uiSchema={uiSchema}
       formData={theme}
-      onChange={({ formData }) => select(formData, themes[formData])}>
+      onChange={({ formData }) =>
+        formData && select(formData, themes[formData])
+      }>
+      <div />
+    </Form>
+  );
+}
+
+function SubthemeSelector({ subtheme, subthemes, select }) {
+  const schema = {
+    type: "string",
+    enum: Object.keys(subthemes),
+  };
+  const uiSchema = {
+    "ui:placeholder": "Select subtheme",
+  };
+  return (
+    <Form
+      className="form_rjsf_subthemeSelector"
+      idPrefix="rjsf_subthemeSelector"
+      schema={schema}
+      uiSchema={uiSchema}
+      formData={subtheme}
+      onChange={({ formData }) =>
+        formData && select(formData, subthemes[formData])
+      }>
       <div />
     </Form>
   );
@@ -310,6 +339,9 @@ class CopyLink extends Component {
 class Playground extends Component {
   constructor(props) {
     super(props);
+
+    // set default theme
+    const theme = "default";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.state = {
@@ -318,7 +350,8 @@ class Playground extends Component {
       uiSchema,
       formData,
       validate,
-      theme: "default",
+      theme,
+      subtheme: null,
       liveSettings: {
         validate: true,
         disable: false,
@@ -326,11 +359,13 @@ class Playground extends Component {
         liveOmit: false,
       },
       shareURL: null,
-      themeObj: {},
+      FormComponent: withTheme({}),
     };
   }
 
   componentDidMount() {
+    const { themes } = this.props;
+    const { theme } = this.state;
     const hash = document.location.hash.match(/#(.*)/);
     if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
       try {
@@ -339,7 +374,10 @@ class Playground extends Component {
         alert("Unable to load form setup data.");
       }
     } else {
-      this.load(samples.Simple);
+      // initialize theme
+      this.onThemeSelected(theme, themes[theme]);
+
+      this.setState({ form: true });
     }
   }
 
@@ -380,12 +418,23 @@ class Playground extends Component {
   onExtraErrorsEdited = extraErrors =>
     this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (theme, { stylesheet, theme: themeObj, editor }) => {
+  onThemeSelected = (
+    theme,
+    { subthemes, stylesheet, theme: themeObj } = {}
+  ) => {
     this.setState({
       theme,
-      themeObj,
+      subthemes,
+      subtheme: null,
+      FormComponent: withTheme(themeObj),
       stylesheet,
-      editor: editor ? editor : "default",
+    });
+  };
+
+  onSubthemeSelected = (subtheme, { stylesheet }) => {
+    this.setState({
+      subtheme,
+      stylesheet,
     });
   };
 
@@ -432,15 +481,14 @@ class Playground extends Component {
       liveSettings,
       validate,
       theme,
-      themeObj,
+      subtheme,
+      FormComponent,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
 
     const { themes } = this.props;
-
-    const FormComponent = withTheme(themeObj);
 
     let templateProps = {};
     if (ArrayFieldTemplate) {
@@ -452,6 +500,7 @@ class Playground extends Component {
     if (extraErrors) {
       templateProps.extraErrors = extraErrors;
     }
+
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -475,8 +524,13 @@ class Playground extends Component {
                 theme={theme}
                 select={this.onThemeSelected}
               />
-              <br />
-              <br />
+              {themes[theme].subthemes && (
+                <SubthemeSelector
+                  subthemes={themes[theme].subthemes}
+                  subtheme={subtheme}
+                  select={this.onSubthemeSelected}
+                />
+              )}
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
           </div>
