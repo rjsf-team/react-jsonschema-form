@@ -8,7 +8,7 @@ The value of this prop will be passed to the `accept-charset` [HTML attribute on
 
 The value of this prop will be passed to the `action` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-action). 
 
-N.B.: This just renders the `action` attribute in the HTML markup, there is no real network request being sent on submit. Instead react-jsonschema-form catches the submit event with `event.preventDefault()`and then calls the [`onSubmit`](#onSubmit) function where you could send a request programmatically with `fetch` or similar.
+Note that this just renders the `action` attribute in the HTML markup. There is no real network request being sent to this `action` on submit. Instead react-jsonschema-form catches the submit event with `event.preventDefault()`and then calls the [`onSubmit`](#onSubmit) function where you could send a request programmatically with `fetch` or similar.
 
 ## additionalMetaSchemas
 
