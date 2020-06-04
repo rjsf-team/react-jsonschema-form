@@ -57,7 +57,7 @@ render((
 
 ### Custom labels for `enum` fields
 
-This library supports a custom `enumNames` property for `enum` fields, which however is not JSON-Schema compliant (see below for a compliant approach). The `enumNames` property allows defining custom labels for each option of an `enum`:
+This library supports a custom [`enumNames`](https://github.com/rjsf-team/react-jsonschema-form/issues/57) property for `enum` fields, which, however is not JSON-Schema compliant (see below for a compliant approach). The `enumNames` property allows defining custom labels for each option of an `enum`:
 
 ```jsx
 const schema = {
