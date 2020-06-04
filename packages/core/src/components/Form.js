@@ -391,11 +391,11 @@ export default class Form extends Component {
     const firstErrorField = error?.property?.replace(".", "");
     let { idPrefix } = this.props;
     if (idPrefix === undefined) {
-      idPrefix = "root_";
+      idPrefix = "root";
     }
 
     const firstErrorElement = this.formElement.elements[
-      `${idPrefix}${firstErrorField}`
+      `${idPrefix}_${firstErrorField}`
     ];
     return firstErrorElement;
   };
