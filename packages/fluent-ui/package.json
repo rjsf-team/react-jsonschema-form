@@ -1,6 +1,6 @@
 {
   "name": "@epicfaace/rjsf-fluent-ui",
-  "version": "2.0.0",
+  "version": "2.0.0-alpha.1",
   "main": "dist/index.js",
   "module": "dist/rjsf-fluent-ui.esm.js",
   "typings": "dist/index.d.ts",
