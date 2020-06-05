@@ -1,20 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import { utils } from '@rjsf/core';
+import { utils } from "@rjsf/core";
 
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 
-import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
+import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
 
-import AddButton from '../AddButton/AddButton';
-import IconButton from '../IconButton/IconButton';
+import AddButton from "../AddButton/AddButton";
+import IconButton from "../IconButton/IconButton";
 
-const {
-  isMultiSelect,
-  getDefaultRegistry,
-} = utils;
+const { isMultiSelect, getDefaultRegistry } = utils;
 
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { schema, registry = getDefaultRegistry() } = props;
@@ -73,7 +70,7 @@ const DefaultArrayItem = (props: any) => {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   };
   return (
     <Grid container={true} key={props.index} alignItems="center">
@@ -91,8 +88,6 @@ const DefaultArrayItem = (props: any) => {
             <IconButton
               icon="arrow-up"
               className="array-item-move-up"
-              tabIndex={-1}
-              style={btnStyle as any}
               disabled={props.disabled || props.readonly || !props.hasMoveUp}
               onClick={props.onReorderClick(props.index, props.index - 1)}
             />
@@ -101,8 +96,7 @@ const DefaultArrayItem = (props: any) => {
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
               icon="arrow-down"
-              tabIndex={-1}
-              style={btnStyle as any}
+              className="array-item-move-down"
               disabled={props.disabled || props.readonly || !props.hasMoveDown}
               onClick={props.onReorderClick(props.index, props.index + 1)}
             />
@@ -111,8 +105,7 @@ const DefaultArrayItem = (props: any) => {
           {props.hasRemove && (
             <IconButton
               icon="remove"
-              tabIndex={-1}
-              style={btnStyle as any}
+              className="array-item-remove"
               disabled={props.disabled || props.readonly}
               onClick={props.onDropIndexClick(props.index)}
             />
@@ -130,23 +123,21 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
         idSchema={props.idSchema}
-        title={props.uiSchema['ui:title'] || props.title}
+        title={props.uiSchema["ui:title"] || props.title}
         required={props.required}
       />
 
-      {(props.uiSchema['ui:description'] || props.schema.description) && (
+      {(props.uiSchema["ui:description"] || props.schema.description) && (
         <div
           className="field-description"
-          key={`field-description-${props.idSchema.$id}`}
-        >
-          {props.uiSchema['ui:description'] || props.schema.description}
+          key={`field-description-${props.idSchema.$id}`}>
+          {props.uiSchema["ui:description"] || props.schema.description}
         </div>
       )}
 
       <div
         className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}
-      >
+        key={`array-item-list-${props.idSchema.$id}`}>
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 
@@ -169,17 +160,17 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           key={`array-field-title-${props.idSchema.$id}`}
           TitleField={props.TitleField}
           idSchema={props.idSchema}
-          title={props.uiSchema['ui:title'] || props.title}
+          title={props.uiSchema["ui:title"] || props.title}
           required={props.required}
         />
 
-        {(props.uiSchema['ui:description'] || props.schema.description) && (
+        {(props.uiSchema["ui:description"] || props.schema.description) && (
           <ArrayFieldDescription
             key={`array-field-description-${props.idSchema.$id}`}
             DescriptionField={props.DescriptionField}
             idSchema={props.idSchema}
             description={
-              props.uiSchema['ui:description'] || props.schema.description
+              props.uiSchema["ui:description"] || props.schema.description
             }
           />
         )}

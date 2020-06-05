@@ -1,30 +1,29 @@
-import React from 'react';
+import React from "react";
 
-import Button from '@material-ui/core/Button';
-import Add from '@material-ui/icons/Add';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Remove from '@material-ui/icons/Remove';
-import { IconButtonProps as MuiIconButtonProps } from '@material-ui/core/IconButton';
+import { IconButton as IconButton_, IIconProps } from "@fluentui/react";
+import { AddButtonProps as FuiIconButtonProps } from "@rjsf/core";
+
+const RemoveIcon: IIconProps = { iconName: "Remove" };
+const UpIcon: IIconProps = { iconName: "Up" };
+const DownIcon: IIconProps = { iconName: "Down" };
 
 const mappings: any = {
-  remove: <Remove />,
-  plus: <Add />,
-  'arrow-up': <ArrowUpward />,
-  'arrow-down': <ArrowDownward />,
+  remove: RemoveIcon,
+  "arrow-up": UpIcon,
+  "arrow-down": DownIcon,
 };
 
-type IconButtonProps = MuiIconButtonProps & {
+type AddButtonProps = FuiIconButtonProps & {
   icon: string;
 };
 
-const IconButton = (props: IconButtonProps) => {
-  const { icon, className, ...otherProps } = props;
-  return (
-    <Button {...otherProps} size="small">
-      {mappings[icon]}
-    </Button>
-  );
-};
+const IconButton: React.FC<AddButtonProps> = props => (
+  <>
+    <IconButton_
+      onClick={e => props.onClick(e as any)}
+      iconProps={mappings[props.icon]}
+      color="secondary"></IconButton_>
+  </>
+);
 
 export default IconButton;
