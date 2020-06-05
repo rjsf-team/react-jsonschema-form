@@ -67,6 +67,7 @@
   },
   "license": "Apache 2",
   "dependencies": {
-    "@fluentui/react": "^7.114.2"
+    "@fluentui/react": "^7.114.2",
+    "lodash": "^4.17.15"
   }
 }
