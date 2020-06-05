@@ -4,7 +4,7 @@ export default () => (
   <div>
     <br />
     <div className="ms-Grid-col ms-sm12">
-      <PrimaryButton text="Submit" />
+      <PrimaryButton text="Submit" type="submit" />
     </div>
   </div>
 );
