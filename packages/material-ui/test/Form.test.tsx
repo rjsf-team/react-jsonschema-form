@@ -47,11 +47,21 @@ describe("single fields", () => {
   });
   test("number field", () => {
     const schema: JSONSchema7 = {
-      type: "number"
+        type: "number"
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
-      .toJSON();
+        .create(<Form schema={schema} />)
+        .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("number field 0", () => {
+    const schema: JSONSchema7 = {
+        type: "number"
+    };
+    const formData= 0;
+    const tree = renderer
+        .create(<Form schema={schema} formData={formData} />)
+        .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("null field", () => {
