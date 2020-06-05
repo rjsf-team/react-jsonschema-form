@@ -43,7 +43,7 @@ const TextWidget = ({
         disabled={disabled || readonly}
         name={name}
         type={schema.type as string}
-        value={value ? value : ''}
+        value={value || (value === 0) ? value : ''}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
