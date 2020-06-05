@@ -1,6 +1,6 @@
 {
   "name": "@epicfaace/rjsf-fluent-ui",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "main": "dist/index.js",
   "module": "dist/rjsf-fluent-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -14,8 +14,7 @@
     "test": "tsdx test"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.2.0",
-    "@material-ui/icons": "^4.2.1",
+    "@fluentui/react": "^7.114.2",
     "@rjsf/core": "^2.0.0-alpha.6",
     "react": ">=16"
   },
@@ -27,6 +26,7 @@
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
+    "@fluentui/react": "^7.114.2",
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
     "@rjsf/core": "^2.0.0",
@@ -67,7 +67,6 @@
   },
   "license": "Apache 2",
   "dependencies": {
-    "@fluentui/react": "^7.114.2",
     "lodash": "^4.17.15"
   }
 }
