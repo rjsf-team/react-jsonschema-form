@@ -54,6 +54,16 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("number field 0", () => {
+    const schema: JSONSchema7 = {
+      type: "number"
+    };
+    const formData= 0;
+    const tree = renderer
+      .create(<Form schema={schema} formData={formData} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("null field", () => {
     const schema: JSONSchema7 = {
       type: "null"
