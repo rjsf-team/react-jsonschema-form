@@ -1,12 +1,6 @@
-import React from 'react';
-
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-
-import { WidgetProps } from '@rjsf/core';
+import React from "react";
+import { ChoiceGroup, IChoiceGroupOption } from "@fluentui/react";
+import { WidgetProps } from "@rjsf/core";
 
 const RadioWidget = ({
   id,
@@ -25,8 +19,15 @@ const RadioWidget = ({
   const name = Math.random().toString();
   const { enumOptions, enumDisabled } = options;
 
-  const _onChange = ({}, value: any) =>
-    onChange(schema.type == 'boolean' ? value !== 'false' : value);
+  function _onChange(
+    ev?: React.FormEvent<HTMLElement | HTMLInputElement>,
+    option?: IChoiceGroupOption
+  ): void {
+    if (option) {
+      onChange(option.key);
+    }
+  }
+
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -35,35 +36,24 @@ const RadioWidget = ({
 
   const row = options ? options.inline : false;
 
+  const radioOptionsSource = (enumOptions as any[]) || [];
+
+  const newOptions = radioOptionsSource.map(option => ({
+    key: option.value,
+    text: option.label,
+  }));
+
   return (
-    <FormControl fullWidth={true} required={required}>
-      <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
-      <RadioGroup
-        name={name}
-        value={`${value}`}
-        row={row as boolean}
+    <>
+      <ChoiceGroup
+        options={newOptions as any}
         onChange={_onChange}
-        onBlur={_onBlur}
         onFocus={_onFocus}
-      >
-        {(enumOptions as any).map((option: any, i: number) => {
-          const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
-
-          const radio = (
-            <FormControlLabel
-              control={<Radio color="primary" key={i} />}
-              label={`${option.label}`}
-              value={`${option.value}`}
-              key={i}
-              disabled={disabled || itemDisabled || readonly}
-            />
-          );
-
-          return radio;
-        })}
-      </RadioGroup>
-    </FormControl>
+        label={label || schema.title}
+        required={required}
+        selectedKey={value}
+      />
+    </>
   );
 };
 

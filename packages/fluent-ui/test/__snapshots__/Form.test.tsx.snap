@@ -28,7 +28,7 @@ exports[`single fields null field 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
-        type="button"
+        type="submit"
       >
         <span
           className="ms-Button-flexContainer flexContainer-50"
@@ -107,7 +107,7 @@ exports[`single fields number field 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
-        type="button"
+        type="submit"
       >
         <span
           className="ms-Button-flexContainer flexContainer-50"
@@ -171,7 +171,7 @@ exports[`single fields string field format data-url 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
-        type="button"
+        type="submit"
       >
         <span
           className="ms-Button-flexContainer flexContainer-50"
@@ -238,7 +238,7 @@ exports[`single fields string field format email 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
-        type="button"
+        type="submit"
       >
         <span
           className="ms-Button-flexContainer flexContainer-50"
@@ -305,7 +305,7 @@ exports[`single fields string field format uri 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
-        type="button"
+        type="submit"
       >
         <span
           className="ms-Button-flexContainer flexContainer-50"
@@ -384,7 +384,7 @@ exports[`single fields string field regular 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
-        type="button"
+        type="submit"
       >
         <span
           className="ms-Button-flexContainer flexContainer-50"
@@ -458,7 +458,7 @@ exports[`single fields unsupported field 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
-        type="button"
+        type="submit"
       >
         <span
           className="ms-Button-flexContainer flexContainer-50"

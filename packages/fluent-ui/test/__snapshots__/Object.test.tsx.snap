@@ -128,7 +128,7 @@ exports[`object fields object 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
-        type="button"
+        type="submit"
       >
         <span
           className="ms-Button-flexContainer flexContainer-51"
