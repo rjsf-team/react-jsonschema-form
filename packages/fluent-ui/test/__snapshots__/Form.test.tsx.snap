@@ -20,7 +20,7 @@ exports[`single fields null field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-49"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -31,14 +31,14 @@ exports[`single fields null field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-50"
+          className="ms-Button-flexContainer flexContainer-51"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-51"
+            className="ms-Button-textContainer textContainer-52"
           >
             <span
-              className="ms-Button-label label-53"
+              className="ms-Button-label label-54"
               id="id__22"
             >
               Submit
@@ -66,18 +66,18 @@ exports[`single fields number field 1`] = `
     }
   >
     <div
-      className="ms-TextField root-41"
+      className="ms-TextField root-42"
     >
       <div
         className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-fieldGroup fieldGroup-42"
+          className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
             aria-invalid={false}
             autoFocus={false}
-            className="ms-TextField-field field-43"
+            className="ms-TextField-field field-44"
             disabled={false}
             id="root"
             name="nodejs"
@@ -99,7 +99,7 @@ exports[`single fields number field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-49"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -110,14 +110,14 @@ exports[`single fields number field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-50"
+          className="ms-Button-flexContainer flexContainer-51"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-51"
+            className="ms-Button-textContainer textContainer-52"
           >
             <span
-              className="ms-Button-label label-53"
+              className="ms-Button-label label-54"
               id="id__19"
             >
               Submit
@@ -163,7 +163,7 @@ exports[`single fields string field format data-url 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-49"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -174,14 +174,14 @@ exports[`single fields string field format data-url 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-50"
+          className="ms-Button-flexContainer flexContainer-51"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-51"
+            className="ms-Button-textContainer textContainer-52"
           >
             <span
-              className="ms-Button-label label-53"
+              className="ms-Button-label label-54"
               id="id__13"
             >
               Submit
@@ -230,7 +230,7 @@ exports[`single fields string field format email 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-49"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -241,14 +241,14 @@ exports[`single fields string field format email 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-50"
+          className="ms-Button-flexContainer flexContainer-51"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-51"
+            className="ms-Button-textContainer textContainer-52"
           >
             <span
-              className="ms-Button-label label-53"
+              className="ms-Button-label label-54"
               id="id__7"
             >
               Submit
@@ -297,7 +297,7 @@ exports[`single fields string field format uri 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-49"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -308,14 +308,14 @@ exports[`single fields string field format uri 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-50"
+          className="ms-Button-flexContainer flexContainer-51"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-51"
+            className="ms-Button-textContainer textContainer-52"
           >
             <span
-              className="ms-Button-label label-53"
+              className="ms-Button-label label-54"
               id="id__10"
             >
               Submit
@@ -343,18 +343,18 @@ exports[`single fields string field regular 1`] = `
     }
   >
     <div
-      className="ms-TextField root-41"
+      className="ms-TextField root-42"
     >
       <div
         className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-fieldGroup fieldGroup-42"
+          className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
             aria-invalid={false}
             autoFocus={false}
-            className="ms-TextField-field field-43"
+            className="ms-TextField-field field-44"
             disabled={false}
             id="root"
             name="nodejs"
@@ -376,7 +376,7 @@ exports[`single fields string field regular 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-49"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -387,14 +387,14 @@ exports[`single fields string field regular 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-50"
+          className="ms-Button-flexContainer flexContainer-51"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-51"
+            className="ms-Button-textContainer textContainer-52"
           >
             <span
-              className="ms-Button-label label-53"
+              className="ms-Button-label label-54"
               id="id__4"
             >
               Submit
@@ -450,7 +450,7 @@ exports[`single fields unsupported field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-49"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -461,14 +461,14 @@ exports[`single fields unsupported field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-50"
+          className="ms-Button-flexContainer flexContainer-51"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-51"
+            className="ms-Button-textContainer textContainer-52"
           >
             <span
-              className="ms-Button-label label-53"
+              className="ms-Button-label label-54"
               id="id__25"
             >
               Submit
