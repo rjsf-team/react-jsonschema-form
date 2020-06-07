@@ -390,6 +390,10 @@ declare module '@rjsf/core' {
 
         export function toDateString(dateObject: DateObject, time?: boolean): string;
 
+        export function utcToLocal(jsonDate: string): string;
+
+        export function localToUTC(dateString: string): Date;
+
         export function pad(num: number, size: number): string;
 
         export function setState(instance: React.Component, state: any, callback: Function): void;
