@@ -121,55 +121,48 @@ exports[`array fields checkboxes 1`] = `
       }
     }
   >
+    <label
+      className="ms-Label root-60"
+    />
     <div
-      className="MuiFormControl-root MuiFormControl-fullWidth"
+      className="ms-Dropdown-container"
     >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
-        data-shrink={true}
-        htmlFor="root"
-      />
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-required={false}
+        className="ms-Dropdown dropdown-61"
+        data-is-focusable={true}
+        id="Dropdown16"
+        onBlur={[Function]}
+        onChange={[Function]}
         onClick={[Function]}
-        required={false}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="button"
+        tabIndex={0}
       >
-        <div
-          aria-haspopup="listbox"
-          aria-labelledby=" "
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          tabIndex={0}
-        >
-          <span
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": "&#8203;",
-              }
-            }
-          />
-        </div>
-        <input
-          autoFocus={false}
-          onAnimationStart={[Function]}
-          type="hidden"
-          value=""
+        <span
+          aria-atomic={true}
+          aria-invalid={false}
+          aria-live="polite"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-62"
+          id="Dropdown16-option"
         />
-        <svg
-          aria-hidden="true"
-          className="MuiSvgIcon-root MuiSelect-icon"
-          focusable="false"
-          role="presentation"
-          viewBox="0 0 24 24"
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-63"
         >
-          <path
-            d="M7 10l5 5 5-5z"
-          />
-        </svg>
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-78"
+            data-icon-name="ChevronDown"
+          >
+            
+          </i>
+        </span>
       </div>
     </div>
   </div>
@@ -198,7 +191,7 @@ exports[`array fields checkboxes 1`] = `
           >
             <span
               className="ms-Button-label label-50"
-              id="id__16"
+              id="id__17"
             >
               Submit
             </span>
