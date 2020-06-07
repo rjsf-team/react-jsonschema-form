@@ -842,7 +842,7 @@ describeRepeated("Form common", createFormComponent => {
   });
 
   describe("Change handler", () => {
-    it("should call provided change handler on form state change", () => {
+    it("should call provided change handler on form state change with schema and uiSchema", () => {
       const schema = {
         type: "object",
         properties: {
@@ -851,12 +851,17 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
+      const uiSchema = {
+        foo: { "ui:field": "textarea" },
+      };
+
       const formData = {
         foo: "",
       };
       const onChange = sandbox.spy();
       const { node } = createFormComponent({
         schema,
+        uiSchema,
         formData,
         onChange,
       });
@@ -869,6 +874,8 @@ describeRepeated("Form common", createFormComponent => {
         formData: {
           foo: "new",
         },
+        schema,
+        uiSchema,
       });
     });
   });
@@ -1326,7 +1333,7 @@ describeRepeated("Form common", createFormComponent => {
             target: { value: "short" },
           });
           sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: undefined,
+            errorSchema: {},
           });
         });
 
@@ -1427,7 +1434,7 @@ describeRepeated("Form common", createFormComponent => {
           });
 
           sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: undefined,
+            errorSchema: {},
           });
         });
       });
