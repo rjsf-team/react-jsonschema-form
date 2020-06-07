@@ -84,6 +84,7 @@ const SelectWidget = ({
       <Select
         multiple={typeof multiple === 'undefined' ? false : multiple}
         value={typeof value === 'undefined' ? emptyValue : value}
+        label={label || schema.title}
         required={required}
         disabled={disabled || readonly}
         autoFocus={autofocus}
