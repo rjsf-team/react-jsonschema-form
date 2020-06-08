@@ -1,29 +1,24 @@
 import React from "react";
 
-import { IconButton as IconButton_, IIconProps } from "@fluentui/react";
+import { IconButton, IIconProps } from "@fluentui/react";
 import { AddButtonProps as FuiIconButtonProps } from "@rjsf/core";
 
-const RemoveIcon: IIconProps = { iconName: "Remove" };
-const UpIcon: IIconProps = { iconName: "Up" };
-const DownIcon: IIconProps = { iconName: "Down" };
-
-const mappings: any = {
-  remove: RemoveIcon,
-  "arrow-up": UpIcon,
-  "arrow-down": DownIcon,
+const mappings: {[x: string]: string} = {
+  remove: "Delete",
+  "arrow-up": "Up",
+  "arrow-down": "Down",
 };
 
-type AddButtonProps = FuiIconButtonProps & {
+type IconButtonProps = FuiIconButtonProps & {
   icon: string;
 };
 
-const IconButton: React.FC<AddButtonProps> = props => (
-  <>
-    <IconButton_
-      onClick={e => props.onClick(e as any)}
-      iconProps={mappings[props.icon]}
-      color="secondary"></IconButton_>
-  </>
+export default (props: IconButtonProps) => (
+ <IconButton
+    disabled={props.disabled}
+    onClick={e => props.onClick(e as any)}
+    iconProps={{
+      iconName: mappings[props.icon]
+    }}
+    color="secondary" />
 );
-
-export default IconButton;

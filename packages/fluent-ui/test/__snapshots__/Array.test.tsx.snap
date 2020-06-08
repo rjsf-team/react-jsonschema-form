@@ -18,13 +18,12 @@ exports[`array fields array 1`] = `
     <span
       style={
         Object {
-          "position": "absolute",
-          "right": 0,
+          "float": "right",
         }
       }
     >
       <button
-        className="ms-Button ms-Button--icon root-41"
+        className="ms-Button ms-Button--commandBar array-item-add root-41"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -32,6 +31,11 @@ exports[`array fields array 1`] = `
         onKeyUp={[Function]}
         onMouseDown={[Function]}
         onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
         type="button"
       >
         <span
@@ -41,16 +45,26 @@ exports[`array fields array 1`] = `
           <i
             aria-hidden={true}
             className="ms-Icon root-37 css-49 ms-Button-icon icon-44"
-            data-icon-name="BoxAdditionSolid"
+            data-icon-name="Add"
             role="presentation"
             style={
               Object {
-                "fontFamily": "\\"FabricMDL2Icons-11\\"",
+                "fontFamily": "\\"FabricMDL2Icons\\"",
               }
             }
           >
-            
+            
           </i>
+          <span
+            className="ms-Button-textContainer textContainer-43"
+          >
+            <span
+              className="ms-Button-label label-45"
+              id="id__1"
+            >
+              Add item
+            </span>
+          </span>
         </span>
       </button>
     </span>
@@ -79,7 +93,7 @@ exports[`array fields array 1`] = `
             className="ms-Button-textContainer textContainer-43"
           >
             <span
-              className="ms-Button-label label-51"
+              className="ms-Button-label label-52"
               id="id__4"
             >
               Submit
@@ -107,7 +121,7 @@ exports[`array fields checkboxes 1`] = `
     }
   >
     <label
-      className="ms-Label root-62"
+      className="ms-Label root-69"
     />
     <div
       className="ms-Dropdown-container"
@@ -117,7 +131,7 @@ exports[`array fields checkboxes 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-63"
+        className="ms-Dropdown dropdown-70"
         data-is-focusable={true}
         id="Dropdown34"
         onBlur={[Function]}
@@ -134,15 +148,15 @@ exports[`array fields checkboxes 1`] = `
           aria-atomic={true}
           aria-invalid={false}
           aria-live="polite"
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-64"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-71"
           id="Dropdown34-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-65"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-72"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-80"
+            className="ms-Dropdown-caretDown caretDown-86"
             data-icon-name="ChevronDown"
           >
             
@@ -175,7 +189,7 @@ exports[`array fields checkboxes 1`] = `
             className="ms-Button-textContainer textContainer-43"
           >
             <span
-              className="ms-Button-label label-51"
+              className="ms-Button-label label-52"
               id="id__35"
             >
               Submit
@@ -211,7 +225,7 @@ exports[`array fields fixed array 1`] = `
         className="ms-Grid-row"
       >
         <div
-          className="ms-Grid-col ms-sm6 ms-md8 ms-lg10"
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
         >
           <div
             className="ms-Grid-col ms-sm12  field field-string"
@@ -222,18 +236,18 @@ exports[`array fields fixed array 1`] = `
             }
           >
             <div
-              className="ms-TextField is-required root-53"
+              className="ms-TextField is-required root-55"
             >
               <div
                 className="ms-TextField-wrapper"
               >
                 <div
-                  className="ms-TextField-fieldGroup fieldGroup-54"
+                  className="ms-TextField-fieldGroup fieldGroup-56"
                 >
                   <input
                     aria-invalid={false}
                     autoFocus={false}
-                    className="ms-TextField-field field-55"
+                    className="ms-TextField-field field-57"
                     disabled={false}
                     id="root_0"
                     name="nodejs"
@@ -252,11 +266,18 @@ exports[`array fields fixed array 1`] = `
           </div>
         </div>
         <div
-          className="ms-Grid-col ms-sm6 ms-md4 ms-lg2"
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
         >
           <button
-            className="ms-Button ms-Button--icon root-41"
-            data-is-focusable={true}
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-63"
+            data-is-focusable={false}
+            disabled={true}
             onClick={[Function]}
             onKeyDown={[Function]}
             onKeyPress={[Function]}
@@ -271,7 +292,7 @@ exports[`array fields fixed array 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-44"
+                className="ms-Icon root-37 css-67 ms-Button-icon icon-64"
                 data-icon-name="Up"
                 role="presentation"
                 style={
@@ -285,8 +306,10 @@ exports[`array fields fixed array 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-41"
-            data-is-focusable={true}
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-63"
+            data-is-focusable={false}
+            disabled={true}
             onClick={[Function]}
             onKeyDown={[Function]}
             onKeyPress={[Function]}
@@ -301,7 +324,7 @@ exports[`array fields fixed array 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-44"
+                className="ms-Icon root-37 css-67 ms-Button-icon icon-64"
                 data-icon-name="Down"
                 role="presentation"
                 style={
@@ -315,7 +338,7 @@ exports[`array fields fixed array 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-41"
+            className="ms-Button ms-Button--icon root-68"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -331,16 +354,16 @@ exports[`array fields fixed array 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-44"
-                data-icon-name="Remove"
+                className="ms-Icon root-37 css-49 ms-Button-icon icon-51"
+                data-icon-name="Delete"
                 role="presentation"
                 style={
                   Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
                   }
                 }
               >
-                
+                
               </i>
             </span>
           </button>
@@ -355,7 +378,7 @@ exports[`array fields fixed array 1`] = `
         className="ms-Grid-row"
       >
         <div
-          className="ms-Grid-col ms-sm6 ms-md8 ms-lg10"
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
         >
           <div
             className="ms-Grid-col ms-sm12  field field-number"
@@ -366,18 +389,18 @@ exports[`array fields fixed array 1`] = `
             }
           >
             <div
-              className="ms-TextField is-required root-53"
+              className="ms-TextField is-required root-55"
             >
               <div
                 className="ms-TextField-wrapper"
               >
                 <div
-                  className="ms-TextField-fieldGroup fieldGroup-54"
+                  className="ms-TextField-fieldGroup fieldGroup-56"
                 >
                   <input
                     aria-invalid={false}
                     autoFocus={false}
-                    className="ms-TextField-field field-55"
+                    className="ms-TextField-field field-57"
                     disabled={false}
                     id="root_1"
                     name="nodejs"
@@ -396,11 +419,18 @@ exports[`array fields fixed array 1`] = `
           </div>
         </div>
         <div
-          className="ms-Grid-col ms-sm6 ms-md4 ms-lg2"
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
         >
           <button
-            className="ms-Button ms-Button--icon root-41"
-            data-is-focusable={true}
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-63"
+            data-is-focusable={false}
+            disabled={true}
             onClick={[Function]}
             onKeyDown={[Function]}
             onKeyPress={[Function]}
@@ -415,7 +445,7 @@ exports[`array fields fixed array 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-44"
+                className="ms-Icon root-37 css-67 ms-Button-icon icon-64"
                 data-icon-name="Up"
                 role="presentation"
                 style={
@@ -429,8 +459,10 @@ exports[`array fields fixed array 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-41"
-            data-is-focusable={true}
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-63"
+            data-is-focusable={false}
+            disabled={true}
             onClick={[Function]}
             onKeyDown={[Function]}
             onKeyPress={[Function]}
@@ -445,7 +477,7 @@ exports[`array fields fixed array 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-44"
+                className="ms-Icon root-37 css-67 ms-Button-icon icon-64"
                 data-icon-name="Down"
                 role="presentation"
                 style={
@@ -459,7 +491,7 @@ exports[`array fields fixed array 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-41"
+            className="ms-Button ms-Button--icon root-68"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -475,16 +507,16 @@ exports[`array fields fixed array 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-44"
-                data-icon-name="Remove"
+                className="ms-Icon root-37 css-49 ms-Button-icon icon-51"
+                data-icon-name="Delete"
                 role="presentation"
                 style={
                   Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
                   }
                 }
               >
-                
+                
               </i>
             </span>
           </button>
@@ -516,7 +548,7 @@ exports[`array fields fixed array 1`] = `
             className="ms-Button-textContainer textContainer-43"
           >
             <span
-              className="ms-Button-label label-51"
+              className="ms-Button-label label-52"
               id="id__31"
             >
               Submit

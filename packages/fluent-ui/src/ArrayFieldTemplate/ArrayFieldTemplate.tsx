@@ -8,8 +8,7 @@ import AddButton from "../AddButton/AddButton";
 import IconButton from "../IconButton/IconButton";
 
 const rightJustify = {
-  position: "absolute",
-  right: 0,
+  float: "right"
 } as React.CSSProperties;
 
 const { isMultiSelect, getDefaultRegistry } = utils;
@@ -39,7 +38,7 @@ const ArrayFieldTitle = ({
   required,
 }: ArrayFieldTitleProps) => {
   if (!title) {
-    return <div />;
+    return null;
   }
 
   const id = `${idSchema.$id}__title`;
@@ -58,7 +57,7 @@ const ArrayFieldDescription = ({
   description,
 }: ArrayFieldDescriptionProps) => {
   if (!description) {
-    return <div />;
+    return null;
   }
 
   const id = `${idSchema.$id}__description`;
@@ -70,10 +69,10 @@ const DefaultArrayItem = (props: any) => {
   return (
     <div className="ms-Grid" dir="ltr">
       <div className="ms-Grid-row">
-        <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+        <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg9">
           {props.children}
         </div>
-        <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
+        <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg3" style={{textAlign: "right"}}>
           <IconButton
             icon="arrow-up"
             className="array-item-move-up"
