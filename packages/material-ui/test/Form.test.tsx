@@ -82,4 +82,28 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("format color", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+      format: "color",
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("format date", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+      format: "date",
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("format datetime", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+      format: "datetime",
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

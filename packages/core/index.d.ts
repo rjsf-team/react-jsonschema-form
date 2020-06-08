@@ -111,6 +111,7 @@ declare module '@rjsf/core' {
         onBlur: (id: string, value: boolean | number | string | null) => void;
         onFocus: (id: string, value: boolean | number | string | null) => void;
         label: string;
+        type: string;
         multiple: boolean;
         rawErrors: string[];
     }
@@ -390,6 +391,10 @@ declare module '@rjsf/core' {
         export function parseDateString(dateString: string, includeTime?: boolean): DateObject;
 
         export function toDateString(dateObject: DateObject, time?: boolean): string;
+
+        export function utcToLocal(jsonDate: string): string;
+
+        export function localToUTC(dateString: string): Date;
 
         export function pad(num: number, size: number): string;
 
