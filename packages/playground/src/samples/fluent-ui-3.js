@@ -8,6 +8,13 @@ module.exports = {
         type: "string",
         title: "Task list title",
       },
+      names: {
+        type: "array",
+        title: "Tasks",
+        items: {
+          type: "string",
+        },
+      },
       tasks: {
         type: "array",
         title: "Tasks",
@@ -35,17 +42,25 @@ module.exports = {
       },
       boolean: {
         type: "object",
-        title: "Boolean field",
+        title: "Test field",
         properties: {
           radio: {
             type: "boolean",
             title: "radio buttons",
-            description: "This is the radio-description",
+          },
+          radioDisabled: {
+            type: "string",
+            title: "Disabled radio options",
+            enum: ["a", "b", "c"],
           },
           select: {
             type: "boolean",
             title: "select box",
-            description: "This is the select-description",
+          },
+          selectDisabled: {
+            type: "string",
+            title: "Disabled select options",
+            enum: ["a", "b", "c"],
           },
         },
       },
@@ -79,8 +94,16 @@ module.exports = {
       radio: {
         "ui:widget": "radio",
       },
+      radioDisabled: {
+        "ui:widget": "radio",
+        "ui:enumDisabled": ["a"],
+      },
       select: {
         "ui:widget": "select",
+      },
+      selectDisabled: {
+        "ui:widget": "select",
+        "ui:enumDisabled": ["a"],
       },
     },
   },

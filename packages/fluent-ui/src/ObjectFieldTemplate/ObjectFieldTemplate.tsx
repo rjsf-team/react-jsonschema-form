@@ -29,9 +29,6 @@ const ObjectFieldTemplate = ({
 
       <div className="ms-Grid" dir="ltr">
         <div className="ms-Grid-row">
-          {/* {properties.map((element: any, index: number) => (
-            <div className="ms-Grid-col" key={index}>{element.content}</div>
-          ))} */}
           {properties.map((element: any) => element.content)}
         </div>
       </div>

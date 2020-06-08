@@ -60,6 +60,9 @@ function DemoFrame(props) {
     const { head } = props;
     return (
       <>
+        <style
+          dangerouslySetInnerHTML={{ __html: "label { font-weight: normal; }" }}
+        />
         {head}
         {children}
       </>

@@ -67,7 +67,7 @@ const ArrayFieldDescription = ({
 // Used in the two templates
 const DefaultArrayItem = (props: any) => {
   return (
-    <div className="ms-Grid" dir="ltr">
+    <div key={props.key} className="ms-Grid" dir="ltr">
       <div className="ms-Grid-row">
         <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg9">
           <div className="ms-Grid-row">

@@ -2,7 +2,6 @@ import React from "react";
 import { Label, Dropdown } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/core";
 
-const nums = new Set(["number", "integer"]);
 
 const SelectWidget = ({
   schema,
@@ -21,15 +20,16 @@ const SelectWidget = ({
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
-  const _onChange = ({}, value: any) => onChange(value.key);
+  const _onChange = (_: any, value: any) => onChange(value.key);
 
   const _onBlur = (e: any) => onBlur(id, e.target.value);
 
   const _onFocus = (e: any) => onFocus(id, e.target.value);
 
-  const newOptions = (enumOptions as any[]).map(option => ({
+  const newOptions = (enumOptions as {value: any, label: any}[]).map(option => ({
     key: option.value,
     text: option.label,
+    disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
   }));
 
   return (

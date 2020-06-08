@@ -1,6 +1,21 @@
 import React from "react";
 import { ChoiceGroup, IChoiceGroupOption } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/core";
+import _pick from "lodash/pick";
+
+// Keys of IChoiceGroupProps from @fluentui/react
+const allowedProps = [
+  "componentRef",
+  "options",
+  "defaultSelectedKey",
+  "selectedKey",
+  "onChange",
+  "label",
+  "onChanged",
+  "theme",
+  "styles",
+  "ariaLabelledBy"
+];
 
 const RadioWidget = ({
   id,
@@ -15,8 +30,6 @@ const RadioWidget = ({
   onBlur,
   onFocus,
 }: WidgetProps) => {
-  // Generating a unique field name to identify this set of radio buttons
-  const name = Math.random().toString();
   const { enumOptions, enumDisabled } = options;
 
   function _onChange(
@@ -36,24 +49,24 @@ const RadioWidget = ({
 
   const row = options ? options.inline : false;
 
-  const radioOptionsSource = (enumOptions as any[]) || [];
-
-  const newOptions = radioOptionsSource.map(option => ({
+  const newOptions = (enumOptions as {value: any, label: any}[]).map(option => ({
     key: option.value,
     text: option.label,
+    disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
   }));
 
+  const uiProps = _pick(options.props || {}, allowedProps);
   return (
-    <>
-      <ChoiceGroup
-        options={newOptions as any}
-        onChange={_onChange}
-        onFocus={_onFocus}
-        label={label || schema.title}
-        required={required}
-        selectedKey={value}
-      />
-    </>
+    <ChoiceGroup
+      options={newOptions as any}
+      onChange={_onChange}
+      onFocus={_onFocus}
+      onBlur={_onBlur}
+      label={label || schema.title}
+      required={required}
+      selectedKey={value}
+      {...uiProps}
+    />
   );
 };
 
