@@ -14,7 +14,6 @@ exports[`array fields array 1`] = `
       }
     }
   >
-    <div />
     <span
       style={
         Object {
@@ -216,7 +215,6 @@ exports[`array fields fixed array 1`] = `
       }
     }
   >
-    <div />
     <div
       className="ms-Grid"
       dir="ltr"
@@ -228,38 +226,42 @@ exports[`array fields fixed array 1`] = `
           className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
         >
           <div
-            className="ms-Grid-col ms-sm12  field field-string"
-            style={
-              Object {
-                "marginBottom": 15,
-              }
-            }
+            className="ms-Grid-row"
           >
             <div
-              className="ms-TextField is-required root-55"
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
             >
               <div
-                className="ms-TextField-wrapper"
+                className="ms-TextField is-required root-55"
               >
                 <div
-                  className="ms-TextField-fieldGroup fieldGroup-56"
+                  className="ms-TextField-wrapper"
                 >
-                  <input
-                    aria-invalid={false}
-                    autoFocus={false}
-                    className="ms-TextField-field field-57"
-                    disabled={false}
-                    id="root_0"
-                    name="nodejs"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    onInput={[Function]}
-                    readOnly={false}
-                    required={true}
-                    type="string"
-                    value=""
-                  />
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-56"
+                  >
+                    <input
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="ms-TextField-field field-57"
+                      disabled={false}
+                      id="root_0"
+                      name="nodejs"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      readOnly={false}
+                      required={true}
+                      type="string"
+                      value=""
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -381,38 +383,42 @@ exports[`array fields fixed array 1`] = `
           className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
         >
           <div
-            className="ms-Grid-col ms-sm12  field field-number"
-            style={
-              Object {
-                "marginBottom": 15,
-              }
-            }
+            className="ms-Grid-row"
           >
             <div
-              className="ms-TextField is-required root-55"
+              className="ms-Grid-col ms-sm12  field field-number"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
             >
               <div
-                className="ms-TextField-wrapper"
+                className="ms-TextField is-required root-55"
               >
                 <div
-                  className="ms-TextField-fieldGroup fieldGroup-56"
+                  className="ms-TextField-wrapper"
                 >
-                  <input
-                    aria-invalid={false}
-                    autoFocus={false}
-                    className="ms-TextField-field field-57"
-                    disabled={false}
-                    id="root_1"
-                    name="nodejs"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    onInput={[Function]}
-                    readOnly={false}
-                    required={true}
-                    type="number"
-                    value=""
-                  />
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-56"
+                  >
+                    <input
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="ms-TextField-field field-57"
+                      disabled={false}
+                      id="root_1"
+                      name="nodejs"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      readOnly={false}
+                      required={true}
+                      type="number"
+                      value=""
+                    />
+                  </div>
                 </div>
               </div>
             </div>
