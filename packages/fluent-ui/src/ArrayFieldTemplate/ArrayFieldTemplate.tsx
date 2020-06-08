@@ -2,14 +2,15 @@ import React from "react";
 
 import { utils } from "@rjsf/core";
 
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-
 import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
 
 import AddButton from "../AddButton/AddButton";
 import IconButton from "../IconButton/IconButton";
+
+const rightJustify = {
+  position: "absolute",
+  right: 0,
+} as React.CSSProperties;
 
 const { isMultiSelect, getDefaultRegistry } = utils;
 
@@ -66,53 +67,34 @@ const ArrayFieldDescription = ({
 
 // Used in the two templates
 const DefaultArrayItem = (props: any) => {
-  const btnStyle = {
-    flex: 1,
-    paddingLeft: 6,
-    paddingRight: 6,
-    fontWeight: "bold",
-  };
   return (
-    <Grid container={true} key={props.index} alignItems="center">
-      <Grid item={true} xs>
-        <Box mb={2}>
-          <Paper elevation={2}>
-            <Box p={2}>{props.children}</Box>
-          </Paper>
-        </Box>
-      </Grid>
-
-      {props.hasToolbar && (
-        <Grid item={true}>
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-up"
-              className="array-item-move-up"
-              disabled={props.disabled || props.readonly || !props.hasMoveUp}
-              onClick={props.onReorderClick(props.index, props.index - 1)}
-            />
-          )}
-
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-down"
-              className="array-item-move-down"
-              disabled={props.disabled || props.readonly || !props.hasMoveDown}
-              onClick={props.onReorderClick(props.index, props.index + 1)}
-            />
-          )}
-
-          {props.hasRemove && (
-            <IconButton
-              icon="remove"
-              className="array-item-remove"
-              disabled={props.disabled || props.readonly}
-              onClick={props.onDropIndexClick(props.index)}
-            />
-          )}
-        </Grid>
-      )}
-    </Grid>
+    <div className="ms-Grid" dir="ltr">
+      <div className="ms-Grid-row">
+        <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+          {props.children}
+        </div>
+        <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
+          <IconButton
+            icon="arrow-up"
+            className="array-item-move-up"
+            disabled={props.disabled || props.readonly || !props.hasMoveUp}
+            onClick={props.onReorderClick(props.index, props.index - 1)}
+          />
+          <IconButton
+            icon="arrow-down"
+            className="array-item-move-down"
+            disabled={props.disabled || props.readonly || !props.hasMoveDown}
+            onClick={props.onReorderClick(props.index, props.index + 1)}
+          />
+          <IconButton
+            icon="remove"
+            className="array-item-remove"
+            disabled={props.disabled || props.readonly}
+            onClick={props.onDropIndexClick(props.index)}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -142,11 +124,13 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       </div>
 
       {props.canAdd && (
-        <AddButton
-          className="array-item-add"
-          onClick={props.onAddClick}
-          disabled={props.disabled || props.readonly}
-        />
+        <span style={rightJustify}>
+          <AddButton
+            className="array-item-add"
+            onClick={props.onAddClick}
+            disabled={props.disabled || props.readonly}
+          />
+        </span>
       )}
     </fieldset>
   );
@@ -154,46 +138,38 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   return (
-    <Paper elevation={2}>
-      <Box p={2}>
-        <ArrayFieldTitle
-          key={`array-field-title-${props.idSchema.$id}`}
-          TitleField={props.TitleField}
+    <>
+      <ArrayFieldTitle
+        key={`array-field-title-${props.idSchema.$id}`}
+        TitleField={props.TitleField}
+        idSchema={props.idSchema}
+        title={props.uiSchema["ui:title"] || props.title}
+        required={props.required}
+      />
+
+      {(props.uiSchema["ui:description"] || props.schema.description) && (
+        <ArrayFieldDescription
+          key={`array-field-description-${props.idSchema.$id}`}
+          DescriptionField={props.DescriptionField}
           idSchema={props.idSchema}
-          title={props.uiSchema["ui:title"] || props.title}
-          required={props.required}
+          description={
+            props.uiSchema["ui:description"] || props.schema.description
+          }
         />
+      )}
 
-        {(props.uiSchema["ui:description"] || props.schema.description) && (
-          <ArrayFieldDescription
-            key={`array-field-description-${props.idSchema.$id}`}
-            DescriptionField={props.DescriptionField}
-            idSchema={props.idSchema}
-            description={
-              props.uiSchema["ui:description"] || props.schema.description
-            }
+      {props.items && props.items.map(p => DefaultArrayItem(p))}
+
+      {props.canAdd && (
+        <span style={rightJustify}>
+          <AddButton
+            className="array-item-add"
+            onClick={props.onAddClick}
+            disabled={props.disabled || props.readonly}
           />
-        )}
-
-        <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
-          {props.items && props.items.map(p => DefaultArrayItem(p))}
-
-          {props.canAdd && (
-            <Grid container justify="flex-end">
-              <Grid item={true}>
-                <Box mt={2}>
-                  <AddButton
-                    className="array-item-add"
-                    onClick={props.onAddClick}
-                    disabled={props.disabled || props.readonly}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
-      </Box>
-    </Paper>
+        </span>
+      )}
+    </>
   );
 };
 
