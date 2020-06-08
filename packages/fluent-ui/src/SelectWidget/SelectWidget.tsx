@@ -73,9 +73,16 @@ const SelectWidget = ({
     if (!item) {
       return;
     }
-    onChange(
-      item.selected ? [...value, item.key] : value.filter((key: any) => key !== item.key),
-    );
+    if (multiple) {
+      const valueOrDefault = value || [];
+      if (item.selected) {
+        onChange([...valueOrDefault, item.key]);
+      } else {
+        onChange(valueOrDefault.filter((key: any) => key !== item.key));
+      }
+    } else {
+      onChange(item.key);
+    }
   };
   const _onBlur = (e: any) => onBlur(id, e.target.value);
 
