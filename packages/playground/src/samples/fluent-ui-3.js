@@ -74,9 +74,7 @@ module.exports = {
         },
       },
       native: {
-        title: "Native",
-        description:
-          "May not work on some browsers, notably Firefox Desktop and IE.",
+        title: "Date example",
         type: "object",
         properties: {
           datetime: {
