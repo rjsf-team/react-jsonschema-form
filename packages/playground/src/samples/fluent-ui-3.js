@@ -62,6 +62,15 @@ module.exports = {
             title: "Disabled select options",
             enum: ["a", "b", "c"],
           },
+          multiselect: {
+            type: "array",
+            items: {
+              type: "string",
+              enum: ["a", "b", "c"],
+            },
+            uniqueItems: true,
+            title: "Multiselect",
+          },
         },
       },
       native: {
@@ -104,6 +113,9 @@ module.exports = {
       selectDisabled: {
         "ui:widget": "select",
         "ui:enumDisabled": ["a"],
+      },
+      multiselect: {
+        "ui:widget": "select",
       },
     },
   },

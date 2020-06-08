@@ -1,7 +1,53 @@
-import React from "react";
-import { Label, Dropdown } from "@fluentui/react";
+import React, { useState } from "react";
+import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/core";
+import _pick from "lodash/pick";
 
+// Keys of IDropdownProps from @fluentui/react
+const allowedProps = [
+  "placeHolder",
+  "options",
+  "onChange",
+  "onChanged",
+  "onRenderLabel",
+  "onRenderPlaceholder",
+  "onRenderPlaceHolder",
+  "onRenderTitle",
+  "onRenderCaretDown",
+  "dropdownWidth",
+  "responsiveMode",
+  "defaultSelectedKeys",
+  "selectedKeys",
+  "multiselectDelimiter",
+  "notifyOnReselect",
+  "isDisabled",
+  "keytipProps",
+  "theme",
+  "styles",
+
+  // ISelectableDroppableTextProps
+  "componentRef",
+  "label",
+  "ariaLabel",
+  "id",
+  "className",
+  "defaultSelectedKey",
+  "selectedKey",
+  "multiSelect",
+  "options",
+  "onRenderContainer",
+  "onRenderList",
+  "onRenderItem",
+  "onRenderOption",
+  "onDismiss",
+  "disabled",
+  "required",
+  "calloutProps",
+  "panelProps",
+  "errorMessage",
+  "placeholder",
+  "openOnKeyboardFocus"
+];
 
 const SelectWidget = ({
   schema,
@@ -20,8 +66,17 @@ const SelectWidget = ({
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
-  const _onChange = (_: any, value: any) => onChange(value.key);
-
+  const _onChange = (
+    _ev?: React.FormEvent<HTMLElement>,
+    item?: IDropdownOption
+  ) => {
+    if (!item) {
+      return;
+    }
+    onChange(
+      item.selected ? [...value, item.key] : value.filter((key: any) => key !== item.key),
+    );
+  };
   const _onBlur = (e: any) => onBlur(id, e.target.value);
 
   const _onFocus = (e: any) => onFocus(id, e.target.value);
@@ -32,11 +87,12 @@ const SelectWidget = ({
     disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
   }));
 
+  const uiProps = _pick(options.props || {}, allowedProps);
   return (
     <>
       <Label>{label || schema.title}</Label>
       <Dropdown
-        multiSelect={typeof multiple === "undefined" ? false : multiple}
+        multiSelect={multiple}
         defaultSelectedKey={value}
         required={required}
         options={newOptions}
@@ -44,6 +100,7 @@ const SelectWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        {...uiProps}
       />
     </>
   );
