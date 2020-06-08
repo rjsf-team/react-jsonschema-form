@@ -63,7 +63,7 @@ const DayPickerStrings: IDatePickerStrings = {
 const controlClass = mergeStyleSets({
   control: {
     margin: "0 0 15px 0",
-    maxWidth: "300px",
+    maxWidth: "700px",
   },
 });
 

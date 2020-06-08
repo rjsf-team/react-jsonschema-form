@@ -1,91 +1,20 @@
 import React from "react";
-import { TextField } from "@fluentui/react";
+
 import { WidgetProps } from "@rjsf/core";
-import _pick from "lodash/pick";
 
-// Keys of ITextFieldProps from @fluentui/react
-const allowedProps = [
-  "multiline",
-  "resizable",
-  "autoAdjustHeight",
-  "underlined",
-  "borderless",
-  "label",
-  "onRenderLabel",
-  "description",
-  "onRenderDescription",
-  "prefix",
-  "suffix",
-  "onRenderPrefix",
-  "onRenderSuffix",
-  "iconProps",
-  "defaultValue",
-  "value",
-  "disabled",
-  "readOnly",
-  "errorMessage",
-  "onChange",
-  "onNotifyValidationResult",
-  "onGetErrorMessage",
-  "deferredValidationTime",
-  "className",
-  "inputClassName",
-  "ariaLabel",
-  "validateOnFocusIn",
-  "validateOnFocusOut",
-  "validateOnLoad",
-  "theme",
-  "styles",
-  "autoComplete",
-  "mask",
-  "maskChar",
-  "maskFormat",
-];
+import TextWidget from "../TextWidget";
 
-const DateTimeWidget = ({
-  id,
-  required,
-  readonly,
-  disabled,
-  label,
-  value,
-  onChange,
-  onBlur,
-  onFocus,
-  autofocus,
-  options,
-  schema,
-  rawErrors,
-}: WidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
-
-  const uiProps = _pick(options.props || {}, allowedProps);
-  return (
-    <TextField
-      id={id}
-      label={label || schema.title}
-      autoFocus={autofocus}
-      required={required}
-      disabled={disabled}
-      readOnly={readonly}
-      name={name}
-      type="datetime-local"
-      value={value ? value : "CUSTOM DATETIME WIDGET TEST!!!"}
-      onChange={_onChange as any}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      errorMessage={(rawErrors || []).join("\n")}
-      {...uiProps}
-    />
-  );
+const DateTimeWidget = (props: WidgetProps) => {
+  const uiProps: any = props.options["props"] || {};
+  let options = {
+    ...props.options,
+    props: {
+      type: "datetime-local",
+      ...uiProps,
+    },
+  };
+  // TODO: rows and columns.
+  return <TextWidget {...props} options={options} />;
 };
 
 export default DateTimeWidget;
