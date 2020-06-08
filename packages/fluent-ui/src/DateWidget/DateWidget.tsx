@@ -1,46 +1,70 @@
 import React from "react";
-import { TextField } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/core";
+
+import {
+  DatePicker,
+  DayOfWeek,
+  IDatePickerStrings,
+  mergeStyleSets,
+} from "@fluentui/react";
 import _pick from "lodash/pick";
 
-// Keys of ITextFieldProps from @fluentui/react
-const allowedProps = [
-  "multiline",
-  "resizable",
-  "autoAdjustHeight",
-  "underlined",
-  "borderless",
-  "label",
-  "onRenderLabel",
-  "description",
-  "onRenderDescription",
-  "prefix",
-  "suffix",
-  "onRenderPrefix",
-  "onRenderSuffix",
-  "iconProps",
-  "defaultValue",
-  "value",
-  "disabled",
-  "readOnly",
-  "errorMessage",
-  "onChange",
-  "onNotifyValidationResult",
-  "onGetErrorMessage",
-  "deferredValidationTime",
-  "className",
-  "inputClassName",
-  "ariaLabel",
-  "validateOnFocusIn",
-  "validateOnFocusOut",
-  "validateOnLoad",
-  "theme",
-  "styles",
-  "autoComplete",
-  "mask",
-  "maskChar",
-  "maskFormat",
-];
+const DayPickerStrings: IDatePickerStrings = {
+  months: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ],
+
+  shortMonths: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
+
+  days: [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ],
+
+  shortDays: ["S", "M", "T", "W", "T", "F", "S"],
+
+  goToToday: "Go to today",
+  prevMonthAriaLabel: "Go to previous month",
+  nextMonthAriaLabel: "Go to next month",
+  prevYearAriaLabel: "Go to previous year",
+  nextYearAriaLabel: "Go to next year",
+  closeButtonAriaLabel: "Close date picker",
+};
+
+const controlClass = mergeStyleSets({
+  control: {
+    margin: "0 0 15px 0",
+  },
+});
 
 const DateWidget = ({
   id,
@@ -57,6 +81,8 @@ const DateWidget = ({
   schema,
   rawErrors,
 }: WidgetProps) => {
+  const [firstDayOfWeek, setFirstDayOfWeek] = React.useState(DayOfWeek.Sunday);
+
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -67,24 +93,17 @@ const DateWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const uiProps = _pick(options.props || {}, allowedProps);
   return (
-    <TextField
-      id={id}
-      label={label || schema.title}
-      autoFocus={autofocus}
-      required={required}
-      disabled={disabled}
-      readOnly={readonly}
-      name={name}
-      type={schema.type as string}
-      value={value ? value : "CUSTOM DATE WIDGET TEST!!!"}
-      onChange={_onChange as any}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      errorMessage={(rawErrors || []).join("\n")}
-      {...uiProps}
-    />
+    <>
+      <DatePicker
+        className={controlClass.control}
+        firstDayOfWeek={firstDayOfWeek}
+        strings={DayPickerStrings}
+        placeholder="Select a date..."
+        ariaLabel="Select a date"
+        isRequired={required}
+      />
+    </>
   );
 };
 

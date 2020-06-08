@@ -30,26 +30,26 @@ exports[`object fields object 1`] = `
           }
         >
           <div
-            className="ms-TextField root-41"
+            className="ms-TextField root-42"
           >
             <div
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-49"
+                className="ms-Label root-50"
                 htmlFor="root_a"
                 id="TextFieldLabel3"
               >
                 a
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-42"
+                className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel3"
                   autoFocus={false}
-                  className="ms-TextField-field field-43"
+                  className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_a"
                   name="nodejs"
@@ -75,26 +75,26 @@ exports[`object fields object 1`] = `
           }
         >
           <div
-            className="ms-TextField root-41"
+            className="ms-TextField root-42"
           >
             <div
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-49"
+                className="ms-Label root-50"
                 htmlFor="root_b"
                 id="TextFieldLabel6"
               >
                 b
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-42"
+                className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel6"
                   autoFocus={false}
-                  className="ms-TextField-field field-43"
+                  className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_b"
                   name="nodejs"
@@ -120,7 +120,7 @@ exports[`object fields object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-50"
+        className="ms-Button ms-Button--primary root-51"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -131,14 +131,14 @@ exports[`object fields object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-51"
+          className="ms-Button-flexContainer flexContainer-52"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-52"
+            className="ms-Button-textContainer textContainer-53"
           >
             <span
-              className="ms-Button-label label-54"
+              className="ms-Button-label label-55"
               id="id__7"
             >
               Submit

@@ -44,7 +44,7 @@ const allowedProps = [
   "theme",
   "title",
   "upArrowButtonStyles",
-  "value"
+  "value",
 ];
 
 const UpDownWidget = ({
@@ -78,11 +78,11 @@ WidgetProps) => {
 
   const _onIncrement = (value: string) => {
     if (Number(value) + step! <= max!) onChange(Number(value) + step!);
-  }
+  };
 
   const _onDecrement = (value: string) => {
     if (Number(value) - step! >= min!) onChange(Number(value) - step!);
-  }
+  };
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
@@ -91,26 +91,28 @@ WidgetProps) => {
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const requiredSymbol = required ? "*" : "";
-  
+
   const uiProps = _pick(options.props || {}, allowedProps);
 
   return (
     <>
-    {/* TODO: add label for= attribute */}
-      <Label>{label + requiredSymbol}</Label>
+      {/* TODO: add label for= attribute */}
+      <Label htmlFor={id}>{label + requiredSymbol}</Label>
       <SpinButton
+        id={id}
         min={min}
         max={max}
         step={step}
         incrementButtonAriaLabel={"Increase value by 1"}
         decrementButtonAriaLabel={"Decrease value by 1"}
         disabled={disabled || readonly}
-        value={value || (value === 0) ? value : ""}
+        value={value || value === 0 ? value : ""}
         onBlur={_onBlur}
         onFocus={_onFocus}
         onChange={_onChange}
         onIncrement={_onIncrement}
         onDecrement={_onDecrement}
+        for=""
         {...uiProps}
       />
     </>
