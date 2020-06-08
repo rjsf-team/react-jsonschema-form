@@ -6,6 +6,8 @@ const styles = {
   root: [
     {
       fontSize: 24,
+      marginBottom: 20,
+      paddingBottom: 0
     },
   ],
 };
