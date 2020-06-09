@@ -35,7 +35,7 @@ const TextWidget = ({
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
-  console.log(textFieldProps);
+
   return (
     <TextField
       id={id}
