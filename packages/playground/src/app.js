@@ -269,6 +269,7 @@ function ThemeSelector({ theme, themes, select }) {
       schema={schema}
       uiSchema={uiSchema}
       formData={theme}
+      noHtml5Validate={true}
       onChange={({ formData }) =>
         formData && select(formData, themes[formData])
       }>
@@ -341,7 +342,7 @@ class Playground extends Component {
     super(props);
 
     // set default theme
-    const theme = "default";
+    const theme = "fluent-ui";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.state = {
@@ -353,7 +354,7 @@ class Playground extends Component {
       theme,
       subtheme: null,
       liveSettings: {
-        validate: true,
+        validate: false,
         disable: false,
         omitExtraData: false,
         liveOmit: false,
