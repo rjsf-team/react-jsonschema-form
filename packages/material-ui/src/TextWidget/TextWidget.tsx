@@ -15,6 +15,7 @@ const TextWidget = ({
   disabled,
   type,
   label,
+  displayLabel,
   value,
   onChange,
   onBlur,
@@ -22,6 +23,7 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
+  //uiSchema,
   rawErrors = [],
   formContext,
   ...textFieldProps
@@ -39,7 +41,7 @@ const TextWidget = ({
   return (
     <TextField
       id={id}
-      label={label || schema.title}
+      label={displayLabel ? label || schema.title : false}
       autoFocus={autofocus}
       required={required}
       disabled={disabled || readonly}

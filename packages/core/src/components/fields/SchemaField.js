@@ -284,6 +284,7 @@ function SchemaFieldRender(props) {
   const field = (
     <FieldComponent
       {...props}
+      displayLabel={displayLabel}
       idSchema={idSchema}
       schema={schema}
       uiSchema={{ ...uiSchema, classNames: undefined }}
