@@ -38,6 +38,18 @@ describe("single fields", () => {
       expect(tree).toMatchSnapshot();
     });
   });
+  test("string field with placeholder", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+    };
+    const uiSchema: UiSchema = {
+      "ui:placeholder": "placeholder",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("number field", () => {
     const schema: JSONSchema7 = {
       type: "number",

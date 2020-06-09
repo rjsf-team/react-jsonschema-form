@@ -1524,6 +1524,99 @@ exports[`single fields string field regular 1`] = `
 </form>
 `;
 
+exports[`single fields string field with placeholder 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="MuiFormControl-root MuiFormControl-fullWidth"
+  >
+    <div
+      className="MuiFormControl-root MuiTextField-root"
+      registry={
+        Object {
+          "ArrayFieldTemplate": [Function],
+          "FieldTemplate": [Function],
+          "ObjectFieldTemplate": [Function],
+          "definitions": Object {},
+          "fields": Object {
+            "AnyOfField": [Function],
+            "ArrayField": [Function],
+            "BooleanField": [Function],
+            "DescriptionField": [Function],
+            "NullField": [Function],
+            "NumberField": [Function],
+            "ObjectField": [Function],
+            "OneOfField": [Function],
+            "SchemaField": [Function],
+            "StringField": [Function],
+            "TitleField": [Function],
+            "UnsupportedField": [Function],
+          },
+          "formContext": Object {},
+          "rootSchema": Object {
+            "type": "string",
+          },
+          "widgets": Object {
+            "AltDateTimeWidget": [Function],
+            "AltDateWidget": [Function],
+            "BaseInput": [Function],
+            "CheckboxWidget": [Function],
+            "CheckboxesWidget": [Function],
+            "ColorWidget": [Function],
+            "DateTimeWidget": [Function],
+            "DateWidget": [Function],
+            "EmailWidget": [Function],
+            "FileWidget": [Function],
+            "HiddenWidget": [Function],
+            "PasswordWidget": [Function],
+            "RadioWidget": [Function],
+            "RangeWidget": [Function],
+            "SelectWidget": [Function],
+            "TextWidget": [Function],
+            "TextareaWidget": [Function],
+            "URLWidget": [Function],
+            "UpDownWidget": [Function],
+          },
+        }
+      }
+    >
+      <div
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        onClick={[Function]}
+      >
+        <input
+          aria-invalid={false}
+          autoFocus={false}
+          className="MuiInputBase-input MuiInput-input"
+          disabled={false}
+          id="root"
+          name="nodejs"
+          onAnimationStart={[Function]}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder="placeholder"
+          required={false}
+          type="string"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields textarea field 1`] = `
 <form
   className="rjsf"
