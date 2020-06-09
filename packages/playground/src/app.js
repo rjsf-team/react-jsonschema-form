@@ -269,7 +269,6 @@ function ThemeSelector({ theme, themes, select }) {
       schema={schema}
       uiSchema={uiSchema}
       formData={theme}
-      noHtml5Validate={true}
       onChange={({ formData }) =>
         formData && select(formData, themes[formData])
       }>
@@ -596,6 +595,7 @@ class Playground extends Component {
                 uiSchema={uiSchema}
                 formData={formData}
                 onChange={this.onFormDataChange}
+                noHtml5Validate={true}
                 onSubmit={({ formData }, e) => {
                   console.log("submitted formData", formData);
                   console.log("submit event", e);
