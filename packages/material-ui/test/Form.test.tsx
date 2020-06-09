@@ -125,4 +125,61 @@ describe("single fields", () => {
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("checkbox field", () => {
+    const schema: JSONSchema7 = {
+      type: "boolean",
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("checkbox field", () => {
+    const schema: JSONSchema7 = {
+      type: "boolean",
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("checkboxes field", () => {
+    const schema: JSONSchema7 = {
+      type: "array",
+      items: {
+        type: "string",
+        enum: ["foo", "bar", "fuzz", "qux"],
+      },
+      uniqueItems: true,
+    };
+    const uiSchema: UiSchema = {
+      "ui:widget": "checkboxes",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("radio field", () => {
+    const schema: JSONSchema7 = {
+      type: "boolean",
+    };
+    const uiSchema: UiSchema = {
+      "ui:widget": "radio",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("slider field", () => {
+    const schema: JSONSchema7 = {
+      type: "integer",
+      minimum: 42,
+      maximum: 100,
+    };
+    const uiSchema: UiSchema = {
+      "ui:widget": "range",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
