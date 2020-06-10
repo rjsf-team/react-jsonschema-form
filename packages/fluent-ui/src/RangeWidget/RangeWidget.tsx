@@ -1,14 +1,43 @@
-import React from 'react';
+import React from "react";
+import { Slider, Label } from "@fluentui/react";
 
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import Slider from '@material-ui/core/Slider';
-import FormLabel from '@material-ui/core/FormLabel';
-
-import { utils } from '@rjsf/core';
-import { WidgetProps } from '@rjsf/core';
+import { utils } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/core";
+import _pick from "lodash/pick";
 
 const { rangeSpec } = utils;
+
+const styles_red = {
+  // TODO: get this color from theme.
+  color: "rgb(164, 38, 44)",
+  fontSize: 12,
+  fontWeight: "normal" as any,
+  fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`,
+};
+
+// Keys of ISliderProps from @fluentui/react
+const allowedProps = [
+  "componentRef",
+  "styles?",
+  "theme",
+  "label",
+  "defaultValue",
+  "value",
+  "min",
+  "max",
+  "step",
+  "showValue",
+  "onChange",
+  "ariaLabel",
+  "ariaValueText",
+  "vertical",
+  "disabled",
+  "snapToStep",
+  "className",
+  "buttonProps",
+  "valueFormat",
+  "originFromZero",
+];
 
 const RangeWidget = ({
   value,
@@ -28,31 +57,25 @@ const RangeWidget = ({
 }: WidgetProps) => {
   let sliderProps = { value, label, id, ...rangeSpec(schema) };
 
-  const _onChange = ({}, value: any) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onChange = (value: number) => onChange(value);
 
+  const uiProps = _pick(options.props || {}, allowedProps);
   return (
-    <Grid container={true} alignItems="flex-end">
-      <FormControl
-        fullWidth={true}
-        //error={!!rawErrors}
-        required={required}
-      >
-        <FormLabel id={id}>{label}</FormLabel>
-        <Slider
-          {...sliderProps}
-          disabled={disabled || readonly}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-      </FormControl>
-    </Grid>
+    <>
+      <Label>
+        {label || schema.title}
+        {required && <span style={styles_red}>&nbsp;*</span>}
+      </Label>
+      <Slider
+        disabled={disabled || readonly}
+        min={sliderProps.min}
+        max={sliderProps.max}
+        step={sliderProps.step}
+        onChange={_onChange}
+        snapToStep
+        {...uiProps}
+      />
+    </>
   );
 };
 
