@@ -59,7 +59,8 @@ export default class Form extends Component {
     const schema = "schema" in props ? props.schema : this.props.schema;
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof inputFormData !== "undefined";
-    const liveValidate = props.liveValidate || this.props.liveValidate;
+    const liveValidate =
+      "liveValidate" in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const omitDefaultLoad =
       (props.omitDefaultLoad || this.props.omitDefaultLoad) && !isOnChange;
@@ -71,14 +72,50 @@ export default class Form extends Component {
     const retrievedSchema = retrieveSchema(schema, rootSchema, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
-    let { errors, errorSchema } = mustValidate
-      ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
-      : {
-          errors: state.errors || [],
-          errorSchema: state.errorSchema || {},
+
+    const getCurrentErrors = () => {
+      if (props.noValidate) {
+        return { errors: [], errorSchema: {} };
+      } else if (!props.liveValidate) {
+        return {
+          errors: state.schemaValidationErrors || [],
+          errorSchema: state.schemaValidationErrorSchema || {},
         };
+      }
+      return {
+        errors: state.errors || [],
+        errorSchema: state.errorSchema || {},
+      };
+    };
+
+    let errors,
+      errorSchema,
+      schemaValidationErrors,
+      schemaValidationErrorSchema;
+    if (mustValidate) {
+      const schemaValidation = this.validate(
+        formData,
+        schema,
+        additionalMetaSchemas,
+        customFormats
+      );
+      errors = schemaValidation.errors;
+      errorSchema = schemaValidation.errorSchema;
+      schemaValidationErrors = errors;
+      schemaValidationErrorSchema = errorSchema;
+    } else {
+      const currentErrors = getCurrentErrors();
+      errors = currentErrors.errors;
+      errorSchema = currentErrors.errorSchema;
+      schemaValidationErrors = state.schemaValidationErrors;
+      schemaValidationErrorSchema = state.schemaValidationErrorSchema;
+    }
     if (props.extraErrors) {
-      errorSchema = mergeObjects(errorSchema, props.extraErrors);
+      errorSchema = mergeObjects(
+        errorSchema,
+        props.extraErrors,
+        !!"concat arrays"
+      );
       errors = toErrorList(errorSchema);
     }
     const idSchema = toIdSchema(
@@ -88,7 +125,7 @@ export default class Form extends Component {
       formData,
       props.idPrefix
     );
-    return {
+    const nextState = {
       schema,
       uiSchema,
       idSchema,
@@ -98,6 +135,11 @@ export default class Form extends Component {
       errorSchema,
       additionalMetaSchemas,
     };
+    if (schemaValidationErrors) {
+      nextState.schemaValidationErrors = schemaValidationErrors;
+      nextState.schemaValidationErrorSchema = schemaValidationErrorSchema;
+    }
+    return nextState;
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -210,15 +252,33 @@ export default class Form extends Component {
     }
 
     if (mustValidate) {
-      let { errors, errorSchema } = this.validate(newFormData);
+      let schemaValidation = this.validate(newFormData);
+      let errors = schemaValidation.errors;
+      let errorSchema = schemaValidation.errorSchema;
+      const schemaValidationErrors = errors;
+      const schemaValidationErrorSchema = errorSchema;
       if (this.props.extraErrors) {
-        errorSchema = mergeObjects(errorSchema, this.props.extraErrors);
+        errorSchema = mergeObjects(
+          errorSchema,
+          this.props.extraErrors,
+          !!"concat arrays"
+        );
         errors = toErrorList(errorSchema);
       }
-      state = { formData: newFormData, errors, errorSchema };
+      state = {
+        formData: newFormData,
+        errors,
+        errorSchema,
+        schemaValidationErrors,
+        schemaValidationErrorSchema,
+      };
     } else if (!this.props.noValidate && newErrorSchema) {
       const errorSchema = this.props.extraErrors
-        ? mergeObjects(newErrorSchema, this.props.extraErrors)
+        ? mergeObjects(
+            newErrorSchema,
+            this.props.extraErrors,
+            !!"concat arrays"
+          )
         : newErrorSchema;
       state = {
         formData: newFormData,
@@ -228,7 +288,7 @@ export default class Form extends Component {
     }
     this.setState(
       state,
-      () => this.props.onChange && this.props.onChange(state)
+      () => this.props.onChange && this.props.onChange(this.state)
     );
   };
 
@@ -272,19 +332,35 @@ export default class Form extends Component {
     }
 
     if (!this.props.noValidate) {
-      let { errors, errorSchema } = this.validate(newFormData);
+      let schemaValidation = this.validate(newFormData);
+      let errors = schemaValidation.errors;
+      let errorSchema = schemaValidation.errorSchema;
+      const schemaValidationErrors = errors;
+      const schemaValidationErrorSchema = errorSchema;
       if (Object.keys(errors).length > 0) {
         if (this.props.extraErrors) {
-          errorSchema = mergeObjects(errorSchema, this.props.extraErrors);
+          errorSchema = mergeObjects(
+            errorSchema,
+            this.props.extraErrors,
+            !!"concat arrays"
+          );
           errors = toErrorList(errorSchema);
         }
-        this.setState({ errors, errorSchema }, () => {
-          if (this.props.onError) {
-            this.props.onError(errors);
-          } else {
-            console.error("Form validation failed", errors);
+        this.setState(
+          {
+            errors,
+            errorSchema,
+            schemaValidationErrors,
+            schemaValidationErrorSchema,
+          },
+          () => {
+            if (this.props.onError) {
+              this.props.onError(errors);
+            } else {
+              console.error("Form validation failed", errors);
+            }
           }
-        });
+        );
         return;
       }
     }

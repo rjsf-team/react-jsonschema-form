@@ -3,8 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { parseDateString, toDateString } from "../src/utils";
-import { utcToLocal } from "../src/components/widgets/DateTimeWidget";
+import { parseDateString, toDateString, utcToLocal } from "../src/utils";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("StringField", () => {
@@ -258,6 +257,18 @@ describe("StringField", () => {
       });
 
       expect(node.querySelector("#custom")).to.exist;
+    });
+
+    it("should create and set autocomplete attribute", () => {
+      const { node } = createFormComponent({
+        schema: { type: "string" },
+        uiSchema: { "ui:autocomplete": "family-name" },
+        formData: undefined,
+      });
+
+      expect(node.querySelector("input").getAttribute("autocomplete")).eql(
+        "family-name"
+      );
     });
   });
 

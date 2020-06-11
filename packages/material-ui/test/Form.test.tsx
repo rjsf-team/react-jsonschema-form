@@ -54,6 +54,16 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("number field 0", () => {
+    const schema: JSONSchema7 = {
+      type: "number"
+    };
+    const formData= 0;
+    const tree = renderer
+      .create(<Form schema={schema} formData={formData} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("null field", () => {
     const schema: JSONSchema7 = {
       type: "null"
@@ -70,6 +80,30 @@ describe("single fields", () => {
     const tree = renderer
       .create(<Form schema={schema} />)
       .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("format color", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+      format: "color",
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("format date", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+      format: "date",
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("format datetime", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+      format: "datetime",
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
