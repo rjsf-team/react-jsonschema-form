@@ -28,6 +28,62 @@ exports[`object fields object 1`] = `
           >
             <div
               className="MuiFormControl-root MuiTextField-root"
+              formContext={Object {}}
+              registry={
+                Object {
+                  "ArrayFieldTemplate": [Function],
+                  "FieldTemplate": [Function],
+                  "ObjectFieldTemplate": [Function],
+                  "definitions": Object {},
+                  "fields": Object {
+                    "AnyOfField": [Function],
+                    "ArrayField": [Function],
+                    "BooleanField": [Function],
+                    "DescriptionField": [Function],
+                    "NullField": [Function],
+                    "NumberField": [Function],
+                    "ObjectField": [Function],
+                    "OneOfField": [Function],
+                    "SchemaField": [Function],
+                    "StringField": [Function],
+                    "TitleField": [Function],
+                    "UnsupportedField": [Function],
+                  },
+                  "formContext": Object {},
+                  "rootSchema": Object {
+                    "properties": Object {
+                      "a": Object {
+                        "type": "string",
+                      },
+                      "b": Object {
+                        "type": "number",
+                      },
+                    },
+                    "type": "object",
+                  },
+                  "widgets": Object {
+                    "AltDateTimeWidget": [Function],
+                    "AltDateWidget": [Function],
+                    "BaseInput": [Function],
+                    "CheckboxWidget": [Function],
+                    "CheckboxesWidget": [Function],
+                    "ColorWidget": [Function],
+                    "DateTimeWidget": [Function],
+                    "DateWidget": [Function],
+                    "EmailWidget": [Function],
+                    "FileWidget": [Function],
+                    "HiddenWidget": [Function],
+                    "PasswordWidget": [Function],
+                    "RadioWidget": [Function],
+                    "RangeWidget": [Function],
+                    "SelectWidget": [Function],
+                    "TextWidget": [Function],
+                    "TextareaWidget": [Function],
+                    "URLWidget": [Function],
+                    "UpDownWidget": [Function],
+                  },
+                }
+              }
             >
               <label
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -47,11 +103,11 @@ exports[`object fields object 1`] = `
                   className="MuiInputBase-input MuiInput-input"
                   disabled={false}
                   id="root_a"
-                  name="nodejs"
                   onAnimationStart={[Function]}
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
+                  placeholder=""
                   required={false}
                   type="string"
                   value=""
@@ -77,6 +133,62 @@ exports[`object fields object 1`] = `
           >
             <div
               className="MuiFormControl-root MuiTextField-root"
+              formContext={Object {}}
+              registry={
+                Object {
+                  "ArrayFieldTemplate": [Function],
+                  "FieldTemplate": [Function],
+                  "ObjectFieldTemplate": [Function],
+                  "definitions": Object {},
+                  "fields": Object {
+                    "AnyOfField": [Function],
+                    "ArrayField": [Function],
+                    "BooleanField": [Function],
+                    "DescriptionField": [Function],
+                    "NullField": [Function],
+                    "NumberField": [Function],
+                    "ObjectField": [Function],
+                    "OneOfField": [Function],
+                    "SchemaField": [Function],
+                    "StringField": [Function],
+                    "TitleField": [Function],
+                    "UnsupportedField": [Function],
+                  },
+                  "formContext": Object {},
+                  "rootSchema": Object {
+                    "properties": Object {
+                      "a": Object {
+                        "type": "string",
+                      },
+                      "b": Object {
+                        "type": "number",
+                      },
+                    },
+                    "type": "object",
+                  },
+                  "widgets": Object {
+                    "AltDateTimeWidget": [Function],
+                    "AltDateWidget": [Function],
+                    "BaseInput": [Function],
+                    "CheckboxWidget": [Function],
+                    "CheckboxesWidget": [Function],
+                    "ColorWidget": [Function],
+                    "DateTimeWidget": [Function],
+                    "DateWidget": [Function],
+                    "EmailWidget": [Function],
+                    "FileWidget": [Function],
+                    "HiddenWidget": [Function],
+                    "PasswordWidget": [Function],
+                    "RadioWidget": [Function],
+                    "RangeWidget": [Function],
+                    "SelectWidget": [Function],
+                    "TextWidget": [Function],
+                    "TextareaWidget": [Function],
+                    "URLWidget": [Function],
+                    "UpDownWidget": [Function],
+                  },
+                }
+              }
             >
               <label
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -96,11 +208,11 @@ exports[`object fields object 1`] = `
                   className="MuiInputBase-input MuiInput-input"
                   disabled={false}
                   id="root_b"
-                  name="nodejs"
                   onAnimationStart={[Function]}
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
+                  placeholder=""
                   required={false}
                   type="number"
                   value=""
@@ -112,12 +224,31 @@ exports[`object fields object 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-162"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>

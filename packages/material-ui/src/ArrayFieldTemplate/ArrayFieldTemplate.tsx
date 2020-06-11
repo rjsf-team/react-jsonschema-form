@@ -41,7 +41,7 @@ const ArrayFieldTitle = ({
   required,
 }: ArrayFieldTitleProps) => {
   if (!title) {
-    return <div />;
+    return null;
   }
 
   const id = `${idSchema.$id}__title`;
@@ -60,7 +60,7 @@ const ArrayFieldDescription = ({
   description,
 }: ArrayFieldDescriptionProps) => {
   if (!description) {
-    return <div />;
+    return null;
   }
 
   const id = `${idSchema.$id}__description`;

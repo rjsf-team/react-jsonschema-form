@@ -45,25 +45,25 @@ Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 - `@material-ui/icons`
 - `@rjsf/core >= 2.0.0`
 
-```sh
+```bash
 yarn add @material-ui/core @material-ui/icons @rjsf/core
 ```
 
 ### Installation
 
-```sh
+```bash
 yarn add @rjsf/material-ui
 ```
 
 ## Usage
 
-```javascript
+```js
 import Form from '@rjsf/material-ui';
 ```
 
 or
 
-```javascript
+```js
 import { withTheme } from '@rjsf/core';
 import { Theme as MuiTheme } from '@rjsf/material-ui';
 
