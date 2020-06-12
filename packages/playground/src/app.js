@@ -4,6 +4,10 @@ import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import DemoFrame from "./DemoFrame";
+import { getUrlState } from "./utils/url";
+import unicode from "./utils/unicode";
+
+const LOCALSTORAGE_NAME = "rjsf_playground_state";
 
 // deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
 
@@ -342,14 +346,20 @@ class Playground extends Component {
 
     // set default theme
     const theme = "default";
+    const storedState = JSON.parse(
+      (typeof window !== "undefined" &&
+        window.localStorage.getItem(LOCALSTORAGE_NAME)) ||
+        null
+    );
+    const urlState = getUrlState() || storedState || {};
+
     // initialize state with Simple data sample
-    const { schema, uiSchema, formData, validate } = samples.Simple;
     this.state = {
       form: false,
-      schema,
-      uiSchema,
-      formData,
-      validate,
+      schema: urlState.schema || samples.Simple.schema,
+      uiSchema: urlState.uiSchema || samples.Simple.uiSchema,
+      formData: urlState.formData || samples.Simple.formData,
+      validate: urlState.validate || samples.Simple.validate,
       theme,
       subtheme: null,
       liveSettings: {
@@ -409,11 +419,37 @@ class Playground extends Component {
     );
   };
 
-  onSchemaEdited = schema => this.setState({ schema, shareURL: null });
+  saveState = () => {
+    const serializedState = JSON.stringify({
+      schema: this.state.schema,
+      uiSchema: this.state.uiSchema,
+      formData: this.state.formData,
+      validate: this.state.validate,
+    });
 
-  onUISchemaEdited = uiSchema => this.setState({ uiSchema, shareURL: null });
+    if (typeof window !== "undefined") {
+      if (window.localStorage) {
+        window.localStorage.setItem(LOCALSTORAGE_NAME, serializedState);
+      }
 
-  onFormDataEdited = formData => this.setState({ formData, shareURL: null });
+      window.location.hash = unicode.encodeToBase64(serializedState);
+    }
+  };
+
+  onSchemaEdited = schema => {
+    this.saveState();
+    return this.setState({ schema, shareURL: null });
+  };
+
+  onUISchemaEdited = uiSchema => {
+    this.saveState();
+    return this.setState({ uiSchema, shareURL: null });
+  };
+
+  onFormDataEdited = formData => {
+    this.saveState();
+    return this.setState({ formData, shareURL: null });
+  };
 
   onExtraErrorsEdited = extraErrors =>
     this.setState({ extraErrors, shareURL: null });
@@ -440,8 +476,10 @@ class Playground extends Component {
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
-  onFormDataChange = ({ formData }) =>
-    this.setState({ formData, shareURL: null });
+  onFormDataChange = ({ formData }) => {
+    this.saveState();
+    return this.setState({ formData, shareURL: null });
+  };
 
   onShare = () => {
     const {
