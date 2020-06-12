@@ -12,6 +12,7 @@ import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import TextWidget from "../TextWidget/TextWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
+import URLWidget from "../URLWidget/URLWidget";
 
 export default {
   AltDateWidget,
@@ -28,4 +29,5 @@ export default {
   TextareaWidget,
   TextWidget,
   UpDownWidget,
+  URLWidget,
 };
