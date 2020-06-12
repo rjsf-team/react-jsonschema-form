@@ -87,12 +87,34 @@ exports[`single fields format color 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-88"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -185,12 +207,31 @@ exports[`single fields format date 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-89"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -283,12 +324,34 @@ exports[`single fields format datetime 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-90"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -303,12 +366,34 @@ exports[`single fields null field 1`] = `
   <div
     className="MuiFormControl-root MuiFormControl-fullWidth"
   />
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-86"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -400,12 +485,34 @@ exports[`single fields number field 0 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-85"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -497,12 +604,31 @@ exports[`single fields number field 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-84"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -530,12 +656,34 @@ exports[`single fields string field format data-url 1`] = `
       </p>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-83"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -628,12 +776,34 @@ exports[`single fields string field format email 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-71"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -726,12 +896,31 @@ exports[`single fields string field format uri 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-82"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -823,12 +1012,31 @@ exports[`single fields string field regular 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-39"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -866,12 +1074,31 @@ exports[`single fields unsupported field 1`] = `
       </pre>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-87"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
