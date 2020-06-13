@@ -157,7 +157,7 @@ exports[`array fields checkboxes 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-261"
+    className="MuiBox-root MuiBox-root-242"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

@@ -14,7 +14,7 @@ exports[`single fields checkbox field 1`] = `
     >
       <span
         aria-disabled={false}
-        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-73 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
         onBlur={[Function]}
         onDragLeave={[Function]}
         onFocus={[Function]}
@@ -34,7 +34,7 @@ exports[`single fields checkbox field 1`] = `
           <input
             autoFocus={false}
             checked={false}
-            className="PrivateSwitchBase-input-76"
+            className="PrivateSwitchBase-input-133"
             data-indeterminate={false}
             disabled={false}
             id="root"
@@ -53,6 +53,9 @@ exports[`single fields checkbox field 1`] = `
             />
           </svg>
         </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
       </span>
       <span
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
@@ -60,7 +63,7 @@ exports[`single fields checkbox field 1`] = `
     </label>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-88"
+    className="MuiBox-root MuiBox-root-173"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -106,7 +109,7 @@ exports[`single fields checkbox field 2`] = `
     >
       <span
         aria-disabled={false}
-        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-73 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
         onBlur={[Function]}
         onDragLeave={[Function]}
         onFocus={[Function]}
@@ -126,7 +129,7 @@ exports[`single fields checkbox field 2`] = `
           <input
             autoFocus={false}
             checked={false}
-            className="PrivateSwitchBase-input-76"
+            className="PrivateSwitchBase-input-133"
             data-indeterminate={false}
             disabled={false}
             id="root"
@@ -145,21 +148,37 @@ exports[`single fields checkbox field 2`] = `
             />
           </svg>
         </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
       </span>
       <span
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
       />
     </label>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-174"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -186,7 +205,7 @@ exports[`single fields checkboxes field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-73 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -206,7 +225,7 @@ exports[`single fields checkboxes field 1`] = `
             <input
               autoFocus={false}
               checked={false}
-              className="PrivateSwitchBase-input-76"
+              className="PrivateSwitchBase-input-133"
               data-indeterminate={false}
               disabled={false}
               id="root_0"
@@ -225,6 +244,9 @@ exports[`single fields checkboxes field 1`] = `
               />
             </svg>
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
@@ -237,7 +259,7 @@ exports[`single fields checkboxes field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-73 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -257,7 +279,7 @@ exports[`single fields checkboxes field 1`] = `
             <input
               autoFocus={false}
               checked={false}
-              className="PrivateSwitchBase-input-76"
+              className="PrivateSwitchBase-input-133"
               data-indeterminate={false}
               disabled={false}
               id="root_1"
@@ -276,6 +298,9 @@ exports[`single fields checkboxes field 1`] = `
               />
             </svg>
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
@@ -288,7 +313,7 @@ exports[`single fields checkboxes field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-73 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -308,7 +333,7 @@ exports[`single fields checkboxes field 1`] = `
             <input
               autoFocus={false}
               checked={false}
-              className="PrivateSwitchBase-input-76"
+              className="PrivateSwitchBase-input-133"
               data-indeterminate={false}
               disabled={false}
               id="root_2"
@@ -327,6 +352,9 @@ exports[`single fields checkboxes field 1`] = `
               />
             </svg>
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
@@ -339,7 +367,7 @@ exports[`single fields checkboxes field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-73 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -359,7 +387,7 @@ exports[`single fields checkboxes field 1`] = `
             <input
               autoFocus={false}
               checked={false}
-              className="PrivateSwitchBase-input-76"
+              className="PrivateSwitchBase-input-133"
               data-indeterminate={false}
               disabled={false}
               id="root_3"
@@ -378,6 +406,9 @@ exports[`single fields checkboxes field 1`] = `
               />
             </svg>
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
@@ -387,12 +418,34 @@ exports[`single fields checkboxes field 1`] = `
       </label>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-184"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -506,6 +559,9 @@ exports[`single fields format color 1`] = `
       >
         Submit
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -594,12 +650,31 @@ exports[`single fields format date 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-90"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -689,7 +764,7 @@ exports[`single fields format datetime 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-90"
+    className="MuiBox-root MuiBox-root-91"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -731,7 +806,7 @@ exports[`single fields null field 1`] = `
     className="MuiFormControl-root MuiFormControl-fullWidth"
   />
   <div
-    className="MuiBox-root MuiBox-root-86"
+    className="MuiBox-root MuiBox-root-87"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -845,12 +920,31 @@ exports[`single fields number field 0 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-86"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -938,12 +1032,34 @@ exports[`single fields number field 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-85"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -982,12 +1098,31 @@ exports[`single fields password field 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-92"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -1017,7 +1152,7 @@ exports[`single fields radio field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-73 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -1036,14 +1171,14 @@ exports[`single fields radio field 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-76"
+              className="PrivateSwitchBase-input-133"
               disabled={false}
               onChange={[Function]}
               type="radio"
               value="true"
             />
             <div
-              className="PrivateRadioButtonIcon-root-143"
+              className="PrivateRadioButtonIcon-root-190"
             >
               <svg
                 aria-hidden="true"
@@ -1058,7 +1193,7 @@ exports[`single fields radio field 1`] = `
               </svg>
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-144"
+                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-191"
                 focusable="false"
                 role="presentation"
                 viewBox="0 0 24 24"
@@ -1069,9 +1204,6 @@ exports[`single fields radio field 1`] = `
               </svg>
             </div>
           </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
@@ -1084,7 +1216,7 @@ exports[`single fields radio field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-73 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -1103,14 +1235,14 @@ exports[`single fields radio field 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-76"
+              className="PrivateSwitchBase-input-133"
               disabled={false}
               onChange={[Function]}
               type="radio"
               value="false"
             />
             <div
-              className="PrivateRadioButtonIcon-root-143"
+              className="PrivateRadioButtonIcon-root-190"
             >
               <svg
                 aria-hidden="true"
@@ -1125,7 +1257,7 @@ exports[`single fields radio field 1`] = `
               </svg>
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-144"
+                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-191"
                 focusable="false"
                 role="presentation"
                 viewBox="0 0 24 24"
@@ -1136,9 +1268,6 @@ exports[`single fields radio field 1`] = `
               </svg>
             </div>
           </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
@@ -1149,7 +1278,7 @@ exports[`single fields radio field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-85"
+    className="MuiBox-root MuiBox-root-193"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1173,9 +1302,6 @@ exports[`single fields radio field 1`] = `
       >
         Submit
       </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
     </button>
   </div>
 </form>
@@ -1239,7 +1365,7 @@ exports[`single fields select field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-84"
+    className="MuiBox-root MuiBox-root-117"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1702,12 +1828,31 @@ exports[`single fields string field regular 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-39"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -1795,12 +1940,31 @@ exports[`single fields string field with placeholder 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="MuiBox-root MuiBox-root-84"
+  >
     <button
-      className="btn btn-info"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
       type="submit"
     >
-      Submit
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -1840,7 +2004,7 @@ exports[`single fields textarea field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-39"
+    className="MuiBox-root MuiBox-root-93"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1864,6 +2028,9 @@ exports[`single fields textarea field 1`] = `
       >
         Submit
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -1902,7 +2069,7 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-87"
+    className="MuiBox-root MuiBox-root-88"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
