@@ -1,10 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
+import TextField from "@material-ui/core/TextField";
 
-import { WidgetProps } from '@rjsf/core';
+import { WidgetProps } from "@rjsf/core";
 
 const PasswordWidget = ({
   id,
@@ -19,11 +17,12 @@ const PasswordWidget = ({
   options,
   autofocus,
   schema,
+  rawErrors = [],
 }: WidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
+    onChange(value === "" ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -31,23 +30,19 @@ const PasswordWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <FormControl
-      fullWidth={true}
-      //error={!!rawErrors}
+    <TextField
+      id={id}
+      label={label || schema.title}
+      autoFocus={autofocus}
       required={required}
-    >
-      <InputLabel>{label || schema.title}</InputLabel>
-      <Input
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled || readonly}
-        type="password"
-        value={value ? value : ''}
-        onFocus={_onFocus}
-        onBlur={_onBlur}
-        onChange={_onChange}
-      />
-    </FormControl>
+      disabled={disabled || readonly}
+      type="password"
+      value={value ? value : ""}
+      error={rawErrors.length > 0}
+      onFocus={_onFocus}
+      onBlur={_onBlur}
+      onChange={_onChange}
+    />
   );
 };
 
