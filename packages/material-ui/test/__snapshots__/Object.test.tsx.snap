@@ -28,7 +28,6 @@ exports[`object fields object 1`] = `
           >
             <div
               className="MuiFormControl-root MuiTextField-root"
-              formContext={Object {}}
               registry={
                 Object {
                   "ArrayFieldTemplate": [Function],
@@ -133,7 +132,6 @@ exports[`object fields object 1`] = `
           >
             <div
               className="MuiFormControl-root MuiTextField-root"
-              formContext={Object {}}
               registry={
                 Object {
                   "ArrayFieldTemplate": [Function],

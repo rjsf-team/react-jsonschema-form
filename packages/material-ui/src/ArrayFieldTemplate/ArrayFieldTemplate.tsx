@@ -76,7 +76,7 @@ const DefaultArrayItem = (props: any) => {
     fontWeight: 'bold',
   };
   return (
-    <Grid container={true} key={props.index} alignItems="center">
+    <Grid container={true} key={props.key} alignItems="center">
       <Grid item={true} xs>
         <Box mb={2}>
           <Paper elevation={2}>

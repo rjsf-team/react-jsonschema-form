@@ -14,7 +14,6 @@ exports[`single fields format color 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        formContext={Object {}}
         registry={
           Object {
             "ArrayFieldTemplate": [Function],
@@ -134,7 +133,6 @@ exports[`single fields format date 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        formContext={Object {}}
         registry={
           Object {
             "ArrayFieldTemplate": [Function],
@@ -251,7 +249,6 @@ exports[`single fields format datetime 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        formContext={Object {}}
         registry={
           Object {
             "ArrayFieldTemplate": [Function],
@@ -413,7 +410,6 @@ exports[`single fields number field 0 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        formContext={Object {}}
         registry={
           Object {
             "ArrayFieldTemplate": [Function],
@@ -532,7 +528,6 @@ exports[`single fields number field 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        formContext={Object {}}
         registry={
           Object {
             "ArrayFieldTemplate": [Function],
@@ -703,7 +698,6 @@ exports[`single fields string field format email 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        formContext={Object {}}
         registry={
           Object {
             "ArrayFieldTemplate": [Function],
@@ -823,7 +817,6 @@ exports[`single fields string field format uri 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        formContext={Object {}}
         registry={
           Object {
             "ArrayFieldTemplate": [Function],
@@ -940,7 +933,6 @@ exports[`single fields string field regular 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        formContext={Object {}}
         registry={
           Object {
             "ArrayFieldTemplate": [Function],
