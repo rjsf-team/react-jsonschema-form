@@ -14,7 +14,9 @@ const rangeOptions = (start, stop) => {
 };
 
 const readyForChange = (state) => {
-  return Object.keys(state).every(key => state[key] !== -1);
+  return Object.keys(state).every(
+    key => typeof state[key] !== "undefined" && state[key] !== -1,
+  );
 };
 
 const AltDateWidget = ({
@@ -23,6 +25,7 @@ const AltDateWidget = ({
   formContext,
   id,
   onBlur,
+  onChange,
   onFocus,
   options,
   readonly,
@@ -39,30 +42,26 @@ const AltDateWidget = ({
     setState(parseDateString(value, showTime));
   }, [showTime, value]);
 
-  const onChange = (property, nextValue) =>
-    setState((prevState) => {
-      const nextState = {
-        ...prevState,
-        [property]: typeof nextValue === "undefined" ? -1 : nextValue,
-      };
+  const handleChange = (property, nextValue) => {
+    const nextState = {
+      ...state,
+      [property]: typeof nextValue === "undefined" ? -1 : nextValue,
+    };
 
-      if (readyForChange(nextState)) {
-        onChange(toDateString(nextState, showTime));
-      }
-
-      return nextState;
-    });
+    if (readyForChange(nextState)) {
+      onChange(toDateString(nextState, showTime));
+    } else {
+      setState(nextState);
+    }
+  }
 
   const handleNow = (event) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
-    }    
-    setState(() => {
-      const nextState = parseDateString(new Date().toJSON(), showTime);
-      onChange(toDateString(nextState, showTime));
-      return nextState;
-    });
+    }
+    const nextState = parseDateString(new Date().toJSON(), showTime);
+    onChange(toDateString(nextState, showTime));
   };
 
   const handleClear = (event) => {
@@ -70,11 +69,7 @@ const AltDateWidget = ({
     if (disabled || readonly) {
       return;
     }
-    setState(() => {
-      const nextState = parseDateString("", showTime);
-      onChange(undefined);
-      return nextState;
-    });
+    onChange(undefined);
   };
 
   const dateElementProps = () => {
@@ -131,7 +126,7 @@ const AltDateWidget = ({
               onFocus,
               readonly,
               registry,
-              select: onChange,
+              select: handleChange,
               // NOTE: antd components accept -1 rather than issue a warning
               // like material-ui, so we need to convert -1 to undefined here.
               value: elemProps.value < 0 ? undefined : elemProps.value,
