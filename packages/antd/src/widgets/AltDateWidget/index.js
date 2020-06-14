@@ -53,7 +53,7 @@ const AltDateWidget = ({
     } else {
       setState(nextState);
     }
-  }
+  };
 
   const handleNow = (event) => {
     event.preventDefault();
