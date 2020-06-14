@@ -22,8 +22,8 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
-  rawErrors = [],
   formContext,
+  rawErrors = [],
   ...textFieldProps
 }: TextWidgetProps) => {
   const _onChange = ({
