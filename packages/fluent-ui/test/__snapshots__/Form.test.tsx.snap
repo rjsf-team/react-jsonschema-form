@@ -39,7 +39,7 @@ exports[`single fields null field 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__25"
+              id="id__28"
             >
               Submit
             </span>
@@ -118,7 +118,7 @@ exports[`single fields number field 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__22"
+              id="id__25"
             >
               Submit
             </span>
@@ -182,7 +182,7 @@ exports[`single fields string field format data-url 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__16"
+              id="id__19"
             >
               Submit
             </span>
@@ -208,21 +208,33 @@ exports[`single fields string field format email 1`] = `
       }
     }
   >
-    <input
-      autoFocus={false}
-      className="form-control"
-      disabled={false}
-      id="root"
-      list={null}
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      placeholder=""
-      readOnly={false}
-      required={false}
-      type="email"
-      value=""
-    />
+    <div
+      className="ms-TextField root-42"
+    >
+      <div
+        className="ms-TextField-wrapper"
+      >
+        <div
+          className="ms-TextField-fieldGroup fieldGroup-43"
+        >
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-44"
+            disabled={false}
+            id="root"
+            name="nodejs"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            readOnly={false}
+            type="email"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
   </div>
   <div>
     <br />
@@ -249,7 +261,7 @@ exports[`single fields string field format email 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__7"
+              id="id__10"
             >
               Submit
             </span>
@@ -328,7 +340,7 @@ exports[`single fields string field format uri 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__13"
+              id="id__16"
             >
               Submit
             </span>
@@ -481,7 +493,7 @@ exports[`single fields unsupported field 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__28"
+              id="id__31"
             >
               Submit
             </span>
