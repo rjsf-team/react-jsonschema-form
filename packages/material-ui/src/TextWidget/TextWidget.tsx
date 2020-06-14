@@ -46,7 +46,7 @@ const TextWidget = ({
       name={name}
       type={type || (schema.type as string)}
       value={value || value === 0 ? value : ""}
-      error={rawErrors.length > 0 ? true : false}
+      error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
