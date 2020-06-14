@@ -64,8 +64,6 @@ const SelectWidget = ({
 
   const { enumOptions, enumDisabled } = options;
 
-  const emptyValue = multiple ? [] : '';
-
   const handleChange = (nextValue) => onChange(processValue(schema, nextValue));
 
   const handleBlur = () => onBlur(id, processValue(schema, value));
@@ -76,6 +74,8 @@ const SelectWidget = ({
 
   const stringify = (currentValue) =>
     Array.isArray(currentValue) ? value.map(String) : String(value);
+
+  console.log(placeholder);
 
   return (
     <Select
@@ -90,7 +90,7 @@ const SelectWidget = ({
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={SELECT_STYLE}
-      value={typeof value !== 'undefined' ? stringify(value) : emptyValue}
+      value={typeof value !== 'undefined' ? stringify(value) : undefined}
     >
       {enumOptions.map(({ value: optionValue, label: optionLabel }) => (
         <Select.Option
