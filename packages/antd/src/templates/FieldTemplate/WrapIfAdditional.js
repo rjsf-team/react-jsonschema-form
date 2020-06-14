@@ -62,6 +62,8 @@ const WrapIfAdditional = ({
               wrapperCol={wrapperCol}
             >
               <Input
+                className="form-control"
+                defaultValue={label}
                 disabled={disabled || (readonlyAsDisabled && readonly)}
                 id={`${id}-key`}
                 name={`${id}-key`}
