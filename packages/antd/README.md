@@ -73,7 +73,7 @@ Read the general [contributors' guide](https://react-jsonschema-form.readthedocs
 
 ## License
 
-MIT
+Apache 2
 
 <!-- MARKDOWN LINKS & IMAGES -->
 

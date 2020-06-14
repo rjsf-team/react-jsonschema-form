@@ -88,7 +88,7 @@
     "rjsf-antd"
   ],
   "author": "Delyan Ruskov <d.ruskov@gmail.com>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/mozilla-services/react-jsonschema-form/issues"
   },
