@@ -1,12 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
-import { WidgetProps } from '@rjsf/core';
+import { WidgetProps } from "@rjsf/core";
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -57,8 +56,10 @@ const CheckboxesWidget = ({
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
-    <FormControl fullWidth={true} required={required}>
-      <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+    <>
+      <FormLabel required={required} htmlFor={id}>
+        {label || schema.title}
+      </FormLabel>
       <FormGroup>
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = value.indexOf(option.value) !== -1;
@@ -90,7 +91,7 @@ const CheckboxesWidget = ({
           );
         })}
       </FormGroup>
-    </FormControl>
+    </>
   );
 };
 

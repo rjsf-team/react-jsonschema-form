@@ -1,15 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
+import TextField, {
+  StandardTextFieldProps as TextFieldProps,
+} from "@material-ui/core/TextField";
 
-import { WidgetProps } from '@rjsf/core';
+import { WidgetProps } from "@rjsf/core";
+
+export type TextWidgetProps = WidgetProps & TextFieldProps;
 
 const TextWidget = ({
   id,
   required,
   readonly,
   disabled,
+  type,
   label,
   value,
   onChange,
@@ -18,11 +22,14 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
-}: WidgetProps) => {
+  rawErrors = [],
+  formContext,
+  ...textFieldProps
+}: TextWidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
+    onChange(value === "" ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -30,25 +37,21 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <FormControl
-      fullWidth={true}
-      //error={!!rawErrors}
+    <TextField
+      id={id}
+      label={label || schema.title}
+      autoFocus={autofocus}
       required={required}
-    >
-      <TextField
-        id={id}
-        label={label || schema.title}
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled || readonly}
-        name={name}
-        type={schema.type as string}
-        value={value ? value : ''}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-      />
-    </FormControl>
+      disabled={disabled || readonly}
+      name={name}
+      type={type || (schema.type as string)}
+      value={value || value === 0 ? value : ""}
+      error={rawErrors.length > 0}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+      {...(textFieldProps as TextFieldProps)}
+    />
   );
 };
 

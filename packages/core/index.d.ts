@@ -15,6 +15,7 @@ declare module '@rjsf/core' {
         ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
         autoComplete?: string;
         autocomplete?: string; // deprecated
+        children?: React.ReactNode;
         className?: string;
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
@@ -109,6 +110,7 @@ declare module '@rjsf/core' {
         onBlur: (id: string, value: boolean | number | string | null) => void;
         onFocus: (id: string, value: boolean | number | string | null) => void;
         label: string;
+        type: string;
         multiple: boolean;
         rawErrors: string[];
     }
@@ -161,6 +163,7 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
@@ -212,6 +215,7 @@ declare module '@rjsf/core' {
         idSchema: IdSchema;
         formData: T;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type AjvError = {
@@ -386,6 +390,10 @@ declare module '@rjsf/core' {
         export function parseDateString(dateString: string, includeTime?: boolean): DateObject;
 
         export function toDateString(dateObject: DateObject, time?: boolean): string;
+
+        export function utcToLocal(jsonDate: string): string;
+
+        export function localToUTC(dateString: string): Date;
 
         export function pad(num: number, size: number): string;
 
