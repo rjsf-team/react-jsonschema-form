@@ -80,11 +80,6 @@ exports[`object fields object 1`] = `
                 },
               }
             }
-            uiSchema={
-              Object {
-                "classNames": undefined,
-              }
-            }
           >
             <label
               className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -184,11 +179,6 @@ exports[`object fields object 1`] = `
                   "URLWidget": [Function],
                   "UpDownWidget": [Function],
                 },
-              }
-            }
-            uiSchema={
-              Object {
-                "classNames": undefined,
               }
             }
           >

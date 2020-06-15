@@ -279,11 +279,6 @@ exports[`array fields fixed array 1`] = `
                             },
                           }
                         }
-                        uiSchema={
-                          Object {
-                            "classNames": undefined,
-                          }
-                        }
                       >
                         <div
                           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -386,11 +381,6 @@ exports[`array fields fixed array 1`] = `
                               "URLWidget": [Function],
                               "UpDownWidget": [Function],
                             },
-                          }
-                        }
-                        uiSchema={
-                          Object {
-                            "classNames": undefined,
                           }
                         }
                       >
