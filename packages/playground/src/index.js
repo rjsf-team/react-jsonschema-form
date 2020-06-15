@@ -3,6 +3,7 @@ import { Theme as MuiTheme } from "@rjsf/material-ui";
 import { Theme as FluentUITheme } from "@rjsf/fluent-ui";
 import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
+import { Theme as Bootstrap4Theme } from "../../bootstrap-4";
 import Playground from "./app";
 import { render } from "react-dom";
 
@@ -103,6 +104,10 @@ const themes = {
     stylesheet:
       "//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css",
     theme: FluentUITheme,
+  },
+  "bootstrap-4": {
+    stylesheet: "",
+    theme: Bootstrap4Theme,
   },
 };
 
