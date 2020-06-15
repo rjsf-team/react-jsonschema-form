@@ -510,6 +510,11 @@ exports[`single fields format color 1`] = `
           },
         }
       }
+      uiSchema={
+        Object {
+          "classNames": undefined,
+        }
+      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -626,6 +631,11 @@ exports[`single fields format date 1`] = `
           },
         }
       }
+      uiSchema={
+        Object {
+          "classNames": undefined,
+        }
+      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -737,6 +747,11 @@ exports[`single fields format datetime 1`] = `
             "URLWidget": [Function],
             "UpDownWidget": [Function],
           },
+        }
+      }
+      uiSchema={
+        Object {
+          "classNames": undefined,
         }
       }
     >
@@ -896,6 +911,11 @@ exports[`single fields number field 0 1`] = `
           },
         }
       }
+      uiSchema={
+        Object {
+          "classNames": undefined,
+        }
+      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1006,6 +1026,11 @@ exports[`single fields number field 1`] = `
             "URLWidget": [Function],
             "UpDownWidget": [Function],
           },
+        }
+      }
+      uiSchema={
+        Object {
+          "classNames": undefined,
         }
       }
     >
@@ -1576,6 +1601,11 @@ exports[`single fields string field format email 1`] = `
           },
         }
       }
+      uiSchema={
+        Object {
+          "classNames": undefined,
+        }
+      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1692,6 +1722,11 @@ exports[`single fields string field format uri 1`] = `
           },
         }
       }
+      uiSchema={
+        Object {
+          "classNames": undefined,
+        }
+      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1802,6 +1837,11 @@ exports[`single fields string field regular 1`] = `
             "URLWidget": [Function],
             "UpDownWidget": [Function],
           },
+        }
+      }
+      uiSchema={
+        Object {
+          "classNames": undefined,
         }
       }
     >
@@ -1916,6 +1956,12 @@ exports[`single fields string field with placeholder 1`] = `
           },
         }
       }
+      uiSchema={
+        Object {
+          "classNames": undefined,
+          "ui:placeholder": "placeholder",
+        }
+      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1999,6 +2045,7 @@ exports[`single fields textarea field 1`] = `
           placeholder=""
           required={false}
           rows={5}
+          value=""
         />
       </div>
     </div>
