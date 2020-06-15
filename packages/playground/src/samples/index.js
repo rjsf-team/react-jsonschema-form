@@ -29,6 +29,7 @@ import defaults from "./defaults";
 import fluentUI from "./fluent-ui";
 import fluentUI2 from "./fluent-ui-2";
 import fluentUI3 from "./fluent-ui-3";
+import fluentUI4 from "./fluent-ui-4";
 
 export const samples = {
   Simple: simple,
@@ -62,4 +63,5 @@ export const samples = {
   "Fluent UI demos": fluentUI,
   "Fluent UI demos 2": fluentUI2,
   "Fluent UI demos 3": fluentUI3,
+  "Fluent UI demos 4": fluentUI4,
 };
