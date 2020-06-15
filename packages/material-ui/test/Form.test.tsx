@@ -197,4 +197,18 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("hidden label", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+    };
+    const uiSchema: UiSchema = {
+      "ui:options": {
+        label: false,
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

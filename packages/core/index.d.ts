@@ -111,7 +111,6 @@ declare module '@rjsf/core' {
         onBlur: (id: string, value: boolean | number | string | null) => void;
         onFocus: (id: string, value: boolean | number | string | null) => void;
         label: string;
-        displayLabel: boolean;
         type: string;
         multiple: boolean;
         rawErrors: string[];
@@ -312,6 +311,8 @@ declare module '@rjsf/core' {
         ): T | JSONSchema7['default'][];
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
+
+        export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
 
         export function isObject(thing: any): boolean;
 
