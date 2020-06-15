@@ -12,7 +12,7 @@ import {
   mergeObjects,
   deepEquals,
   getSchemaType,
-  getDisplayLabel
+  getDisplayLabel,
 } from "../../utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";

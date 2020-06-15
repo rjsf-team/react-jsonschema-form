@@ -372,7 +372,9 @@ export function getDisplayLabel(schema, uiSchema, rootSchema) {
   const uiOptions = getUiOptions(uiSchema);
   let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
-    displayLabel = isMultiSelect(schema, rootSchema) || isFilesArray(schema, uiSchema, rootSchema);
+    displayLabel =
+      isMultiSelect(schema, rootSchema) ||
+      isFilesArray(schema, uiSchema, rootSchema);
   }
   if (schema.type === "object") {
     displayLabel = false;
