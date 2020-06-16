@@ -1,13 +1,18 @@
 {
   "name": "@rjsf/bootstrap-4",
-  "version": "2.0.2",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "module": "dist/rjsf-bootstrap-4.esm.js",
   "typings": "dist/index.d.ts",
-  "description": "Material UI theme, fields and widgets for react-jsonschema-form",
+  "description": "Bootstrap 4 theme, fields and widgets for react-jsonschema-form",
   "files": [
     "dist"
   ],
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "rimraf dist && tsdx build",
+    "test": "tsdx test"
+  },
   "peerDependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
@@ -24,7 +29,9 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@material-ui/core": "^4.2.0",
+    "react-bootstrap": "^1.0.1",
     "@material-ui/icons": "^4.2.1",
+    "@rjsf/core": "^2.0.2",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.3",
     "@types/react": "^16.9.23",
@@ -47,7 +54,7 @@
     "Lorenz Henk <lorenz.henk@cybertec.at>"
   ],
   "keywords": [
-    "Material UI",
+    "Bootstrap 4",
     "react-jsonschema-form",
     "jsonschema",
     "json-schema",
@@ -55,13 +62,12 @@
     "schema",
     "form",
     "react",
-    "material-ui",
-    "rjsf-material-ui"
+    "bootstrap-4",
+    "rjsf-bootstrap-4"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cybertec-postgresql/rjsf-material-ui.git"
+    "url": ""
   },
-  "license": "MIT",
-  "dependencies": {}
+  "license": "MIT"
 }

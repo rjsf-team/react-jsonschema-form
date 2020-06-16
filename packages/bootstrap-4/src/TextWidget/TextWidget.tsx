@@ -1,12 +1,11 @@
 import React from "react";
 
-import TextField, {
-  StandardTextFieldProps as TextFieldProps,
-} from "@material-ui/core/TextField";
+import Form from "react-bootstrap/Form";
+
 
 import { WidgetProps } from "@rjsf/core";
 
-export type TextWidgetProps = WidgetProps & TextFieldProps;
+export type TextWidgetProps = WidgetProps;
 
 const TextWidget = ({
   id,
@@ -37,21 +36,21 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <TextField
-      id={id}
-      label={label || schema.title}
-      autoFocus={autofocus}
-      required={required}
-      disabled={disabled || readonly}
-      name={name}
-      type={type || (schema.type as string)}
-      value={value || value === 0 ? value : ""}
-      error={rawErrors.length > 0}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      {...(textFieldProps as TextFieldProps)}
-    />
+    <Form.Group controlId={id}>
+    <Form.Label>{label || schema.title}</Form.Label>
+    <Form.Control
+    id={id}
+    autoFocus={autofocus}
+    required={required}
+    disabled={disabled || readonly}
+    name={name}
+    type={type || (schema.type as string)}
+    value={value || value === 0 ? value : ""}
+    onChange={_onChange}
+    onBlur={_onBlur}
+    onFocus={_onFocus}
+    {...textFieldProps} />
+  </Form.Group>
   );
 };
 

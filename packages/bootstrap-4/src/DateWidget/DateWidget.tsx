@@ -5,9 +5,6 @@ const DateWidget = (props: TextWidgetProps) => {
   return (
     <TextWidget
       type="date"
-      InputLabelProps={{
-        shrink: true,
-      }}
       {...props}
     />
   );

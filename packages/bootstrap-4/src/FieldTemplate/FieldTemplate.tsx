@@ -6,7 +6,8 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import Typography from "@material-ui/core/Typography";
+
+import Form from "react-bootstrap/Form"
 
 const FieldTemplate = ({
   id,
@@ -24,9 +25,9 @@ const FieldTemplate = ({
       required={required}>
       {children}
       {displayLabel && rawDescription ? (
-        <Typography variant="caption" color="textSecondary">
+        <Form.Text>
           {rawDescription}
-        </Typography>
+        </Form.Text>
       ) : null}
       {rawErrors.length > 0 && (
         <List dense={true} disablePadding={true}>
@@ -39,7 +40,7 @@ const FieldTemplate = ({
           })}
         </List>
       )}
-      {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
+      {rawHelp && <Form.Text className="text-muted" id={id}>{rawHelp}</Form.Text>}
     </FormControl>
   );
 };

@@ -13,9 +13,6 @@ const DateTimeWidget = (props: TextWidgetProps) => {
   return (
     <TextWidget
       type="datetime-local"
-      InputLabelProps={{
-        shrink: true,
-      }}
       {...props}
       value={value}
       onChange={onChange}
