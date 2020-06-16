@@ -22,6 +22,7 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
+  name,
   rawErrors = [],
   formContext,
   ...textFieldProps
