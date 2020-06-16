@@ -2,7 +2,6 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-
 import { WidgetProps } from "@rjsf/core";
 
 export type TextWidgetProps = WidgetProps;
@@ -37,20 +36,24 @@ const TextWidget = ({
 
   return (
     <Form.Group controlId={id}>
-    <Form.Label>{label || schema.title}{required ? "*" : null}</Form.Label>
-    <Form.Control
-    id={id}
-    autoFocus={autofocus}
-    required={required}
-    disabled={disabled || readonly}
-    name={name}
-    type={type || (schema.type as string)}
-    value={value || value === 0 ? value : ""}
-    onChange={_onChange}
-    onBlur={_onBlur}
-    onFocus={_onFocus}
-    {...textFieldProps} />
-  </Form.Group>
+      <Form.Label>
+        {label || schema.title}
+        {required ? "*" : null}
+      </Form.Label>
+      <Form.Control
+        id={id}
+        autoFocus={autofocus}
+        required={required}
+        disabled={disabled || readonly}
+        name={name}
+        type={type || (schema.type as string)}
+        value={value || value === 0 ? value : ""}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        {...textFieldProps}
+      />
+    </Form.Group>
   );
 };
 
