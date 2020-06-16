@@ -37,7 +37,7 @@ const TextWidget = ({
 
   return (
     <Form.Group controlId={id}>
-    <Form.Label>{label || schema.title}</Form.Label>
+    <Form.Label>{label || schema.title}{required ? "*" : null}</Form.Label>
     <Form.Control
     id={id}
     autoFocus={autofocus}
