@@ -138,6 +138,7 @@ declare module '@rjsf/core' {
         readonly: boolean;
         required: boolean;
         name: string;
+        description?: string;
         [prop: string]: any;
     }
 

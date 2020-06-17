@@ -1,10 +1,7 @@
 import React from "react";
+import { FieldProps } from "@rjsf/core";
 
-interface DescriptionFieldI {
-    description? : string
-}
-
-const DescriptionField = ({ description }: DescriptionFieldI) => {
+const DescriptionField = ({ description }: FieldProps) => {
   if (description) {
     return <h2 className="mt-5">{description}</h2>;
   }
