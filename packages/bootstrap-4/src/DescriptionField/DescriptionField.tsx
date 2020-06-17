@@ -1,23 +1,12 @@
 import React from "react";
 
-interface DescriptionFieldI  {
+interface DescriptionFieldI {
     description? : string
 }
 
 const DescriptionField = ({ description }: DescriptionFieldI) => {
   if (description) {
-    return (
-      <>
-        <style type="text/css">
-          {`
-    .h2 {
-        margin-top: 5px
-    }
-    `}
-        </style>
-        <h2>{description}</h2>
-      </>
-    );
+    return <h2 className="mt-5">{description}</h2>;
   }
 
   return null;
