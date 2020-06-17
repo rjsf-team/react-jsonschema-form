@@ -1,9 +1,6 @@
 import React from "react";
 
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@material-ui/core/FormLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
+import Form from "react-bootstrap/Form";
 
 import { WidgetProps } from "@rjsf/core";
 
@@ -22,7 +19,9 @@ const RadioWidget = ({
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
-  const _onChange = ({}, value: any) =>
+  const _onChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(schema.type == "boolean" ? value !== "false" : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
@@ -30,37 +29,37 @@ const RadioWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const row = options ? options.inline : false;
+  const inline = options
+    ? options.inline == null
+      ? undefined
+      : options.inline
+    : false;
 
   return (
-    <>
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
-      <RadioGroup
-        value={`${value}`}
-        row={row as boolean}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}>
-        {(enumOptions as any).map((option: any, i: number) => {
-          const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
-
-          const radio = (
-            <FormControlLabel
-              control={<Radio color="primary" key={i} />}
-              label={`${option.label}`}
-              value={`${option.value}`}
-              key={i}
-              disabled={disabled || itemDisabled || readonly}
-            />
-          );
-
-          return radio;
-        })}
-      </RadioGroup>
-    </>
+    <Form.Group controlId={id}>
+      <Form.Label className="d-block">{label || schema.title}</Form.Label>
+      {(enumOptions as any).map((option: any, i: number) => {
+        const itemDisabled =
+          enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
+        const checked = option.value === value;
+        const radio = (
+          <Form.Check
+            inline={inline as boolean}
+            label={`${option.label}`}
+            key={i}
+            type="radio"
+            disabled={disabled || itemDisabled || readonly}
+            checked={checked}
+            required={required}
+            value={option.value}
+            onChange={_onChange}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
+          />
+        );
+        return radio;
+      })}
+    </Form.Group>
   );
 };
 
