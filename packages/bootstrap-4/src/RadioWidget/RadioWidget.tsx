@@ -29,11 +29,7 @@ const RadioWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const inline = options
-    ? options.inline == null
-      ? undefined
-      : options.inline
-    : false;
+  const inline = options.inline !== null ? options.inline : false;
 
   return (
     <Form.Group controlId={id}>
