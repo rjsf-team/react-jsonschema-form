@@ -35,7 +35,7 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <Form.Group controlId={id}>
+    <Form.Group controlId={id} className="mb-0">
       <Form.Label>
         {label || schema.title}
         {required ? "*" : null}

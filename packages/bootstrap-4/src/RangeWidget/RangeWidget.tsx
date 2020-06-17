@@ -1,7 +1,6 @@
 import React from "react";
 
-import Slider from "@material-ui/core/Slider";
-import FormLabel from "@material-ui/core/FormLabel";
+import Form from "react-bootstrap/Form";
 
 import { utils } from "@rjsf/core";
 import { WidgetProps } from "@rjsf/core";
@@ -23,7 +22,9 @@ const RangeWidget = ({
 }: WidgetProps) => {
   let sliderProps = { value, label, id, ...rangeSpec(schema) };
 
-  const _onChange = ({}, value: any) =>
+  const _onChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(value === "" ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
@@ -32,18 +33,19 @@ const RangeWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <>
-      <FormLabel required={required} id={id}>
-        {label}
-      </FormLabel>
-      <Slider
+    <Form.Group controlId={id} className="mb-0">
+      <Form.Label>{label}</Form.Label>
+      <Form.Control
+        type="range"
+        required={required}
         disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         {...sliderProps}
       />
-    </>
+      <span className="range-view">{value}</span>
+    </Form.Group>
   );
 };
 

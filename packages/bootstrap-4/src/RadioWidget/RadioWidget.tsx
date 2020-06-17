@@ -32,7 +32,7 @@ const RadioWidget = ({
   const inline = options.inline !== null ? options.inline : false;
 
   return (
-    <Form.Group controlId={id}>
+    <Form.Group controlId={id} className="mb-0">
       <Form.Label className="d-block">{label || schema.title}</Form.Label>
       {(enumOptions as any).map((option: any, i: number) => {
         const itemDisabled =
