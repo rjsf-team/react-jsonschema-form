@@ -41,7 +41,7 @@ const RadioWidget = ({
         const radio = (
           <Form.Check
             inline={inline}
-            label={`${option.label}`}
+            label={option.label}
             key={i}
             type="radio"
             disabled={disabled || itemDisabled || readonly}
