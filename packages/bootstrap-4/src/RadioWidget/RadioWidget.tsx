@@ -36,7 +36,7 @@ const RadioWidget = ({
       <Form.Label className="d-block">{label || schema.title}</Form.Label>
       {(enumOptions as any).map((option: any, i: number) => {
         const itemDisabled =
-          enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
+          Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
         const checked = option.value === value;
         const radio = (
           <Form.Check
