@@ -40,7 +40,7 @@ const RadioWidget = ({
         const checked = option.value === value;
         const radio = (
           <Form.Check
-            inline={inline as boolean}
+            inline={inline}
             label={`${option.label}`}
             key={i}
             type="radio"
