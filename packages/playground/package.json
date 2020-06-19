@@ -41,7 +41,7 @@
     "@material-ui/core": "^4.9.4",
     "@rjsf/core": "^2.0.2",
     "@rjsf/material-ui": "^2.0.2",
-    "@epicfaace/rjsf-fluent-ui": "^2.0.0-alpha.3",
+    "@rjsf/fluent-ui": "^2.0.0-alpha.3",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
     "json-schema-merge-allof": "^0.6.0",
