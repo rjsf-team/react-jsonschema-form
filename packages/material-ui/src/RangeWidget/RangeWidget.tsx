@@ -41,6 +41,7 @@ const RangeWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        valueLabelDisplay="auto"
         {...sliderProps}
       />
     </>
