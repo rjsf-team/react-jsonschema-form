@@ -2,16 +2,21 @@
   "name": "@rjsf/antd",
   "version": "2.0.0",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
-  "main": "dist/index.js",
-  "module": "dist/rjsf-antd.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
   "scripts": {
-    "build": "npm run build:dist",
-    "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
+    "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es",
+    "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/cjs",
+    "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/es",
+    "dist:build:umd": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
     "clean": "rimraf dist",
     "lint": "eslint src test",
     "start": "concurrently \"npm:build:* -- --watch\"",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest"
   },
+  "files": [
+    "dist"
+  ],
   "jest": {
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
