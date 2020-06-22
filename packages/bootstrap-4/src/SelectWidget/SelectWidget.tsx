@@ -1,7 +1,6 @@
 import React from "react";
 
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
+import Form from "react-bootstrap/Form";
 
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
@@ -64,43 +63,47 @@ const SelectWidget = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
     onChange(processValue(schema, value));
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({
+    target: { value },
+  }: React.FocusEvent<HTMLSelectElement>) =>
     onBlur(id, processValue(schema, value));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  }: React.FocusEvent<HTMLSelectElement>) =>
     onFocus(id, processValue(schema, value));
 
   return (
-    <TextField
-      id={id}
-      label={label || schema.title}
-      name={name}
-      select
-      value={typeof value === "undefined" ? emptyValue : value}
-      required={required}
-      disabled={disabled || readonly}
-      autoFocus={autofocus}
-      error={rawErrors.length > 0}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      SelectProps={{
-        multiple: typeof multiple === "undefined" ? false : multiple,
-      }}>
-      {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any =
-          enumDisabled && (enumDisabled as any).indexOf(value) != -1;
-        return (
-          <MenuItem key={i} value={value} disabled={disabled}>
-            {label}
-          </MenuItem>
-        );
-      })}
-    </TextField>
+    <Form.Group controlId={id}>
+      <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
+        {label || schema.title}
+        {required ? "*" : null}
+      </Form.Label>
+      <Form.Control
+        as="select"
+        custom
+        id={id}
+        name={name}
+        value={typeof value === "undefined" ? emptyValue : value}
+        required={required}
+        multiple={multiple}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        className={rawErrors.length > 0 ? "is-invalid" : ""}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}>
+        {(enumOptions as any).map(({ value, label }: any, i: number) => {
+          const disabled: any =
+            Array.isArray(enumDisabled) &&
+            (enumDisabled as any).indexOf(value) != -1;
+          return (
+            <option key={i} value={value} disabled={disabled}>
+              {label}
+            </option>
+          );
+        })}
+      </Form.Control>
+    </Form.Group>
   );
 };
 

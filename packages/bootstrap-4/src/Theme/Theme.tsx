@@ -1,7 +1,6 @@
 import React from "react";
 
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
+import Button from "react-bootstrap/Button";
 
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
 import ErrorList from "../ErrorList";
@@ -17,11 +16,11 @@ const { getDefaultRegistry } = utils;
 const { fields, widgets } = getDefaultRegistry();
 
 const DefaultChildren = () => (
-  <Box marginTop={3}>
-    <Button type="submit" variant="contained" color="primary">
+  <div>
+    <Button variant="primary" type="submit">
       Submit
     </Button>
-  </Box>
+  </div>
 );
 
 const Theme: ThemeProps = {

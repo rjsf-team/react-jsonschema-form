@@ -1,6 +1,6 @@
 import React from "react";
 
-import TextField from "@material-ui/core/TextField";
+import Form from "react-bootstrap/Form";
 
 import { WidgetProps } from "@rjsf/core";
 
@@ -30,19 +30,24 @@ const PasswordWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <TextField
-      id={id}
-      label={label || schema.title}
-      autoFocus={autofocus}
-      required={required}
-      disabled={disabled || readonly}
-      type="password"
-      value={value ? value : ""}
-      error={rawErrors.length > 0}
-      onFocus={_onFocus}
-      onBlur={_onBlur}
-      onChange={_onChange}
-    />
+    <Form.Group controlId={id} className="mb-0">
+      <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
+        {label || schema.title}
+        {required ? "*" : null}
+      </Form.Label>
+      <Form.Control
+        id={id}
+        autoFocus={autofocus}
+        className={rawErrors.length > 0 ? "is-invalid" : ""}
+        required={required}
+        disabled={disabled || readonly}
+        type="password"
+        value={value ? value : ""}
+        onFocus={_onFocus}
+        onBlur={_onBlur}
+        onChange={_onChange}
+      />
+    </Form.Group>
   );
 };
 

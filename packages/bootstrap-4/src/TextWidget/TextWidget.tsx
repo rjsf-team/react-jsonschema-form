@@ -36,7 +36,7 @@ const TextWidget = ({
 
   return (
     <Form.Group controlId={id} className="mb-0">
-      <Form.Label>
+      <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
         {label || schema.title}
         {required ? "*" : null}
       </Form.Label>
@@ -45,7 +45,8 @@ const TextWidget = ({
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        name={name}
+        className={rawErrors.length > 0 ? "is-invalid" : ""}
+        list={schema.examples ? `examples_${id}` : undefined}
         type={type || (schema.type as string)}
         value={value || value === 0 ? value : ""}
         onChange={_onChange}
@@ -53,6 +54,15 @@ const TextWidget = ({
         onFocus={_onFocus}
         {...textFieldProps}
       />
+      {schema.examples ? (
+        <datalist id={`examples_${id}`}>
+          {(schema.examples as any)
+            .concat(schema.default ? [schema.default] : [])
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      ) : null}
     </Form.Group>
   );
 };
