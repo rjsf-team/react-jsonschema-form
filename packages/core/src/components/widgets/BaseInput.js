@@ -27,20 +27,8 @@ function BaseInput(props) {
   if (options.inputType) {
     inputProps.type = options.inputType;
   } else if (!inputProps.type) {
-    // If the schema is of type number or integer, set the input type to number
-    if (schema.type === "number") {
-      inputProps.type = "number";
-      // Setting step to 'any' fixes a bug in Safari where decimals are not
-      // allowed in number inputs
-      inputProps.step = "any";
-    } else if (schema.type === "integer") {
-      inputProps.type = "number";
-      // Since this is integer, you always want to step up or down in multiples
-      // of 1
-      inputProps.step = "1";
-    } else {
-      inputProps.type = "text";
-    }
+    // Since we have an updown widget for numeric field, we are setting the type here to be "text"
+    inputProps.type = "text";
   }
 
   if (options.autocomplete) {
