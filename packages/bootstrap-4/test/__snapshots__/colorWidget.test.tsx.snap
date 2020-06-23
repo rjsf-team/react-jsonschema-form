@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ColorWidget simple 1`] = `
+<div
+  className="mb-0 form-group"
+>
+  <label
+    className="form-label"
+    htmlFor="_id"
+  >
+    Some simple label
+    *
+  </label>
+  <input
+    autoFocus={true}
+    className="form-control"
+    disabled={true}
+    id="_id"
+    multiple={false}
+    name="nodejs"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    required={true}
+    type="color"
+    value="value"
+  />
+</div>
+`;
