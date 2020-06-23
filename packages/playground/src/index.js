@@ -1,6 +1,7 @@
 import React from "react";
 import { Theme as MuiTheme } from "@rjsf/material-ui";
 import { Theme as SuiTheme } from "@rjsf/semantic-ui";
+import { Theme as AntdTheme } from "@rjsf/antd";
 import Playground from "./app";
 import { render } from "react-dom";
 
@@ -87,6 +88,10 @@ const themes = {
   "material-ui": {
     stylesheet: "",
     theme: MuiTheme,
+  },
+  antd: {
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/antd/4.1.4/antd.min.css",
+    theme: AntdTheme,
   },
   "semantic-ui": {
     stylesheet:

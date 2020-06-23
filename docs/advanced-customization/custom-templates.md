@@ -78,9 +78,9 @@ The following props are part of each element in `items`:
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
 - `key`: A stable, unique key for the array item.
-- `onAddIndexClick: (index) => (event) => void`: Returns a function that adds a new item at `index`.
-- `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
-- `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
+- `onAddIndexClick: (index) => (event?) => void`: Returns a function that adds a new item at `index`.
+- `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
+- `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
 
 > Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.

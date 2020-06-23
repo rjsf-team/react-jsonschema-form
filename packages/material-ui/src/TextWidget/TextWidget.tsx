@@ -1,6 +1,5 @@
 import React from "react";
 
-import FormControl from "@material-ui/core/FormControl";
 import TextField, {
   StandardTextFieldProps as TextFieldProps,
 } from "@material-ui/core/TextField";
@@ -23,6 +22,8 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
+  rawErrors = [],
+  formContext,
   ...textFieldProps
 }: TextWidgetProps) => {
   const _onChange = ({
@@ -36,24 +37,21 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <FormControl
-      fullWidth={true}
-      //error={!!rawErrors}
-      required={required}>
-      <TextField
-        id={id}
-        label={label || schema.title}
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled || readonly}
-        type={type || (schema.type as string)}
-        value={value || value === 0 ? value : ""}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-        {...(textFieldProps as TextFieldProps)}
-      />
-    </FormControl>
+    <TextField
+      id={id}
+      label={label || schema.title}
+      autoFocus={autofocus}
+      required={required}
+      disabled={disabled || readonly}
+      name={name}
+      type={type || (schema.type as string)}
+      value={value || value === 0 ? value : ""}
+      error={rawErrors.length > 0}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+      {...(textFieldProps as TextFieldProps)}
+    />
   );
 };
 
