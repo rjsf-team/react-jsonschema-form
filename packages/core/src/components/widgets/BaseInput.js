@@ -17,6 +17,7 @@ function BaseInput(props) {
     onFocus,
     options,
     schema,
+    uiSchema,
     formContext,
     registry,
     rawErrors,

@@ -99,6 +99,7 @@ declare module '@rjsf/core' {
         > {
         id: string;
         schema: JSONSchema7;
+        uiSchema: UiSchema;
         value: any;
         required: boolean;
         disabled: boolean;
@@ -311,6 +312,8 @@ declare module '@rjsf/core' {
         ): T | JSONSchema7['default'][];
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
+
+        export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
 
         export function isObject(thing: any): boolean;
 

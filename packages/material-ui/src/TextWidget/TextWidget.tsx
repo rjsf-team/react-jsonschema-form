@@ -4,7 +4,9 @@ import TextField, {
   StandardTextFieldProps as TextFieldProps,
 } from "@material-ui/core/TextField";
 
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, utils } from "@rjsf/core";
+
+const { getDisplayLabel } = utils;
 
 export type TextWidgetProps = WidgetProps & TextFieldProps;
 
@@ -22,6 +24,7 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
+  uiSchema,
   rawErrors = [],
   formContext,
   ...textFieldProps
@@ -36,10 +39,16 @@ const TextWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
+  const displayLabel = getDisplayLabel(
+    schema,
+    uiSchema
+    /* TODO: , rootSchema */
+  );
+
   return (
     <TextField
       id={id}
-      label={label || schema.title}
+      label={displayLabel ? label || schema.title : false}
       autoFocus={autofocus}
       required={required}
       disabled={disabled || readonly}
