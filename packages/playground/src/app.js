@@ -341,7 +341,7 @@ class Playground extends Component {
     super(props);
 
     // set default theme
-    const theme = "fluent-ui";
+    const theme = "default";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.state = {
