@@ -25,14 +25,12 @@
 
 ## About The Project
 
-[![rjsf-material-ui Screen Shot][product-screenshot]](https://cybertec-postgresql.github.io/rjsf-material-ui)
-
-Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
+Exports `fluent-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
-- [Material-UI](https://material-ui.com/)
+- [Fluent UI](https://developer.microsoft.com/en-us/fluentui#/)
 - [Typescript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -47,6 +45,13 @@ Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 ```bash
 yarn add @fluentui/react @rjsf/core
 ```
+
+For the fluent ui grid to work, add the following css tag to the main HTML page:
+
+```html
+<link rel="stylesheet" href="//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
+```
+
 
 ### Installation
 
@@ -64,9 +69,9 @@ or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as MuiTheme } from '@rjsf/fluent-ui';
+import { Theme as FuiTheme } from '@rjsf/fluent-ui';
 
-const Form = withTheme(MuiTheme);
+const Form = withTheme(FuiTheme);
 ```
 
 <!-- MARKDOWN LINKS & IMAGES -->
