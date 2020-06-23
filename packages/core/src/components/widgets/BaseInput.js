@@ -5,7 +5,6 @@ function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   if (!props.id) {
-    console.log("No id for", props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
   const {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 function TextWidget(props) {
   const { BaseInput } = props.registry.widgets;
-  return <BaseInput {...props} />;
+  return <BaseInput type="text" {...props} />;
 }
 
 if (process.env.NODE_ENV !== "production") {
