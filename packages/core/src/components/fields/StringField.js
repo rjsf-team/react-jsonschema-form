@@ -17,7 +17,7 @@ function StringField(props) {
     uiSchema,
     idSchema,
     formData,
-    _defaultWidget,
+    __defaultWidget,
     required,
     disabled,
     readonly,
@@ -32,7 +32,7 @@ function StringField(props) {
   const { widgets, formContext } = registry;
   const enumOptions = isSelect(schema) && optionsList(schema);
 
-  let defaultWidget = enumOptions ? "select" : _defaultWidget || "text";
+  let defaultWidget = enumOptions ? "select" : __defaultWidget || "text";
 
   if (format && hasWidget(schema, format, widgets)) {
     defaultWidget = format;
