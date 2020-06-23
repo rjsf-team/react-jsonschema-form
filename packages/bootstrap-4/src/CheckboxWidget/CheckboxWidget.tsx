@@ -1,9 +1,8 @@
 import React from "react";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-
 import { WidgetProps } from "@rjsf/core";
+import DescriptionField from "../DescriptionField";
+import Form from "react-bootstrap/Form";
 
 const CheckboxWidget = (props: WidgetProps) => {
   const {
@@ -13,36 +12,44 @@ const CheckboxWidget = (props: WidgetProps) => {
     disabled,
     readonly,
     label,
+    schema,
     autofocus,
     onChange,
     onBlur,
     onFocus,
   } = props;
 
-  const _onChange = ({}, checked: boolean) => onChange(checked);
+  const _onChange = ({
+    target: { checked },
+  }: React.FocusEvent<HTMLInputElement>) => onChange(checked);
   const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+    target: { checked },
+  }: React.FocusEvent<HTMLInputElement>) => onBlur(id, checked);
   const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+    target: { checked },
+  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, checked);
 
   return (
-    <FormControlLabel
-      control={
-        <Checkbox
+    <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
+      {(label || schema.description) && (
+        // TODO: remove this ts-ignore as it will be solved once https://github.com/MLH-Fellowship/react-jsonschema-form/pull/29 is merged
+        // @ts-ignore
+        <DescriptionField description={label || schema.description} />
+      )}
+      <label>
+        <Form.Control
           id={id}
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onChange={_onChange}
+          type="checkbox"
           onBlur={_onBlur}
           onFocus={_onFocus}
         />
-      }
-      label={label}
-    />
+      </label>
+    </div>
   );
 };
 
