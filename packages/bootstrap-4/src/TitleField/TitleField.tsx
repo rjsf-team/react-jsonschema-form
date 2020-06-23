@@ -1,15 +1,15 @@
-import React from 'react';
-import { FieldProps } from '@rjsf/core';
+import React from "react";
+import { FieldProps } from "@rjsf/core";
 
-export interface TitleFieldProps extends FieldProps {
-    title: string
+export interface TitleFieldProps extends Partial<FieldProps> {
+  title: string;
 }
 
-const TitleField = ({ title }: FieldProps) => (
+const TitleField = ({ title }: TitleFieldProps) => (
   <>
     <div className="my-1">
       <h5>{title}</h5>
-      <hr className="border-0 bg-secondary" style={{ height: '1px' }} />
+      <hr className="border-0 bg-secondary" style={{ height: "1px" }} />
     </div>
   </>
 );
