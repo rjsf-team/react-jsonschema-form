@@ -26,7 +26,7 @@ import URLWidget from './widgets/URLWidget';
 
 import ErrorList from './ErrorList';
 
-import './index.less';
+// import './index.less';
 
 const { getDefaultRegistry } = utils;
 const { fields, widgets } = getDefaultRegistry();
