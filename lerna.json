@@ -1,4 +1,11 @@
 {
+<<<<<<< HEAD
   "packages": ["packages/*"],
   "version": "2.2.1"
+=======
+  "packages": [
+    "packages/*"
+  ],
+  "version": "2.1.0"
+>>>>>>> db43c11... Update lerna.json
 }
