@@ -15,6 +15,7 @@ declare module '@rjsf/core' {
         ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
         autoComplete?: string;
         autocomplete?: string; // deprecated
+        children?: React.ReactNode;
         className?: string;
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
@@ -183,8 +184,9 @@ declare module '@rjsf/core' {
             hasRemove: boolean;
             hasToolbar: boolean;
             index: number;
-            onDropIndexClick: (index: number) => (event: any) => void;
-            onReorderClick: (index: number, newIndex: number) => (event: any) => void;
+            onAddIndexClick: (index: number) => (event?: any) => void;
+            onDropIndexClick: (index: number) => (event?: any) => void;
+            onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
             readonly: boolean;
             key: string;
         }[];
