@@ -84,7 +84,7 @@ class NumberField extends React.Component {
 
     return (
       <StringField
-        defWidget={"updown"}
+        _defaultWidget={"updown"}
         {...props}
         formData={value}
         onChange={this.handleChange}
