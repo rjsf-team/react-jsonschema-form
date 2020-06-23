@@ -1,5 +1,6 @@
 import React from "react";
 import { Theme as MuiTheme } from "@rjsf/material-ui";
+import { Theme as FluentUITheme } from "@rjsf/fluent-ui";
 import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
 import Playground from "./app";
@@ -97,6 +98,11 @@ const themes = {
     stylesheet:
       "//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css",
     theme: SuiTheme,
+  },
+  "fluent-ui": {
+    stylesheet:
+      "//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css",
+    theme: FluentUITheme,
   },
 };
 

@@ -353,7 +353,7 @@ class Playground extends Component {
       theme,
       subtheme: null,
       liveSettings: {
-        validate: true,
+        validate: false,
         disable: false,
         omitExtraData: false,
         liveOmit: false,
@@ -605,6 +605,7 @@ class Playground extends Component {
                 uiSchema={uiSchema}
                 formData={formData}
                 onChange={this.onFormDataChange}
+                noHtml5Validate={true}
                 onSubmit={({ formData }, e) => {
                   console.log("submitted formData", formData);
                   console.log("submit event", e);
