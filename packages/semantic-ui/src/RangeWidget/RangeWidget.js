@@ -5,7 +5,7 @@ import { Input } from "semantic-ui-react";
 import { utils } from '@rjsf/core';
 import { getSemanticProps } from "../util";
 
-const { getRangeSpec } = utils;
+const { rangeSpec } = utils;
 function RangeWidget({
   value,
   readonly,

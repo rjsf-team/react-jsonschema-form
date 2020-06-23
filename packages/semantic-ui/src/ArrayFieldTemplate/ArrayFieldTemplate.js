@@ -6,7 +6,7 @@ import { utils } from '@rjsf/core';
 import AddButton from "../AddButton";
 import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
 
-const {isFixedItems} = utils;
+const { isFixedItems } = utils;
 
 const ArrayFieldTitle = ({ TitleField, idSchema, uiSchema, title }) => {
   if (!title) {

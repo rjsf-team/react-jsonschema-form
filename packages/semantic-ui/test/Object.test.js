@@ -7,8 +7,8 @@ describe("object fields", () => {
     const schema = {
       type: "object",
       properties: {
-        a: {type: "string"},
-        b: {type: "number"}
+        a: { type: "string" },
+        b: { type: "number" }
       }
     };
     const tree = renderer
