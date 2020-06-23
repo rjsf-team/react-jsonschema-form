@@ -2,8 +2,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Input } from "semantic-ui-react";
-import { rangeSpec } from '@rjsf/core/lib/utils';
+import { utils } from '@rjsf/core';
 import { getSemanticProps } from "../util";
+
+const { getRangeSpec } = utils;
 function RangeWidget({
   value,
   readonly,
