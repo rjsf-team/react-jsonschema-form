@@ -1,8 +1,8 @@
 import React from "react";
 import { FieldProps } from "@rjsf/core";
 
-export interface DescriptionFieldProps extends FieldProps {
-    description?: string
+export interface DescriptionFieldProps extends Partial<FieldProps> {
+  description?: string;
 }
 
 const DescriptionField = ({ description }: DescriptionFieldProps) => {
