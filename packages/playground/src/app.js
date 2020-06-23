@@ -573,11 +573,21 @@ class Playground extends Component {
           {this.state.form && (
             <DemoFrame
               head={
-                <link
-                  rel="stylesheet"
-                  id="theme"
-                  href={this.state.stylesheet || ""}
-                />
+                <React.Fragment>
+                  <link
+                    rel="stylesheet"
+                    id="theme"
+                    href={this.state.stylesheet || ""}
+                  />
+                  {theme === "antd" && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: document.getElementById("antd-styles-iframe")
+                          .contentDocument.head.innerHTML,
+                      }}
+                    />
+                  )}
+                </React.Fragment>
               }
               style={{
                 width: "100%",
