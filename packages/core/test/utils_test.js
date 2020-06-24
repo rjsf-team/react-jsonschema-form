@@ -76,7 +76,7 @@ describe("utils", () => {
       });
 
       const noneValues = [null, undefined, NaN];
-      noneValues.forEach((noneValue) => {
+      noneValues.forEach(noneValue => {
         it("should overwrite existing form data that is equal to a none value", () => {
           expect(
             getDefaultFormState(
@@ -1441,9 +1441,9 @@ describe("utils", () => {
     });
 
     it("should override non-existing values of the first object with the values from the second", () => {
-      expect(
-        mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })
-      ).eql({ a: { b: { c: 1 } } });
+      expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -1531,9 +1531,9 @@ describe("utils", () => {
     });
 
     it("should override non-existing values of the first object with the values from the second", () => {
-      expect(
-        mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })
-      ).eql({ a: { b: { c: 1 } } });
+      expect(mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
+        { a: { b: { c: 1 } } }
+      );
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -3400,8 +3400,12 @@ describe("utils", () => {
         "data:image/png;name=test.png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("test.png");
-      expect(blob).to.have.property("size").eql(8);
-      expect(blob).to.have.property("type").eql("image/png");
+      expect(blob)
+        .to.have.property("size")
+        .eql(8);
+      expect(blob)
+        .to.have.property("type")
+        .eql("image/png");
     });
 
     it("should return unknown if name is not provided", () => {
@@ -3409,8 +3413,12 @@ describe("utils", () => {
         "data:image/png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("unknown");
-      expect(blob).to.have.property("size").eql(8);
-      expect(blob).to.have.property("type").eql("image/png");
+      expect(blob)
+        .to.have.property("size")
+        .eql(8);
+      expect(blob)
+        .to.have.property("type")
+        .eql("image/png");
     });
 
     it("should return ignore unsupported parameters", () => {
@@ -3418,8 +3426,12 @@ describe("utils", () => {
         "data:image/png;unknown=foobar;name=test.png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("test.png");
-      expect(blob).to.have.property("size").eql(8);
-      expect(blob).to.have.property("type").eql("image/png");
+      expect(blob)
+        .to.have.property("size")
+        .eql(8);
+      expect(blob)
+        .to.have.property("type")
+        .eql("image/png");
     });
   });
 
@@ -3428,12 +3440,7 @@ describe("utils", () => {
     // worthless to reproduce all the tests existing for it; so we focus on the
     // behavioral differences we introduced.
     it("should assume functions are always equivalent", () => {
-      expect(
-        deepEquals(
-          () => {},
-          () => {}
-        )
-      ).eql(true);
+      expect(deepEquals(() => {}, () => {})).eql(true);
       expect(deepEquals({ foo() {} }, { foo() {} })).eql(true);
       expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).eql(
         true
@@ -3577,7 +3584,7 @@ describe("utils", () => {
     });
 
     it("should not fail on correct component", () => {
-      const Widget = (props) => <div {...props} />;
+      const Widget = props => <div {...props} />;
       expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
 
@@ -3589,7 +3596,7 @@ describe("utils", () => {
     });
 
     it("should not fail on memo component", () => {
-      const Widget = React.memo((props) => <div {...props} />);
+      const Widget = React.memo(props => <div {...props} />);
       expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
   });
@@ -3629,7 +3636,7 @@ describe("utils", () => {
       });
     });
   });
-      
+
   describe("schemaRequiresTrueValue()", () => {
     it("const", () => {
       expect(schemaRequiresTrueValue({ const: true })).eql(true);
