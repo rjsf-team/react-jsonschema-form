@@ -1,23 +1,19 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/cybertec-postgresql/rjsf-material-ui">
-    <img src="https://raw.githubusercontent.com/cybertec-postgresql/rjsf-material-ui/master/rjsf-material-ui-logo.png" alt="Logo" width="140" height="120">
-  </a>
-
   <h3 align="center">@rjsf/fluent-ui</h3>
 
   <p align="center">
-  Material-UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Fluent UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://rjsf-team.github.io/rjsf-material-ui/">View Playground</a>
+    <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
     ·
-    <a href="https://github.com/rjsf-team/rjsf-material-ui/issues">Report Bug</a>
+    <a href="https://rjsf-team.github.io/react-jsonschema-form/">Report Bug</a>
     ·
-    <a href="https://github.com/rjsf-team/rjsf-material-ui/issues">Request Feature</a>
+    <a href="https://rjsf-team.github.io/react-jsonschema-form/">Request Feature</a>
   </p>
 </p>
 
@@ -25,7 +21,7 @@
 
 ## About The Project
 
-Exports `fluent-ui` theme, fields and widgets for `react-jsonschema-form`.
+Fluent UI theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
