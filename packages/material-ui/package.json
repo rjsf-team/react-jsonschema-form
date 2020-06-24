@@ -16,7 +16,7 @@
   "peerDependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^2.0.0-alpha.6",
+    "@rjsf/core": "^2.0.0",
     "react": ">=16"
   },
   "devDependencies": {

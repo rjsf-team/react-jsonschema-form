@@ -25,6 +25,7 @@ import {
   toPathSchema,
   guessType,
   mergeSchemas,
+  getDisplayLabel,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3596,6 +3597,42 @@ describe("utils", () => {
     it("should not fail on memo component", () => {
       const Widget = React.memo(props => <div {...props} />);
       expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
+    });
+  });
+
+  describe("getDisplayLabel", () => {
+    it("object type", () => {
+      expect(getDisplayLabel({ type: "object" }, {})).eql(false);
+    });
+    it("boolean type without widget", () => {
+      expect(getDisplayLabel({ type: "boolean" }, {})).eql(false);
+    });
+    it("boolean type with widget", () => {
+      expect(getDisplayLabel({ type: "boolean" }, { "ui:widget": "test" })).eql(
+        true
+      );
+    });
+    it("with ui:field", () => {
+      expect(getDisplayLabel({ type: "string" }, { "ui:field": "test" })).eql(
+        false
+      );
+    });
+    describe("array type", () => {
+      it("items", () => {
+        expect(
+          getDisplayLabel({ type: "array", items: { type: "string" } }, {})
+        ).eql(false);
+      });
+      it("items enum", () => {
+        expect(
+          getDisplayLabel({ type: "array", enum: ["NW", "NE", "SW", "SE"] }, {})
+        ).eql(false);
+      });
+      it("files type", () => {
+        expect(
+          getDisplayLabel({ type: "array" }, { "ui:widget": "files" })
+        ).eql(true);
+      });
     });
   });
 });
