@@ -82,13 +82,13 @@ Exports `semantic-ui` theme, fields and widgets for `react-jsonschema-form`.
 - `react-jsonschema-form >= 1.6.0` ([in 1.6.0, the `withTheme` HOC was added](https://github.com/mozilla-services/react-jsonschema-form/pull/1226))
 
 ```sh
-yarn add semantic-ui-css add semantic-ui-react react-jsonschema-form
+yarn add semantic-ui-css add semantic-ui-react @rjsf/core
 ```
 
 ### Installation
 
 ```sh
-yarn add semantic-ui-react
+yarn add @rjsf/semantic-ui
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -96,8 +96,8 @@ yarn add semantic-ui-react
 ## Usage
 
 ```javascript
-import { withTheme } from 'react-jsonschema-form';
-import { Theme as SemanticUITheme } from 'rjsf-semanitc-ui';
+import { withTheme } from '@rjsf/core';
+import { Theme as SemanticUITheme } from '@rjsf/semantic-ui';
 
 const Form = withTheme(SemanticUITheme);
 ```
@@ -105,11 +105,11 @@ const Form = withTheme(SemanticUITheme);
 or
 
 ```javascript
-import SemanticUIForm from 'rjsf-semantic-ui';
+import SemanticUIForm from '@rjsf/semantic-ui';
 ```
 
-##Optional Semantic-UI Theme properties
-- To pass additional properties to widgets see [guide](https://react-jsonschema-form.readthedocs.io/en/latest/form-customization/#object-additional-properties).
+## Optional Semantic-UI Theme properties
+- To pass additional properties to widgets, see this [guide](https://react-jsonschema-form.readthedocs.io/en/latest/form-customization/#object-additional-properties).
 
 #### Semantic Widget Optional Properties
  - [Semantic props for TextWidget](https://react.semantic-ui.com/elements/input/)
