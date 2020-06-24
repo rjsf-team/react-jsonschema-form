@@ -1,0 +1,964 @@
+                       }
+    +                         className="MuiFormControl-root MuiFormControl-fullWidth"
+                            >
+    +                         <label
+    +                           className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated Mui-required Mui-required"
+    +                           data-shrink={false}
+    +                         >
+    +                           <span
+    +                             className="MuiFormLabel-asterisk MuiInputLabel-asterisk"
+    +                           >
+    +                              
+    +                             *
+    +                           </span>
+    +                         </label>
+                              <div
+                                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"      
+                                onClick={[Function]}
+    +                           required={true}
+                              >
+                                <input
+                                  aria-invalid={false}
+                                  autoFocus={false}
+                                  className="MuiInputBase-input MuiInput-input"
+    @@ -208,11 +165,10 @@
+                                  name="nodejs"
+                                  onAnimationStart={[Function]}
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onFocus={[Function]}
+    -                             placeholder=""
+                                  required={true}
+                                  type="number"
+                                  value=""
+                                />
+                              </div>
+    @@ -226,11 +182,11 @@
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-217"
+    +     className="MuiBox-root MuiBox-root-236"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      32 |       .create(<Form schema={schema} />)
+      33 |       .toJSON();
+    > 34 |     expect(tree).toMatchSnapshot();
+         |                  ^
+      35 |   });
+      36 |   test("checkboxes", () => {
+      37 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Array.test.tsx:34:18)
+
+  ● array fields › checkboxes
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `array fields checkboxes 1`
+
+    - Snapshot
+    + Received
+
+    @@ -53,11 +53,11 @@
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-242"
+    +     className="MuiBox-root MuiBox-root-261"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      46 |       .create(<Form schema={schema} />)
+      47 |       .toJSON();
+    > 48 |     expect(tree).toMatchSnapshot();
+         |                  ^
+      49 |   });
+      50 | });
+
+      at Object.<anonymous> (test/Array.test.tsx:48:18)
+
+ › 2 snapshots failed.
+ FAIL  test/Form.test.tsx
+  ● single fields › number field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields number field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -5,59 +5,16 @@
+      >
+        <div
+          className="MuiFormControl-root MuiFormControl-fullWidth"
+        >
+          <div
+    -       className="MuiFormControl-root MuiTextField-root"
+    -       registry={
+    -         Object {
+    -           "ArrayFieldTemplate": [Function],
+    -           "FieldTemplate": [Function],
+    -           "ObjectFieldTemplate": [Function],
+    -           "definitions": Object {},
+    -           "fields": Object {
+    -             "AnyOfField": [Function],
+    -             "ArrayField": [Function],
+    -             "BooleanField": [Function],
+    -             "DescriptionField": [Function],
+    -             "NullField": [Function],
+    -             "NumberField": [Function],
+    -             "ObjectField": [Function],
+    -             "OneOfField": [Function],
+    -             "SchemaField": [Function],
+    -             "StringField": [Function],
+    -             "TitleField": [Function],
+    -             "UnsupportedField": [Function],
+    -           },
+    -           "formContext": Object {},
+    -           "rootSchema": Object {
+    -             "type": "number",
+    -           },
+    -           "widgets": Object {
+    -             "AltDateTimeWidget": [Function],
+    -             "AltDateWidget": [Function],
+    -             "BaseInput": [Function],
+    -             "CheckboxWidget": [Function],
+    -             "CheckboxesWidget": [Function],
+    -             "ColorWidget": [Function],
+    -             "DateTimeWidget": [Function],
+    -             "DateWidget": [Function],
+    -             "EmailWidget": [Function],
+    -             "FileWidget": [Function],
+    -             "HiddenWidget": [Function],
+    -             "PasswordWidget": [Function],
+    -             "RadioWidget": [Function],
+    -             "RangeWidget": [Function],
+    -             "SelectWidget": [Function],
+    -             "TextWidget": [Function],
+    -             "TextareaWidget": [Function],
+    -             "URLWidget": [Function],
+    -             "UpDownWidget": [Function],
+    -           },
+    -         }
+    -       }
+    +       className="MuiFormControl-root MuiFormControl-fullWidth"
+          >
+    +       <label
+    +         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+    +         data-shrink={false}
+    +       />
+            <div
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+              onClick={[Function]}
+            >
+              <input
+    @@ -69,20 +26,19 @@
+                name="nodejs"
+                onAnimationStart={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+    -           placeholder=""
+                required={false}
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-85"
+    +     className="MuiBox-root MuiBox-root-104"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      56 |     };
+      57 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    > 58 |     expect(tree).toMatchSnapshot();
+         |                  ^
+      59 |   });
+      60 |   test("number field 0", () => {
+      61 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:58:18)
+
+  ● single fields › number field 0
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields number field 0 1`
+
+    - Snapshot
+    + Received
+
+    @@ -5,59 +5,16 @@
+      >
+        <div
+          className="MuiFormControl-root MuiFormControl-fullWidth"
+        >
+          <div
+    -       className="MuiFormControl-root MuiTextField-root"
+    -       registry={
+    -         Object {
+    -           "ArrayFieldTemplate": [Function],
+    -           "FieldTemplate": [Function],
+    -           "ObjectFieldTemplate": [Function],
+    -           "definitions": Object {},
+    -           "fields": Object {
+    -             "AnyOfField": [Function],
+    -             "ArrayField": [Function],
+    -             "BooleanField": [Function],
+    -             "DescriptionField": [Function],
+    -             "NullField": [Function],
+    -             "NumberField": [Function],
+    -             "ObjectField": [Function],
+    -             "OneOfField": [Function],
+    -             "SchemaField": [Function],
+    -             "StringField": [Function],
+    -             "TitleField": [Function],
+    -             "UnsupportedField": [Function],
+    -           },
+    -           "formContext": Object {},
+    -           "rootSchema": Object {
+    -             "type": "number",
+    -           },
+    -           "widgets": Object {
+    -             "AltDateTimeWidget": [Function],
+    -             "AltDateWidget": [Function],
+    -             "BaseInput": [Function],
+    -             "CheckboxWidget": [Function],
+    -             "CheckboxesWidget": [Function],
+    -             "ColorWidget": [Function],
+    -             "DateTimeWidget": [Function],
+    -             "DateWidget": [Function],
+    -             "EmailWidget": [Function],
+    -             "FileWidget": [Function],
+    -             "HiddenWidget": [Function],
+    -             "PasswordWidget": [Function],
+    -             "RadioWidget": [Function],
+    -             "RangeWidget": [Function],
+    -             "SelectWidget": [Function],
+    -             "TextWidget": [Function],
+    -             "TextareaWidget": [Function],
+    -             "URLWidget": [Function],
+    -             "UpDownWidget": [Function],
+    -           },
+    -         }
+    -       }
+    +       className="MuiFormControl-root MuiFormControl-fullWidth"
+          >
+    +       <label
+    +         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+    +         data-shrink={false}
+    +       />
+            <div
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+              onClick={[Function]}
+            >
+              <input
+    @@ -69,20 +26,19 @@
+                name="nodejs"
+                onAnimationStart={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+    -           placeholder=""
+                required={false}
+                type="number"
+    -           value={0}
+    +           value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-86"
+    +     className="MuiBox-root MuiBox-root-105"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      66 |       .create(<Form schema={schema} formData={formData} />)
+      67 |       .toJSON();
+    > 68 |     expect(tree).toMatchSnapshot();
+         |                  ^
+      69 |   });
+      70 |   test("null field", () => {
+      71 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:68:18)
+
+  ● single fields › null field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields null field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -5,11 +5,11 @@
+      >
+        <div
+          className="MuiFormControl-root MuiFormControl-fullWidth"
+        />
+        <div
+    -     className="MuiBox-root MuiBox-root-87"
+    +     className="MuiBox-root MuiBox-root-106"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      73 |     };
+      74 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    > 75 |     expect(tree).toMatchSnapshot();
+         |                  ^
+      76 |   });
+      77 |   test("unsupported field", () => {
+      78 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:75:18)
+
+  ● single fields › unsupported field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields unsupported field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -28,11 +28,11 @@
+              {}
+            </pre>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-88"
+    +     className="MuiBox-root MuiBox-root-107"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      80 |     };
+      81 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    > 82 |     expect(tree).toMatchSnapshot();
+         |                  ^
+      83 |   });
+      84 |   test("format color", () => {
+      85 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:82:18)
+
+  ● single fields › format color
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields format color 1`
+
+    - Snapshot
+    + Received
+
+    @@ -79,11 +79,11 @@
+              />
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-89"
+    +     className="MuiBox-root MuiBox-root-108"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      88 |     };
+      89 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    > 90 |     expect(tree).toMatchSnapshot();
+         |                  ^
+      91 |   });
+      92 |   test("format date", () => {
+      93 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:90:18)
+
+  ● single fields › format date
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields format date 1`
+
+    - Snapshot
+    + Received
+
+    @@ -79,11 +79,11 @@
+              />
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-90"
+    +     className="MuiBox-root MuiBox-root-109"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+       96 |     };
+       97 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    >  98 |     expect(tree).toMatchSnapshot();
+          |                  ^
+       99 |   });
+      100 |   test("format datetime", () => {
+      101 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:98:18)
+
+  ● single fields › format datetime
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields format datetime 1`
+
+    - Snapshot
+    + Received
+
+    @@ -79,11 +79,11 @@
+              />
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-91"
+    +     className="MuiBox-root MuiBox-root-110"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      104 |     };
+      105 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    > 106 |     expect(tree).toMatchSnapshot();
+          |                  ^
+      107 |   });
+      108 |   test("password field", () => {
+      109 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:106:18)
+
+  ● single fields › password field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields password field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -29,11 +29,11 @@
+              />
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-92"
+    +     className="MuiBox-root MuiBox-root-111"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      116 |       .create(<Form schema={schema} uiSchema={uiSchema} />)
+      117 |       .toJSON();
+    > 118 |     expect(tree).toMatchSnapshot();
+          |                  ^
+      119 |   });
+      120 |   test("textarea field", () => {
+      121 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:118:18)
+
+  ● single fields › textarea field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields textarea field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -29,11 +29,11 @@
+              />
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-93"
+    +     className="MuiBox-root MuiBox-root-112"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      128 |       .create(<Form schema={schema} uiSchema={uiSchema} />)
+      129 |       .toJSON();
+    > 130 |     expect(tree).toMatchSnapshot();
+          |                  ^
+      131 |   });
+      132 |   test("select field", () => {
+      133 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:130:18)
+
+  ● single fields › select field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields select field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -53,11 +53,11 @@
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-117"
+    +     className="MuiBox-root MuiBox-root-136"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      136 |     };
+      137 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    > 138 |     expect(tree).toMatchSnapshot();
+          |                  ^
+      139 |   });
+      140 |   test("checkbox field", () => {
+      141 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:138:18)
+
+  ● single fields › checkbox field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields checkbox field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -9,11 +9,11 @@
+          <label
+            className="MuiFormControlLabel-root"
+          >
+            <span
+              aria-disabled={false}
+    -         className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+    +         className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-149 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+              onBlur={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+    @@ -29,11 +29,11 @@
+                className="MuiIconButton-label"
+              >
+                <input
+                  autoFocus={false}
+                  checked={false}
+    -             className="PrivateSwitchBase-input-133"
+    +             className="PrivateSwitchBase-input-152"
+                  data-indeterminate={false}
+                  disabled={false}
+                  id="root"
+                  onChange={[Function]}
+                  type="checkbox"
+    @@ -58,11 +58,11 @@
+              className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+            />
+          </label>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-173"
+    +     className="MuiBox-root MuiBox-root-192"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      143 |     };
+      144 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    > 145 |     expect(tree).toMatchSnapshot();
+          |                  ^
+      146 |   });
+      147 |   test("checkbox field", () => {
+      148 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:145:18)
+
+  ● single fields › checkbox field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields checkbox field 2`
+
+    - Snapshot
+    + Received
+
+    @@ -9,11 +9,11 @@
+          <label
+            className="MuiFormControlLabel-root"
+          >
+            <span
+              aria-disabled={false}
+    -         className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+    +         className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-149 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+              onBlur={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+    @@ -29,11 +29,11 @@
+                className="MuiIconButton-label"
+              >
+                <input
+                  autoFocus={false}
+                  checked={false}
+    -             className="PrivateSwitchBase-input-133"
+    +             className="PrivateSwitchBase-input-152"
+                  data-indeterminate={false}
+                  disabled={false}
+                  id="root"
+                  onChange={[Function]}
+                  type="checkbox"
+    @@ -55,11 +55,11 @@
+              className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+            />
+          </label>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-174"
+    +     className="MuiBox-root MuiBox-root-193"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      150 |     };
+      151 |     const tree = renderer.create(<Form schema={schema} />).toJSON();
+    > 152 |     expect(tree).toMatchSnapshot();
+          |                  ^
+      153 |   });
+      154 |   test("checkboxes field", () => {
+      155 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:152:18)
+
+  ● single fields › checkboxes field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields checkboxes field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -16,11 +16,11 @@
+            <label
+              className="MuiFormControlLabel-root"
+            >
+              <span
+                aria-disabled={false}
+    -           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+    +           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-149 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+    @@ -36,11 +36,11 @@
+                  className="MuiIconButton-label"
+                >
+                  <input
+                    autoFocus={false}
+                    checked={false}
+    -               className="PrivateSwitchBase-input-133"
+    +               className="PrivateSwitchBase-input-152"
+                    data-indeterminate={false}
+                    disabled={false}
+                    id="root_0"
+                    onChange={[Function]}
+                    type="checkbox"
+    @@ -70,11 +70,11 @@
+            <label
+              className="MuiFormControlLabel-root"
+            >
+              <span
+                aria-disabled={false}
+    -           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+    +           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-149 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+    @@ -90,11 +90,11 @@
+                  className="MuiIconButton-label"
+                >
+                  <input
+                    autoFocus={false}
+                    checked={false}
+    -               className="PrivateSwitchBase-input-133"
+    +               className="PrivateSwitchBase-input-152"
+                    data-indeterminate={false}
+                    disabled={false}
+                    id="root_1"
+                    onChange={[Function]}
+                    type="checkbox"
+    @@ -124,11 +124,11 @@
+            <label
+              className="MuiFormControlLabel-root"
+            >
+              <span
+                aria-disabled={false}
+    -           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+    +           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-149 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+    @@ -144,11 +144,11 @@
+                  className="MuiIconButton-label"
+                >
+                  <input
+                    autoFocus={false}
+                    checked={false}
+    -               className="PrivateSwitchBase-input-133"
+    +               className="PrivateSwitchBase-input-152"
+                    data-indeterminate={false}
+                    disabled={false}
+                    id="root_2"
+                    onChange={[Function]}
+                    type="checkbox"
+    @@ -178,11 +178,11 @@
+            <label
+              className="MuiFormControlLabel-root"
+            >
+              <span
+                aria-disabled={false}
+    -           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+    +           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-149 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+    @@ -198,11 +198,11 @@
+                  className="MuiIconButton-label"
+                >
+                  <input
+                    autoFocus={false}
+                    checked={false}
+    -               className="PrivateSwitchBase-input-133"
+    +               className="PrivateSwitchBase-input-152"
+                    data-indeterminate={false}
+                    disabled={false}
+                    id="root_3"
+                    onChange={[Function]}
+                    type="checkbox"
+    @@ -230,11 +230,11 @@
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-184"
+    +     className="MuiBox-root MuiBox-root-196"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      167 |       .create(<Form schema={schema} uiSchema={uiSchema} />)
+      168 |       .toJSON();
+    > 169 |     expect(tree).toMatchSnapshot();
+          |                  ^
+      170 |   });
+      171 |   test("radio field", () => {
+      172 |     const schema: JSONSchema7 = {
+
+      at Object.<anonymous> (test/Form.test.tsx:169:18)
+
+  ● single fields › radio field
+
+    expect(received).toMatchSnapshot()
+
+    Snapshot name: `single fields radio field 1`
+
+    - Snapshot
+    + Received
+
+    @@ -19,11 +19,11 @@
+            <label
+              className="MuiFormControlLabel-root"
+            >
+              <span
+                aria-disabled={false}
+    -           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+    +           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-149 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+    @@ -38,18 +38,18 @@
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <input
+                    checked={false}
+    -               className="PrivateSwitchBase-input-133"
+    +               className="PrivateSwitchBase-input-152"
+                    disabled={false}
+                    onChange={[Function]}
+                    type="radio"
+                    value="true"
+                  />
+                  <div
+    -               className="PrivateRadioButtonIcon-root-190"
+    +               className="PrivateRadioButtonIcon-root-202"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="MuiSvgIcon-root"
+                      focusable="false"
+    @@ -60,11 +60,11 @@
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+    -                 className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-191"
+    +                 className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-203"
+                      focusable="false"
+                      role="presentation"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+    @@ -83,11 +83,11 @@
+            <label
+              className="MuiFormControlLabel-root"
+            >
+              <span
+                aria-disabled={false}
+    -           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+    +           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-149 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+    @@ -102,18 +102,18 @@
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <input
+                    checked={false}
+    -               className="PrivateSwitchBase-input-133"
+    +               className="PrivateSwitchBase-input-152"
+                    disabled={false}
+                    onChange={[Function]}
+                    type="radio"
+                    value="false"
+                  />
+                  <div
+    -               className="PrivateRadioButtonIcon-root-190"
+    +               className="PrivateRadioButtonIcon-root-202"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="MuiSvgIcon-root"
+                      focusable="false"
+    @@ -124,11 +124,11 @@
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+    -                 className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-191"
+    +                 className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-203"
+                      focusable="false"
+                      role="presentation"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+    @@ -145,11 +145,11 @@
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
+    -     className="MuiBox-root MuiBox-root-193"
+    +     className="MuiBox-root MuiBox-root-205"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            disabled={false}
+            onBlur={[Function]}
+
+      179 |       .create(<Form schema={schema} uiSchema={uiSchema} />)
+      180 |       .toJSON();
+    > 181 |     expect(tree).toMatchSnapshot();
+          |                  ^
+      182 |   });
+      183 |   // There is a bug in the Material UI <Slider /> component that prevents this from working.
+      184 |   // Error: `TypeError: Cannot read property 'addEventListener' of null`
+
+      at Object.<anonymous> (test/Form.test.tsx:181:18)
+
+ › 14 snapshots failed.
+Snapshot Summary
+ › 17 snapshots failed from 3 test suites. Inspect your code changes or re-run jest with `-u` to update them.
+
+Test Suites: 3 failed, 3 total
+Tests:       17 failed, 1 skipped, 6 passed, 24 total
+Snapshots:   17 failed, 6 passed, 23 total
+Time:        7.288s
+Ran all test suites.
+npm ERR! Test failed.  See above for more details.

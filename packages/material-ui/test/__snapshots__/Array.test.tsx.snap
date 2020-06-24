@@ -157,7 +157,7 @@ exports[`array fields checkboxes 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-242"
+    className="MuiBox-root MuiBox-root-261"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -327,66 +327,23 @@ exports[`array fields fixed array 1`] = `
                       className="MuiFormControl-root MuiFormControl-fullWidth"
                     >
                       <div
-                        className="MuiFormControl-root MuiTextField-root"
-                        registry={
-                          Object {
-                            "ArrayFieldTemplate": [Function],
-                            "FieldTemplate": [Function],
-                            "ObjectFieldTemplate": [Function],
-                            "definitions": Object {},
-                            "fields": Object {
-                              "AnyOfField": [Function],
-                              "ArrayField": [Function],
-                              "BooleanField": [Function],
-                              "DescriptionField": [Function],
-                              "NullField": [Function],
-                              "NumberField": [Function],
-                              "ObjectField": [Function],
-                              "OneOfField": [Function],
-                              "SchemaField": [Function],
-                              "StringField": [Function],
-                              "TitleField": [Function],
-                              "UnsupportedField": [Function],
-                            },
-                            "formContext": Object {},
-                            "rootSchema": Object {
-                              "items": Array [
-                                Object {
-                                  "type": "string",
-                                },
-                                Object {
-                                  "type": "number",
-                                },
-                              ],
-                              "type": "array",
-                            },
-                            "widgets": Object {
-                              "AltDateTimeWidget": [Function],
-                              "AltDateWidget": [Function],
-                              "BaseInput": [Function],
-                              "CheckboxWidget": [Function],
-                              "CheckboxesWidget": [Function],
-                              "ColorWidget": [Function],
-                              "DateTimeWidget": [Function],
-                              "DateWidget": [Function],
-                              "EmailWidget": [Function],
-                              "FileWidget": [Function],
-                              "HiddenWidget": [Function],
-                              "PasswordWidget": [Function],
-                              "RadioWidget": [Function],
-                              "RangeWidget": [Function],
-                              "SelectWidget": [Function],
-                              "TextWidget": [Function],
-                              "TextareaWidget": [Function],
-                              "URLWidget": [Function],
-                              "UpDownWidget": [Function],
-                            },
-                          }
-                        }
+                        className="MuiFormControl-root MuiFormControl-fullWidth"
                       >
+                        <label
+                          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated Mui-required Mui-required"
+                          data-shrink={false}
+                        >
+                          <span
+                            className="MuiFormLabel-asterisk MuiInputLabel-asterisk"
+                          >
+                             
+                            *
+                          </span>
+                        </label>
                         <div
                           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
                           onClick={[Function]}
+                          required={true}
                         >
                           <input
                             aria-invalid={false}
@@ -399,7 +356,6 @@ exports[`array fields fixed array 1`] = `
                             onBlur={[Function]}
                             onChange={[Function]}
                             onFocus={[Function]}
-                            placeholder=""
                             required={true}
                             type="number"
                             value=""
@@ -417,7 +373,7 @@ exports[`array fields fixed array 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-217"
+    className="MuiBox-root MuiBox-root-236"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
