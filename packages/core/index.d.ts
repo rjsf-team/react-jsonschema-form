@@ -111,7 +111,6 @@ declare module '@rjsf/core' {
         onBlur: (id: string, value: boolean | number | string | null) => void;
         onFocus: (id: string, value: boolean | number | string | null) => void;
         label: string;
-        type: string;
         multiple: boolean;
         rawErrors: string[];
     }
