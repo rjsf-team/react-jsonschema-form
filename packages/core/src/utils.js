@@ -368,6 +368,26 @@ export function getUiOptions(uiSchema) {
     }, {});
 }
 
+export function getDisplayLabel(schema, uiSchema, rootSchema) {
+  const uiOptions = getUiOptions(uiSchema);
+  let { label: displayLabel = true } = uiOptions;
+  if (schema.type === "array") {
+    displayLabel =
+      isMultiSelect(schema, rootSchema) ||
+      isFilesArray(schema, uiSchema, rootSchema);
+  }
+  if (schema.type === "object") {
+    displayLabel = false;
+  }
+  if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
+    displayLabel = false;
+  }
+  if (uiSchema["ui:field"]) {
+    displayLabel = false;
+  }
+  return displayLabel;
+}
+
 export function isObject(thing) {
   if (typeof File !== "undefined" && thing instanceof File) {
     return false;

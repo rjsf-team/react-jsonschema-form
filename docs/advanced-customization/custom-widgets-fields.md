@@ -121,6 +121,7 @@ The following props are passed to custom widget components:
 
 - `id`: The generated id for this field;
 - `schema`: The JSONSchema subschema object for this field;
+- `uiSchema`: The uiSchema for this field;
 - `value`: The current value for this field;
 - `placeholder`: the placeholder for the field, if any;
 - `required`: The required status of this field;
