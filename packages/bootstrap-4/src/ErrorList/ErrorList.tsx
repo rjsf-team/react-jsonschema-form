@@ -1,36 +1,25 @@
-import React from 'react';
+import React from "react";
 
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ErrorIcon from '@material-ui/icons/Error';
-import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
 
-import { ErrorListProps } from '@rjsf/core';
+import { ErrorListProps } from "@rjsf/core";
 
 const ErrorList = ({ errors }: ErrorListProps) => (
-  <Paper elevation={2}>
-    <Box mb={2} p={2}>
-      <Typography variant="h6">
-        Errors
-      </Typography>
-      <List dense={true}>
+  <Card border="danger" className="mb-2">
+    <Card.Header className="alert-danger">Errors</Card.Header>
+    <Card.Body className="p-0">
+      <ListGroup variant="flush">
         {errors.map((error, i: number) => {
           return (
-            <ListItem key={i}>
-              <ListItemIcon>
-                <ErrorIcon color="error" />
-              </ListItemIcon>
-              <ListItemText primary={error.stack} />
-            </ListItem>
+            <ListGroup.Item key={i}>
+              <small>{error.stack}</small>
+            </ListGroup.Item>
           );
         })}
-      </List>
-    </Box>
-  </Paper>
+      </ListGroup>
+    </Card.Body>
+  </Card>
 );
 
 export default ErrorList;

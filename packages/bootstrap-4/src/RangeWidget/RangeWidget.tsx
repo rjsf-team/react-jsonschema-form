@@ -34,7 +34,10 @@ const RangeWidget = ({
 
   return (
     <Form.Group controlId={id} className="mb-0">
-      <Form.Label>{label}</Form.Label>
+      <Form.Label>
+        {label}
+        {label && required ? "*" : null}
+      </Form.Label>
       <Form.Control
         type="range"
         required={required}

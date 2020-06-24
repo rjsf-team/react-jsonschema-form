@@ -29,7 +29,7 @@ const UpDownWidget = ({
     <Form.Group controlId={id} className="mb-0">
       <Form.Label>
         {label}
-        {required ? "*" : null}
+        {label && required ? "*" : null}
       </Form.Label>
       <Form.Control
         id={id}

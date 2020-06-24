@@ -76,7 +76,7 @@ const SelectWidget = ({
     <Form.Group controlId={id}>
       <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
         {label || schema.title}
-        {required ? "*" : null}
+        {(label || schema.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
         as="select"

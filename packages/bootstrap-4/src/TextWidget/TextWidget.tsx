@@ -38,7 +38,7 @@ const TextWidget = ({
     <Form.Group controlId={id} className="mb-0">
       <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
         {label || schema.title}
-        {required ? "*" : null}
+        {(label || schema.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
         id={id}

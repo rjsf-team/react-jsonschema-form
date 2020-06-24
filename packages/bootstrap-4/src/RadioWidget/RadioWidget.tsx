@@ -35,7 +35,7 @@ const RadioWidget = ({
     <Form.Group controlId={id} className="mb-0">
       <Form.Label className="d-block">
         {label || schema.title}
-        {required ? "*" : null}
+        {(label || schema.title) && required ? "*" : null}
       </Form.Label>
       {(enumOptions as any).map((option: any, i: number) => {
         const itemDisabled =
