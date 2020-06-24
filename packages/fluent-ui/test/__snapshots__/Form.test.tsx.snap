@@ -39,7 +39,7 @@ exports[`single fields null field 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__28"
+              id="id__33"
             >
               Submit
             </span>
@@ -65,31 +65,112 @@ exports[`single fields number field 1`] = `
       }
     }
   >
-    <div
-      className="ms-TextField root-42"
+    <label
+      className="ms-Label root-58"
+      htmlFor="root"
     >
+      undefined
+    </label>
+    <div
+      className="css-59"
+    >
+      
       <div
-        className="ms-TextField-wrapper"
+        className="css-63"
+        id="root"
+        onChange={[Function]}
       >
-        <div
-          className="ms-TextField-fieldGroup fieldGroup-43"
+        <input
+          aria-disabled={false}
+          aria-labelledby=""
+          aria-valuemax={Infinity}
+          aria-valuemin={-Infinity}
+          aria-valuenow={-Infinity}
+          autoComplete="off"
+          className="ms-spinButton-input css-64"
+          data-lpignore={true}
+          disabled={false}
+          id="input23"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onInput={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          role="spinbutton"
+          type="text"
+          value="-Infinity"
+        />
+        <span
+          className="css-65"
         >
-          <input
-            aria-invalid={false}
-            autoFocus={false}
-            className="ms-TextField-field field-44"
-            disabled={false}
-            id="root"
-            name="nodejs"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onInput={[Function]}
-            readOnly={false}
-            type="number"
-            value=""
-          />
-        </div>
+          <button
+            aria-label="Increase value by 1"
+            className="ms-Button ms-Button--icon ms-UpButton root-66"
+            data-is-focusable={false}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-51"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-37 css-69 ms-Button-icon icon-67"
+                data-icon-name="ChevronUpSmall"
+                role="presentation"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            aria-label="Decrease value by 1"
+            className="ms-Button ms-Button--icon ms-DownButton root-66"
+            data-is-focusable={false}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-51"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-37 css-70 ms-Button-icon icon-67"
+                data-icon-name="ChevronDownSmall"
+                role="presentation"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-3\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </span>
       </div>
     </div>
   </div>
@@ -118,7 +199,7 @@ exports[`single fields number field 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__25"
+              id="id__30"
             >
               Submit
             </span>
@@ -493,7 +574,7 @@ exports[`single fields unsupported field 1`] = `
           >
             <span
               className="ms-Button-label label-54"
-              id="id__31"
+              id="id__36"
             >
               Submit
             </span>

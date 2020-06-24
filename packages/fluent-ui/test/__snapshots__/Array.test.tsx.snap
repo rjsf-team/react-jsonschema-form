@@ -130,9 +130,9 @@ exports[`array fields checkboxes 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-70"
+        className="ms-Dropdown dropdown-81"
         data-is-focusable={true}
-        id="Dropdown34"
+        id="Dropdown39"
         onBlur={[Function]}
         onChange={[Function]}
         onClick={[Function]}
@@ -147,15 +147,15 @@ exports[`array fields checkboxes 1`] = `
           aria-atomic={true}
           aria-invalid={false}
           aria-live="polite"
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-71"
-          id="Dropdown34-option"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-82"
+          id="Dropdown39-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-72"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-83"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-86"
+            className="ms-Dropdown-caretDown caretDown-97"
             data-icon-name="ChevronDown"
           >
             
@@ -189,7 +189,7 @@ exports[`array fields checkboxes 1`] = `
           >
             <span
               className="ms-Button-label label-52"
-              id="id__35"
+              id="id__40"
             >
               Submit
             </span>
@@ -393,32 +393,112 @@ exports[`array fields fixed array 1`] = `
                 }
               }
             >
-              <div
-                className="ms-TextField is-required root-55"
+              <label
+                className="ms-Label root-69"
+                htmlFor="root_1"
               >
+                undefined*
+              </label>
+              <div
+                className="css-70"
+              >
+                
                 <div
-                  className="ms-TextField-wrapper"
+                  className="css-74"
+                  id="root_1"
+                  onChange={[Function]}
                 >
-                  <div
-                    className="ms-TextField-fieldGroup fieldGroup-56"
+                  <input
+                    aria-disabled={false}
+                    aria-labelledby=""
+                    aria-valuemax={Infinity}
+                    aria-valuemin={-Infinity}
+                    aria-valuenow={-Infinity}
+                    autoComplete="off"
+                    className="ms-spinButton-input css-75"
+                    data-lpignore={true}
+                    disabled={false}
+                    id="input20"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    role="spinbutton"
+                    type="text"
+                    value="-Infinity"
+                  />
+                  <span
+                    className="css-76"
                   >
-                    <input
-                      aria-invalid={false}
-                      autoFocus={false}
-                      className="ms-TextField-field field-57"
-                      disabled={false}
-                      id="root_1"
-                      name="nodejs"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onInput={[Function]}
-                      readOnly={false}
-                      required={true}
-                      type="number"
-                      value=""
-                    />
-                  </div>
+                    <button
+                      aria-label="Increase value by 1"
+                      className="ms-Button ms-Button--icon ms-UpButton root-77"
+                      data-is-focusable={false}
+                      onClick={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyPress={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      tabIndex={-1}
+                      type="button"
+                    >
+                      <span
+                        className="ms-Button-flexContainer flexContainer-42"
+                        data-automationid="splitbuttonprimary"
+                      >
+                        <i
+                          aria-hidden={true}
+                          className="ms-Icon root-37 css-79 ms-Button-icon icon-78"
+                          data-icon-name="ChevronUpSmall"
+                          role="presentation"
+                          style={
+                            Object {
+                              "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                            }
+                          }
+                        >
+                          
+                        </i>
+                      </span>
+                    </button>
+                    <button
+                      aria-label="Decrease value by 1"
+                      className="ms-Button ms-Button--icon ms-DownButton root-77"
+                      data-is-focusable={false}
+                      onClick={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyPress={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      tabIndex={-1}
+                      type="button"
+                    >
+                      <span
+                        className="ms-Button-flexContainer flexContainer-42"
+                        data-automationid="splitbuttonprimary"
+                      >
+                        <i
+                          aria-hidden={true}
+                          className="ms-Icon root-37 css-80 ms-Button-icon icon-78"
+                          data-icon-name="ChevronDownSmall"
+                          role="presentation"
+                          style={
+                            Object {
+                              "fontFamily": "\\"FabricMDL2Icons-3\\"",
+                            }
+                          }
+                        >
+                          
+                        </i>
+                      </span>
+                    </button>
+                  </span>
                 </div>
               </div>
             </div>
@@ -555,7 +635,7 @@ exports[`array fields fixed array 1`] = `
           >
             <span
               className="ms-Button-label label-52"
-              id="id__31"
+              id="id__36"
             >
               Submit
             </span>

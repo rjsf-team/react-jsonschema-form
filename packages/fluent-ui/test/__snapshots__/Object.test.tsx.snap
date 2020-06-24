@@ -74,40 +74,112 @@ exports[`object fields object 1`] = `
             }
           }
         >
-          <div
-            className="ms-TextField root-42"
+          <label
+            className="ms-Label root-50"
+            htmlFor="root_b"
           >
+            b
+          </label>
+          <div
+            className="css-51"
+          >
+            
             <div
-              className="ms-TextField-wrapper"
+              className="css-55"
+              id="root_b"
+              onChange={[Function]}
             >
-              <label
-                className="ms-Label root-50"
-                htmlFor="root_b"
-                id="TextFieldLabel6"
+              <input
+                aria-disabled={false}
+                aria-labelledby=""
+                aria-valuemax={Infinity}
+                aria-valuemin={-Infinity}
+                aria-valuenow={-Infinity}
+                autoComplete="off"
+                className="ms-spinButton-input css-56"
+                data-lpignore={true}
+                disabled={false}
+                id="input5"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                role="spinbutton"
+                type="text"
+                value="-Infinity"
+              />
+              <span
+                className="css-57"
               >
-                b
-              </label>
-              <div
-                className="ms-TextField-fieldGroup fieldGroup-43"
-              >
-                <input
-                  aria-invalid={false}
-                  aria-labelledby="TextFieldLabel6"
-                  autoFocus={false}
-                  className="ms-TextField-field field-44"
-                  disabled={false}
-                  id="root_b"
-                  name="nodejs"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  onInput={[Function]}
-                  readOnly={false}
-                  required={false}
-                  type="number"
-                  value=""
-                />
-              </div>
+                <button
+                  aria-label="Increase value by 1"
+                  className="ms-Button ms-Button--icon ms-UpButton root-58"
+                  data-is-focusable={false}
+                  onClick={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyPress={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  tabIndex={-1}
+                  type="button"
+                >
+                  <span
+                    className="ms-Button-flexContainer flexContainer-59"
+                    data-automationid="splitbuttonprimary"
+                  >
+                    <i
+                      aria-hidden={true}
+                      className="ms-Icon root-37 css-66 ms-Button-icon icon-61"
+                      data-icon-name="ChevronUpSmall"
+                      role="presentation"
+                      style={
+                        Object {
+                          "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                        }
+                      }
+                    >
+                      
+                    </i>
+                  </span>
+                </button>
+                <button
+                  aria-label="Decrease value by 1"
+                  className="ms-Button ms-Button--icon ms-DownButton root-58"
+                  data-is-focusable={false}
+                  onClick={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyPress={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  tabIndex={-1}
+                  type="button"
+                >
+                  <span
+                    className="ms-Button-flexContainer flexContainer-59"
+                    data-automationid="splitbuttonprimary"
+                  >
+                    <i
+                      aria-hidden={true}
+                      className="ms-Icon root-37 css-67 ms-Button-icon icon-61"
+                      data-icon-name="ChevronDownSmall"
+                      role="presentation"
+                      style={
+                        Object {
+                          "fontFamily": "\\"FabricMDL2Icons-3\\"",
+                        }
+                      }
+                    >
+                      
+                    </i>
+                  </span>
+                </button>
+              </span>
             </div>
           </div>
         </div>
@@ -120,7 +192,7 @@ exports[`object fields object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-51"
+        className="ms-Button ms-Button--primary root-68"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -131,15 +203,15 @@ exports[`object fields object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-52"
+          className="ms-Button-flexContainer flexContainer-59"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-53"
+            className="ms-Button-textContainer textContainer-60"
           >
             <span
-              className="ms-Button-label label-55"
-              id="id__7"
+              className="ms-Button-label label-70"
+              id="id__12"
             >
               Submit
             </span>
