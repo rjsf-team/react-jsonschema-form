@@ -47,7 +47,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Agustin N. R. Ramirez <agustin.ramirez@cybertec.at>",
   "contributors": [
     "Lorenz Henk <lorenz.henk@cybertec.at>"
   ],

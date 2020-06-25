@@ -100,10 +100,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Jacques Nel <jacqueswho@gmail.com>",
-  "contributors": [
-    "Jacques Nel <jacqueswho@gmail.com>"
-  ],
   "keywords": [
     "Semantic UI",
     "react-jsonschema-form",

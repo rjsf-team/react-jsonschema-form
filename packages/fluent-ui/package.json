@@ -48,7 +48,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "",
   "keywords": [
     "Fluent UI",
     "react-jsonschema-form",
