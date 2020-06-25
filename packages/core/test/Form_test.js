@@ -1979,7 +1979,7 @@ describeRepeated("Form common", createFormComponent => {
   });
 
   describe("Schema and formData updates", () => {
-    // https://github.com/mozilla-services/react-jsonschema-form/issues/231
+    // https://github.com/rjsf-team/react-jsonschema-form/issues/231
     const schema = {
       type: "object",
       properties: {

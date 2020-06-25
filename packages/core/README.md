@@ -13,7 +13,7 @@
   <h3 align="center">@rjsf/core</h3>
 
   <p align="center">
-  Core logic and classic Bootstrap 3 theme for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Core logic and classic Bootstrap 3 theme for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
     <br />
@@ -47,7 +47,7 @@ Core logic and classic Bootstrap 3 theme for `react-jsonschema-form`.
 
 ### Built With
 
-- [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
+- [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
 - [Bootstrap 3](https://getbootstrap.com/docs/3.3/)
 
 <!-- GETTING STARTED -->

@@ -13,7 +13,7 @@
   <h3 align="center">@rjsf/antd</h3>
 
   <p align="center">
-  Ant Design theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Ant Design theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
     <br />
@@ -47,7 +47,7 @@ Ant Design theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
-- [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
+- [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
 - [Ant Design](https://github.com/ant-design/ant-design)
 
 <!-- GETTING STARTED -->
