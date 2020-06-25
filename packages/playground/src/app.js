@@ -19,7 +19,7 @@ function deepEquals(a, b, ca = [], cb = []) {
     return true;
   } else if (typeof a === "function" || typeof b === "function") {
     // Assume all functions are equivalent
-    // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
+    // see https://github.com/rjsf-team/react-jsonschema-form/issues/255
     return true;
   } else if (typeof a !== "object" || typeof b !== "object") {
     return false;
@@ -627,7 +627,7 @@ class Playground extends Component {
         <div className="col-sm-12">
           <p style={{ textAlign: "center" }}>
             Powered by{" "}
-            <a href="https://github.com/mozilla-services/react-jsonschema-form">
+            <a href="https://github.com/rjsf-team/react-jsonschema-form">
               react-jsonschema-form
             </a>
             .

@@ -63,9 +63,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
-  "license": "Apache 2",
+  "license": "Apache-2.0",
   "dependencies": {
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15"

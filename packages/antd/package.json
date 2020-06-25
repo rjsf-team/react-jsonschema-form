@@ -80,7 +80,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
   "keywords": [
     "antd",
@@ -95,7 +95,7 @@
   "author": "Delyan Ruskov <d.ruskov@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/mozilla-services/react-jsonschema-form/issues"
+    "url": "https://github.com/rjsf-team/react-jsonschema-form/issues"
   },
-  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme"
+  "homepage": "https://github.com/rjsf-team/react-jsonschema-form"
 }
