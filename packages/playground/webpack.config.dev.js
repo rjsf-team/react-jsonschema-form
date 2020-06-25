@@ -62,7 +62,9 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        include: /node_modules\/antd/,
+        include: [
+          path.join(__dirname, "node_modules", "antd")
+        ],
         use: [
           {
             loader: "style-loader",
