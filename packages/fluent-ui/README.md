@@ -1,6 +1,16 @@
+[![Build Status][build-shield]][build-url]
+[![npm][npm-shield]][npm-url]
+[![npm downloads][npm-dl-shield]][npm-dl-url]
+[![Contributors][contributors-shield]][contributors-url]
+[![Apache 2.0 License][license-shield]][license-url]
+
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
+  <a href="https://github.com/rjsf-team/react-jsonschema-form">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/fluent-ui/logo.png" alt="Logo" width="120" height="120">
+  </a>
+
   <h3 align="center">@rjsf/fluent-ui</h3>
 
   <p align="center">
@@ -11,11 +21,24 @@
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
     ·
-    <a href="https://rjsf-team.github.io/react-jsonschema-form/">Report Bug</a>
+    <a href="https://github.com/rjsf-team/react-jsonschema-form/issues">Report Bug</a>
     ·
-    <a href="https://rjsf-team.github.io/react-jsonschema-form/">Request Feature</a>
+    <a href="https://github.com/rjsf-team/react-jsonschema-form/issues">Request Feature</a>
   </p>
 </p>
+
+<!-- TABLE OF CONTENTS -->
+
+## Table of Contents
+
+- [About The Project](#about-the-project)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Contact](#contact)
 
 <!-- ABOUT THE PROJECT -->
 
@@ -42,18 +65,19 @@ Fluent UI theme, fields and widgets for `react-jsonschema-form`.
 yarn add @fluentui/react @rjsf/core
 ```
 
-For the fluent ui grid to work, add the following css tag to the main HTML page:
+For the Fluent UI grid to work, add the following CSS tag to the main HTML page:
 
 ```html
 <link rel="stylesheet" href="//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
 ```
-
 
 ### Installation
 
 ```bash
 yarn add @rjsf/fluent-ui
 ```
+
+<!-- USAGE EXAMPLES -->
 
 ## Usage
 
@@ -65,22 +89,44 @@ or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as FuiTheme } from '@rjsf/fluent-ui';
+import { Theme as FluentUITheme } from '@rjsf/fluent-ui';
 
-const Form = withTheme(FuiTheme);
+// Make modifications to the theme with your own fields and widgets
+
+const Form = withTheme(FluentUITheme);
 ```
+
+<!-- ROADMAP -->
+
+## Roadmap
+
+See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues) for a list of proposed features (and known issues).
+
+<!-- CONTRIBUTING -->
+
+## Contributing
+
+Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/contributing/) to get started.
+
+<!-- CONTACT -->
+
+## Contact
+
+rjsf team: [https://github.com/orgs/rjsf-team/people](https://github.com/orgs/rjsf-team/people)
+
+GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[build-shield]: https://img.shields.io/circleci/build/github/cybertec-postgresql/rjsf-material-ui.svg?style=flat-square&token=a58b0890f96bff2b53eef0f4d9c9e5d16eec2200
-[build-url]: https://circleci.com/gh/cybertec-postgresql/rjsf-material-ui
-[contributors-shield]: https://img.shields.io/badge/contributors-1-orange.svg?style=flat-square
-[contributors-url]: https://github.com/cybertec-postgresql/rjsf-material-ui/graphs/contributors
-[license-shield]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
-[license-url]: https://choosealicense.com/licenses/mit
-[npm-shield]: https://img.shields.io/npm/v/rjsf-material-ui/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/rjsf-material-ui
-[npm-dl-shield]: https://img.shields.io/npm/dm/rjsf-material-ui.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/rjsf-material-ui
-[product-screenshot]: https://raw.githubusercontent.com/cybertec-postgresql/rjsf-material-ui/master/screenshot.png
+[build-shield]: https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg
+[build-url]: https://github.com/rjsf-team/react-jsonschema-form/actions
+[contributors-shield]: https://img.shields.io/github/contributors/rjsf-team/react-jsonschema-form.svg
+[contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
+[license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
+[license-url]: https://choosealicense.com/licenses/apache-2.0/
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/fluent-ui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/fluent-ui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/fluent-ui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/fluent-ui
+[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/fluent-ui/screenshot.png

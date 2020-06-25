@@ -1,58 +1,41 @@
-<!--
-*** Thanks for checking out this README Template. If you have a suggestion that would
-*** make this better please fork the repo and create a pull request or simple open
-*** an issue with the tag "enhancement".
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for build-url, contributors-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-[![Build Status](https://travis-ci.org/mozilla-services/react-jsonschema-form.svg?branch=master)](https://travis-ci.org/mozilla-services/react-jsonschema-form)
-![Contributors][contributors-shield]
-![MIT License][license-shield]
+[![Build Status][build-shield]][build-url]
+[![npm][npm-shield]][npm-url]
+[![npm downloads][npm-dl-shield]][npm-dl-url]
+[![Contributors][contributors-shield]][contributors-url]
+[![Apache 2.0 License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://react.semantic-ui.com/">
-    <img src="https://react.semantic-ui.com/logo.png" alt="Logo" width="140" height="120">
+  <a href="https://github.com/rjsf-team/react-jsonschema-form">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/semantic-ui/logo.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">rjsf-semantic-ui</h3>
 
   <p align="center">
-  Semantic-UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Semantic UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
-    <a href="https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/semantic-ui/"><strong>Explore the docs »</strong></a>
+    <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
     ·
-    <a href="https://github.com/Semantic-Org/Semantic-UI-React/issues/new?template=Bug_report.md">Report Bug</a>
-       ·
-       <a href="https://github.com/Semantic-Org/Semantic-UI-React/issues/new?template=Feature_request.md">Request Feature</a>
+    <a href="https://github.com/rjsf-team/react-jsonschema-form/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/rjsf-team/react-jsonschema-form/issues">Request Feature</a>
   </p>
+</p>
 
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
-  - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-    - [Semantic Widget Optional Properties](#semantic-widget-optional-properties)
-    - [Custom Semantic Widget Properties](#custom-semantic-widget-properties)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -66,23 +49,22 @@ Exports `semantic-ui` theme, fields and widgets for `react-jsonschema-form`.
 ### Built With
 
 - [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
-- [Semantic-UI](https://react.semantic-ui.com/)
+- [Semantic UI](https://react.semantic-ui.com/)
 
 <!-- GETTING STARTED -->
 
 ## Getting Started
 
-- see [getting started guide](https://react.semantic-ui.com/usage) on react-semantic-ui
+- See the [getting started guide](https://react.semantic-ui.com/usage) on react-semantic-ui.
 
 ### Prerequisites
 
-- `@semantic-ui-react >= 0.87.0` ([V0.87.0](https://github.com/Semantic-Org/Semantic-UI-React/releases/tag/v0.87.0))
-- `@semantic-ui-css >= 2.4.1` ([default theme for semantic-ui](https://github.com/Semantic-Org/Semantic-UI-CSS))
-- see [theming guide](https://react.semantic-ui.com/theming) if you wish to customize
-- `react-jsonschema-form >= 1.6.0` ([in 1.6.0, the `withTheme` HOC was added](https://github.com/mozilla-services/react-jsonschema-form/pull/1226))
+- `@semantic-ui-react >= 0.87.0`
+- `@semantic-ui-css >= 2.4.1` ([default theme for semantic-ui](https://github.com/Semantic-Org/Semantic-UI-CSS)); see [theming guide](https://react.semantic-ui.com/theming) if you wish to customize
+- `@rjsf/core >= 2.0.0`
 
 ```sh
-yarn add semantic-ui-css add semantic-ui-react @rjsf/core
+yarn add semantic-ui-css semantic-ui-react @rjsf/core
 ```
 
 ### Installation
@@ -96,19 +78,21 @@ yarn add @rjsf/semantic-ui
 ## Usage
 
 ```javascript
-import { withTheme } from '@rjsf/core';
-import { Theme as SemanticUITheme } from '@rjsf/semantic-ui';
-
-const Form = withTheme(SemanticUITheme);
+import Form from '@rjsf/semantic-ui';
 ```
 
 or
 
 ```javascript
-import SemanticUIForm from '@rjsf/semantic-ui';
+import { withTheme } from '@rjsf/core';
+import { Theme as SemanticUITheme } from '@rjsf/semantic-ui';
+
+// Make modifications to the theme with your own fields and widgets
+
+const Form = withTheme(SemanticUITheme);
 ```
 
-## Optional Semantic-UI Theme properties
+## Optional Semantic UI Theme properties
 - To pass additional properties to widgets, see this [guide](https://react-jsonschema-form.readthedocs.io/en/latest/form-customization/#object-additional-properties).
 
 #### Semantic Widget Optional Properties
@@ -122,35 +106,22 @@ import SemanticUIForm from '@rjsf/semantic-ui';
  - [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
 
 #### Custom Semantic Widget Properties
-```javascript
-const uiSchema = {
-  "ui:options":  {
-    semantic: {
-      fluid: true,
-      inverted: false,
-      errorOptions: {
-        size: 'small',
-        pointing: 'above',
-      }
-    },
-  }
-};
-```
-Below is the current default options for all widgets
-```json5
+
+Below are the current default options for all widgets:
+```json
 {
   "ui:options":  {
-   semantic: {
-     fluid: true,
-     inverted: false,
-     errorOptions: {
-      size: 'small',
-      pointing: 'above',
+    "semantic": {
+      "fluid": true,
+      "inverted": false,
+      "errorOptions": {
+        "size": "small",
+        "pointing": "above",
+      }
     }
-   },
- }
+  }
 }
-````
+```
 
 <!-- ROADMAP -->
 
@@ -162,16 +133,27 @@ See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues)
 
 ## Contributing
 
-Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/#contributing) to get started.
+Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/contributing/) to get started.
 
 <!-- CONTACT -->
 
 ## Contact
 
+rjsf team: [https://github.com/orgs/rjsf-team/people](https://github.com/orgs/rjsf-team/people)
+
+GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form)
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[build-url]: https://travis-ci.org/mozilla-services/react-jsonschema-form
-[contributors-shield]: https://img.shields.io/badge/contributors-1-orange.svg?style=flat-square
-[license-shield]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
-[license-url]: https://choosealicense.com/licenses/mit
+[build-shield]: https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg
+[build-url]: https://github.com/rjsf-team/react-jsonschema-form/actions
+[contributors-shield]: https://img.shields.io/github/contributors/rjsf-team/react-jsonschema-form.svg
+[contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
+[license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
+[license-url]: https://choosealicense.com/licenses/apache-2.0/
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/semantic-ui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/semantic-ui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/semantic-ui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/semantic-ui
+[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/semantic-ui/screenshot.png
