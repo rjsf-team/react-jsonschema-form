@@ -73,7 +73,7 @@
     "codemirror": "^5.30.0",
     "concurrently": "^5.1.0",
     "create-react-ref": "^0.1.0",
-    "cross-env": "^2.0.1",
+    "cross-env": "^7.0.2",
     "css-loader": "^0.23.1",
     "eslint": "^4.9.0",
     "eslint-config-react-app": "^2.0.1",
