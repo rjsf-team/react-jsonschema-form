@@ -99,6 +99,7 @@ declare module '@rjsf/core' {
         > {
         id: string;
         schema: JSONSchema7;
+        uiSchema: UiSchema;
         value: any;
         required: boolean;
         disabled: boolean;
@@ -110,7 +111,6 @@ declare module '@rjsf/core' {
         onBlur: (id: string, value: boolean | number | string | null) => void;
         onFocus: (id: string, value: boolean | number | string | null) => void;
         label: string;
-        type: string;
         multiple: boolean;
         rawErrors: string[];
     }
@@ -182,8 +182,9 @@ declare module '@rjsf/core' {
             hasRemove: boolean;
             hasToolbar: boolean;
             index: number;
-            onDropIndexClick: (index: number) => (event: any) => void;
-            onReorderClick: (index: number, newIndex: number) => (event: any) => void;
+            onAddIndexClick: (index: number) => (event?: any) => void;
+            onDropIndexClick: (index: number) => (event?: any) => void;
+            onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
             readonly: boolean;
             key: string;
         }[];
@@ -310,6 +311,8 @@ declare module '@rjsf/core' {
         ): T | JSONSchema7['default'][];
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
+
+        export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
 
         export function isObject(thing: any): boolean;
 

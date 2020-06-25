@@ -19,7 +19,7 @@ function deepEquals(a, b, ca = [], cb = []) {
     return true;
   } else if (typeof a === "function" || typeof b === "function") {
     // Assume all functions are equivalent
-    // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
+    // see https://github.com/rjsf-team/react-jsonschema-form/issues/255
     return true;
   } else if (typeof a !== "object" || typeof b !== "object") {
     return false;
@@ -353,7 +353,7 @@ class Playground extends Component {
       theme,
       subtheme: null,
       liveSettings: {
-        validate: true,
+        validate: false,
         disable: false,
         omitExtraData: false,
         liveOmit: false,
@@ -573,11 +573,21 @@ class Playground extends Component {
           {this.state.form && (
             <DemoFrame
               head={
-                <link
-                  rel="stylesheet"
-                  id="theme"
-                  href={this.state.stylesheet || ""}
-                />
+                <React.Fragment>
+                  <link
+                    rel="stylesheet"
+                    id="theme"
+                    href={this.state.stylesheet || ""}
+                  />
+                  {theme === "antd" && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: document.getElementById("antd-styles-iframe")
+                          .contentDocument.head.innerHTML,
+                      }}
+                    />
+                  )}
+                </React.Fragment>
               }
               style={{
                 width: "100%",
@@ -595,6 +605,7 @@ class Playground extends Component {
                 uiSchema={uiSchema}
                 formData={formData}
                 onChange={this.onFormDataChange}
+                noHtml5Validate={true}
                 onSubmit={({ formData }, e) => {
                   console.log("submitted formData", formData);
                   console.log("submit event", e);
@@ -616,7 +627,7 @@ class Playground extends Component {
         <div className="col-sm-12">
           <p style={{ textAlign: "center" }}>
             Powered by{" "}
-            <a href="https://github.com/mozilla-services/react-jsonschema-form">
+            <a href="https://github.com/rjsf-team/react-jsonschema-form">
               react-jsonschema-form
             </a>
             .

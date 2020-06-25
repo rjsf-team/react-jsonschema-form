@@ -27,7 +27,7 @@
     "tabWidth": 2
   },
   "license": "Apache-2.0",
-  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme",
+  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
     "husky": "^3.1.0"
   },
