@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         node-version: [8.x, 9.x, 10.x, 11.x, 12.x, 13.x]
-      fail-fast: false
+      fail-fast: true
 
     steps:
     - uses: actions/checkout@v2
@@ -30,11 +30,11 @@ jobs:
     - run: npm run cs-check
       env:
         CI: true
-    - name: Upload spanshot diffs on failure
+    - name: Upload snapshot diffs on failure
       uses: actions/upload-artifact@v1
       if: failure()
       with:
-        name: __diff_output__
+        name: diff-output-node-${{ matrix.node-version }}
         path: ./packages/playground/test/__image_snapshots__/__diff_output__
 
   deploy:
