@@ -22,8 +22,9 @@ exports[`DateTimeWidget simple 1`] = `
     onChange={[Function]}
     onFocus={[Function]}
     required={true}
-    type="color"
-    value="0NaN-NaN-NaNTNaN:NaN:NaN.NaN"
+    type="datetime-local"
+    uiSchema={Object {}}
+    value="2020-06-25T06:46:45.529"
   />
 </div>
 `;

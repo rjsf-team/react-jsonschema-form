@@ -23,6 +23,7 @@ exports[`ColorWidget simple 1`] = `
     onFocus={[Function]}
     required={true}
     type="color"
+    uiSchema={Object {}}
     value="value"
   />
 </div>

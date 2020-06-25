@@ -22,7 +22,8 @@ exports[`DateWidget simple 1`] = `
     onChange={[Function]}
     onFocus={[Function]}
     required={true}
-    type="color"
+    type="date"
+    uiSchema={Object {}}
     value="value"
   />
 </div>

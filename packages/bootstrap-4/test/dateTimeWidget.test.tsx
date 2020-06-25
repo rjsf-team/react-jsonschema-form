@@ -6,7 +6,9 @@ import { makeWidgetMockProps } from "./helpers/createMocks";
 describe("DateTimeWidget", () => {
   test("simple", () => {
     const tree = renderer
-      .create(<DateTimeWidget {...makeWidgetMockProps({})} />)
+      .create(
+        <DateTimeWidget {...makeWidgetMockProps({ value: new Date() })} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
