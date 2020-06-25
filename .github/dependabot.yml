@@ -10,27 +10,7 @@ updates:
     schedule:
       interval: "daily"
 
-  - package-ecosystem: "npm"
-    directory: "packages/antd"
-    schedule:
-      interval: "daily"
-
-  - package-ecosystem: "npm"
-    directory: "packages/core"
-    schedule:
-      interval: "daily"
-
-  - package-ecosystem: "npm"
-    directory: "packages/fluent-ui"
-    schedule:
-      interval: "daily"
- 
-  - package-ecosystem: "npm"
-    directory: "packages/playground"
-    schedule:
-      interval: "daily"
- 
-  - package-ecosystem: "npm"
-    directory: "packages/semantic-ui"
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: "daily"
