@@ -44,7 +44,7 @@ jobs:
     - run: npm run bootstrap
     - run: npm run build
     - name: Deploy playground to GitHub Pages
-      uses: crazy-max/ghaction-github-pages@v1.4.0
+      uses: crazy-max/ghaction-github-pages@v2.1.0
       with:
         keep_history: true
         target-branch: gh-pages
