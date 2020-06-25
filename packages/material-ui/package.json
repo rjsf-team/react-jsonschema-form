@@ -67,5 +67,5 @@
     "type": "git",
     "url": "git+https://github.com/cybertec-postgresql/rjsf-material-ui.git"
   },
-  "license": "MIT"
+  "license": "Apache-2.0"
 }
