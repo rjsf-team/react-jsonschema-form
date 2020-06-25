@@ -11,7 +11,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build",
-    "test": "tsdx test --updateSnapshot"
+    "test": "tsdx test"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.2.0",
