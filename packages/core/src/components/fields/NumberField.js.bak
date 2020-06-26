@@ -83,12 +83,7 @@ class NumberField extends React.Component {
     }
 
     return (
-      <StringField
-        __defaultWidget={"updown"}
-        {...props}
-        formData={value}
-        onChange={this.handleChange}
-      />
+      <StringField {...props} formData={value} onChange={this.handleChange} />
     );
   }
 }
