@@ -22,7 +22,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
-    - run: npm run bootstrap
     - run: npm run build
     - run: npm test
     - run: npm run lint
@@ -41,7 +40,6 @@ jobs:
       with:
         node-version: 13.x
     - run: npm install
-    - run: npm run bootstrap
     - run: npm run build
     - name: Deploy playground to GitHub Pages
       uses: crazy-max/ghaction-github-pages@v2.1.0
