@@ -56,8 +56,8 @@ const TextWidget = ({
       />
       {schema.examples ? (
         <datalist id={`examples_${id}`}>
-          {(schema.examples as any)
-            .concat(schema.default ? [schema.default] : [])
+          {(schema.examples as string[])
+            .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example: any) => {
               return <option key={example} value={example} />;
             })}
