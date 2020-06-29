@@ -8,7 +8,7 @@ Array [
     Some simple label
     <span
       aria-hidden={true}
-      className="text-danger"
+      className="text-danger ml-1"
     >
        
       *
@@ -41,7 +41,7 @@ Array [
     Some simple label
     <span
       aria-hidden={true}
-      className="text-danger"
+      className="text-danger ml-1"
     >
        
       *
