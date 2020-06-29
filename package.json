@@ -1,6 +1,6 @@
 {
   "name": "react-jsonschema-form",
-  "version": "2.0.0-alpha.1",
+  "version": "2.2.0",
   "private": true,
   "description": "monorepo for react-jsonschema-form and its themes",
   "scripts": {
@@ -28,6 +28,7 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
+    "conventional-changelog-cli": "^2.0.34",
     "husky": "^3.1.0"
   },
   "husky": {

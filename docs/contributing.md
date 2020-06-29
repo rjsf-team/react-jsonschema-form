@@ -40,15 +40,27 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 ## Releasing
 
-To release, run:
+To release, create a new release branch:
 
 ```bash
-lerna version
+git checkout -b bump-2.2
+lerna version --no-push
+# Also change the version on the root-level package.json and package-lock.json (this is not automatically done by Lerna)
+npx conventional-changelog --release-count 0 --outfile ./CHANGELOG.md --verbose
+npx lerna exec --concurrency 1 --stream -- 'conventional-changelog --release-count 0 --commit-path $PWD --pkg $PWD/package.json --outfile $PWD/CHANGELOG.md --verbose'
+git push --tags origin bump-2.2
+```
+
+Make sure you use [semver](https://semver.org/) for version numbering. For more info on conventional-changelog and Lerna, see [this link](https://github.com/lerna/lerna/tree/master/commands/version#generating-initial-changelogs).
+
+Once the PR has been approved and merged into master, create a release in the Github "Releases" tab and add the latest version to it. You can use the latest changelog info from conventional-changelog as a guideline. Then publish to npm:
+
+```bash
+git checkout master
+git pull origin master
 lerna run build
 lerna publish from-git
 ```
-
-Make sure you use [semver](https://semver.org/) for version numbering. Once a new version has been released, create a release in the Github "Releases" tab and add the version history.
 
 ### Releasing docs
 
