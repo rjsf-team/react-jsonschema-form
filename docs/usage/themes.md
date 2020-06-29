@@ -9,9 +9,9 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
  ---------- | ------- | -----------
  Bootstrap 3 (default) | Published | `@rjsf/core`
  material-ui | Published | `@rjsf/material-ui` 
- fluent-ui | Draft | `@rjsf/fluent-ui` 
- antd | Draft | [#1561](https://github.com/rjsf-team/react-jsonschema-form/pull/1561)
- Semantic UI | Draft | [#1585](https://github.com/rjsf-team/react-jsonschema-form/pull/1585)
+ fluent-ui | Published | `@rjsf/fluent-ui` 
+ antd | Published | `@rjsf/antd`
+ Semantic UI | Published | `@rjsf/semantic-ui`
 
 
 ## Using themes
