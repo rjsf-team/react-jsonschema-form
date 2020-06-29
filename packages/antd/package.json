@@ -97,5 +97,8 @@
   "bugs": {
     "url": "https://github.com/rjsf-team/react-jsonschema-form/issues"
   },
-  "homepage": "https://github.com/rjsf-team/react-jsonschema-form"
+  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
+  "publishConfig": {
+    "access": "public"
+  }
 }
