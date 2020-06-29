@@ -1,3 +1,13 @@
-// TODO: we need to use the mocked props for widget props ,
-// Helper function has been created in https://github.com/MLH-Fellowship/react-jsonschema-form/pull/37
-// wait for the merging of the mentioned PR.
+import React from "react";
+import CheckboxWidget from "../src/CheckboxWidget";
+import renderer from "react-test-renderer";
+import { makeWidgetMockProps } from "./helpers/createMocks";
+
+describe("CheckboxWidget", () => {
+  test("simple", () => {
+    const tree = renderer
+      .create(<CheckboxWidget {...makeWidgetMockProps({})} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});

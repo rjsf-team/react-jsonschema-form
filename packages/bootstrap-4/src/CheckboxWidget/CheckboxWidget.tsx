@@ -32,8 +32,6 @@ const CheckboxWidget = (props: WidgetProps) => {
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {(label || schema.description) && (
-        // TODO: remove this ts-ignore as it will be solved once https://github.com/MLH-Fellowship/react-jsonschema-form/pull/29 is merged
-        // @ts-ignore
         <DescriptionField description={label || schema.description} />
       )}
       <label>
