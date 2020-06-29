@@ -43,7 +43,6 @@ const TextareaWidget = ({
           <span
             aria-hidden
             className={rawErrors.length > 0 ? "text-danger" : ""}>
-            {" "}
             &thinsp;{"*"}
           </span>
         )}

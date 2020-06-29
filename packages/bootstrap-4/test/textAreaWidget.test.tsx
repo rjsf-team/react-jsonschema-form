@@ -1,40 +1,12 @@
 import React from "react";
 import TextareaWidget from "../src/TextareaWidget";
-import { JSONSchema7 } from "json-schema";
+import { makeWidgetMockProps } from "./helpers/createMocks";
 import renderer from "react-test-renderer";
 
 describe("TextareaWidget", () => {
-  const schema: JSONSchema7 = {
-    type: "array",
-    items: {
-      type: "string",
-    },
-  };
-  const mockHandler = (): void => void 0;
   test("simple without errors", () => {
     const tree = renderer
-      .create(
-        <TextareaWidget
-          placeholder={"SOME PLACEHOLDER"}
-          options={{ rows: 5 }}
-          onChange={mockHandler}
-          onBlur={mockHandler}
-          onFocus={mockHandler}
-          schema={schema}
-          required
-          title="Hello"
-          disabled={false}
-          readonly
-          autofocus
-          label="Some simple label"
-          multiple={false}
-          rawErrors={[]}
-          value="value"
-          type="text"
-          formContext={{}}
-          id="_id"
-        />
-      )
+      .create(<TextareaWidget {...makeWidgetMockProps({})} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -42,24 +14,7 @@ describe("TextareaWidget", () => {
     const tree = renderer
       .create(
         <TextareaWidget
-          placeholder={"SOME PLACEHOLDER"}
-          options={{ rows: 5 }}
-          onChange={mockHandler}
-          onBlur={mockHandler}
-          onFocus={mockHandler}
-          schema={schema}
-          required
-          title="Hello"
-          disabled={false}
-          readonly
-          autofocus
-          label="Some simple label"
-          multiple={false}
-          rawErrors={["Invalid 1", "Invalid 2"]}
-          value="value"
-          type="text"
-          formContext={{}}
-          id="_id"
+          {...makeWidgetMockProps({ rawErrors: ["Invalid 1", "Invalid 2"] })}
         />
       )
       .toJSON();
@@ -68,28 +23,7 @@ describe("TextareaWidget", () => {
 
   test("simple without required", () => {
     const tree = renderer
-      .create(
-        <TextareaWidget
-          placeholder={"SOME PLACEHOLDER"}
-          options={{ rows: 5 }}
-          onChange={mockHandler}
-          onBlur={mockHandler}
-          onFocus={mockHandler}
-          schema={schema}
-          required={false}
-          title="Hello"
-          disabled={false}
-          readonly
-          autofocus
-          label="Some simple label"
-          multiple={false}
-          rawErrors={["Invalid 1", "Invalid 2"]}
-          value="value"
-          type="text"
-          formContext={{}}
-          id="_id"
-        />
-      )
+      .create(<TextareaWidget {...makeWidgetMockProps({ required: false })} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

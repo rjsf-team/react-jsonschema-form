@@ -10,7 +10,6 @@ Array [
       aria-hidden={true}
       className="text-danger"
     >
-       
        
       *
     </span>
@@ -26,7 +25,6 @@ Array [
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
-      placeholder="SOME PLACEHOLDER"
       required={true}
       rows={5}
       value="value"
@@ -43,9 +41,8 @@ Array [
     Some simple label
     <span
       aria-hidden={true}
-      className=""
+      className="text-danger"
     >
-       
        
       *
     </span>
@@ -61,7 +58,6 @@ Array [
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
-      placeholder="SOME PLACEHOLDER"
       required={true}
       rows={5}
       value="value"
@@ -88,7 +84,6 @@ Array [
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
-      placeholder="SOME PLACEHOLDER"
       required={false}
       rows={5}
       value="value"
