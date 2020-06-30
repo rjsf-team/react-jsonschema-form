@@ -4,8 +4,8 @@ import TextWidget, { TextWidgetProps } from "../TextWidget";
 const DateWidget = (props: TextWidgetProps) => {
   return (
     <TextWidget
+      {...props}   
       type="date"
-      {...props}
     />
   );
 };
