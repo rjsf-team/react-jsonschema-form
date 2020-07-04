@@ -1,10 +1,5 @@
 import React from "react";
-
-import FormLabel from "@material-ui/core/FormLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-
+import Form from "react-bootstrap/Form";
 import { WidgetProps } from "@rjsf/core";
 
 const selectValue = (value: any, selected: any, all: any) => {
@@ -48,49 +43,59 @@ const CheckboxesWidget = ({
     }
   };
 
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, value);
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
     <>
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
-      <FormGroup>
+      <Form.Label htmlFor={id}>{label || schema.title}</Form.Label>
+      <Form.Group>
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
             enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
-          const checkbox = (
-            <Checkbox
-              id={`${id}_${index}`}
-              checked={checked}
-              disabled={disabled || itemDisabled || readonly}
-              autoFocus={autofocus && index === 0}
-              onChange={_onChange(option)}
-              onBlur={_onBlur}
-              onFocus={_onFocus}
-            />
-          );
+
           return inline ? (
-            <FormControlLabel
-              control={checkbox}
-              key={index}
-              label={option.label}
-            />
+            <Form>
+              <Form.Check
+                required={required}
+                inline
+                className="bg-transparent border-0"
+                custom
+                checked={checked}
+                type={"checkbox"}
+                id={`${id}_${index}`}
+                label={option.label}
+                autoFocus={autofocus && index === 0}
+                onChange={_onChange(option)}
+                onBlur={_onBlur}
+                onFocus={_onFocus}
+                disabled={disabled || itemDisabled || readonly}
+              />
+            </Form>
           ) : (
-            <FormControlLabel
-              control={checkbox}
-              key={index}
-              label={option.label}
-            />
+            <Form>
+              <Form.Check
+                custom
+                required={required}
+                checked={checked}
+                className="bg-transparent border-0"
+                type={"checkbox"}
+                id={`${id}_${index}`}
+                label={option.label}
+                autoFocus={autofocus && index === 0}
+                onChange={_onChange(option)}
+                onBlur={_onBlur}
+                onFocus={_onFocus}
+                disabled={disabled || itemDisabled || readonly}
+              />
+            </Form>
           );
         })}
-      </FormGroup>
+      </Form.Group>
     </>
   );
 };
