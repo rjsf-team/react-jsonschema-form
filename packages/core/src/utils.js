@@ -992,7 +992,7 @@ export function toPathSchema(schema, name = "", rootSchema, formData = {}) {
   }
 
   if (schema.hasOwnProperty("additionalProperties")) {
-    pathSchema.$additionalProperties = true;
+    pathSchema.__rjsf_additionalProperties = true;
   }
 
   if (schema.hasOwnProperty("items") && Array.isArray(formData)) {
