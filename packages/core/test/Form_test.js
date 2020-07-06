@@ -2841,7 +2841,7 @@ describe("Form omitExtraData and liveOmit", () => {
           mixedMap: {
             $name: "level1.mixedMap",
             $additionalProperties: true,
-            namedField: { $name: "level1.mixedMap.namedField" }, // this should not be returned as additionalProperties include all
+            namedField: { $name: "level1.mixedMap.namedField" }, // this name should not be returned, as the root object paths should be returned for objects marked with additionalProperties
           },
         },
         level1a: {
