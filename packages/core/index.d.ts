@@ -15,6 +15,7 @@ declare module '@rjsf/core' {
         ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
         autoComplete?: string;
         autocomplete?: string; // deprecated
+        children?: React.ReactNode;
         className?: string;
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
@@ -98,6 +99,7 @@ declare module '@rjsf/core' {
         > {
         id: string;
         schema: JSONSchema7;
+        uiSchema: UiSchema;
         value: any;
         required: boolean;
         disabled: boolean;
@@ -161,6 +163,7 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
@@ -179,8 +182,9 @@ declare module '@rjsf/core' {
             hasRemove: boolean;
             hasToolbar: boolean;
             index: number;
-            onDropIndexClick: (index: number) => (event: any) => void;
-            onReorderClick: (index: number, newIndex: number) => (event: any) => void;
+            onAddIndexClick: (index: number) => (event?: any) => void;
+            onDropIndexClick: (index: number) => (event?: any) => void;
+            onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
             readonly: boolean;
             key: string;
         }[];
@@ -212,6 +216,7 @@ declare module '@rjsf/core' {
         idSchema: IdSchema;
         formData: T;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type AjvError = {
@@ -307,6 +312,8 @@ declare module '@rjsf/core' {
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
 
+        export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
+
         export function isObject(thing: any): boolean;
 
         export function mergeObjects(obj1: object, obj2: object, concatArrays?: boolean): object;
@@ -386,6 +393,10 @@ declare module '@rjsf/core' {
         export function parseDateString(dateString: string, includeTime?: boolean): DateObject;
 
         export function toDateString(dateObject: DateObject, time?: boolean): string;
+
+        export function utcToLocal(jsonDate: string): string;
+
+        export function localToUTC(dateString: string): Date;
 
         export function pad(num: number, size: number): string;
 

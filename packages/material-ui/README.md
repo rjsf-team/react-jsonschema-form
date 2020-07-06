@@ -1,39 +1,58 @@
+[![Build Status][build-shield]][build-url]
+[![npm][npm-shield]][npm-url]
+[![npm downloads][npm-dl-shield]][npm-dl-url]
+[![Contributors][contributors-shield]][contributors-url]
+[![Apache 2.0 License][license-shield]][license-url]
+
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/cybertec-postgresql/rjsf-material-ui">
-    <img src="https://raw.githubusercontent.com/cybertec-postgresql/rjsf-material-ui/master/rjsf-material-ui-logo.png" alt="Logo" width="140" height="120">
+  <a href="https://github.com/rjsf-team/react-jsonschema-form">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/logo.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">@rjsf/material-ui</h3>
 
   <p align="center">
-  Material-UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Material UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://rjsf-team.github.io/rjsf-material-ui/">View Playground</a>
+    <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
     ·
-    <a href="https://github.com/rjsf-team/rjsf-material-ui/issues">Report Bug</a>
+    <a href="https://github.com/rjsf-team/react-jsonschema-form/issues">Report Bug</a>
     ·
-    <a href="https://github.com/rjsf-team/rjsf-material-ui/issues">Request Feature</a>
+    <a href="https://github.com/rjsf-team/react-jsonschema-form/issues">Request Feature</a>
   </p>
 </p>
+
+<!-- TABLE OF CONTENTS -->
+
+## Table of Contents
+
+- [About The Project](#about-the-project)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Contact](#contact)
 
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
-[![rjsf-material-ui Screen Shot][product-screenshot]](https://cybertec-postgresql.github.io/rjsf-material-ui)
+[![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/material-ui)
 
 Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
-- [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
-- [Material-UI](https://material-ui.com/)
-- [Typescript](https://www.typescriptlang.org/)
+- [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
+- [Material UI](https://material-ui.com/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
 
@@ -55,6 +74,8 @@ yarn add @material-ui/core @material-ui/icons @rjsf/core
 yarn add @rjsf/material-ui
 ```
 
+<!-- USAGE EXAMPLES -->
+
 ## Usage
 
 ```js
@@ -65,22 +86,44 @@ or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as MuiTheme } from '@rjsf/material-ui';
+import { Theme as MaterialUITheme } from '@rjsf/material-ui';
 
-const Form = withTheme(MuiTheme);
+// Make modifications to the theme with your own fields and widgets
+
+const Form = withTheme(MaterialUITheme);
 ```
+
+<!-- ROADMAP -->
+
+## Roadmap
+
+See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues) for a list of proposed features (and known issues).
+
+<!-- CONTRIBUTING -->
+
+## Contributing
+
+Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/contributing/) to get started.
+
+<!-- CONTACT -->
+
+## Contact
+
+rjsf team: [https://github.com/orgs/rjsf-team/people](https://github.com/orgs/rjsf-team/people)
+
+GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[build-shield]: https://img.shields.io/circleci/build/github/cybertec-postgresql/rjsf-material-ui.svg?style=flat-square&token=a58b0890f96bff2b53eef0f4d9c9e5d16eec2200
-[build-url]: https://circleci.com/gh/cybertec-postgresql/rjsf-material-ui
-[contributors-shield]: https://img.shields.io/badge/contributors-1-orange.svg?style=flat-square
-[contributors-url]: https://github.com/cybertec-postgresql/rjsf-material-ui/graphs/contributors
-[license-shield]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
-[license-url]: https://choosealicense.com/licenses/mit
-[npm-shield]: https://img.shields.io/npm/v/rjsf-material-ui/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/rjsf-material-ui
-[npm-dl-shield]: https://img.shields.io/npm/dm/rjsf-material-ui.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/rjsf-material-ui
-[product-screenshot]: https://raw.githubusercontent.com/cybertec-postgresql/rjsf-material-ui/master/screenshot.png
+[build-shield]: https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg
+[build-url]: https://github.com/rjsf-team/react-jsonschema-form/actions
+[contributors-shield]: https://img.shields.io/github/contributors/rjsf-team/react-jsonschema-form.svg
+[contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
+[license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
+[license-url]: https://choosealicense.com/licenses/apache-2.0/
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/material-ui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/material-ui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/material-ui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/material-ui
+[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/screenshot.png
