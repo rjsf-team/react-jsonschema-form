@@ -196,7 +196,7 @@ export default class Form extends Component {
       Object.keys(_obj).forEach(key => {
         if (typeof _obj[key] === "object") {
           let newPaths = paths.map(path => `${path}.${key}`);
-          // if object marked with additionalProperties all its keys are valid
+          // If an object is marked with additionalProperties, all its keys are valid
           if (_obj[key].$additionalProperties && _obj[key].$name !== "") {
             acc.push(_obj[key].$name);
           } else {
