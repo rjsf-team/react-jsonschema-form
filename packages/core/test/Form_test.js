@@ -3070,6 +3070,32 @@ describe("Form omitExtraData and liveOmit", () => {
     });
   });
 
+  it("should rename formData key if key input is renamed in a nested object with omitExtraData=true and liveOmit=true", () => {
+    const { node, onChange } = createFormComponent(
+      {
+        schema: {
+          type: "object",
+          properties: {
+            nested: {
+              additionalProperties: { type: "string" },
+            },
+          },
+        },
+        formData: { nested: { key1: "value" } },
+      },
+      { omitExtraData: true, liveOmit: true }
+    );
+
+    const textNode = node.querySelector("#root-key");
+    Simulate.blur(textNode, {
+      target: { value: "key1new" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { nested: { key1new: "value" } },
+    });
+  });
+
   describe("Async errors", () => {
     it("should render the async errors", () => {
       const schema = {
