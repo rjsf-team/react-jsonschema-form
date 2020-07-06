@@ -1010,6 +1010,11 @@ export function toPathSchema(schema, name = "", rootSchema, formData = {}) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
     return toPathSchema(_schema, name, rootSchema, formData);
   }
+
+  if (schema.hasOwnProperty("additionalProperties")) {
+    pathSchema.__rjsf_additionalProperties = true;
+  }
+
   if (schema.hasOwnProperty("items") && Array.isArray(formData)) {
     formData.forEach((element, i) => {
       pathSchema[i] = toPathSchema(
