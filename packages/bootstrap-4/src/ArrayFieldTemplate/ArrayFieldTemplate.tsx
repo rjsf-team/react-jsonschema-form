@@ -71,7 +71,7 @@ const DefaultArrayItem = (props: any) => {
   };
   return (
     <div key={props.key}>
-      <Row className="mb-2">
+      <Row className="mb-2  d-flex align-items-center">
         <Col>{props.children}</Col>
 
         <Col xs="3" lg="3" className="py-4">
