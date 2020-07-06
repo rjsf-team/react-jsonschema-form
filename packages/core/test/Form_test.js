@@ -2840,7 +2840,7 @@ describe("Form omitExtraData and liveOmit", () => {
           level2: { $name: "level1.level2" },
           mixedMap: {
             $name: "level1.mixedMap",
-            $additionalProperties: true,
+            __rjsf_additionalProperties: true,
             namedField: { $name: "level1.mixedMap.namedField" }, // this name should not be returned, as the root object paths should be returned for objects marked with additionalProperties
           },
         },
@@ -3006,6 +3006,33 @@ describe("Form omitExtraData and liveOmit", () => {
   });
 
   it("should omit data on change with omitExtraData=true and liveOmit=true", () => {
+    const omitExtraData = true;
+    const liveOmit = true;
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+        bar: { type: "string" },
+      },
+    };
+    const formData = { foo: "foo", baz: "baz" };
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData,
+      omitExtraData,
+      liveOmit,
+    });
+
+    Simulate.change(node.querySelector("#root_foo"), {
+      target: { value: "foobar" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "foobar" },
+    });
+  });
+
+  it("should not omit additionalProperties on change with omitExtraData=true and liveOmit=true", () => {
     const omitExtraData = true;
     const liveOmit = true;
     const schema = {
