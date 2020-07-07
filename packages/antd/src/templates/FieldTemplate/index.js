@@ -48,7 +48,7 @@ const FieldTemplate = ({
 
   return (
     <WrapIfAdditional
-      className={classNames}
+      classNames={classNames}
       disabled={disabled}
       formContext={formContext}
       id={id}
