@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 
-import DatePicker from 'antd/lib/date-picker';
+import DatePicker from '../../components/DatePicker';
 
 const DATE_PICKER_STYLE = {
   width: '100%',

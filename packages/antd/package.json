@@ -47,7 +47,6 @@
     "@babel/runtime-corejs2": "^7.10.3",
     "@rjsf/core": "^2.2.0",
     "antd": "^4.0.0",
-    "antd-dayjs-webpack-plugin": "1.0.0",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
