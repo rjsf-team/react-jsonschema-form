@@ -51,7 +51,6 @@
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
-    "babel-plugin-import": "^1.13.0",
     "concurrently": "^5.1.0",
     "core-js": "^2.5.7",
     "cross-env": "^2.0.1",

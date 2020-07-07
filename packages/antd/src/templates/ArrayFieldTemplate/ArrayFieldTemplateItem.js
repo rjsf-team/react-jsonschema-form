@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Button, Col, Row } from 'antd';
-import {
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
+import Button from 'antd/lib/button';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
+import ArrowDownOutlined from '@ant-design/icons/ArrowDownOutlined';
+import ArrowUpOutlined from '@ant-design/icons/ArrowUpOutlined';
+import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
 
 const BTN_GRP_STYLE = {
   width: '100%',

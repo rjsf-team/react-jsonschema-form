@@ -1,8 +1,12 @@
 import React from 'react';
 
 import { utils } from '@rjsf/core';
-import { Button, Col, Form, Input, Row } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import Button from 'antd/lib/button';
+import Col from 'antd/lib/col';
+import Form from 'antd/lib/form';
+import Input from 'antd/lib/input';
+import Row from 'antd/lib/row';
+import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 

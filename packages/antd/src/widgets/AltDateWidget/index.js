@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import { utils } from '@rjsf/core';
-import { Button, Col, Row } from 'antd';
+import Button from 'antd/lib/button';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
 
 const { pad, parseDateString, toDateString } = utils;
 

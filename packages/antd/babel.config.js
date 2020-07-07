@@ -15,13 +15,6 @@ module.exports = {
     "@babel/preset-react"
   ],
   "plugins": [
-    [
-      "import",
-      {
-        "libraryName": "antd",
-        "style": true
-      }
-    ],
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-proposal-class-properties",
     [
@@ -32,24 +25,24 @@ module.exports = {
     ]
   ],
   "env": {
-      cjs: {
-        plugins: defaultPlugins,
-        ignore: ['test/**/*.js']
-      },
-      umd: {
-        plugins: defaultPlugins,
-        ignore: ['test/**/*.js']
-      },
-      es: {
-        plugins: [
-          ...defaultPlugins,
-          ['@babel/plugin-transform-runtime', { useESModules: true, corejs: 2 }]
-        ],
-        ignore: ['test/**/*.js']
-      },
-      test: {
-        plugins: defaultPlugins,
-        ignore: []
-      }
+    cjs: {
+      plugins: defaultPlugins,
+      ignore: ['test/**/*.js']
+    },
+    umd: {
+      plugins: defaultPlugins,
+      ignore: ['test/**/*.js']
+    },
+    es: {
+      plugins: [
+        ...defaultPlugins,
+        ['@babel/plugin-transform-runtime', { useESModules: true, corejs: 2 }]
+      ],
+      ignore: ['test/**/*.js']
+    },
+    test: {
+      plugins: defaultPlugins,
+      ignore: []
+    }
   }
 };
