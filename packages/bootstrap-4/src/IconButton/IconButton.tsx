@@ -1,27 +1,29 @@
 import React from "react";
-
-import Button from "@material-ui/core/Button";
-import Add from "@material-ui/icons/Add";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import ArrowDownward from "@material-ui/icons/ArrowDownward";
-import Remove from "@material-ui/icons/Remove";
-import { IconButtonProps as MuiIconButtonProps } from "@material-ui/core/IconButton";
+import Button from "react-bootstrap/Button";
+import { IoIosRemove } from "react-icons/io";
+import { GrAdd } from "react-icons/gr";
+import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 
 const mappings: any = {
-  remove: <Remove />,
-  plus: <Add />,
-  "arrow-up": <ArrowUpward />,
-  "arrow-down": <ArrowDownward />,
+  remove: <IoIosRemove />,
+  plus: <GrAdd />,
+  "arrow-up": <AiOutlineArrowUp />,
+  "arrow-down": <AiOutlineArrowDown />,
 };
 
-type IconButtonProps = MuiIconButtonProps & {
+type IconButtonProps = {
   icon: string;
+  className?: string;
+  tabIndex?: number;
+  style?: any;
+  disabled?: any;
+  onClick?: any;
 };
 
 const IconButton = (props: IconButtonProps) => {
   const { icon, className, ...otherProps } = props;
   return (
-    <Button {...otherProps} size="small">
+    <Button {...otherProps} variant="light" size="sm">
       {mappings[icon]}
     </Button>
   );

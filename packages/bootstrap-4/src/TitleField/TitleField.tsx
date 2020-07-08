@@ -5,7 +5,7 @@ export interface TitleFieldProps extends Partial<FieldProps> {
   title: string;
 }
 
-const TitleField = ({ title }: TitleFieldProps) => (
+const TitleField = ({ title }: Partial<FieldProps>) => (
   <>
     <div className="my-1">
       <h5>{title}</h5>

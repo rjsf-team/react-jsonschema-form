@@ -1,11 +1,8 @@
 import React from "react";
-
 import { utils } from "@rjsf/core";
-
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
 
 import AddButton from "../AddButton/AddButton";
@@ -73,50 +70,58 @@ const DefaultArrayItem = (props: any) => {
     fontWeight: "bold",
   };
   return (
-    <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs>
-        <Box mb={2}>
-          <Paper elevation={2}>
-            <Box p={2}>{props.children}</Box>
-          </Paper>
-        </Box>
-      </Grid>
+    <div key={props.key}>
+      <Row className="mb-2">
+        <Col>{props.children}</Col>
 
-      {props.hasToolbar && (
-        <Grid item={true}>
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-up"
-              className="array-item-move-up"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly || !props.hasMoveUp}
-              onClick={props.onReorderClick(props.index, props.index - 1)}
-            />
-          )}
+        <Col xs="3" lg="3" className="py-4">
+          {props.hasToolbar && (
+            <Row>
+              {(props.hasMoveUp || props.hasMoveDown) && (
+                <Col>
+                  <IconButton
+                    icon="arrow-up"
+                    className="array-item-move-up"
+                    tabIndex={-1}
+                    style={btnStyle as any}
+                    disabled={
+                      props.disabled || props.readonly || !props.hasMoveUp
+                    }
+                    onClick={props.onReorderClick(props.index, props.index - 1)}
+                  />
+                </Col>
+              )}
 
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-down"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly || !props.hasMoveDown}
-              onClick={props.onReorderClick(props.index, props.index + 1)}
-            />
-          )}
+              {(props.hasMoveUp || props.hasMoveDown) && (
+                <Col>
+                  <IconButton
+                    icon="arrow-down"
+                    tabIndex={-1}
+                    style={btnStyle as any}
+                    disabled={
+                      props.disabled || props.readonly || !props.hasMoveDown
+                    }
+                    onClick={props.onReorderClick(props.index, props.index + 1)}
+                  />
+                </Col>
+              )}
 
-          {props.hasRemove && (
-            <IconButton
-              icon="remove"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly}
-              onClick={props.onDropIndexClick(props.index)}
-            />
+              {props.hasRemove && (
+                <Col>
+                  <IconButton
+                    icon="remove"
+                    tabIndex={-1}
+                    style={btnStyle as any}
+                    disabled={props.disabled || props.readonly}
+                    onClick={props.onDropIndexClick(props.index)}
+                  />
+                </Col>
+              )}
+            </Row>
           )}
-        </Grid>
-      )}
-    </Grid>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
@@ -158,8 +163,8 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   return (
-    <Paper elevation={2}>
-      <Box p={2}>
+    <div>
+      <Row className="p-2">
         <ArrayFieldTitle
           key={`array-field-title-${props.idSchema.$id}`}
           TitleField={props.TitleField}
@@ -179,25 +184,23 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           />
         )}
 
-        <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
+        <Container fluid key={`array-item-list-${props.idSchema.$id}`}>
           {props.items && props.items.map(p => DefaultArrayItem(p))}
 
           {props.canAdd && (
-            <Grid container justify="flex-end">
-              <Grid item={true}>
-                <Box mt={2}>
-                  <AddButton
-                    className="array-item-add"
-                    onClick={props.onAddClick}
-                    disabled={props.disabled || props.readonly}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
+            <Container className="d-flex justify-content-end">
+              <Row className="mt-2">
+                <AddButton
+                  className="array-item-add"
+                  onClick={props.onAddClick}
+                  disabled={props.disabled || props.readonly}
+                />
+              </Row>
+            </Container>
           )}
-        </Grid>
-      </Box>
-    </Paper>
+        </Container>
+      </Row>
+    </div>
   );
 };
 

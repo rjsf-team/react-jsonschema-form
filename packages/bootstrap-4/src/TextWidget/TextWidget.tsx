@@ -4,7 +4,9 @@ import Form from "react-bootstrap/Form";
 
 import { WidgetProps } from "@rjsf/core";
 
-export type TextWidgetProps = WidgetProps;
+export interface TextWidgetProps extends WidgetProps {
+  type?: string;
+}
 
 const TextWidget = ({
   id,

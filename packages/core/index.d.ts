@@ -173,7 +173,7 @@ declare module '@rjsf/core' {
         className: string;
         disabled: boolean;
         idSchema: IdSchema;
-        items: {
+        items?: {
             children: React.ReactElement;
             className: string;
             disabled: boolean;
