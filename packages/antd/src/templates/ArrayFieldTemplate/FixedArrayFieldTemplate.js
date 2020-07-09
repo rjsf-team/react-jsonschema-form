@@ -1,9 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { Button, Col, Row } from 'antd';
+import Button from 'antd/lib/button';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
 import { withConfigConsumer } from 'antd/lib/config-provider/context';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
 
 import ArrayFieldTemplateItem from './ArrayFieldTemplateItem';
 

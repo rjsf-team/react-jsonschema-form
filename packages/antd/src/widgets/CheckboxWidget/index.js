@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Checkbox } from 'antd';
+import Checkbox from 'antd/lib/checkbox';
 
 const CheckboxWidget = ({
   autofocus,

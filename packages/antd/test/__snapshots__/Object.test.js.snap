@@ -6,7 +6,9 @@ exports[`object fields object 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-object"
+  >
     <fieldset
       id="root"
     >
@@ -28,7 +30,9 @@ exports[`object fields object 1`] = `
             }
           }
         >
-          <div>
+          <div
+            className="form-group field field-string"
+          >
             <div
               className="ant-row ant-form-item"
               style={Object {}}
@@ -88,7 +92,9 @@ exports[`object fields object 1`] = `
             }
           }
         >
-          <div>
+          <div
+            className="form-group field field-number"
+          >
             <div
               className="ant-row ant-form-item"
               style={Object {}}

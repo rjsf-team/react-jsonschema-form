@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Form } from 'antd';
+import Form from 'antd/lib/form';
 
 import WrapIfAdditional from './WrapIfAdditional';
 
@@ -48,7 +48,7 @@ const FieldTemplate = ({
 
   return (
     <WrapIfAdditional
-      className={classNames}
+      classNames={classNames}
       disabled={disabled}
       formContext={formContext}
       id={id}

@@ -2,7 +2,7 @@
 import React from 'react';
 
 import { utils } from '@rjsf/core';
-import { Select } from 'antd';
+import Select from 'antd/lib/select';
 
 const { asNumber, guessType } = utils;
 

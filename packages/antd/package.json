@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "2.0.0",
+  "version": "2.2.1",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
@@ -26,8 +26,8 @@
     "@ant-design/icons": "^4.0.0",
     "@babel/runtime-corejs2": "^7.10.3",
     "@rjsf/core": "^2.0.0",
-    "antd-dayjs-webpack-plugin": "1.0.0",
     "antd": "^4.0.0",
+    "antd-dayjs-webpack-plugin": "1.0.0",
     "core-js": "^2.5.7",
     "dayjs": "^1.8.0",
     "lodash": "^4.17.15",
@@ -45,13 +45,11 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
     "@babel/runtime-corejs2": "^7.10.3",
-    "@rjsf/core": "^2.0.0",
+    "@rjsf/core": "^2.2.1",
     "antd": "^4.0.0",
-    "antd-dayjs-webpack-plugin": "1.0.0",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
-    "babel-plugin-import": "^1.13.0",
     "concurrently": "^5.1.0",
     "core-js": "^2.5.7",
     "cross-env": "^2.0.1",
@@ -97,5 +95,8 @@
   "bugs": {
     "url": "https://github.com/rjsf-team/react-jsonschema-form/issues"
   },
-  "homepage": "https://github.com/rjsf-team/react-jsonschema-form"
+  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
+  "publishConfig": {
+    "access": "public"
+  }
 }

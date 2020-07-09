@@ -1,7 +1,7 @@
 /* eslint-disable no-else-return */
 import React from 'react';
 
-import { Radio } from 'antd';
+import Radio from 'antd/lib/radio';
 
 const RadioWidget = ({
   autofocus,

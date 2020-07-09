@@ -6,7 +6,9 @@ exports[`single fields null field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div />
+  <div
+    className="form-group field field-null"
+  />
   <div>
     <button
       className="btn btn-info"
@@ -24,7 +26,9 @@ exports[`single fields number field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-number"
+  >
     <div
       className="ant-input-number"
       style={
@@ -151,7 +155,9 @@ exports[`single fields string field format data-url 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-string"
+  >
     <div>
       <p>
         <input
@@ -182,7 +188,9 @@ exports[`single fields string field format email 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-string"
+  >
     <input
       className="ant-input"
       disabled={false}
@@ -219,7 +227,9 @@ exports[`single fields string field format uri 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-string"
+  >
     <input
       className="ant-input"
       disabled={false}
@@ -256,7 +266,9 @@ exports[`single fields string field regular 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-string"
+  >
     <input
       className="ant-input"
       disabled={false}
@@ -293,7 +305,9 @@ exports[`single fields unsupported field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-undefined"
+  >
     <div
       className="unsupported-field"
     >

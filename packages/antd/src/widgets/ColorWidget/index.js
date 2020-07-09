@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Input } from 'antd';
+import Input from 'antd/lib/checkbox';
 
 const INPUT_STYLE = {
   width: '100%',
