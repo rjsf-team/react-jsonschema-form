@@ -4,12 +4,15 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import { WidgetProps } from "@rjsf/core";
+import { utils } from "@rjsf/core";
+
+const { schemaRequiresTrueValue } = utils;
 
 const CheckboxWidget = (props: WidgetProps) => {
   const {
+    schema,
     id,
     value,
-    required,
     disabled,
     readonly,
     label,
@@ -18,6 +21,11 @@ const CheckboxWidget = (props: WidgetProps) => {
     onBlur,
     onFocus,
   } = props;
+
+  // Because an unchecked checkbox will cause html5 validation to fail, only add
+  // the "required" attribute if the field value must be "true", due to the
+  // "const" or "enum" keywords
+  const required = schemaRequiresTrueValue(schema);
 
   const _onChange = ({}, checked: boolean) => onChange(checked);
   const _onBlur = ({

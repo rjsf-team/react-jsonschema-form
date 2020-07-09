@@ -26,6 +26,7 @@ import {
   guessType,
   mergeSchemas,
   getDisplayLabel,
+  schemaRequiresTrueValue,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3633,6 +3634,84 @@ describe("utils", () => {
           getDisplayLabel({ type: "array" }, { "ui:widget": "files" })
         ).eql(true);
       });
+    });
+  });
+
+  describe("schemaRequiresTrueValue()", () => {
+    it("const", () => {
+      expect(schemaRequiresTrueValue({ const: true })).eql(true);
+    });
+    it("enum with multiple", () => {
+      expect(schemaRequiresTrueValue({ enum: [true, false] })).eql(false);
+    });
+    it("enum with one", () => {
+      expect(schemaRequiresTrueValue({ enum: [true] })).eql(true);
+    });
+    it("anyOf with multiple", () => {
+      expect(
+        schemaRequiresTrueValue({
+          anyOf: [{ type: "string" }, { type: "number" }],
+        })
+      ).eql(false);
+    });
+    it("anyOf with one that would require true", () => {
+      expect(
+        schemaRequiresTrueValue({
+          anyOf: [{ const: true }],
+        })
+      ).eql(true);
+    });
+    it("anyOf with one that would not require true", () => {
+      expect(
+        schemaRequiresTrueValue({
+          anyOf: [{ type: "string" }],
+        })
+      ).eql(false);
+    });
+    it("oneOf with multiple", () => {
+      expect(
+        schemaRequiresTrueValue({
+          oneOf: [{ type: "string" }, { type: "number" }],
+        })
+      ).eql(false);
+    });
+    it("oneOf with one that would require true", () => {
+      expect(
+        schemaRequiresTrueValue({
+          oneOf: [{ const: true }],
+        })
+      ).eql(true);
+    });
+    it("oneOf with one that would not require true", () => {
+      expect(
+        schemaRequiresTrueValue({
+          oneOf: [{ type: "string" }],
+        })
+      ).eql(false);
+    });
+    it("allOf with multiple", () => {
+      expect(
+        schemaRequiresTrueValue({
+          allOf: [{ type: "string" }, { type: "number" }],
+        })
+      ).eql(false);
+    });
+    it("allOf with one that would require true", () => {
+      expect(
+        schemaRequiresTrueValue({
+          allOf: [{ const: true }],
+        })
+      ).eql(true);
+    });
+    it("allOf with one that would not require true", () => {
+      expect(
+        schemaRequiresTrueValue({
+          allOf: [{ type: "string" }],
+        })
+      ).eql(false);
+    });
+    it("simply doesn't require true", () => {
+      expect(schemaRequiresTrueValue({ type: "string" })).eql(false);
     });
   });
 });

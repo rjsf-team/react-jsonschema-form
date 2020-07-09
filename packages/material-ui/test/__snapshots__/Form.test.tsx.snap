@@ -39,6 +39,7 @@ exports[`single fields checkbox field 1`] = `
             disabled={false}
             id="root"
             onChange={[Function]}
+            required={false}
             type="checkbox"
           />
           <svg
@@ -134,6 +135,7 @@ exports[`single fields checkbox field 2`] = `
             disabled={false}
             id="root"
             onChange={[Function]}
+            required={false}
             type="checkbox"
           />
           <svg
