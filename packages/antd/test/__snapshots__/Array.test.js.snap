@@ -6,7 +6,9 @@ exports[`array fields array 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-array"
+  >
     <fieldset
       className="field field-array field-array-of-string"
       id="root"
@@ -113,7 +115,9 @@ exports[`array fields checkboxes 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-array"
+  >
     <div
       className="ant-select ant-select-multiple ant-select-show-search"
       name="root"
@@ -196,7 +200,9 @@ exports[`array fields fixed array 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div>
+  <div
+    className="form-group field field-array"
+  >
     <fieldset
       className="field field-array field-array-fixed-items"
       id="root"
@@ -238,7 +244,9 @@ exports[`array fields fixed array 1`] = `
                 }
               }
             >
-              <div>
+              <div
+                className="form-group field field-string"
+              >
                 <div
                   className="ant-row ant-form-item"
                   style={Object {}}
@@ -297,7 +305,9 @@ exports[`array fields fixed array 1`] = `
                 }
               }
             >
-              <div>
+              <div
+                className="form-group field field-number"
+              >
                 <div
                   className="ant-row ant-form-item"
                   style={Object {}}

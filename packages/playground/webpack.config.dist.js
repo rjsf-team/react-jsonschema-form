@@ -49,7 +49,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        include: /node_modules\/antd/,
+        include: /node_modules[\\/]antd/,
         use: [
           {
             loader: "style-loader",
