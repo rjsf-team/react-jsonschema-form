@@ -1,5 +1,4 @@
 # uiSchema
-## General
 JSON Schema is limited for describing how a given data type should be rendered as a form input component. That's why this library introduces the concept of uiSchema.
 
 A UI schema is basically an object literal providing information on **how** the form should be rendered, while the JSON schema tells **what**.
