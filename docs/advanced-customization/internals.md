@@ -34,7 +34,7 @@ There are three different cases which need to be considered for the merging. Obj
 
 This are the rules which are used when injecting the defaults:
 
-- When the is a scalar in the form data, nothing is changed.
+- When there is a scalar in the form data, nothing is changed.
 - When the value is `undefined` in the form data, the default is created in the form data.
 - When the value is an object in the form data, the defaults are deeply merged into the form data, using the rules defined here for the deep merge.
 - Then the value is an array in the form data, defaults are only injected in existing array items. No new array items will be created, even if the schema has minItems or additional items defined.

@@ -26,8 +26,8 @@ nav:
     - Contributing: contributing.md
   - API Reference:
     - uiSchema:
-      - general: api-reference/uiSchema.md
-      - themes:
+      - General Reference: api-reference/uiSchema.md
+      - Theme-Specific Reference:
         - semantic-ui: api-reference/themes/semantic-ui/uiSchema.md
     - "&lt;Form /&gt; props": api-reference/form-props.md
 

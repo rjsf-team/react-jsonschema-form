@@ -219,4 +219,4 @@ const uiSchema = {
 };
 ```
 ## Theme Options
-[Semantic UI](themes\semantic-ui\uiSchema.md)
+[Semantic UI](themes/semantic-ui/uiSchema.md)
