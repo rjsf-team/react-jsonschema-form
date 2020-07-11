@@ -3157,7 +3157,7 @@ describe("Form omitDefaultLoad", () => {
     sandbox.restore();
   });
 
-  it("should not populate empty default for root property on load", () => {
+  it("should not populate default for root property on load", () => {
     const schema = {
       type: "object",
       properties: {
@@ -3185,7 +3185,7 @@ describe("Form omitDefaultLoad", () => {
     });
   });
 
-  it("should not populate empty default for array property on load", () => {
+  it("should not populate default for array item property on load", () => {
     const schema = {
       type: "object",
       title: "lvl 1 obj",
@@ -3478,7 +3478,7 @@ describe("Form omitDefaultLoad", () => {
     });
   });
 
-  it("should remain emtpty when changing anyOf selection to option with no default", () => {
+  it("should remain empty when changing anyOf selection to option with no default", () => {
     const schema = {
       type: "object",
       anyOf: [
