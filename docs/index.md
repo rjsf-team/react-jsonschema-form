@@ -91,9 +91,9 @@ render((
 ), document.getElementById("app"));
 ```
 
-> Note: If your form has a single field, pass a single value to `formData`. ex: `formData='Charlie'`
+> Note: If your form has a single field, pass a single value to `formData`. e.g. `formData='Charlie'`
 
-> Note: To treat each field with a default as if it has been cleared, set `omitDefaultLoad` to `true`. Defaults will still be honored when new fields are shown as a result of user interaction (e.g., adding a new array row).
+> Note: To treat each field with a default as if it has been cleared, set `omitDefaultLoad` to `true`. Defaults will still be honored when new fields are shown as a result of user interaction (e.g. adding a new array row).
 
 > WARNING: If you have situations where your parent component can re-render, make sure you listen to the `onChange` event and update the data you pass to the `formData` attribute.
 
