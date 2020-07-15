@@ -864,7 +864,6 @@ exports[`single fields hidden label 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
