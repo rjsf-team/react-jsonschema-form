@@ -6,6 +6,7 @@ When developing, run the following from the root-level directory:
 
 ```bash
 npm install
+npm run build
 npm start
 ```
 
