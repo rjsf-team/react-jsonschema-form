@@ -137,7 +137,6 @@ exports[`array fields checkboxes 1`] = `
         </div>
         <input
           autoFocus={false}
-          name="nodejs"
           onAnimationStart={[Function]}
           type="hidden"
           value=""
@@ -290,7 +289,6 @@ exports[`array fields fixed array 1`] = `
                             className="MuiInputBase-input MuiInput-input"
                             disabled={false}
                             id="root_0"
-                            name="nodejs"
                             onAnimationStart={[Function]}
                             onBlur={[Function]}
                             onChange={[Function]}
@@ -394,7 +392,6 @@ exports[`array fields fixed array 1`] = `
                             className="MuiInputBase-input MuiInput-input"
                             disabled={false}
                             id="root_1"
-                            name="nodejs"
                             onAnimationStart={[Function]}
                             onBlur={[Function]}
                             onChange={[Function]}
