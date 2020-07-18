@@ -37,7 +37,7 @@ function TextWidget({
       disabled={disabled || readonly}
       name={name}
       {...semanticProps}
-      value={value || ""}
+      value={value || value === 0 ? value : ""}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
