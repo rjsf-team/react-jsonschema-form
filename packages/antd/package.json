@@ -44,7 +44,7 @@
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@babel/runtime-corejs2": "^7.10.3",
+    "@babel/runtime-corejs3": "^7.10.5",
     "@rjsf/core": "^2.2.1",
     "antd": "^4.0.0",
     "atob": "^2.0.3",
