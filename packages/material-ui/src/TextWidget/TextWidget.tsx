@@ -21,6 +21,7 @@ const TextWidget = ({
   onChange,
   onBlur,
   onFocus,
+  name,
   autofocus,
   options,
   schema,
