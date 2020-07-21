@@ -2,22 +2,22 @@
 <br />
 <p align="center">
   <a href="https://github.com/cybertec-postgresql/rjsf-material-ui">
-    <img src="https://raw.githubusercontent.com/cybertec-postgresql/rjsf-material-ui/master/rjsf-material-ui-logo.png" alt="Logo" width="140" height="120">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/800px-Bootstrap_logo.svg.png" alt="Logo" width="140" height="120">
   </a>
 
-  <h3 align="center">@rjsf/material-ui</h3>
+  <h3 align="center">@rjsf/bootstrap-4</h3>
 
   <p align="center">
-  Material-UI theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Bootstrap-4 theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://rjsf-team.github.io/rjsf-material-ui/">View Playground</a>
+    <a href="#">View Playground</a>
     ·
-    <a href="https://github.com/rjsf-team/rjsf-material-ui/issues">Report Bug</a>
+    <a href="#">Report Bug</a>
     ·
-    <a href="https://github.com/rjsf-team/rjsf-material-ui/issues">Request Feature</a>
+    <a href="#">Request Feature</a>
   </p>
 </p>
 
@@ -25,14 +25,13 @@
 
 ## About The Project
 
-[![rjsf-material-ui Screen Shot][product-screenshot]](https://cybertec-postgresql.github.io/rjsf-material-ui)
 
-Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
+Exports `bootstrap-4` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
-- [Material-UI](https://material-ui.com/)
+- [Bootstrap-4](https://getbootstrap.com/docs/4.0/)
 - [Typescript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -41,33 +40,32 @@ Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@material-ui/core >= 4.2.0` ([in 4.2.0, the `slider` component was added to the core](https://github.com/mui-org/material-ui/pull/16416))
-- `@material-ui/icons`
-- `@rjsf/core >= 2.0.0`
+- `react-bootstrap >= 1.0.1`
+- `@rjsf/core >= 2.2.0`
 
 ```bash
-yarn add @material-ui/core @material-ui/icons @rjsf/core
+yarn add react-bootstrap @rjsf/core
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/material-ui
+yarn add @rjsf/bootstrap-4
 ```
 
 ## Usage
 
 ```js
-import Form from '@rjsf/material-ui';
+import Form from '@rjsf/bootstrap-4';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as MuiTheme } from '@rjsf/material-ui';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 
-const Form = withTheme(MuiTheme);
+const Form = withTheme(Bootstrap4Theme);
 ```
 
 <!-- MARKDOWN LINKS & IMAGES -->
