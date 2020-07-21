@@ -5,7 +5,7 @@ exports[`DateWidget simple 1`] = `
   className="mb-0 form-group"
 >
   <label
-    className="form-label"
+    className="text-danger form-label"
     htmlFor="_id"
   >
     Some simple label
@@ -13,11 +13,10 @@ exports[`DateWidget simple 1`] = `
   </label>
   <input
     autoFocus={true}
-    className="form-control"
+    className="is-invalid form-control"
     disabled={true}
     id="_id"
     multiple={false}
-    name="nodejs"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
