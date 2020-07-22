@@ -3,7 +3,7 @@
   publish = "packages/playground/build"
   command = "npm run build"
   # Ignore dependabot PRs for deploy previews
-  ignore = "git log -1 --pretty=%an | grep dependabot[bot]"
+  ignore = "./dependabot-ignore.sh"
 
 [build.environment]
   SHOW_NETLIFY_BADGE = "true"
