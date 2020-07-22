@@ -29,10 +29,11 @@ const CheckboxWidget = (props: WidgetProps) => {
     target: { checked },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, checked);
 
+  const desc = label || schema.description;
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
-      {(label || schema.description) && (
-        <DescriptionField description={label || schema.description} />
+      {(desc) && (
+        <DescriptionField description={desc} />
       )}
       <label>
         <Form.Control
