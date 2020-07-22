@@ -122,7 +122,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.9.2",
+    "@babel/runtime-corejs3": "^7.10.5",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.3"
   }

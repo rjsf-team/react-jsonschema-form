@@ -32,7 +32,7 @@ module.exports = {
     es: {
       plugins: [
         ...defaultPlugins,
-        ['@babel/plugin-transform-runtime', { useESModules: true, corejs: 2 }]
+        ['@babel/plugin-transform-runtime', { useESModules: true, corejs: 3 }]
       ],
       ignore: ['test/**/*.js']
     },

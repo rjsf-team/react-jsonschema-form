@@ -42,10 +42,10 @@
     "react": ">=16"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.8.7",
+    "@babel/runtime-corejs3": "^7.10.5",
     "@types/json-schema": "^7.0.4",
     "ajv": "^6.7.0",
-    "core-js": "^2.5.7",
+    "core-js": "^3.6.5",
     "json-schema-merge-allof": "^0.6.0",
     "jsonpointer": "^4.0.1",
     "lodash": "^4.17.15",
