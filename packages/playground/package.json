@@ -58,9 +58,6 @@
     "prop-types": "^15.7.2",
     "react-app-polyfill": "^1.0.4",
     "react-bootstrap": "^0.33.1",
-    "@fortawesome/free-solid-svg-icons": "^5.13.1",
-    "@fortawesome/react-fontawesome": "^0.1.11",
-    "@fortawesome/fontawesome-svg-core": "^1.2.29",
     "react-frame-component": "^4.1.1",
     "react-is": "^16.9.0",
     "shortid": "^2.2.14"
