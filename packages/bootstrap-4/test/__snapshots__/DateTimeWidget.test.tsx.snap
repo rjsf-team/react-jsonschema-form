@@ -23,7 +23,7 @@ exports[`DateTimeWidget simple 1`] = `
     required={true}
     type="datetime-local"
     uiSchema={Object {}}
-    value="2020-07-22T14:42:08.208"
+    value="2020-07-23T08:18:54.834"
   />
 </div>
 `;

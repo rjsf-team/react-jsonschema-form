@@ -853,6 +853,11 @@ exports[`single fields select field 1`] = `
         value=""
       >
         <option
+          value=""
+        >
+          
+        </option>
+        <option
           disabled={false}
           value="foo"
         >

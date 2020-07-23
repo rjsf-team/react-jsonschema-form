@@ -10,10 +10,10 @@ exports[`object fields object 1`] = `
     className="form-group"
   >
     <div
-      className="MuiGrid-root makeStyles-root-1 MuiGrid-container MuiGrid-spacing-xs-2"
+      className="p-0 container-fluid"
     >
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+        className="row"
         style={
           Object {
             "marginBottom": "10px",
@@ -21,95 +21,100 @@ exports[`object fields object 1`] = `
         }
       >
         <div
-          className="form-group"
+          className="col-12"
         >
+           
           <div
-            className="mb-0 form-group"
+            className="form-group"
           >
-            <label
-              className="form-label"
-              htmlFor="root_a"
+            <div
+              className="mb-0 form-group"
             >
-              a
-            </label>
-            <input
-              autoFocus={false}
-              className="form-control"
-              disabled={false}
-              id="root_a"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              registry={
-                Object {
-                  "ArrayFieldTemplate": [Function],
-                  "FieldTemplate": [Function],
-                  "ObjectFieldTemplate": [Function],
-                  "definitions": Object {},
-                  "fields": Object {
-                    "AnyOfField": [Function],
-                    "ArrayField": [Function],
-                    "BooleanField": [Function],
-                    "DescriptionField": [Function],
-                    "NullField": [Function],
-                    "NumberField": [Function],
-                    "ObjectField": [Function],
-                    "OneOfField": [Function],
-                    "SchemaField": [Function],
-                    "StringField": [Function],
-                    "TitleField": [Function],
-                    "UnsupportedField": [Function],
-                  },
-                  "formContext": Object {},
-                  "rootSchema": Object {
-                    "properties": Object {
-                      "a": Object {
-                        "type": "string",
-                      },
-                      "b": Object {
-                        "type": "number",
-                      },
+              <label
+                className="form-label"
+                htmlFor="root_a"
+              >
+                a
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_a"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                registry={
+                  Object {
+                    "ArrayFieldTemplate": [Function],
+                    "FieldTemplate": [Function],
+                    "ObjectFieldTemplate": [Function],
+                    "definitions": Object {},
+                    "fields": Object {
+                      "AnyOfField": [Function],
+                      "ArrayField": [Function],
+                      "BooleanField": [Function],
+                      "DescriptionField": [Function],
+                      "NullField": [Function],
+                      "NumberField": [Function],
+                      "ObjectField": [Function],
+                      "OneOfField": [Function],
+                      "SchemaField": [Function],
+                      "StringField": [Function],
+                      "TitleField": [Function],
+                      "UnsupportedField": [Function],
                     },
-                    "type": "object",
-                  },
-                  "widgets": Object {
-                    "AltDateTimeWidget": [Function],
-                    "AltDateWidget": [Function],
-                    "BaseInput": [Function],
-                    "CheckboxWidget": [Function],
-                    "CheckboxesWidget": [Function],
-                    "ColorWidget": [Function],
-                    "DateTimeWidget": [Function],
-                    "DateWidget": [Function],
-                    "EmailWidget": [Function],
-                    "FileWidget": [Function],
-                    "HiddenWidget": [Function],
-                    "PasswordWidget": [Function],
-                    "RadioWidget": [Function],
-                    "RangeWidget": [Function],
-                    "SelectWidget": [Function],
-                    "TextWidget": [Function],
-                    "TextareaWidget": [Function],
-                    "URLWidget": [Function],
-                    "UpDownWidget": [Function],
-                  },
+                    "formContext": Object {},
+                    "rootSchema": Object {
+                      "properties": Object {
+                        "a": Object {
+                          "type": "string",
+                        },
+                        "b": Object {
+                          "type": "number",
+                        },
+                      },
+                      "type": "object",
+                    },
+                    "widgets": Object {
+                      "AltDateTimeWidget": [Function],
+                      "AltDateWidget": [Function],
+                      "BaseInput": [Function],
+                      "CheckboxWidget": [Function],
+                      "CheckboxesWidget": [Function],
+                      "ColorWidget": [Function],
+                      "DateTimeWidget": [Function],
+                      "DateWidget": [Function],
+                      "EmailWidget": [Function],
+                      "FileWidget": [Function],
+                      "HiddenWidget": [Function],
+                      "PasswordWidget": [Function],
+                      "RadioWidget": [Function],
+                      "RangeWidget": [Function],
+                      "SelectWidget": [Function],
+                      "TextWidget": [Function],
+                      "TextareaWidget": [Function],
+                      "URLWidget": [Function],
+                      "UpDownWidget": [Function],
+                    },
+                  }
                 }
-              }
-              required={false}
-              type="string"
-              uiSchema={
-                Object {
-                  "classNames": undefined,
+                required={false}
+                type="string"
+                uiSchema={
+                  Object {
+                    "classNames": undefined,
+                  }
                 }
-              }
-              value=""
-            />
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+        className="row"
         style={
           Object {
             "marginBottom": "10px",
@@ -117,90 +122,95 @@ exports[`object fields object 1`] = `
         }
       >
         <div
-          className="form-group"
+          className="col-12"
         >
+           
           <div
-            className="mb-0 form-group"
+            className="form-group"
           >
-            <label
-              className="form-label"
-              htmlFor="root_b"
+            <div
+              className="mb-0 form-group"
             >
-              b
-            </label>
-            <input
-              autoFocus={false}
-              className="form-control"
-              disabled={false}
-              id="root_b"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              registry={
-                Object {
-                  "ArrayFieldTemplate": [Function],
-                  "FieldTemplate": [Function],
-                  "ObjectFieldTemplate": [Function],
-                  "definitions": Object {},
-                  "fields": Object {
-                    "AnyOfField": [Function],
-                    "ArrayField": [Function],
-                    "BooleanField": [Function],
-                    "DescriptionField": [Function],
-                    "NullField": [Function],
-                    "NumberField": [Function],
-                    "ObjectField": [Function],
-                    "OneOfField": [Function],
-                    "SchemaField": [Function],
-                    "StringField": [Function],
-                    "TitleField": [Function],
-                    "UnsupportedField": [Function],
-                  },
-                  "formContext": Object {},
-                  "rootSchema": Object {
-                    "properties": Object {
-                      "a": Object {
-                        "type": "string",
-                      },
-                      "b": Object {
-                        "type": "number",
-                      },
+              <label
+                className="form-label"
+                htmlFor="root_b"
+              >
+                b
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_b"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                registry={
+                  Object {
+                    "ArrayFieldTemplate": [Function],
+                    "FieldTemplate": [Function],
+                    "ObjectFieldTemplate": [Function],
+                    "definitions": Object {},
+                    "fields": Object {
+                      "AnyOfField": [Function],
+                      "ArrayField": [Function],
+                      "BooleanField": [Function],
+                      "DescriptionField": [Function],
+                      "NullField": [Function],
+                      "NumberField": [Function],
+                      "ObjectField": [Function],
+                      "OneOfField": [Function],
+                      "SchemaField": [Function],
+                      "StringField": [Function],
+                      "TitleField": [Function],
+                      "UnsupportedField": [Function],
                     },
-                    "type": "object",
-                  },
-                  "widgets": Object {
-                    "AltDateTimeWidget": [Function],
-                    "AltDateWidget": [Function],
-                    "BaseInput": [Function],
-                    "CheckboxWidget": [Function],
-                    "CheckboxesWidget": [Function],
-                    "ColorWidget": [Function],
-                    "DateTimeWidget": [Function],
-                    "DateWidget": [Function],
-                    "EmailWidget": [Function],
-                    "FileWidget": [Function],
-                    "HiddenWidget": [Function],
-                    "PasswordWidget": [Function],
-                    "RadioWidget": [Function],
-                    "RangeWidget": [Function],
-                    "SelectWidget": [Function],
-                    "TextWidget": [Function],
-                    "TextareaWidget": [Function],
-                    "URLWidget": [Function],
-                    "UpDownWidget": [Function],
-                  },
+                    "formContext": Object {},
+                    "rootSchema": Object {
+                      "properties": Object {
+                        "a": Object {
+                          "type": "string",
+                        },
+                        "b": Object {
+                          "type": "number",
+                        },
+                      },
+                      "type": "object",
+                    },
+                    "widgets": Object {
+                      "AltDateTimeWidget": [Function],
+                      "AltDateWidget": [Function],
+                      "BaseInput": [Function],
+                      "CheckboxWidget": [Function],
+                      "CheckboxesWidget": [Function],
+                      "ColorWidget": [Function],
+                      "DateTimeWidget": [Function],
+                      "DateWidget": [Function],
+                      "EmailWidget": [Function],
+                      "FileWidget": [Function],
+                      "HiddenWidget": [Function],
+                      "PasswordWidget": [Function],
+                      "RadioWidget": [Function],
+                      "RangeWidget": [Function],
+                      "SelectWidget": [Function],
+                      "TextWidget": [Function],
+                      "TextareaWidget": [Function],
+                      "URLWidget": [Function],
+                      "UpDownWidget": [Function],
+                    },
+                  }
                 }
-              }
-              required={false}
-              type="number"
-              uiSchema={
-                Object {
-                  "classNames": undefined,
+                required={false}
+                type="number"
+                uiSchema={
+                  Object {
+                    "classNames": undefined,
+                  }
                 }
-              }
-              value=""
-            />
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>
