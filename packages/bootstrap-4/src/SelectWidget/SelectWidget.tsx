@@ -53,6 +53,7 @@ const SelectWidget = ({
   onChange,
   onBlur,
   onFocus,
+  placeholder,
   rawErrors = [],
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
@@ -92,6 +93,9 @@ const SelectWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}>
+        {!multiple && schema.default === undefined && (
+          <option value="">{placeholder}</option>
+        )}
         {(enumOptions as any).map(({ value, label }: any, i: number) => {
           const disabled: any =
             Array.isArray(enumDisabled) &&
