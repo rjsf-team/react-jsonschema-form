@@ -3,7 +3,7 @@
   publish = "packages/playground/build"
   command = "npm run build"
   # Ignore dependabot PRs for deploy previews
-  ignore = "./dependabot-ignore.sh"
+  ignore = "./netlify-ignore.sh"
 
 [build.environment]
   SHOW_NETLIFY_BADGE = "true"
