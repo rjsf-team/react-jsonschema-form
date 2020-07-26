@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextWidget simple 1`] = `
+<div
+  className="mb-0 form-group"
+>
+  <label
+    className="text-danger form-label"
+    htmlFor="_id"
+  >
+    Some simple label
+    *
+  </label>
+  <input
+    autoFocus={true}
+    className="is-invalid form-control"
+    disabled={true}
+    id="_id"
+    multiple={false}
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    required={true}
+    type="array"
+    uiSchema={Object {}}
+    value="value"
+  />
+</div>
+`;

@@ -1,0 +1,1382 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`single fields checkbox field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="checkbox "
+    >
+      <label>
+        <input
+          autoFocus={false}
+          checked={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          type="checkbox"
+        />
+      </label>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field 2`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="checkbox "
+    >
+      <label>
+        <input
+          autoFocus={false}
+          checked={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          type="checkbox"
+        />
+      </label>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkboxes field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <label
+      className="form-label"
+      htmlFor="root"
+    />
+    <div
+      className="form-group"
+    >
+      <form
+        className=""
+      >
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root_0"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root_0"
+            title=""
+          >
+            foo
+          </label>
+        </div>
+      </form>
+      <form
+        className=""
+      >
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root_1"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root_1"
+            title=""
+          >
+            bar
+          </label>
+        </div>
+      </form>
+      <form
+        className=""
+      >
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root_2"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root_2"
+            title=""
+          >
+            fuzz
+          </label>
+        </div>
+      </form>
+      <form
+        className=""
+      >
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root_3"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root_3"
+            title=""
+          >
+            qux
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format color 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "color",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="color"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+          }
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format date 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "date",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="date"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+          }
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format datetime 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "datetime",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="datetime-local"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+          }
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields null field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  />
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields number field 0 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "type": "number",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="number"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+          }
+        }
+        value={0}
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields number field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "type": "number",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="number"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+          }
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields password field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="password"
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields radio field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="d-block form-label"
+        htmlFor="root"
+      />
+      <div
+        className="form-check"
+      >
+        <input
+          checked={false}
+          className="form-check-input"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          type="radio"
+          value={true}
+        />
+        <label
+          className="form-check-label"
+          htmlFor="root"
+          title=""
+        >
+          Yes
+        </label>
+      </div>
+      <div
+        className="form-check"
+      >
+        <input
+          checked={false}
+          className="form-check-input"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          type="radio"
+          value={false}
+        />
+        <label
+          className="form-check-label"
+          htmlFor="root"
+          title=""
+        >
+          No
+        </label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <select
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        name="nodejs"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value=""
+      >
+        <option
+          value=""
+        >
+          
+        </option>
+        <option
+          disabled={false}
+          value="foo"
+        >
+          foo
+        </option>
+        <option
+          disabled={false}
+          value="bar"
+        >
+          bar
+        </option>
+      </select>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format data-url 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div>
+      <p>
+        <input
+          autoFocus={false}
+          defaultValue=""
+          disabled={false}
+          id="root"
+          onChange={[Function]}
+          type="file"
+        />
+      </p>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format email 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "email",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="email"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+          }
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format uri 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "format": "uri",
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="url"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+          }
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field regular 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="string"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+          }
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field with placeholder 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="placeholder"
+        registry={
+          Object {
+            "ArrayFieldTemplate": [Function],
+            "FieldTemplate": [Function],
+            "ObjectFieldTemplate": [Function],
+            "definitions": Object {},
+            "fields": Object {
+              "AnyOfField": [Function],
+              "ArrayField": [Function],
+              "BooleanField": [Function],
+              "DescriptionField": [Function],
+              "NullField": [Function],
+              "NumberField": [Function],
+              "ObjectField": [Function],
+              "OneOfField": [Function],
+              "SchemaField": [Function],
+              "StringField": [Function],
+              "TitleField": [Function],
+              "UnsupportedField": [Function],
+            },
+            "formContext": Object {},
+            "rootSchema": Object {
+              "type": "string",
+            },
+            "widgets": Object {
+              "AltDateTimeWidget": [Function],
+              "AltDateWidget": [Function],
+              "BaseInput": [Function],
+              "CheckboxWidget": [Function],
+              "CheckboxesWidget": [Function],
+              "ColorWidget": [Function],
+              "DateTimeWidget": [Function],
+              "DateWidget": [Function],
+              "EmailWidget": [Function],
+              "FileWidget": [Function],
+              "HiddenWidget": [Function],
+              "PasswordWidget": [Function],
+              "RadioWidget": [Function],
+              "RangeWidget": [Function],
+              "SelectWidget": [Function],
+              "TextWidget": [Function],
+              "TextareaWidget": [Function],
+              "URLWidget": [Function],
+              "UpDownWidget": [Function],
+            },
+          }
+        }
+        type="string"
+        uiSchema={
+          Object {
+            "classNames": undefined,
+            "ui:placeholder": "placeholder",
+          }
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields textarea field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="root"
+    />
+    <div
+      className="input-group"
+    >
+      <textarea
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        rows={5}
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields unsupported field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="unsupported-field"
+    >
+      <p>
+        Unsupported field schema
+        <span>
+           for
+           field 
+          <code>
+            root
+          </code>
+        </span>
+        <em>
+          : 
+          Unknown field type undefined
+        </em>
+        .
+      </p>
+      <pre>
+        {}
+      </pre>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
