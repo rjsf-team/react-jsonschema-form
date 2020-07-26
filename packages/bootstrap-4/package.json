@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/bootstrap-4",
-  "version": "0.0.1",
+  "version": "2.2.2",
   "main": "dist/index.js",
   "module": "dist/rjsf-bootstrap-4.esm.js",
   "typings": "dist/index.d.ts",
