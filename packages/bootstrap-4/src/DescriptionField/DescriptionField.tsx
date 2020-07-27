@@ -7,7 +7,7 @@ export interface DescriptionFieldProps extends Partial<FieldProps> {
 
 const DescriptionField = ({ description }: Partial<FieldProps>) => {
   if (description) {
-    return <h2 className="mt-5">{description}</h2>;
+    return <div><h6 className="mb-5">{description}</h6></div>;
   }
 
   return null;

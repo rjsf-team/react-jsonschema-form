@@ -72,13 +72,13 @@ const DefaultArrayItem = (props: any) => {
   return (
     <div key={props.key}>
       <Row className="mb-2  d-flex align-items-center">
-        <Col>{props.children}</Col>
+        <Col xs="9" lg="9">{props.children}</Col>
 
         <Col xs="3" lg="3" className="py-4">
           {props.hasToolbar && (
-            <Row>
+            <div className="d-flex flex-row">
               {(props.hasMoveUp || props.hasMoveDown) && (
-                <Col>
+                <div className="m-0 p-0">
                   <IconButton
                     icon="arrow-up"
                     className="array-item-move-up"
@@ -89,11 +89,11 @@ const DefaultArrayItem = (props: any) => {
                     }
                     onClick={props.onReorderClick(props.index, props.index - 1)}
                   />
-                </Col>
+                </div>
               )}
 
               {(props.hasMoveUp || props.hasMoveDown) && (
-                <Col>
+                <div className="m-0 p-0">
                   <IconButton
                     icon="arrow-down"
                     tabIndex={-1}
@@ -103,11 +103,11 @@ const DefaultArrayItem = (props: any) => {
                     }
                     onClick={props.onReorderClick(props.index, props.index + 1)}
                   />
-                </Col>
+                </div>
               )}
 
               {props.hasRemove && (
-                <Col>
+                <div className="m-0 p-0">
                   <IconButton
                     icon="remove"
                     tabIndex={-1}
@@ -115,9 +115,9 @@ const DefaultArrayItem = (props: any) => {
                     disabled={props.disabled || props.readonly}
                     onClick={props.onDropIndexClick(props.index)}
                   />
-                </Col>
+                </div>
               )}
-            </Row>
+            </div>
           )}
         </Col>
       </Row>
@@ -164,7 +164,8 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   return (
     <div>
-      <Row className="p-2">
+      <Row className="p-0 m-0">
+        <Col className="p-0 m-0">
         <ArrayFieldTitle
           key={`array-field-title-${props.idSchema.$id}`}
           TitleField={props.TitleField}
@@ -184,21 +185,24 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           />
         )}
 
-        <Container fluid key={`array-item-list-${props.idSchema.$id}`}>
+        <Container fluid key={`array-item-list-${props.idSchema.$id}`} className="p-0 m-0">
           {props.items && props.items.map(p => DefaultArrayItem(p))}
 
           {props.canAdd && (
-            <Container className="d-flex justify-content-end">
+            <Container className="">
               <Row className="mt-2">
-                <AddButton
+                <Col xs={9}></Col>
+                <Col xs={3} className="py-4 col-lg-3 col-3"> <AddButton
                   className="array-item-add"
                   onClick={props.onAddClick}
                   disabled={props.disabled || props.readonly}
-                />
+                /></Col>
+
               </Row>
             </Container>
           )}
-        </Container>
+        </Container></Col>
+
       </Row>
     </div>
   );
