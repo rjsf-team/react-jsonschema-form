@@ -23,8 +23,7 @@ const TextWidget = ({
   options,
   schema,
   rawErrors = [],
-  formContext,
-  ...textFieldProps
+
 }: TextWidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -46,7 +45,8 @@ const TextWidget = ({
         id={id}
         autoFocus={autofocus}
         required={required}
-        disabled={disabled || readonly}
+        disabled={disabled}
+        readOnly={readonly}
         className={rawErrors.length > 0 ? "is-invalid" : ""}
         list={schema.examples ? `examples_${id}` : undefined}
         type={type || (schema.type as string)}
@@ -54,7 +54,7 @@ const TextWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        {...textFieldProps}
+
       />
       {schema.examples ? (
         <datalist id={`examples_${id}`}>

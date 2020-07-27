@@ -41,7 +41,8 @@ const RangeWidget = ({
       <Form.Control
         type="range"
         required={required}
-        disabled={disabled || readonly}
+        disabled={disabled}
+        readOnly={readonly}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
