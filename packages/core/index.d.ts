@@ -324,7 +324,7 @@ declare module '@rjsf/core' {
 
         export function isConstant(schema: JSONSchema7): boolean;
 
-        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'] | Error;
+        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'];
 
         export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
 
