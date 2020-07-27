@@ -2,26 +2,31 @@
 
 exports[`CheckboxWidget simple 1`] = `
 <div
-  className="checkbox disabled"
+  className="checkbox disabled form-group"
 >
-  <h2
-    className="mt-5"
+  <div
+    className="form-check"
   >
-    Some simple label
-  </h2>
-  <label>
     <input
       autoFocus={true}
       checked="value"
-      className="form-control"
-      disabled={true}
+      className="form-check-input"
+      disabled={false}
       id="_id"
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
+      readOnly={true}
       required={true}
       type="checkbox"
     />
-  </label>
+    <label
+      className="form-check-label"
+      htmlFor="_id"
+      title=""
+    >
+      Some simple label
+    </label>
+  </div>
 </div>
 `;

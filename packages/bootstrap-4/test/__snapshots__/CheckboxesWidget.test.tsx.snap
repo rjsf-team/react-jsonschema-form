@@ -21,11 +21,12 @@ Array [
           autoFocus={true}
           checked={true}
           className="custom-control-input position-static"
-          disabled={true}
+          disabled={false}
           id="_id_0"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          readOnly={true}
           required={true}
           type="checkbox"
         />
@@ -56,11 +57,12 @@ Array [
           autoFocus={true}
           checked={true}
           className="custom-control-input position-static"
-          disabled={true}
+          disabled={false}
           id="_id_0"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          readOnly={true}
           required={true}
           type="checkbox"
         />

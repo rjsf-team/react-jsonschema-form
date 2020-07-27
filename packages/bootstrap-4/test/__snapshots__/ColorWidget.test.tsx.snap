@@ -6,7 +6,6 @@ exports[`ColorWidget simple 1`] = `
 >
   <label
     className="text-danger form-label"
-    htmlFor="_id"
   >
     Some simple label
     *
@@ -14,15 +13,14 @@ exports[`ColorWidget simple 1`] = `
   <input
     autoFocus={true}
     className="is-invalid form-control"
-    disabled={true}
+    disabled={false}
     id="_id"
-    multiple={false}
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
+    readOnly={true}
     required={true}
     type="color"
-    uiSchema={Object {}}
     value="value"
   />
 </div>

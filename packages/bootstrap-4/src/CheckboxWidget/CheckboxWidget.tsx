@@ -1,7 +1,6 @@
 import React from "react";
 
 import { WidgetProps } from "@rjsf/core";
-import DescriptionField from "../DescriptionField";
 import Form from "react-bootstrap/Form";
 
 const CheckboxWidget = (props: WidgetProps) => {
@@ -31,13 +30,10 @@ const CheckboxWidget = (props: WidgetProps) => {
 
   const desc = label || schema.description;
   return (
-    <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
-      {(desc) && (
-        <DescriptionField description={desc} />
-      )}
-      <label>
-        <Form.Control
+    <Form.Group  className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
+        <Form.Check
           id={id}
+          label={desc}
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled}
@@ -48,8 +44,7 @@ const CheckboxWidget = (props: WidgetProps) => {
           onBlur={_onBlur}
           onFocus={_onFocus}
         />
-      </label>
-    </div>
+        </Form.Group>
   );
 };
 

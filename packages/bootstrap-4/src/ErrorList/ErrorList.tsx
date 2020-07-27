@@ -9,10 +9,10 @@ const ErrorList = ({ errors }: ErrorListProps) => (
   <Card border="danger" className="mb-2">
     <Card.Header className="alert-danger">Errors</Card.Header>
     <Card.Body className="p-0">
-      <ListGroup variant="flush">
+      <ListGroup >
         {errors.map((error, i: number) => {
           return (
-            <ListGroup.Item key={i}>
+            <ListGroup.Item key={i} className="border-0">
               <small>{error.stack}</small>
             </ListGroup.Item>
           );

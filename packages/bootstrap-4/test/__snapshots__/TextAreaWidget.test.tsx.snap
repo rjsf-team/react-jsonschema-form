@@ -20,11 +20,12 @@ Array [
     <textarea
       autoFocus={true}
       className="form-control"
-      disabled={true}
+      disabled={false}
       id="_id"
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
+      readOnly={true}
       required={true}
       rows={5}
       value="value"
@@ -53,11 +54,12 @@ Array [
     <textarea
       autoFocus={true}
       className="form-control"
-      disabled={true}
+      disabled={false}
       id="_id"
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
+      readOnly={true}
       required={true}
       rows={5}
       value="value"
@@ -79,11 +81,12 @@ Array [
     <textarea
       autoFocus={true}
       className="form-control"
-      disabled={true}
+      disabled={false}
       id="_id"
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
+      readOnly={true}
       required={false}
       rows={5}
       value="value"

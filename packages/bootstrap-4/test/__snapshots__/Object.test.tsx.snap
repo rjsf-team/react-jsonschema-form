@@ -32,7 +32,6 @@ exports[`object fields object 1`] = `
             >
               <label
                 className="form-label"
-                htmlFor="root_a"
               >
                 a
               </label>
@@ -44,69 +43,9 @@ exports[`object fields object 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
-                placeholder=""
-                registry={
-                  Object {
-                    "ArrayFieldTemplate": [Function],
-                    "FieldTemplate": [Function],
-                    "ObjectFieldTemplate": [Function],
-                    "definitions": Object {},
-                    "fields": Object {
-                      "AnyOfField": [Function],
-                      "ArrayField": [Function],
-                      "BooleanField": [Function],
-                      "DescriptionField": [Function],
-                      "NullField": [Function],
-                      "NumberField": [Function],
-                      "ObjectField": [Function],
-                      "OneOfField": [Function],
-                      "SchemaField": [Function],
-                      "StringField": [Function],
-                      "TitleField": [Function],
-                      "UnsupportedField": [Function],
-                    },
-                    "formContext": Object {},
-                    "rootSchema": Object {
-                      "properties": Object {
-                        "a": Object {
-                          "type": "string",
-                        },
-                        "b": Object {
-                          "type": "number",
-                        },
-                      },
-                      "type": "object",
-                    },
-                    "widgets": Object {
-                      "AltDateTimeWidget": [Function],
-                      "AltDateWidget": [Function],
-                      "BaseInput": [Function],
-                      "CheckboxWidget": [Function],
-                      "CheckboxesWidget": [Function],
-                      "ColorWidget": [Function],
-                      "DateTimeWidget": [Function],
-                      "DateWidget": [Function],
-                      "EmailWidget": [Function],
-                      "FileWidget": [Function],
-                      "HiddenWidget": [Function],
-                      "PasswordWidget": [Function],
-                      "RadioWidget": [Function],
-                      "RangeWidget": [Function],
-                      "SelectWidget": [Function],
-                      "TextWidget": [Function],
-                      "TextareaWidget": [Function],
-                      "URLWidget": [Function],
-                      "UpDownWidget": [Function],
-                    },
-                  }
-                }
+                readOnly={false}
                 required={false}
                 type="string"
-                uiSchema={
-                  Object {
-                    "classNames": undefined,
-                  }
-                }
                 value=""
               />
             </div>
@@ -133,7 +72,6 @@ exports[`object fields object 1`] = `
             >
               <label
                 className="form-label"
-                htmlFor="root_b"
               >
                 b
               </label>
@@ -145,69 +83,9 @@ exports[`object fields object 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
-                placeholder=""
-                registry={
-                  Object {
-                    "ArrayFieldTemplate": [Function],
-                    "FieldTemplate": [Function],
-                    "ObjectFieldTemplate": [Function],
-                    "definitions": Object {},
-                    "fields": Object {
-                      "AnyOfField": [Function],
-                      "ArrayField": [Function],
-                      "BooleanField": [Function],
-                      "DescriptionField": [Function],
-                      "NullField": [Function],
-                      "NumberField": [Function],
-                      "ObjectField": [Function],
-                      "OneOfField": [Function],
-                      "SchemaField": [Function],
-                      "StringField": [Function],
-                      "TitleField": [Function],
-                      "UnsupportedField": [Function],
-                    },
-                    "formContext": Object {},
-                    "rootSchema": Object {
-                      "properties": Object {
-                        "a": Object {
-                          "type": "string",
-                        },
-                        "b": Object {
-                          "type": "number",
-                        },
-                      },
-                      "type": "object",
-                    },
-                    "widgets": Object {
-                      "AltDateTimeWidget": [Function],
-                      "AltDateWidget": [Function],
-                      "BaseInput": [Function],
-                      "CheckboxWidget": [Function],
-                      "CheckboxesWidget": [Function],
-                      "ColorWidget": [Function],
-                      "DateTimeWidget": [Function],
-                      "DateWidget": [Function],
-                      "EmailWidget": [Function],
-                      "FileWidget": [Function],
-                      "HiddenWidget": [Function],
-                      "PasswordWidget": [Function],
-                      "RadioWidget": [Function],
-                      "RangeWidget": [Function],
-                      "SelectWidget": [Function],
-                      "TextWidget": [Function],
-                      "TextareaWidget": [Function],
-                      "URLWidget": [Function],
-                      "UpDownWidget": [Function],
-                    },
-                  }
-                }
+                readOnly={false}
                 required={false}
                 type="number"
-                uiSchema={
-                  Object {
-                    "classNames": undefined,
-                  }
-                }
                 value=""
               />
             </div>

@@ -32,7 +32,7 @@ const RadioWidget = ({
   const inline = Boolean(options && options.inline);
 
   return (
-    <Form.Group controlId={id} className="mb-0">
+    <Form.Group className="mb-0">
       <Form.Label className="d-block">
         {label || schema.title}
         {(label || schema.title) && required ? "*" : null}
@@ -42,11 +42,13 @@ const RadioWidget = ({
           Array.isArray(enumDisabled) &&
           enumDisabled.indexOf(option.value) !== -1;
         const checked = option.value == value;
+
         const radio = (
           <Form.Check
             inline={inline}
             label={option.label}
             key={i}
+            name={id}
             type="radio"
             disabled={disabled || itemDisabled || readonly}
             checked={checked}

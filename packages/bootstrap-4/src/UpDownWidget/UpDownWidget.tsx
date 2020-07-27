@@ -26,7 +26,7 @@ const UpDownWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <Form.Group controlId={id} className="mb-0">
+    <Form.Group  className="mb-0">
       <Form.Label>
         {label}
         {label && required ? "*" : null}

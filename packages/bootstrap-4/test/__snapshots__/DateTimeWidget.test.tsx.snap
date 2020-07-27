@@ -6,7 +6,6 @@ exports[`DateTimeWidget simple 1`] = `
 >
   <label
     className="text-danger form-label"
-    htmlFor="_id"
   >
     Some simple label
     *
@@ -14,16 +13,15 @@ exports[`DateTimeWidget simple 1`] = `
   <input
     autoFocus={true}
     className="is-invalid form-control"
-    disabled={true}
+    disabled={false}
     id="_id"
-    multiple={false}
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
+    readOnly={true}
     required={true}
     type="datetime-local"
-    uiSchema={Object {}}
-    value="2020-07-23T08:18:54.834"
+    value="2020-07-27T20:49:26.592"
   />
 </div>
 `;

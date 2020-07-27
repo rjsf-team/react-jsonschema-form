@@ -74,7 +74,7 @@ const SelectWidget = ({
     onFocus(id, processValue(schema, value));
 
   return (
-    <Form.Group controlId={id}>
+    <Form.Group>
       <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
         {label || schema.title}
         {(label || schema.title) && required ? "*" : null}
