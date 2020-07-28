@@ -60,18 +60,19 @@ const SelectWidget = ({
 
   const emptyValue = multiple ? [] : "";
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
-    onChange(processValue(schema, value));
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLSelectElement>) =>
-    onBlur(id, processValue(schema, value));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLSelectElement>) =>
-    onFocus(id, processValue(schema, value));
+  function getValue(
+    event: React.FocusEvent | React.ChangeEvent | any,
+    multiple: Boolean
+  ) {
+    if (multiple) {
+      return [].slice
+        .call(event.target.options as any)
+        .filter((o: any) => o.selected)
+        .map((o: any) => o.value);
+    } else {
+      return event.target.value;
+    }
+  }
 
   return (
     <Form.Group>
@@ -91,9 +92,24 @@ const SelectWidget = ({
         readOnly={readonly}
         autoFocus={autofocus}
         className={rawErrors.length > 0 ? "is-invalid" : ""}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}>
+        onBlur={
+          onBlur &&
+          ((event: React.FocusEvent) => {
+            const newValue = getValue(event, multiple);
+            onBlur(id, processValue(schema, newValue));
+          })
+        }
+        onFocus={
+          onFocus &&
+          ((event: React.FocusEvent) => {
+            const newValue = getValue(event, multiple);
+            onFocus(id, processValue(schema, newValue));
+          })
+        }
+        onChange={(event: React.ChangeEvent) => {
+          const newValue = getValue(event, multiple);
+          onChange(processValue(schema, newValue));
+        }}>
         {!multiple && schema.default === undefined && (
           <option value="">{placeholder}</option>
         )}
@@ -102,7 +118,7 @@ const SelectWidget = ({
             Array.isArray(enumDisabled) &&
             (enumDisabled as any).indexOf(value) != -1;
           return (
-            <option key={i} value={value} disabled={disabled}>
+            <option key={i} id={label} value={value} disabled={disabled}>
               {label}
             </option>
           );
