@@ -17,7 +17,8 @@
     "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
     "test": "cross-env BABEL_ENV=test NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
     "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
+    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js",
+    "test-type": "tsc"
   },
   "lint-staged": {
     "{src,test}/**/*.js": [
@@ -105,6 +106,7 @@
     "rimraf": "^2.5.4",
     "sinon": "^9.0.2",
     "style-loader": "^0.13.1",
+    "typescript": "^3.9.7",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
