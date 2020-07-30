@@ -285,13 +285,13 @@ declare module '@rjsf/core' {
 
         export function getWidget(
             schema: JSONSchema7,
-            widget: Widget,
+            widget: Widget | string,
             registeredWidgets?: { [name: string]: Widget },
-        ): Widget | Error;
+        ): Widget;
 
         export function hasWidget(
             schema: JSONSchema7,
-            widget: Widget,
+            widget: Widget | string,
             registeredWidgets?: { [name: string]: Widget },
         ): boolean;
 
@@ -324,7 +324,7 @@ declare module '@rjsf/core' {
 
         export function isConstant(schema: JSONSchema7): boolean;
 
-        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'] | Error;
+        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'];
 
         export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
 
