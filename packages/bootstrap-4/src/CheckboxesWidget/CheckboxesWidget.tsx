@@ -59,7 +59,7 @@ const CheckboxesWidget = ({
             enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
 
           return inline ? (
-            <Form>
+            <Form key={index}>
               <Form.Check
                 required={required}
                 inline
@@ -78,7 +78,7 @@ const CheckboxesWidget = ({
               />
             </Form>
           ) : (
-            <Form>
+            <Form key={index}>
               <Form.Check
                 custom
                 required={required}

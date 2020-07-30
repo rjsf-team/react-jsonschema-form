@@ -123,18 +123,21 @@ exports[`array fields checkboxes 1`] = `
       >
         <option
           disabled={false}
+          id="a"
           value="a"
         >
           a
         </option>
         <option
           disabled={false}
+          id="b"
           value="b"
         >
           b
         </option>
         <option
           disabled={false}
+          id="c"
           value="c"
         >
           c

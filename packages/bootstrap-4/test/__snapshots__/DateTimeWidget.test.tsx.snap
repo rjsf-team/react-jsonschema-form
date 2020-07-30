@@ -21,7 +21,7 @@ exports[`DateTimeWidget simple 1`] = `
     readOnly={true}
     required={true}
     type="datetime-local"
-    value="2020-07-27T20:49:26.592"
+    value="2020-07-30T13:41:00.268"
   />
 </div>
 `;
