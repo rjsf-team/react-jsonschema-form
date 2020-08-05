@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArrayFieldTemplate simple 1`] = `
+<div>
+  <div
+    className="p-0 m-0 row"
+  >
+    <div
+      className="p-0 m-0 col"
+    >
+      <div
+        className="p-0 m-0 container-fluid"
+      >
+        <div
+          className="container"
+        >
+          <div
+            className="mt-2 row"
+          >
+            <div
+              className="col-9"
+            />
+            <div
+              className="py-4 col-lg-3 col-3 col-3"
+            >
+               
+              <button
+                className="ml-1 btn btn-primary"
+                color="primary"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  pId="10297"
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  t="1551322312294"
+                  version="1.1"
+                  viewBox="0 0 1024 1024"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs />
+                  <path
+                    d="M474 152m8 0l60 0q8 0 8 8l0 704q0 8-8 8l-60 0q-8 0-8-8l0-704q0-8 8-8Z"
+                    pId="10298"
+                  />
+                  <path
+                    d="M168 474m8 0l672 0q8 0 8 8l0 60q0 8-8 8l-672 0q-8 0-8-8l0-60q0-8 8-8Z"
+                    pId="10299"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

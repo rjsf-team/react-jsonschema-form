@@ -52,7 +52,6 @@ const TextWidget = ({
       autoFocus={autofocus}
       required={required}
       disabled={disabled || readonly}
-      name={name}
       type={type || (schema.type as string)}
       value={value || value === 0 ? value : ""}
       error={rawErrors.length > 0}

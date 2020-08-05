@@ -25,7 +25,10 @@ nav:
     - Other Internals: advanced-customization/internals.md
     - Contributing: contributing.md
   - API Reference:
-    - uiSchema: api-reference/uiSchema.md
+    - uiSchema:
+      - General Reference: api-reference/uiSchema.md
+      - Theme-Specific Reference:
+        - semantic-ui: api-reference/themes/semantic-ui/uiSchema.md
     - "&lt;Form /&gt; props": api-reference/form-props.md
 
 markdown_extensions:
