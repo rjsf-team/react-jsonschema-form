@@ -1,5 +1,7 @@
+import React from 'react';
 import { utils } from '@rjsf/core';
 import { Form as SuiForm } from "semantic-ui-react";
+import SubmitButton from '../SubmitButton';
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
 import ErrorList from "../ErrorList";
 import Fields from "../Fields";
@@ -17,6 +19,7 @@ const Theme = {
   ObjectFieldTemplate,
   tagName: SuiForm,
   widgets: { ...widgets, ...Widgets },
+  children: React.createElement(SubmitButton)
 };
 
 export default Theme;

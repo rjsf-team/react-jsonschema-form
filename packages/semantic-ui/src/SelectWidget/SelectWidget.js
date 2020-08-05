@@ -3,7 +3,6 @@ import React from "react";
 import _ from "lodash";
 import { Form } from "semantic-ui-react";
 import { utils } from '@rjsf/core';
-import PropTypes from "prop-types";
 import { getSemanticProps } from "../util";
 
 const { asNumber, guessType } = utils;
@@ -59,23 +58,37 @@ const processValue = (schema, value) => {
   return value;
 };
 
-function SelectWidget({
-  schema,
-  id,
-  options,
-  name,
-  required,
-  disabled,
-  readonly,
-  value,
-  multiple,
-  placeholder,
-  autofocus,
-  onChange,
-  onBlur,
-  onFocus,
-}) {
-  const semanticProps = getSemanticProps({ options });
+function SelectWidget(props) {
+  const {
+    schema,
+    uiSchema,
+    formContext,
+    id,
+    options,
+    name,
+    required,
+    disabled,
+    readonly,
+    value,
+    multiple,
+    placeholder,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+  } = props;
+  const semanticProps = getSemanticProps({
+    schema,
+    uiSchema,
+    formContext,
+    options,
+    defaultSchemaProps:{
+      inverted: "false",
+      selection: true,
+      scrolling: true,
+      upward: false,
+    }
+ });
   const { enumDisabled, enumOptions } = options;
   const emptyValue = multiple ? [] : "";
   const dropdownOptions = createDefaultValueOptionsForDropDown(
@@ -113,21 +126,5 @@ function SelectWidget({
     />
   );
 }
-
-SelectWidget.defaultProps = {
-  options: {
-    semantic: {
-      inverted: "false",
-      fluid: true,
-      selection: true,
-      scrolling: true,
-      upward: false,
-    },
-  },
-};
-
-SelectWidget.propTypes = {
-  options: PropTypes.object,
-};
 
 export default SelectWidget;

@@ -6,19 +6,27 @@ import { getSemanticProps } from "../util";
 function CheckboxWidget(props) {
   const {
     id,
+    label,
     value,
     required,
-    disabled,
     readonly,
-    label,
-    autofocus,
+    disabled,
     onChange,
     onBlur,
-    options,
     onFocus,
+    autofocus,
+    options,
+    schema,
+    uiSchema,
     formContext,
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options });
+  const semanticProps = getSemanticProps({
+    options,
+    formContext,
+    schema,
+    uiSchema,
+    defaultSchemaProps: {},
+   });
   const _onChange = (event, data) => onChange && onChange(data.checked);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
@@ -34,17 +42,9 @@ function CheckboxWidget(props) {
       onBlur={_onBlur}
       onFocus={_onFocus}
       required={required}
-      label={label}
+      label={label || schema.title}
     />
   );
 }
-
-CheckboxWidget.defaultProps = {
-  options: {
-    semantic: {
-      inverted: false,
-    },
-  },
-};
 
 export default CheckboxWidget;
