@@ -106,7 +106,7 @@ wrapLabel: wrap all labels in a div, for custom styling via CSS
 ```jsx
 <Form
   formContext={{
-    "semantic"={
+    "semantic" : {
       "wrapLabel": true,
       "wrapContent": true
     }
