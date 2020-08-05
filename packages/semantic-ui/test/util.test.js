@@ -1,4 +1,4 @@
-const { getSemanticProps,getSemanticErrorProps } = require("../src/util");
+import { getSemanticProps,getSemanticErrorProps } from '../src/util';
 
 
 describe("util js functions", () => {
