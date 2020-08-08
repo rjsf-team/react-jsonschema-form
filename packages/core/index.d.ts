@@ -164,6 +164,8 @@ declare module '@rjsf/core' {
         uiSchema: UiSchema;
         formContext: any;
         registry: FieldProps['registry'];
+        onDropPropertyClick: (key: string) => (event?: any) => void;
+        onKeyChange: (val?: any) => void;
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
@@ -204,12 +206,15 @@ declare module '@rjsf/core' {
         TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
         title: string;
         description: string;
+        disabled: boolean;
         properties: {
             content: React.ReactElement;
             name: string;
             disabled: boolean;
             readonly: boolean;
         }[];
+        onAddClick: (schema: JSONSchema7) => () => void;
+        readonly: boolean;
         required: boolean;
         schema: JSONSchema7;
         uiSchema: UiSchema;

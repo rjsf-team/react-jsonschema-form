@@ -17,4 +17,15 @@ describe("object fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+
+  test("additionalProperties", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      additionalProperties: true
+    };
+    const tree = renderer
+      .create(<Form schema={schema} formData={{foo: 'foo'}} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
