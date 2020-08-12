@@ -66,6 +66,7 @@ function SelectWidget(props) {
     id,
     options,
     name,
+    label,
     required,
     disabled,
     readonly,
@@ -107,10 +108,12 @@ function SelectWidget(props) {
     // eslint-disable-next-line no-shadow
     target: { value },
   }) => onFocus && onFocus(id, processValue(schema, value));
+
   return (
     <Form.Dropdown
       key={id}
       name={name}
+      label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
       value={typeof value === "undefined" ? emptyValue : value}
       disabled={disabled}
