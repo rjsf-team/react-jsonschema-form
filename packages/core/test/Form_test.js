@@ -3248,3 +3248,60 @@ describe("Form omitExtraData and liveOmit", () => {
     expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
   });
 });
+
+it("Calling onChange right after updating a Form with props formData", () => {
+  const schema = {
+    type: "array",
+    items: {
+      type: "string",
+    },
+  };
+
+  let changed = false;
+  class ArrayThatTriggersOnChangeRightAfterUpdated extends React.Component {
+    componentDidUpdate = () => {
+      if (changed) {
+        return;
+      }
+      changed = true;
+      this.props.onChange([...this.props.formData, "test"]);
+    };
+    render() {
+      const { ArrayField } = this.props.registry.fields;
+      return <ArrayField {...this.props} />;
+    }
+  }
+
+  const uiSchema = {
+    "ui:field": ArrayThatTriggersOnChangeRightAfterUpdated,
+  };
+
+  const props = {
+    schema,
+    uiSchema,
+  };
+
+  class Container extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {};
+    }
+
+    onChange = ({ formData }) => {
+      this.setState({ formData });
+    };
+
+    render() {
+      return <Form {...this.props} {...this.state} onChange={this.onChange} />;
+    }
+  }
+
+  it("doesn't cause a race condition", () => {
+    const { node } = createComponent(Container, { ...props });
+
+    Simulate.click(node.querySelector(".array-item-add button"));
+
+    expect(node.querySelector("#root_0")).to.exist;
+    expect(node.querySelector("#root_1").getAttribute("value")).to.eq("test");
+  });
+});

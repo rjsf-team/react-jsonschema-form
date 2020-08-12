@@ -287,7 +287,8 @@ export default class Form extends Component {
     }
     this.setState(
       state,
-      () => this.props.onChange && this.props.onChange(this.state)
+      () =>
+        this.props.onChange && this.props.onChange({ ...this.state, ...state })
     );
   };
 
