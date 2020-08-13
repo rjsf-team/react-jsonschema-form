@@ -27,6 +27,7 @@ import {
   mergeSchemas,
   getDisplayLabel,
   schemaRequiresTrueValue,
+  canExpand,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3712,6 +3713,54 @@ describe("utils", () => {
     });
     it("simply doesn't require true", () => {
       expect(schemaRequiresTrueValue({ type: "string" })).eql(false);
+    });
+  });
+
+  describe("canExpand()", () => {
+    it("no additional properties", () => {
+      expect(canExpand({}, {}, {})).eql(false);
+    });
+    it("has additional properties", () => {
+      const schema = {
+        additionalProperties: {
+          type: "string",
+        },
+      };
+      expect(canExpand(schema, {}, {})).eql(true);
+    });
+    it("has uiSchema expandable false", () => {
+      const schema = {
+        additionalProperties: {
+          type: "string",
+        },
+      };
+      const uiSchema = {
+        "ui:options": {
+          expandable: false,
+        },
+      };
+      expect(canExpand(schema, uiSchema, {})).eql(false);
+    });
+    it("does not exceed maxProperties", () => {
+      const schema = {
+        maxProperties: 1,
+        additionalProperties: {
+          type: "string",
+        },
+      };
+      expect(canExpand(schema, {}, {})).eql(true);
+    });
+    it("already exceeds maxProperties", () => {
+      const schema = {
+        maxProperties: 1,
+        additionalProperties: {
+          type: "string",
+        },
+      };
+      const formData = {
+        foo: "bar",
+      };
+      expect(canExpand(schema, {}, formData)).eql(false);
     });
   });
 });

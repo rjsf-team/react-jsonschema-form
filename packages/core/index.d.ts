@@ -282,6 +282,8 @@ declare module '@rjsf/core' {
 
         export const ADDITIONAL_PROPERTY_FLAG: string;
 
+        export function canExpand(schema: JSONSchema7, uiSchema: UiSchema, formData: any): boolean;
+
         export function getDefaultRegistry(): FieldProps['registry'];
 
         export function getSchemaType(schema: JSONSchema7): string;
