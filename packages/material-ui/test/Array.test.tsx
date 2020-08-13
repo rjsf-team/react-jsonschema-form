@@ -47,4 +47,24 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("null array", () => {
+    const schema: JSONSchema7 = {
+      "type": "object",
+      "properties": {
+        "array": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    };
+    const formData = {
+      "array": null
+    };
+    const tree = renderer
+      .create(<Form schema={schema} formData={formData} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
