@@ -163,6 +163,8 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        onKeyChange: (value: string) => () => void;
+        onDropPropertyClick: (value: string) => () => void;
         registry: FieldProps['registry'];
     };
 

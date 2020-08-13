@@ -4,6 +4,11 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
 import { ObjectFieldTemplateProps } from '@rjsf/core';
+import { utils } from '@rjsf/core';
+
+import AddButton from '../AddButton/AddButton';
+
+const { canExpand } = utils;
 
 const useStyles = makeStyles({
   root: {
@@ -18,8 +23,13 @@ const ObjectFieldTemplate = ({
   title,
   properties,
   required,
+  disabled,
+  readonly,
   uiSchema,
   idSchema,
+  schema,
+  formData,
+  onAddClick,
 }: ObjectFieldTemplateProps) => {
   const classes = useStyles();
 
@@ -49,6 +59,17 @@ const ObjectFieldTemplate = ({
             {element.content}
           </Grid>
         ))}
+        {canExpand(schema, uiSchema, formData) && (
+          <Grid container justify='flex-end'>
+            <Grid item={true}>
+              <AddButton
+                className='object-property-expand'
+                onClick={onAddClick(schema)}
+                disabled={disabled || readonly}
+              />
+            </Grid>
+          </Grid>
+        )}
       </Grid>
     </>
   );
