@@ -5,7 +5,6 @@
   "description": "monorepo for react-jsonschema-form and its themes",
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "bootstrap": "lerna bootstrap",
     "publish": "lerna publish",
     "changed": "lerna changed",
     "test": "lerna run test",
@@ -27,7 +26,7 @@
     "tabWidth": 2
   },
   "license": "Apache-2.0",
-  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme",
+  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
     "husky": "^3.1.0"
   },

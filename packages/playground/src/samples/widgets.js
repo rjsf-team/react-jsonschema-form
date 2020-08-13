@@ -52,6 +52,9 @@ export default {
             type: "string",
             title: "textarea",
           },
+          placeholder: {
+            type: "string",
+          },
           color: {
             type: "string",
             title: "color picker",
@@ -107,6 +110,9 @@ export default {
         "ui:options": {
           rows: 5,
         },
+      },
+      placeholder: {
+        "ui:placeholder": "This is a placeholder",
       },
       color: {
         "ui:widget": "color",

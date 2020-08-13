@@ -214,14 +214,7 @@ class ObjectField extends Component {
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, rootSchema, formData);
 
-    // If this schema has a title defined, but the user has set a new key/label, retain their input.
-    let title;
-    if (this.state.wasPropertyKeyModified) {
-      title = name;
-    } else {
-      title = schema.title === undefined ? name : schema.title;
-    }
-
+    const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
     try {

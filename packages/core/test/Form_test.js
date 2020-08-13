@@ -842,7 +842,7 @@ describeRepeated("Form common", createFormComponent => {
   });
 
   describe("Change handler", () => {
-    it("should call provided change handler on form state change", () => {
+    it("should call provided change handler on form state change with schema and uiSchema", () => {
       const schema = {
         type: "object",
         properties: {
@@ -851,12 +851,17 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
+      const uiSchema = {
+        foo: { "ui:field": "textarea" },
+      };
+
       const formData = {
         foo: "",
       };
       const onChange = sandbox.spy();
       const { node } = createFormComponent({
         schema,
+        uiSchema,
         formData,
         onChange,
       });
@@ -869,6 +874,8 @@ describeRepeated("Form common", createFormComponent => {
         formData: {
           foo: "new",
         },
+        schema,
+        uiSchema,
       });
     });
   });
@@ -1326,7 +1333,7 @@ describeRepeated("Form common", createFormComponent => {
             target: { value: "short" },
           });
           sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: undefined,
+            errorSchema: {},
           });
         });
 
@@ -1427,7 +1434,7 @@ describeRepeated("Form common", createFormComponent => {
           });
 
           sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: undefined,
+            errorSchema: {},
           });
         });
       });
@@ -1972,7 +1979,7 @@ describeRepeated("Form common", createFormComponent => {
   });
 
   describe("Schema and formData updates", () => {
-    // https://github.com/mozilla-services/react-jsonschema-form/issues/231
+    // https://github.com/rjsf-team/react-jsonschema-form/issues/231
     const schema = {
       type: "object",
       properties: {
@@ -2808,6 +2815,53 @@ describe("Form omitExtraData and liveOmit", () => {
       );
     });
 
+    it("should get field marked as additionalProperties", () => {
+      const schema = {};
+
+      const formData = {
+        extra: {
+          foo: "bar",
+        },
+        level1: {
+          level2: "test",
+          extra: "foo",
+          mixedMap: {
+            namedField: "foo",
+            key1: "val1",
+          },
+        },
+        level1a: 1.23,
+      };
+
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const pathSchema = {
+        $name: "",
+        level1: {
+          $name: "level1",
+          level2: { $name: "level1.level2" },
+          mixedMap: {
+            $name: "level1.mixedMap",
+            __rjsf_additionalProperties: true,
+            namedField: { $name: "level1.mixedMap.namedField" }, // this name should not be returned, as the root object paths should be returned for objects marked with additionalProperties
+          },
+        },
+        level1a: {
+          $name: "level1a",
+        },
+      };
+
+      const fieldNames = comp.getFieldNames(pathSchema, formData);
+      expect(fieldNames.sort()).eql(
+        ["level1a", "level1.level2", "level1.mixedMap"].sort()
+      );
+    });
+
     it("should get field names from pathSchema with array", () => {
       const schema = {};
 
@@ -2982,6 +3036,63 @@ describe("Form omitExtraData and liveOmit", () => {
 
     sinon.assert.calledWithMatch(onChange.lastCall, {
       formData: { foo: "foobar" },
+    });
+  });
+
+  it("should not omit additionalProperties on change with omitExtraData=true and liveOmit=true", () => {
+    const omitExtraData = true;
+    const liveOmit = true;
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+        bar: { type: "string" },
+        add: {
+          type: "object",
+          additionalProperties: {},
+        },
+      },
+    };
+    const formData = { foo: "foo", baz: "baz", add: { prop: 123 } };
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData,
+      omitExtraData,
+      liveOmit,
+    });
+
+    Simulate.change(node.querySelector("#root_foo"), {
+      target: { value: "foobar" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "foobar", add: { prop: 123 } },
+    });
+  });
+
+  it("should rename formData key if key input is renamed in a nested object with omitExtraData=true and liveOmit=true", () => {
+    const { node, onChange } = createFormComponent(
+      {
+        schema: {
+          type: "object",
+          properties: {
+            nested: {
+              additionalProperties: { type: "string" },
+            },
+          },
+        },
+        formData: { nested: { key1: "value" } },
+      },
+      { omitExtraData: true, liveOmit: true }
+    );
+
+    const textNode = node.querySelector("#root-key");
+    Simulate.blur(textNode, {
+      target: { value: "key1new" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { nested: { key1new: "value" } },
     });
   });
 

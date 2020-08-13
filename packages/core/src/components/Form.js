@@ -196,7 +196,12 @@ export default class Form extends Component {
       Object.keys(_obj).forEach(key => {
         if (typeof _obj[key] === "object") {
           let newPaths = paths.map(path => `${path}.${key}`);
-          getAllPaths(_obj[key], acc, newPaths);
+          // If an object is marked with additionalProperties, all its keys are valid
+          if (_obj[key].__rjsf_additionalProperties && _obj[key].$name !== "") {
+            acc.push(_obj[key].$name);
+          } else {
+            getAllPaths(_obj[key], acc, newPaths);
+          }
         } else if (key === "$name" && _obj[key] !== "") {
           paths.forEach(path => {
             path = path.replace(/^\./, "");
@@ -282,7 +287,7 @@ export default class Form extends Component {
     }
     this.setState(
       state,
-      () => this.props.onChange && this.props.onChange(state)
+      () => this.props.onChange && this.props.onChange(this.state)
     );
   };
 

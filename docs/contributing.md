@@ -6,7 +6,7 @@ When developing, run the following from the root-level directory:
 
 ```bash
 npm install
-lerna bootstrap
+npm run build
 npm start
 ```
 

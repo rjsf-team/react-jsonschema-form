@@ -14,11 +14,11 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 
     The `anyOf` and `oneOf` keywords are supported; however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
 
-    You can also use `oneOf` with [schema dependencies](dependencies.md#schema-dependencies) to dynamically add schema properties based on input data.
+    You can also use `oneOf` with [schema dependencies](../usage/dependencies.md) to dynamically add schema properties based on input data.
 
-    The `allOf` keyword is supported; it uses [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) to merge subschemas to render the final combined schema in the form. When these subschemas are incompatible, though (or if the library has an error merging it), the `allOf` keyword is dropped from the schema. 
+    The `allOf` keyword is supported; it uses [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) to merge subschemas to render the final combined schema in the form. When these subschemas are incompatible, though (or if the library has an error merging it), the `allOf` keyword is dropped from the schema.
 
-* `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/rjsf-team/react-jsonschema-form/issues/848) [#902](https://github.com/mozilla-services/rjsf-team/issues/902) [#992](https://github.com/mozilla-services/rjsf-team/issues/992)
+* `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/rjsf-team/react-jsonschema-form/issues/848) [#902](https://github.com/rjsf-team/rjsf-team/issues/902) [#992](https://github.com/rjsf-team/rjsf-team/issues/992)
 
 ## Handling of schema defaults
 
@@ -32,9 +32,9 @@ Check out the defaults example on the [live playground](https://rjsf-team.github
 
 There are three different cases which need to be considered for the merging. Objects, arrays and scalar values. This library always deeply merges any defaults with the existing form data for objects.
 
-This are the rules which are used when injecting the defaults: 
+This are the rules which are used when injecting the defaults:
 
-- When the is a scalar in the form data, nothing is changed. 
+- When there is a scalar in the form data, nothing is changed.
 - When the value is `undefined` in the form data, the default is created in the form data.
 - When the value is an object in the form data, the defaults are deeply merged into the form data, using the rules defined here for the deep merge.
 - Then the value is an array in the form data, defaults are only injected in existing array items. No new array items will be created, even if the schema has minItems or additional items defined.

@@ -15,6 +15,7 @@ declare module '@rjsf/core' {
         ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
         autoComplete?: string;
         autocomplete?: string; // deprecated
+        children?: React.ReactNode;
         className?: string;
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
@@ -98,6 +99,7 @@ declare module '@rjsf/core' {
         > {
         id: string;
         schema: JSONSchema7;
+        uiSchema: UiSchema;
         value: any;
         required: boolean;
         disabled: boolean;
@@ -161,6 +163,7 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
@@ -179,8 +182,9 @@ declare module '@rjsf/core' {
             hasRemove: boolean;
             hasToolbar: boolean;
             index: number;
-            onDropIndexClick: (index: number) => (event: any) => void;
-            onReorderClick: (index: number, newIndex: number) => (event: any) => void;
+            onAddIndexClick: (index: number) => (event?: any) => void;
+            onDropIndexClick: (index: number) => (event?: any) => void;
+            onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
             readonly: boolean;
             key: string;
         }[];
@@ -200,18 +204,22 @@ declare module '@rjsf/core' {
         TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
         title: string;
         description: string;
+        disabled: boolean;
         properties: {
             content: React.ReactElement;
             name: string;
             disabled: boolean;
             readonly: boolean;
         }[];
+        onAddClick: (schema: JSONSchema7) => () => void;
+        readonly: boolean;
         required: boolean;
         schema: JSONSchema7;
         uiSchema: UiSchema;
         idSchema: IdSchema;
         formData: T;
         formContext: any;
+        registry: FieldProps['registry'];
     };
 
     export type AjvError = {
@@ -280,13 +288,13 @@ declare module '@rjsf/core' {
 
         export function getWidget(
             schema: JSONSchema7,
-            widget: Widget,
+            widget: Widget | string,
             registeredWidgets?: { [name: string]: Widget },
-        ): Widget | Error;
+        ): Widget;
 
         export function hasWidget(
             schema: JSONSchema7,
-            widget: Widget,
+            widget: Widget | string,
             registeredWidgets?: { [name: string]: Widget },
         ): boolean;
 
@@ -307,6 +315,8 @@ declare module '@rjsf/core' {
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
 
+        export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
+
         export function isObject(thing: any): boolean;
 
         export function mergeObjects(obj1: object, obj2: object, concatArrays?: boolean): object;
@@ -317,7 +327,7 @@ declare module '@rjsf/core' {
 
         export function isConstant(schema: JSONSchema7): boolean;
 
-        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'] | Error;
+        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'];
 
         export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
 
@@ -387,6 +397,10 @@ declare module '@rjsf/core' {
 
         export function toDateString(dateObject: DateObject, time?: boolean): string;
 
+        export function utcToLocal(jsonDate: string): string;
+
+        export function localToUTC(dateString: string): Date;
+
         export function pad(num: number, size: number): string;
 
         export function setState(instance: React.Component, state: any, callback: Function): void;
@@ -406,6 +420,8 @@ declare module '@rjsf/core' {
             options: JSONSchema7[],
             definitions: FieldProps['registry']['definitions'],
         ): number;
+
+        export function schemaRequiresTrueValue(schema: JSONSchema7): boolean;
     }
 }
 

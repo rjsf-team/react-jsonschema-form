@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/playground",
-  "version": "2.0.1",
+  "version": "2.3.0",
   "description": "rjsf playground",
   "private": true,
   "scripts": {
@@ -37,14 +37,24 @@
     "react": ">=16"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.2.1",
     "@babel/runtime-corejs2": "^7.4.5",
+    "@fluentui/react": "^7.121.5",
     "@material-ui/core": "^4.9.4",
-    "@rjsf/core": "^2.0.1",
-    "@rjsf/material-ui": "^2.0.1",
+    "@rjsf/antd": "^2.3.0",
+    "@rjsf/bootstrap-4": "^2.3.0",
+    "@rjsf/core": "^2.3.0",
+    "@rjsf/fluent-ui": "^2.3.0",
+    "@rjsf/material-ui": "^2.3.0",
+    "@rjsf/semantic-ui": "^2.3.0",
     "ajv": "^6.7.0",
+    "antd": "^4.3.5",
     "core-js": "^2.5.7",
+    "dayjs": "^1.8.28",
     "json-schema-merge-allof": "^0.6.0",
     "jss": "^10.0.3",
+    "less": "^3.11.3",
+    "less-loader": "^5.0.0",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react-app-polyfill": "^1.0.4",
@@ -107,7 +117,7 @@
     "sass": "^1.23.7",
     "sass-loader": "^7.3.1",
     "sinon": "^7.5.0",
-    "style-loader": "^0.13.1",
+    "style-loader": "^1.2.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
@@ -119,7 +129,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
   "author": "Nicolas Perriault <nperriault@mozilla.com>",
   "keywords": [
@@ -128,7 +138,7 @@
     "json-schema"
   ],
   "license": "Apache-2.0",
-  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme",
+  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
   }

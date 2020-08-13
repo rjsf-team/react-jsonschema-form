@@ -1,0 +1,102 @@
+{
+  "name": "@rjsf/antd",
+  "version": "2.3.0",
+  "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "scripts": {
+    "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es",
+    "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/cjs",
+    "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/es",
+    "dist:build:umd": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
+    "clean": "rimraf dist",
+    "lint": "eslint src test",
+    "start": "concurrently \"npm:build:* -- --watch\"",
+    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest"
+  },
+  "files": [
+    "dist"
+  ],
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+    }
+  },
+  "peerDependencies": {
+    "@ant-design/icons": "^4.0.0",
+    "@babel/runtime-corejs2": "^7.10.3",
+    "@rjsf/core": "^2.0.0",
+    "antd": "^4.0.0",
+    "antd-dayjs-webpack-plugin": "1.0.0",
+    "core-js": "^2.5.7",
+    "dayjs": "^1.8.0",
+    "lodash": "^4.17.15",
+    "react": ">=16"
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^4.0.0",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.10.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.4.4",
+    "@babel/runtime-corejs2": "^7.10.3",
+    "@rjsf/core": "^2.3.0",
+    "antd": "^4.0.0",
+    "atob": "^2.0.3",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
+    "concurrently": "^5.1.0",
+    "core-js": "^2.5.7",
+    "cross-env": "^2.0.1",
+    "css-loader": "^3.2.0",
+    "dayjs": "^1.8.0",
+    "eslint": "^4.9.0",
+    "eslint-config-react-app": "^2.0.1",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.4.0",
+    "jest": "24.9.0",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "lodash": "^4.17.15",
+    "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.4",
+    "react-dom": "^16.8.6",
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-hot-middleware": "^2.13.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "keywords": [
+    "antd",
+    "ant-design",
+    "react",
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "rjsf-antd"
+  ],
+  "author": "Delyan Ruskov <d.ruskov@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/rjsf-team/react-jsonschema-form/issues"
+  },
+  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
+  "publishConfig": {
+    "access": "public"
+  }
+}

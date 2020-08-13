@@ -59,7 +59,26 @@ module.exports = {
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "monaco-editor"),
         ],
-      }
+      },
+      {
+        test: /\.less$/,
+        include: /node_modules[\\/]antd/,
+        use: [
+          {
+            loader: "style-loader",
+            options: {
+              insert: "#antd-styles-iframe"
+            }
+          },
+          "css-loader",
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
+          },
+        ],
+      },
     ]
   }
 };
