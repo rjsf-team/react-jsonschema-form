@@ -74,10 +74,11 @@ const DefaultArrayItem = (props: any) => {
     paddingLeft: 6,
     paddingRight: 6,
     fontWeight: 'bold',
+    minWidth: 0
   };
   return (
     <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs>
+      <Grid item={true} xs style={{ overflow: "auto" }}>
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{props.children}</Box>

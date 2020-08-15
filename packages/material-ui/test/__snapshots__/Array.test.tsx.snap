@@ -208,6 +208,11 @@ exports[`array fields fixed array 1`] = `
           >
             <div
               className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+              style={
+                Object {
+                  "overflow": "auto",
+                }
+              }
             >
               <div
                 className="MuiBox-root MuiBox-root-180"
@@ -311,6 +316,11 @@ exports[`array fields fixed array 1`] = `
           >
             <div
               className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+              style={
+                Object {
+                  "overflow": "auto",
+                }
+              }
             >
               <div
                 className="MuiBox-root MuiBox-root-215"

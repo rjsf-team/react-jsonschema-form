@@ -8,10 +8,10 @@ import Remove from "@material-ui/icons/Remove";
 import { IconButtonProps as MuiIconButtonProps } from "@material-ui/core/IconButton";
 
 const mappings: any = {
-  remove: <Remove />,
-  plus: <Add />,
-  "arrow-up": <ArrowUpward />,
-  "arrow-down": <ArrowDownward />,
+  remove: <Remove fontSize="small" />,
+  plus: <Add fontSize="small" />,
+  "arrow-up": <ArrowUpward fontSize="small" />,
+  "arrow-down": <ArrowDownward fontSize="small" />,
 };
 
 type IconButtonProps = MuiIconButtonProps & {
