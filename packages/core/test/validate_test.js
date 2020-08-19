@@ -335,11 +335,11 @@ describe("Validation", () => {
           },
         })
       ).eql([
-        { stack: "root: err1" },
-        { stack: "root: err2" },
-        { stack: "b: err3" },
-        { stack: "b: err4" },
-        { stack: "c: err5" },
+        { property: ".", stack: "root: err1" },
+        { property: ".", stack: "root: err2" },
+        { property: ".a.b", stack: "b: err3" },
+        { property: ".a.b", stack: "b: err4" },
+        { property: ".c", stack: "c: err5" },
       ]);
     });
   });
@@ -502,7 +502,7 @@ describe("Validation", () => {
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "root: Invalid" },
+          { property: ".", stack: "root: Invalid" },
         ]);
       });
 
@@ -529,7 +529,7 @@ describe("Validation", () => {
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           errorSchema: { __errors: ["Invalid"] },
-          errors: [{ stack: "root: Invalid" }],
+          errors: [{ property: ".", stack: "root: Invalid" }],
           formData: "1234",
         });
       });
@@ -611,8 +611,11 @@ describe("Validation", () => {
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "pass2: should NOT be shorter than 3 characters" },
-          { stack: "pass2: Passwords don't match" },
+          {
+            property: ".pass2",
+            stack: "pass2: should NOT be shorter than 3 characters",
+          },
+          { property: ".pass2", stack: "pass2: Passwords don't match" },
         ]);
       });
 
@@ -650,7 +653,7 @@ describe("Validation", () => {
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "pass2: Passwords don't match" },
+          { property: ".0.pass2", stack: "pass2: Passwords don't match" },
         ]);
       });
 
@@ -678,7 +681,7 @@ describe("Validation", () => {
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "root: Forbidden value: bbb" },
+          { property: ".", stack: "root: Forbidden value: bbb" },
         ]);
       });
     });

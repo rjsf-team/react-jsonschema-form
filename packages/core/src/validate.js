@@ -80,13 +80,16 @@ function toErrorSchema(errors) {
   }, {});
 }
 
-export function toErrorList(errorSchema, fieldName = "root") {
-  // XXX: We should transform fieldName as a full field path string.
+export function toErrorList(errorSchema, fieldPath = []) {
+  const fieldName =
+    fieldPath.length > 0 ? fieldPath[fieldPath.length - 1] : "root";
+
   let errorList = [];
   if ("__errors" in errorSchema) {
     errorList = errorList.concat(
       errorSchema.__errors.map(stack => {
         return {
+          property: "." + fieldPath.join("."),
           stack: `${fieldName}: ${stack}`,
         };
       })
@@ -94,7 +97,7 @@ export function toErrorList(errorSchema, fieldName = "root") {
   }
   return Object.keys(errorSchema).reduce((acc, key) => {
     if (key !== "__errors") {
-      acc = acc.concat(toErrorList(errorSchema[key], key));
+      acc = acc.concat(toErrorList(errorSchema[key], [...fieldPath, key]));
     }
     return acc;
   }, errorList);
