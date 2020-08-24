@@ -218,10 +218,10 @@ function computeDefaults(
     );
   } else if ("oneOf" in schema) {
     schema =
-      schema.oneOf[getMatchingOption(undefined, schema.oneOf, rootSchema)];
+      schema.oneOf[getMatchingOption(undefined, schema.oneOf, rootSchema) || 0];
   } else if ("anyOf" in schema) {
     schema =
-      schema.anyOf[getMatchingOption(undefined, schema.anyOf, rootSchema)];
+      schema.anyOf[getMatchingOption(undefined, schema.anyOf, rootSchema) || 0];
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.
@@ -722,12 +722,12 @@ function resolveDependencies(schema, rootSchema, formData) {
   if ("oneOf" in resolvedSchema) {
     resolvedSchema =
       resolvedSchema.oneOf[
-        getMatchingOption(formData, resolvedSchema.oneOf, rootSchema)
+        getMatchingOption(formData, resolvedSchema.oneOf, rootSchema) || 0
       ];
   } else if ("anyOf" in resolvedSchema) {
     resolvedSchema =
       resolvedSchema.anyOf[
-        getMatchingOption(formData, resolvedSchema.anyOf, rootSchema)
+        getMatchingOption(formData, resolvedSchema.anyOf, rootSchema) || 0
       ];
   }
   return processDependencies(
@@ -1226,7 +1226,8 @@ export function getMatchingOption(formData, options, rootSchema) {
       return i;
     }
   }
-  return 0;
+
+  return undefined;
 }
 
 // Check to see if a schema specifies that a value must be true

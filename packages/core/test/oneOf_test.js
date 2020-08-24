@@ -187,6 +187,13 @@ describe("oneOf", () => {
 
     expect(node.querySelectorAll("#root_foo")).to.have.length.of(0);
     expect(node.querySelectorAll("#root_bar")).to.have.length.of(1);
+
+    Simulate.change($select, {
+      target: { value: $select.options[0].value },
+    });
+
+    expect(node.querySelectorAll("#root_foo")).to.have.length.of(1);
+    expect(node.querySelectorAll("#root_bar")).to.have.length.of(0);
   });
 
   it("should handle change events", () => {
