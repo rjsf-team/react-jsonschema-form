@@ -46,7 +46,7 @@ class AnyOfField extends Component {
     const { rootSchema } = this.props.registry;
 
     let option = getMatchingOption(formData, options, rootSchema);
-    if (option != undefined) {
+    if (option !== undefined) {
       return option;
     }
     // If the form data matches none of the options, use the currently selected
