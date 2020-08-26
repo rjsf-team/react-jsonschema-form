@@ -62,6 +62,7 @@ export default class Form extends Component {
     if (!deepEquals(state.lastProps, props)) {
       return getStateFromProps(props, props.formData, state);
     }
+    return null;
   }
 
   shouldComponentUpdate(nextProps, nextState) {
