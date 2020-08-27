@@ -64,7 +64,7 @@ const FieldTemplate = ({
       ) : (
         <Form.Item
           colon={colon}
-          // extra={!!rawDescription && description}
+          extra={!!rawDescription && rawDescription}
           hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
           help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
           htmlFor={id}
