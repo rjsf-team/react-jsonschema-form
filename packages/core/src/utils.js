@@ -60,6 +60,22 @@ const widgetMap = {
   },
 };
 
+export function canExpand(schema, uiSchema, formData) {
+  if (!schema.additionalProperties) {
+    return false;
+  }
+  const { expandable } = getUiOptions(uiSchema);
+  if (expandable === false) {
+    return expandable;
+  }
+  // if ui:options.expandable was not explicitly set to false, we can add
+  // another property if we have not exceeded maxProperties yet
+  if (schema.maxProperties !== undefined) {
+    return Object.keys(formData).length < schema.maxProperties;
+  }
+  return true;
+}
+
 export function getDefaultRegistry() {
   return {
     fields: require("./components/fields").default,
