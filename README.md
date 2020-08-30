@@ -31,6 +31,7 @@
 
 - [Ant Design](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/antd)
 - [Bootstrap 3](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/core)
+- [Bootstrap 4](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/bootstrap-4)
 - [Fluent UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/fluent-ui)
 - [Material UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/material-ui)
 - [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/semantic-ui)

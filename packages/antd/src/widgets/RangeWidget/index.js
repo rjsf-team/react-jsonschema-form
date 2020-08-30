@@ -2,7 +2,7 @@
 import React from 'react';
 
 import { utils } from '@rjsf/core';
-import { Slider } from 'antd';
+import Slider from 'antd/lib/slider';
 
 const { rangeSpec } = utils;
 

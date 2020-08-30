@@ -3,11 +3,13 @@ import classNames from 'classnames';
 import _ from 'lodash';
 
 import { utils } from '@rjsf/core';
-import { Button, Col, Row } from 'antd';
+import Button from 'antd/lib/button';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
 import { withConfigConsumer } from 'antd/lib/config-provider/context';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
 
-const { getUiOptions } = utils;
+const { canExpand } = utils;
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: '8px',
@@ -76,23 +78,6 @@ const ObjectFieldTemplate = ({
   const filterHidden = (element) =>
     element.content.props.uiSchema['ui:widget'] !== 'hidden';
 
-  const canExpand = () => {
-    if (!schema.additionalProperties) {
-      return false;
-    }
-
-    const { expandable } = getUiOptions(uiSchema);
-    if (expandable === false) {
-      return expandable;
-    }
-
-    if (schema.maxProperties !== undefined) {
-      return Object.keys(formData).length < schema.maxProperties;
-    }
-
-    return true;
-  };
-
   return (
     <fieldset id={idSchema.$id}>
       <Row gutter={rowGutter}>
@@ -121,7 +106,7 @@ const ObjectFieldTemplate = ({
         ))}
       </Row>
 
-      {canExpand() && (
+      {canExpand(schema, uiSchema, formData) && (
         <Col span={24}>
           <Row gutter={rowGutter} justify="end">
             <Col flex="192px">

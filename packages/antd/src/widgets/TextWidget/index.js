@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Input, InputNumber } from 'antd';
+import Input from 'antd/lib/input';
+import InputNumber from 'antd/lib/input-number';
 
 const INPUT_STYLE = {
   width: '100%',

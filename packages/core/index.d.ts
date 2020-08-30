@@ -163,6 +163,8 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        onKeyChange: (value: string) => () => void;
+        onDropPropertyClick: (value: string) => () => void;
         registry: FieldProps['registry'];
     };
 
@@ -204,12 +206,15 @@ declare module '@rjsf/core' {
         TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
         title: string;
         description: string;
+        disabled: boolean;
         properties: {
             content: React.ReactElement;
             name: string;
             disabled: boolean;
             readonly: boolean;
         }[];
+        onAddClick: (schema: JSONSchema7) => () => void;
+        readonly: boolean;
         required: boolean;
         schema: JSONSchema7;
         uiSchema: UiSchema;
@@ -279,19 +284,21 @@ declare module '@rjsf/core' {
 
         export const ADDITIONAL_PROPERTY_FLAG: string;
 
+        export function canExpand(schema: JSONSchema7, uiSchema: UiSchema, formData: any): boolean;
+
         export function getDefaultRegistry(): FieldProps['registry'];
 
         export function getSchemaType(schema: JSONSchema7): string;
 
         export function getWidget(
             schema: JSONSchema7,
-            widget: Widget,
+            widget: Widget | string,
             registeredWidgets?: { [name: string]: Widget },
-        ): Widget | Error;
+        ): Widget;
 
         export function hasWidget(
             schema: JSONSchema7,
-            widget: Widget,
+            widget: Widget | string,
             registeredWidgets?: { [name: string]: Widget },
         ): boolean;
 
@@ -324,7 +331,7 @@ declare module '@rjsf/core' {
 
         export function isConstant(schema: JSONSchema7): boolean;
 
-        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'] | Error;
+        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'];
 
         export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
 
@@ -417,6 +424,8 @@ declare module '@rjsf/core' {
             options: JSONSchema7[],
             definitions: FieldProps['registry']['definitions'],
         ): number;
+
+        export function schemaRequiresTrueValue(schema: JSONSchema7): boolean;
     }
 }
 

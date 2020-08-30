@@ -6,7 +6,7 @@ The value of this prop will be passed to the `accept-charset` [HTML attribute on
 
 ## action
 
-The value of this prop will be passed to the `action` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-action). 
+The value of this prop will be passed to the `action` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-action).
 
 Note that this just renders the `action` attribute in the HTML markup. There is no real network request being sent to this `action` on submit. Instead, react-jsonschema-form catches the submit event with `event.preventDefault()` and then calls the [`onSubmit`](#onSubmit) function, where you could send a request programmatically with `fetch` or similar.
 
@@ -16,7 +16,7 @@ This prop allows you to validate the form data against another JSON Schema meta 
 
 ## ArrayFieldTemplate
 
-React component used to customize how alls arrays are rendered on the form. See [Custom Templates](custom-templates.md) for more information.
+React component used to customize how alls arrays are rendered on the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
 
 ## autoComplete
 
@@ -57,7 +57,7 @@ This prop allows you to define custom formats for validation. See [Validation](.
 
 ## disabled
 
-It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form. 
+It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
 
 ```jsx
 const schema = {
@@ -65,12 +65,12 @@ const schema = {
 };
 
 render((
-  <Form schema={schema} 
+  <Form schema={schema}
         disabled />
 ), document.getElementById("app"));
 ```
 
-If you just want to disable some of the fields, see the `ui:disabled` parameter in `uiSchema`. 
+If you just want to disable some of the fields, see the `ui:disabled` parameter in `uiSchema`.
 
 ## enctype
 
@@ -78,7 +78,7 @@ The value of this prop will be passed to the `enctype` [HTML attribute on the fo
 
 ## extraErrors
 
-This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it can be used to implement asynchronous validation. See [Validation](../usage/validation.md) for more information. 
+This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it can be used to implement asynchronous validation. See [Validation](../usage/validation.md) for more information.
 
 ## ErrorList
 
@@ -147,7 +147,7 @@ If set to true, turns off all validation. Set to `false` by default.
 
 ## ObjectFieldTemplate
 
-React component used to customize how all objects are rendered in the form. See [Custom Templates](custom-templates.md) for more information.
+React component used to customize how all objects are rendered in the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
 
 ## omitExtraData
 
@@ -201,7 +201,7 @@ render((
 
 ## schema
 
-Form schema. We support JSON schema draft-07 by default. See [Schema Reference](api-reference-schema.md) for more information.
+Form schema. We support JSON schema draft-07 by default. See [Schema Reference]((https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
 
 ## showErrorList
 
@@ -238,7 +238,7 @@ A function can be passed to this prop in order to make modifications to the defa
 
 ## uiSchema
 
-Form uiSchema. See [uiSchema Reference](api-reference-uischema.md) for more information.
+Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
 ## validate
 
