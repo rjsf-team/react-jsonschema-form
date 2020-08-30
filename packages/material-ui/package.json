@@ -2,7 +2,7 @@
   "name": "@rjsf/material-ui",
   "version": "2.3.0",
   "main": "dist/index.js",
-  "module": "dist/rjsf-material-ui.esm.js",
+  "module": "dist/material-ui.esm.js",
   "typings": "dist/index.d.ts",
   "description": "Material UI theme, fields and widgets for react-jsonschema-form",
   "files": [
