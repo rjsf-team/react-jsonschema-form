@@ -588,7 +588,6 @@ exports[`single fields select field 1`] = `
         className="custom-select"
         disabled={false}
         id="root"
-        name="nodejs"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
