@@ -2,7 +2,7 @@
   "name": "@rjsf/fluent-ui",
   "version": "2.3.0",
   "main": "dist/index.js",
-  "module": "dist/rjsf-fluent-ui.esm.js",
+  "module": "dist/fluent-ui.esm.js",
   "typings": "dist/index.d.ts",
   "description": "Fluent UI theme, fields and widgets for react-jsonschema-form",
   "files": [

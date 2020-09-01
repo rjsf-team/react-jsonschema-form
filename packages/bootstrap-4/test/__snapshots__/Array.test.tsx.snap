@@ -113,7 +113,6 @@ exports[`array fields checkboxes 1`] = `
         disabled={false}
         id="root"
         multiple={true}
-        name="nodejs"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}

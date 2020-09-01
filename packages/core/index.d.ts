@@ -163,6 +163,8 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        onKeyChange: (value: string) => () => void;
+        onDropPropertyClick: (value: string) => () => void;
         registry: FieldProps['registry'];
     };
 
@@ -281,6 +283,8 @@ declare module '@rjsf/core' {
     export module utils {
 
         export const ADDITIONAL_PROPERTY_FLAG: string;
+
+        export function canExpand(schema: JSONSchema7, uiSchema: UiSchema, formData: any): boolean;
 
         export function getDefaultRegistry(): FieldProps['registry'];
 
