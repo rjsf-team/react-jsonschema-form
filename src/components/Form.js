@@ -45,12 +45,10 @@ export default class Form extends Component {
         errors: state.errors || [],
         errorSchema: state.errorSchema || {}
       };
-    const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
     return {
       status: "initial",
       schema,
       uiSchema,
-      idSchema,
       formData,
       edit,
       errors,
@@ -138,10 +136,13 @@ export default class Form extends Component {
       autocomplete,
       enctype,
       acceptcharset,
-      noHtml5Validate
+      noHtml5Validate,
+      idSchema: originalIdSchema
     } = this.props;
 
-    const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
+    const {schema, uiSchema, formData, errorSchema} = this.state;
+    const idSchema = originalIdSchema || toIdSchema(schema, uiSchema["ui:rootFieldId"], schema.definitions);
+
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
 

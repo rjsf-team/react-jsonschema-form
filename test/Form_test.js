@@ -1123,7 +1123,7 @@ describe("Form", () => {
     });
   });
 
-  describe.only("ID generation", () => {
+  describe("ID generation", () => {
     const schema = {
       type: "object",
       properties: {
@@ -1148,6 +1148,19 @@ describe("Form", () => {
       expect(node.querySelector("input#root_foo")).not.to.be.null;
       expect(node.querySelector("input#root_bar")).not.to.be.null;
     });
+
+    it("should allow an optional idSchema prop to determine the name of the ids",()=> {
+      const  idSchema = {
+        "$id": "root",
+        foo: {"$id": "something_else"},
+        bar: {"$id": "surprise"},
+      };
+
+      const {node} = createFormComponent({...formProps, idSchema});
+
+      expect(node.querySelector("input#something_else")).not.to.be.null;
+      expect(node.querySelector("input#surprise")).not.to.be.null;
+    })
   });
 
   describe("Attributes", () => {
