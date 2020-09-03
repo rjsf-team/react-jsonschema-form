@@ -1123,6 +1123,34 @@ describe("Form", () => {
     });
   });
 
+  describe("ID generation", () => {
+
+    it("should generate ids based on the schema properties", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            minLength: 4
+          },
+          bar: {
+            type: "string"
+          },
+        },
+      };
+
+      const formProps = {
+        schema,
+        liveValidate: true,
+      };
+
+      const {node} = createFormComponent(formProps);
+
+      expect(node.querySelector("input#root_foo")).not.to.be.null;
+      expect(node.querySelector("input#root_bar")).not.to.be.null;
+    });
+  });
+
   describe("Attributes", () => {
     const formProps = {
       schema: {},
