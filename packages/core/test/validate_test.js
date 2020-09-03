@@ -249,7 +249,7 @@ describe("Validation", () => {
       it("should return an error list", () => {
         expect(errors).to.have.length.of(2);
         expect(errors[0].stack).eql(".numberWithMinimum should be >= 5");
-        expect(errors[1].stack).eql("pass2: passwords don't match.");
+        expect(errors[1].stack).eql(".pass2 passwords don't match.");
       });
 
       it("should return an errorSchema", () => {
@@ -339,11 +339,11 @@ describe("Validation", () => {
           },
         })
       ).eql([
-        { property: ".", stack: "root: err1" },
-        { property: ".", stack: "root: err2" },
-        { property: ".a.b", stack: "b: err3" },
-        { property: ".a.b", stack: "b: err4" },
-        { property: ".c", stack: "c: err5" },
+        { property: ".", stack: ". err1" },
+        { property: ".", stack: ". err2" },
+        { property: ".a.b", stack: ".a.b err3" },
+        { property: ".a.b", stack: ".a.b err4" },
+        { property: ".c", stack: ".c err5" },
       ]);
     });
   });
@@ -506,7 +506,7 @@ describe("Validation", () => {
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { property: ".", stack: "root: Invalid" },
+          { property: ".", stack: ". Invalid" },
         ]);
       });
 
@@ -533,7 +533,7 @@ describe("Validation", () => {
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           errorSchema: { __errors: ["Invalid"] },
-          errors: [{ property: ".", stack: "root: Invalid" }],
+          errors: [{ property: ".", stack: ". Invalid" }],
           formData: "1234",
         });
       });
@@ -625,7 +625,7 @@ describe("Validation", () => {
           },
           {
             property: ".pass2",
-            stack: "pass2: Passwords don't match",
+            stack: ".pass2 Passwords don't match",
           },
         ]);
       });
@@ -664,7 +664,7 @@ describe("Validation", () => {
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { property: ".0.pass2", stack: "pass2: Passwords don't match" },
+          { property: ".0.pass2", stack: ".0.pass2 Passwords don't match" },
         ]);
       });
 
@@ -692,7 +692,7 @@ describe("Validation", () => {
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { property: ".", stack: "root: Forbidden value: bbb" },
+          { property: ".", stack: ". Forbidden value: bbb" },
         ]);
       });
     });

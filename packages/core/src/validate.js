@@ -81,16 +81,14 @@ function toErrorSchema(errors) {
 }
 
 export function toErrorList(errorSchema, fieldPath = []) {
-  const fieldName =
-    fieldPath.length > 0 ? fieldPath[fieldPath.length - 1] : "root";
-
   let errorList = [];
   if ("__errors" in errorSchema) {
     errorList = errorList.concat(
       errorSchema.__errors.map(stack => {
+        const property = "." + fieldPath.join(".");
         return {
-          property: "." + fieldPath.join("."),
-          stack: `${fieldName}: ${stack}`,
+          property,
+          stack: `${property} ${stack}`,
         };
       })
     );
