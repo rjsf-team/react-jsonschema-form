@@ -255,7 +255,7 @@ export default function validateFormData(
   const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
 
   // Append the user's errors to the current error list
-  //  Mantain the original error list to keep its AJV provided detail properties.
+  //  Maintain the original error list to keep its AJV-provided detail properties.
   const newErrors = [].concat(errors, toErrorList(userErrorSchema));
 
   return {
