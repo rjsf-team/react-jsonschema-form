@@ -140,12 +140,10 @@ export default class Form extends Component {
       autocomplete,
       enctype,
       acceptcharset,
-      noHtml5Validate,
-      idSchema: originalIdSchema
+      noHtml5Validate
     } = this.props;
 
     const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
-
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
 
