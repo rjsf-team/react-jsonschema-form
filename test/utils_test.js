@@ -577,6 +577,29 @@ describe("utils", () => {
         bar: {$id: "root_bar"}
       });
     });
+
+    it("should append an optional suffix to the ids of properties", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            type: "object",
+            properties: {
+              foo: {type: "string"},
+              bar: {type: "string"},
+            }
+          }
+        },
+        $ref: "#/definitions/testdef"
+      };
+
+      const suffix = 4;
+
+      expect(toIdSchema(schema, undefined, schema.definitions, suffix)).eql({
+        $id: "root",
+        foo: {$id: "root_foo4"},
+        bar: {$id: "root_bar4"},
+      });
+    });
   });
 
   describe("parseDateString()", () => {
