@@ -45,10 +45,14 @@ export default class Form extends Component {
         errors: state.errors || [],
         errorSchema: state.errorSchema || {}
       };
+
+    const {idSchema : originalIdSchema} = props;
+    const idSchema = originalIdSchema || toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
     return {
       status: "initial",
       schema,
       uiSchema,
+      idSchema,
       formData,
       edit,
       errors,
@@ -140,8 +144,7 @@ export default class Form extends Component {
       idSchema: originalIdSchema
     } = this.props;
 
-    const {schema, uiSchema, formData, errorSchema} = this.state;
-    const idSchema = originalIdSchema || toIdSchema(schema, uiSchema["ui:rootFieldId"], schema.definitions);
+    const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
 
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
