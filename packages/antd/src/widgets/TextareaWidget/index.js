@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import Input from 'antd/lib/input';
+import Input from "antd/lib/input";
 
 const INPUT_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const TextareaWidget = ({
@@ -25,7 +25,7 @@ const TextareaWidget = ({
   const { readonlyAsDisabled = true } = formContext;
 
   const handleChange = ({ target }) =>
-    onChange(target.value === '' ? options.emptyValue : target.value);
+    onChange(target.value === "" ? options.emptyValue : target.value);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 

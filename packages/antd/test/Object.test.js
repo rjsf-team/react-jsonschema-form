@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import renderer from "react-test-renderer";
-import { withTheme } from '@rjsf/core';
+import { withTheme } from "@rjsf/core";
 
-import '../__mocks__/matchMedia.mock';
-import { Theme } from '../src';
+import "../__mocks__/matchMedia.mock";
+import { Theme } from "../src";
 
 const { describe, expect, test } = global;
 
@@ -15,12 +15,10 @@ describe("object fields", () => {
       type: "object",
       properties: {
         a: { type: "string" },
-        b: { type: "number" }
-      }
+        b: { type: "number" },
+      },
     };
-    const tree = renderer
-      .create(<Form schema={schema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

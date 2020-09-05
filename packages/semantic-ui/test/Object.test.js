@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Form from "../src/index";
 import renderer from "react-test-renderer";
 
@@ -8,12 +8,10 @@ describe("object fields", () => {
       type: "object",
       properties: {
         a: { type: "string" },
-        b: { type: "number" }
-      }
+        b: { type: "number" },
+      },
     };
-    const tree = renderer
-      .create(<Form schema={schema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

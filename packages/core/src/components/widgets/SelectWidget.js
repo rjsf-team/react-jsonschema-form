@@ -25,9 +25,9 @@ function processValue(schema, value) {
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (schema.enum) {
-    if (schema.enum.every(x => guessType(x) === "number")) {
+    if (schema.enum.every((x) => guessType(x) === "number")) {
       return asNumber(value);
-    } else if (schema.enum.every(x => guessType(x) === "boolean")) {
+    } else if (schema.enum.every((x) => guessType(x) === "boolean")) {
       return value === "true";
     }
   }
@@ -39,8 +39,8 @@ function getValue(event, multiple) {
   if (multiple) {
     return [].slice
       .call(event.target.options)
-      .filter(o => o.selected)
-      .map(o => o.value);
+      .filter((o) => o.selected)
+      .map((o) => o.value);
   } else {
     return event.target.value;
   }
@@ -75,19 +75,19 @@ function SelectWidget(props) {
       autoFocus={autofocus}
       onBlur={
         onBlur &&
-        (event => {
+        ((event) => {
           const newValue = getValue(event, multiple);
           onBlur(id, processValue(schema, newValue));
         })
       }
       onFocus={
         onFocus &&
-        (event => {
+        ((event) => {
           const newValue = getValue(event, multiple);
           onFocus(id, processValue(schema, newValue));
         })
       }
-      onChange={event => {
+      onChange={(event) => {
         const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
       }}>

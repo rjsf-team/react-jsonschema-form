@@ -2,7 +2,7 @@
 import React from "react";
 import _ from "lodash";
 import { Form } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
+import { utils } from "@rjsf/core";
 import PropTypes from "prop-types";
 import { getSemanticProps } from "../util";
 
@@ -49,9 +49,9 @@ const processValue = (schema, value) => {
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (schema.enum) {
-    if (schema.enum.every(x => guessType(x) === "number")) {
+    if (schema.enum.every((x) => guessType(x) === "number")) {
       return asNumber(value);
-    } else if (schema.enum.every(x => guessType(x) === "boolean")) {
+    } else if (schema.enum.every((x) => guessType(x) === "boolean")) {
       return value === "true";
     }
   }

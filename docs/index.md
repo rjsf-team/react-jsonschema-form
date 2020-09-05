@@ -33,7 +33,7 @@ Our latest version requires React 16+. You can also install `react-jsonschema-fo
 ### As a script served from a CDN
 
 ```html
-  <script src="https://unpkg.com/@rjsf/core/dist/react-jsonschema-form.js"></script>
+<script src="https://unpkg.com/@rjsf/core/dist/react-jsonschema-form.js"></script>
 ```
 
 Source maps are available at [this url](https://unpkg.com/@rjsf/core/dist/react-jsonschema-form.js.map).
@@ -45,7 +45,7 @@ You'll also need to alias the default export property to use the Form component:
 ```js
 const Form = JSONSchemaForm.default;
 // or
-const {default: Form} = JSONSchemaForm;
+const { default: Form } = JSONSchemaForm;
 ```
 
 ## Usage
@@ -56,26 +56,27 @@ const schema = {
   type: "object",
   required: ["title"],
   properties: {
-    title: {type: "string", title: "Title", default: "A new task"},
-    done: {type: "boolean", title: "Done?", default: false}
-  }
+    title: { type: "string", title: "Title", default: "A new task" },
+    done: { type: "boolean", title: "Done?", default: false },
+  },
 };
 
 const log = (type) => console.log.bind(console, type);
 
-render((
-  <Form schema={schema}
-        onChange={log("changed")}
-        onSubmit={log("submitted")}
-        onError={log("errors")} />
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    onChange={log("changed")}
+    onSubmit={log("submitted")}
+    onError={log("errors")}
+  />,
+  document.getElementById("app")
+);
 ```
-
 
 ## Theming
 
 For more information on what themes we support, see [Using Themes](usage/themes).
-
 
 <!--
 
@@ -102,9 +103,8 @@ disabled until https://github.com/rjsf-team/react-jsonschema-form/issues/1584 is
 
 Apache 2
 
-
 ## Credits
 
-|  <img style="height: 100px !important" src="https://avatars1.githubusercontent.com/u/1066228?s=200&v=4"> |  <img style="height: 100px !important" src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png"></a> | <img style="height: 100px !important" src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" />  |
-|---|---|---|
-|This project initially started as a [mozilla-services](https://github.com/mozilla-services) project. |Testing is powered by [BrowserStack](https://www.browserstack.com/).|Deploy Previews are provided by [Netlify](https://www.netlify.com).|
+| <img style="height: 100px !important" src="https://avatars1.githubusercontent.com/u/1066228?s=200&v=4"> | <img style="height: 100px !important" src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png"></a> | <img style="height: 100px !important" src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" /> |
+| ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| This project initially started as a [mozilla-services](https://github.com/mozilla-services) project.    | Testing is powered by [BrowserStack](https://www.browserstack.com/).                                                                                 | Deploy Previews are provided by [Netlify](https://www.netlify.com).                                               |

@@ -54,7 +54,7 @@ class AnyOfField extends Component {
     return this && this.state ? this.state.selectedOption : 0;
   }
 
-  onOptionChange = option => {
+  onOptionChange = (option) => {
     const selectedOption = parseInt(option, 10);
     const { formData, onChange, options, registry } = this.props;
     const { rootSchema } = registry;

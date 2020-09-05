@@ -3,7 +3,7 @@ const BABEL_ENV = process.env.BABEL_ENV;
 const defaultPlugins = [];
 
 module.exports = {
-  "presets": [
+  presets: [
     [
       "@babel/preset-env",
       {
@@ -12,37 +12,37 @@ module.exports = {
           BABEL_ENV === "test" ? { node: "current" } : { browsers: "defaults" },
       },
     ],
-    "@babel/preset-react"
+    "@babel/preset-react",
   ],
-  "plugins": [
+  plugins: [
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-proposal-class-properties",
     [
       "@babel/plugin-transform-runtime",
       {
-        "corejs": 2
-      }
-    ]
+        corejs: 2,
+      },
+    ],
   ],
-  "env": {
+  env: {
     cjs: {
       plugins: defaultPlugins,
-      ignore: ['test/**/*.js']
+      ignore: ["test/**/*.js"],
     },
     umd: {
       plugins: defaultPlugins,
-      ignore: ['test/**/*.js']
+      ignore: ["test/**/*.js"],
     },
     es: {
       plugins: [
         ...defaultPlugins,
-        ['@babel/plugin-transform-runtime', { useESModules: true, corejs: 2 }]
+        ["@babel/plugin-transform-runtime", { useESModules: true, corejs: 2 }],
       ],
-      ignore: ['test/**/*.js']
+      ignore: ["test/**/*.js"],
     },
     test: {
       plugins: defaultPlugins,
-      ignore: []
-    }
-  }
+      ignore: [],
+    },
+  },
 };

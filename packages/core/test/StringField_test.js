@@ -957,7 +957,10 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
+      const ids = [].map.call(
+        node.querySelectorAll("select"),
+        (node) => node.id
+      );
 
       expect(ids).eql([
         "root_year",
@@ -980,7 +983,7 @@ describe("StringField", () => {
 
       const lengths = [].map.call(
         node.querySelectorAll("select"),
-        node => node.length
+        (node) => node.length
       );
 
       expect(lengths).eql([
@@ -993,7 +996,7 @@ describe("StringField", () => {
         60 + 1,
       ]);
       const monthOptions = node.querySelectorAll("select#root_month option");
-      const monthOptionsValues = [].map.call(monthOptions, o => o.value);
+      const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
       expect(monthOptionsValues).eql([
         "",
         "1",
@@ -1021,7 +1024,7 @@ describe("StringField", () => {
       });
 
       const monthOptions = node.querySelectorAll("select#root_month option");
-      const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
+      const monthOptionsLabels = [].map.call(monthOptions, (o) => o.text);
       expect(monthOptionsLabels).eql([
         "month",
         "01",
@@ -1051,7 +1054,7 @@ describe("StringField", () => {
 
         const buttonLabels = [].map.call(
           node.querySelectorAll("a.btn"),
-          x => x.textContent
+          (x) => x.textContent
         );
         expect(buttonLabels).eql(["Now", "Clear"]);
       });
@@ -1219,7 +1222,10 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
+      const ids = [].map.call(
+        node.querySelectorAll("select"),
+        (node) => node.id
+      );
 
       expect(ids).eql(["root_year", "root_month", "root_day"]);
     });
@@ -1235,7 +1241,7 @@ describe("StringField", () => {
 
       const lengths = [].map.call(
         node.querySelectorAll("select"),
-        node => node.length
+        (node) => node.length
       );
 
       expect(lengths).eql([
@@ -1245,7 +1251,7 @@ describe("StringField", () => {
         31 + 1,
       ]);
       const monthOptions = node.querySelectorAll("select#root_month option");
-      const monthOptionsValues = [].map.call(monthOptions, o => o.value);
+      const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
       expect(monthOptionsValues).eql([
         "",
         "1",
@@ -1273,7 +1279,7 @@ describe("StringField", () => {
       });
 
       const monthOptions = node.querySelectorAll("select#root_month option");
-      const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
+      const monthOptionsLabels = [].map.call(monthOptions, (o) => o.text);
       expect(monthOptionsLabels).eql([
         "month",
         "01",
@@ -1333,7 +1339,7 @@ describe("StringField", () => {
 
         const buttonLabels = [].map.call(
           node.querySelectorAll("a.btn"),
-          x => x.textContent
+          (x) => x.textContent
         );
         expect(buttonLabels).eql(["Now", "Clear"]);
       });
@@ -1937,7 +1943,7 @@ describe("StringField", () => {
   });
 
   describe("Label", () => {
-    const Widget = props => <div id={`label-${props.label}`} />;
+    const Widget = (props) => <div id={`label-${props.label}`} />;
 
     const widgets = { Widget };
 

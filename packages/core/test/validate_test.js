@@ -354,7 +354,7 @@ describe("Validation", () => {
       },
     };
     const newErrorMessage = "Better error message";
-    const transformErrors = errors => {
+    const transformErrors = (errors) => {
       return [Object.assign({}, errors[0], { message: newErrorMessage })];
     };
 

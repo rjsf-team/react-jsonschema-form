@@ -24,7 +24,7 @@ export const allowedProps = [
   "onChange",
   "onRenderLabel",
   "styles",
-  "theme"
+  "theme",
 ];
 
 const CheckboxWidget = (props: WidgetProps) => {
@@ -58,17 +58,17 @@ const CheckboxWidget = (props: WidgetProps) => {
 
   return (
     <>
-        <Checkbox
-          id={id}
-          label={label || schema.title}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-          checked={typeof value === "undefined" ? false : value}
-          onChange={_onChange}
-          {...uiProps}
-        />
+      <Checkbox
+        id={id}
+        label={label || schema.title}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        checked={typeof value === "undefined" ? false : value}
+        onChange={_onChange}
+        {...uiProps}
+      />
     </>
   );
 };

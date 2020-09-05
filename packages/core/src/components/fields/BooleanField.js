@@ -34,7 +34,7 @@ function BooleanField(props) {
 
   if (Array.isArray(schema.oneOf)) {
     enumOptions = optionsList({
-      oneOf: schema.oneOf.map(option => ({
+      oneOf: schema.oneOf.map((option) => ({
         ...option,
         title: option.title || (option.const === true ? "Yes" : "No"),
       })),

@@ -29,5 +29,5 @@ export default {
   TextWidget,
   UpDownWidget,
   URLWidget,
-  FileWidget
+  FileWidget,
 };

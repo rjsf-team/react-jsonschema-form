@@ -6,22 +6,20 @@ Objects are defined with a type equal to `object` and properties specified in th
 
 ```jsx
 const schema = {
-  "title": "My title",
-  "description": "My description",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string"
+  title: "My title",
+  description: "My description",
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
     },
-    "age": {
-      "type": "number"
-    }
-  }
+    age: {
+      type: "number",
+    },
+  },
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 ## Required properties
@@ -30,23 +28,21 @@ You can specify which properties are required using the `required` attribute:
 
 ```jsx
 const schema = {
-  "title": "My title",
-  "description": "My description",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string"
+  title: "My title",
+  description: "My description",
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
     },
-    "age": {
-      "type": "number"
-    }
+    age: {
+      type: "number",
+    },
   },
-  "required": ["name"]
+  required: ["name"],
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 ## Specifying property order
@@ -57,26 +53,26 @@ Since the order of object properties in Javascript and JSON is not guaranteed, t
 const schema = {
   type: "object",
   properties: {
-    foo: {type: "string"},
-    bar: {type: "string"}
-  }
+    foo: { type: "string" },
+    bar: { type: "string" },
+  },
 };
 
 const uiSchema = {
-  "ui:order": ["bar", "foo"]
+  "ui:order": ["bar", "foo"],
 };
 
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```
 
 If a guaranteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
 
 ```js
 const uiSchema = {
-  "ui:order": ["bar", "*"]
+  "ui:order": ["bar", "*"],
 };
 ```
 
@@ -86,21 +82,19 @@ The `additionalProperties` keyword allows the user to add properties with arbitr
 
 ```jsx
 const schema = {
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string"
-    }
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
+    },
   },
-  "additionalProperties": {
-    "type": "number",
-    "enum": [1, 2, 3]
-  }
+  additionalProperties: {
+    type: "number",
+    enum: [1, 2, 3],
+  },
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 In this way, an add button for new properties is shown by default.
@@ -113,8 +107,8 @@ You can turn support for `additionalProperties` off with the `expandable` option
 
 ```js
 const uiSchema = {
-  "ui:options":  {
-    expandable: false
-  }
+  "ui:options": {
+    expandable: false,
+  },
 };
 ```

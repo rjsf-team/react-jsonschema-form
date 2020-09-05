@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import { FieldProps } from '@rjsf/core';
+import { FieldProps } from "@rjsf/core";
 
-import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from "@material-ui/styles";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles({
   root: {

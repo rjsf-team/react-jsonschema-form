@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from "@material-ui/core/FormControl";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
 
-import { WidgetProps } from '@rjsf/core';
+import { WidgetProps } from "@rjsf/core";
 
 const UpDownWidget = ({
   id,
@@ -31,8 +31,7 @@ const UpDownWidget = ({
     <FormControl
       fullWidth={true}
       //error={!!rawErrors}
-      required={required}
-    >
+      required={required}>
       <InputLabel>{label}</InputLabel>
       <Input
         id={id}
@@ -40,7 +39,7 @@ const UpDownWidget = ({
         required={required}
         type="number"
         disabled={disabled || readonly}
-        value={value ? value : ''}
+        value={value ? value : ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

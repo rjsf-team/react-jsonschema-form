@@ -17,7 +17,8 @@ const FieldTemplate = ({
     <Form.Group>
       {children}
       {displayLabel && rawDescription ? (
-        <Form.Text className={rawErrors.length > 0 ? "text-danger" : "text-muted"}>
+        <Form.Text
+          className={rawErrors.length > 0 ? "text-danger" : "text-muted"}>
           {rawDescription}
         </Form.Text>
       ) : null}
@@ -26,9 +27,7 @@ const FieldTemplate = ({
           {rawErrors.map((error: string) => {
             return (
               <ListGroup.Item as="li" key={error} className="border-0 m-0 p-0">
-                <small className="m-0 text-danger">
-                  {error}
-                </small>
+                <small className="m-0 text-danger">{error}</small>
               </ListGroup.Item>
             );
           })}

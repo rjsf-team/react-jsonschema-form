@@ -37,9 +37,9 @@ function RadioWidget(props) {
               value={option.value}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && i === 0}
-              onChange={_ => onChange(option.value)}
-              onBlur={onBlur && (event => onBlur(id, event.target.value))}
-              onFocus={onFocus && (event => onFocus(id, event.target.value))}
+              onChange={(_) => onChange(option.value)}
+              onBlur={onBlur && ((event) => onBlur(id, event.target.value))}
+              onFocus={onFocus && ((event) => onFocus(id, event.target.value))}
             />
             <span>{option.label}</span>
           </span>

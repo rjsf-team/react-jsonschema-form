@@ -79,14 +79,14 @@ yarn add @rjsf/material-ui
 ## Usage
 
 ```js
-import Form from '@rjsf/material-ui';
+import Form from "@rjsf/material-ui";
 ```
 
 or
 
 ```js
-import { withTheme } from '@rjsf/core';
-import { Theme as MaterialUITheme } from '@rjsf/material-ui';
+import { withTheme } from "@rjsf/core";
+import { Theme as MaterialUITheme } from "@rjsf/material-ui";
 
 // Make modifications to the theme with your own fields and widgets
 

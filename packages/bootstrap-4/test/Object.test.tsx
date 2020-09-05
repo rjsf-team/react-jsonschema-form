@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Form from "../src/index";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
@@ -8,13 +8,11 @@ describe("object fields", () => {
     const schema: JSONSchema7 = {
       type: "object",
       properties: {
-        a: {type: "string"},
-        b: {type: "number"}
-      }
+        a: { type: "string" },
+        b: { type: "number" },
+      },
     };
-    const tree = renderer
-      .create(<Form schema={schema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

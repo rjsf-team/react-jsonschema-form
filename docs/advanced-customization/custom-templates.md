@@ -2,13 +2,13 @@
 
 This is an advanced feature that lets you customize even more aspects of the form:
 
-_ | Custom Field  | Custom Template | Custom Widget
---|---------- | ------------- | ----
-**What it does** | Overrides all behaviour | Overrides just the layout (not behaviour) | Overrides just the input box (not layout, labels, or help, or validation)
-**Usage** | Global or per-field | Global or per-field | Global or per-field
-**Global Example** | `<Form fields={MyCustomField} />` |  `<Form ArrayFieldTemplate={MyArrayTemplate} />` | `<Form widgets={MyCustomWidget} />`
-**Per-Field Example** | `"ui:field": MyCustomField` |  `"ui:ArrayFieldTemplate": MyArrayTemplate` | `"ui:widget":MyCustomWidget`
-**Documentation** | [Custom Fields](custom-widgets-fields.md) | [FieldTemplate](#FieldTemplate) / [ArrayFieldTemplate](#ArrayFieldTemplate) / [ObjectFieldTemplate](#ObjectFieldTemplate) | [Custom Widgets](custom-widgets-fields.md)
+| \_                    | Custom Field                              | Custom Template                                                                                                           | Custom Widget                                                             |
+| --------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **What it does**      | Overrides all behaviour                   | Overrides just the layout (not behaviour)                                                                                 | Overrides just the input box (not layout, labels, or help, or validation) |
+| **Usage**             | Global or per-field                       | Global or per-field                                                                                                       | Global or per-field                                                       |
+| **Global Example**    | `<Form fields={MyCustomField} />`         | `<Form ArrayFieldTemplate={MyArrayTemplate} />`                                                                           | `<Form widgets={MyCustomWidget} />`                                       |
+| **Per-Field Example** | `"ui:field": MyCustomField`               | `"ui:ArrayFieldTemplate": MyArrayTemplate`                                                                                | `"ui:widget":MyCustomWidget`                                              |
+| **Documentation**     | [Custom Fields](custom-widgets-fields.md) | [FieldTemplate](#FieldTemplate) / [ArrayFieldTemplate](#ArrayFieldTemplate) / [ObjectFieldTemplate](#ObjectFieldTemplate) | [Custom Widgets](custom-widgets-fields.md)                                |
 
 ## ArrayFieldTemplate
 
@@ -42,8 +42,8 @@ You also can provide your own field template to a uiSchema by specifying a `ui:A
 
 ```js
 const uiSchema = {
-  "ui:ArrayFieldTemplate": ArrayFieldTemplate
-}
+  "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+};
 ```
 
 Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/4542cd254ffdc6dfaf55e8c9f6f17dc900d0d041/packages/playground/src/samples/customArray.js) for another example.
@@ -87,7 +87,7 @@ The following props are part of each element in `items`:
 
 ## FieldTemplate
 
-To take control over the inner organization of each field (each form row), you can define a *field template* for your form.
+To take control over the inner organization of each field (each form row), you can define a _field template_ for your form.
 
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
@@ -119,8 +119,8 @@ You also can provide your own field template to a uiSchema by specifying a `ui:F
 
 ```js
 const uiSchema = {
-  "ui:FieldTemplate": CustomFieldTemplate
-}
+  "ui:FieldTemplate": CustomFieldTemplate,
+};
 ```
 
 If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`.
@@ -187,7 +187,7 @@ You also can provide your own field template to a uiSchema by specifying a `ui:O
 
 ```js
 const uiSchema = {
-  "ui:ObjectFieldTemplate": ObjectFieldTemplate
+  "ui:ObjectFieldTemplate": ObjectFieldTemplate,
 };
 ```
 

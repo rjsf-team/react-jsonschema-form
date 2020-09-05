@@ -12,7 +12,7 @@ function processFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new window.FileReader();
     reader.onerror = reject;
-    reader.onload = event => {
+    reader.onload = (event) => {
       resolve({
         dataURL: addNameToDataURL(event.target.result, name),
         name,
@@ -49,8 +49,8 @@ function FilesInfo(props) {
 
 function extractFileInfo(dataURLs) {
   return dataURLs
-    .filter(dataURL => typeof dataURL !== "undefined")
-    .map(dataURL => {
+    .filter((dataURL) => typeof dataURL !== "undefined")
+    .map((dataURL) => {
       const { blob, name } = dataURItoBlob(dataURL);
       return {
         name: name,
@@ -72,11 +72,11 @@ class FileWidget extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onChange = event => {
+  onChange = (event) => {
     const { multiple, onChange } = this.props;
-    processFiles(event.target.files).then(filesInfo => {
+    processFiles(event.target.files).then((filesInfo) => {
       const state = {
-        values: filesInfo.map(fileInfo => fileInfo.dataURL),
+        values: filesInfo.map((fileInfo) => fileInfo.dataURL),
         filesInfo,
       };
       this.setState(state, () => {
@@ -96,7 +96,7 @@ class FileWidget extends Component {
       <div>
         <p>
           <input
-            ref={ref => (this.inputRef = ref)}
+            ref={(ref) => (this.inputRef = ref)}
             id={id}
             type="file"
             disabled={readonly || disabled}

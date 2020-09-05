@@ -1,8 +1,5 @@
 {
-  "presets": [
-    "@babel/preset-react",
-    "@babel/preset-env"
-  ],
+  "presets": ["@babel/preset-react", "@babel/preset-env"],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-proposal-object-rest-spread",
@@ -16,9 +13,7 @@
   ],
   "env": {
     "development": {
-      "plugins": [
-        "@babel/plugin-transform-react-jsx"
-      ]
+      "plugins": ["@babel/plugin-transform-react-jsx"]
     }
   }
 }

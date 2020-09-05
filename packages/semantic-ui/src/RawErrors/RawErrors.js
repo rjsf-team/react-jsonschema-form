@@ -16,9 +16,13 @@ function RawErrors({ errors, options }) {
   const { pointing, size } = options;
   if (errors && errors.length > 0) {
     return (
-      <Label color="red" pointing={pointing || "above"} size={size || "small"} basic>
+      <Label
+        color="red"
+        pointing={pointing || "above"}
+        size={size || "small"}
+        basic>
         <List bulleted>
-          {errors.map(error => (
+          {errors.map((error) => (
             <List.Item key={shortid.generate()} content={error} />
           ))}
         </List>
@@ -36,7 +40,7 @@ RawErrors.defaultProps = {
 };
 
 RawErrors.propTypes = {
-  options:PropTypes.object,
+  options: PropTypes.object,
   errors: PropTypes.array,
 };
 

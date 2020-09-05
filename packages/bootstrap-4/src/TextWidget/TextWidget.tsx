@@ -23,7 +23,6 @@ const TextWidget = ({
   options,
   schema,
   rawErrors = [],
-
 }: TextWidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -55,7 +54,6 @@ const TextWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-
       />
       {schema.examples ? (
         <datalist id={`examples_${id}`}>

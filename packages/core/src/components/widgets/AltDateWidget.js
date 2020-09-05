@@ -12,7 +12,7 @@ function rangeOptions(start, stop) {
 }
 
 function readyForChange(state) {
-  return Object.keys(state).every(key => state[key] !== -1);
+  return Object.keys(state).every((key) => state[key] !== -1);
 }
 
 function DateElement(props) {
@@ -41,7 +41,7 @@ function DateElement(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={value => select(type, value)}
+      onChange={(value) => select(type, value)}
       onBlur={onBlur}
     />
   );
@@ -83,7 +83,7 @@ class AltDateWidget extends Component {
     );
   };
 
-  setNow = event => {
+  setNow = (event) => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
@@ -93,7 +93,7 @@ class AltDateWidget extends Component {
     this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
   };
 
-  clear = event => {
+  clear = (event) => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {

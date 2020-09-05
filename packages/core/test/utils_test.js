@@ -77,7 +77,7 @@ describe("utils", () => {
       });
 
       const noneValues = [null, undefined, NaN];
-      noneValues.forEach(noneValue => {
+      noneValues.forEach((noneValue) => {
         it("should overwrite existing form data that is equal to a none value", () => {
           expect(
             getDefaultFormState(
@@ -1442,9 +1442,9 @@ describe("utils", () => {
     });
 
     it("should override non-existing values of the first object with the values from the second", () => {
-      expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
-        { a: { b: { c: 1 } } }
-      );
+      expect(
+        mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })
+      ).eql({ a: { b: { c: 1 } } });
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -1532,9 +1532,9 @@ describe("utils", () => {
     });
 
     it("should override non-existing values of the first object with the values from the second", () => {
-      expect(mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })).eql(
-        { a: { b: { c: 1 } } }
-      );
+      expect(
+        mergeSchemas({ a: { b: undefined } }, { a: { b: { c: 1 } } })
+      ).eql({ a: { b: { c: 1 } } });
     });
 
     it("should recursively merge deeply nested objects", () => {
@@ -2354,8 +2354,8 @@ describe("utils", () => {
           allOf: [{ $ref: "#/definitions/1" }, { $ref: "#/definitions/2" }],
         };
         const definitions = {
-          "1": { type: "string" },
-          "2": { minLength: 5 },
+          1: { type: "string" },
+          2: { minLength: 5 },
         };
         const formData = {};
         expect(retrieveSchema(schema, { definitions }, formData)).eql({
@@ -2795,7 +2795,7 @@ describe("utils", () => {
         $name: "",
         list: {
           $name: "list",
-          "0": {
+          0: {
             $name: "list.0",
             a: {
               $name: "list.0.a",
@@ -2807,7 +2807,7 @@ describe("utils", () => {
               $name: "list.0.c",
             },
           },
-          "1": {
+          1: {
             $name: "list.1",
             a: {
               $name: "list.1.a",
@@ -2816,7 +2816,7 @@ describe("utils", () => {
               $name: "list.1.b",
             },
           },
-          "2": {
+          2: {
             $name: "list.2",
             a: {
               $name: "list.2.a",
@@ -2932,7 +2932,7 @@ describe("utils", () => {
         $name: "",
         address_list: {
           $name: "address_list",
-          "0": {
+          0: {
             $name: "address_list.0",
             city: {
               $name: "address_list.0.city",
@@ -2944,7 +2944,7 @@ describe("utils", () => {
               $name: "address_list.0.street_address",
             },
           },
-          "1": {
+          1: {
             $name: "address_list.1",
             city: {
               $name: "address_list.1.city",
@@ -3150,52 +3150,52 @@ describe("utils", () => {
         $name: "",
         defaultsAndMinItems: {
           $name: "defaultsAndMinItems",
-          "0": {
+          0: {
             $name: "defaultsAndMinItems.0",
           },
-          "1": {
+          1: {
             $name: "defaultsAndMinItems.1",
           },
-          "2": {
+          2: {
             $name: "defaultsAndMinItems.2",
           },
-          "3": {
+          3: {
             $name: "defaultsAndMinItems.3",
           },
-          "4": {
+          4: {
             $name: "defaultsAndMinItems.4",
           },
         },
         fixedItemsList: {
           $name: "fixedItemsList",
-          "0": {
+          0: {
             $name: "fixedItemsList.0",
           },
-          "1": {
+          1: {
             $name: "fixedItemsList.1",
           },
-          "2": {
+          2: {
             $name: "fixedItemsList.2",
           },
         },
         fixedNoToolbar: {
           $name: "fixedNoToolbar",
-          "0": {
+          0: {
             $name: "fixedNoToolbar.0",
           },
-          "1": {
+          1: {
             $name: "fixedNoToolbar.1",
           },
-          "2": {
+          2: {
             $name: "fixedNoToolbar.2",
           },
-          "3": {
+          3: {
             $name: "fixedNoToolbar.3",
           },
         },
         listOfObjects: {
           $name: "listOfObjects",
-          "0": {
+          0: {
             $name: "listOfObjects.0",
             id: {
               $name: "listOfObjects.0.id",
@@ -3204,7 +3204,7 @@ describe("utils", () => {
               $name: "listOfObjects.0.name",
             },
           },
-          "1": {
+          1: {
             $name: "listOfObjects.1",
             id: {
               $name: "listOfObjects.1.id",
@@ -3213,7 +3213,7 @@ describe("utils", () => {
               $name: "listOfObjects.1.name",
             },
           },
-          "2": {
+          2: {
             $name: "listOfObjects.2",
             id: {
               $name: "listOfObjects.2.id",
@@ -3225,28 +3225,28 @@ describe("utils", () => {
         },
         listOfStrings: {
           $name: "listOfStrings",
-          "0": {
+          0: {
             $name: "listOfStrings.0",
           },
-          "1": {
+          1: {
             $name: "listOfStrings.1",
           },
         },
         minItemsList: {
           $name: "minItemsList",
-          "0": {
+          0: {
             $name: "minItemsList.0",
             name: {
               $name: "minItemsList.0.name",
             },
           },
-          "1": {
+          1: {
             $name: "minItemsList.1",
             name: {
               $name: "minItemsList.1.name",
             },
           },
-          "2": {
+          2: {
             $name: "minItemsList.2",
             name: {
               $name: "minItemsList.2.name",
@@ -3255,55 +3255,55 @@ describe("utils", () => {
         },
         multipleChoicesList: {
           $name: "multipleChoicesList",
-          "0": {
+          0: {
             $name: "multipleChoicesList.0",
           },
-          "1": {
+          1: {
             $name: "multipleChoicesList.1",
           },
         },
         nestedList: {
           $name: "nestedList",
-          "0": {
+          0: {
             $name: "nestedList.0",
-            "0": {
+            0: {
               $name: "nestedList.0.0",
             },
-            "1": {
+            1: {
               $name: "nestedList.0.1",
             },
           },
-          "1": {
+          1: {
             $name: "nestedList.1",
-            "0": {
+            0: {
               $name: "nestedList.1.0",
             },
           },
         },
         noToolbar: {
           $name: "noToolbar",
-          "0": {
+          0: {
             $name: "noToolbar.0",
           },
-          "1": {
+          1: {
             $name: "noToolbar.1",
           },
         },
         unorderable: {
           $name: "unorderable",
-          "0": {
+          0: {
             $name: "unorderable.0",
           },
-          "1": {
+          1: {
             $name: "unorderable.1",
           },
         },
         unremovable: {
           $name: "unremovable",
-          "0": {
+          0: {
             $name: "unremovable.0",
           },
-          "1": {
+          1: {
             $name: "unremovable.1",
           },
         },
@@ -3401,12 +3401,8 @@ describe("utils", () => {
         "data:image/png;name=test.png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("test.png");
-      expect(blob)
-        .to.have.property("size")
-        .eql(8);
-      expect(blob)
-        .to.have.property("type")
-        .eql("image/png");
+      expect(blob).to.have.property("size").eql(8);
+      expect(blob).to.have.property("type").eql("image/png");
     });
 
     it("should return unknown if name is not provided", () => {
@@ -3414,12 +3410,8 @@ describe("utils", () => {
         "data:image/png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("unknown");
-      expect(blob)
-        .to.have.property("size")
-        .eql(8);
-      expect(blob)
-        .to.have.property("type")
-        .eql("image/png");
+      expect(blob).to.have.property("size").eql(8);
+      expect(blob).to.have.property("type").eql("image/png");
     });
 
     it("should return ignore unsupported parameters", () => {
@@ -3427,12 +3419,8 @@ describe("utils", () => {
         "data:image/png;unknown=foobar;name=test.png;base64,VGVzdC5wbmc="
       );
       expect(name).eql("test.png");
-      expect(blob)
-        .to.have.property("size")
-        .eql(8);
-      expect(blob)
-        .to.have.property("type")
-        .eql("image/png");
+      expect(blob).to.have.property("size").eql(8);
+      expect(blob).to.have.property("type").eql("image/png");
     });
   });
 
@@ -3441,7 +3429,12 @@ describe("utils", () => {
     // worthless to reproduce all the tests existing for it; so we focus on the
     // behavioral differences we introduced.
     it("should assume functions are always equivalent", () => {
-      expect(deepEquals(() => {}, () => {})).eql(true);
+      expect(
+        deepEquals(
+          () => {},
+          () => {}
+        )
+      ).eql(true);
       expect(deepEquals({ foo() {} }, { foo() {} })).eql(true);
       expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).eql(
         true
@@ -3585,7 +3578,7 @@ describe("utils", () => {
     });
 
     it("should not fail on correct component", () => {
-      const Widget = props => <div {...props} />;
+      const Widget = (props) => <div {...props} />;
       expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
 
@@ -3597,7 +3590,7 @@ describe("utils", () => {
     });
 
     it("should not fail on memo component", () => {
-      const Widget = React.memo(props => <div {...props} />);
+      const Widget = React.memo((props) => <div {...props} />);
       expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
   });

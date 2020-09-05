@@ -1,50 +1,48 @@
 var path = require("path");
 var webpack = require("webpack");
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 module.exports = {
   mode: "production",
   devtool: "source-map",
-  entry: [
-    "./src/index"
-  ],
+  entry: ["./src/index"],
   output: {
     path: path.join(__dirname, "dist"),
   },
   plugins: [
     new MonacoWebpackPlugin({
-      languages: ['json']
+      languages: ["json"],
     }),
     new webpack.DefinePlugin({
       "process.env": {
-        NODE_ENV: JSON.stringify("production")
-      }
-    })
+        NODE_ENV: JSON.stringify("production"),
+      },
+    }),
   ],
   module: {
     rules: [
       {
         test: /\.jsx?$/,
-        use: [
-          "babel-loader",
-        ],
+        use: ["babel-loader"],
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules", "codemirror", "mode", "javascript"),
-        ]
+          path.join(
+            __dirname,
+            "node_modules",
+            "codemirror",
+            "mode",
+            "javascript"
+          ),
+        ],
       },
       {
         test: /\.s?css$/,
-        use: [
-          "style-loader",
-          "css-loader",
-          "sass-loader"
-        ],
+        use: ["style-loader", "css-loader", "sass-loader"],
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules", "monaco-editor")
+          path.join(__dirname, "node_modules", "monaco-editor"),
         ],
       },
       {
@@ -54,18 +52,18 @@ module.exports = {
           {
             loader: "style-loader",
             options: {
-              insert: "#antd-styles-iframe"
-            }
+              insert: "#antd-styles-iframe",
+            },
           },
           "css-loader",
           {
-            loader: 'less-loader',
+            loader: "less-loader",
             options: {
               javascriptEnabled: true,
             },
           },
         ],
       },
-    ]
-  }
+    ],
+  },
 };

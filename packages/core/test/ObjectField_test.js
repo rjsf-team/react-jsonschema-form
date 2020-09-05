@@ -212,7 +212,7 @@ describe("ObjectField", () => {
       });
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
-        l => l.textContent
+        (l) => l.textContent
       );
 
       expect(labels).eql(["baz", "qux", "bar", "foo"]);
@@ -227,7 +227,7 @@ describe("ObjectField", () => {
       });
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
-        l => l.textContent
+        (l) => l.textContent
       );
 
       expect(labels).eql(["baz", "bar", "qux", "foo"]);
@@ -243,7 +243,7 @@ describe("ObjectField", () => {
 
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
-        l => l.textContent
+        (l) => l.textContent
       );
 
       expect(labels).eql(["baz", "qux", "bar", "foo"]);
@@ -295,7 +295,7 @@ describe("ObjectField", () => {
       });
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
-        l => l.textContent
+        (l) => l.textContent
       );
 
       expect(labels).eql(["bar", "foo"]);
@@ -328,7 +328,7 @@ describe("ObjectField", () => {
       });
       const labels = [].map.call(
         node.querySelectorAll(".field > label"),
-        l => l.textContent
+        (l) => l.textContent
       );
 
       expect(labels).eql(["bar", "foo"]);
@@ -352,14 +352,14 @@ describe("ObjectField", () => {
 
       const ids = [].map.call(
         node.querySelectorAll("input[type=text]"),
-        node => node.id
+        (node) => node.id
       );
       expect(ids).eql(["root_bar", "root_foo"]);
     });
   });
 
   describe("Title", () => {
-    const TitleField = props => <div id={`title-${props.title}`} />;
+    const TitleField = (props) => <div id={`title-${props.title}`} />;
 
     const fields = { TitleField };
 

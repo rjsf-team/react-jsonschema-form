@@ -10,13 +10,11 @@ Arrays of a single field type can be specified as follows:
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 ## Arrays of objects
@@ -29,16 +27,14 @@ const schema = {
   items: {
     type: "object",
     properties: {
-        name: {
-            type: "string"
-        }
-    }
-  }
+      name: {
+        type: "string",
+      },
+    },
+  },
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 ## uiSchema for array items
@@ -49,19 +45,20 @@ To specify a uiSchema that applies to array items, specify the uiSchema value wi
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
   items: {
-    "ui:widget": "textarea"
-  }
+    "ui:widget": "textarea",
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```
 
 ## The `additionalItems` keyword
@@ -72,16 +69,14 @@ The `additionalItems` keyword allows the user to add additional items of a given
 const schema = {
   type: "array",
   items: {
-    type: "string"
+    type: "string",
   },
   additionalItems: {
-    type: "boolean"
-  }
+    type: "boolean",
+  },
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 ## Array item options
@@ -94,19 +89,20 @@ Array items are orderable by default, and react-jsonschema-form renders move up/
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
-  "ui:options":  {
-    orderable: false
-  }
+  "ui:options": {
+    orderable: false,
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={schema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={schema} />,
+  document.getElementById("app")
+);
 ```
 
 ### `addable` option
@@ -117,19 +113,20 @@ If either `items` or `additionalItems` contains a schema object, an add button f
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
-  "ui:options":  {
-    addable: false
-  }
+  "ui:options": {
+    addable: false,
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={schema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={schema} />,
+  document.getElementById("app")
+);
 ```
 
 ### `removable` option
@@ -140,21 +137,21 @@ A remove button is shown by default for an item if `items` contains a schema obj
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
-  "ui:options":  {
-    removable: false
-  }
+  "ui:options": {
+    removable: false,
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={schema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={schema} />,
+  document.getElementById("app")
+);
 ```
-
 
 ## Multiple-choice list
 
@@ -170,12 +167,10 @@ const schema = {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
   },
-  uniqueItems: true
+  uniqueItems: true,
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 By default, this will render a multiple select box. If you prefer a list of checkboxes, just set the uiSchema `ui:widget` directive to `checkboxes` for that field:
@@ -188,18 +183,18 @@ const schema = {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
   },
-  uniqueItems: true
+  uniqueItems: true,
 };
 
 const uiSchema = {
-  "ui:widget": "checkboxes"
+  "ui:widget": "checkboxes",
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```
-
 
 ## Specifying the minimum or maximum number of items
 
@@ -216,16 +211,13 @@ const schema = {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
   },
-  uniqueItems: true
+  uniqueItems: true,
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 You can also specify the maximum number of items in an array using the `maxItems` property.
-
 
 ## Inline checkboxes
 
@@ -240,17 +232,18 @@ const schema = {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
   },
-  uniqueItems: true
+  uniqueItems: true,
 };
 
 const uiSchema = {
   "ui:widget": "checkboxes",
   "ui:options": {
-    inline: true
-  }
+    inline: true,
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```

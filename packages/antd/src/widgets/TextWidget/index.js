@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import Input from 'antd/lib/input';
-import InputNumber from 'antd/lib/input-number';
+import Input from "antd/lib/input";
+import InputNumber from "antd/lib/input-number";
 
 const INPUT_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const TextWidget = ({
@@ -28,13 +28,13 @@ const TextWidget = ({
   const handleNumberChange = (nextValue) => onChange(nextValue);
 
   const handleTextChange = ({ target }) =>
-    onChange(target.value === '' ? options.emptyValue : target.value);
+    onChange(target.value === "" ? options.emptyValue : target.value);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 
   const handleFocus = ({ target }) => onFocus(id, target.value);
 
-  return schema.type === 'number' || schema.type === 'integer' ? (
+  return schema.type === "number" || schema.type === "integer" ? (
     <InputNumber
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
@@ -57,7 +57,7 @@ const TextWidget = ({
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={INPUT_STYLE}
-      type={options.inputType || 'text'}
+      type={options.inputType || "text"}
       value={value}
     />
   );

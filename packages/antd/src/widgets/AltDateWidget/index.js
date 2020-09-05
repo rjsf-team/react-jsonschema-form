@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { utils } from '@rjsf/core';
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
+import { utils } from "@rjsf/core";
+import Button from "antd/lib/button";
+import Col from "antd/lib/col";
+import Row from "antd/lib/row";
 
 const { pad, parseDateString, toDateString } = utils;
 
@@ -17,7 +17,7 @@ const rangeOptions = (start, stop) => {
 
 const readyForChange = (state) => {
   return Object.keys(state).every(
-    key => typeof state[key] !== "undefined" && state[key] !== -1,
+    (key) => typeof state[key] !== "undefined" && state[key] !== -1
   );
 };
 
@@ -150,8 +150,7 @@ const AltDateWidget = ({
             className="btn-clear"
             danger
             onClick={handleClear}
-            type="primary"
-          >
+            type="primary">
             Clear
           </Button>
         </Col>

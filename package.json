@@ -15,15 +15,11 @@
     "start": "lerna run start --stream --parallel"
   },
   "dependencies": {
-    "prettier": "^1.18.2",
-    "lerna": "^3.18.3"
+    "lerna": "^3.18.3",
+    "prettier": "^2.1.1"
   },
   "prettier": {
-    "jsxBracketSameLine": true,
-    "trailingComma": "es5",
-    "useTabs": false,
-    "semi": true,
-    "tabWidth": 2
+    "jsxBracketSameLine": true
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",

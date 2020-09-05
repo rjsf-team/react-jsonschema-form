@@ -1,3 +1,3 @@
 /* eslint-disable import/export */
-export { default } from './CheckboxesWidget';
-export * from './CheckboxesWidget';
+export { default } from "./CheckboxesWidget";
+export * from "./CheckboxesWidget";

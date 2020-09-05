@@ -14,7 +14,7 @@ const allowedProps = [
   "onChanged",
   "theme",
   "styles",
-  "ariaLabelledBy"
+  "ariaLabelledBy",
 ];
 
 const RadioWidget = ({
@@ -49,11 +49,13 @@ const RadioWidget = ({
 
   const row = options ? options.inline : false;
 
-  const newOptions = (enumOptions as {value: any, label: any}[]).map(option => ({
-    key: option.value,
-    text: option.label,
-    disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
-  }));
+  const newOptions = (enumOptions as { value: any; label: any }[]).map(
+    (option) => ({
+      key: option.value,
+      text: option.label,
+      disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
+    })
+  );
 
   const uiProps = _pick(options.props || {}, allowedProps);
   return (

@@ -16,28 +16,28 @@ inverted: Format to appear on dark backgrounds.
 ```json
 {
   "ui:options": {
-    "semantic" : {
+    "semantic": {
       "fluid": true,
       "inverted": false,
       "errorOptions": {
         "size": "small",
-        "pointing": "above",
+        "pointing": "above"
       }
     }
   }
 }
 ```
+
 #### Semantic Widget Optional Properties
- - [Semantic props for TextWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for CheckboxWidget](https://react.semantic-ui.com/modules/checkbox/)
- - [Semantic props for SelectWidget](https://react.semantic-ui.com/modules/dropdown/)
- - [Semantic props for RangeWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for RadioWidget](https://react.semantic-ui.com/addons/radio/)
- - [Semantic props for PasswordWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for UpDownWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
 
-
+- [Semantic props for TextWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for CheckboxWidget](https://react.semantic-ui.com/modules/checkbox/)
+- [Semantic props for SelectWidget](https://react.semantic-ui.com/modules/dropdown/)
+- [Semantic props for RangeWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for RadioWidget](https://react.semantic-ui.com/addons/radio/)
+- [Semantic props for PasswordWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for UpDownWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
 
 ## errorOptions
 
@@ -49,23 +49,23 @@ pointing: determines the direction of the arrow on the error message dialog
 ```
 
 Below are the current defaults
+
 ```jsx
 const uiSchema = {
   "ui:options": {
-    "semantic" : {
-      "errorOptions": {
-        "size": "small",
-        "pointing": "above",
-      }
-    }
-  }
+    semantic: {
+      errorOptions: {
+        size: "small",
+        pointing: "above",
+      },
+    },
+  },
 };
 ```
 
 ## semantic options uiSchema for array items
 
 To specify a uiSchema that applies to array items, specify the semantic uiSchema value within the `ui:options` property:
-
 
 ```
 wrapItem: wrap each array item in a Segment
@@ -76,22 +76,23 @@ horizontalButtons: horizontal buttons instead of the default vertical
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
-   "ui:options": {
-      "semantic": {
-        "wrapItem": true,
-        "horizontalButtons": true
-      }
-    }
+  "ui:options": {
+    semantic: {
+      wrapItem: true,
+      horizontalButtons: true,
+    },
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```
 
 ## formContext

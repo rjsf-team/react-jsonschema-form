@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import Alert from 'antd/lib/alert';
-import List from 'antd/lib/list';
-import Space from 'antd/lib/space';
-import ExclamationCircleOutlined from '@ant-design/icons/ExclamationCircleOutlined';
+import Alert from "antd/lib/alert";
+import List from "antd/lib/list";
+import Space from "antd/lib/space";
+import ExclamationCircleOutlined from "@ant-design/icons/ExclamationCircleOutlined";
 
 const ErrorList = ({
   // errorSchema,

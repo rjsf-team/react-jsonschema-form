@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import Input from 'antd/lib/input';
+import Input from "antd/lib/input";
 
 const PasswordWidget = ({
   // autofocus,
@@ -20,10 +20,10 @@ const PasswordWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const emptyValue = options.emptyValue || '';
+  const emptyValue = options.emptyValue || "";
 
   const handleChange = ({ target }) =>
-    onChange(target.value === '' ? emptyValue : target.value);
+    onChange(target.value === "" ? emptyValue : target.value);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 
@@ -38,7 +38,7 @@ const PasswordWidget = ({
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      value={value || ''}
+      value={value || ""}
     />
   );
 };

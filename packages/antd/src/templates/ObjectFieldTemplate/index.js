@@ -1,18 +1,18 @@
-import React from 'react';
-import classNames from 'classnames';
-import _ from 'lodash';
+import React from "react";
+import classNames from "classnames";
+import _ from "lodash";
 
-import { utils } from '@rjsf/core';
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
-import { withConfigConsumer } from 'antd/lib/config-provider/context';
-import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
+import { utils } from "@rjsf/core";
+import Button from "antd/lib/button";
+import Col from "antd/lib/col";
+import Row from "antd/lib/row";
+import { withConfigConsumer } from "antd/lib/config-provider/context";
+import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
 
 const { canExpand } = utils;
 
 const DESCRIPTION_COL_STYLE = {
-  paddingBottom: '8px',
+  paddingBottom: "8px",
 };
 
 const ObjectFieldTemplate = ({
@@ -32,12 +32,12 @@ const ObjectFieldTemplate = ({
   title,
   uiSchema,
 }) => {
-  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = formContext;
+  const { colSpan = 24, labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
   const labelColClassName = classNames(
     labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`,
+    labelAlign === "left" && `${labelClsBasic}-left`
     // labelCol.className,
   );
 
@@ -47,9 +47,9 @@ const ObjectFieldTemplate = ({
 
   const findUiSchema = (element) => element.content.props.uiSchema;
 
-  const findUiSchemaField = (element) => findUiSchema(element)['ui:field'];
+  const findUiSchemaField = (element) => findUiSchema(element)["ui:field"];
 
-  const findUiSchemaWidget = (element) => findUiSchema(element)['ui:widget'];
+  const findUiSchemaWidget = (element) => findUiSchema(element)["ui:widget"];
 
   const calculateColSpan = (element) => {
     const type = findSchemaType(element);
@@ -58,9 +58,9 @@ const ObjectFieldTemplate = ({
 
     const defaultColSpan =
       properties.length < 2 || // Single or no field in object.
-      type === 'object' ||
-      type === 'array' ||
-      widget === 'textarea'
+      type === "object" ||
+      type === "array" ||
+      widget === "textarea"
         ? 24
         : 12;
 
@@ -76,25 +76,25 @@ const ObjectFieldTemplate = ({
   };
 
   const filterHidden = (element) =>
-    element.content.props.uiSchema['ui:widget'] !== 'hidden';
+    element.content.props.uiSchema["ui:widget"] !== "hidden";
 
   return (
     <fieldset id={idSchema.$id}>
       <Row gutter={rowGutter}>
-        {uiSchema['ui:title'] !== false && (uiSchema['ui:title'] || title) && (
+        {uiSchema["ui:title"] !== false && (uiSchema["ui:title"] || title) && (
           <Col className={labelColClassName} span={24}>
             <TitleField
               id={`${idSchema.$id}-title`}
               required={required}
-              title={uiSchema['ui:title'] || title}
+              title={uiSchema["ui:title"] || title}
             />
           </Col>
         )}
-        {uiSchema['ui:description'] !== false &&
-          (uiSchema['ui:description'] || description) && (
+        {uiSchema["ui:description"] !== false &&
+          (uiSchema["ui:description"] || description) && (
             <Col span={24} style={DESCRIPTION_COL_STYLE}>
               <DescriptionField
-                description={uiSchema['ui:description'] || description}
+                description={uiSchema["ui:description"] || description}
                 id={`${idSchema.$id}-description`}
               />
             </Col>
@@ -115,8 +115,7 @@ const ObjectFieldTemplate = ({
                 className="object-property-expand"
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}
-                type="primary"
-              >
+                type="primary">
                 <PlusCircleOutlined /> Add Item
               </Button>
             </Col>
@@ -127,4 +126,4 @@ const ObjectFieldTemplate = ({
   );
 };
 
-export default withConfigConsumer({ prefixCls: 'form' })(ObjectFieldTemplate);
+export default withConfigConsumer({ prefixCls: "form" })(ObjectFieldTemplate);

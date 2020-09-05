@@ -72,7 +72,9 @@ const DefaultArrayItem = (props: any) => {
   return (
     <div key={props.key}>
       <Row className="mb-2  d-flex align-items-center">
-        <Col xs="9" lg="9">{props.children}</Col>
+        <Col xs="9" lg="9">
+          {props.children}
+        </Col>
 
         <Col xs="3" lg="3" className="py-4">
           {props.hasToolbar && (
@@ -166,43 +168,48 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     <div>
       <Row className="p-0 m-0">
         <Col className="p-0 m-0">
-        <ArrayFieldTitle
-          key={`array-field-title-${props.idSchema.$id}`}
-          TitleField={props.TitleField}
-          idSchema={props.idSchema}
-          title={props.uiSchema["ui:title"] || props.title}
-          required={props.required}
-        />
-
-        {(props.uiSchema["ui:description"] || props.schema.description) && (
-          <ArrayFieldDescription
-            key={`array-field-description-${props.idSchema.$id}`}
-            DescriptionField={props.DescriptionField}
+          <ArrayFieldTitle
+            key={`array-field-title-${props.idSchema.$id}`}
+            TitleField={props.TitleField}
             idSchema={props.idSchema}
-            description={
-              props.uiSchema["ui:description"] || props.schema.description
-            }
+            title={props.uiSchema["ui:title"] || props.title}
+            required={props.required}
           />
-        )}
 
-        <Container fluid key={`array-item-list-${props.idSchema.$id}`} className="p-0 m-0">
-          {props.items && props.items.map(p => DefaultArrayItem(p))}
-
-          {props.canAdd && (
-            <Container className="">
-              <Row className="mt-2">
-                <Col xs={9}></Col>
-                <Col xs={3} className="py-4 col-lg-3 col-3"> <AddButton
-                  className="array-item-add"
-                  onClick={props.onAddClick}
-                  disabled={props.disabled || props.readonly}
-                /></Col>
-
-              </Row>
-            </Container>
+          {(props.uiSchema["ui:description"] || props.schema.description) && (
+            <ArrayFieldDescription
+              key={`array-field-description-${props.idSchema.$id}`}
+              DescriptionField={props.DescriptionField}
+              idSchema={props.idSchema}
+              description={
+                props.uiSchema["ui:description"] || props.schema.description
+              }
+            />
           )}
-        </Container></Col>
 
+          <Container
+            fluid
+            key={`array-item-list-${props.idSchema.$id}`}
+            className="p-0 m-0">
+            {props.items && props.items.map((p) => DefaultArrayItem(p))}
+
+            {props.canAdd && (
+              <Container className="">
+                <Row className="mt-2">
+                  <Col xs={9}></Col>
+                  <Col xs={3} className="py-4 col-lg-3 col-3">
+                    {" "}
+                    <AddButton
+                      className="array-item-add"
+                      onClick={props.onAddClick}
+                      disabled={props.disabled || props.readonly}
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            )}
+          </Container>
+        </Col>
       </Row>
     </div>
   );

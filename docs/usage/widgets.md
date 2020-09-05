@@ -1,6 +1,6 @@
 # Widgets
 
-The uiSchema `ui:widget` property tells the form which UI widget should be used to render a field. 
+The uiSchema `ui:widget` property tells the form which UI widget should be used to render a field.
 
 Example:
 
@@ -9,39 +9,39 @@ const schema = {
   type: "object",
   properties: {
     done: {
-      type: "boolean"
-    }
-  }
+      type: "boolean",
+    },
+  },
 };
 
-const uiSchema =  {
+const uiSchema = {
   done: {
-    "ui:widget": "radio" // could also be "select"
-  }
+    "ui:widget": "radio", // could also be "select"
+  },
 };
 
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```
 
 Here's a list of supported alternative widgets for different JSON Schema data types:
 
 ## For `boolean` fields
 
-  * `radio`: a radio button group with `true` and `false` as selectable values;
-  * `select`: a select box with `true` and `false` as options;
-  * by default, a checkbox is used
+- `radio`: a radio button group with `true` and `false` as selectable values;
+- `select`: a select box with `true` and `false` as options;
+- by default, a checkbox is used
 
 > Note: To set the labels for a boolean field, instead of using `true` and `false` you can set `enumNames` in your schema. Note that `enumNames` belongs in your `schema`, not the `uiSchema`, and the order is always `[true, false]`.
 
 ## For `string` fields
 
-  * `textarea`: a `textarea` element is used;
-  * `password`: an `input[type=password]` element is used;
-  * `color`: an `input[type=color]` element is used;
-  * by default, a regular `input[type=text]` element is used.
+- `textarea`: a `textarea` element is used;
+- `password`: an `input[type=password]` element is used;
+- `color`: an `input[type=color]` element is used;
+- by default, a regular `input[type=text]` element is used.
 
 ### String formats
 
@@ -64,11 +64,11 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 
 ![](https://i.imgur.com/VF5tY60.png)
 
-You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
+You can customize the list of years displayed in the `year` dropdown by providing a `yearsRange` property to `ui:options` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 ```jsx
 const schema = {
-  type: "string"
+  type: "string",
 };
 
 const uiSchema = {
@@ -77,24 +77,23 @@ const uiSchema = {
     yearsRange: [1980, 2030],
     hideNowButton: true,
     hideClearButton: true,
-  }
+  },
 };
 
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```
 
 ## For `number` and `integer` fields
 
-  * `updown`: an `input[type=number]` updown selector;
-  * `range`: an `input[type=range]` slider;
-  * `radio`: a radio button group with enum values. This can only be used when `enum` values are specified for this input.
-  * By default, a regular `input[type=text]` element is used.
+- `updown`: an `input[type=number]` updown selector;
+- `range`: an `input[type=range]` slider;
+- `radio`: a radio button group with enum values. This can only be used when `enum` values are specified for this input.
+- By default, a regular `input[type=text]` element is used.
 
 > Note: If JSON Schema's `minimum`, `maximum` and `multipleOf` values are defined, the `min`, `max` and `step` input attributes values will take those values.
-
 
 ## Hidden widgets
 
@@ -104,24 +103,24 @@ It's possible to use a hidden widget for a field by setting its `ui:widget` uiSc
 const schema = {
   type: "object",
   properties: {
-    foo: {type: "boolean"}
-  }
+    foo: { type: "boolean" },
+  },
 };
 
 const uiSchema = {
-  foo: {"ui:widget": "hidden"}
+  foo: { "ui:widget": "hidden" },
 };
 
-render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```
 
 Notes:
 
- - Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
- - A hidden widget takes its value from the `formData` prop.
+- Hiding widgets is only supported for `boolean`, `string`, `number` and `integer` schema types;
+- A hidden widget takes its value from the `formData` prop.
 
 ## File widgets
 
@@ -130,18 +129,18 @@ This library supports a limited form of `input[type=file]` widgets, in the sense
 There are two ways to use file widgets.
 
 1. By declaring a `string` json schema type along a `data-url` [format](#string-formats):
+
 ```jsx
 const schema = {
   type: "string",
   format: "data-url",
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 2. By specifying a `ui:widget` field uiSchema directive as `file`:
+
 ```js
 const schema = {
   type: "string",
@@ -162,7 +161,7 @@ const schema = {
   items: {
     type: "string",
     format: "data-url",
-  }
+  },
 };
 ```
 
@@ -181,10 +180,10 @@ You can use the accept attribute to specify a filter for what file types the use
 ```jsx
 const schema = {
   type: "string",
-  format: "data-url"
+  format: "data-url",
 };
 
 const uiSchema = {
-  "ui:options": { accept: ".pdf" }
+  "ui:options": { accept: ".pdf" },
 };
 ```

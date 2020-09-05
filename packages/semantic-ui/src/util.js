@@ -43,7 +43,7 @@ export function cleanClassNames(classNameArr, omit = []) {
 
   // Remove any class names from omit, and make the rest unique before
   // returning them as a string
-  return [...new Set(classList.filter(cn => !omit.includes(cn)))].join(" ");
+  return [...new Set(classList.filter((cn) => !omit.includes(cn)))].join(" ");
 }
 
 /**

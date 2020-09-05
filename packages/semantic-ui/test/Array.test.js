@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Form from "../src/index";
 import renderer from "react-test-renderer";
 
@@ -7,12 +7,10 @@ describe("array fields", () => {
     const schema = {
       type: "array",
       items: {
-        type: "string"
-      }
+        type: "string",
+      },
     };
-    const tree = renderer
-      .create(<Form schema={schema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("fixed array", () => {
@@ -20,16 +18,14 @@ describe("array fields", () => {
       type: "array",
       items: [
         {
-          type: "string"
+          type: "string",
         },
         {
-          type: "number"
-        }
-      ]
+          type: "number",
+        },
+      ],
     };
-    const tree = renderer
-      .create(<Form schema={schema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("checkboxes", () => {
@@ -37,13 +33,11 @@ describe("array fields", () => {
       type: "array",
       items: {
         type: "string",
-        enum: ["a", "b", "c"]
+        enum: ["a", "b", "c"],
       },
-      uniqueItems: true
+      uniqueItems: true,
     };
-    const tree = renderer
-      .create(<Form schema={schema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

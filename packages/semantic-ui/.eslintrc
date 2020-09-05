@@ -10,16 +10,9 @@
         "beforeSelfClosing": "always"
       }
     ],
-    "curly": [
-      2
-    ],
-    "semi": [
-      2,
-      "always"
-    ],
-    "comma-dangle": [
-      0
-    ],
+    "curly": [2],
+    "semi": [2, "always"],
+    "comma-dangle": [0],
     "no-unused-vars": [
       2,
       {
@@ -28,16 +21,9 @@
         "ignoreRestSiblings": true
       }
     ],
-    "no-console": [
-      0
-    ],
-    "object-curly-spacing": [
-      2,
-      "always"
-    ],
-    "keyword-spacing": [
-      "error"
-    ]
+    "no-console": [0],
+    "object-curly-spacing": [2, "always"],
+    "keyword-spacing": ["error"]
   },
   "env": {
     "es6": true,
@@ -45,8 +31,5 @@
     "node": true
   },
   "extends": "eslint:recommended",
-  "plugins": [
-    "jsx-a11y",
-    "react"
-  ]
+  "plugins": ["jsx-a11y", "react"]
 }

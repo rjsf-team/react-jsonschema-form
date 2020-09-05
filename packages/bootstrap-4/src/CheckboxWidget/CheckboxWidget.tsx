@@ -30,21 +30,22 @@ const CheckboxWidget = (props: WidgetProps) => {
 
   const desc = label || schema.description;
   return (
-    <Form.Group  className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
-        <Form.Check
-          id={id}
-          label={desc}
-          checked={typeof value === "undefined" ? false : value}
-          required={required}
-          disabled={disabled}
-          readOnly={readonly}
-          autoFocus={autofocus}
-          onChange={_onChange}
-          type="checkbox"
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-        </Form.Group>
+    <Form.Group
+      className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
+      <Form.Check
+        id={id}
+        label={desc}
+        checked={typeof value === "undefined" ? false : value}
+        required={required}
+        disabled={disabled}
+        readOnly={readonly}
+        autoFocus={autofocus}
+        onChange={_onChange}
+        type="checkbox"
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+      />
+    </Form.Group>
   );
 };
 

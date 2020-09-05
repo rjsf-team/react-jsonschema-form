@@ -46,7 +46,7 @@ const allowedProps = [
   "panelProps",
   "errorMessage",
   "placeholder",
-  "openOnKeyboardFocus"
+  "openOnKeyboardFocus",
 ];
 
 const SelectWidget = ({
@@ -88,11 +88,13 @@ const SelectWidget = ({
 
   const _onFocus = (e: any) => onFocus(id, e.target.value);
 
-  const newOptions = (enumOptions as {value: any, label: any}[]).map(option => ({
-    key: option.value,
-    text: option.label,
-    disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
-  }));
+  const newOptions = (enumOptions as { value: any; label: any }[]).map(
+    (option) => ({
+      key: option.value,
+      text: option.label,
+      disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
+    })
+  );
 
   const uiProps = _pick(options.props || {}, allowedProps);
   return (

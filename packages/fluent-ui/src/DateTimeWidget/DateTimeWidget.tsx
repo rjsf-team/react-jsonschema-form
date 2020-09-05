@@ -6,7 +6,6 @@ import TextWidget from "../TextWidget";
 
 const { localToUTC, utcToLocal } = utils;
 
-
 const DateTimeWidget = (props: WidgetProps) => {
   const uiProps: any = props.options["props"] || {};
 
@@ -22,7 +21,14 @@ const DateTimeWidget = (props: WidgetProps) => {
     },
   };
   // TODO: rows and columns.
-  return <TextWidget {...props} options={options} value={value} onChange={onChange} />;
+  return (
+    <TextWidget
+      {...props}
+      options={options}
+      value={value}
+      onChange={onChange}
+    />
+  );
 };
 
 export default DateTimeWidget;

@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-var webpack = require('webpack');
+var webpack = require("webpack");
 
-module.exports = options => ({
+module.exports = (options) => ({
   mode: options.mode,
   devtool: options.devtool,
   cache: options.cache,
@@ -16,34 +16,31 @@ module.exports = options => ({
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        use: "babel-loader",
       },
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.less$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'style-loader',
+            loader: "style-loader",
           },
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               modules: {
                 getLocalIdent: (context, localIdentName, localName) =>
-                  localName.replace(/([A-Z])/g, '-$1').toLowerCase(),
+                  localName.replace(/([A-Z])/g, "-$1").toLowerCase(),
               },
             },
           },
           {
-            loader: 'less-loader',
+            loader: "less-loader",
             options: {
               javascriptEnabled: true,
             },
@@ -55,20 +52,20 @@ module.exports = options => ({
         include: /node_modules/,
         use: [
           {
-            loader: 'style-loader',
+            loader: "style-loader",
           },
           {
-            loader: 'css-loader',
+            loader: "css-loader",
           },
           {
-            loader: 'less-loader',
+            loader: "less-loader",
             options: {
               javascriptEnabled: true,
             },
           },
         ],
       },
-    ]
+    ],
   },
   externals: options.externals,
 });

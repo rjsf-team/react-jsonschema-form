@@ -2,8 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
-import { getSemanticProps } from
-'../util';
+import { getSemanticProps } from "../util";
 
 function UpDownWidget({
   id,

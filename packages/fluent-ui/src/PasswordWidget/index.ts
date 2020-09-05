@@ -1,2 +1,2 @@
-export { default } from './PasswordWidget';
-export * from './PasswordWidget';
+export { default } from "./PasswordWidget";
+export * from "./PasswordWidget";

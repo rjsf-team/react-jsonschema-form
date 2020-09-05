@@ -77,8 +77,10 @@ function BaseInput(props) {
       {...inputProps}
       list={schema.examples ? `examples_${inputProps.id}` : null}
       onChange={_onChange}
-      onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
-      onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
+      onBlur={onBlur && ((event) => onBlur(inputProps.id, event.target.value))}
+      onFocus={
+        onFocus && ((event) => onFocus(inputProps.id, event.target.value))
+      }
     />,
     schema.examples ? (
       <datalist id={`examples_${inputProps.id}`}>
@@ -86,7 +88,7 @@ function BaseInput(props) {
           ...new Set(
             schema.examples.concat(schema.default ? [schema.default] : [])
           ),
-        ].map(example => (
+        ].map((example) => (
           <option key={example} value={example} />
         ))}
       </datalist>

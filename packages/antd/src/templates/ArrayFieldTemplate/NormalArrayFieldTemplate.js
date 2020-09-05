@@ -1,16 +1,16 @@
-import React from 'react';
-import classNames from 'classnames';
+import React from "react";
+import classNames from "classnames";
 
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
-import { withConfigConsumer } from 'antd/lib/config-provider/context';
-import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
+import Button from "antd/lib/button";
+import Col from "antd/lib/col";
+import Row from "antd/lib/row";
+import { withConfigConsumer } from "antd/lib/config-provider/context";
+import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
 
-import ArrayFieldTemplateItem from './ArrayFieldTemplateItem';
+import ArrayFieldTemplateItem from "./ArrayFieldTemplateItem";
 
 const DESCRIPTION_COL_STYLE = {
-  paddingBottom: '8px',
+  paddingBottom: "8px",
 };
 
 const NormalArrayFieldTemplate = ({
@@ -32,12 +32,12 @@ const NormalArrayFieldTemplate = ({
   TitleField,
   uiSchema,
 }) => {
-  const { labelAlign = 'right', rowGutter = 24 } = formContext;
+  const { labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
   const labelColClassName = classNames(
     labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`,
+    labelAlign === "left" && `${labelClsBasic}-left`
     // labelCol.className,
   );
 
@@ -50,15 +50,15 @@ const NormalArrayFieldTemplate = ({
               id={`${idSchema.$id}__title`}
               key={`array-field-title-${idSchema.$id}`}
               required={required}
-              title={uiSchema['ui:title'] || title}
+              title={uiSchema["ui:title"] || title}
             />
           </Col>
         )}
 
-        {(uiSchema['ui:description'] || schema.description) && (
+        {(uiSchema["ui:description"] || schema.description) && (
           <Col span={24} style={DESCRIPTION_COL_STYLE}>
             <DescriptionField
-              description={uiSchema['ui:description'] || schema.description}
+              description={uiSchema["ui:description"] || schema.description}
               id={`${idSchema.$id}__description`}
               key={`array-field-description-${idSchema.$id}`}
             />
@@ -66,9 +66,13 @@ const NormalArrayFieldTemplate = ({
         )}
 
         <Col className="row array-item-list" span={24}>
-          {items && items.map((itemProps) => (
-            <ArrayFieldTemplateItem {...itemProps} formContext={formContext} />
-          ))}
+          {items &&
+            items.map((itemProps) => (
+              <ArrayFieldTemplateItem
+                {...itemProps}
+                formContext={formContext}
+              />
+            ))}
         </Col>
 
         {canAdd && (
@@ -80,8 +84,7 @@ const NormalArrayFieldTemplate = ({
                   className="array-item-add"
                   disabled={disabled || readonly}
                   onClick={onAddClick}
-                  type="primary"
-                >
+                  type="primary">
                   <PlusCircleOutlined /> Add Item
                 </Button>
               </Col>
@@ -93,6 +96,6 @@ const NormalArrayFieldTemplate = ({
   );
 };
 
-export default withConfigConsumer({ prefixCls: 'form' })(
-  NormalArrayFieldTemplate,
+export default withConfigConsumer({ prefixCls: "form" })(
+  NormalArrayFieldTemplate
 );

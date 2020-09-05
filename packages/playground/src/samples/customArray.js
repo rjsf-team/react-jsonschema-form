@@ -4,7 +4,7 @@ function ArrayFieldTemplate(props) {
   return (
     <div className={props.className}>
       {props.items &&
-        props.items.map(element => (
+        props.items.map((element) => (
           <div key={element.key} className={element.className}>
             <div>{element.children}</div>
             {element.hasMoveDown && (

@@ -6,19 +6,19 @@ Miscellaneous internals of react-jsonschema-form are listed here.
 
 This component follows [JSON Schema](http://json-schema.org/documentation.html) specs. We currently support JSON Schema-07 by default, but we also support other JSON schema versions through the [custom schema validation](https://react-jsonschema-form.readthedocs.io/en/latest/validation/#custom-schema-validation) feature. Due to the limitation of form widgets, there are some exceptions as follows:
 
-* `additionalItems` keyword for arrays
+- `additionalItems` keyword for arrays
 
-    This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
+  This keyword works when `items` is an array. `additionalItems: true` is not supported because there's no widget to represent an item of any type. In this case it will be treated as no additional items allowed. `additionalItems` being a valid schema is supported.
 
-* `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`)
+- `anyOf`, `allOf`, and `oneOf`, or multiple `types` (i.e. `"type": ["string", "array"]`)
 
-    The `anyOf` and `oneOf` keywords are supported; however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
+  The `anyOf` and `oneOf` keywords are supported; however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
 
-    You can also use `oneOf` with [schema dependencies](../usage/dependencies.md) to dynamically add schema properties based on input data.
+  You can also use `oneOf` with [schema dependencies](../usage/dependencies.md) to dynamically add schema properties based on input data.
 
-    The `allOf` keyword is supported; it uses [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) to merge subschemas to render the final combined schema in the form. When these subschemas are incompatible, though (or if the library has an error merging it), the `allOf` keyword is dropped from the schema.
+  The `allOf` keyword is supported; it uses [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) to merge subschemas to render the final combined schema in the form. When these subschemas are incompatible, though (or if the library has an error merging it), the `allOf` keyword is dropped from the schema.
 
-* `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/rjsf-team/react-jsonschema-form/issues/848) [#902](https://github.com/rjsf-team/rjsf-team/issues/902) [#992](https://github.com/rjsf-team/rjsf-team/issues/992)
+- `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/rjsf-team/react-jsonschema-form/issues/848) [#902](https://github.com/rjsf-team/rjsf-team/issues/902) [#992](https://github.com/rjsf-team/rjsf-team/issues/992)
 
 ## Handling of schema defaults
 
@@ -50,29 +50,46 @@ For arrays this is not the case. Defining an array, when a parent also defines a
 The `ArrayField` component provides a UI to add, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons). If you don't use glyphicons but still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
 
 ```css
-i.glyphicon { display: none; }
-.btn-add::after { content: 'Add'; }
-.array-item-move-up::after { content: 'Move Up'; }
-.array-item-move-down::after { content: 'Move Down'; }
-.array-item-remove::after { content: 'Remove'; }
+i.glyphicon {
+  display: none;
+}
+.btn-add::after {
+  content: "Add";
+}
+.array-item-move-up::after {
+  content: "Move Up";
+}
+.array-item-move-down::after {
+  content: "Move Down";
+}
+.array-item-remove::after {
+  content: "Remove";
+}
 ```
 
 ## Submit form programmatically
+
 You can use the reference to get your `Form` component and call the `submit` method to submit the form programmatically without a submit button.
 This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
 
 ```jsx
-const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
+const onSubmit = ({ formData }) => console.log("Data submitted: ", formData);
 let yourForm;
 
 const schema = {
-    type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema}
-        onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    onSubmit={onSubmit}
+    ref={(form) => {
+      yourForm = form;
+    }}
+  />,
+  document.getElementById("app")
+);
 
 yourForm.submit();
 ```

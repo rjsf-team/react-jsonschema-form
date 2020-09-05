@@ -12,10 +12,9 @@ const AddButton = (props: AddButtonProps) => (
     iconProps={addIcon}
     text="Add item"
     className={props.className}
-    onClick={e => props.onClick(e as any)}
+    onClick={(e) => props.onClick(e as any)}
     disabled={props.disabled}
-    />
-
+  />
 );
 
 export default AddButton;

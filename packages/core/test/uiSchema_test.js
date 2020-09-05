@@ -56,7 +56,7 @@ describe("uiSchema", () => {
       };
 
       const uiSchema = {
-        "ui:widget": props => {
+        "ui:widget": (props) => {
           return (
             <input
               type="text"
@@ -64,7 +64,7 @@ describe("uiSchema", () => {
               value={props.value}
               defaultValue={props.defaultValue}
               required={props.required}
-              onChange={event => props.onChange(event.target.value)}
+              onChange={(event) => props.onChange(event.target.value)}
             />
           );
         },
@@ -284,7 +284,7 @@ describe("uiSchema", () => {
         },
       };
 
-      const CustomWidget = props => {
+      const CustomWidget = (props) => {
         return (
           <input
             type="text"
@@ -292,7 +292,7 @@ describe("uiSchema", () => {
             value={props.value}
             defaultValue={props.defaultValue}
             required={props.required}
-            onChange={event => props.onChange(event.target.value)}
+            onChange={(event) => props.onChange(event.target.value)}
           />
         );
       };
@@ -322,7 +322,7 @@ describe("uiSchema", () => {
         },
       };
 
-      const CustomWidget = props => {
+      const CustomWidget = (props) => {
         const { value, options } = props;
         return (
           <input type="text" className={options.className} value={value} />
@@ -383,7 +383,7 @@ describe("uiSchema", () => {
         },
       };
 
-      const CustomWidget = props => {
+      const CustomWidget = (props) => {
         const { options } = props;
         const { enumOptions, className } = options;
         return (
@@ -1595,7 +1595,7 @@ describe("uiSchema", () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const labels = [].map.call(
           node.querySelectorAll(".field-radio-group label"),
-          node => node.textContent
+          (node) => node.textContent
         );
 
         expect(labels).eql(["Yes", "No"]);
@@ -1780,7 +1780,7 @@ describe("uiSchema", () => {
 
       const ids = [].map.call(
         node.querySelectorAll("input[type=text]"),
-        node => node.id
+        (node) => node.id
       );
       expect(ids).eql(["myform_foo", "myform_bar"]);
     });
@@ -1803,7 +1803,7 @@ describe("uiSchema", () => {
 
       const ids = [].map.call(
         node.querySelectorAll("input[type=text]"),
-        node => node.id
+        (node) => node.id
       );
       expect(ids).eql(["myform_0", "myform_1"]);
     });
@@ -1843,7 +1843,7 @@ describe("uiSchema", () => {
 
       const ids = [].map.call(
         node.querySelectorAll("input[type=text]"),
-        node => node.id
+        (node) => node.id
       );
       expect(ids).eql([
         "myform_0_foo",
@@ -1882,7 +1882,7 @@ describe("uiSchema", () => {
         it("should disable an ArrayField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.disabled
+            (node) => node.disabled
           );
           expect(disabled).eql([true, true]);
         });
@@ -1924,7 +1924,7 @@ describe("uiSchema", () => {
         it("should disable an ObjectField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.disabled
+            (node) => node.disabled
           );
           expect(disabled).eql([true, true]);
         });
@@ -2116,7 +2116,7 @@ describe("uiSchema", () => {
 
         const disabled = [].map.call(
           node.querySelectorAll("select"),
-          node => node.disabled
+          (node) => node.disabled
         );
         expect(disabled).eql([true, true, true]);
       });
@@ -2135,7 +2135,7 @@ describe("uiSchema", () => {
 
         const disabled = [].map.call(
           node.querySelectorAll("select"),
-          node => node.disabled
+          (node) => node.disabled
         );
         expect(disabled).eql([true, true, true, true, true, true]);
       });
@@ -2170,7 +2170,7 @@ describe("uiSchema", () => {
         it("should mark as readonly an ArrayField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.hasAttribute("readonly")
+            (node) => node.hasAttribute("readonly")
           );
           expect(disabled).eql([true, true]);
         });
@@ -2212,7 +2212,7 @@ describe("uiSchema", () => {
         it("should mark as readonly an ObjectField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.hasAttribute("readonly")
+            (node) => node.hasAttribute("readonly")
           );
           expect(disabled).eql([true, true]);
         });
@@ -2395,7 +2395,7 @@ describe("uiSchema", () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+        const readonly = [].map.call(node.querySelectorAll("select"), (node) =>
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true]);
@@ -2413,7 +2413,7 @@ describe("uiSchema", () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+        const readonly = [].map.call(node.querySelectorAll("select"), (node) =>
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true, true, true, true]);
@@ -2444,7 +2444,7 @@ describe("uiSchema", () => {
         it("should mark as readonly an ArrayField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.hasAttribute("readonly")
+            (node) => node.hasAttribute("readonly")
           );
           expect(disabled).eql([true, true]);
         });
@@ -2485,7 +2485,7 @@ describe("uiSchema", () => {
         it("should mark as readonly an ObjectField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.hasAttribute("readonly")
+            (node) => node.hasAttribute("readonly")
           );
           expect(disabled).eql([true, true]);
         });
@@ -2663,7 +2663,7 @@ describe("uiSchema", () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+        const readonly = [].map.call(node.querySelectorAll("select"), (node) =>
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true]);
@@ -2681,7 +2681,7 @@ describe("uiSchema", () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+        const readonly = [].map.call(node.querySelectorAll("select"), (node) =>
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true, true, true, true]);

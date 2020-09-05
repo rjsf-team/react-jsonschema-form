@@ -133,7 +133,7 @@ export default {
         return (
           <input
             className="form-control"
-            onChange={event => onChange(event.target.value)}
+            onChange={(event) => onChange(event.target.value)}
             style={{ backgroundColor }}
             value={value}
           />
@@ -151,7 +151,7 @@ export default {
             className="form-control"
             style={{ backgroundColor }}
             value={value}
-            onChange={event => onChange(event.target.value)}>
+            onChange={(event) => onChange(event.target.value)}>
             {enumOptions.map(({ label, value }, i) => {
               return (
                 <option key={i} value={value}>

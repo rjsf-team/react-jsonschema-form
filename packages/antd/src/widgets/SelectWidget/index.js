@@ -1,16 +1,16 @@
 /* eslint-disable no-else-return */
-import React from 'react';
+import React from "react";
 
-import { utils } from '@rjsf/core';
-import Select from 'antd/lib/select';
+import { utils } from "@rjsf/core";
+import Select from "antd/lib/select";
 
 const { asNumber, guessType } = utils;
 
 const SELECT_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
-const nums = new Set(['number', 'integer']);
+const nums = new Set(["number", "integer"]);
 
 /**
  * This is a silly limitation in the DOM where option change event values are
@@ -20,23 +20,23 @@ const processValue = (schema, value) => {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
   const { type, items } = schema;
 
-  if (value === '') {
+  if (value === "") {
     return undefined;
-  } else if (type === 'array' && items && nums.has(items.type)) {
+  } else if (type === "array" && items && nums.has(items.type)) {
     return value.map(asNumber);
-  } else if (type === 'boolean') {
-    return value === 'true';
-  } else if (type === 'number') {
+  } else if (type === "boolean") {
+    return value === "true";
+  } else if (type === "number") {
     return asNumber(value);
   }
 
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (schema.enum) {
-    if (schema.enum.every((x) => guessType(x) === 'number')) {
+    if (schema.enum.every((x) => guessType(x) === "number")) {
       return asNumber(value);
-    } else if (schema.enum.every((x) => guessType(x) === 'boolean')) {
-      return value === 'true';
+    } else if (schema.enum.every((x) => guessType(x) === "boolean")) {
+      return value === "true";
     }
   }
 
@@ -83,21 +83,19 @@ const SelectWidget = ({
       disabled={disabled || (readonlyAsDisabled && readonly)}
       getPopupContainer={getPopupContainer}
       id={id}
-      mode={typeof multiple !== 'undefined' ? 'multiple' : undefined}
+      mode={typeof multiple !== "undefined" ? "multiple" : undefined}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={SELECT_STYLE}
-      value={typeof value !== 'undefined' ? stringify(value) : undefined}
-    >
+      value={typeof value !== "undefined" ? stringify(value) : undefined}>
       {enumOptions.map(({ value: optionValue, label: optionLabel }) => (
         <Select.Option
           disabled={enumDisabled && enumDisabled.indexOf(value) !== -1}
           key={String(optionValue)}
-          value={String(optionValue)}
-        >
+          value={String(optionValue)}>
           {optionLabel}
         </Select.Option>
       ))}

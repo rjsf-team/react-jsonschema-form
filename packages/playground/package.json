@@ -104,7 +104,7 @@
     "mocha": "^5.2.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "nyc": "^13.2.0",
-    "prettier": "^1.15.1",
+    "prettier": "^2.1.1",
     "react": "^16.9.0",
     "react-codemirror2": "^4.1.0",
     "react-dom": "^16.9.0",

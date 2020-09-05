@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import { FieldProps } from '@rjsf/core';
+import { FieldProps } from "@rjsf/core";
 
-import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import Box from "@material-ui/core/Box";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
 
 const TitleField = ({ title }: FieldProps) => (
   <>

@@ -11,7 +11,7 @@ const DateTimeWidget = (props: TextWidgetProps) => {
   };
 
   return (
-    <TextWidget  
+    <TextWidget
       {...props}
       type="datetime-local"
       value={value}

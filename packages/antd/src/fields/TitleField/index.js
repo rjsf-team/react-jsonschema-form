@@ -1,7 +1,7 @@
-import React from 'react';
-import classNames from 'classnames';
+import React from "react";
+import classNames from "classnames";
 
-import { withConfigConsumer } from 'antd/lib/config-provider/context';
+import { withConfigConsumer } from "antd/lib/config-provider/context";
 
 const TitleField = ({
   // autofocus,
@@ -24,8 +24,8 @@ const TitleField = ({
   const { colon = true } = formContext;
 
   let labelChildren = title;
-  if (colon && typeof title === 'string' && title.trim() !== '') {
-    labelChildren = title.replace(/[：:]\s*$/, '');
+  if (colon && typeof title === "string" && title.trim() !== "") {
+    labelChildren = title.replace(/[：:]\s*$/, "");
   }
 
   const labelClassName = classNames({
@@ -49,8 +49,7 @@ const TitleField = ({
       className={labelClassName}
       htmlFor={id}
       onClick={handleLabelClick}
-      title={typeof title === 'string' ? title : ''}
-    >
+      title={typeof title === "string" ? title : ""}>
       {labelChildren}
     </label>
   ) : null;
@@ -60,4 +59,4 @@ TitleField.defaultProps = {
   formContext: {},
 };
 
-export default withConfigConsumer({ prefixCls: 'form' })(TitleField);
+export default withConfigConsumer({ prefixCls: "form" })(TitleField);

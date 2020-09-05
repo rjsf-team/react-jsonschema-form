@@ -36,7 +36,7 @@ function DemoFrame(props) {
   });
   const instanceRef = React.useRef();
 
-  const handleRef = React.useCallback(ref => {
+  const handleRef = React.useCallback((ref) => {
     instanceRef.current = {
       contentDocument: ref ? ref.node.contentDocument : null,
       contentWindow: ref ? ref.node.contentWindow : null,

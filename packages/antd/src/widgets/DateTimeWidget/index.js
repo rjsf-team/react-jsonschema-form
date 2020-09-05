@@ -1,10 +1,10 @@
-import React from 'react';
-import dayjs from 'dayjs';
+import React from "react";
+import dayjs from "dayjs";
 
-import DatePicker from '../../components/DatePicker';
+import DatePicker from "../../components/DatePicker";
 
 const DATE_PICKER_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const DateTimeWidget = ({

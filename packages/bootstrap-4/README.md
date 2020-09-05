@@ -37,7 +37,6 @@
 
 ## About The Project
 
-
 Exports `bootstrap-4` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
@@ -68,14 +67,14 @@ yarn add @rjsf/bootstrap-4
 ## Usage
 
 ```js
-import Form from '@rjsf/bootstrap-4';
+import Form from "@rjsf/bootstrap-4";
 ```
 
 or
 
 ```js
-import { withTheme } from '@rjsf/core';
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { withTheme } from "@rjsf/core";
+import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 
 const Form = withTheme(Bootstrap4Theme);
 ```

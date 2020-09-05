@@ -85,7 +85,7 @@ export function toErrorList(errorSchema, fieldName = "root") {
   let errorList = [];
   if ("__errors" in errorSchema) {
     errorList = errorList.concat(
-      errorSchema.__errors.map(stack => {
+      errorSchema.__errors.map((stack) => {
         return {
           stack: `${fieldName}: ${stack}`,
         };
@@ -143,7 +143,7 @@ function transformAjvErrors(errors = []) {
     return [];
   }
 
-  return errors.map(e => {
+  return errors.map((e) => {
     const { dataPath, keyword, message, params, schemaPath } = e;
     let property = `${dataPath}`;
 
@@ -195,7 +195,7 @@ export default function validateFormData(
 
   // add more custom formats to validate against
   if (customFormats && newFormats && isObject(customFormats)) {
-    Object.keys(customFormats).forEach(formatName => {
+    Object.keys(customFormats).forEach((formatName) => {
       ajv.addFormat(formatName, customFormats[formatName]);
     });
 

@@ -78,7 +78,7 @@ function LabelInput(props) {
       className="form-control"
       type="text"
       id={id}
-      onBlur={event => onChange(event.target.value)}
+      onBlur={(event) => onChange(event.target.value)}
       defaultValue={label}
     />
   );
@@ -105,7 +105,7 @@ function ErrorList(props) {
     <div>
       <ul className="error-detail bs-callout bs-callout-info">
         {errors
-          .filter(elem => !!elem)
+          .filter((elem) => !!elem)
           .map((error, index) => {
             return (
               <li className="text-danger" key={index}>

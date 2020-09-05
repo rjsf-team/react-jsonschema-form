@@ -1,30 +1,30 @@
-import { utils } from '@rjsf/core';
+import { utils } from "@rjsf/core";
 
-import DescriptionField from './fields/DescriptionField';
-import TitleField from './fields/TitleField';
+import DescriptionField from "./fields/DescriptionField";
+import TitleField from "./fields/TitleField";
 
-import FieldTemplate from './templates/FieldTemplate';
-import ObjectFieldTemplate from './templates/ObjectFieldTemplate';
-import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
+import FieldTemplate from "./templates/FieldTemplate";
+import ObjectFieldTemplate from "./templates/ObjectFieldTemplate";
+import ArrayFieldTemplate from "./templates/ArrayFieldTemplate";
 
-import AltDateTimeWidget from './widgets/AltDateTimeWidget';
-import AltDateWidget from './widgets/AltDateWidget';
-import CheckboxesWidget from './widgets/CheckboxesWidget';
-import CheckboxWidget from './widgets/CheckboxWidget';
-import ColorWidget from './widgets/ColorWidget';
-import DateTimeWidget from './widgets/DateTimeWidget';
-import DateWidget from './widgets/DateWidget';
-import EmailWidget from './widgets/EmailWidget';
-import PasswordWidget from './widgets/PasswordWidget';
-import RadioWidget from './widgets/RadioWidget';
-import RangeWidget from './widgets/RangeWidget';
-import SelectWidget from './widgets/SelectWidget';
-import TextareaWidget from './widgets/TextareaWidget';
-import TextWidget from './widgets/TextWidget';
-import UpDownWidget from './widgets/UpDownWidget';
-import URLWidget from './widgets/URLWidget';
+import AltDateTimeWidget from "./widgets/AltDateTimeWidget";
+import AltDateWidget from "./widgets/AltDateWidget";
+import CheckboxesWidget from "./widgets/CheckboxesWidget";
+import CheckboxWidget from "./widgets/CheckboxWidget";
+import ColorWidget from "./widgets/ColorWidget";
+import DateTimeWidget from "./widgets/DateTimeWidget";
+import DateWidget from "./widgets/DateWidget";
+import EmailWidget from "./widgets/EmailWidget";
+import PasswordWidget from "./widgets/PasswordWidget";
+import RadioWidget from "./widgets/RadioWidget";
+import RangeWidget from "./widgets/RangeWidget";
+import SelectWidget from "./widgets/SelectWidget";
+import TextareaWidget from "./widgets/TextareaWidget";
+import TextWidget from "./widgets/TextWidget";
+import UpDownWidget from "./widgets/UpDownWidget";
+import URLWidget from "./widgets/URLWidget";
 
-import ErrorList from './ErrorList';
+import ErrorList from "./ErrorList";
 
 // import './index.less';
 

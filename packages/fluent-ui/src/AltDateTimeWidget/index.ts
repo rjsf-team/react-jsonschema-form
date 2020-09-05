@@ -1,2 +1,2 @@
-export { default } from './AltDateTimeWidget';
-export * from './AltDateTimeWidget';
+export { default } from "./AltDateTimeWidget";
+export * from "./AltDateTimeWidget";

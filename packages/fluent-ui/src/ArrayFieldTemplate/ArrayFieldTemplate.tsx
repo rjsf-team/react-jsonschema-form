@@ -8,7 +8,7 @@ import AddButton from "../AddButton/AddButton";
 import IconButton from "../IconButton/IconButton";
 
 const rightJustify = {
-  float: "right"
+  float: "right",
 } as React.CSSProperties;
 
 const { isMultiSelect, getDefaultRegistry } = utils;
@@ -70,11 +70,11 @@ const DefaultArrayItem = (props: any) => {
     <div key={props.key} className="ms-Grid" dir="ltr">
       <div className="ms-Grid-row">
         <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg9">
-          <div className="ms-Grid-row">
-          {props.children}
-          </div>
+          <div className="ms-Grid-row">{props.children}</div>
         </div>
-        <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg3" style={{textAlign: "right"}}>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={{ textAlign: "right" }}>
           <IconButton
             icon="arrow-up"
             className="array-item-move-up"
@@ -159,7 +159,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         />
       )}
 
-      {props.items && props.items.map(p => DefaultArrayItem(p))}
+      {props.items && props.items.map((p) => DefaultArrayItem(p))}
 
       {props.canAdd && (
         <span style={rightJustify}>

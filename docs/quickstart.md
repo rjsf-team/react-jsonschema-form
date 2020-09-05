@@ -9,12 +9,10 @@ First, specify a schema using the [JSON Schema specification](https://json-schem
 ```jsx
 const schema = {
   title: "Test form",
-  type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 You can also render an object with multiple fields with the below schema:
@@ -25,17 +23,15 @@ const schema = {
   type: "object",
   properties: {
     name: {
-      type: "string"
+      type: "string",
     },
     age: {
-      type: "number"
-    }
-  }
+      type: "number",
+    },
+  },
 };
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](/docs/usage/single.md).
@@ -45,20 +41,20 @@ For more information and examples of JSON Schema properties that this library su
 The uiSchema is used to add more customization to the form's look and feel. Use the `classNames`
 attribute of the uiSchema to add a custom CSS class name to the form:
 
-
 ```jsx
 const schema = {
   title: "Test form",
-  type: "string"
+  type: "string",
 };
 
 const uiSchema = {
-  classNames: "custom-css-class"
+  classNames: "custom-css-class",
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} />,
+  document.getElementById("app")
+);
 ```
 
 To customize object fields in the uiSchema, the structure of the
@@ -71,26 +67,24 @@ const schema = {
   type: "object",
   properties: {
     name: {
-      type: "string"
+      type: "string",
     },
     age: {
-      type: "number"
-    }
-  }
+      type: "number",
+    },
+  },
 };
 
 const uiSchema = {
   name: {
-    classNames: "custom-class-name"
+    classNames: "custom-class-name",
   },
   age: {
-    classNames: "custom-class-age"
-  }
-}
+    classNames: "custom-class-age",
+  },
+};
 
-render((
-  <Form schema={schema} />
-), document.getElementById("app"));
+render(<Form schema={schema} />, document.getElementById("app"));
 ```
 
 ## Form initialization
@@ -102,23 +96,23 @@ const schema = {
   type: "object",
   properties: {
     title: {
-      type: "string"
+      type: "string",
     },
     done: {
-      type: "boolean"
-    }
-  }
+      type: "boolean",
+    },
+  },
 };
 
 const formData = {
   title: "First task",
-  done: true
+  done: true,
 };
 
-render((
-  <Form schema={schema}
-        formData={formData} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} formData={formData} />,
+  document.getElementById("app")
+);
 ```
 
 > Note: If your form has a single field, pass a single value to `formData`. ex: `formData="Charlie"`
@@ -137,14 +131,14 @@ By default, `<Form />` is an [uncontrolled component](https://reactjs.org/docs/u
 ```jsx
 const App = () => {
   const [formData, setFormData] = React.useState(null);
-  return (<Form
-    schema={{type: "string"}}
-    formData={formData}
-    onChange={e => setFormData(e.formData)}
-  />);
+  return (
+    <Form
+      schema={{ type: "string" }}
+      formData={formData}
+      onChange={(e) => setFormData(e.formData)}
+    />
+  );
 };
 
-render((
-  <App />
-), document.getElementById("app"));
+render(<App />, document.getElementById("app"));
 ```
