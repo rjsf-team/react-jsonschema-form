@@ -9,8 +9,8 @@
     "changed": "lerna changed",
     "test": "lerna run test",
     "lint": "lerna run lint",
-    "cs-check": "lerna run cs-check",
-    "cs-format": "lerna run cs-format",
+    "cs-check": "prettier -l .",
+    "cs-format": "prettier --write .",
     "build": "lerna run --stream build",
     "start": "lerna run start --stream --parallel"
   },

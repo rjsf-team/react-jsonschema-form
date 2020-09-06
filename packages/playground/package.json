@@ -7,8 +7,6 @@
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "prepublishOnly": "npm run build:lib",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js",
-    "cs-check": "prettier -l \"{playground,src,test}/**/*.js\"",
-    "cs-format": "prettier \"{playground,src,test}/**/*.js\" --write",
     "build": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "lint": "eslint src test playground",
     "precommit": "lint-staged",
