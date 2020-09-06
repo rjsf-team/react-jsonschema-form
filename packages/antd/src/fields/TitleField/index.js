@@ -49,7 +49,8 @@ const TitleField = ({
       className={labelClassName}
       htmlFor={id}
       onClick={handleLabelClick}
-      title={typeof title === "string" ? title : ""}>
+      title={typeof title === "string" ? title : ""}
+    >
       {labelChildren}
     </label>
   ) : null;

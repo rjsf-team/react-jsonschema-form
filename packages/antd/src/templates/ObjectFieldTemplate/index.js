@@ -115,7 +115,8 @@ const ObjectFieldTemplate = ({
                 className="object-property-expand"
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}
-                type="primary">
+                type="primary"
+              >
                 <PlusCircleOutlined /> Add Item
               </Button>
             </Col>

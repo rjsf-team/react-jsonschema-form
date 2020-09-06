@@ -48,7 +48,8 @@ function DefaultArrayItem(props) {
             !isInitialArrayItem(props)
               ? { ...gridStyle(!props.horizontalButtons), alignItems: "center" }
               : gridStyle(!props.horizontalButtons)
-          }>
+          }
+        >
           <Grid.Column width={16} verticalAlign="middle">
             {props.children}
           </Grid.Column>
@@ -141,7 +142,8 @@ function DefaultFixedArrayFieldTemplate({
       {fieldDescription && (
         <div
           className="field-description"
-          key={`field-description-${idSchema.$id}`}>
+          key={`field-description-${idSchema.$id}`}
+        >
           {fieldDescription}
         </div>
       )}
@@ -157,7 +159,8 @@ function DefaultFixedArrayFieldTemplate({
               marginTop: "1rem",
               position: "relative",
               textAlign: "right",
-            }}>
+            }}
+          >
             <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
           </div>
         )}
@@ -191,7 +194,8 @@ function DefaultNormalArrayFieldTemplate({
         className,
         classNames,
         "sortable-form-fields",
-      ])}>
+      ])}
+    >
       <ArrayFieldTitle
         key={`array-field-title-${idSchema.$id}`}
         TitleField={TitleField}
@@ -221,7 +225,8 @@ function DefaultNormalArrayFieldTemplate({
               marginTop: "1rem",
               position: "relative",
               textAlign: "right",
-            }}>
+            }}
+          >
             <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
           </div>
         )}

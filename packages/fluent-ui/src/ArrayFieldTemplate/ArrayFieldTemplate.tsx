@@ -74,7 +74,8 @@ const DefaultArrayItem = (props: any) => {
         </div>
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
-          style={{ textAlign: "right" }}>
+          style={{ textAlign: "right" }}
+        >
           <IconButton
             icon="arrow-up"
             className="array-item-move-up"
@@ -113,14 +114,16 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       {(props.uiSchema["ui:description"] || props.schema.description) && (
         <div
           className="field-description"
-          key={`field-description-${props.idSchema.$id}`}>
+          key={`field-description-${props.idSchema.$id}`}
+        >
           {props.uiSchema["ui:description"] || props.schema.description}
         </div>
       )}
 
       <div
         className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}>
+        key={`array-item-list-${props.idSchema.$id}`}
+      >
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 

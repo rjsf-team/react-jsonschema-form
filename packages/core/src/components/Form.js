@@ -461,7 +461,8 @@ export default class Form extends Component {
         onSubmit={this.onSubmit}
         ref={(form) => {
           this.formElement = form;
-        }}>
+        }}
+      >
         {this.renderErrors()}
         <_SchemaField
           schema={schema}

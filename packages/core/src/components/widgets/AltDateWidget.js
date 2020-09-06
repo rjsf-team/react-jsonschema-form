@@ -166,7 +166,8 @@ class AltDateWidget extends Component {
             <a
               href="#"
               className="btn btn-warning btn-clear"
-              onClick={this.clear}>
+              onClick={this.clear}
+            >
               Clear
             </a>
           </li>

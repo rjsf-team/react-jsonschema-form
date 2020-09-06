@@ -36,11 +36,13 @@ const FieldTemplate = ({
       onKeyChange={onKeyChange}
       readonly={readonly}
       required={required}
-      schema={schema}>
+      schema={schema}
+    >
       <FormControl
         fullWidth={true}
         error={rawErrors.length ? true : false}
-        required={required}>
+        required={required}
+      >
         {children}
         {displayLabel && rawDescription ? (
           <Typography variant="caption" color="textSecondary">

@@ -24,7 +24,8 @@ const CustomCheckbox = function (props) {
     <button
       id="custom"
       className={props.value ? "checked" : "unchecked"}
-      onClick={() => props.onChange(!props.value)}>
+      onClick={() => props.onChange(!props.value)}
+    >
       {String(props.value)}
     </button>
   );

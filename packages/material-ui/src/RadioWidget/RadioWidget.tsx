@@ -42,7 +42,8 @@ const RadioWidget = ({
         row={row as boolean}
         onChange={_onChange}
         onBlur={_onBlur}
-        onFocus={_onFocus}>
+        onFocus={_onFocus}
+      >
         {(enumOptions as any).map((option: any, i: number) => {
           const itemDisabled =
             enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;

@@ -90,12 +90,14 @@ const SelectWidget = ({
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={SELECT_STYLE}
-      value={typeof value !== "undefined" ? stringify(value) : undefined}>
+      value={typeof value !== "undefined" ? stringify(value) : undefined}
+    >
       {enumOptions.map(({ value: optionValue, label: optionLabel }) => (
         <Select.Option
           disabled={enumDisabled && enumDisabled.indexOf(value) !== -1}
           key={String(optionValue)}
-          value={String(optionValue)}>
+          value={String(optionValue)}
+        >
           {optionLabel}
         </Select.Option>
       ))}

@@ -31,7 +31,8 @@ const CheckboxWidget = (props: WidgetProps) => {
   const desc = label || schema.description;
   return (
     <Form.Group
-      className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
+      className={`checkbox ${disabled || readonly ? "disabled" : ""}`}
+    >
       <Form.Check
         id={id}
         label={desc}

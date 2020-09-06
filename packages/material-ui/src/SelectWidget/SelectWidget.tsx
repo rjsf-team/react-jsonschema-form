@@ -89,7 +89,8 @@ const SelectWidget = ({
       }}
       SelectProps={{
         multiple: typeof multiple === "undefined" ? false : multiple,
-      }}>
+      }}
+    >
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any =
           enumDisabled && (enumDisabled as any).indexOf(value) != -1;

@@ -20,7 +20,8 @@ function RawErrors({ errors, options }) {
         color="red"
         pointing={pointing || "above"}
         size={size || "small"}
-        basic>
+        basic
+      >
         <List bulleted>
           {errors.map((error) => (
             <List.Item key={shortid.generate()} content={error} />

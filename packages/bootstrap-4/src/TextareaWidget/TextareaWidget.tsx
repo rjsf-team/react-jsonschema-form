@@ -42,7 +42,8 @@ const TextareaWidget = ({
         {required && (
           <span
             aria-hidden
-            className={rawErrors.length > 0 ? "text-danger ml-1" : "ml-1"}>
+            className={rawErrors.length > 0 ? "text-danger ml-1" : "ml-1"}
+          >
             &thinsp;{"*"}
           </span>
         )}

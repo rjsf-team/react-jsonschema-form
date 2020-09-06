@@ -37,13 +37,15 @@ const CheckboxesWidget = ({
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
-      value={value}>
+      value={value}
+    >
       {enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (
         <span key={optionValue}>
           <Checkbox
             autoFocus={i === 0 ? autofocus : false}
             disabled={enumDisabled && enumDisabled.indexOf(value) !== -1}
-            value={optionValue}>
+            value={optionValue}
+          >
             {optionLabel}
           </Checkbox>
           {!inline && <br />}

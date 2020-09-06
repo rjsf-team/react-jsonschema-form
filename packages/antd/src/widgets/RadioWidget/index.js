@@ -38,13 +38,15 @@ const RadioWidget = ({
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
-      value={`${value}`}>
+      value={`${value}`}
+    >
       {enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (
         <Radio
           autoFocus={i === 0 ? autofocus : false}
           disabled={enumDisabled && enumDisabled.indexOf(value) !== -1}
           key={`${optionValue}`}
-          value={`${optionValue}`}>
+          value={`${optionValue}`}
+        >
           {optionLabel}
         </Radio>
       ))}

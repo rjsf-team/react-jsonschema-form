@@ -57,7 +57,8 @@ const FieldTemplate = ({
       onKeyChange={onKeyChange}
       readonly={readonly}
       required={required}
-      schema={schema}>
+      schema={schema}
+    >
       {id === "root" ? (
         children
       ) : (
@@ -72,7 +73,8 @@ const FieldTemplate = ({
           required={required}
           style={wrapperStyle}
           validateStatus={rawErrors ? "error" : undefined}
-          wrapperCol={wrapperCol}>
+          wrapperCol={wrapperCol}
+        >
           {children}
         </Form.Item>
       )}

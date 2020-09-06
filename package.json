@@ -18,9 +18,6 @@
     "lerna": "^3.18.3",
     "prettier": "^2.1.1"
   },
-  "prettier": {
-    "jsxBracketSameLine": true
-  },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {

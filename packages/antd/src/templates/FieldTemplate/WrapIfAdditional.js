@@ -63,7 +63,8 @@ const WrapIfAdditional = ({
               labelCol={labelCol}
               required={required}
               style={wrapperStyle}
-              wrapperCol={wrapperCol}>
+              wrapperCol={wrapperCol}
+            >
               <Input
                 className="form-control"
                 defaultValue={label}

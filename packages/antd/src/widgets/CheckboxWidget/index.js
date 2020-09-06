@@ -35,7 +35,8 @@ const CheckboxWidget = ({
       name={id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}>
+      onFocus={!readonly ? handleFocus : undefined}
+    >
       {label}
     </Checkbox>
   );

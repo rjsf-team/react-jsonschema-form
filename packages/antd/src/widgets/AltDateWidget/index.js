@@ -150,7 +150,8 @@ const AltDateWidget = ({
             className="btn-clear"
             danger
             onClick={handleClear}
-            type="primary">
+            type="primary"
+          >
             Clear
           </Button>
         </Col>

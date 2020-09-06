@@ -15,7 +15,8 @@ const ExposedArrayKeyTemplate = function (props) {
           <div
             key={element.key}
             className="array-item"
-            data-rjsf-itemkey={element.key}>
+            data-rjsf-itemkey={element.key}
+          >
             <div>{element.children}</div>
             {(element.hasMoveUp || element.hasMoveDown) && (
               <button
@@ -23,7 +24,8 @@ const ExposedArrayKeyTemplate = function (props) {
                 onClick={element.onReorderClick(
                   element.index,
                   element.index + 1
-                )}>
+                )}
+              >
                 Down
               </button>
             )}
@@ -33,14 +35,16 @@ const ExposedArrayKeyTemplate = function (props) {
                 onClick={element.onReorderClick(
                   element.index,
                   element.index - 1
-                )}>
+                )}
+              >
                 Up
               </button>
             )}
             {element.hasRemove && (
               <button
                 className="array-item-remove"
-                onClick={element.onDropIndexClick(element.index)}>
+                onClick={element.onDropIndexClick(element.index)}
+              >
                 Remove
               </button>
             )}
@@ -335,7 +339,8 @@ describe("ArrayField", () => {
             className={
               "array-item-move-before array-item-move-before-to-" + beforeIndex
             }
-            onClick={item.onAddIndexClick(beforeIndex)}>
+            onClick={item.onAddIndexClick(beforeIndex)}
+          >
             {"Add Item Above"}
           </button>
         );
@@ -347,7 +352,8 @@ describe("ArrayField", () => {
             className={
               "array-item-move-after array-item-move-after-to-" + afterIndex
             }
-            onClick={item.onAddIndexClick(afterIndex)}>
+            onClick={item.onAddIndexClick(afterIndex)}
+          >
             {"Add Item Below"}
           </button>
         );
@@ -356,7 +362,8 @@ describe("ArrayField", () => {
           <div
             key={item.key}
             data-rjsf-itemkey={item.key}
-            className={`array-item item-${item.index}`}>
+            className={`array-item item-${item.index}`}
+          >
             <div>{addBeforeButton}</div>
             {item.children}
             <div>{addAfterButton}</div>
@@ -567,7 +574,8 @@ describe("ArrayField", () => {
             <button
               key={i}
               className={"array-item-move-to-" + i}
-              onClick={props.onReorderClick(props.index, i)}>
+              onClick={props.onReorderClick(props.index, i)}
+            >
               {"Move item to index " + i}
             </button>
           );
@@ -576,7 +584,8 @@ describe("ArrayField", () => {
           <div
             key={props.key}
             data-rjsf-itemkey={props.key}
-            className={`array-item item-${props.index}`}>
+            className={`array-item item-${props.index}`}
+          >
             {props.children}
             {buttons}
           </div>

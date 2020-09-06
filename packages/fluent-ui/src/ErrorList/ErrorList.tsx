@@ -18,7 +18,8 @@ const ErrorList = ({ errors }: ErrorListProps) => (
           key={i}
           messageBarType={MessageBarType.error}
           isMultiline={false}
-          dismissButtonAriaLabel="Close">
+          dismissButtonAriaLabel="Close"
+        >
           {error.stack}
         </MessageBar>
       );

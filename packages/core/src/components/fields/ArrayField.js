@@ -56,7 +56,8 @@ function DefaultArrayItem(props) {
             style={{
               display: "flex",
               justifyContent: "space-around",
-            }}>
+            }}
+          >
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconButton
                 icon="arrow-up"
@@ -116,14 +117,16 @@ function DefaultFixedArrayFieldTemplate(props) {
       {(props.uiSchema["ui:description"] || props.schema.description) && (
         <div
           className="field-description"
-          key={`field-description-${props.idSchema.$id}`}>
+          key={`field-description-${props.idSchema.$id}`}
+        >
           {props.uiSchema["ui:description"] || props.schema.description}
         </div>
       )}
 
       <div
         className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}>
+        key={`array-item-list-${props.idSchema.$id}`}
+      >
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 
@@ -162,7 +165,8 @@ function DefaultNormalArrayFieldTemplate(props) {
 
       <div
         className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}>
+        key={`array-item-list-${props.idSchema.$id}`}
+      >
         {props.items && props.items.map((p) => DefaultArrayItem(p))}
       </div>
 

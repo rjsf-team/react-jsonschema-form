@@ -18,7 +18,8 @@ const FieldTemplate = ({
       {children}
       {displayLabel && rawDescription ? (
         <Form.Text
-          className={rawErrors.length > 0 ? "text-danger" : "text-muted"}>
+          className={rawErrors.length > 0 ? "text-danger" : "text-muted"}
+        >
           {rawDescription}
         </Form.Text>
       ) : null}
@@ -36,7 +37,8 @@ const FieldTemplate = ({
       {rawHelp && (
         <Form.Text
           className={rawErrors.length > 0 ? "text-danger" : "text-muted"}
-          id={id}>
+          id={id}
+        >
           {rawHelp}
         </Form.Text>
       )}

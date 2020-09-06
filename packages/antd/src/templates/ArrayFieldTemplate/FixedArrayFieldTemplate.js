@@ -84,7 +84,8 @@ const FixedArrayFieldTemplate = ({
                   className="array-item-add"
                   disabled={disabled || readonly}
                   onClick={onAddClick}
-                  type="primary">
+                  type="primary"
+                >
                   <PlusCircleOutlined /> Add Item
                 </Button>
               </Col>

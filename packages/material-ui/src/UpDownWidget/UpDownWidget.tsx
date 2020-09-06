@@ -31,7 +31,8 @@ const UpDownWidget = ({
     <FormControl
       fullWidth={true}
       //error={!!rawErrors}
-      required={required}>
+      required={required}
+    >
       <InputLabel>{label}</InputLabel>
       <Input
         id={id}

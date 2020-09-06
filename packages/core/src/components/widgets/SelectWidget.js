@@ -90,7 +90,8 @@ function SelectWidget(props) {
       onChange={(event) => {
         const newValue = getValue(event, multiple);
         onChange(processValue(schema, newValue));
-      }}>
+      }}
+    >
       {!multiple && schema.default === undefined && (
         <option value="">{placeholder}</option>
       )}
