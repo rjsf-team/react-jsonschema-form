@@ -93,6 +93,8 @@ const SelectWidget = ({
     text: option.label,
     disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
   }));
+  
+  const defaultProps = multiple ? { defaultSelectedKeys: value } : { defaultSelectedKey: value };
 
   const uiProps = _pick(options.props || {}, allowedProps);
   return (
@@ -100,13 +102,13 @@ const SelectWidget = ({
       <Label>{label || schema.title}</Label>
       <Dropdown
         multiSelect={multiple}
-        defaultSelectedKey={value}
         required={required}
         options={newOptions}
         disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        {...defaultProps}
         {...uiProps}
       />
     </>
