@@ -45,7 +45,9 @@ export default class Form extends Component {
         errors: state.errors || [],
         errorSchema: state.errorSchema || {}
       };
-    const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
+
+    const {idSchema : originalIdSchema} = props;
+    const idSchema = originalIdSchema || toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
     return {
       status: "initial",
       schema,

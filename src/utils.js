@@ -385,24 +385,26 @@ export function shouldRender(comp, nextProps, nextState) {
   return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
 }
 
-export function toIdSchema(schema, id, definitions) {
+export function toIdSchema(schema, id, definitions, idSuffix = "") {
   const idSchema = {
     $id: id || "root"
   };
+
   if ("$ref" in schema) {
     const _schema = retrieveSchema(schema, definitions);
-    return toIdSchema(_schema, id, definitions);
+    return toIdSchema(_schema, id, definitions, idSuffix);
   }
   if ("items" in schema && !schema.items.$ref) {
-    return toIdSchema(schema.items, id, definitions);
+    return toIdSchema(schema.items, id, definitions, idSuffix);
   }
   if (schema.type !== "object") {
     return idSchema;
   }
+
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
-    idSchema[name] = toIdSchema(field, fieldId, definitions);
+    const fieldId = `${idSchema.$id}_${name}${idSuffix}`;
+    idSchema[name] = toIdSchema(field, fieldId, definitions, idSuffix);
   }
   return idSchema;
 }
