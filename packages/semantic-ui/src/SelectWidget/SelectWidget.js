@@ -64,6 +64,7 @@ function SelectWidget({
   id,
   options,
   name,
+  label,
   required,
   disabled,
   readonly,
@@ -98,6 +99,7 @@ function SelectWidget({
     <Form.Dropdown
       key={id}
       name={name}
+      label={label}
       multiple={typeof multiple === "undefined" ? false : multiple}
       value={typeof value === "undefined" ? emptyValue : value}
       disabled={disabled}
