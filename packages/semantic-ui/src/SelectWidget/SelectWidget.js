@@ -99,7 +99,7 @@ function SelectWidget({
     <Form.Dropdown
       key={id}
       name={name}
-      label={label}
+      label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
       value={typeof value === "undefined" ? emptyValue : value}
       disabled={disabled}
