@@ -34,9 +34,8 @@
     "index.d.ts"
   ],
   "engineStrict": false,
-  "engines": {
-    "npm": ">=2.14.7",
-    "node": ">=6"
+  "engines":{
+    "node": ">=10"
   },
   "peerDependencies": {
     "react": ">=16"
