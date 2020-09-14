@@ -279,7 +279,6 @@ function SchemaFieldRender(props) {
     />
   );
 
-  const { type } = schema;
   const id = idSchema.$id;
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
@@ -300,7 +299,7 @@ function SchemaFieldRender(props) {
   const classNames = [
     "form-group",
     "field",
-    `field-${type}`,
+    `field-${schema.type}`,
     errors && errors.length > 0 ? "field-error has-error has-danger" : "",
     uiSchema.classNames,
   ]
