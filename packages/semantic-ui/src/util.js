@@ -22,12 +22,21 @@ export function getSemanticProps({
    const hasFormContextProps = formContext.semantic  ? true : false;
    const hasSchemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic ? true : false;
    const hasOptionsProps = options.semantic  ? true : false;
+   const formContextProps = hasFormContextProps ? formContext.semantic : defaultContextProps;
+   let schemaProps = hasSchemaProps ? uiSchema["ui:options"].semantic : defaultSchemaProps;
+   let optionProps = hasOptionsProps ? options.semantic : {};
+   // formContext props should overide other props
+   if (hasFormContextProps){
+     Object.keys(formContext.semantic).map((key) => {
+      optionProps[key] = formContext.semantic[key];
+     });
+   }
 
   return Object.assign(
     {},
-    hasFormContextProps ? formContext.semantic : defaultContextProps,
-    hasSchemaProps ? uiSchema["ui:options"].semantic : defaultSchemaProps,
-    hasOptionsProps ? options.semantic : {},
+    formContextProps,
+    schemaProps,
+    optionProps,
   );
 }
 

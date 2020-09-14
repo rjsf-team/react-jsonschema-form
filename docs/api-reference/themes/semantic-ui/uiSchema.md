@@ -110,7 +110,6 @@ wrapLabel: wrap all labels in a div, for custom styling via CSS
       "wrapLabel": true,
       "wrapContent": true
     }
-    uiSchema={uiSchema}
   // other props...
   }}
 />

@@ -30,6 +30,30 @@ describe("util js functions", () => {
           "horizontalButtons": true
         });
       });
+
+
+      test("formContext semantic props if passed should overwrite ui:options", () => {
+        const uiSchema = {
+          "ui:options": {
+            "semantic": {
+              "wrapItem": true,
+              "inverted": false,
+              "horizontalButtons": false
+            }
+          }
+        };
+        const formContext = { semantic:{
+          "inverted": true,
+          "horizontalButtons": true
+        }
+        };
+        expect(getSemanticProps({ uiSchema,formContext, defaultSchemaProps:{ wrapItem: false , horizontalButtons: true } })).toEqual({
+          "wrapItem": true,
+          "inverted": true,
+          "horizontalButtons": true
+        });
+      });
+
   });
 
   describe("getSemanticErrorProps", () => {
