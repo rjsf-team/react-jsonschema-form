@@ -1,6 +1,6 @@
 {
-  "name": "@rjsf/fluent-ui",
-  "version": "2.4.0",
+  "name": "@rjsf-koszit/fluent-ui",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/fluent-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -63,7 +63,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+    "url": "git+https://github.com/koszti/react-jsonschema-form.git"
   },
   "license": "Apache-2.0",
   "dependencies": {

@@ -10,6 +10,8 @@
 
   <h3 align="center">react-jsonschema-form</h3>
 
+  <h3 align="center">This is a FORK of the original react-jsonschema-form with some custom temporary experimental changes</h3>
+
   <p align="center">
     A simple <a href="http://facebook.github.io/react/">React</a> component capable of using <a href="http://json-schema.org/">JSON Schema</a> to declaratively build and customize web forms.
     <br />

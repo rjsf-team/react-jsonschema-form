@@ -1,8 +1,8 @@
 {
-  "name": "react-jsonschema-form",
-  "version": "2.0.0-alpha.1",
+  "name": "react-jsonschema-form-koszti",
+  "version": "1.0.0",
   "private": true,
-  "description": "monorepo for react-jsonschema-form and its themes",
+  "description": "a fork of monorepo for react-jsonschema-form and its themes",
   "scripts": {
     "postinstall": "lerna bootstrap",
     "publish": "lerna publish",
@@ -26,7 +26,7 @@
     "tabWidth": 2
   },
   "license": "Apache-2.0",
-  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
+  "homepage": "https://github.com/koszti/react-jsonschema-form",
   "devDependencies": {
     "husky": "^3.1.0"
   },

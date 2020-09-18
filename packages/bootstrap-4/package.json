@@ -1,6 +1,6 @@
 {
-  "name": "@rjsf/bootstrap-4",
-  "version": "2.4.0",
+  "name": "@rjsf-koszti/bootstrap-4",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/bootstrap-4.esm.js",
   "typings": "dist/index.d.ts",

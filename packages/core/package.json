@@ -1,6 +1,6 @@
 {
-  "name": "@rjsf/core",
-  "version": "2.4.0",
+  "name": "@rjsf-koszti/core",
+  "version": "1.0.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
@@ -117,7 +117,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+    "url": "git+https://github.com/koszti/react-jsonschema-form.git"
   },
   "author": "Nicolas Perriault <nperriault@mozilla.com>",
   "keywords": [
@@ -126,7 +126,7 @@
     "json-schema"
   ],
   "license": "Apache-2.0",
-  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
+  "homepage": "https://github.com/koszti/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
   }
