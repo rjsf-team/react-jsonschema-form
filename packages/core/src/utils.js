@@ -361,27 +361,36 @@ export function mergeDefaultsWithFormData(defaults, formData) {
 }
 
 export function getUiOptions(uiSchema) {
-  // get all passed options from ui:widget, ui:options, and ui:<optionName>
-  return Object.keys(uiSchema)
-    .filter(key => key.indexOf("ui:") === 0)
-    .reduce((options, key) => {
-      const value = uiSchema[key];
+  let options = {};
 
-      if (key === "ui:widget" && isObject(value)) {
-        console.warn(
-          "Setting options via ui:widget object is deprecated, use ui:options instead"
-        );
-        return {
-          ...options,
-          ...(value.options || {}),
-          widget: value.component,
-        };
-      }
-      if (key === "ui:options" && isObject(value)) {
-        return { ...options, ...value };
-      }
-      return { ...options, [key.substring(3)]: value };
-    }, {});
+  //set deprecated options from ui:widget if existing
+  if (uiSchema["ui:widget"] && isObject(uiSchema["ui:widget"])) {
+    console.warn(
+      "Setting options via ui:widget object is deprecated, use ui:options instead"
+    );
+    options = {
+      ...(uiSchema["ui:widget"].options || {}),
+      widget: uiSchema["ui:widget"].component,
+    };
+  }
+
+  //ui:options overwrites deprecated options from ui:widget
+  if (uiSchema["ui:options"] && isObject(uiSchema["ui:options"])) {
+    options = { ...options, ...uiSchema["ui:options"] };
+  }
+
+  //ui:<optionName> overwrites ui:options and ui:widget
+  Object.keys(uiSchema)
+    .filter(key => {
+      return (
+        key.indexOf("ui:") === 0 && key != "ui:widget" && key != "ui:options"
+      );
+    })
+    .forEach(key => {
+      options = { ...options, [key.substring(3)]: uiSchema[key] };
+    });
+
+  return options;
 }
 
 export function getDisplayLabel(schema, uiSchema, rootSchema) {

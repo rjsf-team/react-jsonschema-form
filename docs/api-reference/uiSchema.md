@@ -5,9 +5,9 @@ A UI schema is basically an object literal providing information on **how** the 
 
 The uiSchema object follows the tree structure of the form field hierarchy, and defines how each property should be rendered.
 
-Note that every property within uiSchema can be rendered in one of two ways: `{"ui:options": {[property]: [value]}}`, or `{"ui:[property]": value}`.
+Note that every property within uiSchema can be rendered in one of two ways: `{"ui:options": {[property]: [value]}}`, or `{"ui:[property]": value}`. In instances where both ways are included for the same field, `{"ui:[property]": value}` wins dominance.
 
-In other words, the following uiSchemas are equivalent:
+In other words, the following uiSchemas are equivalent (with `ui:title` having priority):
 
 ```json
 {
