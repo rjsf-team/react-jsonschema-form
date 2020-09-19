@@ -2,6 +2,7 @@ import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
+import { getUiOptions } from "../../utils";
 
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -286,7 +287,8 @@ function SchemaFieldRender(props) {
   if (wasPropertyKeyModified) {
     label = name;
   } else {
-    label = uiSchema["ui:title"] || props.schema.title || schema.title || name;
+    const options = getUiOptions(uiSchema);
+    label = options.title || props.schema.title || schema.title || name;
   }
 
   const description =

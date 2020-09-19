@@ -44,7 +44,7 @@ function StringField(props) {
       schema={schema}
       uiSchema={uiSchema}
       id={idSchema && idSchema.$id}
-      label={title === undefined ? name : title}
+      label={options.title || title || name}
       value={formData}
       onChange={onChange}
       onBlur={onBlur}

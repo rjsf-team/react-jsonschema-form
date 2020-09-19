@@ -58,7 +58,7 @@ function BooleanField(props) {
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}
-      label={title === undefined ? name : title}
+      label={options.title || title || name}
       value={formData}
       required={required}
       disabled={disabled}
