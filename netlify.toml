@@ -1,7 +1,7 @@
 [build]
   base = ""
   publish = "packages/playground/build"
-  command = "npm run build"
+  command = "npm i && npm run build"
   # Ignore dependabot PRs for deploy previews
   ignore = "./netlify-ignore.sh"
 
