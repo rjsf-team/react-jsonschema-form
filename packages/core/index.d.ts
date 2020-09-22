@@ -106,7 +106,7 @@ declare module '@rjsf/core' {
         readonly: boolean;
         autofocus: boolean;
         onChange: (value: any) => void;
-        options: { [key: string]: boolean | number | string | object | null };
+        options: { [key: string]: boolean | null | number | string | object | Array<boolean | null | number | string | object> };
         formContext: any;
         onBlur: (id: string, value: boolean | number | string | null) => void;
         onFocus: (id: string, value: boolean | number | string | null) => void;
