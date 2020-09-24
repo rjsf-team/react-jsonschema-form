@@ -34,7 +34,7 @@ function ArrayFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ArrayFieldTemplate={ArrayFieldTemplate} />,
+        ArrayFieldTemplate={ArrayFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -111,7 +111,7 @@ function CustomFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        FieldTemplate={CustomFieldTemplate} />,
+        FieldTemplate={CustomFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -179,7 +179,7 @@ function ObjectFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ObjectFieldTemplate={ObjectFieldTemplate} />,
+        ObjectFieldTemplate={ObjectFieldTemplate} />
 ), document.getElementById("app"));
 ```
 

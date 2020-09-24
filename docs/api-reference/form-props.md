@@ -115,7 +115,7 @@ const schema = {
 
 render((
   <Form schema={schema}
-        idPrefix={"rjsf_prefix"}/>,
+        idPrefix={"rjsf_prefix"}/>
 ), document.getElementById("app"));
 ```
 
