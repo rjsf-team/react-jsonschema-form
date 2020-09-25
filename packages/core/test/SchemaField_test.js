@@ -247,6 +247,23 @@ describe("SchemaField", () => {
 
       expect(node.querySelectorAll(".foo")).to.have.length.of(1);
     });
+
+    it("should handle schema properties with array types correctly", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: ["string", "null"],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(
+        node.querySelectorAll(".field.form-group.field-string.field-null")
+      ).to.have.length.of(1);
+    });
   });
 
   describe("label support", () => {

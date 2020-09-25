@@ -296,10 +296,13 @@ function SchemaFieldRender(props) {
   const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
+  const fieldTypeClasses = Array.isArray(schema.type)
+    ? schema.type.map(type => `field-${type}`)
+    : [`field-${schema.type}`];
   const classNames = [
     "form-group",
     "field",
-    `field-${schema.type}`,
+    ...fieldTypeClasses,
     errors && errors.length > 0 ? "field-error has-error has-danger" : "",
     uiSchema.classNames,
   ]
