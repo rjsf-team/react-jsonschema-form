@@ -1,0 +1,67 @@
+{
+	"name": "@rjsf/chakra-ui",
+	"version": "2.4.0",
+	"main": "dist/index.js",
+	"module": "dist/chakra-ui.esm.js",
+	"typings": "dist/index.d.ts",
+	"description": "chakra UI theme, fields and widgets for react-jsonschema-form",
+	"files": [ "dist" ],
+	"scripts": {
+		"start": "tsdx watch",
+		"build": "rimraf dist && tsdx build",
+		"test": "tsdx test"
+	},
+	"peerDependencies": {
+		"@chakra-ui/core": "^0.8.0",
+		"@emotion/core": "^10.0.35",
+		"@emotion/styled": "^10.0.27",
+		"@rjsf/core": "^2.0.0",
+		"react": ">=16"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.0.0-0",
+		"@babel/plugin-proposal-class-properties": "^7.5.5",
+		"@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+		"@babel/plugin-transform-modules-commonjs": "^7.8.3",
+		"@babel/plugin-transform-runtime": "^7.5.5",
+		"@babel/preset-env": "^7.5.5",
+		"@babel/preset-react": "^7.0.0",
+		"@chakra-ui/core": "^4.2.0",
+		"@rjsf/core": "^2.4.0",
+		"@types/jest": "^24.0.15",
+		"@types/json-schema": "^7.0.3",
+		"@types/react": "^16.9.23",
+		"@types/react-dom": "^16.9.5",
+		"@types/react-test-renderer": "^16.9.2",
+		"@types/sinon": "^9.0.0",
+		"react": "^16.8.6",
+		"react-dom": "^16.8.6",
+		"react-test-renderer": "^16.13.1",
+		"rimraf": "^2.6.3",
+		"tsdx": "^0.13.1",
+		"tslib": "^2.0.0",
+		"typescript": "^3.5.3"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"author": "Andrew Miracle <me@andrewmiracle.com>",
+	"contributors": [ "Lorenz Henk <lorenz.henk@cybertec.at>", "Andrew Miracle <me@andrewmiracle.com>" ],
+	"keywords": [
+		"Chakra UI",
+		"react-jsonschema-form",
+		"jsonschema",
+		"json-schema",
+		"json",
+		"schema",
+		"form",
+		"react",
+		"chakra-ui",
+		"rjsf-chakra-ui"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+	},
+	"license": "Apache-2.0"
+}
