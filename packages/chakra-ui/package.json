@@ -5,7 +5,9 @@
 	"module": "dist/chakra-ui.esm.js",
 	"typings": "dist/index.d.ts",
 	"description": "chakra UI theme, fields and widgets for react-jsonschema-form",
-	"files": [ "dist" ],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"start": "tsdx watch",
 		"build": "rimraf dist && tsdx build",
@@ -26,7 +28,7 @@
 		"@babel/plugin-transform-runtime": "^7.5.5",
 		"@babel/preset-env": "^7.5.5",
 		"@babel/preset-react": "^7.0.0",
-		"@chakra-ui/core": "^4.2.0",
+		"@chakra-ui/core": "^0.8.0",
 		"@rjsf/core": "^2.4.0",
 		"@types/jest": "^24.0.15",
 		"@types/json-schema": "^7.0.3",
@@ -46,7 +48,10 @@
 		"access": "public"
 	},
 	"author": "Andrew Miracle <me@andrewmiracle.com>",
-	"contributors": [ "Lorenz Henk <lorenz.henk@cybertec.at>", "Andrew Miracle <me@andrewmiracle.com>" ],
+	"contributors": [
+		"Lorenz Henk <lorenz.henk@cybertec.at>",
+		"Andrew Miracle <me@andrewmiracle.com>"
+	],
 	"keywords": [
 		"Chakra UI",
 		"react-jsonschema-form",

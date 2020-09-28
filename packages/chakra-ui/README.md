@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/logo.png" alt="Logo" width="120" height="120">
+    <img src="./logo.png" alt="Logo" width="240">
   </a>
 
   <h3 align="center">@rjsf/chakra-ui</h3>
