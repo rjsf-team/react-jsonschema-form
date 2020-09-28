@@ -6,7 +6,7 @@ import { WidgetProps } from "@rjsf/core";
 
 type TBaseInput = WidgetProps & InputProps
 
-const BaseInput: React.FC<TBaseInput> = ({ id, ...props }) {
+const BaseInput: React.FC<TBaseInput> = ({ id, ...props }) => {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   if (!id) {
