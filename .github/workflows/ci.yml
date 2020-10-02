@@ -42,7 +42,7 @@ jobs:
     - run: npm install
     - run: npm run build
     - name: Deploy playground to GitHub Pages
-      uses: crazy-max/ghaction-github-pages@v2.1.2
+      uses: crazy-max/ghaction-github-pages@v2.1.3
       with:
         keep_history: true
         target-branch: gh-pages
