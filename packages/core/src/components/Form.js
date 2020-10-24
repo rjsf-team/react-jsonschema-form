@@ -407,6 +407,7 @@ export default class Form extends Component {
     if (this.formElement) {
       this.formElement.dispatchEvent(
         new CustomEvent("submit", {
+          bubbles: true,
           cancelable: true,
         })
       );
