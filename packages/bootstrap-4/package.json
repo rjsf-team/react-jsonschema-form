@@ -40,7 +40,7 @@
     "rimraf": "^2.6.3",
     "tsdx": "^0.13.1",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.9.7"
   },
   "publishConfig": {
     "access": "public"

@@ -22,8 +22,7 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
-  rawErrors = [],
-
+  rawErrors = []
 }: TextWidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -35,6 +34,9 @@ const TextWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
+  // Should the all lower version of autoComplete even be accepted?
+  const { autocomplete: deprecatedAutoComplete, autoComplete } = options ?? {};
+
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
     <Form.Group className="mb-0">
@@ -44,6 +46,7 @@ const TextWidget = ({
       </Form.Label>
       <Form.Control
         id={id}
+        autoComplete={(deprecatedAutoComplete ?? autoComplete) as string | undefined}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}

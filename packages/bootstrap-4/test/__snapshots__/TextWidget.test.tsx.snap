@@ -25,3 +25,30 @@ exports[`TextWidget simple 1`] = `
   />
 </div>
 `;
+
+exports[`TextWidget with autoComplete 1`] = `
+<div
+  className="mb-0 form-group"
+>
+  <label
+    className="text-danger form-label"
+  >
+    Some simple label
+    *
+  </label>
+  <input
+    autoComplete="username"
+    autoFocus={true}
+    className="is-invalid form-control"
+    disabled={false}
+    id="_id"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    readOnly={true}
+    required={true}
+    type="array"
+    value="value"
+  />
+</div>
+`;

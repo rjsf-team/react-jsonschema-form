@@ -10,4 +10,13 @@ describe("TextWidget", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+
+  test("with autoComplete", () => {
+    const tree = renderer
+      .create(<TextWidget {...makeWidgetMockProps({options: {
+        autoComplete: 'username'
+      }})} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
