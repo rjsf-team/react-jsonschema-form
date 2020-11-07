@@ -1,23 +1,31 @@
-import Checkbox from '@chakra-ui/core/dist/Checkbox'
-import CheckboxGroup from '@chakra-ui/core/dist/CheckboxGroup'
-import FormLabel from '@chakra-ui/core/dist/FormLabel'
-import React from 'react'
+import { CheckboxGroup, Checkbox, FormLabel } from "@chakra-ui/core";
+import { WidgetProps } from "@rjsf/core";
+import React from "react";
 
-const selectValue = (value, selected, all) => {
-  const at = all.indexOf(value)
-  const updated = selected.slice(0, at).concat(value, selected.slice(at))
+// const selectValue = (value, selected, all) => {
+//   const at = all.indexOf(value);
+//   const updated = selected.slice(0, at).concat(value, selected.slice(at));
 
-  // As inserting values at predefined index positions doesn't work with empty
-  // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a, b) => all.indexOf(a) > all.indexOf(b))
-}
+//   // As inserting values at predefined index positions doesn't work with empty
+//   // arrays, we need to reorder the updated selection to match the initial order
+//   return updated.sort((a, b) => all.indexOf(a) > all.indexOf(b));
+// };
 
-const deselectValue = (value, selected) => {
-  return selected.filter(v => v !== value)
-}
+// const deselectValue = (value, selected) => {
+//   return selected.filter((v) => v !== value);
+// };
 
-const CheckboxesWidget = ({ id, disabled, options, value, readonly, onChange, onBlur, onFocus }) => {
-  const { enumOptions, enumDisabled, inline } = options
+const CheckboxesWidget = ({
+  id,
+  disabled,
+  options,
+  value,
+  readonly,
+  onChange,
+  onBlur,
+  onFocus,
+}: WidgetProps) => {
+  const { enumOptions, enumDisabled } = options;
 
   // const _onChange = option => ({ target: { checked } }) => {
   //   const all = enumOptions.map(({ value }) => value)
@@ -29,14 +37,15 @@ const CheckboxesWidget = ({ id, disabled, options, value, readonly, onChange, on
   //   }
   // }
 
-  const _onBlur = ({ target: { value } }) => onBlur(id, value)
-  const _onFocus = ({ target: { value } }) => onFocus(id, value)
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <CheckboxGroup isInline={inline} onChange={(option) => onChange(option)}>
-      {enumOptions.map((option, index) => {
-        const checked = value.indexOf(option.value) !== -1
-        const itemDisabled = enumDisabled && enumDisabled.indexOf(option.value) !== -1
+    <CheckboxGroup onChange={(option) => onChange(option)}>
+      {(enumOptions as any).map((option: { value: any; label: any; }, index: any) => {
+        const checked = value.indexOf(option.value) !== -1;
+        const itemDisabled =
+          enumDisabled && (enumDisabled as string[]).indexOf(option.value) !== -1;
         return (
           <Checkbox
             key={`${id}_${index}`}
@@ -47,15 +56,21 @@ const CheckboxesWidget = ({ id, disabled, options, value, readonly, onChange, on
             onBlur={_onBlur}
             paddingTop="0"
             display="inline-flex"
-            onFocus={_onFocus}>
-            <FormLabel fontWeight="400" htmlFor={`${id}_${index}`} display="inline-flex" fontSize="0.9rem">
+            onFocus={_onFocus}
+          >
+            <FormLabel
+              fontWeight="400"
+              htmlFor={`${id}_${index}`}
+              display="inline-flex"
+              fontSize="0.9rem"
+            >
               {option.label}
             </FormLabel>
           </Checkbox>
-        )
+        );
       })}
     </CheckboxGroup>
-  )
-}
+  );
+};
 
-export default CheckboxesWidget
+export default CheckboxesWidget;

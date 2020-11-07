@@ -1,48 +1,51 @@
-import React from 'react'
-import { isMultiSelect, getDefaultRegistry } from 'react-jsonschema-form/lib/utils'
-import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
+import React, { VoidFunctionComponent } from "react";
+//@ts-ignore
+import { isMultiSelect, getDefaultRegistry, } from "@rjsf/core/lib/utils";
+import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
+
 
 /* Chakra Ui components */
-import FormLabel from '@chakra-ui/core/dist/FormLabel'
-import Box from '@chakra-ui/core/dist/Box'
-import Divider from '@chakra-ui/core/dist/Divider'
-import Flex from '@chakra-ui/core/dist/Flex'
 
 /* Local Components */
-import AddButton from '../AddButton/AddButton'
-import IconButton from '../IconButton/IconButton'
+import AddButton from "../AddButton/AddButton";
+import IconButton from "../IconButton/IconButton";
+import { Divider, FormLabel, Flex, Box } from "@chakra-ui/core";
 
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps): JSX.Element => {
-  const { schema, registry = getDefaultRegistry() } = props
+  const { schema, registry = getDefaultRegistry() } = props;
 
   if (isMultiSelect(schema, registry.rootSchema)) {
-    return <DefaultFixedArrayFieldTemplate {...props} />
+    return <DefaultFixedArrayFieldTemplate {...props} />;
   }
-  return <DefaultNormalArrayFieldTemplate {...props} />
-}
-
+  return <DefaultNormalArrayFieldTemplate {...props} />;
+};
 
 interface ArrayFieldTitleProps {
   TitleField: any;
   idSchema: IdSchema;
   title: string;
   required: boolean;
-};
-const ArrayFieldTitle = ({ TitleField, idSchema, title, required }: ArrayFieldTitleProps) => {
-
+}
+const ArrayFieldTitle = ({
+  TitleField,
+  idSchema,
+  title,
+  required,
+}: ArrayFieldTitleProps) => {
   const id = `${idSchema.$id}__title`;
   if (!title) {
     return <TitleField id={id} title={title} required={required} />;
-
   }
 
   return (
     <>
       <Divider mb={3} />
-      <FormLabel fontSize="0.9rem" fontWeight="500" htmlFor={id}>{title}</FormLabel>
+      <FormLabel fontSize="0.9rem" fontWeight="500" htmlFor={id}>
+        {title}
+      </FormLabel>
     </>
-  )
-}
+  );
+};
 
 type ArrayFieldDescriptionProps = {
   DescriptionField: any;
@@ -50,14 +53,28 @@ type ArrayFieldDescriptionProps = {
   description: string;
 };
 
-
-const ArrayFieldDescription: React.FC<ArrayFieldDescriptionProps> = ({ DescriptionField, idSchema, description }): JSX.Element => {
+const ArrayFieldDescription: React.FC<ArrayFieldDescriptionProps> = ({
+  DescriptionField,
+  idSchema,
+  description,
+}): JSX.Element => {
   if (!description) {
-    return null
+    return <React.Fragment />;
   }
 
-  const id = `${idSchema.$id}__description`
-  return <DescriptionField id={id} description={description} />
+  const id = `${idSchema.$id}__description`;
+  return <DescriptionField id={id} description={description} />;
+};
+type TIndex = number | string | any;
+type TDefaultArrayItem = ArrayFieldTemplateProps & {
+  children: React.ReactChildren;
+  hasToolbar: boolean;
+  index: TIndex
+  hasMoveUp: boolean;
+  hasMoveDown: boolean;
+  hasRemove: boolean;
+  onReorderClick: (x: TIndex, y: TIndex) => void;
+  onDropIndexClick: (x: TIndex) => VoidFunctionComponent;
 }
 
 // Used in the two templates
@@ -71,14 +88,14 @@ const DefaultArrayItem = ({
   readonly,
   hasRemove,
   onReorderClick,
-  onDropIndexClick
-}) => {
+  onDropIndexClick,
+}: TDefaultArrayItem) => {
   const btnStyle = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: 'bold'
-  }
+    fontWeight: "bold",
+  };
   return (
     <Flex key={index} alignItems="flex-end" justifyContent="flex-start">
       <Box flexGrow={1} py={1} mb={1}>
@@ -86,16 +103,21 @@ const DefaultArrayItem = ({
       </Box>
 
       {hasToolbar && (
-        <Flex justify="space-between" alignItems="flex-end" direction={["column", "row"]} pb={[2, 2]} pl={1} ml={1}>
-
-
+        <Flex
+          justify="space-between"
+          alignItems="flex-end"
+          direction={["column", "row"]}
+          pb={[2, 2]}
+          pl={1}
+          ml={1}
+        >
           {(hasMoveUp || hasMoveDown) && (
             <IconButton
               p={2}
               mt={2}
               minHeight="35px"
               minWidth="35px"
-              icon="arrow-up"
+              iconMap="arrow-up"
               className="array-item-move-up"
               tabIndex={-1}
               style={btnStyle}
@@ -111,7 +133,7 @@ const DefaultArrayItem = ({
               mx={[0, 1]}
               minHeight="35px"
               minWidth="35px"
-              icon="arrow-down"
+              iconMap="arrow-down"
               tabIndex={-1}
               style={btnStyle}
               isDisabled={disabled || readonly || !hasMoveDown}
@@ -125,7 +147,7 @@ const DefaultArrayItem = ({
               mt={2}
               minHeight="35px"
               minWidth="35px"
-              icon="remove"
+              iconMap="remove"
               tabIndex={-1}
               style={btnStyle}
               isDisabled={disabled || readonly}
@@ -133,11 +155,10 @@ const DefaultArrayItem = ({
             />
           )}
         </Flex>
-
       )}
     </Flex>
-  )
-}
+  );
+};
 
 const DefaultFixedArrayFieldTemplate = ({
   className,
@@ -151,32 +172,44 @@ const DefaultFixedArrayFieldTemplate = ({
   canAdd,
   onAddClick,
   disabled,
-  readonly
-}) => {
+  readonly,
+}: ArrayFieldTemplateProps) => {
   return (
     <fieldset className={className}>
       <ArrayFieldTitle
         key={`array-field-title-${idSchema.$id}`}
         TitleField={TitleField}
         idSchema={idSchema}
-        title={uiSchema['ui:title'] || title}
+        title={uiSchema["ui:title"] || title}
         required={required}
       />
 
-      {(uiSchema['ui:description'] || schema.description) && (
-        <div className="field-description" key={`field-description-${idSchema.$id}`}>
-          {uiSchema['ui:description'] || schema.description}
+      {(uiSchema["ui:description"] || schema.description) && (
+        <div
+          className="field-description"
+          key={`field-description-${idSchema.$id}`}
+        >
+          {uiSchema["ui:description"] || schema.description}
         </div>
       )}
 
-      <div className="row array-item-list" key={`array-item-list-${idSchema.$id}`}>
-        {items && items.map(DefaultArrayItem)}
+      <div
+        className="row array-item-list"
+        key={`array-item-list-${idSchema.$id}`}
+      >
+        {items && items.map(DefaultArrayItem as any)}
       </div>
 
-      {canAdd && <AddButton className="array-item-add" onClick={onAddClick} disabled={disabled || readonly} />}
+      {canAdd && (
+        <AddButton
+          className="array-item-add"
+          onClick={onAddClick}
+          disabled={disabled || readonly}
+        />
+      )}
     </fieldset>
-  )
-}
+  );
+};
 
 const DefaultNormalArrayFieldTemplate = ({
   idSchema,
@@ -190,41 +223,46 @@ const DefaultNormalArrayFieldTemplate = ({
   canAdd,
   onAddClick,
   disabled,
-  readonly
-}) => {
+  readonly,
+}: ArrayFieldTemplateProps) => {
   return (
     <Box py={2}>
       <ArrayFieldTitle
         key={`array-field-title-${idSchema.$id}`}
         TitleField={TitleField}
         idSchema={idSchema}
-        title={uiSchema['ui:title'] || title}
+        title={uiSchema["ui:title"] || title}
         required={required}
       />
 
-      {(uiSchema['ui:description'] || schema.description) && (
+      {(uiSchema["ui:description"] || schema.description) && (
         <ArrayFieldDescription
           key={`array-field-description-${idSchema.$id}`}
           DescriptionField={DescriptionField}
           idSchema={idSchema}
-          description={uiSchema['ui:description'] || schema.description}
+          description={uiSchema["ui:description"] || schema.description}
         />
       )}
 
-      <Flex key={`array-item-list-${idSchema.$id}`} direction="column" justify="center">
-        {items && items.map(p => DefaultArrayItem(p))}
-
+      <Flex
+        key={`array-item-list-${idSchema.$id}`}
+        direction="column"
+        justify="center"
+      >
+        {items && items.map((p) => DefaultArrayItem(p as any))}
 
         {canAdd && (
           <Flex justify="flex-end">
             <Box mt={2}>
-              <AddButton onClick={onAddClick} isDisabled={disabled || readonly}>Add More</AddButton>
+              <AddButton onClick={onAddClick} isDisabled={disabled || readonly}>
+                Add More
+              </AddButton>
             </Box>
           </Flex>
         )}
       </Flex>
     </Box>
-  )
-}
+  );
+};
 
-export default ArrayFieldTemplate
+export default ArrayFieldTemplate;

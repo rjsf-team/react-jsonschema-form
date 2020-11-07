@@ -1,7 +1,9 @@
 import { Select } from '@chakra-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { guessType, asNumber } from 'react-jsonschema-form/lib/utils'
+//@ts-ignore
+import { guessType, asNumber } from '@rjsf/core/lib/utils'
+import { WidgetProps } from '@rjsf/core'
 
 const nums = new Set(['number', 'integer'])
 
@@ -9,14 +11,14 @@ const nums = new Set(['number', 'integer'])
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
  */
-function processValue(schema, value) {
+function processValue(schema: { enum?: any; type?: any; items?: any }, value: string | any[]) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
   const { type, items } = schema
   if (value === '') {
     return undefined
   }
   if (type === 'array' && items && nums.has(items.type)) {
-    return value.map(asNumber)
+    return (value as any[]).map(asNumber)
   }
   if (type === 'boolean') {
     return value === 'true'
@@ -28,10 +30,10 @@ function processValue(schema, value) {
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (schema.enum) {
-    if (schema.enum.every(x => guessType(x) === 'number')) {
+    if (schema.enum.every((x: any) => guessType(x) === 'number')) {
       return asNumber(value)
     }
-    if (schema.enum.every(x => guessType(x) === 'boolean')) {
+    if (schema.enum.every((x: any) => guessType(x) === 'boolean')) {
       return value === 'true'
     }
   }
@@ -39,17 +41,15 @@ function processValue(schema, value) {
   return value
 }
 
-function getValue(event, multiple) {
+function getValue(event: React.ChangeEvent<HTMLSelectElement>, multiple: boolean) {
   if (multiple) {
-    return [].slice
-      .call(event.target.options)
-      .filter(o => o.selected)
-      .map(o => o.value)
+    //@ts-ignore
+    return [].slice.call(event.target.options).filter(o => o.selected).map(o => o.value)
   }
   return event.target.value
 }
 
-function SelectWidget(props) {
+function SelectWidget(props: WidgetProps) {
   const {
     schema,
     id,
@@ -95,11 +95,11 @@ function SelectWidget(props) {
         onChange(processValue(schema, newValue))
       }}>
       {!multiple && schema.default === undefined && <option value="">{placeholder}</option>}
-      {enumOptions.map(({ value, label }, i) => {
-        const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1
+      {(enumOptions as any[]).map(({ value, label }, i) => {
+        const disabled = enumDisabled && (enumDisabled as string[]).indexOf(value) !== -1
         return (
           // eslint-disable-next-line react/no-array-index-key
-          <option key={i} value={value} disabled={disabled}>
+          <option key={i} value={value} disabled={disabled as boolean}>
             {label}
           </option>
         )

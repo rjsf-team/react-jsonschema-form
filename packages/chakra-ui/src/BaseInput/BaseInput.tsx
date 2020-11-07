@@ -2,9 +2,30 @@ import React from 'react'
 import { Input, InputProps } from '@chakra-ui/core'
 import PropTypes from 'prop-types'
 import { WidgetProps } from "@rjsf/core";
+import { JSONSchema7, JSONSchema7Object, JSONSchema7Array } from 'json-schema'
+
+type TWidgetProps = WidgetProps & {
+  schema: JSONSchema7 & {
+    examples: | string
+    | number
+    | boolean
+    | JSONSchema7Object
+    | JSONSchema7Array
+    | string[]
+    | any
+  }
+}
+
+type ExtInputProps = InputProps & {
+  list: string | undefined;
+  // onChange: any;
+  // onBlur: any;
+  // onFocus: any;
+}
+
+type TBaseInput = TWidgetProps & ExtInputProps
 
 
-type TBaseInput = WidgetProps & InputProps
 
 const BaseInput: React.FC<TBaseInput> = ({ id, ...props }) => {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
@@ -17,12 +38,12 @@ const BaseInput: React.FC<TBaseInput> = ({ id, ...props }) => {
 
   interface IInput extends WidgetProps {
     type: any;
-    step: string | number | null;
+    step: string | number;
     autoComplete: any;
-    min: string | number | null;
-    max: string | number | null;
+    min: string | number;
+    max: string | number;
   }
-  const inputProps: IInput = _inputProps
+  const inputProps: Partial<IInput> = _inputProps
 
   // If options.inputType is set use that as the input type
   if (options.inputType) {
@@ -66,6 +87,7 @@ const BaseInput: React.FC<TBaseInput> = ({ id, ...props }) => {
     return props.onChange(value === '' ? options.emptyValue : value)
   }
 
+
   return (
     <>
       <Input
@@ -78,12 +100,12 @@ const BaseInput: React.FC<TBaseInput> = ({ id, ...props }) => {
         {...inputProps}
         list={schema.examples ? `examples_${inputProps.id}` : undefined}
         onChange={_onChange}
-        onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
-        onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
+        onBlur={onBlur && ((event) => onBlur(inputProps.id as string, event.target.value))}
+        onFocus={onFocus && ((event) => onFocus(inputProps.id as string, event.target.value))}
       />
       {schema.examples ? (
         <datalist id={`examples_${inputProps.id}`}>
-          {Array.from(new Set(schema.examples.concat(schema.default ? [schema.default] : []))).map((example: string) => (
+          {Array.from(new Set(schema.examples.concat(schema.default ? [schema.default] : []))).map((example: any) => (
             <option key={example} value={example} />
           ))}
         </datalist>
@@ -109,13 +131,13 @@ if (process.env.NODE_ENV !== 'production') {
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     value: PropTypes.any,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    autofocus: PropTypes.bool,
-    onChange: PropTypes.func,
-    onBlur: PropTypes.func,
-    onFocus: PropTypes.func
+    // required: PropTypes.bool,
+    // disabled: PropTypes.bool,
+    // readonly: PropTypes.bool,
+    // autofocus: PropTypes.bool,
+    // onChange: PropTypes.func,
+    // onBlur: PropTypes.func,
+    // onFocus: PropTypes.func
   }
 }
 

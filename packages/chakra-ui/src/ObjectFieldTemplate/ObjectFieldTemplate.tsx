@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/core'
 import { Stack } from '@chakra-ui/core'
+import { ObjectFieldTemplateProps } from '@rjsf/core'
 import React from 'react'
 
 const ObjectFieldTemplate = ({
@@ -11,7 +12,7 @@ const ObjectFieldTemplate = ({
   required,
   uiSchema,
   idSchema
-}) => (
+}: ObjectFieldTemplateProps) => (
     <>
       {(uiSchema['ui:title'] || title) && <TitleField id={`${idSchema.$id}-title`} title={title} required={required} />}
       {description && <DescriptionField id={`${idSchema.$id}-description`} description={description} />}

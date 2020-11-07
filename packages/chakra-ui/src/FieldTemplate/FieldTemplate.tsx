@@ -1,8 +1,9 @@
 import React from 'react'
 import { FormHelperText, FormControl, FormErrorMessage } from '@chakra-ui/core'
 import { FormLabel as WrappedFormLabel } from '@chakra-ui/core'
+import { FieldTemplateProps } from '@rjsf/core'
 
-const FieldTemplate = ({ id, children, label, displayLabel, disabled, readonly, required, rawErrors = [], rawHelp, DescriptionField, description }) => (
+const FieldTemplate = ({ id, children, label, displayLabel, disabled, readonly, required, rawErrors = [], rawHelp }: FieldTemplateProps) => (
   <FormControl isDisabled={disabled} mt={4} isReadOnly={readonly} isRequired={required} isInvalid={!!rawErrors.length}>
     {displayLabel && (
       <WrappedFormLabel fontWeight="500" fontSize="0.9rem" htmlFor={id}>{label}</WrappedFormLabel>

@@ -1,16 +1,17 @@
-import Text from '@chakra-ui/core/dist/Text'
-import React from 'react'
+import React from "react";
+import { Text } from "@chakra-ui/core";
+import { FieldTemplateProps } from '@rjsf/core';
 
-const DescriptionField = ({ description }) => {
+const DescriptionField = ({ description }: FieldTemplateProps) => {
   if (description) {
     return (
       <Text fontSize="sm" mb={2} opacity="0.9">
         {description}
       </Text>
-    )
+    );
   }
 
-  return null
-}
+  return null;
+};
 
-export default DescriptionField
+export default DescriptionField;

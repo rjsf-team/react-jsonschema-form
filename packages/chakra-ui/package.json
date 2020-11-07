@@ -14,10 +14,9 @@
 		"test": "tsdx test"
 	},
 	"peerDependencies": {
-		"@chakra-ui/core": "^0.8.0",
-		"@emotion/core": "^10.0.35",
-		"@emotion/styled": "^10.0.27",
+		"@chakra-ui/core": "^1.0.0-rc.8",
 		"@rjsf/core": "^2.0.0",
+		"react-icons": "^3.11.0",
 		"react": ">=16"
 	},
 	"devDependencies": {
@@ -28,7 +27,7 @@
 		"@babel/plugin-transform-runtime": "^7.5.5",
 		"@babel/preset-env": "^7.5.5",
 		"@babel/preset-react": "^7.0.0",
-		"@chakra-ui/core": "^0.8.0",
+		"@chakra-ui/core": "^1.0.0-rc.8",
 		"@rjsf/core": "^2.4.0",
 		"@types/jest": "^24.0.15",
 		"@types/json-schema": "^7.0.3",
@@ -38,6 +37,7 @@
 		"@types/sinon": "^9.0.0",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",
+		"react-icons": "^3.11.0",
 		"react-test-renderer": "^16.13.1",
 		"rimraf": "^2.6.3",
 		"tsdx": "^0.13.1",
@@ -55,6 +55,7 @@
 	"keywords": [
 		"Chakra UI",
 		"react-jsonschema-form",
+		"@rjsf/core",
 		"jsonschema",
 		"json-schema",
 		"json",
