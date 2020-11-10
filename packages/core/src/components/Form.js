@@ -374,8 +374,13 @@ export default class Form extends Component {
       errors = [];
     }
 
-    this.setState(
-      { formData: newFormData, errors: errors, errorSchema: errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: [] },
+    this.setState({ 
+      formData: newFormData,
+      errors: errors,
+      errorSchema: errorSchema,
+      schemaValidationErrors: [],
+      schemaValidationErrorSchema: [] 
+    },
       () => {
         if (this.props.onSubmit) {
           this.props.onSubmit(
