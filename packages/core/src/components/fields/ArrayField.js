@@ -448,7 +448,7 @@ class ArrayField extends Component {
     if (isFilesArray(schema, uiSchema, rootSchema)) {
       return this.renderFiles();
     }
-    if (isMultiSelect(schema, rootSchema)) {
+    if (isMultiSelect(schema, uiSchema, rootSchema)) {
       return this.renderMultiSelect();
     }
     return this.renderNormalArray();

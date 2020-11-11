@@ -1323,6 +1323,17 @@ describe("utils", () => {
       };
       expect(isMultiSelect(schema)).to.be.false;
     });
+
+    it("should be true if widget is select", () => {
+      const schema = {
+        items: { foo: { type: "string" } },
+      };
+      const uiSchema = {
+        "ui:widget": "select",
+      };
+
+      expect(isMultiSelect(schema, uiSchema)).to.be.true;
+    });
   });
 
   describe("isFilesArray()", () => {

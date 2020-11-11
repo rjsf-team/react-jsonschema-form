@@ -158,7 +158,7 @@ render((
 
 ## Multiple-choice list
 
-The default behavior for array fields is a list of text inputs with add/remove buttons. There are two alternative widgets for picking multiple elements from a list of choices. Typically this applies when a schema has an `enum` list for the `items` property of an `array` field, and the `uniqueItems` property set to `true`.
+The default behavior for array fields is a list of text inputs with add/remove buttons. There are two alternative widgets for picking multiple elements from a list of choices. This applies when a schema has an `enum` list for the `items` property of an `array` field and the `uniqueItems` property set to `true`, or when the `ui:widget` is set to `select`.
 
 Example:
 

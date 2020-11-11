@@ -335,7 +335,7 @@ declare module '@rjsf/core' {
 
         export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
 
-        export function isMultiSelect(schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+        export function isMultiSelect(schema: JSONSchema7, uiSchema: UiSchema, definitions?: FieldProps['registry']['definitions']): boolean;
 
         export function isFilesArray(
             schema: JSONSchema7,

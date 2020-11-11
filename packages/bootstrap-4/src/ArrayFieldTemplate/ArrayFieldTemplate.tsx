@@ -14,7 +14,7 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { schema, registry = getDefaultRegistry() } = props;
 
   // TODO: update types so we don't have to cast registry as any
-  if (isMultiSelect(schema, (registry as any).rootSchema)) {
+  if (isMultiSelect(schema, props.uiSchema, (registry as any).rootSchema)) {
     return <DefaultFixedArrayFieldTemplate {...props} />;
   } else {
     return <DefaultNormalArrayFieldTemplate {...props} />;

@@ -138,7 +138,7 @@ const ArrayFieldTemplate = ({
   if (isFilesArray(schema, uiSchema, rootSchema)) {
     return renderFiles();
   }
-  if (isMultiSelect(schema, rootSchema)) {
+  if (isMultiSelect(schema, uiSchema, rootSchema)) {
     return renderMultiSelect();
   }
 

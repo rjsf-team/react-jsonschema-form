@@ -272,7 +272,8 @@ function computeDefaults(
         });
       }
       if (schema.minItems) {
-        if (!isMultiSelect(schema, rootSchema)) {
+        // The UI schema is not important when calculating the defaults, so we just pass a default empty object.
+        if (!isMultiSelect(schema, {}, rootSchema)) {
           const defaultsLength = defaults ? defaults.length : 0;
           if (schema.minItems > defaultsLength) {
             const defaultEntries = defaults || [];
@@ -389,7 +390,7 @@ export function getDisplayLabel(schema, uiSchema, rootSchema) {
   let { label: displayLabel = true } = uiOptions;
   if (schema.type === "array") {
     displayLabel =
-      isMultiSelect(schema, rootSchema) ||
+      isMultiSelect(schema, uiSchema, rootSchema) ||
       isFilesArray(schema, uiSchema, rootSchema);
   }
   if (schema.type === "object") {
@@ -528,7 +529,10 @@ export function isSelect(_schema, rootSchema = {}) {
   return false;
 }
 
-export function isMultiSelect(schema, rootSchema = {}) {
+export function isMultiSelect(schema, uiSchema, rootSchema = {}) {
+  if (uiSchema["ui:widget"] === "select") {
+    return true;
+  }
   if (!schema.uniqueItems || !schema.items) {
     return false;
   }
