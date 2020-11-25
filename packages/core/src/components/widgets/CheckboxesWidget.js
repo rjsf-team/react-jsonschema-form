@@ -16,10 +16,12 @@ function deselectValue(value, selected) {
 function CheckboxesWidget(props) {
   const { id, disabled, options, value, autofocus, readonly, onChange } = props;
   const { enumOptions, enumDisabled, inline } = options;
+  const checkboxesValues = Array.isArray(value) ? value : [value];
+
   return (
     <div className="checkboxes" id={id}>
       {enumOptions.map((option, index) => {
-        const checked = value.indexOf(option.value) !== -1;
+        const checked = checkboxesValues.includes(option.value);
         const itemDisabled =
           enumDisabled && enumDisabled.indexOf(option.value) != -1;
         const disabledCls =
@@ -35,9 +37,9 @@ function CheckboxesWidget(props) {
               onChange={event => {
                 const all = enumOptions.map(({ value }) => value);
                 if (event.target.checked) {
-                  onChange(selectValue(option.value, value, all));
+                  onChange(selectValue(option.value, checkboxesValues, all));
                 } else {
-                  onChange(deselectValue(option.value, value));
+                  onChange(deselectValue(option.value, checkboxesValues));
                 }
               }}
             />
