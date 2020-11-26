@@ -2,7 +2,7 @@ $(function() {
 function escape(html) {
     return html.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 }
-$(".jsx").each(function() {
+$(".language-jsx").each(function() {
     var text = escape($(this).text());
     if (text.indexOf("render") === -1) {
         return;
