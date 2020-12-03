@@ -571,7 +571,8 @@ export function optionsList(schema) {
     return altSchemas.map((schema, i) => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
-      return { label, value };
+      const description = schema.description;
+      return { label, value, description };
     });
   }
 }
