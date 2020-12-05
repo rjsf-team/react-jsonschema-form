@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
 import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
-
 function rangeOptions(start, stop) {
   let options = [];
   for (let i = start; i <= stop; i++) {
@@ -10,11 +8,9 @@ function rangeOptions(start, stop) {
   }
   return options;
 }
-
 function readyForChange(state) {
   return Object.keys(state).every(key => state[key] !== -1);
 }
-
 function DateElement(props) {
   const {
     type,
@@ -34,7 +30,7 @@ function DateElement(props) {
     <SelectWidget
       schema={{ type: "integer" }}
       id={id}
-      className="form-control"
+      className="block appearance-none w-full py-1 px-2 mb-1 text-base leading-normal bg-white text-grey-darker border border-grey rounded"
       options={{ enumOptions: rangeOptions(range[0], range[1]) }}
       placeholder={type}
       value={value}
@@ -46,7 +42,6 @@ function DateElement(props) {
     />
   );
 }
-
 class AltDateWidget extends Component {
   static defaultProps = {
     time: false,
@@ -57,20 +52,16 @@ class AltDateWidget extends Component {
       yearsRange: [1900, new Date().getFullYear() + 2],
     },
   };
-
   constructor(props) {
     super(props);
     this.state = parseDateString(props.value, props.time);
   }
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState(parseDateString(nextProps.value, nextProps.time));
   }
-
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
-
   onChange = (property, value) => {
     this.setState(
       { [property]: typeof value === "undefined" ? -1 : value },
@@ -82,7 +73,6 @@ class AltDateWidget extends Component {
       }
     );
   };
-
   setNow = event => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
@@ -92,7 +82,6 @@ class AltDateWidget extends Component {
     const nowDateObj = parseDateString(new Date().toJSON(), time);
     this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
   };
-
   clear = event => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
@@ -101,7 +90,6 @@ class AltDateWidget extends Component {
     }
     this.setState(parseDateString("", time), () => onChange(undefined));
   };
-
   get dateElementProps() {
     const { time, options } = this.props;
     const { year, month, day, hour, minute, second } = this.state;
@@ -123,7 +111,6 @@ class AltDateWidget extends Component {
     }
     return data;
   }
-
   render() {
     const {
       id,
@@ -154,7 +141,7 @@ class AltDateWidget extends Component {
           ? !options.hideNowButton
           : true) && (
           <li>
-            <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
+            <a href="#" className="inline-block align-middle text-center select-none border font-normal whitespace-no-wrap py-2 px-4 rounded text-base leading-normal no-underline text-teal-lightest bg-teal hover:bg-teal-light btn-now" onClick={this.setNow}>
               Now
             </a>
           </li>
@@ -165,7 +152,7 @@ class AltDateWidget extends Component {
           <li>
             <a
               href="#"
-              className="btn btn-warning btn-clear"
+              className="inline-block align-middle text-center select-none border font-normal whitespace-no-wrap py-2 px-4 rounded text-base leading-normal no-underline text-yellow-lightest bg-yellow hover:bg-yellow-light btn-clear"
               onClick={this.clear}>
               Clear
             </a>
@@ -175,7 +162,6 @@ class AltDateWidget extends Component {
     );
   }
 }
-
 if (process.env.NODE_ENV !== "production") {
   AltDateWidget.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -191,5 +177,4 @@ if (process.env.NODE_ENV !== "production") {
     options: PropTypes.object,
   };
 }
-
 export default AltDateWidget;

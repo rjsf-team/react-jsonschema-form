@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
-
 import { default as DefaultErrorList } from "./ErrorList";
 import {
   getDefaultFormState,
@@ -17,7 +16,6 @@ import {
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
 import { mergeObjects } from "../utils";
-
 export default class Form extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -28,7 +26,6 @@ export default class Form extends Component {
     ErrorList: DefaultErrorList,
     omitExtraData: false,
   };
-
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props, props.formData);
@@ -40,7 +37,6 @@ export default class Form extends Component {
     }
     this.formElement = null;
   }
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     const nextState = this.getStateFromProps(nextProps, nextProps.formData);
     if (
@@ -52,7 +48,6 @@ export default class Form extends Component {
     }
     this.setState(nextState);
   }
-
   getStateFromProps(props, inputFormData) {
     const state = this.state || {};
     const schema = "schema" in props ? props.schema : this.props.schema;
@@ -66,7 +61,6 @@ export default class Form extends Component {
     const retrievedSchema = retrieveSchema(schema, rootSchema, formData);
     const customFormats = props.customFormats;
     const additionalMetaSchemas = props.additionalMetaSchemas;
-
     const getCurrentErrors = () => {
       if (props.noValidate) {
         return { errors: [], errorSchema: {} };
@@ -81,7 +75,6 @@ export default class Form extends Component {
         errorSchema: state.errorSchema || {},
       };
     };
-
     let errors,
       errorSchema,
       schemaValidationErrors,
@@ -135,11 +128,9 @@ export default class Form extends Component {
     }
     return nextState;
   }
-
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
-
   validate(
     formData,
     schema = this.props.schema,
@@ -158,11 +149,9 @@ export default class Form extends Component {
       customFormats
     );
   }
-
   renderErrors() {
     const { errors, errorSchema, schema, uiSchema } = this.state;
     const { ErrorList, showErrorList, formContext } = this.props;
-
     if (errors.length && showErrorList != false) {
       return (
         <ErrorList
@@ -176,21 +165,17 @@ export default class Form extends Component {
     }
     return null;
   }
-
   getUsedFormData = (formData, fields) => {
     //for the case of a single input form
     if (fields.length === 0 && typeof formData !== "object") {
       return formData;
     }
-
     let data = _pick(formData, fields);
     if (Array.isArray(formData)) {
       return Object.keys(data).map(key => data[key]);
     }
-
     return data;
   };
-
   getFieldNames = (pathSchema, formData) => {
     const getAllPaths = (_obj, acc = [], paths = [""]) => {
       Object.keys(_obj).forEach(key => {
@@ -216,10 +201,8 @@ export default class Form extends Component {
       });
       return acc;
     };
-
     return getAllPaths(pathSchema);
   };
-
   onChange = (formData, newErrorSchema) => {
     if (isObject(formData) || Array.isArray(formData)) {
       const newState = this.getStateFromProps(this.props, formData);
@@ -228,7 +211,6 @@ export default class Form extends Component {
     const mustValidate = !this.props.noValidate && this.props.liveValidate;
     let state = { formData };
     let newFormData = formData;
-
     if (this.props.omitExtraData === true && this.props.liveOmit === true) {
       const retrievedSchema = retrieveSchema(
         this.state.schema,
@@ -241,15 +223,12 @@ export default class Form extends Component {
         this.state.schema,
         formData
       );
-
       const fieldNames = this.getFieldNames(pathSchema, formData);
-
       newFormData = this.getUsedFormData(formData, fieldNames);
       state = {
         formData: newFormData,
       };
     }
-
     if (mustValidate) {
       let schemaValidation = this.validate(newFormData);
       let errors = schemaValidation.errors;
@@ -290,28 +269,23 @@ export default class Form extends Component {
       () => this.props.onChange && this.props.onChange(this.state)
     );
   };
-
   onBlur = (...args) => {
     if (this.props.onBlur) {
       this.props.onBlur(...args);
     }
   };
-
   onFocus = (...args) => {
     if (this.props.onFocus) {
       this.props.onFocus(...args);
     }
   };
-
   onSubmit = event => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
       return;
     }
-
     event.persist();
     let newFormData = this.state.formData;
-
     if (this.props.omitExtraData === true) {
       const retrievedSchema = retrieveSchema(
         this.state.schema,
@@ -324,12 +298,9 @@ export default class Form extends Component {
         this.state.schema,
         newFormData
       );
-
       const fieldNames = this.getFieldNames(pathSchema, newFormData);
-
       newFormData = this.getUsedFormData(newFormData, fieldNames);
     }
-
     if (!this.props.noValidate) {
       let schemaValidation = this.validate(newFormData);
       let errors = schemaValidation.errors;
@@ -363,7 +334,6 @@ export default class Form extends Component {
         return;
       }
     }
-
     let errorSchema;
     let errors;
     if (this.props.extraErrors) {
@@ -373,7 +343,6 @@ export default class Form extends Component {
       errorSchema = {};
       errors = [];
     }
-
     this.setState(
       { formData: newFormData, errors: errors, errorSchema: errorSchema },
       () => {
@@ -386,7 +355,6 @@ export default class Form extends Component {
       }
     );
   };
-
   getRegistry() {
     // For BC, accept passed SchemaField and TitleField props and pass them to
     // the "fields" registry one.
@@ -402,7 +370,6 @@ export default class Form extends Component {
       formContext: this.props.formContext || {},
     };
   }
-
   submit() {
     if (this.formElement) {
       this.formElement.dispatchEvent(
@@ -412,7 +379,6 @@ export default class Form extends Component {
       );
     }
   }
-
   render() {
     const {
       children,
@@ -432,7 +398,6 @@ export default class Form extends Component {
       disabled,
       formContext,
     } = this.props;
-
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
@@ -445,7 +410,6 @@ export default class Form extends Component {
     const autoComplete = currentAutoComplete
       ? currentAutoComplete
       : deprecatedAutocomplete;
-
     return (
       <FormTag
         className={className ? className : "rjsf"}
@@ -481,7 +445,7 @@ export default class Form extends Component {
           children
         ) : (
           <div>
-            <button type="submit" className="btn btn-info">
+            <button type="submit" className="inline-block align-middle text-center select-none border font-normal whitespace-no-wrap py-2 px-4 rounded text-base leading-normal no-underline text-teal-lightest bg-teal hover:bg-teal-light">
               Submit
             </button>
           </div>
@@ -490,7 +454,6 @@ export default class Form extends Component {
     );
   }
 }
-
 if (process.env.NODE_ENV !== "production") {
   Form.propTypes = {
     schema: PropTypes.object.isRequired,

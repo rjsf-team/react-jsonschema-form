@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { schemaRequiresTrueValue } from "../../utils";
-
 function CheckboxWidget(props) {
   const {
     schema,
@@ -16,12 +15,10 @@ function CheckboxWidget(props) {
     onChange,
     DescriptionField,
   } = props;
-
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
-
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description && (
@@ -44,11 +41,9 @@ function CheckboxWidget(props) {
     </div>
   );
 }
-
 CheckboxWidget.defaultProps = {
   autofocus: false,
 };
-
 if (process.env.NODE_ENV !== "production") {
   CheckboxWidget.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -61,5 +56,4 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
   };
 }
-
 export default CheckboxWidget;

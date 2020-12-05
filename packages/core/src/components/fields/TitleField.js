@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 const REQUIRED_FIELD_SYMBOL = "*";
-
 function TitleField(props) {
   const { id, title, required } = props;
   return (
@@ -12,7 +10,6 @@ function TitleField(props) {
     </legend>
   );
 }
-
 if (process.env.NODE_ENV !== "production") {
   TitleField.propTypes = {
     id: PropTypes.string,
@@ -20,5 +17,4 @@ if (process.env.NODE_ENV !== "production") {
     required: PropTypes.bool,
   };
 }
-
 export default TitleField;

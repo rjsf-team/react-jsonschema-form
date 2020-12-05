@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import { rangeSpec } from "../../utils";
-
 function RangeWidget(props) {
   const {
     schema,
@@ -18,11 +16,9 @@ function RangeWidget(props) {
     </div>
   );
 }
-
 if (process.env.NODE_ENV !== "production") {
   RangeWidget.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 }
-
 export default RangeWidget;

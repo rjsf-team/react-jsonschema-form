@@ -1,6 +1,5 @@
 import React from "react";
 import * as types from "../../types";
-
 import {
   getWidget,
   getUiOptions,
@@ -9,7 +8,6 @@ import {
   getDefaultRegistry,
   hasWidget,
 } from "../../utils";
-
 function StringField(props) {
   const {
     schema,
@@ -60,16 +58,13 @@ function StringField(props) {
     />
   );
 }
-
 if (process.env.NODE_ENV !== "production") {
   StringField.propTypes = types.fieldProps;
 }
-
 StringField.defaultProps = {
   uiSchema: {},
   disabled: false,
   readonly: false,
   autofocus: false,
 };
-
 export default StringField;

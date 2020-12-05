@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
   const updated = selected.slice(0, at).concat(value, selected.slice(at));
@@ -8,11 +7,9 @@ function selectValue(value, selected, all) {
   // arrays, we need to reorder the updated selection to match the initial order
   return updated.sort((a, b) => all.indexOf(a) > all.indexOf(b));
 }
-
 function deselectValue(value, selected) {
   return selected.filter(v => v !== value);
 }
-
 function CheckboxesWidget(props) {
   const { id, disabled, options, value, autofocus, readonly, onChange } = props;
   const { enumOptions, enumDisabled, inline } = options;
@@ -57,14 +54,12 @@ function CheckboxesWidget(props) {
     </div>
   );
 }
-
 CheckboxesWidget.defaultProps = {
   autofocus: false,
   options: {
     inline: false,
   },
 };
-
 if (process.env.NODE_ENV !== "production") {
   CheckboxesWidget.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -82,5 +77,4 @@ if (process.env.NODE_ENV !== "production") {
     onChange: PropTypes.func,
   };
 }
-
 export default CheckboxesWidget;

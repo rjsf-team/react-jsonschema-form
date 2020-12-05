@@ -1,10 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import { asNumber, guessType } from "../../utils";
-
 const nums = new Set(["number", "integer"]);
-
 /**
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
@@ -21,7 +18,6 @@ function processValue(schema, value) {
   } else if (type === "number") {
     return asNumber(value);
   }
-
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (schema.enum) {
@@ -31,10 +27,8 @@ function processValue(schema, value) {
       return value === "true";
     }
   }
-
   return value;
 }
-
 function getValue(event, multiple) {
   if (multiple) {
     return [].slice
@@ -45,7 +39,6 @@ function getValue(event, multiple) {
     return event.target.value;
   }
 }
-
 function SelectWidget(props) {
   const {
     schema,
@@ -68,7 +61,7 @@ function SelectWidget(props) {
     <select
       id={id}
       multiple={multiple}
-      className="form-control"
+      className="block appearance-none w-full py-1 px-2 mb-1 text-base leading-normal bg-white text-grey-darker border border-grey rounded"
       value={typeof value === "undefined" ? emptyValue : value}
       required={required}
       disabled={disabled || readonly}
@@ -105,11 +98,9 @@ function SelectWidget(props) {
     </select>
   );
 }
-
 SelectWidget.defaultProps = {
   autofocus: false,
 };
-
 if (process.env.NODE_ENV !== "production") {
   SelectWidget.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -128,5 +119,4 @@ if (process.env.NODE_ENV !== "production") {
     onFocus: PropTypes.func,
   };
 }
-
 export default SelectWidget;

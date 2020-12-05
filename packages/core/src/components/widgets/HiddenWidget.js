@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 function HiddenWidget({ id, value }) {
   return (
     <input
@@ -10,7 +9,6 @@ function HiddenWidget({ id, value }) {
     />
   );
 }
-
 if (process.env.NODE_ENV !== "production") {
   HiddenWidget.propTypes = {
     id: PropTypes.string.isRequired,
@@ -21,5 +19,4 @@ if (process.env.NODE_ENV !== "production") {
     ]),
   };
 }
-
 export default HiddenWidget;

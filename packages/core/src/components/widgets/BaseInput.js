@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
@@ -23,7 +22,6 @@ function BaseInput(props) {
     rawErrors,
     ...inputProps
   } = props;
-
   // If options.inputType is set use that as the input type
   if (options.inputType) {
     inputProps.type = options.inputType;
@@ -43,33 +41,27 @@ function BaseInput(props) {
       inputProps.type = "text";
     }
   }
-
   if (options.autocomplete) {
     inputProps.autoComplete = options.autocomplete;
   }
-
   // If multipleOf is defined, use this as the step value. This mainly improves
   // the experience for keyboard users (who can use the up/down KB arrows).
   if (schema.multipleOf) {
     inputProps.step = schema.multipleOf;
   }
-
   if (typeof schema.minimum !== "undefined") {
     inputProps.min = schema.minimum;
   }
-
   if (typeof schema.maximum !== "undefined") {
     inputProps.max = schema.maximum;
   }
-
   const _onChange = ({ target: { value } }) => {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
-
   return [
     <input
       key={inputProps.id}
-      className="form-control"
+      className="block appearance-none w-full py-1 px-2 mb-1 text-base leading-normal bg-white text-grey-darker border border-grey rounded"
       readOnly={readonly}
       disabled={disabled}
       autoFocus={autofocus}
@@ -93,14 +85,12 @@ function BaseInput(props) {
     ) : null,
   ];
 }
-
 BaseInput.defaultProps = {
   required: false,
   disabled: false,
   readonly: false,
   autofocus: false,
 };
-
 if (process.env.NODE_ENV !== "production") {
   BaseInput.propTypes = {
     id: PropTypes.string.isRequired,
@@ -115,5 +105,4 @@ if (process.env.NODE_ENV !== "production") {
     onFocus: PropTypes.func,
   };
 }
-
 export default BaseInput;

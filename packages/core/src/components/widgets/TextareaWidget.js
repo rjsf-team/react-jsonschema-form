@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 function TextareaWidget(props) {
   const {
     id,
@@ -21,7 +20,7 @@ function TextareaWidget(props) {
   return (
     <textarea
       id={id}
-      className="form-control"
+      className="block appearance-none w-full py-1 px-2 mb-1 text-base leading-normal bg-white text-grey-darker border border-grey rounded"
       value={value ? value : ""}
       placeholder={placeholder}
       required={required}
@@ -35,12 +34,10 @@ function TextareaWidget(props) {
     />
   );
 }
-
 TextareaWidget.defaultProps = {
   autofocus: false,
   options: {},
 };
-
 if (process.env.NODE_ENV !== "production") {
   TextareaWidget.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -59,5 +56,4 @@ if (process.env.NODE_ENV !== "production") {
     onFocus: PropTypes.func,
   };
 }
-
 export default TextareaWidget;

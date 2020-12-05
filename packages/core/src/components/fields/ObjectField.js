@@ -1,7 +1,6 @@
 import AddButton from "../AddButton";
 import React, { Component } from "react";
 import * as types from "../../types";
-
 import {
   orderProperties,
   retrieveSchema,
@@ -9,7 +8,6 @@ import {
   canExpand,
   ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
-
 function DefaultObjectFieldTemplate(props) {
   const { TitleField, DescriptionField } = props;
   return (
@@ -40,7 +38,6 @@ function DefaultObjectFieldTemplate(props) {
     </fieldset>
   );
 }
-
 class ObjectField extends Component {
   static defaultProps = {
     uiSchema: {},
@@ -51,19 +48,16 @@ class ObjectField extends Component {
     disabled: false,
     readonly: false,
   };
-
   state = {
     wasPropertyKeyModified: false,
     additionalProperties: {},
   };
-
   isRequired(name) {
     const schema = this.props.schema;
     return (
       Array.isArray(schema.required) && schema.required.indexOf(name) !== -1
     );
   }
-
   onPropertyChange = (name, addedByAdditionalProperties = false) => {
     return (value, errorSchema) => {
       if (!value && addedByAdditionalProperties) {
@@ -87,7 +81,6 @@ class ObjectField extends Component {
       );
     };
   };
-
   onDropPropertyClick = key => {
     return event => {
       event.preventDefault();
@@ -97,7 +90,6 @@ class ObjectField extends Component {
       onChange(copiedFormData);
     };
   };
-
   getAvailableKey = (preferredKey, formData) => {
     var index = 0;
     var newKey = preferredKey;
@@ -106,13 +98,11 @@ class ObjectField extends Component {
     }
     return newKey;
   };
-
   onKeyChange = oldValue => {
     return (value, errorSchema) => {
       if (oldValue === value) {
         return;
       }
-
       value = this.getAvailableKey(value, this.props.formData);
       const newFormData = { ...this.props.formData };
       const newKeys = { [oldValue]: value };
@@ -121,9 +111,7 @@ class ObjectField extends Component {
         return { [newKey]: newFormData[key] };
       });
       const renamedObj = Object.assign({}, ...keyValues);
-
       this.setState({ wasPropertyKeyModified: true });
-
       this.props.onChange(
         renamedObj,
         errorSchema &&
@@ -134,7 +122,6 @@ class ObjectField extends Component {
       );
     };
   };
-
   getDefaultValue(type) {
     switch (type) {
       case "string":
@@ -154,11 +141,9 @@ class ObjectField extends Component {
         return "New Value";
     }
   }
-
   handleAddClick = schema => () => {
     let type = schema.additionalProperties.type;
     const newFormData = { ...this.props.formData };
-
     if (schema.additionalProperties.hasOwnProperty("$ref")) {
       const { registry = getDefaultRegistry() } = this.props;
       const refSchema = retrieveSchema(
@@ -166,17 +151,13 @@ class ObjectField extends Component {
         registry.rootSchema,
         this.props.formData
       );
-
       type = refSchema.type;
     }
-
     newFormData[
       this.getAvailableKey("newKey", newFormData)
     ] = this.getDefaultValue(type);
-
     this.props.onChange(newFormData);
   };
-
   render() {
     const {
       uiSchema,
@@ -192,11 +173,9 @@ class ObjectField extends Component {
       onFocus,
       registry = getDefaultRegistry(),
     } = this.props;
-
     const { rootSchema, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, rootSchema, formData);
-
     const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
@@ -206,7 +185,7 @@ class ObjectField extends Component {
     } catch (err) {
       return (
         <div>
-          <p className="config-error" style={{ color: "red" }}>
+          <p className="config-error" style={{ flex-growor: "red" }}>
             Invalid {name || "root"} object field configuration:
             <em>{err.message}</em>.
           </p>
@@ -214,12 +193,10 @@ class ObjectField extends Component {
         </div>
       );
     }
-
     const Template =
       uiSchema["ui:ObjectFieldTemplate"] ||
       registry.ObjectFieldTemplate ||
       DefaultObjectFieldTemplate;
-
     const templateProps = {
       title: uiSchema["ui:title"] || title,
       description,
@@ -277,9 +254,7 @@ class ObjectField extends Component {
     return <Template {...templateProps} onAddClick={this.handleAddClick} />;
   }
 }
-
 if (process.env.NODE_ENV !== "production") {
   ObjectField.propTypes = types.fieldProps;
 }
-
 export default ObjectField;

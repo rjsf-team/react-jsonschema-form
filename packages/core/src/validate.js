@@ -2,12 +2,9 @@ import toPath from "lodash/toPath";
 import Ajv from "ajv";
 let ajv = createAjvInstance();
 import { deepEquals, getDefaultFormState } from "./utils";
-
 let formerCustomFormats = null;
 let formerMetaSchema = null;
-
 import { isObject, mergeObjects } from "./utils";
-
 function createAjvInstance() {
   const ajv = new Ajv({
     errorDataPath: "property",
@@ -16,7 +13,6 @@ function createAjvInstance() {
     schemaId: "auto",
     unknownFormats: "ignore",
   });
-
   // add custom formats
   ajv.addFormat(
     "data-url",
@@ -28,7 +24,6 @@ function createAjvInstance() {
   );
   return ajv;
 }
-
 function toErrorSchema(errors) {
   // Transforms a ajv validation errors list:
   // [
@@ -52,20 +47,17 @@ function toErrorSchema(errors) {
     const { property, message } = error;
     const path = toPath(property);
     let parent = errorSchema;
-
     // If the property is at the root (.level1) then toPath creates
     // an empty array element at the first index. Remove it.
     if (path.length > 0 && path[0] === "") {
       path.splice(0, 1);
     }
-
     for (const segment of path.slice(0)) {
       if (!(segment in parent)) {
         parent[segment] = {};
       }
       parent = parent[segment];
     }
-
     if (Array.isArray(parent.__errors)) {
       // We store the list of errors for this node in a property named __errors
       // to avoid name collision with a possible sub schema field named
@@ -79,7 +71,6 @@ function toErrorSchema(errors) {
     return errorSchema;
   }, {});
 }
-
 export function toErrorList(errorSchema, fieldName = "root") {
   // XXX: We should transform fieldName as a full field path string.
   let errorList = [];
@@ -99,7 +90,6 @@ export function toErrorList(errorSchema, fieldName = "root") {
     return acc;
   }, errorList);
 }
-
 function createErrorHandler(formData) {
   const handler = {
     // We store the list of errors for this node in a property named __errors
@@ -122,7 +112,6 @@ function createErrorHandler(formData) {
   }
   return handler;
 }
-
 function unwrapErrorHandler(errorHandler) {
   return Object.keys(errorHandler).reduce((acc, key) => {
     if (key === "addError") {
@@ -133,7 +122,6 @@ function unwrapErrorHandler(errorHandler) {
     return { ...acc, [key]: unwrapErrorHandler(errorHandler[key]) };
   }, {});
 }
-
 /**
  * Transforming the error output from ajv to format used by jsonschema.
  * At some point, components should be updated to support ajv.
@@ -142,11 +130,9 @@ function transformAjvErrors(errors = []) {
   if (errors === null) {
     return [];
   }
-
   return errors.map(e => {
     const { dataPath, keyword, message, params, schemaPath } = e;
     let property = `${dataPath}`;
-
     // put data in expected format
     return {
       name: keyword,
@@ -158,7 +144,6 @@ function transformAjvErrors(errors = []) {
     };
   });
 }
-
 /**
  * This function processes the formData with a user `validate` contributed
  * function, which receives the form data and an `errorHandler` object that
@@ -175,14 +160,11 @@ export default function validateFormData(
   // Include form data with undefined values, which is required for validation.
   const rootSchema = schema;
   formData = getDefaultFormState(schema, formData, rootSchema, true);
-
   const newMetaSchemas = !deepEquals(formerMetaSchema, additionalMetaSchemas);
   const newFormats = !deepEquals(formerCustomFormats, customFormats);
-
   if (newMetaSchemas || newFormats) {
     ajv = createAjvInstance();
   }
-
   // add more schemas to validate against
   if (
     additionalMetaSchemas &&
@@ -192,34 +174,27 @@ export default function validateFormData(
     ajv.addMetaSchema(additionalMetaSchemas);
     formerMetaSchema = additionalMetaSchemas;
   }
-
   // add more custom formats to validate against
   if (customFormats && newFormats && isObject(customFormats)) {
     Object.keys(customFormats).forEach(formatName => {
       ajv.addFormat(formatName, customFormats[formatName]);
     });
-
     formerCustomFormats = customFormats;
   }
-
   let validationError = null;
   try {
     ajv.validate(schema, formData);
   } catch (err) {
     validationError = err;
   }
-
   let errors = transformAjvErrors(ajv.errors);
   // Clear errors to prevent persistent errors, see #1104
-
   ajv.errors = null;
-
   const noProperMetaSchema =
     validationError &&
     validationError.message &&
     typeof validationError.message === "string" &&
     validationError.message.includes("no schema with key or ref ");
-
   if (noProperMetaSchema) {
     errors = [
       ...errors,
@@ -231,9 +206,7 @@ export default function validateFormData(
   if (typeof transformErrors === "function") {
     errors = transformErrors(errors);
   }
-
   let errorSchema = toErrorSchema(errors);
-
   if (noProperMetaSchema) {
     errorSchema = {
       ...errorSchema,
@@ -244,11 +217,9 @@ export default function validateFormData(
       },
     };
   }
-
   if (typeof customValidate !== "function") {
     return { errors, errorSchema };
   }
-
   const errorHandler = customValidate(formData, createErrorHandler(formData));
   const userErrorSchema = unwrapErrorHandler(errorHandler);
   const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
@@ -256,13 +227,11 @@ export default function validateFormData(
   // exposed by the jsonschema lib, which contains full field paths and other
   // properties.
   const newErrors = toErrorList(newErrorSchema);
-
   return {
     errors: newErrors,
     errorSchema: newErrorSchema,
   };
 }
-
 /**
  * Validates data against a schema, returning true if the data is valid, or
  * false otherwise. If the schema is invalid, then this function will return

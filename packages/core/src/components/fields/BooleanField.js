@@ -1,13 +1,11 @@
 import React from "react";
 import * as types from "../../types";
-
 import {
   getWidget,
   getUiOptions,
   optionsList,
   getDefaultRegistry,
 } from "../../utils";
-
 function BooleanField(props) {
   const {
     schema,
@@ -29,9 +27,7 @@ function BooleanField(props) {
   const { widgets, formContext, fields } = registry;
   const { widget = "checkbox", ...options } = getUiOptions(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
-
   let enumOptions;
-
   if (Array.isArray(schema.oneOf)) {
     enumOptions = optionsList({
       oneOf: schema.oneOf.map(option => ({
@@ -49,7 +45,6 @@ function BooleanField(props) {
           : ["Yes", "No"]),
     });
   }
-
   return (
     <Widget
       options={{ ...options, enumOptions }}
@@ -71,16 +66,13 @@ function BooleanField(props) {
     />
   );
 }
-
 if (process.env.NODE_ENV !== "production") {
   BooleanField.propTypes = types.fieldProps;
 }
-
 BooleanField.defaultProps = {
   uiSchema: {},
   disabled: false,
   readonly: false,
   autofocus: false,
 };
-
 export default BooleanField;

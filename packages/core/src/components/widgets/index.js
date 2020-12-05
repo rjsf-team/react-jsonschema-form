@@ -17,7 +17,6 @@ import TextareaWidget from "./TextareaWidget";
 import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
-
 export default {
   BaseInput,
   PasswordWidget,

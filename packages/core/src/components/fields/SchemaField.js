@@ -2,7 +2,6 @@ import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
 import * as types from "../../types";
-
 import {
   ADDITIONAL_PROPERTY_FLAG,
   isSelect,
@@ -14,7 +13,6 @@ import {
   getSchemaType,
   getDisplayLabel,
 } from "../../utils";
-
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   array: "ArrayField",
@@ -25,7 +23,6 @@ const COMPONENT_TYPES = {
   string: "StringField",
   null: "NullField",
 };
-
 function getFieldComponent(schema, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
@@ -34,20 +31,16 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   if (typeof field === "string" && field in fields) {
     return fields[field];
   }
-
   const componentName = COMPONENT_TYPES[getSchemaType(schema)];
-
   // If the type is not defined and the schema uses 'anyOf' or 'oneOf', don't
   // render a field and let the MultiSchemaField component handle the form display
   if (!componentName && (schema.anyOf || schema.oneOf)) {
     return () => null;
   }
-
   return componentName in fields
     ? fields[componentName]
     : () => {
         const { UnsupportedField } = fields;
-
         return (
           <UnsupportedField
             schema={schema}
@@ -57,7 +50,6 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
         );
       };
 }
-
 function Label(props) {
   const { label, required, id } = props;
   if (!label) {
@@ -70,12 +62,11 @@ function Label(props) {
     </label>
   );
 }
-
 function LabelInput(props) {
   const { id, label, onChange } = props;
   return (
     <input
-      className="form-control"
+      className="block appearance-none w-full py-1 px-2 mb-1 text-base leading-normal bg-white text-grey-darker border border-grey rounded"
       type="text"
       id={id}
       onBlur={event => onChange(event.target.value)}
@@ -83,7 +74,6 @@ function LabelInput(props) {
     />
   );
 }
-
 function Help(props) {
   const { help } = props;
   if (!help) {
@@ -94,13 +84,11 @@ function Help(props) {
   }
   return <div className="help-block">{help}</div>;
 }
-
 function ErrorList(props) {
   const { errors = [] } = props;
   if (errors.length === 0) {
     return null;
   }
-
   return (
     <div>
       <ul className="error-detail bs-callout bs-callout-info">
@@ -108,7 +96,7 @@ function ErrorList(props) {
           .filter(elem => !!elem)
           .map((error, index) => {
             return (
-              <li className="text-danger" key={index}>
+              <li className="text-red" key={index}>
                 {error}
               </li>
             );
@@ -132,7 +120,6 @@ function DefaultTemplate(props) {
   if (hidden) {
     return <div className="hidden">{children}</div>;
   }
-
   return (
     <WrapIfAdditional {...props}>
       {displayLabel && <Label label={label} required={required} id={id} />}
@@ -163,14 +150,12 @@ if (process.env.NODE_ENV !== "production") {
     formContext: PropTypes.object,
   };
 }
-
 DefaultTemplate.defaultProps = {
   hidden: false,
   readonly: false,
   required: false,
   displayLabel: true,
 };
-
 function WrapIfAdditional(props) {
   const {
     id,
@@ -185,16 +170,14 @@ function WrapIfAdditional(props) {
   } = props;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
-
   if (!additional) {
     return <div className={classNames}>{props.children}</div>;
   }
-
   return (
     <div className={classNames}>
-      <div className="row">
-        <div className="col-xs-5 form-additional">
-          <div className="form-group">
+      <div className="flex flex-wrap">
+        <div className="sm:w-2/5 pr-4 pl-4 form-additional">
+          <div className="mb-4">
             <Label label={keyLabel} required={required} id={`${id}-key`} />
             <LabelInput
               label={label}
@@ -204,14 +187,14 @@ function WrapIfAdditional(props) {
             />
           </div>
         </div>
-        <div className="form-additional form-group col-xs-5">
+        <div className="form-additional mb-4 sm:w-2/5 pr-4 pl-4">
           {props.children}
         </div>
-        <div className="col-xs-2">
+        <div className="sm:w-1/5 pr-4 pl-4">
           <IconButton
             type="danger"
             icon="remove"
-            className="array-item-remove btn-block"
+            className="array-item-remove block w-full"
             tabIndex="-1"
             style={{ border: "0" }}
             disabled={disabled || readonly}
@@ -222,7 +205,6 @@ function WrapIfAdditional(props) {
     </div>
   );
 }
-
 function SchemaFieldRender(props) {
   const {
     uiSchema,
@@ -258,11 +240,8 @@ function SchemaFieldRender(props) {
   if (Object.keys(schema).length === 0) {
     return null;
   }
-
   const displayLabel = getDisplayLabel(schema, uiSchema, rootSchema);
-
   const { __errors, ...fieldErrorSchema } = errorSchema;
-
   // See #439: uiSchema: Don't pass consumed class names to child components
   const field = (
     <FieldComponent
@@ -278,9 +257,7 @@ function SchemaFieldRender(props) {
       rawErrors={__errors}
     />
   );
-
   const id = idSchema.$id;
-
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
   let label;
   if (wasPropertyKeyModified) {
@@ -288,7 +265,6 @@ function SchemaFieldRender(props) {
   } else {
     label = uiSchema["ui:title"] || props.schema.title || schema.title || name;
   }
-
   const description =
     uiSchema["ui:description"] ||
     props.schema.description ||
@@ -305,7 +281,6 @@ function SchemaFieldRender(props) {
   ]
     .join(" ")
     .trim();
-
   const fieldProps = {
     description: (
       <DescriptionField
@@ -335,15 +310,12 @@ function SchemaFieldRender(props) {
     uiSchema,
     registry,
   };
-
   const _AnyOfField = registry.fields.AnyOfField;
   const _OneOfField = registry.fields.OneOfField;
-
   return (
     <FieldTemplate {...fieldProps}>
       <React.Fragment>
         {field}
-
         {/*
         If the schema `anyOf` or 'oneOf' can be rendered as a select control, don't
         render the selection and let `StringField` component handle
@@ -366,7 +338,6 @@ function SchemaFieldRender(props) {
             uiSchema={uiSchema}
           />
         )}
-
         {schema.oneOf && !isSelect(schema) && (
           <_OneOfField
             disabled={disabled}
@@ -388,17 +359,14 @@ function SchemaFieldRender(props) {
     </FieldTemplate>
   );
 }
-
 class SchemaField extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !deepEquals(this.props, nextProps);
   }
-
   render() {
     return SchemaFieldRender(this.props);
   }
 }
-
 SchemaField.defaultProps = {
   uiSchema: {},
   errorSchema: {},
@@ -407,7 +375,6 @@ SchemaField.defaultProps = {
   readonly: false,
   autofocus: false,
 };
-
 if (process.env.NODE_ENV !== "production") {
   SchemaField.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -418,5 +385,4 @@ if (process.env.NODE_ENV !== "production") {
     registry: types.registry.isRequired,
   };
 }
-
 export default SchemaField;

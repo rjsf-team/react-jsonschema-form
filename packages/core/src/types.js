@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-
 export const registry = PropTypes.shape({
   ArrayFieldTemplate: PropTypes.elementType,
   FieldTemplate: PropTypes.elementType,
@@ -12,7 +11,6 @@ export const registry = PropTypes.shape({
     PropTypes.oneOfType([PropTypes.func, PropTypes.object])
   ).isRequired,
 });
-
 export const fieldProps = {
   autofocus: PropTypes.bool,
   disabled: PropTypes.bool,

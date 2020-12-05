@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 function UnsupportedField({ schema, idSchema, reason }) {
   return (
     <div className="unsupported-field">
@@ -17,7 +16,6 @@ function UnsupportedField({ schema, idSchema, reason }) {
     </div>
   );
 }
-
 if (process.env.NODE_ENV !== "production") {
   UnsupportedField.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -25,5 +23,4 @@ if (process.env.NODE_ENV !== "production") {
     reason: PropTypes.string,
   };
 }
-
 export default UnsupportedField;

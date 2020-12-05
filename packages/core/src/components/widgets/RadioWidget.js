@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 function RadioWidget(props) {
   const {
     options,
@@ -44,7 +43,6 @@ function RadioWidget(props) {
             <span>{option.label}</span>
           </span>
         );
-
         return inline ? (
           <label key={i} className={`radio-inline ${disabledCls}`}>
             {radio}
@@ -58,11 +56,9 @@ function RadioWidget(props) {
     </div>
   );
 }
-
 RadioWidget.defaultProps = {
   autofocus: false,
 };
-
 if (process.env.NODE_ENV !== "production") {
   RadioWidget.propTypes = {
     schema: PropTypes.object.isRequired,

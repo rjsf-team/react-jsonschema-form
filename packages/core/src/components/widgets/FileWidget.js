@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
 import { dataURItoBlob, shouldRender } from "../../utils";
-
 function addNameToDataURL(dataURL, name) {
   return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
 }
-
 function processFile(file) {
   const { name, size, type } = file;
   return new Promise((resolve, reject) => {
@@ -23,11 +20,9 @@ function processFile(file) {
     reader.readAsDataURL(file);
   });
 }
-
 function processFiles(files) {
   return Promise.all([].map.call(files, processFile));
 }
-
 function FilesInfo(props) {
   const { filesInfo } = props;
   if (filesInfo.length === 0) {
@@ -46,7 +41,6 @@ function FilesInfo(props) {
     </ul>
   );
 }
-
 function extractFileInfo(dataURLs) {
   return dataURLs
     .filter(dataURL => typeof dataURL !== "undefined")
@@ -59,7 +53,6 @@ function extractFileInfo(dataURLs) {
       };
     });
 }
-
 class FileWidget extends Component {
   constructor(props) {
     super(props);
@@ -67,11 +60,9 @@ class FileWidget extends Component {
     const values = Array.isArray(value) ? value : [value];
     this.state = { values, filesInfo: extractFileInfo(values) };
   }
-
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
-
   onChange = event => {
     const { multiple, onChange } = this.props;
     processFiles(event.target.files).then(filesInfo => {
@@ -88,7 +79,6 @@ class FileWidget extends Component {
       });
     });
   };
-
   render() {
     const { multiple, id, readonly, disabled, autofocus, options } = this.props;
     const { filesInfo } = this.state;
@@ -112,11 +102,9 @@ class FileWidget extends Component {
     );
   }
 }
-
 FileWidget.defaultProps = {
   autofocus: false,
 };
-
 if (process.env.NODE_ENV !== "production") {
   FileWidget.propTypes = {
     multiple: PropTypes.bool,
@@ -127,5 +115,4 @@ if (process.env.NODE_ENV !== "production") {
     autofocus: PropTypes.bool,
   };
 }
-
 export default FileWidget;
