@@ -32,7 +32,7 @@
     "lodash": "^4.17.15",
     "react": ">=16",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.87.3",
+    "semantic-ui-react": "^2.0.1",
     "shortid": "^2.2.14"
   },
   "devDependencies": {
@@ -124,6 +124,6 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.9.2",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.87.3"
+    "semantic-ui-react": "^2.0.1"
   }
 }
