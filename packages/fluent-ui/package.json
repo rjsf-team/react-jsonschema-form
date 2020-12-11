@@ -43,7 +43,7 @@
     "rimraf": "^2.6.3",
     "tsdx": "^0.13.1",
     "tslib": "^2.0.0",
-    "typescript": "^3.5.3"
+    "typescript": "^4.1.2"
   },
   "publishConfig": {
     "access": "public"
