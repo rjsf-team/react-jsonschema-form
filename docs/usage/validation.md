@@ -263,7 +263,7 @@ const extraErrors = {
 
 render((
   <Form schema={schema}
-        extraErrors={extraErrors} />,
+        extraErrors={extraErrors} />
 ), document.getElementById("app"));
 ```
 
