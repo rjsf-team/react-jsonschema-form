@@ -113,7 +113,7 @@ const uiSchema = {
 
 render((
   <Form schema={schema}
-        uiSchema={uiSchema} />,
+        uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 
