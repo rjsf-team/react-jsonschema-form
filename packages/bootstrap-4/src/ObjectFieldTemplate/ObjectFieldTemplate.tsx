@@ -33,7 +33,7 @@ const ObjectFieldTemplate = ({
       )}
       <Container fluid className="p-0">
         {properties.map((element: any, index: number) => (
-          <Row key={index} style={{ marginBottom: "10px" }} className={(element.content.uiSchema["ui:widget"] === "hidden")?"d-none":undefined} >
+          <Row key={index} style={{ marginBottom: "10px" }} className={(element.content.props.uiSchema["ui:widget"] === "hidden")?"d-none":undefined} >
             <Col xs={12}> {element.content}</Col>
           </Row>
         ))}
