@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/fluent-ui",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "dist/index.js",
   "module": "dist/fluent-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -29,7 +29,7 @@
     "@fluentui/react": "^7.114.2",
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^2.4.0",
+    "@rjsf/core": "^2.4.1",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.3",
     "@types/lodash": "^4.14.152",
