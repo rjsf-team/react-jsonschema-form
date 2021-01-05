@@ -268,3 +268,59 @@ render((
 ```
 
 An important note is that these errors are "display only" and will not block the user from submitting the form again.
+
+## Localize the validation errors
+
+You can change the default localization for the error messages by providing a special function to the `localizeErrors` prop. 
+There are two possible options for that:
+
+- you can import that function from the `ajv-i18n` library (here is the list of supported languages [ajv-i18n](https://github.com/epoberezkin/ajv-i18n)),
+  
+```jsx
+const localize_ru = require('ajv-i18n/localize/ru');
+
+return (<Form scheme={...} localizeErrors={localize_ru} />);
+```
+
+- you can write it by yourself, which is more preferable if you not only want to localize the messages but also reword them.
+
+
+```jsx
+function localize_ru(errors = []) {
+  if (!(errors && errors.length)) return;
+
+  errors.forEach(function(error) {
+    let outMessage = "";
+    
+    switch (error.keyword) {
+      case "pattern": {
+        outMessage = 'должно соответствовать образцу "' + error.params.pattern + '"';
+
+        break;
+      }
+      case "required": {
+        outMessage = "поле обязательно для заполнения";
+
+        break;
+      }
+      default:
+        outMessage = error.message;
+    }
+    
+    error.message = outMessage;
+  })
+
+  return errors;
+}
+
+return (<Form localizeErrors={localize_ru} />);
+```
+
+Notes:
+
+- If you provided your own function, you must **always** return the same list of errors. Modifying the list in place without returning it will result in an error.
+- You must process all the cases which you need by yourself. See the full list of possible cases [here](https://github.com/ajv-validator/ajv-i18n/blob/master/messages/index.js).
+- Each element in the `errors` list passed to the custom function represent a **raw** error object returned by ajv ([see doc](https://github.com/ajv-validator/ajv/blob/master/docs/api.md#error-objects)).
+
+
+See an example on the [playground](http://mozilla-services.github.io/react-jsonschema-form/) (the `Errors Localization` tab).
