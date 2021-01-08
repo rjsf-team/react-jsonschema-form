@@ -347,7 +347,11 @@ declare module '@rjsf/core' {
 
         export function allowAdditionalItems(schema: JSONSchema7): boolean;
 
-        export function optionsList(schema: JSONSchema7): { label: string; value: string }[];
+        export function optionsList(schema: JSONSchema7): {
+            label: string;
+            value: string;
+            description?: string;
+        }[];
 
         export function guessType(value: any): JSONSchema7TypeName;
 
