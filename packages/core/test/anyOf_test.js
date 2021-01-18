@@ -810,7 +810,9 @@ describe("anyOf", () => {
 
       expect(node.querySelectorAll("select")).to.have.length.of(1);
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_items_0_foo")).to.have.length.of(
+        1
+      );
     });
 
     it("should not change the selected option when switching order of items for anyOf inside array items", () => {
@@ -995,8 +997,12 @@ describe("anyOf", () => {
         target: { value: $select.options[1].value },
       });
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
-      expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_items_0_foo")).to.have.length.of(
+        1
+      );
+      expect(node.querySelectorAll("input#root_items_0_bar")).to.have.length.of(
+        1
+      );
     });
 
     it("should correctly infer the selected option based on value", () => {

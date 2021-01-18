@@ -494,7 +494,7 @@ describe("oneOf", () => {
 
     expect($select.value).eql("1");
 
-    Simulate.change(node.querySelector("input#root_bar"), {
+    Simulate.change(node.querySelector("input#root_items_bar"), {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
 
@@ -584,8 +584,12 @@ describe("oneOf", () => {
         target: { value: $select.options[1].value },
       });
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
-      expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_items_0_foo")).to.have.length.of(
+        1
+      );
+      expect(node.querySelectorAll("input#root_items_0_bar")).to.have.length.of(
+        1
+      );
     });
   });
 
