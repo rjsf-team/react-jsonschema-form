@@ -12,6 +12,7 @@ export type TextWidgetProps = WidgetProps & TextFieldProps;
 
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -48,6 +49,7 @@ const TextWidget = ({
   return (
     <TextField
       id={id}
+      placeholder={placeholder}
       label={displayLabel ? label || schema.title : false}
       autoFocus={autofocus}
       required={required}

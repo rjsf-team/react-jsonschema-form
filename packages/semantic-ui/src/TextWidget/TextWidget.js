@@ -6,6 +6,7 @@ import { getSemanticProps } from "../util";
 
 function TextWidget({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -30,6 +31,7 @@ function TextWidget({
     <Form.Input
       key={id}
       id={id}
+      placeholder={placeholder}
       type={schema.type}
       label={schema.title || label}
       required={required}
