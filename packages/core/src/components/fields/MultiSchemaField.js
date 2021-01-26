@@ -6,6 +6,7 @@ import {
   getWidget,
   guessType,
   retrieveSchema,
+  resolveSchema,
   getDefaultFormState,
   getMatchingOption,
   deepEquals,
@@ -16,7 +17,6 @@ class AnyOfField extends Component {
     super(props);
 
     const { formData, options } = this.props;
-
     this.state = {
       selectedOption: this.getMatchingOption(formData, options),
     };
@@ -43,7 +43,31 @@ class AnyOfField extends Component {
   }
 
   getMatchingOption(formData, options) {
+    const uiOptions = getUiOptions(this.props.uiSchema);
     const { rootSchema } = this.props.registry;
+
+    if (uiOptions.anyOfDiscriminatorField) {
+      let selectedDiscriminatorValue =
+        formData[uiOptions.anyOfDiscriminatorField];
+      console.log(
+        uiOptions.anyOfDiscriminatorField,
+        selectedDiscriminatorValue,
+        formData
+      );
+      for (let [idx, option] of this.props.options.entries()) {
+        let opt = option;
+        if (option.hasOwnProperty("$ref")) {
+          opt = resolveSchema(option, rootSchema, formData);
+        }
+        if (
+          opt?.properties?.[uiOptions.anyOfDiscriminatorField]?.enum?.[0] ===
+          selectedDiscriminatorValue
+        ) {
+          console.log(option);
+          return idx;
+        }
+      }
+    }
 
     let option = getMatchingOption(formData, options, rootSchema);
     if (option !== 0) {
@@ -131,10 +155,26 @@ class AnyOfField extends Component {
         : Object.assign({}, option, { type: baseType });
     }
 
-    const enumOptions = options.map((option, index) => ({
-      label: option.title || `Option ${index + 1}`,
-      value: index,
-    }));
+    const { rootSchema } = this.props.registry;
+    const enumOptions = options.map((option, index) => {
+      if (uiOptions.anyOfDiscriminatorField) {
+        let opt = option;
+        if (option.hasOwnProperty("$ref")) {
+          opt = resolveSchema(option, rootSchema, formData);
+        }
+        console.log(opt);
+        return {
+          label:
+            opt?.properties?.[uiOptions.anyOfDiscriminatorField]?.enum?.[0],
+          value: index,
+        };
+      } else {
+        return {
+          label: option.title || `Option ${index + 1}`,
+          value: index,
+        };
+      }
+    });
 
     return (
       <div className="panel panel-default panel-body">
