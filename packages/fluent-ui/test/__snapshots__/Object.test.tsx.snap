@@ -59,7 +59,7 @@ exports[`object fields object 1`] = `
                   onInput={[Function]}
                   readOnly={false}
                   required={false}
-                  type="string"
+                  type="text"
                   value=""
                 />
               </div>
