@@ -229,6 +229,7 @@ describe("Validation", () => {
         properties: {
           pass1: { type: "string" },
           pass2: { type: "string" },
+          numberWithMinimum: { type: "number", minimum: 5 },
         },
       };
 
@@ -239,20 +240,26 @@ describe("Validation", () => {
           }
           return errors;
         };
-        const formData = { pass1: "a", pass2: "b" };
+        const formData = { pass1: "a", pass2: "b", numberWithMinimum: 2 };
         const result = validateFormData(formData, schema, validate);
         errors = result.errors;
         errorSchema = result.errorSchema;
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(1);
-        expect(errors[0].stack).eql("pass2: passwords don't match.");
+        expect(errors).to.have.length.of(2);
+        expect(errors[0].property).eql(".numberWithMinimum");
+        expect(errors[0].message).eql("should be >= 5");
+        expect(errors[1].property).eql(".pass2");
+        expect(errors[1].stack).eql("pass2: passwords don't match.");
       });
 
       it("should return an errorSchema", () => {
         expect(errorSchema.pass2.__errors).to.have.length.of(1);
         expect(errorSchema.pass2.__errors[0]).eql("passwords don't match.");
+
+        expect(errorSchema.numberWithMinimum.__errors).to.have.length.of(1);
+        expect(errorSchema.numberWithMinimum.__errors[0]).eql("should be >= 5");
       });
     });
 
@@ -335,11 +342,11 @@ describe("Validation", () => {
           },
         })
       ).eql([
-        { stack: "root: err1" },
-        { stack: "root: err2" },
-        { stack: "b: err3" },
-        { stack: "b: err4" },
-        { stack: "c: err5" },
+        { property: ".", stack: "root: err1" },
+        { property: ".", stack: "root: err2" },
+        { property: ".a.b", stack: "b: err3" },
+        { property: ".a.b", stack: "b: err4" },
+        { property: ".c", stack: "c: err5" },
       ]);
     });
   });
@@ -502,7 +509,7 @@ describe("Validation", () => {
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "root: Invalid" },
+          { property: ".", stack: "root: Invalid" },
         ]);
       });
 
@@ -529,7 +536,7 @@ describe("Validation", () => {
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           errorSchema: { __errors: ["Invalid"] },
-          errors: [{ stack: "root: Invalid" }],
+          errors: [{ property: ".", stack: "root: Invalid" }],
           formData: "1234",
         });
       });
@@ -611,8 +618,18 @@ describe("Validation", () => {
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "pass2: should NOT be shorter than 3 characters" },
-          { stack: "pass2: Passwords don't match" },
+          {
+            message: "should NOT be shorter than 3 characters",
+            name: "minLength",
+            params: { limit: 3 },
+            property: ".pass2",
+            schemaPath: "#/properties/pass2/minLength",
+            stack: ".pass2 should NOT be shorter than 3 characters",
+          },
+          {
+            property: ".pass2",
+            stack: "pass2: Passwords don't match",
+          },
         ]);
       });
 
@@ -650,7 +667,7 @@ describe("Validation", () => {
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "pass2: Passwords don't match" },
+          { property: ".0.pass2", stack: "pass2: Passwords don't match" },
         ]);
       });
 
@@ -678,7 +695,7 @@ describe("Validation", () => {
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "root: Forbidden value: bbb" },
+          { property: ".", stack: "root: Forbidden value: bbb" },
         ]);
       });
     });

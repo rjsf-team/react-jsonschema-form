@@ -80,13 +80,16 @@ function toErrorSchema(errors) {
   }, {});
 }
 
-export function toErrorList(errorSchema, fieldName = "root") {
+export function toErrorList(errorSchema, fieldPath = []) {
   // XXX: We should transform fieldName as a full field path string.
+  const fieldName =
+    fieldPath.length > 0 ? fieldPath[fieldPath.length - 1] : "root";
   let errorList = [];
   if ("__errors" in errorSchema) {
     errorList = errorList.concat(
       errorSchema.__errors.map(stack => {
         return {
+          property: "." + fieldPath.join("."),
           stack: `${fieldName}: ${stack}`,
         };
       })
@@ -94,7 +97,7 @@ export function toErrorList(errorSchema, fieldName = "root") {
   }
   return Object.keys(errorSchema).reduce((acc, key) => {
     if (key !== "__errors") {
-      acc = acc.concat(toErrorList(errorSchema[key], key));
+      acc = acc.concat(toErrorList(errorSchema[key], [...fieldPath, key]));
     }
     return acc;
   }, errorList);
@@ -252,10 +255,10 @@ export default function validateFormData(
   const errorHandler = customValidate(formData, createErrorHandler(formData));
   const userErrorSchema = unwrapErrorHandler(errorHandler);
   const newErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
-  // XXX: The errors list produced is not fully compliant with the format
-  // exposed by the jsonschema lib, which contains full field paths and other
-  // properties.
-  const newErrors = toErrorList(newErrorSchema);
+
+  // Append the user's errors to the current error list
+  //  Mantain the original error list to keep its AJV provided detail properties.
+  const newErrors = [].concat(errors, toErrorList(userErrorSchema));
 
   return {
     errors: newErrors,
