@@ -142,7 +142,7 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll(".field-string")).to.have.length.of(0);
     });
   });
-  
+
   describe("Nullable array formData", () => {
     const schema = {
       type: "object",
