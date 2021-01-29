@@ -148,7 +148,7 @@ describe("ArrayField", () => {
       type: "object",
       properties: {
         foo: {
-          type: ["array", "null"]
+          type: ["array", "null"],
           items: { type: "string" },
         },
       },
