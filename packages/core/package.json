@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
