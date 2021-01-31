@@ -42,6 +42,7 @@ exports[`single fields number field 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           type="number"
           value=""
         />
@@ -186,6 +187,7 @@ exports[`single fields string field regular 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           type="string"
           value=""
         />
