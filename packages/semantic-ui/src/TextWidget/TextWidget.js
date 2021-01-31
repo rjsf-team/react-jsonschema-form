@@ -26,7 +26,7 @@ function TextWidget({
     onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const inputType = schema.type === 'string' ?  'text' : `${schema.type}`
+  const inputType = schema.type === 'string' ?  'text' : `${schema.type}`;
   
   return (
     <Form.Input
