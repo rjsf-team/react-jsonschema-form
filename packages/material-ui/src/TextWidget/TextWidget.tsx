@@ -44,6 +44,7 @@ const TextWidget = ({
     uiSchema
     /* TODO: , rootSchema */
   );
+  const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
 
   return (
     <TextField
@@ -52,7 +53,7 @@ const TextWidget = ({
       autoFocus={autofocus}
       required={required}
       disabled={disabled || readonly}
-      type={type || (schema.type as string)}
+      type={inputType as string}
       value={value || value === 0 ? value : ""}
       error={rawErrors.length > 0}
       onChange={_onChange}
