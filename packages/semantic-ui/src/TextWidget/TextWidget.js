@@ -19,7 +19,6 @@ function TextWidget(props) {
     onFocus,
     autofocus,
     options,
-    type,
     schema,
     uiSchema,
     formContext,
