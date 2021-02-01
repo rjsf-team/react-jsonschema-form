@@ -187,7 +187,7 @@ exports[`single fields string field regular 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
-          type="string"
+          type="text"
           value=""
         />
       </div>

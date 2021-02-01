@@ -775,7 +775,7 @@ exports[`single fields string field regular 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         readOnly={false}
-        type="string"
+        type="text"
         value=""
       />
     </div>
@@ -816,7 +816,7 @@ exports[`single fields string field with placeholder 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         readOnly={false}
-        type="string"
+        type="text"
         value=""
       />
     </div>

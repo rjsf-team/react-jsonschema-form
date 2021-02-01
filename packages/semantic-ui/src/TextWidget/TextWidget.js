@@ -37,17 +37,21 @@ function TextWidget(props) {
     onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
+
   const displayLabel = getDisplayLabel(
     schema,
     uiSchema
     /* TODO: , rootSchema */
   );
+
+  const inputType = schema.type === 'string' ?  'text' : `${schema.type}`;
+  
   return (
     <Form.Input
       key={id}
       id={id}
-      type={type || schema.type}
       label={displayLabel ? label || schema.title : false}
+      type={inputType}
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
