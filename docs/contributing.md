@@ -51,6 +51,17 @@ lerna publish from-git
 
 Make sure you use [semver](https://semver.org/) for version numbering. Once a new version has been released, create a release in the Github "Releases" tab and add the version history.
 
+Finally, once you publish the new release to npm, perform a quick test to ensure the right files were published to the npm package. To do this, run:
+
+```bash
+cd playground
+rm -rf node_modules
+npm install
+npm start
+```
+
+These commands will start the playground, but with the actual packages from npm, rather than the linked local packages. Open up http://localhost:8080/ and ensure that everything is working and that packages are imported properly.
+
 ### Releasing docs
 
 Docs are automatically released using [Read The Docs](https://readthedocs.org/) based on the latest commits from the `master` branch.
