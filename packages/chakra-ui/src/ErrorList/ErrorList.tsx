@@ -1,5 +1,5 @@
-import { Box, Heading } from '@chakra-ui/core'
-import { List, ListIcon, ListItem } from '@chakra-ui/core'
+import { Box, Heading } from '@chakra-ui/react'
+import { List, ListIcon, ListItem } from '@chakra-ui/react'
 import { ErrorListProps } from '@rjsf/core'
 import React from 'react'
 

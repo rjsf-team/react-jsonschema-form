@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Heading, Divider, HeadingProps } from '@chakra-ui/core'
+import { Box, Heading, Divider, HeadingProps } from '@chakra-ui/react'
 import { WidgetProps } from '@rjsf/core'
 
 const TitleField: React.FC<WidgetProps & HeadingProps> = ({ title }) => (

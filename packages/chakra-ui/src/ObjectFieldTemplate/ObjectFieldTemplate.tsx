@@ -1,5 +1,5 @@
-import { Box } from '@chakra-ui/core'
-import { Stack } from '@chakra-ui/core'
+import { Box } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { ObjectFieldTemplateProps } from '@rjsf/core'
 import React from 'react'
 

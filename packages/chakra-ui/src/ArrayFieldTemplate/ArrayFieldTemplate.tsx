@@ -1,20 +1,23 @@
 import React, { VoidFunctionComponent } from "react";
-//@ts-ignore
-import { isMultiSelect, getDefaultRegistry, } from "@rjsf/core/lib/utils";
+import { utils } from '@rjsf/core';
+
 import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
 
 
-/* Chakra Ui components */
+/* RJSF Utils */
+const { isMultiSelect, getDefaultRegistry } = utils;
 
 /* Local Components */
 import AddButton from "../AddButton/AddButton";
 import IconButton from "../IconButton/IconButton";
-import { Divider, FormLabel, Flex, Box } from "@chakra-ui/core";
+import { Divider, FormLabel, Flex, Box } from "@chakra-ui/react";
 
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps): JSX.Element => {
   const { schema, registry = getDefaultRegistry() } = props;
 
-  if (isMultiSelect(schema, registry.rootSchema)) {
+
+
+  if (isMultiSelect(schema, registry.definitions)) {
     return <DefaultFixedArrayFieldTemplate {...props} />;
   }
   return <DefaultNormalArrayFieldTemplate {...props} />;

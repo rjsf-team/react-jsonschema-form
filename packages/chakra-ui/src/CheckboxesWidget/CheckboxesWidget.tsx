@@ -1,4 +1,4 @@
-import { CheckboxGroup, Checkbox, FormLabel } from "@chakra-ui/core";
+import { CheckboxGroup, Checkbox, FormLabel } from "@chakra-ui/react";
 import { WidgetProps } from "@rjsf/core";
 import React from "react";
 

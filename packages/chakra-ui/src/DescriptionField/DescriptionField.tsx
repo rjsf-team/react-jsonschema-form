@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@chakra-ui/core";
+import { Text } from "@chakra-ui/react";
 import { FieldTemplateProps } from '@rjsf/core';
 
 const DescriptionField = ({ description }: FieldTemplateProps) => {

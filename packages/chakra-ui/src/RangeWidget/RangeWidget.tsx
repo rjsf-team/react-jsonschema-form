@@ -5,7 +5,7 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-} from "@chakra-ui/core";
+} from "@chakra-ui/react";
 import { WidgetProps, utils } from '@rjsf/core';
 const { rangeSpec } = utils
 const RangeWidget = ({

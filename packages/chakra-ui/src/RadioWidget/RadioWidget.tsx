@@ -1,4 +1,4 @@
-import { Radio, RadioGroup, FormControl } from '@chakra-ui/core'
+import { Radio, RadioGroup, FormControl } from '@chakra-ui/react'
 import { WidgetProps } from '@rjsf/core';
 import React, { ReactText } from 'react'
 

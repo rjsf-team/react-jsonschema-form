@@ -7,11 +7,11 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/rjsf-team/react-jsonschema-form">
+  <a href="https://github.com/kpilens/rjsf-chakra-ui">
     <img src="./logo.png" alt="Logo" width="240">
   </a>
 
-  <h3 align="center">@rjsf/chakra-ui</h3>
+  <h3 align="center">@kpilens/rjsf-chakra-ui</h3>
 
   <p align="center">
   Chakra UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -53,7 +53,7 @@ Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 ### Built With
 
 - [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
-- [chakra UI](https://chakra-ui.com/)
+- [Chakra UI](https://chakra-ui.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -62,20 +62,18 @@ Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@chakra-ui/core >= 0.6.0`
-- `@emotion/core" >= 10.0.35`
-- `@emotion/styled >= 10.0.27`
-- `@rjsf/core" >= 2.0.0`
+- `@chakra-ui/react >= 1.2.0`
+- `react >= 16.0.0`
 - `@rjsf/core >= 2.0.0`
 
 ```bash
-yarn add @chakra-ui/core @emotion/core @emotion/styled @rjsf/core
+yarn add @chakra-ui/react
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/chakra-ui
+yarn add @rsjf/chakra-ui @rsjf/core
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -83,14 +81,14 @@ yarn add @rjsf/chakra-ui
 ## Usage
 
 ```js
-import Form from '@rjsf/chakra-ui';
+import Form from '@rsjf/chakra-ui';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
+import { Theme as ChakraUITheme } from '@rsjf/chakra-ui';
 
 // Make modifications to the theme with your own fields and widgets
 

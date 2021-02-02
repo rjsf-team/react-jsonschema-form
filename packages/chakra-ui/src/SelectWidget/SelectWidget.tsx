@@ -1,17 +1,16 @@
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import React from 'react'
 import PropTypes from 'prop-types'
-//@ts-ignore
-import { guessType, asNumber } from '@rjsf/core/lib/utils'
-import { WidgetProps } from '@rjsf/core'
+import { WidgetProps, utils } from '@rjsf/core'
 
 const nums = new Set(['number', 'integer'])
+const { guessType, asNumber } = utils;
 
 /**
  * This is a silly limitation in the DOM where option change event values are
  * always retrieved as strings.
  */
-function processValue(schema: { enum?: any; type?: any; items?: any }, value: string | any[]) {
+function processValue(schema: any, value: any) {
   // "enum" is a reserved word, so only "type" and "items" can be destructured
   const { type, items } = schema
   if (value === '') {
@@ -24,14 +23,14 @@ function processValue(schema: { enum?: any; type?: any; items?: any }, value: st
     return value === 'true'
   }
   if (type === 'number') {
-    return asNumber(value)
+    return asNumber(value as any)
   }
 
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (schema.enum) {
     if (schema.enum.every((x: any) => guessType(x) === 'number')) {
-      return asNumber(value)
+      return asNumber(value as any)
     }
     if (schema.enum.every((x: any) => guessType(x) === 'boolean')) {
       return value === 'true'
@@ -67,6 +66,10 @@ function SelectWidget(props: WidgetProps) {
   } = props
   const { enumOptions, enumDisabled } = options
   const emptyValue = multiple ? [] : ''
+
+  // const handleBlur = () => onBlur(id, processValue(schema, value));
+  // const handleFocus = () => onFocus(id, processValue(schema, value));
+
   return (
     <Select
       id={id}
@@ -79,7 +82,7 @@ function SelectWidget(props: WidgetProps) {
       onBlur={
         onBlur &&
         (event => {
-          const newValue = getValue(event, multiple)
+          const newValue: any = getValue(event, multiple)
           onBlur(id, processValue(schema, newValue))
         })
       }

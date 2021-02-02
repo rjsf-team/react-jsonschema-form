@@ -5,7 +5,7 @@ import {
   NumberIncrementStepper,
   NumberInputField,
   NumberInputStepper
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { WidgetProps } from '@rjsf/core'
 
 const UpDownWidget = ({ id, readonly, disabled, value, onChange, onBlur, onFocus }: WidgetProps) => {

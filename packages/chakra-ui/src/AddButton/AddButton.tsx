@@ -1,4 +1,4 @@
-import { ButtonProps, Button } from "@chakra-ui/core";
+import { ButtonProps, Button } from "@chakra-ui/react";
 import { AddButtonProps } from "@rjsf/core";
 import React from "react";
 import { MdAdd } from "react-icons/md";

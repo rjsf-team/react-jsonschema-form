@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, InputProps } from '@chakra-ui/core'
+import { Input, InputProps } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
 import { WidgetProps } from "@rjsf/core";
 import { JSONSchema7, JSONSchema7Object, JSONSchema7Array } from 'json-schema'

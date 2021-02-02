@@ -1,4 +1,4 @@
-import { Checkbox } from '@chakra-ui/core'
+import { Checkbox } from '@chakra-ui/react'
 import { WidgetProps } from '@rjsf/core'
 import React from 'react'
 

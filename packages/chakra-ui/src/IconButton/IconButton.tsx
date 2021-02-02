@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton } from "@chakra-ui/core";
+import { IconButton } from "@chakra-ui/react";
 import { MdAdd, MdRemove, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
 
 const mappings = {

@@ -1,6 +1,6 @@
 import React from 'react'
-import { FormHelperText, FormControl, FormErrorMessage } from '@chakra-ui/core'
-import { FormLabel as WrappedFormLabel } from '@chakra-ui/core'
+import { FormHelperText, FormControl, FormErrorMessage } from '@chakra-ui/react'
+import { FormLabel as WrappedFormLabel } from '@chakra-ui/react'
 import { FieldTemplateProps } from '@rjsf/core'
 
 const FieldTemplate = ({ id, children, label, displayLabel, disabled, readonly, required, rawErrors = [], rawHelp }: FieldTemplateProps) => (

@@ -1,4 +1,4 @@
-import { Textarea } from '@chakra-ui/core'
+import { Textarea } from '@chakra-ui/react'
 import { WidgetProps } from '@rjsf/core'
 import React from 'react'
 
