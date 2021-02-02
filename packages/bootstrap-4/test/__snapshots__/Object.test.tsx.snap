@@ -45,7 +45,7 @@ exports[`object fields object 1`] = `
                 onFocus={[Function]}
                 readOnly={false}
                 required={false}
-                type="string"
+                type="text"
                 value=""
               />
             </div>

@@ -199,7 +199,7 @@ exports[`array fields fixed array 1`] = `
                         onFocus={[Function]}
                         readOnly={false}
                         required={true}
-                        type="string"
+                        type="text"
                         value=""
                       />
                     </div>

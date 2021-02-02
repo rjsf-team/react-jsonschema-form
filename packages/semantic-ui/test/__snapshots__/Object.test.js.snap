@@ -31,7 +31,7 @@ exports[`object fields object 1`] = `
             onChange={[Function]}
             onFocus={[Function]}
             required={false}
-            type="string"
+            type="text"
             value=""
           />
         </div>

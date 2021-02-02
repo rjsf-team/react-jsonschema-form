@@ -387,7 +387,7 @@ exports[`single fields string field regular 1`] = `
             onFocus={[Function]}
             onInput={[Function]}
             readOnly={false}
-            type="string"
+            type="text"
             value=""
           />
         </div>

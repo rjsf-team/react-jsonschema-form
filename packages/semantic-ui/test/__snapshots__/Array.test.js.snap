@@ -215,7 +215,7 @@ exports[`array fields fixed array 1`] = `
                         onChange={[Function]}
                         onFocus={[Function]}
                         required={true}
-                        type="string"
+                        type="text"
                         value=""
                       />
                     </div>
