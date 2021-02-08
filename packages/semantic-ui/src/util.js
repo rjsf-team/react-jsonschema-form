@@ -4,21 +4,69 @@ import React from "react";
  * Extract props meant for semantic UI components from props that are
  * passed to Widgets, Templates and Fields.
  * @param {Object} params
- * @param {Object} params.formContext
- * @param {Object} params.uiSchema
- * @param {Object} params.options
+ * @param {Object?} params.formContext
+ * @param {Object?} params.uiSchema
+ * @param {Object?} params.options
+ * @param {Object?} params.defaultSchemaProps
+ * @param {Object?} params.defaultContextProps
  * @returns {any}
  */
 export function getSemanticProps({
   formContext = {},
   uiSchema = {},
   options = {},
+  defaultSchemaProps = { fluid: true ,inverted: false },
+  defaultContextProps= { }
 }) {
+
+   const hasFormContextProps = formContext.semantic  ? true : false;
+   const hasSchemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic ? true : false;
+   const hasOptionsProps = options.semantic  ? true : false;
+   const formContextProps = hasFormContextProps ? formContext.semantic : defaultContextProps;
+   let schemaProps = hasSchemaProps ? uiSchema["ui:options"].semantic : defaultSchemaProps;
+   let optionProps = hasOptionsProps ? options.semantic : {};
+   // formContext props should overide other props
+   if (hasFormContextProps){
+     Object.keys(formContext.semantic).map((key) => {
+      optionProps[key] = formContext.semantic[key];
+     });
+   }
+
   return Object.assign(
     {},
-    formContext.semantic || {},
-    uiSchema["ui:options"] ? uiSchema["ui:options"].semantic : {},
-    options.semantic || {}
+    formContextProps,
+    schemaProps,
+    optionProps,
+  );
+}
+
+/**
+ * Extract error props meant for semantic UI components from props that are
+ * passed to Widgets, Templates and Fields.
+ * @param {Object} params
+ * @param {Object?} params.formContext
+ * @param {Object?} params.uiSchema
+ * @param {Object?} params.defaultProps
+ * @returns {any}
+ */
+export function getSemanticErrorProps({
+  formContext = {},
+  uiSchema = {},
+  options = {},
+  defaultProps = { size: 'small', pointing:'above' }
+}) {
+
+  const hasFormContextProps = formContext.semantic && formContext.semantic.errorOptions || false;
+  const hasSchemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic && uiSchema["ui:options"].semantic.errorOptions || false;
+  const hasOptionsProps = options.semantic && options.semantic.errorOptions || false;
+
+  const defaultSemanticErrorProps =  defaultProps;
+
+  return Object.assign(
+    {},
+    hasFormContextProps ? formContext.semantic.errorOptions : {},
+    hasSchemaProps ? uiSchema["ui:options"].semantic.errorOptions  : defaultSemanticErrorProps,
+    hasOptionsProps ? options.semantic.errorOptions : {}
   );
 }
 
@@ -48,9 +96,9 @@ export function cleanClassNames(classNameArr, omit = []) {
 
 /**
  *
- * @param wrap
+ * @param {boolean} wrap
  * @param Component
- * @param props
+ * @param {Object} props
  * @returns {*}
  * @constructor
  */

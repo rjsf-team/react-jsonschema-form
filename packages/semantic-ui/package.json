@@ -26,12 +26,12 @@
     "test": "cross-env NODE_ENV=test BABEL_ENV=test jest"
   },
   "peerDependencies": {
-    "@rjsf/core": "^2.0.0",
+    "@rjsf/core": "2.4.2",
     "lodash": "^4.17.15",
     "nanoid": "^3.1.23",
     "react": ">=16",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.87.3"
+    "semantic-ui-react": "1.2.1",
   },
   "devDependencies": {
     "@babel/cli": "^7.13.14",
@@ -116,6 +116,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.87.3"
+    "semantic-ui-react": "1.2.1"
   }
 }

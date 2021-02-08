@@ -16,22 +16,30 @@ function deselectValue(value, selected) {
   return selected.filter(v => v !== value);
 }
 
-function CheckboxesWidget({
-  id,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-  formContext,
-  schema,
-}) {
+function CheckboxesWidget(props) {
+  const {
+    id,
+    disabled,
+    options,
+    value,
+    autofocus,
+    readonly,
+    onChange,
+    onBlur,
+    onFocus,
+    formContext,
+    schema,
+    uiSchema,
+  } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const { title } = schema;
-  const semanticProps = getSemanticProps({ formContext, options });
+  const semanticProps = getSemanticProps({
+    options,
+    formContext,
+    schema,
+    uiSchema,
+    defaultSchemaProps: {},
+   });
   const _onChange = option => ({ target: { checked } }) => {
     // eslint-disable-next-line no-shadow
     const all = enumOptions.map(({ value }) => value);
@@ -72,13 +80,4 @@ function CheckboxesWidget({
     </React.Fragment>
   );
 }
-
-CheckboxesWidget.defaultProps = {
-  options: {
-    semantic: {
-      inverted: false,
-    },
-  },
-};
-
 export default CheckboxesWidget;
