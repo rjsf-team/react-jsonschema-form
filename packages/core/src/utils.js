@@ -368,7 +368,6 @@ export function getUiOptions(uiSchema) {
     .filter(key => key.indexOf("ui:") === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
-
       if (key === "ui:widget" && isObject(value)) {
         console.warn(
           "Setting options via ui:widget object is deprecated, use ui:options instead"
@@ -394,6 +393,7 @@ export function getDisplayLabel(schema, uiSchema, rootSchema) {
       isMultiSelect(schema, rootSchema) ||
       isFilesArray(schema, uiSchema, rootSchema);
   }
+
   if (schema.type === "object") {
     displayLabel = false;
   }

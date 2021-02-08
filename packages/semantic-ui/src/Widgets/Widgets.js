@@ -7,7 +7,6 @@ import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import TextWidget from "../TextWidget/TextWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
-
 export default {
   CheckboxWidget,
   CheckboxesWidget,

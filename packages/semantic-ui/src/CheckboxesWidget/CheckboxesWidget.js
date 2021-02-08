@@ -16,19 +16,20 @@ function deselectValue(value, selected) {
   return selected.filter(v => v !== value);
 }
 
-function CheckboxesWidget({
-  id,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-  formContext,
-  schema,
-}) {
+function CheckboxesWidget(props) {
+  const {
+    id,
+    disabled,
+    options,
+    value,
+    autofocus,
+    readonly,
+    onChange,
+    onBlur,
+    onFocus,
+    formContext,
+    schema,
+  } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const { title } = schema;
   const semanticProps = getSemanticProps({ formContext, options });
