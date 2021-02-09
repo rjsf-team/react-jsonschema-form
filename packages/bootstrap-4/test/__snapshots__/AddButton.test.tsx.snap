@@ -2,15 +2,9 @@
 
 exports[`AddButton simple 1`] = `
 <button
-  className="ml-1 btn btn-primary"
-  color="primary"
+  className="someClass btn btn-primary btn-block"
   disabled={false}
   onClick={[Function]}
-  style={
-    Object {
-      "width": "100%",
-    }
-  }
   type="button"
 >
   <svg

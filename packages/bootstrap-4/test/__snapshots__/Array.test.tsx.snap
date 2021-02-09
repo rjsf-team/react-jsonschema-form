@@ -33,15 +33,9 @@ exports[`array fields array 1`] = `
                 >
                    
                   <button
-                    className="ml-1 btn btn-primary"
-                    color="primary"
+                    className="array-item-add btn btn-primary btn-block"
                     disabled={false}
                     onClick={[Function]}
-                    style={
-                      Object {
-                        "width": "100%",
-                      }
-                    }
                     type="button"
                   >
                     <svg
