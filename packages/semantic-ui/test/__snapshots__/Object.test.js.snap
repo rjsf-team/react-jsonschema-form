@@ -32,7 +32,7 @@ exports[`object fields object 1`] = `
             onFocus={[Function]}
             placeholder=""
             required={false}
-            type="string"
+            type="text"
             value=""
           />
         </div>

@@ -391,7 +391,7 @@ exports[`single fields string field regular 1`] = `
             onInput={[Function]}
             placeholder=""
             readOnly={false}
-            type="string"
+            type="text"
             value=""
           />
         </div>

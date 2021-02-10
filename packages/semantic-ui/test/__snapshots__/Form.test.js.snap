@@ -188,7 +188,7 @@ exports[`single fields string field regular 1`] = `
           onChange={[Function]}
           onFocus={[Function]}
           placeholder=""
-          type="string"
+          type="text"
           value=""
         />
       </div>

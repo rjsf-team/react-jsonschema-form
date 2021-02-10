@@ -70,6 +70,8 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const uiProps = _pick(options.props || {}, allowedProps);
+  const inputType = schema.type === 'string' ?  'text' : `${schema.type}`
+
   return (
     <TextField
       id={id}
@@ -80,7 +82,7 @@ const TextWidget = ({
       disabled={disabled}
       readOnly={readonly}
       name={name}
-      type={schema.type as string}
+      type={inputType as string}
       value={value ? value : ""}
       onChange={_onChange as any}
       onBlur={_onBlur}

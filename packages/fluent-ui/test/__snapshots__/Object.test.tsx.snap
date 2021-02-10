@@ -60,7 +60,7 @@ exports[`object fields object 1`] = `
                   placeholder=""
                   readOnly={false}
                   required={false}
-                  type="string"
+                  type="text"
                   value=""
                 />
               </div>
