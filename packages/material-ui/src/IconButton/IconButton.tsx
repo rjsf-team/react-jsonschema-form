@@ -8,21 +8,23 @@ import Remove from "@material-ui/icons/Remove";
 import { IconButtonProps as MuiIconButtonProps } from "@material-ui/core/IconButton";
 
 const mappings: any = {
-  remove: <Remove fontSize="small" />,
-  plus: <Add fontSize="small" />,
-  "arrow-up": <ArrowUpward fontSize="small" />,
-  "arrow-down": <ArrowDownward fontSize="small" />,
+  remove: Remove,
+  plus: Add,
+  "arrow-up": ArrowUpward,
+  "arrow-down": ArrowDownward,
 };
 
 type IconButtonProps = MuiIconButtonProps & {
   icon: string;
+  iconProps?: object;
 };
 
 const IconButton = (props: IconButtonProps) => {
-  const { icon, className, ...otherProps } = props;
+  const { icon, className, iconProps, ...otherProps } = props;
+  var IconComp = mappings[icon];
   return (
     <Button {...otherProps} size="small">
-      {mappings[icon]}
+      <IconComp {...iconProps} />
     </Button>
   );
 };

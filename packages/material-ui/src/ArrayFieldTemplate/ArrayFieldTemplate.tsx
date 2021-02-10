@@ -94,6 +94,7 @@ const DefaultArrayItem = (props: any) => {
               className="array-item-move-up"
               tabIndex={-1}
               style={btnStyle as any}
+              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveUp}
               onClick={props.onReorderClick(props.index, props.index - 1)}
             />
@@ -104,6 +105,7 @@ const DefaultArrayItem = (props: any) => {
               icon="arrow-down"
               tabIndex={-1}
               style={btnStyle as any}
+              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveDown}
               onClick={props.onReorderClick(props.index, props.index + 1)}
             />
@@ -114,6 +116,7 @@ const DefaultArrayItem = (props: any) => {
               icon="remove"
               tabIndex={-1}
               style={btnStyle as any}
+              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly}
               onClick={props.onDropIndexClick(props.index)}
             />
