@@ -1,7 +1,9 @@
 import React from "react";
 
 import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
+import TextField, {
+  StandardTextFieldProps as TextFieldProps,
+} from "@material-ui/core/TextField";
 
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
@@ -55,6 +57,7 @@ const SelectWidget = ({
   onBlur,
   onFocus,
   rawErrors = [],
+  ...textFieldProps
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
@@ -89,7 +92,8 @@ const SelectWidget = ({
       }}
       SelectProps={{
         multiple: typeof multiple === "undefined" ? false : multiple,
-      }}>
+      }}
+      {...(textFieldProps as TextFieldProps)}>
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any =
           enumDisabled && (enumDisabled as any).indexOf(value) != -1;
