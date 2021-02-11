@@ -21,7 +21,7 @@ type IconButtonProps = MuiIconButtonProps & {
 
 const IconButton = (props: IconButtonProps) => {
   const { icon, className, iconProps, ...otherProps } = props;
-  var IconComp = mappings[icon];
+  const IconComp = mappings[icon];
   return (
     <Button {...otherProps} size="small">
       <IconComp {...iconProps} />
