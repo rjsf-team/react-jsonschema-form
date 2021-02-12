@@ -201,7 +201,7 @@ render((
 
 ## schema
 
-Form schema. We support JSON schema draft-07 by default. See [Schema Reference]((https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
+Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
 
 ## showErrorList
 
