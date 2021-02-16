@@ -330,6 +330,7 @@ function SchemaFieldRender(props) {
     displayLabel,
     classNames,
     formContext,
+    formData,
     fields,
     schema,
     uiSchema,
