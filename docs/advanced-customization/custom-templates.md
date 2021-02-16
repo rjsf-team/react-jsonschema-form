@@ -146,6 +146,7 @@ The following props are passed to a custom field template component:
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
 - `formContext`: The `formContext` object that you passed to Form.
+- `formData`: The formData for this field.
 - `registry`: The `registry` object.
 
 > Note: you can only define a single global field template for a form, but you can set individual field templates per property using `"ui:FieldTemplate"`.
