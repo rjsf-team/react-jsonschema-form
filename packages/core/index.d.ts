@@ -164,6 +164,7 @@ declare module '@rjsf/core' {
         uiSchema: UiSchema;
         formContext: any;
         formData: T;
+        onChange: (e: IChangeEvent<T> | any, es?: ErrorSchema) => any;
         onKeyChange: (value: string) => () => void;
         onDropPropertyClick: (value: string) => () => void;
         registry: FieldProps['registry'];

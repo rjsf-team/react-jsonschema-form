@@ -322,6 +322,7 @@ function SchemaFieldRender(props) {
     id,
     label,
     hidden,
+    onChange: props.onChange,
     onKeyChange,
     onDropPropertyClick,
     required,
