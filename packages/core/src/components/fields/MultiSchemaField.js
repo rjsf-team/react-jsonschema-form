@@ -119,6 +119,9 @@ class AnyOfField extends Component {
     const { selectedOption } = this.state;
     const { widget = "select", ...uiOptions } = getUiOptions(uiSchema);
     const Widget = getWidget({ type: "number" }, widget, widgets);
+    const optionsSchema = options.map(option =>
+      retrieveSchema(option, registry.rootSchema, formData)
+    );
 
     const option = options[selectedOption] || null;
     let optionSchema;
@@ -131,7 +134,7 @@ class AnyOfField extends Component {
         : Object.assign({}, option, { type: baseType });
     }
 
-    const enumOptions = options.map((option, index) => ({
+    const enumOptions = optionsSchema.map((option, index) => ({
       label: option.title || `Option ${index + 1}`,
       value: index,
     }));

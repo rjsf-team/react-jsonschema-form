@@ -67,12 +67,17 @@ describe("anyOf", () => {
             },
           },
           {
+            $ref: "#/definitions/bar",
+          },
+        ],
+        definitions: {
+          bar: {
             type: "object",
             properties: {
               foo: { type: "string", default: "defaultbar" },
             },
           },
-        ],
+        },
       },
     });
     sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -826,6 +831,46 @@ describe("anyOf", () => {
 
       expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
       expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+    });
+
+    it("should correctly set the label of the options", () => {
+      const schema = {
+        type: "object",
+        anyOf: [
+          {
+            title: "Foo",
+            properties: {
+              foo: { type: "string" },
+            },
+          },
+          {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+          {
+            $ref: "#/definitions/baz",
+          },
+        ],
+        definitions: {
+          baz: {
+            title: "Baz",
+            properties: {
+              baz: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const $select = node.querySelector("select");
+
+      expect($select.options[0].text).eql("Foo");
+      expect($select.options[1].text).eql("Option 2");
+      expect($select.options[2].text).eql("Baz");
     });
   });
 });

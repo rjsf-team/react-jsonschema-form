@@ -221,9 +221,23 @@ function computeDefaults(
   } else if ("oneOf" in schema) {
     schema =
       schema.oneOf[getMatchingOption(undefined, schema.oneOf, rootSchema)];
+    return computeDefaults(
+      schema,
+      defaults,
+      rootSchema,
+      formData,
+      includeUndefinedValues
+    );
   } else if ("anyOf" in schema) {
     schema =
       schema.anyOf[getMatchingOption(undefined, schema.anyOf, rootSchema)];
+    return computeDefaults(
+      schema,
+      defaults,
+      rootSchema,
+      formData,
+      includeUndefinedValues
+    );
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.

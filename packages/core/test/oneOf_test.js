@@ -67,12 +67,17 @@ describe("oneOf", () => {
             },
           },
           {
+            $ref: "#/definitions/bar",
+          },
+        ],
+        definitions: {
+          bar: {
             type: "object",
             properties: {
               foo: { type: "string", default: "defaultbar" },
             },
           },
-        ],
+        },
       },
     });
 
@@ -610,6 +615,46 @@ describe("oneOf", () => {
       Simulate.click(node.querySelector(".array-item-add button"));
 
       expect($select.value).to.eql($select.options[1].value);
+    });
+
+    it("should correctly set the label of the options", () => {
+      const schema = {
+        type: "object",
+        oneOf: [
+          {
+            title: "Foo",
+            properties: {
+              foo: { type: "string" },
+            },
+          },
+          {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+          {
+            $ref: "#/definitions/baz",
+          },
+        ],
+        definitions: {
+          baz: {
+            title: "Baz",
+            properties: {
+              baz: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const $select = node.querySelector("select");
+
+      expect($select.options[0].text).eql("Foo");
+      expect($select.options[1].text).eql("Option 2");
+      expect($select.options[2].text).eql("Baz");
     });
   });
 });
