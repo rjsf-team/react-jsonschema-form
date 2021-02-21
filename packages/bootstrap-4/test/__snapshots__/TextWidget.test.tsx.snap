@@ -1,5 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`TextWidget schema integer type as string 1`] = `
+<div
+  className="mb-0 form-group"
+>
+  <label
+    className="text-danger form-label"
+  >
+    Some simple label
+    *
+  </label>
+  <input
+    autoFocus={true}
+    className="is-invalid form-control"
+    disabled={false}
+    id="_id"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    readOnly={true}
+    required={true}
+    type="text"
+    value="value"
+  />
+</div>
+`;
+
 exports[`TextWidget simple 1`] = `
 <div
   className="mb-0 form-group"

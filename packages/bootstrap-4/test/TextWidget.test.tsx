@@ -10,4 +10,11 @@ describe("TextWidget", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+
+  test("schema integer type as string", () => {
+    const tree = renderer
+      .create(<TextWidget {...makeWidgetMockProps({})} schema={{type: 'string'}} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

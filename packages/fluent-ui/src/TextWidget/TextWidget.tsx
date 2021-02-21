@@ -69,7 +69,7 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const uiProps = _pick(options.props || {}, allowedProps);
-  const inputType = schema.type === 'string' ?  'text' : `${schema.type}`
+  const inputType = (schema.type === 'string' || schema.type === 'integer') ? 'text' : `${schema.type}`
 
   return (
     <TextField

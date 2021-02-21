@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextWidget schema integer type as string 1`] = `
+<div
+  className="ms-TextField root-41"
+>
+  <div
+    className="ms-TextField-wrapper"
+  >
+    <label
+      className="ms-Label root-49"
+      htmlFor="id"
+      id="TextFieldLabel3"
+    >
+      test
+    </label>
+    <div
+      className="ms-TextField-fieldGroup fieldGroup-42"
+    >
+      <input
+        aria-invalid={false}
+        aria-labelledby="TextFieldLabel3"
+        autoFocus={false}
+        className="ms-TextField-field field-43"
+        disabled={false}
+        id="id"
+        name="nodejs"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        readOnly={false}
+        required={false}
+        type="text"
+        value="value"
+      />
+    </div>
+  </div>
+</div>
+`;

@@ -34,7 +34,7 @@ const TextWidget = ({
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
-  const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
+  const inputType = ((type || schema.type) === 'string' || schema.type === 'integer') ?  'text' : `${type || schema.type}`
   
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (

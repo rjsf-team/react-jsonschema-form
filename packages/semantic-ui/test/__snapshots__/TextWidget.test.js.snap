@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextWidget schema integer type as string 1`] = `
+<div
+  className="field"
+>
+  <label
+    htmlFor="id"
+  >
+    test
+  </label>
+  <div
+    className="ui input"
+  >
+    <input
+      id="id"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      type="text"
+      value="value"
+    />
+  </div>
+</div>
+`;

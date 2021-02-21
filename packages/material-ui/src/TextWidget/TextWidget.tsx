@@ -44,7 +44,7 @@ const TextWidget = ({
     uiSchema
     /* TODO: , rootSchema */
   );
-  const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
+  const inputType = ((type || schema.type) === 'string' || schema.type === 'integer') ?  'text' : `${type || schema.type}`
 
   return (
     <TextField
