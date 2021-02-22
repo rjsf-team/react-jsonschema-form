@@ -16,10 +16,10 @@ describe("TextWidget", () => {
     options: {},
     formContext: {},
     id: "id",
-  }
+  };
   test("schema integer type as string", () => {
     const tree = renderer
-      .create(<TextWidget {...props} schema={{type: 'integer'}} />)
+      .create(<TextWidget {...props} schema={{ type: 'integer' }} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
