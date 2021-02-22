@@ -45,6 +45,7 @@ const allowedProps = [
 
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -74,6 +75,7 @@ const TextWidget = ({
   return (
     <TextField
       id={id}
+      placeholder={placeholder}
       label={label || schema.title}
       autoFocus={autofocus}
       required={required}
