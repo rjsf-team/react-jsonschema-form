@@ -1,39 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { asNumber, guessType } from "../../utils";
-
-const nums = new Set(["number", "integer"]);
-
-/**
- * This is a silly limitation in the DOM where option change event values are
- * always retrieved as strings.
- */
-function processValue(schema, value) {
-  // "enum" is a reserved word, so only "type" and "items" can be destructured
-  const { type, items } = schema;
-  if (value === "") {
-    return undefined;
-  } else if (type === "array" && items && nums.has(items.type)) {
-    return value.map(asNumber);
-  } else if (type === "boolean") {
-    return value === "true";
-  } else if (type === "number") {
-    return asNumber(value);
-  }
-
-  // If type is undefined, but an enum is present, try and infer the type from
-  // the enum values
-  if (schema.enum) {
-    if (schema.enum.every(x => guessType(x) === "number")) {
-      return asNumber(value);
-    } else if (schema.enum.every(x => guessType(x) === "boolean")) {
-      return value === "true";
-    }
-  }
-
-  return value;
-}
+import { processNewValue } from "../../utils";
 
 function getValue(event, multiple) {
   if (multiple) {
@@ -49,6 +17,7 @@ function getValue(event, multiple) {
 function SelectWidget(props) {
   const {
     schema,
+    uiSchema,
     id,
     options,
     value,
@@ -77,19 +46,19 @@ function SelectWidget(props) {
         onBlur &&
         (event => {
           const newValue = getValue(event, multiple);
-          onBlur(id, processValue(schema, newValue));
+          onBlur(id, processNewValue({ schema, uiSchema, newValue }));
         })
       }
       onFocus={
         onFocus &&
         (event => {
           const newValue = getValue(event, multiple);
-          onFocus(id, processValue(schema, newValue));
+          onFocus(id, processNewValue({ schema, uiSchema, newValue }));
         })
       }
       onChange={event => {
         const newValue = getValue(event, multiple);
-        onChange(processValue(schema, newValue));
+        onChange(processNewValue({ schema, uiSchema, newValue }));
       }}>
       {!multiple && schema.default === undefined && (
         <option value="">{placeholder}</option>

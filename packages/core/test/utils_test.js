@@ -18,6 +18,7 @@ import {
   mergeObjects,
   pad,
   parseDateString,
+  processNewValue,
   retrieveSchema,
   shouldRender,
   toDateString,
@@ -3358,6 +3359,21 @@ describe("utils", () => {
         minute: 0,
         second: 0,
       });
+    });
+  });
+
+  describe("processNewValue()", () => {
+    it("should return undefined if choice is blank", () => {
+      expect(processNewValue({ schema: {}, uiSchema: {}, newValue: "" })).eql(
+        undefined
+      );
+      expect(
+        processNewValue({
+          schema: { enum: ["@*", ""] },
+          uiSchema: {},
+          newValue: "",
+        })
+      ).eql(undefined);
     });
   });
 

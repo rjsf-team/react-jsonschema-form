@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, utils } from "@rjsf/core";
 import _pick from "lodash/pick";
+
+const { processNewValue } = utils
 
 // Keys of IDropdownProps from @fluentui/react
 const allowedProps = [
@@ -51,6 +53,7 @@ const allowedProps = [
 
 const SelectWidget = ({
   schema,
+  uiSchema,
   id,
   options,
   label,
@@ -76,17 +79,17 @@ const SelectWidget = ({
     if (multiple) {
       const valueOrDefault = value || [];
       if (item.selected) {
-        onChange([...valueOrDefault, item.key]);
+        onChange(processNewValue({ schema, uiSchema, newValue: [...valueOrDefault, item.key] }));
       } else {
-        onChange(valueOrDefault.filter((key: any) => key !== item.key));
+        onChange(processNewValue({ schema, uiSchema, newValue: valueOrDefault.filter((key: any) => key !== item.key) }));
       }
     } else {
-      onChange(item.key);
+      onChange(processNewValue({ schema, uiSchema, newValue: item.key }));
     }
   };
-  const _onBlur = (e: any) => onBlur(id, e.target.value);
+  const _onBlur = (e: any) => onBlur(id, processNewValue({ schema, uiSchema, newValue: e.target.value }));
 
-  const _onFocus = (e: any) => onFocus(id, e.target.value);
+  const _onFocus = (e: any) => onFocus(id, processNewValue({ schema, uiSchema, newValue: e.target.value }))
 
   const newOptions = (enumOptions as {value: any, label: any}[]).map(option => ({
     key: option.value,

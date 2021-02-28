@@ -578,6 +578,44 @@ export function optionsList(schema) {
   }
 }
 
+// "enum" is a reserved word, so only "type" and "items" can be destructured
+const nums = new Set(["number", "integer"]);
+
+/**
+ * Turn a DOM event form value into its formData counterpart.
+ *
+ * It is especially used in `SelectWidget` widgets.
+ *
+ * @example turn "24" into 24 if the field is numeric
+ * @example turn the user choice of an "empty value" (`""`) into the `ui:emptyValue` alternative, `undefined` otherwise
+ * @see https://react-jsonschema-form.readthedocs.io/en/latest/usage/validation/#the-case-of-empty-strings
+ */
+export function processNewValue({ schema, uiSchema, newValue }) {
+  const { type, items } = schema;
+
+  if (newValue === "") {
+    return undefined;
+  } else if (type === "array" && items && nums.has(items.type)) {
+    return newValue.map(asNumber);
+  } else if (type === "boolean") {
+    return newValue === "true";
+  } else if (type === "number") {
+    return asNumber(newValue);
+  }
+
+  // If type is undefined, but an enum is present, try and infer the type from
+  // the enum values
+  if (schema.enum) {
+    if (schema.enum.every(x => guessType(x) === "number")) {
+      return asNumber(newValue);
+    } else if (schema.enum.every(x => guessType(x) === "boolean")) {
+      return newValue === "true";
+    }
+  }
+
+  return newValue;
+}
+
 export function findSchemaDefinition($ref, rootSchema = {}) {
   const origRef = $ref;
   if ($ref.startsWith("#")) {
