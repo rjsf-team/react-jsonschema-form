@@ -594,7 +594,7 @@ export function processNewValue({ schema, uiSchema, newValue }) {
   const { type, items } = schema;
 
   if (newValue === "") {
-    return undefined;
+    return "ui:emptyValue" in uiSchema ? uiSchema["ui:emptyValue"] : undefined;
   } else if (type === "array" && items && nums.has(items.type)) {
     return newValue.map(asNumber);
   } else if (type === "boolean") {
