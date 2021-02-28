@@ -3375,6 +3375,24 @@ describe("utils", () => {
         })
       ).eql(undefined);
     });
+
+    it("should return the enforced `ui:emptyValue` if an empty string is provided", () => {
+      expect(
+        processNewValue({
+          schema: {},
+          uiSchema: { "ui:emptyValue": "alt" },
+          newValue: "",
+        })
+      ).eql("alt");
+
+      expect(
+        processNewValue({
+          schema: { enum: ["@*", ""] },
+          uiSchema: { "ui:emptyValue": "alt" },
+          newValue: "",
+        })
+      ).eql("alt");
+    });
   });
 
   describe("toDateString()", () => {
