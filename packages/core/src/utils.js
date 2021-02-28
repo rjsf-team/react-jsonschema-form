@@ -584,7 +584,7 @@ const nums = new Set(["number", "integer"]);
 /**
  * Turn a DOM event form value into its formData counterpart.
  *
- * It is especially used in `SelectWidget` widgets.
+ * It is currently only used in `SelectWidget` widgets.
  *
  * @example turn "24" into 24 if the field is numeric
  * @example turn the user choice of an "empty value" (`""`) into the `ui:emptyValue` alternative, `undefined` otherwise
