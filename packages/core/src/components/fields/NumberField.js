@@ -73,11 +73,17 @@ class NumberField extends React.Component {
       // Construct a regular expression that checks for a string that consists
       // of the formData value suffixed with zero or one '.' characters and zero
       // or more '0' characters
-      const re = new RegExp(`${value}`.replace(".", "\\.") + "\\.?0*$");
+      const re = new RegExp("^" + `${value}`.replace(".", "\\.") + "\\.?0*$");
 
-      // If the cached "lastValue" is a match, use that instead of the formData
-      // value to prevent the input value from changing in the UI
-      if (lastValue.match(re)) {
+      let normalizedLastValue = `${lastValue}`;
+      if (`${lastValue}`.charAt(0) === ".") {
+        normalizedLastValue = `0${lastValue}`;
+      }
+
+      // If the normalized cached "lastValue" is a match, use the "lastValue"
+      // instead of the formData value to prevent the input value from changing
+      // in the UI
+      if (normalizedLastValue.match(re)) {
         value = lastValue;
       }
     }

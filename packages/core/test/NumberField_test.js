@@ -299,6 +299,26 @@ describe("NumberField", () => {
         expect($input.value).eql(".00");
       });
 
+      it("should not used cached value when substring matches", () => {
+        const schema = {
+          type: "number",
+        };
+        const { comp, node } = createFormComponent({
+          schema,
+          formData: 11,
+        });
+
+        Simulate.change(node.querySelector("input"), {
+          target: { value: "11" },
+        });
+
+        setProps(comp, {
+          schema,
+          formData: 1,
+        });
+        expect(node.querySelector("input").value).eql("1");
+      });
+
       it("should update input values correctly when formData prop changes", () => {
         const schema = {
           type: "number",
