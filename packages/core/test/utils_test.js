@@ -3786,7 +3786,7 @@ describe("utils", () => {
         })
       );
     });
-    it("shoulld generate options for a oneOf|anyOf schema", () => {
+    it("should generate options for a oneOf|anyOf schema", () => {
       const oneOfSchema = {
         title: "string",
         oneOf: [
