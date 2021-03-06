@@ -214,8 +214,9 @@ exports[`array fields fixed array 1`] = `
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
+                        placeholder=""
                         required={true}
-                        type="string"
+                        type="text"
                         value=""
                       />
                     </div>
@@ -256,6 +257,7 @@ exports[`array fields fixed array 1`] = `
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
+                        placeholder=""
                         required={true}
                         type="number"
                         value=""

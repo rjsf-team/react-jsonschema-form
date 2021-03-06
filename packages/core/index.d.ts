@@ -143,7 +143,7 @@ declare module '@rjsf/core' {
 
     export type Field = React.StatelessComponent<FieldProps> | React.ComponentClass<FieldProps>;
 
-    export type FieldTemplateProps = {
+    export type FieldTemplateProps<T = any> = {
         id: string;
         classNames: string;
         label: string;
@@ -163,6 +163,8 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        formData: T;
+        onChange: (value: T) => void;
         onKeyChange: (value: string) => () => void;
         onDropPropertyClick: (value: string) => () => void;
         registry: FieldProps['registry'];
