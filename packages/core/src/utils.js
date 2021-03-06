@@ -573,8 +573,11 @@ export function optionsList(schema) {
     return altSchemas.map((schema, i) => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
-      const description = schema.description;
-      return { label, value, description };
+      return {
+        ...schema,
+        label,
+        value,
+      };
     });
   }
 }
