@@ -133,7 +133,7 @@ The following props are passed to custom widget components:
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
-- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is spread onto the { ...schema.\[anyOf|oneOf\], label, value } object.
+- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object of each option is spread onto the { ...schema.\[anyOf|oneOf\], label, value } object.
 - `formContext`: The `formContext` object that you passed to Form.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 
