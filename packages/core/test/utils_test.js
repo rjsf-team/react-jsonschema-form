@@ -3814,16 +3814,16 @@ describe("utils", () => {
       };
       expect(optionsList(oneOfSchema)).eql(
         oneOfSchema.oneOf.map(opt => ({
+          ...opt,
           label: opt.title,
           value: opt.const,
-          description: opt.description,
         }))
       );
       expect(optionsList(anyofSchema)).eql(
         anyofSchema.anyOf.map(opt => ({
+          ...opt,
           label: opt.title,
           value: opt.const,
-          description: opt.description,
         }))
       );
     });
