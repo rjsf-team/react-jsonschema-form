@@ -574,7 +574,7 @@ export function optionsList(schema) {
       const value = toConstant(schema);
       const label = schema.title || String(value);
       return {
-        ...schema,
+        schema,
         label,
         value,
       };
