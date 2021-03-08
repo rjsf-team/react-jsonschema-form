@@ -70,7 +70,6 @@
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
     "chai": "^3.3.0",
-    "codemirror": "^5.30.0",
     "concurrently": "^5.1.0",
     "create-react-ref": "^0.1.0",
     "cross-env": "^7.0.2",
