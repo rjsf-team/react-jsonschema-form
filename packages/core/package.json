@@ -51,7 +51,7 @@
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react-app-polyfill": "^1.0.4",
-    "react-is": "^16.9.0",
+    "react-is": "^17.0.1",
     "shortid": "^2.2.14"
   },
   "devDependencies": {
