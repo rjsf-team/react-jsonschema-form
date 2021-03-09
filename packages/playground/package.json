@@ -19,8 +19,7 @@
   "lint-staged": {
     "{playground,src,test}/**/*.js": [
       "eslint --fix",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "main": "lib/index.js",

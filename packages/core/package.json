@@ -22,8 +22,7 @@
   "lint-staged": {
     "{src,test}/**/*.js": [
       "eslint --fix",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "main": "dist/cjs/index.js",
