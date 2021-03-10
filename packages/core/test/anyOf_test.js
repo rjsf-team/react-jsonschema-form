@@ -639,6 +639,52 @@ describe("anyOf", () => {
     });
   });
 
+  it("should use title from refs schema before using fallback generated value as title", () => {
+    const schema = {
+      definitions: {
+        address: {
+          title: "Address",
+          type: "object",
+          properties: {
+            street: {
+              title: "Street",
+              type: "string",
+            },
+          },
+        },
+        person: {
+          title: "Person",
+          type: "object",
+          properties: {
+            name: {
+              title: "Name",
+              type: "string",
+            },
+          },
+        },
+        nested: {
+          $ref: "#/definitions/person",
+        },
+      },
+      anyOf: [
+        {
+          $ref: "#/definitions/address",
+        },
+        {
+          $ref: "#/definitions/nested",
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    let options = node.querySelectorAll("option");
+    expect(options[0].firstChild.nodeValue).eql("Address");
+    expect(options[1].firstChild.nodeValue).eql("Person");
+  });
+
   describe("Arrays", () => {
     it("should correctly render form inputs for anyOf inside array items", () => {
       const schema = {
