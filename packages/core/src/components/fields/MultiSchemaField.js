@@ -132,7 +132,10 @@ class AnyOfField extends Component {
     }
 
     const enumOptions = options.map((option, index) => ({
-      label: option.title || `Option ${index + 1}`,
+      label:
+        option.title ||
+        retrieveSchema(option, registry.rootSchema).title ||
+        `Option ${index + 1}`,
       value: index,
     }));
 
