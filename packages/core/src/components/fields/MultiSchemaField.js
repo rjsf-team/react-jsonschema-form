@@ -108,7 +108,6 @@ class AnyOfField extends Component {
       onBlur,
       onChange,
       onFocus,
-      options,
       registry,
       uiSchema,
       schema,
@@ -120,6 +119,10 @@ class AnyOfField extends Component {
     const { widget = "select", ...uiOptions } = getUiOptions(uiSchema);
     const Widget = getWidget({ type: "number" }, widget, widgets);
 
+    // get the dereference schemas
+    const options = this.props.options.map(option =>
+      retrieveSchema(option, registry.rootSchema)
+    );
     const option = options[selectedOption] || null;
     let optionSchema;
 
@@ -132,10 +135,7 @@ class AnyOfField extends Component {
     }
 
     const enumOptions = options.map((option, index) => ({
-      label:
-        option.title ||
-        retrieveSchema(option, registry.rootSchema).title ||
-        `Option ${index + 1}`,
+      label: option.title || `Option ${index + 1}`,
       value: index,
     }));
 
