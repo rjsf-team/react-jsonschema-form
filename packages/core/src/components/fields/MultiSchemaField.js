@@ -121,7 +121,7 @@ class AnyOfField extends Component {
 
     // get the dereference schemas
     const options = this.props.options.map(option =>
-      retrieveSchema(option, registry.rootSchema)
+      retrieveSchema(option, registry.rootSchema, formData)
     );
     const option = options[selectedOption] || null;
     let optionSchema;
