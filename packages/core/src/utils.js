@@ -1200,7 +1200,16 @@ export function getMatchingOption(formData, options, rootSchema) {
         })),
       };
 
-      let augmentedSchema;
+      // start augmentedSchema as an object to hold only references
+      let {
+        type,
+        anyOf,
+        $ref,
+        properties,
+        items,
+        title,
+        ...augmentedSchema
+      } = rootSchema;
 
       // If the "anyOf" keyword already exists, wrap the augmentation in an "allOf"
       if (option.anyOf) {
@@ -1216,9 +1225,9 @@ export function getMatchingOption(formData, options, rootSchema) {
 
         shallowClone.allOf.push(requiresAnyOf);
 
-        augmentedSchema = shallowClone;
+        augmentedSchema = Object.assign(augmentedSchema, shallowClone);
       } else {
-        augmentedSchema = Object.assign({}, option, requiresAnyOf);
+        augmentedSchema = Object.assign(augmentedSchema, option, requiresAnyOf);
       }
 
       // Remove the "required" field as it's likely that not all fields have
