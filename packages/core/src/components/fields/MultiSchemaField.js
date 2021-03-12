@@ -108,6 +108,7 @@ class AnyOfField extends Component {
       onBlur,
       onChange,
       onFocus,
+      options,
       registry,
       uiSchema,
       schema,
@@ -120,9 +121,6 @@ class AnyOfField extends Component {
     const Widget = getWidget({ type: "number" }, widget, widgets);
 
     // get the dereference schemas
-    const options = this.props.options.map(option =>
-      retrieveSchema(option, registry.rootSchema, formData)
-    );
     const option = options[selectedOption] || null;
     let optionSchema;
 
