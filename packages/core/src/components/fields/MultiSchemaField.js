@@ -120,7 +120,6 @@ class AnyOfField extends Component {
     const { widget = "select", ...uiOptions } = getUiOptions(uiSchema);
     const Widget = getWidget({ type: "number" }, widget, widgets);
 
-    // get the dereference schemas
     const option = options[selectedOption] || null;
     let optionSchema;
 
