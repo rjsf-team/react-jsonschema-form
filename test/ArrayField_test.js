@@ -2,7 +2,7 @@
 import React from "react";
 
 import {expect} from "chai";
-import {Simulate} from "react-addons-test-utils";
+import {Simulate} from "react-dom/test-utils";
 
 import {createFormComponent, createSandbox} from "./test_utils";
 
@@ -214,6 +214,10 @@ describe("ArrayField", () => {
 
     it("should force revalidation when a field is removed", () => {
       // refs #195
+      // React 16 unmounts the component tree on errors, so we need to disable
+      // the automatic throwing of errors here
+      sandbox.restore();
+      sandbox.stub(console, "error", () => {});
       const {node} = createFormComponent({
         schema: {
           ...schema,
@@ -238,6 +242,7 @@ describe("ArrayField", () => {
 
       expect(node.querySelectorAll(".has-error .error-detail"))
         .to.have.length.of(0);
+      sandbox.restore();
     });
 
     it("should handle cleared field values in the array", () => {

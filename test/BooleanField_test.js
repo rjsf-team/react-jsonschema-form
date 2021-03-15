@@ -1,6 +1,6 @@
 import React from "react";
 import {expect} from "chai";
-import {Simulate} from "react-addons-test-utils";
+import {Simulate} from "react-dom/test-utils";
 
 import {createFormComponent, createSandbox} from "./test_utils";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import {expect} from "chai";
-import {Simulate} from "react-addons-test-utils";
+import {Simulate} from "react-dom/test-utils";
 
 import SchemaField from "../src/components/fields/SchemaField";
 import TitleField from "../src/components/fields/TitleField";
@@ -48,6 +48,7 @@ describe("SchemaField", () => {
         return <div id="custom"/>;
       }
     }
+    const MemoizedComponent = React.memo(() => <div id="custom2"/>);
 
     const schema = {
       type: "object",
@@ -76,6 +77,22 @@ describe("SchemaField", () => {
       const {node} = createFormComponent({schema, uiSchema});
 
       expect(node.querySelectorAll("#custom"))
+        .to.have.length.of(1);
+
+      expect(node.querySelectorAll("input"))
+        .to.have.length.of(1);
+
+      expect(node.querySelectorAll("label")).to.have.length.of(1);
+    });
+
+    it("should use provided memoized custom component for specific property", () => {
+      const uiSchema = {
+        foo: {"ui:field": MemoizedComponent}
+      };
+
+      const {node} = createFormComponent({schema, uiSchema});
+
+      expect(node.querySelectorAll("#custom2"))
         .to.have.length.of(1);
 
       expect(node.querySelectorAll("input"))

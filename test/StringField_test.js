@@ -1,7 +1,7 @@
 /* This file has been modified from the original forked source code */
 import React from "react";
 import {expect} from "chai";
-import {Simulate} from "react-addons-test-utils";
+import {Simulate} from "react-dom/test-utils";
 
 import {parseDateString, toDateString} from "../src/utils";
 import {createFormComponent, createSandbox} from "./test_utils";
@@ -129,6 +129,20 @@ describe("StringField", () => {
         },
         widgets: {
           TextWidget: CustomWidget
+        }
+      });
+
+      expect(node.querySelector("#custom"))
+        .to.exist;
+    });
+
+    it("should render customized memoized TextWidget", () => {
+      const {node} = createFormComponent({
+        schema: {
+          type: "string",
+        },
+        widgets: {
+          TextWidget: React.memo(CustomWidget)
         }
       });
 

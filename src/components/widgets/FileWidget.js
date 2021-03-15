@@ -62,7 +62,7 @@ function extractFileInfo(dataURLs) {
 }
 
 class FileWidget extends Component {
-  defaultProps = {
+  static defaultProps = {
     multiple: false
   };
 
