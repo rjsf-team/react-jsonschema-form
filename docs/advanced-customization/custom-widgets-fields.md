@@ -54,7 +54,8 @@ The default fields you can override are:
  - `ArrayField`
  - `BooleanField`
  - `DescriptionField`
- - `MultiSchemaField`
+ - `OneOfField`
+ - `AnyOfField`
  - `NullField`
  - `NumberField`
  - `ObjectField`
