@@ -67,12 +67,17 @@ describe("anyOf", () => {
             },
           },
           {
+            $ref: "#/definitions/bar",
+          },
+        ],
+        definitions: {
+          bar: {
             type: "object",
             properties: {
               foo: { type: "string", default: "defaultbar" },
             },
           },
-        ],
+        },
       },
     });
     sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -826,6 +831,46 @@ describe("anyOf", () => {
 
       Simulate.change(strInputs[1], { target: { value: "bar" } });
       expect(strInputs[1].value).eql("bar");
+    });
+
+    it("should correctly set the label of the options", () => {
+      const schema = {
+        type: "object",
+        anyOf: [
+          {
+            title: "Foo",
+            properties: {
+              foo: { type: "string" },
+            },
+          },
+          {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+          {
+            $ref: "#/definitions/baz",
+          },
+        ],
+        definitions: {
+          baz: {
+            title: "Baz",
+            properties: {
+              baz: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const $select = node.querySelector("select");
+
+      expect($select.options[0].text).eql("Foo");
+      expect($select.options[1].text).eql("Option 2");
+      expect($select.options[2].text).eql("Baz");
     });
 
     it("should correctly render mixed types for anyOf inside array items", () => {
