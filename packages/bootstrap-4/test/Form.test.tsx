@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 import Form from "../src/index";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
-import { UiSchema } from "@rjsf/core";
+import CoreForm, { UiSchema } from "@rjsf/core";
 
 describe("single fields", () => {
   describe("string field", () => {
@@ -196,5 +196,40 @@ describe("single fields", () => {
       .create(<Form schema={schema} uiSchema={uiSchema} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
+  });
+});
+
+describe("Form", () => {
+  test("Renders with appropriate refs", () => {
+    function FormWithRef() {
+      const ref = useRef<
+        CoreForm<{
+          field: string;
+        }>
+      >(null);
+    
+      return (
+        <Form<{
+          field: string;
+        }>
+          ref={ref}
+          formData={{
+            field: "",
+          }}
+          schema={{
+            type: "object",
+            properties: {
+              field: {
+                type: "string",
+              },
+            },
+          }}
+        />
+      );
+    }
+    
+    const el = renderer.create(<FormWithRef />).toJSON();
+
+    expect(el).toMatchSnapshot();
   });
 });

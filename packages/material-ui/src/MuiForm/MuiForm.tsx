@@ -1,8 +1,6 @@
-import { withTheme, FormProps } from '@rjsf/core';
+import CoreForm, { withTheme } from "@rjsf/core";
+import Theme from "../Theme";
 
-import Theme from '../Theme';
-import { StatelessComponent } from 'react';
-
-const MuiForm: React.ComponentClass<FormProps<any>> | StatelessComponent<FormProps<any>>  = withTheme(Theme);
+const MuiForm:typeof CoreForm = withTheme(Theme);
 
 export default MuiForm;
