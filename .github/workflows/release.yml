@@ -20,6 +20,6 @@ jobs:
       - run: npm test
       - run: npm run lint
       - run: npm run cs-check
-      - run: npx lerna publish from-git --yes
+      - run: npx lerna publish from-package --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
