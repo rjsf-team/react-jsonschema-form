@@ -51,7 +51,7 @@ Make sure you use [semver](https://semver.org/) for version numbering when selec
 The command above will create a new version tag and push it to GitHub. Then, create a release in
 the Github "Releases" tab and add a description of the changes in the new release.
 
-This will trigger a GitHub Actions pipeline that will build and publish the package to npm.
+This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
 
 ### Releasing docs
 
