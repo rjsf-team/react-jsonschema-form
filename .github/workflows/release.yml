@@ -1,7 +1,9 @@
 name: Release
 on:
-  release:
-    types: [published]
+  # release:
+  #   types: [published]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   release_to_npm:
@@ -18,6 +20,9 @@ jobs:
       - run: npm test
       - run: npm run lint
       - run: npm run cs-check
-      - run: npx lerna publish from-package --yes
+      - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npx lerna publish from-package --yes
+      - if: always()
+        run: rm .npmrc
