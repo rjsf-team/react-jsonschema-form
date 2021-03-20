@@ -53,6 +53,10 @@ the Github "Releases" tab and add a description of the changes in the new releas
 
 This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
 
+The package is published through an automation token belonging to the
+[rjsf-bot](https://www.npmjs.com/~rjsf-bot) user on npm. This token
+is stored as the `NPM_TOKEN` secret on GitHub Actions.
+
 ### Releasing docs
 
 Docs are automatically released using [Read The Docs](https://readthedocs.org/) based on the latest commits from the `master` branch.
