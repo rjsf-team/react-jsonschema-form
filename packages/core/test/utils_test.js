@@ -28,6 +28,7 @@ import {
   getDisplayLabel,
   schemaRequiresTrueValue,
   canExpand,
+  optionsList,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3761,6 +3762,70 @@ describe("utils", () => {
         foo: "bar",
       };
       expect(canExpand(schema, {}, formData)).eql(false);
+    });
+  });
+
+  describe("optionsList()", () => {
+    it("should generate options for an enum schema", () => {
+      const enumSchema = {
+        type: "string",
+        enum: ["Opt1", "Opt2", "Opt3"],
+      };
+
+      const enumNameSchema = {
+        ...enumSchema,
+        enumNames: ["Option1", "Option2", "Option3"],
+      };
+      expect(optionsList(enumSchema)).eql(
+        enumSchema.enum.map(opt => ({ label: opt, value: opt }))
+      );
+      expect(optionsList(enumNameSchema)).eql(
+        enumNameSchema.enum.map((opt, index) => {
+          const label = enumNameSchema.enumNames[index] || opt;
+          return { label: label, value: opt };
+        })
+      );
+    });
+    it("should generate options for a oneOf|anyOf schema", () => {
+      const oneOfSchema = {
+        title: "string",
+        oneOf: [
+          {
+            const: "Option1",
+            title: "Option1 title",
+            description: "Option1 description",
+          },
+          {
+            const: "Option2",
+            title: "Option2 title",
+            description: "Option2 description",
+          },
+          {
+            const: "Option3",
+            title: "Option3 title",
+            description: "Option3 description",
+          },
+        ],
+      };
+      const anyofSchema = {
+        ...oneOfSchema,
+        oneOf: undefined,
+        anyOf: oneOfSchema.oneOf,
+      };
+      expect(optionsList(oneOfSchema)).eql(
+        oneOfSchema.oneOf.map(schema => ({
+          schema,
+          label: schema.title,
+          value: schema.const,
+        }))
+      );
+      expect(optionsList(anyofSchema)).eql(
+        anyofSchema.anyOf.map(schema => ({
+          schema,
+          label: schema.title,
+          value: schema.const,
+        }))
+      );
     });
   });
 });

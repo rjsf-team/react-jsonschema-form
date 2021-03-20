@@ -15,8 +15,8 @@
     "start": "lerna run start --stream --parallel"
   },
   "dependencies": {
-    "prettier": "^1.18.2",
-    "lerna": "^3.18.3"
+    "lerna": "^3.18.3",
+    "prettier": "^1.18.2"
   },
   "prettier": {
     "jsxBracketSameLine": true,

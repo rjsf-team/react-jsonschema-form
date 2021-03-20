@@ -10,6 +10,7 @@ export interface TextWidgetProps extends WidgetProps {
 
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -45,6 +46,7 @@ const TextWidget = ({
       </Form.Label>
       <Form.Control
         id={id}
+        placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
