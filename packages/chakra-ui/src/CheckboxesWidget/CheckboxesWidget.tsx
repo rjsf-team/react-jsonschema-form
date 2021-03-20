@@ -37,8 +37,8 @@ const CheckboxesWidget = ({
   //   }
   // }
 
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
     <CheckboxGroup onChange={(option) => onChange(option)}>

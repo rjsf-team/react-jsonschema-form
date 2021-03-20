@@ -11,8 +11,8 @@ const RadioWidget = ({ id, schema, options, value, disabled, required, readonly,
 
   // eslint-disable-next-line no-empty-pattern
   const _onChange = (value: ReactText) => onChange(schema.type === 'boolean' ? value !== 'false' : value)
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value)
-  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value)
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement | any>) => onBlur(id, value)
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value)
 
   const inline = !!options.inline
   const paddingRatio = inline ? 4 : 2 // Number
@@ -26,7 +26,7 @@ const RadioWidget = ({ id, schema, options, value, disabled, required, readonly,
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}>
-        {(enumOptions as any).map((option: { value: string | number; label: React.ReactNode; }, i: string | number | null | undefined) => {
+        {(enumOptions as any).map((option: { value: string | number; label: React.ReactNode; }, i: string | number | undefined) => {
           const itemDisabled = enumDisabled && (enumDisabled as (string | number)[]).indexOf(option.value) !== -1
 
           return (
