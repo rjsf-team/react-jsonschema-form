@@ -1,7 +1,6 @@
-import CoreForm from "@rjsf/core";
-import { UiSchema } from "@rjsf/core";
+import CoreForm, { UiSchema } from "@rjsf/core";
 import { JSONSchema7 } from "json-schema";
-import React, { useRef } from "react";
+import React from "react";
 import renderer from "react-test-renderer";
 import Form from "../src/index";
 
@@ -214,37 +213,42 @@ describe("single fields", () => {
   });
 });
 
-describe("Form", () => {
-  test("Renders with appropriate refs", () => {
-    function FormWithRef() {
-      const ref = useRef<
-        CoreForm<{
-          field: string;
-        }>
-      >(null);
-    
-      return (
-        <Form<{
-          field: string;
-        }>
-          ref={ref}
-          formData={{
-            field: "",
-          }}
-          schema={{
-            type: "object",
-            properties: {
-              field: {
-                type: "string",
-              },
+describe("refs", () => {
+  test("Renders with a ref and the Form Element accepts a generic formData argument", () => {  
+    let ref = React.createRef<CoreForm<{
+      field: string;
+    }>>()
+ 
+    renderer.create(
+      <Form<{
+        field: string;
+      }>
+        ref={ref}
+        formData={{
+          field: "",
+        }}
+        schema={{
+          type: "object",
+          properties: {
+            field: {
+              type: "string",
             },
-          }}
-        />
-      );
-    }
-    
-    const el = renderer.create(<FormWithRef />).toJSON();
+          },
+        }}
+      />
+    );
 
-    expect(el).toMatchSnapshot();
+    expect(ref.current).toBeDefined();
+    if (ref.current) {
+      expect(ref.current.submit).toBeDefined();
+      expect(ref.current.formElement).toBeDefined();
+      expect(ref.current.validate).toBeDefined();
+    } else {
+      /**
+       * If we hit this, then the ref wasn't properly
+       * forwarded
+       */ 
+      expect(false).toBe(true)
+    }
   });
 });
