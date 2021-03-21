@@ -1,5 +1,6 @@
 import React from "react";
 import { create } from "jss";
+import { ChakraProvider } from "@chakra-ui/react";
 import { jssPreset, StylesProvider } from "@material-ui/core/styles";
 import Frame from "react-frame-component";
 
@@ -82,7 +83,10 @@ function DemoFrame(props) {
             })}
           </StylesProvider>
         ) : null
-      ) : (
+      ) : theme === "chakra-ui" ? <ChakraProvider>
+        {children}
+      </ChakraProvider>
+      : (
         children
       )}
     </Frame>

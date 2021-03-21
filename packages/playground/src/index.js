@@ -4,6 +4,7 @@ import { Theme as FluentUITheme } from "@rjsf/fluent-ui";
 import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
+import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
 import Playground from "./app";
 import { render } from "react-dom";
 
@@ -109,6 +110,9 @@ const themes = {
     stylesheet:
       "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css",
     theme: Bootstrap4Theme,
+  },
+  "chakra-ui": {
+    theme: ChakraUITheme,
   },
 };
 
