@@ -83,10 +83,9 @@ function DemoFrame(props) {
             })}
           </StylesProvider>
         ) : null
-      ) : theme === "chakra-ui" ? <ChakraProvider>
-        {children}
-      </ChakraProvider>
-      : (
+      ) : theme === "chakra-ui" ? (
+        <ChakraProvider>{children}</ChakraProvider>
+      ) : (
         children
       )}
     </Frame>
