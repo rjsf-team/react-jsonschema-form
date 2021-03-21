@@ -54,7 +54,7 @@
     "antd": "^4.3.5",
     "core-js": "^2.5.7",
     "dayjs": "^1.8.28",
-    "framer-motion": "^4.0.0",
+    "framer-motion": "^3.3.0-beta.22",
     "json-schema-merge-allof": "^0.6.0",
     "jss": "^10.0.3",
     "less": "^3.11.3",
