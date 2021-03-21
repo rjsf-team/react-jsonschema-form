@@ -35,6 +35,7 @@
 - [Fluent UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/fluent-ui)
 - [Material UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/material-ui)
 - [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/semantic-ui)
+- [Chakra UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/chakra-ui)
 
 ## Documentation
 Read our [documentation](https://react-jsonschema-form.readthedocs.io/en/latest/) on Read the Docs.

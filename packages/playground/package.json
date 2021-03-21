@@ -49,6 +49,7 @@
     "@rjsf/fluent-ui": "^2.5.1",
     "@rjsf/material-ui": "^2.5.1",
     "@rjsf/semantic-ui": "^2.5.1",
+    "@rjsf/chakra-ui": "^2.5.1",
     "ajv": "^6.7.0",
     "antd": "^4.3.5",
     "core-js": "^2.5.7",

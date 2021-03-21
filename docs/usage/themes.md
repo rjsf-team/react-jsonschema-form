@@ -13,6 +13,7 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
  fluent-ui | Published | `@rjsf/fluent-ui`
  antd | Published | `@rjsf/antd`
  Semantic UI | Published | `@rjsf/semantic-ui`
+ Chakra UI | Published | `@rjsf/chakra-ui`
 
 
 ## Using themes
