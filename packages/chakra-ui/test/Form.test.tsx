@@ -168,21 +168,7 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("radio field", () => {
-    const schema: JSONSchema7 = {
-      type: "boolean",
-    };
-    const uiSchema: UiSchema = {
-      "ui:widget": "radio",
-    };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-  // There is a bug in the Material UI <Slider /> component that prevents this from working.
-  // Error: `TypeError: Cannot read property 'addEventListener' of null`
-  // From: https://github.com/mui-org/material-ui/blob/v4.5.2/packages/material-ui/src/Slider/Slider.js#L622
+
   test.skip("slider field", () => {
     const schema: JSONSchema7 = {
       type: "integer",
@@ -211,4 +197,5 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-});
+})
+

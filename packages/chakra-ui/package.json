@@ -16,8 +16,8 @@
 	"peerDependencies": {
 		"@chakra-ui/react": ">=1.2.0",
 		"@rjsf/core": "^2.0.0",
-		"react-icons": "^3.11.0",
-		"react": ">=16"
+		"react": ">=16",
+		"react-icons": "^3.11.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.0.0-0",
