@@ -19,7 +19,7 @@ jobs:
       uses: actions/setup-node@v2.1.2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
+    - run: npm ci
     - run: npm run build
     - run: npm test
     - run: npm run lint
@@ -28,16 +28,25 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js 13.x
+    - name: Use Node.js 14.x
       uses: actions/setup-node@v2.1.2
       with:
-        node-version: 13.x
-    - run: npm install
+        node-version: 14.x
+    - run: npm ci
     - run: npm run build
-    - name: Deploy playground to GitHub Pages
+    - if: github.ref != 'refs/heads/master'
+    - name: Publish deploy preview to Netlify
+      uses: netlify/actions/cli@master
+      with:
+        args: deploy --dir=packages/playground/build --alias="deploy-preview-${PR_NUMBER}"
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+    - if: github.ref == 'refs/heads/master'
+      name: Deploy playground to GitHub Pages
       uses: crazy-max/ghaction-github-pages@v2.2.0
       with:
         keep_history: true
