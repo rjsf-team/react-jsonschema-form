@@ -224,8 +224,8 @@ class ArrayField extends Component {
         updatedKeyedFormData: false,
       };
     }
-    const nextFormData = nextProps.formData;
-    const previousKeyedFormData = prevState.keyedFormData;
+    const nextFormData = nextProps.formData || [];
+    const previousKeyedFormData = prevState.keyedFormData || [];
     const newKeyedFormData =
       nextFormData.length === previousKeyedFormData.length
         ? previousKeyedFormData.map((previousKeyedFormDatum, index) => {

@@ -57,9 +57,10 @@ exports[`object fields object 1`] = `
                   onChange={[Function]}
                   onFocus={[Function]}
                   onInput={[Function]}
+                  placeholder=""
                   readOnly={false}
                   required={false}
-                  type="string"
+                  type="text"
                   value=""
                 />
               </div>
@@ -102,6 +103,7 @@ exports[`object fields object 1`] = `
                   onChange={[Function]}
                   onFocus={[Function]}
                   onInput={[Function]}
+                  placeholder=""
                   readOnly={false}
                   required={false}
                   type="number"

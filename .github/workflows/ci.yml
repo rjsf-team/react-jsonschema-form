@@ -8,17 +8,15 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [10.x, 11.x, 12.x, 13.x, 14.x]
+        node-version: [10.x, 12.x, 14.x]
 
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2.1.1
+      uses: actions/setup-node@v2.1.2
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
@@ -26,8 +24,6 @@ jobs:
     - run: npm test
     - run: npm run lint
     - run: npm run cs-check
-      env:
-        CI: true
 
   deploy:
     runs-on: ubuntu-latest
@@ -36,13 +32,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js 13.x
-      uses: actions/setup-node@v2.1.1
+      uses: actions/setup-node@v2.1.2
       with:
         node-version: 13.x
     - run: npm install
     - run: npm run build
     - name: Deploy playground to GitHub Pages
-      uses: crazy-max/ghaction-github-pages@v2.1.2
+      uses: crazy-max/ghaction-github-pages@v2.2.0
       with:
         keep_history: true
         target-branch: gh-pages
@@ -51,13 +47,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   docs:
-      
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python
-      uses: actions/setup-python@v2.1.2
+      uses: actions/setup-python@v2.1.4
       with:
         python-version: 3.6
     - run: pip install -r requirements.docs.txt
