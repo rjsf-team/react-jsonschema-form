@@ -19,15 +19,15 @@ jobs:
       uses: actions/setup-node@v2.1.2
       with:
         node-version: ${{ matrix.node-version }}
-    - if: matrix.node-version == '8.x' || matrix.node-version == '9.x'
+    - if: ${{ matrix.node-version == '8.x' || matrix.node-version == '9.x' }}
       run: npm install
-    - if: matrix.node-version != '8.x' && matrix.node-version != '9.x'
+    - if: ${{ matrix.node-version != '8.x' && matrix.node-version != '9.x' }}
       run: npm ci
     - run: npm run build
     - run: npm test
     - run: npm run lint
     - run: npm run cs-check
-    - if: matrix.node-version == '14.x' && github.ref != 'refs/heads/master'
+    - if: ${{ matrix.node-version == '14.x' && github.ref != 'refs/heads/master' }}
       name: Publish deploy preview to Netlify
       uses: netlify/actions/cli@master
       with:
@@ -36,7 +36,7 @@ jobs:
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
-    - if: matrix.node-version == '14.x' && github.ref == 'refs/heads/master'
+    - if: ${{ matrix.node-version == '14.x' && github.ref == 'refs/heads/master' }}
       name: Deploy playground to GitHub Pages
       uses: crazy-max/ghaction-github-pages@v2.2.0
       with:
