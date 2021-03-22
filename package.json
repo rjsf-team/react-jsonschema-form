@@ -12,7 +12,8 @@
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",
     "build": "lerna run --stream build",
-    "start": "lerna run start --stream --parallel"
+    "start": "lerna run start --stream --parallel",
+    "clean": "rm -rf node_modules packages/*/node_modules"
   },
   "dependencies": {
     "lerna": "^3.18.3",

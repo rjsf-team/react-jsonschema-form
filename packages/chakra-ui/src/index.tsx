@@ -6,6 +6,6 @@ export { default as FieldTemplate } from './FieldTemplate'
 export { default as ObjectFieldTemplate } from './ObjectFieldTemplate'
 export { default as Theme } from './Theme'
 export { default as Widgets } from './Widgets'
-
+export { __createChakraFrameProvider } from './ChakraFrameProvider';
 
 export default Form

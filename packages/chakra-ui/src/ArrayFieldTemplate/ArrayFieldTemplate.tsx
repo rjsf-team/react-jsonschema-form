@@ -1,4 +1,4 @@
-import React, { VoidFunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import { utils } from '@rjsf/core';
 
 import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
@@ -77,7 +77,7 @@ type TDefaultArrayItem = ArrayFieldTemplateProps & {
   hasMoveDown: boolean;
   hasRemove: boolean;
   onReorderClick: (x: TIndex, y: TIndex) => void;
-  onDropIndexClick: (x: TIndex) => VoidFunctionComponent;
+  onDropIndexClick: (x: TIndex) => FunctionComponent;
 }
 
 // Used in the two templates
