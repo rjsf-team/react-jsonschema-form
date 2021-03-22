@@ -214,6 +214,31 @@ export const withThemeExample = () => {
   return <Form schema={schema} ref={forwardedRef} />;
 };
 
+export const formWithGenericFormData = () => {
+  type GenericFormData = {
+    field: string
+  }
+  const forwardedRef = React.useRef<Form<GenericFormData>>(null);
+
+  return <Form<GenericFormData> schema={schema} formData={{ field: '' }} ref={forwardedRef} />;
+};
+
+export const withThemeExampleWithGenricFormData= () => {
+  const Form = withTheme({
+    showErrorList: false,
+    noValidate: false,
+    noHtml5Validate: false,
+  });
+
+  type GenericFormData = {
+    field: string
+  }
+
+  const forwardedRef = React.useRef<Form<GenericFormData>>(null);
+
+  return <Form<GenericFormData> schema={schema} formData={{ field: '' }} ref={forwardedRef} />;
+};
+
 export const additionalPropertyFlagExample = () => {
   return ADDITIONAL_PROPERTY_FLAG;
 };
