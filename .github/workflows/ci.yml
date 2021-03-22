@@ -19,7 +19,10 @@ jobs:
       uses: actions/setup-node@v2.1.2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
+    - if: matrix.node-version == "8.x" || matrix.node-version == "9.x"
+      run: npm install
+    - if: matrix.node-version != "8.x" && matrix.node-version != "9.x"
+      run: npm ci
     - run: npm run build
     - run: npm test
     - run: npm run lint
