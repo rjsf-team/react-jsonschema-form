@@ -918,5 +918,90 @@ describe("anyOf", () => {
       expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
       expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
     });
+
+    it("should correctly infer the selected option based on value", () => {
+      const schema = {
+        $ref: "#/defs/any",
+        defs: {
+          chain: {
+            type: "object",
+            title: "Chain",
+            properties: {
+              id: {
+                enum: ["chain"],
+              },
+              components: {
+                type: "array",
+                items: { $ref: "#/defs/any" },
+              },
+            },
+          },
+
+          map: {
+            type: "object",
+            title: "Map",
+            properties: {
+              id: { enum: ["map"] },
+              fn: { $ref: "#/defs/any" },
+            },
+          },
+
+          to_absolute: {
+            type: "object",
+            title: "To Absolute",
+            properties: {
+              id: { enum: ["to_absolute"] },
+              base_url: { type: "string" },
+            },
+          },
+
+          transform: {
+            type: "object",
+            title: "Transform",
+            properties: {
+              id: { enum: ["transform"] },
+              property_key: { type: "string" },
+              transformer: { $ref: "#/defs/any" },
+            },
+          },
+          any: {
+            anyOf: [
+              { $ref: "#/defs/chain" },
+              { $ref: "#/defs/map" },
+              { $ref: "#/defs/to_absolute" },
+              { $ref: "#/defs/transform" },
+            ],
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        formData: {
+          id: "chain",
+          components: [
+            {
+              id: "map",
+              fn: {
+                id: "transform",
+                property_key: "uri",
+                transformer: {
+                  id: "to_absolute",
+                  base_url: "http://localhost",
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      const idSelects = node.querySelectorAll("select#root_id");
+
+      expect(idSelects).to.have.length(4);
+      expect(idSelects[0].value).eql("chain");
+      expect(idSelects[1].value).eql("map");
+      expect(idSelects[2].value).eql("transform");
+      expect(idSelects[3].value).eql("to_absolute");
+    });
   });
 });

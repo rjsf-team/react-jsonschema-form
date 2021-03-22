@@ -1208,6 +1208,8 @@ export function getMatchingOption(formData, options, rootSchema) {
         properties,
         items,
         title,
+        additionalItems,
+        additionalProperties,
         ...augmentedSchema
       } = rootSchema;
 
@@ -1225,9 +1227,9 @@ export function getMatchingOption(formData, options, rootSchema) {
 
         shallowClone.allOf.push(requiresAnyOf);
 
-        augmentedSchema = Object.assign(augmentedSchema, shallowClone);
+        augmentedSchema = { ...augmentedSchema, ...shallowClone };
       } else {
-        augmentedSchema = Object.assign(augmentedSchema, option, requiresAnyOf);
+        augmentedSchema = { ...augmentedSchema, ...option, ...requiresAnyOf };
       }
 
       // Remove the "required" field as it's likely that not all fields have
