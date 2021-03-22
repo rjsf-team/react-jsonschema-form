@@ -37,7 +37,7 @@ jobs:
     - run: npm ci
     - run: npm run build
     - if: github.ref != 'refs/heads/master'
-    - name: Publish deploy preview to Netlify
+      name: Publish deploy preview to Netlify
       uses: netlify/actions/cli@master
       with:
         args: deploy --dir=packages/playground/build --alias="deploy-preview-${PR_NUMBER}"
