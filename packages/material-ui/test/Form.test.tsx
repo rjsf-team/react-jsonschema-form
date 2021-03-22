@@ -239,16 +239,8 @@ describe("refs", () => {
     );
 
     expect(ref.current).toBeDefined();
-    if (ref.current) {
-      expect(ref.current.submit).toBeDefined();
-      expect(ref.current.formElement).toBeDefined();
-      expect(ref.current.validate).toBeDefined();
-    } else {
-      /**
-       * If we hit this, then the ref wasn't properly
-       * forwarded
-       */ 
-      expect(false).toBe(true)
-    }
+    expect(ref.current!.submit).toBeDefined();
+    expect(ref.current!.formElement).toBeDefined();
+    expect(ref.current!.validate).toBeDefined();
   });
 });
