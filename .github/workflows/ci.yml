@@ -8,12 +8,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [8.x, 9.x, 10.x, 11.x, 12.x, 13.x]
+        node-version: [8.x, 9.x, 10.x, 12.x, 14.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -26,8 +24,6 @@ jobs:
     - run: npm test
     - run: npm run lint
     - run: npm run cs-check
-      env:
-        CI: true
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,9 +47,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   docs:
-      
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python

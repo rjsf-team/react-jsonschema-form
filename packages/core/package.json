@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
@@ -15,15 +15,15 @@
     "publish-to-npm": "npm run build && npm publish",
     "start": "concurrently \"npm:build:* -- --watch\"",
     "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test": "cross-env BABEL_ENV=test NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
+    "test": "concurrently \"cross-env BABEL_ENV=test NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js\" \"npm:test-type\"",
     "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
+    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js",
+    "test-type": "tsc"
   },
   "lint-staged": {
     "{src,test}/**/*.js": [
       "eslint --fix",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "main": "dist/cjs/index.js",
@@ -106,6 +106,7 @@
     "rimraf": "^2.5.4",
     "sinon": "^9.0.2",
     "style-loader": "^0.13.1",
+    "typescript": "^4.2.3",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",

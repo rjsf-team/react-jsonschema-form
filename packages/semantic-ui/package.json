@@ -1,14 +1,13 @@
 {
   "name": "@rjsf/semantic-ui",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
   "lint-staged": {
     "{src,test}/**/*.js": [
       "eslint --fix",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "files": [
@@ -45,7 +44,7 @@
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@rjsf/core": "^2.5.0",
+    "@rjsf/core": "^2.5.1",
     "atob": "^2.0.3",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
