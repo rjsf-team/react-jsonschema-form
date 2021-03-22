@@ -12,6 +12,7 @@ export type TextWidgetProps = WidgetProps & TextFieldProps;
 
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -44,16 +45,17 @@ const TextWidget = ({
     uiSchema
     /* TODO: , rootSchema */
   );
+  const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
 
   return (
     <TextField
       id={id}
+      placeholder={placeholder}
       label={displayLabel ? label || schema.title : false}
       autoFocus={autofocus}
       required={required}
       disabled={disabled || readonly}
-      name={name}
-      type={type || (schema.type as string)}
+      type={inputType as string}
       value={value || value === 0 ? value : ""}
       error={rawErrors.length > 0}
       onChange={_onChange}

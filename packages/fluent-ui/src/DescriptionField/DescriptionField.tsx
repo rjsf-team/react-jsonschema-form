@@ -2,7 +2,7 @@ import React from "react";
 
 import { FieldProps } from "@rjsf/core";
 
-import { Text } from "office-ui-fabric-react/lib/Text";
+import { Text } from "@fluentui/react";
 
 const DescriptionField = ({ description }: FieldProps) => {
   if (description) {

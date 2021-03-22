@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "2.2.2",
+  "version": "2.5.1",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
@@ -17,6 +17,10 @@
   "files": [
     "dist"
   ],
+  "engineStrict": false,
+  "engines": {
+    "node": ">=10"
+  },
   "jest": {
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
@@ -45,7 +49,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
     "@babel/runtime-corejs2": "^7.10.3",
-    "@rjsf/core": "^2.2.2",
+    "@rjsf/core": "^2.5.1",
     "antd": "^4.0.0",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",

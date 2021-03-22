@@ -34,7 +34,7 @@ function ArrayFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ArrayFieldTemplate={ArrayFieldTemplate} />,
+        ArrayFieldTemplate={ArrayFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -111,7 +111,7 @@ function CustomFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        FieldTemplate={CustomFieldTemplate} />,
+        FieldTemplate={CustomFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -145,7 +145,9 @@ The following props are passed to a custom field template component:
 - `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
+- `onChange`: The value change event handler; Can be called with a new value to change the value for this field.
 - `formContext`: The `formContext` object that you passed to Form.
+- `formData`: The formData for this field.
 - `registry`: The `registry` object.
 
 > Note: you can only define a single global field template for a form, but you can set individual field templates per property using `"ui:FieldTemplate"`.
@@ -179,7 +181,7 @@ function ObjectFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ObjectFieldTemplate={ObjectFieldTemplate} />,
+        ObjectFieldTemplate={ObjectFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -201,6 +203,7 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `description`: A string value containing the description for the object.
 - `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
+- `onAddClick: (schema: JSONSchema7) => () => void`: Returns a function that adds a new property to the object (to be used with additionalProperties)
 - `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object is required.
 - `schema`: The schema object for this object.

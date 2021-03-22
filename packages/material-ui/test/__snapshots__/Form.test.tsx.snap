@@ -523,7 +523,6 @@ exports[`single fields format color 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
@@ -639,7 +638,6 @@ exports[`single fields format date 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
@@ -752,7 +750,6 @@ exports[`single fields format datetime 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
@@ -867,14 +864,13 @@ exports[`single fields hidden label 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
           placeholder=""
           required={false}
-          type="string"
+          type="text"
           value=""
         />
       </div>
@@ -1024,7 +1020,6 @@ exports[`single fields number field 0 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
@@ -1136,7 +1131,6 @@ exports[`single fields number field 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
@@ -1462,7 +1456,6 @@ exports[`single fields select field 1`] = `
         </div>
         <input
           autoFocus={false}
-          name="nodejs"
           onAnimationStart={[Function]}
           type="hidden"
           value=""
@@ -1506,74 +1499,6 @@ exports[`single fields select field 1`] = `
       >
         Submit
       </span>
-    </button>
-  </div>
-</form>
-`;
-
-exports[`single fields slider field 1`] = `
-<form
-  className="rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
-  >
-    <label
-      className="MuiFormLabel-root"
-      id="root"
-    />
-    <span
-      className="MuiSlider-root MuiSlider-colorPrimary"
-      id="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onMouseDown={[Function]}
-    >
-      <span
-        className="MuiSlider-rail"
-      />
-      <span
-        className="MuiSlider-track"
-        style={
-          Object {
-            "left": "0%",
-            "width": "NaN%",
-          }
-        }
-      />
-      <input
-        type="hidden"
-        value=""
-      />
-      <span
-        aria-orientation="horizontal"
-        aria-valuemax={100}
-        aria-valuemin={42}
-        className="MuiSlider-thumb MuiSlider-thumbColorPrimary"
-        data-index={0}
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseOver={[Function]}
-        role="slider"
-        style={
-          Object {
-            "left": "NaN%",
-          }
-        }
-        tabIndex={0}
-      />
-    </span>
-  </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
     </button>
   </div>
 </form>
@@ -1704,7 +1629,6 @@ exports[`single fields string field format email 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
@@ -1820,7 +1744,6 @@ exports[`single fields string field format uri 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
@@ -1932,14 +1855,13 @@ exports[`single fields string field regular 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
           placeholder=""
           required={false}
-          type="string"
+          type="text"
           value=""
         />
       </div>
@@ -2044,14 +1966,13 @@ exports[`single fields string field with placeholder 1`] = `
           className="MuiInputBase-input MuiInput-input"
           disabled={false}
           id="root"
-          name="nodejs"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
           placeholder="placeholder"
           required={false}
-          type="string"
+          type="text"
           value=""
         />
       </div>

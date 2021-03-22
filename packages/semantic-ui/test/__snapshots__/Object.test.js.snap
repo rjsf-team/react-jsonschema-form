@@ -30,8 +30,9 @@ exports[`object fields object 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
-            type="string"
+            type="text"
             value=""
           />
         </div>
@@ -58,6 +59,7 @@ exports[`object fields object 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder=""
             required={false}
             type="number"
             value=""

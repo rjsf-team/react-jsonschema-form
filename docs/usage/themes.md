@@ -8,8 +8,9 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
  Theme Name | Status | Package Name / Link
  ---------- | ------- | -----------
  Bootstrap 3 (default) | Published | `@rjsf/core`
- material-ui | Published | `@rjsf/material-ui` 
- fluent-ui | Published | `@rjsf/fluent-ui` 
+ Bootstrap 4 | Published | `@rjsf/bootstrap-4`
+ material-ui | Published | `@rjsf/material-ui`
+ fluent-ui | Published | `@rjsf/fluent-ui`
  antd | Published | `@rjsf/antd`
  Semantic UI | Published | `@rjsf/semantic-ui`
 
@@ -23,7 +24,7 @@ first install both `@rjsf/core` and `@rjsf/material-ui`. Then you can import the
 import Form from "@rjsf/material-ui";
 ```
 
-If you would like to contribute a theme with a new UI framework, please develop the theme using the `withTheme` component described in [Theme Customization](theme-customization.md) and make a PR!
+If you would like to contribute a theme with a new UI framework, please develop the theme using the `withTheme` component described in [Theme Customization](../advanced-customization/custom-themes.md) and make a PR!
 
 You can also use the uiSchema to add custom CSS class names to your form.
 

@@ -40,7 +40,6 @@ const UpDownWidget = ({
         required={required}
         type="number"
         disabled={disabled || readonly}
-        name={name}
         value={value ? value : ''}
         onChange={_onChange}
         onBlur={_onBlur}

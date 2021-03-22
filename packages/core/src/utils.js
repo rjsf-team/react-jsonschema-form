@@ -2,9 +2,11 @@ import React from "react";
 import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js/library/fn/array/fill";
-import validateFormData, { isValid } from "./validate";
 import union from "lodash/union";
 import jsonpointer from "jsonpointer";
+import fields from "./components/fields";
+import widgets from "./components/widgets";
+import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -60,10 +62,26 @@ const widgetMap = {
   },
 };
 
+export function canExpand(schema, uiSchema, formData) {
+  if (!schema.additionalProperties) {
+    return false;
+  }
+  const { expandable } = getUiOptions(uiSchema);
+  if (expandable === false) {
+    return expandable;
+  }
+  // if ui:options.expandable was not explicitly set to false, we can add
+  // another property if we have not exceeded maxProperties yet
+  if (schema.maxProperties !== undefined) {
+    return Object.keys(formData).length < schema.maxProperties;
+  }
+  return true;
+}
+
 export function getDefaultRegistry() {
   return {
-    fields: require("./components/fields").default,
-    widgets: require("./components/widgets").default,
+    fields,
+    widgets,
     definitions: {},
     rootSchema: {},
     formContext: {},
@@ -555,7 +573,11 @@ export function optionsList(schema) {
     return altSchemas.map((schema, i) => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
-      return { label, value };
+      return {
+        schema,
+        label,
+        value,
+      };
     });
   }
 }
