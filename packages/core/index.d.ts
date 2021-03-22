@@ -437,8 +437,7 @@ declare module '@rjsf/core' {
 }
 
 declare module '@rjsf/core/lib/components/fields/SchemaField' {
-    import { JSONSchema7 } from 'json-schema';
-    import Form, { FieldProps, UiSchema, IdSchema, FormValidation } from '@rjsf/core';
+    import { FieldProps } from '@rjsf/core';
 
     export type SchemaFieldProps<T = any> = Pick<
         FieldProps<T>,
