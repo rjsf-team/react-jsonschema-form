@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object fields object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="grouped equal width fields"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="field"
+      >
+        <label
+          htmlFor="root_a"
+        >
+          a
+        </label>
+        <div
+          className="ui fluid input"
+        >
+          <input
+            autoFocus={false}
+            disabled={false}
+            id="root_a"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="field"
+      >
+        <label
+          htmlFor="root_b"
+        >
+          b
+        </label>
+        <div
+          className="ui fluid input"
+        >
+          <input
+            autoFocus={false}
+            disabled={false}
+            id="root_b"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="number"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

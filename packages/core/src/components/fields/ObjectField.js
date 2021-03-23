@@ -6,28 +6,11 @@ import {
   orderProperties,
   retrieveSchema,
   getDefaultRegistry,
-  getUiOptions,
+  canExpand,
   ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
-  const canExpand = function canExpand() {
-    const { formData, schema, uiSchema } = props;
-    if (!schema.additionalProperties) {
-      return false;
-    }
-    const { expandable } = getUiOptions(uiSchema);
-    if (expandable === false) {
-      return expandable;
-    }
-    // if ui:options.expandable was not explicitly set to false, we can add
-    // another property if we have not exceeded maxProperties yet
-    if (schema.maxProperties !== undefined) {
-      return Object.keys(formData).length < schema.maxProperties;
-    }
-    return true;
-  };
-
   const { TitleField, DescriptionField } = props;
   return (
     <fieldset id={props.idSchema.$id}>
@@ -47,7 +30,7 @@ function DefaultObjectFieldTemplate(props) {
         />
       )}
       {props.properties.map(prop => prop.content)}
-      {canExpand() && (
+      {canExpand(props.schema, props.uiSchema, props.formData) && (
         <AddButton
           className="object-property-expand"
           onClick={props.onAddClick(props.schema)}
@@ -214,14 +197,7 @@ class ObjectField extends Component {
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, rootSchema, formData);
 
-    // If this schema has a title defined, but the user has set a new key/label, retain their input.
-    let title;
-    if (this.state.wasPropertyKeyModified) {
-      title = name;
-    } else {
-      title = schema.title === undefined ? name : schema.title;
-    }
-
+    const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
     let orderedProperties;
     try {

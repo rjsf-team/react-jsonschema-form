@@ -62,6 +62,27 @@ const ExposedArrayKeyTemplate = function(props) {
   );
 };
 
+const CustomOnAddClickTemplate = function(props) {
+  return (
+    <div className="array">
+      {props.items &&
+        props.items.map(element => (
+          <div key={element.key} className="array-item">
+            <div>{element.children}</div>
+          </div>
+        ))}
+
+      {props.canAdd && (
+        <div className="array-item-add">
+          <button onClick={() => props.onAddClick()} type="button">
+            Add New
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 describe("ArrayField", () => {
   let sandbox;
   const CustomComponent = props => {
@@ -99,6 +120,53 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll("#custom")[0].textContent).to.eql(
         "Custom UnsupportedField"
       );
+    });
+  });
+
+  describe("Malformed nested array formData", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "array",
+          items: { type: "string" },
+        },
+      },
+    };
+
+    it("should contain no field in the list when nested array formData is explicitly null", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { foo: null },
+      });
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(0);
+    });
+  });
+
+  describe("Nullable array formData", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: ["array", "null"],
+          items: { type: "string" },
+        },
+      },
+    };
+
+    it("should contain no field in the list when nested array formData is explicitly null", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { foo: null },
+      });
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(0);
+    });
+    it("should contain a field in the list when nested array formData is a single item", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { foo: ["test"] },
+      });
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
     });
   });
 
@@ -247,6 +315,17 @@ describe("ArrayField", () => {
 
       expect(node.querySelector(".array-item").hasAttribute(ArrayKeyDataAttr))
         .to.be.true;
+    });
+
+    it("should add a field when clicking add button even if event is not passed to onAddClick", () => {
+      const { node } = createFormComponent({
+        schema,
+        ArrayFieldTemplate: CustomOnAddClickTemplate,
+      });
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector(".array-item")).not.to.be.null;
     });
 
     it("should not provide an add button if length equals maxItems", () => {

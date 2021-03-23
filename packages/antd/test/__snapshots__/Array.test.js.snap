@@ -1,0 +1,453 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array fields array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 row array-item-list"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        />
+        <div
+          className="ant-col ant-col-24"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <div
+            className="ant-row ant-row-end"
+            style={
+              Object {
+                "marginLeft": -12,
+                "marginRight": -12,
+              }
+            }
+          >
+            <div
+              className="ant-col"
+              style={
+                Object {
+                  "flex": "0 0 192px",
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                }
+              }
+            >
+              <button
+                className="ant-btn array-item-add ant-btn-primary ant-btn-block"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  aria-label="plus-circle"
+                  className="anticon anticon-plus-circle"
+                  role="img"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className=""
+                    data-icon="plus-circle"
+                    fill="currentColor"
+                    focusable="false"
+                    height="1em"
+                    viewBox="64 64 896 896"
+                    width="1em"
+                  >
+                    <path
+                      d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"
+                    />
+                    <path
+                      d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                    />
+                  </svg>
+                </span>
+                <span>
+                   Add Item
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="ant-select ant-select-multiple ant-select-show-search"
+      name="root"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-select-selector"
+        onClick={[Function]}
+        onMouseDown={[Function]}
+      >
+        <span
+          className="ant-select-selection-search"
+          style={
+            Object {
+              "width": 0,
+            }
+          }
+        >
+          <input
+            aria-activedescendant="root_list_0"
+            aria-autocomplete="list"
+            aria-controls="root_list"
+            aria-haspopup="listbox"
+            aria-owns="root_list"
+            autoComplete="off"
+            autoFocus={false}
+            className="ant-select-selection-search-input"
+            disabled={false}
+            id="root"
+            onChange={[Function]}
+            onKeyDown={[Function]}
+            onMouseDown={[Function]}
+            onPaste={[Function]}
+            readOnly={true}
+            role="combobox"
+            style={
+              Object {
+                "opacity": 0,
+              }
+            }
+            value=""
+          />
+          <span
+            aria-hidden={true}
+            className="ant-select-selection-search-mirror"
+          >
+            
+             
+          </span>
+        </span>
+        <span
+          className="ant-select-selection-placeholder"
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-fixed-items"
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 row array-item-list"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <div
+            className="ant-row ant-row-top"
+            style={
+              Object {
+                "marginLeft": -12,
+                "marginRight": -12,
+              }
+            }
+          >
+            <div
+              className="ant-col"
+              style={
+                Object {
+                  "flex": "1",
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                }
+              }
+            >
+              <div
+                className="form-group field field-string"
+              >
+                <div
+                  className="ant-row ant-form-item"
+                  style={Object {}}
+                >
+                  <div
+                    className="ant-col ant-col-24 ant-form-item-control"
+                    style={Object {}}
+                  >
+                    <div
+                      className="ant-form-item-control-input"
+                    >
+                      <div
+                        className="ant-form-item-control-input-content"
+                      >
+                        <input
+                          className="ant-input"
+                          disabled={false}
+                          id="root_0"
+                          name="root_0"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          placeholder=""
+                          style={
+                            Object {
+                              "width": "100%",
+                            }
+                          }
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ant-row ant-row-top"
+            style={
+              Object {
+                "marginLeft": -12,
+                "marginRight": -12,
+              }
+            }
+          >
+            <div
+              className="ant-col"
+              style={
+                Object {
+                  "flex": "1",
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                }
+              }
+            >
+              <div
+                className="form-group field field-number"
+              >
+                <div
+                  className="ant-row ant-form-item"
+                  style={Object {}}
+                >
+                  <div
+                    className="ant-col ant-col-24 ant-form-item-control"
+                    style={Object {}}
+                  >
+                    <div
+                      className="ant-form-item-control-input"
+                    >
+                      <div
+                        className="ant-form-item-control-input-content"
+                      >
+                        <div
+                          className="ant-input-number"
+                          style={
+                            Object {
+                              "width": "100%",
+                            }
+                          }
+                        >
+                          <div
+                            className="ant-input-number-handler-wrap"
+                          >
+                            <span
+                              aria-disabled={false}
+                              aria-label="Increase Value"
+                              className="ant-input-number-handler ant-input-number-handler-up "
+                              onMouseDown={[Function]}
+                              onMouseLeave={[Function]}
+                              onMouseUp={[Function]}
+                              onTouchCancel={[Function]}
+                              onTouchEnd={[Function]}
+                              onTouchMove={[Function]}
+                              onTouchStart={[Function]}
+                              role="button"
+                              unselectable="unselectable"
+                            >
+                              <span
+                                aria-label="up"
+                                className="anticon anticon-up ant-input-number-handler-up-inner"
+                                role="img"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className=""
+                                  data-icon="up"
+                                  fill="currentColor"
+                                  focusable="false"
+                                  height="1em"
+                                  viewBox="64 64 896 896"
+                                  width="1em"
+                                >
+                                  <path
+                                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                                  />
+                                </svg>
+                              </span>
+                            </span>
+                            <span
+                              aria-disabled={false}
+                              aria-label="Decrease Value"
+                              className="ant-input-number-handler ant-input-number-handler-down "
+                              onMouseDown={[Function]}
+                              onMouseLeave={[Function]}
+                              onMouseUp={[Function]}
+                              onTouchCancel={[Function]}
+                              onTouchEnd={[Function]}
+                              onTouchMove={[Function]}
+                              onTouchStart={[Function]}
+                              role="button"
+                              unselectable="unselectable"
+                            >
+                              <span
+                                aria-label="down"
+                                className="anticon anticon-down ant-input-number-handler-down-inner"
+                                role="img"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className=""
+                                  data-icon="down"
+                                  fill="currentColor"
+                                  focusable="false"
+                                  height="1em"
+                                  viewBox="64 64 896 896"
+                                  width="1em"
+                                >
+                                  <path
+                                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                                  />
+                                </svg>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            className="ant-input-number-input-wrap"
+                          >
+                            <input
+                              aria-valuemin={-9007199254740991}
+                              autoComplete="off"
+                              className="ant-input-number-input"
+                              disabled={false}
+                              id="root_1"
+                              min={-9007199254740991}
+                              name="root_1"
+                              onBlur={[Function]}
+                              onChange={[Function]}
+                              onFocus={[Function]}
+                              onKeyDown={[Function]}
+                              onKeyUp={[Function]}
+                              onMouseUp={[Function]}
+                              placeholder=""
+                              required={false}
+                              role="spinbutton"
+                              step={1}
+                              type="number"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

@@ -1,8 +1,8 @@
 {
   "name": "@rjsf/material-ui",
-  "version": "2.0.0-alpha.6",
+  "version": "2.5.1",
   "main": "dist/index.js",
-  "module": "dist/rjsf-material-ui.esm.js",
+  "module": "dist/material-ui.esm.js",
   "typings": "dist/index.d.ts",
   "description": "Material UI theme, fields and widgets for react-jsonschema-form",
   "files": [
@@ -16,8 +16,8 @@
   "peerDependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
-    "react": ">=16",
-    "@rjsf/core": "^2.0.0-alpha.6"
+    "@rjsf/core": "^2.0.0",
+    "react": ">=16"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
@@ -29,7 +29,7 @@
     "@babel/preset-react": "^7.0.0",
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^2.0.0-alpha.6",
+    "@rjsf/core": "^2.5.1",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.3",
     "@types/react": "^16.9.23",
@@ -41,7 +41,7 @@
     "react-test-renderer": "^16.13.1",
     "rimraf": "^2.6.3",
     "tsdx": "^0.13.1",
-    "tslib": "^1.10.0",
+    "tslib": "^2.0.0",
     "typescript": "^3.5.3"
   },
   "publishConfig": {
@@ -65,7 +65,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cybertec-postgresql/rjsf-material-ui.git"
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
-  "license": "MIT"
+  "license": "Apache-2.0"
 }

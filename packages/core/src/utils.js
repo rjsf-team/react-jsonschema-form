@@ -2,9 +2,11 @@ import React from "react";
 import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js/library/fn/array/fill";
-import validateFormData, { isValid } from "./validate";
 import union from "lodash/union";
 import jsonpointer from "jsonpointer";
+import fields from "./components/fields";
+import widgets from "./components/widgets";
+import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -60,10 +62,26 @@ const widgetMap = {
   },
 };
 
+export function canExpand(schema, uiSchema, formData) {
+  if (!schema.additionalProperties) {
+    return false;
+  }
+  const { expandable } = getUiOptions(uiSchema);
+  if (expandable === false) {
+    return expandable;
+  }
+  // if ui:options.expandable was not explicitly set to false, we can add
+  // another property if we have not exceeded maxProperties yet
+  if (schema.maxProperties !== undefined) {
+    return Object.keys(formData).length < schema.maxProperties;
+  }
+  return true;
+}
+
 export function getDefaultRegistry() {
   return {
-    fields: require("./components/fields").default,
-    widgets: require("./components/widgets").default,
+    fields,
+    widgets,
     definitions: {},
     rootSchema: {},
     formContext: {},
@@ -368,6 +386,26 @@ export function getUiOptions(uiSchema) {
     }, {});
 }
 
+export function getDisplayLabel(schema, uiSchema, rootSchema) {
+  const uiOptions = getUiOptions(uiSchema);
+  let { label: displayLabel = true } = uiOptions;
+  if (schema.type === "array") {
+    displayLabel =
+      isMultiSelect(schema, rootSchema) ||
+      isFilesArray(schema, uiSchema, rootSchema);
+  }
+  if (schema.type === "object") {
+    displayLabel = false;
+  }
+  if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
+    displayLabel = false;
+  }
+  if (uiSchema["ui:field"]) {
+    displayLabel = false;
+  }
+  return displayLabel;
+}
+
 export function isObject(thing) {
   if (typeof File !== "undefined" && thing instanceof File) {
     return false;
@@ -535,7 +573,11 @@ export function optionsList(schema) {
     return altSchemas.map((schema, i) => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
-      return { label, value };
+      return {
+        schema,
+        label,
+        value,
+      };
     });
   }
 }
@@ -872,7 +914,7 @@ export function deepEquals(a, b, ca = [], cb = []) {
     return true;
   } else if (typeof a === "function" || typeof b === "function") {
     // Assume all functions are equivalent
-    // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
+    // see https://github.com/rjsf-team/react-jsonschema-form/issues/255
     return true;
   } else if (typeof a !== "object" || typeof b !== "object") {
     return false;
@@ -990,6 +1032,11 @@ export function toPathSchema(schema, name = "", rootSchema, formData = {}) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
     return toPathSchema(_schema, name, rootSchema, formData);
   }
+
+  if (schema.hasOwnProperty("additionalProperties")) {
+    pathSchema.__rjsf_additionalProperties = true;
+  }
+
   if (schema.hasOwnProperty("items") && Array.isArray(formData)) {
     formData.forEach((element, i) => {
       pathSchema[i] = toPathSchema(
@@ -1056,6 +1103,36 @@ export function toDateString(
   );
   const datetime = new Date(utcTime).toJSON();
   return time ? datetime : datetime.slice(0, 10);
+}
+
+export function utcToLocal(jsonDate) {
+  if (!jsonDate) {
+    return "";
+  }
+
+  // required format of `"yyyy-MM-ddThh:mm" followed by optional ":ss" or ":ss.SSS"
+  // https://html.spec.whatwg.org/multipage/input.html#local-date-and-time-state-(type%3Ddatetime-local)
+  // > should be a _valid local date and time string_ (not GMT)
+
+  // Note - date constructor passed local ISO-8601 does not correctly
+  // change time to UTC in node pre-8
+  const date = new Date(jsonDate);
+
+  const yyyy = pad(date.getFullYear(), 4);
+  const MM = pad(date.getMonth() + 1, 2);
+  const dd = pad(date.getDate(), 2);
+  const hh = pad(date.getHours(), 2);
+  const mm = pad(date.getMinutes(), 2);
+  const ss = pad(date.getSeconds(), 2);
+  const SSS = pad(date.getMilliseconds(), 3);
+
+  return `${yyyy}-${MM}-${dd}T${hh}:${mm}:${ss}.${SSS}`;
+}
+
+export function localToUTC(dateString) {
+  if (dateString) {
+    return new Date(dateString).toJSON();
+  }
 }
 
 export function pad(num, size) {
@@ -1166,4 +1243,35 @@ export function getMatchingOption(formData, options, rootSchema) {
     }
   }
   return 0;
+}
+
+// Check to see if a schema specifies that a value must be true
+export function schemaRequiresTrueValue(schema) {
+  // Check if const is a truthy value
+  if (schema.const) {
+    return true;
+  }
+
+  // Check if an enum has a single value of true
+  if (schema.enum && schema.enum.length === 1 && schema.enum[0] === true) {
+    return true;
+  }
+
+  // If anyOf has a single value, evaluate the subschema
+  if (schema.anyOf && schema.anyOf.length === 1) {
+    return schemaRequiresTrueValue(schema.anyOf[0]);
+  }
+
+  // If oneOf has a single value, evaluate the subschema
+  if (schema.oneOf && schema.oneOf.length === 1) {
+    return schemaRequiresTrueValue(schema.oneOf[0]);
+  }
+
+  // Evaluate each subschema in allOf, to see if one of them requires a true
+  // value
+  if (schema.allOf) {
+    return schema.allOf.some(schemaRequiresTrueValue);
+  }
+
+  return false;
 }

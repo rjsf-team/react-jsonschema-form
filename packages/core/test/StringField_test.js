@@ -4,8 +4,7 @@ import { Simulate, act } from "react-dom/test-utils";
 
 import sinon from "sinon";
 
-import { parseDateString, toDateString } from "../src/utils";
-import { utcToLocal } from "../src/components/widgets/DateTimeWidget";
+import { parseDateString, toDateString, utcToLocal } from "../src/utils";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("StringField", () => {

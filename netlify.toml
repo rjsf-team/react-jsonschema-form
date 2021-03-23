@@ -1,7 +1,10 @@
 [build]
   base = ""
   publish = "packages/playground/build"
-  command = "npm run bootstrap && npm run build"
+  command = "npm run build"
+  # Ignore dependabot PRs for deploy previews
+  ignore = "./netlify-ignore.sh"
 
 [build.environment]
   SHOW_NETLIFY_BADGE = "true"
+  NODE_VERSION = "14"

@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object fields object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="p-0 container-fluid"
+    >
+      <div
+        className="row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="form-group"
+          >
+            <div
+              className="mb-0 form-group"
+            >
+              <label
+                className="form-label"
+              >
+                a
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_a"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="form-group"
+          >
+            <div
+              className="mb-0 form-group"
+            >
+              <label
+                className="form-label"
+              >
+                b
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_b"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={false}
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

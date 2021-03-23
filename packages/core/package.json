@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "2.0.0-alpha.6",
+  "version": "2.5.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
@@ -22,8 +22,7 @@
   "lint-staged": {
     "{src,test}/**/*.js": [
       "eslint --fix",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "main": "dist/cjs/index.js",
@@ -34,9 +33,8 @@
     "index.d.ts"
   ],
   "engineStrict": false,
-  "engines": {
-    "npm": ">=2.14.7",
-    "node": ">=6"
+  "engines":{
+    "node": ">=12"
   },
   "peerDependencies": {
     "react": ">=16"
@@ -70,10 +68,9 @@
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
     "chai": "^3.3.0",
-    "codemirror": "^5.30.0",
     "concurrently": "^5.1.0",
     "create-react-ref": "^0.1.0",
-    "cross-env": "^2.0.1",
+    "cross-env": "^7.0.2",
     "css-loader": "^0.23.1",
     "eslint": "^4.9.0",
     "eslint-config-react-app": "^2.0.1",
@@ -105,7 +102,7 @@
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.3.3",
     "rimraf": "^2.5.4",
-    "sinon": "^7.5.0",
+    "sinon": "^9.0.2",
     "style-loader": "^0.13.1",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.1.2",
@@ -117,7 +114,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla-services/react-jsonschema-form.git"
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
   "author": "Nicolas Perriault <nperriault@mozilla.com>",
   "keywords": [
@@ -126,7 +123,7 @@
     "json-schema"
   ],
   "license": "Apache-2.0",
-  "homepage": "https://github.com/mozilla-services/react-jsonschema-form#readme",
+  "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
   }
