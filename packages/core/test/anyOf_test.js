@@ -67,6 +67,40 @@ describe("anyOf", () => {
             },
           },
           {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultbar" },
+            },
+          },
+        ],
+      },
+    });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "defaultfoo" },
+    });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "defaultbar" },
+    });
+  });
+
+  it("should assign a default value and set defaults on option change when using references", () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        anyOf: [
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          {
             $ref: "#/definitions/bar",
           },
         ],
