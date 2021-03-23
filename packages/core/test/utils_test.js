@@ -656,6 +656,23 @@ describe("utils", () => {
         });
       });
 
+      it("should populate defaults for oneOf second option", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            test: {
+              oneOf: [
+                { properties: { a: { type: "string", default: "a" } } },
+                { properties: { b: { type: "string", default: "b" } } },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { test: { b: "b" } })).eql({
+          test: { b: "b" },
+        });
+      });
+
       it("should populate defaults for oneOf when 'type': 'object' is missing", () => {
         const schema = {
           type: "object",
@@ -750,6 +767,23 @@ describe("utils", () => {
         };
         expect(getDefaultFormState(schema, {})).eql({
           name: "a",
+        });
+      });
+
+      it("should populate defaults for anyOf second option", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            test: {
+              anyOf: [
+                { properties: { a: { type: "string", default: "a" } } },
+                { properties: { b: { type: "string", default: "b" } } },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(schema, { test: { b: "b" } })).eql({
+          test: { b: "b" },
         });
       });
 

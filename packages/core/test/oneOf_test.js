@@ -503,6 +503,43 @@ describe("oneOf", () => {
     expect(node.querySelector("input#root").value).eql("");
   });
 
+  it("should use only the selected option when generating default values", () => {
+    const schema = {
+      type: "object",
+      oneOf: [
+        {
+          additionalProperties: false,
+          properties: { lorem: { type: "object" } },
+        },
+        {
+          additionalProperties: false,
+          properties: { ipsum: { type: "object" } },
+        },
+        {
+          additionalProperties: false,
+          properties: { pyot: { type: "object" } },
+        },
+      ],
+    };
+
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: { lorem: {} },
+    });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    expect($select.value).eql("1");
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { lorem: undefined, ipsum: {} },
+    });
+  });
+
   describe("Arrays", () => {
     it("should correctly render mixed types for oneOf inside array items", () => {
       const schema = {
