@@ -20,9 +20,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm run build
+    # Add Netlify badge if we're going to deploy to Netlify
+    - if: github.ref != 'refs/heads/master'
+      run: npm run build
       env:
         SHOW_NETLIFY_BADGE: true
+    - if: github.ref == 'refs/heads/master'
+      run: npm run build
     - run: npm test
     - run: npm run lint
     - run: npm run cs-check
