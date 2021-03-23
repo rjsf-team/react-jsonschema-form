@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 15.x]
+        node-version: [12.x, 14.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - run: npm run cs-check
-    - run: npm test
+    
     # Add Netlify badge if we're going to deploy to Netlify
     - if: github.ref != 'refs/heads/master'
       run: npm run build
@@ -35,6 +35,8 @@ jobs:
       with:
         name: dist
         path: packages/playground/build
+    
+    - run: npm test
     
   deploy_preview:
     runs-on: ubuntu-latest
