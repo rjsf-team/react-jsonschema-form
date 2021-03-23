@@ -39,7 +39,7 @@ jobs:
   deploy_preview:
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/master'
-    name: Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)
+    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
     needs: [build]
     steps:
       - name: Download built files
@@ -47,7 +47,7 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: Deploy to Netlify
+      - name: "Deploy to Netlify (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
         uses: netlify/actions/cli@master
         with:
           args: deploy --dir=dist --alias="deploy-preview-${PR_NUMBER}"
