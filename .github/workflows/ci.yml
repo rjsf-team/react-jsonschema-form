@@ -24,11 +24,13 @@ jobs:
     - run: npm run cs-check
     
     # Add Netlify badge if we're going to deploy to Netlify
-    - if: github.ref != 'refs/heads/master'
+    - name: Build with Netlify badge
+      if: github.ref != 'refs/heads/master'
       run: npm run build
       env:
         SHOW_NETLIFY_BADGE: true
-    - if: github.ref == 'refs/heads/master'
+    - name: Build
+      if: github.ref == 'refs/heads/master'
       run: npm run build
     - if: matrix.node-version == '14.x'
       uses: actions/upload-artifact@v2
