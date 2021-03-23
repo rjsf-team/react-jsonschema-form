@@ -15,7 +15,7 @@
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "scripts": {
     "build": "npm run build:cjs && npm run build:es",

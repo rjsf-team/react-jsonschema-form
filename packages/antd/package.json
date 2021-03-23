@@ -19,7 +19,7 @@
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "jest": {
     "moduleNameMapper": {
