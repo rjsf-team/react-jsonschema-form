@@ -17,6 +17,10 @@
   "files": [
     "dist"
   ],
+  "engineStrict": false,
+  "engines": {
+    "node": ">=10"
+  },
   "jest": {
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
