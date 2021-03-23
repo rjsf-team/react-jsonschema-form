@@ -18,6 +18,10 @@
     "react": ">=16",
     "react-bootstrap": "^1.0.1"
   },
+  "engineStrict": false,
+  "engines": {
+    "node": ">=12"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
