@@ -37,9 +37,7 @@
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
-    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
@@ -119,7 +117,6 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.9.2",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.3"
   }
