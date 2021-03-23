@@ -20,7 +20,7 @@
   },
   "engineStrict": false,
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",

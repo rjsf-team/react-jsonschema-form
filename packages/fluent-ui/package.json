@@ -15,7 +15,7 @@
   },
   "engineStrict": false,
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "peerDependencies": {
     "@fluentui/react": "^7.114.2",
