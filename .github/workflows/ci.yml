@@ -21,27 +21,56 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build
+      env:
+        SHOW_NETLIFY_BADGE: true
     - run: npm test
     - run: npm run lint
     - run: npm run cs-check
-    - if: ${{ matrix.node-version == '14.x' && github.ref != 'refs/heads/master' }}
-      name: Publish deploy preview to Netlify
-      uses: netlify/actions/cli@master
+    - if: matrix.node-version == '14.x'
+      uses: actions/upload-artifact@v2
       with:
-        args: deploy --dir=packages/playground/build --alias="deploy-preview-${PR_NUMBER}"
-      env:
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        PR_NUMBER: ${{ github.event.pull_request.number }}
-    - if: ${{ matrix.node-version == '14.x' && github.ref == 'refs/heads/master' }}
-      name: Deploy playground to GitHub Pages
-      uses: crazy-max/ghaction-github-pages@v2.2.0
-      with:
-        keep_history: true
-        target-branch: gh-pages
-        build_dir: packages/playground/build
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: build
+        path: packages/playground/build
+    
+  deploy_preview:
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/master'
+    name: Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)
+    needs: [build]
+    steps:
+      - name: Download built files
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=build --alias="deploy-preview-${PR_NUMBER}"
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+  
+  deploy_playground:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    name: Deploy playground to GitHub Pages
+    needs: [build]
+    steps:
+      - name: Download built files
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
+      - name: Deploy playground
+        uses: crazy-max/ghaction-github-pages@v2.2.0
+        with:
+          keep_history: true
+          target-branch: gh-pages
+          build_dir: packages/playground/build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   docs:
     runs-on: ubuntu-latest
