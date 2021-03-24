@@ -5,7 +5,7 @@ import { deepEquals, getDefaultFormState } from "./utils";
 
 let formerCustomFormats = null;
 let formerMetaSchema = null;
-const rootSchemaId = "__rjsf_rootSchema";
+const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
 import { isObject, mergeObjects } from "./utils";
 
@@ -265,17 +265,17 @@ export default function validateFormData(
 }
 
 /**
- * Get a similar schema where ref's are prefixed with `rootSchemaId`
+ * Recursively prefixes all $ref's in a schema with `ROOT_SCHEMA_PREFIX`
  * This is used in isValid to make references to the rootSchema
  */
-function withIdRefPrefix(schemaNode) {
+export function withIdRefPrefix(schemaNode) {
   let obj = schemaNode;
   if (schemaNode.constructor === Object) {
     obj = { ...schemaNode };
-    for (let key of Object.keys(obj)) {
+    for (const key in obj) {
       const value = obj[key];
-      if (key === "$ref") {
-        obj[key] = rootSchemaId + value;
+      if (key === "$ref" && typeof value === "string") {
+        obj[key] = ROOT_SCHEMA_PREFIX + value;
       } else {
         obj[key] = withIdRefPrefix(value);
       }
@@ -302,22 +302,16 @@ export function isValid(schema, data, rootSchema) {
     // that lives in the rootSchema but not in the schema in question.
     if (rootSchema) {
       const result = ajv
-        .addSchema(rootSchema, rootSchemaId)
+        .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
         .validate(withIdRefPrefix(schema), data);
-
-      // make sure we remove the rootSchema from the global ajv instance
-      ajv.removeSchema(rootSchemaId);
       return result;
     } else {
       return ajv.validate(schema, data);
     }
   } catch (e) {
-    try {
-      // make sure we also remove the rootSchema if an error occured before removing but after adding
-      ajv.removeSchema(rootSchemaId);
-    } catch (e) {
-      return false;
-    }
     return false;
+  } finally {
+    // make sure we remove the rootSchema from the global ajv instance
+    ajv.removeSchema(ROOT_SCHEMA_PREFIX);
   }
 }

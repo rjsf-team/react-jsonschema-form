@@ -3,7 +3,11 @@ import { expect } from "chai";
 import sinon from "sinon";
 import { Simulate } from "react-dom/test-utils";
 
-import validateFormData, { isValid, toErrorList } from "../src/validate";
+import validateFormData, {
+  isValid,
+  toErrorList,
+  withIdRefPrefix,
+} from "../src/validate";
 import { createFormComponent, submitForm } from "./test_utils";
 
 describe("Validation", () => {
@@ -54,6 +58,44 @@ describe("Validation", () => {
       };
 
       expect(isValid(schema, formData, rootSchema)).to.be.true;
+    });
+  });
+
+  describe("validate.withIdRefPrefix", () => {
+    it("should recursively add id prefix to all refs", () => {
+      const schema = {
+        anyOf: [{ $ref: "#/defs/foo" }],
+      };
+      const expected = {
+        anyOf: [{ $ref: "__rjsf_rootSchema#/defs/foo" }],
+      };
+
+      expect(withIdRefPrefix(schema)).to.eql(expected);
+    });
+
+    it("shouldn't mutated the schema", () => {
+      const schema = {
+        anyOf: [{ $ref: "#/defs/foo" }],
+      };
+
+      withIdRefPrefix(schema);
+
+      expect(schema).to.eql({
+        anyOf: [{ $ref: "#/defs/foo" }],
+      });
+    });
+
+    it("should not change the ref since it's a property", () => {
+      const schema = {
+        title: "A registration form",
+        description: "A simple form example.",
+        type: "object",
+        properties: {
+          $ref: { type: "string", title: "First name", default: "Chuck" },
+        },
+      };
+
+      expect(withIdRefPrefix(schema)).to.eql(schema);
     });
   });
 
