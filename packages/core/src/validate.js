@@ -263,14 +263,45 @@ export default function validateFormData(
   };
 }
 
+function isDict(v) {
+  return (
+    typeof v === "object" &&
+    v !== null &&
+    !(v instanceof Array) &&
+    !(v instanceof Date)
+  );
+}
+
+/**
+ * Get a similar schema where ref's are prefixed with "__rjsf_rootSchema"
+ */
+function withIdRefPrefix(schema) {
+  const obj = { ...schema };
+  for (let key of Object.keys(obj)) {
+    const value = obj[key];
+    if (key === "$ref") {
+      obj[key] = "__rjsf_rootSchema" + value;
+    } else if (isDict(value)) {
+      obj[key] = withIdRefPrefix(value);
+    }
+  }
+  return obj;
+}
+
 /**
  * Validates data against a schema, returning true if the data is valid, or
  * false otherwise. If the schema is invalid, then this function will return
  * false.
  */
-export function isValid(schema, data) {
+export function isValid(schema, data, rootSchema) {
   try {
-    return ajv.validate(schema, data);
+    if (rootSchema) {
+      return createAjvInstance()
+        .addSchema(rootSchema, "__rjsf_rootSchema")
+        .validate(withIdRefPrefix(schema), data);
+    } else {
+      return ajv.validate(schema, data);
+    }
   } catch (e) {
     return false;
   }
