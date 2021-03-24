@@ -5,6 +5,7 @@ import { deepEquals, getDefaultFormState } from "./utils";
 
 let formerCustomFormats = null;
 let formerMetaSchema = null;
+const rootSchemaId = "__rjsf_rootSchema";
 
 import { isObject, mergeObjects } from "./utils";
 
@@ -264,17 +265,25 @@ export default function validateFormData(
 }
 
 /**
- * Get a similar schema where ref's are prefixed with "__rjsf_rootSchema"
+ * Get a similar schema where ref's are prefixed with `rootSchemaId`
  * This is used in isValid to make references to the rootSchema
  */
-function withIdRefPrefix(schema) {
-  const obj = { ...schema };
-  for (let key of Object.keys(obj)) {
-    const value = obj[key];
-    if (key === "$ref") {
-      obj[key] = "__rjsf_rootSchema" + value;
-    } else if (value.constructor === Object) {
-      obj[key] = withIdRefPrefix(value);
+function withIdRefPrefix(schemaNode) {
+  let obj = schemaNode;
+  if (schemaNode.constructor === Object) {
+    obj = { ...schemaNode };
+    for (let key of Object.keys(obj)) {
+      const value = obj[key];
+      if (key === "$ref") {
+        obj[key] = rootSchemaId + value;
+      } else {
+        obj[key] = withIdRefPrefix(value);
+      }
+    }
+  } else if (Array.isArray(schemaNode)) {
+    obj = [...schemaNode];
+    for (var i = 0; i < obj.length; i++) {
+      obj[i] = withIdRefPrefix(obj[i]);
     }
   }
   return obj;
@@ -293,11 +302,11 @@ export function isValid(schema, data, rootSchema) {
     // that lives in the rootSchema but not in the schema in question.
     if (rootSchema) {
       const result = ajv
-        .addSchema(rootSchema, "__rjsf_rootSchema")
+        .addSchema(rootSchema, rootSchemaId)
         .validate(withIdRefPrefix(schema), data);
 
       // make sure we remove the rootSchema from the global ajv instance
-      ajv.removeSchema("__rjsf_rootSchema");
+      ajv.removeSchema(rootSchemaId);
       return result;
     } else {
       return ajv.validate(schema, data);
@@ -305,7 +314,7 @@ export function isValid(schema, data, rootSchema) {
   } catch (e) {
     try {
       // make sure we also remove the rootSchema if an error occured before removing but after adding
-      ajv.removeSchema("__rjsf_rootSchema");
+      ajv.removeSchema(rootSchemaId);
     } catch (e) {
       return false;
     }

@@ -35,6 +35,26 @@ describe("Validation", () => {
 
       expect(isValid(schema, { foo: "bar" })).to.be.false;
     });
+
+    it("should return true if the data is valid against the schema including refs to rootSchema", () => {
+      const schema = {
+        anyOf: [{ $ref: "#/defs/foo" }],
+      };
+      const rootSchema = {
+        defs: {
+          foo: {
+            properties: {
+              name: { type: "string" },
+            },
+          },
+        },
+      };
+      const formData = {
+        name: "John Doe",
+      };
+
+      expect(isValid(schema, formData, rootSchema)).to.be.true;
+    });
   });
 
   describe("validate.validateFormData()", () => {
