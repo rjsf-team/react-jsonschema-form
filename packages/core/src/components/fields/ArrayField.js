@@ -1,7 +1,7 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
-import includes from "core-js/library/fn/array/includes";
+import includes from "core-js-pure/es/array/includes";
 import * as types from "../../types";
 
 import {
