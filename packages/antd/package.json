@@ -17,6 +17,10 @@
   "files": [
     "dist"
   ],
+  "engineStrict": false,
+  "engines": {
+    "node": ">=12"
+  },
   "jest": {
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
@@ -24,11 +28,9 @@
   },
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0",
-    "@babel/runtime-corejs2": "^7.10.3",
     "@rjsf/core": "^2.0.0",
     "antd": "^4.0.0",
     "antd-dayjs-webpack-plugin": "1.0.0",
-    "core-js": "^2.5.7",
     "dayjs": "^1.8.0",
     "lodash": "^4.17.15",
     "react": ">=16"
@@ -38,20 +40,16 @@
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
-    "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@babel/runtime-corejs2": "^7.10.3",
     "@rjsf/core": "^2.5.1",
     "antd": "^4.0.0",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
     "concurrently": "^5.1.0",
-    "core-js": "^2.5.7",
     "cross-env": "^2.0.1",
     "css-loader": "^3.2.0",
     "dayjs": "^1.8.0",
@@ -66,7 +64,6 @@
     "less-loader": "^5.0.0",
     "lodash": "^4.17.15",
     "react": "^16.8.6",
-    "react-app-polyfill": "^1.0.4",
     "react-dom": "^16.8.6",
     "react-test-renderer": "^16.13.1",
     "rimraf": "^3.0.2",
