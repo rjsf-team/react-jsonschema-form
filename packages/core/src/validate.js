@@ -263,17 +263,9 @@ export default function validateFormData(
   };
 }
 
-function isDict(v) {
-  return (
-    typeof v === "object" &&
-    v !== null &&
-    !(v instanceof Array) &&
-    !(v instanceof Date)
-  );
-}
-
 /**
  * Get a similar schema where ref's are prefixed with "__rjsf_rootSchema"
+ * This is used in isValid to make references to the rootSchema
  */
 function withIdRefPrefix(schema) {
   const obj = { ...schema };
@@ -281,7 +273,7 @@ function withIdRefPrefix(schema) {
     const value = obj[key];
     if (key === "$ref") {
       obj[key] = "__rjsf_rootSchema" + value;
-    } else if (isDict(value)) {
+    } else if (value.constructor === Object) {
       obj[key] = withIdRefPrefix(value);
     }
   }
@@ -295,14 +287,28 @@ function withIdRefPrefix(schema) {
  */
 export function isValid(schema, data, rootSchema) {
   try {
+    // if rootSchema is given then we add that schema with an id.
+    // then we rewrite the schema ref's to point to the rootSchema using the id
+    // this accounts for the case where schema have references to models
+    // that lives in the rootSchema but not in the schema in question.
     if (rootSchema) {
-      return createAjvInstance()
+      const result = ajv
         .addSchema(rootSchema, "__rjsf_rootSchema")
         .validate(withIdRefPrefix(schema), data);
+
+      // make sure we remove the rootSchema from the global ajv instance
+      ajv.removeSchema("__rjsf_rootSchema");
+      return result;
     } else {
       return ajv.validate(schema, data);
     }
   } catch (e) {
+    try {
+      // make sure we also remove the rootSchema if an error occured before removing but after adding
+      ajv.removeSchema("__rjsf_rootSchema");
+    } catch (e) {
+      return false;
+    }
     return false;
   }
 }
