@@ -24,7 +24,7 @@ export default class Form extends Component {
     noValidate: false,
     liveValidate: false,
     disabled: false,
-    noHtml5Validate: false,
+    noHtml5Validate: true,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
   };

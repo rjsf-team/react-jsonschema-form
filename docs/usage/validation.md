@@ -25,7 +25,11 @@ render((
 
 ## HTML5 Validation
 
-By default, the form uses HTML5 validation. This may cause unintuitive results because the HTML5 validation errors (such as when a field is `required`) may be displayed before the form is submitted, and thus these errors will display differently from the react-jsonschema-form validation errors. You can turn off HTML validation by setting the `noHtml5Validate` to `true`.
+By default, the form does not use HTML5 validation. 
+
+If you wish to enable HTML5 validation, passing `noHtml5Validate=false` will enable it. 
+
+You may find that enabling HTML5 validation errors leads to some unintuitive results, as this will display some errors prior to form submission in a manner different than the way errors from react-jsonschema-form displays validation errors
 
 ```jsx
 const schema = {
@@ -39,7 +43,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema} noHtml5Validate />
+  <Form schema={schema} noHtml5Validate={false} />
 ), document.getElementById("app"));
 ```
 
