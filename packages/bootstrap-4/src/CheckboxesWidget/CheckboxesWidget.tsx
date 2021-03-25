@@ -73,8 +73,7 @@ const CheckboxesWidget = ({
                 onChange={_onChange(option)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
-                disabled={disabled || itemDisabled || false}
-                readOnly={readonly}
+                disabled={disabled || readonly || itemDisabled || false}
               />
             </Form>
           ) : (
@@ -91,8 +90,7 @@ const CheckboxesWidget = ({
                 onChange={_onChange(option)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
-                disabled={disabled || itemDisabled || false}
-                readOnly={readonly}
+                disabled={disabled || readonly || itemDisabled || false}
               />
             </Form>
           );
