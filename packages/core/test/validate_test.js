@@ -20,7 +20,7 @@ describe("Validation", () => {
         },
       };
 
-      expect(isValid(schema, { foo: "bar" })).to.be.true;
+      expect(isValid(schema, { foo: "bar" }, schema)).to.be.true;
     });
 
     it("should return false if the data is not valid against the schema", () => {
@@ -31,13 +31,13 @@ describe("Validation", () => {
         },
       };
 
-      expect(isValid(schema, { foo: 12345 })).to.be.false;
+      expect(isValid(schema, { foo: 12345 }, schema)).to.be.false;
     });
 
     it("should return false if the schema is invalid", () => {
       const schema = "foobarbaz";
 
-      expect(isValid(schema, { foo: "bar" })).to.be.false;
+      expect(isValid(schema, { foo: "bar" }, schema)).to.be.false;
     });
 
     it("should return true if the data is valid against the schema including refs to rootSchema", () => {

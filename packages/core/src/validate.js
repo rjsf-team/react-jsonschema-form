@@ -274,7 +274,11 @@ export function withIdRefPrefix(schemaNode) {
     obj = { ...schemaNode };
     for (const key in obj) {
       const value = obj[key];
-      if (key === "$ref" && typeof value === "string") {
+      if (
+        key === "$ref" &&
+        typeof value === "string" &&
+        value.startsWith("#")
+      ) {
         obj[key] = ROOT_SCHEMA_PREFIX + value;
       } else {
         obj[key] = withIdRefPrefix(value);
@@ -296,18 +300,13 @@ export function withIdRefPrefix(schemaNode) {
  */
 export function isValid(schema, data, rootSchema) {
   try {
-    // if rootSchema is given then we add that schema with an id.
-    // then we rewrite the schema ref's to point to the rootSchema using the id
+    // add the rootSchema ROOT_SCHEMA_PREFIX as id.
+    // then rewrite the schema ref's to point to the rootSchema
     // this accounts for the case where schema have references to models
     // that lives in the rootSchema but not in the schema in question.
-    if (rootSchema) {
-      const result = ajv
-        .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
-        .validate(withIdRefPrefix(schema), data);
-      return result;
-    } else {
-      return ajv.validate(schema, data);
-    }
+    return ajv
+      .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
+      .validate(withIdRefPrefix(schema), data);
   } catch (e) {
     return false;
   } finally {
