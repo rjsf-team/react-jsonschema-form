@@ -469,7 +469,6 @@ exports[`single fields format color 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -584,7 +583,6 @@ exports[`single fields format date 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -696,7 +694,6 @@ exports[`single fields format datetime 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -811,7 +808,6 @@ exports[`single fields hidden label 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -967,7 +963,6 @@ exports[`single fields number field 0 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -1078,7 +1073,6 @@ exports[`single fields number field 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -1575,7 +1569,6 @@ exports[`single fields string field format email 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -1690,7 +1683,6 @@ exports[`single fields string field format uri 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -1802,7 +1794,6 @@ exports[`single fields string field regular 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],
@@ -1913,7 +1904,6 @@ exports[`single fields string field with placeholder 1`] = `
           "ArrayFieldTemplate": [Function],
           "FieldTemplate": [Function],
           "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
           "fields": Object {
             "AnyOfField": [Function],
             "ArrayField": [Function],

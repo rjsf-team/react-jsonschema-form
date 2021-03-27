@@ -69,7 +69,6 @@ exports[`object fields additionalProperties 1`] = `
                     "ArrayFieldTemplate": [Function],
                     "FieldTemplate": [Function],
                     "ObjectFieldTemplate": [Function],
-                    "definitions": Object {},
                     "fields": Object {
                       "AnyOfField": [Function],
                       "ArrayField": [Function],
@@ -306,7 +305,6 @@ exports[`object fields object 1`] = `
                 "ArrayFieldTemplate": [Function],
                 "FieldTemplate": [Function],
                 "ObjectFieldTemplate": [Function],
-                "definitions": Object {},
                 "fields": Object {
                   "AnyOfField": [Function],
                   "ArrayField": [Function],
@@ -406,7 +404,6 @@ exports[`object fields object 1`] = `
                 "ArrayFieldTemplate": [Function],
                 "FieldTemplate": [Function],
                 "ObjectFieldTemplate": [Function],
-                "definitions": Object {},
                 "fields": Object {
                   "AnyOfField": [Function],
                   "ArrayField": [Function],
