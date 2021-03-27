@@ -1782,10 +1782,7 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       const formData = {
-        outer: [
-          ["good", "bad"],
-          ["bad", "good"],
-        ],
+        outer: [["good", "bad"], ["bad", "good"]],
       };
 
       const formProps = { schema, formData, liveValidate: true };
