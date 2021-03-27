@@ -137,9 +137,9 @@ The value of this prop will be passed to the `method` [HTML attribute on the for
 
 The value of this prop will be passed to the `name` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-name).
 
-## noHtml5Validate
+## html5Validate
 
-If set to true, turns off HTML5 validation on the form. Set to `true` by default.
+If set to true, turns on HTML5 validation on the form. Set to `false` by default.
 
 ## noValidate
 

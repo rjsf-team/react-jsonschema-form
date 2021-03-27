@@ -24,7 +24,7 @@ export default class Form extends Component {
     noValidate: false,
     liveValidate: false,
     disabled: false,
-    noHtml5Validate: true,
+    html5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
   };
@@ -428,7 +428,7 @@ export default class Form extends Component {
       autoComplete: currentAutoComplete,
       enctype,
       acceptcharset,
-      noHtml5Validate,
+      html5Validate,
       disabled,
       formContext,
     } = this.props;
@@ -446,6 +446,8 @@ export default class Form extends Component {
       ? currentAutoComplete
       : deprecatedAutocomplete;
 
+    const noValidate = !html5Validate;
+
     return (
       <FormTag
         className={className ? className : "rjsf"}
@@ -457,7 +459,7 @@ export default class Form extends Component {
         autoComplete={autoComplete}
         encType={enctype}
         acceptCharset={acceptcharset}
-        noValidate={noHtml5Validate}
+        noValidate={noValidate}
         onSubmit={this.onSubmit}
         ref={form => {
           this.formElement = form;
@@ -520,7 +522,7 @@ if (process.env.NODE_ENV !== "production") {
     enctype: PropTypes.string,
     acceptcharset: PropTypes.string,
     noValidate: PropTypes.bool,
-    noHtml5Validate: PropTypes.bool,
+    html5Validate: PropTypes.bool,
     liveValidate: PropTypes.bool,
     validate: PropTypes.func,
     transformErrors: PropTypes.func,

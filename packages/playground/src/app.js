@@ -605,7 +605,6 @@ class Playground extends Component {
                 uiSchema={uiSchema}
                 formData={formData}
                 onChange={this.onFormDataChange}
-                noHtml5Validate={true}
                 onSubmit={({ formData }, e) => {
                   console.log("submitted formData", formData);
                   console.log("submit event", e);

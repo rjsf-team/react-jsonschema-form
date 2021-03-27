@@ -32,7 +32,7 @@ declare module '@rjsf/core' {
         liveValidate?: boolean;
         method?: string;
         name?: string;
-        noHtml5Validate?: boolean;
+        html5Validate?: boolean;
         noValidate?: boolean;
         ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
         omitExtraData?: boolean;

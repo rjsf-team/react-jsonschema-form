@@ -1782,7 +1782,10 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       const formData = {
-        outer: [["good", "bad"], ["bad", "good"]],
+        outer: [
+          ["good", "bad"],
+          ["bad", "good"],
+        ],
       };
 
       const formProps = { schema, formData, liveValidate: true };
@@ -2195,7 +2198,7 @@ describeRepeated("Form common", createFormComponent => {
       autoComplete: "off",
       enctype: "multipart/form-data",
       acceptcharset: "ISO-8859-1",
-      noHtml5Validate: true,
+      html5Validate: false,
     };
 
     let node;
