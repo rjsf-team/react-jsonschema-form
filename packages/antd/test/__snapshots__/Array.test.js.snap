@@ -3,7 +3,7 @@
 exports[`array fields array 1`] = `
 <form
   className="rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
@@ -112,7 +112,7 @@ exports[`array fields array 1`] = `
 exports[`array fields checkboxes 1`] = `
 <form
   className="rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
@@ -197,7 +197,7 @@ exports[`array fields checkboxes 1`] = `
 exports[`array fields fixed array 1`] = `
 <form
   className="rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div

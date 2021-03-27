@@ -3,7 +3,7 @@
 exports[`object fields object 1`] = `
 <form
   className="rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div

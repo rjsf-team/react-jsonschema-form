@@ -3,7 +3,7 @@
 exports[`single fields null field 1`] = `
 <form
   className="ui form rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
@@ -23,7 +23,7 @@ exports[`single fields null field 1`] = `
 exports[`single fields number field 1`] = `
 <form
   className="ui form rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
@@ -63,7 +63,7 @@ exports[`single fields number field 1`] = `
 exports[`single fields string field format data-url 1`] = `
 <form
   className="ui form rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
@@ -96,7 +96,7 @@ exports[`single fields string field format data-url 1`] = `
 exports[`single fields string field format email 1`] = `
 <form
   className="ui form rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
@@ -132,7 +132,7 @@ exports[`single fields string field format email 1`] = `
 exports[`single fields string field format uri 1`] = `
 <form
   className="ui form rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
@@ -168,7 +168,7 @@ exports[`single fields string field format uri 1`] = `
 exports[`single fields string field regular 1`] = `
 <form
   className="ui form rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
@@ -208,7 +208,7 @@ exports[`single fields string field regular 1`] = `
 exports[`single fields unsupported field 1`] = `
 <form
   className="ui form rjsf"
-  noValidate={false}
+  noValidate={true}
   onSubmit={[Function]}
 >
   <div
