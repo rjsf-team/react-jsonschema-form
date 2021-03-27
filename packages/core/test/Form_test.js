@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import sinon from "sinon";
+import rewiremock from "rewiremock";
 import React from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
 import { findDOMNode } from "react-dom";
@@ -15,6 +16,9 @@ import {
   describeRepeated,
   submitForm,
 } from "./test_utils";
+
+// Rewrite React import to use React 17 if we're running the test-react-17 npm script
+rewiremock("react").by(process.env.USE_REACT_17 ? "react-17" : "react");
 
 describeRepeated("Form common", createFormComponent => {
   let sandbox;
