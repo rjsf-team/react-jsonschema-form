@@ -40,7 +40,7 @@
     "react": ">=16"
   },
   "dependencies": {
-    "@types/json-schema": "^7.0.4",
+    "@types/json-schema": "^7.0.7",
     "ajv": "^6.7.0",
     "core-js-pure": "^3.6.5",
     "json-schema-merge-allof": "^0.6.0",
