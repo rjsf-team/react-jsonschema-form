@@ -43,7 +43,6 @@ describe("SchemaField", () => {
       expect(registry).eql({
         widgets: getDefaultRegistry().widgets,
         fields: getDefaultRegistry().fields,
-        definitions: schema.definitions,
         rootSchema: schema,
         ArrayFieldTemplate: undefined,
         FieldTemplate: undefined,
@@ -70,7 +69,6 @@ describe("SchemaField", () => {
       expect(registry).eql({
         widgets: getDefaultRegistry().widgets,
         fields: getDefaultRegistry().fields,
-        definitions: {},
         rootSchema: schema,
         ArrayFieldTemplate: undefined,
         FieldTemplate: undefined,

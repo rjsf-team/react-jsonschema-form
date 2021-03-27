@@ -82,7 +82,6 @@ export function getDefaultRegistry() {
   return {
     fields,
     widgets,
-    definitions: {},
     rootSchema: {},
     formContext: {},
   };
@@ -369,16 +368,6 @@ export function getUiOptions(uiSchema) {
     .reduce((options, key) => {
       const value = uiSchema[key];
 
-      if (key === "ui:widget" && isObject(value)) {
-        console.warn(
-          "Setting options via ui:widget object is deprecated, use ui:options instead"
-        );
-        return {
-          ...options,
-          ...(value.options || {}),
-          widget: value.component,
-        };
-      }
       if (key === "ui:options" && isObject(value)) {
         return { ...options, ...value };
       }

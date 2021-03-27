@@ -212,8 +212,6 @@ render((
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
 
-> Note: Since v0.41.0, the `ui:widget` object API, where a widget and options were specified with `"ui:widget": {component, options}` shape, is deprecated. It will be removed in a future release.
-
 ### Customizing widgets text input
 
 All the widgets that render a text input use the `BaseInput` component internally. If you need to customize all text inputs without customizing all widgets individually, you can provide a `BaseInput` component in the `widgets` property of `Form` (see [Custom component registration](#custom-component-registration)).
@@ -299,7 +297,6 @@ The `registry` is an object containing the registered custom fields and widgets 
  - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
  - `rootSchema`: The root schema, which can contain referenced [definitions](#schema-definitions-and-references);
  - `formContext`: The [formContext](#the-formcontext-object) object;
- - `definitions` (deprecated since v2): Equal to `rootSchema.definitions`.
 
 The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
 

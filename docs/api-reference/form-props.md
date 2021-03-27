@@ -22,10 +22,6 @@ React component used to customize how alls arrays are rendered on the form. See 
 
 The value of this prop will be passed to the `autocomplete` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-autocomplete).
 
-## autocomplete
-
-Deprecated, same functionality as `autoComplete`
-
 ## className
 
 The value of this prop will be passed to the `class` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).

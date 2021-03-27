@@ -397,7 +397,6 @@ export default class Form extends Component {
       ArrayFieldTemplate: this.props.ArrayFieldTemplate,
       ObjectFieldTemplate: this.props.ObjectFieldTemplate,
       FieldTemplate: this.props.FieldTemplate,
-      definitions: this.props.schema.definitions || {},
       rootSchema: this.props.schema,
       formContext: this.props.formContext || {},
     };
@@ -424,8 +423,7 @@ export default class Form extends Component {
       method,
       target,
       action,
-      autocomplete: deprecatedAutocomplete,
-      autoComplete: currentAutoComplete,
+      autoComplete,
       enctype,
       acceptcharset,
       noHtml5Validate,
@@ -437,14 +435,6 @@ export default class Form extends Component {
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
     const FormTag = tagName ? tagName : "form";
-    if (deprecatedAutocomplete) {
-      console.warn(
-        "Using autocomplete property of Form is deprecated, use autoComplete instead."
-      );
-    }
-    const autoComplete = currentAutoComplete
-      ? currentAutoComplete
-      : deprecatedAutocomplete;
 
     return (
       <FormTag
@@ -515,7 +505,6 @@ if (process.env.NODE_ENV !== "production") {
     method: PropTypes.string,
     target: PropTypes.string,
     action: PropTypes.string,
-    autocomplete: PropTypes.string,
     autoComplete: PropTypes.string,
     enctype: PropTypes.string,
     acceptcharset: PropTypes.string,

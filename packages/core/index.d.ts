@@ -12,18 +12,17 @@ declare module '@rjsf/core' {
         acceptcharset?: string;
         action?: string;
         additionalMetaSchemas?: ReadonlyArray<object>;
-        ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
+        ArrayFieldTemplate?: React.FunctionComponent<ArrayFieldTemplateProps>;
         autoComplete?: string;
-        autocomplete?: string; // deprecated
         children?: React.ReactNode;
         className?: string;
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
         enctype?: string;
         extraErrors?: any;
-        ErrorList?: React.StatelessComponent<ErrorListProps>;
+        ErrorList?: React.FunctionComponent<ErrorListProps>;
         fields?: { [name: string]: Field };
-        FieldTemplate?: React.StatelessComponent<FieldTemplateProps>;
+        FieldTemplate?: React.FunctionComponent<FieldTemplateProps>;
         formContext?: any;
         formData?: T;
         id?: string;
@@ -34,7 +33,7 @@ declare module '@rjsf/core' {
         name?: string;
         noHtml5Validate?: boolean;
         noValidate?: boolean;
-        ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        ObjectFieldTemplate?: React.FunctionComponent<ObjectFieldTemplateProps>;
         omitExtraData?: boolean;
         onBlur?: (id: string, value: boolean | number | string | null) => void;
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
@@ -68,9 +67,9 @@ declare module '@rjsf/core' {
         'ui:widget'?: Widget | string;
         'ui:options'?: { [key: string]: boolean | number | string | object | any[] | null };
         'ui:order'?: string[];
-        'ui:FieldTemplate'?: React.StatelessComponent<FieldTemplateProps>;
-        'ui:ArrayFieldTemplate'?: React.StatelessComponent<ArrayFieldTemplateProps>;
-        'ui:ObjectFieldTemplate'?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        'ui:FieldTemplate'?: React.FunctionComponent<FieldTemplateProps>;
+        'ui:ArrayFieldTemplate'?: React.FunctionComponent<ArrayFieldTemplateProps>;
+        'ui:ObjectFieldTemplate'?: React.FunctionComponent<ObjectFieldTemplateProps>;
         [name: string]: any;
     };
 
@@ -115,7 +114,7 @@ declare module '@rjsf/core' {
         rawErrors: string[];
     }
 
-    export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
+    export type Widget = React.FunctionComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
 
     export interface FieldProps<T = any>
         extends Pick<React.HTMLAttributes<HTMLElement>, Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur'>> {
@@ -129,7 +128,7 @@ declare module '@rjsf/core' {
         registry: {
             fields: { [name: string]: Field };
             widgets: { [name: string]: Widget };
-            definitions: { [name: string]: any };
+            rootSchema: JSONSchema7;
             formContext: any;
         };
         formContext: any;
@@ -141,7 +140,7 @@ declare module '@rjsf/core' {
         [prop: string]: any;
     }
 
-    export type Field = React.StatelessComponent<FieldProps> | React.ComponentClass<FieldProps>;
+    export type Field = React.FunctionComponent<FieldProps> | React.ComponentClass<FieldProps>;
 
     export type FieldTemplateProps<T = any> = {
         id: string;
@@ -171,8 +170,8 @@ declare module '@rjsf/core' {
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
-        DescriptionField: React.StatelessComponent<{ id: string; description: string | React.ReactElement }>;
-        TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
+        DescriptionField: React.FunctionComponent<{ id: string; description: string | React.ReactElement }>;
+        TitleField: React.FunctionComponent<{ id: string; title: string; required: boolean }>;
         canAdd: boolean;
         className: string;
         disabled: boolean;
@@ -204,8 +203,8 @@ declare module '@rjsf/core' {
     };
 
     export type ObjectFieldTemplateProps<T = any> = {
-        DescriptionField: React.StatelessComponent<{ id: string; description: string | React.ReactElement }>;
-        TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
+        DescriptionField: React.FunctionComponent<{ id: string; description: string | React.ReactElement }>;
+        TitleField: React.FunctionComponent<{ id: string; title: string; required: boolean }>;
         title: string;
         description: string;
         disabled: boolean;
@@ -274,7 +273,7 @@ declare module '@rjsf/core' {
 
     export function withTheme<T = any>(
         themeProps: ThemeProps<T>,
-    ): React.ComponentClass<FormProps<T>> | React.StatelessComponent<FormProps<T>>;
+    ): React.ComponentClass<FormProps<T>> | React.FunctionComponent<FormProps<T>>;
 
     export type AddButtonProps = {
         className: string;
@@ -307,7 +306,7 @@ declare module '@rjsf/core' {
         export function computeDefaults<T = any>(
             schema: JSONSchema7,
             parentDefaults: JSONSchema7['default'][],
-            definitions: FieldProps['registry']['definitions'],
+            rootSchema: FieldProps['registry']['rootSchema'],
             rawFormData?: T,
             includeUndefinedValues?: boolean,
         ): JSONSchema7['default'][];
@@ -315,7 +314,7 @@ declare module '@rjsf/core' {
         export function getDefaultFormState<T = any>(
             schema: JSONSchema7,
             formData: T,
-            definitions?: FieldProps['registry']['definitions'],
+            rootSchema?: FieldProps['registry']['rootSchema'],
             includeUndefinedValues?: boolean,
         ): T | JSONSchema7['default'][];
 
@@ -335,14 +334,14 @@ declare module '@rjsf/core' {
 
         export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'];
 
-        export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+        export function isSelect(_schema: JSONSchema7, rootSchema?: FieldProps['registry']['rootSchema']): boolean;
 
-        export function isMultiSelect(schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+        export function isMultiSelect(schema: JSONSchema7, rootSchema?: FieldProps['registry']['rootSchema']): boolean;
 
         export function isFilesArray(
             schema: JSONSchema7,
             uiSchema: UiSchema,
-            definitions?: FieldProps['registry']['definitions'],
+            rootSchema: FieldProps['registry']['rootSchema'],
         ): boolean;
 
         export function isFixedItems(schema: JSONSchema7): boolean;
@@ -359,19 +358,19 @@ declare module '@rjsf/core' {
 
         export function stubExistingAdditionalProperties<T = any>(
             schema: JSONSchema7,
-            definitions?: FieldProps['registry']['definitions'],
+            rootSchema?: FieldProps['registry']['rootSchema'],
             formData?: T,
         ): JSONSchema7;
 
         export function resolveSchema<T = any>(
             schema: JSONSchema7Definition,
-            definitions?: FieldProps['registry']['definitions'],
+            rootSchema?: FieldProps['registry']['rootSchema'],
             formData?: T,
         ): JSONSchema7;
 
         export function retrieveSchema<T = any>(
             schema: JSONSchema7Definition,
-            definitions?: FieldProps['registry']['definitions'],
+            rootSchema?: FieldProps['registry']['rootSchema'],
             formData?: T,
         ): JSONSchema7;
 
@@ -382,7 +381,7 @@ declare module '@rjsf/core' {
         export function toIdSchema<T = any>(
             schema: JSONSchema7Definition,
             id: string,
-            definitions: FieldProps['registry']['definitions'],
+            rootSchema: FieldProps['registry']['rootSchema'],
             formData?: T,
             idPredix?: string,
         ): IdSchema | IdSchema[];
@@ -390,7 +389,7 @@ declare module '@rjsf/core' {
         export function toPathSchema<T = any>(
             schema: JSONSchema7Definition,
             name: string | undefined,
-            definitions: FieldProps['registry']['definitions'],
+            rootSchema: FieldProps['registry']['rootSchema'],
             formData?: T,
         ): PathSchema | PathSchema[];
 
@@ -428,7 +427,7 @@ declare module '@rjsf/core' {
         export function getMatchingOption(
             formData: any,
             options: JSONSchema7[],
-            definitions: FieldProps['registry']['definitions'],
+            rootSchema?: FieldProps['registry']['rootSchema'],
         ): number;
 
         export function schemaRequiresTrueValue(schema: JSONSchema7): boolean;

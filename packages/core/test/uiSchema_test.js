@@ -121,14 +121,10 @@ describe("uiSchema", () => {
         uiSchema = {
           // pass widget as function
           funcAll: {
-            "ui:widget": {
-              component: widget,
-              options: {
-                background: "purple",
-              },
-            },
+            "ui:widget": widget,
             "ui:options": {
               margin: "7px",
+              background: "purple",
             },
             "ui:padding": "42px",
           },
@@ -138,14 +134,10 @@ describe("uiSchema", () => {
 
           // pass widget as string
           stringAll: {
-            "ui:widget": {
-              component: "widget",
-              options: {
-                background: "blue",
-              },
-            },
+            "ui:widget": "widget",
             "ui:options": {
               margin: "19px",
+              background: "blue",
             },
             "ui:padding": "41px",
           },
@@ -158,22 +150,6 @@ describe("uiSchema", () => {
             },
           },
         };
-      });
-
-      it("should log warning when deprecated ui:widget: {component, options} api is used", () => {
-        createFormComponent({
-          schema: {
-            type: "string",
-          },
-          uiSchema: {
-            "ui:widget": {
-              component: "widget",
-            },
-          },
-          widgets,
-        });
-        expect(console.warn.calledWithMatch(/ui:widget object is deprecated/))
-          .to.be.true;
       });
 
       it("should cache MergedWidget instance", () => {
