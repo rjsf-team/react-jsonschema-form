@@ -7,7 +7,7 @@
     "postinstall": "lerna bootstrap",
     "publish": "lerna publish",
     "changed": "lerna changed",
-    "test": "lerna run test",
+    "test": "lerna run --stream test",
     "lint": "lerna run lint",
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",
