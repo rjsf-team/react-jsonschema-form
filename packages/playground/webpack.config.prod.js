@@ -6,9 +6,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: "production",
   entry: "./src/index",
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   output: {
     path: path.join(__dirname, "build"),
-    filename: "bundle.js",
     publicPath: process.env.SHOW_NETLIFY_BADGE ? "": "/react-jsonschema-form/"
   },
   plugins: [

@@ -9,6 +9,11 @@ module.exports = {
   entry: [
     "./src/index"
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   output: {
     path: path.join(__dirname, "build"),
   },
