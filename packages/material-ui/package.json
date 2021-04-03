@@ -34,6 +34,7 @@
     "@types/react-dom": "^16.9.5",
     "@types/react-test-renderer": "^16.9.2",
     "@types/sinon": "^9.0.0",
+    "jsdom": "^12.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-test-renderer": "^16.13.1",

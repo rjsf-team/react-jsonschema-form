@@ -375,7 +375,10 @@ describeRepeated("Form common", createFormComponent => {
   });
 
   describe("Custom submit buttons", () => {
-    it("should submit the form when clicked", done => {
+    // Skipping test due to regression in JSDOM  that causes it to not handle
+    //  form subsmissions from click events properly
+    // https://github.com/jsdom/jsdom/issues/3117
+    it.skip("should submit the form when clicked", done => {
       let submitCount = 0;
       const onSubmit = () => {
         submitCount++;
