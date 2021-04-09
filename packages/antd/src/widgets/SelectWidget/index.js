@@ -75,8 +75,6 @@ const SelectWidget = ({
   const stringify = (currentValue) =>
     Array.isArray(currentValue) ? value.map(String) : String(value);
 
-  console.log(placeholder);
-
   return (
     <Select
       autoFocus={autofocus}
