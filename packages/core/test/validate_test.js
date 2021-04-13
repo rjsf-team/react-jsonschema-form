@@ -85,7 +85,7 @@ describe("Validation", () => {
       });
     });
 
-    it("should not change the ref since it's a property", () => {
+    it("should not change a property named '$ref'", () => {
       const schema = {
         title: "A registration form",
         description: "A simple form example.",
