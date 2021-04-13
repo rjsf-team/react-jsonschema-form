@@ -724,6 +724,52 @@ describe("anyOf", () => {
     expect(options[1].firstChild.nodeValue).eql("Person");
   });
 
+  it("should collect schema from $ref even when ref is within properties", () => {
+    const schema = {
+      properties: {
+        address: {
+          title: "Address",
+          type: "object",
+          properties: {
+            street: {
+              title: "Street",
+              type: "string",
+            },
+          },
+        },
+        person: {
+          title: "Person",
+          type: "object",
+          properties: {
+            name: {
+              title: "Name",
+              type: "string",
+            },
+          },
+        },
+        nested: {
+          $ref: "#/properties/person",
+        },
+      },
+      anyOf: [
+        {
+          $ref: "#/properties/address",
+        },
+        {
+          $ref: "#/properties/nested",
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    let options = node.querySelectorAll("option");
+    expect(options[0].firstChild.nodeValue).eql("Address");
+    expect(options[1].firstChild.nodeValue).eql("Person");
+  });
+
   describe("Arrays", () => {
     it("should correctly render form inputs for anyOf inside array items", () => {
       const schema = {
