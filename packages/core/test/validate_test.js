@@ -73,7 +73,7 @@ describe("Validation", () => {
       expect(withIdRefPrefix(schema)).to.eql(expected);
     });
 
-    it("shouldn't mutated the schema", () => {
+    it("shouldn't mutate the schema", () => {
       const schema = {
         anyOf: [{ $ref: "#/defs/foo" }],
       };
