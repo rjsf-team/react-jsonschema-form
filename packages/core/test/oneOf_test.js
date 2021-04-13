@@ -91,6 +91,44 @@ describe("oneOf", () => {
     });
   });
 
+  it("should assign a default value and set defaults on option change when using refs", () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        oneOf: [
+          {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultfoo" },
+            },
+          },
+          { $ref: "#/definitions/bar" },
+        ],
+        definitions: {
+          bar: {
+            type: "object",
+            properties: {
+              foo: { type: "string", default: "defaultbar" },
+            },
+          },
+        },
+      },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "defaultfoo" },
+    });
+
+    const $select = node.querySelector("select");
+
+    Simulate.change($select, {
+      target: { value: $select.options[1].value },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: "defaultbar" },
+    });
+  });
+
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
     const { node, onChange } = createFormComponent({
       schema: {
@@ -611,5 +649,130 @@ describe("oneOf", () => {
 
       expect($select.value).to.eql($select.options[1].value);
     });
+
+    it("should correctly set the label of the options", () => {
+      const schema = {
+        type: "object",
+        oneOf: [
+          {
+            title: "Foo",
+            properties: {
+              foo: { type: "string" },
+            },
+          },
+          {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+          {
+            $ref: "#/definitions/baz",
+          },
+        ],
+        definitions: {
+          baz: {
+            title: "Baz",
+            properties: {
+              baz: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const $select = node.querySelector("select");
+
+      expect($select.options[0].text).eql("Foo");
+      expect($select.options[1].text).eql("Option 2");
+      expect($select.options[2].text).eql("Baz");
+    });
+  });
+
+  it("should correctly infer the selected option based on value", () => {
+    const schema = {
+      $ref: "#/defs/any",
+      defs: {
+        chain: {
+          type: "object",
+          title: "Chain",
+          properties: {
+            id: {
+              enum: ["chain"],
+            },
+            components: {
+              type: "array",
+              items: { $ref: "#/defs/any" },
+            },
+          },
+        },
+
+        map: {
+          type: "object",
+          title: "Map",
+          properties: {
+            id: { enum: ["map"] },
+            fn: { $ref: "#/defs/any" },
+          },
+        },
+
+        to_absolute: {
+          type: "object",
+          title: "To Absolute",
+          properties: {
+            id: { enum: ["to_absolute"] },
+            base_url: { type: "string" },
+          },
+        },
+
+        transform: {
+          type: "object",
+          title: "Transform",
+          properties: {
+            id: { enum: ["transform"] },
+            property_key: { type: "string" },
+            transformer: { $ref: "#/defs/any" },
+          },
+        },
+        any: {
+          oneOf: [
+            { $ref: "#/defs/chain" },
+            { $ref: "#/defs/map" },
+            { $ref: "#/defs/to_absolute" },
+            { $ref: "#/defs/transform" },
+          ],
+        },
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData: {
+        id: "chain",
+        components: [
+          {
+            id: "map",
+            fn: {
+              id: "transform",
+              property_key: "uri",
+              transformer: {
+                id: "to_absolute",
+                base_url: "http://localhost",
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    const idSelects = node.querySelectorAll("select#root_id");
+
+    expect(idSelects).to.have.length(4);
+    expect(idSelects[0].value).eql("chain");
+    expect(idSelects[1].value).eql("map");
+    expect(idSelects[2].value).eql("transform");
+    expect(idSelects[3].value).eql("to_absolute");
   });
 });
