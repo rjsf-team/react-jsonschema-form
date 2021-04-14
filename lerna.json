@@ -2,5 +2,6 @@
   "packages": [
     "packages/*"
   ],
+  "hoist": ["react", "react-dom"],
   "version": "2.5.1"
 }
