@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x, 14.x]
+        react-version: [16.x, 17.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -20,6 +21,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
+    - if: matrix.react-version == '17.x'
+      run: npm i react@17 react-dom@17
     - run: npm run lint
     - run: npm run cs-check
     
@@ -32,7 +35,7 @@ jobs:
       if: github.ref == 'refs/heads/master'
       run: npm run build
     
-    - if: matrix.node-version == '14.x'
+    - if: matrix.node-version == '14.x' && matrix.react-version == '16.x'
       uses: actions/upload-artifact@v2
       with:
         name: dist
