@@ -22,7 +22,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - if: matrix.react-version == '17.x'
-      run: npm i react@17 react-dom@17
+      run: lerna add react@17 react-dom@17 --dev
     - run: npm run lint
     - run: npm run cs-check
     
