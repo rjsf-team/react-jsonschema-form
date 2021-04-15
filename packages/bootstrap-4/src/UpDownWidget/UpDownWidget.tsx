@@ -38,7 +38,7 @@ const UpDownWidget = ({
         type="number"
         disabled={disabled}
         readOnly={readonly}
-        value={value != null ? value : ""}
+        value={value || value === 0 ? value : ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
