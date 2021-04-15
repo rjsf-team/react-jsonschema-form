@@ -29,6 +29,7 @@ import {
   schemaRequiresTrueValue,
   canExpand,
   optionsList,
+  getMatchingOption,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3826,6 +3827,42 @@ describe("utils", () => {
           value: schema.const,
         }))
       );
+    });
+    it("should infer correct anyOf schema based on data", () => {
+      const rootSchema = {
+        defs: {
+          a: { type: "object", properties: { id: { enum: ["a"] } } },
+          nested: {
+            type: "object",
+            properties: {
+              id: { enum: ["nested"] },
+              child: { $ref: "#/defs/any" },
+            },
+          },
+          any: { anyOf: [{ $ref: "#/defs/a" }, { $ref: "#/defs/nested" }] },
+        },
+        $ref: "#/defs/any",
+      };
+      const options = [
+        { type: "object", properties: { id: { enum: ["a"] } } },
+        {
+          type: "object",
+          properties: {
+            id: { enum: ["nested"] },
+            child: { $ref: "#/defs/any" },
+          },
+        },
+      ];
+      const formData = {
+        id: "nested",
+        child: {
+          id: "nested",
+          child: {
+            id: "a",
+          },
+        },
+      };
+      expect(getMatchingOption(formData, options, rootSchema)).eql(1);
     });
   });
 });
