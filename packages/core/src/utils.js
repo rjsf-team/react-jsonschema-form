@@ -126,11 +126,7 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (
-    typeof widget === "function" ||
-    ReactIs.isForwardRef(React.createElement(widget)) ||
-    ReactIs.isMemo(widget)
-  ) {
+  if (typeof widget !== "string" && ReactIs.isValidElementType(widget)) {
     return mergeOptions(widget);
   }
 

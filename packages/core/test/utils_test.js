@@ -3602,6 +3602,37 @@ describe("utils", () => {
       const Widget = React.memo(props => <div {...props} />);
       expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
+
+    it("should not fail on components using Suspense", done => {
+      const LazilyLoaded = React.lazy(() =>
+        Promise.resolve({ default: props => <div {...props} /> })
+      );
+      const Widget = props => (
+        <React.Suspense fallback={null}>
+          <LazilyLoaded {...props} />
+        </React.Suspense>
+      );
+
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
+      done();
+    });
+
+    it("should not fail on components using Suspense in registered widgets", done => {
+      const LazilyLoaded = React.lazy(() =>
+        Promise.resolve({ default: props => <div {...props} /> })
+      );
+      const Widget = props => (
+        <React.Suspense fallback={null}>
+          <LazilyLoaded {...props} />
+        </React.Suspense>
+      );
+      const widgetName = "lazyDiv";
+
+      expect(getWidget(schema, widgetName, { [widgetName]: Widget })({})).eql(
+        <Widget options={{}} />
+      );
+      done();
+    });
   });
 
   describe("getDisplayLabel", () => {
