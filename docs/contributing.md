@@ -41,15 +41,21 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 ## Releasing
 
-To release, run:
+To release, go to the master branch and then run:
 
 ```bash
 lerna version
-lerna run build
-lerna publish from-git
 ```
 
-Make sure you use [semver](https://semver.org/) for version numbering. Once a new version has been released, create a release in the Github "Releases" tab and add the version history.
+Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
+The command above will create a new version tag and push it to GitHub. Then, create a release in
+the Github "Releases" tab and add a description of the changes in the new release.
+
+This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
+
+The package is published through an automation token belonging to the
+[rjsf-bot](https://www.npmjs.com/~rjsf-bot) user on npm. This token
+is stored as the `NPM_TOKEN` secret on GitHub Actions.
 
 ### Releasing docs
 

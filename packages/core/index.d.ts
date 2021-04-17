@@ -105,8 +105,9 @@ declare module '@rjsf/core' {
         disabled: boolean;
         readonly: boolean;
         autofocus: boolean;
+        placeholder: string;
         onChange: (value: any) => void;
-        options: { [key: string]: boolean | number | string | object | null };
+        options: NonNullable<UiSchema['ui:options']>;
         formContext: any;
         onBlur: (id: string, value: boolean | number | string | null) => void;
         onFocus: (id: string, value: boolean | number | string | null) => void;
@@ -143,7 +144,7 @@ declare module '@rjsf/core' {
 
     export type Field = React.StatelessComponent<FieldProps> | React.ComponentClass<FieldProps>;
 
-    export type FieldTemplateProps = {
+    export type FieldTemplateProps<T = any> = {
         id: string;
         classNames: string;
         label: string;
@@ -163,6 +164,10 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        formData: T;
+        onChange: (value: T) => void;
+        onKeyChange: (value: string) => () => void;
+        onDropPropertyClick: (value: string) => () => void;
         registry: FieldProps['registry'];
     };
 
@@ -282,6 +287,8 @@ declare module '@rjsf/core' {
 
         export const ADDITIONAL_PROPERTY_FLAG: string;
 
+        export function canExpand(schema: JSONSchema7, uiSchema: UiSchema, formData: any): boolean;
+
         export function getDefaultRegistry(): FieldProps['registry'];
 
         export function getSchemaType(schema: JSONSchema7): string;
@@ -343,7 +350,11 @@ declare module '@rjsf/core' {
 
         export function allowAdditionalItems(schema: JSONSchema7): boolean;
 
-        export function optionsList(schema: JSONSchema7): { label: string; value: string }[];
+        export function optionsList(schema: JSONSchema7):  {
+            schema?: JSONSchema7Definition;
+            label: string;
+            value: string;
+        }[];
 
         export function guessType(value: any): JSONSchema7TypeName;
 

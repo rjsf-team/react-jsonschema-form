@@ -1,8 +1,8 @@
 {
   "name": "@rjsf/bootstrap-4",
-  "version": "2.3.0",
+  "version": "2.5.1",
   "main": "dist/index.js",
-  "module": "dist/rjsf-bootstrap-4.esm.js",
+  "module": "dist/bootstrap-4.esm.js",
   "typings": "dist/index.d.ts",
   "description": "Bootstrap 4 theme, fields and widgets for react-jsonschema-form",
   "files": [
@@ -18,17 +18,19 @@
     "react": ">=16",
     "react-bootstrap": "^1.0.1"
   },
+  "engineStrict": false,
+  "engines": {
+    "node": ">=12"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/plugin-transform-modules-commonjs": "^7.8.3",
-    "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "@rjsf/core": "^2.3.0",
+    "@rjsf/core": "^2.5.1",
     "@types/jest": "^24.0.15",
-    "@types/json-schema": "^7.0.3",
+    "@types/json-schema": "^7.0.7",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "@types/react-test-renderer": "^16.9.2",
@@ -38,7 +40,7 @@
     "react-dom": "^16.8.6",
     "react-test-renderer": "^16.13.1",
     "rimraf": "^2.6.3",
-    "tsdx": "^0.13.1",
+    "tsdx": "^0.14.1",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"
   },

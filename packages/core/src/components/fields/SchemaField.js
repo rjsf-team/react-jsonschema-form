@@ -230,6 +230,7 @@ function SchemaFieldRender(props) {
     errorSchema,
     idPrefix,
     name,
+    onChange,
     onKeyChange,
     onDropPropertyClick,
     required,
@@ -279,7 +280,6 @@ function SchemaFieldRender(props) {
     />
   );
 
-  const { type } = schema;
   const id = idSchema.$id;
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
@@ -300,7 +300,7 @@ function SchemaFieldRender(props) {
   const classNames = [
     "form-group",
     "field",
-    `field-${type}`,
+    `field-${schema.type}`,
     errors && errors.length > 0 ? "field-error has-error has-danger" : "",
     uiSchema.classNames,
   ]
@@ -323,6 +323,7 @@ function SchemaFieldRender(props) {
     id,
     label,
     hidden,
+    onChange,
     onKeyChange,
     onDropPropertyClick,
     required,
@@ -331,6 +332,7 @@ function SchemaFieldRender(props) {
     displayLabel,
     classNames,
     formContext,
+    formData,
     fields,
     schema,
     uiSchema,
@@ -360,7 +362,9 @@ function SchemaFieldRender(props) {
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.anyOf}
+            options={schema.anyOf.map(_schema =>
+              retrieveSchema(_schema, rootSchema, formData)
+            )}
             baseType={schema.type}
             registry={registry}
             schema={schema}
@@ -378,7 +382,9 @@ function SchemaFieldRender(props) {
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.oneOf}
+            options={schema.oneOf.map(_schema =>
+              retrieveSchema(_schema, rootSchema, formData)
+            )}
             baseType={schema.type}
             registry={registry}
             schema={schema}
