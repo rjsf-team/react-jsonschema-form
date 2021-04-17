@@ -1,10 +1,12 @@
 import React from "react";
 import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
-import fill from "core-js/library/fn/array/fill";
-import validateFormData, { isValid } from "./validate";
+import fill from "core-js-pure/features/array/fill";
 import union from "lodash/union";
 import jsonpointer from "jsonpointer";
+import fields from "./components/fields";
+import widgets from "./components/widgets";
+import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -78,8 +80,8 @@ export function canExpand(schema, uiSchema, formData) {
 
 export function getDefaultRegistry() {
   return {
-    fields: require("./components/fields").default,
-    widgets: require("./components/widgets").default,
+    fields,
+    widgets,
     definitions: {},
     rootSchema: {},
     formContext: {},
@@ -571,7 +573,11 @@ export function optionsList(schema) {
     return altSchemas.map((schema, i) => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
-      return { label, value };
+      return {
+        schema,
+        label,
+        value,
+      };
     });
   }
 }
@@ -1219,10 +1225,10 @@ export function getMatchingOption(formData, options, rootSchema) {
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
 
-      if (isValid(augmentedSchema, formData)) {
+      if (isValid(augmentedSchema, formData, rootSchema)) {
         return i;
       }
-    } else if (isValid(options[i], formData)) {
+    } else if (isValid(option, formData, rootSchema)) {
       return i;
     }
   }

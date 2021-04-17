@@ -230,6 +230,7 @@ function SchemaFieldRender(props) {
     errorSchema,
     idPrefix,
     name,
+    onChange,
     onKeyChange,
     onDropPropertyClick,
     required,
@@ -322,6 +323,7 @@ function SchemaFieldRender(props) {
     id,
     label,
     hidden,
+    onChange,
     onKeyChange,
     onDropPropertyClick,
     required,
@@ -330,6 +332,7 @@ function SchemaFieldRender(props) {
     displayLabel,
     classNames,
     formContext,
+    formData,
     fields,
     schema,
     uiSchema,
@@ -359,7 +362,9 @@ function SchemaFieldRender(props) {
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.anyOf}
+            options={schema.anyOf.map(_schema =>
+              retrieveSchema(_schema, rootSchema, formData)
+            )}
             baseType={schema.type}
             registry={registry}
             schema={schema}
@@ -377,7 +382,9 @@ function SchemaFieldRender(props) {
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.oneOf}
+            options={schema.oneOf.map(_schema =>
+              retrieveSchema(_schema, rootSchema, formData)
+            )}
             baseType={schema.type}
             registry={registry}
             schema={schema}

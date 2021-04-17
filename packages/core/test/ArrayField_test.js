@@ -123,6 +123,53 @@ describe("ArrayField", () => {
     });
   });
 
+  describe("Malformed nested array formData", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "array",
+          items: { type: "string" },
+        },
+      },
+    };
+
+    it("should contain no field in the list when nested array formData is explicitly null", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { foo: null },
+      });
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(0);
+    });
+  });
+
+  describe("Nullable array formData", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: ["array", "null"],
+          items: { type: "string" },
+        },
+      },
+    };
+
+    it("should contain no field in the list when nested array formData is explicitly null", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { foo: null },
+      });
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(0);
+    });
+    it("should contain a field in the list when nested array formData is a single item", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { foo: ["test"] },
+      });
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+    });
+  });
+
   describe("List of inputs", () => {
     const schema = {
       type: "array",

@@ -440,7 +440,7 @@ class Playground extends Component {
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
-  onFormDataChange = ({ formData }) =>
+  onFormDataChange = ({ formData = "" }) =>
     this.setState({ formData, shareURL: null });
 
   onShare = () => {

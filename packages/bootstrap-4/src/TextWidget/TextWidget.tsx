@@ -10,6 +10,7 @@ export interface TextWidgetProps extends WidgetProps {
 
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -33,10 +34,9 @@ const TextWidget = ({
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
-
   // Should the all lower version of autoComplete even be accepted?
   const { autocomplete: deprecatedAutoComplete, autoComplete } = options ?? {};
-
+  const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
     <Form.Group className="mb-0">
@@ -47,13 +47,14 @@ const TextWidget = ({
       <Form.Control
         id={id}
         autoComplete={(deprecatedAutoComplete ?? autoComplete) as string | undefined}
+        placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
         readOnly={readonly}
         className={rawErrors.length > 0 ? "is-invalid" : ""}
         list={schema.examples ? `examples_${id}` : undefined}
-        type={type || (schema.type as string)}
+        type={inputType}
         value={value || value === 0 ? value : ""}
         onChange={_onChange}
         onBlur={_onBlur}
