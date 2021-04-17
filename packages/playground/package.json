@@ -14,7 +14,7 @@
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build && gh-pages --dist build/",
     "publish-to-npm": "npm run build && npm publish",
-    "start": "webpack-dev-server --open --config webpack.config.dev.js"
+    "start": "webpack serve --open --config webpack.config.dev.js"
   },
   "lint-staged": {
     "{playground,src,test}/**/*.js": [
