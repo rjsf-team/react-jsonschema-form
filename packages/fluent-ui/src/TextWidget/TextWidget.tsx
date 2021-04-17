@@ -81,7 +81,8 @@ const TextWidget = ({
       required={required}
       disabled={disabled}
       readOnly={readonly}
-      name={name}
+      // TODO: once fluent-ui supports the name prop, we can add it back in here.
+      // name={name}
       type={inputType as string}
       value={value ? value : ""}
       onChange={_onChange as any}
