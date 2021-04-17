@@ -53,7 +53,7 @@
     "jss": "^10.0.3",
     "less": "^3.11.3",
     "less-loader": "^5.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react-app-polyfill": "^1.0.4",
     "react-bootstrap": "^0.33.1",
@@ -118,7 +118,7 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
-    "webpack-dev-server": "^3.10.1",
+    "webpack-dev-server": "^3.11.2",
     "webpack-hot-middleware": "^2.13.2"
   },
   "directories": {
