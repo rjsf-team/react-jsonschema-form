@@ -31,6 +31,7 @@ describe("UpDownWidget", () => {
       options: {},
       formContext: {},
       id: "_id",
+      placeholder: "",
       value: 0,
     };
     const tree = renderer.create(<UpDownWidget {...props} />).toJSON();
