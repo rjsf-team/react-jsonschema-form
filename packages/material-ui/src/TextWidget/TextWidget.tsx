@@ -8,7 +8,7 @@ import { WidgetProps, utils } from "@rjsf/core";
 
 const { getDisplayLabel } = utils;
 
-export type TextWidgetProps = WidgetProps & TextFieldProps;
+export type TextWidgetProps = WidgetProps & Pick<TextFieldProps, Exclude<keyof TextFieldProps, 'onBlur' | 'onFocus'>>;
 
 const TextWidget = ({
   id,
