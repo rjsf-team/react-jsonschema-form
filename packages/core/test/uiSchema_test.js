@@ -533,10 +533,7 @@ describe("uiSchema", () => {
     expect(node.querySelector("div.help-block").textContent).eql("plop");
   });
 
-  // Skipping due to JSDOM regression introduced in 15.2.0
-  // <input autofocus> no longer sets activeElement correctly
-  // https://github.com/jsdom/jsdom/issues/3041
-  describe.skip("ui:focus", () => {
+  describe("ui:focus", () => {
     const shouldFocus = (schema, uiSchema, selector = "input", formData) => {
       const props = {
         schema,
