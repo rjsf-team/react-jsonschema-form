@@ -62,7 +62,7 @@
     "html": "^1.0.0",
     "husky": "^0.13.2",
     "jest": "^25.4.0",
-    "jsdom": "^8.3.0",
+    "jsdom": "^16.5.3",
     "json-loader": "^0.5.7",
     "lint-staged": "^9.4.2",
     "loader-utils": "^1.2.3",
