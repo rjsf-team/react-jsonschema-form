@@ -144,9 +144,7 @@ describe("NumberField", () => {
           uiSchema,
         });
 
-        expect(node.querySelector(".field input").getAttribute("value")).eql(
-          "2"
-        );
+        expect(node.querySelector(".field input").value).eql("2");
       });
 
       it("should handle a change event", () => {
@@ -211,9 +209,7 @@ describe("NumberField", () => {
           formData: 2,
         });
 
-        expect(node.querySelector(".field input").getAttribute("value")).eql(
-          "2"
-        );
+        expect(node.querySelector(".field input").value).eql("2");
       });
 
       describe("when inputting a number that ends with a dot and/or zero it should normalize it, without changing the input value", () => {
@@ -278,6 +274,8 @@ describe("NumberField", () => {
             sinon.assert.calledWithMatch(onChange.lastCall, {
               formData: test.output,
             });
+            // "2." is not really a valid number in a input field of type number
+            // so we need to use getAttribute("value") instead since .value outputs the empty string
             expect($input.getAttribute("value")).eql(test.input);
           });
         });
@@ -348,6 +346,8 @@ describe("NumberField", () => {
         Simulate.change(node.querySelector("input"), {
           target: { value: "2." },
         });
+        // "2." is not really a valid number in a input field of type number
+        // so we need to use getAttribute("value") instead since .value outputs the empty string
         expect(node.querySelector(".field input").getAttribute("value")).eql(
           "2."
         );
@@ -355,23 +355,17 @@ describe("NumberField", () => {
         Simulate.change(node.querySelector("input"), {
           target: { value: "2.0" },
         });
-        expect(node.querySelector(".field input").getAttribute("value")).eql(
-          "2.0"
-        );
+        expect(node.querySelector(".field input").value).eql("2.0");
 
         Simulate.change(node.querySelector("input"), {
           target: { value: "2.00" },
         });
-        expect(node.querySelector(".field input").getAttribute("value")).eql(
-          "2.00"
-        );
+        expect(node.querySelector(".field input").value).eql("2.00");
 
         Simulate.change(node.querySelector("input"), {
           target: { value: "2.000" },
         });
-        expect(node.querySelector(".field input").getAttribute("value")).eql(
-          "2.000"
-        );
+        expect(node.querySelector(".field input").value).eql("2.000");
       });
 
       it("should allow a zero to be input", () => {
@@ -385,9 +379,7 @@ describe("NumberField", () => {
         Simulate.change(node.querySelector("input"), {
           target: { value: "0" },
         });
-        expect(node.querySelector(".field input").getAttribute("value")).eql(
-          "0"
-        );
+        expect(node.querySelector(".field input").value).eql("0");
       });
 
       it("should render customized StringField", () => {
