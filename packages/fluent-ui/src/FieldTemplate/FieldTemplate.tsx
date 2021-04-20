@@ -32,7 +32,7 @@ const FieldTemplate = ({
         {required && <span style={{color: "rgb(164, 38, 44)", fontSize: "12px", fontWeight: "normal"}}>*</span>}
       </Label>} */}
       {rawDescription && <Text>{rawDescription}</Text>}
-      {rawErrors.length > 0 && <List items={rawErrors}>})}</List>}
+      {rawErrors.length > 0 && <List items={rawErrors} />}
       {rawHelp && <Text id={id}>{rawHelp}</Text>}
     </div>
   );

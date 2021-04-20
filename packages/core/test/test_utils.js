@@ -2,7 +2,7 @@
 
 import React from "react";
 import sinon from "sinon";
-import { renderIntoDocument, act } from "react-dom/test-utils";
+import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
 import { findDOMNode, render } from "react-dom";
 
 import Form from "../src";
@@ -56,6 +56,6 @@ export function describeRepeated(title, fn) {
 
 export function submitForm(node) {
   act(() => {
-    node.querySelector("button[type=submit]").click();
+    Simulate.submit(node);
   });
 }
