@@ -3,6 +3,7 @@ import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js-pure/features/array/fill";
 import union from "lodash/union";
+import isEmpty from "lodash/isEmpty";
 import jsonpointer from "jsonpointer";
 import fields from "./components/fields";
 import widgets from "./components/widgets";
@@ -222,7 +223,7 @@ function computeDefaults(
     schema =
       schema.oneOf[
         getMatchingOption(
-          JSON.stringify(formData) !== "{}" ? formData : undefined,
+          isEmpty(formData) ? formData : undefined,
           schema.oneOf,
           rootSchema
         )
@@ -231,7 +232,7 @@ function computeDefaults(
     schema =
       schema.anyOf[
         getMatchingOption(
-          JSON.stringify(formData) !== "{}" ? formData : undefined,
+          isEmpty(formData) ? formData : undefined,
           schema.anyOf,
           rootSchema
         )
