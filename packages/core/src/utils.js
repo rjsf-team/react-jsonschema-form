@@ -223,7 +223,7 @@ function computeDefaults(
     schema =
       schema.oneOf[
         getMatchingOption(
-          isEmpty(formData) ? formData : undefined,
+          isEmpty(formData) ? undefined : formData,
           schema.oneOf,
           rootSchema
         )
@@ -232,7 +232,7 @@ function computeDefaults(
     schema =
       schema.anyOf[
         getMatchingOption(
-          isEmpty(formData) ? formData : undefined,
+          isEmpty(formData) ? undefined : formData,
           schema.anyOf,
           rootSchema
         )
