@@ -2263,6 +2263,28 @@ describeRepeated("Form common", createFormComponent => {
       const node = createFormComponent(formProps).node;
       expect(node.getAttribute("novalidate")).to.be.null;
     });
+
+    it("should maintain the no validate attribute when false or not passed", () => {
+      const formProps = {
+        schema: {},
+        id: "test-form",
+        className: "test-class other-class",
+        name: "testName",
+        method: "post",
+        target: "_blank",
+        action: "/users/list",
+        autoComplete: "off",
+        enctype: "multipart/form-data",
+        acceptcharset: "ISO-8859-1",
+      };
+      const undefinedNode = createFormComponent(formProps).node;
+      const falseNode = createFormComponent({
+        ...formProps,
+        html5Validate: false,
+      }).node;
+      expect(undefinedNode.getAttribute("novalidate")).not.to.be.null;
+      expect(falseNode.getAttribute("novalidate")).not.to.be.null;
+    });
   });
 
   describe("Deprecated autocomplete attribute", () => {
