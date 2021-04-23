@@ -25,7 +25,7 @@ render((
 
 ## HTML5 Validation
 
-By default, the form does not use HTML5 validation. 
+By default, the form does not use [HTML5's built-in validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation). Rather, react-jsonschema-form's validation is used by default. 
 
 If you wish to enable HTML5 validation, passing `html5Validate=false` will enable it. 
 
