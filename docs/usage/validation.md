@@ -43,7 +43,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema} html5Validate={false} />
+  <Form schema={schema} html5Validate={true} />
 ), document.getElementById("app"));
 ```
 
