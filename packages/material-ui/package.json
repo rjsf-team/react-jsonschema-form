@@ -29,7 +29,7 @@
     "@material-ui/icons": "^4.2.1",
     "@rjsf/core": "^2.5.1",
     "@types/jest": "^24.0.15",
-    "@types/json-schema": "^7.0.3",
+    "@types/json-schema": "^7.0.7",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "@types/react-test-renderer": "^16.9.2",
@@ -38,7 +38,7 @@
     "react-dom": "^16.8.6",
     "react-test-renderer": "^16.13.1",
     "rimraf": "^2.6.3",
-    "tsdx": "^0.13.1",
+    "tsdx": "^0.14.1",
     "tslib": "^2.0.0",
     "typescript": "^3.5.3"
   },
