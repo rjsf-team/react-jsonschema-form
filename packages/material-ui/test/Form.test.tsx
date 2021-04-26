@@ -144,9 +144,10 @@ describe("single fields", () => {
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkbox field", () => {
+  test("checkbox field description", () => {
     const schema: JSONSchema7 = {
       type: "boolean",
+      description: "howdy there",
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
