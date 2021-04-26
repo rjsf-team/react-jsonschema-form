@@ -96,7 +96,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field description 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -155,9 +155,14 @@ exports[`single fields checkbox field 2`] = `
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
       />
     </label>
+    <p
+      className="MuiFormHelperText-root"
+    >
+      howdy there
+    </p>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-174"
+    className="MuiBox-root MuiBox-root-182"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -421,7 +426,7 @@ exports[`single fields checkboxes field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-184"
+    className="MuiBox-root MuiBox-root-192"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -877,7 +882,7 @@ exports[`single fields hidden label 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-194"
+    className="MuiBox-root MuiBox-root-202"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1289,7 +1294,7 @@ exports[`single fields radio field 1`] = `
               value="true"
             />
             <div
-              className="PrivateRadioButtonIcon-root-190"
+              className="PrivateRadioButtonIcon-root-198"
             >
               <svg
                 aria-hidden="true"
@@ -1304,7 +1309,7 @@ exports[`single fields radio field 1`] = `
               </svg>
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-191"
+                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-199"
                 focusable="false"
                 role="presentation"
                 viewBox="0 0 24 24"
@@ -1353,7 +1358,7 @@ exports[`single fields radio field 1`] = `
               value="false"
             />
             <div
-              className="PrivateRadioButtonIcon-root-190"
+              className="PrivateRadioButtonIcon-root-198"
             >
               <svg
                 aria-hidden="true"
@@ -1368,7 +1373,7 @@ exports[`single fields radio field 1`] = `
               </svg>
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-191"
+                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-199"
                 focusable="false"
                 role="presentation"
                 viewBox="0 0 24 24"
@@ -1389,7 +1394,7 @@ exports[`single fields radio field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-193"
+    className="MuiBox-root MuiBox-root-201"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

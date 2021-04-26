@@ -2,10 +2,10 @@ import React from "react";
 
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
-import { FormHelperText } from "@material-ui/core";
 
 const { schemaRequiresTrueValue } = utils;
 
