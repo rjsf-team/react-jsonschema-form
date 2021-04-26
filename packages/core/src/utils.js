@@ -397,6 +397,9 @@ export function getDisplayLabel(schema, uiSchema, rootSchema) {
   if (schema.type === "object") {
     displayLabel = false;
   }
+  if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
+    displayLabel = false;
+  }
   if (uiSchema["ui:field"]) {
     displayLabel = false;
   }
