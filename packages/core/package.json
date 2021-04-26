@@ -1,5 +1,5 @@
 {
-  "name": "@rjsf/core",
+  "name": "@visma/rjsf-core",
   "version": "2.5.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {

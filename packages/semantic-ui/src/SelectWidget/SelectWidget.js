@@ -2,7 +2,7 @@
 import React from "react";
 import _ from "lodash";
 import { Form } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 import PropTypes from "prop-types";
 import { getSemanticProps } from "../util";
 

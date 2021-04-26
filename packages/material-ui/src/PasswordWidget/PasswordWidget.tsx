@@ -2,7 +2,7 @@ import React from "react";
 
 import TextField from "@material-ui/core/TextField";
 
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 
 const PasswordWidget = ({
   id,

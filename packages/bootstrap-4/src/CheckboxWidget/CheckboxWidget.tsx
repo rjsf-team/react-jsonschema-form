@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 import Form from "react-bootstrap/Form";
 
 const CheckboxWidget = (props: WidgetProps) => {

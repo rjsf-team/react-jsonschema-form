@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FieldTemplateProps } from "@rjsf/core";
+import { FieldTemplateProps } from "@visma/rjsf-core";
 
 import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";

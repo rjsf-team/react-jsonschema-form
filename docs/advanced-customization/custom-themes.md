@@ -6,7 +6,7 @@ The `withTheme` component provides an easy way to extend the functionality of re
 
 ```jsx
 import React, { Component } from 'react';
-import { withTheme } from '@rjsf/core';
+import { withTheme } from '@visma/rjsf-core';
 
 const theme = { widgets: {test: () => (<div>test</div>) } };
 

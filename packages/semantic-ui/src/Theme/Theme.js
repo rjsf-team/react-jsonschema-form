@@ -1,4 +1,4 @@
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 import { Form as SuiForm } from "semantic-ui-react";
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
 import ErrorList from "../ErrorList";

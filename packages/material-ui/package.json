@@ -1,5 +1,5 @@
 {
-  "name": "@rjsf/material-ui",
+  "name": "@visma/rjsf-material-ui",
   "version": "2.5.1",
   "main": "dist/index.js",
   "module": "dist/material-ui.esm.js",
@@ -16,7 +16,7 @@
   "peerDependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^2.0.0",
+    "@visma/rjsf-core": "^2.0.0",
     "react": ">=16"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
     "@babel/preset-react": "^7.0.0",
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^2.5.1",
+    "@visma/rjsf-core": "^2.5.1",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.7",
     "@types/react": "^16.9.23",

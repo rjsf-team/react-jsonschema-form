@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AddButtonProps } from '@rjsf/core';
+import { AddButtonProps } from '@visma/rjsf-core';
 
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { utils } from "@rjsf/core";
+import { utils } from "@visma/rjsf-core";
 import { JSONSchema7 } from "json-schema";
 
 import Grid from "@material-ui/core/Grid";

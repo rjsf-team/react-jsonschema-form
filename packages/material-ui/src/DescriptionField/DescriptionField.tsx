@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FieldProps } from '@rjsf/core';
+import { FieldProps } from '@visma/rjsf-core';
 
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';

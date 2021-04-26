@@ -2,7 +2,7 @@ import React from "react";
 import Form from "../src/index";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
-import { UiSchema } from "@rjsf/core";
+import { UiSchema } from "@visma/rjsf-core";
 
 describe("single fields", () => {
   describe("string field", () => {

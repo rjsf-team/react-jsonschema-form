@@ -1,9 +1,9 @@
 import React from "react";
-import { utils } from "@rjsf/core";
+import { utils } from "@visma/rjsf-core";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
+import { ArrayFieldTemplateProps, IdSchema } from "@visma/rjsf-core";
 
 import AddButton from "../AddButton/AddButton";
 import IconButton from "../IconButton/IconButton";

@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Input } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 import { getSemanticProps } from "../util";
 
 const { rangeSpec } = utils;

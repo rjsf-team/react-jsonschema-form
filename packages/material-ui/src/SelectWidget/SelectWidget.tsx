@@ -3,8 +3,8 @@ import React from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
-import { WidgetProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
+import { utils } from "@visma/rjsf-core";
 
 const { asNumber, guessType } = utils;
 

@@ -1,4 +1,4 @@
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 
 import DescriptionField from './fields/DescriptionField';
 import TitleField from './fields/TitleField';

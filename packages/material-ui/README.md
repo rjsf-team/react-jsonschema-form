@@ -11,7 +11,7 @@
     <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/logo.png" alt="Logo" width="120" height="120">
   </a>
 
-  <h3 align="center">@rjsf/material-ui</h3>
+  <h3 align="center">@visma/rjsf-material-ui</h3>
 
   <p align="center">
   Material UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -44,7 +44,7 @@
 
 ## About The Project
 
-[![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/material-ui)
+[![@visma/rjsf-material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@visma/rjsf-material-ui)
 
 Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 
@@ -62,16 +62,16 @@ Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 - `@material-ui/core >= 4.2.0` ([in 4.2.0, the `slider` component was added to the core](https://github.com/mui-org/material-ui/pull/16416))
 - `@material-ui/icons`
-- `@rjsf/core >= 2.0.0`
+- `@visma/rjsf-core >= 2.0.0`
 
 ```bash
-yarn add @material-ui/core @material-ui/icons @rjsf/core
+yarn add @material-ui/core @material-ui/icons @visma/rjsf-core
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/material-ui
+yarn add @visma/rjsf-material-ui
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -79,14 +79,14 @@ yarn add @rjsf/material-ui
 ## Usage
 
 ```js
-import Form from '@rjsf/material-ui';
+import Form from '@visma/rjsf-material-ui';
 ```
 
 or
 
 ```js
-import { withTheme } from '@rjsf/core';
-import { Theme as MaterialUITheme } from '@rjsf/material-ui';
+import { withTheme } from '@visma/rjsf-core';
+import { Theme as MaterialUITheme } from '@visma/rjsf-material-ui';
 
 // Make modifications to the theme with your own fields and widgets
 
@@ -122,8 +122,8 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/material-ui/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/material-ui
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/material-ui.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/material-ui
+[npm-shield]: https://img.shields.io/npm/v/@visma/rjsf-material-ui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@visma/rjsf-material-ui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@visma/rjsf-material-ui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@visma/rjsf-material-ui
 [product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/screenshot.png

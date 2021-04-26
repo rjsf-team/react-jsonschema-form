@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 
 import TextField from "@material-ui/core/TextField";
 

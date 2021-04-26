@@ -1,4 +1,4 @@
-import { withTheme } from '@rjsf/core';
+import { withTheme } from '@visma/rjsf-core';
 
 import Theme from "../Theme";
 

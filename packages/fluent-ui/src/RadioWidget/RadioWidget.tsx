@@ -1,6 +1,6 @@
 import React from "react";
 import { ChoiceGroup, IChoiceGroupOption } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 import _pick from "lodash/pick";
 
 // Keys of IChoiceGroupProps from @fluentui/react
