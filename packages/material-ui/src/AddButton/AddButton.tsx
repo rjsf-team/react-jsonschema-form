@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 const AddButton: React.FC<AddButtonProps> = props => (
   <Button {...props} color="secondary">
-    <AddIcon /> Add Item
+    <AddIcon /> { props.addButtonText || 'Add Item' }
   </Button>
 );
 

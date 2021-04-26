@@ -82,7 +82,7 @@ const FixedArrayFieldTemplate = ({
                   onClick={onAddClick}
                   type="primary"
                 >
-                  <PlusCircleOutlined /> Add Item
+                  <PlusCircleOutlined /> {uiSchema['ui:addButtonText'] || "Add Item"}
                 </Button>
               </Col>
             </Row>

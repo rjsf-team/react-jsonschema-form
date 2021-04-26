@@ -117,7 +117,7 @@ const ObjectFieldTemplate = ({
                 onClick={onAddClick(schema)}
                 type="primary"
               >
-                <PlusCircleOutlined /> Add Item
+                <PlusCircleOutlined /> {uiSchema['ui:addButtonText'] || "Add Item"}
               </Button>
             </Col>
           </Row>

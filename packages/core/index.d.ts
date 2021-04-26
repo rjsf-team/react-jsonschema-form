@@ -71,6 +71,7 @@ declare module '@rjsf/core' {
         'ui:FieldTemplate'?: React.StatelessComponent<FieldTemplateProps>;
         'ui:ArrayFieldTemplate'?: React.StatelessComponent<ArrayFieldTemplateProps>;
         'ui:ObjectFieldTemplate'?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        'ui:addButtonText'?: string;
         [name: string]: any;
     };
 
@@ -281,6 +282,7 @@ declare module '@rjsf/core' {
         className: string;
         onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
         disabled: boolean;
+        addButtonText?: string;
     };
 
     export module utils {

@@ -158,7 +158,7 @@ function DefaultFixedArrayFieldTemplate({
               position: "relative",
               textAlign: "right",
             }}>
-            <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
+            <AddButton onClick={onAddClick} disabled={disabled || readOnly} addButtonText={uiSchema['ui:addButtonText']} />
           </div>
         )}
       </div>
@@ -222,7 +222,7 @@ function DefaultNormalArrayFieldTemplate({
               position: "relative",
               textAlign: "right",
             }}>
-            <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
+            <AddButton onClick={onAddClick} disabled={disabled || readOnly} addButtonText={uiSchema['ui:addButtonText']} />
           </div>
         )}
       </div>

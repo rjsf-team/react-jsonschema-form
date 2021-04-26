@@ -5,7 +5,7 @@ function AddButton(props) {
   return (
     <Button {...props} icon size="tiny" labelPosition="left">
       <Icon name="plus" />
-      Add Item
+      { props.addButtonText || "Add Item" }
     </Button>
   );
 }
