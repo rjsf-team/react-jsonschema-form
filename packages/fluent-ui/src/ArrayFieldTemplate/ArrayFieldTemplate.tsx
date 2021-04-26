@@ -130,6 +130,7 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             className="array-item-add"
             onClick={props.onAddClick}
             disabled={props.disabled || props.readonly}
+            addButtonText={props.uiSchema['ui:addButtonText']}
           />
         </span>
       )}
@@ -167,6 +168,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             className="array-item-add"
             onClick={props.onAddClick}
             disabled={props.disabled || props.readonly}
+            addButtonText={props.uiSchema['ui:addButtonText']}
           />
         </span>
       )}

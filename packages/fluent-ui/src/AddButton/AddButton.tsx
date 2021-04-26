@@ -10,7 +10,7 @@ const AddButton = (props: AddButtonProps) => (
   <CommandBarButton
     style={{ height: "32px" }}
     iconProps={addIcon}
-    text="Add item"
+    text={props.addButtonText || "Add item"}
     className={props.className}
     onClick={e => props.onClick(e as any)}
     disabled={props.disabled}
