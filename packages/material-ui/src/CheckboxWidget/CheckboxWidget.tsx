@@ -5,6 +5,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
+import { FormHelperText } from "@material-ui/core";
 
 const { schemaRequiresTrueValue } = utils;
 
@@ -36,21 +37,26 @@ const CheckboxWidget = (props: WidgetProps) => {
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          id={id}
-          checked={typeof value === "undefined" ? false : value}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-      }
-      label={label}
-    />
+    <>
+      <FormControlLabel
+        control={
+          <Checkbox
+            id={id}
+            checked={typeof value === "undefined" ? false : value}
+            required={required}
+            disabled={disabled || readonly}
+            autoFocus={autofocus}
+            onChange={_onChange}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
+          />
+        }
+        label={label}
+      />
+      {schema.description ? (
+        <FormHelperText>{schema.description}</FormHelperText>
+      ) : null}
+    </>
   );
 };
 
