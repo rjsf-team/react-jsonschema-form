@@ -418,15 +418,19 @@ describeRepeated("Form common", createFormComponent => {
       document.body.removeChild(domNode);
     });
     it("should submit the form programmatically", done => {
-      
       let yourForm;
 
       const onSubmit = () => {
         done();
       };
 
-      const comp = renderIntoDocument(
-        <Form onSubmit={onSubmit} schema={{}} ref={(form) => {yourForm = form;}}>
+      renderIntoDocument(
+        <Form
+          onSubmit={onSubmit}
+          schema={{}}
+          ref={form => {
+            yourForm = form;
+          }}>
           <div />
         </Form>,
         domNode
