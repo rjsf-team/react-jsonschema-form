@@ -409,6 +409,33 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
+  describe("External submit button", () => {
+    const domNode = document.createElement("div");
+    beforeEach(() => {
+      document.body.appendChild(domNode);
+    });
+    afterEach(() => {
+      document.body.removeChild(domNode);
+    });
+    it("should submit the form programmatically", done => {
+      
+      let yourForm;
+
+      const onSubmit = () => {
+        done();
+      };
+
+      const comp = renderIntoDocument(
+        <Form onSubmit={onSubmit} schema={{}} ref={(form) => {yourForm = form;}}>
+          <div />
+        </Form>,
+        domNode
+      );
+
+      yourForm.submit();
+    });
+  });
+
   describe("Schema definitions", () => {
     it("should use a single schema definition reference", () => {
       const schema = {
