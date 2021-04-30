@@ -23,6 +23,7 @@ jobs:
     - run: npm ci
     - if: matrix.react-version == '17.x'
       run: lerna add react@17 react-dom@17 --dev
+      continue-on-error: true
     - run: npm run lint
     - run: npm run cs-check
     
