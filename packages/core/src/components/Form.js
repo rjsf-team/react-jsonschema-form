@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
+import CustomEvent from "custom-event";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
