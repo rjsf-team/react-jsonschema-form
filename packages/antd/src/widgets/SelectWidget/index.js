@@ -89,11 +89,13 @@ const SelectWidget = ({
       placeholder={placeholder}
       style={SELECT_STYLE}
       value={typeof value !== 'undefined' ? stringify(value) : undefined}
+      filterOption={(input, option) =>
+        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      }
     >
       {enumOptions.map(({ value: optionValue, label: optionLabel }) => (
         <Select.Option
           disabled={enumDisabled && enumDisabled.indexOf(optionValue) !== -1}
-          key={String(optionValue)}
           value={String(optionValue)}
         >
           {optionLabel}
