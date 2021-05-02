@@ -1,8 +1,7 @@
-import React from 'react';
+import React from "react";
 import Form from "../src/index";
 import { JSONSchema7 } from "json-schema";
-import renderer, {ReactTestRendererJSON, ReactTestRendererNode} from "react-test-renderer";
-import {inspect} from "util";
+import renderer, { ReactTestRendererNode } from "react-test-renderer";
 
 describe("array fields", () => {
   test("array", () => {
