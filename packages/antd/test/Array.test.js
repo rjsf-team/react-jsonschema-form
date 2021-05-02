@@ -36,10 +36,25 @@ describe("array fields", () => {
         .create(<Form schema={schema} uiSchema={uiSchema} />)
         .toJSON();
 
-    const buttonNode = tree.children[0].children[0].children[0].children[1].children[0]
-        .children[0].children[0].children[1];
+    if (tree === null || typeof tree === "string" || !tree.children)
+      {throw new Error("Component tree is not built correctly");}
 
-    expect(buttonNode.children[0]).toBe(" Custom button text");
+    const indexes = [0, 0, 1, 0, 0, 0, 1, 0];
+    let buttonNode = tree.children[0];
+
+    for (let i of indexes) {
+      if (!buttonNode || typeof buttonNode === "string") {
+        throw new Error("The current node is not a ReactTestRendererJson");
+      }
+
+      if (buttonNode.children === null) {
+        throw new Error("The current node has no children");
+      }
+
+      buttonNode = buttonNode.children[i];
+    }
+
+    expect(buttonNode).toBe(" Custom button text");
   });
   test("fixed array", () => {
     const schema = {
