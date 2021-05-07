@@ -1265,3 +1265,11 @@ export function schemaRequiresTrueValue(schema) {
 
   return false;
 }
+
+export const descriptionId = id => `${id}__description`;
+
+export const helpId = id => `${id}__help`;
+
+export const ariaDescribedBy = id => ({
+  "aria-describedby": `${descriptionId(id)} ${helpId(id)}`,
+});

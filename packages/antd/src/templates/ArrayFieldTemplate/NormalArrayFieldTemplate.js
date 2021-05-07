@@ -6,6 +6,7 @@ import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import { withConfigConsumer } from 'antd/lib/config-provider/context';
 import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
+import { utils } from '@rjsf/core';
 
 import ArrayFieldTemplateItem from './ArrayFieldTemplateItem';
 
@@ -59,7 +60,7 @@ const NormalArrayFieldTemplate = ({
           <Col span={24} style={DESCRIPTION_COL_STYLE}>
             <DescriptionField
               description={uiSchema['ui:description'] || schema.description}
-              id={`${idSchema.$id}__description`}
+              id={utils.descriptionId(idSchema.$id)}
               key={`array-field-description-${idSchema.$id}`}
             />
           </Col>

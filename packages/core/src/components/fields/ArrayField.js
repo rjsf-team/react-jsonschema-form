@@ -16,6 +16,7 @@ import {
   retrieveSchema,
   toIdSchema,
   getDefaultRegistry,
+  descriptionId,
 } from "../../utils";
 import shortid from "shortid";
 
@@ -31,7 +32,7 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   if (!description) {
     return null;
   }
-  const id = `${idSchema.$id}__description`;
+  const id = descriptionId(idSchema.$id);
   return <DescriptionField id={id} description={description} />;
 }
 

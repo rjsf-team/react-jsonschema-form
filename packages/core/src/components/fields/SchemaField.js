@@ -13,6 +13,9 @@ import {
   deepEquals,
   getSchemaType,
   getDisplayLabel,
+  ariaDescribedBy,
+  helpId,
+  descriptionId,
 } from "../../utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -64,7 +67,7 @@ function Label(props) {
     return null;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <label className="control-label" htmlFor={id} {...ariaDescribedBy(id)}>
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
@@ -80,17 +83,22 @@ function LabelInput(props) {
       id={id}
       onBlur={event => onChange(event.target.value)}
       defaultValue={label}
+      {...ariaDescribedBy(id)}
     />
   );
 }
 
 function Help(props) {
-  const { help } = props;
+  const { id, help } = props;
   if (!help) {
     return null;
   }
   if (typeof help === "string") {
-    return <p className="help-block">{help}</p>;
+    return (
+      <p className="help-block" id={helpId(id)}>
+        {help}
+      </p>
+    );
   }
   return <div className="help-block">{help}</div>;
 }
@@ -310,13 +318,13 @@ function SchemaFieldRender(props) {
   const fieldProps = {
     description: (
       <DescriptionField
-        id={id + "__description"}
+        id={descriptionId(id)}
         description={description}
         formContext={formContext}
       />
     ),
     rawDescription: description,
-    help: <Help help={help} />,
+    help: <Help help={help} id={id} />,
     rawHelp: typeof help === "string" ? help : undefined,
     errors: <ErrorList errors={errors} />,
     rawErrors: errors,
