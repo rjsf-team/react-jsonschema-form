@@ -60,7 +60,7 @@ const ArrayFieldDescription = ({
     return null;
   }
 
-  const id = `${idSchema.$id}__description`;
+  const id = utils.descriptionId(idSchema.$id);
   return <DescriptionField id={id} description={description} />;
 };
 

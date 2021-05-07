@@ -8,6 +8,7 @@ import {
   getDefaultRegistry,
   canExpand,
   ADDITIONAL_PROPERTY_FLAG,
+  descriptionId,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
@@ -24,7 +25,7 @@ function DefaultObjectFieldTemplate(props) {
       )}
       {props.description && (
         <DescriptionField
-          id={`${props.idSchema.$id}__description`}
+          id={descriptionId(props.idSchema.$id)}
           description={props.description}
           formContext={props.formContext}
         />

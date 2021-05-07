@@ -22,7 +22,7 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
     // See #312: Ensure compatibility with old versions of React.
     return null;
   }
-  const id = `${idSchema.$id}__description`;
+  const id = utils.descriptionId(idSchema.$id);
   return <DescriptionField id={id} description={description} />;
 }
 
