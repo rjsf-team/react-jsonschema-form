@@ -36,10 +36,10 @@ declare module '@rjsf/core' {
         noValidate?: boolean;
         ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
         omitExtraData?: boolean;
-        onBlur?: (id: string, value: boolean | number | string | null) => void;
+        onBlur?: (id: string, value: any) => void;
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
         onError?: (e: any) => any;
-        onFocus?: (id: string, value: boolean | number | string | null) => void;
+        onFocus?: (id: string, value: any) => void;
         onSubmit?: (e: ISubmitEvent<T>) => any;
         schema: JSONSchema7;
         showErrorList?: boolean;
@@ -59,7 +59,7 @@ declare module '@rjsf/core' {
             customFormats?: FormProps<T>['customFormats'],
         ) => { errors: AjvError[]; errorSchema: ErrorSchema };
         onChange: (formData: T, newErrorSchema: ErrorSchema) => void;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
+        onBlur: (id: string, value: any) => void;
         submit: () => void;
     }
 
@@ -109,8 +109,8 @@ declare module '@rjsf/core' {
         onChange: (value: any) => void;
         options: NonNullable<UiSchema['ui:options']>;
         formContext: any;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
-        onFocus: (id: string, value: boolean | number | string | null) => void;
+        onBlur: (id: string, value: any) => void;
+        onFocus: (id: string, value: any) => void;
         label: string;
         multiple: boolean;
         rawErrors: string[];
@@ -126,7 +126,7 @@ declare module '@rjsf/core' {
         formData: T;
         errorSchema: ErrorSchema;
         onChange: (e: IChangeEvent<T> | any, es?: ErrorSchema) => any;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
+        onBlur: (id: string, value: any) => void;
         registry: {
             fields: { [name: string]: Field };
             widgets: { [name: string]: Widget };
