@@ -12,34 +12,34 @@ export type TextWidgetProps = WidgetProps &
   Pick<TextFieldProps, Exclude<keyof TextFieldProps, "onBlur" | "onFocus">>;
 
 const TextWidget = ({
-                      id,
-                      placeholder,
-                      required,
-                      readonly,
-                      disabled,
-                      type,
-                      label,
-                      value,
-                      onChange,
-                      onBlur,
-                      onFocus,
-                      autofocus,
-                      options,
-                      schema,
-                      uiSchema,
-                      rawErrors = [],
-                      formContext,
-                      ...textFieldProps
-                    }: TextWidgetProps) => {
+  id,
+  placeholder,
+  required,
+  readonly,
+  disabled,
+  type,
+  label,
+  value,
+  onChange,
+  onBlur,
+  onFocus,
+  autofocus,
+  options,
+  schema,
+  uiSchema,
+  rawErrors = [],
+  formContext,
+  ...textFieldProps
+}: TextWidgetProps) => {
   const _onChange = ({
-                       target: { value },
-                     }: React.ChangeEvent<HTMLInputElement>) =>
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(value === "" ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
-                      target: { value },
-                    }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const displayLabel = getDisplayLabel(
     schema,
