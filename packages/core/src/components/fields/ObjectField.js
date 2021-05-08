@@ -274,6 +274,7 @@ class ObjectField extends Component {
       schema,
       formData,
       formContext,
+      registry,
     };
     return <Template {...templateProps} onAddClick={this.handleAddClick} />;
   }
