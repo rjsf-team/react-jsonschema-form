@@ -438,6 +438,8 @@ declare module '@visma/rjsf-core' {
 
         export function helpId(id: string): string;
 
+        export function errorsId(id: string): string;
+
         export function ariaDescribedBy(id: string): { 'aria-describedby': string };
     }
 }
