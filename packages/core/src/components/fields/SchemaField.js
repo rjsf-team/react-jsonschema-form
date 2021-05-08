@@ -16,6 +16,7 @@ import {
   ariaDescribedBy,
   helpId,
   descriptionId,
+  errorsId,
 } from "../../utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -108,14 +109,14 @@ function Help(props) {
 }
 
 function ErrorList(props) {
-  const { errors = [] } = props;
+  const { errors = [], id } = props;
   if (errors.length === 0) {
     return null;
   }
 
   return (
     <div>
-      <ul className="error-detail bs-callout bs-callout-info">
+      <ul className="error-detail bs-callout bs-callout-info" id={errorsId(id)}>
         {errors
           .filter(elem => !!elem)
           .map((error, index) => {
@@ -330,7 +331,7 @@ function SchemaFieldRender(props) {
     rawDescription: description,
     help: <Help help={help} id={id} />,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: <ErrorList errors={errors} />,
+    errors: <ErrorList errors={errors} id={id} />,
     rawErrors: errors,
     id,
     label,
