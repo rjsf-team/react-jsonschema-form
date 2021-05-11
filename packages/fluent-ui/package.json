@@ -1,6 +1,6 @@
 {
   "name": "@visma/rjsf-fluent-ui",
-  "version": "2.5.1-formula.4",
+  "version": "2.5.1-formula.5",
   "main": "dist/index.js",
   "module": "dist/fluent-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -38,7 +38,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-test-renderer": "^16.9.2",
     "@types/sinon": "^9.0.0",
-    "@visma/rjsf-core": "^2.5.1-formula.4",
+    "@visma/rjsf-core": "^2.5.1-formula.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.0",
     "react-test-renderer": "^16.13.1",
