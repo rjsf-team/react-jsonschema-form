@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextWidget renders with examples 1`] = `
+Array [
+  <div
+    className="MuiFormControl-root MuiTextField-root"
+    multiple={false}
+  >
+    <div
+      className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled Mui-error Mui-error MuiInputBase-formControl MuiInput-formControl"
+      onClick={[Function]}
+    >
+      <input
+        aria-invalid={true}
+        autoFocus={true}
+        className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+        disabled={true}
+        id="_id"
+        list="examples__id"
+        onAnimationStart={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        required={true}
+        type="array"
+        value="value"
+      />
+    </div>
+  </div>,
+  <datalist
+    id="examples__id"
+  >
+    <option
+      value="Firefox"
+    />
+    <option
+      value="Chrome"
+    />
+    <option
+      value="Opera"
+    />
+    <option
+      value="Vivaldi"
+    />
+    <option
+      value="Safari"
+    />
+  </datalist>,
+]
+`;
+
+exports[`TextWidget should render 1`] = `
+<div
+  className="MuiFormControl-root MuiTextField-root"
+  multiple={false}
+>
+  <div
+    className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled Mui-error Mui-error MuiInputBase-formControl MuiInput-formControl"
+    onClick={[Function]}
+  >
+    <input
+      aria-invalid={true}
+      autoFocus={true}
+      className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+      disabled={true}
+      id="_id"
+      list="examples__id"
+      onAnimationStart={[Function]}
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      required={true}
+      type="array"
+      value="value"
+    />
+  </div>
+</div>
+`;
