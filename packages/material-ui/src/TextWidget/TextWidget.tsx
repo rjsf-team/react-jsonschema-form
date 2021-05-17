@@ -5,6 +5,7 @@ import TextField, {
 } from "@material-ui/core/TextField";
 
 import { WidgetProps, utils } from "@visma/rjsf-core";
+import Typography from "@material-ui/core/Typography";
 
 const { getDisplayLabel } = utils;
 
@@ -32,8 +33,15 @@ const TextWidget = ({
 }: TextWidgetProps) => {
   const _onChange = ({
     target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = (value === "" ? options.emptyValue : value);
+
+    console.log(options);
+
+    onChange(rawValue ?
+        options.maxLength ? String(rawValue).substring(0, Number(options.maxLength)) : rawValue
+        : "")
+  };
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -48,21 +56,28 @@ const TextWidget = ({
   const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
 
   return (
-    <TextField
-      id={id}
-      placeholder={placeholder}
-      label={displayLabel ? label || schema.title : false}
-      autoFocus={autofocus}
-      required={required}
-      disabled={disabled || readonly}
-      type={inputType as string}
-      value={value || value === 0 ? value : ""}
-      error={rawErrors.length > 0}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      {...(textFieldProps as TextFieldProps)}
-    />
+    <>
+      <TextField
+        id={id}
+        placeholder={placeholder}
+        label={displayLabel ? label || schema.title : false}
+        autoFocus={autofocus}
+        required={required}
+        disabled={disabled || readonly}
+        type={inputType as string}
+        value={value || value === 0 ? value : ""}
+        error={rawErrors.length > 0}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        {...(textFieldProps as TextFieldProps)}
+      />
+      {options.showCharacterCounter &&
+      <div>
+        <Typography variant="subtitle2" style={{float: "right"}}>{(value ? value.length : 0) + " / " + options.maxLength}</Typography>
+      </div>
+      }
+    </>
   );
 };
 
