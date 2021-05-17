@@ -35,9 +35,6 @@ const TextWidget = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = (value === "" ? options.emptyValue : value);
-
-    console.log(options);
-
     onChange(rawValue ?
         options.maxLength ? String(rawValue).substring(0, Number(options.maxLength)) : rawValue
         : "")
