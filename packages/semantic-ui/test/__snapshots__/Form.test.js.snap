@@ -103,6 +103,7 @@ exports[`single fields string field format email 1`] = `
     className="grouped equal width fields"
   >
     <input
+      aria-describedby="root__errors root__description root__help"
       autoFocus={false}
       className="form-control"
       disabled={false}
@@ -139,6 +140,7 @@ exports[`single fields string field format uri 1`] = `
     className="grouped equal width fields"
   >
     <input
+      aria-describedby="root__errors root__description root__help"
       autoFocus={false}
       className="form-control"
       disabled={false}
