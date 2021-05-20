@@ -1,4 +1,4 @@
-// Originally from https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/@rjsf/core/react-jsonschema-form-tests.tsx
+// Originally from https://github.com/DefinitelyTyped/DefinitelyTyped/blob/93797a6d6f67508c7ab7d60b89fa2a6c2681a219/types/react-jsonschema-form/react-jsonschema-form-tests.tsx
 
 import * as React from 'react';
 import Form, {
