@@ -36,7 +36,7 @@ const TextWidget = ({
   }: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = (value === "" ? options.emptyValue : value);
     onChange(rawValue ?
-        options.maxLength ? String(rawValue).substring(0, Number(options.maxLength)) : rawValue
+      schema.maxLength ? String(rawValue).substring(0, Number(schema.maxLength)) : rawValue
         : "")
   };
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
@@ -71,7 +71,7 @@ const TextWidget = ({
       />
       {options.showCharacterCounter &&
       <div>
-        <Typography variant="subtitle2" style={{float: "right"}}>{(value ? value.length : 0) + " / " + options.maxLength}</Typography>
+        <Typography variant="subtitle2" style={{float: "right"}}>{(value ? value.length : 0) + " / " + schema.maxLength}</Typography>
       </div>
       }
     </>
