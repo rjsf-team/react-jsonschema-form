@@ -96,7 +96,7 @@ function Help(props) {
   }
   if (typeof help === "string") {
     return (
-      <p className="help-block" id={helpId(id)}>
+      <p id={id} className="help-block">
         {help}
       </p>
     );
@@ -329,7 +329,7 @@ function SchemaFieldRender(props) {
       />
     ),
     rawDescription: description,
-    help: <Help help={help} id={id} />,
+    help: <Help id={helpId(id)} help={help} />,
     rawHelp: typeof help === "string" ? help : undefined,
     errors: <ErrorList errors={errors} id={id} />,
     rawErrors: errors,
