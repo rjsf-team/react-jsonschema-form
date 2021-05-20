@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Form } from "semantic-ui-react";
+import { utils } from "@rjsf/core";
 import DescriptionField from "../DescriptionField";
 import HelpField from "../HelpField";
 import RawErrors from "../RawErrors";
@@ -31,7 +32,7 @@ function FieldTemplate({
             )}
           </MaybeWrap>
         )}
-        <HelpField helpText={rawHelp} id={id + "__help"} />
+        <HelpField helpText={rawHelp} id={utils.helpId(id)} />
         <RawErrors errors={rawErrors} options={errorOptions} />
       </MaybeWrap>
     </Form.Group>
