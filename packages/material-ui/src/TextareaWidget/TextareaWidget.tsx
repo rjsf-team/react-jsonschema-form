@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WidgetProps } from "@rjsf/core";
+import { utils, WidgetProps } from "@rjsf/core";
 
 import TextField from "@material-ui/core/TextField";
 
@@ -49,6 +49,7 @@ const TextareaWidget = ({
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
+      InputProps={utils.ariaDescribedBy(id)}
     />
   );
 };

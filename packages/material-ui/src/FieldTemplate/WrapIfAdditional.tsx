@@ -64,6 +64,7 @@ const WrapIfAdditional = ({
             name={`${id}-key`}
             onBlur={!readonly ? handleBlur : undefined}
             type="text"
+            {...utils.ariaDescribedBy(id)}
           />
         </FormControl>
       </Grid>

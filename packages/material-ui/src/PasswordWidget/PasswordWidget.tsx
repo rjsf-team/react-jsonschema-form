@@ -2,7 +2,7 @@ import React from "react";
 
 import TextField from "@material-ui/core/TextField";
 
-import { WidgetProps } from "@rjsf/core";
+import { utils, WidgetProps } from "@rjsf/core";
 
 const PasswordWidget = ({
   id,
@@ -42,6 +42,7 @@ const PasswordWidget = ({
       onFocus={_onFocus}
       onBlur={_onBlur}
       onChange={_onChange}
+      InputProps={utils.ariaDescribedBy(id)}
     />
   );
 };

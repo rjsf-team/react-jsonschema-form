@@ -3,8 +3,7 @@ import React from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
-import { WidgetProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import { utils, WidgetProps } from "@rjsf/core";
 
 const { asNumber, guessType } = utils;
 
@@ -89,6 +88,7 @@ const SelectWidget = ({
       }}
       SelectProps={{
         multiple: typeof multiple === "undefined" ? false : multiple,
+        ...utils.ariaDescribedBy(id),
       }}>
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any =

@@ -40,6 +40,7 @@ exports[`object fields additionalProperties 1`] = `
                 onClick={[Function]}
               >
                 <input
+                  aria-describedby="root_foo__errors root_foo__description root_foo__help"
                   aria-invalid={false}
                   className="MuiInputBase-input MuiInput-input"
                   defaultValue="foo"
@@ -126,6 +127,7 @@ exports[`object fields additionalProperties 1`] = `
                   onClick={[Function]}
                 >
                   <input
+                    aria-describedby="root_foo__errors root_foo__description root_foo__help"
                     aria-invalid={false}
                     autoFocus={false}
                     className="MuiInputBase-input MuiInput-input"
@@ -370,6 +372,7 @@ exports[`object fields object 1`] = `
               onClick={[Function]}
             >
               <input
+                aria-describedby="root_a__errors root_a__description root_a__help"
                 aria-invalid={false}
                 autoFocus={false}
                 className="MuiInputBase-input MuiInput-input"
@@ -470,6 +473,7 @@ exports[`object fields object 1`] = `
               onClick={[Function]}
             >
               <input
+                aria-describedby="root_b__errors root_b__description root_b__help"
                 aria-invalid={false}
                 autoFocus={false}
                 className="MuiInputBase-input MuiInput-input"
