@@ -100,6 +100,7 @@ const liveSettingsSchema = {
   properties: {
     validate: { type: "boolean", title: "Live validation" },
     disable: { type: "boolean", title: "Disable whole form" },
+    readonly: { type: "boolean", title: "Set whole form read-only" },
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
   },
@@ -601,6 +602,7 @@ class Playground extends Component {
                 disabled={liveSettings.disable}
                 omitExtraData={liveSettings.omitExtraData}
                 liveOmit={liveSettings.liveOmit}
+                readonly={liveSettings.readonly}
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
