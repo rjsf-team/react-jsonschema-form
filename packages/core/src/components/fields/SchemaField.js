@@ -116,7 +116,7 @@ function ErrorList(props) {
 
   return (
     <div>
-      <ul className="error-detail bs-callout bs-callout-info" id={errorsId(id)}>
+      <ul className="error-detail bs-callout bs-callout-info" id={id}>
         {errors
           .filter(elem => !!elem)
           .map((error, index) => {
@@ -331,7 +331,7 @@ function SchemaFieldRender(props) {
     rawDescription: description,
     help: <Help id={helpId(id)} help={help} />,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: <ErrorList errors={errors} id={id} />,
+    errors: <ErrorList id={errorsId(id)} errors={errors} />,
     rawErrors: errors,
     id,
     label,
