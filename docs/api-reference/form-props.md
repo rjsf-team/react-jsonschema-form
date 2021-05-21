@@ -72,6 +72,23 @@ render((
 
 If you just want to disable some of the fields, see the `ui:disabled` parameter in `uiSchema`.
 
+## readonly
+
+It's possible to set the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form.
+
+```jsx
+const schema = {
+  type: "string"
+};
+
+render((
+  <Form schema={schema}
+        readonly />
+), document.getElementById("app"));
+```
+
+If you just want to set some of the fields read-only, see the `ui:readonly` parameter in `uiSchema`.
+
 ## enctype
 
 The value of this prop will be passed to the `enctype` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-enctype).
