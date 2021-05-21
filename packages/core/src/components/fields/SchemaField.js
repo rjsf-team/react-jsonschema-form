@@ -68,7 +68,10 @@ function Label(props) {
     return null;
   }
   return (
-    <label className="control-label" htmlFor={id} {...ariaDescribedBy(id)}>
+    <label
+      className="control-label"
+      htmlFor={id}
+      aria-describedby={ariaDescribedBy(id)}>
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
@@ -84,7 +87,7 @@ function LabelInput(props) {
       id={id}
       onBlur={event => onChange(event.target.value)}
       defaultValue={label}
-      {...ariaDescribedBy(id)}
+      aria-describedby={ariaDescribedBy(id)}
     />
   );
 }

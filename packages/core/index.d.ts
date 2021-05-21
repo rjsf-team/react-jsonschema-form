@@ -440,7 +440,7 @@ declare module '@rjsf/core' {
 
         export function errorsId(id: string): string;
 
-        export function ariaDescribedBy(id: string): { 'aria-describedby': string };
+        export function ariaDescribedBy(id: string): string;
     }
 }
 

@@ -61,7 +61,7 @@ const TextWidget = ({
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      InputProps={utils.ariaDescribedBy(id)}
+      InputProps={{ "aria-describedby": utils.ariaDescribedBy(id) }}
       {...(textFieldProps as TextFieldProps)}
     />
   );

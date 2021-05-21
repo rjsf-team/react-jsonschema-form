@@ -1272,6 +1272,5 @@ export const helpId = id => `${id}__help`;
 
 export const errorsId = id => `${id}__errors`;
 
-export const ariaDescribedBy = id => ({
-  "aria-describedby": `${errorsId(id)} ${descriptionId(id)} ${helpId(id)}`,
-});
+export const ariaDescribedBy = id =>
+  `${errorsId(id)} ${descriptionId(id)} ${helpId(id)}`;

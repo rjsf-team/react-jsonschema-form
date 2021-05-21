@@ -42,7 +42,7 @@ const PasswordWidget = ({
       onFocus={_onFocus}
       onBlur={_onBlur}
       onChange={_onChange}
-      InputProps={utils.ariaDescribedBy(id)}
+      InputProps={{ "aria-describedby": utils.ariaDescribedBy(id) }}
     />
   );
 };

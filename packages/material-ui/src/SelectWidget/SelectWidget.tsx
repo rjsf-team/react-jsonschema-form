@@ -88,7 +88,7 @@ const SelectWidget = ({
       }}
       SelectProps={{
         multiple: typeof multiple === "undefined" ? false : multiple,
-        ...utils.ariaDescribedBy(id),
+        "aria-describedby": utils.ariaDescribedBy(id),
       }}>
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any =
