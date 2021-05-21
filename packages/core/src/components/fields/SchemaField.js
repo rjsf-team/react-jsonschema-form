@@ -68,10 +68,7 @@ function Label(props) {
     return null;
   }
   return (
-    <label
-      className="control-label"
-      htmlFor={id}
-      aria-describedby={ariaDescribedBy(id)}>
+    <label className="control-label" htmlFor={id}>
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
