@@ -1266,11 +1266,16 @@ export function schemaRequiresTrueValue(schema) {
   return false;
 }
 
+// Create a consistent id for the field description element
 export const descriptionId = id => `${id}__description`;
 
+// Create a consistent id for the field help element
 export const helpId = id => `${id}__help`;
 
+// Create a consistent id for the field errors element
 export const errorsId = id => `${id}__errors`;
 
+// Create a list of element ids that contain additional information about the
+// field
 export const ariaDescribedBy = id =>
   `${errorsId(id)} ${descriptionId(id)} ${helpId(id)}`;
