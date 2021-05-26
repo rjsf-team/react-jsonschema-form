@@ -1,4 +1,5 @@
 import React from "react";
+import { useIntl } from "react-intl";
 import * as types from "../../types";
 
 import {
@@ -29,6 +30,8 @@ function BooleanField(props) {
   const { widgets, formContext, fields } = registry;
   const { widget = "checkbox", ...options } = getUiOptions(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
+  const yes = useIntl().formatMessage({ defaultMessage: "Yes" });
+  const no = useIntl().formatMessage({ defaultMessage: "No" });
 
   let enumOptions;
 
@@ -36,7 +39,7 @@ function BooleanField(props) {
     enumOptions = optionsList({
       oneOf: schema.oneOf.map(option => ({
         ...option,
-        title: option.title || (option.const === true ? "Yes" : "No"),
+        title: option.title || (option.const === true ? yes : no),
       })),
     });
   } else {
@@ -44,9 +47,7 @@ function BooleanField(props) {
       enum: schema.enum || [true, false],
       enumNames:
         schema.enumNames ||
-        (schema.enum && schema.enum[0] === false
-          ? ["No", "Yes"]
-          : ["Yes", "No"]),
+        (schema.enum && schema.enum[0] === false ? [no, yes] : [yes, no]),
     });
   }
 

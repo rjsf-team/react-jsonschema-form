@@ -2,6 +2,7 @@ import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
 import includes from "core-js-pure/es/array/includes";
+import { injectIntl, useIntl } from "react-intl";
 import * as types from "../../types";
 
 import {
@@ -60,7 +61,9 @@ function DefaultArrayItem(props) {
             {(props.hasMoveUp || props.hasMoveDown) && (
               <IconButton
                 icon="arrow-up"
-                aria-label="Move up"
+                aria-label={useIntl().formatMessage({
+                  defaultMessage: "Move up",
+                })}
                 className="array-item-move-up"
                 tabIndex="-1"
                 style={btnStyle}
@@ -73,7 +76,9 @@ function DefaultArrayItem(props) {
               <IconButton
                 icon="arrow-down"
                 className="array-item-move-down"
-                aria-label="Move down"
+                aria-label={useIntl().formatMessage({
+                  defaultMessage: "Move down",
+                })}
                 tabIndex="-1"
                 style={btnStyle}
                 disabled={
@@ -87,7 +92,9 @@ function DefaultArrayItem(props) {
               <IconButton
                 type="danger"
                 icon="remove"
-                aria-label="Remove"
+                aria-label={useIntl().formatMessage({
+                  defaultMessage: "Remove",
+                })}
                 className="array-item-remove"
                 tabIndex="-1"
                 style={btnStyle}
@@ -438,7 +445,9 @@ class ArrayField extends Component {
         <UnsupportedField
           schema={schema}
           idSchema={idSchema}
-          reason="Missing items definition"
+          reason={this.props.intl.formatMessage({
+            defaultMessage: "Missing items definition",
+          })}
         />
       );
     }
@@ -794,4 +803,4 @@ if (process.env.NODE_ENV !== "production") {
   ArrayField.propTypes = types.fieldProps;
 }
 
-export default ArrayField;
+export default injectIntl(ArrayField);

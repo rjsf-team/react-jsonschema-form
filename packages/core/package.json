@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
+    "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib && npm run messages:extract && npm run messages:compile",
     "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/cjs",
     "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/es",
     "build:es:lib": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./lib",
@@ -11,7 +11,8 @@
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
-    "precommit": "lint-staged",
+    "messages:extract": "formatjs extract \"../*/src/**/*.{js,jsx,ts,tsx}\" --out-file lang/en-US.json --id-interpolation-pattern [sha512:contenthash:base64:6]",
+    "messages:compile": "formatjs compile-folder --ast lang dist/compiled-lang",
     "publish-to-npm": "npm run build && npm publish",
     "start": "concurrently \"npm:build:* -- --watch\"",
     "tdd": "cross-env NODE_ENV=test mocha --require @babel/register --watch --require ./test/setup-jsdom.js test/**/*_test.js",
@@ -29,6 +30,7 @@
   "module": "dist/es/index.js",
   "files": [
     "dist",
+    "lang",
     "lib",
     "index.d.ts"
   ],
@@ -47,6 +49,7 @@
     "jsonpointer": "^4.0.1",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
+    "react-intl": "^5.18.1",
     "react-is": "^16.9.0",
     "shortid": "^2.2.14"
   },
@@ -60,6 +63,7 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
+    "@formatjs/cli": "^4.2.16",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",

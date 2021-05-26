@@ -12,6 +12,8 @@ import Widgets from "../Widgets";
 
 import { ThemeProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
+import { useIntl } from "react-intl";
+
 const { getDefaultRegistry } = utils;
 
 const { fields, widgets } = getDefaultRegistry();
@@ -19,7 +21,7 @@ const { fields, widgets } = getDefaultRegistry();
 const DefaultChildren = () => (
   <Box marginTop={3}>
     <Button type="submit" variant="contained" color="primary">
-      Submit
+      {useIntl().formatMessage({ defaultMessage: "Submit" })}
     </Button>
   </Box>
 );
