@@ -795,6 +795,50 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields hidden field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <input
+    id="root"
+    type="hidden"
+    value=""
+  />
+  <div
+    className="MuiBox-root MuiBox-root-194"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields hidden label 1`] = `
 <form
   className="rjsf"

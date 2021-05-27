@@ -33,6 +33,9 @@ const ObjectFieldTemplate = ({
 }: ObjectFieldTemplateProps) => {
   const classes = useStyles();
 
+  const isHidden = (element: any): boolean =>
+    element.content.props.uiSchema["ui:widget"] === "hidden";
+
   return (
     <>
       {(uiSchema['ui:title'] || title) && (
@@ -49,16 +52,19 @@ const ObjectFieldTemplate = ({
         />
       )}
       <Grid container={true} spacing={2} className={classes.root}>
-        {properties.map((element: any, index: number) => (
-          <Grid
-            item={true}
-            xs={12}
-            key={index}
-            style={{ marginBottom: '10px' }}
-          >
-            {element.content}
-          </Grid>
-        ))}
+        {properties.map((element: any, index: number) =>
+          isHidden(element) ? (
+            element.content
+          ) : (
+            <Grid
+              item={true}
+              xs={12}
+              key={index}
+              style={{ marginBottom: "10px" }}>
+              {element.content}
+            </Grid>
+          )
+        )}
         {canExpand(schema, uiSchema, formData) && (
           <Grid container justify='flex-end'>
             <Grid item={true}>
