@@ -84,7 +84,7 @@ function LabelInput(props) {
       id={id}
       onBlur={event => onChange(event.target.value)}
       defaultValue={label}
-      {...ariaDescribedBy(id)}
+      aria-describedby={ariaDescribedBy(id)}
     />
   );
 }
@@ -96,12 +96,16 @@ function Help(props) {
   }
   if (typeof help === "string") {
     return (
-      <p className="help-block" id={helpId(id)}>
+      <p id={id} className="help-block">
         {help}
       </p>
     );
   }
-  return <div className="help-block">{help}</div>;
+  return (
+    <div id={id} className="help-block">
+      {help}
+    </div>
+  );
 }
 
 function ErrorList(props) {
@@ -112,7 +116,7 @@ function ErrorList(props) {
 
   return (
     <div>
-      <ul className="error-detail bs-callout bs-callout-info" id={errorsId(id)}>
+      <ul className="error-detail bs-callout bs-callout-info" id={id}>
         {errors
           .filter(elem => !!elem)
           .map((error, index) => {
@@ -325,9 +329,9 @@ function SchemaFieldRender(props) {
       />
     ),
     rawDescription: description,
-    help: <Help help={help} id={id} />,
+    help: <Help id={helpId(id)} help={help} />,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: <ErrorList errors={errors} id={id} />,
+    errors: <ErrorList id={errorsId(id)} errors={errors} />,
     rawErrors: errors,
     id,
     label,

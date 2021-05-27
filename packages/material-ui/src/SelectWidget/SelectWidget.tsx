@@ -3,8 +3,7 @@ import React from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
-import { WidgetProps } from "@visma/rjsf-core";
-import { utils } from "@visma/rjsf-core";
+import { utils, WidgetProps } from "@visma/rjsf-core";
 
 const { asNumber, guessType } = utils;
 
@@ -89,6 +88,7 @@ const SelectWidget = ({
       }}
       SelectProps={{
         multiple: typeof multiple === "undefined" ? false : multiple,
+        "aria-describedby": utils.ariaDescribedBy(id),
       }}>
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any =

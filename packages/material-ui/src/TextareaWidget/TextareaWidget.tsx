@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WidgetProps } from "@visma/rjsf-core";
+import { utils, WidgetProps } from "@visma/rjsf-core";
 
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -55,6 +55,7 @@ const TextareaWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        InputProps={{ "aria-describedby": utils.ariaDescribedBy(id) }}
       />
       {options.showCharacterCounter &&
       <div>

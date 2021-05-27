@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FieldTemplateProps } from "@visma/rjsf-core";
+import { FieldTemplateProps, utils } from "@visma/rjsf-core";
 
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -43,22 +43,27 @@ const FieldTemplate = ({
         required={required}>
         {children}
         {displayLabel && rawDescription ? (
-          <Typography variant="caption" color="textSecondary">
+          <Typography
+            id={utils.descriptionId(id)}
+            variant="caption"
+            color="textSecondary">
             {rawDescription}
           </Typography>
         ) : null}
         {rawErrors.length > 0 && (
-          <List dense={true} disablePadding={true}>
+          <List id={utils.errorsId(id)} dense={true} disablePadding={true}>
             {rawErrors.map((error, i: number) => {
               return (
                 <ListItem key={i} disableGutters={true}>
-                  <FormHelperText id={id}>{error}</FormHelperText>
+                  <FormHelperText>{error}</FormHelperText>
                 </ListItem>
               );
             })}
           </List>
         )}
-        {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
+        {rawHelp && (
+          <FormHelperText id={utils.helpId(id)}>{rawHelp}</FormHelperText>
+        )}
       </FormControl>
     </WrapIfAdditional>
   );
