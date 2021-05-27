@@ -1,6 +1,7 @@
 import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
+import { useIntl } from "react-intl";
 import * as types from "../../types";
 
 import {
@@ -30,7 +31,7 @@ const COMPONENT_TYPES = {
   null: "NullField",
 };
 
-function getFieldComponent(schema, uiSchema, idSchema, fields) {
+function useGetFieldComponent(schema, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -56,7 +57,10 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
           <UnsupportedField
             schema={schema}
             idSchema={idSchema}
-            reason={`Unknown field type ${schema.type}`}
+            reason={useIntl().formatMessage(
+              { defaultMessage: "Unknown field type {type}" },
+              { type: schema.type }
+            )}
           />
         );
       };
@@ -259,7 +263,12 @@ function SchemaFieldRender(props) {
     toIdSchema(schema, null, rootSchema, formData, idPrefix),
     idSchema
   );
-  const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
+  const FieldComponent = useGetFieldComponent(
+    schema,
+    uiSchema,
+    idSchema,
+    fields
+  );
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(

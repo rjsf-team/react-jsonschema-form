@@ -1,17 +1,28 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useIntl } from "react-intl";
 
 function UnsupportedField({ schema, idSchema, reason }) {
   return (
     <div className="unsupported-field">
       <p>
-        Unsupported field schema
-        {idSchema && idSchema.$id && (
-          <span>
-            {" for"} field <code>{idSchema.$id}</code>
-          </span>
+        {useIntl().formatMessage(
+          {
+            defaultMessage: `Unsupported field schema{hasSchema, select,
+              true { for field {schema}}
+              other {}
+            }{hasReason, select,
+              true {: {reason}}
+              other {}
+            }`,
+          },
+          {
+            hasSchema: Boolean(idSchema && idSchema.$id),
+            schema: <code>{idSchema.$id}</code>,
+            hasReason: Boolean(reason),
+            reason: <em>{reason}</em>,
+          }
         )}
-        {reason && <em>: {reason}</em>}.
       </p>
       {schema && <pre>{JSON.stringify(schema, null, 2)}</pre>}
     </div>

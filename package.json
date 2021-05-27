@@ -28,6 +28,7 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
+    "babel-plugin-formatjs": "^10.2.15",
     "husky": "^3.1.0"
   },
   "husky": {
