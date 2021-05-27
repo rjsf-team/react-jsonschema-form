@@ -17,13 +17,6 @@ module.exports = {
   plugins: [
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-proposal-optional-chaining",
-    [
-      "formatjs",
-      {
-        idInterpolationPattern: "[sha512:contenthash:base64:6]",
-        ast: true
-      }
-    ]
   ],
   ignore,
 };
