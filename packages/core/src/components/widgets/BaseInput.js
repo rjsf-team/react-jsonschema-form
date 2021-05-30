@@ -83,7 +83,9 @@ function BaseInput(props) {
       aria-describedby={ariaDescribedBy(inputProps.id)}
     />,
     schema.examples ? (
-      <datalist id={`examples_${inputProps.id}`}>
+      <datalist
+        key={`datalist_${inputProps.id}`}
+        id={`examples_${inputProps.id}`}>
         {[
           ...new Set(
             schema.examples.concat(schema.default ? [schema.default] : [])
