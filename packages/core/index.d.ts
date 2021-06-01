@@ -40,7 +40,7 @@ declare module '@rjsf/core' {
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
         onError?: (e: any) => any;
         onFocus?: (id: string, value: any) => void;
-        onSubmit?: (e: ISubmitEvent<T>) => any;
+        onSubmit?: (e: ISubmitEvent<T>, nativeEvent: React.FormEvent<HTMLFormElement>) => any;
         schema: JSONSchema7;
         showErrorList?: boolean;
         tagName?: keyof JSX.IntrinsicElements | React.ComponentType;
