@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2.1.2
+      uses: actions/setup-node@v2.1.5
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
@@ -75,7 +75,7 @@ jobs:
           name: dist
           path: dist
       - name: Deploy playground
-        uses: crazy-max/ghaction-github-pages@v2.2.0
+        uses: crazy-max/ghaction-github-pages@v2.5.0
         with:
           keep_history: true
           target-branch: gh-pages
@@ -88,7 +88,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python
-      uses: actions/setup-python@v2.1.4
+      uses: actions/setup-python@v2.2.2
       with:
         python-version: 3.6
     - run: pip install -r requirements.docs.txt
