@@ -14,6 +14,3 @@ If this is related to existing tickets, include links to them as well. Use the s
 * [ ] **I'm adding a new feature**
   - [ ] I've updated the playground with an example use of the feature
 
-### Deploy preview
-
-Once CI finishes, you should be able to view a deploy preview of the playground from this PR at this link: https://deploy-preview-[PR_NUMBER]--rjsf.netlify.app/
