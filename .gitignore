@@ -130,3 +130,5 @@ yarn.lock
 # Code coverage
 coverage
 .nyc_output
+
+venv
