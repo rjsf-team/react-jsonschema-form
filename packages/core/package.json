@@ -46,6 +46,7 @@
     "json-schema-merge-allof": "^0.6.0",
     "jsonpointer": "^4.0.1",
     "lodash": "^4.17.15",
+    "nanoid": "^3.1.23",
     "prop-types": "^15.7.2",
     "react-is": "^16.9.0"
   },
@@ -86,7 +87,6 @@
     "mini-css-extract-plugin": "^0.4.3",
     "mocha": "^5.2.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
-    "nanoid": "^3.1.23",
     "nyc": "^13.2.0",
     "prettier": "^1.15.1",
     "react": "^16.9.0",
