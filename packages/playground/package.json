@@ -58,8 +58,7 @@
     "react-app-polyfill": "^1.0.4",
     "react-bootstrap": "^0.33.1",
     "react-frame-component": "^4.1.1",
-    "react-is": "^16.9.0",
-    "shortid": "^2.2.14"
+    "react-is": "^16.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -99,6 +98,7 @@
     "mini-css-extract-plugin": "^0.4.3",
     "mocha": "^8.3.2",
     "monaco-editor-webpack-plugin": "^1.7.0",
+    "nanoid": "^3.1.23",
     "nyc": "^15.1.0",
     "prettier": "^1.15.1",
     "react": "^16.9.0",

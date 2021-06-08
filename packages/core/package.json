@@ -47,8 +47,7 @@
     "jsonpointer": "^4.0.1",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
-    "react-is": "^16.9.0",
-    "shortid": "^2.2.14"
+    "react-is": "^16.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -87,6 +86,7 @@
     "mini-css-extract-plugin": "^0.4.3",
     "mocha": "^5.2.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
+    "nanoid": "^3.1.23",
     "nyc": "^13.2.0",
     "prettier": "^1.15.1",
     "react": "^16.9.0",

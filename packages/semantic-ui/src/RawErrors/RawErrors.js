@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
 import PropTypes from "prop-types";
-import shortid from "shortid";
+import { nanoid } from "nanoid";
 import { Label, List } from "semantic-ui-react";
 
 /**
@@ -19,7 +19,7 @@ function RawErrors({ errors, options }) {
       <Label color="red" pointing={pointing || "above"} size={size || "small"} basic>
         <List bulleted>
           {errors.map(error => (
-            <List.Item key={shortid.generate()} content={error} />
+            <List.Item key={nanoid()} content={error} />
           ))}
         </List>
       </Label>
