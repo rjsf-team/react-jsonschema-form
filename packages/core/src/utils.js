@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext } from "react";
 import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js-pure/features/array/fill";
@@ -1279,3 +1279,5 @@ export const errorsId = id => `${id}__errors`;
 // field
 export const ariaDescribedBy = id =>
   `${errorsId(id)} ${descriptionId(id)} ${helpId(id)}`;
+
+export const Context = createContext();

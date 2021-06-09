@@ -16,7 +16,7 @@ import {
   isObject,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
-import { mergeObjects } from "../utils";
+import { Context, mergeObjects } from "../utils";
 
 export default class Form extends Component {
   static defaultProps = {
@@ -447,46 +447,48 @@ export default class Form extends Component {
       : deprecatedAutocomplete;
 
     return (
-      <FormTag
-        className={className ? className : "rjsf"}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autoComplete}
-        encType={enctype}
-        acceptCharset={acceptcharset}
-        noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}
-        ref={form => {
-          this.formElement = form;
-        }}>
-        {this.renderErrors()}
-        <_SchemaField
-          schema={schema}
-          uiSchema={uiSchema}
-          errorSchema={errorSchema}
-          idSchema={idSchema}
-          idPrefix={idPrefix}
-          formContext={formContext}
-          formData={formData}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          registry={registry}
-          disabled={disabled}
-        />
-        {children ? (
-          children
-        ) : (
-          <div>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </div>
-        )}
-      </FormTag>
+      <Context.Provider value={{ formData }}>
+        <FormTag
+          className={className ? className : "rjsf"}
+          id={id}
+          name={name}
+          method={method}
+          target={target}
+          action={action}
+          autoComplete={autoComplete}
+          encType={enctype}
+          acceptCharset={acceptcharset}
+          noValidate={noHtml5Validate}
+          onSubmit={this.onSubmit}
+          ref={form => {
+            this.formElement = form;
+          }}>
+          {this.renderErrors()}
+          <_SchemaField
+            schema={schema}
+            uiSchema={uiSchema}
+            errorSchema={errorSchema}
+            idSchema={idSchema}
+            idPrefix={idPrefix}
+            formContext={formContext}
+            formData={formData}
+            onChange={this.onChange}
+            onBlur={this.onBlur}
+            onFocus={this.onFocus}
+            registry={registry}
+            disabled={disabled}
+          />
+          {children ? (
+            children
+          ) : (
+            <div>
+              <button type="submit" className="btn btn-info">
+                Submit
+              </button>
+            </div>
+          )}
+        </FormTag>
+      </Context.Provider>
     );
   }
 }
