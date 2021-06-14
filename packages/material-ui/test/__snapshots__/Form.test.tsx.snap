@@ -921,7 +921,7 @@ exports[`single fields hidden label 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-194"
+    className="MuiBox-root MuiBox-root-195"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -945,9 +945,6 @@ exports[`single fields hidden label 1`] = `
       >
         Submit
       </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
     </button>
   </div>
 </form>
