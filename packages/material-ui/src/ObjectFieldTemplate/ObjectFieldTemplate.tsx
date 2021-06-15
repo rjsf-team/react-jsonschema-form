@@ -33,9 +33,6 @@ const ObjectFieldTemplate = ({
 }: ObjectFieldTemplateProps) => {
   const classes = useStyles();
 
-  const isHidden = (element: any): boolean =>
-    element.content.props.uiSchema["ui:widget"] === "hidden";
-
   return (
     <>
       {(uiSchema['ui:title'] || title) && (
@@ -52,10 +49,10 @@ const ObjectFieldTemplate = ({
         />
       )}
       <Grid container={true} spacing={2} className={classes.root}>
-        {properties.map((element: any, index: number) =>
+        {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.
-          isHidden(element) ? (
+          element.hidden ? (
             element.content
           ) : (
             <Grid
