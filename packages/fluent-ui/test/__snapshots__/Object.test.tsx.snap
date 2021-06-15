@@ -10,6 +10,7 @@ exports[`object fields object 1`] = `
     className="ms-Grid-col ms-sm12  field field-object"
     style={
       Object {
+        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -25,6 +26,7 @@ exports[`object fields object 1`] = `
           className="ms-Grid-col ms-sm12  field field-string"
           style={
             Object {
+              "display": undefined,
               "marginBottom": 15,
             }
           }
@@ -70,6 +72,7 @@ exports[`object fields object 1`] = `
           className="ms-Grid-col ms-sm12  field field-number"
           style={
             Object {
+              "display": undefined,
               "marginBottom": 15,
             }
           }

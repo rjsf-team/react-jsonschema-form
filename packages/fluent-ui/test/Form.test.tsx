@@ -2,6 +2,7 @@ import React from 'react';
 import Form from "../src/index";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
+import { UiSchema } from '@rjsf/core';
 
 describe("single fields", () => {
   describe("string field", () => {
@@ -69,6 +70,25 @@ describe("single fields", () => {
     };
     const tree = renderer
       .create(<Form schema={schema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("hidden field", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string",
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      "my-field": {
+        "ui:widget": "hidden",
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
