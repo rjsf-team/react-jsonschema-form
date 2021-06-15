@@ -346,6 +346,55 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields hidden field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="p-0 container-fluid"
+    >
+      <div
+        className="d-none row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="form-group"
+          >
+            <input
+              id="root_my-field"
+              type="hidden"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields null field 1`] = `
 <form
   className="rjsf"
