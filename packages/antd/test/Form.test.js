@@ -78,4 +78,16 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("hidden field", () => {
+    const schema = {
+      type: "string",
+    };
+    const uiSchema = {
+      "ui:widget": "hidden",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
