@@ -801,13 +801,21 @@ exports[`single fields hidden field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <input
-    id="root"
-    type="hidden"
-    value=""
-  />
   <div
-    className="MuiBox-root MuiBox-root-194"
+    className="MuiFormControl-root MuiFormControl-fullWidth"
+  >
+    <div
+      className="MuiGrid-root makeStyles-root-194 MuiGrid-container MuiGrid-spacing-xs-2"
+    >
+      <input
+        id="root_my-field"
+        type="hidden"
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-298"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -921,7 +929,7 @@ exports[`single fields hidden label 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-195"
+    className="MuiBox-root MuiBox-root-299"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

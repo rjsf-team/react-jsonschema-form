@@ -7,13 +7,21 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-hidden"
+    className="form-group field field-object"
   >
-    <input
+    <fieldset
       id="root"
-      type="hidden"
-      value=""
-    />
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      />
+    </fieldset>
   </div>
   <div>
     <button

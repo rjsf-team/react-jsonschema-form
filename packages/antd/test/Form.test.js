@@ -80,10 +80,17 @@ describe("single fields", () => {
   });
   test("hidden field", () => {
     const schema = {
-      type: "string",
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string",
+        },
+      },
     };
     const uiSchema = {
-      "ui:widget": "hidden",
+      "my-field": {
+        "ui:widget": "hidden",
+      },
     };
     const tree = renderer
       .create(<Form schema={schema} uiSchema={uiSchema} />)
