@@ -20,12 +20,15 @@ const FieldTemplate = ({
   rawDescription,
   classNames,
   label,
-  required
+  required,
+  hidden,
 }: FieldTemplateProps) => {
   // TODO: do this better by not returning the form-group class from master.
   classNames = "ms-Grid-col ms-sm12 " + classNames.replace("form-group", "");
   return (
-    <div className={classNames} style={{marginBottom: 15}}>
+    <div
+      className={classNames}
+      style={{ marginBottom: 15, display: hidden ? "none" : undefined }}>
       {children}
       {/* {displayLabel && <Label>
         {label}

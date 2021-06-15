@@ -10,6 +10,7 @@ exports[`array fields array 1`] = `
     className="ms-Grid-col ms-sm12  field field-array"
     style={
       Object {
+        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -115,6 +116,7 @@ exports[`array fields checkboxes 1`] = `
     className="ms-Grid-col ms-sm12  field field-array"
     style={
       Object {
+        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -211,6 +213,7 @@ exports[`array fields fixed array 1`] = `
     className="ms-Grid-col ms-sm12  field field-array"
     style={
       Object {
+        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -232,6 +235,7 @@ exports[`array fields fixed array 1`] = `
               className="ms-Grid-col ms-sm12  field field-string"
               style={
                 Object {
+                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
@@ -389,6 +393,7 @@ exports[`array fields fixed array 1`] = `
               className="ms-Grid-col ms-sm12  field field-number"
               style={
                 Object {
+                  "display": undefined,
                   "marginBottom": 15,
                 }
               }

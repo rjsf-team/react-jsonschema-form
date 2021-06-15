@@ -215,6 +215,7 @@ declare module '@rjsf/core' {
             name: string;
             disabled: boolean;
             readonly: boolean;
+            hidden: boolean;
         }[];
         onAddClick: (schema: JSONSchema7) => () => void;
         readonly: boolean;

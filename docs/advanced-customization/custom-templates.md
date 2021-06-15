@@ -219,5 +219,6 @@ The following props are part of each element in `properties`:
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `readonly`: A boolean value stating if the property is read-only.
+- `hidden`: A boolean value stating if the property should be hidden.
 
 > Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an object field template, you may need to specify both `ui:FieldTemplate` and `ui:ObjectFieldTemplate`.

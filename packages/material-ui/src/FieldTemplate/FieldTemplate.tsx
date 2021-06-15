@@ -16,6 +16,7 @@ const FieldTemplate = ({
   classNames,
   disabled,
   displayLabel,
+  hidden,
   label,
   onDropPropertyClick,
   onKeyChange,
@@ -26,6 +27,10 @@ const FieldTemplate = ({
   rawDescription,
   schema,
 }: FieldTemplateProps) => {
+  if (hidden) {
+    return children;
+  }
+
   return (
     <WrapIfAdditional
       classNames={classNames}
