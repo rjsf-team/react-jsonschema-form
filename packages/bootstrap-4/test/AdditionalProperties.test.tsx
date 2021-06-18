@@ -4,25 +4,14 @@ import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
 
 describe("AdditionalProperties tests", () => {
-    test("show hidden fields if additional properties is true", () => {
-      const schema: JSONSchema7 = {
-        additionalProperties: true,
-      };
-      const formData: any = {
-        "additionalProperty": 'myValue'
-
-      }
-      const tree = renderer.create(<Form schema={schema} formData={formData} />).toJSON();
-      expect(tree).toMatchSnapshot();
-    });
-    test("don't show hidden fields if additionalProperties is false", () => {
+    test("show add button and fields if additionalProperties is true", () => {
         const schema: JSONSchema7 = {
-            additionalProperties: false,
-          };
-          const formData: any = {
-              "additionalProperty": 'should not appear'
-          }
+            additionalProperties: true,
+            };
+            const formData: any = {
+                "additionalProperty": 'should appear'
+            }
         const tree = renderer.create(<Form schema={schema} formData={formData} />).toJSON();
         expect(tree).toMatchSnapshot();
-      });
+    });
 });
