@@ -45,6 +45,7 @@ const allowedProps = [
 
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -74,12 +75,14 @@ const TextWidget = ({
   return (
     <TextField
       id={id}
+      placeholder={placeholder}
       label={label || schema.title}
       autoFocus={autofocus}
       required={required}
       disabled={disabled}
       readOnly={readonly}
-      name={name}
+      // TODO: once fluent-ui supports the name prop, we can add it back in here.
+      // name={name}
       type={inputType as string}
       value={value ? value : ""}
       onChange={_onChange as any}

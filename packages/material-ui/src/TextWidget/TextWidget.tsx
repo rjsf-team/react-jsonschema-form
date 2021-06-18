@@ -8,10 +8,11 @@ import { WidgetProps, utils } from "@rjsf/core";
 
 const { getDisplayLabel } = utils;
 
-export type TextWidgetProps = WidgetProps & TextFieldProps;
+export type TextWidgetProps = WidgetProps & Pick<TextFieldProps, Exclude<keyof TextFieldProps, 'onBlur' | 'onFocus'>>;
 
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -49,6 +50,7 @@ const TextWidget = ({
   return (
     <TextField
       id={id}
+      placeholder={placeholder}
       label={displayLabel ? label || schema.title : false}
       autoFocus={autofocus}
       required={required}

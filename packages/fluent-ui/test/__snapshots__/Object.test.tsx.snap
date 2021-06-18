@@ -10,6 +10,7 @@ exports[`object fields object 1`] = `
     className="ms-Grid-col ms-sm12  field field-object"
     style={
       Object {
+        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -25,6 +26,7 @@ exports[`object fields object 1`] = `
           className="ms-Grid-col ms-sm12  field field-string"
           style={
             Object {
+              "display": undefined,
               "marginBottom": 15,
             }
           }
@@ -52,11 +54,11 @@ exports[`object fields object 1`] = `
                   className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_a"
-                  name="nodejs"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
                   onInput={[Function]}
+                  placeholder=""
                   readOnly={false}
                   required={false}
                   type="text"
@@ -70,6 +72,7 @@ exports[`object fields object 1`] = `
           className="ms-Grid-col ms-sm12  field field-number"
           style={
             Object {
+              "display": undefined,
               "marginBottom": 15,
             }
           }
@@ -97,11 +100,11 @@ exports[`object fields object 1`] = `
                   className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_b"
-                  name="nodejs"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
                   onInput={[Function]}
+                  placeholder=""
                   readOnly={false}
                   required={false}
                   type="number"

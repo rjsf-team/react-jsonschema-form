@@ -75,9 +75,6 @@ const ObjectFieldTemplate = ({
     return defaultColSpan;
   };
 
-  const filterHidden = (element) =>
-    element.content.props.uiSchema['ui:widget'] !== 'hidden';
-
   return (
     <fieldset id={idSchema.$id}>
       <Row gutter={rowGutter}>
@@ -99,7 +96,7 @@ const ObjectFieldTemplate = ({
               />
             </Col>
           )}
-        {properties.filter(filterHidden).map((element) => (
+        {properties.filter((e) => !e.hidden).map((element) => (
           <Col key={element.name} span={calculateColSpan(element)}>
             {element.content}
           </Col>

@@ -36,11 +36,11 @@ declare module '@rjsf/core' {
         noValidate?: boolean;
         ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
         omitExtraData?: boolean;
-        onBlur?: (id: string, value: boolean | number | string | null) => void;
+        onBlur?: (id: string, value: any) => void;
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
         onError?: (e: any) => any;
-        onFocus?: (id: string, value: boolean | number | string | null) => void;
-        onSubmit?: (e: ISubmitEvent<T>) => any;
+        onFocus?: (id: string, value: any) => void;
+        onSubmit?: (e: ISubmitEvent<T>, nativeEvent: React.FormEvent<HTMLFormElement>) => any;
         schema: JSONSchema7;
         showErrorList?: boolean;
         tagName?: keyof JSX.IntrinsicElements | React.ComponentType;
@@ -59,7 +59,7 @@ declare module '@rjsf/core' {
             customFormats?: FormProps<T>['customFormats'],
         ) => { errors: AjvError[]; errorSchema: ErrorSchema };
         onChange: (formData: T, newErrorSchema: ErrorSchema) => void;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
+        onBlur: (id: string, value: any) => void;
         submit: () => void;
     }
 
@@ -105,11 +105,12 @@ declare module '@rjsf/core' {
         disabled: boolean;
         readonly: boolean;
         autofocus: boolean;
+        placeholder: string;
         onChange: (value: any) => void;
         options: NonNullable<UiSchema['ui:options']>;
         formContext: any;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
-        onFocus: (id: string, value: boolean | number | string | null) => void;
+        onBlur: (id: string, value: any) => void;
+        onFocus: (id: string, value: any) => void;
         label: string;
         multiple: boolean;
         rawErrors: string[];
@@ -125,7 +126,7 @@ declare module '@rjsf/core' {
         formData: T;
         errorSchema: ErrorSchema;
         onChange: (e: IChangeEvent<T> | any, es?: ErrorSchema) => any;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
+        onBlur: (id: string, value: any) => void;
         registry: {
             fields: { [name: string]: Field };
             widgets: { [name: string]: Widget };
@@ -143,7 +144,7 @@ declare module '@rjsf/core' {
 
     export type Field = React.StatelessComponent<FieldProps> | React.ComponentClass<FieldProps>;
 
-    export type FieldTemplateProps = {
+    export type FieldTemplateProps<T = any> = {
         id: string;
         classNames: string;
         label: string;
@@ -163,6 +164,8 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        formData: T;
+        onChange: (value: T) => void;
         onKeyChange: (value: string) => () => void;
         onDropPropertyClick: (value: string) => () => void;
         registry: FieldProps['registry'];
@@ -212,6 +215,7 @@ declare module '@rjsf/core' {
             name: string;
             disabled: boolean;
             readonly: boolean;
+            hidden: boolean;
         }[];
         onAddClick: (schema: JSONSchema7) => () => void;
         readonly: boolean;
@@ -347,7 +351,11 @@ declare module '@rjsf/core' {
 
         export function allowAdditionalItems(schema: JSONSchema7): boolean;
 
-        export function optionsList(schema: JSONSchema7): { label: string; value: string }[];
+        export function optionsList(schema: JSONSchema7):  {
+            schema?: JSONSchema7Definition;
+            label: string;
+            value: string;
+        }[];
 
         export function guessType(value: any): JSONSchema7TypeName;
 

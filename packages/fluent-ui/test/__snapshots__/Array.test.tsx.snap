@@ -10,6 +10,7 @@ exports[`array fields array 1`] = `
     className="ms-Grid-col ms-sm12  field field-array"
     style={
       Object {
+        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -115,6 +116,7 @@ exports[`array fields checkboxes 1`] = `
     className="ms-Grid-col ms-sm12  field field-array"
     style={
       Object {
+        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -211,6 +213,7 @@ exports[`array fields fixed array 1`] = `
     className="ms-Grid-col ms-sm12  field field-array"
     style={
       Object {
+        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -232,6 +235,7 @@ exports[`array fields fixed array 1`] = `
               className="ms-Grid-col ms-sm12  field field-string"
               style={
                 Object {
+                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
@@ -251,11 +255,11 @@ exports[`array fields fixed array 1`] = `
                       className="ms-TextField-field field-57"
                       disabled={false}
                       id="root_0"
-                      name="nodejs"
                       onBlur={[Function]}
                       onChange={[Function]}
                       onFocus={[Function]}
                       onInput={[Function]}
+                      placeholder=""
                       readOnly={false}
                       required={true}
                       type="text"
@@ -389,6 +393,7 @@ exports[`array fields fixed array 1`] = `
               className="ms-Grid-col ms-sm12  field field-number"
               style={
                 Object {
+                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
@@ -408,11 +413,11 @@ exports[`array fields fixed array 1`] = `
                       className="ms-TextField-field field-57"
                       disabled={false}
                       id="root_1"
-                      name="nodejs"
                       onBlur={[Function]}
                       onChange={[Function]}
                       onFocus={[Function]}
                       onInput={[Function]}
+                      placeholder=""
                       readOnly={false}
                       required={true}
                       type="number"
