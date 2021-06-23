@@ -31,7 +31,7 @@
     "nanoid": "^3.1.23",
     "react": ">=16",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "1.2.1",
+    "semantic-ui-react": "1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.14",
