@@ -89,11 +89,11 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 14.x
-      - run: npm i -g lerna@3.18.4
+      - run: npm i lerna@3.18.4
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: lerna publish from-package --yes --no-verify-access --canary
+      - run: npx lerna publish from-package --yes --no-verify-access --canary
       - if: always()
         run: rm .npmrc
 
