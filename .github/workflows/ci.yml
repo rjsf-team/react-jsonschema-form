@@ -85,10 +85,10 @@ jobs:
     name: Deploy canary version of packages to npm
     needs: [build]
     steps:
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 14.x
         uses: actions/setup-node@v2.1.5
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
       - run: npm i -g lerna@3.18.4
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
