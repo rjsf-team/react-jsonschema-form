@@ -90,7 +90,7 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 14.x
-      - run: npm i lerna@3.18.4
+      - run: npm ci
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
