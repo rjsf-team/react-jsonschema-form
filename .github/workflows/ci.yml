@@ -85,6 +85,7 @@ jobs:
     name: Deploy canary version of packages to npm
     needs: [build]
     steps:
+      - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2.1.5
         with:
