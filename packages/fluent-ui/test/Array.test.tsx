@@ -1,7 +1,8 @@
 import React from "react";
 import Form from "../src/index";
 import { JSONSchema7 } from "json-schema";
-import renderer, { ReactTestRendererNode } from "react-test-renderer";
+import renderer from "react-test-renderer";
+import AddButton from "../src/AddButton";
 
 describe("array fields", () => {
   test("array", () => {
@@ -57,26 +58,11 @@ describe("array fields", () => {
     const uiSchema = {
       "ui:addButtonText": "Custom button text"
     };
-    const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} />)
-        .toJSON();
+    const testRenderer = renderer
+        .create(<Form schema={schema} uiSchema={uiSchema} />);
 
-    if (tree === null || typeof tree === "string" || !tree.children)
-      throw new Error("Component tree is not built correctly");
+    const addButton = testRenderer.root.findByType(AddButton).findByProps({ addButtonText: "Custom button text" });
 
-    const indexes = [0, 0, 0, 1, 0, 0];
-    let buttonNode = tree.children[0];
-
-    for (let i of indexes) {
-      if (!buttonNode || typeof buttonNode === "string")
-        throw new Error("The current node is not a ReactTestRendererJson");
-
-      if (buttonNode.children === null)
-        throw new Error("The current node has no children");
-
-      buttonNode = buttonNode.children[i] as ReactTestRendererNode;
-    }
-
-    expect(buttonNode).toBe("Custom button text");
+    expect(addButton).toBeTruthy();
   });
 });
