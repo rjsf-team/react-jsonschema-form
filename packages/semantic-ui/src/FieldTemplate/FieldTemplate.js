@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Form } from "semantic-ui-react";
-import DescriptionField from "../DescriptionField";
 import HelpField from "../HelpField";
 import RawErrors from "../RawErrors";
 import { getSemanticProps, MaybeWrap } from "../util";
@@ -16,8 +15,10 @@ function FieldTemplate({
   rawErrors = [],
   rawHelp,
   rawDescription,
+  registry,
   ...props
 }) {
+  const { DescriptionField } = registry.fields;
   const semanticProps = getSemanticProps(props);
   const { wrapLabel, wrapContent, errorOptions } = semanticProps;
   return (
