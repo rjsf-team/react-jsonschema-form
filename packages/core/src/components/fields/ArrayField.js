@@ -472,7 +472,13 @@ class ArrayField extends Component {
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
-    const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
+    const {
+      ArrayFieldTemplate,
+      rootSchema,
+      fields,
+      formContext,
+      ArrayFieldTemplates,
+    } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, rootSchema);
     const formData = keyedToPlainFormData(this.state.keyedFormData);
@@ -523,10 +529,14 @@ class ArrayField extends Component {
     };
 
     // Check if a custom render function was passed in
+    let customComponent;
+    if (typeof uiSchema["ui:ArrayFieldTemplate"] === "function") {
+      customComponent = uiSchema["ui:ArrayFieldTemplate"];
+    } else if (typeof uiSchema["ui:ArrayFieldTemplate"] === "string") {
+      customComponent = ArrayFieldTemplates[uiSchema["ui:ArrayFieldTemplate"]];
+    }
     const Component =
-      uiSchema["ui:ArrayFieldTemplate"] ||
-      ArrayFieldTemplate ||
-      DefaultNormalArrayFieldTemplate;
+      customComponent || ArrayFieldTemplate || DefaultNormalArrayFieldTemplate;
     return <Component {...arrayProps} />;
   }
 
@@ -638,7 +648,13 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
-    const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
+    const {
+      ArrayFieldTemplate,
+      rootSchema,
+      fields,
+      formContext,
+      ArrayFieldTemplates,
+    } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
       retrieveSchema(item, rootSchema, formData[index])
@@ -709,10 +725,14 @@ class ArrayField extends Component {
     };
 
     // Check if a custom template template was passed in
-    const Template =
-      uiSchema["ui:ArrayFieldTemplate"] ||
-      ArrayFieldTemplate ||
-      DefaultFixedArrayFieldTemplate;
+    let customTemplate;
+    if (typeof uiSchema["ui:ArrayFieldTemplate"] === "function") {
+      customTemplate = uiSchema["ui:ArrayFieldTemplate"];
+    } else if (typeof uiSchema["ui:ArrayFieldTemplate"] === "string") {
+      customTemplate = ArrayFieldTemplates[uiSchema["ui:ArrayFieldTemplate"]];
+    }
+    const Template = customTemplate;
+    ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
     return <Template {...arrayProps} />;
   }
 
