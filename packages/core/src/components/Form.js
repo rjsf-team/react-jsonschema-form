@@ -400,8 +400,8 @@ export default class Form extends Component {
       definitions: this.props.schema.definitions || {},
       rootSchema: this.props.schema,
       formContext: this.props.formContext || {},
-      ArrayFieldTemplates: this.props.arrayFieldTemplates || {},
-      ObjectFieldTemplates: { ...this.props.objectFieldTemplates },
+      arrayFieldTemplates: this.props.arrayFieldTemplates || {},
+      objectFieldTemplates: this.props.objectFieldTemplates || {},
     };
   }
 
