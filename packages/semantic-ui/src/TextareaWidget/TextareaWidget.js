@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
+import {utils} from '@rjsf/core';
 
 function TextareaWidget({
   id,
@@ -22,9 +23,7 @@ function TextareaWidget({
   formContext,
 }) {
   const semanticProps = getSemanticProps({ formContext, options });
-  // eslint-disable-next-line no-shadow
-  const _onChange = ({ target: { value } }) =>
-    onChange && onChange(value === "" ? options.emptyValue : value);
+  const { eventOnChange } = utils.hooks.useEmptyValueOnChange({ onChange, options, value });
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
 
@@ -41,7 +40,7 @@ function TextareaWidget({
       {...semanticProps}
       value={value || ""}
       rows={options.rows || 5}
-      onChange={_onChange}
+      onChange={eventOnChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
     />
