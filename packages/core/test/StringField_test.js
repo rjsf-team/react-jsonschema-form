@@ -568,7 +568,7 @@ describe("StringField", () => {
     });
 
     it("should render ui:EmptyValue when formData is emptyString and ui:EmptyValue is defined", () => {
-      const { node, onChange } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: { type: "string" },
         uiSchema: {
           "ui:widget": "textarea",

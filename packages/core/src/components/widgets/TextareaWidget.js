@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {hooks} from '../../utils';
+import { hooks } from '../../utils';
 
 function TextareaWidget(props) {
   const {
