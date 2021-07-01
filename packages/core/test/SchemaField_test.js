@@ -49,6 +49,8 @@ describe("SchemaField", () => {
         FieldTemplate: undefined,
         ObjectFieldTemplate: undefined,
         formContext: {},
+        objectFieldTemplates: {},
+        arrayFieldTemplates: {},
       });
     });
     it("should set definitions to empty object if it is undefined", () => {
@@ -76,6 +78,8 @@ describe("SchemaField", () => {
         FieldTemplate: undefined,
         ObjectFieldTemplate: undefined,
         formContext: {},
+        objectFieldTemplates: {},
+        arrayFieldTemplates: {},
       });
     });
   });
