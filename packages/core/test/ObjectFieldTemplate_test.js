@@ -47,56 +47,105 @@ describe("ObjectFieldTemplate", () => {
 
   let node;
   describe("with template globally configured", () => {
-    node = createFormComponent({
-      schema: {
-        type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } },
-      },
-      uiSchema: { "ui:description": "foobar" },
-      formData,
-      ObjectFieldTemplate,
-      fields: {
-        TitleField,
-        DescriptionField,
-      },
-    }).node;
+    beforeEach(() => {
+      node = createFormComponent({
+        schema: {
+          type: "object",
+          properties: { foo: { type: "string" }, bar: { type: "string" } },
+        },
+        uiSchema: { "ui:description": "foobar" },
+        formData,
+        ObjectFieldTemplate,
+        fields: {
+          TitleField,
+          DescriptionField,
+        },
+      }).node;
+    });
     sharedIts();
   });
   describe("with template configured in ui:ObjectFieldTemplate", () => {
-    node = createFormComponent({
-      schema: {
-        type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } },
-      },
-      uiSchema: {
-        "ui:description": "foobar",
-        "ui:ObjectFieldTemplate": ObjectFieldTemplate,
-      },
-      formData,
-      fields: {
-        TitleField,
-        DescriptionField,
-      },
-    }).node;
-    sharedIts();
+    beforeEach(() => {
+      node = createFormComponent({
+        schema: {
+          type: "object",
+          properties: { foo: { type: "string" }, bar: { type: "string" } },
+        },
+        uiSchema: {
+          "ui:description": "foobar",
+          "ui:ObjectFieldTemplate": ObjectFieldTemplate,
+        },
+        formData,
+        fields: {
+          TitleField,
+          DescriptionField,
+        },
+      }).node;
+      sharedIts();
+    });
+  });
+  describe("with template configured in objectFieldTemplates", () => {
+    beforeEach(() => {
+      node = createFormComponent({
+        schema: {
+          type: "object",
+          properties: { foo: { type: "string" }, bar: { type: "string" } },
+        },
+        uiSchema: {
+          "ui:description": "foobar",
+          "ui:ObjectFieldTemplate": "customTemplate",
+        },
+        objectFieldTemplates: { customTemplate: ObjectFieldTemplate },
+        formData,
+        fields: {
+          TitleField,
+          DescriptionField,
+        },
+      }).node;
+      sharedIts();
+    });
   });
   describe("with template configured globally overridden by ui:ObjectFieldTemplate", () => {
-    node = createFormComponent({
-      schema: {
-        type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } },
-      },
-      uiSchema: {
-        "ui:description": "foobar",
-        "ui:ObjectFieldTemplate": ObjectFieldTemplate,
-      },
-      formData,
-      ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
-      fields: {
-        TitleField,
-        DescriptionField,
-      },
-    }).node;
+    beforeEach(() => {
+      node = createFormComponent({
+        schema: {
+          type: "object",
+          properties: { foo: { type: "string" }, bar: { type: "string" } },
+        },
+        uiSchema: {
+          "ui:description": "foobar",
+          "ui:ObjectFieldTemplate": ObjectFieldTemplate,
+        },
+        formData,
+        ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
+        fields: {
+          TitleField,
+          DescriptionField,
+        },
+      }).node;
+    });
+    sharedIts();
+  });
+  describe("with template configured globally overridden by objectFieldTemplates", () => {
+    beforeEach(() => {
+      node = createFormComponent({
+        schema: {
+          type: "object",
+          properties: { foo: { type: "string" }, bar: { type: "string" } },
+        },
+        uiSchema: {
+          "ui:description": "foobar",
+          "ui:ObjectFieldTemplate": "customTemplate",
+        },
+        formData,
+        objectFieldTemplates: { customTemplate: ObjectFieldTemplate },
+        ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
+        fields: {
+          TitleField,
+          DescriptionField,
+        },
+      }).node;
+    });
     sharedIts();
   });
 
