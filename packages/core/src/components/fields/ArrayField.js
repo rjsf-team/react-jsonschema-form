@@ -731,8 +731,8 @@ class ArrayField extends Component {
     } else if (typeof uiSchema["ui:ArrayFieldTemplate"] === "string") {
       customTemplate = arrayFieldTemplates[uiSchema["ui:ArrayFieldTemplate"]];
     }
-    const Template = customTemplate;
-    ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
+    const Template =
+      customTemplate || ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
     return <Template {...arrayProps} />;
   }
 
