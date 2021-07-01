@@ -28,7 +28,7 @@ Then import the dependency as follows:
 import Form from "@rjsf/core";
 ```
 
-Our latest version requires React 16+. You can also install `react-jsonschema-form` (the 1.x version) which works with React 15+.
+Our latest version requires React 16.8.0+. You can also install `react-jsonschema-form` (the 1.x version) which works with React 15+.
 
 ### As a script served from a CDN
 
