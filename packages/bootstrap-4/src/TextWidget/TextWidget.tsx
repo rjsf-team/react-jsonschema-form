@@ -2,7 +2,7 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-import { WidgetProps } from "@rjsf/core";
+import {utils, WidgetProps} from "@rjsf/core";
 
 export interface TextWidgetProps extends WidgetProps {
   type?: string;
@@ -26,17 +26,14 @@ const TextWidget = ({
   rawErrors = [],
 
 }: TextWidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
   const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
-  
+
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
     <Form.Group className="mb-0">
@@ -55,7 +52,7 @@ const TextWidget = ({
         list={schema.examples ? `examples_${id}` : undefined}
         type={inputType}
         value={value || value === 0 ? value : ""}
-        onChange={_onChange}
+        onChange={onEventChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
 

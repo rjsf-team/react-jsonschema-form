@@ -1,5 +1,7 @@
 // Originally from https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/@rjsf/core/index.d.ts
 
+import {UseEmptyValueOnChangeProps} from "@rjsf/core";
+
 declare module '@rjsf/core' {
     import * as React from 'react';
     import { JSONSchema7, JSONSchema7Definition, JSONSchema7Type, JSONSchema7TypeName } from 'json-schema';
@@ -285,6 +287,22 @@ declare module '@rjsf/core' {
     };
 
     export module utils {
+
+        type UseEmptyValueOnChangeProps = {
+          onChange: (props:any) => void,
+          options:NonNullable<UiSchema['ui:options']>,
+          value: any
+        };
+
+        type UseEmptyValueOnChangeReturnValue = {
+          onEventChange: (event: React.ChangeEvent<any>) => void,
+        };
+
+        type UtilsHooks = {
+          useEmptyValueOnChange: (props: UseEmptyValueOnChangeProps) => UseEmptyValueOnChangeReturnValue;
+        };
+
+        export const hooks: UtilsHooks;
 
         export const ADDITIONAL_PROPERTY_FLAG: string;
 

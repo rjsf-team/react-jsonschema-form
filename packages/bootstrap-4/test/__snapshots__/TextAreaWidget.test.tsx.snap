@@ -23,7 +23,6 @@ Array [
       disabled={false}
       id="_id"
       onBlur={[Function]}
-      onChange={[Function]}
       onFocus={[Function]}
       placeholder=""
       readOnly={true}
@@ -58,7 +57,6 @@ Array [
       disabled={false}
       id="_id"
       onBlur={[Function]}
-      onChange={[Function]}
       onFocus={[Function]}
       placeholder=""
       readOnly={true}
@@ -86,7 +84,6 @@ Array [
       disabled={false}
       id="_id"
       onBlur={[Function]}
-      onChange={[Function]}
       onFocus={[Function]}
       placeholder=""
       readOnly={true}

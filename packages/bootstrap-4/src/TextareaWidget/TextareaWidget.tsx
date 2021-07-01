@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WidgetProps } from "@rjsf/core";
+import {utils, WidgetProps} from "@rjsf/core";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
 
@@ -24,10 +24,7 @@ const TextareaWidget = ({
   schema,
   rawErrors = [],
 }: CustomWidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLTextAreaElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
   const _onBlur = ({
     target: { value },
   }: React.FocusEvent<HTMLTextAreaElement>) => onBlur(id, value);
@@ -58,7 +55,7 @@ const TextareaWidget = ({
           required={required}
           autoFocus={autofocus}
           rows={options.rows || 5}
-          onChange={_onChange}
+          onChange={onEventChange}
           onBlur={_onBlur}
           onFocus={_onFocus}
         />
