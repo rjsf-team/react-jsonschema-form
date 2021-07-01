@@ -18,7 +18,7 @@ declare module "@rjsf/core" {
     action?: string;
     additionalMetaSchemas?: ReadonlyArray<object>;
     ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
-    ArrayFieldTemplates?: {
+    arrayFieldTemplates?: {
       [name: string]: React.StatelessComponent<ArrayFieldTemplateProps>;
     };
     autoComplete?: string;
@@ -45,7 +45,7 @@ declare module "@rjsf/core" {
     noHtml5Validate?: boolean;
     noValidate?: boolean;
     ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
-    ObjectFieldTemplates?: {
+    objectFieldTemplates?: {
       [name: string]: React.StatelessComponent<ObjectFieldTemplateProps>;
     };
     omitExtraData?: boolean;

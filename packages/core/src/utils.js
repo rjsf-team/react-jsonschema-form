@@ -85,8 +85,8 @@ export function getDefaultRegistry() {
     definitions: {},
     rootSchema: {},
     formContext: {},
-    ArrayFieldTemplates: {},
-    ObjectFieldTemplates: {},
+    arrayFieldTemplates: {},
+    objectFieldTemplates: {},
   };
 }
 

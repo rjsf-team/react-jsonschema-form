@@ -2,10 +2,10 @@ import PropTypes from "prop-types";
 
 export const registry = PropTypes.shape({
   ArrayFieldTemplate: PropTypes.elementType,
-  ArrayFieldTemplates: PropTypes.objectOf(PropTypes.elementType),
+  arrayFieldTemplates: PropTypes.objectOf(PropTypes.elementType),
   FieldTemplate: PropTypes.elementType,
   ObjectFieldTemplate: PropTypes.elementType,
-  ObjectFieldTemplates: PropTypes.objectOf(PropTypes.elementType),
+  objectFieldTemplates: PropTypes.objectOf(PropTypes.elementType),
   definitions: PropTypes.object.isRequired,
   rootSchema: PropTypes.object,
   fields: PropTypes.objectOf(PropTypes.elementType).isRequired,

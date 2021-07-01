@@ -477,7 +477,7 @@ class ArrayField extends Component {
       rootSchema,
       fields,
       formContext,
-      ArrayFieldTemplates,
+      arrayFieldTemplates,
     } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, rootSchema);
@@ -533,7 +533,7 @@ class ArrayField extends Component {
     if (typeof uiSchema["ui:ArrayFieldTemplate"] === "function") {
       customComponent = uiSchema["ui:ArrayFieldTemplate"];
     } else if (typeof uiSchema["ui:ArrayFieldTemplate"] === "string") {
-      customComponent = ArrayFieldTemplates[uiSchema["ui:ArrayFieldTemplate"]];
+      customComponent = arrayFieldTemplates[uiSchema["ui:ArrayFieldTemplate"]];
     }
     const Component =
       customComponent || ArrayFieldTemplate || DefaultNormalArrayFieldTemplate;
@@ -653,7 +653,7 @@ class ArrayField extends Component {
       rootSchema,
       fields,
       formContext,
-      ArrayFieldTemplates,
+      arrayFieldTemplates,
     } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
@@ -729,7 +729,7 @@ class ArrayField extends Component {
     if (typeof uiSchema["ui:ArrayFieldTemplate"] === "function") {
       customTemplate = uiSchema["ui:ArrayFieldTemplate"];
     } else if (typeof uiSchema["ui:ArrayFieldTemplate"] === "string") {
-      customTemplate = ArrayFieldTemplates[uiSchema["ui:ArrayFieldTemplate"]];
+      customTemplate = arrayFieldTemplates[uiSchema["ui:ArrayFieldTemplate"]];
     }
     const Template = customTemplate;
     ArrayFieldTemplate || DefaultFixedArrayFieldTemplate;
