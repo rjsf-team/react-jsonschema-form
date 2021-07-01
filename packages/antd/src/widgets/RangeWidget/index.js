@@ -1,8 +1,7 @@
 /* eslint-disable no-else-return */
 import React from 'react';
-
-import { utils } from '@rjsf/core';
 import Slider from 'antd/lib/slider';
+import { utils } from '@rjsf/core';
 
 const { rangeSpec } = utils;
 
@@ -26,10 +25,7 @@ const RangeWidget = ({
 
   const { min, max, step } = rangeSpec(schema);
 
-  const emptyValue = options.emptyValue || '';
-
-  const handleChange = (nextValue) =>
-    onChange(nextValue === '' ? emptyValue : nextValue);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
 
   const handleBlur = () => onBlur(id, value);
 
@@ -43,7 +39,7 @@ const RangeWidget = ({
       max={max}
       min={min}
       onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleChange : undefined}
+      onChange={!readonly ? onEventChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       range={false}

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {utils} from '@rjsf/core';
 import Input from 'antd/lib/input';
 import InputNumber from 'antd/lib/input-number';
 
@@ -27,8 +27,7 @@ const TextWidget = ({
 
   const handleNumberChange = (nextValue) => onChange(nextValue);
 
-  const handleTextChange = ({ target }) =>
-    onChange(target.value === '' ? options.emptyValue : target.value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 
@@ -53,7 +52,7 @@ const TextWidget = ({
       id={id}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleTextChange : undefined}
+      onChange={!readonly ? onEventChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={INPUT_STYLE}

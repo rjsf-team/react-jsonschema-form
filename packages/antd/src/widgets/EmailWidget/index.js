@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { utils } from '@rjsf/core';
 import Input from 'antd/lib/input';
 
 const INPUT_STYLE = {
@@ -24,8 +24,7 @@ const EmailWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = ({ target }) =>
-    onChange(target.value === '' ? options.emptyValue : target.value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 
@@ -37,7 +36,7 @@ const EmailWidget = ({
       id={id}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleChange : undefined}
+      onChange={!readonly ? onEventChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={INPUT_STYLE}

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {utils} from '@rjsf/core';
 import Input from 'antd/lib/input';
 
 const PasswordWidget = ({
@@ -20,10 +20,7 @@ const PasswordWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const emptyValue = options.emptyValue || '';
-
-  const handleChange = ({ target }) =>
-    onChange(target.value === '' ? emptyValue : target.value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 
@@ -35,7 +32,7 @@ const PasswordWidget = ({
       id={id}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleChange : undefined}
+      onChange={!readonly ? onEventChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       value={value || ''}
