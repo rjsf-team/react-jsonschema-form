@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, utils } from "@rjsf/core";
 
 import TextField from "@material-ui/core/TextField";
 
@@ -24,10 +24,7 @@ const TextareaWidget = ({
   schema,
   rawErrors = [],
 }: CustomWidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -46,7 +43,7 @@ const TextareaWidget = ({
       multiline={true}
       rows={options.rows || 5}
       error={rawErrors.length > 0}
-      onChange={_onChange}
+      onChange={onEventChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
     />

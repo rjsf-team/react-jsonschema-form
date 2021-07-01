@@ -30,10 +30,7 @@ const TextWidget = ({
   formContext,
   ...textFieldProps
 }: TextWidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -58,7 +55,7 @@ const TextWidget = ({
       type={inputType as string}
       value={value || value === 0 ? value : ""}
       error={rawErrors.length > 0}
-      onChange={_onChange}
+      onChange={onEventChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
       {...(textFieldProps as TextFieldProps)}

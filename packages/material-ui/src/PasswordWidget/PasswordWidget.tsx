@@ -2,7 +2,7 @@ import React from "react";
 
 import TextField from "@material-ui/core/TextField";
 
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, utils } from "@rjsf/core";
 
 const PasswordWidget = ({
   id,
@@ -19,10 +19,7 @@ const PasswordWidget = ({
   schema,
   rawErrors = [],
 }: WidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -41,7 +38,7 @@ const PasswordWidget = ({
       error={rawErrors.length > 0}
       onFocus={_onFocus}
       onBlur={_onBlur}
-      onChange={_onChange}
+      onChange={onEventChange}
     />
   );
 };
