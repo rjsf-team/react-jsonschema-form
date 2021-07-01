@@ -189,7 +189,7 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, { formData: undefined });
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: "" });
     });
 
     it("should handle an empty string change event with custom ui:emptyValue", () => {
@@ -202,6 +202,21 @@ describe("StringField", () => {
       Simulate.change(node.querySelector("input"), {
         target: { value: "" },
       });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "default",
+      });
+    });
+
+    it("should render ui:EmptyValue when formData is emptyString and ui:EmptyValue is defined", () => {
+      const { onChange } = createFormComponent({
+        schema: { type: "string" },
+        uiSchema: { "ui:emptyValue": "default" },
+        formData: "",
+      });
+
+      // this simulates the re-render due to the hook.
+      act(() => {});
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: "default",
@@ -221,7 +236,7 @@ describe("StringField", () => {
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: undefined,
+        formData: "",
       });
     });
 
@@ -529,7 +544,7 @@ describe("StringField", () => {
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: undefined,
+        formData: "",
       });
     });
 
@@ -546,6 +561,24 @@ describe("StringField", () => {
       Simulate.change(node.querySelector("textarea"), {
         target: { value: "" },
       });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: "default",
+      });
+    });
+
+    it("should render ui:EmptyValue when formData is emptyString and ui:EmptyValue is defined", () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: "string" },
+        uiSchema: {
+          "ui:widget": "textarea",
+          "ui:emptyValue": "default",
+        },
+        formData: "",
+      });
+
+      // this simulates the re-render due to the hook.
+      act(() => {});
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: "default",

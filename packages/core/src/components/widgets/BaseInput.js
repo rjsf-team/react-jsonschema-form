@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { hooks } from '../../utils';
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
@@ -21,8 +22,11 @@ function BaseInput(props) {
     formContext,
     registry,
     rawErrors,
+    onChange,
     ...inputProps
   } = props;
+
+  const { eventOnChange } = hooks.useEmptyValueOnChange({ onChange, options, value });
 
   // If options.inputType is set use that as the input type
   if (options.inputType) {
@@ -62,10 +66,6 @@ function BaseInput(props) {
     inputProps.max = schema.maximum;
   }
 
-  const _onChange = ({ target: { value } }) => {
-    return props.onChange(value === "" ? options.emptyValue : value);
-  };
-
   return [
     <input
       key={inputProps.id}
@@ -76,7 +76,7 @@ function BaseInput(props) {
       value={value == null ? "" : value}
       {...inputProps}
       list={schema.examples ? `examples_${inputProps.id}` : null}
-      onChange={_onChange}
+      onChange={eventOnChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
       onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
     />,

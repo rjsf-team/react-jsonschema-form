@@ -7,6 +7,11 @@ import jsonpointer from "jsonpointer";
 import fields from "./components/fields";
 import widgets from "./components/widgets";
 import validateFormData, { isValid } from "./validate";
+import useEmptyValueOnChange from './hooks/useEmptyValueOnChange';
+
+export const hooks = {
+  useEmptyValueOnChange
+};
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 

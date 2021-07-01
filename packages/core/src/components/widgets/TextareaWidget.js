@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {hooks} from '../../utils';
 
 function TextareaWidget(props) {
   const {
@@ -15,9 +16,7 @@ function TextareaWidget(props) {
     onBlur,
     onFocus,
   } = props;
-  const _onChange = ({ target: { value } }) => {
-    return onChange(value === "" ? options.emptyValue : value);
-  };
+  const { eventOnChange } = hooks.useEmptyValueOnChange({ onChange, options, value });
   return (
     <textarea
       id={id}
@@ -31,7 +30,7 @@ function TextareaWidget(props) {
       rows={options.rows}
       onBlur={onBlur && (event => onBlur(id, event.target.value))}
       onFocus={onFocus && (event => onFocus(id, event.target.value))}
-      onChange={_onChange}
+      onChange={eventOnChange}
     />
   );
 }
