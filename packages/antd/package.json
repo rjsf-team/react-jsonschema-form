@@ -33,7 +33,7 @@
     "antd-dayjs-webpack-plugin": "1.0.0",
     "dayjs": "^1.8.0",
     "lodash": "^4.17.15",
-    "react": ">=16"
+    "react": ">=16.8.0"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.0.0",

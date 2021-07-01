@@ -20,7 +20,7 @@
   "peerDependencies": {
     "@fluentui/react": "^7.114.2",
     "@rjsf/core": "^2.0.0",
-    "react": ">=16"
+    "react": ">=16.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",

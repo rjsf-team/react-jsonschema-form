@@ -32,7 +32,7 @@
     "node": ">=12"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16.8.0"
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.1",

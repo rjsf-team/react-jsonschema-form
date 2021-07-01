@@ -15,7 +15,7 @@
   },
   "peerDependencies": {
     "@rjsf/core": "^2.0.0-alpha.6",
-    "react": ">=16",
+    "react": ">=16.8.0",
     "react-bootstrap": "^1.0.1"
   },
   "engineStrict": false,
