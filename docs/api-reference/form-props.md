@@ -18,6 +18,10 @@ This prop allows you to validate the form data against another JSON Schema meta 
 
 React component used to customize how alls arrays are rendered on the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
 
+## arrayFieldTemplates
+
+Dictionary of templates React to customize how arrays are rendered on the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
+
 ## autoComplete
 
 The value of this prop will be passed to the `autocomplete` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-autocomplete).
@@ -36,17 +40,18 @@ You can provide custom buttons to your form via the `Form` component's `children
 
 ```jsx
 const schema = {
-  type: "string"
+  type: "string",
 };
 
-render((
+render(
   <Form schema={schema}>
     <div>
       <button type="submit">Submit</button>
       <button type="button">Cancel</button>
     </div>
-  </Form>
-), document.getElementById("app"));
+  </Form>,
+  document.getElementById("app")
+);
 ```
 
 > **Warning:** There needs to be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
@@ -61,13 +66,10 @@ It's possible to disable the whole form by setting the `disabled` prop. The `dis
 
 ```jsx
 const schema = {
-  type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema}
-        disabled />
-), document.getElementById("app"));
+render(<Form schema={schema} disabled />, document.getElementById("app"));
 ```
 
 If you just want to disable some of the fields, see the `ui:disabled` parameter in `uiSchema`.
@@ -110,13 +112,13 @@ To avoid collisions with existing ids in the DOM, it is possible to change the p
 
 ```jsx
 const schema = {
-  type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema}
-        idPrefix={"rjsf_prefix"}/>
-), document.getElementById("app"));
+render(
+  <Form schema={schema} idPrefix={"rjsf_prefix"} />,
+  document.getElementById("app")
+);
 ```
 
 This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key">`
@@ -149,6 +151,10 @@ If set to true, turns off all validation. Set to `false` by default.
 
 React component used to customize how all objects are rendered in the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
 
+## objectFieldTemplates
+
+Dictionary of templates React to customize how object are rendered on the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
+
 ## omitExtraData
 
 If set to true, then extra form data values that are not in any form field will be removed whenever `onSubmit` is called. Set to `false` by default.
@@ -167,14 +173,14 @@ To react when submitted form data are invalid, pass an `onError` handler. It wil
 
 ```jsx
 const schema = {
-  type: "string"
+  type: "string",
 };
-const onError = (errors) => console.log("I have", errors.length, "errors to fix");
+const onError = errors => console.log("I have", errors.length, "errors to fix");
 
-render((
-  <Form schema={schema}
-        onError={onError} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} onError={onError} />,
+  document.getElementById("app")
+);
 ```
 
 ## onFocus
@@ -187,14 +193,14 @@ You can pass a function as the `onSubmit` prop of your `Form` component to liste
 
 ```jsx
 const schema = {
-  type: "string"
+  type: "string",
 };
-const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
+const onSubmit = ({ formData }, e) => console.log("Data submitted: ", formData);
 
-render((
-  <Form schema={schema}
-        onSubmit={onSubmit} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} onSubmit={onSubmit} />,
+  document.getElementById("app")
+);
 ```
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
@@ -212,13 +218,10 @@ When this prop is set to true, a list of errors (or the custom error list define
 It's possible to change the default `form` tag name to a different HTML tag, which can be helpful if you are nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no longer work.
 
 ```jsx
-<Form
-  tagName="div"
-/>
+<Form tagName="div" />
 ```
 
 You can also provide a class/function component.
-
 
 ```jsx
 const CustomForm = props => <form {...props} style={...} className={...} />
