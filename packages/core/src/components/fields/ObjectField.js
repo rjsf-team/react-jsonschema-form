@@ -193,7 +193,7 @@ class ObjectField extends Component {
       registry = getDefaultRegistry(),
     } = this.props;
 
-    const { rootSchema, fields, formContext } = registry;
+    const { rootSchema, fields, formContext, objectFieldTemplates } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, rootSchema, formData);
 
@@ -214,9 +214,14 @@ class ObjectField extends Component {
         </div>
       );
     }
-
+    let customTemplate;
+    if (typeof uiSchema["ui:ObjectFieldTemplate"] === "function") {
+      customTemplate = uiSchema["ui:ObjectFieldTemplate"];
+    } else if (typeof uiSchema["ui:ObjectFieldTemplate"] === "string") {
+      customTemplate = objectFieldTemplates[uiSchema["ui:ObjectFieldTemplate"]];
+    }
     const Template =
-      uiSchema["ui:ObjectFieldTemplate"] ||
+      customTemplate ||
       registry.ObjectFieldTemplate ||
       DefaultObjectFieldTemplate;
 
