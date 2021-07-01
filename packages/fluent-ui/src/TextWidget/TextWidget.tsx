@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, utils } from "@rjsf/core";
 import _pick from "lodash/pick";
 
 // Keys of ITextFieldProps from @fluentui/react
@@ -59,10 +59,7 @@ const TextWidget = ({
   schema,
   rawErrors,
 }: WidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+  const {onEventChange} = utils.hooks.useEmptyValueOnChange({onChange, options, value});
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -85,7 +82,7 @@ const TextWidget = ({
       // name={name}
       type={inputType as string}
       value={value ? value : ""}
-      onChange={_onChange as any}
+      onChange={onEventChange as any}
       onBlur={_onBlur}
       onFocus={_onFocus}
       errorMessage={(rawErrors || []).join("\n")}
