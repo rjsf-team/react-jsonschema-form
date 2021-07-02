@@ -2,7 +2,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import React from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
-import { findDOMNode } from "react-dom";
+import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
 import { createRef } from "create-react-ref";
 
@@ -375,6 +375,17 @@ describeRepeated("Form common", createFormComponent => {
   });
 
   describe("Custom submit buttons", () => {
+    // Submit events on buttons are not fired on disconnected forms
+    // So we need to add the DOM tree to the body in this case.
+    // See: https://github.com/jsdom/jsdom/pull/1865
+    // https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected
+    const domNode = document.createElement("div");
+    beforeEach(() => {
+      document.body.appendChild(domNode);
+    });
+    afterEach(() => {
+      document.body.removeChild(domNode);
+    });
     it("should submit the form when clicked", done => {
       let submitCount = 0;
       const onSubmit = () => {
@@ -384,11 +395,12 @@ describeRepeated("Form common", createFormComponent => {
         }
       };
 
-      const comp = renderIntoDocument(
+      const comp = render(
         <Form onSubmit={onSubmit} schema={{}}>
-          <button type="submit">Submit</button>
-          <button type="submit">Another submit</button>
-        </Form>
+          <button type="submit" value="Submit button" />
+          <button type="submit" value="Another submit button" />
+        </Form>,
+        domNode
       );
       const node = findDOMNode(comp);
       const buttons = node.querySelectorAll("button[type=submit]");

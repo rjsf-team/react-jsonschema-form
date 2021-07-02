@@ -34,7 +34,7 @@ function ArrayFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ArrayFieldTemplate={ArrayFieldTemplate} />,
+        ArrayFieldTemplate={ArrayFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -111,7 +111,7 @@ function CustomFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        FieldTemplate={CustomFieldTemplate} />,
+        FieldTemplate={CustomFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -145,7 +145,9 @@ The following props are passed to a custom field template component:
 - `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
+- `onChange`: The value change event handler; Can be called with a new value to change the value for this field.
 - `formContext`: The `formContext` object that you passed to Form.
+- `formData`: The formData for this field.
 - `registry`: The `registry` object.
 
 > Note: you can only define a single global field template for a form, but you can set individual field templates per property using `"ui:FieldTemplate"`.
@@ -179,7 +181,7 @@ function ObjectFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ObjectFieldTemplate={ObjectFieldTemplate} />,
+        ObjectFieldTemplate={ObjectFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -217,5 +219,6 @@ The following props are part of each element in `properties`:
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `readonly`: A boolean value stating if the property is read-only.
+- `hidden`: A boolean value stating if the property should be hidden.
 
 > Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an object field template, you may need to specify both `ui:FieldTemplate` and `ui:ObjectFieldTemplate`.

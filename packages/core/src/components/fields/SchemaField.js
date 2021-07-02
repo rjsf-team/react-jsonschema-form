@@ -85,14 +85,22 @@ function LabelInput(props) {
 }
 
 function Help(props) {
-  const { help } = props;
+  const { id, help } = props;
   if (!help) {
     return null;
   }
   if (typeof help === "string") {
-    return <p className="help-block">{help}</p>;
+    return (
+      <p id={id} className="help-block">
+        {help}
+      </p>
+    );
   }
-  return <div className="help-block">{help}</div>;
+  return (
+    <div id={id} className="help-block">
+      {help}
+    </div>
+  );
 }
 
 function ErrorList(props) {
@@ -230,6 +238,7 @@ function SchemaFieldRender(props) {
     errorSchema,
     idPrefix,
     name,
+    onChange,
     onKeyChange,
     onDropPropertyClick,
     required,
@@ -279,7 +288,6 @@ function SchemaFieldRender(props) {
     />
   );
 
-  const { type } = schema;
   const id = idSchema.$id;
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
@@ -300,7 +308,7 @@ function SchemaFieldRender(props) {
   const classNames = [
     "form-group",
     "field",
-    `field-${type}`,
+    `field-${schema.type}`,
     errors && errors.length > 0 ? "field-error has-error has-danger" : "",
     uiSchema.classNames,
   ]
@@ -316,13 +324,14 @@ function SchemaFieldRender(props) {
       />
     ),
     rawDescription: description,
-    help: <Help help={help} />,
+    help: <Help id={id + "__help"} help={help} />,
     rawHelp: typeof help === "string" ? help : undefined,
     errors: <ErrorList errors={errors} />,
     rawErrors: errors,
     id,
     label,
     hidden,
+    onChange,
     onKeyChange,
     onDropPropertyClick,
     required,
@@ -331,6 +340,7 @@ function SchemaFieldRender(props) {
     displayLabel,
     classNames,
     formContext,
+    formData,
     fields,
     schema,
     uiSchema,
@@ -360,7 +370,9 @@ function SchemaFieldRender(props) {
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.anyOf}
+            options={schema.anyOf.map(_schema =>
+              retrieveSchema(_schema, rootSchema, formData)
+            )}
             baseType={schema.type}
             registry={registry}
             schema={schema}
@@ -378,7 +390,9 @@ function SchemaFieldRender(props) {
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.oneOf}
+            options={schema.oneOf.map(_schema =>
+              retrieveSchema(_schema, rootSchema, formData)
+            )}
             baseType={schema.type}
             registry={registry}
             schema={schema}

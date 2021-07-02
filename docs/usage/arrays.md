@@ -105,7 +105,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema} uiSchema={schema} />
+  <Form schema={schema} uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 
@@ -128,7 +128,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema} uiSchema={schema} />
+  <Form schema={schema} uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 
@@ -151,7 +151,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema} uiSchema={schema} />
+  <Form schema={schema} uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 

@@ -30,6 +30,7 @@ export function makeWidgetMockProps(
     options: {},
     formContext: {},
     id: "_id",
+    placeholder: "",
     ...props,
   };
 }

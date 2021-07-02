@@ -2,7 +2,7 @@
 
 [Please describe them here]
 
-If this is related to existing tickets, include links to them as well.
+If this is related to existing tickets, include links to them as well. Use the syntax `fixes #[issue number]` (ex: `fixes #123`).
 
 ### Checklist
 
@@ -13,3 +13,4 @@ If this is related to existing tickets, include links to them as well.
   - [ ] I've updated [docs](https://react-jsonschema-form.readthedocs.io/) if needed
 * [ ] **I'm adding a new feature**
   - [ ] I've updated the playground with an example use of the feature
+

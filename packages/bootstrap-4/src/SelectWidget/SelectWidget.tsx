@@ -84,7 +84,6 @@ const SelectWidget = ({
         as="select"
         custom
         id={id}
-        name={name}
         value={typeof value === "undefined" ? emptyValue : value}
         required={required}
         multiple={multiple}

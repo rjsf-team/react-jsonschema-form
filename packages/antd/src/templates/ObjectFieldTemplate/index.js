@@ -9,7 +9,7 @@ import Row from 'antd/lib/row';
 import { withConfigConsumer } from 'antd/lib/config-provider/context';
 import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
 
-const { getUiOptions } = utils;
+const { canExpand } = utils;
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: '8px',
@@ -75,26 +75,6 @@ const ObjectFieldTemplate = ({
     return defaultColSpan;
   };
 
-  const filterHidden = (element) =>
-    element.content.props.uiSchema['ui:widget'] !== 'hidden';
-
-  const canExpand = () => {
-    if (!schema.additionalProperties) {
-      return false;
-    }
-
-    const { expandable } = getUiOptions(uiSchema);
-    if (expandable === false) {
-      return expandable;
-    }
-
-    if (schema.maxProperties !== undefined) {
-      return Object.keys(formData).length < schema.maxProperties;
-    }
-
-    return true;
-  };
-
   return (
     <fieldset id={idSchema.$id}>
       <Row gutter={rowGutter}>
@@ -116,14 +96,14 @@ const ObjectFieldTemplate = ({
               />
             </Col>
           )}
-        {properties.filter(filterHidden).map((element) => (
+        {properties.filter((e) => !e.hidden).map((element) => (
           <Col key={element.name} span={calculateColSpan(element)}>
             {element.content}
           </Col>
         ))}
       </Row>
 
-      {canExpand() && (
+      {canExpand(schema, uiSchema, formData) && (
         <Col span={24}>
           <Row gutter={rowGutter} justify="end">
             <Col flex="192px">

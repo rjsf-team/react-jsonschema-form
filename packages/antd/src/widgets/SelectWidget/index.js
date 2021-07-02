@@ -75,8 +75,6 @@ const SelectWidget = ({
   const stringify = (currentValue) =>
     Array.isArray(currentValue) ? value.map(String) : String(value);
 
-  console.log(placeholder);
-
   return (
     <Select
       autoFocus={autofocus}
@@ -94,7 +92,7 @@ const SelectWidget = ({
     >
       {enumOptions.map(({ value: optionValue, label: optionLabel }) => (
         <Select.Option
-          disabled={enumDisabled && enumDisabled.indexOf(value) !== -1}
+          disabled={enumDisabled && enumDisabled.indexOf(optionValue) !== -1}
           key={String(optionValue)}
           value={String(optionValue)}
         >

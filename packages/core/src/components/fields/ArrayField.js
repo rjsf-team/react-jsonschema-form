@@ -1,7 +1,7 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
-import includes from "core-js/library/fn/array/includes";
+import includes from "core-js-pure/es/array/includes";
 import * as types from "../../types";
 
 import {
@@ -17,7 +17,7 @@ import {
   toIdSchema,
   getDefaultRegistry,
 } from "../../utils";
-import shortid from "shortid";
+import { nanoid } from "nanoid";
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
@@ -178,7 +178,7 @@ function DefaultNormalArrayFieldTemplate(props) {
 }
 
 function generateRowId() {
-  return shortid.generate();
+  return nanoid();
 }
 
 function generateKeyedFormData(formData) {
@@ -224,8 +224,8 @@ class ArrayField extends Component {
         updatedKeyedFormData: false,
       };
     }
-    const nextFormData = nextProps.formData;
-    const previousKeyedFormData = prevState.keyedFormData;
+    const nextFormData = nextProps.formData || [];
+    const previousKeyedFormData = prevState.keyedFormData || [];
     const newKeyedFormData =
       nextFormData.length === previousKeyedFormData.length
         ? previousKeyedFormData.map((previousKeyedFormDatum, index) => {

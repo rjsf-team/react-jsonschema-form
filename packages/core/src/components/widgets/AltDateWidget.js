@@ -63,8 +63,13 @@ class AltDateWidget extends Component {
     this.state = parseDateString(props.value, props.time);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState(parseDateString(nextProps.value, nextProps.time));
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevProps.value &&
+      prevProps.value !== parseDateString(this.props.value, this.props.time)
+    ) {
+      this.setState(parseDateString(this.props.value, this.props.time));
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
