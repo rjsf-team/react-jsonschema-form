@@ -539,13 +539,13 @@ class ArrayField extends Component {
       disabled,
       readonly,
       required,
-      label,
       placeholder,
       autofocus,
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
       rawErrors,
+      name,
     } = this.props;
     const items = this.props.formData;
     const { widgets, rootSchema, formContext } = registry;
@@ -570,7 +570,7 @@ class ArrayField extends Component {
         disabled={disabled}
         readonly={readonly}
         required={required}
-        label={label}
+        label={name}
         placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
