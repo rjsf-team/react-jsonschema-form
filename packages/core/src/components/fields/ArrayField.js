@@ -550,6 +550,7 @@ class ArrayField extends Component {
     const items = this.props.formData;
     const { widgets, rootSchema, formContext } = registry;
     const itemsSchema = retrieveSchema(schema.items, rootSchema, formData);
+    const title = schema.title || name;
     const enumOptions = optionsList(itemsSchema);
     const { widget = "select", ...options } = {
       ...getUiOptions(uiSchema),
@@ -570,7 +571,7 @@ class ArrayField extends Component {
         disabled={disabled}
         readonly={readonly}
         required={required}
-        label={name}
+        label={title}
         placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
