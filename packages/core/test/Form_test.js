@@ -3261,7 +3261,7 @@ describe("Form omitExtraData and liveOmit", () => {
   });
 });
 
-it("Calling onChange right after updating a Form with props formData", () => {
+describe("Calling onChange right after updating a Form with props formData", () => {
   const schema = {
     type: "array",
     items: {
