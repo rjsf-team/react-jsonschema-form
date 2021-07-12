@@ -321,6 +321,7 @@ export function isValid(schema, data, rootSchema) {
     }
     return ajv.validate(withIdRefPrefix(schema), data);
   } catch (e) {
+    console.warn("Encountered error while validating schema", e);
     return false;
   }
 }

@@ -14,7 +14,6 @@ describe("allOf", () => {
   });
 
   it("should render a regular input element with a single type, when multiple types specified", () => {
-    // I think that this is wrong
     const schema = {
       type: "object",
       properties: {
@@ -31,7 +30,7 @@ describe("allOf", () => {
     expect(node.querySelectorAll("input")).to.have.length.of(1);
   });
 
-  it("should properly merge multiple schemas as per https://json-schema.org/understanding-json-schema/reference/combining.html", () => {
+  it("should properly merge multiple schemas with refs", () => {
     const schema = {
       definitions: {
         address: {
