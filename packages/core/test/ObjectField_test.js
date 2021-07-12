@@ -658,6 +658,29 @@ describe("ObjectField", () => {
       });
     });
 
+    it("uses a custom separator between the duplicate key name and the suffix", () => {
+      const formData = {
+        first: 1,
+        second: 2,
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: {
+          "ui:DuplicateKeySuffixSeparator": "_",
+        },
+      });
+
+      const textNode = node.querySelector("#root_first-key");
+      Simulate.blur(textNode, {
+        target: { value: "second" },
+      });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { second: 2, second_1: 1 },
+      });
+    });
+
     it("should not attach suffix when input is only clicked", () => {
       const formData = {
         first: 1,

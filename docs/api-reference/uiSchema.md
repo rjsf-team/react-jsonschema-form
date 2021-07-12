@@ -218,5 +218,18 @@ const uiSchema = {
   "ui:title": "Your password"
 };
 ```
+
+## Duplicate Key Suffix Separator
+
+When using `additionalProperties`, key collision is prevented by appending a unique suffix to the duplicate key. For example, when you add a key named `myKey` to a form where `myKey` is already described, then your new key will become `myKey-1`.
+
+With `ui:DuplicateKeySuffixSeparator`, you can change the `"-"` to a string of your choice, such as an underscore (`"_"`), or the empty string (`""`).
+
+```js
+const uiSchema = {
+  "ui:DuplicateKeySuffixSeparator": "_",
+};
+```
+
 ## Theme Options
 [Semantic UI](themes/semantic-ui/uiSchema.md)

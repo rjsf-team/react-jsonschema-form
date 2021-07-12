@@ -98,11 +98,11 @@ class ObjectField extends Component {
     };
   };
 
-  getAvailableKey = (preferredKey, formData) => {
+  getAvailableKey = (preferredKey, formData, separator = "-") => {
     var index = 0;
     var newKey = preferredKey;
     while (formData.hasOwnProperty(newKey)) {
-      newKey = `${preferredKey}-${++index}`;
+      newKey = `${preferredKey}${separator}${++index}`;
     }
     return newKey;
   };
@@ -113,7 +113,11 @@ class ObjectField extends Component {
         return;
       }
 
-      value = this.getAvailableKey(value, this.props.formData);
+      value = this.getAvailableKey(
+        value,
+        this.props.formData,
+        this.props.uiSchema["ui:DuplicateKeySuffixSeparator"]
+      );
       const newFormData = { ...this.props.formData };
       const newKeys = { [oldValue]: value };
       const keyValues = Object.keys(newFormData).map(key => {
@@ -171,7 +175,11 @@ class ObjectField extends Component {
     }
 
     newFormData[
-      this.getAvailableKey("newKey", newFormData)
+      this.getAvailableKey(
+        "newKey",
+        newFormData,
+        this.props.uiSchema["ui:DuplicateKeySuffixSeparator"]
+      )
     ] = this.getDefaultValue(type);
 
     this.props.onChange(newFormData);
@@ -202,6 +210,17 @@ class ObjectField extends Component {
     let orderedProperties;
     try {
       const properties = Object.keys(schema.properties || {});
+      // Order properties so additional properties are always last
+      // There may be an issue that our conditional logic is causing that this fixes, so this may need to be rolled back
+      // const properties = [
+      //   ...Object.keys(schema.properties || {}).filter(
+      //     key => !schema.properties[key][ADDITIONAL_PROPERTY_FLAG]
+      //   ),
+      //   ...Object.keys(schema.properties || {}).filter(
+      //     key => schema.properties[key][ADDITIONAL_PROPERTY_FLAG]
+      //   ),
+      // ];
+
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
     } catch (err) {
       return (
