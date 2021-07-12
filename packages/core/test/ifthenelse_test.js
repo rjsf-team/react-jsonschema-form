@@ -287,4 +287,138 @@ describe("conditional items", () => {
       expect(node.querySelector("input[label=postcode]")).not.eql(null);
     });
   });
+
+  it("handles nested if then else", () => {
+    const schemaWithNested = {
+      $schema: "http://json-schema.org/draft-07/schema#",
+      type: "object",
+      properties: {
+        country: {
+          enum: ["USA"],
+        },
+      },
+      required: ["country"],
+      if: {
+        properties: {
+          country: {
+            const: "USA",
+          },
+        },
+        required: ["country"],
+      },
+      then: {
+        properties: {
+          state: {
+            type: "string",
+            anyOf: [
+              {
+                const: "California",
+              },
+              {
+                const: "New York",
+              },
+            ],
+          },
+        },
+        required: ["state"],
+        if: {
+          properties: {
+            state: {
+              const: "New York",
+            },
+          },
+          required: ["state"],
+        },
+        then: {
+          properties: {
+            city: {
+              type: "string",
+              anyOf: [
+                {
+                  const: "New York City",
+                },
+                {
+                  const: "Buffalo",
+                },
+                {
+                  const: "Rochester",
+                },
+              ],
+            },
+          },
+        },
+        else: {
+          if: {
+            properties: {
+              state: {
+                const: "California",
+              },
+            },
+            required: ["state"],
+          },
+          then: {
+            properties: {
+              city: {
+                type: "string",
+                anyOf: [
+                  {
+                    const: "Los Angeles",
+                  },
+                  {
+                    const: "San Diego",
+                  },
+                  {
+                    const: "San Jose",
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const formData = {
+      country: "USA",
+      state: "California",
+    };
+    const { node } = createFormComponent({
+      schema: schemaWithNested,
+      formData,
+    });
+    expect(node.querySelector("select[id=root_country]")).not.eql(null);
+    expect(node.querySelector("select[id=root_state]")).not.eql(null);
+    expect(node.querySelector("select[id=root_city]")).not.eql(null);
+  });
+
+  it("handles additionalProperties with if then else", () => {
+    /**
+     * Ensures that fields defined in "then" or "else" (e.g. zipcode) are handled
+     * with regular form fields, not as additional properties
+     */
+
+    const formData = {
+      country: "United States of America",
+      zipcode: "12345",
+      otherKey: "otherValue",
+    };
+    const { node } = createFormComponent({
+      schema: {
+        ...schema,
+        additionalProperties: true,
+      },
+      formData,
+    });
+
+    // The zipcode field exists, but not as an additional property
+    expect(node.querySelector("input[label=zipcode]")).not.eql(null);
+    expect(
+      node.querySelector("div.form-additional input[label=zipcode]")
+    ).to.eql(null);
+
+    // The "otherKey" field exists as an additional property
+    expect(
+      node.querySelector("div.form-additional input[label=otherKey]")
+    ).not.eql(null);
+  });
 });
