@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/playground",
-  "version": "2.5.1",
+  "version": "3.0.0",
   "description": "rjsf playground",
   "private": true,
   "scripts": {
@@ -39,12 +39,12 @@
     "@babel/runtime-corejs3": "^7.11.2",
     "@fluentui/react": "^7.121.5",
     "@material-ui/core": "^4.9.4",
-    "@rjsf/antd": "^2.5.1",
-    "@rjsf/bootstrap-4": "^2.5.1",
-    "@rjsf/core": "^2.5.1",
-    "@rjsf/fluent-ui": "^2.5.1",
-    "@rjsf/material-ui": "^2.5.1",
-    "@rjsf/semantic-ui": "^2.5.1",
+    "@rjsf/antd": "^3.0.0",
+    "@rjsf/bootstrap-4": "^3.0.0",
+    "@rjsf/core": "^3.0.0",
+    "@rjsf/fluent-ui": "^3.0.0",
+    "@rjsf/material-ui": "^3.0.0",
+    "@rjsf/semantic-ui": "^3.0.0",
     "ajv": "^6.7.0",
     "antd": "^4.3.5",
     "core-js": "^3.6.5",
@@ -58,8 +58,7 @@
     "react-app-polyfill": "^1.0.4",
     "react-bootstrap": "^0.33.1",
     "react-frame-component": "^4.1.1",
-    "react-is": "^16.9.0",
-    "shortid": "^2.2.14"
+    "react-is": "^16.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",

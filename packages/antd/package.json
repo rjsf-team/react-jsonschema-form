@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "2.5.1",
+  "version": "3.0.0",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
@@ -44,7 +44,7 @@
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@rjsf/core": "^2.5.1",
+    "@rjsf/core": "^3.0.0",
     "antd": "^4.0.0",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
@@ -95,6 +95,5 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {}
+  }
 }

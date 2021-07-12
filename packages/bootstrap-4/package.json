@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/bootstrap-4",
-  "version": "2.5.1",
+  "version": "3.0.0",
   "main": "dist/index.js",
   "module": "dist/bootstrap-4.esm.js",
   "typings": "dist/index.d.ts",
@@ -28,7 +28,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.8.3",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "@rjsf/core": "^2.5.1",
+    "@rjsf/core": "^3.0.0",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.7",
     "@types/react": "^16.9.23",
