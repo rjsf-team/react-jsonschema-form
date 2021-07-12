@@ -301,17 +301,26 @@ export function withIdRefPrefix(schemaNode) {
  */
 export function isValid(schema, data, rootSchema) {
   try {
-    // add the rootSchema ROOT_SCHEMA_PREFIX as id.
+    // add the rootSchema. if it has no $id, use ROOT_SCHEMA_PREFIX as the cache key.
     // then rewrite the schema ref's to point to the rootSchema
     // this accounts for the case where schema have references to models
     // that lives in the rootSchema but not in the schema in question.
-    return ajv
-      .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
-      .validate(withIdRefPrefix(schema), data);
+    let rootSchemaAdded;
+    if (rootSchema.$id) {
+      rootSchemaAdded = !!ajv.getSchema(rootSchema.$id);
+    } else {
+      rootSchemaAdded = !!ajv.getSchema(ROOT_SCHEMA_PREFIX);
+    }
+
+    if (!rootSchemaAdded) {
+      if (rootSchema.$id) {
+        ajv.addSchema(rootSchema);
+      } else {
+        ajv.addSchema(rootSchema, ROOT_SCHEMA_PREFIX);
+      }
+    }
+    return ajv.validate(withIdRefPrefix(schema), data);
   } catch (e) {
     return false;
-  } finally {
-    // make sure we remove the rootSchema from the global ajv instance
-    ajv.removeSchema(ROOT_SCHEMA_PREFIX);
   }
 }
