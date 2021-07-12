@@ -91,6 +91,9 @@ export default class Form extends Component {
 
   onSubmit = (event) => {
     event.preventDefault();
+    if (this.props.stopPropagation) {
+      event.stopPropagation();
+    }
     this.setState({status: "submitted"});
 
     if (!this.props.noValidate) {
