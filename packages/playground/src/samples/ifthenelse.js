@@ -2,74 +2,32 @@ module.exports = {
   schema: {
     type: "object",
     properties: {
+      street_address: {
+        type: "string",
+      },
       country: {
-        enum: [
-          "United States of America",
-          "United Kingdom",
-          "France",
-          "Germany",
-        ],
         default: "United States of America",
+        enum: ["United States of America", "Canada"],
       },
     },
-    required: ["country"],
-    definitions: {
-      uk: {
-        properties: {
-          post_code: {
-            type: "string",
-          },
+    if: {
+      properties: { country: { const: "United States of America" } },
+    },
+    then: {
+      properties: {
+        zip_code: {
+          type: "string",
+          pattern: "[0-9]{5}(-[0-9]{4})?",
         },
       },
     },
-    allOf: [
-      {
-        if: {
-          properties: {
-            country: {
-              const: "United States of America",
-              default: "",
-            },
-          },
-        },
-        then: {
-          properties: {
-            zip_code: {
-              type: "string",
-            },
-          },
+    else: {
+      properties: {
+        postal_code: {
+          type: "string",
+          pattern: "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]",
         },
       },
-      {
-        if: {
-          properties: {
-            country: {
-              const: "United Kingdom",
-              default: "",
-            },
-          },
-        },
-        then: {
-          $ref: "#/definitions/uk",
-        },
-      },
-      {
-        if: {
-          properties: {
-            country: {
-              const: "France",
-              default: "",
-            },
-          },
-        },
-        then: {
-          properties: {
-            phone_number: {
-              type: "string",
-            },
-          },
-        },
-      },
-    ],
+    },
   },
 };
