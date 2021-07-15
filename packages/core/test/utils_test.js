@@ -2327,67 +2327,6 @@ describe("utils", () => {
         });
       });
     });
-
-    describe("allOf", () => {
-      it("should merge types", () => {
-        const schema = {
-          allOf: [{ type: ["string", "number", "null"] }, { type: "string" }],
-        };
-        const definitions = {};
-        const formData = {};
-        expect(retrieveSchema(schema, { definitions }, formData)).eql({
-          type: "string",
-        });
-      });
-      it("should not merge incompatible types", () => {
-        sandbox.stub(console, "warn");
-        const schema = {
-          allOf: [{ type: "string" }, { type: "boolean" }],
-        };
-        const definitions = {};
-        const formData = {};
-        expect(retrieveSchema(schema, { definitions }, formData)).eql({});
-        expect(
-          console.warn.calledWithMatch(/could not merge subschemas in allOf/)
-        ).to.be.true;
-      });
-      it("should merge types with $ref in them", () => {
-        const schema = {
-          allOf: [{ $ref: "#/definitions/1" }, { $ref: "#/definitions/2" }],
-        };
-        const definitions = {
-          "1": { type: "string" },
-          "2": { minLength: 5 },
-        };
-        const formData = {};
-        expect(retrieveSchema(schema, { definitions }, formData)).eql({
-          type: "string",
-          minLength: 5,
-        });
-      });
-      it("should properly merge schemas with nested allOf's", () => {
-        const schema = {
-          allOf: [
-            {
-              type: "string",
-              allOf: [{ minLength: 2 }, { maxLength: 5 }],
-            },
-            {
-              type: "string",
-              allOf: [{ default: "hi" }, { minLength: 4 }],
-            },
-          ],
-        };
-        const definitions = {};
-        const formData = {};
-        expect(retrieveSchema(schema, { definitions }, formData)).eql({
-          type: "string",
-          minLength: 4,
-          maxLength: 5,
-          default: "hi",
-        });
-      });
-    });
   });
 
   describe("shouldRender", () => {
