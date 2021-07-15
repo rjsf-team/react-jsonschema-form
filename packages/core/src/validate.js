@@ -1,7 +1,10 @@
 import toPath from "lodash/toPath";
 import Ajv from "ajv";
 let ajv;
-import { getDefaultFormState } from "./utils";
+let previousSchema;
+let previousMetaSchemas;
+let previousFormats;
+import { deepEquals, getDefaultFormState } from "./utils";
 
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
@@ -161,7 +164,7 @@ function transformAjvErrors(errors = []) {
 }
 
 let validate;
-
+let compileError;
 /**
  * This function processes the formData with a user `validate` contributed
  * function, which receives the form data and an `errorHandler` object that
@@ -179,10 +182,26 @@ export default function validateFormData(
   const rootSchema = schema;
   formData = getDefaultFormState(schema, formData, rootSchema, true);
 
+  const schemaChanged = !deepEquals(previousSchema, schema);
+  const metaSchemasChanged = !deepEquals(
+    previousMetaSchemas,
+    additionalMetaSchemas
+  );
+  const formatsChanged = !deepEquals(previousFormats, customFormats);
+
   // TODO: this will not work if root schema changes, or if additional metaschemas or formats are added after-the-fact
   // Maybe we should map the (schema, metaschema, format) tuple to a cached ajv instance and/or compiled validator?
   // It's also a bad idea to put off compiling the validator until validation-time, but that will require a larger re-write
-  if (validate == null) {
+  if (
+    validate == null ||
+    schemaChanged ||
+    metaSchemasChanged ||
+    formatsChanged
+  ) {
+    compileError = null;
+    previousSchema = schema;
+    previousMetaSchemas = additionalMetaSchemas;
+    previousFormats = customFormats;
     ajv = createAjvInstance();
 
     // add more schemas to validate against
@@ -196,25 +215,32 @@ export default function validateFormData(
         ajv.addFormat(formatName, customFormats[formatName]);
       });
     }
-    validate = ajv.compile(schema);
+    try {
+      validate = ajv.compile(schema);
+    } catch (e) {
+      compileError = e;
+    }
   }
 
-  let validationError = null;
-  validate(formData);
-
-  let errors = transformAjvErrors(validate.errors);
+  let errors;
+  if (!compileError) {
+    validate(formData);
+    errors = transformAjvErrors(validate.errors);
+  } else {
+    errors = transformAjvErrors(ajv.errors);
+  }
 
   const noProperMetaSchema =
-    validationError &&
-    validationError.message &&
-    typeof validationError.message === "string" &&
-    validationError.message.includes("no schema with key or ref ");
+    compileError &&
+    compileError.message &&
+    typeof compileError.message === "string" &&
+    compileError.message.includes("no schema with key or ref ");
 
   if (noProperMetaSchema) {
     errors = [
       ...errors,
       {
-        stack: validationError.message,
+        stack: compileError.message,
       },
     ];
   }
@@ -229,7 +255,7 @@ export default function validateFormData(
       ...errorSchema,
       ...{
         $schema: {
-          __errors: [validationError.message],
+          __errors: [compileError.message],
         },
       },
     };
@@ -292,6 +318,7 @@ const cacheKeyFn = (...args) => args.map(arg => JSON.stringify(arg)).join("_");
 export const withIdRefPrefix = _.memoize(_withIdRefPrefix, cacheKeyFn);
 
 let subschemaAjv;
+let previousRootSchema = null;
 /**
  * Validates data against a schema, returning true if the data is valid, or
  * false otherwise. If the schema is invalid, then this function will return
@@ -299,7 +326,8 @@ let subschemaAjv;
  */
 export function isValid(schema, data, rootSchema) {
   try {
-    if (subschemaAjv == null) {
+    if (subschemaAjv == null || !deepEquals(previousRootSchema, rootSchema)) {
+      previousRootSchema = rootSchema;
       if (rootSchema.$id) {
         delete rootSchema.$id;
       }
