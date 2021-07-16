@@ -189,9 +189,6 @@ export default function validateFormData(
   );
   const formatsChanged = !deepEquals(previousFormats, customFormats);
 
-  // TODO: this will not work if root schema changes, or if additional metaschemas or formats are added after-the-fact
-  // Maybe we should map the (schema, metaschema, format) tuple to a cached ajv instance and/or compiled validator?
-  // It's also a bad idea to put off compiling the validator until validation-time, but that will require a larger re-write
   if (
     validate == null ||
     schemaChanged ||
@@ -317,8 +314,8 @@ const cacheKeyFn = (...args) => args.map(arg => JSON.stringify(arg)).join("_");
  */
 export const withIdRefPrefix = _.memoize(_withIdRefPrefix, cacheKeyFn);
 
-let subschemaAjv;
-let previousRootSchema = null;
+let compiledSubschemaMap = new WeakMap();
+let withIdRefPrefixMap = new WeakMap();
 /**
  * Validates data against a schema, returning true if the data is valid, or
  * false otherwise. If the schema is invalid, then this function will return
@@ -326,23 +323,32 @@ let previousRootSchema = null;
  */
 export function isValid(schema, data, rootSchema) {
   try {
-    if (subschemaAjv == null || !deepEquals(previousRootSchema, rootSchema)) {
-      previousRootSchema = rootSchema;
-      if (rootSchema.$id) {
-        delete rootSchema.$id;
-      }
+    let subschemaAjv;
+    if (compiledSubschemaMap.has(rootSchema)) {
+      subschemaAjv = compiledSubschemaMap.get(rootSchema);
+    } else {
+      // add the rootSchema, using the ROOT_SCHEMA_PREFIX as the cache key.
+
       subschemaAjv = createAjvInstance();
       subschemaAjv.addSchema(rootSchema, ROOT_SCHEMA_PREFIX);
+      compiledSubschemaMap.set(rootSchema, subschemaAjv);
     }
 
-    return subschemaAjv.validate(withIdRefPrefix(schema), data);
-
-    // add the rootSchema. if it has no $id, use ROOT_SCHEMA_PREFIX as the cache key.
-    // then rewrite the schema ref's to point to the rootSchema
+    // rewrite the schema ref's to point to the rootSchema
     // this accounts for the case where schema have references to models
     // that lives in the rootSchema but not in the schema in question.
+    let prefixedSchema;
+    if (withIdRefPrefixMap.has(schema)) {
+      prefixedSchema = withIdRefPrefixMap.get(schema);
+    } else {
+      prefixedSchema = _withIdRefPrefix(schema);
+      withIdRefPrefixMap.set(schema, prefixedSchema);
+    }
+
+    return subschemaAjv.validate(prefixedSchema, data);
   } catch (e) {
     console.warn("Encountered error while validating schema", e);
     return false;
   }
 }
+// export const isValid = _.memoize(_isValid, cacheKeyFn);

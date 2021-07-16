@@ -6,7 +6,11 @@ import jsonpointer from "jsonpointer";
 import fields from "./components/fields";
 import widgets from "./components/widgets";
 import validateFormData, { isValid } from "./validate";
+import _ from "lodash";
 
+// Use the same default object to optimize memoized functions that rely on referential equality
+const DEFAULT_ROOT_SCHEMA = {};
+const DEFAULT_FORM_DATA = {};
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
 const widgetMap = {
@@ -170,11 +174,14 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
   }
 }
 
-function computeDefaults(
+const cacheKeyFn = (...args) => args.map(arg => JSON.stringify(arg)).join("_");
+const computeDefaults = _.memoize(_computeDefaults, cacheKeyFn);
+
+function _computeDefaults(
   _schema,
   parentDefaults,
   rootSchema,
-  rawFormData = {},
+  rawFormData = DEFAULT_FORM_DATA,
   includeUndefinedValues = false
 ) {
   let schema = isObject(_schema) ? _schema : {};
@@ -302,7 +309,7 @@ function computeDefaults(
 export function getDefaultFormState(
   _schema,
   formData,
-  rootSchema = {},
+  rootSchema = DEFAULT_ROOT_SCHEMA,
   includeUndefinedValues = false
 ) {
   if (!isObject(_schema)) {
@@ -520,7 +527,7 @@ export function toConstant(schema) {
   }
 }
 
-export function isSelect(_schema, rootSchema = {}) {
+export function isSelect(_schema, rootSchema = DEFAULT_ROOT_SCHEMA) {
   const schema = retrieveSchema(_schema, rootSchema);
   const altSchemas = schema.oneOf || schema.anyOf;
   if (Array.isArray(schema.enum)) {
@@ -531,14 +538,18 @@ export function isSelect(_schema, rootSchema = {}) {
   return false;
 }
 
-export function isMultiSelect(schema, rootSchema = {}) {
+export function isMultiSelect(schema, rootSchema = DEFAULT_ROOT_SCHEMA) {
   if (!schema.uniqueItems || !schema.items) {
     return false;
   }
   return isSelect(schema.items, rootSchema);
 }
 
-export function isFilesArray(schema, uiSchema, rootSchema = {}) {
+export function isFilesArray(
+  schema,
+  uiSchema,
+  rootSchema = DEFAULT_ROOT_SCHEMA
+) {
   if (uiSchema["ui:widget"] === "files") {
     return true;
   } else if (schema.items) {
@@ -583,7 +594,7 @@ export function optionsList(schema) {
   }
 }
 
-export function findSchemaDefinition($ref, rootSchema = {}) {
+export function findSchemaDefinition($ref, rootSchema = DEFAULT_ROOT_SCHEMA) {
   const origRef = $ref;
   if ($ref.startsWith("#")) {
     // Decode URI fragment representation.
@@ -624,8 +635,8 @@ export const guessType = function guessType(value) {
 // This function will create new "properties" items for each key in our formData
 export function stubExistingAdditionalProperties(
   schema,
-  rootSchema = {},
-  formData = {}
+  rootSchema = DEFAULT_ROOT_SCHEMA,
+  formData = DEFAULT_FORM_DATA
 ) {
   // Clone the schema so we don't ruin the consumer's original
   schema = {
@@ -661,7 +672,13 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
-export function resolveSchema(schema, rootSchema = {}, formData = {}) {
+export const resolveSchema = _.memoize(_resolveSchema, cacheKeyFn);
+
+export function _resolveSchema(
+  schema,
+  rootSchema = DEFAULT_ROOT_SCHEMA,
+  formData = DEFAULT_FORM_DATA
+) {
   if (schema.hasOwnProperty("$ref")) {
     return resolveReference(schema, rootSchema, formData);
   } else if (schema.hasOwnProperty("dependencies")) {
@@ -694,9 +711,13 @@ function resolveReference(schema, rootSchema, formData) {
   );
 }
 
-export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
+export function _retrieveSchema(
+  schema,
+  rootSchema = DEFAULT_ROOT_SCHEMA,
+  formData = DEFAULT_FORM_DATA
+) {
   if (!isObject(schema)) {
-    return {};
+    return DEFAULT_ROOT_SCHEMA;
   }
   let resolvedSchema = resolveSchema(schema, rootSchema, formData);
 
@@ -763,6 +784,8 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
 
   return resolvedSchema;
 }
+
+export const retrieveSchema = _.memoize(_retrieveSchema, cacheKeyFn);
 
 function resolveDependencies(schema, rootSchema, formData) {
   // Drop the dependencies from the source schema.
@@ -1034,7 +1057,7 @@ export function toIdSchema(
   schema,
   id,
   rootSchema,
-  formData = {},
+  formData = DEFAULT_FORM_DATA,
   idPrefix = "root"
 ) {
   const idSchema = {
@@ -1066,7 +1089,12 @@ export function toIdSchema(
   return idSchema;
 }
 
-export function toPathSchema(schema, name = "", rootSchema, formData = {}) {
+export function toPathSchema(
+  schema,
+  name = "",
+  rootSchema,
+  formData = DEFAULT_FORM_DATA
+) {
   const pathSchema = {
     $name: name.replace(/^\./, ""),
   };
