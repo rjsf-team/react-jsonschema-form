@@ -10,6 +10,7 @@ import RangeWidget from "../RangeWidget/RangeWidget";
 import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import TextWidget from "../TextWidget/TextWidget";
+import TimeWidget from "../TimeWidget/TimeWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
 import URLWidget from "../URLWidget/URLWidget";
 
@@ -26,6 +27,7 @@ export default {
   SelectWidget,
   TextareaWidget,
   TextWidget,
+  TimeWidget,
   UpDownWidget,
   URLWidget,
 };

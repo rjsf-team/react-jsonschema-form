@@ -35,6 +35,7 @@ const widgetMap = {
     "date-time": "DateTimeWidget",
     "alt-date": "AltDateWidget",
     "alt-datetime": "AltDateTimeWidget",
+    time: "TimeWidget",
     color: "ColorWidget",
     file: "FileWidget",
   },
@@ -728,12 +729,12 @@ function resolveDependencies(schema, rootSchema, formData) {
   if ("oneOf" in resolvedSchema) {
     resolvedSchema =
       resolvedSchema.oneOf[
-        getMatchingOption(formData, resolvedSchema.oneOf, rootSchema)
+      getMatchingOption(formData, resolvedSchema.oneOf, rootSchema)
       ];
   } else if ("anyOf" in resolvedSchema) {
     resolvedSchema =
       resolvedSchema.anyOf[
-        getMatchingOption(formData, resolvedSchema.anyOf, rootSchema)
+      getMatchingOption(formData, resolvedSchema.anyOf, rootSchema)
       ];
   }
   return processDependencies(
