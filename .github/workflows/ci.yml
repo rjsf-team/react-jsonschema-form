@@ -81,7 +81,7 @@ jobs:
   
   deploy_canary:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+#     if: github.ref == 'refs/heads/master'
     name: Deploy canary version of packages to npm
     needs: [build]
     steps:
@@ -94,7 +94,7 @@ jobs:
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npx lerna publish from-package --yes --no-verify-access --canary
+      - run: npx lerna publish --yes --no-verify-access --canary
       - if: always()
         run: rm .npmrc
 
