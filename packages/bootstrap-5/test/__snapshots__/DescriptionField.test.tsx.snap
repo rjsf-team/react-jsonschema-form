@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DescriptionField should return h2 element when description is being passed as props 1`] = `
+<div>
+  <div
+    className="mb-3"
+  >
+    SOME THING
+  </div>
+</div>
+`;

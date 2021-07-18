@@ -25,21 +25,10 @@ module.exports = {
     })
   ],
   devtool: "source-map",
-  externals: {
-    react: {
-      root: "React",
-      commonjs: "react",
-      commonjs2: "react",
-      amd: "react"
-    },
-    'react-dom': {
-      root: "ReactDOM",
-      commonjs2: 'react-dom',
-      commonjs: 'react-dom',
-      amd: 'react-dom',
-      umd: 'react-dom',
-    }
-  },
+  externals: [
+    'react',
+    'react-dom'
+  ],
   module: {
     rules: [
       {
