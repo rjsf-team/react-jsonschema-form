@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { schemaRequiresTrueValue } from "../../utils";
 
 function CheckboxWidget(props) {
-  var {
+  const {
     schema,
     id,
     value,
@@ -21,12 +21,6 @@ function CheckboxWidget(props) {
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
-
-  // If its a constant value then we want to disable the control and set the default value
-  if (typeof schema.const !== "undefined") {
-    value = schema.const;
-    disabled = true;
-  }
 
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>

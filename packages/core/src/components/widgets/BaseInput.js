@@ -8,7 +8,7 @@ function BaseInput(props) {
     console.log("No id for", props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
-  var {
+  const {
     value,
     readonly,
     disabled,
@@ -65,12 +65,6 @@ function BaseInput(props) {
   const _onChange = ({ target: { value } }) => {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
-
-  // If its a constant value then we want to disable the control and set the default value
-  if (typeof schema.const !== "undefined") {
-    value = schema.const;
-    disabled = true;
-  }
 
   return [
     <input
