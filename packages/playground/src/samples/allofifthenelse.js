@@ -8,8 +8,7 @@ module.exports = {
           "United Kingdom",
           "France",
           "Germany",
-        ],
-        default: "United States of America",
+        ]
       },
     },
     required: ["country"],
