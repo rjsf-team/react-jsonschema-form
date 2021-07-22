@@ -9,7 +9,7 @@ import { deepEquals, getDefaultFormState } from "./utils";
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
 import { isObject, mergeObjects } from "./utils";
-import _ from "lodash";
+import memoize from "lodash/memoize";
 
 function createAjvInstance() {
   const ajv = new Ajv({
@@ -312,7 +312,7 @@ const cacheKeyFn = (...args) => args.map(arg => JSON.stringify(arg)).join("_");
  * _withIdRefPrefix creates a new schema object every time it runs, which prevents us from utilizing AJV's cache, triggering a compile every run
  * We can memoize the function to reuse schemas that we've already resolved, which lets us hit AJV's cache and avoid expensive recompiles
  */
-export const withIdRefPrefix = _.memoize(_withIdRefPrefix, cacheKeyFn);
+export const withIdRefPrefix = memoize(_withIdRefPrefix, cacheKeyFn);
 
 let compiledSubschemaMap = new WeakMap();
 let withIdRefPrefixMap = new WeakMap();
@@ -351,4 +351,3 @@ export function isValid(schema, data, rootSchema) {
     return false;
   }
 }
-// export const isValid = _.memoize(_isValid, cacheKeyFn);

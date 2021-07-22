@@ -6,7 +6,7 @@ import jsonpointer from "jsonpointer";
 import fields from "./components/fields";
 import widgets from "./components/widgets";
 import validateFormData, { isValid } from "./validate";
-import _ from "lodash";
+import memoize from "lodash/memoize";
 
 // Use the same default object to optimize memoized functions that rely on referential equality
 const DEFAULT_ROOT_SCHEMA = {};
@@ -175,7 +175,7 @@ export function hasWidget(schema, widget, registeredWidgets = {}) {
 }
 
 const cacheKeyFn = (...args) => args.map(arg => JSON.stringify(arg)).join("_");
-const computeDefaults = _.memoize(_computeDefaults, cacheKeyFn);
+const computeDefaults = memoize(_computeDefaults, cacheKeyFn);
 
 function _computeDefaults(
   _schema,
@@ -672,7 +672,7 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
-export const resolveSchema = _.memoize(_resolveSchema, cacheKeyFn);
+export const resolveSchema = memoize(_resolveSchema, cacheKeyFn);
 
 export function _resolveSchema(
   schema,
@@ -785,7 +785,7 @@ export function _retrieveSchema(
   return resolvedSchema;
 }
 
-export const retrieveSchema = _.memoize(_retrieveSchema, cacheKeyFn);
+export const retrieveSchema = memoize(_retrieveSchema, cacheKeyFn);
 
 function resolveDependencies(schema, rootSchema, formData) {
   // Drop the dependencies from the source schema.
