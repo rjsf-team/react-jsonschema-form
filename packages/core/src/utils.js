@@ -684,7 +684,7 @@ export function _resolveSchema(
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, rootSchema, formData);
     return retrieveSchema(resolvedSchema, rootSchema, formData);
-  } else if (schema["allOf"]) {
+  } else if (schema.hasOwnProperty("allOf")) {
     return {
       ...schema,
       allOf: schema.allOf.map(allOfSubschema =>
@@ -764,8 +764,8 @@ export function _retrieveSchema(
         allOfSchema = resolveSchema(allOfSchema, rootSchema, formData); // resolve references etc.
         resolvedSchema = {
           ...mergeSchemas(resolvedSchema, allOfSchema),
-          allOf: undefined,
         };
+        delete resolvedSchema.allOf;
       }
     }
   }
