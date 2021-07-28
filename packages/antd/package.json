@@ -28,7 +28,7 @@
   },
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0",
-    "@rjsf/core": "^2.0.0",
+    "@rjsf/core": "^3.0.0",
     "antd": "^4.0.0",
     "antd-dayjs-webpack-plugin": "1.0.0",
     "dayjs": "^1.8.0",
