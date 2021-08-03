@@ -934,7 +934,11 @@ exports[`single fields hidden label 1`] = `
     </div>
   </div>
   <div
+<<<<<<< HEAD
     className="MuiBox-root MuiBox-root-307"
+=======
+    className="MuiBox-root MuiBox-root-202"
+>>>>>>> fe6728c93583656a0c6050a34dbc1c90b560c620
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
