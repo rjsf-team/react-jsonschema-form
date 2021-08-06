@@ -572,7 +572,7 @@ export function optionsList(schema) {
     });
   } else {
     const altSchemas = schema.oneOf || schema.anyOf;
-    return altSchemas.map((schema, i) => {
+    return altSchemas.map(schema => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
       return {
@@ -662,12 +662,37 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
+const _resolveCondition = (schema, rootSchema, formdata) => {
+  let {
+    if: expression,
+    then,
+    else: otherwise,
+    ...resolvedSchemaLessConditional
+  } = schema;
+
+  const conditionalSchema = isValid(expression, formdata, rootSchema)
+    ? then
+    : otherwise;
+
+  if (conditionalSchema) {
+    return retrieveSchema(
+      mergeSchemas(conditionalSchema, resolvedSchemaLessConditional),
+      rootSchema,
+      formdata
+    );
+  } else {
+    return retrieveSchema(resolvedSchemaLessConditional, rootSchema, formdata);
+  }
+};
+
 export function resolveSchema(schema, rootSchema = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
     return resolveReference(schema, rootSchema, formData);
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, rootSchema, formData);
     return retrieveSchema(resolvedSchema, rootSchema, formData);
+  } else if (schema.hasOwnProperty("if")) {
+    return _resolveCondition(schema, rootSchema, formData);
   } else if (schema.hasOwnProperty("allOf")) {
     return {
       ...schema,

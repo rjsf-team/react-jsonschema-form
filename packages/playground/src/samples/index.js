@@ -26,6 +26,7 @@ import nullable from "./nullable";
 import nullField from "./null";
 import errorSchema from "./errorSchema";
 import defaults from "./defaults";
+import ifElseThen from "./ifElseThen";
 
 export const samples = {
   Simple: simple,
@@ -52,6 +53,7 @@ export const samples = {
   "Any Of": anyOf,
   "One Of": oneOf,
   "All Of": allOf,
+  "If Else Then": ifElseThen,
   "Null fields": nullField,
   Nullable: nullable,
   ErrorSchema: errorSchema,

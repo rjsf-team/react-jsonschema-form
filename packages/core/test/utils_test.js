@@ -2388,6 +2388,142 @@ describe("utils", () => {
         });
       });
     });
+
+    describe("ifElseThen", () => {
+      it("should resolve if, then", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            country: {
+              default: "United States of America",
+              enum: ["United States of America", "Canada"],
+            },
+          },
+          if: {
+            properties: { country: { const: "United States of America" } },
+          },
+          then: {
+            properties: { postal_code: { pattern: "[0-9]{5}(-[0-9]{4})?" } },
+          },
+          else: {
+            properties: {
+              postal_code: { pattern: "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]" },
+            },
+          },
+        };
+        const definitions = {};
+        const formData = {
+          country: "United States of America",
+          postal_code: "20500",
+        };
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            country: {
+              default: "United States of America",
+              enum: ["United States of America", "Canada"],
+            },
+            postal_code: { pattern: "[0-9]{5}(-[0-9]{4})?" },
+          },
+        });
+      });
+      it("should resolve if, else", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            country: {
+              default: "United States of America",
+              enum: ["United States of America", "Canada"],
+            },
+          },
+          if: {
+            properties: { country: { const: "United States of America" } },
+          },
+          then: {
+            properties: { postal_code: { pattern: "[0-9]{5}(-[0-9]{4})?" } },
+          },
+          else: {
+            properties: {
+              postal_code: { pattern: "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]" },
+            },
+          },
+        };
+        const definitions = {};
+        const formData = {
+          country: "Canada",
+          postal_code: "K1M 1M4",
+        };
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            country: {
+              default: "United States of America",
+              enum: ["United States of America", "Canada"],
+            },
+            postal_code: { pattern: "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]" },
+          },
+        });
+      });
+      it("should resolve multiple conditions", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            animal: {
+              enum: ["Cat", "Fish"],
+            },
+          },
+          allOf: [
+            {
+              if: {
+                properties: { animal: { const: "Cat" } },
+              },
+              then: {
+                properties: {
+                  food: { type: "string", enum: ["meat", "grass", "fish"] },
+                },
+              },
+              required: ["food"],
+            },
+            {
+              if: {
+                properties: { animal: { const: "Fish" } },
+              },
+              then: {
+                properties: {
+                  food: {
+                    type: "string",
+                    enum: ["insect", "worms"],
+                  },
+                  water: {
+                    type: "string",
+                    enum: ["lake", "sea"],
+                  },
+                },
+                required: ["food", "water"],
+              },
+            },
+            {
+              required: ["animal"],
+            },
+          ],
+        };
+        const definitions = {};
+        const formData = {
+          animal: "Cat",
+        };
+
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            animal: {
+              enum: ["Cat", "Fish"],
+            },
+            food: { type: "string", enum: ["meat", "grass", "fish"] },
+          },
+          required: ["animal", "food"],
+        });
+      });
+    });
   });
 
   describe("shouldRender", () => {
