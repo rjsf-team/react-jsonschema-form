@@ -662,7 +662,7 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
-const _resolveCondition = (schema, rootSchema, formdata) => {
+const resolveCondition = (schema, rootSchema, formdata) => {
   let {
     if: expression,
     then,
@@ -692,7 +692,7 @@ export function resolveSchema(schema, rootSchema = {}, formData = {}) {
     const resolvedSchema = resolveDependencies(schema, rootSchema, formData);
     return retrieveSchema(resolvedSchema, rootSchema, formData);
   } else if (schema.hasOwnProperty("if")) {
-    return _resolveCondition(schema, rootSchema, formData);
+    return resolveCondition(schema, rootSchema, formData);
   } else if (schema.hasOwnProperty("allOf")) {
     return {
       ...schema,
