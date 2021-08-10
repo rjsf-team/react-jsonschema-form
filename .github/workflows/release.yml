@@ -23,6 +23,6 @@ jobs:
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npx lerna publish from-package --force-publish=* --yes --no-verify-access
+      - run: npx lerna publish from-package --yes --no-verify-access
       - if: always()
         run: rm .npmrc
