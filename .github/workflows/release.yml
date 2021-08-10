@@ -2,6 +2,8 @@ name: Release
 on:
   release:
     types: [published]
+  push:
+    branches: rel
 
 jobs:
   release_to_npm:
