@@ -27,4 +27,20 @@ describe("object fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("With custom AddButton text", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      additionalProperties: true
+    };
+
+    const uiSchema = {
+      "ui:addButtonText": "Custom button text"
+    };
+
+    const testRenderer = renderer.create(<Form schema={schema} uiSchema={uiSchema} />);
+
+    const addButton = testRenderer.root.findByProps({ addButtonText: "Custom button text" });
+
+    expect(addButton).toBeTruthy();
+  });
 });

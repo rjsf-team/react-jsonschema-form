@@ -66,6 +66,7 @@ const ObjectFieldTemplate = ({
                 className='object-property-expand'
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
+                addButtonText={uiSchema['ui:addButtonText']}
               />
             </Grid>
           </Grid>

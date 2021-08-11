@@ -4,6 +4,7 @@ import { withTheme } from '@rjsf/core';
 
 import '../__mocks__/matchMedia.mock';
 import { Theme } from '../src';
+import Button from "antd/lib/button";
 
 const { describe, expect, test } = global;
 
@@ -22,7 +23,7 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("array with custom addButtonText", () => {
+  test("Array with custom AddButton text", () => {
     const schema = {
       type: "array",
       items: {
@@ -32,29 +33,12 @@ describe("array fields", () => {
     const uiSchema = {
       "ui:addButtonText": "Custom button text"
     };
-    const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} />)
-        .toJSON();
+    const testRenderer = renderer
+        .create(<Form schema={schema} uiSchema={uiSchema} />);
 
-    if (tree === null || typeof tree === "string" || !tree.children)
-      {throw new Error("Component tree is not built correctly");}
+    const addButton = testRenderer.root.findByType(Button);
 
-    const indexes = [0, 0, 1, 0, 0, 0, 1, 0];
-    let buttonNode = tree.children[0];
-
-    for (let i of indexes) {
-      if (!buttonNode || typeof buttonNode === "string") {
-        throw new Error("The current node is not a ReactTestRendererJson");
-      }
-
-      if (buttonNode.children === null) {
-        throw new Error("The current node has no children");
-      }
-
-      buttonNode = buttonNode.children[i];
-    }
-
-    expect(buttonNode).toBe(" Custom button text");
+    expect(addButton.props.children[2]).toBe("Custom button text");
   });
   test("fixed array", () => {
     const schema = {
