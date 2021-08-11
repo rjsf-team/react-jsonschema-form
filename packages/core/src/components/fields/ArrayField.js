@@ -637,7 +637,7 @@ class ArrayField extends Component {
       onFocus,
       rawErrors,
     } = this.props;
-    const title = schema.title || name;
+    const title = schema.title === undefined ? name : schema.title;
     let items = this.props.formData;
     const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
     const { TitleField } = fields;
