@@ -48,6 +48,21 @@ Will result in:
 </div>
 ```
 
+## addButtonText
+
+Customizes the text appearing on the button that lets you add new items to ```arrays``` and objects with
+```addProperties: true```.
+_Note: This feature is only available for themes that have text in the AddButton in the first place._
+
+The following uiSchema will make the AddButton render the text ```Custom Text!```
+
+```js
+const schema = {type: "object", addProperties: true};
+const uiSchema = {
+  "ui:addButtonText": "Custom Text!"
+}
+```
+
 ## autofocus
 
 If you want to automatically focus on a text input or textarea input, set the `ui:autofocus` uiSchema directive to `true`.
