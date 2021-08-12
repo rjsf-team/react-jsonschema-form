@@ -31,6 +31,12 @@ export function makeWidgetMockProps(
     formContext: {},
     id: "_id",
     placeholder: "",
+    registry: {
+      fields: {},
+      widgets: {},
+      formContext: {},
+      definitions: {},
+    },
     ...props,
   };
 }
