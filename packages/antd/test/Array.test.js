@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 
 import '../__mocks__/matchMedia.mock';
-import { Form } from '../src';
+import Form from '../src';
 
 const { describe, expect, test } = global;
 
