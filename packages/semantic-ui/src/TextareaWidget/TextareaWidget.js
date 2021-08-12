@@ -3,36 +3,43 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-
-function TextareaWidget({
-  id,
-  placeholder,
-  value,
-  required,
-  disabled,
-  autofocus,
-  label,
-  name,
-  readonly,
-  onBlur,
-  onFocus,
-  onChange,
-  options,
-  schema,
-  formContext,
-}) {
+import {  utils } from "@rjsf/core";
+const { getDisplayLabel } = utils;
+function TextareaWidget(props) {
+  const {
+    id,
+    placeholder,
+    value,
+    required,
+    disabled,
+    autofocus,
+    label,
+    name,
+    readonly,
+    onBlur,
+    onFocus,
+    onChange,
+    options,
+    schema,
+    uiSchema,
+    formContext,
+  } = props;
   const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange && onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-
+  const displayLabel = getDisplayLabel(
+    schema,
+    uiSchema
+    /* TODO: , rootSchema */
+  );
   return (
     <Form.TextArea
       id={id}
       key={id}
-      label={schema.title || label}
+      label={displayLabel ? label || schema.title : false}
       placeholder={placeholder}
       autoFocus={autofocus}
       required={required}

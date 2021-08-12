@@ -11,6 +11,7 @@ import DateWidget from "../DateWidget/DateWidget";
 import DateTimeWidget from "../DateTimeWidget/DateTimeWidget";
 import EmailWidget from "../EmailWidget/EmailWidget";
 import URLWidget from "../URLWidget/URLWidget";
+
 export default {
   CheckboxWidget,
   CheckboxesWidget,

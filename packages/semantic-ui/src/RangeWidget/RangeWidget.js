@@ -6,21 +6,21 @@ import { utils } from '@rjsf/core';
 import { getSemanticProps } from "../util";
 
 const { rangeSpec } = utils;
-function RangeWidget({
-  value,
-  readonly,
-  disabled,
-  onBlur,
-  onFocus,
-  options,
-  schema,
-  onChange,
-  required,
-  label,
-  name,
-  id,
-  formContext,
-}) {
+function RangeWidget(props) {
+  const {
+    value,
+    readonly,
+    disabled,
+    onBlur,
+    onFocus,
+    options,
+    schema,
+    onChange,
+    required,
+    name,
+    id,
+    formContext,
+  } = props;
   const semanticProps = getSemanticProps({ formContext, options });
 
   // eslint-disable-next-line no-shadow
