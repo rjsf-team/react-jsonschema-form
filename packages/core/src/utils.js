@@ -388,16 +388,18 @@ export function getUiOptions(uiSchema) {
 export function getDisplayLabel(schema, uiSchema, rootSchema) {
   const uiOptions = getUiOptions(uiSchema);
   let { label: displayLabel = true } = uiOptions;
-  if (schema.type === "array") {
+  const schemaType = getSchemaType(schema);
+
+  if (schemaType === "array") {
     displayLabel =
       isMultiSelect(schema, rootSchema) ||
       isFilesArray(schema, uiSchema, rootSchema);
   }
 
-  if (schema.type === "object") {
+  if (schemaType === "object") {
     displayLabel = false;
   }
-  if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
+  if (schemaType === "boolean" && !uiSchema["ui:widget"]) {
     displayLabel = false;
   }
   if (uiSchema["ui:field"]) {

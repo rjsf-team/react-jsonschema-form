@@ -1171,7 +1171,7 @@ describe("StringField", () => {
       });
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should call the provided onChange function once all values are filled", () => {
       const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
@@ -1194,6 +1194,29 @@ describe("StringField", () => {
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: "2012-10-02",
       });
+    });
+
+    it("should reflect the change into the dom, even when not all values are filled", () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date",
+        },
+        uiSchema,
+      });
+
+      act(() => {
+        Simulate.change(node.querySelector("#root_year"), {
+          target: { value: 2012 },
+        });
+        Simulate.change(node.querySelector("#root_month"), {
+          target: { value: 10 },
+        });
+      });
+      expect(node.querySelector("#root_year").value).eql("2012");
+      expect(node.querySelector("#root_month").value).eql("10");
+      expect(node.querySelector("#root_day").value).eql("");
+      sinon.assert.notCalled(onChange);
     });
 
     it("should fill field with data", () => {

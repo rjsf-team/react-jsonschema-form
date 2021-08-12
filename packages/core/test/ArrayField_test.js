@@ -1190,6 +1190,20 @@ describe("ArrayField", () => {
           "should NOT have duplicate items (items ## 1 and 0 are identical)"
         );
       });
+
+      it("should pass a label as prop to custom widgets", () => {
+        const LabelComponent = ({ label }) => <div id="test">{label}</div>;
+        const { node } = createFormComponent({
+          schema,
+          widgets: {
+            SelectWidget: LabelComponent,
+          },
+        });
+
+        const matches = node.querySelectorAll("#test");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.eql(schema.title);
+      });
     });
 
     describe("CheckboxesWidget", () => {
