@@ -2523,6 +2523,74 @@ describe("utils", () => {
           required: ["animal", "food"],
         });
       });
+      it.only("should resolve $ref", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            animal: {
+              enum: ["Cat", "Fish"],
+            },
+          },
+          allOf: [
+            {
+              if: {
+                properties: { animal: { const: "Cat" } },
+              },
+              then: {
+                $ref: "#/definitions/cat",
+              },
+              required: ["food"],
+            },
+            {
+              if: {
+                properties: { animal: { const: "Fish" } },
+              },
+              then: {
+                $ref: "#/definitions/fish",
+              },
+            },
+            {
+              required: ["animal"],
+            },
+          ],
+        };
+
+        const definitions = {
+          cat: {
+            properties: {
+              food: { type: "string", enum: ["meat", "grass", "fish"] },
+            },
+          },
+          fish: {
+            properties: {
+              food: {
+                type: "string",
+                enum: ["insect", "worms"],
+              },
+              water: {
+                type: "string",
+                enum: ["lake", "sea"],
+              },
+            },
+            required: ["food", "water"],
+          },
+        };
+
+        const formData = {
+          animal: "Cat",
+        };
+
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            animal: {
+              enum: ["Cat", "Fish"],
+            },
+            food: { type: "string", enum: ["meat", "grass", "fish"] },
+          },
+          required: ["animal", "food"],
+        });
+      });
     });
   });
 
