@@ -29,7 +29,7 @@ const ObjectFieldTemplate = ({
 
       <div className="ms-Grid" dir="ltr">
         <div className="ms-Grid-row">
-          {properties.map((element: any) => element.content)}
+          {properties.map((element) => element.content)}
         </div>
       </div>
     </>

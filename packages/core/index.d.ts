@@ -40,7 +40,7 @@ declare module '@rjsf/core' {
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
         onError?: (e: any) => any;
         onFocus?: (id: string, value: any) => void;
-        onSubmit?: (e: ISubmitEvent<T>) => any;
+        onSubmit?: (e: ISubmitEvent<T>, nativeEvent: React.FormEvent<HTMLFormElement>) => any;
         schema: JSONSchema7;
         showErrorList?: boolean;
         tagName?: keyof JSX.IntrinsicElements | React.ComponentType;
@@ -114,9 +114,17 @@ declare module '@rjsf/core' {
         label: string;
         multiple: boolean;
         rawErrors: string[];
+        registry: Registry;
     }
 
     export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
+
+    export interface Registry {
+      fields: { [name: string]: Field };
+      widgets: { [name: string]: Widget };
+      definitions: { [name: string]: any };
+      formContext: any;
+    }
 
     export interface FieldProps<T = any>
         extends Pick<React.HTMLAttributes<HTMLElement>, Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur'>> {
@@ -127,12 +135,7 @@ declare module '@rjsf/core' {
         errorSchema: ErrorSchema;
         onChange: (e: IChangeEvent<T> | any, es?: ErrorSchema) => any;
         onBlur: (id: string, value: any) => void;
-        registry: {
-            fields: { [name: string]: Field };
-            widgets: { [name: string]: Widget };
-            definitions: { [name: string]: any };
-            formContext: any;
-        };
+        registry: Registry;
         formContext: any;
         autofocus: boolean;
         disabled: boolean;
@@ -215,6 +218,7 @@ declare module '@rjsf/core' {
             name: string;
             disabled: boolean;
             readonly: boolean;
+            hidden: boolean;
         }[];
         onAddClick: (schema: JSONSchema7) => () => void;
         readonly: boolean;

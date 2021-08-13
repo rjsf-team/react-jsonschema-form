@@ -33,6 +33,12 @@ describe("UpDownWidget", () => {
       id: "_id",
       placeholder: "",
       value: 0,
+      registry: {
+        fields: {},
+        widgets: {},
+        definitions: {},
+        formContext: {},
+      }
     };
     const tree = renderer.create(<UpDownWidget {...props} />).toJSON();
     expect(tree).toMatchSnapshot();
