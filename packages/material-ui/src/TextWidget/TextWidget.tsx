@@ -28,6 +28,7 @@ const TextWidget = ({
   uiSchema,
   rawErrors = [],
   formContext,
+  registry, // pull out the registry so it doesn't end up in the textFieldProps
   ...textFieldProps
 }: TextWidgetProps) => {
   const _onChange = ({
