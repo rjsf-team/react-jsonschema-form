@@ -65,7 +65,7 @@ const ObjectFieldTemplate = ({
           )
         )}
         {canExpand(schema, uiSchema, formData) && (
-          <Grid container justify='flex-end'>
+          <Grid container justifyContent='flex-end'>
             <Grid item={true}>
               <AddButton
                 className='object-property-expand'
