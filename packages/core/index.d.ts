@@ -129,7 +129,7 @@ declare module '@rjsf/core' {
     }
 
     export interface FieldProps<T = any>
-        extends Pick<React.HTMLAttributes<HTMLElement>, Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur'>> {
+        extends Pick<React.HTMLAttributes<HTMLElement>, Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>> {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         idSchema: IdSchema;
@@ -137,6 +137,7 @@ declare module '@rjsf/core' {
         errorSchema: ErrorSchema;
         onChange: (e: IChangeEvent<T> | any, es?: ErrorSchema) => any;
         onBlur: (id: string, value: any) => void;
+        onFocus: (id: string, value: any) => void;
         registry: Registry;
         formContext: any;
         autofocus: boolean;
