@@ -115,6 +115,7 @@ declare module '@rjsf/core' {
         multiple: boolean;
         rawErrors: string[];
         registry: Registry;
+        type?: string; // Add the optional prop for TextWidget to simplify Typescript usage
     }
 
     export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
@@ -124,6 +125,7 @@ declare module '@rjsf/core' {
       widgets: { [name: string]: Widget };
       definitions: { [name: string]: any };
       formContext: any;
+      rootSchema: JSONSchema7;
     }
 
     export interface FieldProps<T = any>
