@@ -115,17 +115,17 @@ declare module '@rjsf/core' {
         multiple: boolean;
         rawErrors: string[];
         registry: Registry;
-        type?: string; // Add the optional prop for TextWidget to simplify Typescript usage
+        [prop: string]: any; // Allow for other props
     }
 
     export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
 
     export interface Registry {
-      fields: { [name: string]: Field };
-      widgets: { [name: string]: Widget };
-      definitions: { [name: string]: any };
-      formContext: any;
-      rootSchema: JSONSchema7;
+        fields: { [name: string]: Field };
+        widgets: { [name: string]: Widget };
+        definitions: { [name: string]: any };
+        formContext: any;
+        rootSchema: JSONSchema7;
     }
 
     export interface FieldProps<T = any>
@@ -145,7 +145,7 @@ declare module '@rjsf/core' {
         readonly: boolean;
         required: boolean;
         name: string;
-        [prop: string]: any;
+        [prop: string]: any; // Allow for other props
     }
 
     export type Field = React.StatelessComponent<FieldProps> | React.ComponentClass<FieldProps>;
@@ -174,7 +174,7 @@ declare module '@rjsf/core' {
         onChange: (value: T) => void;
         onKeyChange: (value: string) => () => void;
         onDropPropertyClick: (value: string) => () => void;
-        registry: FieldProps['registry'];
+        registry: Registry;
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
@@ -207,7 +207,7 @@ declare module '@rjsf/core' {
         title: string;
         formContext: any;
         formData: T;
-        registry: FieldProps['registry'];
+        registry: Registry;
     };
 
     export type ObjectFieldTemplateProps<T = any> = {
@@ -231,7 +231,7 @@ declare module '@rjsf/core' {
         idSchema: IdSchema;
         formData: T;
         formContext: any;
-        registry: FieldProps['registry'];
+        registry: Registry;
     };
 
     export type AjvError = {
@@ -296,7 +296,7 @@ declare module '@rjsf/core' {
 
         export function canExpand(schema: JSONSchema7, uiSchema: UiSchema, formData: any): boolean;
 
-        export function getDefaultRegistry(): FieldProps['registry'];
+        export function getDefaultRegistry(): Registry;
 
         export function getSchemaType(schema: JSONSchema7): string;
 
@@ -315,7 +315,7 @@ declare module '@rjsf/core' {
         export function computeDefaults<T = any>(
             schema: JSONSchema7,
             parentDefaults: JSONSchema7['default'][],
-            definitions: FieldProps['registry']['definitions'],
+            definitions: Registry['definitions'],
             rawFormData?: T,
             includeUndefinedValues?: boolean,
         ): JSONSchema7['default'][];
@@ -323,7 +323,7 @@ declare module '@rjsf/core' {
         export function getDefaultFormState<T = any>(
             schema: JSONSchema7,
             formData: T,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
             includeUndefinedValues?: boolean,
         ): T | JSONSchema7['default'][];
 
@@ -343,14 +343,14 @@ declare module '@rjsf/core' {
 
         export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'];
 
-        export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+        export function isSelect(_schema: JSONSchema7, definitions?: Registry['definitions']): boolean;
 
-        export function isMultiSelect(schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+        export function isMultiSelect(schema: JSONSchema7, definitions?: Registry['definitions']): boolean;
 
         export function isFilesArray(
             schema: JSONSchema7,
             uiSchema: UiSchema,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
         ): boolean;
 
         export function isFixedItems(schema: JSONSchema7): boolean;
@@ -367,19 +367,19 @@ declare module '@rjsf/core' {
 
         export function stubExistingAdditionalProperties<T = any>(
             schema: JSONSchema7,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
             formData?: T,
         ): JSONSchema7;
 
         export function resolveSchema<T = any>(
             schema: JSONSchema7Definition,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
             formData?: T,
         ): JSONSchema7;
 
         export function retrieveSchema<T = any>(
             schema: JSONSchema7Definition,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
             formData?: T,
         ): JSONSchema7;
 
@@ -390,7 +390,7 @@ declare module '@rjsf/core' {
         export function toIdSchema<T = any>(
             schema: JSONSchema7Definition,
             id: string,
-            definitions: FieldProps['registry']['definitions'],
+            definitions: Registry['definitions'],
             formData?: T,
             idPredix?: string,
         ): IdSchema | IdSchema[];
@@ -398,7 +398,7 @@ declare module '@rjsf/core' {
         export function toPathSchema<T = any>(
             schema: JSONSchema7Definition,
             name: string | undefined,
-            definitions: FieldProps['registry']['definitions'],
+            definitions: Registry['definitions'],
             formData?: T,
         ): PathSchema | PathSchema[];
 
@@ -436,7 +436,7 @@ declare module '@rjsf/core' {
         export function getMatchingOption(
             formData: any,
             options: JSONSchema7[],
-            definitions: FieldProps['registry']['definitions'],
+            definitions: Registry['definitions'],
         ): number;
 
         export function schemaRequiresTrueValue(schema: JSONSchema7): boolean;
