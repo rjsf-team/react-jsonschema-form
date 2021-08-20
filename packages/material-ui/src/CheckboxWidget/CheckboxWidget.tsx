@@ -2,6 +2,7 @@ import React from "react";
 
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { FormHelperText } from "@material-ui/core";
 
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
@@ -20,6 +21,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     onChange,
     onBlur,
     onFocus,
+    options
   } = props;
 
   // Because an unchecked checkbox will cause html5 validation to fail, only add
@@ -36,21 +38,24 @@ const CheckboxWidget = (props: WidgetProps) => {
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          id={id}
-          checked={typeof value === "undefined" ? false : value}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-      }
-      label={label}
-    />
+    <>
+      <FormControlLabel
+        control={
+          <Checkbox
+            id={id}
+            checked={typeof value === "undefined" ? false : value}
+            required={required}
+            disabled={disabled || readonly}
+            autoFocus={autofocus}
+            onChange={_onChange}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
+          />
+        }
+        label={label}
+      />
+      {options.description ?? <FormHelperText>{options.description}</FormHelperText>}
+    </>
   );
 };
 
