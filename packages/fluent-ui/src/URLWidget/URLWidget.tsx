@@ -1,10 +1,10 @@
 import React from "react";
 
-import { WidgetProps, utils } from "@rjsf/core";
-
-import TextWidget from "../TextWidget";
+import { WidgetProps } from "@rjsf/core";
 
 const URLWidget = (props: WidgetProps) => {
+  const { registry } = props;
+  const { TextWidget } = registry.widgets;
   const uiProps: any = props.options["props"] || {};
   let options = {
     ...props.options,

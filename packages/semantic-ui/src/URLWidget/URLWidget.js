@@ -1,19 +1,18 @@
-/* eslint-disable react/prop-types */
 import React from "react";
-import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 import {  utils } from "@rjsf/core";
+
 const { getDisplayLabel } = utils;
-function PasswordWidget(props) {
+function URLWidget(props) {
   const {
     id,
+    name,
+    label,
+    value,
     required,
     readonly,
     disabled,
-    label,
-    name,
-    value,
     onChange,
     onBlur,
     onFocus,
@@ -26,7 +25,7 @@ function PasswordWidget(props) {
   const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
-    onChange && onChange(value === "" ? options.emptyValue : value);
+    onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const displayLabel = getDisplayLabel(
@@ -36,16 +35,16 @@ function PasswordWidget(props) {
   );
   return (
     <Form.Input
-      id={id}
       key={id}
+      id={id}
+      type="url"
       label={displayLabel ? label || schema.title : false}
-      autoFocus={autofocus}
       required={required}
+      autoFocus={autofocus}
       disabled={disabled || readonly}
       name={name}
       {...semanticProps}
-      type="password"
-      value={value || ""}
+      value={value || value === 0 ? value : ""}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
@@ -53,17 +52,13 @@ function PasswordWidget(props) {
   );
 }
 
-PasswordWidget.defaultProps = {
+URLWidget.defaultProps = {
   options: {
     semantic: {
-      inverted: false,
       fluid: true,
+      inverted: false,
     },
   },
 };
 
-PasswordWidget.propTypes = {
-  options: PropTypes.object,
-};
-
-export default PasswordWidget;
+export default URLWidget;

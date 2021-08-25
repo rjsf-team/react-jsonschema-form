@@ -142,56 +142,6 @@ exports[`array fields array icons 1`] = `
                     >
                       <div
                         className="MuiFormControl-root MuiTextField-root"
-                        registry={
-                          Object {
-                            "ArrayFieldTemplate": [Function],
-                            "FieldTemplate": [Function],
-                            "ObjectFieldTemplate": [Function],
-                            "definitions": Object {},
-                            "fields": Object {
-                              "AnyOfField": [Function],
-                              "ArrayField": [Function],
-                              "BooleanField": [Function],
-                              "DescriptionField": [Function],
-                              "NullField": [Function],
-                              "NumberField": [Function],
-                              "ObjectField": [Function],
-                              "OneOfField": [Function],
-                              "SchemaField": [Function],
-                              "StringField": [Function],
-                              "TitleField": [Function],
-                              "UnsupportedField": [Function],
-                            },
-                            "formContext": Object {},
-                            "rootSchema": Object {
-                              "items": Object {
-                                "type": "string",
-                              },
-                              "type": "array",
-                            },
-                            "widgets": Object {
-                              "AltDateTimeWidget": [Function],
-                              "AltDateWidget": [Function],
-                              "BaseInput": [Function],
-                              "CheckboxWidget": [Function],
-                              "CheckboxesWidget": [Function],
-                              "ColorWidget": [Function],
-                              "DateTimeWidget": [Function],
-                              "DateWidget": [Function],
-                              "EmailWidget": [Function],
-                              "FileWidget": [Function],
-                              "HiddenWidget": [Function],
-                              "PasswordWidget": [Function],
-                              "RadioWidget": [Function],
-                              "RangeWidget": [Function],
-                              "SelectWidget": [Function],
-                              "TextWidget": [Function],
-                              "TextareaWidget": [Function],
-                              "URLWidget": [Function],
-                              "UpDownWidget": [Function],
-                            },
-                          }
-                        }
                       >
                         <div
                           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -384,56 +334,6 @@ exports[`array fields array icons 1`] = `
                     >
                       <div
                         className="MuiFormControl-root MuiTextField-root"
-                        registry={
-                          Object {
-                            "ArrayFieldTemplate": [Function],
-                            "FieldTemplate": [Function],
-                            "ObjectFieldTemplate": [Function],
-                            "definitions": Object {},
-                            "fields": Object {
-                              "AnyOfField": [Function],
-                              "ArrayField": [Function],
-                              "BooleanField": [Function],
-                              "DescriptionField": [Function],
-                              "NullField": [Function],
-                              "NumberField": [Function],
-                              "ObjectField": [Function],
-                              "OneOfField": [Function],
-                              "SchemaField": [Function],
-                              "StringField": [Function],
-                              "TitleField": [Function],
-                              "UnsupportedField": [Function],
-                            },
-                            "formContext": Object {},
-                            "rootSchema": Object {
-                              "items": Object {
-                                "type": "string",
-                              },
-                              "type": "array",
-                            },
-                            "widgets": Object {
-                              "AltDateTimeWidget": [Function],
-                              "AltDateWidget": [Function],
-                              "BaseInput": [Function],
-                              "CheckboxWidget": [Function],
-                              "CheckboxesWidget": [Function],
-                              "ColorWidget": [Function],
-                              "DateTimeWidget": [Function],
-                              "DateWidget": [Function],
-                              "EmailWidget": [Function],
-                              "FileWidget": [Function],
-                              "HiddenWidget": [Function],
-                              "PasswordWidget": [Function],
-                              "RadioWidget": [Function],
-                              "RangeWidget": [Function],
-                              "SelectWidget": [Function],
-                              "TextWidget": [Function],
-                              "TextareaWidget": [Function],
-                              "URLWidget": [Function],
-                              "UpDownWidget": [Function],
-                            },
-                          }
-                        }
                       >
                         <div
                           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -817,61 +717,6 @@ exports[`array fields fixed array 1`] = `
                     >
                       <div
                         className="MuiFormControl-root MuiTextField-root"
-                        registry={
-                          Object {
-                            "ArrayFieldTemplate": [Function],
-                            "FieldTemplate": [Function],
-                            "ObjectFieldTemplate": [Function],
-                            "definitions": Object {},
-                            "fields": Object {
-                              "AnyOfField": [Function],
-                              "ArrayField": [Function],
-                              "BooleanField": [Function],
-                              "DescriptionField": [Function],
-                              "NullField": [Function],
-                              "NumberField": [Function],
-                              "ObjectField": [Function],
-                              "OneOfField": [Function],
-                              "SchemaField": [Function],
-                              "StringField": [Function],
-                              "TitleField": [Function],
-                              "UnsupportedField": [Function],
-                            },
-                            "formContext": Object {},
-                            "rootSchema": Object {
-                              "items": Array [
-                                Object {
-                                  "type": "string",
-                                },
-                                Object {
-                                  "type": "number",
-                                },
-                              ],
-                              "type": "array",
-                            },
-                            "widgets": Object {
-                              "AltDateTimeWidget": [Function],
-                              "AltDateWidget": [Function],
-                              "BaseInput": [Function],
-                              "CheckboxWidget": [Function],
-                              "CheckboxesWidget": [Function],
-                              "ColorWidget": [Function],
-                              "DateTimeWidget": [Function],
-                              "DateWidget": [Function],
-                              "EmailWidget": [Function],
-                              "FileWidget": [Function],
-                              "HiddenWidget": [Function],
-                              "PasswordWidget": [Function],
-                              "RadioWidget": [Function],
-                              "RangeWidget": [Function],
-                              "SelectWidget": [Function],
-                              "TextWidget": [Function],
-                              "TextareaWidget": [Function],
-                              "URLWidget": [Function],
-                              "UpDownWidget": [Function],
-                            },
-                          }
-                        }
                       >
                         <div
                           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -925,61 +770,6 @@ exports[`array fields fixed array 1`] = `
                     >
                       <div
                         className="MuiFormControl-root MuiTextField-root"
-                        registry={
-                          Object {
-                            "ArrayFieldTemplate": [Function],
-                            "FieldTemplate": [Function],
-                            "ObjectFieldTemplate": [Function],
-                            "definitions": Object {},
-                            "fields": Object {
-                              "AnyOfField": [Function],
-                              "ArrayField": [Function],
-                              "BooleanField": [Function],
-                              "DescriptionField": [Function],
-                              "NullField": [Function],
-                              "NumberField": [Function],
-                              "ObjectField": [Function],
-                              "OneOfField": [Function],
-                              "SchemaField": [Function],
-                              "StringField": [Function],
-                              "TitleField": [Function],
-                              "UnsupportedField": [Function],
-                            },
-                            "formContext": Object {},
-                            "rootSchema": Object {
-                              "items": Array [
-                                Object {
-                                  "type": "string",
-                                },
-                                Object {
-                                  "type": "number",
-                                },
-                              ],
-                              "type": "array",
-                            },
-                            "widgets": Object {
-                              "AltDateTimeWidget": [Function],
-                              "AltDateWidget": [Function],
-                              "BaseInput": [Function],
-                              "CheckboxWidget": [Function],
-                              "CheckboxesWidget": [Function],
-                              "ColorWidget": [Function],
-                              "DateTimeWidget": [Function],
-                              "DateWidget": [Function],
-                              "EmailWidget": [Function],
-                              "FileWidget": [Function],
-                              "HiddenWidget": [Function],
-                              "PasswordWidget": [Function],
-                              "RadioWidget": [Function],
-                              "RangeWidget": [Function],
-                              "SelectWidget": [Function],
-                              "TextWidget": [Function],
-                              "TextareaWidget": [Function],
-                              "URLWidget": [Function],
-                              "UpDownWidget": [Function],
-                            },
-                          }
-                        }
                       >
                         <div
                           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
