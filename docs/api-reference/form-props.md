@@ -95,6 +95,7 @@ React component used to customize each field of the form. See [Custom Templates]
 ## formContext
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
+Using `{readonlyAsDisabled: false}` will make most themes use the toolkit native functionality offer readOnly fields instead of using the HTML-disabled mechanism.
 
 ## formData
 
