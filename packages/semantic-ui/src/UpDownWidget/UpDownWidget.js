@@ -4,28 +4,36 @@ import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from
 '../util';
-
-function UpDownWidget({
-  id,
-  required,
-  readonly,
-  disabled,
-  label,
-  name,
-  value,
-  options,
-  onChange,
-  onBlur,
-  onFocus,
-  autofocus,
-  rawErrors,
-  formContext,
-}) {
+import {  utils } from "@rjsf/core";
+const { getDisplayLabel } = utils;
+function UpDownWidget(props) {
+  const {
+    id,
+    required,
+    readonly,
+    disabled,
+    label,
+    name,
+    value,
+    options,
+    onChange,
+    onBlur,
+    onFocus,
+    autofocus,
+    formContext,
+    schema,
+    uiSchema,
+  } = props;
   const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
+  const displayLabel = getDisplayLabel(
+    schema,
+    uiSchema
+    /* TODO: , rootSchema */
+  );
   return (
     <React.Fragment>
       <Form.Input
@@ -34,7 +42,7 @@ function UpDownWidget({
         autoFocus={autofocus}
         required={required}
         type="number"
-        label={label}
+        label={displayLabel ? label || schema.title : false}
         disabled={disabled || readonly}
         name={name}
         {...semanticProps}
