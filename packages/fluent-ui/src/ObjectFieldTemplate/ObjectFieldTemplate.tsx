@@ -1,5 +1,5 @@
 import React from "react";
-import { ObjectFieldTemplateProps } from "@rjsf/core";
+import { ObjectFieldTemplateProps } from "@visma/rjsf-core";
 
 const ObjectFieldTemplate = ({
   DescriptionField,

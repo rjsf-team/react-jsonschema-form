@@ -3,7 +3,7 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 
-import { ErrorListProps } from "@rjsf/core";
+import { ErrorListProps } from "@visma/rjsf-core";
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <Card border="danger" className="mb-4">

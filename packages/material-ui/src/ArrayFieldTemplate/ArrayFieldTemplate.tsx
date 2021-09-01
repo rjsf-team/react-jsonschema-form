@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
-import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
+import { ArrayFieldTemplateProps, IdSchema } from '@visma/rjsf-core';
 
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
@@ -62,7 +62,7 @@ const ArrayFieldDescription = ({
     return null;
   }
 
-  const id = `${idSchema.$id}__description`;
+  const id = utils.descriptionId(idSchema.$id);
   return <DescriptionField id={id} description={description} />;
 };
 

@@ -1,5 +1,5 @@
+import { WidgetProps } from '@visma/rjsf-core';
 import React from "react";
-import { WidgetProps } from '@rjsf/core';
 
 const FileWidget = (props: WidgetProps) => {
   const { registry } = props;

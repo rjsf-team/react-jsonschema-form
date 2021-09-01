@@ -1,4 +1,5 @@
 import React from "react";
+import { useIntl } from "react-intl";
 import IconButton from "./IconButton";
 
 export default function AddButton({ className, onClick, disabled }) {
@@ -9,7 +10,7 @@ export default function AddButton({ className, onClick, disabled }) {
           type="info"
           icon="plus"
           className="btn-add col-xs-12"
-          aria-label="Add"
+          aria-label={useIntl().formatMessage({ defaultMessage: "Add" })}
           tabIndex="0"
           onClick={onClick}
           disabled={disabled}

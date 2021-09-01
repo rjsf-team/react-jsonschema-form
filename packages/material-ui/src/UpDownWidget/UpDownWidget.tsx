@@ -4,7 +4,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 
-import { WidgetProps } from '@rjsf/core';
+import { WidgetProps } from '@visma/rjsf-core';
 
 const UpDownWidget = ({
   id,

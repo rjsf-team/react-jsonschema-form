@@ -1,8 +1,8 @@
 import React from "react";
 import { Slider, Label } from "@fluentui/react";
 
-import { utils } from "@rjsf/core";
-import { WidgetProps } from "@rjsf/core";
+import { utils } from "@visma/rjsf-core";
+import { WidgetProps } from "@visma/rjsf-core";
 import _pick from "lodash/pick";
 
 const { rangeSpec } = utils;

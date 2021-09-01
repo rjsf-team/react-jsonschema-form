@@ -1,7 +1,7 @@
 import React from "react";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 import UpDownWidget from "../src/UpDownWidget/UpDownWidget";
 
 export const mockSchema: JSONSchema7 = {

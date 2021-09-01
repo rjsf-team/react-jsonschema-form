@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldProps } from "@rjsf/core";
+import { FieldProps } from "@visma/rjsf-core";
 
 export interface TitleFieldProps extends Partial<FieldProps> {
   title: string;

@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldTemplateProps } from "@rjsf/core";
+import { FieldTemplateProps } from "@visma/rjsf-core";
 import { Text, Label } from "@fluentui/react";
 import { List } from "@fluentui/react";
 

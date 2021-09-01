@@ -1,12 +1,10 @@
-import { utils, withTheme } from '@rjsf/core';
-
+import { utils, withTheme } from '@visma/rjsf-core';
+import ErrorList from './ErrorList';
 import DescriptionField from './fields/DescriptionField';
 import TitleField from './fields/TitleField';
-
+import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
 import FieldTemplate from './templates/FieldTemplate';
 import ObjectFieldTemplate from './templates/ObjectFieldTemplate';
-import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
-
 import AltDateTimeWidget from './widgets/AltDateTimeWidget';
 import AltDateWidget from './widgets/AltDateWidget';
 import CheckboxesWidget from './widgets/CheckboxesWidget';
@@ -24,7 +22,9 @@ import TextWidget from './widgets/TextWidget';
 import UpDownWidget from './widgets/UpDownWidget';
 import URLWidget from './widgets/URLWidget';
 
-import ErrorList from './ErrorList';
+
+
+
 
 // import './index.less';
 

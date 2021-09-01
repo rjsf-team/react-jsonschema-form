@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { ariaDescribedBy } from "../../utils";
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
@@ -79,6 +80,7 @@ function BaseInput(props) {
       onChange={_onChange}
       onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
       onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
+      aria-describedby={ariaDescribedBy(inputProps.id)}
     />,
     schema.examples ? (
       <datalist

@@ -1,6 +1,7 @@
 import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
+import { useIntl } from "react-intl";
 import * as types from "../../types";
 
 import {
@@ -13,6 +14,10 @@ import {
   deepEquals,
   getSchemaType,
   getDisplayLabel,
+  ariaDescribedBy,
+  helpId,
+  descriptionId,
+  errorsId,
 } from "../../utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -26,7 +31,7 @@ const COMPONENT_TYPES = {
   null: "NullField",
 };
 
-function getFieldComponent(schema, uiSchema, idSchema, fields) {
+function useGetFieldComponent(schema, uiSchema, idSchema, fields) {
   const field = uiSchema["ui:field"];
   if (typeof field === "function") {
     return field;
@@ -52,7 +57,10 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
           <UnsupportedField
             schema={schema}
             idSchema={idSchema}
-            reason={`Unknown field type ${schema.type}`}
+            reason={useIntl().formatMessage(
+              { defaultMessage: "Unknown field type {type}" },
+              { type: schema.type }
+            )}
           />
         );
       };
@@ -64,7 +72,7 @@ function Label(props) {
     return null;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <label className="control-label" htmlFor={id} {...ariaDescribedBy(id)}>
       {label}
       {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
@@ -80,6 +88,7 @@ function LabelInput(props) {
       id={id}
       onBlur={event => onChange(event.target.value)}
       defaultValue={label}
+      aria-describedby={ariaDescribedBy(id)}
     />
   );
 }
@@ -104,14 +113,14 @@ function Help(props) {
 }
 
 function ErrorList(props) {
-  const { errors = [] } = props;
+  const { errors = [], id } = props;
   if (errors.length === 0) {
     return null;
   }
 
   return (
     <div>
-      <ul className="error-detail bs-callout bs-callout-info">
+      <ul className="error-detail bs-callout bs-callout-info" id={id}>
         {errors
           .filter(elem => !!elem)
           .map((error, index) => {
@@ -254,7 +263,12 @@ function SchemaFieldRender(props) {
     toIdSchema(schema, null, rootSchema, formData, idPrefix),
     idSchema
   );
-  const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
+  const FieldComponent = useGetFieldComponent(
+    schema,
+    uiSchema,
+    idSchema,
+    fields
+  );
   const { DescriptionField } = fields;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(
@@ -318,15 +332,15 @@ function SchemaFieldRender(props) {
   const fieldProps = {
     description: (
       <DescriptionField
-        id={id + "__description"}
+        id={descriptionId(id)}
         description={description}
         formContext={formContext}
       />
     ),
     rawDescription: description,
-    help: <Help id={id + "__help"} help={help} />,
+    help: <Help id={helpId(id)} help={help} />,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: <ErrorList errors={errors} />,
+    errors: <ErrorList id={errorsId(id)} errors={errors} />,
     rawErrors: errors,
     id,
     label,

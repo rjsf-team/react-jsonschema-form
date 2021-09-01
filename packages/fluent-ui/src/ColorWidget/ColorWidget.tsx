@@ -7,7 +7,7 @@ import {
   getColorFromString,
   Label,
 } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 import _pick from "lodash/pick";
 import { useConstCallback } from "@uifabric/react-hooks";
 

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { utils } from "@rjsf/core";
+import { utils } from "@visma/rjsf-core";
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";

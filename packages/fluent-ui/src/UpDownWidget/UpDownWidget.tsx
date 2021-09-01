@@ -1,9 +1,9 @@
 import React from "react";
 import { Label } from "@fluentui/react";
 import { SpinButton } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 import _pick from "lodash/pick";
-import { utils } from "@rjsf/core";
+import { utils } from "@visma/rjsf-core";
 
 const { rangeSpec } = utils;
 

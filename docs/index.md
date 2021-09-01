@@ -19,13 +19,13 @@ react-jsonschema-form also comes with tools such as `uiSchema` and other form pr
 First install the dependency from npm:
 
 ```bash
-$ npm install @rjsf/core --save
+$ npm install @visma/rjsf-core --save
 ```
 
 Then import the dependency as follows:
 
 ```js
-import Form from "@rjsf/core";
+import Form from "@visma/rjsf-core";
 ```
 
 Our latest version requires React 16+. You can also install `react-jsonschema-form` (the 1.x version) which works with React 15+.
@@ -33,10 +33,10 @@ Our latest version requires React 16+. You can also install `react-jsonschema-fo
 ### As a script served from a CDN
 
 ```html
-  <script src="https://unpkg.com/@rjsf/core/dist/react-jsonschema-form.js"></script>
+  <script src="https://unpkg.com/@visma/rjsf-core/dist/react-jsonschema-form.js"></script>
 ```
 
-Source maps are available at [this url](https://unpkg.com/@rjsf/core/dist/react-jsonschema-form.js.map).
+Source maps are available at [this url](https://unpkg.com/@visma/rjsf-core/dist/react-jsonschema-form.js.map).
 
 > Note: The CDN version **does not** embed `react` or `react-dom`.
 

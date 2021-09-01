@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 
 import FixedArrayFieldTemplate from './FixedArrayFieldTemplate';
 import NormalArrayFieldTemplate from './NormalArrayFieldTemplate';

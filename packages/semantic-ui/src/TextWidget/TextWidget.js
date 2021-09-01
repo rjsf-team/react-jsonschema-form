@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import React from "react";
+import { utils } from "@visma/rjsf-core";
 import PropTypes from "prop-types";
+import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-import { utils } from "@rjsf/core";
 const { getDisplayLabel } = utils;
 function TextWidget(props) {
   const {

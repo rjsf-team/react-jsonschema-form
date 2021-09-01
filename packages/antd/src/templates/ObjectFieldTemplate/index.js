@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import _ from 'lodash';
 
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 import Button from 'antd/lib/button';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';

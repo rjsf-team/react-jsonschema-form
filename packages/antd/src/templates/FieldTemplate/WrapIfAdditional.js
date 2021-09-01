@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 import Button from 'antd/lib/button';
 import Col from 'antd/lib/col';
 import Form from 'antd/lib/form';

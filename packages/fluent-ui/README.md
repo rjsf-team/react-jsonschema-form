@@ -11,7 +11,7 @@
     <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/fluent-ui/logo.png" alt="Logo" width="120" height="120">
   </a>
 
-  <h3 align="center">@rjsf/fluent-ui</h3>
+  <h3 align="center">@visma/rjsf-fluent-ui</h3>
 
   <p align="center">
   Fluent UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -59,10 +59,10 @@ Fluent UI theme, fields and widgets for `react-jsonschema-form`.
 ### Prerequisites
 
 - `@fluentui/react >= 7.114.2`
-- `@rjsf/core >= 2.0.0`
+- `@visma/rjsf-core >= 2.0.0`
 
 ```bash
-yarn add @fluentui/react @rjsf/core
+yarn add @fluentui/react @visma/rjsf-core
 ```
 
 For the Fluent UI grid to work, add the following CSS tag to the main HTML page:
@@ -74,7 +74,7 @@ For the Fluent UI grid to work, add the following CSS tag to the main HTML page:
 ### Installation
 
 ```bash
-yarn add @rjsf/fluent-ui
+yarn add @visma/rjsf-fluent-ui
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -82,14 +82,14 @@ yarn add @rjsf/fluent-ui
 ## Usage
 
 ```js
-import Form from '@rjsf/fluent-ui';
+import Form from '@visma/rjsf-fluent-ui';
 ```
 
 or
 
 ```js
-import { withTheme } from '@rjsf/core';
-import { Theme as FluentUITheme } from '@rjsf/fluent-ui';
+import { withTheme } from '@visma/rjsf-core';
+import { Theme as FluentUITheme } from '@visma/rjsf-fluent-ui';
 
 // Make modifications to the theme with your own fields and widgets
 
@@ -125,8 +125,8 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/fluent-ui/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/fluent-ui
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/fluent-ui.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/fluent-ui
+[npm-shield]: https://img.shields.io/npm/v/@visma/rjsf-fluent-ui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@visma/rjsf-fluent-ui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@visma/rjsf-fluent-ui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@visma/rjsf-fluent-ui
 [product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/fluent-ui/screenshot.png

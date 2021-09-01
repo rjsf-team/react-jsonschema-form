@@ -5,7 +5,7 @@
     <img src="./react-bootstrap-4-logo.png" alt="Logo" width="140" height="120">
   </a>
 
-  <h3 align="center">@rjsf/bootstrap-4</h3>
+  <h3 align="center">@visma/rjsf-bootstrap-4</h3>
 
   <p align="center">
   Bootstrap-4 theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -53,29 +53,29 @@ Exports `bootstrap-4` theme, fields and widgets for `react-jsonschema-form`.
 ### Prerequisites
 
 - `react-bootstrap >= 1.0.1`
-- `@rjsf/core >= 2.2.0`
+- `@visma/rjsf-core >= 2.2.0`
 
 ```bash
-yarn add react-bootstrap @rjsf/core
+yarn add react-bootstrap @visma/rjsf-core
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/bootstrap-4
+yarn add @visma/rjsf-bootstrap-4
 ```
 
 ## Usage
 
 ```js
-import Form from '@rjsf/bootstrap-4';
+import Form from '@visma/rjsf-bootstrap-4';
 ```
 
 or
 
 ```js
-import { withTheme } from '@rjsf/core';
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { withTheme } from '@visma/rjsf-core';
+import { Theme as Bootstrap4Theme } from '@visma/rjsf-bootstrap-4';
 
 const Form = withTheme(Bootstrap4Theme);
 ```
@@ -103,8 +103,8 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/bootstrap-4/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/bootstrap-4
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/bootstrap-4.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/bootstrap-4
+[npm-shield]: https://img.shields.io/npm/v/@visma/rjsf-bootstrap-4/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@visma/rjsf-bootstrap-4
+[npm-dl-shield]: https://img.shields.io/npm/dm/@visma/rjsf-bootstrap-4.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@visma/rjsf-bootstrap-4
 [product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/bootstrap-4/screenshot.png

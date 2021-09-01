@@ -148,6 +148,7 @@ exports[`array fields array icons 1`] = `
                           onClick={[Function]}
                         >
                           <input
+                            aria-describedby="root_0__errors root_0__description root_0__help"
                             aria-invalid={false}
                             autoFocus={false}
                             className="MuiInputBase-input MuiInput-input"
@@ -340,6 +341,7 @@ exports[`array fields array icons 1`] = `
                           onClick={[Function]}
                         >
                           <input
+                            aria-describedby="root_1__errors root_1__description root_1__help"
                             aria-invalid={false}
                             autoFocus={false}
                             className="MuiInputBase-input MuiInput-input"
@@ -625,6 +627,7 @@ exports[`array fields checkboxes 1`] = `
           />
         </div>
         <input
+          aria-describedby="root__errors root__description root__help"
           autoFocus={false}
           onAnimationStart={[Function]}
           type="hidden"
@@ -723,6 +726,7 @@ exports[`array fields fixed array 1`] = `
                           onClick={[Function]}
                         >
                           <input
+                            aria-describedby="root_0__errors root_0__description root_0__help"
                             aria-invalid={false}
                             autoFocus={false}
                             className="MuiInputBase-input MuiInput-input"
@@ -776,6 +780,7 @@ exports[`array fields fixed array 1`] = `
                           onClick={[Function]}
                         >
                           <input
+                            aria-describedby="root_1__errors root_1__description root_1__help"
                             aria-invalid={false}
                             autoFocus={false}
                             className="MuiInputBase-input MuiInput-input"

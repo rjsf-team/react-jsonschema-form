@@ -9,7 +9,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 
-import { ErrorListProps } from '@rjsf/core';
+import { ErrorListProps } from '@visma/rjsf-core';
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <Paper elevation={2}>

@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button, Grid, Segment } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
+import { utils } from '@visma/rjsf-core';
 import AddButton from "../AddButton";
 import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
 
@@ -22,7 +22,7 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
     // See #312: Ensure compatibility with old versions of React.
     return null;
   }
-  const id = `${idSchema.$id}__description`;
+  const id = utils.descriptionId(idSchema.$id);
   return <DescriptionField id={id} description={description} />;
 }
 

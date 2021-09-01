@@ -1,5 +1,6 @@
 import AddButton from "../AddButton";
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import * as types from "../../types";
 
 import {
@@ -8,6 +9,7 @@ import {
   getDefaultRegistry,
   canExpand,
   ADDITIONAL_PROPERTY_FLAG,
+  descriptionId,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
@@ -24,7 +26,7 @@ function DefaultObjectFieldTemplate(props) {
       )}
       {props.description && (
         <DescriptionField
-          id={`${props.idSchema.$id}__description`}
+          id={descriptionId(props.idSchema.$id)}
           description={props.description}
           formContext={props.formContext}
         />
@@ -207,7 +209,10 @@ class ObjectField extends Component {
       return (
         <div>
           <p className="config-error" style={{ color: "red" }}>
-            Invalid {name || "root"} object field configuration:
+            {this.props.intl.formatMessage(
+              { defaultMessage: "Invalid {name} object field configuration:" },
+              { name: name || "root" }
+            )}
             <em>{err.message}</em>.
           </p>
           <pre>{JSON.stringify(schema)}</pre>
@@ -285,4 +290,4 @@ if (process.env.NODE_ENV !== "production") {
   ObjectField.propTypes = types.fieldProps;
 }
 
-export default ObjectField;
+export default injectIntl(ObjectField);

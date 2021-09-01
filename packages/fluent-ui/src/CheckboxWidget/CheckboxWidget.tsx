@@ -1,6 +1,6 @@
 import React from "react";
 import { Checkbox, Label } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 import _pick from "lodash/pick";
 
 // Keys of ICheckboxProps from @fluentui/react

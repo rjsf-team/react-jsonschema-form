@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { utils } from "@visma/rjsf-core";
 import React from "react";
 import { Form } from "semantic-ui-react";
 import DescriptionField from "../DescriptionField";
@@ -31,7 +32,7 @@ function FieldTemplate({
             )}
           </MaybeWrap>
         )}
-        <HelpField helpText={rawHelp} id={id + "__help"} />
+        <HelpField helpText={rawHelp} id={utils.helpId(id)} />
         <RawErrors errors={rawErrors} options={errorOptions} />
       </MaybeWrap>
     </Form.Group>

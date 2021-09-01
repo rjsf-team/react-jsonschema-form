@@ -1,7 +1,7 @@
+import { utils } from "@visma/rjsf-core";
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-import {  utils } from "@rjsf/core";
 
 const { getDisplayLabel } = utils;
 function URLWidget(props) {

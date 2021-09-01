@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@visma/rjsf-core";
 import _pick from "lodash/pick";
 
 // Keys of ITextFieldProps from @fluentui/react

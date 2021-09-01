@@ -4,7 +4,7 @@ import DescriptionField from "../src/DescriptionField";
 import renderer from "react-test-renderer";
 import TitleField from "../src/TitleField";
 import { mockSchema } from "./helpers/createMocks";
-import { utils } from "@rjsf/core";
+import { utils } from "@visma/rjsf-core";
 const { getDefaultRegistry } = utils;
 
 describe("ArrayFieldTemplate", () => {

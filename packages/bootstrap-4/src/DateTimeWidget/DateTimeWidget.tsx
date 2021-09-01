@@ -1,5 +1,5 @@
+import { utils, WidgetProps } from "@visma/rjsf-core";
 import React from "react";
-import { utils, WidgetProps } from "@rjsf/core";
 
 const { localToUTC, utcToLocal } = utils;
 
