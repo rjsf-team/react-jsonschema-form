@@ -38,6 +38,7 @@ describe("UpDownWidget", () => {
         widgets: {},
         definitions: {},
         formContext: {},
+        rootSchema: {},
       }
     };
     const tree = renderer.create(<UpDownWidget {...props} />).toJSON();
