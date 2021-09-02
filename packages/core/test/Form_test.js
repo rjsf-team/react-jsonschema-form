@@ -1497,7 +1497,7 @@ describeRepeated("Form common", createFormComponent => {
       });
 
       it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
-        const { node, onError } = createFormComponent({
+        const { node, onError, onSubmit } = createFormComponent({
           schema,
         });
 
@@ -1524,6 +1524,12 @@ describeRepeated("Form common", createFormComponent => {
         });
         Simulate.submit(node);
         sinon.assert.notCalled(onError);
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          errors: [],
+          errorSchema: {},
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+        });
       });
     });
 
