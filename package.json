@@ -31,6 +31,11 @@
     "babel-plugin-formatjs": "^10.2.15",
     "husky": "^3.1.0"
   },
+  "optionalDependencies": {
+    "@visma/formula": "^0.4.18",
+    "react": "^17.0.2",
+    "react-intl": "^5.20.10"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lerna run --concurrency 1 --stream precommit"

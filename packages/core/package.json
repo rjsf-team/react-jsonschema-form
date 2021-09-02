@@ -40,6 +40,7 @@
     "node": ">=12"
   },
   "peerDependencies": {
+    "@visma/formula": "^0.4.18",
     "react": ">=16",
     "react-intl": "^5.0.0"
   },
@@ -64,7 +65,7 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@formatjs/cli": "^4.2.16",
+    "@formatjs/cli": "^4.2.33",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",

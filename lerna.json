@@ -1,6 +1,4 @@
 {
-  "packages": [
-    "packages/*"
-  ],
+  "packages": ["packages/core", "packages/material-ui"],
   "version": "3.1.0"
 }

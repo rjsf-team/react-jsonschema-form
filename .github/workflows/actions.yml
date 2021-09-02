@@ -1,0 +1,73 @@
+name: Test, publish packages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  install_build_test:
+    name: Clean install dependencies, build, test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.target_commitish }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci --legacy-peer-deps
+      - run: npm run build
+      # - run: npm test
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: |
+            .
+            !**/node_modules
+            !**/src
+          retention-days: 0.05
+
+  publish:
+    needs: install_build_test
+    name: Publish to npm if version change
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: .
+
+      - name: Set up Node.js
+        if: steps.check.outputs.changed == 'true'
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
+
+      - name: Ignoring changes
+        run: |
+          git config user.email "you@example.com"
+          git config user.name "Your Name"
+          git add --all .
+          git commit -m "Ignoring changes for lerna publish"
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN} > .npmrc
+          npx lerna publish from-package --yes --no-verify-access --no-git-reset
+
+      - if: always()
+        run: rm .npmrc
