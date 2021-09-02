@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Skeleton from 'react-loading-skeleton';
 
 function TextareaWidget(props) {
   const {
@@ -15,24 +16,37 @@ function TextareaWidget(props) {
     onBlur,
     onFocus,
   } = props;
+
+  let isDataLoaded = true;
+  if (props.isDataLoaded !== undefined) {
+    isDataLoaded = props.isDataLoaded;
+  }
   const _onChange = ({ target: { value } }) => {
     return onChange(value === "" ? options.emptyValue : value);
   };
   return (
-    <textarea
-      id={id}
-      className="form-control"
-      value={typeof value === "undefined" ? "" : value}
-      placeholder={placeholder}
-      required={required}
-      disabled={disabled}
-      readOnly={readonly}
-      autoFocus={autofocus}
-      rows={options.rows}
-      onBlur={onBlur && (event => onBlur(id, event.target.value))}
-      onFocus={onFocus && (event => onFocus(id, event.target.value))}
-      onChange={_onChange}
-    />
+    <React.Fragment>
+      {(value == null || value === "" || value === undefined) && !isDataLoaded && (
+        <Skeleton/>
+      )}
+      {(value || isDataLoaded) && (
+        <textarea
+          id={id}
+          className="form-control"
+          value={typeof value === "undefined" ? "" : value}
+          placeholder={placeholder}
+          required={required}
+          disabled={disabled}
+          data-cy={props["data-cy"]}
+          readOnly={readonly}
+          autoFocus={autofocus}
+          rows={options.rows}
+          onBlur={onBlur && (event => onBlur(id, event.target.value))}
+          onFocus={onFocus && (event => onFocus(id, event.target.value))}
+          onChange={_onChange}
+        />
+      )}
+    </React.Fragment>
   );
 }
 

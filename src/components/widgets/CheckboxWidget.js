@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Skeleton from 'react-loading-skeleton';
 import DescriptionField from "../fields/DescriptionField.js";
 
 // Check to see if a schema specifies that a value must be true
@@ -34,6 +35,9 @@ function schemaRequiresTrueValue(schema) {
 function CheckboxWidget(props) {
   const {
     schema,
+    schema: {
+      hideLabel
+    },
     id,
     value,
     disabled,
@@ -44,32 +48,45 @@ function CheckboxWidget(props) {
     onFocus,
     onChange,
   } = props;
-
+  let isDataLoaded = true;
+  if (props.isDataLoaded !== undefined) {
+    isDataLoaded = props.isDataLoaded;
+  }
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
 
   return (
-    <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
-      {schema.description && (
-        <DescriptionField description={schema.description} />
+    <React.Fragment>
+      {(value == null || value === "" || value === undefined) && !isDataLoaded && (
+        <Skeleton/>
       )}
-      <label>
-        <input
-          type="checkbox"
-          id={id}
-          checked={typeof value === "undefined" ? false : value}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          onChange={event => onChange(event.target.checked)}
-          onBlur={onBlur && (event => onBlur(id, event.target.checked))}
-          onFocus={onFocus && (event => onFocus(id, event.target.checked))}
-        />
-        <span>{label}</span>
-      </label>
-    </div>
+      {(value || isDataLoaded) && (
+        <div className={`custom-control custom-checkbox ${disabled || readonly ? "disabled" : ""}`}>
+          {schema.description && (
+            <DescriptionField description={schema.description} />
+          )}
+          <input
+            type="checkbox"
+            id={id}
+            className="custom-control-input"
+            checked={typeof value === "undefined" ? false : value}
+            required={required}
+            disabled={disabled || readonly}
+            autoFocus={autofocus}
+            onChange={event => onChange(event.target.checked)}
+            onBlur={onBlur && (event => onBlur(id, event.target.checked))}
+            onFocus={onFocus && (event => onFocus(id, event.target.checked))}
+          />
+          <label className="custom-control-label" htmlFor={id}>
+            {!hideLabel &&
+              <span>{label}</span>
+            }
+          </label>
+        </div>
+      )}
+    </React.Fragment>
   );
 }
 

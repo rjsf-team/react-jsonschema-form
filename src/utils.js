@@ -32,6 +32,7 @@ const widgetMap = {
     "alt-datetime": "AltDateTimeWidget",
     color: "ColorWidget",
     file: "FileWidget",
+    schema: "",
   },
   number: {
     text: "TextWidget",
@@ -52,9 +53,13 @@ const widgetMap = {
   array: {
     select: "SelectWidget",
     checkboxes: "CheckboxesWidget",
+    Tags: "TagWidget",
     files: "FileWidget",
     hidden: "HiddenWidget",
   },
+  schema:{
+    object:""
+  }
 };
 
 export function getDefaultRegistry() {
@@ -103,7 +108,10 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     return Widget.MergedWidget;
   }
 
-  if (typeof widget === "function" || ReactIs.isForwardRef(widget)) {
+  if (
+    typeof widget === "function" ||
+    ReactIs.isForwardRef(React.createElement(widget))
+  ) {
     return mergeOptions(widget);
   }
 
@@ -273,7 +281,7 @@ export function getDefaultFormState(
     // Override schema defaults with form data.
     return mergeObjects(defaults, formData);
   }
-  if (formData === 0) {
+  if (formData === 0 || formData === false) {
     return formData;
   }
   return formData || defaults;
@@ -612,12 +620,12 @@ function resolveDependencies(schema, definitions, formData) {
   if ("oneOf" in resolvedSchema) {
     resolvedSchema =
       resolvedSchema.oneOf[
-        getMatchingOption(formData, resolvedSchema.oneOf, definitions)
+      getMatchingOption(formData, resolvedSchema.oneOf, definitions)
       ];
   } else if ("anyOf" in resolvedSchema) {
     resolvedSchema =
       resolvedSchema.anyOf[
-        getMatchingOption(formData, resolvedSchema.anyOf, definitions)
+      getMatchingOption(formData, resolvedSchema.anyOf, definitions)
       ];
   }
   return processDependencies(

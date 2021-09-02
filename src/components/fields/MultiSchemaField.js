@@ -95,6 +95,7 @@ class AnyOfField extends Component {
       disabled,
       errorSchema,
       formData,
+      taskData,
       idPrefix,
       idSchema,
       onBlur,
@@ -104,8 +105,17 @@ class AnyOfField extends Component {
       registry,
       safeRenderCompletion,
       uiSchema,
+      permission,
+      updatedFields,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      subForms,
+      roleId,
     } = this.props;
-
     const _SchemaField = registry.fields.SchemaField;
     const { widgets } = registry;
     const { selectedOption } = this.state;
@@ -147,9 +157,20 @@ class AnyOfField extends Component {
           <_SchemaField
             schema={optionSchema}
             uiSchema={uiSchema}
+            permission={permission}
+            updatedFields={updatedFields}
+            updatedFieldClassName={updatedFieldClassName}
+            isDataLoaded={isDataLoaded}
+            AuthID={AuthID}
+            EditorType={EditorType}
+            TaskID={TaskID}
+            timezone={timezone}
+            subForms={subForms}
+            roleId={roleId}
             errorSchema={errorSchema}
             idSchema={idSchema}
             idPrefix={idPrefix}
+            taskData={taskData}
             formData={formData}
             onChange={onChange}
             onBlur={onBlur}

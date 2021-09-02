@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Skeleton from 'react-loading-skeleton';
 
 function BaseInput(props) {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   if (!props.id) {
-    console.log("No id for", props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
   const {
@@ -23,6 +23,10 @@ function BaseInput(props) {
     ...inputProps
   } = props;
 
+  let isDataLoaded = true;
+  if (props.isDataLoaded !== undefined) {
+    isDataLoaded = props.isDataLoaded;
+  }
   // If options.inputType is set use that as the input type
   if (options.inputType) {
     inputProps.type = options.inputType;
@@ -60,19 +64,25 @@ function BaseInput(props) {
   const _onChange = ({ target: { value } }) => {
     return props.onChange(value === "" ? options.emptyValue : value);
   };
-
   return (
-    <input
-      className="form-control"
-      readOnly={readonly}
-      disabled={disabled}
-      autoFocus={autofocus}
-      value={value == null ? "" : value}
-      {...inputProps}
-      onChange={_onChange}
-      onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
-      onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
-    />
+    <React.Fragment>
+      {(value == null || value === "" || value === undefined) && !isDataLoaded && (
+        <Skeleton height={38} />
+      )}
+      {(value || isDataLoaded) && (
+        <input
+          className="form-control"
+          readOnly={readonly}
+          disabled={disabled}
+          autoFocus={autofocus}
+          value={value == null ? "" : value}
+          {...inputProps}
+          onChange={_onChange}
+          onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
+          onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
+        />
+      )}
+    </React.Fragment>
   );
 }
 

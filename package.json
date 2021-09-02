@@ -40,16 +40,23 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "react": ">=15"
+    "react": ">=16"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.4.5",
     "ajv": "^6.7.0",
     "core-js": "^2.5.7",
-    "lodash": "^4.17.15",
+    "json-logic-js": "^1.2.2",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.findindex": "^4.6.0",
+    "lodash.get": "^4.4.2",
+    "lodash.isempty": "^4.4.0",
+    "lodash.pick": "^4.4.0",
+    "lodash.topath": "^4.5.2",
     "prop-types": "^15.5.8",
-    "react-is": "^16.8.4",
+    "react-is": "^16.9.0",
     "react-lifecycles-compat": "^3.0.4",
+    "react-loading-skeleton": "^2.1.1",
     "shortid": "^2.2.14"
   },
   "devDependencies": {
@@ -91,9 +98,10 @@
     "monaco-editor-webpack-plugin": "^1.7.0",
     "nyc": "^13.2.0",
     "prettier": "^1.15.1",
-    "react": "^15.5.0",
+    "react": "^16.9.0",
+    "react-bootstrap": "1.0.0-beta.5",
     "react-codemirror2": "^4.1.0",
-    "react-dom": "^15.3.2",
+    "react-dom": "^16.9.0",
     "react-monaco-editor": "^0.26.2",
     "react-portal": "^4.2.0",
     "react-transform-catch-errors": "^1.0.0",

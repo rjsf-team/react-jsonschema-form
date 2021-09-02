@@ -49,6 +49,17 @@ describe("utils", () => {
         ).to.eql(0);
       });
 
+      it("should keep existing form data that is equal to false", () => {
+        expect(
+          getDefaultFormState(
+            {
+              type: "boolean",
+            },
+            false
+          )
+        ).to.eql(false);
+      });
+
       const noneValues = [null, undefined, NaN];
       noneValues.forEach(noneValue => {
         it("should overwrite existing form data that is equal to a none value", () => {
@@ -1104,7 +1115,7 @@ describe("utils", () => {
       });
     });
 
-    it.only("should 'resolve' and stub out a schema which contains an `additionalProperties` with a type and definition", () => {
+    it("should 'resolve' and stub out a schema which contains an `additionalProperties` with a type and definition", () => {
       const schema = {
         type: "string",
         additionalProperties: {
@@ -2858,12 +2869,16 @@ describe("utils", () => {
       );
     });
 
-    //TODO: Unskip the test when react>=16.3 will be used
-    it.skip("should not fail on forwarded ref component", () => {
+    it("should not fail on correct component", () => {
+      const Widget = props => <div {...props} />;
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
+    });
+
+    it("should not fail on forwarded ref component", () => {
       const Widget = React.forwardRef((props, ref) => (
         <div {...props} ref={ref} />
       ));
-      expect(getWidget(schema, Widget)).eql(<Widget />);
+      expect(getWidget(schema, Widget)({})).eql(<Widget options={{}} />);
     });
   });
 });

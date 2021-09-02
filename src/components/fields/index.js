@@ -22,5 +22,5 @@ export default {
   StringField,
   TitleField,
   NullField,
-  UnsupportedField,
+  UnsupportedField
 };

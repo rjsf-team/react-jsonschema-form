@@ -1,10 +1,11 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
+import Confirmation from "../Confirmation";
 import React, { Component } from "react";
 import { polyfill } from "react-lifecycles-compat";
 import includes from "core-js/library/fn/array/includes";
 import * as types from "../../types";
-
+import findIndex from "lodash.findindex";
 import UnsupportedField from "./UnsupportedField";
 import {
   getWidget,
@@ -28,7 +29,6 @@ function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   const id = `${idSchema.$id}__title`;
   return <TitleField id={id} title={title} required={required} />;
 }
-
 function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   if (!description) {
     return null;
@@ -47,56 +47,65 @@ function DefaultArrayItem(props) {
   };
   return (
     <div key={props.key} className={props.className}>
-      <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
-        {props.children}
-      </div>
+      <div className="row">
 
-      {props.hasToolbar && (
-        <div className="col-xs-3 array-item-toolbox">
-          <div
-            className="btn-group"
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-            }}>
-            {(props.hasMoveUp || props.hasMoveDown) && (
-              <IconButton
-                icon="arrow-up"
-                className="array-item-move-up"
-                tabIndex="-1"
-                style={btnStyle}
-                disabled={props.disabled || props.readonly || !props.hasMoveUp}
-                onClick={props.onReorderClick(props.index, props.index - 1)}
-              />
-            )}
 
-            {(props.hasMoveUp || props.hasMoveDown) && (
-              <IconButton
-                icon="arrow-down"
-                className="array-item-move-down"
-                tabIndex="-1"
-                style={btnStyle}
-                disabled={
-                  props.disabled || props.readonly || !props.hasMoveDown
-                }
-                onClick={props.onReorderClick(props.index, props.index + 1)}
-              />
-            )}
+        {props.hasToolbar && (
+          <div className={"col-12"}>
+            <div className="array-item-toolbox float-right">
+              <div
+                className="btn-group"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                }}>
+                {(props.hasMoveUp || props.hasMoveDown) && (
+                  <IconButton
+                    icon="arrow-up"
+                    className="array-item-move-up"
+                    tabIndex="-1"
+                    style={btnStyle}
+                    disabled={props.disabled || props.readonly || !props.hasMoveUp}
+                    onClick={props.onReorderClick(props.index, props.index - 1)}
+                  />
+                )}
 
-            {props.hasRemove && (
-              <IconButton
-                type="danger"
-                icon="remove"
-                className="array-item-remove"
-                tabIndex="-1"
-                style={btnStyle}
-                disabled={props.disabled || props.readonly}
-                onClick={props.onDropIndexClick(props.index)}
-              />
-            )}
+                {(props.hasMoveUp || props.hasMoveDown) && (
+                  <IconButton
+                    icon="arrow-down"
+                    className="array-item-move-down"
+                    tabIndex="-1"
+                    style={btnStyle}
+                    disabled={
+                      props.disabled || props.readonly || !props.hasMoveDown
+                    }
+                    onClick={props.onReorderClick(props.index, props.index + 1)}
+                  />
+                )}
+
+                {props.hasEdit && (
+                  <IconButton
+                    type="primary"
+                    icon="edit"
+                    className="array-item-edit btn-sm"
+                    tabIndex="-1"
+                    style={btnStyle}
+                    disabled={props.disabled || props.readonly}
+                    onClick={props.onEditIndexClick(props.index)}
+                  />
+                )}
+
+                {props.hasRemove && (
+                  <Confirmation variant="outline-primary" disabled={props.disabled || props.readonly} headingText={"Are you sure to delete this items?"} onConfirmation={props.onDropIndexClick(props.index)} ButtonText={'X'} className={"array-item-remove"} />
+                )}
+              </div>
+            </div>
           </div>
+        )}
+        <div className={/* props.hasToolbar ? "col-9" :  */"col-12"}>
+          {props.children}
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -128,6 +137,8 @@ function DefaultFixedArrayFieldTemplate(props) {
 
       {props.canAdd && (
         <AddButton
+          textValue="+"
+          typeValue="secondary"
           className="array-item-add"
           onClick={props.onAddClick}
           disabled={props.disabled || props.readonly}
@@ -138,6 +149,10 @@ function DefaultFixedArrayFieldTemplate(props) {
 }
 
 function DefaultNormalArrayFieldTemplate(props) {
+  let AddButtonText = "+";
+  if (props.uiSchema && props.uiSchema["ui:ArrayAddText"]) {
+    AddButtonText = props.uiSchema["ui:ArrayAddText"];
+  }
   return (
     <fieldset className={props.className} id={props.idSchema.$id}>
       <ArrayFieldTitle
@@ -168,6 +183,8 @@ function DefaultNormalArrayFieldTemplate(props) {
       {props.canAdd && (
         <AddButton
           className="array-item-add"
+          textValue={AddButtonText}
+          typeValue="link"
           onClick={props.onAddClick}
           disabled={props.disabled || props.readonly}
         />
@@ -184,11 +201,12 @@ function generateKeyedFormData(formData) {
   return !Array.isArray(formData)
     ? []
     : formData.map(item => {
-        return {
-          key: generateRowId(),
-          item,
-        };
-      });
+      return {
+        key: generateRowId(),
+        isEditableArray: false,
+        item,
+      };
+    });
 }
 
 function keyedToPlainFormData(keyedFormData) {
@@ -203,6 +221,7 @@ class ArrayField extends Component {
     required: false,
     disabled: false,
     readonly: false,
+    isEditTrigger: false,
     autofocus: false,
   };
 
@@ -212,20 +231,28 @@ class ArrayField extends Component {
     const keyedFormData = generateKeyedFormData(formData);
     this.state = {
       keyedFormData,
+      updatedKeyedFormData: false,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    // Don't call getDerivedStateFromProps if keyed formdata was just updated.
+    if (prevState.updatedKeyedFormData) {
+      return {
+        updatedKeyedFormData: false,
+      };
+    }
     const nextFormData = nextProps.formData;
     const previousKeyedFormData = prevState.keyedFormData;
     const newKeyedFormData =
       nextFormData.length === previousKeyedFormData.length
         ? previousKeyedFormData.map((previousKeyedFormDatum, index) => {
-            return {
-              key: previousKeyedFormDatum.key,
-              item: nextFormData[index],
-            };
-          })
+          return {
+            key: previousKeyedFormDatum.key,
+            isEditableArray: previousKeyedFormDatum.isEditableArray,
+            item: nextFormData[index],
+          };
+        })
         : generateKeyedFormData(nextFormData);
     return {
       keyedFormData: newKeyedFormData,
@@ -248,7 +275,7 @@ class ArrayField extends Component {
   }
 
   canAddItem(formItems) {
-    const { schema, uiSchema } = this.props;
+    const { schema, uiSchema, permission, roleId, name } = this.props;
     let { addable } = getUiOptions(uiSchema);
     if (addable !== false) {
       // if ui:options.addable was not explicitly set to false, we can add
@@ -259,6 +286,10 @@ class ArrayField extends Component {
         addable = true;
       }
     }
+    if (permission && permission[roleId] && permission[roleId][5] !== undefined && includes(Object.values(permission[roleId][5]), name) && name) {
+      addable = false;
+    }
+
     return addable;
   }
 
@@ -272,23 +303,40 @@ class ArrayField extends Component {
     return getDefaultFormState(itemSchema, undefined, definitions);
   };
 
-  onAddClick = event => {
-    event.preventDefault();
-
-    const { onChange } = this.props;
-    const newKeyedFormDataRow = {
-      key: generateRowId(),
-      item: this._getNewFormDataRow(),
-    };
-    const newKeyedFormData = [...this.state.keyedFormData, newKeyedFormDataRow];
-
+  onAddClick = ((event, newData = null) => {
+    if (event) {
+      event.preventDefault();
+    }
+    const { onChange, onBlur } = this.props;
+    let newKeyedFormData = [];
+    if (newData && Array.isArray(newData)) {
+      const newKeyedFormDataRow = newData.map((item, i) => {
+        return {
+          key: generateRowId(),
+          isEditableArray: false,
+          item: (!item) ? this._getNewFormDataRow() : item,
+        };
+      });
+      newKeyedFormData = [...this.state.keyedFormData, ...newKeyedFormDataRow];
+    } else {
+      const newKeyedFormDataRow = {
+        key: generateRowId(),
+        isEditableArray: false,
+        item: (!newData) ? this._getNewFormDataRow() : newData,
+      };
+      newKeyedFormData = [...this.state.keyedFormData, newKeyedFormDataRow];
+    }
     this.setState(
       {
         keyedFormData: newKeyedFormData,
+        updatedKeyedFormData: true,
       },
-      () => onChange(keyedToPlainFormData(newKeyedFormData))
+      () => {
+        onChange(keyedToPlainFormData(newKeyedFormData))
+        onBlur(keyedToPlainFormData(newKeyedFormData))
+      }
     );
-  };
+  });
 
   onAddIndexClick = index => {
     return event => {
@@ -298,6 +346,7 @@ class ArrayField extends Component {
       const { onChange } = this.props;
       const newKeyedFormDataRow = {
         key: generateRowId(),
+        isEditableArray: false,
         item: this._getNewFormDataRow(),
       };
       let newKeyedFormData = [...this.state.keyedFormData];
@@ -306,6 +355,7 @@ class ArrayField extends Component {
       this.setState(
         {
           keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
         },
         () => onChange(keyedToPlainFormData(newKeyedFormData))
       );
@@ -313,6 +363,41 @@ class ArrayField extends Component {
   };
 
   onDropIndexClick = index => {
+    return event => {
+      if (event) {
+        event.preventDefault();
+      }
+      const { onChange, onBlur } = this.props;
+      const { keyedFormData } = this.state;
+      // refs #195: revalidate to ensure properly reindexing errors
+      let newErrorSchema;
+      if (this.props.errorSchema) {
+        newErrorSchema = {};
+        const errorSchema = this.props.errorSchema;
+        for (let i in errorSchema) {
+          i = parseInt(i);
+          if (i < index) {
+            newErrorSchema[i] = errorSchema[i];
+          } else if (i > index) {
+            newErrorSchema[i - 1] = errorSchema[i];
+          }
+        }
+      }
+      const newKeyedFormData = keyedFormData.filter((_, i) => i !== index);
+      this.setState(
+        {
+          keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
+        },
+        () => {
+          onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
+          onBlur(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
+        }
+      );
+    };
+  };
+
+  onEditIndexClick = index => {
     return event => {
       if (event) {
         event.preventDefault();
@@ -333,10 +418,12 @@ class ArrayField extends Component {
           }
         }
       }
-      const newKeyedFormData = keyedFormData.filter((_, i) => i !== index);
+      const newKeyedFormData = keyedFormData;
+      newKeyedFormData[index].isEditableArray = !keyedFormData[index].isEditableArray;
       this.setState(
         {
           keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
         },
         () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema)
       );
@@ -398,10 +485,10 @@ class ArrayField extends Component {
       onChange(
         newFormData,
         errorSchema &&
-          this.props.errorSchema && {
-            ...this.props.errorSchema,
-            [index]: errorSchema,
-          }
+        this.props.errorSchema && {
+          ...this.props.errorSchema,
+          [index]: errorSchema,
+        }
       );
     };
   };
@@ -440,6 +527,7 @@ class ArrayField extends Component {
   }
 
   renderNormalArray() {
+
     const {
       schema,
       uiSchema,
@@ -456,15 +544,26 @@ class ArrayField extends Component {
       onFocus,
       idPrefix,
       rawErrors,
+      permission,
+      updatedFields,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      subForms,
+      roleId,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
     const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
     const { TitleField, DescriptionField } = fields;
     const itemsSchema = retrieveSchema(schema.items, definitions);
+
     const arrayProps = {
       canAdd: this.canAddItem(formData),
       items: this.state.keyedFormData.map((keyedItem, index) => {
-        const { key, item } = keyedItem;
+        const { key, item, isEditableArray } = keyedItem;
         const itemSchema = retrieveSchema(schema.items, definitions, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + "_" + index;
@@ -476,6 +575,7 @@ class ArrayField extends Component {
           idPrefix
         );
         return this.renderArrayFieldItem({
+          isEditableArray,
           key,
           index,
           canMoveUp: index > 0,
@@ -488,6 +588,17 @@ class ArrayField extends Component {
           autofocus: autofocus && index === 0,
           onBlur,
           onFocus,
+          permission,
+          updatedFields,
+          updatedFieldClassName,
+          isDataLoaded,
+          AuthID,
+          EditorType,
+          TaskID,
+          timezone,
+          subForms,
+          roleId,
+          name,
         });
       }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
@@ -495,6 +606,16 @@ class ArrayField extends Component {
       disabled,
       idSchema,
       uiSchema,
+      permission,
+      updatedFields,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      subForms,
+      roleId,
       onAddClick: this.onAddClick,
       readonly,
       required,
@@ -505,10 +626,11 @@ class ArrayField extends Component {
       formData,
       rawErrors,
       registry,
+      onDropIndexClick: this.onDropIndexClick,
     };
 
     // Check if a custom render function was passed in
-    const Component =
+    let Component =
       uiSchema["ui:ArrayFieldTemplate"] ||
       ArrayFieldTemplate ||
       DefaultNormalArrayFieldTemplate;
@@ -521,6 +643,7 @@ class ArrayField extends Component {
       idSchema,
       uiSchema,
       formData,
+      taskData,
       disabled,
       readonly,
       required,
@@ -531,6 +654,16 @@ class ArrayField extends Component {
       onFocus,
       registry = getDefaultRegistry(),
       rawErrors,
+      permission,
+      updatedFields,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      subForms,
+      roleId,
     } = this.props;
     const items = this.props.formData;
     const { widgets, definitions, formContext } = registry;
@@ -550,7 +683,18 @@ class ArrayField extends Component {
         onFocus={onFocus}
         options={options}
         schema={schema}
+        permission={permission}
+        updatedFields={updatedFields}
+        updatedFieldClassName={updatedFieldClassName}
+        isDataLoaded={isDataLoaded}
+        AuthID={AuthID}
+        EditorType={EditorType}
+        TaskID={TaskID}
+        timezone={timezone}
+        subForms={subForms}
+        roleId={roleId}
         registry={registry}
+        taskData={taskData}
         value={items}
         disabled={disabled}
         readonly={readonly}
@@ -577,6 +721,17 @@ class ArrayField extends Component {
       onFocus,
       registry = getDefaultRegistry(),
       rawErrors,
+      permission,
+      taskData,
+      updatedFields,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      roleId,
+      subForms,
     } = this.props;
     const title = schema.title || name;
     const items = this.props.formData;
@@ -592,7 +747,18 @@ class ArrayField extends Component {
         onBlur={onBlur}
         onFocus={onFocus}
         schema={schema}
+        permission={permission}
+        updatedFields={updatedFields}
+        updatedFieldClassName={updatedFieldClassName}
+        isDataLoaded={isDataLoaded}
+        AuthID={AuthID}
+        EditorType={EditorType}
+        TaskID={TaskID}
+        timezone={timezone}
+        subForms={subForms}
+        roleId={roleId}
         title={title}
+        taskData={taskData}
         value={items}
         disabled={disabled}
         readonly={readonly}
@@ -620,6 +786,16 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       rawErrors,
+      permission,
+      updatedFields,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      roleId,
+      subForms,
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
@@ -646,7 +822,7 @@ class ArrayField extends Component {
       idSchema,
       formData,
       items: this.state.keyedFormData.map((keyedItem, index) => {
-        const { key, item } = keyedItem;
+        const { key, item, isEditableArray } = keyedItem;
         const additional = index >= itemSchemas.length;
         const itemSchema = additional
           ? retrieveSchema(schema.additionalItems, definitions, item)
@@ -662,11 +838,12 @@ class ArrayField extends Component {
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}
           : Array.isArray(uiSchema.items)
-          ? uiSchema.items[index]
-          : uiSchema.items || {};
+            ? uiSchema.items[index]
+            : uiSchema.items || {};
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
 
         return this.renderArrayFieldItem({
+          isEditableArray,
           key,
           index,
           canRemove: additional,
@@ -680,6 +857,16 @@ class ArrayField extends Component {
           autofocus: autofocus && index === 0,
           onBlur,
           onFocus,
+          permission,
+          updatedFields,
+          updatedFieldClassName,
+          isDataLoaded,
+          AuthID,
+          EditorType,
+          TaskID,
+          timezone,
+          roleId,
+          subForms,
         });
       }),
       onAddClick: this.onAddClick,
@@ -687,10 +874,21 @@ class ArrayField extends Component {
       required,
       schema,
       uiSchema,
+      permission,
+      updatedFields,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      subForms,
+      roleId,
       title,
       TitleField,
       formContext,
       rawErrors,
+      onDropIndexClick: this.onDropIndexClick,
     };
 
     // Check if a custom template template was passed in
@@ -703,20 +901,34 @@ class ArrayField extends Component {
 
   renderArrayFieldItem(props) {
     const {
+      isEditableArray,
       key,
       index,
       canRemove = true,
       canMoveUp = true,
+      CanEdit = false,
       canMoveDown = true,
       itemSchema,
       itemData,
       itemUiSchema,
       itemIdSchema,
       itemErrorSchema,
+      permission,
+      taskData,
+      updatedFields,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      subForms,
+      roleId,
       autofocus,
       onBlur,
       onFocus,
       rawErrors,
+      name
     } = props;
     const {
       disabled,
@@ -727,7 +939,8 @@ class ArrayField extends Component {
     const {
       fields: { SchemaField },
     } = registry;
-    const { orderable, removable } = {
+    const { orderable, removable, Editable } = {
+      Editable: true,
       orderable: true,
       removable: true,
       ...uiSchema["ui:options"],
@@ -736,15 +949,51 @@ class ArrayField extends Component {
       moveUp: orderable && canMoveUp,
       moveDown: orderable && canMoveDown,
       remove: removable && canRemove,
+      edit: Editable && CanEdit
     };
     has.toolbar = Object.keys(has).some(key => has[key]);
-
+    let arrayLabelOnlyPermission = false;
+    // Checking Edit and Remove option showing based on Auth
+    if (itemData && AuthID && itemData['id'] !== undefined && itemData['id'] !== '-1' && itemData['user_id'] !== '-1' && permission && permission[roleId] && permission[roleId][6] !== undefined && includes(Object.values(permission[roleId][6]), name) && name) {
+      has.remove = false;
+      has.edit = false;
+      if (parseInt(AuthID) === parseInt(itemData['user_id'])) {
+        has.remove = true;
+        has.edit = true;
+      }
+      if (!isEditableArray) {
+        arrayLabelOnlyPermission = true;
+      }
+    } else if (permission && permission[roleId] && permission[roleId][7] !== undefined && itemData && AuthID && itemData['id'] !== undefined && itemData['id'] !== '-1') {
+      has.remove = true;
+      has.edit = true;
+    } else if (permission && permission[roleId] && permission[roleId][5] !== undefined && includes(Object.values(permission[roleId][5]), name) && name) {
+      arrayLabelOnlyPermission = true;
+      has.remove = false;
+      has.edit = false;
+      has.moveDown = false;
+      has.moveUp = false;
+    }
     return {
       children: (
         <SchemaField
           schema={itemSchema}
           uiSchema={itemUiSchema}
+          permission={permission}
+          updatedFields={updatedFields}
+          updatedFieldClassName={updatedFieldClassName}
+          isDataLoaded={isDataLoaded}
+          AuthID={AuthID}
+          EditorType={EditorType}
+          TaskID={TaskID}
+          timezone={timezone}
+          subForms={subForms}
+          roleId={roleId}
+          isEditTrigger={isEditableArray}
+          arrayLabelOnlyPermission={arrayLabelOnlyPermission}
+          taskData={taskData}
           formData={itemData}
+          originalArrayData={itemData}
           errorSchema={itemErrorSchema}
           idSchema={itemIdSchema}
           required={this.isItemRequired(itemSchema)}
@@ -758,16 +1007,18 @@ class ArrayField extends Component {
           rawErrors={rawErrors}
         />
       ),
-      className: "array-item",
+      className: "col-12",
       disabled,
       hasToolbar: has.toolbar,
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
       hasRemove: has.remove,
+      hasEdit: has.edit,
       index,
       key,
       onAddIndexClick: this.onAddIndexClick,
       onDropIndexClick: this.onDropIndexClick,
+      onEditIndexClick: this.onEditIndexClick,
       onReorderClick: this.onReorderClick,
       readonly,
     };

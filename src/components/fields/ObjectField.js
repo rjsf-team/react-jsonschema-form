@@ -49,6 +49,8 @@ function DefaultObjectFieldTemplate(props) {
       {props.properties.map(prop => prop.content)}
       {canExpand() && (
         <AddButton
+          textValue="+"
+          typeValue="secondary"
           className="object-property-expand"
           onClick={props.onAddClick(props.schema)}
           disabled={props.disabled || props.readonly}
@@ -97,10 +99,10 @@ class ObjectField extends Component {
       this.props.onChange(
         newFormData,
         errorSchema &&
-          this.props.errorSchema && {
-            ...this.props.errorSchema,
-            [name]: errorSchema,
-          }
+        this.props.errorSchema && {
+          ...this.props.errorSchema,
+          [name]: errorSchema,
+        }
       );
     };
   };
@@ -144,10 +146,10 @@ class ObjectField extends Component {
       this.props.onChange(
         renamedObj,
         errorSchema &&
-          this.props.errorSchema && {
-            ...this.props.errorSchema,
-            [value]: errorSchema,
-          }
+        this.props.errorSchema && {
+          ...this.props.errorSchema,
+          [value]: errorSchema,
+        }
       );
     };
   };
@@ -197,7 +199,18 @@ class ObjectField extends Component {
   render() {
     const {
       uiSchema,
+      permission,
+      updatedFields,
+      realtimeUserPositionField,
+      updatedFieldClassName,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      roleId,
       formData,
+      taskData,
       errorSchema,
       idSchema,
       name,
@@ -207,9 +220,14 @@ class ObjectField extends Component {
       idPrefix,
       onBlur,
       onFocus,
+      originalArrayData,
+      isEditTrigger,
+      onOptionFilter,
+      onOptionResponse,
+      arrayLabelOnlyPermission,
       registry = getDefaultRegistry(),
+      subForms,
     } = this.props;
-
     const { definitions, fields, formContext } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, definitions, formData);
@@ -260,14 +278,29 @@ class ObjectField extends Component {
               name={name}
               required={this.isRequired(name)}
               schema={schema.properties[name]}
+              permission={permission}
+              updatedFields={updatedFields}
+              realtimeUserPositionField={realtimeUserPositionField}
+              updatedFieldClassName={updatedFieldClassName}
+              isDataLoaded={isDataLoaded}
+              AuthID={AuthID}
+              EditorType={EditorType}
+              TaskID={TaskID}
+              timezone={timezone}
+              subForms={subForms}
+              roleId={roleId}
               uiSchema={
                 addedByAdditionalProperties
                   ? uiSchema.additionalProperties
                   : uiSchema[name]
               }
+              originalArrayData={originalArrayData}
+              isEditTrigger={isEditTrigger}
+              arrayLabelOnlyPermission={arrayLabelOnlyPermission}
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
+              taskData={taskData}
               formData={(formData || {})[name]}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}
               onKeyChange={this.onKeyChange(name)}
@@ -276,6 +309,8 @@ class ObjectField extends Component {
                 addedByAdditionalProperties
               )}
               onBlur={onBlur}
+              onOptionFilter={/* onOptionFilter */(onOptionFilter) ? (onOptionFilter || null)[name] : undefined}
+              onOptionResponse={/* onOptionResponse */(onOptionResponse) ? (onOptionResponse || null)[name] : undefined}
               onFocus={onFocus}
               registry={registry}
               disabled={disabled}

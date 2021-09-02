@@ -52,6 +52,18 @@ module.exports = {
           path.join(__dirname, "node_modules", "babel-runtime"),
         ],
       },
+      {
+        test: /\.css$/,
+        use: [
+          "style-loader",
+          "css-loader",
+        ],
+        include: [
+          path.join(__dirname, "css"),
+          path.join(__dirname, "playground"),
+          path.join(__dirname, "node_modules"),
+        ],
+      },
     ]
   }
 };

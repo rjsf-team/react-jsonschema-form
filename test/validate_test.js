@@ -513,7 +513,7 @@ describe("Validation", () => {
           validate,
           liveValidate: true,
         });
-        comp.componentWillReceiveProps({ formData });
+        comp.UNSAFE_componentWillReceiveProps({ formData });
 
         expect(comp.state.errorSchema).eql({
           __errors: ["Invalid"],
@@ -595,7 +595,7 @@ describe("Validation", () => {
           validate,
           liveValidate: true,
         });
-        comp.componentWillReceiveProps({ formData });
+        comp.UNSAFE_componentWillReceiveProps({ formData });
 
         expect(comp.state.errorSchema).eql({
           __errors: [],
@@ -642,7 +642,7 @@ describe("Validation", () => {
           validate,
           liveValidate: true,
         });
-        comp.componentWillReceiveProps({ formData });
+        comp.UNSAFE_componentWillReceiveProps({ formData });
 
         expect(comp.state.errorSchema).eql({
           0: {
@@ -689,7 +689,7 @@ describe("Validation", () => {
           validate,
           liveValidate: true,
         });
-        comp.componentWillReceiveProps({ formData });
+        comp.UNSAFE_componentWillReceiveProps({ formData });
 
         expect(comp.state.errorSchema).eql({
           0: { __errors: [] },

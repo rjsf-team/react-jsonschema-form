@@ -1,4 +1,4 @@
-import toPath from "lodash/toPath";
+import toPath from "lodash.topath";
 import Ajv from "ajv";
 let ajv = createAjvInstance();
 import { deepEquals, getDefaultFormState } from "./utils";

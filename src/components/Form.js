@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import _pick from "lodash/pick";
-import _get from "lodash/get";
-import _isEmpty from "lodash/isEmpty";
+import _cloneDeep from "lodash.clonedeep";
+import _pick from "lodash.pick";
+import _get from "lodash.get";
+import _isEmpty from "lodash.isempty";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
@@ -28,6 +29,8 @@ export default class Form extends Component {
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
+    submitBtnClass: "btn btn-info",
+    submitBtnName: "Submit"
   };
 
   constructor(props) {
@@ -69,9 +72,9 @@ export default class Form extends Component {
     const { errors, errorSchema } = mustValidate
       ? this.validate(formData, schema, additionalMetaSchemas, customFormats)
       : {
-          errors: state.errors || [],
-          errorSchema: state.errorSchema || {},
-        };
+        errors: state.errors || [],
+        errorSchema: state.errorSchema || {},
+      };
     const idSchema = toIdSchema(
       retrievedSchema,
       uiSchema["ui:rootFieldId"],
@@ -218,15 +221,22 @@ export default class Form extends Component {
   };
 
   onBlur = (...args) => {
-    if (this.props.onBlur) {
-      this.props.onBlur(...args);
+    const { formData } = this.state;
+    const { errors, errorSchema } = this.validate(formData);
+    const { onBlurSubmit } = this.props;
+    if(onBlurSubmit){
+      this.setState({ errors, errorSchema }, () => onBlurSubmit(this.state));
     }
+     if (this.props.onBlur) {
+       this.props.onBlur(...args);
+     }
   };
 
   onFocus = (...args) => {
     if (this.props.onFocus) {
       this.props.onFocus(...args);
     }
+
   };
 
   onSubmit = event => {
@@ -303,9 +313,36 @@ export default class Form extends Component {
       this.formElement.dispatchEvent(new Event("submit", { cancelable: true }));
     }
   }
+  iterate(obj, stack, fields, unsetField) {
+    for (var property in obj) {
+      if (obj.hasOwnProperty(property)) {
+        if (typeof obj[property] == "object") {
+          if (property === "required" && unsetField !== 5 && unsetField !== 4) {
+            if (obj[property].length > 0) {
+              const unsetRequiredField = obj[property].filter(val => !fields.includes(val));
+              obj[property] = unsetRequiredField;
+            }
+          } else if ((unsetField === 5) && fields.indexOf(property) > -1) {
+            if (obj[property].type && obj[property].type === "array" && obj[property].items && obj[property].items.required) {
+              obj[property].items.required = [];
+            } else if (obj[property].type && obj[property].type === "object" && obj[property].properties && obj[property].properties.required) {
+              obj[property].properties.required = [];
+            }
+          } else if (unsetField === 4 && fields.indexOf(property) > -1) {
+            delete obj[property];
+          }
+          this.iterate(obj[property], stack + '.' + property, fields, unsetField);
+        }
+      }
+    }
+    return obj;
+  }
 
   render() {
     const {
+      permission,
+      isAuth,
+      taskData,
       children,
       safeRenderCompletion,
       id,
@@ -322,55 +359,110 @@ export default class Form extends Component {
       noHtml5Validate,
       disabled,
       formContext,
+      updatedFields,
+      updatedFieldClassName,
+      realtimeUserPositionField,
+      isDataLoaded,
+      AuthID,
+      EditorType,
+      TaskID,
+      timezone,
+      roleId,
+      onOptionResponse,
+      submitBtnClass,
+      submitBtnName,
+      onOptionFilter,
+      subForms,
     } = this.props;
-
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
     const FormTag = tagName ? tagName : "form";
-
+    if (permission && roleId && roleId !== undefined && permission[roleId]) {
+      const unsetRequired = [0, 1, 2, 4, 5];
+      unsetRequired.forEach((unsetField) => {
+        if (permission && permission[roleId][unsetField] && permission[roleId][unsetField].length > 0) {
+          this.iterate(schema, '', permission[roleId][unsetField], unsetField);
+        }
+      });
+    }
+    var size = 0;
+    if (schema.properties) {
+      size = Object.keys(schema.properties).length;
+    }
+    const schemaLength = size;
+    const tmpTaskData = _cloneDeep(taskData);
+    if (tmpTaskData !== undefined && tmpTaskData['front_fields'] !== null) {
+      tmpTaskData['front_fields'] = formData;
+    }
     return (
-      <FormTag
-        className={className ? className : "rjsf"}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autocomplete}
-        encType={enctype}
-        acceptCharset={acceptcharset}
-        noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}
-        ref={form => {
-          this.formElement = form;
-        }}>
-        {this.renderErrors()}
-        <_SchemaField
-          schema={schema}
-          uiSchema={uiSchema}
-          errorSchema={errorSchema}
-          idSchema={idSchema}
-          idPrefix={idPrefix}
-          formContext={formContext}
-          formData={formData}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          registry={registry}
-          safeRenderCompletion={safeRenderCompletion}
-          disabled={disabled}
-        />
-        {children ? (
-          children
-        ) : (
-          <div>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </div>
-        )}
-      </FormTag>
+      <>
+        {(schemaLength > 0) &&
+          <FormTag
+            className={className ? className : "rjsf"}
+            id={id}
+            name={name}
+            method={method}
+            target={target}
+            action={action}
+            autoComplete={autocomplete}
+            encType={enctype}
+            acceptCharset={acceptcharset}
+            noValidate={noHtml5Validate}
+            onSubmit={this.onSubmit}
+            ref={form => {
+              this.formElement = form;
+            }}>
+            {this.renderErrors()}
+            <_SchemaField
+              schema={schema}
+              updatedFields={updatedFields}
+              updatedFieldClassName={updatedFieldClassName}
+              realtimeUserPositionField={realtimeUserPositionField}
+              isDataLoaded={isDataLoaded}
+              AuthID={AuthID}
+              EditorType={EditorType}
+              TaskID={TaskID}
+              timezone={timezone}
+              subForms={subForms}
+              roleId={roleId}
+              uiSchema={uiSchema}
+              permission={permission}
+              isAuth={isAuth}
+              errorSchema={errorSchema}
+              idSchema={idSchema}
+              idPrefix={idPrefix}
+              formContext={formContext}
+              taskData={tmpTaskData}
+              formData={formData}
+              onChange={this.onChange}
+              onBlur={this.onBlur}
+              onOptionFilter={onOptionFilter}
+              onOptionResponse={onOptionResponse}
+              onFocus={this.onFocus}
+              registry={registry}
+              safeRenderCompletion={safeRenderCompletion}
+              disabled={disabled}
+            />
+            {!this.props.onBlurSubmit && (
+              <>
+                {children ? (
+                  children
+                ) : (
+                    <div>
+                      <button type="submit" className={submitBtnClass}>
+                        {submitBtnName}
+                      </button>
+                    </div>
+                  )}
+              </>
+            )
+            }
+
+          </FormTag>
+
+        }
+      </>
     );
   }
 }
@@ -379,7 +471,20 @@ if (process.env.NODE_ENV !== "production") {
   Form.propTypes = {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
+    permission: PropTypes.object,
+    isAuth: PropTypes.bool,
+    AuthID: PropTypes.number,
+    EditorType:PropTypes.number,
+    TaskID: PropTypes.string,
+    updatedFields: PropTypes.any,
+    realtimeUserPositionField: PropTypes.any,
+    updatedFieldClassName: PropTypes.string,
+    isDataLoaded: PropTypes.bool,
+    roleId: PropTypes.string,
+    timezone: PropTypes.string,
+    subForms: PropTypes.object,
     formData: PropTypes.any,
+    taskData: PropTypes.any,
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
     ),
@@ -399,6 +504,8 @@ if (process.env.NODE_ENV !== "production") {
     method: PropTypes.string,
     target: PropTypes.string,
     action: PropTypes.string,
+    submitBtnClass: PropTypes.string,
+    submitBtnName: PropTypes.string,
     autocomplete: PropTypes.string,
     enctype: PropTypes.string,
     acceptcharset: PropTypes.string,
@@ -406,6 +513,7 @@ if (process.env.NODE_ENV !== "production") {
     noHtml5Validate: PropTypes.bool,
     liveValidate: PropTypes.bool,
     validate: PropTypes.func,
+    onBlurSubmit: PropTypes.func,
     transformErrors: PropTypes.func,
     safeRenderCompletion: PropTypes.bool,
     formContext: PropTypes.object,

@@ -1,19 +1,22 @@
 import React from "react";
 import IconButton from "./IconButton";
 
-export default function AddButton({ className, onClick, disabled }) {
+export default function AddButton({ className, onClick, disabled, textValue, typeValue }) {
   return (
     <div className="row">
-      <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>
+      <div  className="col-12">
+      <p className={`${className}`}>
         <IconButton
-          type="info"
-          icon="plus"
-          className="btn-add col-xs-12"
+          type={typeValue}/* 
+          icon="plus" */
+          text={textValue}
+          className="btn-add btn-sm"
           tabIndex="0"
           onClick={onClick}
           disabled={disabled}
         />
       </p>
+      </div>
     </div>
   );
 }

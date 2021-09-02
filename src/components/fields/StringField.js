@@ -26,6 +26,13 @@ function StringField(props) {
     onFocus,
     registry = getDefaultRegistry(),
     rawErrors,
+    updatedFields,
+    updatedFieldClassName,
+    isDataLoaded,
+    AuthID,
+    EditorType,
+    TaskID,
+    timezone
   } = props;
   const { title, format } = schema;
   const { widgets, formContext } = registry;
@@ -46,10 +53,18 @@ function StringField(props) {
       label={title === undefined ? name : title}
       value={formData}
       onChange={onChange}
+      timezone={timezone}
       onBlur={onBlur}
+      data-cy={name}
       onFocus={onFocus}
       required={required}
       disabled={disabled}
+      updatedFields={updatedFields}
+      updatedFieldClassName={updatedFieldClassName}
+      isDataLoaded={isDataLoaded}
+      authid={AuthID}
+      editortype={EditorType}
+      taskid={TaskID}
       readonly={readonly}
       formContext={formContext}
       autofocus={autofocus}

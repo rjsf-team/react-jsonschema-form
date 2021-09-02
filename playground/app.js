@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import MonacoEditor from "react-monaco-editor";
-
 import { shouldRender } from "../src/utils";
 import { samples } from "./samples";
 import Form from "../src";
@@ -20,7 +19,7 @@ const liveSettingsSchema = {
 const themes = {
   default: {
     stylesheet:
-      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+      "http://cssilize.com/demo/restyaboard-layout-b2c03665/restya-classic/css/bootstrap.min.css",
   },
   cerulean: {
     stylesheet:
@@ -169,7 +168,7 @@ class Editor extends Component {
     this.state = { valid: true, code: props.code };
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     this.setState({ valid: true, code: props.code });
   }
 
@@ -305,20 +304,25 @@ class CopyLink extends Component {
     );
   }
 }
-
 class App extends Component {
   constructor(props) {
     super(props);
     // initialize state with Simple data sample
-    const { schema, uiSchema, formData, validate } = samples.Simple;
+    const { schema, uiSchema, formData, validate, permission, rules, extraActions } = samples.Numbers;
+
     this.state = {
       form: false,
+      rules,
       schema,
       uiSchema,
       formData,
+      permission,
       validate,
       editor: "default",
       theme: "default",
+      teamsResponse: {
+        team_user: []
+      },
       liveSettings: {
         validate: true,
         disable: false,
@@ -330,6 +334,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+
     const hash = document.location.hash.match(/#(.*)/);
     if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
       try {
@@ -338,7 +343,7 @@ class App extends Component {
         alert("Unable to load form setup data.");
       }
     } else {
-      this.load(samples.Simple);
+      this.load(samples.Numbers);
     }
   }
 
@@ -370,6 +375,8 @@ class App extends Component {
 
   onFormDataEdited = formData => this.setState({ formData, shareURL: null });
 
+  onPermissionEdited = permission => this.setState({ permission, shareURL: null });
+
   onThemeSelected = (theme, { stylesheet, editor }) => {
     this.setState({ theme, editor: editor ? editor : "default" });
     setImmediate(() => {
@@ -380,8 +387,11 @@ class App extends Component {
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
-  onFormDataChange = ({ formData }) =>
+  onFormDataChange = ({ formData }) => {
     this.setState({ formData, shareURL: null });
+  }
+
+
 
   onShare = () => {
     const { formData, schema, uiSchema, liveSettings } = this.state;
@@ -398,6 +408,17 @@ class App extends Component {
     }
   };
 
+  fetchTeams = (value) => {
+    if (value !== '') {
+      const { teamsResponse } = this.state;
+      teamsResponse.team_user.push(
+        { value: value, label: value },
+      );
+      this.setState({ teamsResponse });
+      this.forceUpdate();
+    }
+  };
+
   render() {
     const {
       schema,
@@ -405,19 +426,23 @@ class App extends Component {
       formData,
       liveSettings,
       validate,
+      permission,
       theme,
       editor,
+      rules,
+      extraActions,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
       transformErrors,
     } = this.state;
-
+    const onOptionFilter = {};
+    onOptionFilter["team_user"] = this.fetchTeams;
+    const updatedFields = ['due_date'];
+    const updatedFieldClassName = "animate";
     return (
       <div className="container-fluid">
-        <div className="page-header">
-          <h1>react-jsonschema-form</h1>
-          <div className="row">
-            <div className="col-sm-8">
+        <div className="row">
+          {/*   <div className="col-sm-8">
               <Selector onSelected={this.load} />
             </div>
             <div className="col-sm-2">
@@ -427,40 +452,43 @@ class App extends Component {
                 onChange={this.setLiveSettings}>
                 <div />
               </Form>
-            </div>
-            <div className="col-sm-2">
-              <ThemeSelector theme={theme} select={this.onThemeSelected} />
+            </div> */}
+          <div className="col-sm-7">
+            <Editor
+              title="JSONSchema"
+              theme={editor}
+              code={toJson(schema)}
+              onChange={this.onSchemaEdited}
+            />
+            <div className="row">
+              <div className="col-sm-6">
+                <Editor
+                  title="UISchema"
+                  theme={editor}
+                  code={toJson(uiSchema)}
+                  onChange={this.onUISchemaEdited}
+                />
+              </div>
+              <div className="col-sm-6">
+                <Editor
+                  title="formData"
+                  theme={editor}
+                  code={toJson(formData)}
+                  onChange={this.onFormDataEdited}
+                />
+              </div>
+              {/*  <div className="col-sm-4">
+              <Editor
+                title="permission"
+                theme={editor}
+                code={toJson(permission)}
+                onChange={this.onPermissionEdited}
+              />
+            </div> */}
             </div>
           </div>
-        </div>
-        <div className="col-sm-7">
-          <Editor
-            title="JSONSchema"
-            theme={editor}
-            code={toJson(schema)}
-            onChange={this.onSchemaEdited}
-          />
-          <div className="row">
-            <div className="col-sm-6">
-              <Editor
-                title="UISchema"
-                theme={editor}
-                code={toJson(uiSchema)}
-                onChange={this.onUISchemaEdited}
-              />
-            </div>
-            <div className="col-sm-6">
-              <Editor
-                title="formData"
-                theme={editor}
-                code={toJson(formData)}
-                onChange={this.onFormDataEdited}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="col-sm-5">
-          {this.state.form && (
+          <div className="col-sm-5">
+            {/* this.state.form && (
             <Form
               ArrayFieldTemplate={ArrayFieldTemplate}
               ObjectFieldTemplate={ObjectFieldTemplate}
@@ -500,9 +528,51 @@ class App extends Component {
                 </div>
               </div>
             </Form>
-          )}
-        </div>
-        <div className="col-sm-12">
+          ) */}
+            {<Form
+              schema={schema}
+              uiSchema={uiSchema}
+              formData={formData}
+              permission={permission}
+              updatedFieldClassName={updatedFieldClassName}
+              updatedFields={updatedFields}
+              isDataLoaded={true}
+              AuthID={1}
+              roleId={"editor"}
+              onChange={this.onFormDataChange}
+              onSubmit={({ formData }, e) => {
+                console.log("submitted formData", formData);
+                console.log("submit event", e);
+              }}
+              fields={{ geo: GeoPosition }}
+              validate={validate}
+              onBlur={(id, value) =>
+                console.log(`Touched ${id} with value ${value}`)
+              }
+              onFocus={(id, value) =>
+                console.log(`Focused ${id} with value ${value}`)
+              }
+              onOptionFilter={onOptionFilter}
+              onOptionResponse={this.state.teamsResponse}
+              transformErrors={transformErrors}
+              onError={log("errors")}>
+              <div className="row">
+                <div className="col-sm-3">
+                  <button className="btn btn-primary" type="submit">
+                    Submit
+                  </button>
+                </div>
+                <div className="col-sm-9 text-right">
+                  <CopyLink
+                    shareURL={this.state.shareURL}
+                    onShare={this.onShare}
+                  />
+                </div>
+              </div>
+            </Form>}
+
+          </div>
+          {/*   <div className="col-sm-12">
           <p style={{ textAlign: "center" }}>
             Powered by{" "}
             <a href="https://github.com/mozilla-services/react-jsonschema-form">
@@ -522,6 +592,7 @@ class App extends Component {
               </div>
             )}
           </p>
+        </div> */}
         </div>
       </div>
     );
