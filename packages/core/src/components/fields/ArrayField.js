@@ -103,23 +103,28 @@ function DefaultArrayItem(props) {
 }
 
 function DefaultFixedArrayFieldTemplate(props) {
+  const uiOptions = getUiOptions(props.uiSchema);
+  let { label: displayLabel = true } = uiOptions;
+
   return (
     <fieldset className={props.className} id={props.idSchema.$id}>
-      <ArrayFieldTitle
-        key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
-        idSchema={props.idSchema}
-        title={props.uiSchema["ui:title"] || props.title}
-        required={props.required}
-      />
-
-      {(props.uiSchema["ui:description"] || props.schema.description) && (
-        <div
-          className="field-description"
-          key={`field-description-${props.idSchema.$id}`}>
-          {props.uiSchema["ui:description"] || props.schema.description}
-        </div>
+      {displayLabel && (
+        <ArrayFieldTitle
+          key={`array-field-title-${props.idSchema.$id}`}
+          TitleField={props.TitleField}
+          idSchema={props.idSchema}
+          title={props.uiSchema["ui:title"] || props.title}
+          required={props.required}
+        />
       )}
+      {displayLabel &&
+        (props.uiSchema["ui:description"] || props.schema.description) && (
+          <div
+            className="field-description"
+            key={`field-description-${props.idSchema.$id}`}>
+            {props.uiSchema["ui:description"] || props.schema.description}
+          </div>
+        )}
 
       <div
         className="row array-item-list"
@@ -139,26 +144,32 @@ function DefaultFixedArrayFieldTemplate(props) {
 }
 
 function DefaultNormalArrayFieldTemplate(props) {
+  const uiOptions = getUiOptions(props.uiSchema);
+  let { label: displayLabel = true } = uiOptions;
+
   return (
     <fieldset className={props.className} id={props.idSchema.$id}>
-      <ArrayFieldTitle
-        key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
-        idSchema={props.idSchema}
-        title={props.uiSchema["ui:title"] || props.title}
-        required={props.required}
-      />
-
-      {(props.uiSchema["ui:description"] || props.schema.description) && (
-        <ArrayFieldDescription
-          key={`array-field-description-${props.idSchema.$id}`}
-          DescriptionField={props.DescriptionField}
+      {displayLabel && (
+        <ArrayFieldTitle
+          key={`array-field-title-${props.idSchema.$id}`}
+          TitleField={props.TitleField}
           idSchema={props.idSchema}
-          description={
-            props.uiSchema["ui:description"] || props.schema.description
-          }
+          title={props.uiSchema["ui:title"] || props.title}
+          required={props.required}
         />
       )}
+
+      {displayLabel &&
+        (props.uiSchema["ui:description"] || props.schema.description) && (
+          <ArrayFieldDescription
+            key={`array-field-description-${props.idSchema.$id}`}
+            DescriptionField={props.DescriptionField}
+            idSchema={props.idSchema}
+            description={
+              props.uiSchema["ui:description"] || props.schema.description
+            }
+          />
+        )}
 
       <div
         className="row array-item-list"

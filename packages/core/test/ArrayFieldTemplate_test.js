@@ -350,3 +350,40 @@ describe("ArrayFieldTemplate", () => {
     });
   });
 });
+
+describe("ArrayFieldTemplate with hidden label", () => {
+  const schema = {
+    type: "array",
+    title: "Example array label",
+    description: "Example array description",
+    items: { type: "string" },
+  };
+  const uiSchema = {
+    "ui:options": { label: false },
+  };
+
+  it("normal array should not generate label and description", () => {
+    const { node } = createFormComponent({
+      schema: schema,
+      uiSchema: uiSchema,
+      formData: ["a", "b"],
+    });
+
+    expect(node.querySelectorAll("legend")).to.have.length.of(0);
+  });
+
+  it("fixed array should not generate label and description", () => {
+    const fixedArraySchema = {
+      ...schema,
+      items: [{ type: "string" }],
+    };
+
+    const { node } = createFormComponent({
+      schema: fixedArraySchema,
+      uiSchema: uiSchema,
+      formData: ["a", "b"],
+    });
+
+    expect(node.querySelectorAll("legend")).to.have.length.of(0);
+  });
+});
