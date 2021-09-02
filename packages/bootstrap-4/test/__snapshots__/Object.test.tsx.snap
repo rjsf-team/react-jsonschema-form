@@ -27,29 +27,26 @@ exports[`object fields object 1`] = `
           <div
             className="form-group"
           >
-            <div
-              className="mb-0 form-group"
+            <label
+              className="form-label"
+              htmlFor="root_a"
             >
-              <label
-                className="form-label"
-              >
-                a
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_a"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="text"
-                value=""
-              />
-            </div>
+              a
+            </label>
+            <input
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_a"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value=""
+            />
           </div>
         </div>
       </div>
@@ -68,29 +65,26 @@ exports[`object fields object 1`] = `
           <div
             className="form-group"
           >
-            <div
-              className="mb-0 form-group"
+            <label
+              className="form-label"
+              htmlFor="root_b"
             >
-              <label
-                className="form-label"
-              >
-                b
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_b"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="number"
-                value=""
-              />
-            </div>
+              b
+            </label>
+            <input
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_b"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="number"
+              value=""
+            />
           </div>
         </div>
       </div>

@@ -229,26 +229,19 @@ exports[`single fields format color 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="color"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="color"
+      value=""
+    />
   </div>
   <div>
     <button
@@ -271,26 +264,19 @@ exports[`single fields format date 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="date"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="date"
+      value=""
+    />
   </div>
   <div>
     <button
@@ -313,26 +299,19 @@ exports[`single fields format datetime 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="datetime-local"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="datetime-local"
+      value=""
+    />
   </div>
   <div>
     <button
@@ -373,6 +352,12 @@ exports[`single fields hidden field 1`] = `
           <div
             className="form-group"
           >
+            <label
+              className="form-label"
+              htmlFor="root_my-field"
+            >
+              my-field
+            </label>
             <input
               id="root_my-field"
               type="hidden"
@@ -425,26 +410,19 @@ exports[`single fields number field 0 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="number"
-        value={0}
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="number"
+      value={0}
+    />
   </div>
   <div>
     <button
@@ -467,26 +445,19 @@ exports[`single fields number field 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="number"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="number"
+      value=""
+    />
   </div>
   <div>
     <button
@@ -685,26 +656,19 @@ exports[`single fields string field format data-url 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control-file"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="file"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control-file"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="file"
+      value=""
+    />
   </div>
   <div>
     <button
@@ -727,26 +691,19 @@ exports[`single fields string field format email 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="email"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="email"
+      value=""
+    />
   </div>
   <div>
     <button
@@ -769,26 +726,19 @@ exports[`single fields string field format uri 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="url"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="url"
+      value=""
+    />
   </div>
   <div>
     <button
@@ -811,26 +761,19 @@ exports[`single fields string field regular 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="text"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="text"
+      value=""
+    />
   </div>
   <div>
     <button
@@ -853,26 +796,19 @@ exports[`single fields string field with placeholder 1`] = `
   <div
     className="form-group"
   >
-    <div
-      className="mb-0 form-group"
-    >
-      <label
-        className="form-label"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder="placeholder"
-        readOnly={false}
-        type="text"
-        value=""
-      />
-    </div>
+    <input
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder="placeholder"
+      readOnly={false}
+      type="text"
+      value=""
+    />
   </div>
   <div>
     <button

@@ -11,7 +11,6 @@ const TextWidget = ({
   readonly,
   disabled,
   type,
-  label,
   value,
   onChange,
   onBlur,
@@ -35,11 +34,7 @@ const TextWidget = ({
 
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
-    <Form.Group className="mb-0">
-      <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
-        {label || schema.title}
-        {(label || schema.title) && required ? "*" : null}
-      </Form.Label>
+    <>
       <Form.Control
         id={id}
         placeholder={placeholder}
@@ -65,7 +60,7 @@ const TextWidget = ({
             })}
         </datalist>
       ) : null}
-    </Form.Group>
+    </>
   );
 };
 

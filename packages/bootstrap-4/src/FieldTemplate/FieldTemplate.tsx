@@ -12,15 +12,30 @@ const FieldTemplate = ({
   rawErrors = [],
   rawHelp,
   rawDescription,
+  label,
+  schema,
+  required
 }: FieldTemplateProps) => {
+
+  const shouldDisplayLabel = displayLabel && (label || schema.title);
+  const labelComponent = shouldDisplayLabel
+    ? (
+      <Form.Label htmlFor={id} className={rawErrors.length > 0 ? "text-danger" : ""}>
+        {label || schema.title}
+        {required ? "*" : null}
+      </Form.Label>
+    )
+    : null;
+
   return (
     <Form.Group>
-      {children}
-      {displayLabel && rawDescription ? (
+      {labelComponent}
+      {shouldDisplayLabel && rawDescription ? (
         <Form.Text className={rawErrors.length > 0 ? "text-danger" : "text-muted"}>
           {rawDescription}
         </Form.Text>
       ) : null}
+      {children}
       {rawErrors.length > 0 && (
         <ListGroup as="ul">
           {rawErrors.map((error: string) => {
