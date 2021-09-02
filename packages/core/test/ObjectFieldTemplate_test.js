@@ -118,3 +118,27 @@ describe("ObjectFieldTemplate", () => {
     });
   }
 });
+
+describe("ObjectFieldTemplate with hidden label", () => {
+  const schema = {
+    type: "object",
+    title: "Example object label",
+    description: "Example object description",
+    properties: {
+      name: { type: "string" },
+    },
+  };
+  const uiSchema = {
+    "ui:options": { label: false },
+  };
+
+  it("should not generate label and description", () => {
+    const { node } = createFormComponent({
+      schema: schema,
+      uiSchema: uiSchema,
+      formData: { name: "test object " },
+    });
+
+    expect(node.querySelectorAll("legend")).to.have.length.of(0);
+  });
+});

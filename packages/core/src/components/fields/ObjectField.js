@@ -8,13 +8,17 @@ import {
   getDefaultRegistry,
   canExpand,
   ADDITIONAL_PROPERTY_FLAG,
+  getUiOptions,
 } from "../../utils";
 
 function DefaultObjectFieldTemplate(props) {
   const { TitleField, DescriptionField } = props;
+  const uiOptions = getUiOptions(props.uiSchema);
+  let { label: displayLabel = true } = uiOptions;
+
   return (
     <fieldset id={props.idSchema.$id}>
-      {(props.uiSchema["ui:title"] || props.title) && (
+      {displayLabel && (props.uiSchema["ui:title"] || props.title) && (
         <TitleField
           id={`${props.idSchema.$id}__title`}
           title={props.title || props.uiSchema["ui:title"]}
@@ -22,7 +26,7 @@ function DefaultObjectFieldTemplate(props) {
           formContext={props.formContext}
         />
       )}
-      {props.description && (
+      {displayLabel && props.description && (
         <DescriptionField
           id={`${props.idSchema.$id}__description`}
           description={props.description}
