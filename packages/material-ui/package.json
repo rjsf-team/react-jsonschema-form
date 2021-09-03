@@ -1,6 +1,6 @@
 {
   "name": "@visma/rjsf-material-ui",
-  "version": "3.1.0-0",
+  "version": "3.1.0-1",
   "main": "dist/index.js",
   "module": "dist/material-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -33,7 +33,7 @@
     "@types/react-dom": "^16.9.5",
     "@types/react-test-renderer": "^16.9.2",
     "@types/sinon": "^9.0.0",
-    "@visma/rjsf-core": "^3.1.0-0",
+    "@visma/rjsf-core": "^3.1.0-1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-test-renderer": "^16.13.1",

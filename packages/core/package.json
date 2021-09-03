@@ -1,6 +1,6 @@
 {
   "name": "@visma/rjsf-core",
-  "version": "3.1.0-0",
+  "version": "3.1.0-1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib && npm run messages:extract && npm run messages:compile",
