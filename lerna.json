@@ -1,4 +1,7 @@
 {
-  "packages": ["packages/core", "packages/material-ui"],
-  "version": "3.1.0"
+  "packages": [
+    "packages/core",
+    "packages/material-ui"
+  ],
+  "version": "3.1.0-0"
 }
