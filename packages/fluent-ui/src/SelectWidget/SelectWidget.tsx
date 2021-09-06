@@ -97,8 +97,9 @@ const SelectWidget = ({
   const uiProps = _pick(options.props || {}, allowedProps);
   return (
     <>
-      <Label>{label || schema.title}</Label>
+     
       <Dropdown
+        label={label || schema.title}
         multiSelect={multiple}
         defaultSelectedKey={value}
         required={required}
