@@ -13,6 +13,7 @@ import {
   deepEquals,
   getSchemaType,
   getDisplayLabel,
+  getUiOptions,
 } from "../../utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -289,19 +290,18 @@ function SchemaFieldRender(props) {
   );
 
   const id = idSchema.$id;
+  const uiOptions = getUiOptions(uiSchema);
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
   let label;
   if (wasPropertyKeyModified) {
     label = name;
   } else {
-    label = uiSchema["ui:title"] || props.schema.title || schema.title || name;
+    label = uiOptions.title || props.schema.title || schema.title || name;
   }
 
   const description =
-    uiSchema["ui:description"] ||
-    props.schema.description ||
-    schema.description;
+    uiOptions.description || props.schema.description || schema.description;
   const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";

@@ -121,4 +121,62 @@ describe("FieldTemplate", () => {
       );
     });
   });
+
+  describe("FieldTemplate should use label & description from uiSchema", () => {
+    const schema = {
+      type: "string",
+      title: "Example Title",
+      description: "Example description",
+    };
+    const uiSchemaWithUiOptions = {
+      "ui:title": "Replace Title",
+      "ui:description": "Replace description",
+      "ui:options": {
+        title: "Override Title",
+        description: "Override description",
+      },
+    };
+    const { node: nodeWithUiOptions } = createFormComponent({
+      schema: schema,
+      uiSchema: uiSchemaWithUiOptions,
+      formData: "test string",
+    });
+
+    it("should use label from ui:options", () => {
+      const foundNodes = nodeWithUiOptions.querySelectorAll("label");
+      expect(foundNodes).to.have.length.of(1);
+      expect(foundNodes[0].firstChild.data).to.equal("Override Title");
+    });
+
+    it("should use description from ui:options", () => {
+      const foundNodes = nodeWithUiOptions.querySelectorAll(
+        "#root__description"
+      );
+      expect(foundNodes).to.have.length.of(1);
+      expect(foundNodes[0].firstChild.data).to.equal("Override description");
+    });
+
+    // use ui:title and ui:description
+    const uiSchema = {
+      "ui:title": "Replace Title",
+      "ui:description": "Replace description",
+    };
+    const { node } = createFormComponent({
+      schema: schema,
+      uiSchema: uiSchema,
+      formData: "test string",
+    });
+
+    it("should use label from ui:options", () => {
+      const foundNodes = node.querySelectorAll("label");
+      expect(foundNodes).to.have.length.of(1);
+      expect(foundNodes[0].firstChild.data).to.equal("Replace Title");
+    });
+
+    it("should use description from ui:options", () => {
+      const foundNodes = node.querySelectorAll("#root__description");
+      expect(foundNodes).to.have.length.of(1);
+      expect(foundNodes[0].firstChild.data).to.equal("Replace description");
+    });
+  });
 });

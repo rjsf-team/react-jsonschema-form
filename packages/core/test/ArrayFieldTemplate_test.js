@@ -387,3 +387,121 @@ describe("ArrayFieldTemplate with hidden label", () => {
     expect(node.querySelectorAll("legend")).to.have.length.of(0);
   });
 });
+
+describe("Normal ArrayFieldTemplate with label & description from uiSchema", () => {
+  const schema = {
+    type: "array",
+    title: "Array Label",
+    description: "Array description",
+    items: { type: "string" },
+  };
+  const uiSchema = {
+    "ui:title": "Replace title",
+    "ui:description": "Replace description",
+    "ui:options": {
+      title: "Override title",
+      description: "Override description",
+    },
+  };
+  const { node: normalArrayNodeWithUiOptions } = createFormComponent({
+    schema: schema,
+    uiSchema: uiSchema,
+    formData: ["a", "b"],
+  });
+
+  it("should use label from ui:options", () => {
+    const foundNodes = normalArrayNodeWithUiOptions.querySelectorAll(
+      "#root__title"
+    );
+    expect(foundNodes).to.have.length.of(1);
+    expect(foundNodes[0].firstChild.data).to.be.equal("Override title");
+  });
+
+  it("should use description from ui:options", () => {
+    const foundNodes = normalArrayNodeWithUiOptions.querySelectorAll(
+      "#root__description"
+    );
+    expect(foundNodes).to.have.length.of(1);
+    expect(foundNodes[0].firstChild.data).to.be.equal("Override description");
+  });
+
+  // create a form with ui:title and ui:description
+  const modifiedUiSchema = {
+    "ui:title": "Replace title",
+    "ui:description": "Replace description",
+  };
+  const { node: newNode } = createFormComponent({
+    schema: schema,
+    uiSchema: modifiedUiSchema,
+    formData: ["a", "b"],
+  });
+
+  it("should use label from ui:title", () => {
+    const foundNodes = newNode.querySelectorAll("#root__title");
+    expect(foundNodes).to.have.length.of(1);
+    expect(foundNodes[0].firstChild.data).to.be.equal("Replace title");
+  });
+
+  it("should use description from ui:description", () => {
+    const foundNodes = newNode.querySelectorAll("#root__description");
+    expect(foundNodes).to.have.length.of(1);
+    expect(foundNodes[0].firstChild.data).to.be.equal("Replace description");
+  });
+});
+
+describe("Fixed ArrayFieldTemplate with label & description from uiSchema", () => {
+  const schema = {
+    type: "array",
+    title: "Array Label",
+    description: "Array description",
+    items: [{ type: "string" }],
+  };
+  const uiSchema = {
+    "ui:title": "Replace title",
+    "ui:description": "Replace description",
+    "ui:options": {
+      title: "Override title",
+      description: "Override description",
+    },
+  };
+  const { node: nodeWithUiOptions } = createFormComponent({
+    schema: schema,
+    uiSchema: uiSchema,
+    formData: ["a", "b"],
+  });
+
+  it("should use label from ui:options", () => {
+    const foundNodes = nodeWithUiOptions.querySelectorAll("#root__title");
+    expect(foundNodes).to.have.length.of(1);
+    expect(foundNodes[0].firstChild.data).to.be.equal("Override title");
+  });
+
+  it("should use description from ui:options", () => {
+    const foundNodes = nodeWithUiOptions.querySelectorAll(".field-description");
+    expect(foundNodes).to.have.length.of(1);
+    expect(foundNodes[0].firstChild.data).to.be.equal("Override description");
+  });
+
+  // create a form with ui:title and ui:description
+  const modifiedUiSchema = {
+    "ui:title": "Replace title",
+    "ui:description": "Replace description",
+  };
+  const { node: newNode } = createFormComponent({
+    schema: schema,
+    uiSchema: modifiedUiSchema,
+    formData: ["a", "b"],
+  });
+
+  it("should use label from ui:title", () => {
+    const foundNodes = newNode.querySelectorAll("#root__title");
+    expect(foundNodes).to.have.length.of(1);
+    expect(foundNodes[0].firstChild.data).to.be.equal("Replace title");
+  });
+
+  it("should use description from ui:description", () => {
+    const foundNodes = newNode.querySelectorAll(".field-description");
+    expect(foundNodes).to.have.length.of(1);
+    expect(foundNodes[0].firstChild.data).to.be.equal("Replace description");
+  });
+});

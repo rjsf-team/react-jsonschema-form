@@ -18,10 +18,10 @@ function DefaultObjectFieldTemplate(props) {
 
   return (
     <fieldset id={props.idSchema.$id}>
-      {displayLabel && (props.uiSchema["ui:title"] || props.title) && (
+      {displayLabel && props.title && (
         <TitleField
           id={`${props.idSchema.$id}__title`}
-          title={props.title || props.uiSchema["ui:title"]}
+          title={props.title}
           required={props.required}
           formContext={props.formContext}
         />
@@ -201,8 +201,10 @@ class ObjectField extends Component {
     const { SchemaField, TitleField, DescriptionField } = fields;
     const schema = retrieveSchema(this.props.schema, rootSchema, formData);
 
-    const title = schema.title === undefined ? name : schema.title;
-    const description = uiSchema["ui:description"] || schema.description;
+    const uiOptions = getUiOptions(uiSchema);
+    const title = uiOptions.title || schema.title || name;
+    const description = uiOptions.description || schema.description;
+
     let orderedProperties;
     try {
       const properties = Object.keys(schema.properties || {});
