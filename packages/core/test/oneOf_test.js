@@ -36,11 +36,13 @@ describe("oneOf", () => {
       type: "object",
       oneOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -132,14 +134,15 @@ describe("oneOf", () => {
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
     const { node, onChange } = createFormComponent({
       schema: {
-        type: "object",
         oneOf: [
           {
+            type: "object",
             properties: {
               foo: { type: "string", default: "defaultfoo" },
             },
           },
           {
+            type: "object",
             properties: {
               foo: { type: "string", default: "defaultbar" },
             },
@@ -165,14 +168,15 @@ describe("oneOf", () => {
 
   it("should render a custom widget", () => {
     const schema = {
-      type: "object",
       oneOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -195,14 +199,15 @@ describe("oneOf", () => {
 
   it("should change the rendered form when the select value is changed", () => {
     const schema = {
-      type: "object",
       oneOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -229,14 +234,15 @@ describe("oneOf", () => {
 
   it("should handle change events", () => {
     const schema = {
-      type: "object",
       oneOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -265,11 +271,13 @@ describe("oneOf", () => {
       },
       oneOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -655,12 +663,14 @@ describe("oneOf", () => {
         type: "object",
         oneOf: [
           {
+            type: "object",
             title: "Foo",
             properties: {
               foo: { type: "string" },
             },
           },
           {
+            type: "object",
             properties: {
               bar: { type: "string" },
             },
@@ -671,6 +681,7 @@ describe("oneOf", () => {
         ],
         definitions: {
           baz: {
+            type: "object",
             title: "Baz",
             properties: {
               baz: { type: "string" },

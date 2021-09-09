@@ -33,14 +33,15 @@ describe("anyOf", () => {
 
   it("should render a select element if the anyOf keyword is present", () => {
     const schema = {
-      type: "object",
       anyOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -132,14 +133,15 @@ describe("anyOf", () => {
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
     const { node, onChange } = createFormComponent({
       schema: {
-        type: "object",
         anyOf: [
           {
+            type: "object",
             properties: {
               foo: { type: "string", default: "defaultfoo" },
             },
           },
           {
+            type: "object",
             properties: {
               foo: { type: "string", default: "defaultbar" },
             },
@@ -165,14 +167,15 @@ describe("anyOf", () => {
 
   it("should render a custom widget", () => {
     const schema = {
-      type: "object",
       anyOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -195,14 +198,15 @@ describe("anyOf", () => {
 
   it("should change the rendered form when the select value is changed", () => {
     const schema = {
-      type: "object",
       anyOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -229,14 +233,15 @@ describe("anyOf", () => {
 
   it("should handle change events", () => {
     const schema = {
-      type: "object",
       anyOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -265,11 +270,13 @@ describe("anyOf", () => {
       },
       anyOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
         },
         {
+          type: "object",
           properties: {
             bar: { type: "string" },
           },
@@ -451,9 +458,9 @@ describe("anyOf", () => {
 
   it("should not change the selected option when entering values", () => {
     const schema = {
-      type: "object",
       anyOf: [
         {
+          type: "object",
           title: "First method of identification",
           properties: {
             firstName: {
@@ -465,6 +472,7 @@ describe("anyOf", () => {
           },
         },
         {
+          type: "object",
           title: "Second method of identification",
           properties: {
             idCode: {
@@ -498,9 +506,9 @@ describe("anyOf", () => {
 
   it("should not change the selected option when entering values and the subschema uses `anyOf`", () => {
     const schema = {
-      type: "object",
       anyOf: [
         {
+          type: "object",
           title: "First method of identification",
           properties: {
             firstName: {
@@ -512,6 +520,7 @@ describe("anyOf", () => {
           },
         },
         {
+          type: "object",
           title: "Second method of identification",
           properties: {
             idCode: {
@@ -520,6 +529,7 @@ describe("anyOf", () => {
           },
           anyOf: [
             {
+              type: "object",
               properties: {
                 foo: {
                   type: "string",
@@ -527,6 +537,7 @@ describe("anyOf", () => {
               },
             },
             {
+              type: "object",
               properties: {
                 bar: {
                   type: "string",
@@ -561,9 +572,9 @@ describe("anyOf", () => {
 
   it("should not change the selected option when entering values and the subschema uses `allOf`", () => {
     const schema = {
-      type: "object",
       anyOf: [
         {
+          type: "object",
           title: "First method of identification",
           properties: {
             firstName: {
@@ -575,6 +586,7 @@ describe("anyOf", () => {
           },
         },
         {
+          type: "object",
           title: "Second method of identification",
           properties: {
             idCode: {
@@ -583,6 +595,7 @@ describe("anyOf", () => {
           },
           allOf: [
             {
+              type: "object",
               properties: {
                 foo: {
                   type: "string",
@@ -590,6 +603,7 @@ describe("anyOf", () => {
               },
             },
             {
+              type: "object",
               properties: {
                 bar: {
                   type: "string",
@@ -624,14 +638,15 @@ describe("anyOf", () => {
 
   it("should not mutate a schema that contains nested anyOf and allOf", () => {
     const schema = {
-      type: "object",
       anyOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
           allOf: [
             {
+              type: "object",
               properties: {
                 baz: { type: "string" },
               },
@@ -639,6 +654,7 @@ describe("anyOf", () => {
           ],
           anyOf: [
             {
+              type: "object",
               properties: {
                 buzz: { type: "string" },
               },
@@ -653,14 +669,15 @@ describe("anyOf", () => {
     });
 
     expect(schema).to.eql({
-      type: "object",
       anyOf: [
         {
+          type: "object",
           properties: {
             foo: { type: "string" },
           },
           allOf: [
             {
+              type: "object",
               properties: {
                 baz: { type: "string" },
               },
@@ -668,6 +685,7 @@ describe("anyOf", () => {
           ],
           anyOf: [
             {
+              type: "object",
               properties: {
                 buzz: { type: "string" },
               },
@@ -726,6 +744,7 @@ describe("anyOf", () => {
 
   it("should collect schema from $ref even when ref is within properties", () => {
     const schema = {
+      type: "object",
       properties: {
         address: {
           title: "Address",
@@ -781,6 +800,7 @@ describe("anyOf", () => {
               type: "object",
               anyOf: [
                 {
+                  type: "object",
                   properties: {
                     foo: {
                       type: "string",
@@ -788,6 +808,7 @@ describe("anyOf", () => {
                   },
                 },
                 {
+                  type: "object",
                   properties: {
                     bar: {
                       type: "string",
@@ -823,6 +844,7 @@ describe("anyOf", () => {
               type: "object",
               anyOf: [
                 {
+                  type: "object",
                   properties: {
                     foo: {
                       type: "string",
@@ -830,6 +852,7 @@ describe("anyOf", () => {
                   },
                 },
                 {
+                  type: "object",
                   properties: {
                     bar: {
                       type: "string",
@@ -876,6 +899,7 @@ describe("anyOf", () => {
               type: "object",
               anyOf: [
                 {
+                  type: "object",
                   properties: {
                     foo: {
                       type: "string",
@@ -883,6 +907,7 @@ describe("anyOf", () => {
                   },
                 },
                 {
+                  type: "object",
                   properties: {
                     bar: {
                       type: "string",
@@ -918,12 +943,14 @@ describe("anyOf", () => {
         type: "object",
         anyOf: [
           {
+            type: "object",
             title: "Foo",
             properties: {
               foo: { type: "string" },
             },
           },
           {
+            type: "object",
             properties: {
               bar: { type: "string" },
             },
@@ -935,6 +962,7 @@ describe("anyOf", () => {
         definitions: {
           baz: {
             title: "Baz",
+            type: "object",
             properties: {
               baz: { type: "string" },
             },
