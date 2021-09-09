@@ -1411,7 +1411,7 @@ describeRepeated("Form common", createFormComponent => {
 
           sinon.assert.calledWithMatch(onChange.lastCall, {
             errorSchema: {
-              __errors: ["should NOT be shorter than 8 characters"],
+              __errors: ["should NOT have fewer than 8 characters"],
             },
           });
         });
@@ -1429,7 +1429,7 @@ describeRepeated("Form common", createFormComponent => {
           expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
           expect(
             node.querySelector(".field-string .error-detail").textContent
-          ).eql("should NOT be shorter than 8 characters");
+          ).eql("should NOT have fewer than 8 characters");
         });
       });
 
@@ -1490,7 +1490,7 @@ describeRepeated("Form common", createFormComponent => {
           sinon.match(value => {
             return (
               value.length === 1 &&
-              value[0].message === "should NOT be shorter than 8 characters"
+              value[0].message === "should NOT have fewer than 8 characters"
             );
           })
         );
@@ -1508,12 +1508,12 @@ describeRepeated("Form common", createFormComponent => {
 
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 8 characters",
+            message: "should NOT have fewer than 8 characters",
             name: "minLength",
             params: { limit: 8 },
             property: "",
             schemaPath: "#/minLength",
-            stack: "should NOT be shorter than 8 characters",
+            stack: "should NOT have fewer than 8 characters",
           },
         ]);
         sinon.assert.calledOnce(onError);
@@ -1573,12 +1573,12 @@ describeRepeated("Form common", createFormComponent => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 8 characters",
+            message: "should NOT have fewer than 8 characters",
             name: "minLength",
             params: { limit: 8 },
             property: "",
             schemaPath: "#/minLength",
-            stack: "should NOT be shorter than 8 characters",
+            stack: "should NOT have fewer than 8 characters",
           },
         ]);
       });
@@ -1589,7 +1589,7 @@ describeRepeated("Form common", createFormComponent => {
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(
           node.querySelector(".field-string .error-detail").textContent
-        ).eql("should NOT be shorter than 8 characters");
+        ).eql("should NOT have fewer than 8 characters");
       });
     });
 
@@ -1609,12 +1609,12 @@ describeRepeated("Form common", createFormComponent => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 8 characters",
+            message: "should NOT have fewer than 8 characters",
             name: "minLength",
             params: { limit: 8 },
             property: "",
             schemaPath: "#/minLength",
-            stack: "should NOT be shorter than 8 characters",
+            stack: "should NOT have fewer than 8 characters",
           },
           {
             message: 'should match pattern "d+"',
@@ -1634,7 +1634,7 @@ describeRepeated("Form common", createFormComponent => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(errors).eql([
-          "should NOT be shorter than 8 characters",
+          "should NOT have fewer than 8 characters",
           'should match pattern "d+"',
         ]);
       });
@@ -1672,12 +1672,12 @@ describeRepeated("Form common", createFormComponent => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 8 characters",
+            message: "should NOT have fewer than 8 characters",
             name: "minLength",
             params: { limit: 8 },
-            property: ".level1.level2",
+            property: "/level1/level2",
             schemaPath: "#/properties/level1/properties/level2/minLength",
-            stack: ".level1.level2 should NOT be shorter than 8 characters",
+            stack: "/level1/level2 should NOT have fewer than 8 characters",
           },
         ]);
       });
@@ -1690,7 +1690,7 @@ describeRepeated("Form common", createFormComponent => {
 
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(errorDetail.textContent).eql(
-          "should NOT be shorter than 8 characters"
+          "should NOT have fewer than 8 characters"
         );
       });
     });
@@ -1716,12 +1716,12 @@ describeRepeated("Form common", createFormComponent => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "should NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: "[1]",
+            property: "/1",
             schemaPath: "#/items/minLength",
-            stack: "[1] should NOT be shorter than 4 characters",
+            stack: "/1 should NOT have fewer than 4 characters",
           },
         ]);
       });
@@ -1736,7 +1736,7 @@ describeRepeated("Form common", createFormComponent => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors).eql(["should NOT be shorter than 4 characters"]);
+        expect(errors).eql(["should NOT have fewer than 4 characters"]);
       });
 
       it("should not denote errors on non impacted fields", () => {
@@ -1774,20 +1774,20 @@ describeRepeated("Form common", createFormComponent => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "should NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: ".level1[1]",
+            property: "/level1/1",
             schemaPath: "#/properties/level1/items/minLength",
-            stack: ".level1[1] should NOT be shorter than 4 characters",
+            stack: "/level1/1 should NOT have fewer than 4 characters",
           },
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "should NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: ".level1[3]",
+            property: "/level1/3",
             schemaPath: "#/properties/level1/items/minLength",
-            stack: ".level1[3] should NOT be shorter than 4 characters",
+            stack: "/level1/3 should NOT have fewer than 4 characters",
           },
         ]);
       });
@@ -1803,7 +1803,7 @@ describeRepeated("Form common", createFormComponent => {
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
         const errors = [].map.call(liNodes, li => li.textContent);
 
-        expect(errors).eql(["should NOT be shorter than 4 characters"]);
+        expect(errors).eql(["should NOT have fewer than 4 characters"]);
       });
     });
 
@@ -1836,20 +1836,20 @@ describeRepeated("Form common", createFormComponent => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "should NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: ".outer[0][1]",
+            property: "/outer/0/1",
             schemaPath: "#/properties/outer/items/items/minLength",
-            stack: ".outer[0][1] should NOT be shorter than 4 characters",
+            stack: "/outer/0/1 should NOT have fewer than 4 characters",
           },
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "should NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: ".outer[1][0]",
+            property: "/outer/1/0",
             schemaPath: "#/properties/outer/items/items/minLength",
-            stack: ".outer[1][0] should NOT be shorter than 4 characters",
+            stack: "/outer/1/0 should NOT have fewer than 4 characters",
           },
         ]);
       });
@@ -1864,8 +1864,8 @@ describeRepeated("Form common", createFormComponent => {
 
         expect(errors).eql([
           null,
-          "should NOT be shorter than 4 characters",
-          "should NOT be shorter than 4 characters",
+          "should NOT have fewer than 4 characters",
+          "should NOT have fewer than 4 characters",
           null,
         ]);
       });
@@ -1897,12 +1897,12 @@ describeRepeated("Form common", createFormComponent => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "should NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: "[1].foo",
+            property: "/1/foo",
             schemaPath: "#/items/properties/foo/minLength",
-            stack: "[1].foo should NOT be shorter than 4 characters",
+            stack: "/1/foo should NOT have fewer than 4 characters",
           },
         ]);
       });
@@ -1917,7 +1917,7 @@ describeRepeated("Form common", createFormComponent => {
         const errors = [].map.call(liNodes, li => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors).eql(["should NOT be shorter than 4 characters"]);
+        expect(errors).eql(["should NOT have fewer than 4 characters"]);
       });
     });
 
@@ -2409,12 +2409,12 @@ describeRepeated("Form common", createFormComponent => {
       submitForm(node);
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
-          message: "should NOT be shorter than 8 characters",
+          message: "should NOT have fewer than 8 characters",
           name: "minLength",
           params: { limit: 8 },
           property: "",
           schemaPath: "#/minLength",
-          stack: "should NOT be shorter than 8 characters",
+          stack: "should NOT have fewer than 8 characters",
         },
         {
           message: 'should match pattern "d+"',
