@@ -3830,18 +3830,18 @@ describe("utils", () => {
     });
     it("should infer correct anyOf schema based on data", () => {
       const rootSchema = {
-        defs: {
+        $defs: {
           a: { type: "object", properties: { id: { enum: ["a"] } } },
           nested: {
             type: "object",
             properties: {
               id: { enum: ["nested"] },
-              child: { $ref: "#/defs/any" },
+              child: { $ref: "#/$defs/any" },
             },
           },
-          any: { anyOf: [{ $ref: "#/defs/a" }, { $ref: "#/defs/nested" }] },
+          any: { anyOf: [{ $ref: "#/$defs/a" }, { $ref: "#/$defs/nested" }] },
         },
-        $ref: "#/defs/any",
+        $ref: "#/$defs/any",
       };
       const options = [
         { type: "object", properties: { id: { enum: ["a"] } } },
@@ -3849,7 +3849,7 @@ describe("utils", () => {
           type: "object",
           properties: {
             id: { enum: ["nested"] },
-            child: { $ref: "#/defs/any" },
+            child: { $ref: "#/$defs/any" },
           },
         },
       ];

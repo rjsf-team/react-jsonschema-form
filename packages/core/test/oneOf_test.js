@@ -693,8 +693,8 @@ describe("oneOf", () => {
 
   it("should correctly infer the selected option based on value", () => {
     const schema = {
-      $ref: "#/defs/any",
-      defs: {
+      $ref: "#/$defs/any",
+      $defs: {
         chain: {
           type: "object",
           title: "Chain",
@@ -704,7 +704,7 @@ describe("oneOf", () => {
             },
             components: {
               type: "array",
-              items: { $ref: "#/defs/any" },
+              items: { $ref: "#/$defs/any" },
             },
           },
         },
@@ -714,7 +714,7 @@ describe("oneOf", () => {
           title: "Map",
           properties: {
             id: { enum: ["map"] },
-            fn: { $ref: "#/defs/any" },
+            fn: { $ref: "#/$defs/any" },
           },
         },
 
@@ -733,15 +733,15 @@ describe("oneOf", () => {
           properties: {
             id: { enum: ["transform"] },
             property_key: { type: "string" },
-            transformer: { $ref: "#/defs/any" },
+            transformer: { $ref: "#/$defs/any" },
           },
         },
         any: {
           oneOf: [
-            { $ref: "#/defs/chain" },
-            { $ref: "#/defs/map" },
-            { $ref: "#/defs/to_absolute" },
-            { $ref: "#/defs/transform" },
+            { $ref: "#/$defs/chain" },
+            { $ref: "#/$defs/map" },
+            { $ref: "#/$defs/to_absolute" },
+            { $ref: "#/$defs/transform" },
           ],
         },
       },
