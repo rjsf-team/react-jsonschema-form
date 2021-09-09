@@ -7,7 +7,7 @@ import TextField, {
 import { WidgetProps, utils } from "@visma/rjsf-core";
 import Typography from "@material-ui/core/Typography";
 
-const { getDisplayLabel } = utils;
+const { getDisplayLabel, rangeSpec } = utils;
 
 export type TextWidgetProps = WidgetProps & Pick<TextFieldProps, Exclude<keyof TextFieldProps, 'onBlur' | 'onFocus'>>;
 
@@ -69,6 +69,7 @@ const TextWidget = ({
         onBlur={_onBlur}
         onFocus={_onFocus}
         InputProps={{ "aria-describedby": utils.ariaDescribedBy(id) }}
+        inputProps={inputType === 'number' ? {...rangeSpec(schema)} : {}}
         {...(textFieldProps as TextFieldProps)}
       />
       {options.showCharacterCounter &&
