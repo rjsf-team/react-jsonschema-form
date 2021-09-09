@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@types/json-schema": "^7.0.7",
-    "ajv": "^6.7.0",
+    "ajv": "^7.2.4",
+    "ajv-formats": "^2.1.1",
     "core-js-pure": "^3.6.5",
     "json-schema-merge-allof": "^0.6.0",
     "jsonpointer": "^4.0.1",
