@@ -42,11 +42,12 @@ describe("Validation", () => {
 
     it("should return true if the data is valid against the schema including refs to rootSchema", () => {
       const schema = {
-        anyOf: [{ $ref: "#/defs/foo" }],
+        anyOf: [{ $ref: "#/$defs/foo" }],
       };
       const rootSchema = {
-        defs: {
+        $defs: {
           foo: {
+            type: "object",
             properties: {
               name: { type: "string" },
             },
@@ -127,11 +128,18 @@ describe("Validation", () => {
         expect(errors[1].message).eql("should be string");
       });
 
+      // ajv@7.0^ has changed the format of error.dataPath. In ajv@6.0^ the error
+      // in the illformed key will result in dataPath = ['bar.\\'"[]()=+*&^%$#@!'].
+      // However in ajv@7.0 and higher this key results in
+      // dataPath = bar.'"[]()=+*&^%$#@!. lodash breaks this into error paths
+      // [`bar.'"`, `()=+*&^%$#@!.`] due to the presence of '[]'. Updating this test
+      // to reflect the changes in errorSchema resulting from this new behavior of ajv@7^.
       it("should return an errorSchema", () => {
         expect(errorSchema.foo.__errors).to.have.length.of(1);
         expect(errorSchema.foo.__errors[0]).eql("should be string");
-        expect(errorSchema[illFormedKey].__errors).to.have.length.of(1);
-        expect(errorSchema[illFormedKey].__errors[0]).eql("should be string");
+        const errorTree = errorSchema[`bar.'"`];
+        expect(errorTree[`()=+*&^%$#@!`].__errors).to.have.length.of(1);
+        expect(errorTree[`()=+*&^%$#@!`].__errors[0]).eql("should be string");
       });
     });
 
@@ -163,7 +171,7 @@ describe("Validation", () => {
     describe("validating using custom meta schema", () => {
       const schema = {
         $ref: "#/definitions/Dataset",
-        $schema: "http://json-schema.org/draft-04/schema#",
+        $schema: "http://json-schema.org/draft-06/schema#",
         definitions: {
           Dataset: {
             properties: {
@@ -177,7 +185,7 @@ describe("Validation", () => {
           },
         },
       };
-      const metaSchemaDraft4 = require("ajv/lib/refs/json-schema-draft-04.json");
+      const metaSchemaSecure = require("ajv/lib/refs/json-schema-secure.json");
       const metaSchemaDraft6 = require("ajv/lib/refs/json-schema-draft-06.json");
 
       it("should return a validation error about meta schema when meta schema is not defined", () => {
@@ -186,7 +194,7 @@ describe("Validation", () => {
           schema
         );
         const errMessage =
-          'no schema with key or ref "http://json-schema.org/draft-04/schema#"';
+          'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
         expect(errors.errors[0].stack).to.equal(errMessage);
         expect(errors.errors).to.eql([
           {
@@ -203,11 +211,11 @@ describe("Validation", () => {
           schema,
           null,
           null,
-          [metaSchemaDraft4]
+          [metaSchemaDraft6]
         );
         expect(errors.errors).to.have.lengthOf(1);
         expect(errors.errors[0].stack).to.equal(
-          '.datasetId should match pattern "\\d+"'
+          '/datasetId should match pattern "\\d+"'
         );
       });
       it("should return a validation error about formData, when used with multiple meta schemas", () => {
@@ -216,11 +224,11 @@ describe("Validation", () => {
           schema,
           null,
           null,
-          [metaSchemaDraft4, metaSchemaDraft6]
+          [metaSchemaSecure, metaSchemaDraft6]
         );
         expect(errors.errors).to.have.lengthOf(1);
         expect(errors.errors[0].stack).to.equal(
-          '.datasetId should match pattern "\\d+"'
+          '/datasetId should match pattern "\\d+"'
         );
       });
     });
@@ -253,7 +261,7 @@ describe("Validation", () => {
 
         expect(result.errors).to.have.lengthOf(1);
         expect(result.errors[0].stack).to.equal(
-          '.phone should match format "phone-us"'
+          '/phone should match format "phone-us"'
         );
       });
 
@@ -277,7 +285,7 @@ describe("Validation", () => {
 
         expect(result.errors).to.have.lengthOf(1);
         expect(result.errors[0].stack).to.equal(
-          '.phone should match format "area-code"'
+          '/phone should match format "area-code"'
         );
       });
     });
@@ -364,19 +372,18 @@ describe("Validation", () => {
       });
 
       it("should return an error list", () => {
-        expect(errors).to.have.length.of(1);
-        expect(errors[0].name).eql("type");
-        expect(errors[0].property).eql(".properties['foo'].required");
-        expect(errors[0].schemaPath).eql("#/definitions/stringArray/type"); // TODO: This schema path is wrong due to a bug in ajv; change this test when https://github.com/ajv-validator/ajv/issues/512 is fixed.
-        expect(errors[0].message).eql("should be array");
+        expect(errors).to.have.length.greaterThan(0);
+        const last = errors.length - 1;
+        expect(errors[last].stack).to.be.a("string");
+        expect(errors[last].stack).to.include("schema is invalid");
       });
 
       it("should return an errorSchema", () => {
-        expect(errorSchema.properties.foo.required.__errors).to.have.length.of(
-          1
-        );
-        expect(errorSchema.properties.foo.required.__errors[0]).eql(
-          "should be array"
+        expect(errorSchema["$schema"]).to.be.a("object");
+        expect(errorSchema["$schema"].__errors).to.have.length.greaterThan(0);
+        const last = errorSchema["$schema"].__errors.length - 1;
+        expect(errorSchema["$schema"].__errors[last]).eql(
+          `required value must be ["array"]`
         );
       });
     });
@@ -479,9 +486,9 @@ describe("Validation", () => {
               message: "is a required property",
               name: "required",
               params: { missingProperty: "foo" },
-              property: ".foo",
+              property: "/foo",
               schemaPath: "#/required",
-              stack: ".foo is a required property",
+              stack: "/foo is a required property",
             },
           ]);
         });
@@ -489,7 +496,7 @@ describe("Validation", () => {
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            ".foo is a required property"
+            "/foo is a required property"
           );
         });
       });
@@ -525,19 +532,19 @@ describe("Validation", () => {
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            ".foo should NOT be shorter than 10 characters"
+            "/foo should NOT have fewer than 10 characters"
           );
         });
 
         it("should trigger the onError handler", () => {
           sinon.assert.calledWithMatch(onError.lastCall, [
             {
-              message: "should NOT be shorter than 10 characters",
+              message: "should NOT have fewer than 10 characters",
               name: "minLength",
               params: { limit: 10 },
-              property: ".foo",
+              property: "/foo",
               schemaPath: "#/properties/foo/minLength",
-              stack: ".foo should NOT be shorter than 10 characters",
+              stack: "/foo should NOT have fewer than 10 characters",
             },
           ]);
         });
@@ -673,7 +680,7 @@ describe("Validation", () => {
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "pass2: should NOT be shorter than 3 characters" },
+          { stack: "pass2: should NOT have fewer than 3 characters" },
           { stack: "pass2: Passwords don't match" },
         ]);
       });
@@ -781,9 +788,9 @@ describe("Validation", () => {
               message: "is a required property",
               name: "required",
               params: { missingProperty: "foo" },
-              property: ".foo",
+              property: "/foo",
               schemaPath: "#/required",
-              stack: ".foo is a required property",
+              stack: "/foo is a required property",
             },
           ]);
         });
@@ -850,7 +857,7 @@ describe("Validation", () => {
 
       const schema = {
         $ref: "#/definitions/Dataset",
-        $schema: "http://json-schema.org/draft-04/schema#",
+        $schema: "http://json-schema.org/draft-06/schema#",
         definitions: {
           Dataset: {
             properties: {
@@ -871,7 +878,7 @@ describe("Validation", () => {
           formData,
           liveValidate: true,
           additionalMetaSchemas: [
-            require("ajv/lib/refs/json-schema-draft-04.json"),
+            require("ajv/lib/refs/json-schema-draft-06.json"),
           ],
         });
         node = withMetaSchema.node;
@@ -885,9 +892,9 @@ describe("Validation", () => {
             message: 'should match pattern "\\d+"',
             name: "pattern",
             params: { pattern: "\\d+" },
-            property: ".datasetId",
+            property: "/datasetId",
             schemaPath: "#/properties/datasetId/pattern",
-            stack: '.datasetId should match pattern "\\d+"',
+            stack: '/datasetId should match pattern "\\d+"',
           },
         ]);
         onError.resetHistory();
