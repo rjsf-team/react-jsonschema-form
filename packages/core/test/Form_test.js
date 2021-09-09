@@ -2367,9 +2367,9 @@ describeRepeated("Form common", createFormComponent => {
           message: 'should match format "area-code"',
           name: "format",
           params: { format: "area-code" },
-          property: ".areaCode",
+          property: "/areaCode",
           schemaPath: "#/properties/areaCode/format",
-          stack: '.areaCode should match format "area-code"',
+          stack: '/areaCode should match format "area-code"',
         },
       ]);
     });
@@ -2380,7 +2380,7 @@ describeRepeated("Form common", createFormComponent => {
       const formProps = {
         liveValidate: true,
         schema: {
-          $schema: "http://json-schema.org/draft-04/schema#",
+          $schema: "http://json-schema.org/draft-06/schema#",
           type: "string",
           minLength: 8,
           pattern: "d+",
@@ -2394,7 +2394,7 @@ describeRepeated("Form common", createFormComponent => {
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
           stack:
-            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+            'no schema with key or ref "http://json-schema.org/draft-06/schema#"',
         },
       ]);
 
@@ -2402,7 +2402,7 @@ describeRepeated("Form common", createFormComponent => {
         ...formProps,
         onError,
         additionalMetaSchemas: [
-          require("ajv/lib/refs/json-schema-draft-04.json"),
+          require("ajv/lib/refs/json-schema-draft-06.json"),
         ],
       });
 
@@ -2432,7 +2432,7 @@ describeRepeated("Form common", createFormComponent => {
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
           stack:
-            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+            'no schema with key or ref "http://json-schema.org/draft-06/schema#"',
         },
       ]);
     });

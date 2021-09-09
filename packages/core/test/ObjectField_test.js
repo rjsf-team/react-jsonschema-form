@@ -466,12 +466,12 @@ describe("ObjectField", () => {
       sinon.assert.notCalled(onSubmit);
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
-          message: "is an invalid additional property",
+          message: "should NOT have additional properties",
           name: "additionalProperties",
           params: { additionalProperty: "nonschema" },
-          property: "['nonschema']",
+          property: "",
           schemaPath: "#/additionalProperties",
-          stack: "['nonschema'] is an invalid additional property",
+          stack: "should NOT have additional properties",
         },
       ]);
     });

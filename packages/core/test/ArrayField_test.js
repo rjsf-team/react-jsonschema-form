@@ -812,9 +812,9 @@ describe("ArrayField", () => {
             message: "should be integer",
             name: "type",
             params: { type: "integer" },
-            property: "[1]",
+            property: "/1",
             schemaPath: "#/items/type",
-            stack: "[1] should be integer",
+            stack: "/1 should be integer",
           },
         ],
         formData: [1, null, 3],
@@ -826,9 +826,9 @@ describe("ArrayField", () => {
           message: "should be integer",
           name: "type",
           params: { type: "integer" },
-          property: "[1]",
+          property: "/1",
           schemaPath: "#/items/type",
-          stack: "[1] should be integer",
+          stack: "/1 should be integer",
         },
       ]);
     });
@@ -1024,9 +1024,9 @@ describe("ArrayField", () => {
           message: "should NOT have fewer than 3 items",
           name: "minItems",
           params: { limit: 3 },
-          property: ".multipleChoicesList",
+          property: "/multipleChoicesList",
           schemaPath: "#/properties/multipleChoicesList/minItems",
-          stack: ".multipleChoicesList should NOT have fewer than 3 items",
+          stack: "/multipleChoicesList should NOT have fewer than 3 items",
         },
       ]);
     });
