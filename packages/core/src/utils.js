@@ -597,7 +597,8 @@ export function findSchemaDefinition($ref, rootSchema = {}) {
     throw new Error(`Could not find a definition for ${origRef}.`);
   }
   if (current.hasOwnProperty("$ref")) {
-    return findSchemaDefinition(current.$ref, rootSchema);
+    const { $ref, ...currentSchema } = current;
+    return { ...findSchemaDefinition($ref, rootSchema), ...currentSchema };
   }
   return current;
 }

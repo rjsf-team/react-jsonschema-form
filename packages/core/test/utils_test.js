@@ -1651,6 +1651,33 @@ describe("utils", () => {
 
       expect(retrieveSchema(schema, { definitions })).eql(address);
     });
+    it("should 'resolve' a schema which contains definitions from combined with another reference in `#/definitions`", () => {
+      const expectedPhone = {
+        maximum: 12,
+        minLength: 10,
+        type: "string",
+        title: "Cellphone number",
+      };
+      const schema = {
+        maximum: 12,
+        $ref: "#/definitions/cellphone",
+      };
+      const basePhone = {
+        type: "string",
+        minLength: 10,
+      };
+      const cellphone = {
+        $ref: "#/definitions/basePhone",
+        title: "Cellphone number",
+      };
+      const alternativeCellphone = {
+        $ref: "#/definitions/basePhone",
+        title: "Alternative Cellphone number",
+        description: "Not applied to all",
+      };
+      const definitions = { basePhone, cellphone, alternativeCellphone };
+      expect(retrieveSchema(schema, { definitions })).eql(expectedPhone);
+    });
 
     it("should 'resolve' a schema which contains definitions not in `#/definitions`", () => {
       const address = {
