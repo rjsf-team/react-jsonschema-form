@@ -12,7 +12,7 @@ Note that this just renders the `action` attribute in the HTML markup. There is 
 
 ## additionalMetaSchemas
 
-This prop allows you to validate the form data against another JSON Schema meta schema, for example, JSON Schema draft-04. See [Validation](../usage/validation.md) for more information.
+This prop allows you to validate the form data against another JSON Schema meta schema, for example, JSON Schema draft-06. See [Validation](../usage/validation.md) for more information.
 
 ## ArrayFieldTemplate
 

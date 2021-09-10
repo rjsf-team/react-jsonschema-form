@@ -177,7 +177,7 @@ To have your schemas validated against any other meta schema than draft-07 (the 
 
 ```json
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   ...
 }
 ```
@@ -186,22 +186,22 @@ Note that react-jsonschema-form only supports the latest version of JSON Schema,
 
 ### additionalMetaSchemas
 
-The `additionalMetaSchemas` prop allows you to validate the form data against one (or more than one) JSON Schema meta schema, for example, JSON Schema draft-04. You can import a meta schema as follows:
+The `additionalMetaSchemas` prop allows you to validate the form data against one (or more than one) JSON Schema meta schema, for example, JSON Schema draft-06. You can import a meta schema as follows:
 
 ```jsx
-const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
+const metaSchemaDraft06 = require("ajv/lib/refs/json-schema-draft-06.json");
 ```
 
-In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
+In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-06 (added), depending on the value of `$schema` attribute.
 
 ```jsx
 const schema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   type: "string"
 };
 
 return (<Form schema={schema} 
-  additionalMetaSchemas={[metaSchemaDraft04]} />);
+  additionalMetaSchemas={[metaSchemaDraft06]} />);
 ```
 
 ## customFormats
