@@ -1497,7 +1497,7 @@ describeRepeated("Form common", createFormComponent => {
       });
 
       it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
-        const { node, onError } = createFormComponent({
+        const { node, onError, onSubmit } = createFormComponent({
           schema,
         });
 
@@ -1524,6 +1524,37 @@ describeRepeated("Form common", createFormComponent => {
         });
         Simulate.submit(node);
         sinon.assert.notCalled(onError);
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          errors: [],
+          errorSchema: {},
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+        });
+      });
+
+      it("should reset errors from UI after correction and resubmission", () => {
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "short" },
+        });
+        Simulate.submit(node);
+
+        const errorListHTML =
+          '<li class="text-danger">should NOT be shorter than 8 characters</li>';
+        const errors = node.querySelectorAll(".error-detail");
+        // Check for errors attached to the field
+        expect(errors).to.have.lengthOf(1);
+        expect(errors[0]).to.have.property("innerHTML");
+        expect(errors[0].innerHTML).to.be.eql(errorListHTML);
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "long enough" },
+        });
+        Simulate.submit(node);
+        expect(node.querySelectorAll(".error-detail")).to.have.lengthOf(0);
       });
     });
 
