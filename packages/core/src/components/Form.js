@@ -364,6 +364,8 @@ export default class Form extends Component {
       }
     }
 
+    // There are no errors generated through schema validation.
+    // Check for user provided errors and update state accordingly.
     let errorSchema;
     let errors;
     if (this.props.extraErrors) {
