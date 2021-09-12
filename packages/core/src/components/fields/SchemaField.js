@@ -98,8 +98,11 @@ class LabelInput extends React.Component {
         schema={schema}
         formData={this.state.value}
         registry={registry}
-        onChange={value => this.setState({ value })}
-        onBlur={(id, value) => onChange(value)}
+        onChange={value => {
+          onChange(value);
+          this.setState({ value });
+        }}
+        onBlur={(_, value) => onChange(value)}
       />
     );
   }
