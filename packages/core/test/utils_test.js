@@ -2884,6 +2884,39 @@ describe("utils", () => {
       });
     });
 
+    it("should return a pathSchema for a schema with oneOf", () => {
+      const schema = {
+        type: "object",
+        oneOf: [
+          {
+            properties: {
+              lorem: {
+                type: "string",
+              },
+            }
+          },
+          {
+            properties: {
+              ipsum: {
+                type: "string",
+              },
+            }
+          },
+        ],
+      };
+
+      const formData = {
+        lorem: "loremValue"
+      };
+
+      expect(toPathSchema(schema, "", schema, formData)).eql({
+        $name: "",
+        lorem: {
+          $name: "lorem",
+        }
+      });
+    });
+
     it("should return a pathSchema for a schema with references in an array item", () => {
       const schema = {
         definitions: {

@@ -1035,6 +1035,11 @@ export function toPathSchema(schema, name = "", rootSchema, formData = {}) {
     return toPathSchema(_schema, name, rootSchema, formData);
   }
 
+  if ("oneOf" in schema) {
+    const _schema =  schema.oneOf[getMatchingOption(formData, schema.oneOf, rootSchema)];
+    return toPathSchema(_schema, name, rootSchema, formData);
+  }
+
   if (schema.hasOwnProperty("additionalProperties")) {
     pathSchema.__rjsf_additionalProperties = true;
   }
