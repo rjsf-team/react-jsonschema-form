@@ -1,6 +1,6 @@
 import React from "react";
 import { expect } from "chai";
-import { Simulate } from "react-dom/test-utils";
+import { act, Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
 import { parseDateString, toDateString, utcToLocal } from "../src/utils";
@@ -909,25 +909,26 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      Simulate.change(node.querySelector("#root_year"), {
-        target: { value: 2012 },
+      act(() => {
+        Simulate.change(node.querySelector("#root_year"), {
+          target: { value: 2012 },
+        });
+        Simulate.change(node.querySelector("#root_month"), {
+          target: { value: 10 },
+        });
+        Simulate.change(node.querySelector("#root_day"), {
+          target: { value: 2 },
+        });
+        Simulate.change(node.querySelector("#root_hour"), {
+          target: { value: 1 },
+        });
+        Simulate.change(node.querySelector("#root_minute"), {
+          target: { value: 2 },
+        });
+        Simulate.change(node.querySelector("#root_second"), {
+          target: { value: 3 },
+        });
       });
-      Simulate.change(node.querySelector("#root_month"), {
-        target: { value: 10 },
-      });
-      Simulate.change(node.querySelector("#root_day"), {
-        target: { value: 2 },
-      });
-      Simulate.change(node.querySelector("#root_hour"), {
-        target: { value: 1 },
-      });
-      Simulate.change(node.querySelector("#root_minute"), {
-        target: { value: 2 },
-      });
-      Simulate.change(node.querySelector("#root_second"), {
-        target: { value: 3 },
-      });
-
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: "2012-10-02T01:02:03.000Z",
       });
@@ -1170,7 +1171,7 @@ describe("StringField", () => {
       });
     });
 
-    it("should reflect the change into the dom", () => {
+    it("should call the provided onChange function once all values are filled", () => {
       const { node, onChange } = createFormComponent({
         schema: {
           type: "string",
@@ -1179,19 +1180,43 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      Simulate.change(node.querySelector("#root_year"), {
-        target: { value: 2012 },
+      act(() => {
+        Simulate.change(node.querySelector("#root_year"), {
+          target: { value: 2012 },
+        });
+        Simulate.change(node.querySelector("#root_month"), {
+          target: { value: 10 },
+        });
+        Simulate.change(node.querySelector("#root_day"), {
+          target: { value: 2 },
+        });
       });
-      Simulate.change(node.querySelector("#root_month"), {
-        target: { value: 10 },
-      });
-      Simulate.change(node.querySelector("#root_day"), {
-        target: { value: 2 },
-      });
-
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: "2012-10-02",
       });
+    });
+
+    it("should reflect the change into the dom, even when not all values are filled", () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "date",
+        },
+        uiSchema,
+      });
+
+      act(() => {
+        Simulate.change(node.querySelector("#root_year"), {
+          target: { value: 2012 },
+        });
+        Simulate.change(node.querySelector("#root_month"), {
+          target: { value: 10 },
+        });
+      });
+      expect(node.querySelector("#root_year").value).eql("2012");
+      expect(node.querySelector("#root_month").value).eql("10");
+      expect(node.querySelector("#root_day").value).eql("");
+      sinon.assert.notCalled(onChange);
     });
 
     it("should fill field with data", () => {

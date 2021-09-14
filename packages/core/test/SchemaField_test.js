@@ -279,6 +279,17 @@ describe("SchemaField", () => {
       const { node } = createFormComponent({ schema, uiSchema });
       expect(node.querySelectorAll("label")).to.have.length.of(0);
     });
+
+    it("should render label even when type object is missing", () => {
+      const schema = {
+        title: "test",
+        properties: {
+          foo: { type: "string" },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+      expect(node.querySelectorAll("label")).to.have.length.of(1);
+    });
   });
 
   describe("description support", () => {

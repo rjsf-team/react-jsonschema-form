@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
-import fill from "core-js/library/fn/array/fill";
+import fill from "core-js-pure/features/array/fill";
 import union from "lodash/union";
 import jsonpointer from "jsonpointer";
 import fields from "./components/fields";
@@ -368,7 +368,6 @@ export function getUiOptions(uiSchema) {
     .filter(key => key.indexOf("ui:") === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
-
       if (key === "ui:widget" && isObject(value)) {
         console.warn(
           "Setting options via ui:widget object is deprecated, use ui:options instead"
@@ -389,15 +388,18 @@ export function getUiOptions(uiSchema) {
 export function getDisplayLabel(schema, uiSchema, rootSchema) {
   const uiOptions = getUiOptions(uiSchema);
   let { label: displayLabel = true } = uiOptions;
-  if (schema.type === "array") {
+  const schemaType = getSchemaType(schema);
+
+  if (schemaType === "array") {
     displayLabel =
       isMultiSelect(schema, rootSchema) ||
       isFilesArray(schema, uiSchema, rootSchema);
   }
-  if (schema.type === "object") {
+
+  if (schemaType === "object") {
     displayLabel = false;
   }
-  if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
+  if (schemaType === "boolean" && !uiSchema["ui:widget"]) {
     displayLabel = false;
   }
   if (uiSchema["ui:field"]) {
@@ -573,7 +575,11 @@ export function optionsList(schema) {
     return altSchemas.map((schema, i) => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
-      return { label, value };
+      return {
+        schema,
+        label,
+        value,
+      };
     });
   }
 }
@@ -1221,10 +1227,10 @@ export function getMatchingOption(formData, options, rootSchema) {
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
 
-      if (isValid(augmentedSchema, formData)) {
+      if (isValid(augmentedSchema, formData, rootSchema)) {
         return i;
       }
-    } else if (isValid(options[i], formData)) {
+    } else if (isValid(option, formData, rootSchema)) {
       return i;
     }
   }

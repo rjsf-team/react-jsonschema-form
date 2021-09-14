@@ -1,6 +1,8 @@
 import { WidgetProps } from "@rjsf/core";
 import { JSONSchema7 } from "json-schema";
 
+import TextWidget from "../../src/TextWidget/TextWidget";
+
 export const mockSchema: JSONSchema7 = {
   type: "array",
   items: {
@@ -30,6 +32,14 @@ export function makeWidgetMockProps(
     options: {},
     formContext: {},
     id: "_id",
+    placeholder: "",
+    registry: {
+      fields: {},
+      widgets: { TextWidget },
+      formContext: {},
+      definitions: {},
+      rootSchema: {},
+    },
     ...props,
   };
 }

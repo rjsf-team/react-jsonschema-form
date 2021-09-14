@@ -364,6 +364,8 @@ export default class Form extends Component {
       }
     }
 
+    // There are no errors generated through schema validation.
+    // Check for user provided errors and update state accordingly.
     let errorSchema;
     let errors;
     if (this.props.extraErrors) {
@@ -375,7 +377,13 @@ export default class Form extends Component {
     }
 
     this.setState(
-      { formData: newFormData, errors: errors, errorSchema: errorSchema },
+      {
+        formData: newFormData,
+        errors: errors,
+        errorSchema: errorSchema,
+        schemaValidationErrors: [],
+        schemaValidationErrorSchema: {},
+      },
       () => {
         if (this.props.onSubmit) {
           this.props.onSubmit(

@@ -31,7 +31,7 @@ function FieldTemplate({
             )}
           </MaybeWrap>
         )}
-        <HelpField helpText={rawHelp} id={id} />
+        <HelpField helpText={rawHelp} id={id + "__help"} />
         <RawErrors errors={rawErrors} options={errorOptions} />
       </MaybeWrap>
     </Form.Group>

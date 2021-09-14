@@ -11,12 +11,11 @@ exports[`CheckboxWidget simple 1`] = `
       autoFocus={true}
       checked="value"
       className="form-check-input"
-      disabled={false}
+      disabled={true}
       id="_id"
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
-      readOnly={true}
       required={true}
       type="checkbox"
     />

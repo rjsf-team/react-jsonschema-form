@@ -5,6 +5,7 @@ import { deepEquals, getDefaultFormState } from "./utils";
 
 let formerCustomFormats = null;
 let formerMetaSchema = null;
+const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
 import { isObject, mergeObjects } from "./utils";
 
@@ -264,14 +265,52 @@ export default function validateFormData(
 }
 
 /**
+ * Recursively prefixes all $ref's in a schema with `ROOT_SCHEMA_PREFIX`
+ * This is used in isValid to make references to the rootSchema
+ */
+export function withIdRefPrefix(schemaNode) {
+  let obj = schemaNode;
+  if (schemaNode.constructor === Object) {
+    obj = { ...schemaNode };
+    for (const key in obj) {
+      const value = obj[key];
+      if (
+        key === "$ref" &&
+        typeof value === "string" &&
+        value.startsWith("#")
+      ) {
+        obj[key] = ROOT_SCHEMA_PREFIX + value;
+      } else {
+        obj[key] = withIdRefPrefix(value);
+      }
+    }
+  } else if (Array.isArray(schemaNode)) {
+    obj = [...schemaNode];
+    for (var i = 0; i < obj.length; i++) {
+      obj[i] = withIdRefPrefix(obj[i]);
+    }
+  }
+  return obj;
+}
+
+/**
  * Validates data against a schema, returning true if the data is valid, or
  * false otherwise. If the schema is invalid, then this function will return
  * false.
  */
-export function isValid(schema, data) {
+export function isValid(schema, data, rootSchema) {
   try {
-    return ajv.validate(schema, data);
+    // add the rootSchema ROOT_SCHEMA_PREFIX as id.
+    // then rewrite the schema ref's to point to the rootSchema
+    // this accounts for the case where schema have references to models
+    // that lives in the rootSchema but not in the schema in question.
+    return ajv
+      .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
+      .validate(withIdRefPrefix(schema), data);
   } catch (e) {
     return false;
+  } finally {
+    // make sure we remove the rootSchema from the global ajv instance
+    ajv.removeSchema(ROOT_SCHEMA_PREFIX);
   }
 }
