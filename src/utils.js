@@ -387,7 +387,7 @@ export function shouldRender(comp, nextProps, nextState) {
   return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
 }
 
-export function toIdSchema(schema, id, definitions, idSuffix = "") {
+export function toIdSchema(schema, id, definitions = {}, idSuffix = "") {
   const idSchema = {
     $id: id || "root"
   };
