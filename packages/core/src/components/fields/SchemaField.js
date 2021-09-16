@@ -231,6 +231,7 @@ function WrapIfAdditional(props) {
             <Label label={keyLabel} required={required} id={`${id}-key`} />
             <LabelInput
               label={label}
+              required={required}
               schema={propertyNamesSchema}
               registry={props.registry}
               id={`${id}-key`}
