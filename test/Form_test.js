@@ -1165,7 +1165,7 @@ describe("Form", () => {
 
   describe("Attributes", () => {
     const formProps = {
-      schema: {},
+      // schema: {}, // undefined to test fallback
       id: "test-form",
       className: "test-class other-class",
       name: "testName",
