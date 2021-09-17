@@ -182,7 +182,7 @@ class ArrayField extends Component {
 
   onAddClick = (event) => {
     event.preventDefault();
-    const {schema, registry, formData} = this.props;
+    const {schema, registry = {}, formData} = this.props;
     const {definitions} = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
@@ -266,7 +266,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
-      registry,
+      registry = {},
       formContext,
       onBlur
     } = this.props;
@@ -316,7 +316,7 @@ class ArrayField extends Component {
   renderMultiSelect() {
     const {schema, idSchema, uiSchema, disabled, readonly, autofocus, onBlur} = this.props;
     const items = this.props.formData;
-    const {widgets, definitions, formContext} = this.props.registry;
+    const {widgets, definitions, formContext} = this.props.registry || {};
     const itemsSchema = retrieveSchema(schema.items, definitions);
     const enumOptions = optionsList(itemsSchema);
     const {widget="select", ...options} = {...getUiOptions(uiSchema), enumOptions};
@@ -372,7 +372,7 @@ class ArrayField extends Component {
       disabled,
       readonly,
       autofocus,
-      registry,
+      registry = {},
       onBlur
     } = this.props;
     const title = schema.title || name;
