@@ -71,41 +71,28 @@ function Label(props) {
   );
 }
 
-class LabelInput extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      value: props.label,
-    };
-  }
-  render() {
-    const { id, label, onChange, schema, registry } = this.props;
-
-    if (!schema) {
-      return (
-        <input
-          className="form-control"
-          type="text"
-          id={id}
-          onBlur={event => onChange(event.target.value)}
-          defaultValue={label}
-        />
-      );
-    }
-
+function LabelInput(props) {
+  const { id, label, onChange, schema, registry } = props;
+  if (!schema) {
     return (
-      <SchemaField
-        schema={schema}
-        formData={this.state.value}
-        registry={registry}
-        onChange={value => {
-          onChange(value);
-          this.setState({ value });
-        }}
-        onBlur={(_, value) => onChange(value)}
+      <input
+        className="form-control"
+        type="text"
+        id={id}
+        onBlur={event => onChange(event.target.value)}
+        defaultValue={label}
       />
     );
   }
+  return (
+    <SchemaField
+      schema={schema}
+      formData={label}
+      registry={registry}
+      onChange={onChange}
+      onBlur={(_, value) => onChange(value)}
+    />
+  );
 }
 
 function Help(props) {
