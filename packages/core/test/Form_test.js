@@ -2236,10 +2236,10 @@ describeRepeated("Form common", createFormComponent => {
     };
     const formData = { foo: "foo", bar: "bar" };
 
-    it("should enable all items", () => {
+    it("should not have any readonly items", () => {
       const { node } = createFormComponent({ schema, formData });
 
-      expect(node.querySelectorAll("input:disabled")).to.have.length.of(0);
+      expect(node.querySelectorAll("input:read-only")).to.have.length.of(0);
     });
 
     it("should readonly all items", () => {
