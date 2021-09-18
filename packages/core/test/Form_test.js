@@ -2226,6 +2226,33 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
+  describe("Form readonly prop", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+        bar: { type: "string" },
+      },
+    };
+    const formData = { foo: "foo", bar: "bar" };
+
+    it("should enable all items", () => {
+      const { node } = createFormComponent({ schema, formData });
+
+      expect(node.querySelectorAll("input:disabled")).to.have.length.of(0);
+    });
+
+    it("should readonly all items", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        readonly: true,
+      });
+
+      expect(node.querySelectorAll("input:read-only")).to.have.length.of(2);
+    });
+  });
+
   describe("Attributes", () => {
     const formProps = {
       schema: {},
