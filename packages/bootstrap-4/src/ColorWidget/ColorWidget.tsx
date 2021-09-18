@@ -1,7 +1,9 @@
 import React from "react";
-import TextWidget, { TextWidgetProps } from "../TextWidget";
+import { WidgetProps } from '@rjsf/core';
 
-const ColorWidget = (props: TextWidgetProps) => {
+const ColorWidget = (props: WidgetProps) => {
+  const { registry } = props;
+  const { TextWidget } = registry.widgets;
   return <TextWidget {...props} type="color" />;
 };
 
