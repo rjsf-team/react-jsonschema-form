@@ -74,11 +74,12 @@ function Label(props) {
 function LabelInput(props) {
   return (
     <SchemaField
-      {...props}
       idSchema={props.idSchema || { $id: props.id }}
       schema={props.schema || { type: "string" }}
       defaultValue={props.defaultValue || props.label}
       formData={props.formData || props.label}
+      registry={props.registry}
+      onChange={props.onChange}
       onBlur={(event, value) => props.onChange(value || event.target.value)}
     />
   );
