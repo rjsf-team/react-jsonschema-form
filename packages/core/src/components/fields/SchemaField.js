@@ -72,25 +72,14 @@ function Label(props) {
 }
 
 function LabelInput(props) {
-  const { id, label, onChange, schema, registry } = props;
-  if (!schema) {
-    return (
-      <input
-        className="form-control"
-        type="text"
-        id={id}
-        onBlur={event => onChange(event.target.value)}
-        defaultValue={label}
-      />
-    );
-  }
   return (
     <SchemaField
-      schema={schema}
-      formData={label}
-      registry={registry}
-      onChange={onChange}
-      onBlur={(_, value) => onChange(value)}
+      {...props}
+      idSchema={props.idSchema || { $id: props.id }}
+      schema={props.schema || { type: "string" }}
+      defaultValue={props.defaultValue || props.label}
+      formData={props.formData || props.label}
+      onBlur={(event, value) => props.onChange(value || event.target.value)}
     />
   );
 }

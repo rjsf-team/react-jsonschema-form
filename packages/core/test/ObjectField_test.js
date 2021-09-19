@@ -414,7 +414,7 @@ describe("ObjectField", () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
+      expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
     });
 
     it("should apply uiSchema to additionalProperties", () => {
