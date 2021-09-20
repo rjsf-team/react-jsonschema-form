@@ -320,6 +320,20 @@ describe("SchemaField", () => {
 
       expect(node.querySelectorAll("select")).to.have.length.of(1);
     });
+
+    it("should render SchemaField as input for object key if schema has propertyNames schema without type", () => {
+      const schemaWithPropertyNames = {
+        ...schema,
+        propertyNames: {
+          enum: ["1", "2"],
+          pattern: "^[A-Za-z_][A-Za-z0-9_]*$",
+        },
+      };
+      const { node } = createFormComponent({ schema: schemaWithPropertyNames });
+      Simulate.click(node.querySelector(".glyphicon-plus"));
+
+      expect(node.querySelectorAll("select")).to.have.length.of(1);
+    });
   });
 
   describe("description support", () => {
