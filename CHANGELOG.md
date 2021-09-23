@@ -10,9 +10,13 @@ If your PR affects multiple packages, list it multiple times under headings for 
 If it affects more general things such as dependency updates or non-package-specific changes,
 add it under a "Dev / docs / playground" section.
 
+You should also update the heading of the latest (upcoming) version if your PR change merits
+it according to semantic versioning. For example, if your PR adds a breaking change, then you
+should change the heading of the (upcoming) version to include a major version bump.
+
 -->
 
-# v3.1.0 (upcoming)
+# v3.2.0 (upcoming)
 
 ## @rjsf/core
 - Fix for clearing errors after updating and submitting form (https://github.com/rjsf-team/react-jsonschema-form/pull/2536)
