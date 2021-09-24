@@ -2231,10 +2231,10 @@ describeRepeated("Form common", createFormComponent => {
       type: "object",
       properties: {
         foo: { type: "string" },
-        bar: { type: "string" },
+        bar: { type: "object", properties: { baz: { type: "string" } } },
       },
     };
-    const formData = { foo: "foo", bar: "bar" };
+    const formData = { foo: "foo", bar: { baz: "baz" } };
 
     it("should not have any readonly items", () => {
       const { node } = createFormComponent({ schema, formData });
