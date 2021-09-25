@@ -24,6 +24,7 @@ export default class Form extends Component {
     noValidate: false,
     liveValidate: false,
     disabled: false,
+    readonly: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
@@ -438,6 +439,7 @@ export default class Form extends Component {
       acceptcharset,
       noHtml5Validate,
       disabled,
+      readonly,
       formContext,
     } = this.props;
 
@@ -484,6 +486,7 @@ export default class Form extends Component {
           onFocus={this.onFocus}
           registry={registry}
           disabled={disabled}
+          readonly={readonly}
         />
         {children ? (
           children
@@ -504,6 +507,8 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     formData: PropTypes.any,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
     ),
