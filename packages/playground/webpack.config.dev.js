@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: "development",
-  devtool: "source-map",
+  devtool: "inline-source-map",
   entry: [
     "./src/index"
   ],
@@ -51,6 +51,11 @@ module.exports = {
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "mode", "javascript"),
         ]
+      },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"]
       },
       {
         test: /\.s?css$/,
