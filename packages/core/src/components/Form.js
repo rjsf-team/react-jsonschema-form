@@ -27,6 +27,7 @@ export default class Form extends Component {
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
+    localizeErrors: null,
   };
 
   constructor(props) {
@@ -65,6 +66,7 @@ export default class Form extends Component {
     const formData = getDefaultFormState(schema, inputFormData, rootSchema);
     const retrievedSchema = retrieveSchema(schema, rootSchema, formData);
     const customFormats = props.customFormats;
+    const localizeErrors = props.localizeErrors;
     const additionalMetaSchemas = props.additionalMetaSchemas;
 
     const getCurrentErrors = () => {
@@ -91,7 +93,8 @@ export default class Form extends Component {
         formData,
         schema,
         additionalMetaSchemas,
-        customFormats
+        customFormats,
+        localizeErrors
       );
       errors = schemaValidation.errors;
       errorSchema = schemaValidation.errorSchema;
@@ -144,7 +147,8 @@ export default class Form extends Component {
     formData,
     schema = this.props.schema,
     additionalMetaSchemas = this.props.additionalMetaSchemas,
-    customFormats = this.props.customFormats
+    customFormats = this.props.customFormats,
+    localizeErrors = this.props.localizeErrors
   ) {
     const { validate, transformErrors } = this.props;
     const { rootSchema } = this.getRegistry();
@@ -155,7 +159,8 @@ export default class Form extends Component {
       validate,
       transformErrors,
       additionalMetaSchemas,
-      customFormats
+      customFormats,
+      localizeErrors
     );
   }
 

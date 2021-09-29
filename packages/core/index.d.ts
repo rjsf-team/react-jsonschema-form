@@ -30,6 +30,7 @@ declare module '@rjsf/core' {
         idPrefix?: string;
         liveOmit?: boolean;
         liveValidate?: boolean;
+        localizeErrors?: (errors: AjvError[]) => AjvError[];
         method?: string;
         name?: string;
         noHtml5Validate?: boolean;
@@ -450,6 +451,7 @@ declare module '@rjsf/core/lib/validate' {
         schema: JSONSchema7Definition,
         customValidate?: FormProps<T>['validate'],
         transformErrors?: FormProps<T>['transformErrors'],
+        localizeErrors?: FormProps<T>['localizeErrors'],
         additionalMetaSchemas?: FormProps<T>['additionalMetaSchemas'],
         customFormats?: FormProps<T>['customFormats'],
     ): { errors: AjvError[]; errorSchema: ErrorSchema };

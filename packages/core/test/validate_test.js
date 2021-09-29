@@ -376,6 +376,69 @@ describe("Validation", () => {
     });
   });
 
+  describe("localizeErrors", () => {
+    const illFormedKey = "baz.'\"[]()=+*&^%$#@!";
+    const schema = {
+      type: "object",
+      required: [illFormedKey],
+      properties: {
+        foo: { type: "string", minLength: 8 },
+        [illFormedKey]: { type: "string" },
+      },
+    };
+    const translatedMessageForRequiredKeyword =
+      "поле обязательно для заполнения";
+    const defaultMessageForMinLengthField =
+      "should NOT be shorter than 8 characters";
+
+    const localizeErrors = errors => {
+      for (let error of errors) {
+        let outMessage = "";
+
+        switch (error.keyword) {
+          case "required": {
+            outMessage = translatedMessageForRequiredKeyword;
+
+            break;
+          }
+          default:
+            outMessage = error.message;
+        }
+
+        error.message = outMessage;
+      }
+
+      return errors;
+    };
+
+    let errors;
+
+    beforeEach(() => {
+      const result = validateFormData(
+        { foo: "bar", [illFormedKey]: undefined },
+        schema,
+        null,
+        null,
+        null,
+        null,
+        localizeErrors
+      );
+      errors = result.errors;
+    });
+
+    it("should use localizeErrors function", () => {
+      expect(errors).not.to.be.empty;
+
+      expect(errors[1].message).to.equal(translatedMessageForRequiredKeyword);
+    });
+
+    it("should fallback to original error message if validation case is not considered", () => {
+      expect(errors).not.to.be.empty;
+
+      expect(errors[0].message).to.equal(defaultMessageForMinLengthField);
+    });
+  });
+
   describe("Form integration", () => {
     let sandbox;
 

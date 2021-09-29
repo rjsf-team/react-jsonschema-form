@@ -48,6 +48,7 @@
     "@rjsf/material-ui": "^2.4.1",
     "@rjsf/semantic-ui": "^2.4.1",
     "ajv": "^6.7.0",
+    "ajv-i18n": "^3.6.0",
     "antd": "^4.3.5",
     "core-js": "^2.5.7",
     "dayjs": "^1.8.28",

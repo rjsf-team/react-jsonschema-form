@@ -236,6 +236,10 @@ The value of this prop will be passed to the `target` [HTML attribute on the for
 
 A function can be passed to this prop in order to make modifications to the default errors resulting from JSON Schema validation. See [Validation](../usage/validation.md) for more information.
 
+## localizeErrors
+
+A function can be passed to this prop in order to localize the default errors resulting from JSON Schema validation. See [Validation](../usage/validation.md) for more information.
+
 ## uiSchema
 
 Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.

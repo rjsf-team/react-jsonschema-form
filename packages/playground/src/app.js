@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import MonacoEditor from "react-monaco-editor";
-import { samples } from "./samples";
-import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
+import "react-app-polyfill/ie11";
+
+import { samples } from "./samples";
 import DemoFrame from "./DemoFrame";
 
 // deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
@@ -351,6 +352,7 @@ class Playground extends Component {
       formData,
       validate,
       theme,
+      localizeErrors: null,
       subtheme: null,
       liveSettings: {
         validate: false,
@@ -391,6 +393,7 @@ class Playground extends Component {
     // uiSchema is missing on some examples. Provide a default to
     // clear the field in all cases.
     const { uiSchema = {} } = data;
+    const { localizeErrors = null } = data;
 
     const { theme = this.state.theme } = data;
     const { themes } = this.props;
@@ -405,6 +408,7 @@ class Playground extends Component {
         ObjectFieldTemplate,
         uiSchema,
         extraErrors,
+        localizeErrors,
       })
     );
   };
@@ -482,6 +486,7 @@ class Playground extends Component {
       validate,
       theme,
       subtheme,
+      localizeErrors,
       FormComponent,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
@@ -604,22 +609,23 @@ class Playground extends Component {
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
-                onChange={this.onFormDataChange}
                 noHtml5Validate={true}
-                onSubmit={({ formData }, e) => {
-                  console.log("submitted formData", formData);
-                  console.log("submit event", e);
-                }}
                 fields={{ geo: GeoPosition }}
                 validate={validate}
+                transformErrors={transformErrors}
+                localizeErrors={localizeErrors}
                 onBlur={(id, value) =>
                   console.log(`Touched ${id} with value ${value}`)
                 }
                 onFocus={(id, value) =>
                   console.log(`Focused ${id} with value ${value}`)
                 }
-                transformErrors={transformErrors}
                 onError={log("errors")}
+                onChange={this.onFormDataChange}
+                onSubmit={({ formData }, e) => {
+                  console.log("submitted formData", formData);
+                  console.log("submit event", e);
+                }}
               />
             </DemoFrame>
           )}
