@@ -3,7 +3,11 @@ import { expect } from "chai";
 import sinon from "sinon";
 import { Simulate } from "react-dom/test-utils";
 
-import validateFormData, { isValid, toErrorList } from "../src/validate";
+import validateFormData, {
+  isValid,
+  toErrorList,
+  withIdRefPrefix,
+} from "../src/validate";
 import { createFormComponent, submitForm } from "./test_utils";
 
 describe("Validation", () => {
@@ -16,7 +20,7 @@ describe("Validation", () => {
         },
       };
 
-      expect(isValid(schema, { foo: "bar" })).to.be.true;
+      expect(isValid(schema, { foo: "bar" }, schema)).to.be.true;
     });
 
     it("should return false if the data is not valid against the schema", () => {
@@ -27,13 +31,71 @@ describe("Validation", () => {
         },
       };
 
-      expect(isValid(schema, { foo: 12345 })).to.be.false;
+      expect(isValid(schema, { foo: 12345 }, schema)).to.be.false;
     });
 
     it("should return false if the schema is invalid", () => {
       const schema = "foobarbaz";
 
-      expect(isValid(schema, { foo: "bar" })).to.be.false;
+      expect(isValid(schema, { foo: "bar" }, schema)).to.be.false;
+    });
+
+    it("should return true if the data is valid against the schema including refs to rootSchema", () => {
+      const schema = {
+        anyOf: [{ $ref: "#/defs/foo" }],
+      };
+      const rootSchema = {
+        defs: {
+          foo: {
+            properties: {
+              name: { type: "string" },
+            },
+          },
+        },
+      };
+      const formData = {
+        name: "John Doe",
+      };
+
+      expect(isValid(schema, formData, rootSchema)).to.be.true;
+    });
+  });
+
+  describe("validate.withIdRefPrefix", () => {
+    it("should recursively add id prefix to all refs", () => {
+      const schema = {
+        anyOf: [{ $ref: "#/defs/foo" }],
+      };
+      const expected = {
+        anyOf: [{ $ref: "__rjsf_rootSchema#/defs/foo" }],
+      };
+
+      expect(withIdRefPrefix(schema)).to.eql(expected);
+    });
+
+    it("shouldn't mutate the schema", () => {
+      const schema = {
+        anyOf: [{ $ref: "#/defs/foo" }],
+      };
+
+      withIdRefPrefix(schema);
+
+      expect(schema).to.eql({
+        anyOf: [{ $ref: "#/defs/foo" }],
+      });
+    });
+
+    it("should not change a property named '$ref'", () => {
+      const schema = {
+        title: "A registration form",
+        description: "A simple form example.",
+        type: "object",
+        properties: {
+          $ref: { type: "string", title: "First name", default: "Chuck" },
+        },
+      };
+
+      expect(withIdRefPrefix(schema)).to.eql(schema);
     });
   });
 
@@ -305,7 +367,7 @@ describe("Validation", () => {
         expect(errors).to.have.length.of(1);
         expect(errors[0].name).eql("type");
         expect(errors[0].property).eql(".properties['foo'].required");
-        expect(errors[0].schemaPath).eql("#/definitions/stringArray/type"); // TODO: This schema path is wrong due to a bug in ajv; change this test when https://github.com/epoberezkin/ajv/issues/512 is fixed.
+        expect(errors[0].schemaPath).eql("#/definitions/stringArray/type"); // TODO: This schema path is wrong due to a bug in ajv; change this test when https://github.com/ajv-validator/ajv/issues/512 is fixed.
         expect(errors[0].message).eql("should be array");
       });
 

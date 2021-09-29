@@ -19,8 +19,7 @@ const {
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { schema, registry = getDefaultRegistry() } = props;
 
-  // TODO: update types so we don't have to cast registry as any
-  if (isMultiSelect(schema, (registry as any).rootSchema)) {
+  if (isMultiSelect(schema, registry.rootSchema)) {
     return <DefaultFixedArrayFieldTemplate {...props} />;
   } else {
     return <DefaultNormalArrayFieldTemplate {...props} />;
@@ -74,10 +73,11 @@ const DefaultArrayItem = (props: any) => {
     paddingLeft: 6,
     paddingRight: 6,
     fontWeight: 'bold',
+    minWidth: 0
   };
   return (
     <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs>
+      <Grid item={true} xs style={{ overflow: "auto" }}>
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{props.children}</Box>
@@ -93,6 +93,7 @@ const DefaultArrayItem = (props: any) => {
               className="array-item-move-up"
               tabIndex={-1}
               style={btnStyle as any}
+              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveUp}
               onClick={props.onReorderClick(props.index, props.index - 1)}
             />
@@ -103,6 +104,7 @@ const DefaultArrayItem = (props: any) => {
               icon="arrow-down"
               tabIndex={-1}
               style={btnStyle as any}
+              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveDown}
               onClick={props.onReorderClick(props.index, props.index + 1)}
             />
@@ -113,6 +115,7 @@ const DefaultArrayItem = (props: any) => {
               icon="remove"
               tabIndex={-1}
               style={btnStyle as any}
+              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly}
               onClick={props.onDropIndexClick(props.index)}
             />

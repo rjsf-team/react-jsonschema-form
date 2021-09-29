@@ -40,14 +40,13 @@ exports[`array fields array 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -155,14 +154,13 @@ exports[`array fields checkboxes 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -214,8 +212,9 @@ exports[`array fields fixed array 1`] = `
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
+                        placeholder=""
                         required={true}
-                        type="string"
+                        type="text"
                         value=""
                       />
                     </div>
@@ -256,6 +255,7 @@ exports[`array fields fixed array 1`] = `
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
+                        placeholder=""
                         required={true}
                         type="number"
                         value=""
@@ -270,13 +270,12 @@ exports[`array fields fixed array 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;

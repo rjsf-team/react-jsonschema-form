@@ -2,7 +2,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import React from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
-import { findDOMNode } from "react-dom";
+import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
 import { createRef } from "create-react-ref";
 
@@ -375,6 +375,17 @@ describeRepeated("Form common", createFormComponent => {
   });
 
   describe("Custom submit buttons", () => {
+    // Submit events on buttons are not fired on disconnected forms
+    // So we need to add the DOM tree to the body in this case.
+    // See: https://github.com/jsdom/jsdom/pull/1865
+    // https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected
+    const domNode = document.createElement("div");
+    beforeEach(() => {
+      document.body.appendChild(domNode);
+    });
+    afterEach(() => {
+      document.body.removeChild(domNode);
+    });
     it("should submit the form when clicked", done => {
       let submitCount = 0;
       const onSubmit = () => {
@@ -384,11 +395,12 @@ describeRepeated("Form common", createFormComponent => {
         }
       };
 
-      const comp = renderIntoDocument(
+      const comp = render(
         <Form onSubmit={onSubmit} schema={{}}>
-          <button type="submit">Submit</button>
-          <button type="submit">Another submit</button>
-        </Form>
+          <button type="submit" value="Submit button" />
+          <button type="submit" value="Another submit button" />
+        </Form>,
+        domNode
       );
       const node = findDOMNode(comp);
       const buttons = node.querySelectorAll("button[type=submit]");
@@ -1485,7 +1497,7 @@ describeRepeated("Form common", createFormComponent => {
       });
 
       it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
-        const { node, onError } = createFormComponent({
+        const { node, onError, onSubmit } = createFormComponent({
           schema,
         });
 
@@ -1512,6 +1524,37 @@ describeRepeated("Form common", createFormComponent => {
         });
         Simulate.submit(node);
         sinon.assert.notCalled(onError);
+        sinon.assert.calledWithMatch(onSubmit.lastCall, {
+          errors: [],
+          errorSchema: {},
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+        });
+      });
+
+      it("should reset errors from UI after correction and resubmission", () => {
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "short" },
+        });
+        Simulate.submit(node);
+
+        const errorListHTML =
+          '<li class="text-danger">should NOT be shorter than 8 characters</li>';
+        const errors = node.querySelectorAll(".error-detail");
+        // Check for errors attached to the field
+        expect(errors).to.have.lengthOf(1);
+        expect(errors[0]).to.have.property("innerHTML");
+        expect(errors[0].innerHTML).to.be.eql(errorListHTML);
+
+        Simulate.change(node.querySelector("input[type=text]"), {
+          target: { value: "long enough" },
+        });
+        Simulate.submit(node);
+        expect(node.querySelectorAll(".error-detail")).to.have.lengthOf(0);
       });
     });
 
@@ -2180,6 +2223,33 @@ describeRepeated("Form common", createFormComponent => {
       });
 
       expect(node.querySelectorAll("input:disabled")).to.have.length.of(2);
+    });
+  });
+
+  describe("Form readonly prop", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+        bar: { type: "object", properties: { baz: { type: "string" } } },
+      },
+    };
+    const formData = { foo: "foo", bar: { baz: "baz" } };
+
+    it("should not have any readonly items", () => {
+      const { node } = createFormComponent({ schema, formData });
+
+      expect(node.querySelectorAll("input:read-only")).to.have.length.of(0);
+    });
+
+    it("should readonly all items", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        readonly: true,
+      });
+
+      expect(node.querySelectorAll("input:read-only")).to.have.length.of(2);
     });
   });
 

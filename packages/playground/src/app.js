@@ -101,6 +101,7 @@ const liveSettingsSchema = {
   properties: {
     validate: { type: "boolean", title: "Live validation" },
     disable: { type: "boolean", title: "Disable whole form" },
+    readonly: { type: "boolean", title: "Readonly whole form" },
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
   },
@@ -357,6 +358,7 @@ class Playground extends Component {
       liveSettings: {
         validate: false,
         disable: false,
+        readonly: false,
         omitExtraData: false,
         liveOmit: false,
       },
@@ -444,7 +446,7 @@ class Playground extends Component {
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
-  onFormDataChange = ({ formData }) =>
+  onFormDataChange = ({ formData = "" }) =>
     this.setState({ formData, shareURL: null });
 
   onShare = () => {
@@ -604,6 +606,7 @@ class Playground extends Component {
                 {...templateProps}
                 liveValidate={liveSettings.validate}
                 disabled={liveSettings.disable}
+                readonly={liveSettings.readonly}
                 omitExtraData={liveSettings.omitExtraData}
                 liveOmit={liveSettings.liveOmit}
                 schema={schema}

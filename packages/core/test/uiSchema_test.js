@@ -1,10 +1,12 @@
 import { expect } from "chai";
 import React from "react";
 import sinon from "sinon";
+import { render } from "react-dom";
 import { Simulate } from "react-dom/test-utils";
 import SelectWidget from "../src/components/widgets/SelectWidget";
 import RadioWidget from "../src/components/widgets/RadioWidget";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
+import Form from "../src";
 
 describe("uiSchema", () => {
   let sandbox;
@@ -543,8 +545,14 @@ describe("uiSchema", () => {
         props.formData = formData;
       }
 
-      const { node } = createFormComponent(props);
-      expect(node.querySelector(selector)).eql(document.activeElement);
+      // activeElement only works correctly in jsdom if
+      // the dom tree is connected to the document root.
+      // https://github.com/jsdom/jsdom/issues/2723#issuecomment-664476384
+      const domNode = document.createElement("div");
+      document.body.appendChild(domNode);
+      render(<Form {...props} />, domNode);
+      expect(domNode.querySelector(selector)).eql(document.activeElement);
+      document.body.removeChild(domNode);
     };
 
     describe("number", () => {
@@ -1201,11 +1209,11 @@ describe("uiSchema", () => {
           schema,
           uiSchema,
           formData: {
-            foo: 3.14,
+            foo: 13.14,
           },
         });
 
-        expect(node.querySelector("[type=range]").value).eql("3.14");
+        expect(node.querySelector("[type=range]").value).eql("13.14");
       });
 
       it("should call onChange handler when value is updated", () => {
