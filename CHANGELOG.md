@@ -34,6 +34,11 @@ should change the heading of the (upcoming) version to include a major version b
 - Several dependency updates
 - Added global `readonly` flag to the `Form` (https://github.com/rjsf-team/react-jsonschema-form/pull/2554)
 
+# v3.1.1 (upcoming)
+
+## @rjsf/antd
+- Do not show errors if `extraErrors` has `[]` (https://github.com/rjsf-team/react-jsonschema-form/pull/2576).
+
 # v3.1.0
 
 ## @rjsf/core
