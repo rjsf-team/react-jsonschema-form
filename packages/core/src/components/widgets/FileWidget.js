@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Typography } from "@material-ui/core";
 
 import { dataURItoBlob, shouldRender } from "../../utils";
 
@@ -90,10 +91,11 @@ class FileWidget extends Component {
   };
 
   render() {
-    const { multiple, id, readonly, disabled, autofocus, options } = this.props;
+    const { multiple, id, readonly, disabled, autofocus, options, label } = this.props;
     const { filesInfo } = this.state;
     return (
       <div>
+        <Typography variant="subtitle1">{label}</Typography>
         <p>
           <input
             ref={ref => (this.inputRef = ref)}
