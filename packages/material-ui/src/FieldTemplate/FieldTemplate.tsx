@@ -46,6 +46,9 @@ const FieldTemplate = ({
         fullWidth={true}
         error={rawErrors.length ? true : false}
         required={required}>
+        {schema.format ? (
+          <Typography variant="subtitle1">{label || schema.title}</Typography>
+        ) : null}
         {children}
         {displayLabel && rawDescription ? (
           <Typography
