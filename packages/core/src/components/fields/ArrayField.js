@@ -610,6 +610,10 @@ class ArrayField extends Component {
     const items = this.props.formData;
     const { widgets, formContext } = registry;
     const { widget = "files", ...options } = getUiOptions(uiSchema);
+    const accept = uiSchema.items
+      ? uiSchema.items["ui:options"]?.accept
+      : undefined;
+    options["accept"] = accept;
     const Widget = getWidget(schema, widget, widgets);
     return (
       <Widget
