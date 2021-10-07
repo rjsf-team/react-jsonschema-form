@@ -121,8 +121,6 @@ const FileWidget = ({
   const [state, setState] = useState<FileInfo[]>();
   const inputRef = useRef();
 
-  console.log('what')
-
   useEffect(() => {
     const values = Array.isArray(value) ? value : [value];
     const initialFilesInfo: FileInfo[] = extractFileInfo(values);
