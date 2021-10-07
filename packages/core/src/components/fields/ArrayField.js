@@ -624,7 +624,7 @@ class ArrayField extends Component {
         onBlur={onBlur}
         onFocus={onFocus}
         schema={schema}
-        label={title}
+        title={title}
         value={items}
         disabled={disabled}
         readonly={readonly}
