@@ -4,8 +4,6 @@ import React, { Component } from "react";
 import includes from "core-js-pure/es/array/includes";
 import { injectIntl, useIntl } from "react-intl";
 import * as types from "../../types";
-import { pickBy } from "lodash";
-import { show } from "@visma/formula/lib/useDynamicElements";
 
 import {
   getWidget,
@@ -733,26 +731,7 @@ class ArrayField extends Component {
     return <Template {...arrayProps} />;
   }
 
-  filterArrayFieldItemProperties(props) {
-    return props.itemSchema.type === "object"
-      ? {
-          ...props,
-          itemSchema: {
-            ...props.itemSchema,
-            properties: pickBy(props.itemSchema.properties, (property, id) =>
-              show(
-                props.itemData || {},
-                props.itemUiSchema?.[id]?.["ui:options"]?.element || {}
-              )
-            ),
-          },
-        }
-      : props;
-  }
-
   renderArrayFieldItem(props) {
-    props = this.filterArrayFieldItemProperties(props);
-
     const {
       key,
       index,
