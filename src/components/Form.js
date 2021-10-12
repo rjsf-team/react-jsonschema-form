@@ -33,7 +33,7 @@ export default class Form extends Component {
 
   getStateFromProps(props) {
     const state = this.state || {};
-    const schema = "schema" in props ? props.schema : this.props.schema || {};
+    const schema = ("schema" in props ? props.schema : this.props.schema) || {};
     const uiSchema = "uiSchema" in props ? props.uiSchema : this.props.uiSchema;
     const edit = typeof props.formData !== "undefined";
     const liveValidate = props.liveValidate || this.props.liveValidate;
