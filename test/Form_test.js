@@ -25,6 +25,11 @@ describe("Form", () => {
 
       expect(node.tagName).eql("FORM");
     });
+    it("should render a form tag with an undefined schema", () => {
+      const {node} = createFormComponent({schema: undefined});
+
+      expect(node.tagName).eql("FORM");
+    });
 
     it("should render a submit button", () => {
       const {node} = createFormComponent({schema: {}});
