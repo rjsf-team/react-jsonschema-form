@@ -10,6 +10,8 @@ import { ArrayFieldTemplateProps, IdSchema } from '@visma/rjsf-core';
 
 import AddButton from '../AddButton/AddButton';
 import IconButton from '../IconButton/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 const {
   isMultiSelect,
@@ -34,17 +36,21 @@ type ArrayFieldTitleProps = {
 };
 
 const ArrayFieldTitle = ({
-  TitleField,
   idSchema,
   title,
-  required,
 }: ArrayFieldTitleProps) => {
   if (!title) {
     return null;
   }
 
   const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} required={required} />;
+  // return <TitleField id={id} title={title} required={required} />;
+  return (
+    <Box id={id} mb={1} mt={1}>
+      <Typography variant="subtitle1">{title}</Typography>
+      <Divider />
+    </Box>
+  );
 };
 
 type ArrayFieldDescriptionProps = {
