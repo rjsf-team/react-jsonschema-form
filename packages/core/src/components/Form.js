@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import _pick from "lodash/pick";
+import _pick from "./patchLodashPick";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
 
@@ -408,7 +408,7 @@ export default class Form extends Component {
       this.formElement.dispatchEvent(
         new CustomEvent("submit", {
           cancelable: true,
-          bubbles: true
+          bubbles: true,
         })
       );
     }
