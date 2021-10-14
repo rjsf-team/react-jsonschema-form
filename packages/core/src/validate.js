@@ -1,4 +1,5 @@
 import toPath from "lodash/toPath";
+import isPlainObject from "lodash/isPlainObject";
 import Ajv from "ajv";
 let ajv = createAjvInstance();
 import { deepEquals, getDefaultFormState } from "./utils";
@@ -84,6 +85,7 @@ function toErrorSchema(errors) {
 export function toErrorList(errorSchema, fieldName = "root") {
   // XXX: We should transform fieldName as a full field path string.
   let errorList = [];
+
   if ("__errors" in errorSchema) {
     errorList = errorList.concat(
       errorSchema.__errors.map(stack => {
@@ -93,8 +95,9 @@ export function toErrorList(errorSchema, fieldName = "root") {
       })
     );
   }
+
   return Object.keys(errorSchema).reduce((acc, key) => {
-    if (key !== "__errors") {
+    if (key !== "__errors" && isPlainObject(errorSchema[key])) {
       acc = acc.concat(toErrorList(errorSchema[key], key));
     }
     return acc;
