@@ -2,6 +2,7 @@ import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
 import { useIntl } from "react-intl";
+import { useDebouncedCallback } from "use-debounce";
 import * as types from "../../types";
 
 import {
@@ -240,7 +241,51 @@ function WrapIfAdditional(props) {
   );
 }
 
+function useStateDebounced([externalState, setExternalState]) {
+  const [internalState, setInternalState] = React.useState(externalState);
+
+  const setExternalStateDebounced = useDebouncedCallback(value => {
+    setExternalState(value);
+  }, 100);
+
+  // Latest internal or external update will eventually be used.
+  const setInternalStateDebounced = useDebouncedCallback(value => {
+    setInternalState(value);
+  }, 1000);
+
+  React.useEffect(
+    () => {
+      setInternalStateDebounced(externalState);
+    },
+    [externalState]
+  );
+
+  return [
+    internalState,
+    React.useCallback(value => {
+      setInternalState(value);
+      setInternalStateDebounced(value);
+      setExternalStateDebounced(value);
+    }, []),
+  ];
+}
+
+function useDebouncedSchemaFieldProps(props) {
+  const [formData, onChange] = useStateDebounced([
+    props.formData,
+    props.onChange,
+  ]);
+
+  return {
+    ...props,
+    formData,
+    onChange,
+  };
+}
+
 function SchemaFieldRender(props) {
+  props = useDebouncedSchemaFieldProps(props);
+
   const {
     uiSchema,
     formData,
@@ -424,7 +469,7 @@ class SchemaField extends React.Component {
   }
 
   render() {
-    return SchemaFieldRender(this.props);
+    return <SchemaFieldRender {...this.props} />;
   }
 }
 
