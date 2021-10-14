@@ -251,7 +251,7 @@ function useStateDebounced([externalState, setExternalState]) {
   // Latest internal or external update will eventually be used.
   const setInternalStateDebounced = useDebouncedCallback(value => {
     setInternalState(value);
-  }, 1000);
+  }, 200);
 
   React.useEffect(
     () => {
