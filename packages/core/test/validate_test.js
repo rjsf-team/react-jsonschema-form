@@ -404,6 +404,18 @@ describe("Validation", () => {
         { stack: "c: err5" },
       ]);
     });
+
+    it("should not crash when extra properties exist in errorSchema and omit them", () => {
+      expect(
+        toErrorList({
+          __errors: ["err1", "err2"],
+          __warnings: ["warn1", "warn2"],
+          b: {
+            __warnings: ["warn3"],
+          },
+        })
+      ).eql([{ stack: "root: err1" }, { stack: "root: err2" }]);
+    });
   });
 
   describe("transformErrors", () => {
