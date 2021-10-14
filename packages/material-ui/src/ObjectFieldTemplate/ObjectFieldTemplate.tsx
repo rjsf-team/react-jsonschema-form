@@ -7,6 +7,9 @@ import { ObjectFieldTemplateProps } from '@visma/rjsf-core';
 import { utils } from '@visma/rjsf-core';
 
 import AddButton from '../AddButton/AddButton';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import Box from '@material-ui/core/Box';
 
 const { canExpand } = utils;
 
@@ -19,10 +22,10 @@ const useStyles = makeStyles({
 const ObjectFieldTemplate = ({
   DescriptionField,
   description,
-  TitleField,
+  // TitleField,
   title,
   properties,
-  required,
+  // required,
   disabled,
   readonly,
   uiSchema,
@@ -36,11 +39,10 @@ const ObjectFieldTemplate = ({
   return (
     <>
       {(uiSchema['ui:title'] || title) && (
-        <TitleField
-          id={`${idSchema.$id}-title`}
-          title={title}
-          required={required}
-        />
+        <Box id={`${idSchema.$id}-title`} mb={1} mt={1}>
+          <Typography variant="subtitle1" style={{fontSize: 18}}>{title}</Typography>
+          <Divider />
+        </Box>
       )}
       {description && (
         <DescriptionField
