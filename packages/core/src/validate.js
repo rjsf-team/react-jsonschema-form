@@ -131,10 +131,11 @@ function unwrapErrorHandler(errorHandler) {
   return Object.keys(errorHandler).reduce((acc, key) => {
     if (key === "addError") {
       return acc;
-    } else if (key === "__errors") {
+    } else if (isPlainObject(errorHandler[key])) {
+      return { ...acc, [key]: unwrapErrorHandler(errorHandler[key]) };
+    } else {
       return { ...acc, [key]: errorHandler[key] };
     }
-    return { ...acc, [key]: unwrapErrorHandler(errorHandler[key]) };
   }, {});
 }
 

@@ -3422,20 +3422,31 @@ describe("Form omitExtraData and liveOmit", () => {
   it("should ignore extra array properties passed within the errorSchema", () => {
     const schema = {
       type: "object",
+      required: ["foo", "bar"],
       properties: {
-        foo: { type: "string" },
+        foo: { type: "string", minLength: 10 },
+        bar: { type: "string" },
       },
     };
 
-    const extraErrors = {
-      __warnings: ["a warning that should be ignored"],
-      foo: {
-        __errors: ["foo", "bar"],
-        __warnings: ["another warning"],
-      },
+    const formData = {
+      foo: "dummy",
     };
 
-    const { node } = createFormComponent({ schema, extraErrors });
+    const validate = (formData, errors) => {
+      if (formData.foo === "dummy") {
+        errors.foo.__warnings = ["value might be too common"];
+      }
+
+      return errors;
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData,
+      validate,
+      liveValidate: true,
+    });
 
     expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
   });
