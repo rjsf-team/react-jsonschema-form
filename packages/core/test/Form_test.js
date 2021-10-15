@@ -3418,4 +3418,25 @@ describe("Form omitExtraData and liveOmit", () => {
 
     expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
   });
+
+  it("should ignore extra array properties passed within the errorSchema", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+      },
+    };
+
+    const extraErrors = {
+      __warnings: ["a warning that should be ignored"],
+      foo: {
+        __errors: ["foo", "bar"],
+        __warnings: ["another warning"],
+      },
+    };
+
+    const { node } = createFormComponent({ schema, extraErrors });
+
+    expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
+  });
 });
