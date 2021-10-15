@@ -53,7 +53,8 @@
     "lodash": "^4.17.15",
     "nanoid": "^3.1.23",
     "prop-types": "^15.7.2",
-    "react-is": "^16.9.0"
+    "react-is": "^16.9.0",
+    "use-debounce": "^7.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -103,7 +104,6 @@
     "rimraf": "^2.5.4",
     "sinon": "^9.0.2",
     "style-loader": "^0.13.1",
-    "use-debounce": "^7.0.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
