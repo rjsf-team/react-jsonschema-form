@@ -1,13 +1,10 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { withTheme } from '@rjsf/core';
 
 import '../__mocks__/matchMedia.mock';
-import { Theme } from '../src';
+import Form from '../src';
 
 const { describe, expect, test } = global;
-
-const Form = withTheme(Theme);
 
 describe("single fields", () => {
   describe("string field", () => {
@@ -75,6 +72,25 @@ describe("single fields", () => {
     };
     const tree = renderer
       .create(<Form schema={schema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("hidden field", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string",
+        },
+      },
+    };
+    const uiSchema = {
+      "my-field": {
+        "ui:widget": "hidden",
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

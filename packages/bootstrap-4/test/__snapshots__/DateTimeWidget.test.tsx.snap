@@ -18,6 +18,7 @@ exports[`DateTimeWidget simple 1`] = `
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
+    placeholder=""
     readOnly={true}
     required={true}
     type="datetime-local"

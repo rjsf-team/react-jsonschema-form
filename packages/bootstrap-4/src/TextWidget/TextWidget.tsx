@@ -4,12 +4,9 @@ import Form from "react-bootstrap/Form";
 
 import { WidgetProps } from "@rjsf/core";
 
-export interface TextWidgetProps extends WidgetProps {
-  type?: string;
-}
-
 const TextWidget = ({
   id,
+  placeholder,
   required,
   readonly,
   disabled,
@@ -24,7 +21,7 @@ const TextWidget = ({
   schema,
   rawErrors = [],
 
-}: TextWidgetProps) => {
+}: WidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -52,6 +49,7 @@ const TextWidget = ({
       </Form.Label>
       <Form.Control
         id={id}
+        placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}

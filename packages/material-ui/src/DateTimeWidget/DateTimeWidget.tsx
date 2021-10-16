@@ -1,10 +1,12 @@
 import React from "react";
 import { utils } from "@rjsf/core";
-import TextWidget, { TextWidgetProps } from "../TextWidget";
+import { TextWidgetProps } from "../TextWidget";
 
 const { localToUTC, utcToLocal } = utils;
 
 const DateTimeWidget = (props: TextWidgetProps) => {
+  const { registry } = props;
+  const { TextWidget } = registry.widgets;
   const value = utcToLocal(props.value);
   const onChange = (value: any) => {
     props.onChange(localToUTC(value));

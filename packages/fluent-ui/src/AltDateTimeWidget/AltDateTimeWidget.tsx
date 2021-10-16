@@ -1,5 +1,12 @@
 import React from "react";
 import { WidgetProps } from "@rjsf/core";
-import TextWidget from '../TextWidget';
 
-export default (props: WidgetProps) => <TextWidget {...props} />;
+const AltDateTimeWidget = (props: WidgetProps) => {
+  const { registry } = props;
+  const { TextWidget } = registry.widgets;
+  return (
+    <TextWidget {...props} />
+  );
+};
+
+export default AltDateTimeWidget;
