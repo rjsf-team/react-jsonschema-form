@@ -840,6 +840,8 @@ function withExactlyOneSubschema(
   dependencyKey,
   oneOf
 ) {
+  let unmetSchemas = [];
+  let rogueFormData = {};
   const validSubschemas = oneOf.filter(subschema => {
     if (!subschema.properties) {
       return false;
@@ -853,13 +855,20 @@ function withExactlyOneSubschema(
         },
       };
       const { errors } = validateFormData(formData, conditionSchema);
-      return errors.length === 0;
+      if (errors.length === 0) return true
+      else {
+        unmetSchemas.push(conditionPropertySchema);
+        rogueFormData = formData;
+        return false;
+      }
     }
   });
   if (validSubschemas.length !== 1) {
     console.warn(
-      "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid"
+      "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid. unmet schemas:", unmetSchemas, "current form data:", rogueFormData
     );
+    unmetSchemas = [];
+    rogueFormData = {};
     return schema;
   }
   const subschema = validSubschemas[0];
