@@ -83,7 +83,12 @@ const DefaultArrayItem = (props: any) => {
   };
   return (
     <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs style={{ overflow: "auto" }}>
+      <Grid
+        item={true}
+        xs
+        // Causes datepicker popover to be shown only partially
+        // style={{ overflow: "auto" }}
+      >
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{props.children}</Box>
