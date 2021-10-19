@@ -8,6 +8,11 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rjsf-team/react-jsonschema-form.git",
+    "directory":"packages/bootstrap-4"
+  },
   "scripts": {
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build",
