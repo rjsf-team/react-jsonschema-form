@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import _pick from "./patchLodashPick";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
+import mapValues from "lodash/mapValues";
 
 import { default as DefaultErrorList } from "./ErrorList";
 import {
@@ -329,6 +330,15 @@ export default class Form extends Component {
 
       newFormData = this.getUsedFormData(newFormData, fieldNames);
     }
+
+    // Arrays are initialized with an empty element. Remove undefined elements before validation.
+    newFormData = (function removeUndefinedElements(data) {
+      return Array.isArray(data)
+        ? data.filter(entry => entry !== undefined).map(removeUndefinedElements)
+        : typeof data === "object" && data !== null
+        ? mapValues(data, removeUndefinedElements)
+        : data;
+    })(newFormData);
 
     if (!this.props.noValidate) {
       let schemaValidation = this.validate(newFormData);
