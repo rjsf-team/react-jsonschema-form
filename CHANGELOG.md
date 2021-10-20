@@ -16,7 +16,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# v3.2.0 (upcoming)
+# v3.2.1 (upcoming)
+
+# v3.2.0
 
 ## @rjsf/core
 - Fix for clearing errors after updating and submitting form (https://github.com/rjsf-team/react-jsonschema-form/pull/2536)
