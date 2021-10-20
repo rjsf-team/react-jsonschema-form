@@ -184,7 +184,7 @@ describe("BooleanField", () => {
     expect(description.textContent).eql("my description");
   });
 
-  it("should pass uiSchema to custom wigdet", () => {
+  it("should pass uiSchema to custom widget", () => {
     const CustomCheckboxWidget = ({ uiSchema }) => {
       return (
         <div id="custom-ui-option-value">
