@@ -34,6 +34,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 - Several dependency updates
 - Added global `readonly` flag to the `Form` (https://github.com/rjsf-team/react-jsonschema-form/pull/2554)
+- Enable source maps in playground, for development (https://github.com/rjsf-team/react-jsonschema-form/pull/2568)
 
 # v3.1.0
 
