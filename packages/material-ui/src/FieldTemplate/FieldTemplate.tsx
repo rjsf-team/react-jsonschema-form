@@ -28,7 +28,7 @@ const FieldTemplate = ({
   schema,
 }: FieldTemplateProps) => {
   if (hidden) {
-    return children;
+    return null;
   }
 
   return (
