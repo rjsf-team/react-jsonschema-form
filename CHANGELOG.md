@@ -16,13 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# v3.2.0 (upcoming)
+# v3.2.1 (upcoming)
+
+# v3.2.0
 
 ## @rjsf/core
 - Fix for clearing errors after updating and submitting form (https://github.com/rjsf-team/react-jsonschema-form/pull/2536)
 - bootstrap-4 TextWidget wrappers now pull from registry, add rootSchema to Registry, fix FieldProps.onFocus type to match WidgetProps (https://github.com/rjsf-team/react-jsonschema-form/pull/2519)
 - Added global `readonly` flag to the `Form` (https://github.com/rjsf-team/react-jsonschema-form/pull/2554)
 - Fix to allow changing `additionalProperties` to falsy values (https://github.com/rjsf-team/react-jsonschema-form/pull/2540)
+- Pass uiSchema to custom Boolean widget (https://github.com/rjsf-team/react-jsonschema-form/pull/2587)
 
 ## @rjsf/bootstrap-4
 - bootstrap-4 TextWidget wrappers now pull from registry, add rootSchema to Registry, fix FieldProps.onFocus type to match WidgetProps (https://github.com/rjsf-team/react-jsonschema-form/pull/2519)
@@ -33,6 +36,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 - Several dependency updates
 - Added global `readonly` flag to the `Form` (https://github.com/rjsf-team/react-jsonschema-form/pull/2554)
+- Enable source maps in playground, for development (https://github.com/rjsf-team/react-jsonschema-form/pull/2568)
 
 # v3.1.0
 
