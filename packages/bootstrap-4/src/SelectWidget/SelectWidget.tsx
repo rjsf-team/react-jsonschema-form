@@ -75,7 +75,7 @@ const SelectWidget = ({
   }
 
   return (
-    <Form.Group>
+    <Form.Group className="mb-0">
       <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
         {label || schema.title}
         {(label || schema.title) && required ? "*" : null}
