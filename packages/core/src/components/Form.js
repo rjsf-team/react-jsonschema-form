@@ -461,6 +461,7 @@ export default class Form extends Component {
       <Context.Provider value={{ formData }}>
         <FormTag
           className={className ? className : "rjsf"}
+          style={{ width: "100%", maxWidth: 700, margin: "auto" }}
           id={id}
           name={name}
           method={method}
