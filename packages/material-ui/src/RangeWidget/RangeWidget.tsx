@@ -8,6 +8,42 @@ import { WidgetProps } from "@visma/rjsf-core";
 
 const { rangeSpec } = utils;
 
+const calculateMultiplier = (min: number, max: number, step: number) => {
+  let multiplier = 1;
+  const range = max-min;
+  const maxAmountOfMarks = 10;
+  let amountOfMarks = range/step;
+
+  // finds a multiplier for step so that there are not too many marks
+  // and all marks are also valid values
+  while (amountOfMarks >= maxAmountOfMarks) {
+    multiplier++;
+    if (range%(step*multiplier) === 0) {
+      amountOfMarks = range/(step*multiplier);
+    } else {
+      if (multiplier/range > 0.5) {
+        multiplier = -1;
+        amountOfMarks = 0;
+      }
+    }
+  }
+
+  return multiplier;
+
+  /*
+  let multiplier = 1;
+  let amountOfMarks = (max-min)/step;
+
+  while (amountOfMarks >= 10) {
+    multiplier++;
+    if ((max-min)%(step*multiplier))
+    amountOfMarks = (max-min)/(step*multiplier);
+  }
+
+  return multiplier;
+  */
+}
+
 const generateWithMiddleMarks = (min: number, max: number, step: number) => {
   const middleMarks = [];
 
@@ -25,8 +61,11 @@ const generateMarks = (min?: number, max?: number, step?: number) => {
     return [];
   }
 
-  if ((max-min)/step! < 10) {
-    return generateWithMiddleMarks(min!, max!, step!);
+  const multiplier = calculateMultiplier(min!, max!, step ? step : 1);
+  console.log(multiplier);
+
+  if (multiplier > 0) {
+    return generateWithMiddleMarks(min!, max!, (step ? step : 1)*multiplier);
   }
 
   return [{value: min!, label: min!.toString()}, {value: max!, label: max!.toString()}];
