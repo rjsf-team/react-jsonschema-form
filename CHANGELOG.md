@@ -16,8 +16,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# v3.2.1 (upcoming)
-
+# v3.3.0
+## @rjsf/semantic-ui
+- "semantic-ui-react" updated to v1.2.1 (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
+- fixed passing [semantic theme specific props](https://react-jsonschema-form.readthedocs.io/en/latest/api-reference/themes/semantic-ui/uiSchema/), by overiding defaults, with your own semantic props (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
 # v3.2.0
 
 ## @rjsf/core
@@ -32,10 +34,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/fluent-ui
 - fluent-ui: Allow value of 0 in TextWidget (https://github.com/rjsf-team/react-jsonschema-form/pull/2497)
-
-## @rjsf/semantic-ui
-- "semantic-ui-react" updated to v1.2.1 (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
-- fixed passing semantic theme specific props, by overiding defaults, with your own semantic props (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
 
 ## Dev / docs / playground
 - Several dependency updates
