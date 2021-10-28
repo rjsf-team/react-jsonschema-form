@@ -33,6 +33,10 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/fluent-ui
 - fluent-ui: Allow value of 0 in TextWidget (https://github.com/rjsf-team/react-jsonschema-form/pull/2497)
 
+## @rjsf/semantic-ui
+- "semantic-ui-react" updated to v1.2.1 (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
+- fixed passing semantic theme specific props, by overiding defaults, with your own semantic props (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
+
 ## Dev / docs / playground
 - Several dependency updates
 - Added global `readonly` flag to the `Form` (https://github.com/rjsf-team/react-jsonschema-form/pull/2554)
@@ -45,7 +49,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Take into account implicitly defined types when rendering labels for fields (https://github.com/rjsf-team/react-jsonschema-form/pull/2502)
 
 ## @rjsf/antd
-- Add default Form export to @rjsf/antd (https://github.com/rjsf-team/react-jsonschema-form/pull/2514) 
+- Add default Form export to @rjsf/antd (https://github.com/rjsf-team/react-jsonschema-form/pull/2514)
 
 ## @rjsf/fluent-ui
 - Make material-ui and fluent-ui pull TextWidget from the registry; remove registry prop from <div> in TextWidget (https://github.com/rjsf-team/react-jsonschema-form/pull/2515)
