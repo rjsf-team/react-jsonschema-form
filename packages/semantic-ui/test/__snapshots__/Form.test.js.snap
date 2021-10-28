@@ -35,6 +35,7 @@ exports[`single fields number field 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby={null}
           autoFocus={false}
           disabled={false}
           id="root"
@@ -106,6 +107,7 @@ exports[`single fields string field format email 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby={null}
           autoFocus={false}
           disabled={false}
           id="root"
@@ -144,6 +146,7 @@ exports[`single fields string field format uri 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby={null}
           autoFocus={false}
           disabled={false}
           id="root"
@@ -182,6 +185,7 @@ exports[`single fields string field regular 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby={null}
           autoFocus={false}
           disabled={false}
           id="root"

@@ -44,7 +44,6 @@ function TextWidget(props) {
   );
 
   const inputType = schema.type === 'string' ?  'text' : `${schema.type}`;
-
   return (
     <Form.Input
       key={id}
