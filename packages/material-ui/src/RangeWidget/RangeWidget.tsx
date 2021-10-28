@@ -1,12 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import Slider from '@material-ui/core/Slider';
-import FormLabel from '@material-ui/core/FormLabel';
+import Slider from "@material-ui/core/Slider";
+import FormLabel from "@material-ui/core/FormLabel";
 
-import { utils } from '@rjsf/core';
-import { WidgetProps } from '@rjsf/core';
+import { utils } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/core";
 
 const { rangeSpec } = utils;
 
@@ -18,9 +16,6 @@ const RangeWidget = ({
   onFocus,
   options,
   schema,
-  //formContext,
-  //registry,
-  //rawErrors,
   onChange,
   required,
   label,
@@ -29,7 +24,7 @@ const RangeWidget = ({
   let sliderProps = { value, label, id, ...rangeSpec(schema) };
 
   const _onChange = ({}, value: any) =>
-    onChange(value === '' ? options.emptyValue : value);
+    onChange(value === "" ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -37,22 +32,19 @@ const RangeWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <Grid container={true} alignItems="flex-end">
-      <FormControl
-        fullWidth={true}
-        //error={!!rawErrors}
-        required={required}
-      >
-        <FormLabel id={id}>{label}</FormLabel>
-        <Slider
-          {...sliderProps}
-          disabled={disabled || readonly}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-      </FormControl>
-    </Grid>
+    <>
+      <FormLabel required={required} id={id}>
+        {label}
+      </FormLabel>
+      <Slider
+        disabled={disabled || readonly}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        valueLabelDisplay="auto"
+        {...sliderProps}
+      />
+    </>
   );
 };
 

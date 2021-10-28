@@ -1,0 +1,38 @@
+@import '~antd/lib/style/themes/default.less';
+
+.field-hidden {
+  display: none;
+}
+
+.form-group.field-object {
+  margin-bottom: 0;
+}
+
+.form-group:not(.field) {
+  // Add margin below oneOf / anyOf dropdown.
+  margin-bottom: @form-item-margin-bottom;
+}
+
+.object-property-expand {
+  // Add margin below the `additionalProperties` related add button.
+  margin-bottom: @form-item-margin-bottom;
+}
+
+// .panel.panel-default.panel-body > .ant-row > fieldset > .ant-col.ant-form-item-label {
+.panel.panel-default.panel-body fieldset > .ant-col.ant-form-item-label {
+  // Hide oneOf / anyOf  object title.
+  display: none;
+}
+
+.panel.panel-danger.errors {
+  margin-bottom: @form-item-margin-bottom;
+
+  .list-group .ant-list-item {
+    margin-left: 0;
+    margin-right: 0;
+
+    .anticon.anticon-exclamation-circle {
+      color: @red-6;
+    }
+  }
+}

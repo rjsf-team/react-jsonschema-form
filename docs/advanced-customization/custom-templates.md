@@ -34,7 +34,7 @@ function ArrayFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ArrayFieldTemplate={ArrayFieldTemplate} />,
+        ArrayFieldTemplate={ArrayFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -65,6 +65,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `title`: A string value containing the title for the array.
 - `formContext`: The `formContext` object that you passed to Form.
 - `formData`: The formData for this array.
+- `registry`: The `registry` object.
 
 The following props are part of each element in `items`:
 
@@ -77,9 +78,9 @@ The following props are part of each element in `items`:
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
 - `key`: A stable, unique key for the array item.
-- `onAddIndexClick: (index) => (event) => void`: Returns a function that adds a new item at `index`.
-- `onDropIndexClick: (index) => (event) => void`: Returns a function that removes the item at `index`.
-- `onReorderClick: (index, newIndex) => (event) => void`: Returns a function that swaps the items at `index` with `newIndex`.
+- `onAddIndexClick: (index) => (event?) => void`: Returns a function that adds a new item at `index`.
+- `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
+- `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
 
 > Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
@@ -110,7 +111,7 @@ function CustomFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        FieldTemplate={CustomFieldTemplate} />,
+        FieldTemplate={CustomFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -144,7 +145,10 @@ The following props are passed to a custom field template component:
 - `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
+- `onChange`: The value change event handler; Can be called with a new value to change the value for this field.
 - `formContext`: The `formContext` object that you passed to Form.
+- `formData`: The formData for this field.
+- `registry`: The `registry` object.
 
 > Note: you can only define a single global field template for a form, but you can set individual field templates per property using `"ui:FieldTemplate"`.
 
@@ -177,7 +181,7 @@ function ObjectFieldTemplate(props) {
 
 render((
   <Form schema={schema}
-        ObjectFieldTemplate={ObjectFieldTemplate} />,
+        ObjectFieldTemplate={ObjectFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -199,6 +203,7 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `description`: A string value containing the description for the object.
 - `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
+- `onAddClick: (schema: JSONSchema7) => () => void`: Returns a function that adds a new property to the object (to be used with additionalProperties)
 - `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object is required.
 - `schema`: The schema object for this object.
@@ -206,6 +211,7 @@ The following props are passed to each `ObjectFieldTemplate`:
 - `idSchema`: An object containing the id for this object & ids for it's properties.
 - `formData`: The form data for the object.
 - `formContext`: The `formContext` object that you passed to Form.
+- `registry`: The `registry` object.
 
 The following props are part of each element in `properties`:
 
@@ -213,5 +219,6 @@ The following props are part of each element in `properties`:
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `readonly`: A boolean value stating if the property is read-only.
+- `hidden`: A boolean value stating if the property should be hidden.
 
 > Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an object field template, you may need to specify both `ui:FieldTemplate` and `ui:ObjectFieldTemplate`.

@@ -1,6 +1,6 @@
 # Validation
 
-When the form is submitted, the form data is validated to conform to the given JSON schema; this library uses the [ajv](https://github.com/epoberezkin/ajv) validator by default.
+When the form is submitted, the form data is validated to conform to the given JSON schema; this library uses the [ajv](https://github.com/ajv-validator/ajv) validator by default.
 
 ## Live validation
 
@@ -110,10 +110,10 @@ Each element in the `errors` list passed to `transformErrors` has the following 
 
 - `name`: name of the error, for example, "required" or "minLength"
 - `message`: message, for example, "is a required property" or "should NOT be shorter than 3 characters"
-- `params`: an object with the error params returned by ajv ([see doc](https://github.com/epoberezkin/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#error-parameters) for more info).
+- `params`: an object with the error params returned by ajv ([see doc](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#error-parameters) for more info).
 - `property`: a string in Javascript property accessor notation to the data path of the field with the error. For example, `.name` or `['first-name']`.
 - `stack`: full error name, for example ".name is a required property".
-- `schemaPath`: JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`. (Note: this may sometimes be wrong due to a [https://github.com/epoberezkin/ajv/issues/512](bug in ajv)).
+- `schemaPath`: JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`. (Note: this may sometimes be wrong due to a [bug in ajv](https://github.com/ajv-validator/ajv/issues/512)).
 
 ## Error List Display
 
@@ -224,7 +224,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-Format values can be anything AJV’s [`addFormat` method](https://github.com/epoberezkin/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
+Format values can be anything AJV’s [`addFormat` method](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
 
 ## Async validation
 
@@ -263,7 +263,7 @@ const extraErrors = {
 
 render((
   <Form schema={schema}
-        extraErrors={extraErrors} />,
+        extraErrors={extraErrors} />
 ), document.getElementById("app"));
 ```
 

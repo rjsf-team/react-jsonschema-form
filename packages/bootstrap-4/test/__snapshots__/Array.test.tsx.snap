@@ -1,0 +1,267 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array fields array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div>
+      <div
+        className="p-0 m-0 row"
+      >
+        <div
+          className="p-0 m-0 col"
+        >
+          <div
+            className="p-0 m-0 container-fluid"
+          >
+            <div
+              className="container"
+            >
+              <div
+                className="mt-2 row"
+              >
+                <div
+                  className="col-9"
+                />
+                <div
+                  className="py-4 col-lg-3 col-3 col-3"
+                >
+                   
+                  <button
+                    className="ml-1 btn btn-primary"
+                    color="primary"
+                    disabled={false}
+                    onClick={[Function]}
+                    style={
+                      Object {
+                        "width": "100%",
+                      }
+                    }
+                    type="button"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      strokeWidth="0"
+                      style={
+                        Object {
+                          "color": undefined,
+                        }
+                      }
+                      viewBox="0 0 16 16"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clipRule="evenodd"
+                        d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                        fillRule="evenodd"
+                      />
+                      <path
+                        clipRule="evenodd"
+                        d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                        fillRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+      />
+      <select
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        multiple={true}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        readOnly={false}
+        required={false}
+        value={Array []}
+      >
+        <option
+          disabled={false}
+          id="a"
+          value="a"
+        >
+          a
+        </option>
+        <option
+          disabled={false}
+          id="b"
+          value="b"
+        >
+          b
+        </option>
+        <option
+          disabled={false}
+          id="c"
+          value="c"
+        >
+          c
+        </option>
+      </select>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div>
+      <div
+        className="p-0 m-0 row"
+      >
+        <div
+          className="p-0 m-0 col"
+        >
+          <div
+            className="p-0 m-0 container-fluid"
+          >
+            <div>
+              <div
+                className="mb-2  d-flex align-items-center row"
+              >
+                <div
+                  className="col-lg-9 col-9"
+                >
+                  <div
+                    className="form-group"
+                  >
+                    <div
+                      className="mb-0 form-group"
+                    >
+                      <label
+                        className="form-label"
+                      />
+                      <input
+                        autoFocus={false}
+                        className="form-control"
+                        disabled={false}
+                        id="root_0"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={true}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="py-4 col-lg-3 col-3"
+                />
+              </div>
+            </div>
+            <div>
+              <div
+                className="mb-2  d-flex align-items-center row"
+              >
+                <div
+                  className="col-lg-9 col-9"
+                >
+                  <div
+                    className="form-group"
+                  >
+                    <div
+                      className="mb-0 form-group"
+                    >
+                      <label
+                        className="form-label"
+                      />
+                      <input
+                        autoFocus={false}
+                        className="form-control"
+                        disabled={false}
+                        id="root_1"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={true}
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="py-4 col-lg-3 col-3"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

@@ -54,7 +54,8 @@ The default fields you can override are:
  - `ArrayField`
  - `BooleanField`
  - `DescriptionField`
- - `MultiSchemaField`
+ - `OneOfField`
+ - `AnyOfField`
  - `NullField`
  - `NumberField`
  - `ObjectField`
@@ -113,7 +114,7 @@ const uiSchema = {
 
 render((
   <Form schema={schema}
-        uiSchema={uiSchema} />,
+        uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
 
@@ -121,6 +122,7 @@ The following props are passed to custom widget components:
 
 - `id`: The generated id for this field;
 - `schema`: The JSONSchema subschema object for this field;
+- `uiSchema`: The uiSchema for this field;
 - `value`: The current value for this field;
 - `placeholder`: the placeholder for the field, if any;
 - `required`: The required status of this field;
@@ -132,10 +134,9 @@ The following props are passed to custom widget components:
 - `onBlur`: The input blur event handler; call it with the the widget id and value;
 - `onFocus`: The input focus event handler; call it with the the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
+- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.
 - `formContext`: The `formContext` object that you passed to Form.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
-
-> Note: Prior to v0.35.0, the `options` prop contained the list of options (`label` and `value`) for `enum` fields. Since v0.35.0, it now exposes this list as the `enumOptions` property within the `options` object.
 
 ### Custom component registration
 

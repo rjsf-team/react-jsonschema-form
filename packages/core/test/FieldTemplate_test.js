@@ -91,4 +91,34 @@ describe("FieldTemplate", () => {
       });
     });
   });
+
+  describe("Custom FieldTemplate should have registry", () => {
+    function FieldTemplate(props) {
+      return (
+        <div>
+          Root Schema:{" "}
+          <span id="root-schema">
+            {JSON.stringify(props.registry.rootSchema)}
+          </span>
+        </div>
+      );
+    }
+
+    it("should allow access to root schema from registry", () => {
+      const schema = {
+        type: "object",
+        properties: { fooBarBaz: { type: "string" } },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        FieldTemplate,
+      });
+
+      expect(node.querySelectorAll("#root-schema")).to.have.length.of(1);
+      expect(node.querySelectorAll("#root-schema")[0].innerHTML).to.equal(
+        JSON.stringify(schema)
+      );
+    });
+  });
 });

@@ -19,7 +19,7 @@ function deepEquals(a, b, ca = [], cb = []) {
     return true;
   } else if (typeof a === "function" || typeof b === "function") {
     // Assume all functions are equivalent
-    // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
+    // see https://github.com/rjsf-team/react-jsonschema-form/issues/255
     return true;
   } else if (typeof a !== "object" || typeof b !== "object") {
     return false;
@@ -100,6 +100,7 @@ const liveSettingsSchema = {
   properties: {
     validate: { type: "boolean", title: "Live validation" },
     disable: { type: "boolean", title: "Disable whole form" },
+    readonly: { type: "boolean", title: "Readonly whole form" },
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
   },
@@ -339,6 +340,9 @@ class CopyLink extends Component {
 class Playground extends Component {
   constructor(props) {
     super(props);
+
+    // set default theme
+    const theme = "default";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.state = {
@@ -347,11 +351,12 @@ class Playground extends Component {
       uiSchema,
       formData,
       validate,
-      theme: "default",
+      theme,
       subtheme: null,
       liveSettings: {
-        validate: true,
+        validate: false,
         disable: false,
+        readonly: false,
         omitExtraData: false,
         liveOmit: false,
       },
@@ -361,6 +366,8 @@ class Playground extends Component {
   }
 
   componentDidMount() {
+    const { themes } = this.props;
+    const { theme } = this.state;
     const hash = document.location.hash.match(/#(.*)/);
     if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
       try {
@@ -369,7 +376,10 @@ class Playground extends Component {
         alert("Unable to load form setup data.");
       }
     } else {
-      this.load({ theme: Object.keys(this.props.themes)[0] });
+      // initialize theme
+      this.onThemeSelected(theme, themes[theme]);
+
+      this.setState({ form: true });
     }
   }
 
@@ -432,7 +442,7 @@ class Playground extends Component {
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
-  onFormDataChange = ({ formData }) =>
+  onFormDataChange = ({ formData = "" }) =>
     this.setState({ formData, shareURL: null });
 
   onShare = () => {
@@ -565,11 +575,21 @@ class Playground extends Component {
           {this.state.form && (
             <DemoFrame
               head={
-                <link
-                  rel="stylesheet"
-                  id="theme"
-                  href={this.state.stylesheet || ""}
-                />
+                <React.Fragment>
+                  <link
+                    rel="stylesheet"
+                    id="theme"
+                    href={this.state.stylesheet || ""}
+                  />
+                  {theme === "antd" && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: document.getElementById("antd-styles-iframe")
+                          .contentDocument.head.innerHTML,
+                      }}
+                    />
+                  )}
+                </React.Fragment>
               }
               style={{
                 width: "100%",
@@ -581,12 +601,14 @@ class Playground extends Component {
                 {...templateProps}
                 liveValidate={liveSettings.validate}
                 disabled={liveSettings.disable}
+                readonly={liveSettings.readonly}
                 omitExtraData={liveSettings.omitExtraData}
                 liveOmit={liveSettings.liveOmit}
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
                 onChange={this.onFormDataChange}
+                noHtml5Validate={true}
                 onSubmit={({ formData }, e) => {
                   console.log("submitted formData", formData);
                   console.log("submit event", e);
@@ -608,7 +630,7 @@ class Playground extends Component {
         <div className="col-sm-12">
           <p style={{ textAlign: "center" }}>
             Powered by{" "}
-            <a href="https://github.com/mozilla-services/react-jsonschema-form">
+            <a href="https://github.com/rjsf-team/react-jsonschema-form">
               react-jsonschema-form
             </a>
             .

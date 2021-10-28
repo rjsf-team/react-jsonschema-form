@@ -1,9 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import { WidgetProps } from '@rjsf/core';
+import { WidgetProps } from "@rjsf/core";
 
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 
 type CustomWidgetProps = WidgetProps & {
   options: any;
@@ -23,11 +22,12 @@ const TextareaWidget = ({
   onChange,
   options,
   schema,
+  rawErrors = [],
 }: CustomWidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
+    onChange(value === "" ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -35,26 +35,21 @@ const TextareaWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <FormControl
-      fullWidth={true}
-      //error={!!rawErrors}
+    <TextField
+      id={id}
+      label={label || schema.title}
+      placeholder={placeholder}
+      disabled={disabled || readonly}
+      value={value}
       required={required}
-    >
-      <TextField
-        id={id}
-        label={label || schema.title}
-        placeholder={placeholder}
-        disabled={disabled || readonly}
-        value={value}
-        required={required}
-        autoFocus={autofocus}
-        multiline={true}
-        rows={options.rows || 5}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-      />
-    </FormControl>
+      autoFocus={autofocus}
+      multiline={true}
+      rows={options.rows || 5}
+      error={rawErrors.length > 0}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 };
 

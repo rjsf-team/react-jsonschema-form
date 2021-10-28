@@ -38,7 +38,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](usage/schema.md).
+For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](/docs/usage/single.md).
 
 ## Form uiSchema
 
@@ -62,7 +62,7 @@ render((
 ```
 
 To customize object fields in the uiSchema, the structure of the
-uiSchema should be `{key: value}`, where `key` is the property key and `value` is an 
+uiSchema should be `{key: value}`, where `key` is the property key and `value` is an
 object with the uiSchema configuration for that particular property. For example:
 
 ```jsx
@@ -127,7 +127,7 @@ render((
 
 ### Form event handlers
 
-You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`, and `onBlur` on the `<Form />` component; see the [Form Props Reference](api-reference-props.md) for more details.
+You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`, and `onBlur` on the `<Form />` component; see the [Form Props Reference](/docs/api-reference/form-props.md) for more details.
 
 ### Controlled component
 

@@ -8,6 +8,11 @@ module.exports = {
   entry: [
     "./src/index"
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   output: {
     path: path.join(__dirname, "dist"),
   },
@@ -31,7 +36,7 @@ module.exports = {
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules", "codemirror", "mode", "javascript"),
+          path.join(__dirname, "node_modules", "mode", "javascript"),
         ]
       },
       {
@@ -45,6 +50,25 @@ module.exports = {
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "monaco-editor")
+        ],
+      },
+      {
+        test: /\.less$/,
+        include: /node_modules[\\/]antd/,
+        use: [
+          {
+            loader: "style-loader",
+            options: {
+              insert: "#antd-styles-iframe"
+            }
+          },
+          "css-loader",
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
+          },
         ],
       },
     ]

@@ -1,54 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
+import { TextWidgetProps } from "../TextWidget";
 
-import { WidgetProps } from '@rjsf/core';
-
-const PasswordWidget = ({
-  id,
-  required,
-  readonly,
-  disabled,
-  value,
-  label,
-  onFocus,
-  onBlur,
-  onChange,
-  options,
-  autofocus,
-  schema,
-}: WidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
-
-  return (
-    <FormControl
-      fullWidth={true}
-      //error={!!rawErrors}
-      required={required}
-    >
-      <InputLabel>{label || schema.title}</InputLabel>
-      <Input
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled || readonly}
-        type="password"
-        value={value ? value : ''}
-        onFocus={_onFocus}
-        onBlur={_onBlur}
-        onChange={_onChange}
-      />
-    </FormControl>
-  );
+const PasswordWidget = (props: TextWidgetProps) => {
+  const { registry } = props;
+  const { TextWidget } = registry.widgets;
+  return <TextWidget type="password" {...props} />;
 };
 
 export default PasswordWidget;

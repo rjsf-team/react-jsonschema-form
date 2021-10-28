@@ -125,7 +125,10 @@ yarn.lock
 # IDE
 .vscode
 .idea
+*.iml
 
 # Code coverage
 coverage
 .nyc_output
+
+venv

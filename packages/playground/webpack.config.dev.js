@@ -5,10 +5,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: "development",
-  devtool: "source-map",
+  devtool: "inline-source-map",
   entry: [
     "./src/index"
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   output: {
     path: path.join(__dirname, "build"),
   },
@@ -44,8 +49,13 @@ module.exports = {
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules", "codemirror", "mode", "javascript"),
+          path.join(__dirname, "node_modules", "mode", "javascript"),
         ]
+      },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"]
       },
       {
         test: /\.s?css$/,
@@ -58,6 +68,25 @@ module.exports = {
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "monaco-editor")
+        ],
+      },
+      {
+        test: /\.less$/,
+        include: /node_modules[\\/]antd/,
+        use: [
+          {
+            loader: "style-loader",
+            options: {
+              insert: "#antd-styles-iframe"
+            }
+          },
+          "css-loader",
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
+          },
         ],
       },
     ]

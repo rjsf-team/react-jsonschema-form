@@ -54,6 +54,7 @@ function BooleanField(props) {
     <Widget
       options={{ ...options, enumOptions }}
       schema={schema}
+      uiSchema={uiSchema}
       id={idSchema && idSchema.$id}
       onChange={onChange}
       onFocus={onFocus}

@@ -1,0 +1,52 @@
+{
+  "parser": "babel-eslint",
+  "rules": {
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2,
+    "react/react-in-jsx-scope": 2,
+    "react/jsx-tag-spacing": [
+      1,
+      {
+        "beforeSelfClosing": "always"
+      }
+    ],
+    "curly": [
+      2
+    ],
+    "semi": [
+      2,
+      "always"
+    ],
+    "comma-dangle": [
+      0
+    ],
+    "no-unused-vars": [
+      2,
+      {
+        "vars": "all",
+        "args": "none",
+        "ignoreRestSiblings": true
+      }
+    ],
+    "no-console": [
+      0
+    ],
+    "object-curly-spacing": [
+      2,
+      "always"
+    ],
+    "keyword-spacing": [
+      "error"
+    ]
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "plugins": [
+    "jsx-a11y",
+    "react"
+  ]
+}

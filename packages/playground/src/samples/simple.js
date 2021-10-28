@@ -14,19 +14,19 @@ module.exports = {
         type: "string",
         title: "Last name",
       },
-      age: {
-        type: "integer",
-        title: "Age",
-      },
-      bio: {
-        type: "string",
-        title: "Bio",
-      },
-      password: {
-        type: "string",
-        title: "Password",
-        minLength: 3,
-      },
+      // age: {
+      //   type: "integer",
+      //   title: "Age",
+      // },
+      // bio: {
+      //   type: "string",
+      //   title: "Bio",
+      // },
+      // password: {
+      //   type: "string",
+      //   title: "Password",
+      //   minLength: 3,
+      // },
       telephone: {
         type: "string",
         title: "Telephone",

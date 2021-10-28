@@ -74,7 +74,7 @@ render((
 
 ## Theming
 
-For more information on what themes we support, see [Using Themes](/usage/themes.md).
+For more information on what themes we support, see [Using Themes](usage/themes).
 
 
 <!--

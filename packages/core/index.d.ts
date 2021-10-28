@@ -15,9 +15,11 @@ declare module '@rjsf/core' {
         ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
         autoComplete?: string;
         autocomplete?: string; // deprecated
+        children?: React.ReactNode;
         className?: string;
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
+        readonly?: boolean;
         enctype?: string;
         extraErrors?: any;
         ErrorList?: React.StatelessComponent<ErrorListProps>;
@@ -35,11 +37,11 @@ declare module '@rjsf/core' {
         noValidate?: boolean;
         ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
         omitExtraData?: boolean;
-        onBlur?: (id: string, value: boolean | number | string | null) => void;
+        onBlur?: (id: string, value: any) => void;
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
         onError?: (e: any) => any;
-        onFocus?: (id: string, value: boolean | number | string | null) => void;
-        onSubmit?: (e: ISubmitEvent<T>) => any;
+        onFocus?: (id: string, value: any) => void;
+        onSubmit?: (e: ISubmitEvent<T>, nativeEvent: React.FormEvent<HTMLFormElement>) => any;
         schema: JSONSchema7;
         showErrorList?: boolean;
         tagName?: keyof JSX.IntrinsicElements | React.ComponentType;
@@ -58,7 +60,7 @@ declare module '@rjsf/core' {
             customFormats?: FormProps<T>['customFormats'],
         ) => { errors: AjvError[]; errorSchema: ErrorSchema };
         onChange: (formData: T, newErrorSchema: ErrorSchema) => void;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
+        onBlur: (id: string, value: any) => void;
         submit: () => void;
     }
 
@@ -98,50 +100,58 @@ declare module '@rjsf/core' {
         > {
         id: string;
         schema: JSONSchema7;
+        uiSchema: UiSchema;
         value: any;
         required: boolean;
         disabled: boolean;
         readonly: boolean;
         autofocus: boolean;
+        placeholder: string;
         onChange: (value: any) => void;
-        options: { [key: string]: boolean | number | string | object | null };
+        options: NonNullable<UiSchema['ui:options']>;
         formContext: any;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
-        onFocus: (id: string, value: boolean | number | string | null) => void;
+        onBlur: (id: string, value: any) => void;
+        onFocus: (id: string, value: any) => void;
         label: string;
         multiple: boolean;
         rawErrors: string[];
+        registry: Registry;
+        [prop: string]: any; // Allow for other props
     }
 
     export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
 
+    export interface Registry {
+        fields: { [name: string]: Field };
+        widgets: { [name: string]: Widget };
+        definitions: { [name: string]: any };
+        formContext: any;
+        rootSchema: JSONSchema7;
+    }
+
     export interface FieldProps<T = any>
-        extends Pick<React.HTMLAttributes<HTMLElement>, Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur'>> {
+        extends Pick<React.HTMLAttributes<HTMLElement>, Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>> {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         idSchema: IdSchema;
         formData: T;
         errorSchema: ErrorSchema;
         onChange: (e: IChangeEvent<T> | any, es?: ErrorSchema) => any;
-        onBlur: (id: string, value: boolean | number | string | null) => void;
-        registry: {
-            fields: { [name: string]: Field };
-            widgets: { [name: string]: Widget };
-            definitions: { [name: string]: any };
-            formContext: any;
-        };
+        onBlur: (id: string, value: any) => void;
+        onFocus: (id: string, value: any) => void;
+        registry: Registry;
         formContext: any;
         autofocus: boolean;
         disabled: boolean;
         readonly: boolean;
         required: boolean;
         name: string;
-        [prop: string]: any;
+        [prop: string]: any; // Allow for other props
     }
 
     export type Field = React.StatelessComponent<FieldProps> | React.ComponentClass<FieldProps>;
 
-    export type FieldTemplateProps = {
+    export type FieldTemplateProps<T = any> = {
         id: string;
         classNames: string;
         label: string;
@@ -161,6 +171,11 @@ declare module '@rjsf/core' {
         schema: JSONSchema7;
         uiSchema: UiSchema;
         formContext: any;
+        formData: T;
+        onChange: (value: T) => void;
+        onKeyChange: (value: string) => () => void;
+        onDropPropertyClick: (value: string) => () => void;
+        registry: Registry;
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
@@ -179,8 +194,9 @@ declare module '@rjsf/core' {
             hasRemove: boolean;
             hasToolbar: boolean;
             index: number;
-            onDropIndexClick: (index: number) => (event: any) => void;
-            onReorderClick: (index: number, newIndex: number) => (event: any) => void;
+            onAddIndexClick: (index: number) => (event?: any) => void;
+            onDropIndexClick: (index: number) => (event?: any) => void;
+            onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
             readonly: boolean;
             key: string;
         }[];
@@ -192,7 +208,7 @@ declare module '@rjsf/core' {
         title: string;
         formContext: any;
         formData: T;
-        registry: FieldProps['registry'];
+        registry: Registry;
     };
 
     export type ObjectFieldTemplateProps<T = any> = {
@@ -200,18 +216,23 @@ declare module '@rjsf/core' {
         TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
         title: string;
         description: string;
+        disabled: boolean;
         properties: {
             content: React.ReactElement;
             name: string;
             disabled: boolean;
             readonly: boolean;
+            hidden: boolean;
         }[];
+        onAddClick: (schema: JSONSchema7) => () => void;
+        readonly: boolean;
         required: boolean;
         schema: JSONSchema7;
         uiSchema: UiSchema;
         idSchema: IdSchema;
         formData: T;
         formContext: any;
+        registry: Registry;
     };
 
     export type AjvError = {
@@ -274,26 +295,28 @@ declare module '@rjsf/core' {
 
         export const ADDITIONAL_PROPERTY_FLAG: string;
 
-        export function getDefaultRegistry(): FieldProps['registry'];
+        export function canExpand(schema: JSONSchema7, uiSchema: UiSchema, formData: any): boolean;
+
+        export function getDefaultRegistry(): Registry;
 
         export function getSchemaType(schema: JSONSchema7): string;
 
         export function getWidget(
             schema: JSONSchema7,
-            widget: Widget,
+            widget: Widget | string,
             registeredWidgets?: { [name: string]: Widget },
-        ): Widget | Error;
+        ): Widget;
 
         export function hasWidget(
             schema: JSONSchema7,
-            widget: Widget,
+            widget: Widget | string,
             registeredWidgets?: { [name: string]: Widget },
         ): boolean;
 
         export function computeDefaults<T = any>(
             schema: JSONSchema7,
             parentDefaults: JSONSchema7['default'][],
-            definitions: FieldProps['registry']['definitions'],
+            definitions: Registry['definitions'],
             rawFormData?: T,
             includeUndefinedValues?: boolean,
         ): JSONSchema7['default'][];
@@ -301,11 +324,13 @@ declare module '@rjsf/core' {
         export function getDefaultFormState<T = any>(
             schema: JSONSchema7,
             formData: T,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
             includeUndefinedValues?: boolean,
         ): T | JSONSchema7['default'][];
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
+
+        export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
 
         export function isObject(thing: any): boolean;
 
@@ -317,41 +342,45 @@ declare module '@rjsf/core' {
 
         export function isConstant(schema: JSONSchema7): boolean;
 
-        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'] | Error;
+        export function toConstant(schema: JSONSchema7): JSONSchema7Type | JSONSchema7['const'];
 
-        export function isSelect(_schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+        export function isSelect(_schema: JSONSchema7, definitions?: Registry['definitions']): boolean;
 
-        export function isMultiSelect(schema: JSONSchema7, definitions?: FieldProps['registry']['definitions']): boolean;
+        export function isMultiSelect(schema: JSONSchema7, definitions?: Registry['definitions']): boolean;
 
         export function isFilesArray(
             schema: JSONSchema7,
             uiSchema: UiSchema,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
         ): boolean;
 
         export function isFixedItems(schema: JSONSchema7): boolean;
 
         export function allowAdditionalItems(schema: JSONSchema7): boolean;
 
-        export function optionsList(schema: JSONSchema7): { label: string; value: string }[];
+        export function optionsList(schema: JSONSchema7):  {
+            schema?: JSONSchema7Definition;
+            label: string;
+            value: string;
+        }[];
 
         export function guessType(value: any): JSONSchema7TypeName;
 
         export function stubExistingAdditionalProperties<T = any>(
             schema: JSONSchema7,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
             formData?: T,
         ): JSONSchema7;
 
         export function resolveSchema<T = any>(
             schema: JSONSchema7Definition,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
             formData?: T,
         ): JSONSchema7;
 
         export function retrieveSchema<T = any>(
             schema: JSONSchema7Definition,
-            definitions?: FieldProps['registry']['definitions'],
+            definitions?: Registry['definitions'],
             formData?: T,
         ): JSONSchema7;
 
@@ -362,7 +391,7 @@ declare module '@rjsf/core' {
         export function toIdSchema<T = any>(
             schema: JSONSchema7Definition,
             id: string,
-            definitions: FieldProps['registry']['definitions'],
+            definitions: Registry['definitions'],
             formData?: T,
             idPredix?: string,
         ): IdSchema | IdSchema[];
@@ -370,7 +399,7 @@ declare module '@rjsf/core' {
         export function toPathSchema<T = any>(
             schema: JSONSchema7Definition,
             name: string | undefined,
-            definitions: FieldProps['registry']['definitions'],
+            definitions: Registry['definitions'],
             formData?: T,
         ): PathSchema | PathSchema[];
 
@@ -386,6 +415,10 @@ declare module '@rjsf/core' {
         export function parseDateString(dateString: string, includeTime?: boolean): DateObject;
 
         export function toDateString(dateObject: DateObject, time?: boolean): string;
+
+        export function utcToLocal(jsonDate: string): string;
+
+        export function localToUTC(dateString: string): Date;
 
         export function pad(num: number, size: number): string;
 
@@ -404,8 +437,10 @@ declare module '@rjsf/core' {
         export function getMatchingOption(
             formData: any,
             options: JSONSchema7[],
-            definitions: FieldProps['registry']['definitions'],
+            definitions: Registry['definitions'],
         ): number;
+
+        export function schemaRequiresTrueValue(schema: JSONSchema7): boolean;
     }
 }
 
