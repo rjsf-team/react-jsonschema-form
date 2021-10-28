@@ -694,7 +694,7 @@ class ArrayField extends Component {
     const title = schema.title || name;
     let items = this.props.formData;
     const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
-    const { TitleField } = fields;
+    const { TitleField, DescriptionField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
       retrieveSchema(item, rootSchema, formData[index])
     );
@@ -712,6 +712,7 @@ class ArrayField extends Component {
     const arrayProps = {
       canAdd: this.canAddItem(items) && additionalSchema,
       className: "field field-array field-array-fixed-items",
+      DescriptionField,
       disabled,
       idSchema,
       formData,
