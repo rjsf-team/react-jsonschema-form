@@ -19,4 +19,5 @@ module.exports = {
     "@babel/plugin-proposal-optional-chaining"
   ],
   ignore,
+  sourceMaps: "inline"
 };
