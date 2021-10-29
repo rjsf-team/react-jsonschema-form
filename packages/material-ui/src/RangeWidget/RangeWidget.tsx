@@ -62,7 +62,6 @@ const generateMarks = (min?: number, max?: number, step?: number) => {
   }
 
   const multiplier = calculateMultiplier(min!, max!, step ? step : 1);
-  console.log(multiplier);
 
   if (multiplier > 0) {
     return generateWithMiddleMarks(min!, max!, (step ? step : 1)*multiplier);
