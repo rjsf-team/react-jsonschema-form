@@ -44,6 +44,7 @@
     "@rjsf/core": "^3.2.0",
     "@rjsf/fluent-ui": "^3.2.0",
     "@rjsf/material-ui": "^3.2.0",
+    "@rjsf/mui-v5": "^3.2.0",
     "@rjsf/semantic-ui": "^3.2.0",
     "ajv": "^6.7.0",
     "antd": "^4.3.5",
