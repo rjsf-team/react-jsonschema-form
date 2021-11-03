@@ -19,6 +19,7 @@ import {
   helpId,
   descriptionId,
   errorsId,
+  Context,
 } from "../../utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -243,15 +244,20 @@ function WrapIfAdditional(props) {
 
 function useStateDebounced([externalState, setExternalState]) {
   const [internalState, setInternalState] = React.useState(externalState);
+  const pendingUpdateRef = React.useRef();
+  const resolvePendingUpdateRef = React.useRef();
+  const { pendingUpdates } = React.useContext(Context);
 
   const setExternalStateDebounced = useDebouncedCallback(value => {
     setExternalState(value);
-  }, 100);
+    pendingUpdates.delete(pendingUpdateRef.current);
+    resolvePendingUpdateRef.current();
+  }, 1000);
 
   // Latest internal or external update will eventually be used.
   const setInternalStateDebounced = useDebouncedCallback(value => {
     setInternalState(value);
-  }, 200);
+  }, 2000);
 
   React.useEffect(
     () => {
@@ -259,10 +265,24 @@ function useStateDebounced([externalState, setExternalState]) {
     },
     [externalState]
   );
-
   return [
     internalState,
     React.useCallback(value => {
+      const prevPendingUpdate = pendingUpdateRef.current;
+      const prevResolvePendingUpdate = resolvePendingUpdateRef.current;
+
+      pendingUpdates.add(
+        (pendingUpdateRef.current = new Promise(resolve => {
+          resolvePendingUpdateRef.current = resolve;
+        }))
+      );
+      if (prevPendingUpdate) {
+        pendingUpdates.delete(prevPendingUpdate);
+      }
+      if (prevResolvePendingUpdate) {
+        prevResolvePendingUpdate();
+      }
+
       setInternalState(value);
       setInternalStateDebounced(value);
       setExternalStateDebounced(value);
