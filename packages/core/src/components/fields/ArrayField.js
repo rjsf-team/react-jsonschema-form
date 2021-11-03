@@ -778,7 +778,8 @@ class ArrayField extends Component {
           formData={itemData}
           errorSchema={itemErrorSchema}
           idSchema={itemIdSchema}
-          required={this.isItemRequired(itemSchema)}
+          //required={this.props.required}
+          required={true}
           onChange={this.onChangeForIndex(index)}
           onBlur={onBlur}
           onFocus={onFocus}
