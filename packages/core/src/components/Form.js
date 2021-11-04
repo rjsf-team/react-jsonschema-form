@@ -1,23 +1,24 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import _pick from "./patchLodashPick";
+import { isEqual } from "lodash";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
 import mapValues from "lodash/mapValues";
-
-import { default as DefaultErrorList } from "./ErrorList";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 import {
+  Context,
+  deepEquals,
   getDefaultFormState,
+  getDefaultRegistry,
+  isObject,
+  mergeObjects,
   retrieveSchema,
   shouldRender,
   toIdSchema,
-  getDefaultRegistry,
-  deepEquals,
   toPathSchema,
-  isObject,
 } from "../utils";
 import validateFormData, { toErrorList } from "../validate";
-import { Context, mergeObjects } from "../utils";
+import { default as DefaultErrorList } from "./ErrorList";
+import _pick from "./patchLodashPick";
 
 export default class Form extends Component {
   static defaultProps = {
@@ -28,6 +29,10 @@ export default class Form extends Component {
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
+  };
+
+  formContext = {
+    pendingUpdates: new Set(),
   };
 
   constructor(props) {
@@ -304,11 +309,24 @@ export default class Form extends Component {
     }
   };
 
-  onSubmit = event => {
+  async pendingUpdates() {
+    this.setState({ isSubmitting: true });
+
+    let prevPendingUpdates;
+    while (!isEqual(prevPendingUpdates, [...this.formContext.pendingUpdates])) {
+      prevPendingUpdates = [...this.formContext.pendingUpdates];
+      await Promise.all(this.formContext.pendingUpdates);
+    }
+    this.setState({ isSubmitting: false });
+  }
+
+  onSubmit = async event => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
       return;
     }
+
+    await this.pendingUpdates();
 
     event.persist();
     let newFormData = this.state.formData;
@@ -457,8 +475,15 @@ export default class Form extends Component {
       ? currentAutoComplete
       : deprecatedAutocomplete;
 
+    if (this.formContext.formData !== formData) {
+      this.formContext = {
+        ...this.formContext,
+        formData,
+      };
+    }
+
     return (
-      <Context.Provider value={{ formData }}>
+      <Context.Provider value={this.formContext}>
         <FormTag
           className={className ? className : "rjsf"}
           id={id}
@@ -487,7 +512,7 @@ export default class Form extends Component {
             onBlur={this.onBlur}
             onFocus={this.onFocus}
             registry={registry}
-            disabled={disabled}
+            disabled={disabled || this.state.isSubmitting}
           />
           {children ? (
             children
