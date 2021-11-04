@@ -5,6 +5,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItem from "@material-ui/core/ListItem";
 import DescriptionIcon from "@material-ui/icons/Description";
+import IconButton from "@material-ui/core/IconButton";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
 interface FileInfo {
   name: string;
@@ -87,27 +89,6 @@ function extractFileInfo(dataURLs: any[]) {
     });
 }
 
-const FilesInfo = ({ filesInfo }: Props) => {
-  if (!filesInfo || filesInfo.length === 0) {
-    return null;
-  }
-  return (
-    <List id="file-info">
-      {filesInfo.map((fileInfo: any, key: any) => {
-        const { name, size, type } = fileInfo;
-        return (
-          <ListItem key={key}>
-            <ListItemIcon>
-              <DescriptionIcon />
-            </ListItemIcon>
-            <ListItemText primary={name} secondary={`${type}, ${size} bytes`} />
-          </ListItem>
-        );
-      })}
-    </List>
-  );
-};
-
 const FileWidget = ({
                       id,
                       options,
@@ -126,6 +107,8 @@ const FileWidget = ({
     const initialFilesInfo: FileInfo[] = extractFileInfo(values);
     if (initialFilesInfo.length > 0) {
       setState(initialFilesInfo);
+    } else {
+      setState([]);
     }
   }, [value]);
 
@@ -139,6 +122,45 @@ const FileWidget = ({
         onChange(values[0]);
       }
     });
+  };
+
+  const RemoveButton = ({index}: any) => {
+    const onRemoveClick = () => {
+      if (multiple) {
+        const newValues = value.splice(index, 1);
+        onChange(newValues);
+      } else {
+        onChange([undefined]);
+      }
+    }
+
+    return (
+      <IconButton onClick={onRemoveClick}>
+        <HighlightOffIcon />
+      </IconButton>
+    );
+  }
+
+  const FilesInfo = ({ filesInfo }: Props) => {
+    if (!filesInfo || filesInfo.length === 0) {
+      return null;
+    }
+    return (
+      <List id="file-info">
+        {filesInfo.map((fileInfo: any, key: any) => {
+          const { name, size, type } = fileInfo;
+          return (
+            <ListItem key={key}>
+              <ListItemIcon>
+                <DescriptionIcon />
+              </ListItemIcon>
+              <ListItemText primary={name} secondary={`${type}, ${size} bytes`} />
+              <RemoveButton index={key} />
+            </ListItem>
+          );
+        })}
+      </List>
+    );
   };
 
   return (
