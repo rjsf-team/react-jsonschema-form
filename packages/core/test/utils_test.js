@@ -1770,6 +1770,21 @@ describe("utils", () => {
       });
     });
 
+    it("should handle null formData for schema which contains additionalProperties", () => {
+      const schema = {
+        additionalProperties: {
+          type: "string",
+        },
+        type: "object"
+      };
+
+      const formData = null;
+      expect( retrieveSchema(schema, {}, formData)).eql({
+        ...schema,
+        properties: {}
+      });
+    });
+
     it("should priorize local definitions over foreign ones", () => {
       const schema = {
         $ref: "#/definitions/address",
