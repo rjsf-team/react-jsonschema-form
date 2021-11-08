@@ -57,7 +57,7 @@ const ObjectFieldTemplate = ({
           ) : (
             <Grid
               item={true}
-              xs={12}
+              xs={uiSchema['ui:fieldFlexWidth'] || 12}
               key={index}
               style={{ marginBottom: "10px" }}>
               {element.content}
