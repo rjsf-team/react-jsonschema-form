@@ -17,6 +17,7 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 
 # v3.2.1 (upcoming)
+- MUI: Added ui-schema 'fieldFlexWidth' variable to override object field Flex Grid 'xs' default size '12' (https://github.com/rjsf-team/react-jsonschema-form/pull/2597)
 
 # v3.2.0
 
