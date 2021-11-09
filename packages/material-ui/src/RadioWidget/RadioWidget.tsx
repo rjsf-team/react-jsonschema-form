@@ -4,6 +4,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControl from '@material-ui/core/FormControl';
 
 import { WidgetProps } from "@visma/rjsf-core";
 
@@ -33,7 +34,7 @@ const RadioWidget = ({
   const row = options ? options.inline : false;
 
   return (
-    <>
+    <FormControl component="fieldset">
       <FormLabel required={required} htmlFor={id}>
         {label || schema.title}
       </FormLabel>
@@ -60,7 +61,7 @@ const RadioWidget = ({
           return radio;
         })}
       </RadioGroup>
-    </>
+    </FormControl>
   );
 };
 
