@@ -97,6 +97,9 @@ export function toErrorList(errorSchema, fieldName = "root") {
   }
 
   return Object.keys(errorSchema).reduce((acc, key) => {
+    // Ensure errorSchema property is an object (meaning it relates to an object property)
+    // before going deep in toErrorList to avoid exceptions,
+    // for instance if errorSchema[key] is an array used in custom field.
     if (key !== "__errors" && isPlainObject(errorSchema[key])) {
       acc = acc.concat(toErrorList(errorSchema[key], key));
     }
