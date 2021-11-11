@@ -77,7 +77,7 @@ const WrapIfAdditional = ({
           style={btnStyle as any}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
-        />
+          size="large" />
       </Grid>
     </Grid>
   );
