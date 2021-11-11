@@ -2,7 +2,7 @@ import React from "react";
 
 import { WidgetProps } from "@rjsf/core";
 
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 
 type CustomWidgetProps = WidgetProps & {
   options: any;

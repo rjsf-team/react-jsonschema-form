@@ -14,8 +14,10 @@
     "test": "tsdx test"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.2.0",
-    "@material-ui/icons": "^4.2.1",
+    "@mui/icons-material": "^5.0.5",
+    "@mui/material": "^5.0.6",
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
     "@rjsf/core": "^3.0.0",
     "react": ">=17"
   },
@@ -25,8 +27,11 @@
     "@babel/plugin-transform-modules-commonjs": "^7.8.3",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "@material-ui/core": "^4.2.0",
-    "@material-ui/icons": "^4.2.1",
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.5",
+    "@mui/material": "^5.0.6",
+    "@mui/styles": "^5.0.2",
     "@rjsf/core": "^3.2.0",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.7",
@@ -60,7 +65,8 @@
     "react",
     "material-ui",
     "mui-v5",
-    "rjsf-material-ui"
+    "rjsf-material-ui",
+    "rjsf-mui-v5"
   ],
   "repository": {
     "type": "git",

@@ -2,7 +2,7 @@ import React from "react";
 
 import TextField, {
   StandardTextFieldProps as TextFieldProps,
-} from "@material-ui/core/TextField";
+} from "@mui/material/TextField";
 
 import { WidgetProps, utils } from "@rjsf/core";
 

@@ -1,13 +1,13 @@
 import React from 'react';
 
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ErrorIcon from '@material-ui/icons/Error';
-import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ErrorIcon from '@mui/icons-material/Error';
+import ListItemText from '@mui/material/ListItemText';
+import Paper from '@mui/material/Paper';
 
 import { ErrorListProps } from '@rjsf/core';
 

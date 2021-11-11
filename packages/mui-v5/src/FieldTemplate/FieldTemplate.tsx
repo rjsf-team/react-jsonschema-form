@@ -2,11 +2,11 @@ import React from "react";
 
 import { FieldTemplateProps } from "@rjsf/core";
 
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Typography from "@material-ui/core/Typography";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Typography from "@mui/material/Typography";
 
 import WrapIfAdditional from "./WrapIfAdditional";
 

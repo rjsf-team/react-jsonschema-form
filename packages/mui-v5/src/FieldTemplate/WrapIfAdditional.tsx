@@ -3,10 +3,10 @@ import React from "react";
 import { utils } from "@rjsf/core";
 import { JSONSchema7 } from "json-schema";
 
-import Grid from "@material-ui/core/Grid";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
+import Grid from "@mui/material/Grid";
+import FormControl from "@mui/material/FormControl";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
 
 import IconButton from "../IconButton/IconButton";
 

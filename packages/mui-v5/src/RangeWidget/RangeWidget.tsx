@@ -1,7 +1,7 @@
 import React from "react";
 
-import Slider from "@material-ui/core/Slider";
-import FormLabel from "@material-ui/core/FormLabel";
+import Slider from "@mui/material/Slider";
+import FormLabel from "@mui/material/FormLabel";
 
 import { utils } from "@rjsf/core";
 import { WidgetProps } from "@rjsf/core";
