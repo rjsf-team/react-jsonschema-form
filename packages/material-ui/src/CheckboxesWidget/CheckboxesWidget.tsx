@@ -4,6 +4,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import FormControl from '@material-ui/core/FormControl';
 
 import { WidgetProps } from "@visma/rjsf-core";
 
@@ -56,7 +57,7 @@ const CheckboxesWidget = ({
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
-    <>
+    <FormControl component="fieldset">
       <FormLabel required={required} htmlFor={id}>
         {label || schema.title}
       </FormLabel>
@@ -85,7 +86,7 @@ const CheckboxesWidget = ({
           );
         })}
       </FormGroup>
-    </>
+    </FormControl>
   );
 };
 
