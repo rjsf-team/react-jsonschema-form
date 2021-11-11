@@ -2,9 +2,7 @@ import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
 import { useIntl } from "react-intl";
-import { useDebouncedCallback } from "use-debounce";
 import * as types from "../../types";
-
 import {
   ADDITIONAL_PROPERTY_FLAG,
   isSelect,
@@ -19,7 +17,6 @@ import {
   helpId,
   descriptionId,
   errorsId,
-  Context,
 } from "../../utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
@@ -242,70 +239,7 @@ function WrapIfAdditional(props) {
   );
 }
 
-function useStateDebounced([externalState, setExternalState]) {
-  const [internalState, setInternalState] = React.useState(externalState);
-  const pendingUpdateRef = React.useRef();
-  const resolvePendingUpdateRef = React.useRef();
-  const { pendingUpdates } = React.useContext(Context);
-
-  const setExternalStateDebounced = useDebouncedCallback(value => {
-    setExternalState(value);
-    pendingUpdates.delete(pendingUpdateRef.current);
-    resolvePendingUpdateRef.current();
-  }, 1000);
-
-  // Latest internal or external update will eventually be used.
-  const setInternalStateDebounced = useDebouncedCallback(value => {
-    setInternalState(value);
-  }, 2000);
-
-  React.useEffect(
-    () => {
-      setInternalStateDebounced(externalState);
-    },
-    [externalState]
-  );
-  return [
-    internalState,
-    React.useCallback(value => {
-      const prevPendingUpdate = pendingUpdateRef.current;
-      const prevResolvePendingUpdate = resolvePendingUpdateRef.current;
-
-      pendingUpdates.add(
-        (pendingUpdateRef.current = new Promise(resolve => {
-          resolvePendingUpdateRef.current = resolve;
-        }))
-      );
-      if (prevPendingUpdate) {
-        pendingUpdates.delete(prevPendingUpdate);
-      }
-      if (prevResolvePendingUpdate) {
-        prevResolvePendingUpdate();
-      }
-
-      setInternalState(value);
-      setInternalStateDebounced(value);
-      setExternalStateDebounced(value);
-    }, []),
-  ];
-}
-
-function useDebouncedSchemaFieldProps(props) {
-  const [formData, onChange] = useStateDebounced([
-    props.formData,
-    props.onChange,
-  ]);
-
-  return {
-    ...props,
-    formData,
-    onChange,
-  };
-}
-
 function SchemaFieldRender(props) {
-  props = useDebouncedSchemaFieldProps(props);
-
   const {
     uiSchema,
     formData,

@@ -442,6 +442,24 @@ export default class Form extends Component {
     }
   }
 
+  // https://github.com/rjsf-team/react-jsonschema-form/issues/1597
+  componentDidMount() {
+    const root = this.formElement;
+    root && root.addEventListener("keydown", this.onKeyDown);
+  }
+  componentWillUnmount() {
+    const root = this.formElement;
+    root && root.removeEventListener("keydown", this.onKeyDown);
+  }
+  onKeyDown = event => {
+    // Prevent Enter press from activating submit action
+    if (event.keyCode === 13) {
+      const target = event.target;
+      event.preventDefault();
+      target.click();
+    }
+  };
+
   render() {
     const {
       children,
