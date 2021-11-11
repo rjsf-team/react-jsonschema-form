@@ -20,23 +20,17 @@ export function getSemanticProps({
 }) {
 
    const hasFormContextProps = formContext.semantic  ? true : false;
-   const hasSchemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic ? true : false;
+   const hasUiSchemaProps  = uiSchema["ui:options"] && uiSchema["ui:options"].semantic ? true : false;
    const hasOptionsProps = options.semantic  ? true : false;
    const formContextProps = hasFormContextProps ? formContext.semantic : defaultContextProps;
-   let schemaProps = hasSchemaProps ? uiSchema["ui:options"].semantic : defaultSchemaProps;
+   let schemaProps = hasUiSchemaProps  ? uiSchema["ui:options"].semantic : defaultSchemaProps;
    let optionProps = hasOptionsProps ? options.semantic : {};
    // formContext props should overide other props
-   if (hasFormContextProps){
-     Object.keys(formContext.semantic).map((key) => {
-      optionProps[key] = formContext.semantic[key];
-     });
-   }
-
-  return Object.assign(
+   return Object.assign(
     {},
-    formContextProps,
     schemaProps,
     optionProps,
+    formContextProps,
   );
 }
 
@@ -57,7 +51,7 @@ export function getSemanticErrorProps({
 }) {
 
   const hasFormContextProps = formContext.semantic && formContext.semantic.errorOptions || false;
-  const hasSchemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic && uiSchema["ui:options"].semantic.errorOptions || false;
+  const hasUiSchemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic && uiSchema["ui:options"].semantic.errorOptions || false;
   const hasOptionsProps = options.semantic && options.semantic.errorOptions || false;
 
   const defaultSemanticErrorProps =  defaultProps;
@@ -65,7 +59,7 @@ export function getSemanticErrorProps({
   return Object.assign(
     {},
     hasFormContextProps ? formContext.semantic.errorOptions : {},
-    hasSchemaProps ? uiSchema["ui:options"].semantic.errorOptions  : defaultSemanticErrorProps,
+    hasUiSchemaProps ? uiSchema["ui:options"].semantic.errorOptions  : defaultSemanticErrorProps,
     hasOptionsProps ? options.semantic.errorOptions : {}
   );
 }
