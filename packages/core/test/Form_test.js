@@ -4,7 +4,6 @@ import React from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
 import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
-import { createRef } from "create-react-ref";
 
 import Form from "../src";
 import {
@@ -2488,7 +2487,7 @@ describeRepeated("Form common", createFormComponent => {
       class ArrayTemplateWithForm extends React.Component {
         constructor(props) {
           super(props);
-          innerRef = createRef();
+          innerRef = React.createRef();
         }
 
         render() {
