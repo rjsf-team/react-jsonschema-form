@@ -13,6 +13,7 @@ import TextWidget from "../TextWidget/TextWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
 import URLWidget from "../URLWidget/URLWidget";
 import FileWidget from "../FileWidget/FileWidget";
+import { withPropagateChangeOnBlur } from "./withPropagateChangeOnBlur";
 
 export default {
   CheckboxWidget,
@@ -25,8 +26,8 @@ export default {
   RadioWidget,
   RangeWidget,
   SelectWidget,
-  TextareaWidget,
-  TextWidget,
+  TextareaWidget: withPropagateChangeOnBlur(TextareaWidget),
+  TextWidget: withPropagateChangeOnBlur(TextWidget),
   UpDownWidget,
   URLWidget,
   FileWidget
