@@ -17,7 +17,7 @@
     "start": "webpack serve --open --config webpack.config.dev.js"
   },
   "lint-staged": {
-    "{playground,src,test}/**/*.js": [
+    "{playground-r17,src,test}/**/*.js": [
       "eslint --fix",
       "prettier --write"
     ]
@@ -32,7 +32,7 @@
     "node": ">=12"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=17"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.11.2",

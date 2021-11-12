@@ -1,6 +1,5 @@
 import React from "react";
 import { CssBaseline } from "@mui/material";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import Frame from "react-frame-component";
@@ -30,10 +29,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
-const muiTheme = createTheme({
-  root: {},
-});
 
 function DemoFrame(props) {
   const { children, classes, theme, ...other } = props;
@@ -69,13 +64,11 @@ function DemoFrame(props) {
       {theme === "mui-5" ? (
         state.ready ? (
           <CacheProvider value={state.emotionCache}>
-            <ThemeProvider theme={muiTheme}>
-              <CssBaseline />
-              {React.cloneElement(children, {
-                container: state.container,
-                window: state.window,
-              })}
-            </ThemeProvider>
+            <CssBaseline />
+            {React.cloneElement(children, {
+              container: state.container,
+              window: state.window,
+            })}
           </CacheProvider>
         ) : null
       ) : (
