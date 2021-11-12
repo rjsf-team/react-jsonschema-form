@@ -39,7 +39,7 @@ const CheckboxWidget = (props: WidgetProps) => {
       control={
         <Checkbox
           id={id}
-          checked={typeof value === 'undefined' ? false : value}
+          checked={typeof value === 'undefined' ? false : Boolean(value)}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}

@@ -18,14 +18,14 @@ exports[`UpDownWidget renders 0 as 0 and not "" 1`] = `
     </span>
   </label>
   <div
-    className="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl css-1480iag-MuiInputBase-root-MuiInput-root"
+    className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
     onClick={[Function]}
     required={true}
   >
     <input
       aria-invalid={false}
       autoFocus={true}
-      className="MuiInput-input MuiInputBase-input Mui-disabled css-1x51dt5-MuiInputBase-input-MuiInput-input"
+      className="MuiOutlinedInput-input MuiInputBase-input Mui-disabled css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
       disabled={true}
       id="_id"
       onAnimationStart={[Function]}
@@ -36,6 +36,23 @@ exports[`UpDownWidget renders 0 as 0 and not "" 1`] = `
       type="number"
       value={0}
     />
+    <fieldset
+      aria-hidden={true}
+      className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+    >
+      <legend
+        className="css-nnbavb"
+      >
+        <span
+          className="notranslate"
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "&#8203;",
+            }
+          }
+        />
+      </legend>
+    </fieldset>
   </div>
 </div>
 `;

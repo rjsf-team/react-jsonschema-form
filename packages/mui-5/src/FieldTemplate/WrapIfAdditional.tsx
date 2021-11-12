@@ -3,7 +3,7 @@ import React from 'react';
 import { utils } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
 
-import { Grid, FormControl, Input, InputLabel } from '@mui/material';
+import { Grid, FormControl, InputLabel, OutlinedInput } from '@mui/material';
 
 import IconButton from '../IconButton/IconButton';
 
@@ -54,7 +54,7 @@ const WrapIfAdditional = ({
       <Grid item={true} xs>
         <FormControl fullWidth={true} required={required}>
           <InputLabel>{keyLabel}</InputLabel>
-          <Input
+          <OutlinedInput
             defaultValue={label}
             disabled={disabled || readonly}
             id={`${id}-key`}

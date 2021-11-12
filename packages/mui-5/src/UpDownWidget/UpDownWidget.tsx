@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FormControl, Input, InputLabel } from '@mui/material';
+import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
 
 import { WidgetProps } from '@rjsf/core';
 
@@ -32,7 +32,7 @@ const UpDownWidget = ({
       required={required}
     >
       <InputLabel>{label}</InputLabel>
-      <Input
+      <OutlinedInput
         id={id}
         autoFocus={autofocus}
         required={required}

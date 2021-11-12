@@ -41,12 +41,12 @@ exports[`object fields additionalProperties 1`] = `
                 foo Key
               </label>
               <div
-                className="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-1480iag-MuiInputBase-root-MuiInput-root"
+                className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
                 onClick={[Function]}
               >
                 <input
                   aria-invalid={false}
-                  className="MuiInput-input MuiInputBase-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
+                  className="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   defaultValue="foo"
                   disabled={false}
                   id="root_foo-key"
@@ -58,6 +58,23 @@ exports[`object fields additionalProperties 1`] = `
                   required={false}
                   type="text"
                 />
+                <fieldset
+                  aria-hidden={true}
+                  className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                >
+                  <legend
+                    className="css-nnbavb"
+                  >
+                    <span
+                      className="notranslate"
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "&#8203;",
+                        }
+                      }
+                    />
+                  </legend>
+                </fieldset>
               </div>
             </div>
           </div>

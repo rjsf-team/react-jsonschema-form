@@ -27,6 +27,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
     "@babel/preset-react": "^7.16.0",
+    "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.1.0",
     "@mui/material": "^5.1.0",
     "@rjsf/core": "^3.2.0",
