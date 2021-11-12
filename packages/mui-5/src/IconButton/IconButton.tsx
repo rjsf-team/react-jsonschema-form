@@ -1,20 +1,16 @@
-import React from "react";
+import React from 'react';
 
-import Button from "@mui/material/Button";
-import Add from "@mui/icons-material/Add";
-import ArrowUpward from "@mui/icons-material/ArrowUpward";
-import ArrowDownward from "@mui/icons-material/ArrowDownward";
-import Remove from "@mui/icons-material/Remove";
-import { IconButtonProps as MuiIconButtonProps } from "@mui/material/IconButton";
+import { Button, ButtonProps } from '@mui/material';
+import { Add, ArrowUpward, ArrowDownward, Remove } from '@mui/icons-material';
 
 const mappings: any = {
   remove: Remove,
   plus: Add,
-  "arrow-up": ArrowUpward,
-  "arrow-down": ArrowDownward,
+  'arrow-up': ArrowUpward,
+  'arrow-down': ArrowDownward,
 };
 
-type IconButtonProps = MuiIconButtonProps & {
+type IconButtonProps = ButtonProps & {
   icon: string;
   iconProps?: object;
 };

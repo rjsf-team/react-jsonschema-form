@@ -1,11 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import FormLabel from "@mui/material/FormLabel";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import { FormLabel, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from '@rjsf/core';
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);

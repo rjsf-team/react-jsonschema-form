@@ -1,10 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import { Checkbox, FormControlLabel } from '@mui/material';
 
-import { WidgetProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import { WidgetProps } from '@rjsf/core';
+import { utils } from '@rjsf/core';
 
 const { schemaRequiresTrueValue } = utils;
 
@@ -40,7 +39,7 @@ const CheckboxWidget = (props: WidgetProps) => {
       control={
         <Checkbox
           id={id}
-          checked={typeof value === "undefined" ? false : value}
+          checked={typeof value === 'undefined' ? false : value}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
@@ -49,7 +48,7 @@ const CheckboxWidget = (props: WidgetProps) => {
           onFocus={_onFocus}
         />
       }
-      label={label}
+      label={label || ''}
     />
   );
 };

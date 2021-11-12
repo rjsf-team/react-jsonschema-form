@@ -1,8 +1,8 @@
 {
-  "name": "@rjsf/mui-v5",
+  "name": "@rjsf/mui-5",
   "version": "3.2.0",
   "main": "dist/index.js",
-  "module": "dist/mui-v5.esm.js",
+  "module": "dist/mui-5.esm.js",
   "typings": "dist/index.d.ts",
   "description": "Material UI V5 theme, fields and widgets for react-jsonschema-form",
   "files": [
@@ -14,37 +14,34 @@
     "test": "tsdx test"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^5.0.5",
-    "@mui/material": "^5.0.6",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.5",
+    "@mui/material": "^5.0.6",
     "@rjsf/core": "^3.0.0",
     "react": ">=17"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-0",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
-    "@emotion/react": "^11.5.0",
-    "@emotion/styled": "^11.3.0",
-    "@mui/icons-material": "^5.0.5",
-    "@mui/material": "^5.0.6",
-    "@mui/styles": "^5.0.2",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.16.0",
+    "@mui/icons-material": "^5.1.0",
+    "@mui/material": "^5.1.0",
     "@rjsf/core": "^3.2.0",
     "@types/jest": "^24.0.15",
-    "@types/json-schema": "^7.0.7",
-    "@types/react": "^17.0.33",
-    "@types/react-dom": "^17.0.10",
-    "@types/react-test-renderer": "^16.9.2",
+    "@types/json-schema": "^7.0.9",
+    "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-test-renderer": "^17.0.1",
     "@types/sinon": "^9.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
     "rimraf": "^2.6.3",
     "tsdx": "^0.14.1",
-    "tslib": "^2.0.0",
+    "tslib": "^2.3.1",
     "typescript": "^3.5.3"
   },
   "publishConfig": {
@@ -52,7 +49,8 @@
   },
   "author": "Agustin N. R. Ramirez <agustin.ramirez@cybertec.at>",
   "contributors": [
-    "Lorenz Henk <lorenz.henk@cybertec.at>"
+    "Lorenz Henk <lorenz.henk@cybertec.at>",
+    "Heath Chiavettone <heath.chiavettone@freenome.com>"
   ],
   "keywords": [
     "Material UI v5",
@@ -64,9 +62,9 @@
     "form",
     "react",
     "material-ui",
-    "mui-v5",
+    "mui-5",
     "rjsf-material-ui",
-    "rjsf-mui-v5"
+    "rjsf-mui-5"
   ],
   "repository": {
     "type": "git",

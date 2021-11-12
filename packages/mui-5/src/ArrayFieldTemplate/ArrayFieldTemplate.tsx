@@ -2,9 +2,7 @@ import React from 'react';
 
 import { utils } from '@rjsf/core';
 
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import { Box, Grid, Paper } from '@mui/material';
 
 import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
 
@@ -77,7 +75,7 @@ const DefaultArrayItem = (props: any) => {
   };
   return (
     <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs style={{ overflow: "auto" }}>
+      <Grid item={true} xs style={{ overflow: 'auto' }}>
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{props.children}</Box>
@@ -96,7 +94,8 @@ const DefaultArrayItem = (props: any) => {
               iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveUp}
               onClick={props.onReorderClick(props.index, props.index - 1)}
-              size="large" />
+              size="large"
+            />
           )}
 
           {(props.hasMoveUp || props.hasMoveDown) && (
@@ -107,7 +106,8 @@ const DefaultArrayItem = (props: any) => {
               iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveDown}
               onClick={props.onReorderClick(props.index, props.index + 1)}
-              size="large" />
+              size="large"
+            />
           )}
 
           {props.hasRemove && (
@@ -118,7 +118,8 @@ const DefaultArrayItem = (props: any) => {
               iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly}
               onClick={props.onDropIndexClick(props.index)}
-              size="large" />
+              size="large"
+            />
           )}
         </Grid>
       )}

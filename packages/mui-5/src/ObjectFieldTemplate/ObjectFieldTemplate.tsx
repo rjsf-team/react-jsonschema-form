@@ -1,20 +1,12 @@
 import React from 'react';
 
-import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
+import { Grid } from '@mui/material';
 
-import { ObjectFieldTemplateProps } from '@rjsf/core';
-import { utils } from '@rjsf/core';
+import { ObjectFieldTemplateProps, utils } from '@rjsf/core';
 
 import AddButton from '../AddButton/AddButton';
 
 const { canExpand } = utils;
-
-const useStyles = makeStyles({
-  root: {
-    marginTop: 10,
-  },
-});
 
 const ObjectFieldTemplate = ({
   DescriptionField,
@@ -31,8 +23,6 @@ const ObjectFieldTemplate = ({
   formData,
   onAddClick,
 }: ObjectFieldTemplateProps) => {
-  const classes = useStyles();
-
   return <>
     {(uiSchema['ui:title'] || title) && (
       <TitleField
@@ -47,7 +37,7 @@ const ObjectFieldTemplate = ({
         description={description}
       />
     )}
-    <Grid container={true} spacing={2} className={classes.root}>
+    <Grid container={true} spacing={2} style={{ marginTop: '10px' }}>
       {properties.map((element, index) =>
         // Remove the <Grid> if the inner element is hidden as the <Grid>
         // itself would otherwise still take up space.
@@ -58,16 +48,16 @@ const ObjectFieldTemplate = ({
             item={true}
             xs={12}
             key={index}
-            style={{ marginBottom: "10px" }}>
+            style={{ marginBottom: '10px' }}>
             {element.content}
           </Grid>
         )
       )}
       {canExpand(schema, uiSchema, formData) && (
-        <Grid container justifyContent='flex-end'>
+        <Grid container justifyContent="flex-end">
           <Grid item={true}>
             <AddButton
-              className='object-property-expand'
+              className="object-property-expand"
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}
             />

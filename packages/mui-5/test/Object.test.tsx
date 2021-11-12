@@ -1,15 +1,15 @@
 import React from 'react';
-import Form from "../src/index";
-import { JSONSchema7 } from "json-schema";
-import renderer from "react-test-renderer";
+import Form from '../src/index';
+import { JSONSchema7 } from 'json-schema';
+import renderer from 'react-test-renderer';
 
-describe("object fields", () => {
-  test("object", () => {
+describe('object fields', () => {
+  test('object', () => {
     const schema: JSONSchema7 = {
-      type: "object",
+      type: 'object',
       properties: {
-        a: {type: "string"},
-        b: {type: "number"}
+        a: {type: 'string'},
+        b: {type: 'number'}
       }
     };
     const tree = renderer
@@ -17,9 +17,9 @@ describe("object fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("additionalProperties", () => {
+  test('additionalProperties', () => {
     const schema: JSONSchema7 = {
-      type: "object",
+      type: 'object',
       additionalProperties: true
     };
     const tree = renderer

@@ -1,14 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import { utils } from "@rjsf/core";
-import { JSONSchema7 } from "json-schema";
+import { utils } from '@rjsf/core';
+import { JSONSchema7 } from 'json-schema';
 
-import Grid from "@mui/material/Grid";
-import FormControl from "@mui/material/FormControl";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
+import { Grid, FormControl, Input, InputLabel } from '@mui/material';
 
-import IconButton from "../IconButton/IconButton";
+import IconButton from '../IconButton/IconButton';
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 
@@ -42,7 +39,7 @@ const WrapIfAdditional = ({
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   };
 
   if (!additional) {
@@ -77,7 +74,8 @@ const WrapIfAdditional = ({
           style={btnStyle as any}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
-          size="large" />
+          size="large"
+        />
       </Grid>
     </Grid>
   );

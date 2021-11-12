@@ -1,17 +1,16 @@
-import React from "react";
+import React from 'react';
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { Box, Button } from '@mui/material';
 
-import ArrayFieldTemplate from "../ArrayFieldTemplate";
-import ErrorList from "../ErrorList";
-import Fields from "../Fields";
-import FieldTemplate from "../FieldTemplate";
-import ObjectFieldTemplate from "../ObjectFieldTemplate";
-import Widgets from "../Widgets";
+import ArrayFieldTemplate from '../ArrayFieldTemplate';
+import ErrorList from '../ErrorList';
+import Fields from '../Fields';
+import FieldTemplate from '../FieldTemplate';
+import ObjectFieldTemplate from '../ObjectFieldTemplate';
+import Widgets from '../Widgets';
 
-import { ThemeProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import { ThemeProps, utils } from '@rjsf/core';
+
 const { getDefaultRegistry } = utils;
 
 const { fields, widgets } = getDefaultRegistry();

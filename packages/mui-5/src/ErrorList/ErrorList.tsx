@@ -1,13 +1,7 @@
 import React from 'react';
 
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ErrorIcon from '@mui/icons-material/Error';
-import ListItemText from '@mui/material/ListItemText';
-import Paper from '@mui/material/Paper';
+import { Box, Typography, List, ListItem, ListItemIcon, ListItemText, Paper } from '@mui/material';
+import { Error as ErrorIcon } from '@mui/icons-material';
 
 import { ErrorListProps } from '@rjsf/core';
 

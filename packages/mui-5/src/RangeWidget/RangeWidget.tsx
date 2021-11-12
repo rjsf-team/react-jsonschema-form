@@ -1,10 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import Slider from "@mui/material/Slider";
-import FormLabel from "@mui/material/FormLabel";
+import { FormLabel, Slider } from '@mui/material';
 
-import { utils } from "@rjsf/core";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, utils } from '@rjsf/core';
 
 const { rangeSpec } = utils;
 
@@ -24,7 +22,7 @@ const RangeWidget = ({
   let sliderProps = { value, label, id, ...rangeSpec(schema) };
 
   const _onChange = ({}, value: any) =>
-    onChange(value === "" ? options.emptyValue : value);
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({

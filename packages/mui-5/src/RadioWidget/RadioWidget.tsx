@@ -1,11 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
+import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from '@rjsf/core';
 
 const RadioWidget = ({
   id,
@@ -23,7 +20,7 @@ const RadioWidget = ({
   const { enumOptions, enumDisabled } = options;
 
   const _onChange = ({}, value: any) =>
-    onChange(schema.type == "boolean" ? value !== "false" : value);
+    onChange(schema.type == 'boolean' ? value !== 'false' : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -49,7 +46,7 @@ const RadioWidget = ({
 
           const radio = (
             <FormControlLabel
-              control={<Radio color="primary" key={i} />}
+              control={<Radio name={`${id}-${i}`} color="primary" key={i} />}
               label={`${option.label}`}
               value={`${option.value}`}
               key={i}
