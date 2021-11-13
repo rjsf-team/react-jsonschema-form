@@ -33,8 +33,8 @@
 - [Bootstrap 3](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/core)
 - [Bootstrap 4](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/bootstrap-4)
 - [Fluent UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/fluent-ui)
-- [Material UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/material-ui)
-- [Material UI V5](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/mui-5)
+- [Material UI 4](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/material-ui)
+- [Material UI 5](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/mui-5)
 - [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/semantic-ui)
 
 ## Documentation

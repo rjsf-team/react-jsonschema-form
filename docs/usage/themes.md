@@ -9,7 +9,8 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
  ---------- | ------- | -----------
  Bootstrap 3 (default) | Published | `@rjsf/core`
  Bootstrap 4 | Published | `@rjsf/bootstrap-4`
- material-ui | Published | `@rjsf/material-ui`
+ material-ui 4 | Published | `@rjsf/material-ui`
+ material-ui 5 | In Review | `@rjsf/mui-5`
  fluent-ui | Published | `@rjsf/fluent-ui`
  antd | Published | `@rjsf/antd`
  Semantic UI | Published | `@rjsf/semantic-ui`

@@ -11,10 +11,10 @@
     <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/logo.png" alt="Logo" width="120" height="120">
   </a>
 
-  <h3 align="center">@rjsf/material-ui</h3>
+  <h3 align="center">@rjsf/mui-5</h3>
 
   <p align="center">
-  Material UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Material UI 5 theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
     <br />
@@ -44,9 +44,9 @@
 
 ## About The Project
 
-[![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/material-ui)
+[![@rjsf/mui-5 Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/mui-5)
 
-Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
+Exports `mui-5` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
@@ -60,18 +60,20 @@ Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@material-ui/core >= 4.2.0` ([in 4.2.0, the `slider` component was added to the core](https://github.com/mui-org/material-ui/pull/16416))
-- `@material-ui/icons`
-- `@rjsf/core >= 2.0.0`
+- `@mui/material`
+- `@mui/icons-material`
+- `@emotion/react > 11.5.0`,
+- `@emotion/styled": 11.3.0`,
+- `@rjsf/core >= 3.0.0`
 
 ```bash
-yarn add @material-ui/core @material-ui/icons @rjsf/core
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/material-ui
+yarn add @rjsf/mui-5
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -79,14 +81,14 @@ yarn add @rjsf/material-ui
 ## Usage
 
 ```js
-import Form from '@rjsf/material-ui';
+import Form from '@rjsf/mui-5';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as MaterialUITheme } from '@rjsf/material-ui';
+import { Theme as MaterialUITheme } from '@rjsf/mui-5';
 
 // Make modifications to the theme with your own fields and widgets
 

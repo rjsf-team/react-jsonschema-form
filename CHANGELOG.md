@@ -18,6 +18,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 # v3.2.1 (upcoming)
 
+## @rjsf/core
+- Add React 17 as a supported peer-dependency
+
+## @rjsf/mui-5
+- New theme added to support material-ui v5 on top of React 17
+
+## Dev / docs / playground
+- Added a new `playground-r17` for the `@rjsf/core` and `@rjsf/mui-5` themes on top of React 17
+
 # v3.2.0
 
 ## @rjsf/core
