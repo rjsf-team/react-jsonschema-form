@@ -94,4 +94,19 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("field with description", () => {
+    const schema = {
+      properties: {
+        test: {
+          type: "string",
+          title: "test",
+          description: "test description",
+        }
+      }
+    };
+    const tree = renderer
+      .create(<Form schema={schema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
