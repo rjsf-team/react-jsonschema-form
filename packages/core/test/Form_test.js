@@ -46,7 +46,7 @@ describeRepeated("Form common", createFormComponent => {
         <Form {...props}>
           <button type="submit">Submit</button>
           <button type="submit">Another submit</button>
-        </Form>,
+        </Form>
       );
       const node = findDOMNode(comp);
       expect(node.querySelectorAll("button[type=submit]")).to.have.length.of(2);
@@ -73,11 +73,11 @@ describeRepeated("Form common", createFormComponent => {
       const comp = renderIntoDocument(
         <Form {...props}>
           <button type="submit">Submit</button>
-        </Form>,
+        </Form>
       );
       const node = findDOMNode(comp);
       expect(node.querySelector(".unsupported-field").textContent).to.contain(
-        "Unknown field type undefined",
+        "Unknown field type undefined"
       );
     });
   });
@@ -92,7 +92,7 @@ describeRepeated("Form common", createFormComponent => {
         <Form schema={schema} onChange={onChangeProp} formData={formData}>
           <button type="submit">Submit</button>
           <button type="submit">Another submit</button>
-        </Form>,
+        </Form>
       );
     }
 
@@ -336,22 +336,22 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should use the provided template for labels", () => {
       expect(node.querySelector(".my-template > label").textContent).eql(
-        "root object",
+        "root object"
       );
       expect(
-        node.querySelector(".my-template .field-string > label").textContent,
+        node.querySelector(".my-template .field-string > label").textContent
       ).eql("foo*");
     });
 
     it("should pass description as the provided React element", () => {
       expect(node.querySelector("#root_foo__description").textContent).eql(
-        "this is description",
+        "this is description"
       );
     });
 
     it("should pass rawDescription as a string", () => {
       expect(node.querySelector(".raw-description").textContent).eql(
-        "this is description rendered from the raw format",
+        "this is description rendered from the raw format"
       );
     });
 
@@ -369,7 +369,7 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should pass rawHelp as a string", () => {
       expect(node.querySelector(".raw-help").textContent).eql(
-        "this is help rendered from the raw format",
+        "this is help rendered from the raw format"
       );
     });
   });
@@ -400,7 +400,7 @@ describeRepeated("Form common", createFormComponent => {
           <button type="submit" value="Submit button" />
           <button type="submit" value="Another submit button" />
         </Form>,
-        domNode,
+        domNode
       );
       const node = findDOMNode(comp);
       const buttons = node.querySelectorAll("button[type=submit]");
@@ -552,7 +552,7 @@ describeRepeated("Form common", createFormComponent => {
         schema,
         formData: {
           data1: 123,
-          data2: ["one","two","three"]
+          data2: ["one", "two", "three"],
         },
       });
 
@@ -569,7 +569,7 @@ describeRepeated("Form common", createFormComponent => {
 
       expect(() => createFormComponent({ schema })).to.Throw(
         Error,
-        /#\/definitions\/nonexistent/,
+        /#\/definitions\/nonexistent/
       );
     });
 
@@ -1040,7 +1040,7 @@ describeRepeated("Form common", createFormComponent => {
         setProps(comp, {
           ...formProps,
           formData: null,
-        }),
+        })
       );
 
       it("should call onChange", () => {
@@ -1069,7 +1069,7 @@ describeRepeated("Form common", createFormComponent => {
           ...formProps,
           schema: newSchema,
           formData: "some value",
-        }),
+        })
       );
 
       it("should not call onChange", () => {
@@ -1088,7 +1088,7 @@ describeRepeated("Form common", createFormComponent => {
           ...formProps,
           schema: newSchema,
           formData: "something else",
-        }),
+        })
       );
 
       it("should not call onChange", () => {
@@ -1107,7 +1107,7 @@ describeRepeated("Form common", createFormComponent => {
           ...formProps,
           schema: newSchema,
           formData: null,
-        }),
+        })
       );
 
       it("should call onChange", () => {
@@ -1481,7 +1481,7 @@ describeRepeated("Form common", createFormComponent => {
 
           expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
           expect(
-            node.querySelector(".field-string .error-detail").textContent,
+            node.querySelector(".field-string .error-detail").textContent
           ).eql("should NOT be shorter than 8 characters");
         });
       });
@@ -1545,7 +1545,7 @@ describeRepeated("Form common", createFormComponent => {
               value.length === 1 &&
               value[0].message === "should NOT be shorter than 8 characters"
             );
-          }),
+          })
         );
       });
 
@@ -1596,7 +1596,7 @@ describeRepeated("Form common", createFormComponent => {
         Simulate.submit(node);
 
         const errorListHTML =
-          "<li class=\"text-danger\">should NOT be shorter than 8 characters</li>";
+          '<li class="text-danger">should NOT be shorter than 8 characters</li>';
         const errors = node.querySelectorAll(".error-detail");
         // Check for errors attached to the field
         expect(errors).to.have.lengthOf(1);
@@ -1641,7 +1641,7 @@ describeRepeated("Form common", createFormComponent => {
 
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(
-          node.querySelector(".field-string .error-detail").textContent,
+          node.querySelector(".field-string .error-detail").textContent
         ).eql("should NOT be shorter than 8 characters");
       });
     });
@@ -1670,12 +1670,12 @@ describeRepeated("Form common", createFormComponent => {
             stack: "should NOT be shorter than 8 characters",
           },
           {
-            message: "should match pattern \"d+\"",
+            message: 'should match pattern "d+"',
             name: "pattern",
             params: { pattern: "d+" },
             property: "",
             schemaPath: "#/pattern",
-            stack: "should match pattern \"d+\"",
+            stack: 'should match pattern "d+"',
           },
         ]);
       });
@@ -1688,7 +1688,7 @@ describeRepeated("Form common", createFormComponent => {
 
         expect(errors).eql([
           "should NOT be shorter than 8 characters",
-          "should match pattern \"d+\"",
+          'should match pattern "d+"',
         ]);
       });
     });
@@ -1738,12 +1738,12 @@ describeRepeated("Form common", createFormComponent => {
       it("should denote the error in the field", () => {
         const { node } = createFormComponent(formProps);
         const errorDetail = node.querySelector(
-          ".field-object .field-string .error-detail",
+          ".field-object .field-string .error-detail"
         );
 
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(errorDetail.textContent).eql(
-          "should NOT be shorter than 8 characters",
+          "should NOT be shorter than 8 characters"
         );
       });
     });
@@ -1784,7 +1784,7 @@ describeRepeated("Form common", createFormComponent => {
         const fieldNodes = node.querySelectorAll(".field-string");
 
         const liNodes = fieldNodes[1].querySelectorAll(
-          ".field-string .error-detail li",
+          ".field-string .error-detail li"
         );
         const errors = [].map.call(liNodes, li => li.textContent);
 
@@ -1965,7 +1965,7 @@ describeRepeated("Form common", createFormComponent => {
         const fieldNodes = node.querySelectorAll(".field-string");
 
         const liNodes = fieldNodes[1].querySelectorAll(
-          ".field-string .error-detail li",
+          ".field-string .error-detail li"
         );
         const errors = [].map.call(liNodes, li => li.textContent);
 
@@ -2386,8 +2386,8 @@ describeRepeated("Form common", createFormComponent => {
       });
       expect(
         console.warn.calledWithMatch(
-          /Using autocomplete property of Form is deprecated/,
-        ),
+          /Using autocomplete property of Form is deprecated/
+        )
       ).to.be.true;
     });
 
@@ -2444,12 +2444,12 @@ describeRepeated("Form common", createFormComponent => {
       submitForm(node);
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
-          message: "should match format \"area-code\"",
+          message: 'should match format "area-code"',
           name: "format",
           params: { format: "area-code" },
           property: ".areaCode",
           schemaPath: "#/properties/areaCode/format",
-          stack: ".areaCode should match format \"area-code\"",
+          stack: '.areaCode should match format "area-code"',
         },
       ]);
     });
@@ -2474,7 +2474,7 @@ describeRepeated("Form common", createFormComponent => {
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
           stack:
-            "no schema with key or ref \"http://json-schema.org/draft-04/schema#\"",
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
         },
       ]);
 
@@ -2497,12 +2497,12 @@ describeRepeated("Form common", createFormComponent => {
           stack: "should NOT be shorter than 8 characters",
         },
         {
-          message: "should match pattern \"d+\"",
+          message: 'should match pattern "d+"',
           name: "pattern",
           params: { pattern: "d+" },
           property: "",
           schemaPath: "#/pattern",
-          stack: "should match pattern \"d+\"",
+          stack: 'should match pattern "d+"',
         },
       ]);
 
@@ -2512,7 +2512,7 @@ describeRepeated("Form common", createFormComponent => {
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
           stack:
-            "no schema with key or ref \"http://json-schema.org/draft-04/schema#\"",
+            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
         },
       ]);
     });
@@ -2934,7 +2934,7 @@ describe("Form omitExtraData and liveOmit", () => {
           "level1.level2",
           "level1.anotherThing.anotherThingNested",
           "level1.anotherThing.anotherThingNested2",
-        ].sort(),
+        ].sort()
       );
     });
 
@@ -2981,7 +2981,7 @@ describe("Form omitExtraData and liveOmit", () => {
 
       const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
-        ["level1a", "level1.level2", "level1.mixedMap"].sort(),
+        ["level1a", "level1.level2", "level1.mixedMap"].sort()
       );
     });
 
@@ -3049,7 +3049,7 @@ describe("Form omitExtraData and liveOmit", () => {
           "address_list.1.city",
           "address_list.1.state",
           "address_list.1.street_address",
-        ].sort(),
+        ].sort()
       );
     });
   });
@@ -3206,7 +3206,7 @@ describe("Form omitExtraData and liveOmit", () => {
         },
         formData: { nested: { key1: "value" } },
       },
-      { omitExtraData: true, liveOmit: true },
+      { omitExtraData: true, liveOmit: true }
     );
 
     const textNode = node.querySelector("#root-key");

@@ -1775,13 +1775,13 @@ describe("utils", () => {
         additionalProperties: {
           type: "string",
         },
-        type: "object"
+        type: "object",
       };
 
       const formData = null;
-      expect( retrieveSchema(schema, {}, formData)).eql({
+      expect(retrieveSchema(schema, {}, formData)).eql({
         ...schema,
-        properties: {}
+        properties: {},
       });
     });
 
