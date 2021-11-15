@@ -49,7 +49,7 @@ const CheckboxWidget = (props: WidgetProps) => {
           onFocus={_onFocus}
         />
       }
-      label={label}
+      label={label || ''}
     />
   );
 };

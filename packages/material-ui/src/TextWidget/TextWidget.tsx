@@ -8,8 +8,6 @@ import { WidgetProps, utils } from "@rjsf/core";
 
 const { getDisplayLabel } = utils;
 
-export type TextWidgetProps = WidgetProps & Pick<TextFieldProps, Exclude<keyof TextFieldProps, 'onBlur' | 'onFocus'>>;
-
 const TextWidget = ({
   id,
   placeholder,
@@ -30,7 +28,7 @@ const TextWidget = ({
   formContext,
   registry, // pull out the registry so it doesn't end up in the textFieldProps
   ...textFieldProps
-}: TextWidgetProps) => {
+}: WidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
