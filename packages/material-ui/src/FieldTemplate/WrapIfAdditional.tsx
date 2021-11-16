@@ -67,6 +67,7 @@ const WrapIfAdditional = ({
       </Grid>
       <Grid item={true}>
         <IconButton
+          size="small"
           tabIndex={-1}
           style={btnStyle as any}
           disabled={disabled || readonly}

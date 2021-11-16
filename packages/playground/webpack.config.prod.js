@@ -36,7 +36,9 @@ module.exports = {
       "@material-ui/styles": path.resolve("node_modules", "@material-ui/styles"),
       react: path.resolve('./node_modules/react'),
       'react-dom': path.resolve('./node_modules/react-dom'),
-      // Needed for the updated material-ui without having React 17 loaded
+      // In cases when @mui is loaded, it will blow up the playground because of a missing library that is only present
+      // in React 17, so just make them resolve to `null` thereby triggering the unhappy path in the `Mui5Context` the
+      // same way as if someone was trying to use the Material UI 5 (or 4) themes without installing the libraries
       '@mui/icons-material': path.resolve(__dirname, 'src/emptyLibrary.js'),
       '@mui/material': path.resolve(__dirname, 'src/emptyLibrary.js')
     }

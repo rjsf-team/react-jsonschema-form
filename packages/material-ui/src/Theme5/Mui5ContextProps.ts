@@ -10,13 +10,13 @@ import {
   FormLabel,
   Grid,
   IconButton,
-  Input,
   InputLabel,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   MenuItem,
+  OutlinedInput,
   Paper,
   Radio,
   RadioGroup,
@@ -38,7 +38,7 @@ export default interface Mui5ContextProps {
   FormHelperText?: FormHelperText;
   FormLabel?: FormLabel;
   IconButton?: IconButton;
-  Input?: Input;
+  Input?: OutlinedInput;
   InputLabel?: InputLabel;
   List?: List;
   ListItem?: ListItem;

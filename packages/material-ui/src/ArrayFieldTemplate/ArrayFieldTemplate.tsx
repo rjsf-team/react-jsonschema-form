@@ -84,6 +84,7 @@ const DefaultArrayItem = (props: any) => {
         <Grid item={true}>
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
+              size="small"
               className="array-item-move-up"
               tabIndex={-1}
               style={btnStyle as any}
@@ -96,6 +97,7 @@ const DefaultArrayItem = (props: any) => {
 
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
+              size="small"
               tabIndex={-1}
               style={btnStyle as any}
               disabled={props.disabled || props.readonly || !props.hasMoveDown}
@@ -107,6 +109,7 @@ const DefaultArrayItem = (props: any) => {
 
           {props.hasRemove && (
             <IconButton
+              size="small"
               tabIndex={-1}
               style={btnStyle as any}
               disabled={props.disabled || props.readonly}

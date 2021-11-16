@@ -1,6 +1,5 @@
 import React from "react";
-import { Theme5 as MuiV5Theme } from "@rjsf/material-ui";
-import { Theme4 as MuiV4Theme } from "@rjsf/material-ui";
+import { Theme4 as MuiV4Theme, Theme5 as MuiV5Theme } from "@rjsf/material-ui";
 import Playground from "./app";
 import { render } from "react-dom";
 
