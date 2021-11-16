@@ -60,9 +60,9 @@ Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@material-ui/core >= 4.2.0` ([in 4.2.0, the `slider` component was added to the core](https://github.com/mui-org/material-ui/pull/16416))
-- `@material-ui/icons`
-- `@rjsf/core >= 2.0.0`
+- `@material-ui/core >= 4.12.0` (in 4.12.0, the made it forward compatible with Material-UI V5)
+- `@material-ui/icons >= 4.11.0` (in 4.11.0, the made it forward compatible with Material-UI V5)
+- `@rjsf/core >= 3.0.0`
 
 ```bash
 yarn add @material-ui/core @material-ui/icons @rjsf/core

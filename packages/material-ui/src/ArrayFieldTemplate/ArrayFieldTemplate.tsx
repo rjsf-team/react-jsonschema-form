@@ -1,15 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { utils } from '@rjsf/core';
-
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-
-import { ArrayFieldTemplateProps, IdSchema } from '@rjsf/core';
+import { ArrayFieldTemplateProps, IdSchema, utils } from '@rjsf/core';
 
 import AddButton from '../AddButton/AddButton';
-import IconButton from '../IconButton/IconButton';
+import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
 
 const {
   isMultiSelect,
@@ -68,6 +62,7 @@ const ArrayFieldDescription = ({
 
 // Used in the two templates
 const DefaultArrayItem = (props: any) => {
+  const { ArrowDownwardIcon, ArrowUpwardIcon, Box, Grid, IconButton, Paper, RemoveIcon } = useContext(MuiComponentContext);
   const btnStyle = {
     flex: 1,
     paddingLeft: 6,
@@ -77,7 +72,7 @@ const DefaultArrayItem = (props: any) => {
   };
   return (
     <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs style={{ overflow: "auto" }}>
+      <Grid item={true} xs style={{ overflow: 'auto' }}>
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{props.children}</Box>
@@ -89,36 +84,36 @@ const DefaultArrayItem = (props: any) => {
         <Grid item={true}>
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
-              icon="arrow-up"
               className="array-item-move-up"
               tabIndex={-1}
               style={btnStyle as any}
-              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveUp}
               onClick={props.onReorderClick(props.index, props.index - 1)}
-            />
+            >
+              <ArrowUpwardIcon fontSize="small" />
+            </IconButton>
           )}
 
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
-              icon="arrow-down"
               tabIndex={-1}
               style={btnStyle as any}
-              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveDown}
               onClick={props.onReorderClick(props.index, props.index + 1)}
-            />
+            >
+              <ArrowDownwardIcon fontSize="small" />
+            </IconButton>
           )}
 
           {props.hasRemove && (
             <IconButton
-              icon="remove"
               tabIndex={-1}
               style={btnStyle as any}
-              iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly}
               onClick={props.onDropIndexClick(props.index)}
-            />
+            >
+              <RemoveIcon fontSize="small" />
+            </IconButton>
           )}
         </Grid>
       )}
@@ -165,6 +160,7 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 };
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
+  const { Box, Grid, Paper } = useContext(MuiComponentContext);
   return (
     <Paper elevation={2}>
       <Box p={2}>
@@ -191,7 +187,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           {props.items && props.items.map(p => DefaultArrayItem(p))}
 
           {props.canAdd && (
-            <Grid container justify="flex-end">
+            <Grid container justifyContent="flex-end">
               <Grid item={true}>
                 <Box mt={2}>
                   <AddButton

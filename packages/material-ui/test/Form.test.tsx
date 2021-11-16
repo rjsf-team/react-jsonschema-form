@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "../src/index";
+import { MuiForm4 as Form } from "../src/index";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
 import { UiSchema } from "@rjsf/core";

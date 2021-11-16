@@ -1,10 +1,7 @@
-import React from 'react';
-
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-
+import React, { useContext } from 'react';
 import { WidgetProps } from '@rjsf/core';
+
+import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
 
 const UpDownWidget = ({
   id,
@@ -18,6 +15,7 @@ const UpDownWidget = ({
   onFocus,
   autofocus,
 }: WidgetProps) => {
+  const { FormControl, InputLabel, Input } = useContext(MuiComponentContext);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(value);

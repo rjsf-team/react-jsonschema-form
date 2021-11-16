@@ -2,6 +2,9 @@ import React from "react";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
 import { WidgetProps } from "@rjsf/core";
+
+import MuiComponentContext from '../src/MuiComponentContext/MuiComponentContext';
+import { Mui4Context } from '../src/Theme/Theme';
 import UpDownWidget from "../src/UpDownWidget/UpDownWidget";
 
 export const mockSchema: JSONSchema7 = {
@@ -13,35 +16,39 @@ export const mockSchema: JSONSchema7 = {
 
 export const mockEventHandlers = (): void => void 0;
 
-describe("UpDownWidget", () => {
-  test("renders 0 as 0 and not ''", () => {
-    const props: WidgetProps = {
-      uiSchema: {},
-      schema: mockSchema,
-      required: true,
-      disabled: false,
-      readonly: true,
-      autofocus: true,
-      label: "Some simple label",
-      onChange: mockEventHandlers,
-      onBlur: mockEventHandlers,
-      onFocus: mockEventHandlers,
-      multiple: false,
-      rawErrors: [""],
-      options: {},
+test("renders 0 as 0 and not ''", () => {
+  const props: WidgetProps = {
+    uiSchema: {},
+    schema: mockSchema,
+    required: true,
+    disabled: false,
+    readonly: true,
+    autofocus: true,
+    label: "Some simple label",
+    onChange: mockEventHandlers,
+    onBlur: mockEventHandlers,
+    onFocus: mockEventHandlers,
+    multiple: false,
+    rawErrors: [""],
+    options: {},
+    formContext: {},
+    id: "_id",
+    placeholder: "",
+    value: 0,
+    registry: {
+      fields: {},
+      widgets: {},
+      definitions: {},
       formContext: {},
-      id: "_id",
-      placeholder: "",
-      value: 0,
-      registry: {
-        fields: {},
-        widgets: {},
-        definitions: {},
-        formContext: {},
-        rootSchema: {},
-      }
-    };
-    const tree = renderer.create(<UpDownWidget {...props} />).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
+      rootSchema: {},
+    }
+  };
+  const tree = renderer.create((
+    <MuiComponentContext.Provider value={Mui4Context}>
+      <UpDownWidget {...props} />
+    </MuiComponentContext.Provider>
+  )).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+describe("UpDownWidget", () => {
 });

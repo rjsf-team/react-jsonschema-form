@@ -37,7 +37,7 @@
     "node": ">=12"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16 || >=17"
   },
   "dependencies": {
     "@types/json-schema": "^7.0.7",
@@ -65,7 +65,6 @@
     "babel-loader": "^8.0.6",
     "chai": "^3.3.0",
     "concurrently": "^5.1.0",
-    "create-react-ref": "^0.1.0",
     "cross-env": "^7.0.2",
     "css-loader": "^0.23.1",
     "eslint": "^4.9.0",

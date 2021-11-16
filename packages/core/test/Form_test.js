@@ -1,10 +1,9 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import React from "react";
+import React, { createRef } from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
 import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
-import { createRef } from "create-react-ref";
 
 import Form from "../src";
 import {
