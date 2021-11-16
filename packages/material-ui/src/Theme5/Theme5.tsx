@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, Ref } from 'react';
-
 import {
   Box,
   Button,
@@ -32,22 +31,12 @@ import {
   Error as ErrorIcon,
   Remove as RemoveIcon,
 } from '@mui/icons-material';
+import { ThemeProps } from '@rjsf/core';
 
-import ArrayFieldTemplate from '../ArrayFieldTemplate';
-import ErrorList from '../ErrorList';
-import Fields from '../Fields';
-import FieldTemplate from '../FieldTemplate';
-import ObjectFieldTemplate from '../ObjectFieldTemplate';
-import Widgets from '../Widgets';
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import MuiComponentContext from '../MuiComponentContext';
+import ThemeCommon from '../ThemeCommon';
 
-import { ThemeProps, utils } from '@rjsf/core';
-
-const { getDefaultRegistry } = utils;
-
-const { fields, widgets } = getDefaultRegistry();
-
-const DefaultChildren = () => (
+const DefaultChildren5 = () => (
   <Box marginTop={3}>
     <Button type="submit" variant="contained" color="primary">
       Submit
@@ -100,15 +89,10 @@ const Mui5TagName = React.forwardRef(
   }
 );
 
-const Theme: ThemeProps = {
+const Theme5: ThemeProps = {
   tagName: Mui5TagName,
-  children: <DefaultChildren />,
-  ArrayFieldTemplate,
-  fields: { ...fields, ...Fields },
-  FieldTemplate,
-  ObjectFieldTemplate,
-  widgets: { ...widgets, ...Widgets },
-  ErrorList,
+  children: <DefaultChildren5 />,
+  ...ThemeCommon,
 };
 
-export default Theme;
+export default Theme5;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { MuiForm4 as Form } from "../src/index";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
+import Form from "../src/index";
 
 describe("array fields", () => {
   test("array", () => {

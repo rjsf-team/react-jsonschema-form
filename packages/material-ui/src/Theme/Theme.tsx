@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, Ref } from 'react';
-
 import {
   Box,
   Button,
@@ -32,20 +31,10 @@ import {
   Error as ErrorIcon,
   Remove as RemoveIcon,
 } from '@material-ui/icons';
+import { ThemeProps } from '@rjsf/core';
 
-import ArrayFieldTemplate from '../ArrayFieldTemplate';
-import ErrorList from '../ErrorList';
-import Fields from '../Fields';
-import FieldTemplate from '../FieldTemplate';
-import ObjectFieldTemplate from '../ObjectFieldTemplate';
-import Widgets from '../Widgets';
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
-
-import { ThemeProps, utils } from '@rjsf/core';
-
-const { getDefaultRegistry } = utils;
-
-const { fields, widgets } = getDefaultRegistry();
+import MuiComponentContext from '../MuiComponentContext';
+import ThemeCommon from '../ThemeCommon';
 
 const DefaultChildren = () => (
   <Box marginTop={3}>
@@ -103,12 +92,7 @@ const Mui4TagName = React.forwardRef(
 const Theme: ThemeProps = {
   tagName: Mui4TagName,
   children: <DefaultChildren />,
-  ArrayFieldTemplate,
-  fields: { ...fields, ...Fields },
-  FieldTemplate,
-  ObjectFieldTemplate,
-  widgets: { ...widgets, ...Widgets },
-  ErrorList,
+  ...ThemeCommon,
 };
 
 export default Theme;
