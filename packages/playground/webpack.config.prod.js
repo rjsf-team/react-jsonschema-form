@@ -35,7 +35,10 @@ module.exports = {
     alias: {
       "@material-ui/styles": path.resolve("node_modules", "@material-ui/styles"),
       react: path.resolve('./node_modules/react'),
-      'react-dom': path.resolve('./node_modules/react-dom')
+      'react-dom': path.resolve('./node_modules/react-dom'),
+      // Needed for the updated material-ui without having React 17 loaded
+      '@mui/icons-material': path.resolve(__dirname, 'src/emptyLibrary.js'),
+      '@mui/material': path.resolve(__dirname, 'src/emptyLibrary.js')
     }
   },
   module: {
