@@ -172,7 +172,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root array-item-move-up Mui-disabled Mui-disabled"
+                className="MuiButtonBase-root MuiIconButton-root array-item-move-up Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -214,7 +214,7 @@ exports[`array fields array icons 1`] = `
                 </span>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -259,7 +259,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -361,7 +361,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root array-item-move-up"
+                className="MuiButtonBase-root MuiIconButton-root array-item-move-up MuiIconButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -406,7 +406,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
+                className="MuiButtonBase-root MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -448,7 +448,7 @@ exports[`array fields array icons 1`] = `
                 </span>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}

@@ -184,7 +184,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeMedium array-item-move-up css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -224,7 +224,7 @@ exports[`array fields array icons 1`] = `
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -267,7 +267,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -384,7 +384,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium array-item-move-up css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -427,7 +427,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -467,7 +467,7 @@ exports[`array fields array icons 1`] = `
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}

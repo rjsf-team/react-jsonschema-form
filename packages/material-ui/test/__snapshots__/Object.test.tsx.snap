@@ -105,7 +105,7 @@ exports[`object fields additionalProperties 1`] = `
             className="MuiGrid-root MuiGrid-item"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
