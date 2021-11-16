@@ -1,8 +1,8 @@
 import React from "react";
-import { MuiForm5 as Form } from "../../src";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
 import { UiSchema } from "@rjsf/core";
+import { MuiForm5 as Form } from "../../src";
 
 describe("single fields", () => {
   describe("string field", () => {

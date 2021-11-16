@@ -1,7 +1,7 @@
 import React from 'react';
-import { MuiForm5 as Form } from "../../src";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
+import { MuiForm5 as Form } from "../../src";
 
 describe("object fields", () => {
   test("object", () => {

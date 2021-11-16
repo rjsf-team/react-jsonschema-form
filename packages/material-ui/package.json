@@ -59,7 +59,8 @@
   },
   "author": "Agustin N. R. Ramirez <agustin.ramirez@cybertec.at>",
   "contributors": [
-    "Lorenz Henk <lorenz.henk@cybertec.at>"
+    "Lorenz Henk <lorenz.henk@cybertec.at>",
+    "Heath Chiavettone <heath.chiavettone@freenome.com>"
   ],
   "keywords": [
     "Material UI",
@@ -71,6 +72,7 @@
     "form",
     "react",
     "material-ui",
+    "mui",
     "rjsf-material-ui"
   ],
   "repository": {

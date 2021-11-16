@@ -46,12 +46,13 @@
 
 [![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/material-ui)
 
-Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
+Exports `material-ui` version 4 and 5 themes, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
 - [Material UI](https://material-ui.com/)
+- [Mui](https://mui.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -60,12 +61,28 @@ Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@material-ui/core >= 4.12.0` (in 4.12.0, the made it forward compatible with Material-UI V5)
-- `@material-ui/icons >= 4.11.0` (in 4.11.0, the made it forward compatible with Material-UI V5)
-- `@rjsf/core >= 3.0.0`
+#### Material UI version 4
+
+- `@material-ui/core >= 4.12.0` (in 4.12.0, the library developers made it forward compatible with Material-UI V5)
+- `@material-ui/icons >= 4.11.0` (in 4.11.0, the library developers made it forward compatible with Material-UI V5)
+- `@rjsf/core >= 3.3.0`
 
 ```bash
 yarn add @material-ui/core @material-ui/icons @rjsf/core
+```
+
+#### Material UI version 5
+
+NOTE: Material UI 5 requires React 17 so you will need to upgrade
+
+- `@mui/material`
+- `@mui/icons-material`
+- `@emotion/react`
+- `@emotion/styled`
+- `@rjsf/core >= 3.3.0`
+
+```bash
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core
 ```
 
 ### Installation
@@ -78,8 +95,12 @@ yarn add @rjsf/material-ui
 
 ## Usage
 
+### Material UI version 4
+
 ```js
 import Form from '@rjsf/material-ui';
+// One could also use the `MuiForm4` alias
+// import { MuiForm4 as Form } from '@rjsf/material-ui';
 ```
 
 or
@@ -87,10 +108,29 @@ or
 ```js
 import { withTheme } from '@rjsf/core';
 import { Theme as MaterialUITheme } from '@rjsf/material-ui';
+// One could also use the `Theme4` alias
+// import { Theme4 as MaterialUITheme } from '@rjsf/material-ui';
 
 // Make modifications to the theme with your own fields and widgets
 
 const Form = withTheme(MaterialUITheme);
+```
+
+### Material UI version 5
+
+```js
+import { MuiForm5 as Form } from '@rjsf/material-ui';
+```
+
+or
+
+```js
+import { withTheme } from '@rjsf/core';
+import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
+
+// Make modifications to the theme with your own fields and widgets
+
+const Form = withTheme(Mui5Theme);
 ```
 
 <!-- ROADMAP -->
@@ -126,4 +166,6 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/material-ui
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/material-ui.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/material-ui
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/screenshot.png
+[product-screenshots]: 
+- https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/screenshot.png
+- https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/screenshot5.png

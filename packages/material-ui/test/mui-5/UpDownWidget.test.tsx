@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 import { WidgetProps } from "@rjsf/core";
 
 import MuiComponentContext from '../../src/MuiComponentContext/MuiComponentContext';
-import { Mui5Context } from '../../src/Theme5/Theme5';
+import { Mui5Context } from '../../src/Theme5/Mui5Context';
 import UpDownWidget from "../../src/UpDownWidget/UpDownWidget";
 
 export const mockSchema: JSONSchema7 = {

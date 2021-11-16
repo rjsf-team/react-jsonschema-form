@@ -15,15 +15,32 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# v3.3.1 (upcoming)
+# v3.4.1 (upcoming)
+
+# v3.4
+
+## @rjsf/core
+- Add React 17 as a supported peer-dependency
+
+## @rjsf/material-ui
+- Added React 17 as an optional peer dependency
+- **Potentially breaking change**: Bumped required minimum versions of `@material-ui/core` and `@material-ui/icons` to the latest (`4.12.0` and `4.11.1`)
+  - New exports: `MuiForm4` and `Theme4` are aliases to the material-ui version 4 `MuiForm` and `Theme`
+  - The Material-UI 4 theme will fallback to a form with a message indicating `@material-ui` is not available when one (or both) of the libraries are not installed
+- Added support for material-ui version 5 on top of React 17
+  - **Backwards compatible change**: Added `@mui/material`, `@mui/icons-material`, `@emotion/react` and `@emotion/styled` as optional peer dependencies
+  - New exports: `MuiForm5` and `Theme5` support using the Material UI 5 libraries instead of version 4
+  - The Material-UI 5 theme will fallback to a form with a message indicating `@mui` is not available when one (or both) of the libraries are not installed
+
+## Dev / docs / playground
+- Added resolve aliases to `playground` so that the updated `material-ui` theme doesn't try to resolve the `@mui` libraries which require React 17 and fail to load as a result
+- Added a new `playground-r17` for the `@rjsf/core` and `@rjsf/material-ui` version 4 and 5 themes on top of React 17
 
 # v3.3.0
 
 ## @rjsf/semantic-ui
 - "semantic-ui-react" dependency updated to v1.3.1 (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
 - fixed an issue where all semantic props overwritten when a single [semantic theme-specific prop](https://react-jsonschema-form.readthedocs.io/en/latest/api-reference/themes/semantic-ui/uiSchema/) is passed in ([issue 2619](https://github.com/rjsf-team/react-jsonschema-form/issues/2619)) (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
-
-# v3.2.2 (upcoming)
 
 # v3.2.1
 
