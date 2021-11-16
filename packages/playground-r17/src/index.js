@@ -1,5 +1,6 @@
 import React from "react";
 import { Theme5 as MuiV5Theme } from "@rjsf/material-ui";
+import { Theme4 as MuiV4Theme } from "@rjsf/material-ui";
 import Playground from "./app";
 import { render } from "react-dom";
 
@@ -83,7 +84,11 @@ const themes = {
       },
     },
   },
-  "mui-5": {
+  "material-ui-4": {
+    stylesheet: "",
+    theme: MuiV4Theme,
+  },
+  "material-ui-5": {
     stylesheet: "",
     theme: MuiV5Theme,
   },

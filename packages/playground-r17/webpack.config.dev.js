@@ -24,9 +24,11 @@ module.exports = {
   },
   resolve: {
     alias: {
+      // The following is needed to allow the material ui v4 theme to properly load the css into the iframe
+      "@material-ui/styles": path.resolve("node_modules", "@material-ui/styles"),
       react: path.resolve('./node_modules/react'),
       'react-dom': path.resolve('./node_modules/react-dom'),
-      // The following two are needed to allow the mui-5 theme to properly load the css into the iframe
+      // The following two are needed to allow the material ui v5 theme to properly load the css into the iframe
       '@emotion/react': path.resolve('./node_modules/@emotion/react'),
       '@emotion/styled': path.resolve('./node_modules/@emotion/styled'),
     }

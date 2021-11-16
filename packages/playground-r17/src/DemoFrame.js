@@ -2,6 +2,8 @@ import React from "react";
 import { CssBaseline } from "@mui/material";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import { create } from "jss";
+import { jssPreset, StylesProvider } from "@material-ui/core/styles";
 import Frame from "react-frame-component";
 
 /*
@@ -47,6 +49,11 @@ function DemoFrame(props) {
   const onContentDidMount = () => {
     setState({
       ready: true,
+      jss: create({
+        plugins: jssPreset().plugins,
+        insertionPoint: instanceRef.current.contentWindow["demo-frame-jss"],
+      }),
+      sheetsManager: new Map(),
       emotionCache: createCache({
         key: "css",
         prepend: true,
@@ -56,24 +63,33 @@ function DemoFrame(props) {
       window: () => instanceRef.current.contentWindow,
     });
   };
+  let body = children;
+  if (theme === "material-ui-4") {
+    body = state.ready ? (
+      <StylesProvider jss={state.jss} sheetsManager={state.sheetsManager}>
+        {React.cloneElement(children, {
+          container: state.container,
+          window: state.window,
+        })}
+      </StylesProvider>
+    ) : null;
+  } else if (theme === "material-ui-5") {
+    body = state.ready ? (
+      <CacheProvider value={state.emotionCache}>
+        <CssBaseline />
+        {React.cloneElement(children, {
+          container: state.container,
+          window: state.window,
+        })}
+      </CacheProvider>
+    ) : null;
+  }
   return (
     <Frame ref={handleRef} contentDidMount={onContentDidMount} {...other}>
       {/* We need to wrap the material-ui form in a custom StylesProvider
             so that styles are injected into the iframe, not the parent window. */}
       <div id="demo-frame-jss" />
-      {theme === "mui-5" ? (
-        state.ready ? (
-          <CacheProvider value={state.emotionCache}>
-            <CssBaseline />
-            {React.cloneElement(children, {
-              container: state.container,
-              window: state.window,
-            })}
-          </CacheProvider>
-        ) : null
-      ) : (
-        children
-      )}
+      {body}
     </Frame>
   );
 }

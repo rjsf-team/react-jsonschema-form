@@ -36,6 +36,8 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.11.2",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
     "@mui/material": "^5.0.6",
     "@rjsf/core": "^3.2.0",
     "@rjsf/material-ui": "^3.2.0",
