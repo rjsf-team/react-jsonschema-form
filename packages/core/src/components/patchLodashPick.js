@@ -9,7 +9,7 @@ export default function pick(object, paths) {
 
   for (const path of paths) {
     let target = data;
-    let source = object;
+    let source = object || {};
 
     const parts = path.split(".");
     const lastIndex = parts.length - 1;
@@ -24,7 +24,7 @@ export default function pick(object, paths) {
       }
 
       target = target[part];
-      source = source[part];
+      source = source[part] || {};
     }
   }
 
