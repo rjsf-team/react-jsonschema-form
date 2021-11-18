@@ -29,7 +29,6 @@ function DateTimeWidget(props) {
     schema,
     formContext,
     options,
-    defaultSchemaProps: {},
   });
   const _onChange = ({ target: { value } }) => onChange && onChange(localToUTC(value));
   const _onBlur = () => onBlur && onBlur(id, value);

@@ -25,10 +25,9 @@ function RadioWidget(props) {
     { formContext,
       options,
       uiSchema,
-      defaultSchemaProps: {}
     });
   // eslint-disable-next-line no-shadow
-  const _onChange = (event, { value : eventValue }) =>{
+  const _onChange = (event, { value : eventValue }) => {
     return onChange &&  onChange(schema.type === "boolean" ? eventValue !== "false" : eventValue);};
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);

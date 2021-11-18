@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
+import React from "react";
 import { utils } from '@rjsf/core';
 import _ from "lodash";
-import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
@@ -87,6 +87,7 @@ function SelectWidget(props) {
     defaultSchemaProps:{
       inverted: "false",
       selection: true,
+      fluid: true,
       scrolling: true,
       upward: false,
     }

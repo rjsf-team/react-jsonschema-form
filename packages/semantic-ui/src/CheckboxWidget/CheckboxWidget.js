@@ -26,7 +26,9 @@ function CheckboxWidget(props) {
     formContext,
     schema,
     uiSchema,
-    defaultSchemaProps: {},
+    defaultSchemaProps: {
+      inverted: false,
+    },
    });
    const displayLabel = getDisplayLabel(
     schema,

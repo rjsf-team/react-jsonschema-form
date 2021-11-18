@@ -28,7 +28,6 @@ function DateWidget(props) {
     schema,
     formContext,
     options,
-    defaultSchemaProps: {},
   });
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
   const _onBlur = () => onBlur && onBlur(id, value);

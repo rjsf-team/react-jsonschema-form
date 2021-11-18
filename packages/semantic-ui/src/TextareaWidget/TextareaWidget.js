@@ -23,7 +23,11 @@ function TextareaWidget(props) {
     uiSchema,
     formContext,
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options, defaultSchemaProps: {} });
+  const semanticProps = getSemanticProps({
+    formContext,
+    options,
+    defaultSchemaProps: { inverted: false }
+  });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange && onChange(value === "" ? options.emptyValue : value);

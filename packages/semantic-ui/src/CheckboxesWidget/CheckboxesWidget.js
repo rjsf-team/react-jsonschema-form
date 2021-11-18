@@ -38,7 +38,9 @@ function CheckboxesWidget(props) {
     formContext,
     schema,
     uiSchema,
-    defaultSchemaProps: {},
+    defaultSchemaProps: {
+      inverted: false,
+    },
    });
   const _onChange = option => ({ target: { checked } }) => {
     // eslint-disable-next-line no-shadow
