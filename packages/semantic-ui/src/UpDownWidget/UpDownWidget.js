@@ -24,12 +24,9 @@ function UpDownWidget(props) {
     formContext,
   } = props;
   const semanticProps = getSemanticProps(
-    { formContext, options,
+    { formContext,
+      options,
       uiSchema,
-      defaultSchemaProps: {
-        fluid: true,
-        inverted: false,
-    }
   });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value);

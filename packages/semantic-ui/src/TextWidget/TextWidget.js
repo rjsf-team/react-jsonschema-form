@@ -24,34 +24,28 @@ function TextWidget(props) {
     formContext,
   } = props;
   const semanticProps = getSemanticProps(
-    { formContext, options,
+    { formContext,
+      options,
       uiSchema,
-      defaultSchemaProps: {
-        fluid: true,
-        inverted: false,
-    }
   });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-
   const displayLabel = getDisplayLabel(
     schema,
     uiSchema
     /* TODO: , rootSchema */
   );
 
-  const inputType = schema.type === 'string' ?  'text' : `${schema.type}`;
   return (
     <Form.Input
       key={id}
       id={id}
       placeholder={placeholder}
-      type={inputType}
+      type={schema.type === 'string' ?  'text' : `${schema.type}`}
       label={displayLabel ? label || schema.title : false}
-      type={inputType}
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}

@@ -27,10 +27,6 @@ function EmailWidget(props) {
     uiSchema,
     formContext,
     options,
-    defaultSchemaProps:{
-      inverted: false,
-      fluid: true,
-    }
  });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
