@@ -7,6 +7,8 @@ import ListItem from "@material-ui/core/ListItem";
 import DescriptionIcon from "@material-ui/icons/Description";
 import IconButton from "@material-ui/core/IconButton";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import Button from "@material-ui/core/Button";
+import { useIntl } from 'react-intl';
 
 interface FileInfo {
   name: string;
@@ -101,6 +103,7 @@ const FileWidget = ({
                     }: WidgetProps) => {
   const [state, setState] = useState<FileInfo[]>();
   const inputRef = useRef();
+  const intl = useIntl();
 
   useEffect(() => {
     const values = Array.isArray(value) ? value : [value];
@@ -167,14 +170,21 @@ const FileWidget = ({
     <>
       <input
         ref={inputRef.current}
-        id={id}
+        id={`file-input-${id}`}
         type="file"
         disabled={readonly || disabled}
         onChange={handleChange}
         autoFocus={autofocus}
         multiple={multiple}
         accept={options.accept as string}
+        style={{display: 'none'}}
       />
+      <Button
+        variant="outlined"
+        onClick={() => document.getElementById(`file-input-${id}`)!.click()}
+      >
+        { intl.formatMessage({defaultMessage: 'Choose file'}) }
+      </Button>
       <FilesInfo filesInfo={state} />
     </>
   );
