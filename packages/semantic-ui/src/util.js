@@ -15,7 +15,7 @@ export function getSemanticProps({
   formContext = {},
   uiSchema = {},
   options = {},
-  defaultSchemaProps = { fluid: true ,inverted: false },
+  defaultSchemaProps = { fluid: true , inverted: false },
   defaultContextProps= { }
 }) {
 
