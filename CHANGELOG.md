@@ -16,7 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# v3.2.1 (upcoming)
+# v3.2.2 (upcoming)
+
+# v3.2.1
+
+## @rjsf/core
+- Don't crash when non-object formData is passed in to a schema item with additionalProperties (https://github.com/rjsf-team/react-jsonschema-form/pull/2595)
+- Upgrade jsonpointer to 5.0.0 to address security vulnerability (https://github.com/rjsf-team/react-jsonschema-form/pull/2599)
 
 # v3.2.0
 
