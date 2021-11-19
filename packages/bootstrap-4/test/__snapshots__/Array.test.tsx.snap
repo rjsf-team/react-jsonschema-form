@@ -114,7 +114,6 @@ exports[`array fields checkboxes 1`] = `
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        readOnly={false}
         required={false}
         value={Array []}
       >
