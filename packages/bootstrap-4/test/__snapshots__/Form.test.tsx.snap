@@ -639,7 +639,6 @@ exports[`single fields select field 1`] = `
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        readOnly={false}
         value=""
       >
         <option
