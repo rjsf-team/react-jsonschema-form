@@ -23,6 +23,15 @@ should change the heading of the (upcoming) version to include a major version b
 - "semantic-ui-react" updated to v1.3.1 (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
 - fixed passing [semantic theme specific props](https://react-jsonschema-form.readthedocs.io/en/latest/api-reference/themes/semantic-ui/uiSchema/), by overiding defaults, with your own semantic props (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
 
+# v3.2.2 (upcoming)
+
+# v3.2.1
+
+## @rjsf/core
+- Don't crash when non-object formData is passed in to a schema item with additionalProperties (https://github.com/rjsf-team/react-jsonschema-form/pull/2595)
+- Upgrade jsonpointer to 5.0.0 to address security vulnerability (https://github.com/rjsf-team/react-jsonschema-form/pull/2599)
+
+
 # v3.2.0
 
 ## @rjsf/core
