@@ -105,11 +105,12 @@ function SelectWidget(props) {
       label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
       value={typeof value === "undefined" ? emptyValue : value}
-      disabled={disabled || readonly}
+      disabled={disabled}
       placeholder={placeholder}
       {...semanticProps}
       required={required}
       autoFocus={autofocus}
+      readOnly={readonly}
       options={dropdownOptions}
       onChange={_onChange}
       onBlur={_onBlur}
