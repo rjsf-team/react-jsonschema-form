@@ -47,4 +47,19 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("checkboxes 0", () => {
+    const schema: JSONSchema7 = {
+      type: "array",
+      readOnly: true,
+      items: {
+        type: "string",
+        enum: ["a", "b", "c"]
+      },
+      uniqueItems: true
+    };
+    const tree = renderer
+      .create(<Form schema={schema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

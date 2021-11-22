@@ -137,6 +137,15 @@ describe("single fields", () => {
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("select field 0", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+      readOnly: true,
+      enum: ["foo", "bar"],
+    };
+    const tree = renderer.create(<Form schema={schema} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("checkbox field", () => {
     const schema: JSONSchema7 = {
       type: "boolean",

@@ -153,6 +153,69 @@ exports[`array fields checkboxes 1`] = `
 </form>
 `;
 
+exports[`array fields checkboxes 0 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+      />
+      <select
+        autoFocus={false}
+        className="custom-select"
+        disabled={true}
+        id="root"
+        multiple={true}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={Array []}
+      >
+        <option
+          disabled={false}
+          id="a"
+          value="a"
+        >
+          a
+        </option>
+        <option
+          disabled={false}
+          id="b"
+          value="b"
+        >
+          b
+        </option>
+        <option
+          disabled={false}
+          id="c"
+          value="c"
+        >
+          c
+        </option>
+      </select>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`array fields fixed array 1`] = `
 <form
   className="rjsf"

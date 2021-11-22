@@ -675,6 +675,65 @@ exports[`single fields select field 1`] = `
 </form>
 `;
 
+exports[`single fields select field 0 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+      />
+      <select
+        autoFocus={false}
+        className="custom-select"
+        disabled={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value=""
+      >
+        <option
+          value=""
+        >
+          
+        </option>
+        <option
+          disabled={false}
+          id="foo"
+          value="foo"
+        >
+          foo
+        </option>
+        <option
+          disabled={false}
+          id="bar"
+          value="bar"
+        >
+          bar
+        </option>
+      </select>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields string field format data-url 1`] = `
 <form
   className="rjsf"
