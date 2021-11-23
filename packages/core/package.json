@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
@@ -44,7 +44,7 @@
     "ajv": "^6.7.0",
     "core-js-pure": "^3.6.5",
     "json-schema-merge-allof": "^0.6.0",
-    "jsonpointer": "^4.0.1",
+    "jsonpointer": "^5.0.0",
     "lodash": "^4.17.15",
     "nanoid": "^3.1.23",
     "prop-types": "^15.7.2",
