@@ -7,7 +7,7 @@ import TextField, {
 import { WidgetProps, utils } from "@visma/rjsf-core";
 import Typography from "@material-ui/core/Typography";
 
-const { getDisplayLabel, rangeSpec } = utils;
+const { rangeSpec } = utils;
 
 export type TextWidgetProps = WidgetProps & Pick<TextFieldProps, Exclude<keyof TextFieldProps, 'onBlur' | 'onFocus'>>;
 
@@ -46,11 +46,6 @@ const TextWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const displayLabel = getDisplayLabel(
-    schema,
-    uiSchema
-    /* TODO: , rootSchema */
-  );
   const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
 
   return (
@@ -58,7 +53,6 @@ const TextWidget = ({
       <TextField
         id={id}
         placeholder={placeholder}
-        label={displayLabel ? label || schema.title : false}
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}

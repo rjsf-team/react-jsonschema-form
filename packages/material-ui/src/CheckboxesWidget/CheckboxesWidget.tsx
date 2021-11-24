@@ -1,6 +1,5 @@
 import React from "react";
 
-import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -22,15 +21,12 @@ const deselectValue = (value: any, selected: any) => {
 };
 
 const CheckboxesWidget = ({
-  schema,
-  label,
   id,
   disabled,
   options,
   value,
   autofocus,
   readonly,
-  required,
   onChange,
   onBlur,
   onFocus,
@@ -58,9 +54,6 @@ const CheckboxesWidget = ({
 
   return (
     <FormControl component="fieldset">
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
       <FormGroup row={!!inline}>
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = value.indexOf(option.value) !== -1;

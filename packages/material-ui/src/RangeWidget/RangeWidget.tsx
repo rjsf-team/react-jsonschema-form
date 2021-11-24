@@ -1,7 +1,6 @@
 import React from "react";
 
 import Slider from "@material-ui/core/Slider";
-import FormLabel from "@material-ui/core/FormLabel";
 
 import { utils } from "@visma/rjsf-core";
 import { WidgetProps } from "@visma/rjsf-core";
@@ -79,7 +78,6 @@ const RangeWidget = ({
   options,
   schema,
   onChange,
-  required,
   label,
   id,
 }: WidgetProps) => {
@@ -97,9 +95,6 @@ const RangeWidget = ({
 
   return (
     <>
-      <FormLabel required={required} id={id}>
-        {label}
-      </FormLabel>
       <Slider
         disabled={disabled || readonly}
         onChange={_onChange}
