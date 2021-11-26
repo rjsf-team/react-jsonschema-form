@@ -1,4 +1,4 @@
-import { getSemanticProps,getSemanticErrorProps } from '../src/util';
+import { getSemanticErrorProps, getSemanticProps } from '../src/util';
 
 
 describe("util js functions", () => {
@@ -27,6 +27,20 @@ describe("util js functions", () => {
         };
         expect(getSemanticProps({ uiSchema, defaultSchemaProps:{ wrapItem: false , horizontalButtons: true } })).toEqual({
           "wrapItem": true,
+          "horizontalButtons": true
+        });
+      });
+
+      test("semantic props if passed should overwrite defaultSchemaProps but only the keys that match", () => {
+        const uiSchema = {
+          "ui:options": {
+            "semantic": {
+              "horizontalButtons": true
+            }
+          }
+        };
+        expect(getSemanticProps({ uiSchema, defaultSchemaProps:{ wrapItem: false , horizontalButtons: true } })).toEqual({
+          "wrapItem": false,
           "horizontalButtons": true
         });
       });
@@ -76,7 +90,8 @@ describe("util js functions", () => {
         }
       };
       expect(getSemanticErrorProps({ uiSchema })).toEqual({
-          'size': 'large',
+          size: 'large',
+          pointing: 'above'
        });
     });
   });

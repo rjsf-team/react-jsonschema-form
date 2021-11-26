@@ -19,15 +19,14 @@ export function getSemanticProps({
   defaultContextProps= { }
 }) {
 
-   const hasFormContextProps = formContext.semantic  ? true : false;
-   const hasUiSchemaProps  = uiSchema["ui:options"] && uiSchema["ui:options"].semantic ? true : false;
-   const hasOptionsProps = options.semantic  ? true : false;
-   const formContextProps = hasFormContextProps ? formContext.semantic : defaultContextProps;
-   let schemaProps = hasUiSchemaProps  ? uiSchema["ui:options"].semantic : defaultSchemaProps;
-   let optionProps = hasOptionsProps ? options.semantic : {};
+   const formContextProps = formContext.semantic;
+   let schemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic;
+   let optionProps = options.semantic;
    // formContext props should overide other props
    return Object.assign(
     {},
+    { ...(defaultSchemaProps && defaultSchemaProps) },
+    { ...(defaultContextProps && defaultContextProps) },
     schemaProps,
     optionProps,
     formContextProps,
@@ -50,17 +49,16 @@ export function getSemanticErrorProps({
   defaultProps = { size: 'small', pointing:'above' }
 }) {
 
-  const hasFormContextProps = formContext.semantic && formContext.semantic.errorOptions || false;
-  const hasUiSchemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic && uiSchema["ui:options"].semantic.errorOptions || false;
-  const hasOptionsProps = options.semantic && options.semantic.errorOptions || false;
-
-  const defaultSemanticErrorProps =  defaultProps;
+  const formContextProps = formContext.semantic && formContext.semantic.errorOptions;
+  const schemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic && uiSchema["ui:options"].semantic.errorOptions;
+  const optionProps = options.semantic && options.semantic.errorOptionse;
 
   return Object.assign(
     {},
-    hasFormContextProps ? formContext.semantic.errorOptions : {},
-    hasUiSchemaProps ? uiSchema["ui:options"].semantic.errorOptions  : defaultSemanticErrorProps,
-    hasOptionsProps ? options.semantic.errorOptions : {}
+    { ...(defaultProps && defaultProps) },
+    schemaProps,
+    optionProps,
+    formContextProps,
   );
 }
 

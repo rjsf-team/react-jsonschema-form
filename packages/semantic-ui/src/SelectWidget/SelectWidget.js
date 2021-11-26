@@ -84,7 +84,7 @@ function SelectWidget(props) {
     uiSchema,
     formContext,
     options,
-    defaultSchemaProps:{
+    defaultSchemaProps: {
       inverted: "false",
       selection: true,
       fluid: true,
