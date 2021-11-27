@@ -24,6 +24,7 @@ exports[`object fields object 1`] = `
           className="ui fluid input"
         >
           <input
+            aria-describedby={null}
             autoFocus={false}
             disabled={false}
             id="root_a"
@@ -53,6 +54,7 @@ exports[`object fields object 1`] = `
           className="ui fluid input"
         >
           <input
+            aria-describedby={null}
             autoFocus={false}
             disabled={false}
             id="root_b"

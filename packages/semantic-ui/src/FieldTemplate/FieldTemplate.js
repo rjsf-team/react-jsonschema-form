@@ -4,7 +4,7 @@ import { Form } from "semantic-ui-react";
 import DescriptionField from "../DescriptionField";
 import HelpField from "../HelpField";
 import RawErrors from "../RawErrors";
-import { getSemanticProps, MaybeWrap } from "../util";
+import { getSemanticProps, getSemanticErrorProps, MaybeWrap } from "../util";
 
 function FieldTemplate({
   id,
@@ -19,7 +19,8 @@ function FieldTemplate({
   ...props
 }) {
   const semanticProps = getSemanticProps(props);
-  const { wrapLabel, wrapContent, errorOptions } = semanticProps;
+  const { wrapLabel, wrapContent } = semanticProps;
+  const errorOptions = getSemanticErrorProps(props);
   return (
     <Form.Group key={id} widths="equal" grouped>
       <MaybeWrap wrap={wrapContent} className="sui-field-content">

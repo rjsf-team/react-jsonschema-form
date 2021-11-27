@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from
 '../util';
@@ -9,22 +8,26 @@ const { getDisplayLabel } = utils;
 function UpDownWidget(props) {
   const {
     id,
+    name,
+    label,
+    value,
     required,
     readonly,
     disabled,
-    label,
-    name,
-    value,
-    options,
     onChange,
     onBlur,
     onFocus,
     autofocus,
-    formContext,
+    options,
     schema,
     uiSchema,
+    formContext,
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options });
+  const semanticProps = getSemanticProps(
+    { formContext,
+      options,
+      uiSchema,
+  });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
   const _onBlur = () => onBlur && onBlur(id, value);
@@ -54,18 +57,4 @@ function UpDownWidget(props) {
     </React.Fragment>
   );
 }
-
-UpDownWidget.defaultProps = {
-  options: {
-    semantic: {
-      inverted: false,
-      fluid: true,
-    },
-  },
-};
-
-UpDownWidget.propTypes = {
-  options: PropTypes.object,
-};
-
 export default UpDownWidget;
