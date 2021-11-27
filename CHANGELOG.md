@@ -21,7 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/semantic-ui
 - "semantic-ui-react" dependency updated to v1.3.1 (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
-- fixed passing [semantic theme specific props](https://react-jsonschema-form.readthedocs.io/en/latest/api-reference/themes/semantic-ui/uiSchema/), by only overiding defaults that match, with your own semantic props (https://github.com/rjsf-team/react-jsonschema-form/pull/2590) related to this [issue 2619](https://github.com/rjsf-team/react-jsonschema-form/issues/2619)
+- fixed an issue where all semantic props overwritten when a single [semantic theme-specific prop](https://react-jsonschema-form.readthedocs.io/en/latest/api-reference/themes/semantic-ui/uiSchema/) is passed in ([issue 2619](https://github.com/rjsf-team/react-jsonschema-form/issues/2619)) (https://github.com/rjsf-team/react-jsonschema-form/pull/2590)
 
 # v3.2.2 (upcoming)
 
