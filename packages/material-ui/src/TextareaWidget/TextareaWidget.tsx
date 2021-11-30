@@ -16,7 +16,6 @@ const TextareaWidget = ({
   required,
   disabled,
   autofocus,
-  label,
   readonly,
   onBlur,
   onFocus,
@@ -43,7 +42,6 @@ const TextareaWidget = ({
     <>
       <TextField
         id={id}
-        label={label || schema.title}
         placeholder={placeholder}
         disabled={disabled || readonly}
         value={value}

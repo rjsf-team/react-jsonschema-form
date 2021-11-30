@@ -403,7 +403,7 @@ export function getDisplayLabel(schema, uiSchema, rootSchema) {
     displayLabel = false;
   }
   if (uiSchema["ui:field"]) {
-    displayLabel = false;
+    displayLabel = schema.format === "table";
   }
   return displayLabel;
 }

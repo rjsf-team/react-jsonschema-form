@@ -10,6 +10,15 @@ import Typography from "@material-ui/core/Typography";
 
 import WrapIfAdditional from "./WrapIfAdditional";
 
+const showTitle = (schema: any, uiSchema: any) => {
+  if (schema.type === 'array') {
+    return schema.items.type !== 'object' && (schema.items.enum || schema.items.enumNames);
+  } else if (uiSchema['ui:widget'] === 'checkbox') {
+    return false;
+  }
+  return schema.format === 'table' || !(schema.type === 'object' || (schema.type === 'string' && schema.title === undefined));
+}
+
 const FieldTemplate = ({
   id,
   children,
@@ -26,6 +35,7 @@ const FieldTemplate = ({
   rawHelp,
   rawDescription,
   schema,
+  uiSchema
 }: FieldTemplateProps) => {
   if (hidden) {
     return null;
@@ -46,11 +56,10 @@ const FieldTemplate = ({
         fullWidth={true}
         error={rawErrors.length ? true : false}
         required={required}>
-        {schema.format ? (
+        {showTitle(schema, uiSchema) ?
           <Typography variant="subtitle1">{label || schema.title}</Typography>
-        ) : null}
-        {children}
-        {displayLabel && rawDescription ? (
+          : null}
+        {displayLabel && rawDescription && (schema.type !== 'boolean' || uiSchema['ui:widget'] === 'radio') ? (
           <Typography
             id={utils.descriptionId(id)}
             variant="caption"
@@ -58,6 +67,7 @@ const FieldTemplate = ({
             {rawDescription}
           </Typography>
         ) : null}
+        {children}
         {rawErrors.length > 0 && (
           <List id={utils.errorsId(id)} dense={true} disablePadding={true}>
             {rawErrors.map((error, i: number) => {
