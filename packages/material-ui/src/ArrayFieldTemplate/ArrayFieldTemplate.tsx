@@ -38,6 +38,7 @@ type ArrayFieldTitleProps = {
 const ArrayFieldTitle = ({
   idSchema,
   title,
+  required
 }: ArrayFieldTitleProps) => {
   if (!title) {
     return null;
@@ -47,7 +48,7 @@ const ArrayFieldTitle = ({
   // return <TitleField id={id} title={title} required={required} />;
   return (
     <Box id={id} mb={1} mt={1}>
-      <Typography variant="subtitle1">{title}</Typography>
+      <Typography variant="subtitle1">{required ? title + ' *' : title}</Typography>
       <Divider />
     </Box>
   );
