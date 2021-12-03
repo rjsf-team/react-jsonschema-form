@@ -9,7 +9,6 @@ import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 
 import WrapIfAdditional from "./WrapIfAdditional";
-import { FormLabel } from '@material-ui/core';
 
 const showTitle = (schema: any, uiSchema: any) => {
   if (schema.type === 'array') {
@@ -58,7 +57,10 @@ const FieldTemplate = ({
         error={rawErrors.length ? true : false}
         required={required}>
         {showTitle(schema, uiSchema) ?
-          <FormLabel required={required} htmlFor={id}>{label || schema.title}</FormLabel>
+          <Typography variant="subtitle1">
+            {label || schema.title}
+            {required ? ' *' : null}
+          </Typography>
           : null}
         {displayLabel && rawDescription && (schema.type !== 'boolean' || uiSchema['ui:widget'] === 'radio') ? (
           <Typography
