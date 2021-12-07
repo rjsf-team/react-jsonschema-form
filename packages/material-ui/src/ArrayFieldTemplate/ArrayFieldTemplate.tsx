@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 
 import { utils } from '@visma/rjsf-core';
 
@@ -74,12 +75,17 @@ const ArrayFieldDescription = ({
 
 // Used in the two templates
 const DefaultArrayItem = (props: any) => {
+  const intl = useIntl();
   const btnStyle = {
     flex: 1,
-    paddingLeft: 6,
-    paddingRight: 6,
+    paddingLeft: 3,
+    paddingRight: 3,
     fontWeight: 'bold',
-    minWidth: 0
+    minWidth: 0,
+    marginLeft: 5,
+    marginBottom: 10,
+    borderRadius: 15,
+    borderWidth: 2
   };
   return (
     <Grid container={true} key={props.key} alignItems="center">
@@ -102,7 +108,8 @@ const DefaultArrayItem = (props: any) => {
             <IconButton
               icon="arrow-up"
               className="array-item-move-up"
-              tabIndex={-1}
+              aria-label={intl.formatMessage({defaultMessage: 'Move up'})}
+              //tabIndex={-1}
               style={btnStyle as any}
               iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveUp}
@@ -113,7 +120,8 @@ const DefaultArrayItem = (props: any) => {
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
               icon="arrow-down"
-              tabIndex={-1}
+              aria-label={intl.formatMessage({defaultMessage: 'Move down'})}
+              //tabIndex={-1}
               style={btnStyle as any}
               iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly || !props.hasMoveDown}
@@ -124,7 +132,8 @@ const DefaultArrayItem = (props: any) => {
           {props.hasRemove && (
             <IconButton
               icon="remove"
-              tabIndex={-1}
+              aria-label={intl.formatMessage({defaultMessage: 'Remove'})}
+              //tabIndex={-1}
               style={btnStyle as any}
               iconProps={{ fontSize: 'small' }}
               disabled={props.disabled || props.readonly}
