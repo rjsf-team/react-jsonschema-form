@@ -506,6 +506,59 @@ describeRepeated("Form common", createFormComponent => {
       expect(node.querySelectorAll("input[type=text]")).to.have.length.of(1);
     });
 
+    it("should not crash with null values for property with additionalProperties", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          data: {
+            additionalProperties: {
+              type: "string",
+            },
+            type: "object",
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        formData: {
+          data: null,
+        },
+      });
+
+      expect(node).to.not.be.null;
+    });
+
+    it("should not crash with non-object values for property with additionalProperties", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          data1: {
+            additionalProperties: {
+              type: "string",
+            },
+            type: "object",
+          },
+          data2: {
+            additionalProperties: {
+              type: "string",
+            },
+            type: "object",
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        formData: {
+          data1: 123,
+          data2: ["one", "two", "three"],
+        },
+      });
+
+      expect(node).to.not.be.null;
+    });
+
     it("should raise for non-existent definitions referenced", () => {
       const schema = {
         type: "object",
