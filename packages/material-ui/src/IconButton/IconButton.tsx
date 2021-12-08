@@ -5,7 +5,7 @@ import Add from "@material-ui/icons/Add";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Remove from "@material-ui/icons/Remove";
-import { IconButtonProps as MuiIconButtonProps,} from "@material-ui/core/IconButton";
+import { IconButtonProps as MuiIconButtonProps } from "@material-ui/core/IconButton";
 
 const mappings: any = {
   remove: Remove,
