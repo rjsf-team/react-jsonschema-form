@@ -28,18 +28,45 @@ function processFiles(files) {
   return Promise.all([].map.call(files, processFile));
 }
 
+function FileInfoPreview(props) {
+  const { dataURL, type } = props;
+  const onPreviewButtonClicked = () => {
+    window.location.href = dataURL;
+  };
+
+  if (type.indexOf("image") !== -1) {
+    return (
+      <img
+        src={dataURL}
+        style={{ maxWidth: "100%" }}
+        className="file-preview"
+      />
+    );
+  }
+
+  return (
+    <button onClick={onPreviewButtonClicked} className="file-preview">
+      Click to preview
+    </button>
+  );
+}
+
 function FilesInfo(props) {
-  const { filesInfo } = props;
+  const { filesInfo, fileOptions } = props;
+  const { preview } = fileOptions;
+
   if (filesInfo.length === 0) {
     return null;
   }
   return (
     <ul className="file-info">
       {filesInfo.map((fileInfo, key) => {
-        const { name, size, type } = fileInfo;
+        const { name, size, type, dataURL } = fileInfo;
         return (
           <li key={key}>
             <strong>{name}</strong> ({type}, {size} bytes)
+            <br />
+            {preview && <FileInfoPreview type={type} dataURL={dataURL} />}
           </li>
         );
       })}
@@ -107,7 +134,7 @@ class FileWidget extends Component {
             accept={options.accept}
           />
         </p>
-        <FilesInfo filesInfo={filesInfo} />
+        <FilesInfo filesInfo={filesInfo} fileOptions={options} />
       </div>
     );
   }

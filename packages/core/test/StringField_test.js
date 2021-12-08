@@ -1943,6 +1943,21 @@ describe("StringField", () => {
 
       expect(node.querySelector("#custom")).to.exist;
     });
+
+    it("should render the file widget with preview attribute", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "string",
+          format: "data-url",
+        },
+        uiSchema: {
+          "ui:options": { preview: true },
+        },
+        formData: "data:text/plain;name=file1.txt;base64,x=",
+      });
+
+      expect(node.querySelector(".file-preview")).to.exist;
+    });
   });
 
   describe("UpDownWidget", () => {
