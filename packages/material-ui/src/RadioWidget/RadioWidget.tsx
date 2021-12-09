@@ -10,6 +10,7 @@ import { WidgetProps } from "@visma/rjsf-core";
 const RadioWidget = ({
   id,
   schema,
+  label,
   options,
   value,
   disabled,
@@ -32,6 +33,7 @@ const RadioWidget = ({
 
   return (
     <FormControl component="fieldset">
+      <legend style={{position: 'absolute', clip: 'rect(0,0,0,0)'}}>{label}</legend>
       <RadioGroup
         value={`${value}`}
         row={row as boolean}
