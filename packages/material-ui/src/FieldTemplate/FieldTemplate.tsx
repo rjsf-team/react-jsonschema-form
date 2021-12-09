@@ -13,7 +13,7 @@ import WrapIfAdditional from "./WrapIfAdditional";
 const showTitle = (schema: any, uiSchema: any) => {
   if (schema.type === 'array') {
     return schema.items.type !== 'object' && (schema.items.enum || schema.items.enumNames);
-  } else if (uiSchema['ui:widget'] === 'checkbox') {
+  } else if (uiSchema['ui:widget'] === 'checkbox' || (schema.type === 'boolean' && uiSchema['ui:widget'] !== 'radio')) {
     return false;
   }
   return schema.format === 'table' || !(schema.type === 'object' || (schema.type === 'string' && schema.title === undefined));
