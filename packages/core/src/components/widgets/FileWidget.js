@@ -29,10 +29,7 @@ function processFiles(files) {
 }
 
 function FileInfoPreview(props) {
-  const { dataURL, type } = props;
-  const onPreviewButtonClicked = () => {
-    window.location.href = dataURL;
-  };
+  const { dataURL, type, name } = props;
 
   if (type.indexOf("image") !== -1) {
     return (
@@ -45,9 +42,9 @@ function FileInfoPreview(props) {
   }
 
   return (
-    <button onClick={onPreviewButtonClicked} className="file-preview">
-      Click to preview
-    </button>
+    <a download={`preview-${name}`} href={dataURL}>
+      Preview
+    </a>
   );
 }
 
@@ -63,10 +60,13 @@ function FilesInfo(props) {
       {filesInfo.map((fileInfo, key) => {
         const { name, size, type, dataURL } = fileInfo;
         return (
-          <li key={key}>
-            <strong>{name}</strong> ({type}, {size} bytes)
-            <br />
-            {preview && <FileInfoPreview type={type} dataURL={dataURL} />}
+          <li key={key} style={{ marginBottom: "15px" }}>
+            <p>
+              <strong>{name}</strong> ({type}, {size} bytes)
+            </p>
+            {preview && (
+              <FileInfoPreview type={type} dataURL={dataURL} name={name} />
+            )}
           </li>
         );
       })}
