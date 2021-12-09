@@ -198,11 +198,7 @@ export default class Form extends Component {
         if (typeof _obj[key] === "object") {
           let newPaths = paths.map(path => `${path}.${key}`);
           // If an object is marked with additionalProperties, all its keys are valid
-          if (
-            _obj[key].__rjsf_additionalProperties &&
-            _obj[key].$name !== "" &&
-            _obj[key].additionalProperties !== false
-          ) {
+          if (_obj[key].__rjsf_additionalProperties && _obj[key].$name !== "") {
             acc.push(_obj[key].$name);
           } else {
             getAllPaths(_obj[key], acc, newPaths);
