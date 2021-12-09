@@ -57,7 +57,10 @@ const FieldTemplate = ({
         error={rawErrors.length ? true : false}
         required={required}>
         {showTitle(schema, uiSchema) ?
-          <Typography variant="subtitle1">{label || schema.title}</Typography>
+          <Typography variant="subtitle1">
+            {label || schema.title}
+            {required ? ' *' : null}
+          </Typography>
           : null}
         {displayLabel && rawDescription && (schema.type !== 'boolean' || uiSchema['ui:widget'] === 'radio') ? (
           <Typography
