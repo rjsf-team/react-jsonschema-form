@@ -23,7 +23,7 @@ const IconButton = (props: IconButtonProps) => {
   const { icon, className, iconProps, ...otherProps } = props;
   const IconComp = mappings[icon];
   return (
-    <Button {...otherProps} size="small">
+    <Button {...otherProps} variant="outlined" size="small">
       <IconComp {...iconProps} />
     </Button>
   );
