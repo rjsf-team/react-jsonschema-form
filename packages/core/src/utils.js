@@ -1038,7 +1038,10 @@ export function toPathSchema(schema, name = "", rootSchema, formData = {}) {
     return toPathSchema(_schema, name, rootSchema, formData);
   }
 
-  if (schema.hasOwnProperty("additionalProperties")) {
+  if (
+    schema.hasOwnProperty("additionalProperties") &&
+    schema.additionalProperties !== false
+  ) {
     pathSchema.__rjsf_additionalProperties = true;
   }
 

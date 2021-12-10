@@ -3193,6 +3193,45 @@ describe("Form omitExtraData and liveOmit", () => {
     });
   });
 
+  it("should remove extra data on change with omitExtraData=true and liveOmit=true if additionalProperties equal false", () => {
+    const omitExtraData = true;
+    const liveOmit = true;
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string", additionalProperties: false },
+        bar: { type: "string", additionalProperties: false },
+        info: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            name: {
+              type: "string",
+              additionalProperties: false,
+            },
+          },
+          required: ["name"],
+        },
+      },
+      additionalProperties: false,
+    };
+    const formData = {
+      foo: "foo",
+      baz: "baz",
+      info: { majorVersion: "v1123", name: "foofoo" },
+    };
+    const { node } = createFormComponent({
+      schema,
+      formData,
+      omitExtraData,
+      liveOmit,
+    });
+
+    Simulate.submit(node);
+
+    expect(node.querySelectorAll(".errors li")).to.have.length.of(0);
+  });
+
   it("should rename formData key if key input is renamed in a nested object with omitExtraData=true and liveOmit=true", () => {
     const { node, onChange } = createFormComponent(
       {
