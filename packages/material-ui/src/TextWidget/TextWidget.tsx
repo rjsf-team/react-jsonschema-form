@@ -48,8 +48,6 @@ const TextWidget = ({
 
   const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
 
-  console.log(schema)
-
   return (
     <>
       <TextField
