@@ -68,7 +68,9 @@ const TextWidget = ({
       />
       {options.showCharacterCounter &&
       <div>
-        <Typography variant="subtitle2" style={{float: "right"}}>{(value ? value.length : 0) + " / " + schema.maxLength}</Typography>
+        <Typography variant="subtitle2" style={{float: "right"}}>
+          {(value ? value.length : 0)} {schema.maxLength !== undefined && " / " + schema.maxLength}
+        </Typography>
       </div>
       }
     </>
