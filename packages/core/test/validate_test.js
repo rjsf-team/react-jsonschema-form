@@ -171,8 +171,13 @@ describe("Validation", () => {
                 pattern: "\\d+",
                 type: "string",
               },
+              datasetName: {
+                pattern: "\\d+",
+                type: "string",
+                title: "Name of the dataset",
+              },
             },
-            required: ["datasetId"],
+            required: ["datasetId", "datasetName"],
             type: "object",
           },
         },
@@ -182,7 +187,7 @@ describe("Validation", () => {
 
       it("should return a validation error about meta schema when meta schema is not defined", () => {
         const errors = validateFormData(
-          { datasetId: "some kind of text" },
+          { datasetId: "some kind of text", datasetName: "2" },
           schema
         );
         const errMessage =
@@ -199,7 +204,7 @@ describe("Validation", () => {
       });
       it("should return a validation error about formData", () => {
         const errors = validateFormData(
-          { datasetId: "some kind of text" },
+          { datasetId: "some kind of text", datasetName: "2" },
           schema,
           null,
           null,
@@ -207,12 +212,38 @@ describe("Validation", () => {
         );
         expect(errors.errors).to.have.lengthOf(1);
         expect(errors.errors[0].stack).to.equal(
-          '.datasetId should match pattern "\\d+"'
+          'datasetId should match pattern "\\d+"'
+        );
+      });
+      it("should return a validation error with title attribute about formData", () => {
+        const errors = validateFormData(
+          { datasetId: "2", datasetName: "some kind of text" },
+          schema,
+          null,
+          null,
+          [metaSchemaDraft4]
+        );
+        expect(errors.errors).to.have.lengthOf(1);
+        expect(errors.errors[0].stack).to.equal(
+          'Name of the dataset should match pattern "\\d+"'
+        );
+      });
+      it("should return a validation error with title attribute about formData required", () => {
+        const errors = validateFormData(
+          { datasetId: "2" },
+          schema,
+          null,
+          null,
+          [metaSchemaDraft4]
+        );
+        expect(errors.errors).to.have.lengthOf(1);
+        expect(errors.errors[0].stack).to.equal(
+          "Name of the dataset is a required property"
         );
       });
       it("should return a validation error about formData, when used with multiple meta schemas", () => {
         const errors = validateFormData(
-          { datasetId: "some kind of text" },
+          { datasetId: "some kind of text", datasetName: "2" },
           schema,
           null,
           null,
@@ -220,7 +251,7 @@ describe("Validation", () => {
         );
         expect(errors.errors).to.have.lengthOf(1);
         expect(errors.errors[0].stack).to.equal(
-          '.datasetId should match pattern "\\d+"'
+          'datasetId should match pattern "\\d+"'
         );
       });
     });
@@ -253,7 +284,7 @@ describe("Validation", () => {
 
         expect(result.errors).to.have.lengthOf(1);
         expect(result.errors[0].stack).to.equal(
-          '.phone should match format "phone-us"'
+          'phone should match format "phone-us"'
         );
       });
 
@@ -277,7 +308,7 @@ describe("Validation", () => {
 
         expect(result.errors).to.have.lengthOf(1);
         expect(result.errors[0].stack).to.equal(
-          '.phone should match format "area-code"'
+          'phone should match format "area-code"'
         );
       });
     });
@@ -481,7 +512,7 @@ describe("Validation", () => {
               params: { missingProperty: "foo" },
               property: ".foo",
               schemaPath: "#/required",
-              stack: ".foo is a required property",
+              stack: "foo is a required property",
             },
           ]);
         });
@@ -489,7 +520,7 @@ describe("Validation", () => {
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            ".foo is a required property"
+            "foo is a required property"
           );
         });
       });
@@ -525,7 +556,7 @@ describe("Validation", () => {
         it("should render errors", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            ".foo should NOT be shorter than 10 characters"
+            "foo should NOT be shorter than 10 characters"
           );
         });
 
@@ -537,7 +568,7 @@ describe("Validation", () => {
               params: { limit: 10 },
               property: ".foo",
               schemaPath: "#/properties/foo/minLength",
-              stack: ".foo should NOT be shorter than 10 characters",
+              stack: "foo should NOT be shorter than 10 characters",
             },
           ]);
         });
@@ -783,7 +814,7 @@ describe("Validation", () => {
               params: { missingProperty: "foo" },
               property: ".foo",
               schemaPath: "#/required",
-              stack: ".foo is a required property",
+              stack: "foo is a required property",
             },
           ]);
         });
@@ -887,7 +918,7 @@ describe("Validation", () => {
             params: { pattern: "\\d+" },
             property: ".datasetId",
             schemaPath: "#/properties/datasetId/pattern",
-            stack: '.datasetId should match pattern "\\d+"',
+            stack: 'datasetId should match pattern "\\d+"',
           },
         ]);
         onError.resetHistory();

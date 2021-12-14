@@ -1026,7 +1026,7 @@ describe("ArrayField", () => {
           params: { limit: 3 },
           property: ".multipleChoicesList",
           schemaPath: "#/properties/multipleChoicesList/minItems",
-          stack: ".multipleChoicesList should NOT have fewer than 3 items",
+          stack: "multipleChoicesList should NOT have fewer than 3 items",
         },
       ]);
     });

@@ -1730,7 +1730,7 @@ describeRepeated("Form common", createFormComponent => {
             params: { limit: 8 },
             property: ".level1.level2",
             schemaPath: "#/properties/level1/properties/level2/minLength",
-            stack: ".level1.level2 should NOT be shorter than 8 characters",
+            stack: "level2 should NOT be shorter than 8 characters",
           },
         ]);
       });
@@ -1832,7 +1832,7 @@ describeRepeated("Form common", createFormComponent => {
             params: { limit: 4 },
             property: ".level1[1]",
             schemaPath: "#/properties/level1/items/minLength",
-            stack: ".level1[1] should NOT be shorter than 4 characters",
+            stack: "level1[1] should NOT be shorter than 4 characters",
           },
           {
             message: "should NOT be shorter than 4 characters",
@@ -1840,7 +1840,7 @@ describeRepeated("Form common", createFormComponent => {
             params: { limit: 4 },
             property: ".level1[3]",
             schemaPath: "#/properties/level1/items/minLength",
-            stack: ".level1[3] should NOT be shorter than 4 characters",
+            stack: "level1[3] should NOT be shorter than 4 characters",
           },
         ]);
       });
@@ -1894,7 +1894,7 @@ describeRepeated("Form common", createFormComponent => {
             params: { limit: 4 },
             property: ".outer[0][1]",
             schemaPath: "#/properties/outer/items/items/minLength",
-            stack: ".outer[0][1] should NOT be shorter than 4 characters",
+            stack: "outer[0][1] should NOT be shorter than 4 characters",
           },
           {
             message: "should NOT be shorter than 4 characters",
@@ -1902,7 +1902,7 @@ describeRepeated("Form common", createFormComponent => {
             params: { limit: 4 },
             property: ".outer[1][0]",
             schemaPath: "#/properties/outer/items/items/minLength",
-            stack: ".outer[1][0] should NOT be shorter than 4 characters",
+            stack: "outer[1][0] should NOT be shorter than 4 characters",
           },
         ]);
       });
@@ -1955,7 +1955,7 @@ describeRepeated("Form common", createFormComponent => {
             params: { limit: 4 },
             property: "[1].foo",
             schemaPath: "#/items/properties/foo/minLength",
-            stack: "[1].foo should NOT be shorter than 4 characters",
+            stack: "foo should NOT be shorter than 4 characters",
           },
         ]);
       });
@@ -2449,7 +2449,7 @@ describeRepeated("Form common", createFormComponent => {
           params: { format: "area-code" },
           property: ".areaCode",
           schemaPath: "#/properties/areaCode/format",
-          stack: '.areaCode should match format "area-code"',
+          stack: 'areaCode should match format "area-code"',
         },
       ]);
     });

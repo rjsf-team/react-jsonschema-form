@@ -16,6 +16,7 @@ function createAjvInstance() {
     multipleOfPrecision: 8,
     schemaId: "auto",
     unknownFormats: "ignore",
+    verbose: true,
   });
 
   // add custom formats
@@ -145,16 +146,35 @@ function transformAjvErrors(errors = []) {
   }
 
   return errors.map(e => {
-    const { dataPath, keyword, message, params, schemaPath } = e;
+    const { dataPath, keyword, message, params, schemaPath, parentSchema } = e;
     let property = `${dataPath}`;
-
+    // Get the latest element that represent the item
+    let paths = dataPath.split(".");
+    let currentProperty = paths.pop();
+    let title = currentProperty;
+    //If schemaPath termine par currentProperty/name => parentSchema represent the current property
+    if (
+      schemaPath.endsWith(`${currentProperty}/${keyword}`) &&
+      parentSchema.title
+    ) {
+      title = parentSchema.title;
+    } else {
+      // otherwise we are a level upper e.g for required properties
+      if (
+        parentSchema.hasOwnProperty("properties") &&
+        parentSchema.properties.hasOwnProperty(currentProperty) &&
+        parentSchema.properties[currentProperty].hasOwnProperty("title")
+      ) {
+        title = parentSchema.properties[currentProperty].title;
+      }
+    }
     // put data in expected format
     return {
       name: keyword,
       property,
       message,
       params, // specific to ajv
-      stack: `${property} ${message}`.trim(),
+      stack: `${title} ${message}`.trim(),
       schemaPath,
     };
   });
