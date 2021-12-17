@@ -39,7 +39,7 @@ export default class Form extends Component {
     const liveValidate = props.liveValidate || this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const {definitions} = schema;
-    const formData = getDefaultFormState(schema, props.formData, definitions);
+    const formData = getDefaultFormState(schema, props.formData, definitions || {});
     const {errors, errorSchema} = mustValidate ?
       this.validate(formData, schema) : {
         errors: state.errors || [],
@@ -47,7 +47,7 @@ export default class Form extends Component {
       };
 
     const {idSchema : originalIdSchema} = props;
-    const idSchema = originalIdSchema || toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
+    const idSchema = originalIdSchema || toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions || {});
     return {
       status: "initial",
       schema,
