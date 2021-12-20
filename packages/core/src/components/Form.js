@@ -4,6 +4,7 @@ import _isEmpty from "lodash/isEmpty";
 import mapValues from "lodash/mapValues";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import {
   Context,
   deepEquals,
@@ -20,7 +21,7 @@ import validateFormData, { toErrorList } from "../validate";
 import { default as DefaultErrorList } from "./ErrorList";
 import _pick from "./patchLodashPick";
 
-export default class Form extends Component {
+class Form extends Component {
   static defaultProps = {
     uiSchema: {},
     noValidate: false,
@@ -161,7 +162,8 @@ export default class Form extends Component {
       validate,
       transformErrors,
       additionalMetaSchemas,
-      customFormats
+      customFormats,
+      this.props.intl
     );
   }
 
@@ -546,6 +548,8 @@ export default class Form extends Component {
     );
   }
 }
+
+export default injectIntl(Form);
 
 if (process.env.NODE_ENV !== "production") {
   Form.propTypes = {

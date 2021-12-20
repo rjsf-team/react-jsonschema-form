@@ -1,13 +1,21 @@
-import toPath from "lodash/toPath";
 import Ajv from "ajv";
+import en from "ajv-i18n/localize/en";
+import fi from "ajv-i18n/localize/fi";
+import sv from "ajv-i18n/localize/sv";
+import toPath from "lodash/toPath";
+import {
+  deepEquals,
+  getDefaultFormState,
+  isObject,
+  mergeObjects,
+} from "./utils";
 let ajv = createAjvInstance();
-import { deepEquals, getDefaultFormState } from "./utils";
+
+const localize = { en, fi, sv };
 
 let formerCustomFormats = null;
 let formerMetaSchema = null;
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
-
-import { isObject, mergeObjects } from "./utils";
 
 function createAjvInstance() {
   const ajv = new Ajv({
@@ -16,6 +24,7 @@ function createAjvInstance() {
     multipleOfPrecision: 8,
     schemaId: "auto",
     unknownFormats: "ignore",
+    messages: false,
   });
 
   // add custom formats
@@ -171,7 +180,8 @@ export default function validateFormData(
   customValidate,
   transformErrors,
   additionalMetaSchemas = [],
-  customFormats = {}
+  customFormats = {},
+  intl
 ) {
   // Include form data with undefined values, which is required for validation.
   const rootSchema = schema;
@@ -209,6 +219,8 @@ export default function validateFormData(
   } catch (err) {
     validationError = err;
   }
+
+  localize[intl.locale.split("-")[0]](ajv.errors);
 
   let errors = transformAjvErrors(ajv.errors);
   // Clear errors to prevent persistent errors, see #1104
