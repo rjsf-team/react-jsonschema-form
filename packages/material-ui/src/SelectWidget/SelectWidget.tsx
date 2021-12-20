@@ -4,6 +4,24 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
 import { utils, WidgetProps } from "@visma/rjsf-core";
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  inputLabelRoot: {
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    whiteSpace: "nowrap",
+    width: 1
+  },
+  inputFormControl: {
+    "label + &": {
+      marginTop: 0
+    }
+  }
+});
 
 const { asNumber, guessType } = utils;
 
@@ -43,6 +61,7 @@ const SelectWidget = ({
   schema,
   id,
   options,
+  label,
   required,
   disabled,
   readonly,
@@ -69,20 +88,25 @@ const SelectWidget = ({
   }: React.FocusEvent<HTMLInputElement>) =>
     onFocus(id, processValue(schema, value));
 
+  const classes = useStyles();
+
   return (
     <TextField
       id={id}
       select
       value={typeof value === "undefined" ? emptyValue : value}
       required={required}
+      label={label}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
+      InputProps={{classes: {formControl: classes.inputFormControl }}}
       InputLabelProps={{
-        shrink: true,
+        shrink: false,
+        className: classes.inputLabelRoot
       }}
       SelectProps={{
         multiple: typeof multiple === "undefined" ? false : multiple,

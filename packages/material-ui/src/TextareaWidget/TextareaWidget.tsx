@@ -4,15 +4,34 @@ import { utils, WidgetProps } from "@visma/rjsf-core";
 
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import { makeStyles } from '@material-ui/core/styles';
 
 type CustomWidgetProps = WidgetProps & {
   options: any;
 };
 
+const useStyles = makeStyles({
+  inputLabelRoot: {
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    whiteSpace: "nowrap",
+    width: 1
+  },
+  inputFormControl: {
+    "label + &": {
+      marginTop: 0
+    }
+  }
+});
+
 const TextareaWidget = ({
   id,
   placeholder,
   value,
+  label,
   required,
   disabled,
   autofocus,
@@ -38,6 +57,8 @@ const TextareaWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
+  const classes = useStyles();
+
   return (
     <>
       <TextField
@@ -45,6 +66,7 @@ const TextareaWidget = ({
         placeholder={placeholder}
         disabled={disabled || readonly}
         value={value}
+        label={label}
         required={required}
         autoFocus={autofocus}
         multiline={true}
@@ -53,7 +75,11 @@ const TextareaWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        InputProps={{ "aria-describedby": utils.ariaDescribedBy(id) }}
+        InputProps={{ "aria-describedby": utils.ariaDescribedBy(id), classes: {
+            formControl: classes.inputFormControl
+          }
+        }}
+        InputLabelProps={{shrink: false, className: classes.inputLabelRoot}}
       />
       {options.showCharacterCounter &&
       <div>
