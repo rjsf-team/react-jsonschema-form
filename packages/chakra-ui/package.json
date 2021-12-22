@@ -1,0 +1,44 @@
+{
+  "name": "@rjsf/chakra-ui",
+  "version": "1.0.0",
+  "description": "Chakra UI theme, fields, and widgets for react-jsonschema-form",
+  "main": "dist/index.js",
+  "module": "dist/chakra-ui.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "rimraf dist && tsdx build",
+    "test": "tsdx test"
+  },
+  "engineStrict": false,
+  "engines": {
+    "node": ">=12"
+  },
+  "peerDependencies": {
+    "@chakra-ui/react": "^1.7.2",
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@rjsf/core": "^3.0.0",
+    "framer-motion": "^5.4.2",
+    "react": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Jonathan Blair <jonathanbblair@gmail.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@chakra-ui/react": "^1.7.2",
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@rjsf/core": "^3.2.1",
+    "framer-motion": "^5.4.2",
+    "react": "^17.0.2",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.2"
+  }
+}
