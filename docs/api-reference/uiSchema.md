@@ -13,6 +13,13 @@ In other words, the following uiSchemas are equivalent:
 {
   "ui:title": "Title",
   "ui:description": "Description"
+  "ui:submitButtonProps": {
+      "hidden": false,
+      "disabled": false,
+      "className": "btn btn-info",
+      "required": true,
+      "submitText": "Submit"
+    },
 }
 ```
 
@@ -20,7 +27,14 @@ In other words, the following uiSchemas are equivalent:
 {
   "ui:options": {
     "title": "Title",
-    "description": "Description"
+    "description": "Description",
+    "submitButtonProps": {
+      "hidden": false,
+      "disabled": false,
+      "className": "btn btn-info",
+      "required": true,
+      "submitText": "Submit"
+    },
   }
 }
 ```
@@ -216,6 +230,43 @@ const schema = {type: "string"};
 const uiSchema = {
   "ui:widget": "password",
   "ui:title": "Your password"
+};
+```
+
+## submitButtonProps
+
+Sometimes it's convenient to change the behavior of the submit button for the form. This is the purpose of the `ui:submitButtonProps` uiSchema directive:
+
+By default, this library will set the following options mentioned below for all submit buttons:
+### `hidden` option
+
+You can use this option to hide the submit button
+
+### `disabled` option
+
+You can use this option to disable the submit button
+
+### `className` option
+
+You can use this option to specify a class name for the submit button
+
+### `required` option
+
+You can use this option to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes
+
+### `submitText` option
+
+You can use this option to change the text of the submit button
+
+```js
+const uiSchema = {
+ "submitButtonProps": {
+      "hidden": false,
+      "disabled": false,
+      "className": "btn btn-info",
+      "required": true,
+      "submitText": "Submit"
+    }
 };
 ```
 ## Theme Options

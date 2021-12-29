@@ -30,6 +30,7 @@ import {
   canExpand,
   optionsList,
   getMatchingOption,
+  getSubmitButtonProps,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3636,6 +3637,74 @@ describe("utils", () => {
         expect(
           getDisplayLabel({ type: "array" }, { "ui:widget": "files" })
         ).eql(true);
+      });
+    });
+  });
+
+  describe("getSubmitButtonProps", () => {
+    it("default props", () => {
+      expect(getSubmitButtonProps({})).eql({
+        disabled: false,
+        hidden: false,
+        className: "btn btn-info",
+        submitText: "Submit",
+        required: true,
+      });
+    });
+
+    it("required option should be false", () => {
+      expect(
+        getSubmitButtonProps({
+          "ui:options": { submitButtonProps: { required: false } },
+        })
+      ).eql({
+        disabled: false,
+        hidden: false,
+        className: "btn btn-info",
+        submitText: "Submit",
+        required: false,
+      });
+    });
+
+    it("hidden option should be true", () => {
+      expect(
+        getSubmitButtonProps({
+          "ui:options": { submitButtonProps: { hidden: true } },
+        })
+      ).eql({
+        disabled: false,
+        hidden: true,
+        className: "btn btn-info",
+        submitText: "Submit",
+        required: true,
+      });
+    });
+
+    it("disabled option should be true", () => {
+      expect(
+        getSubmitButtonProps({
+          "ui:options": { submitButtonProps: { disabled: true } },
+        })
+      ).eql({
+        disabled: true,
+        hidden: false,
+        className: "btn btn-info",
+        submitText: "Submit",
+        required: true,
+      });
+    });
+
+    it("submitText option should be confirm", () => {
+      expect(
+        getSubmitButtonProps({
+          "ui:options": { submitButtonProps: { submitText: "Confirm" } },
+        })
+      ).eql({
+        disabled: false,
+        hidden: false,
+        className: "btn btn-info",
+        submitText: "Confirm",
+        required: true,
       });
     });
   });

@@ -385,6 +385,22 @@ export function getUiOptions(uiSchema) {
     }, {});
 }
 
+export function getSubmitButtonProps(uiSchema) {
+  const uiOptions = getUiOptions(uiSchema);
+  const defaultOptions = {
+    disabled: false,
+    hidden: false,
+    className: "btn btn-info",
+    submitText: "Submit",
+    required: true,
+  };
+  if (uiOptions && uiOptions["submitButtonProps"]) {
+    return Object.assign({}, defaultOptions, uiOptions["submitButtonProps"]);
+  }
+
+  return defaultOptions;
+}
+
 export function getDisplayLabel(schema, uiSchema, rootSchema) {
   const uiOptions = getUiOptions(uiSchema);
   let { label: displayLabel = true } = uiOptions;

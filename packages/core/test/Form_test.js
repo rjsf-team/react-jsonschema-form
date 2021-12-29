@@ -374,6 +374,45 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
+  describe("ui options submitButtonProps", () => {
+    it("should not render a submit button", () => {
+      const props = {
+        schema: {},
+        uiSchema: { "ui:submitButtonProps": { required: false } },
+      };
+      const comp = renderIntoDocument(<Form {...props} />);
+      const node = findDOMNode(comp);
+
+      expect(node.querySelectorAll("button[type=submit]")).to.have.length.of(0);
+    });
+
+    it("should render a submit button with text Confirm", () => {
+      const props = {
+        schema: {},
+        uiSchema: { "ui:submitButtonProps": { submitText: "Confirm" } },
+      };
+      const comp = renderIntoDocument(<Form {...props} />);
+      const node = findDOMNode(comp);
+      expect(node.querySelector("button[type=submit]").textContent).eql(
+        "Confirm"
+      );
+    });
+
+    it("should render a submit button with class ui-submit-button", () => {
+      const props = {
+        schema: {},
+        uiSchema: { "ui:submitButtonProps": { className: "ui-submit-button" } },
+      };
+      const comp = renderIntoDocument(<Form {...props} />);
+      const node = findDOMNode(comp);
+      expect(
+        node
+          .querySelector("button[type=submit]")
+          .classList.contains("ui-submit-button")
+      ).eql(true);
+    });
+  });
+
   describe("Custom submit buttons", () => {
     // Submit events on buttons are not fired on disconnected forms
     // So we need to add the DOM tree to the body in this case.
