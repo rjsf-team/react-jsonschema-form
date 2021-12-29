@@ -18,6 +18,27 @@ should change the heading of the (upcoming) version to include a major version b
 
 # v3.2.1 (upcoming)
 
+## Dev / docs / playground
+- Enable ui options in playground, to demonstrate submit button options (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+
+## @rjsf/core
+- Feature for options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+
+## @rjsf/bootstrap-4
+- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+
+## @rjsf/material-ui
+- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+
+## @rjsf/semantic-ui
+- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+
+## @rjsf/antd
+- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+
+## @rjsf/fluent-ui
+- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+
 # v3.2.0
 
 ## @rjsf/core
@@ -45,7 +66,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Take into account implicitly defined types when rendering labels for fields (https://github.com/rjsf-team/react-jsonschema-form/pull/2502)
 
 ## @rjsf/antd
-- Add default Form export to @rjsf/antd (https://github.com/rjsf-team/react-jsonschema-form/pull/2514) 
+- Add default Form export to @rjsf/antd (https://github.com/rjsf-team/react-jsonschema-form/pull/2514)
 
 ## @rjsf/fluent-ui
 - Make material-ui and fluent-ui pull TextWidget from the registry; remove registry prop from <div> in TextWidget (https://github.com/rjsf-team/react-jsonschema-form/pull/2515)
