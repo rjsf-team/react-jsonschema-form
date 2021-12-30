@@ -3645,7 +3645,6 @@ describe("utils", () => {
     it("default props", () => {
       expect(getSubmitButtonProps({})).eql({
         disabled: false,
-        hidden: false,
         className: "btn btn-info",
         submitText: "Submit",
         required: true,
@@ -3659,7 +3658,6 @@ describe("utils", () => {
         })
       ).eql({
         disabled: false,
-        hidden: false,
         className: "btn btn-info",
         submitText: "Submit",
         required: false,
@@ -3687,7 +3685,6 @@ describe("utils", () => {
         })
       ).eql({
         disabled: true,
-        hidden: false,
         className: "btn btn-info",
         submitText: "Submit",
         required: true,
@@ -3701,7 +3698,6 @@ describe("utils", () => {
         })
       ).eql({
         disabled: false,
-        hidden: false,
         className: "btn btn-info",
         submitText: "Confirm",
         required: true,

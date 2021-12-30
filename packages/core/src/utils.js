@@ -389,7 +389,6 @@ export function getSubmitButtonProps(uiSchema) {
   const uiOptions = getUiOptions(uiSchema);
   const defaultOptions = {
     disabled: false,
-    hidden: false,
     className: "btn btn-info",
     submitText: "Submit",
     required: true,

@@ -14,7 +14,6 @@ In other words, the following uiSchemas are equivalent:
   "ui:title": "Title",
   "ui:description": "Description"
   "ui:submitButtonProps": {
-      "hidden": false,
       "disabled": false,
       "className": "btn btn-info",
       "required": true,
@@ -29,7 +28,6 @@ In other words, the following uiSchemas are equivalent:
     "title": "Title",
     "description": "Description",
     "submitButtonProps": {
-      "hidden": false,
       "disabled": false,
       "className": "btn btn-info",
       "required": true,
@@ -237,10 +235,7 @@ const uiSchema = {
 
 Sometimes it's convenient to change the behavior of the submit button for the form. This is the purpose of the `ui:submitButtonProps` uiSchema directive:
 
-By default, this library will set the following options mentioned below for all submit buttons:
-### `hidden` option
-
-You can use this option to hide the submit button
+You can pass any other prop to the submit button if you want, by default, this library will set the following options mentioned below for all submit buttons:
 
 ### `disabled` option
 
@@ -261,7 +256,6 @@ You can use this option to change the text of the submit button
 ```js
 const uiSchema = {
  "submitButtonProps": {
-      "hidden": false,
       "disabled": false,
       "className": "btn btn-info",
       "required": true,
