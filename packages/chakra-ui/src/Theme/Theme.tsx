@@ -1,16 +1,17 @@
-import * as React from "react";
+import React from "react";
 
 import { Box, Button } from "@chakra-ui/react";
 
 // import ArrayFieldTemplate from "../ArrayFieldTemplate";
-// import ErrorList from "../ErrorList";
+import ErrorList from "../ErrorList";
 import Fields from "../Fields";
 // import FieldTemplate from "../FieldTemplate";
 // import ObjectFieldTemplate from "../ObjectFieldTemplate";
-// import Widgets from "../Widgets";
+import Widgets from "../Widgets";
 
 import { ThemeProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
+
 const { getDefaultRegistry } = utils;
 
 const { fields, widgets } = getDefaultRegistry();
@@ -29,8 +30,8 @@ const Theme: ThemeProps = {
   fields: { ...fields, ...Fields },
   //   FieldTemplate,
   //   ObjectFieldTemplate,
-  widgets: { ...widgets /* ,...Widgets */ },
-  //   ErrorList,
+  widgets: { ...widgets, ...Widgets },
+  ErrorList,
 };
 
 export default Theme;
