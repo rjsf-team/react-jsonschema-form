@@ -4,7 +4,7 @@ import { Box, Button } from "@chakra-ui/react";
 
 // import ArrayFieldTemplate from "../ArrayFieldTemplate";
 // import ErrorList from "../ErrorList";
-// import Fields from "../Fields";
+import Fields from "../Fields";
 // import FieldTemplate from "../FieldTemplate";
 // import ObjectFieldTemplate from "../ObjectFieldTemplate";
 // import Widgets from "../Widgets";
@@ -17,7 +17,7 @@ const { fields, widgets } = getDefaultRegistry();
 
 const DefaultChildren = () => (
   <Box marginTop={3}>
-    <Button type="submit" variant="contained" color="primary">
+    <Button type="submit" variant="solid">
       Submit
     </Button>
   </Box>
@@ -26,7 +26,7 @@ const DefaultChildren = () => (
 const Theme: ThemeProps = {
   children: <DefaultChildren />,
   // ArrayFieldTemplate,
-  fields: { ...fields /* ,...Fields */ },
+  fields: { ...fields, ...Fields },
   //   FieldTemplate,
   //   ObjectFieldTemplate,
   widgets: { ...widgets /* ,...Widgets */ },
