@@ -43,12 +43,12 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
       )}
       <Grid gap={2}>
         {properties.map((element, index) =>
-          // Remove the <Grid> if the inner element is hidden as the <Grid>
-          // itself would otherwise still take up space.
           element.hidden ? (
             element.content
           ) : (
-            <GridItem key={index}>{element.content}</GridItem>
+            <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>
+              {element.content}
+            </GridItem>
           )
         )}
         {canExpand(schema, uiSchema, formData) && (
