@@ -1,5 +1,217 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`single fields field with description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="ant-row ant-form-item"
+              style={Object {}}
+            >
+              <div
+                className="ant-col ant-col-24 ant-form-item-label"
+                style={Object {}}
+              >
+                <label
+                  className=""
+                  htmlFor="root_my-field"
+                  title="my-field"
+                >
+                  my-field
+                </label>
+              </div>
+              <div
+                className="ant-col ant-col-24 ant-form-item-control"
+                style={Object {}}
+              >
+                <div
+                  className="ant-form-item-control-input"
+                >
+                  <div
+                    className="ant-form-item-control-input-content"
+                  >
+                    <input
+                      className="ant-input"
+                      disabled={false}
+                      id="root_my-field"
+                      name="root_my-field"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      placeholder=""
+                      style={
+                        Object {
+                          "width": "100%",
+                        }
+                      }
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="ant-form-item-extra"
+                >
+                  <span
+                    id="root_my-field__description"
+                  >
+                    some description
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="ant-row ant-form-item"
+              style={Object {}}
+            >
+              <div
+                className="ant-col ant-col-24 ant-form-item-label"
+                style={Object {}}
+              >
+                <label
+                  className=""
+                  htmlFor="root_my-field"
+                  title="my-field"
+                >
+                  my-field
+                </label>
+              </div>
+              <div
+                className="ant-col ant-col-24 ant-form-item-control"
+                style={Object {}}
+              >
+                <div
+                  className="ant-form-item-control-input"
+                >
+                  <div
+                    className="ant-form-item-control-input-content"
+                  >
+                    <input
+                      className="ant-input"
+                      disabled={false}
+                      id="root_my-field"
+                      name="root_my-field"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      placeholder=""
+                      style={
+                        Object {
+                          "width": "100%",
+                        }
+                      }
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="ant-form-item-extra"
+                >
+                  <span
+                    id="root_my-field__description"
+                  >
+                    some other description
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields hidden field 1`] = `
 <form
   className="rjsf"
