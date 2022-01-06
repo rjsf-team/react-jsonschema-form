@@ -5,7 +5,7 @@ import { Box, Button } from "@chakra-ui/react";
 // import ArrayFieldTemplate from "../ArrayFieldTemplate";
 // import ErrorList from "../ErrorList";
 import Fields from "../Fields";
-// import FieldTemplate from "../FieldTemplate";
+import FieldTemplate from "../FieldTemplate";
 import ObjectFieldTemplate from "../ObjectFieldTemplate";
 // import Widgets from "../Widgets";
 
@@ -27,7 +27,7 @@ const Theme: ThemeProps = {
   children: <DefaultChildren />,
   // ArrayFieldTemplate,
   fields: { ...fields, ...Fields },
-  //   FieldTemplate,
+  FieldTemplate,
   ObjectFieldTemplate,
   widgets: { ...widgets /* ,...Widgets */ },
   //   ErrorList,
