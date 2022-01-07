@@ -21,10 +21,14 @@ const mappings = {
 type IconButtonProps = Omit<ChakraIconButtonProps, "aria-label" | "icon"> & {
   icon: keyof typeof mappings;
 };
-const MyIconButton = (props: IconButtonProps) => {
+
+/**
+ * props used in Template:
+ * icon, tabIndex, disabled, onClick
+ */
+const ChakraIconButton = (props: IconButtonProps) => {
   const { icon, ...otherProps } = props;
-  /* prettier-ignore */
-  return <IconButton {...otherProps} size="sm" icon={mappings[icon]} aria-label={icon}/>;
+  return <IconButton {...otherProps} icon={mappings[icon]} aria-label={icon} />;
 };
 
-export default MyIconButton;
+export default ChakraIconButton;

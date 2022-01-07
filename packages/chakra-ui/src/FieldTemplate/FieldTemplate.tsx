@@ -2,28 +2,35 @@ import React from "react";
 
 import { FieldTemplateProps } from "@rjsf/core";
 
-import { Text, FormControl, FormHelperText } from "@chakra-ui/react";
+import {
+  Text,
+  FormControl,
+  FormHelperText,
+  FormErrorMessage,
+} from "@chakra-ui/react";
 import { List, ListItem } from "@chakra-ui/react";
 
 import WrapIfAdditional from "./WrapIfAdditional";
 
-const FieldTemplate = ({
-  id,
-  children,
-  classNames,
-  disabled,
-  displayLabel,
-  hidden,
-  label,
-  onDropPropertyClick,
-  onKeyChange,
-  readonly,
-  required,
-  rawErrors = [],
-  rawHelp,
-  rawDescription,
-  schema,
-}: FieldTemplateProps) => {
+const FieldTemplate = (props: FieldTemplateProps) => {
+  const {
+    id,
+    children,
+    classNames,
+    disabled,
+    displayLabel,
+    hidden,
+    label,
+    onDropPropertyClick,
+    onKeyChange,
+    readonly,
+    required,
+    rawErrors = [],
+    rawHelp,
+    rawDescription,
+    schema,
+  } = props;
+
   if (hidden) {
     return <>{children}</>;
   }
@@ -39,12 +46,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}>
-      <FormControl
-        // fullWidth={true}
-        isRequired={required}
-        error={rawErrors.length ? true : false}
-        // required={required}
-      >
+      <FormControl isRequired={required} isInvalid={rawErrors?.length > 0}>
         {children}
         {displayLabel && rawDescription ? <Text>{rawDescription}</Text> : null}
         {rawErrors.length > 0 && (
@@ -52,7 +54,7 @@ const FieldTemplate = ({
             {rawErrors.map((error, i: number) => {
               return (
                 <ListItem key={i}>
-                  <FormHelperText id={id}>{error}</FormHelperText>
+                  <FormErrorMessage id={id}>{error}</FormErrorMessage>
                 </ListItem>
               );
             })}

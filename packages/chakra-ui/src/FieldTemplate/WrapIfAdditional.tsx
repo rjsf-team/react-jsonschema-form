@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import { utils } from "@rjsf/core";
 import { JSONSchema7 } from "json-schema";
@@ -15,7 +15,7 @@ import IconButton from "../IconButton";
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 
-type WrapIfAdditionalProps = {
+interface WrapIfAdditionalProps {
   children: React.ReactElement;
   classNames: string;
   disabled: boolean;
@@ -26,31 +26,25 @@ type WrapIfAdditionalProps = {
   readonly: boolean;
   required: boolean;
   schema: JSONSchema7;
-};
+}
 
-const WrapIfAdditional = ({
-  children,
-  disabled,
-  id,
-  label,
-  onDropPropertyClick,
-  onKeyChange,
-  readonly,
-  required,
-  schema,
-}: WrapIfAdditionalProps) => {
-  const keyLabel = `${label} Key`; // i18n ?
+const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
+  const {
+    children,
+    disabled,
+    id,
+    label,
+    onDropPropertyClick,
+    onKeyChange,
+    readonly,
+    required,
+    schema,
+  } = props;
   const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
-  // const btnStyle = {
-  //   flex: 1,
-  //   paddingLeft: 6,
-  //   paddingRight: 6,
-  //   fontWeight: "bold",
-  // };
-
   if (!additional) {
     return <>{children}</>;
   }
+  const keyLabel = `${label} Key`;
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
@@ -75,7 +69,6 @@ const WrapIfAdditional = ({
         <IconButton
           icon="remove"
           tabIndex={-1}
-          // style={btnStyle as any}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
         />
