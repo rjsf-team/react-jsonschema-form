@@ -30,6 +30,8 @@ const TextWidget = (props: TextWidgetProps) => {
     readonly,
     rawErrors,
     autofocus,
+    placeholder,
+    disabled,
   } = props;
 
   const _onChange = ({
@@ -48,6 +50,7 @@ const TextWidget = (props: TextWidgetProps) => {
 
   return (
     <FormControl
+      isDisabled={disabled || readonly}
       isRequired={required}
       isReadOnly={readonly}
       isInvalid={rawErrors?.length > 0}>
@@ -61,6 +64,7 @@ const TextWidget = (props: TextWidgetProps) => {
         onBlur={_onBlur}
         onFocus={_onFocus}
         autoFocus={autofocus}
+        placeholder={placeholder}
         // type={inputType}
         type={type}
       />
