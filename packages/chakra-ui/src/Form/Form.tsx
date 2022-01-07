@@ -5,6 +5,6 @@ import { ComponentClass, FunctionComponent } from "react";
 
 const Form:
   | ComponentClass<FormProps<any>>
-  | FunctionComponent<FormProps<any>> = withTheme(Theme as any);
+  | FunctionComponent<FormProps<any>> = withTheme(Theme);
 
 export default Form;
