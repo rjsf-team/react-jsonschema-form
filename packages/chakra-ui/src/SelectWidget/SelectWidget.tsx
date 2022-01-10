@@ -111,37 +111,6 @@ const SelectWidget = ({
         : null}
     </FormControl>
   );
-
-  // return (
-  //   <TextField
-  //     id={id}
-  //     label={label || schema.title}
-  //     select
-  //     value={typeof value === "undefined" ? emptyValue : value}
-  //     required={required}
-  //     disabled={disabled || readonly}
-  //     autoFocus={autofocus}
-  //     error={rawErrors.length > 0}
-  //     onChange={_onChange}
-  //     onBlur={_onBlur}
-  //     onFocus={_onFocus}
-  //     InputLabelProps={{
-  //       shrink: true,
-  //     }}
-  //     SelectProps={{
-  //       multiple: typeof multiple === "undefined" ? false : multiple,
-  //     }}>
-  //     {(enumOptions as any).map(({ value, label }: any, i: number) => {
-  //       const disabled: any =
-  //         enumDisabled && (enumDisabled as any).indexOf(value) != -1;
-  //       return (
-  //         <MenuItem key={i} value={value} disabled={disabled}>
-  //           {label}
-  //         </MenuItem>
-  //       );
-  //     })}
-  //   </TextField>
-  // );
 };
 
 export default SelectWidget;
