@@ -4,11 +4,7 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  // FormHelperText,
   Select,
-  // SelectField,
-  // SelectFieldProps,
-  // SelectProps,
 } from "@chakra-ui/react";
 
 import { WidgetProps } from "@rjsf/core";
