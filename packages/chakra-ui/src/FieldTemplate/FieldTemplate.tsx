@@ -46,10 +46,10 @@ const FieldTemplate = (props: FieldTemplateProps) => {
       readonly={readonly}
       required={required}
       schema={schema}>
-      <FormControl isRequired={required} isInvalid={rawErrors?.length > 0}>
+      <FormControl isRequired={required} isInvalid={rawErrors && rawErrors.length > 0}>
         {children}
         {displayLabel && rawDescription ? <Text>{rawDescription}</Text> : null}
-        {rawErrors.length > 0 && (
+        {rawErrors && rawErrors.length > 0 && (
           <List>
             {rawErrors.map((error, i: number) => {
               return (

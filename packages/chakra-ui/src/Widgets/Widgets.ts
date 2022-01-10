@@ -6,15 +6,19 @@ import CheckboxWidget from "../CheckboxWidget/CheckboxWidget";
 // import SelectWidget from '../SelectWidget/SelectWidget'
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
+import TextWidget from "../TextWidget/TextWidget";
+import PasswordWidget from "../PasswordWidget/PasswordWidget";
 
 const widgets = {
   // BaseInput,
   CheckboxWidget,
   CheckboxesWidget,
+  PasswordWidget,
   // radio: RadioWidget,
   // RangeWidget,
   // select: SelectWidget,
   TextareaWidget,
+  TextWidget,
   UpDownWidget,
 };
 

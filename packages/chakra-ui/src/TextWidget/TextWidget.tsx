@@ -53,7 +53,7 @@ const TextWidget = (props: TextWidgetProps) => {
       isDisabled={disabled || readonly}
       isRequired={required}
       isReadOnly={readonly}
-      isInvalid={rawErrors?.length > 0}>
+      isInvalid={rawErrors && rawErrors.length > 0}>
       {displayLabel ? (
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       ) : null}
