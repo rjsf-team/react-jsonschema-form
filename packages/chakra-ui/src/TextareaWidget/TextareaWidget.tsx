@@ -1,4 +1,4 @@
-import { Textarea } from "@chakra-ui/react";
+import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
 import { WidgetProps } from "@rjsf/core";
 import React from "react";
 
@@ -6,6 +6,7 @@ const TextareaWidget = ({
                           id,
                           placeholder,
                           value,
+                          label,
                           disabled,
                           autofocus,
                           readonly,
@@ -19,17 +20,20 @@ const TextareaWidget = ({
   const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLTextAreaElement>) => onFocus(id, value);
 
   return (
-    <Textarea
-      id={id}
-      value={value}
-      placeholder={placeholder}
-      isDisabled={disabled}
-      isReadOnly={readonly}
-      autoFocus={autofocus}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-    />
+    <FormControl>
+      <FormLabel htmlFor={id}>{label}</FormLabel>
+      <Textarea
+        id={id}
+        value={value}
+        placeholder={placeholder}
+        isDisabled={disabled}
+        isReadOnly={readonly}
+        autoFocus={autofocus}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+      />
+    </FormControl>
   );
 };
 
