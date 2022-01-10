@@ -8,11 +8,15 @@ import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
 import TextWidget from "../TextWidget/TextWidget";
 import PasswordWidget from "../PasswordWidget/PasswordWidget";
+import DateWidget from "../DateWidget/DateWidget";
+import DateTimeWidget from "../DateTimeWidget/DateTimeWidget";
 
 const widgets = {
   // BaseInput,
   CheckboxWidget,
   CheckboxesWidget,
+  DateWidget,
+  DateTimeWidget,
   PasswordWidget,
   // radio: RadioWidget,
   // RangeWidget,
