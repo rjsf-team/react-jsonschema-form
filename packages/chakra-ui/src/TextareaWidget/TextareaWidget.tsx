@@ -6,6 +6,7 @@ const TextareaWidget = ({
                           id,
                           placeholder,
                           value,
+                          label,
                           disabled,
                           autofocus,
                           readonly,
@@ -20,7 +21,7 @@ const TextareaWidget = ({
 
   return (
     <FormControl>
-      <FormLabel htmlFor={id}>Email address</FormLabel>
+      <FormLabel htmlFor={id}>{label}</FormLabel>
       <Textarea
         id={id}
         value={value}
