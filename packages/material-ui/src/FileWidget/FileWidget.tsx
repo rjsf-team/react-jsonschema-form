@@ -100,6 +100,7 @@ const FileWidget = ({
                       multiple,
                       autofocus,
                       onChange,
+                      label
                     }: WidgetProps) => {
   const [state, setState] = useState<FileInfo[]>();
   const inputRef = useRef();
@@ -180,6 +181,9 @@ const FileWidget = ({
         style={{display: 'none'}}
       />
       <Button
+        aria-label={ label &&
+          `${label}: ${intl.formatMessage({defaultMessage: 'Choose file'})}`
+        }
         variant="outlined"
         onClick={() => document.getElementById(`file-input-${id}`)!.click()}
       >
