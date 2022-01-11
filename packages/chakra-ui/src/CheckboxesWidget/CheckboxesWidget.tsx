@@ -16,15 +16,15 @@ import { WidgetProps } from "@rjsf/core";
 // };
 
 const CheckboxesWidget = ({
-                            id,
-                            disabled,
-                            options,
-                            value,
-                            readonly,
-                            onChange,
-                            onBlur,
-                            onFocus,
-                          }: WidgetProps) => {
+  id,
+  disabled,
+  options,
+  value,
+  readonly,
+  onChange,
+  onBlur,
+  onFocus,
+}: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
   // const _onChange = option => ({ target: { checked } }) => {
@@ -37,33 +37,35 @@ const CheckboxesWidget = ({
   //   }
   // }
 
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  const _onBlur = ({
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  const _onFocus = ({
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
-    <CheckboxGroup onChange={(option) => onChange(option)}>
-      {(enumOptions as any).map((option: { value: any; label: any; }, index: any) => {
-        const checked = value.indexOf(option.value) !== -1;
-        const itemDisabled =
-          enumDisabled && (enumDisabled as string[]).indexOf(option.value) !== -1;
-        return (
-          <Checkbox
-            key={`${id}_${index}`}
-            id={`${id}_${index}`}
-            value={option.value}
-            isChecked={checked}
-            isDisabled={disabled || itemDisabled || readonly}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
-          >
-            <FormLabel
-              htmlFor={`${id}_${index}`}
-            >
-              {option.label}
-            </FormLabel>
-          </Checkbox>
-        );
-      })}
+    <CheckboxGroup onChange={option => onChange(option)}>
+      {(enumOptions as any).map(
+        (option: { value: any; label: any }, index: any) => {
+          const checked = value.indexOf(option.value) !== -1;
+          const itemDisabled =
+            enumDisabled &&
+            (enumDisabled as string[]).indexOf(option.value) !== -1;
+          return (
+            <Checkbox
+              key={`${id}_${index}`}
+              id={`${id}_${index}`}
+              value={option.value}
+              isChecked={checked}
+              isDisabled={disabled || itemDisabled || readonly}
+              onBlur={_onBlur}
+              onFocus={_onFocus}>
+              <FormLabel htmlFor={`${id}_${index}`}>{option.label}</FormLabel>
+            </Checkbox>
+          );
+        }
+      )}
     </CheckboxGroup>
   );
 };

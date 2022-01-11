@@ -1,22 +1,29 @@
 import React from "react";
 import { utils } from "@rjsf/core";
 import { WidgetProps } from "@rjsf/core";
-import { FormControl, FormLabel, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+} from "@chakra-ui/react";
 
 const { rangeSpec } = utils;
 
 const RangeWidget = ({
-                       value,
-                       readonly,
-                       disabled,
-                       onBlur,
-                       onFocus,
-                       options,
-                       schema,
-                       onChange,
-                       label,
-                       id,
-                     }: WidgetProps) => {
+  value,
+  readonly,
+  disabled,
+  onBlur,
+  onFocus,
+  options,
+  schema,
+  onChange,
+  label,
+  id,
+}: WidgetProps) => {
   let sliderProps = { value, label, id, ...rangeSpec(schema) };
 
   const _onChange = (value: undefined | number) =>
@@ -24,8 +31,8 @@ const RangeWidget = ({
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
-                      target: { value },
-                    }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
     <FormControl>
@@ -36,8 +43,7 @@ const RangeWidget = ({
         isDisabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
-        onFocus={_onFocus}
-      >
+        onFocus={_onFocus}>
         <SliderTrack />
         <SliderFilledTrack />
         <SliderThumb />

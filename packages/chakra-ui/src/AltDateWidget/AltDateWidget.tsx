@@ -25,23 +25,23 @@ interface AltDateStateType {
 
 const readyForChange = (state: AltDateStateType) => {
   return Object.keys(state).every(
-    key => typeof state[key] !== "undefined" && state[key] !== -1,
+    key => typeof state[key] !== "undefined" && state[key] !== -1
   );
 };
 
 const AltDateWidget = ({
-                         autofocus,
-                         disabled,
-                         id,
-                         onBlur,
-                         onChange,
-                         onFocus,
-                         options,
-                         readonly,
-                         registry,
-                         showTime,
-                         value,
-                       }: any) => {
+  autofocus,
+  disabled,
+  id,
+  onBlur,
+  onChange,
+  onFocus,
+  options,
+  readonly,
+  registry,
+  showTime,
+  value,
+}: any) => {
   const { SelectWidget } = registry.widgets;
   const [state, setState] = useState(parseDateString(value, showTime));
   useEffect(() => {
@@ -91,7 +91,7 @@ const AltDateWidget = ({
       data.push(
         { type: "hour", range: [0, 23], value: hour },
         { type: "minute", range: [0, 59], value: minute },
-        { type: "second", range: [0, 59], value: second },
+        { type: "second", range: [0, 59], value: second }
       );
     }
 
@@ -107,7 +107,9 @@ const AltDateWidget = ({
         disabled={elemProps.disabled}
         id={elemProps.id}
         onBlur={elemProps.onBlur}
-        onChange={(elemValue: WidgetProps) => elemProps.select(elemProps.type, elemValue)}
+        onChange={(elemValue: WidgetProps) =>
+          elemProps.select(elemProps.type, elemValue)
+        }
         onFocus={elemProps.onFocus}
         options={{
           enumOptions: rangeOptions(elemProps.range[0], elemProps.range[1]),
@@ -145,12 +147,15 @@ const AltDateWidget = ({
       </Box>
       <Box display="flex">
         {!options.hideNowButton && (
-          <Button onClick={(e: MouseEvent<HTMLButtonElement>) => handleNow(e)} mr="2">
+          <Button
+            onClick={(e: MouseEvent<HTMLButtonElement>) => handleNow(e)}
+            mr="2">
             Now
           </Button>
         )}
         {!options.hideClearButton && (
-          <Button onClick={(e: MouseEvent<HTMLButtonElement>) => handleClear(e)}>
+          <Button
+            onClick={(e: MouseEvent<HTMLButtonElement>) => handleClear(e)}>
             Clear
           </Button>
         )}
