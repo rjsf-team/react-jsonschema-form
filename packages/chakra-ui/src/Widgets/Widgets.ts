@@ -1,4 +1,3 @@
-// import BaseInput from '../BaseInput/BaseInput'
 import AltDateTimeWidget from "../AltDateTimeWidget/AltDateTimeWidget";
 import AltDateWidget from "../AltDateWidget/AltDateWidget";
 import CheckboxWidget from "../CheckboxWidget/CheckboxWidget";
@@ -19,7 +18,6 @@ import URLWidget from "../URLWidget/URLWidget";
 const widgets = {
   AltDateTimeWidget,
   AltDateWidget,
-  // BaseInput,
   CheckboxWidget,
   CheckboxesWidget,
   ColorWidget,
