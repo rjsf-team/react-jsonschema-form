@@ -6,7 +6,7 @@ import DateWidget from "../DateWidget/DateWidget";
 import DateTimeWidget from "../DateTimeWidget/DateTimeWidget";
 // import EmailWidget from "../EmailWidget/EmailWidget";
 import PasswordWidget from "../PasswordWidget/PasswordWidget";
-// import RadioWidget from "../RadioWidget/RadioWidget";
+import RadioWidget from "../RadioWidget/RadioWidget";
 import RangeWidget from "../RangeWidget/RangeWidget";
 import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
@@ -22,7 +22,7 @@ const widgets = {
   DateWidget,
   DateTimeWidget,
   PasswordWidget,
-  // radio: RadioWidget,
+  radio: RadioWidget,
   RangeWidget,
   select: SelectWidget,
   TextareaWidget,
