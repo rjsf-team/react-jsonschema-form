@@ -4,7 +4,7 @@ import CheckboxesWidget from "../CheckboxesWidget/CheckboxesWidget";
 import ColorWidget from "../ColorWidget/ColorWidget";
 import DateWidget from "../DateWidget/DateWidget";
 import DateTimeWidget from "../DateTimeWidget/DateTimeWidget";
-// import EmailWidget from "../EmailWidget/EmailWidget";
+import EmailWidget from "../EmailWidget/EmailWidget";
 import PasswordWidget from "../PasswordWidget/PasswordWidget";
 import RadioWidget from "../RadioWidget/RadioWidget";
 import RangeWidget from "../RangeWidget/RangeWidget";
@@ -21,6 +21,7 @@ const widgets = {
   ColorWidget,
   DateWidget,
   DateTimeWidget,
+  EmailWidget,
   PasswordWidget,
   radio: RadioWidget,
   RangeWidget,
