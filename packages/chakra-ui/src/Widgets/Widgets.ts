@@ -27,7 +27,7 @@ const widgets = {
   DateTimeWidget,
   EmailWidget,
   PasswordWidget,
-  radio: RadioWidget,
+  RadioWidget,
   RangeWidget,
   SelectWidget,
   TextareaWidget,
