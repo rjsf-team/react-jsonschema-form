@@ -96,7 +96,7 @@ const RangeWidget = ({
   return (
     <>
       <Slider
-        aria-label={label}
+        label={label}
         disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
