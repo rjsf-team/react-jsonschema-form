@@ -549,7 +549,7 @@ class Form extends Component {
   }
 }
 
-export default injectIntl(Form);
+export default injectIntl(Form, { forwardRef: true });
 
 if (process.env.NODE_ENV !== "production") {
   Form.propTypes = {
