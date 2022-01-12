@@ -29,7 +29,28 @@ export const __createChakraFrameProvider = (props: any) => ({
   document,
 }: any) => {
   const customTheme = extendTheme(
-    withDefaultColorScheme({ colorScheme: "blue" })
+    withDefaultColorScheme({ colorScheme: "blue" }),
+    {
+      styles: {
+        global: {
+          /**
+           * This is required since Chakra UI bulldozes default browser styles with `<CSSReset />`
+           * See: https://github.com/chakra-ui/chakra-ui/blob/main/packages/css-reset/src/css-reset.tsx
+           *
+           * Disabling CSSReset would make the need for similar styles to be applied across the Chakra UI library.
+           * Noteably, `box-sizing: border-box` on `input` elements, as Chakra default theme relies heavily on this.
+           *
+           * These button styles are the minimal amount required to make the button look like the default browser styles.
+           */
+          button: {
+            padding: "1px 6px",
+            borderStyle: "outset",
+            borderWidth: 2,
+            background: "rgb(239, 239, 239)",
+          },
+        },
+      },
+    }
   );
 
   return (
