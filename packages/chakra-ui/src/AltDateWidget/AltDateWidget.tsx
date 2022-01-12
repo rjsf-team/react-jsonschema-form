@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-
+import React, { MouseEvent, useEffect, useState } from "react";
 import { utils, WidgetProps } from "@rjsf/core";
 import { Box, Button } from "@chakra-ui/react";
 
 const { pad, parseDateString, toDateString } = utils;
 
-const rangeOptions = (start: any, stop: any) => {
+const rangeOptions = (start: number, stop: number) => {
   let options = [];
   for (let i = start; i <= stop; i++) {
     options.push({ value: i, label: pad(i, 2) });
@@ -13,7 +12,18 @@ const rangeOptions = (start: any, stop: any) => {
   return options;
 };
 
-const readyForChange = (state: any) => {
+interface AltDateStateType {
+  [x: string]: number;
+
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  second: number;
+}
+
+const readyForChange = (state: AltDateStateType) => {
   return Object.keys(state).every(
     key => typeof state[key] !== "undefined" && state[key] !== -1
   );
@@ -31,14 +41,14 @@ const AltDateWidget = ({
   registry,
   showTime,
   value,
-}: WidgetProps) => {
-  const { select: SelectWidget } = registry.widgets;
+}: any) => {
+  const { SelectWidget } = registry.widgets;
   const [state, setState] = useState(parseDateString(value, showTime));
   useEffect(() => {
     setState(parseDateString(value, showTime));
   }, [showTime, value]);
 
-  const handleChange = (property: any, nextValue: any) => {
+  const handleChange = (property: string, nextValue: string) => {
     const nextState = {
       ...state,
       [property]: typeof nextValue === "undefined" ? -1 : nextValue,
@@ -51,7 +61,7 @@ const AltDateWidget = ({
     }
   };
 
-  const handleNow = (event: any) => {
+  const handleNow = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
@@ -60,7 +70,7 @@ const AltDateWidget = ({
     onChange(toDateString(nextState, showTime));
   };
 
-  const handleClear = (event: any) => {
+  const handleClear = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
@@ -91,14 +101,13 @@ const AltDateWidget = ({
   const renderDateElement = (elemProps: WidgetProps) => {
     const value = Boolean(elemProps.value) ? elemProps.value : undefined;
     return (
-      // @ts-ignore
       <SelectWidget
         autofocus={elemProps.autofocus}
         className="form-control"
         disabled={elemProps.disabled}
         id={elemProps.id}
         onBlur={elemProps.onBlur}
-        onChange={(elemValue: any) =>
+        onChange={(elemValue: WidgetProps) =>
           elemProps.select(elemProps.type, elemValue)
         }
         onFocus={elemProps.onFocus}
@@ -116,8 +125,7 @@ const AltDateWidget = ({
   return (
     <Box>
       <Box display="flex" flexWrap="wrap" alignItems="center" justify="center">
-        {/* @ts-ignore */}
-        {dateElementProps().map((elemProps: WidgetProps, i) => {
+        {dateElementProps().map((elemProps: any, i) => {
           const elemId = id + "_" + elemProps.type;
           return (
             <Box key={elemId} mr="2" mb="2">
@@ -139,12 +147,19 @@ const AltDateWidget = ({
       </Box>
       <Box display="flex">
         {!options.hideNowButton && (
-          <Button onClick={handleNow} mr="2">
+          <Button
+            onClick={(e: MouseEvent<HTMLButtonElement>) => handleNow(e)}
+            mr="2"
+          >
             Now
           </Button>
         )}
         {!options.hideClearButton && (
-          <Button onClick={handleClear}>Clear</Button>
+          <Button
+            onClick={(e: MouseEvent<HTMLButtonElement>) => handleClear(e)}
+          >
+            Clear
+          </Button>
         )}
       </Box>
     </Box>

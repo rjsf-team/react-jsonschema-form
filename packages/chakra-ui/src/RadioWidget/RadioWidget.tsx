@@ -19,13 +19,6 @@ const RadioWidget = ({
   disabled,
   readonly,
   label,
-  // rawErrors,
-  // autofocus,
-  // placeholder,
-  // formContext,
-  // registry,
-  // multiple,
-  // uiSchema,
   onChange,
   onBlur,
   onFocus,
@@ -44,13 +37,15 @@ const RadioWidget = ({
     <FormControl
       isDisabled={disabled || readonly}
       isRequired={required}
-      isReadOnly={readonly}>
+      isReadOnly={readonly}
+    >
       <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       <RadioGroup
         onChange={onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        value={`${value}`}>
+        value={`${value}`}
+      >
         <Stack direction={row ? "row" : "column"}>
           {(enumOptions as any).map((option: any, i: number) => {
             const itemDisabled = Boolean(
@@ -61,7 +56,8 @@ const RadioWidget = ({
               <Radio
                 value={`${option.value}`}
                 key={i}
-                disabled={disabled || itemDisabled || readonly}>
+                disabled={disabled || itemDisabled || readonly}
+              >
                 {`${option.label}`}
               </Radio>
             );
