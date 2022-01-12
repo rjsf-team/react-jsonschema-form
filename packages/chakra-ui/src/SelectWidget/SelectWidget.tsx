@@ -86,8 +86,8 @@ const SelectWidget = ({
       <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       <Select
         id={id}
-        value={typeof value === "undefined" ? emptyValue : value}
         placeholder={placeholder}
+        value={typeof value === "undefined" ? emptyValue : value}
         autoFocus={autofocus}
         onBlur={_onBlur}
         onChange={_onChange}

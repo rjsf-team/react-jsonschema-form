@@ -1,12 +1,6 @@
 import * as React from "react";
 
-import {
-  FormControl,
-  FormLabel,
-  // FormHelperText,
-  // FormErrorMessage,
-  Input,
-} from "@chakra-ui/react";
+import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 
 import { WidgetProps, utils } from "@rjsf/core";
 
@@ -17,7 +11,7 @@ export type TextWidgetProps = WidgetProps & {};
 const TextWidget = (props: TextWidgetProps) => {
   const {
     id,
-    type,
+    type = "text",
     value,
     label,
     schema,
@@ -44,9 +38,8 @@ const TextWidget = (props: TextWidgetProps) => {
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const displayLabel = getDisplayLabel(schema, uiSchema);
-  // const inputType =
-  //   (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
+  const displayLabel =
+    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   return (
     <FormControl
@@ -66,14 +59,8 @@ const TextWidget = (props: TextWidgetProps) => {
         onFocus={_onFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
-        // type={inputType}
         type={type}
       />
-      {/* {rawErrors?.length > 0
-          ? rawErrors.map((error, i) => (
-              <FormErrorMessage key={i}>{error}</FormErrorMessage>
-            ))
-          : null} */}
     </FormControl>
   );
 };
