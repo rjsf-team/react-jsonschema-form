@@ -43,7 +43,8 @@ const RangeWidget = ({
         isDisabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
-        onFocus={_onFocus}>
+        onFocus={_onFocus}
+      >
         <SliderTrack />
         <SliderFilledTrack />
         <SliderThumb />

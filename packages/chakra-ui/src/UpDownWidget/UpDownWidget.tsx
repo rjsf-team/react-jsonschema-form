@@ -35,7 +35,8 @@ const UpDownWidget = ({
         value={value}
         onChange={_onChange}
         onBlur={_onBlur}
-        onFocus={_onFocus}>
+        onFocus={_onFocus}
+      >
         <NumberInputField id={id} />
         <NumberInputStepper>
           <NumberIncrementStepper />

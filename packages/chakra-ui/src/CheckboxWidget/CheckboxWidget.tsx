@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import { Checkbox, FormControl, Text } from "@chakra-ui/react";
-import { WidgetProps } from '@rjsf/core';
+import { WidgetProps } from "@rjsf/core";
 
 const CheckboxWidget = (props: WidgetProps) => {
   const {
@@ -28,7 +28,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     <FormControl isRequired={required}>
       <Checkbox
         id={id}
-        isChecked={typeof value === 'undefined' ? false : value}
+        isChecked={typeof value === "undefined" ? false : value}
         isDisabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}

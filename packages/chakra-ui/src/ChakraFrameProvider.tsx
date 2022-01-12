@@ -33,7 +33,7 @@ export const __createChakraFrameProvider = (props: any) => ({
   );
 
   return (
-    <div style={{ margin: 4 }}>
+    <div style={{ margin: 2 }}>
       <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
         <ChakraProvider theme={customTheme}>{props.children}</ChakraProvider>
       </CacheProvider>

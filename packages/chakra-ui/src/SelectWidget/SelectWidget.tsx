@@ -81,16 +81,18 @@ const SelectWidget = ({
     <FormControl
       isRequired={required}
       isDisabled={disabled}
-      isReadOnly={readonly}>
+      isReadOnly={readonly}
+    >
       <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       <Select
         id={id}
-        value={typeof value === "undefined" ? emptyValue : value}
         placeholder={placeholder}
+        value={typeof value === "undefined" ? emptyValue : value}
         autoFocus={autofocus}
         onBlur={_onBlur}
         onChange={_onChange}
-        onFocus={_onFocus}>
+        onFocus={_onFocus}
+      >
         {(enumOptions as any).map(({ value, label }: any, i: number) => {
           const disabled: any =
             enumDisabled && (enumDisabled as any).indexOf(value) != -1;

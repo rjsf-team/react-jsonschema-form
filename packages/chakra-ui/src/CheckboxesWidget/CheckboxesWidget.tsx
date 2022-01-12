@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   CheckboxGroup,
   Checkbox,
@@ -6,8 +6,8 @@ import {
   FormControl,
   Text,
   Stack,
-} from '@chakra-ui/react';
-import { WidgetProps } from '@rjsf/core';
+} from "@chakra-ui/react";
+import { WidgetProps } from "@rjsf/core";
 
 // const selectValue = (value, selected, all) => {
 //   const at = all.indexOf(value);
@@ -57,7 +57,7 @@ const CheckboxesWidget = ({
     <FormControl isRequired={required}>
       <FormLabel htmlFor={id}>{label}</FormLabel>
       <CheckboxGroup onChange={option => onChange(option)}>
-        <Stack direction={row ? 'row' : 'column'}>
+        <Stack direction={row ? "row" : "column"}>
           {(enumOptions as any).map(
             (option: { value: any; label: any }, index: any) => {
               const checked = value.indexOf(option.value) !== -1;

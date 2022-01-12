@@ -149,13 +149,15 @@ const AltDateWidget = ({
         {!options.hideNowButton && (
           <Button
             onClick={(e: MouseEvent<HTMLButtonElement>) => handleNow(e)}
-            mr="2">
+            mr="2"
+          >
             Now
           </Button>
         )}
         {!options.hideClearButton && (
           <Button
-            onClick={(e: MouseEvent<HTMLButtonElement>) => handleClear(e)}>
+            onClick={(e: MouseEvent<HTMLButtonElement>) => handleClear(e)}
+          >
             Clear
           </Button>
         )}
