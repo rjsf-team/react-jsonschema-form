@@ -226,8 +226,9 @@ describe("single fields", () => {
       },
     };
     const uiSchema: UiSchema = {
+      "ui:title": "Titre 1",
       "title": {
-        "ui:title": "test",
+        "ui:title": "Titre 2",
       },
     };
     const tree = renderer

@@ -15,6 +15,8 @@ const UpDownWidget = ({
   onBlur,
   onFocus,
   autofocus,
+  schema,
+  uiSchema
 }: WidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -28,8 +30,8 @@ const UpDownWidget = ({
   return (
     <Form.Group  className="mb-0">
       <Form.Label>
-        {label}
-        {label && required ? "*" : null}
+        {uiSchema["ui:title"] || schema.title || label}
+        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
         id={id}
