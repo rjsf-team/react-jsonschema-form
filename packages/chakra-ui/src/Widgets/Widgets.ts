@@ -1,4 +1,5 @@
-// import BaseInput from '../BaseInput/BaseInput'
+import AltDateTimeWidget from "../AltDateTimeWidget/AltDateTimeWidget";
+import AltDateWidget from "../AltDateWidget/AltDateWidget";
 import CheckboxWidget from "../CheckboxWidget/CheckboxWidget";
 import CheckboxesWidget from "../CheckboxesWidget/CheckboxesWidget";
 import ColorWidget from "../ColorWidget/ColorWidget";
@@ -15,7 +16,8 @@ import UpDownWidget from "../UpDownWidget/UpDownWidget";
 import URLWidget from "../URLWidget/URLWidget";
 
 const widgets = {
-  // BaseInput,
+  AltDateTimeWidget,
+  AltDateWidget,
   CheckboxWidget,
   CheckboxesWidget,
   ColorWidget,
@@ -23,9 +25,9 @@ const widgets = {
   DateTimeWidget,
   EmailWidget,
   PasswordWidget,
-  radio: RadioWidget,
+  RadioWidget,
   RangeWidget,
-  select: SelectWidget,
+  SelectWidget,
   TextareaWidget,
   TextWidget,
   UpDownWidget,
