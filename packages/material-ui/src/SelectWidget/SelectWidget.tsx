@@ -89,6 +89,12 @@ const SelectWidget = ({
     onFocus(id, processValue(schema, value));
 
   const classes = useStyles();
+  let ariaLabel = label;
+
+  if (!ariaLabel) {
+    const element = options!.element as {label: string, title: string, useLabel: boolean};
+    ariaLabel = element.useLabel ? element.label : element.title;
+  }
 
   return (
     <TextField
@@ -96,7 +102,7 @@ const SelectWidget = ({
       select
       value={typeof value === "undefined" ? emptyValue : value}
       required={required}
-      label={label}
+      label={ariaLabel}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       error={rawErrors.length > 0}

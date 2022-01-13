@@ -59,6 +59,13 @@ const TextareaWidget = ({
 
   const classes = useStyles();
 
+  let ariaLabel = label;
+
+  if (!ariaLabel) {
+    const element = options!.element as {label: string, title: string, useLabel: boolean};
+    ariaLabel = element.useLabel ? element.label : element.title;
+  }
+
   return (
     <>
       <TextField
@@ -66,7 +73,7 @@ const TextareaWidget = ({
         placeholder={placeholder}
         disabled={disabled || readonly}
         value={value}
-        label={label}
+        label={ariaLabel}
         required={required}
         autoFocus={autofocus}
         multiline={true}

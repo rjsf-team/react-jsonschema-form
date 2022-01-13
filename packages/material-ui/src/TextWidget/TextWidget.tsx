@@ -67,6 +67,13 @@ const TextWidget = ({
   const classes = useStyles();
   const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
 
+  let ariaLabel = label;
+
+  if (!ariaLabel) {
+    const element = options!.element as {label: string, title: string, useLabel: boolean};
+    ariaLabel = element.useLabel ? element.label : element.title;
+  }
+
   return (
     <>
       <TextField
@@ -74,7 +81,7 @@ const TextWidget = ({
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
-        label={label}
+        label={ariaLabel}
         hiddenLabel
         disabled={disabled || readonly}
         type={inputType as string}

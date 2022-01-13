@@ -93,10 +93,17 @@ const RangeWidget = ({
 
   const marks = generateMarks(sliderProps.min, sliderProps.max, sliderProps.step);
 
+  let ariaLabel = label;
+
+  if (!ariaLabel) {
+    const element = options!.element as {label: string, title: string, useLabel: boolean};
+    ariaLabel = element.useLabel ? element.label : element.title;
+  }
+
   return (
     <>
       <Slider
-        arial-label={label}
+        arial-label={ariaLabel}
         disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}

@@ -167,6 +167,13 @@ const FileWidget = ({
     );
   };
 
+  let ariaLabel = label;
+
+  if (!ariaLabel) {
+    const element = options!.element as {label: string, title: string, useLabel: boolean};
+    ariaLabel = element.useLabel ? element.label : element.title;
+  }
+
   return (
     <>
       <input
@@ -181,8 +188,8 @@ const FileWidget = ({
         style={{display: 'none'}}
       />
       <Button
-        aria-label={ label &&
-          `${label}: ${intl.formatMessage({defaultMessage: 'Choose file'})}`
+        aria-label={ ariaLabel &&
+          `${ariaLabel}: ${intl.formatMessage({defaultMessage: 'Choose file'})}`
         }
         variant="outlined"
         onClick={() => document.getElementById(`file-input-${id}`)!.click()}
