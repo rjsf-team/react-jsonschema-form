@@ -3,7 +3,6 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import weakMemoize from "@emotion/weak-memoize";
 import { ChakraProvider } from "@chakra-ui/react";
-import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react";
 
 /**
  * __createChakraFrameProvider is used to ensure that <Global> emotion components
@@ -28,14 +27,10 @@ let memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) => {
 export const __createChakraFrameProvider = (props: any) => ({
   document,
 }: any) => {
-  const customTheme = extendTheme(
-    withDefaultColorScheme({ colorScheme: "blue" })
-  );
-
   return (
     <div style={{ margin: 2 }}>
       <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
-        <ChakraProvider theme={customTheme}>{props.children}</ChakraProvider>
+        <ChakraProvider>{props.children}</ChakraProvider>
       </CacheProvider>
     </div>
   );
