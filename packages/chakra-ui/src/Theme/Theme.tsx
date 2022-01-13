@@ -27,11 +27,11 @@ const SubmitButton = () => (
 const Theme: ThemeProps = {
   children: <SubmitButton />,
   ArrayFieldTemplate,
-  fields: { ...fields, ...Fields },
   FieldTemplate,
   ObjectFieldTemplate,
-  widgets: { ...widgets, ...Widgets },
   ErrorList,
+  fields: { ...fields, ...Fields },
+  widgets: { ...widgets, ...Widgets },
 };
 
 export default Theme;
