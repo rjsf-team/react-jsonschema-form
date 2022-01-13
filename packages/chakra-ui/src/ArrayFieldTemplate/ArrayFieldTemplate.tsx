@@ -2,7 +2,7 @@ import React from "react";
 
 import { utils } from "@rjsf/core";
 
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Stack } from "@chakra-ui/react";
 import { Card } from "../ui-helpers/Card/Card";
 
 import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
@@ -67,45 +67,62 @@ const DefaultArrayItem = (props: any) => {
   return (
     <Grid key={props.key} alignItems="center">
       <GridItem>
-        <Box mb={2}>
+        <Box mx={2}>
           <Card>
-            <Box p={2}>{props.children}</Box>
+            <Box p={2}>
+              <Grid templateColumns="repeat(5, 1fr)" gap={2}>
+                <GridItem colSpan={4}>{props.children}</GridItem>
+                <GridItem>
+                  {props.hasToolbar && (
+                    <Grid item={true} templateColumns="repeat(3, 1fr)" gap={1}>
+                      {(props.hasMoveUp || props.hasMoveDown) && (
+                        <IconButton
+                          icon="arrow-up"
+                          // leaving this classname as a reference for later
+                          // className="array-item-move-up"
+                          tabIndex={-1}
+                          disabled={
+                            props.disabled || props.readonly || !props.hasMoveUp
+                          }
+                          onClick={props.onReorderClick(
+                            props.index,
+                            props.index - 1
+                          )}
+                        />
+                      )}
+
+                      {(props.hasMoveUp || props.hasMoveDown) && (
+                        <IconButton
+                          icon="arrow-down"
+                          tabIndex={-1}
+                          disabled={
+                            props.disabled ||
+                            props.readonly ||
+                            !props.hasMoveDown
+                          }
+                          onClick={props.onReorderClick(
+                            props.index,
+                            props.index + 1
+                          )}
+                        />
+                      )}
+
+                      {props.hasRemove && (
+                        <IconButton
+                          icon="remove"
+                          tabIndex={-1}
+                          disabled={props.disabled || props.readonly}
+                          onClick={props.onDropIndexClick(props.index)}
+                        />
+                      )}
+                    </Grid>
+                  )}
+                </GridItem>
+              </Grid>
+            </Box>
           </Card>
         </Box>
       </GridItem>
-
-      {props.hasToolbar && (
-        <Grid item={true}>
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-up"
-              // leaving this classname as a reference for later
-              // className="array-item-move-up"
-              tabIndex={-1}
-              disabled={props.disabled || props.readonly || !props.hasMoveUp}
-              onClick={props.onReorderClick(props.index, props.index - 1)}
-            />
-          )}
-
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-down"
-              tabIndex={-1}
-              disabled={props.disabled || props.readonly || !props.hasMoveDown}
-              onClick={props.onReorderClick(props.index, props.index + 1)}
-            />
-          )}
-
-          {props.hasRemove && (
-            <IconButton
-              icon="remove"
-              tabIndex={-1}
-              disabled={props.disabled || props.readonly}
-              onClick={props.onDropIndexClick(props.index)}
-            />
-          )}
-        </Grid>
-      )}
     </Grid>
   );
 };
@@ -176,17 +193,13 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           {props.items.length > 0 && props.items.map(p => DefaultArrayItem(p))}
 
           {props.canAdd && (
-            <Grid justify="flex-end">
-              <GridItem>
-                <Box mt={2}>
-                  <AddButton
-                    className="array-item-add"
-                    onClick={props.onAddClick}
-                    disabled={props.disabled || props.readonly}
-                  />
-                </Box>
-              </GridItem>
-            </Grid>
+            <Stack direction="row-reverse" mt={2}>
+              <AddButton
+                className="array-item-add"
+                onClick={props.onAddClick}
+                disabled={props.disabled || props.readonly}
+              />
+            </Stack>
           )}
         </Grid>
       </Box>
