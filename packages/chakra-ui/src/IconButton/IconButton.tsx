@@ -6,13 +6,13 @@ import {
 
 import {
   AddIcon,
-  MinusIcon,
   ArrowUpIcon,
   ArrowDownIcon,
+  DeleteIcon
 } from "@chakra-ui/icons";
 
 const mappings = {
-  remove: <MinusIcon />,
+  remove: <DeleteIcon />,
   plus: <AddIcon />,
   "arrow-up": <ArrowUpIcon />,
   "arrow-down": <ArrowDownIcon />,
