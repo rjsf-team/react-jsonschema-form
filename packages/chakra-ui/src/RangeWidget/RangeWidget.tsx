@@ -45,8 +45,9 @@ const RangeWidget = ({
         onBlur={_onBlur}
         onFocus={_onFocus}
       >
-        <SliderTrack />
-        <SliderFilledTrack />
+        <SliderTrack>
+          <SliderFilledTrack />
+        </SliderTrack>
         <SliderThumb />
       </Slider>
     </FormControl>
