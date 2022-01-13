@@ -2,8 +2,7 @@ import React from "react";
 
 import { utils } from "@rjsf/core";
 
-import { Box, Grid, GridItem } from "@chakra-ui/react";
-import { Card } from "../ui-helpers/Card/Card";
+import { Box, Grid, GridItem, ButtonGroup, HStack } from "@chakra-ui/react";
 
 import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
 
@@ -63,24 +62,18 @@ const ArrayFieldDescription = ({
 };
 
 // Used in the two templates
-const DefaultArrayItem = (props: any) => {
-  return (
-    <Grid key={props.key} alignItems="center">
-      <GridItem>
-        <Box mb={2}>
-          <Card>
-            <Box p={2}>{props.children}</Box>
-          </Card>
-        </Box>
-      </GridItem>
+const DefaultArrayItem = (props: any) => (
+  <HStack key={props.key} alignItems={"flex-end"}>
+    <Box p={2} w="100%">
+      {props.children}
+    </Box>
 
-      {props.hasToolbar && (
-        <Grid item={true}>
+    {props.hasToolbar && (
+      <Box p={2}>
+        <ButtonGroup isAttached>
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
               icon="arrow-up"
-              // leaving this classname as a reference for later
-              // className="array-item-move-up"
               tabIndex={-1}
               disabled={props.disabled || props.readonly || !props.hasMoveUp}
               onClick={props.onReorderClick(props.index, props.index - 1)}
@@ -104,94 +97,88 @@ const DefaultArrayItem = (props: any) => {
               onClick={props.onDropIndexClick(props.index)}
             />
           )}
-        </Grid>
+        </ButtonGroup>
+      </Box>
+    )}
+  </HStack>
+);
+
+const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => (
+  <fieldset className={props.className}>
+    <ArrayFieldTitle
+      key={`array-field-title-${props.idSchema.$id}`}
+      TitleField={props.TitleField}
+      idSchema={props.idSchema}
+      title={props.uiSchema["ui:title"] || props.title}
+      required={props.required}
+    />
+
+    {(props.uiSchema["ui:description"] || props.schema.description) && (
+      // Use DescriptionField if possible
+      <div
+        className="field-description"
+        key={`field-description-${props.idSchema.$id}`}
+      >
+        {props.uiSchema["ui:description"] || props.schema.description}
+      </div>
+    )}
+
+    <div
+      className="row array-item-list"
+      key={`array-item-list-${props.idSchema.$id}`}
+    >
+      {props.items && props.items.map(DefaultArrayItem)}
+    </div>
+
+    {props.canAdd && (
+      <AddButton
+        justifySelf={"flex-end"}
+        className="array-item-add"
+        onClick={props.onAddClick}
+        disabled={props.disabled || props.readonly}
+      />
+    )}
+  </fieldset>
+);
+
+const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => (
+  <Box>
+    <ArrayFieldTitle
+      key={`array-field-title-${props.idSchema.$id}`}
+      TitleField={props.TitleField}
+      idSchema={props.idSchema}
+      title={props.uiSchema["ui:title"] || props.title}
+      required={props.required}
+    />
+
+    {(props.uiSchema["ui:description"] || props.schema.description) && (
+      <ArrayFieldDescription
+        key={`array-field-description-${props.idSchema.$id}`}
+        DescriptionField={props.DescriptionField}
+        idSchema={props.idSchema}
+        description={
+          props.uiSchema["ui:description"] || props.schema.description
+        }
+      />
+    )}
+
+    <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
+      <GridItem>
+        {props.items.length > 0 && props.items.map(p => DefaultArrayItem(p))}
+      </GridItem>
+      {props.canAdd && (
+        <GridItem justifySelf={"flex-end"}>
+          <Box mt={2}>
+            <AddButton
+              className="array-item-add"
+              onClick={props.onAddClick}
+              disabled={props.disabled || props.readonly}
+            />
+          </Box>
+        </GridItem>
       )}
     </Grid>
-  );
-};
-
-const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-  return (
-    <fieldset className={props.className}>
-      <ArrayFieldTitle
-        key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
-        idSchema={props.idSchema}
-        title={props.uiSchema["ui:title"] || props.title}
-        required={props.required}
-      />
-
-      {(props.uiSchema["ui:description"] || props.schema.description) && (
-        // Use DescriptionField if possible
-        <div
-          className="field-description"
-          key={`field-description-${props.idSchema.$id}`}
-        >
-          {props.uiSchema["ui:description"] || props.schema.description}
-        </div>
-      )}
-
-      <div
-        className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}
-      >
-        {props.items && props.items.map(DefaultArrayItem)}
-      </div>
-
-      {props.canAdd && (
-        <AddButton
-          className="array-item-add"
-          onClick={props.onAddClick}
-          disabled={props.disabled || props.readonly}
-        />
-      )}
-    </fieldset>
-  );
-};
-
-const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-  return (
-    <Card>
-      <Box p={2}>
-        <ArrayFieldTitle
-          key={`array-field-title-${props.idSchema.$id}`}
-          TitleField={props.TitleField}
-          idSchema={props.idSchema}
-          title={props.uiSchema["ui:title"] || props.title}
-          required={props.required}
-        />
-
-        {(props.uiSchema["ui:description"] || props.schema.description) && (
-          <ArrayFieldDescription
-            key={`array-field-description-${props.idSchema.$id}`}
-            DescriptionField={props.DescriptionField}
-            idSchema={props.idSchema}
-            description={
-              props.uiSchema["ui:description"] || props.schema.description
-            }
-          />
-        )}
-
-        <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
-          {props.items.length > 0 && props.items.map(p => DefaultArrayItem(p))}
-
-          {props.canAdd && (
-            <Grid justify="flex-end">
-              <GridItem>
-                <Box mt={2}>
-                  <AddButton
-                    className="array-item-add"
-                    onClick={props.onAddClick}
-                    disabled={props.disabled || props.readonly}
-                  />
-                </Box>
-              </GridItem>
-            </Grid>
-          )}
-        </Grid>
-      </Box>
-    </Card>
-  );
-};
+  </Box>
+);
 
 export default ArrayFieldTemplate;
