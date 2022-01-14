@@ -12,12 +12,12 @@ export interface ChakraUiSchema extends Omit<UiSchema, "ui:options"> {
 type ChakraUiOptions = UiSchema["ui:options"] & { chakra?: ChakraProps };
 
 interface GetChakraProps {
-  uiSchema: ChakraUiSchema;
+  uiSchema?: ChakraUiSchema;
 }
 
-export function getChakra({ uiSchema }: GetChakraProps): ChakraProps {
-  let chakraProps =
-    (uiSchema["ui:options"] && uiSchema["ui:options"].chakra) ?? {};
+export function getChakra({ uiSchema = {} }: GetChakraProps): ChakraProps {
+  const chakraProps =
+    (uiSchema["ui:options"] && uiSchema["ui:options"].chakra) || {};
 
   Object.keys(chakraProps).forEach(key => {
     /**
@@ -28,7 +28,7 @@ export function getChakra({ uiSchema }: GetChakraProps): ChakraProps {
      * In this case we just want to delete the unknown props. So we flip the boolean.
      */
     if (shouldForwardProp(key)) {
-      // How to type this?!... 😬
+      // @ts-ignore - How to type this?!... 😬
       delete (chakraProps as any)[key];
     }
   });
