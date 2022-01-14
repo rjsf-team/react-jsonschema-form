@@ -17,6 +17,5 @@ interface GetChakraProps {
 
 export function getChakra({ uiSchema }: GetChakraProps): ChakraProps {
   const chakraProps = uiSchema["ui:options"] && uiSchema["ui:options"].chakra;
-  console.log("getChakra:", chakraProps);
   return Object.assign({}, chakraProps) as ChakraProps;
 }
