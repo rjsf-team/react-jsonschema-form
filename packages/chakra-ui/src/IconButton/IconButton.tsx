@@ -8,11 +8,7 @@ import {
   AddIcon,
   ArrowUpIcon,
   ArrowDownIcon,
-<<<<<<< HEAD
-  DeleteIcon,
-=======
   DeleteIcon
->>>>>>> chakra-ui
 } from "@chakra-ui/icons";
 
 const mappings = {
