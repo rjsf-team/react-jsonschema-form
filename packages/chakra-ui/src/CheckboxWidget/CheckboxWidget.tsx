@@ -1,6 +1,7 @@
 import React from "react";
 import { Checkbox, FormControl, Text } from "@chakra-ui/react";
 import { WidgetProps } from "@rjsf/core";
+import { getChakra } from "../utils";
 
 const CheckboxWidget = (props: WidgetProps) => {
   const {
@@ -13,7 +14,10 @@ const CheckboxWidget = (props: WidgetProps) => {
     onFocus,
     required,
     label,
+    uiSchema,
   } = props;
+  const chakraProps = getChakra({ uiSchema });
+
   const _onChange = ({
     target: { checked },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(checked);
@@ -25,7 +29,7 @@ const CheckboxWidget = (props: WidgetProps) => {
   }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
-    <FormControl isRequired={required}>
+    <FormControl {...chakraProps} isRequired={required}>
       <Checkbox
         id={id}
         isChecked={typeof value === "undefined" ? false : value}

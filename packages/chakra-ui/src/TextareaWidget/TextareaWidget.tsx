@@ -1,6 +1,9 @@
-import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/core";
 import React from "react";
+import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
+import { WidgetProps, utils } from "@rjsf/core";
+import { getChakra } from "../utils";
+
+const { getDisplayLabel } = utils;
 
 const TextareaWidget = ({
   id,
@@ -14,7 +17,15 @@ const TextareaWidget = ({
   onFocus,
   onChange,
   options,
+  schema,
+  uiSchema,
+  required,
+  rawErrors,
 }: WidgetProps) => {
+  const chakraProps = getChakra({ uiSchema });
+  const displayLabel =
+    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -27,14 +38,20 @@ const TextareaWidget = ({
   }: React.FocusEvent<HTMLTextAreaElement>) => onFocus(id, value);
 
   return (
-    <FormControl>
-      <FormLabel htmlFor={id}>{label}</FormLabel>
+    <FormControl
+      {...chakraProps}
+      isDisabled={disabled || readonly}
+      isRequired={required}
+      isReadOnly={readonly}
+      isInvalid={rawErrors && rawErrors.length > 0}
+    >
+      {displayLabel ? (
+        <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+      ) : null}
       <Textarea
         id={id}
         value={value}
         placeholder={placeholder}
-        isDisabled={disabled}
-        isReadOnly={readonly}
         autoFocus={autofocus}
         onChange={_onChange}
         onBlur={_onBlur}

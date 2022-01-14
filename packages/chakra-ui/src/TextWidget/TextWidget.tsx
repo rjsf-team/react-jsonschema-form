@@ -1,8 +1,7 @@
 import * as React from "react";
-
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-
 import { WidgetProps, utils } from "@rjsf/core";
+import { getChakra } from "../utils";
 
 const { getDisplayLabel } = utils;
 
@@ -27,6 +26,7 @@ const TextWidget = (props: TextWidgetProps) => {
     placeholder,
     disabled,
   } = props;
+  const chakraProps = getChakra({ uiSchema });
 
   const _onChange = ({
     target: { value },
@@ -43,6 +43,7 @@ const TextWidget = (props: TextWidgetProps) => {
 
   return (
     <FormControl
+      {...chakraProps}
       isDisabled={disabled || readonly}
       isRequired={required}
       isReadOnly={readonly}

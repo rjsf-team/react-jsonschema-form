@@ -8,6 +8,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { WidgetProps } from "@rjsf/core";
+import { getChakra } from "../utils";
 
 // const selectValue = (value, selected, all) => {
 //   const at = all.indexOf(value);
@@ -33,9 +34,11 @@ const CheckboxesWidget = ({
   onFocus,
   required,
   label,
+  uiSchema,
+  schema,
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
-
+  const chakraProps = getChakra({ uiSchema });
   // const _onChange = option => ({ target: { checked } }) => {
   //   const all = enumOptions.map(({ value }) => value)
 
@@ -52,10 +55,12 @@ const CheckboxesWidget = ({
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+
   const row = options ? options.inline : false;
+
   return (
-    <FormControl isRequired={required}>
-      <FormLabel htmlFor={id}>{label}</FormLabel>
+    <FormControl {...chakraProps} isRequired={required}>
+      <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       <CheckboxGroup onChange={option => onChange(option)}>
         <Stack direction={row ? "row" : "column"}>
           {(enumOptions as any).map(

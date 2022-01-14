@@ -8,9 +8,8 @@ import Fields from "../Fields";
 import FieldTemplate from "../FieldTemplate";
 import ObjectFieldTemplate from "../ObjectFieldTemplate";
 import Widgets from "../Widgets";
-
-import { ThemeProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
+import { ThemeProps } from "../utils";
 
 const { getDefaultRegistry } = utils;
 
