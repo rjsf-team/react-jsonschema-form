@@ -28,10 +28,10 @@ export function getChakra({ uiSchema }: GetChakraProps): ChakraProps {
      * In this case we just want to delete the unknown props. So we flip the boolean.
      */
     if (shouldForwardProp(key)) {
-      // @ts-ignore - How to type this?!... 😬
-      delete chakraProps[key];
+      // How to type this?!... 😬
+      delete (chakraProps as any)[key];
     }
   });
 
-  return chakraProps as ChakraProps;
+  return chakraProps;
 }
