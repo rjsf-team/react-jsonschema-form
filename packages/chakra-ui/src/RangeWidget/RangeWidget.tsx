@@ -1,6 +1,4 @@
 import React from "react";
-import { utils } from "@rjsf/core";
-import { WidgetProps } from "@rjsf/core";
 import {
   FormControl,
   FormLabel,
@@ -9,8 +7,10 @@ import {
   SliderThumb,
   SliderTrack,
 } from "@chakra-ui/react";
+import { utils, WidgetProps } from "@rjsf/core";
+import { getChakra } from "../utils";
 
-const { rangeSpec } = utils;
+const { rangeSpec, getDisplayLabel } = utils;
 
 const RangeWidget = ({
   value,
@@ -20,11 +20,17 @@ const RangeWidget = ({
   onFocus,
   options,
   schema,
+  uiSchema,
   onChange,
   label,
   id,
 }: WidgetProps) => {
-  let sliderProps = { value, label, id, ...rangeSpec(schema) };
+  const chakraProps = getChakra({ uiSchema });
+
+  let sliderWidgetProps = { value, label, id, ...rangeSpec(schema) };
+
+  const displayLabel =
+    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const _onChange = (value: undefined | number) =>
     onChange(value === undefined ? options.emptyValue : value);
@@ -35,10 +41,12 @@ const RangeWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <FormControl>
-      <FormLabel htmlFor={id}>{label}</FormLabel>
+    <FormControl {...chakraProps}>
+      {displayLabel ? (
+        <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+      ) : null}
       <Slider
-        {...sliderProps}
+        {...sliderWidgetProps}
         id={id}
         isDisabled={disabled || readonly}
         onChange={_onChange}

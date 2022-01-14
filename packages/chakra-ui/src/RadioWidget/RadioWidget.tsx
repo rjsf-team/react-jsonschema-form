@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 
 import { WidgetProps } from "@rjsf/core";
+import { getChakra } from "../utils";
 
 const RadioWidget = ({
   id,
@@ -22,8 +23,10 @@ const RadioWidget = ({
   onChange,
   onBlur,
   onFocus,
+  uiSchema,
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
+  const chakraProps = getChakra({ uiSchema });
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
@@ -35,6 +38,7 @@ const RadioWidget = ({
 
   return (
     <FormControl
+      {...chakraProps}
       isDisabled={disabled || readonly}
       isRequired={required}
       isReadOnly={readonly}

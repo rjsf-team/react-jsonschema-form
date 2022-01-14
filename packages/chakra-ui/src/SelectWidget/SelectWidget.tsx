@@ -1,16 +1,14 @@
 import React from "react";
-
 import {
   FormControl,
   FormLabel,
   FormErrorMessage,
   Select,
 } from "@chakra-ui/react";
-
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
-
-const { asNumber, guessType } = utils;
+import { getChakra } from "../utils";
+const { asNumber, guessType, getDisplayLabel } = utils;
 
 const nums = new Set(["number", "integer"]);
 
@@ -60,10 +58,15 @@ const SelectWidget = ({
   onBlur,
   onFocus,
   rawErrors = [],
+  uiSchema,
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
+  const chakraProps = getChakra({ uiSchema });
 
   const emptyValue = multiple ? [] : "";
+
+  const displayLabel =
+    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const _onChange = ({
     target: { value },
@@ -77,13 +80,17 @@ const SelectWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLSelectElement>) =>
     onFocus(id, processValue(schema, value));
+
   return (
     <FormControl
+      {...chakraProps}
       isRequired={required}
       isDisabled={disabled}
       isReadOnly={readonly}
     >
-      <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+      {displayLabel ? (
+        <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+      ) : null}
       <Select
         id={id}
         placeholder={placeholder}

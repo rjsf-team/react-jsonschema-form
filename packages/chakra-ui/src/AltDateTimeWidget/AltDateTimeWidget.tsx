@@ -5,7 +5,7 @@ import { TextWidgetProps } from "TextWidget";
 
 const AltDateTimeWidget = (props: TextWidgetProps) => {
   const { AltDateWidget } = props.registry.widgets;
-  return <AltDateWidget showTime {...props} />;
+  return <AltDateWidget {...props} showTime />;
 };
 
 AltDateTimeWidget.defaultProps = {

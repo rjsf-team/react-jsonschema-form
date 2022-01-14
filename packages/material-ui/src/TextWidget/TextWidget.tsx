@@ -8,7 +8,8 @@ import { WidgetProps, utils } from "@rjsf/core";
 
 const { getDisplayLabel } = utils;
 
-export type TextWidgetProps = WidgetProps & Pick<TextFieldProps, Exclude<keyof TextFieldProps, 'onBlur' | 'onFocus'>>;
+export type TextWidgetProps = WidgetProps &
+  Pick<TextFieldProps, Exclude<keyof TextFieldProps, "onBlur" | "onFocus">>;
 
 const TextWidget = ({
   id,
@@ -46,7 +47,8 @@ const TextWidget = ({
     uiSchema
     /* TODO: , rootSchema */
   );
-  const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
+  const inputType =
+    (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
 
   return (
     <TextField
