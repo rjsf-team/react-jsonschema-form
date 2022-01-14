@@ -16,7 +16,7 @@ In other words, the following uiSchemas are equivalent:
   "ui:submitButtonProps": {
       "disabled": false,
       "className": "btn btn-info",
-      "required": true,
+      "allowed": true,
       "submitText": "Submit"
     },
 }
@@ -30,7 +30,7 @@ In other words, the following uiSchemas are equivalent:
     "submitButtonProps": {
       "disabled": false,
       "className": "btn btn-info",
-      "required": true,
+      "allowed": true,
       "submitText": "Submit"
     },
   }
@@ -245,7 +245,7 @@ You can use this option to disable the submit button
 
 You can use this option to specify a class name for the submit button
 
-### `required` option
+### `allowed` option
 
 You can use this option to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes
 
@@ -258,7 +258,7 @@ const uiSchema = {
  "submitButtonProps": {
       "disabled": false,
       "className": "btn btn-info",
-      "required": true,
+      "allowed": true,
       "submitText": "Submit"
     }
 };

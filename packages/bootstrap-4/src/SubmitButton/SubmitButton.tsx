@@ -3,8 +3,8 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 const { getSubmitButtonProps } = utils;
 const SubmitButton: React.FC<WidgetProps> = props => {
-  const { submitText, required, ...submitButtonProps }= getSubmitButtonProps(props.uiSchema);
-  if(!required) return null;
+  const { submitText, allowed, ...submitButtonProps }= getSubmitButtonProps(props.uiSchema);
+  if(!allowed) return null;
   return ( <div>
       <Button variant="primary" type="submit" {...submitButtonProps} >
         {submitText}

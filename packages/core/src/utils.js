@@ -391,7 +391,7 @@ export function getSubmitButtonProps(uiSchema) {
     disabled: false,
     className: "btn btn-info",
     submitText: "Submit",
-    required: true,
+    allowed: true,
   };
   if (uiOptions && uiOptions["submitButtonProps"]) {
     return Object.assign({}, defaultOptions, uiOptions["submitButtonProps"]);

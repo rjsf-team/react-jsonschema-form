@@ -3647,20 +3647,20 @@ describe("utils", () => {
         disabled: false,
         className: "btn btn-info",
         submitText: "Submit",
-        required: true,
+        allowed: true,
       });
     });
 
-    it("required option should be false", () => {
+    it("allowed option should be false", () => {
       expect(
         getSubmitButtonProps({
-          "ui:options": { submitButtonProps: { required: false } },
+          "ui:options": { submitButtonProps: { allowed: false } },
         })
       ).eql({
         disabled: false,
         className: "btn btn-info",
         submitText: "Submit",
-        required: false,
+        allowed: false,
       });
     });
 
@@ -3674,7 +3674,7 @@ describe("utils", () => {
         hidden: true,
         className: "btn btn-info",
         submitText: "Submit",
-        required: true,
+        allowed: true,
       });
     });
 
@@ -3687,7 +3687,7 @@ describe("utils", () => {
         disabled: true,
         className: "btn btn-info",
         submitText: "Submit",
-        required: true,
+        allowed: true,
       });
     });
 
@@ -3700,7 +3700,7 @@ describe("utils", () => {
         disabled: false,
         className: "btn btn-info",
         submitText: "Confirm",
-        required: true,
+        allowed: true,
       });
     });
   });

@@ -378,7 +378,7 @@ describeRepeated("Form common", createFormComponent => {
     it("should not render a submit button", () => {
       const props = {
         schema: {},
-        uiSchema: { "ui:submitButtonProps": { required: false } },
+        uiSchema: { "ui:submitButtonProps": { allowed: false } },
       };
       const comp = renderIntoDocument(<Form {...props} />);
       const node = findDOMNode(comp);

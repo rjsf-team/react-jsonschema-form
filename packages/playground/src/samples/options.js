@@ -24,7 +24,7 @@ module.exports = {
   uiSchema: {
     "ui:submitButtonProps": {
       submitText: "Confirm Details",
-      required: true,
+      allowed: true,
       disabled: false,
     },
     firstName: {
