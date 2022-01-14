@@ -8,17 +8,25 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, utils } from "@rjsf/core";
+
+const { getDisplayLabel } = utils;
 
 const UpDownWidget = ({
   id,
+  schema,
+  uiSchema,
   readonly,
   disabled,
+  label,
   value,
   onChange,
   onBlur,
   onFocus,
 }: WidgetProps) => {
+  const displayLabel =
+    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+
   const _onChange = (value: string | number) => onChange(value);
   const _onBlur = ({
     target: { value },
@@ -29,7 +37,9 @@ const UpDownWidget = ({
 
   return (
     <FormControl>
-      <FormLabel htmlFor={id}>Amount</FormLabel>
+      {displayLabel ? (
+        <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+      ) : null}
       <NumberInput
         isDisabled={disabled || readonly}
         value={value}
