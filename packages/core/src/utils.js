@@ -385,16 +385,18 @@ export function getUiOptions(uiSchema) {
     }, {});
 }
 
-export function getSubmitButtonProps(uiSchema) {
+export function getSubmitButtonOptions(uiSchema) {
   const uiOptions = getUiOptions(uiSchema);
   const defaultOptions = {
-    disabled: false,
-    className: "btn btn-info",
+    props: {
+      disabled: false,
+      className: "btn btn-info",
+    },
     submitText: "Submit",
-    allowed: true,
+    removed: false,
   };
-  if (uiOptions && uiOptions["submitButtonProps"]) {
-    return Object.assign({}, defaultOptions, uiOptions["submitButtonProps"]);
+  if (uiOptions && uiOptions["submitButtonOptions"]) {
+    return Object.assign({}, defaultOptions, uiOptions["submitButtonOptions"]);
   }
 
   return defaultOptions;

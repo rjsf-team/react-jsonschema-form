@@ -1,13 +1,13 @@
 import React from "react";
-import { getSubmitButtonProps } from ".././../utils";
+import { getSubmitButtonOptions } from ".././../utils";
 export default function SubmitButton({ uiSchema }) {
-  const { submitText, allowed, ...submitProps } = getSubmitButtonProps(
+  const { submitText, removed, props: submitButtonProps } = getSubmitButtonOptions(
     uiSchema
   );
   return (
     <div>
-      {allowed && (
-        <button type="submit" {...submitProps}>
+      {!removed && (
+        <button type="submit" {...submitButtonProps}>
           {submitText}
         </button>
       )}

@@ -1,10 +1,10 @@
 import { utils, WidgetProps } from "@rjsf/core";
 import React from "react";
 import Button from "react-bootstrap/Button";
-const { getSubmitButtonProps } = utils;
+const { getSubmitButtonOptions } = utils;
 const SubmitButton: React.FC<WidgetProps> = props => {
-  const { submitText, allowed, ...submitButtonProps }= getSubmitButtonProps(props.uiSchema);
-  if(!allowed) return null;
+  const { submitText, removed, props: submitButtonProps }= getSubmitButtonOptions(props.uiSchema);
+  if(removed) return null;
   return ( <div>
       <Button variant="primary" type="submit" {...submitButtonProps} >
         {submitText}

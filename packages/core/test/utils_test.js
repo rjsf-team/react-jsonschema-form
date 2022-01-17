@@ -30,9 +30,10 @@ import {
   canExpand,
   optionsList,
   getMatchingOption,
-  getSubmitButtonProps,
+  getSubmitButtonOptions,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
+
 
 describe("utils", () => {
   let sandbox;
@@ -3641,66 +3642,71 @@ describe("utils", () => {
     });
   });
 
-  describe("getSubmitButtonProps", () => {
+  describe("getSubmitButtonOptions", () => {
     it("default props", () => {
-      expect(getSubmitButtonProps({})).eql({
-        disabled: false,
-        className: "btn btn-info",
+      expect(getSubmitButtonOptions({})).eql({
+        props:{ disabled: false,
+          className: "btn btn-info" },
         submitText: "Submit",
-        allowed: true,
+        removed: false,
       });
     });
 
     it("allowed option should be false", () => {
       expect(
-        getSubmitButtonProps({
-          "ui:options": { submitButtonProps: { allowed: false } },
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { removed: false } },
         })
       ).eql({
+        props: {
         disabled: false,
-        className: "btn btn-info",
+        className: "btn btn-info"
+      },
         submitText: "Submit",
-        allowed: false,
+        removed: false,
       });
     });
 
     it("hidden option should be true", () => {
       expect(
-        getSubmitButtonProps({
-          "ui:options": { submitButtonProps: { hidden: true } },
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { props: { hidden: true } } },
         })
       ).eql({
-        disabled: false,
-        hidden: true,
-        className: "btn btn-info",
+        props : {
+          hidden: true
+        },
         submitText: "Submit",
-        allowed: true,
+        removed: false,
       });
     });
 
     it("disabled option should be true", () => {
       expect(
-        getSubmitButtonProps({
-          "ui:options": { submitButtonProps: { disabled: true } },
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { props: { disabled: true } } },
         })
       ).eql({
-        disabled: true,
-        className: "btn btn-info",
+        props : {
+          disabled: true,
+        },
         submitText: "Submit",
-        allowed: true,
+        removed: false,
       });
     });
 
     it("submitText option should be confirm", () => {
       expect(
-        getSubmitButtonProps({
-          "ui:options": { submitButtonProps: { submitText: "Confirm" } },
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { submitText: "Confirm" } },
         })
       ).eql({
-        disabled: false,
-        className: "btn btn-info",
+        props : {
+          disabled: false,
+          className: "btn btn-info",
+        },
         submitText: "Confirm",
-        allowed: true,
+        removed: false,
       });
     });
   });

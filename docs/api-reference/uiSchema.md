@@ -13,10 +13,12 @@ In other words, the following uiSchemas are equivalent:
 {
   "ui:title": "Title",
   "ui:description": "Description"
-  "ui:submitButtonProps": {
+  "ui:submitButtonOptions": {
+    "props":{
       "disabled": false,
       "className": "btn btn-info",
-      "allowed": true,
+    },
+      "removed": true,
       "submitText": "Submit"
     },
 }
@@ -27,10 +29,12 @@ In other words, the following uiSchemas are equivalent:
   "ui:options": {
     "title": "Title",
     "description": "Description",
-    "submitButtonProps": {
-      "disabled": false,
-      "className": "btn btn-info",
-      "allowed": true,
+    "submitButtonOptions": {
+      props: {
+        "disabled": false,
+        "className": "btn btn-info",
+      },
+      "removed": false,
       "submitText": "Submit"
     },
   }
@@ -231,21 +235,21 @@ const uiSchema = {
 };
 ```
 
-## submitButtonProps
+## submitButtonOptions
 
-Sometimes it's convenient to change the behavior of the submit button for the form. This is the purpose of the `ui:submitButtonProps` uiSchema directive:
+Sometimes it's convenient to change the behavior of the submit button for the form. This is the purpose of the `ui:submitButtonOptions` uiSchema directive:
 
-You can pass any other prop to the submit button if you want, by default, this library will set the following options mentioned below for all submit buttons:
+You can pass any other prop to the submit button if you want, by default, this library will set the following options / props mentioned below for all submit buttons:
 
-### `disabled` option
+### `disabled` prop
 
 You can use this option to disable the submit button
 
-### `className` option
+### `className` prop
 
 You can use this option to specify a class name for the submit button
 
-### `allowed` option
+### `removed` option
 
 You can use this option to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes
 
@@ -255,12 +259,14 @@ You can use this option to change the text of the submit button
 
 ```js
 const uiSchema = {
- "submitButtonProps": {
+ "submitButtonOptions": {
+   props: {
       "disabled": false,
       "className": "btn btn-info",
-      "allowed": true,
-      "submitText": "Submit"
-    }
+   },
+    "removed": false,
+    "submitText": "Submit"
+  }
 };
 ```
 ## Theme Options

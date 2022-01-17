@@ -16,6 +16,7 @@ import {
   submitForm,
 } from "./test_utils";
 
+
 describeRepeated("Form common", createFormComponent => {
   let sandbox;
 
@@ -374,11 +375,11 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("ui options submitButtonProps", () => {
+  describe("ui options submitButtonOptions", () => {
     it("should not render a submit button", () => {
       const props = {
         schema: {},
-        uiSchema: { "ui:submitButtonProps": { allowed: false } },
+        uiSchema: { "ui:submitButtonOptions": { removed: true } },
       };
       const comp = renderIntoDocument(<Form {...props} />);
       const node = findDOMNode(comp);
@@ -389,7 +390,7 @@ describeRepeated("Form common", createFormComponent => {
     it("should render a submit button with text Confirm", () => {
       const props = {
         schema: {},
-        uiSchema: { "ui:submitButtonProps": { submitText: "Confirm" } },
+        uiSchema: { "ui:submitButtonOptions": { submitText: "Confirm" } },
       };
       const comp = renderIntoDocument(<Form {...props} />);
       const node = findDOMNode(comp);
@@ -401,7 +402,7 @@ describeRepeated("Form common", createFormComponent => {
     it("should render a submit button with class ui-submit-button", () => {
       const props = {
         schema: {},
-        uiSchema: { "ui:submitButtonProps": { className: "ui-submit-button" } },
+        uiSchema: { "ui:submitButtonOptions":  { props: { className: "ui-submit-button" } } },
       };
       const comp = renderIntoDocument(<Form {...props} />);
       const node = findDOMNode(comp);

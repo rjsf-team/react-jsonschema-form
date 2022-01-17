@@ -22,10 +22,13 @@ module.exports = {
     },
   },
   uiSchema: {
-    "ui:submitButtonProps": {
+    "ui:submitButtonOptions": {
       submitText: "Confirm Details",
-      allowed: true,
-      disabled: false,
+      removed: false,
+      props: {
+        disabled: false,
+        "className": "btn btn-info"
+       }
     },
     firstName: {
       "ui:autofocus": true,
