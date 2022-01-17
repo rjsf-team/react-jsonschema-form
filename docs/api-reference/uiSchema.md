@@ -14,11 +14,11 @@ In other words, the following uiSchemas are equivalent:
   "ui:title": "Title",
   "ui:description": "Description"
   "ui:submitButtonOptions": {
-    "props":{
+    "props": {
       "disabled": false,
       "className": "btn btn-info",
     },
-      "removed": true,
+      "removed": false,
       "submitText": "Submit"
     },
 }
