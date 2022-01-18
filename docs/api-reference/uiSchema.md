@@ -247,7 +247,7 @@ You can use this option to disable the submit button
 
 ### `className` prop
 
-You can use this option to specify a class name for the submit button
+You can use this option to specify a class name for the submit button.
 
 ### `removed` option
 
