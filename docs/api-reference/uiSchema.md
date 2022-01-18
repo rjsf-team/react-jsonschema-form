@@ -30,7 +30,7 @@ In other words, the following uiSchemas are equivalent:
     "title": "Title",
     "description": "Description",
     "submitButtonOptions": {
-      props: {
+      "props": {
         "disabled": false,
         "className": "btn btn-info",
       },
