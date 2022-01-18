@@ -251,7 +251,7 @@ You can use this option to specify a class name for the submit button
 
 ### `removed` option
 
-You can use this option to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes
+You can set this property to `true` to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes.
 
 ### `submitText` option
 
