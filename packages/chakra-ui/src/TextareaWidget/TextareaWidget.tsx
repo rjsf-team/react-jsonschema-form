@@ -50,7 +50,7 @@ const TextareaWidget = ({
       ) : null}
       <Textarea
         id={id}
-        value={value}
+        value={value ?? ""}
         placeholder={placeholder}
         autoFocus={autofocus}
         onChange={_onChange}
