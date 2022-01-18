@@ -22,22 +22,22 @@ should change the heading of the (upcoming) version to include a major version b
 - Enable ui options in playground, to demonstrate submit button options (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 ## @rjsf/core
-- Feature for options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- Feature for ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 ## @rjsf/bootstrap-4
-- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 ## @rjsf/material-ui
-- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 ## @rjsf/semantic-ui
-- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 ## @rjsf/antd
-- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 ## @rjsf/fluent-ui
-- SubmitButton widget to use new options on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 # v3.2.0
 
