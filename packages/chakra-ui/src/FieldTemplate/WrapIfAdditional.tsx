@@ -61,6 +61,7 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
             name={`${id}-key`}
             onBlur={!readonly ? handleBlur : undefined}
             type="text"
+            mb={1}
           />
         </FormControl>
       </GridItem>

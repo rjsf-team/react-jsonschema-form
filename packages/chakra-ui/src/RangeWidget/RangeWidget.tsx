@@ -41,7 +41,7 @@ const RangeWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <FormControl {...chakraProps}>
+    <FormControl mb={1} {...chakraProps}>
       {displayLabel ? (
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       ) : null}

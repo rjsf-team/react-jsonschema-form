@@ -62,46 +62,50 @@ const ArrayFieldDescription = ({
 };
 
 // Used in the two templates
-const DefaultArrayItem = (props: any) => (
-  <HStack key={props.key} alignItems={"flex-end"}>
-    <Box p={2} w="100%">
-      {props.children}
-    </Box>
-
-    {props.hasToolbar && (
-      <Box p={2}>
-        <ButtonGroup isAttached>
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-up"
-              tabIndex={-1}
-              disabled={props.disabled || props.readonly || !props.hasMoveUp}
-              onClick={props.onReorderClick(props.index, props.index - 1)}
-            />
-          )}
-
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              icon="arrow-down"
-              tabIndex={-1}
-              disabled={props.disabled || props.readonly || !props.hasMoveDown}
-              onClick={props.onReorderClick(props.index, props.index + 1)}
-            />
-          )}
-
-          {props.hasRemove && (
-            <IconButton
-              icon="remove"
-              tabIndex={-1}
-              disabled={props.disabled || props.readonly}
-              onClick={props.onDropIndexClick(props.index)}
-            />
-          )}
-        </ButtonGroup>
+const DefaultArrayItem = (props: any) => {
+  return (
+    <HStack key={props.key} alignItems={"flex-end"} py={1}>
+      <Box w="100%">
+        {props.children}
       </Box>
-    )}
-  </HStack>
-);
+
+      {props.hasToolbar && (
+        <Box>
+          <ButtonGroup isAttached mb={1}>
+            {(props.hasMoveUp || props.hasMoveDown) && (
+              <IconButton
+                icon="arrow-up"
+                tabIndex={-1}
+                disabled={props.disabled || props.readonly || !props.hasMoveUp}
+                onClick={props.onReorderClick(props.index, props.index - 1)}
+              />
+            )}
+
+            {(props.hasMoveUp || props.hasMoveDown) && (
+              <IconButton
+                icon="arrow-down"
+                tabIndex={-1}
+                disabled={
+                  props.disabled || props.readonly || !props.hasMoveDown
+                }
+                onClick={props.onReorderClick(props.index, props.index + 1)}
+              />
+            )}
+
+            {props.hasRemove && (
+              <IconButton
+                icon="remove"
+                tabIndex={-1}
+                disabled={props.disabled || props.readonly}
+                onClick={props.onDropIndexClick(props.index)}
+              />
+            )}
+          </ButtonGroup>
+        </Box>
+      )}
+    </HStack>
+  );
+};
 
 const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => (
   <fieldset className={props.className}>
@@ -162,7 +166,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => (
       />
     )}
 
-    <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
+    <Grid key={`array-item-list-${props.idSchema.$id}`}>
       <GridItem>
         {props.items.length > 0 && props.items.map(p => DefaultArrayItem(p))}
       </GridItem>

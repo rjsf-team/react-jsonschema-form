@@ -52,7 +52,9 @@ const FieldTemplate = (props: FieldTemplateProps) => {
         isInvalid={rawErrors && rawErrors.length > 0}
       >
         {children}
-        {displayLabel && rawDescription ? <Text>{rawDescription}</Text> : null}
+        {displayLabel && rawDescription ? (
+          <Text mt={2}>{rawDescription}</Text>
+        ) : null}
         {rawErrors && rawErrors.length > 0 && (
           <List>
             {rawErrors.map((error, i: number) => {

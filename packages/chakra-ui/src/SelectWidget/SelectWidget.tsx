@@ -8,7 +8,8 @@ import {
 import { WidgetProps } from "@rjsf/core";
 import { utils } from "@rjsf/core";
 import { getChakra } from "../utils";
-const { asNumber, guessType, getDisplayLabel } = utils;
+
+const { asNumber, guessType } = utils;
 
 const nums = new Set(["number", "integer"]);
 
@@ -52,7 +53,6 @@ const SelectWidget = ({
   disabled,
   readonly,
   value,
-  multiple,
   autofocus,
   onChange,
   onBlur,
@@ -63,10 +63,9 @@ const SelectWidget = ({
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
 
-  const emptyValue = multiple ? [] : "";
-
-  const displayLabel =
-    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+  // @todo Default emptyValue should be string when multi select is implemented
+  // const emptyValue = multiple ? [] : "";
+  const emptyValue: string = "";
 
   const _onChange = ({
     target: { value },
@@ -83,18 +82,25 @@ const SelectWidget = ({
 
   return (
     <FormControl
+      mb={1}
       {...chakraProps}
       isRequired={required}
       isDisabled={disabled}
       isReadOnly={readonly}
     >
-      {displayLabel ? (
+      {(label || schema.title) && (
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
-      ) : null}
+      )}
       <Select
         id={id}
         placeholder={placeholder}
-        value={typeof value === "undefined" ? emptyValue : value}
+        value={
+          typeof value === "undefined"
+            ? emptyValue
+            : typeof value === "string"
+            ? value
+            : value[0] || ""
+        }
         autoFocus={autofocus}
         onBlur={_onBlur}
         onChange={_onChange}

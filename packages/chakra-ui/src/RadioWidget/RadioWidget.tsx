@@ -38,6 +38,7 @@ const RadioWidget = ({
 
   return (
     <FormControl
+      mb={1}
       {...chakraProps}
       isDisabled={disabled || readonly}
       isRequired={required}

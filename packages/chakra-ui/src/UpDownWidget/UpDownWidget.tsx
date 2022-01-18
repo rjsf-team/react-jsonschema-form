@@ -9,6 +9,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { WidgetProps, utils } from "@rjsf/core";
+import { getChakra } from "../utils";
 
 const { getDisplayLabel } = utils;
 
@@ -27,6 +28,8 @@ const UpDownWidget = ({
   const displayLabel =
     getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
+  const chakraProps = getChakra({ uiSchema });
+
   const _onChange = (value: string | number) => onChange(value);
   const _onBlur = ({
     target: { value },
@@ -36,7 +39,7 @@ const UpDownWidget = ({
   }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
-    <FormControl>
+    <FormControl mb={1} {...chakraProps}>
       {displayLabel ? (
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       ) : null}

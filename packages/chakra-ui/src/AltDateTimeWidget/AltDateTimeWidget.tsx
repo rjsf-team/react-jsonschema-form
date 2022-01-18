@@ -1,9 +1,9 @@
 import React from "react";
 
 import _AltDateWidget from "../AltDateWidget";
-import { TextWidgetProps } from "TextWidget";
+import { WidgetProps } from "@rjsf/core";
 
-const AltDateTimeWidget = (props: TextWidgetProps) => {
+const AltDateTimeWidget = (props: WidgetProps) => {
   const { AltDateWidget } = props.registry.widgets;
   return <AltDateWidget {...props} showTime />;
 };
