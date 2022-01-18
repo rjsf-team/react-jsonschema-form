@@ -59,7 +59,7 @@ const CheckboxesWidget = ({
   const row = options ? options.inline : false;
 
   return (
-    <FormControl {...chakraProps} isRequired={required}>
+    <FormControl mb={1} {...chakraProps} isRequired={required}>
       <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       <CheckboxGroup onChange={option => onChange(option)}>
         <Stack direction={row ? "row" : "column"}>

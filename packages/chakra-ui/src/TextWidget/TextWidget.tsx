@@ -5,9 +5,7 @@ import { getChakra } from "../utils";
 
 const { getDisplayLabel } = utils;
 
-export type TextWidgetProps = WidgetProps & {};
-
-const TextWidget = (props: TextWidgetProps) => {
+const TextWidget = (props: WidgetProps) => {
   const {
     id,
     type = "text",
@@ -43,6 +41,7 @@ const TextWidget = (props: TextWidgetProps) => {
 
   return (
     <FormControl
+      mb={1}
       {...chakraProps}
       isDisabled={disabled || readonly}
       isRequired={required}

@@ -29,19 +29,20 @@ const readyForChange = (state: AltDateStateType) => {
   );
 };
 
-const AltDateWidget = ({
-  autofocus,
-  disabled,
-  id,
-  onBlur,
-  onChange,
-  onFocus,
-  options,
-  readonly,
-  registry,
-  showTime,
-  value,
-}: any) => {
+const AltDateWidget = (props: any) => {
+  const {
+    autofocus,
+    disabled,
+    id,
+    onBlur,
+    onChange,
+    onFocus,
+    options,
+    readonly,
+    registry,
+    showTime,
+    value,
+  } = props;
   const { SelectWidget } = registry.widgets;
   const [state, setState] = useState(parseDateString(value, showTime));
   useEffect(() => {
@@ -99,23 +100,18 @@ const AltDateWidget = ({
   };
 
   const renderDateElement = (elemProps: WidgetProps) => {
-    const value = Boolean(elemProps.value) ? elemProps.value : undefined;
+    const value = Boolean(elemProps?.value) ? elemProps.value : undefined;
     return (
       <SelectWidget
-        autofocus={elemProps.autofocus}
+        {...elemProps}
         className="form-control"
-        disabled={elemProps.disabled}
-        id={elemProps.id}
-        onBlur={elemProps.onBlur}
         onChange={(elemValue: WidgetProps) =>
           elemProps.select(elemProps.type, elemValue)
         }
-        onFocus={elemProps.onFocus}
         options={{
           enumOptions: rangeOptions(elemProps.range[0], elemProps.range[1]),
         }}
         placeholder={elemProps.type}
-        readonly={elemProps.readonly}
         schema={{ type: "integer" }}
         value={value}
       />
@@ -130,6 +126,7 @@ const AltDateWidget = ({
           return (
             <Box key={elemId} mr="2" mb="2">
               {renderDateElement({
+                ...props,
                 ...elemProps,
                 autofocus: autofocus && i === 0,
                 disabled,
@@ -139,7 +136,7 @@ const AltDateWidget = ({
                 readonly,
                 registry,
                 select: handleChange,
-                value: elemProps.value < 0 ? undefined : elemProps.value,
+                value: elemProps.value < 0 ? "" : elemProps.value,
               })}
             </Box>
           );

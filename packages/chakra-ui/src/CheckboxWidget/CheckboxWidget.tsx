@@ -29,7 +29,7 @@ const CheckboxWidget = (props: WidgetProps) => {
   }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
-    <FormControl {...chakraProps} isRequired={required}>
+    <FormControl mb={1} {...chakraProps} isRequired={required}>
       <Checkbox
         id={id}
         isChecked={typeof value === "undefined" ? false : value}
