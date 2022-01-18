@@ -241,26 +241,31 @@ Sometimes it's convenient to change the behavior of the submit button for the fo
 
 You can pass any other prop to the submit button if you want, by default, this library will set the following options / props mentioned below for all submit buttons:
 
-### `disabled` prop
-
-You can use this option to disable the submit button
-
-### `className` prop
-
-You can use this option to specify a class name for the submit button.
-
 ### `removed` option
 
 You can set this property to `true` to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes.
 
 ### `submitText` option
 
-You can use this option to change the text of the submit button
+You can use this option to change the text of the submit button. Set to "submit" by default.
+
+### `props` section
+
+You can pass any other prop to the submit button if you want, via this section. by default the `disabled` and `className` prop are set.
+
+
+####  `disabled` prop
+
+You can use this option to disable the submit button. Set to `false` by default.
+
+#### `className` prop
+
+You can use this option to specify a class name for the submit button. Set to "btn btn-info" by default.
 
 ```js
 const uiSchema = {
  "submitButtonOptions": {
-   props: {
+   "props": {
       "disabled": false,
       "className": "btn btn-info",
    },
