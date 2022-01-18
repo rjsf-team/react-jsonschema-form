@@ -138,7 +138,9 @@ const FileWidget = ({
     }
 
     return (
-      <IconButton onClick={onRemoveClick}>
+      <IconButton
+        aria-label={intl.formatMessage({defaultMessage: "Remove file"})}
+        onClick={onRemoveClick}>
         <HighlightOffIcon />
       </IconButton>
     );
