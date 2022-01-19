@@ -5,6 +5,7 @@ import {
   getWidget,
   getUiOptions,
   isSelect,
+  isConstant,
   optionsList,
   getDefaultRegistry,
   hasWidget,
@@ -51,7 +52,7 @@ function StringField(props) {
       onFocus={onFocus}
       required={required}
       disabled={disabled}
-      readonly={readonly}
+      readonly={readonly||isConstant(schema)}
       formContext={formContext}
       autofocus={autofocus}
       registry={registry}
