@@ -6,6 +6,7 @@ import * as types from "../../types";
 import {
   ADDITIONAL_PROPERTY_FLAG,
   isSelect,
+  isConstant,
   retrieveSchema,
   toIdSchema,
   getDefaultRegistry,
@@ -261,7 +262,7 @@ function SchemaFieldRender(props) {
     props.readonly ||
       uiSchema["ui:readonly"] ||
       props.schema.readOnly ||
-      schema.readOnly
+      schema.readOnly || isConstant(schema)
   );
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
   if (Object.keys(schema).length === 0) {
