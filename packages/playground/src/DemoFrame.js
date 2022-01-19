@@ -74,7 +74,7 @@ function DemoFrame(props) {
       <div id="demo-frame-jss" />
       {/* We need to wrap the material-ui form in a custom StylesProvider
             so that styles are injected into the iframe, not the parent window. */}
-      {theme === "material-ui" ? (
+      {theme === "material-ui-4" ? (
         state.ready ? (
           <StylesProvider jss={state.jss} sheetsManager={state.sheetsManager}>
             {React.cloneElement(children, {
