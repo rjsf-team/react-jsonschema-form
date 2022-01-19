@@ -49,7 +49,9 @@ const TextWidget = (props: WidgetProps) => {
       isInvalid={rawErrors && rawErrors.length > 0}
     >
       {displayLabel ? (
-        <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+        <FormLabel htmlFor={id} id={`${id}-label`}>
+          {label || schema.title}
+        </FormLabel>
       ) : null}
       <Input
         id={id}

@@ -63,7 +63,7 @@ const SelectWidget = ({
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
 
-  // @todo Default emptyValue should be string when multi select is implemented
+  // TODO: Default emptyValue should be string when multi select is implemented
   // const emptyValue = multiple ? [] : "";
   const emptyValue: string = "";
 
