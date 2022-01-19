@@ -74,7 +74,7 @@ exports[`object fields object 1`] = `
             <label
               className="chakra-form__label emotion-5"
               htmlFor="root_a"
-              id="root_a-WOWLABEL"
+              id="root_a-label"
             >
               A
             </label>
@@ -109,7 +109,7 @@ exports[`object fields object 1`] = `
             <label
               className="chakra-form__label emotion-5"
               htmlFor="root_b"
-              id="root_b-WOWLABEL"
+              id="root_b-label"
             >
               B
             </label>
