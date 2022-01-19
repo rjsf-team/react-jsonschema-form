@@ -5,7 +5,7 @@ exports[`renders 0 as 0 and not '' 1`] = `
   className="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
 >
   <label
-    className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required css-1kty9di-MuiFormLabel-root-MuiInputLabel-root"
+    className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required css-1sumxir-MuiFormLabel-root-MuiInputLabel-root"
     data-shrink={true}
   >
     Some simple label

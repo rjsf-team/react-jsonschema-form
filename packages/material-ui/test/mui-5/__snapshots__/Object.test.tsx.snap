@@ -18,7 +18,7 @@ exports[`object fields additionalProperties 1`] = `
       }
     >
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1em9ut6-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
         style={
           Object {
             "marginBottom": "10px",
@@ -29,7 +29,7 @@ exports[`object fields additionalProperties 1`] = `
           className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-ofrcno-MuiGrid-root"
         >
           <div
-            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-4jz4pb-MuiGrid-root"
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1vd824g-MuiGrid-root"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
@@ -79,7 +79,7 @@ exports[`object fields additionalProperties 1`] = `
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-4jz4pb-MuiGrid-root"
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1vd824g-MuiGrid-root"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
@@ -179,7 +179,7 @@ exports[`object fields additionalProperties 1`] = `
         </div>
       </div>
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-undefined css-16g5rpk-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-container css-16g5rpk-MuiGrid-root"
       >
         <div
           className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
@@ -271,7 +271,7 @@ exports[`object fields object 1`] = `
       }
     >
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1em9ut6-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
         style={
           Object {
             "marginBottom": "10px",
@@ -328,7 +328,7 @@ exports[`object fields object 1`] = `
         </div>
       </div>
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1em9ut6-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
         style={
           Object {
             "marginBottom": "10px",
