@@ -1,6 +1,11 @@
 # uiSchema Options for Chakra-UI
 
-When using RJSF with Chakra-UI, you can use the following `chakra` option to customize the appearance of the form:
+When using `@rjsf/chakra-ui` there are a couple of ways to customize the feel of the form.
+
+## Styling
+
+You can use `ChakraProvider`, where you can customize the components at a theme level.\
+And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize the styling of the form widgets.
 
 ```json
 {

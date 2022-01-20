@@ -27,7 +27,10 @@
     "access": "public"
   },
   "author": "Jonathan Blair <jonathanbblair@gmail.com>",
-  "contributors": [],
+  "contributors": [
+    "jzander <jeremy.zander@gmail.com>",
+    "Rodrigo Fuentes <rodrigofuentes@users.noreply.github.com>"
+  ],
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
