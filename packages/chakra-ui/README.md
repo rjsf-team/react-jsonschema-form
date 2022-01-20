@@ -124,8 +124,8 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/material-ui/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/material-ui
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/material-ui.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/material-ui
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/screenshot.png
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/chakra-ui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/chakra-ui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/chakra-ui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/chakra-ui
+[product-screenshot]: ./screenshot.png
