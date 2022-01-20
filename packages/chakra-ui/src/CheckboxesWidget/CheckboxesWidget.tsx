@@ -23,20 +23,21 @@ import { getChakra } from "../utils";
 //   return selected.filter((v) => v !== value);
 // };
 
-const CheckboxesWidget = ({
-  id,
-  disabled,
-  options,
-  value,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-  required,
-  label,
-  uiSchema,
-  schema,
-}: WidgetProps) => {
+const CheckboxesWidget = (props: WidgetProps) => {
+  const {
+    id,
+    disabled,
+    options,
+    value,
+    readonly,
+    onChange,
+    onBlur,
+    onFocus,
+    required,
+    label,
+    uiSchema,
+    schema,
+  } = props;
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
   // const _onChange = option => ({ target: { checked } }) => {
@@ -61,7 +62,7 @@ const CheckboxesWidget = ({
   return (
     <FormControl mb={1} {...chakraProps} isRequired={required}>
       <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
-      <CheckboxGroup onChange={option => onChange(option)}>
+      <CheckboxGroup onChange={option => onChange(option)} defaultValue={value}>
         <Stack direction={row ? "row" : "column"}>
           {(enumOptions as any).map(
             (option: { value: any; label: any }, index: any) => {
