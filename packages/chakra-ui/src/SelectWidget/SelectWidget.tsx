@@ -43,23 +43,24 @@ const processValue = (schema: any, value: any) => {
   return value;
 };
 
-const SelectWidget = ({
-  schema,
-  id,
-  options,
-  label,
-  placeholder,
-  required,
-  disabled,
-  readonly,
-  value,
-  autofocus,
-  onChange,
-  onBlur,
-  onFocus,
-  rawErrors = [],
-  uiSchema,
-}: WidgetProps) => {
+const SelectWidget = (props: WidgetProps) => {
+  const {
+    schema,
+    id,
+    options,
+    label,
+    placeholder,
+    required,
+    disabled,
+    readonly,
+    value,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    rawErrors = [],
+    uiSchema,
+  } = props;
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
 
@@ -93,7 +94,7 @@ const SelectWidget = ({
       )}
       <Select
         id={id}
-        placeholder={placeholder}
+        placeholder={placeholder !== "" ? placeholder : " "}
         value={
           typeof value === "undefined"
             ? emptyValue
