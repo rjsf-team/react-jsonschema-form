@@ -8,7 +8,7 @@ const { getDisplayLabel } = utils;
 const TextWidget = (props: WidgetProps) => {
   const {
     id,
-    type = "text",
+    type,
     value,
     label,
     schema,
@@ -39,6 +39,9 @@ const TextWidget = (props: WidgetProps) => {
   const displayLabel =
     getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
+  const inputType =
+    (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
+
   return (
     <FormControl
       mb={1}
@@ -61,7 +64,7 @@ const TextWidget = (props: WidgetProps) => {
         onFocus={_onFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
-        type={type}
+        type={inputType}
       />
     </FormControl>
   );
