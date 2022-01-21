@@ -8,7 +8,7 @@ const { getDisplayLabel } = utils;
 const TextWidget = (props: WidgetProps) => {
   const {
     id,
-    type = "text",
+    type,
     value,
     label,
     schema,
@@ -39,6 +39,9 @@ const TextWidget = (props: WidgetProps) => {
   const displayLabel =
     getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
+  const inputType =
+    (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
+
   return (
     <FormControl
       mb={1}
@@ -61,8 +64,18 @@ const TextWidget = (props: WidgetProps) => {
         onFocus={_onFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
-        type={type}
+        type={inputType}
+        list={schema.examples ? `examples_${id}` : undefined}
       />
+      {schema.examples ? (
+        <datalist id={`examples_${id}`}>
+          {(schema.examples as string[])
+            .concat(schema.default ? ([schema.default] as string[]) : [])
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      ) : null}
     </FormControl>
   );
 };

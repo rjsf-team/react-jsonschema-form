@@ -13,18 +13,22 @@ import { getChakra } from "../utils";
 
 const { getDisplayLabel } = utils;
 
-const UpDownWidget = ({
-  id,
-  schema,
-  uiSchema,
-  readonly,
-  disabled,
-  label,
-  value,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps) => {
+const UpDownWidget = (props: WidgetProps) => {
+  const {
+    id,
+    schema,
+    uiSchema,
+    readonly,
+    disabled,
+    label,
+    value,
+    onChange,
+    onBlur,
+    onFocus,
+    rawErrors,
+    required,
+  } = props;
+
   const displayLabel =
     getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
@@ -39,13 +43,19 @@ const UpDownWidget = ({
   }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
-    <FormControl mb={1} {...chakraProps}>
+    <FormControl
+      mb={1}
+      {...chakraProps}
+      isDisabled={disabled || readonly}
+      isRequired={required}
+      isReadOnly={readonly}
+      isInvalid={rawErrors && rawErrors.length > 0}
+    >
       {displayLabel ? (
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       ) : null}
       <NumberInput
-        isDisabled={disabled || readonly}
-        value={value}
+        value={value ?? ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

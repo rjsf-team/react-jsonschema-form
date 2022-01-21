@@ -43,23 +43,24 @@ const processValue = (schema: any, value: any) => {
   return value;
 };
 
-const SelectWidget = ({
-  schema,
-  id,
-  options,
-  label,
-  placeholder,
-  required,
-  disabled,
-  readonly,
-  value,
-  autofocus,
-  onChange,
-  onBlur,
-  onFocus,
-  rawErrors = [],
-  uiSchema,
-}: WidgetProps) => {
+const SelectWidget = (props: WidgetProps) => {
+  const {
+    schema,
+    id,
+    options,
+    label,
+    placeholder,
+    required,
+    disabled,
+    readonly,
+    value,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    rawErrors = [],
+    uiSchema,
+  } = props;
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
 
@@ -84,16 +85,17 @@ const SelectWidget = ({
     <FormControl
       mb={1}
       {...chakraProps}
+      isDisabled={disabled || readonly}
       isRequired={required}
-      isDisabled={disabled}
       isReadOnly={readonly}
+      isInvalid={rawErrors && rawErrors.length > 0}
     >
       {(label || schema.title) && (
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       )}
       <Select
         id={id}
-        placeholder={placeholder}
+        placeholder={placeholder !== "" ? placeholder : " "}
         value={typeof value === "undefined" ? emptyValue : value.toString()}
         autoFocus={autofocus}
         onBlur={_onBlur}
