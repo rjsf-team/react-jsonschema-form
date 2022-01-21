@@ -25,7 +25,7 @@ const TextWidget = (props: WidgetProps) => {
     disabled,
   } = props;
   const chakraProps = getChakra({ uiSchema });
-  console.log("TextWidget props", props);
+
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
