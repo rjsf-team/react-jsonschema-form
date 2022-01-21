@@ -2,12 +2,15 @@ import React from "react";
 import {
   FormControl,
   FormLabel,
-  FormErrorMessage,
   Select,
 } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import { utils, WidgetProps } from "@rjsf/core";
 import { getChakra } from "../utils";
+import {
+  GroupBase,
+  OptionsOrGroups,
+  Select as ChakraMultiSelect,
+} from "chakra-react-select";
 
 const { asNumber, guessType } = utils;
 
@@ -50,6 +53,7 @@ const SelectWidget = (props: WidgetProps) => {
     options,
     label,
     placeholder,
+    multiple,
     required,
     disabled,
     readonly,
@@ -67,6 +71,17 @@ const SelectWidget = (props: WidgetProps) => {
   // TODO: Default emptyValue should be string when multi select is implemented
   // const emptyValue = multiple ? [] : "";
   const emptyValue: string = "";
+
+  const _onMultiChange = (e: any) => {
+    return onChange(
+      processValue(
+        schema,
+        e.map((v: { label: any; value: any }) => {
+          return v.value;
+        })
+      )
+    );
+  };
 
   const _onChange = ({
     target: { value },
@@ -91,32 +106,50 @@ const SelectWidget = (props: WidgetProps) => {
       isInvalid={rawErrors && rawErrors.length > 0}
     >
       {(label || schema.title) && (
-        <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+        <FormLabel
+          htmlFor={
+            typeof multiple !== "undefined" && enumOptions ? undefined : id
+          }
+        >
+          {label || schema.title}
+        </FormLabel>
       )}
-      <Select
-        id={id}
-        placeholder={placeholder !== "" ? placeholder : " "}
-        value={typeof value === "undefined" ? emptyValue : value.toString()}
-        autoFocus={autofocus}
-        onBlur={_onBlur}
-        onChange={_onChange}
-        onFocus={_onFocus}
-      >
-        {(enumOptions as any).map(({ value, label }: any, i: number) => {
-          const disabled: any =
-            enumDisabled && (enumDisabled as any).indexOf(value) != -1;
-          return (
-            <option key={i} value={value} disabled={disabled}>
-              {label}
-            </option>
-          );
-        })}
-      </Select>
-      {rawErrors && rawErrors.length > 0
-        ? rawErrors.map((error, i) => (
-            <FormErrorMessage key={i}>{error}</FormErrorMessage>
-          ))
-        : null}
+      {typeof multiple !== "undefined" && enumOptions ? (
+        <ChakraMultiSelect
+          isMulti
+          name={label}
+          options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
+          placeholder={placeholder}
+          closeMenuOnSelect={false}
+          onChange={_onMultiChange}
+          value={value.map((v: any) => {
+            return {
+              label: v,
+              value: v,
+            };
+          })}
+        />
+      ) : (
+        <Select
+          id={id}
+          placeholder={placeholder !== "" ? placeholder : " "}
+          value={typeof value === "undefined" ? emptyValue : value.toString()}
+          autoFocus={autofocus}
+          onBlur={_onBlur}
+          onChange={_onChange}
+          onFocus={_onFocus}
+        >
+          {(enumOptions as any).map(({ value, label }: any, i: number) => {
+            const disabled: any =
+              enumDisabled && (enumDisabled as any).indexOf(value) != -1;
+            return (
+              <option key={i} value={value} disabled={disabled}>
+                {label}
+              </option>
+            );
+          })}
+        </Select>
+      )}
     </FormControl>
   );
 };
