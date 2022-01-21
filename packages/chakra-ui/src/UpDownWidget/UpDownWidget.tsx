@@ -55,7 +55,7 @@ const UpDownWidget = (props: WidgetProps) => {
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       ) : null}
       <NumberInput
-        value={value}
+        value={value ?? ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
