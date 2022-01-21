@@ -3,6 +3,7 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import weakMemoize from "@emotion/weak-memoize";
 import { ChakraProvider } from "@chakra-ui/react";
+import CSSReset from "./CssReset";
 
 /**
  * __createChakraFrameProvider is used to ensure that <Global> emotion components
@@ -30,7 +31,10 @@ export const __createChakraFrameProvider = (props: any) => ({
   return (
     <div style={{ margin: 2 }}>
       <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
-        <ChakraProvider>{props.children}</ChakraProvider>
+        <ChakraProvider resetCSS={false}>
+          <CSSReset />
+          {props.children}
+        </ChakraProvider>
       </CacheProvider>
     </div>
   );
