@@ -100,10 +100,11 @@ const AltDateWidget = (props: any) => {
   };
 
   const renderDateElement = (elemProps: WidgetProps) => {
-    const value = Boolean(elemProps?.value) ? elemProps.value : undefined;
+    const value = Boolean(elemProps.value) ? elemProps.value : undefined;
     return (
       <SelectWidget
         {...elemProps}
+        label={undefined}
         className="form-control"
         onChange={(elemValue: WidgetProps) =>
           elemProps.select(elemProps.type, elemValue)
