@@ -1,7 +1,6 @@
 import React from "react";
 import {
   FormControl,
-  FormErrorMessage,
   FormLabel,
   Select,
 } from "@chakra-ui/react";
@@ -74,9 +73,14 @@ const SelectWidget = (props: WidgetProps) => {
   const emptyValue: string = "";
 
   const _onMultiChange = (e: any) => {
-    return onChange(processValue(schema, e.map((v: { label: any; value: any }) => {
-      return v.value;
-    })));
+    return onChange(
+      processValue(
+        schema,
+        e.map((v: { label: any; value: any }) => {
+          return v.value;
+        })
+      )
+    );
   };
 
   const _onChange = ({
@@ -91,6 +95,7 @@ const SelectWidget = (props: WidgetProps) => {
     target: { value },
   }: React.FocusEvent<HTMLSelectElement>) =>
     onFocus(id, processValue(schema, value));
+
   return (
     <FormControl
       mb={1}
@@ -101,7 +106,13 @@ const SelectWidget = (props: WidgetProps) => {
       isInvalid={rawErrors && rawErrors.length > 0}
     >
       {(label || schema.title) && (
-        <FormLabel htmlFor={typeof multiple !== "undefined" && enumOptions ? undefined : id}>{label || schema.title}</FormLabel>
+        <FormLabel
+          htmlFor={
+            typeof multiple !== "undefined" && enumOptions ? undefined : id
+          }
+        >
+          {label || schema.title}
+        </FormLabel>
       )}
       {typeof multiple !== "undefined" && enumOptions ? (
         <ChakraMultiSelect
@@ -139,12 +150,6 @@ const SelectWidget = (props: WidgetProps) => {
           })}
         </Select>
       )}
-
-      {rawErrors && rawErrors.length > 0
-        ? rawErrors.map((error, i) => (
-            <FormErrorMessage key={i}>{error}</FormErrorMessage>
-          ))
-        : null}
     </FormControl>
   );
 };
