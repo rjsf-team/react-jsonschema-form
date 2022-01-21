@@ -96,14 +96,7 @@ const SelectWidget = (props: WidgetProps) => {
       <Select
         id={id}
         placeholder={placeholder !== "" ? placeholder : " "}
-        // value={
-        //   typeof value === "undefined"
-        //     ? emptyValue
-        //     : typeof value === "string"
-        //     ? value
-        //     : value[0] || ""
-        // }
-        value={typeof value === "undefined" ? emptyValue : value}
+        value={typeof value === "undefined" ? emptyValue : value.toString()}
         autoFocus={autofocus}
         onBlur={_onBlur}
         onChange={_onChange}
