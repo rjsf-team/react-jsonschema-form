@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -11,26 +12,30 @@ import Paper from '@material-ui/core/Paper';
 
 import { ErrorListProps } from '@visma/rjsf-core';
 
-const ErrorList = ({ errors }: ErrorListProps) => (
-  <Paper elevation={2}>
-    <Box mb={2} p={2}>
-      <Typography variant="h6">
-        Errors
-      </Typography>
-      <List dense={true}>
-        {errors.map((error, i: number) => {
-          return (
-            <ListItem key={i}>
-              <ListItemIcon>
-                <ErrorIcon color="error" />
-              </ListItemIcon>
-              <ListItemText primary={error.stack} />
-            </ListItem>
-          );
-        })}
-      </List>
-    </Box>
-  </Paper>
-);
+const ErrorList = ({ errors }: ErrorListProps) => {
+  const intl = useIntl();
+
+  return (
+    <Paper elevation={2}>
+      <Box mb={2} p={2}>
+        <Typography variant="h6">
+          {intl.formatMessage({defaultMessage: 'Errors'})}
+        </Typography>
+        <List dense={true}>
+          {errors.map((error, i: number) => {
+            return (
+              <ListItem key={i}>
+                <ListItemIcon>
+                  <ErrorIcon color="error" />
+                </ListItemIcon>
+                <ListItemText primary={error.stack} />
+              </ListItem>
+            );
+          })}
+        </List>
+      </Box>
+    </Paper>
+  );
+}
 
 export default ErrorList;
