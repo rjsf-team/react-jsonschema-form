@@ -25,7 +25,7 @@ const TextWidget = (props: WidgetProps) => {
     disabled,
   } = props;
   const chakraProps = getChakra({ uiSchema });
-
+  console.log("TextWidget props", props);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -65,7 +65,17 @@ const TextWidget = (props: WidgetProps) => {
         autoFocus={autofocus}
         placeholder={placeholder}
         type={inputType}
+        list={schema.examples ? `examples_${id}` : undefined}
       />
+      {schema.examples ? (
+        <datalist id={`examples_${id}`}>
+          {(schema.examples as string[])
+            .concat(schema.default ? ([schema.default] as string[]) : [])
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      ) : null}
     </FormControl>
   );
 };
