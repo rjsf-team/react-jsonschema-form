@@ -36,6 +36,7 @@ const CheckboxesWidget = (props: WidgetProps) => {
     required,
     label,
     uiSchema,
+    rawErrors = [],
     schema,
   } = props;
   const { enumOptions, enumDisabled } = options;
@@ -60,7 +61,14 @@ const CheckboxesWidget = (props: WidgetProps) => {
   const row = options ? options.inline : false;
 
   return (
-    <FormControl mb={1} {...chakraProps} isRequired={required}>
+    <FormControl
+      mb={1}
+      {...chakraProps}
+      isDisabled={disabled || readonly}
+      isRequired={required}
+      isReadOnly={readonly}
+      isInvalid={rawErrors && rawErrors.length > 0}
+    >
       <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       <CheckboxGroup onChange={option => onChange(option)} defaultValue={value}>
         <Stack direction={row ? "row" : "column"}>
