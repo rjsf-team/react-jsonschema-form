@@ -41,7 +41,7 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
           description={description}
         />
       )}
-      <Grid gap={description ? 2 : 6}>
+      <Grid gap={description ? 2 : 6} mb={4}>
         {properties.map((element, index) =>
           element.hidden ? (
             element.content
