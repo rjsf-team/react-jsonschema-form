@@ -85,9 +85,10 @@ const SelectWidget = (props: WidgetProps) => {
     <FormControl
       mb={1}
       {...chakraProps}
+      isDisabled={disabled || readonly}
       isRequired={required}
-      isDisabled={disabled}
       isReadOnly={readonly}
+      isInvalid={rawErrors && rawErrors.length > 0}
     >
       {(label || schema.title) && (
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
@@ -95,13 +96,14 @@ const SelectWidget = (props: WidgetProps) => {
       <Select
         id={id}
         placeholder={placeholder !== "" ? placeholder : " "}
-        value={
-          typeof value === "undefined"
-            ? emptyValue
-            : typeof value === "string"
-            ? value
-            : value[0] || ""
-        }
+        // value={
+        //   typeof value === "undefined"
+        //     ? emptyValue
+        //     : typeof value === "string"
+        //     ? value
+        //     : value[0] || ""
+        // }
+        value={typeof value === "undefined" ? emptyValue : value}
         autoFocus={autofocus}
         onBlur={_onBlur}
         onChange={_onChange}
