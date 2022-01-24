@@ -50,7 +50,7 @@
     "@types/react-dom": "^16.9.5",
     "@types/react-test-renderer": "^16.9.2",
     "babel-loader": "^8.2.3",
-    "framer-motion": "^3.10.6",
+    "framer-motion": "^5.5.5",
     "react": "^17.0.2",
     "react-dom": "^16.13.0",
     "react-is": "^17.0.2",
