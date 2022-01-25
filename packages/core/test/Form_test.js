@@ -16,7 +16,6 @@ import {
   submitForm,
 } from "./test_utils";
 
-
 describeRepeated("Form common", createFormComponent => {
   let sandbox;
 
@@ -402,7 +401,11 @@ describeRepeated("Form common", createFormComponent => {
     it("should render a submit button with class ui-submit-button", () => {
       const props = {
         schema: {},
-        uiSchema: { "ui:submitButtonOptions":  { props: { className: "ui-submit-button" } } },
+        uiSchema: {
+          "ui:submitButtonOptions": {
+            props: { className: "ui-submit-button" },
+          },
+        },
       };
       const comp = renderIntoDocument(<Form {...props} />);
       const node = findDOMNode(comp);

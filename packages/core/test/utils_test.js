@@ -34,7 +34,6 @@ import {
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
-
 describe("utils", () => {
   let sandbox;
 
@@ -3660,8 +3659,7 @@ describe("utils", () => {
   describe("getSubmitButtonOptions", () => {
     it("default props", () => {
       expect(getSubmitButtonOptions({})).eql({
-        props:{ disabled: false,
-          className: "btn btn-info" },
+        props: { disabled: false, className: "btn btn-info" },
         submitText: "Submit",
         removed: false,
       });
@@ -3674,9 +3672,9 @@ describe("utils", () => {
         })
       ).eql({
         props: {
-        disabled: false,
-        className: "btn btn-info"
-      },
+          disabled: false,
+          className: "btn btn-info",
+        },
         submitText: "Submit",
         removed: false,
       });
@@ -3688,8 +3686,8 @@ describe("utils", () => {
           "ui:options": { submitButtonOptions: { props: { hidden: true } } },
         })
       ).eql({
-        props : {
-          hidden: true
+        props: {
+          hidden: true,
         },
         submitText: "Submit",
         removed: false,
@@ -3702,7 +3700,7 @@ describe("utils", () => {
           "ui:options": { submitButtonOptions: { props: { disabled: true } } },
         })
       ).eql({
-        props : {
+        props: {
           disabled: true,
         },
         submitText: "Submit",
@@ -3716,7 +3714,7 @@ describe("utils", () => {
           "ui:options": { submitButtonOptions: { submitText: "Confirm" } },
         })
       ).eql({
-        props : {
+        props: {
           disabled: false,
           className: "btn btn-info",
         },
