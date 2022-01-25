@@ -20,6 +20,7 @@
   "peerDependencies": {
     "@chakra-ui/react": ">=1.7.3",
     "@chakra-ui/icons": ">=1.1.1",
+    "framer-motion": ">=5.5.5",
     "@rjsf/core": "^3.0.0",
     "react": ">=16"
   },
