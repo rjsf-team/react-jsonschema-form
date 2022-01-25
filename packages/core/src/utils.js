@@ -651,6 +651,9 @@ export function stubExistingAdditionalProperties(
     properties: { ...schema.properties },
   };
 
+  // make sure formData is an object
+  formData = isObject(formData) ? formData : {};
+
   Object.keys(formData).forEach(key => {
     if (schema.properties.hasOwnProperty(key)) {
       // No need to stub, our schema already has the property
