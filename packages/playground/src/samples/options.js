@@ -27,8 +27,8 @@ module.exports = {
       removed: false,
       props: {
         disabled: false,
-        "className": "btn btn-info"
-       }
+        className: "btn btn-info",
+      },
     },
     firstName: {
       "ui:autofocus": true,
