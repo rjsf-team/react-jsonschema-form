@@ -18,7 +18,7 @@
     "test": "tsdx test"
   },
   "peerDependencies": {
-    "@rjsf/core": "^3.2.0",
+    "@rjsf/core": "^3.0.0",
     "react": ">=16",
     "react-bootstrap": "^1.0.1"
   },
