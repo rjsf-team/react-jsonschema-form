@@ -256,6 +256,10 @@ export const CSSReset = () => (
         border-color: revert;
         border-style: revert;
       }
+      .array-item > hr {
+        margin-top: 16px;
+        margin-bottom: 16px;
+      }
     `}
   />
 );
