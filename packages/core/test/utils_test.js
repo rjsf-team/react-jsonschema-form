@@ -3659,7 +3659,7 @@ describe("utils", () => {
   describe("getSubmitButtonOptions", () => {
     it("default props", () => {
       expect(getSubmitButtonOptions({})).eql({
-        props: { disabled: false, className: "btn btn-info" },
+        props: { disabled: false },
         submitText: "Submit",
         removed: false,
       });
@@ -3673,7 +3673,6 @@ describe("utils", () => {
       ).eql({
         props: {
           disabled: false,
-          className: "btn btn-info",
         },
         submitText: "Submit",
         removed: false,
@@ -3716,7 +3715,6 @@ describe("utils", () => {
       ).eql({
         props: {
           disabled: false,
-          className: "btn btn-info",
         },
         submitText: "Confirm",
         removed: false,
