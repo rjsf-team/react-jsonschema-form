@@ -24,7 +24,6 @@ exports[`object fields object 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
             autoFocus={false}
             disabled={false}
             id="root_a"
@@ -54,7 +53,6 @@ exports[`object fields object 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
             autoFocus={false}
             disabled={false}
             id="root_b"
@@ -70,13 +68,12 @@ exports[`object fields object 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;

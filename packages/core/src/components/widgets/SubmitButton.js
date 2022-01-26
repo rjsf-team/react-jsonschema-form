@@ -10,7 +10,7 @@ export default function SubmitButton({ uiSchema }) {
   return (
     <div>
       {!removed && (
-        <button type="submit" {...submitButtonProps}>
+        <button type="submit" {...submitButtonProps} className="btn btn-info">
           {submitText}
         </button>
       )}

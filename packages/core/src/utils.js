@@ -390,7 +390,6 @@ export function getSubmitButtonOptions(uiSchema) {
   const defaultOptions = {
     props: {
       disabled: false,
-      className: "btn btn-info",
     },
     submitText: "Submit",
     removed: false,

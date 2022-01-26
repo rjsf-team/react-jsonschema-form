@@ -260,7 +260,7 @@ You can use this option to disable the submit button. Set to `false` by default.
 
 #### `className` prop
 
-You can use this option to specify a class name for the submit button. Set to "btn btn-info" by default.
+You can use this option to specify a class name for the submit button.
 
 ```js
 const uiSchema = {
