@@ -341,7 +341,7 @@ declare module '@rjsf/core' {
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
 
-        export function getSubmitButtonOptions(uiSchema: UiSchema): UiSchema['ui:submitButtonOptions'];
+        export function getSubmitButtonOptions(uiSchema: UiSchema): UISchemaSubmitButtonOptions;
 
         export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
 
