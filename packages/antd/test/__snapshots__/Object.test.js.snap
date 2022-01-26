@@ -252,13 +252,15 @@ exports[`object fields object 1`] = `
       </div>
     </fieldset>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn btn btn-info ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;

@@ -12,7 +12,8 @@
     "clean": "rimraf dist",
     "lint": "eslint src test",
     "start": "concurrently \"npm:build:* -- --watch\"",
-    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest"
+    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest",
+    "test:update":"cross-env NODE_ENV=test BABEL_ENV=test jest --u"
   },
   "files": [
     "dist"
