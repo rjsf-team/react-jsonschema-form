@@ -4,6 +4,7 @@ exports[`object fields object 1`] = `
 .emotion-1 {
   display: grid;
   grid-gap: 6px;
+  margin-bottom: 4px;
 }
 
 .emotion-4 {
@@ -124,7 +125,7 @@ exports[`object fields object 1`] = `
               placeholder=""
               readOnly={false}
               required={false}
-              type="text"
+              type="number"
               value=""
             />
           </div>

@@ -11,7 +11,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build",
-    "test": "tsdx test"
+    "test": "tsdx test",
+    "test:watch": "tsdx test --watch"
   },
   "engineStrict": false,
   "engines": {

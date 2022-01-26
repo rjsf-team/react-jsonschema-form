@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  FormControl,
-  FormLabel,
-  Select,
-} from "@chakra-ui/react";
+import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import { utils, WidgetProps } from "@rjsf/core";
 import { getChakra } from "../utils";
 import {
@@ -116,6 +112,7 @@ const SelectWidget = (props: WidgetProps) => {
       )}
       {typeof multiple !== "undefined" && enumOptions ? (
         <ChakraMultiSelect
+          inputId={id}
           isMulti
           name={label}
           options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}

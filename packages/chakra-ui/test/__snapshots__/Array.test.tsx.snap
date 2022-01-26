@@ -144,29 +144,138 @@ exports[`array fields checkboxes 1`] = `
 }
 
 .emotion-2 {
-  width: 100%;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
   position: relative;
+  pointer-events: auto;
 }
 
 .emotion-3 {
-  -webkit-padding-end: 2rem;
-  padding-inline-end: 2rem;
-}
-
-.emotion-3:focus,
-.emotion-3[data-focus] {
-  z-index: unset;
-}
-
-.emotion-4 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
   position: absolute;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  height: auto;
+  min-height: 10px;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.125rem 1rem;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-7 {
+  color: gray.400;
+  -webkit-margin-start: 0.125rem;
+  margin-inline-start: 0.125rem;
+  -webkit-margin-end: 0.125rem;
+  margin-inline-end: 0.125rem;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.emotion-8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1/1/2/3;
+  grid-template-columns: 0 min-content;
+  color: inherit;
+}
+
+.emotion-8::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre;
+  padding: 0px;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-9 {
+  color: inherit;
+  background: 0;
+  opacity: 1;
+  width: 100%;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-11 {
+  border: 0;
+  border-left-width: 1px;
+  height: 100%;
+  opacity: 1;
+}
+
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -175,19 +284,29 @@ exports[`array fields checkboxes 1`] = `
   -ms-flex-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
-  pointer-events: none;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0;
+  cursor: pointer;
 }
 
-.emotion-5 {
+.emotion-13 {
+  width: 5px;
+  height: 5px;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-14 {
   margin-top: 3px;
 }
 
-.emotion-6 {
+.emotion-15 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -230,67 +349,95 @@ exports[`array fields checkboxes 1`] = `
       role="group"
     >
       <div
-        className="chakra-select__wrapper emotion-2"
+        className=" emotion-2"
+        onKeyDown={[Function]}
       >
-        <select
-          autoFocus={false}
-          className="chakra-select emotion-3"
-          disabled={false}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          readOnly={false}
-          required={false}
-          value=""
-        >
-          <option
-            value="a"
-          >
-            a
-          </option>
-          <option
-            value="b"
-          >
-            b
-          </option>
-          <option
-            value="c"
-          >
-            c
-          </option>
-        </select>
+        <span
+          className="emotion-3"
+          id="react-select-2-live-region"
+        />
+        <span
+          aria-atomic="false"
+          aria-live="polite"
+          aria-relevant="additions text"
+          className="emotion-3"
+        />
         <div
-          className="chakra-select__icon-wrapper emotion-4"
+          className=" emotion-5"
+          onMouseDown={[Function]}
+          onTouchEnd={[Function]}
         >
-          <svg
-            aria-hidden={true}
-            className="chakra-select__icon"
-            focusable={false}
-            role="presentation"
-            style={
-              Object {
-                "color": "currentColor",
-                "height": "1em",
-                "width": "1em",
-              }
-            }
-            viewBox="0 0 24 24"
+          <div
+            className=" emotion-6"
           >
-            <path
-              d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
-              fill="currentColor"
+            <div
+              className=" emotion-7"
+              id="react-select-2-placeholder"
+            >
+              Select...
+            </div>
+            <div
+              className=" emotion-8"
+              data-value=""
+            >
+              <input
+                aria-autocomplete="list"
+                aria-controls="react-select-2-listbox"
+                aria-describedby="react-select-2-placeholder"
+                aria-expanded={false}
+                aria-haspopup={true}
+                aria-owns="react-select-2-listbox"
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect="off"
+                className=" emotion-9"
+                disabled={false}
+                id="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                role="combobox"
+                spellCheck="false"
+                tabIndex={0}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className=" emotion-10"
+          >
+            <hr
+              aria-orientation="vertical"
+              className="chakra-divider emotion-11"
             />
-          </svg>
+            <div
+              aria-hidden="true"
+              className=" emotion-12"
+              onMouseDown={[Function]}
+              onTouchEnd={[Function]}
+            >
+              <svg
+                className="chakra-icon emotion-13"
+                focusable={false}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div
-    className="emotion-5"
+    className="emotion-14"
   >
     <button
-      className="chakra-button emotion-6"
+      className="chakra-button emotion-15"
       type="submit"
     >
       Submit
@@ -447,7 +594,7 @@ exports[`array fields fixed array 1`] = `
                     placeholder=""
                     readOnly={false}
                     required={true}
-                    type="text"
+                    type="number"
                     value=""
                   />
                 </div>
