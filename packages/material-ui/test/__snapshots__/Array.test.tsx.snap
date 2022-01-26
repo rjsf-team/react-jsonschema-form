@@ -69,31 +69,12 @@ exports[`array fields array 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-178"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      className="btn btn-info"
       type="submit"
     >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
+      Submit
     </button>
   </div>
 </form>
@@ -112,7 +93,7 @@ exports[`array fields array icons 1`] = `
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
       <div
-        className="MuiBox-root MuiBox-root-243"
+        className="MuiBox-root MuiBox-root-240"
       >
         <div
           className="MuiGrid-root MuiGrid-container"
@@ -129,13 +110,13 @@ exports[`array fields array icons 1`] = `
               }
             >
               <div
-                className="MuiBox-root MuiBox-root-244"
+                className="MuiBox-root MuiBox-root-241"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-245"
+                    className="MuiBox-root MuiBox-root-242"
                   >
                     <div
                       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -257,9 +238,6 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
               <button
                 className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall"
@@ -303,9 +281,6 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
             </div>
           </div>
@@ -321,13 +296,13 @@ exports[`array fields array icons 1`] = `
               }
             >
               <div
-                className="MuiBox-root MuiBox-root-246"
+                className="MuiBox-root MuiBox-root-243"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-247"
+                    className="MuiBox-root MuiBox-root-244"
                   >
                     <div
                       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -406,9 +381,6 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
               <button
                 className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall Mui-disabled Mui-disabled"
@@ -495,9 +467,6 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
             </div>
           </div>
@@ -508,7 +477,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item"
             >
               <div
-                className="MuiBox-root MuiBox-root-248"
+                className="MuiBox-root MuiBox-root-245"
               >
                 <button
                   className="MuiButtonBase-root MuiButton-root MuiButton-text array-item-add MuiButton-textSecondary"
@@ -544,9 +513,6 @@ exports[`array fields array icons 1`] = `
                     </svg>
                      Add Item
                   </span>
-                  <span
-                    className="MuiTouchRipple-root"
-                  />
                 </button>
               </div>
             </div>
@@ -555,34 +521,12 @@ exports[`array fields array icons 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-249"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      className="btn btn-info"
       type="submit"
     >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
+      Submit
     </button>
   </div>
 </form>
@@ -644,31 +588,12 @@ exports[`array fields checkboxes 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-242"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      className="btn btn-info"
       type="submit"
     >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
+      Submit
     </button>
   </div>
 </form>
@@ -687,7 +612,7 @@ exports[`array fields fixed array 1`] = `
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
       <div
-        className="MuiBox-root MuiBox-root-179"
+        className="MuiBox-root MuiBox-root-178"
       >
         <div
           className="MuiGrid-root MuiGrid-container"
@@ -704,13 +629,13 @@ exports[`array fields fixed array 1`] = `
               }
             >
               <div
-                className="MuiBox-root MuiBox-root-180"
+                className="MuiBox-root MuiBox-root-179"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-181"
+                    className="MuiBox-root MuiBox-root-180"
                   >
                     <div
                       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -757,13 +682,13 @@ exports[`array fields fixed array 1`] = `
               }
             >
               <div
-                className="MuiBox-root MuiBox-root-215"
+                className="MuiBox-root MuiBox-root-214"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-216"
+                    className="MuiBox-root MuiBox-root-215"
                   >
                     <div
                       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -802,34 +727,12 @@ exports[`array fields fixed array 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-217"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      className="btn btn-info"
       type="submit"
     >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
+      Submit
     </button>
   </div>
 </form>
