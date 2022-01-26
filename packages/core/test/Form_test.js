@@ -397,24 +397,6 @@ describeRepeated("Form common", createFormComponent => {
         "Confirm"
       );
     });
-
-    it("should render a submit button with class ui-submit-button", () => {
-      const props = {
-        schema: {},
-        uiSchema: {
-          "ui:submitButtonOptions": {
-            props: { className: "ui-submit-button" },
-          },
-        },
-      };
-      const comp = renderIntoDocument(<Form {...props} />);
-      const node = findDOMNode(comp);
-      expect(
-        node
-          .querySelector("button[type=submit]")
-          .classList.contains("ui-submit-button")
-      ).eql(true);
-    });
   });
 
   describe("Custom submit buttons", () => {
