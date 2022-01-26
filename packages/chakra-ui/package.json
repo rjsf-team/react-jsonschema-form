@@ -31,7 +31,8 @@
   "author": "Jonathan Blair <jonathanbblair@gmail.com>",
   "contributors": [
     "jzander <jeremy.zander@gmail.com>",
-    "Rodrigo Fuentes <rodrigofuentes@users.noreply.github.com>"
+    "Rodrigo Fuentes <rodrigofuentes@users.noreply.github.com>",
+    "U.M Andrew <me@andrewmiracle.com>"
   ],
   "license": "Apache-2.0",
   "devDependencies": {
