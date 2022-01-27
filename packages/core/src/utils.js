@@ -1288,10 +1288,11 @@ export function getMatchingOption(formData, options, rootSchema) {
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
 
-      if (isValid(augmentedSchema, formData, rootSchema)) {
+      if (formData && isValid(augmentedSchema, formData, rootSchema)) {
         return i;
       }
-    } else if (isValid(option, formData, rootSchema)) {
+      return i;
+    } else if (formData && isValid(option, formData, rootSchema)) {
       return i;
     }
   }
