@@ -73,7 +73,7 @@ yarn add @chakra-ui/react
 ### Installation
 
 ```bash
-yarn add @rsjf/chakra-ui @rsjf/core
+yarn add @rjsf/chakra-ui @rjsf/core
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -81,14 +81,14 @@ yarn add @rsjf/chakra-ui @rsjf/core
 ## Usage
 
 ```js
-import Form from "@rsjf/chakra-ui";
+import Form from "@rjsf/chakra-ui";
 ```
 
 or
 
 ```js
 import { withTheme } from "@rjsf/core";
-import { Theme as ChakraUITheme } from "@rsjf/chakra-ui";
+import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
 
 // Make modifications to the theme with your own fields and widgets
 
