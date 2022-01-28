@@ -70,12 +70,12 @@ Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 Refer to the [rjsf installation guide](https://react-jsonschema-form.readthedocs.io/en/latest/#installation) and [chakra-ui installation guide](https://chakra-ui.com/docs/getting-started#installation) and for more details.
 
 ---
+
 ### Installation
 
 ```bash
 yarn add @chakra-ui/react@^1.7 @emotion/react@^11 @emotion/styled@^11 framer-motion@^5
 ```
-
 
 ```bash
 yarn add @rjsf/chakra-ui @rjsf/core
