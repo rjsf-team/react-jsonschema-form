@@ -1,29 +1,36 @@
 /* eslint-disable react/prop-types,react/destructuring-assignment */
+import { utils } from '@rjsf/core';
 import React from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
-import AddButton from "../AddButton";
-import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
+import { getSemanticProps, MaybeWrap } from "../util";
+import { DefaultFixedArrayFieldTemplate } from './FixedArrayFieldTemplate';
+import { DefaultNormalArrayFieldTemplate } from './NormalArrayFieldTemplate';
+const { isFixedItems,getDefaultRegistry,
+  getUiOptions,
+  getWidget,
+  isFilesArray,
+  isMultiSelect,
+  optionsList,
+  retrieveSchema, } = utils;
 
-const { isFixedItems } = utils;
 
-const ArrayFieldTitle = ({ TitleField, idSchema, uiSchema, title }) => {
-  if (!title) {
-    return null;
-  }
+export function ArrayFieldTitle ({ TitleField, idSchema, uiSchema, title })  {
+    if (!title) {
+      return null;
+    }
 
-  const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} options={uiSchema["ui:options"]} />;
-};
-
-function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
-  if (!description) {
-    // See #312: Ensure compatibility with old versions of React.
-    return null;
-  }
-  const id = `${idSchema.$id}__description`;
-  return <DescriptionField id={id} description={description} />;
+    const id = `${idSchema.$id}__title`;
+    return <TitleField id={id} title={title} options={uiSchema["ui:options"]} />;
 }
+
+export function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
+    if (!description) {
+      // See #312: Ensure compatibility with old versions of React.
+      return null;
+    }
+    const id = `${idSchema.$id}__description`;
+    return <DescriptionField id={id} description={description} />;
+  }
 
 const gridStyle = vertical => ({
   display: "grid",
@@ -38,7 +45,7 @@ function isInitialArrayItem(props) {
 }
 
 // Used in the two templates
-function DefaultArrayItem(props) {
+export function DefaultArrayItem(props) {
   return (
     <div className="array-item" key={props.key}>
       <MaybeWrap wrap={props.wrapItem} component={Segment}>
@@ -105,148 +112,145 @@ function DefaultArrayItem(props) {
   );
 }
 
-// Used for arrays that are represented as multiple selection fields
-// (displayed as a multi select or checkboxes)
-function DefaultFixedArrayFieldTemplate({
-  uiSchema,
-  idSchema,
-  canAdd,
-  className,
-  classNames,
-  disabled,
-  items,
-  onAddClick,
-  readOnly,
-  required,
-  schema,
-  title,
-  TitleField,
-  itemProps,
-}) {
-  const fieldTitle = uiSchema["ui:title"] || title;
-  const fieldDescription = uiSchema["ui:description"] || schema.description;
-
-  return (
-    <div className={cleanClassNames([className, classNames])}>
-      <ArrayFieldTitle
-        key={`array-field-title-${idSchema.$id}`}
-        TitleField={TitleField}
-        idSchema={idSchema}
-        uiSchema={uiSchema}
-        title={fieldTitle}
-        required={required}
-      />
-
-      {fieldDescription && (
-        <div
-          className="field-description"
-          key={`field-description-${idSchema.$id}`}>
-          {fieldDescription}
-        </div>
-      )}
-
-      <div key={`array-item-list-${idSchema.$id}`}>
-        <div className="row array-item-list">
-          {items && items.map(p => DefaultArrayItem({ ...p, ...itemProps }))}
-        </div>
-
-        {canAdd && (
-          <div
-            style={{
-              marginTop: "1rem",
-              position: "relative",
-              textAlign: "right",
-            }}>
-            <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function DefaultNormalArrayFieldTemplate({
-  uiSchema,
-  idSchema,
-  canAdd,
-  className,
-  classNames,
-  disabled,
-  DescriptionField,
-  items,
-  onAddClick,
-  readOnly,
-  required,
-  schema,
-  title,
-  TitleField,
-  itemProps,
-}) {
-  const fieldTitle = uiSchema["ui:title"] || title;
-  const fieldDescription = uiSchema["ui:description"] || schema.description;
-  return (
-    <div
-      className={cleanClassNames([
-        className,
-        classNames,
-        "sortable-form-fields",
-      ])}>
-      <ArrayFieldTitle
-        key={`array-field-title-${idSchema.$id}`}
-        TitleField={TitleField}
-        idSchema={idSchema}
-        uiSchema={uiSchema}
-        title={fieldTitle}
-        required={required}
-      />
-
-      {fieldDescription && (
-        <ArrayFieldDescription
-          key={`array-field-description-${idSchema.$id}`}
-          DescriptionField={DescriptionField}
-          idSchema={idSchema}
-          description={fieldDescription}
-        />
-      )}
-
-      <div key={`array-item-list-${idSchema.$id}`}>
-        <div className="row array-item-list">
-          {items && items.map(p => DefaultArrayItem({ ...p, ...itemProps }))}
-        </div>
-
-        {canAdd && (
-          <div
-            style={{
-              marginTop: "1rem",
-              position: "relative",
-              textAlign: "right",
-            }}>
-            <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 function ArrayFieldTemplate(props) {
-  const { options,
+  const {
+    DescriptionField,
+    TitleField,
+    autofocus,
+    canAdd,
+    className,
+    disabled,
+    formContext,
+    formData,
+    idSchema,
+    items,
+    label,
+    name,
+    onAddClick,
+    onBlur,
+    onChange,
+    onFocus,
+    placeholder,
+    rawErrors,
+    readonly,
+    registry = getDefaultRegistry(),
+    required,
     schema,
+    title,
     uiSchema,
-    formContext, } = props;
-  const semanticProps = getSemanticProps({
-      options,
-      uiSchema,
-      formContext,
-      defaultSchemaProps: { horizontalButtons : false, wrapItem : false }
-  });
-  const  { horizontalButtons, wrapItem } = semanticProps;
+  } = props;
+  const { fields, rootSchema, widgets } = registry;
+  const { UnsupportedField } = fields;
+  const { horizontalButtons, wrapItem } = getSemanticProps(props);
   const itemProps = { horizontalButtons, wrapItem };
 
-  if (isFixedItems(schema)) {
-    return <DefaultFixedArrayFieldTemplate {...props} itemProps={itemProps} />;
+  const renderFiles = () => {
+    const { widget = 'files', ...options } = getUiOptions(uiSchema);
+
+    const Widget = getWidget(schema, widget, widgets);
+
+    return (
+      <Widget
+        id={idSchema && idSchema.$id}
+        options={options}
+        multiple
+        schema={schema}
+        value={formData}
+        title={schema.title || name} // Why not props.title?
+      />
+    );
+  };
+
+  const renderMultiSelect = () => {
+    const itemsSchema = retrieveSchema(schema.items, rootSchema, formData);
+    const enumOptions = optionsList(itemsSchema);
+    const { widget = 'select', ...options } = {
+      ...getUiOptions(uiSchema),
+      enumOptions,
+    };
+
+    const Widget = getWidget(schema, widget, widgets);
+
+    return (
+      <Widget
+        autofocus={autofocus}
+        disabled={disabled}
+        formContext={formContext}
+        id={idSchema && idSchema.$id}
+        label={label}
+        multiple
+        onBlur={onBlur}
+        onChange={onChange}
+        onFocus={onFocus}
+        options={options}
+        placeholder={placeholder}
+        rawErrors={rawErrors}
+        readonly={readonly}
+        registry={registry}
+        required={required}
+        schema={schema}
+        value={formData}
+      />
+    );
+  };
+
+  if (!Object.prototype.hasOwnProperty.call(schema, 'items')) {
+    return (
+      <UnsupportedField
+        idSchema={idSchema}
+        reason="Missing items definition"
+        schema={schema}
+      />
+    );
   }
-  return <DefaultNormalArrayFieldTemplate {...props} itemProps={itemProps} />;
+
+  if (isFixedItems(schema)) {
+    return <DefaultFixedArrayFieldTemplate
+    canAdd={canAdd}
+    className={className}
+    DescriptionField={DescriptionField}
+    disabled={disabled}
+    formContext={formContext}
+    formData={formData}
+    idSchema={idSchema}
+    items={items}
+    onAddClick={onAddClick}
+    readonly={readonly}
+    registry={registry}
+    required={required}
+    schema={schema}
+    title={title}
+    TitleField={TitleField}
+    uiSchema={uiSchema}
+    itemProps={itemProps} />;
+  }
+
+  if (isFilesArray(schema, uiSchema, rootSchema)) {
+    return renderFiles();
+  }
+  if (isMultiSelect(schema, rootSchema)) {
+    return renderMultiSelect();
+  }
+
+  return <DefaultNormalArrayFieldTemplate
+      canAdd={canAdd}
+      className={className}
+      DescriptionField={DescriptionField}
+      disabled={disabled}
+      formContext={formContext}
+      formData={formData}
+      idSchema={idSchema}
+      items={items}
+      onAddClick={onAddClick}
+      readonly={readonly}
+      registry={registry}
+      required={required}
+      schema={schema}
+      title={title}
+      TitleField={TitleField}
+      uiSchema={uiSchema}
+      itemProps={itemProps}
+      />;
 }
 
 export default ArrayFieldTemplate;
