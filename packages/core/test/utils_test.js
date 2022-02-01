@@ -4200,6 +4200,33 @@ describe("utils", () => {
         }))
       );
     });
+    it("should infer correct anyOf schema based on data if passing undefined", () => {
+      const rootSchema = {
+        defs: {
+          a: { type: "object", properties: { id: { enum: ["a"] } } },
+          nested: {
+            type: "object",
+            properties: {
+              id: { enum: ["nested"] },
+              child: { $ref: "#/defs/any" },
+            },
+          },
+          any: { anyOf: [{ $ref: "#/defs/a" }, { $ref: "#/defs/nested" }] },
+        },
+        $ref: "#/defs/any",
+      };
+      const options = [
+        { type: "object", properties: { id: { enum: ["a"] } } },
+        {
+          type: "object",
+          properties: {
+            id: { enum: ["nested"] },
+            child: { $ref: "#/defs/any" },
+          },
+        },
+      ];
+      expect(getMatchingOption(undefined, options, rootSchema)).eql(0);
+    });
     it("should infer correct anyOf schema based on data", () => {
       const rootSchema = {
         defs: {
