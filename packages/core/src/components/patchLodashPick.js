@@ -17,13 +17,15 @@ export default function pick(object, paths) {
     for (let index = 0; index < parts.length; ++index) {
       const part = parts[index];
 
-      if (!(part in target)) {
+      if (target && !(part in target)) {
         const value = source[part];
         const isLastPart = index === lastIndex;
         target[part] = isLastPart ? value : initialValue(value);
       }
 
-      target = target[part];
+      if (target) {
+        target = target[part];
+      }
       source = source[part] || {};
     }
   }

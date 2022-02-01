@@ -133,7 +133,7 @@ const DefaultArrayItem = (props: any) => {
           {props.hasRemove && (
             <IconButton
               icon="remove"
-              aria-label={intl.formatMessage({defaultMessage: 'Remove'})}
+              aria-label={intl.formatMessage({defaultMessage: 'Remove item'})}
               //tabIndex={-1}
               style={btnStyle as any}
               iconProps={{ fontSize: 'small' }}
