@@ -58,7 +58,7 @@
     "react-app-polyfill": "^1.0.4",
     "react-bootstrap": "^0.33.1",
     "react-frame-component": "^4.1.1",
-    "react-is": "^16.9.0"
+    "react-is": "^17.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
