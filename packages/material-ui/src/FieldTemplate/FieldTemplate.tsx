@@ -1,6 +1,7 @@
 import React from "react";
 
 import { FieldTemplateProps, utils } from "@visma/rjsf-core";
+import { useIntl } from 'react-intl';
 
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -37,6 +38,7 @@ const FieldTemplate = ({
   schema,
   uiSchema
 }: FieldTemplateProps) => {
+  const intl = useIntl();
   if (hidden) {
     return null;
   }
@@ -57,7 +59,9 @@ const FieldTemplate = ({
         error={rawErrors.length ? true : false}
         required={required}>
         {showTitle(schema, uiSchema) ?
-          <Typography variant="subtitle1">
+          <Typography
+            aria-label={required ? intl.formatMessage({defaultMessage: 'Required field'}) : undefined}
+            variant="subtitle1">
             {label || schema.title}
             {required ? ' *' : null}
           </Typography>
