@@ -24,7 +24,7 @@ const IconButton = (props: IconButtonProps) => {
   const IconComp = mappings[icon];
   return (
     <Button {...otherProps} variant="outlined" size="small">
-      <IconComp {...iconProps} />
+      <IconComp alt={otherProps['aria-label']} {...iconProps} />
     </Button>
   );
 };
