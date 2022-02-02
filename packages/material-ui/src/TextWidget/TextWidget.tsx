@@ -3,6 +3,7 @@ import React from "react";
 import TextField, {
   StandardTextFieldProps as TextFieldProps,
 } from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { WidgetProps, utils } from "@visma/rjsf-core";
 import Typography from "@material-ui/core/Typography";
@@ -10,6 +11,23 @@ import Typography from "@material-ui/core/Typography";
 const { rangeSpec } = utils;
 
 export type TextWidgetProps = WidgetProps & Pick<TextFieldProps, Exclude<keyof TextFieldProps, 'onBlur' | 'onFocus'>>;
+
+const useStyles = makeStyles({
+  inputLabelRoot: {
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    whiteSpace: "nowrap",
+    width: 1
+  },
+  inputFormControl: {
+    "label + &": {
+      marginTop: 0
+    }
+  }
+});
 
 const TextWidget = ({
   id,
@@ -46,7 +64,15 @@ const TextWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
+  const classes = useStyles();
   const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
+
+  let ariaLabel = label;
+
+  if (!ariaLabel) {
+    const element = options!.element as {label: string, title: string, useLabel: boolean};
+    ariaLabel = element.useLabel ? element.label : element.title;
+  }
 
   return (
     <>
@@ -55,6 +81,8 @@ const TextWidget = ({
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
+        label={ariaLabel}
+        hiddenLabel
         disabled={disabled || readonly}
         type={inputType as string}
         value={value || value === 0 ? value : ""}
@@ -62,9 +90,13 @@ const TextWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        InputProps={{ "aria-describedby": utils.ariaDescribedBy(id) }}
+        InputProps={{ "aria-describedby": utils.ariaDescribedBy(id), classes: {
+            formControl: classes.inputFormControl
+          }
+        }}
         inputProps={inputType === 'number' ? {...rangeSpec(schema)} : {}}
         {...(textFieldProps as TextFieldProps)}
+        InputLabelProps={{shrink: false, className: classes.inputLabelRoot}}
       />
       {options.showCharacterCounter &&
       <div>
