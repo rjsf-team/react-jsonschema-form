@@ -20,6 +20,14 @@ const showTitle = (schema: any, uiSchema: any) => {
   return schema.format === 'table' || !(schema.type === 'object' || (schema.type === 'string' && schema.title === undefined));
 }
 
+const getLabel = (uiSchema: any, defaultLabel: string) => {
+  if (uiSchema['ui:options'] && uiSchema['ui:options']!.element) {
+    const { useLabel, label, title } = uiSchema['ui:options']!.element;
+    return useLabel ? label : title;
+  }
+  return defaultLabel;
+}
+
 const FieldTemplate = ({
   id,
   children,
@@ -43,6 +51,8 @@ const FieldTemplate = ({
     return null;
   }
 
+
+
   return (
     <WrapIfAdditional
       classNames={classNames}
@@ -62,8 +72,8 @@ const FieldTemplate = ({
           <Typography
             aria-label={required ? intl.formatMessage({defaultMessage: 'Required field'}) : undefined}
             variant="subtitle1">
-            {label || schema.title}
-            {required ? ' *' : null}
+            { getLabel(uiSchema, label) }
+            { required ? ' *' : null }
           </Typography>
           : null}
         {displayLabel && rawDescription && (schema.type !== 'boolean' || uiSchema['ui:widget'] === 'radio') ? (
