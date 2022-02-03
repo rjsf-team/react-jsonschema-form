@@ -100,6 +100,31 @@ import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
 const Form = withTheme(ChakraUITheme);
 ```
 
+## Optional Chakra UI Theme properties
+
+- To pass additional properties to widgets, see this [guide](https://react-jsonschema-form.readthedocs.io/en/latest/form-customization/#object-additional-properties).
+
+You can use `ChakraProvider`, to customize the components at a theme level.\
+And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize the styling of the form widgets.
+
+#### Custom Chakra uiSchema Chakra Property
+
+```json
+{
+  "ui:options": {
+    "chakra": {
+      "p": "1rem",
+      "color": "blue.200",
+      "sx": {
+        "margin": "0 auto"
+      }
+    }
+  }
+}
+```
+
+It accepts the theme accessible [style props](https://chakra-ui.com/docs/features/style-props) provided by [Chakra](https://chakra-ui.com/docs/getting-started) and [Emotion](https://emotion.sh/docs/introduction).
+
 <!-- ROADMAP -->
 
 ## Roadmap
