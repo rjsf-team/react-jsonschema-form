@@ -60,7 +60,7 @@ const UpDownWidget = (props: WidgetProps) => {
         onBlur={_onBlur}
         onFocus={_onFocus}
       >
-        <NumberInputField id={id} />
+        <NumberInputField id={id} name={id} />
         <NumberInputStepper>
           <NumberIncrementStepper />
           <NumberDecrementStepper />

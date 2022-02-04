@@ -48,6 +48,7 @@ const RangeWidget = ({
       <Slider
         {...sliderWidgetProps}
         id={id}
+        name={id}
         isDisabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}

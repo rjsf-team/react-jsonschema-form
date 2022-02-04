@@ -32,6 +32,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     <FormControl mb={1} {...chakraProps} isRequired={required}>
       <Checkbox
         id={id}
+        name={id}
         isChecked={typeof value === "undefined" ? false : value}
         isDisabled={disabled || readonly}
         onChange={_onChange}

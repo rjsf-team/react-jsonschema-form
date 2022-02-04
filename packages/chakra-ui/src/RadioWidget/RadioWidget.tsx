@@ -50,6 +50,7 @@ const RadioWidget = ({
         onBlur={_onBlur}
         onFocus={_onFocus}
         value={`${value}`}
+        name={id}
       >
         <Stack direction={row ? "row" : "column"}>
           {(enumOptions as any).map((option: any, i: number) => {

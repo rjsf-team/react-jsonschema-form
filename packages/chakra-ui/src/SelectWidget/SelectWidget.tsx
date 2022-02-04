@@ -113,8 +113,8 @@ const SelectWidget = (props: WidgetProps) => {
       {typeof multiple !== "undefined" && enumOptions ? (
         <ChakraMultiSelect
           inputId={id}
+          name={id}
           isMulti
-          name={label}
           options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
           placeholder={placeholder}
           closeMenuOnSelect={false}
@@ -129,6 +129,7 @@ const SelectWidget = (props: WidgetProps) => {
       ) : (
         <Select
           id={id}
+          name={id}
           placeholder={placeholder !== "" ? placeholder : " "}
           value={typeof value === "undefined" ? emptyValue : value.toString()}
           autoFocus={autofocus}

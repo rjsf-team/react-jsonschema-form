@@ -58,6 +58,7 @@ const TextWidget = (props: WidgetProps) => {
       ) : null}
       <Input
         id={id}
+        name={id}
         value={value || value === 0 ? value : ""}
         onChange={_onChange}
         onBlur={_onBlur}
