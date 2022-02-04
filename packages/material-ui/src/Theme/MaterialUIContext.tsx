@@ -38,6 +38,7 @@ if (mui && Object.keys(mui).length && icons && Object.keys(icons).length) {
     Paper,
     Radio,
     RadioGroup,
+    Slider,
     TextField,
     Typography,
   } = mui;
@@ -79,6 +80,7 @@ if (mui && Object.keys(mui).length && icons && Object.keys(icons).length) {
     Paper,
     Radio,
     RadioGroup,
+    Slider,
     TextField,
     Typography,
     AddIcon,
