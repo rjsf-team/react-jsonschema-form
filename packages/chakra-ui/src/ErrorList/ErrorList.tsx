@@ -1,0 +1,37 @@
+import React from "react";
+import { ErrorListProps } from "@rjsf/core";
+import {
+  Heading,
+  List,
+  ListIcon,
+  ListItem,
+  Alert,
+  AlertTitle,
+} from "@chakra-ui/react";
+import { WarningIcon } from "@chakra-ui/icons";
+
+const ErrorList = ({ errors }: ErrorListProps) => {
+  return (
+    <Alert
+      flexDirection="column"
+      alignItems="flex-start"
+      gap={3}
+      status="error"
+    >
+      <AlertTitle mb={2} as={Heading}>
+        Errors
+      </AlertTitle>
+
+      <List>
+        {errors.map((error, i) => (
+          <ListItem key={i}>
+            <ListIcon as={WarningIcon} color="red.500" />
+            {error.stack}
+          </ListItem>
+        ))}
+      </List>
+    </Alert>
+  );
+};
+
+export default ErrorList;

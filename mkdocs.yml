@@ -8,26 +8,27 @@ nav:
   - Introduction: index.md
   - Quickstart: quickstart.md
   - JSON schema:
-    - Single fields: usage/single.md
-    - Objects: usage/objects.md
-    - Arrays: usage/arrays.md
-    - Definitions: usage/definitions.md
-    - Dependencies: usage/dependencies.md
-    - oneOf / anyOf / allOf: usage/oneof.md
+      - Single fields: usage/single.md
+      - Objects: usage/objects.md
+      - Arrays: usage/arrays.md
+      - Definitions: usage/definitions.md
+      - Dependencies: usage/dependencies.md
+      - oneOf / anyOf / allOf: usage/oneof.md
   - Usage:
-    - Widgets: usage/widgets.md
-    - Themes: usage/themes.md
-    - Validation: usage/validation.md
+      - Widgets: usage/widgets.md
+      - Themes: usage/themes.md
+      - Validation: usage/validation.md
   - Advanced Customization:
-    - Custom Widgets and Fields: advanced-customization/custom-widgets-fields.md
-    - Custom Templates: advanced-customization/custom-templates.md
-    - Custom Themes: advanced-customization/custom-themes.md
-    - Other Internals: advanced-customization/internals.md
-    - Contributing: contributing.md
+      - Custom Widgets and Fields: advanced-customization/custom-widgets-fields.md
+      - Custom Templates: advanced-customization/custom-templates.md
+      - Custom Themes: advanced-customization/custom-themes.md
+      - Other Internals: advanced-customization/internals.md
+      - Contributing: contributing.md
   - API Reference:
-    - General uiSchema Reference: api-reference/uiSchema.md
-    - semantic-ui uiSchema Reference: api-reference/themes/semantic-ui/uiSchema.md
-    - "&lt;Form /&gt; props": api-reference/form-props.md
+      - General uiSchema Reference: api-reference/uiSchema.md
+      - semantic-ui uiSchema Reference: api-reference/themes/semantic-ui/uiSchema.md
+      - chakra-ui uiSchema Reference: api-reference/themes/chakra-ui/uiSchema.md
+      - "&lt;Form /&gt; props": api-reference/form-props.md
   - 3.x Migration: 3.x upgrade guide.md
   - 2.x Migration: 2.x upgrade guide.md
 

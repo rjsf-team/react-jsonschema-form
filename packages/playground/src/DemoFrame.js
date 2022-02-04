@@ -1,7 +1,8 @@
 import React from "react";
 import { create } from "jss";
 import { jssPreset, StylesProvider } from "@material-ui/core/styles";
-import Frame from "react-frame-component";
+import Frame, { FrameContextConsumer } from "react-frame-component";
+import { __createChakraFrameProvider } from "@rjsf/chakra-ui";
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -82,6 +83,10 @@ function DemoFrame(props) {
             })}
           </StylesProvider>
         ) : null
+      ) : theme === "chakra-ui" ? (
+        <FrameContextConsumer>
+          {__createChakraFrameProvider(props)}
+        </FrameContextConsumer>
       ) : (
         children
       )}
