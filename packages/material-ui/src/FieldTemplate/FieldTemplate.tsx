@@ -1,14 +1,8 @@
-import React from "react";
+import React, { useContext } from 'react';
+import { FieldTemplateProps } from '@rjsf/core';
 
-import { FieldTemplateProps } from "@rjsf/core";
-
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Typography from "@material-ui/core/Typography";
-
-import WrapIfAdditional from "./WrapIfAdditional";
+import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import WrapIfAdditional from './WrapIfAdditional';
 
 const FieldTemplate = ({
   id,
@@ -30,7 +24,7 @@ const FieldTemplate = ({
   if (hidden) {
     return children;
   }
-
+  const { FormControl, FormHelperText, List, ListItem, Typography } = useContext(MuiComponentContext);
   return (
     <WrapIfAdditional
       classNames={classNames}
