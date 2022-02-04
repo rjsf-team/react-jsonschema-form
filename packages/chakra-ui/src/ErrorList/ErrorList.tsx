@@ -1,7 +1,6 @@
 import React from "react";
 import { ErrorListProps } from "@rjsf/core";
 import {
-  Heading,
   List,
   ListIcon,
   ListItem,
@@ -18,7 +17,7 @@ const ErrorList = ({ errors }: ErrorListProps) => {
       gap={3}
       status="error"
     >
-      <AlertTitle mb={2} as={Heading}>
+      <AlertTitle>
         Errors
       </AlertTitle>
 
