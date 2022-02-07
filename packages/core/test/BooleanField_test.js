@@ -184,6 +184,38 @@ describe("BooleanField", () => {
     expect(description.textContent).eql("my description");
   });
 
+  it("should pass uiSchema to custom widget", () => {
+    const CustomCheckboxWidget = ({ uiSchema }) => {
+      return (
+        <div id="custom-ui-option-value">
+          {uiSchema.custom_field_key["ui:options"].test}
+        </div>
+      );
+    };
+
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        description: "my description",
+      },
+      widgets: {
+        CheckboxWidget: CustomCheckboxWidget,
+      },
+      uiSchema: {
+        custom_field_key: {
+          "ui:widget": "checkbox",
+          "ui:options": {
+            test: "foo",
+          },
+        },
+      },
+    });
+
+    expect(node.querySelector("#custom-ui-option-value").textContent).to.eql(
+      "foo"
+    );
+  });
+
   it("should render the description using provided description field", () => {
     const { node } = createFormComponent({
       schema: {

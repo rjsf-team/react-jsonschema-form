@@ -1,22 +1,13 @@
-import React from 'react';
-
+import React, { useContext } from 'react';
 import { FieldProps } from '@rjsf/core';
 
-import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
-
-const useStyles = makeStyles({
-  root: {
-    marginTop: 5,
-  },
-});
+import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
 
 const DescriptionField = ({ description }: FieldProps) => {
+  const { Typography } = useContext(MuiComponentContext);
   if (description) {
-    const classes = useStyles();
-
     return (
-      <Typography variant="subtitle2" className={classes.root}>
+      <Typography variant="subtitle2" style={{ marginTop: '5px' }}>
         {description}
       </Typography>
     );

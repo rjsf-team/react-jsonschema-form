@@ -866,5 +866,56 @@ describe("ObjectField", () => {
         formData: { first: "" },
       });
     });
+
+    it("should change content of value input to boolean false", () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          ...schema,
+          additionalProperties: true,
+        },
+        formData: { first: true },
+      });
+
+      Simulate.change(node.querySelector("#root_first"), {
+        target: { checked: false },
+      });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { first: false },
+      });
+    });
+
+    it("should change content of value input to number 0", () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          ...schema,
+          additionalProperties: true,
+        },
+        formData: { first: 1 },
+      });
+
+      Simulate.change(node.querySelector("#root_first"), {
+        target: { value: 0 },
+      });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { first: 0 },
+      });
+    });
+
+    it("should change content of value input to null", () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: { first: "str" },
+      });
+
+      Simulate.change(node.querySelector("#root_first"), {
+        target: { value: null },
+      });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: { first: null },
+      });
+    });
   });
 });
