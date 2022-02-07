@@ -11,7 +11,7 @@
     <img src="./logo.png" alt="Logo" width="340">
   </a>
 
-  <h3 align="center">@rjsf/rjsf-chakra-ui</h3>
+  <h3 align="center">@rjsf/chakra-ui</h3>
 
   <p align="center">
   Chakra UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
