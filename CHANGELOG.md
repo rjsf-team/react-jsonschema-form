@@ -41,7 +41,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added chakra-ui theme
 
 ## @rjsf/core
-- introduce `idSeparator` property (https://github.com/rjsf-team/react-jsonschema-form/pull/2628)
+- Introduce `idSeparator` prop to change the path separator used to generate field names (https://github.com/rjsf-team/react-jsonschema-form/pull/2628)
 
 # v3.3.0
 
