@@ -2538,7 +2538,7 @@ describe("utils", () => {
           required: ["animal", "food"],
         });
       });
-      it.only("should resolve $ref", () => {
+      it("should resolve $ref", () => {
         const schema = {
           type: "object",
           properties: {
@@ -2604,6 +2604,89 @@ describe("utils", () => {
             food: { type: "string", enum: ["meat", "grass", "fish"] },
           },
           required: ["animal", "food"],
+        });
+      });
+      it("handles nested if then else", () => {
+        const schemaWithNested = {
+          type: "object",
+          properties: {
+            country: {
+              enum: ["USA"],
+            },
+          },
+          required: ["country"],
+          if: {
+            properties: {
+              country: {
+                const: "USA",
+              },
+            },
+            required: ["country"],
+          },
+          then: {
+            properties: {
+              state: {
+                type: "string",
+                enum: ["California", "New York"],
+              },
+            },
+            required: ["state"],
+            if: {
+              properties: {
+                state: {
+                  const: "New York",
+                },
+              },
+              required: ["state"],
+            },
+            then: {
+              properties: {
+                city: {
+                  type: "string",
+                  enum: ["New York City", "Buffalo", "Rochester"],
+                },
+              },
+            },
+            else: {
+              if: {
+                properties: {
+                  state: {
+                    const: "California",
+                  },
+                },
+                required: ["state"],
+              },
+              then: {
+                properties: {
+                  city: {
+                    type: "string",
+                    enum: ["Los Angeles", "San Diego", "San Jose"],
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        const definitions = {};
+        const formData = {
+          country: "USA",
+          state: "New York",
+        };
+
+        expect(retrieveSchema(schemaWithNested, definitions, formData)).eql({
+          type: "object",
+          properties: {
+            country: {
+              enum: ["USA"],
+            },
+            state: { type: "string", enum: ["California", "New York"] },
+            city: {
+              type: "string",
+              enum: ["New York City", "Buffalo", "Rochester"],
+            },
+          },
+          required: ["state", "country"],
         });
       });
     });
