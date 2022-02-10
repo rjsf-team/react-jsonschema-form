@@ -662,7 +662,10 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
-const resolveCondition = (schema, rootSchema, formdata) => {
+/**
+ * Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch with the rest of the schema
+ */
+const resolveCondition = (schema, rootSchema, formData) => {
   let {
     if: expression,
     then,
@@ -670,21 +673,21 @@ const resolveCondition = (schema, rootSchema, formdata) => {
     ...resolvedSchemaLessConditional
   } = schema;
 
-  const conditionalSchema = isValid(expression, formdata, rootSchema)
+  const conditionalSchema = isValid(expression, formData, rootSchema)
     ? then
     : otherwise;
 
   if (conditionalSchema) {
     return retrieveSchema(
       mergeSchemas(
-        retrieveSchema(conditionalSchema, rootSchema, formdata),
+        retrieveSchema(conditionalSchema, rootSchema, formData),
         resolvedSchemaLessConditional
       ),
       rootSchema,
-      formdata
+      formData
     );
   } else {
-    return retrieveSchema(resolvedSchemaLessConditional, rootSchema, formdata);
+    return retrieveSchema(resolvedSchemaLessConditional, rootSchema, formData);
   }
 };
 
