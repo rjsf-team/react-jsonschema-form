@@ -7,11 +7,19 @@ import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import TextWidget from "../TextWidget/TextWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
+import DateWidget from "../DateWidget/DateWidget";
+import DateTimeWidget from "../DateTimeWidget/DateTimeWidget";
+import EmailWidget from "../EmailWidget/EmailWidget";
+import URLWidget from "../URLWidget/URLWidget";
 
 export default {
   CheckboxWidget,
   CheckboxesWidget,
+  DateWidget,
+  DateTimeWidget,
   PasswordWidget,
+  EmailWidget,
+  URLWidget,
   RadioWidget,
   RangeWidget,
   SelectWidget,

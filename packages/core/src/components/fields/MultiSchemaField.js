@@ -104,6 +104,7 @@ class AnyOfField extends Component {
       errorSchema,
       formData,
       idPrefix,
+      idSeparator,
       idSchema,
       onBlur,
       onChange,
@@ -160,6 +161,7 @@ class AnyOfField extends Component {
             errorSchema={errorSchema}
             idSchema={idSchema}
             idPrefix={idPrefix}
+            idSeparator={idSeparator}
             formData={formData}
             onChange={onChange}
             onBlur={onBlur}

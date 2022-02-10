@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useContext } from 'react';
+import { WidgetProps } from '@rjsf/core';
+import { utils } from '@rjsf/core';
 
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-
-import { WidgetProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
 
 const { schemaRequiresTrueValue } = utils;
 
@@ -21,7 +19,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     onBlur,
     onFocus,
   } = props;
-
+  const { Checkbox, FormControlLabel } = useContext(MuiComponentContext);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -40,7 +38,7 @@ const CheckboxWidget = (props: WidgetProps) => {
       control={
         <Checkbox
           id={id}
-          checked={typeof value === "undefined" ? false : value}
+          checked={typeof value === 'undefined' ? false : Boolean(value)}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
@@ -49,7 +47,7 @@ const CheckboxWidget = (props: WidgetProps) => {
           onFocus={_onFocus}
         />
       }
-      label={label}
+      label={label || ''}
     />
   );
 };

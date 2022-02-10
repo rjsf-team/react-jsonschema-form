@@ -4,10 +4,6 @@ import Form from "react-bootstrap/Form";
 
 import { WidgetProps } from "@rjsf/core";
 
-export interface TextWidgetProps extends WidgetProps {
-  type?: string;
-}
-
 const TextWidget = ({
   id,
   placeholder,
@@ -24,8 +20,9 @@ const TextWidget = ({
   options,
   schema,
   rawErrors = [],
+  uiSchema,
 
-}: TextWidgetProps) => {
+}: WidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -36,13 +33,13 @@ const TextWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
   const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
-  
+
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
     <Form.Group className="mb-0">
       <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
-        {label || schema.title}
-        {(label || schema.title) && required ? "*" : null}
+        {uiSchema["ui:title"] || schema.title || label}
+        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
         id={id}

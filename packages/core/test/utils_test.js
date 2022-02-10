@@ -1770,6 +1770,21 @@ describe("utils", () => {
       });
     });
 
+    it("should handle null formData for schema which contains additionalProperties", () => {
+      const schema = {
+        additionalProperties: {
+          type: "string",
+        },
+        type: "object",
+      };
+
+      const formData = null;
+      expect(retrieveSchema(schema, {}, formData)).eql({
+        ...schema,
+        properties: {},
+      });
+    });
+
     it("should priorize local definitions over foreign ones", () => {
       const schema = {
         $ref: "#/definitions/address",
@@ -2637,6 +2652,27 @@ describe("utils", () => {
         $id: "rjsf",
         foo: { $id: "rjsf_foo" },
         bar: { $id: "rjsf_bar" },
+      });
+    });
+
+    it("should handle idSeparator parameter", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            type: "object",
+            properties: {
+              foo: { type: "string" },
+              bar: { type: "string" },
+            },
+          },
+        },
+        $ref: "#/definitions/testdef",
+      };
+
+      expect(toIdSchema(schema, undefined, schema, {}, "rjsf", "/")).eql({
+        $id: "rjsf",
+        foo: { $id: "rjsf/foo" },
+        bar: { $id: "rjsf/bar" },
       });
     });
 

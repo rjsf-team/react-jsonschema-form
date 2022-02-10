@@ -49,7 +49,8 @@ lerna version
 
 Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
 The command above will create a new version tag and push it to GitHub. Then, create a release in
-the Github "Releases" tab and add a description of the changes in the new release.
+the Github "Releases" tab and add a description of the changes in the new release. You can copy
+the latest changelog entry in `CHANGELOG.md` to make the release notes, and update as necessary.
 
 This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
 

@@ -237,6 +237,7 @@ function SchemaFieldRender(props) {
     formData,
     errorSchema,
     idPrefix,
+    idSeparator,
     name,
     onChange,
     onKeyChange,
@@ -252,7 +253,7 @@ function SchemaFieldRender(props) {
   const schema = retrieveSchema(props.schema, rootSchema, formData);
 
   idSchema = mergeObjects(
-    toIdSchema(schema, null, rootSchema, formData, idPrefix),
+    toIdSchema(schema, null, rootSchema, formData, idPrefix, idSeparator),
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
