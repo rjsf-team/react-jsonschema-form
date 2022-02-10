@@ -14,7 +14,7 @@ exports[`single fields checkbox field 1`] = `
     >
       <span
         aria-disabled={false}
-        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
         onBlur={[Function]}
         onDragLeave={[Function]}
         onFocus={[Function]}
@@ -34,7 +34,7 @@ exports[`single fields checkbox field 1`] = `
           <input
             autoFocus={false}
             checked={false}
-            className="PrivateSwitchBase-input-133"
+            className="PrivateSwitchBase-input-19"
             data-indeterminate={false}
             disabled={false}
             id="root"
@@ -43,10 +43,9 @@ exports[`single fields checkbox field 1`] = `
             type="checkbox"
           />
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
           >
             <path
@@ -60,11 +59,13 @@ exports[`single fields checkbox field 1`] = `
       </span>
       <span
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-      />
+      >
+        
+      </span>
     </label>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-173"
+    className="MuiBox-root MuiBox-root-20"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -110,7 +111,7 @@ exports[`single fields checkbox field 2`] = `
     >
       <span
         aria-disabled={false}
-        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
         onBlur={[Function]}
         onDragLeave={[Function]}
         onFocus={[Function]}
@@ -130,7 +131,7 @@ exports[`single fields checkbox field 2`] = `
           <input
             autoFocus={false}
             checked={false}
-            className="PrivateSwitchBase-input-133"
+            className="PrivateSwitchBase-input-19"
             data-indeterminate={false}
             disabled={false}
             id="root"
@@ -139,10 +140,9 @@ exports[`single fields checkbox field 2`] = `
             type="checkbox"
           />
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
           >
             <path
@@ -153,11 +153,13 @@ exports[`single fields checkbox field 2`] = `
       </span>
       <span
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-      />
+      >
+        
+      </span>
     </label>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-174"
+    className="MuiBox-root MuiBox-root-21"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -207,7 +209,7 @@ exports[`single fields checkboxes field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -227,7 +229,7 @@ exports[`single fields checkboxes field 1`] = `
             <input
               autoFocus={false}
               checked={false}
-              className="PrivateSwitchBase-input-133"
+              className="PrivateSwitchBase-input-19"
               data-indeterminate={false}
               disabled={false}
               id="root_0"
@@ -235,10 +237,9 @@ exports[`single fields checkboxes field 1`] = `
               type="checkbox"
             />
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -261,7 +262,7 @@ exports[`single fields checkboxes field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -281,7 +282,7 @@ exports[`single fields checkboxes field 1`] = `
             <input
               autoFocus={false}
               checked={false}
-              className="PrivateSwitchBase-input-133"
+              className="PrivateSwitchBase-input-19"
               data-indeterminate={false}
               disabled={false}
               id="root_1"
@@ -289,10 +290,9 @@ exports[`single fields checkboxes field 1`] = `
               type="checkbox"
             />
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -315,7 +315,7 @@ exports[`single fields checkboxes field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -335,7 +335,7 @@ exports[`single fields checkboxes field 1`] = `
             <input
               autoFocus={false}
               checked={false}
-              className="PrivateSwitchBase-input-133"
+              className="PrivateSwitchBase-input-19"
               data-indeterminate={false}
               disabled={false}
               id="root_2"
@@ -343,10 +343,9 @@ exports[`single fields checkboxes field 1`] = `
               type="checkbox"
             />
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -369,7 +368,7 @@ exports[`single fields checkboxes field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -389,7 +388,7 @@ exports[`single fields checkboxes field 1`] = `
             <input
               autoFocus={false}
               checked={false}
-              className="PrivateSwitchBase-input-133"
+              className="PrivateSwitchBase-input-19"
               data-indeterminate={false}
               disabled={false}
               id="root_3"
@@ -397,10 +396,9 @@ exports[`single fields checkboxes field 1`] = `
               type="checkbox"
             />
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -421,7 +419,7 @@ exports[`single fields checkboxes field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-184"
+    className="MuiBox-root MuiBox-root-22"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -464,54 +462,6 @@ exports[`single fields format color 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "format": "color",
-            "type": "string",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -536,7 +486,7 @@ exports[`single fields format color 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-89"
+    className="MuiBox-root MuiBox-root-10"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -579,54 +529,6 @@ exports[`single fields format date 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "format": "date",
-            "type": "string",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -651,7 +553,7 @@ exports[`single fields format date 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-90"
+    className="MuiBox-root MuiBox-root-11"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -691,54 +593,6 @@ exports[`single fields format datetime 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "format": "datetime",
-            "type": "string",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -763,7 +617,7 @@ exports[`single fields format datetime 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-91"
+    className="MuiBox-root MuiBox-root-12"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -805,7 +659,12 @@ exports[`single fields hidden field 1`] = `
     className="MuiFormControl-root MuiFormControl-fullWidth"
   >
     <div
-      className="MuiGrid-root makeStyles-root-194 MuiGrid-container MuiGrid-spacing-xs-2"
+      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+      style={
+        Object {
+          "marginTop": "10px",
+        }
+      }
     >
       <input
         id="root_my-field"
@@ -815,7 +674,7 @@ exports[`single fields hidden field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-298"
+    className="MuiBox-root MuiBox-root-27"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -858,53 +717,6 @@ exports[`single fields hidden label 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "type": "string",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -929,7 +741,7 @@ exports[`single fields hidden label 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-299"
+    className="MuiBox-root MuiBox-root-28"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -968,7 +780,7 @@ exports[`single fields null field 1`] = `
     className="MuiFormControl-root MuiFormControl-fullWidth"
   />
   <div
-    className="MuiBox-root MuiBox-root-87"
+    className="MuiBox-root MuiBox-root-8"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1011,53 +823,6 @@ exports[`single fields number field 0 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "type": "number",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1082,7 +847,7 @@ exports[`single fields number field 0 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-86"
+    className="MuiBox-root MuiBox-root-7"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1122,53 +887,6 @@ exports[`single fields number field 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "type": "number",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1193,7 +911,7 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-85"
+    className="MuiBox-root MuiBox-root-6"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1251,6 +969,7 @@ exports[`single fields password field 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           required={false}
           type="password"
           value=""
@@ -1259,7 +978,7 @@ exports[`single fields password field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-92"
+    className="MuiBox-root MuiBox-root-13"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1312,7 +1031,7 @@ exports[`single fields radio field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -1331,20 +1050,20 @@ exports[`single fields radio field 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-133"
+              className="PrivateSwitchBase-input-19"
               disabled={false}
+              name="root-0"
               onChange={[Function]}
               type="radio"
               value="true"
             />
             <div
-              className="PrivateRadioButtonIcon-root-190"
+              className="PrivateRadioButtonIcon-root-23"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -1352,10 +1071,9 @@ exports[`single fields radio field 1`] = `
                 />
               </svg>
               <svg
-                aria-hidden="true"
-                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-191"
+                aria-hidden={true}
+                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-24"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -1376,7 +1094,7 @@ exports[`single fields radio field 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-130 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -1395,20 +1113,20 @@ exports[`single fields radio field 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-133"
+              className="PrivateSwitchBase-input-19"
               disabled={false}
+              name="root-1"
               onChange={[Function]}
               type="radio"
               value="false"
             />
             <div
-              className="PrivateRadioButtonIcon-root-190"
+              className="PrivateRadioButtonIcon-root-23"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -1416,10 +1134,9 @@ exports[`single fields radio field 1`] = `
                 />
               </svg>
               <svg
-                aria-hidden="true"
-                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-191"
+                aria-hidden={true}
+                className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-24"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -1438,7 +1155,7 @@ exports[`single fields radio field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-193"
+    className="MuiBox-root MuiBox-root-26"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1485,13 +1202,13 @@ exports[`single fields select field 1`] = `
       >
         <div
           aria-haspopup="listbox"
-          aria-labelledby=" root"
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+          aria-labelledby="root"
+          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
           id="root"
           onBlur={[Function]}
-          onClick={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
+          onMouseDown={[Function]}
           role="button"
           tabIndex={0}
         >
@@ -1504,16 +1221,19 @@ exports[`single fields select field 1`] = `
           />
         </div>
         <input
+          aria-hidden={true}
           autoFocus={false}
+          className="MuiSelect-nativeInput"
           onAnimationStart={[Function]}
-          type="hidden"
+          onChange={[Function]}
+          required={false}
+          tabIndex={-1}
           value=""
         />
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root MuiSelect-icon"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -1524,7 +1244,7 @@ exports[`single fields select field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-117"
+    className="MuiBox-root MuiBox-root-15"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1576,7 +1296,7 @@ exports[`single fields string field format data-url 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-83"
+    className="MuiBox-root MuiBox-root-4"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1619,54 +1339,6 @@ exports[`single fields string field format email 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "format": "email",
-            "type": "string",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1691,7 +1363,7 @@ exports[`single fields string field format email 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-71"
+    className="MuiBox-root MuiBox-root-2"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1734,54 +1406,6 @@ exports[`single fields string field format uri 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "format": "uri",
-            "type": "string",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1806,7 +1430,7 @@ exports[`single fields string field format uri 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-82"
+    className="MuiBox-root MuiBox-root-3"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1846,53 +1470,6 @@ exports[`single fields string field regular 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "type": "string",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1917,7 +1494,7 @@ exports[`single fields string field regular 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-39"
+    className="MuiBox-root MuiBox-root-1"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1957,53 +1534,6 @@ exports[`single fields string field with placeholder 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root"
-      registry={
-        Object {
-          "ArrayFieldTemplate": [Function],
-          "FieldTemplate": [Function],
-          "ObjectFieldTemplate": [Function],
-          "definitions": Object {},
-          "fields": Object {
-            "AnyOfField": [Function],
-            "ArrayField": [Function],
-            "BooleanField": [Function],
-            "DescriptionField": [Function],
-            "NullField": [Function],
-            "NumberField": [Function],
-            "ObjectField": [Function],
-            "OneOfField": [Function],
-            "SchemaField": [Function],
-            "StringField": [Function],
-            "TitleField": [Function],
-            "UnsupportedField": [Function],
-          },
-          "formContext": Object {},
-          "rootSchema": Object {
-            "type": "string",
-          },
-          "widgets": Object {
-            "AltDateTimeWidget": [Function],
-            "AltDateWidget": [Function],
-            "BaseInput": [Function],
-            "CheckboxWidget": [Function],
-            "CheckboxesWidget": [Function],
-            "ColorWidget": [Function],
-            "DateTimeWidget": [Function],
-            "DateWidget": [Function],
-            "EmailWidget": [Function],
-            "FileWidget": [Function],
-            "HiddenWidget": [Function],
-            "PasswordWidget": [Function],
-            "RadioWidget": [Function],
-            "RangeWidget": [Function],
-            "SelectWidget": [Function],
-            "TextWidget": [Function],
-            "TextareaWidget": [Function],
-            "URLWidget": [Function],
-            "UpDownWidget": [Function],
-          },
-        }
-      }
     >
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -2028,7 +1558,7 @@ exports[`single fields string field with placeholder 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-84"
+    className="MuiBox-root MuiBox-root-5"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -2091,7 +1621,7 @@ exports[`single fields textarea field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-93"
+    className="MuiBox-root MuiBox-root-14"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -2156,7 +1686,7 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-88"
+    className="MuiBox-root MuiBox-root-9"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

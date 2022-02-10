@@ -40,14 +40,13 @@ exports[`array fields array 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -64,6 +63,7 @@ exports[`array fields checkboxes 1`] = `
       className="field"
     >
       <div
+        aria-describedby={null}
         aria-disabled={false}
         aria-expanded={false}
         aria-multiselectable={true}
@@ -74,18 +74,13 @@ exports[`array fields checkboxes 1`] = `
         onChange={[Function]}
         onClick={[Function]}
         onFocus={[Function]}
+        onKeyDown={[Function]}
         onMouseDown={[Function]}
         readOnly={false}
         required={false}
         role="listbox"
         tabIndex={0}
       >
-        <div
-          aria-atomic={true}
-          aria-live="polite"
-          className="text"
-          role="alert"
-        />
         <i
           aria-hidden="true"
           className="dropdown icon"
@@ -155,14 +150,13 @@ exports[`array fields checkboxes 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -208,6 +202,7 @@ exports[`array fields fixed array 1`] = `
                       className="ui fluid input"
                     >
                       <input
+                        aria-describedby={null}
                         autoFocus={false}
                         disabled={false}
                         id="root_0"
@@ -251,6 +246,7 @@ exports[`array fields fixed array 1`] = `
                       className="ui fluid input"
                     >
                       <input
+                        aria-describedby={null}
                         autoFocus={false}
                         disabled={false}
                         id="root_1"
@@ -272,13 +268,12 @@ exports[`array fields fixed array 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;

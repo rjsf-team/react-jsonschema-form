@@ -24,6 +24,7 @@ export default class Form extends Component {
     noValidate: false,
     liveValidate: false,
     disabled: false,
+    readonly: false,
     noHtml5Validate: false,
     ErrorList: DefaultErrorList,
     omitExtraData: false,
@@ -117,7 +118,8 @@ export default class Form extends Component {
       uiSchema["ui:rootFieldId"],
       rootSchema,
       formData,
-      props.idPrefix
+      props.idPrefix,
+      props.idSeparator
     );
     const nextState = {
       schema,
@@ -364,6 +366,8 @@ export default class Form extends Component {
       }
     }
 
+    // There are no errors generated through schema validation.
+    // Check for user provided errors and update state accordingly.
     let errorSchema;
     let errors;
     if (this.props.extraErrors) {
@@ -375,7 +379,13 @@ export default class Form extends Component {
     }
 
     this.setState(
-      { formData: newFormData, errors: errors, errorSchema: errorSchema },
+      {
+        formData: newFormData,
+        errors: errors,
+        errorSchema: errorSchema,
+        schemaValidationErrors: [],
+        schemaValidationErrorSchema: {},
+      },
       () => {
         if (this.props.onSubmit) {
           this.props.onSubmit(
@@ -418,6 +428,7 @@ export default class Form extends Component {
       children,
       id,
       idPrefix,
+      idSeparator,
       className,
       tagName,
       name,
@@ -430,6 +441,7 @@ export default class Form extends Component {
       acceptcharset,
       noHtml5Validate,
       disabled,
+      readonly,
       formContext,
     } = this.props;
 
@@ -469,6 +481,7 @@ export default class Form extends Component {
           errorSchema={errorSchema}
           idSchema={idSchema}
           idPrefix={idPrefix}
+          idSeparator={idSeparator}
           formContext={formContext}
           formData={formData}
           onChange={this.onChange}
@@ -476,6 +489,7 @@ export default class Form extends Component {
           onFocus={this.onFocus}
           registry={registry}
           disabled={disabled}
+          readonly={readonly}
         />
         {children ? (
           children
@@ -496,6 +510,8 @@ if (process.env.NODE_ENV !== "production") {
     schema: PropTypes.object.isRequired,
     uiSchema: PropTypes.object,
     formData: PropTypes.any,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
     widgets: PropTypes.objectOf(
       PropTypes.oneOfType([PropTypes.func, PropTypes.object])
     ),

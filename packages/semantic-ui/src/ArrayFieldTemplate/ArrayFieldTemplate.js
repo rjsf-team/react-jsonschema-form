@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types,react/destructuring-assignment */
 import React from "react";
-import PropTypes from "prop-types";
 import { Button, Grid, Segment } from "semantic-ui-react";
 import { utils } from '@rjsf/core';
 import AddButton from "../AddButton";
@@ -231,8 +230,17 @@ function DefaultNormalArrayFieldTemplate({
 }
 
 function ArrayFieldTemplate(props) {
-  const { schema } = props;
-  const { horizontalButtons, wrapItem } = getSemanticProps(props);
+  const { options,
+    schema,
+    uiSchema,
+    formContext, } = props;
+  const semanticProps = getSemanticProps({
+      options,
+      uiSchema,
+      formContext,
+      defaultSchemaProps: { horizontalButtons : false, wrapItem : false }
+  });
+  const  { horizontalButtons, wrapItem } = semanticProps;
   const itemProps = { horizontalButtons, wrapItem };
 
   if (isFixedItems(schema)) {
@@ -240,13 +248,5 @@ function ArrayFieldTemplate(props) {
   }
   return <DefaultNormalArrayFieldTemplate {...props} itemProps={itemProps} />;
 }
-
-ArrayFieldTemplate.defaultProps = {
-  options: {},
-};
-
-ArrayFieldTemplate.propTypes = {
-  options: PropTypes.object,
-};
 
 export default ArrayFieldTemplate;
