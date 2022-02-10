@@ -139,6 +139,30 @@ render((
 
 This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key">`
 
+## idSeparator
+
+To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (the default is `_`).
+
+```jsx
+const schema = {
+  type: "object",
+  properties: {
+    first: {
+      type: "string"
+    }
+  }
+};
+
+render((
+  <Form schema={schema}
+        idSeparator={"/"}/>
+), document.getElementById("app"));
+```
+
+This will render `<input id="root/first">` instead of `<input
+id="root_first">` when rendering `first`.
+
+
 ## liveOmit
 
 If `omitExtraData` and `liveOmit` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called. Set to `false` by default.

@@ -118,7 +118,8 @@ export default class Form extends Component {
       uiSchema["ui:rootFieldId"],
       rootSchema,
       formData,
-      props.idPrefix
+      props.idPrefix,
+      props.idSeparator
     );
     const nextState = {
       schema,
@@ -427,6 +428,7 @@ export default class Form extends Component {
       children,
       id,
       idPrefix,
+      idSeparator,
       className,
       tagName,
       name,
@@ -479,6 +481,7 @@ export default class Form extends Component {
           errorSchema={errorSchema}
           idSchema={idSchema}
           idPrefix={idPrefix}
+          idSeparator={idSeparator}
           formContext={formContext}
           formData={formData}
           onChange={this.onChange}
