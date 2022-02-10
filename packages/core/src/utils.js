@@ -1,5 +1,6 @@
 import React from "react";
 import * as ReactIs from "react-is";
+import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js-pure/features/array/fill";
 import union from "lodash/union";
 import jsonpointer from "jsonpointer";
@@ -584,7 +585,7 @@ export function optionsList(schema) {
     });
   } else {
     const altSchemas = schema.oneOf || schema.anyOf;
-    return altSchemas.map((schema, i) => {
+    return altSchemas.map(schema => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
       return {
@@ -677,6 +678,32 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
+const resolveCondition = (schema, rootSchema, formdata) => {
+  let {
+    if: expression,
+    then,
+    else: otherwise,
+    ...resolvedSchemaLessConditional
+  } = schema;
+
+  const conditionalSchema = isValid(expression, formdata, rootSchema)
+    ? then
+    : otherwise;
+
+  if (conditionalSchema) {
+    return retrieveSchema(
+      mergeSchemas(
+        retrieveSchema(conditionalSchema, rootSchema, formdata),
+        resolvedSchemaLessConditional
+      ),
+      rootSchema,
+      formdata
+    );
+  } else {
+    return retrieveSchema(resolvedSchemaLessConditional, rootSchema, formdata);
+  }
+};
+
 export const resolveSchema = memoize(_resolveSchema, cacheKeyFn);
 
 export function _resolveSchema(
@@ -689,6 +716,8 @@ export function _resolveSchema(
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, rootSchema, formData);
     return retrieveSchema(resolvedSchema, rootSchema, formData);
+  } else if (schema.hasOwnProperty("if")) {
+    return resolveCondition(schema, rootSchema, formData);
   } else if (schema.hasOwnProperty("allOf")) {
     return {
       ...schema,
@@ -726,52 +755,16 @@ export function _retrieveSchema(
   }
   let resolvedSchema = resolveSchema(schema, rootSchema, formData);
 
-  while ("if" in resolvedSchema) {
-    // Note that if and else are key words in javascript so extract to variable names which are allowed
-    var {
-      if: expression,
-      then,
-      else: otherwise,
-      ...resolvedSchemaLessConditional
-    } = resolvedSchema;
-
-    var conditionalSchema = isValid(expression, formData, rootSchema)
-      ? then
-      : otherwise;
-
-    if (conditionalSchema) {
-      conditionalSchema = resolveSchema(
-        conditionalSchema,
-        rootSchema,
-        formData
-      );
-    }
-    resolvedSchema = mergeSchemas(
-      resolvedSchemaLessConditional,
-      conditionalSchema || {}
-    );
-  }
-
-  let allOf = resolvedSchema.allOf;
-
-  if (allOf) {
-    for (var i = 0; i < allOf.length; i++) {
-      let allOfSchema = allOf[i];
-
-      // if we see an if in our all of schema then evaluate the if schema and select the then / else, not sure if we should still merge without our if then else
-      if ("if" in allOfSchema) {
-        allOfSchema = isValid(allOfSchema.if, formData, rootSchema)
-          ? allOfSchema.then
-          : allOfSchema.else;
-      }
-
-      if (allOfSchema) {
-        allOfSchema = resolveSchema(allOfSchema, rootSchema, formData); // resolve references etc.
-        resolvedSchema = {
-          ...mergeSchemas(resolvedSchema, allOfSchema),
-        };
-        delete resolvedSchema.allOf;
-      }
+  if ("allOf" in schema) {
+    try {
+      resolvedSchema = mergeAllOf({
+        ...resolvedSchema,
+        allOf: resolvedSchema.allOf,
+      });
+    } catch (e) {
+      console.warn("could not merge subschemas in allOf:\n" + e);
+      const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
+      return resolvedSchemaWithoutAllOf;
     }
   }
 
@@ -1069,7 +1062,7 @@ export function toIdSchema(
   const idSchema = {
     $id: id || idPrefix,
   };
-  if ("$ref" in schema || "dependencies" in schema) {
+  if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
     return toIdSchema(_schema, id, rootSchema, formData, idPrefix, idSeparator);
   }
