@@ -200,27 +200,6 @@ render((
 ), document.getElementById("app"));
 ```
 
-You can also render your own custom widgets by omitting the `enum` and `uniqueItems` options. 
-
-```js
-const schema = {
-  type: "array",
-  title: "A multiple-choice list",
-  items: {
-    type: "string",
-  },
-};
-
-const uiSchema = {
-  "ui:widget": "MyCustomWidget"
-};
-
-render((
-  <Form schema={schema} uiSchema={uiSchema} />
-), document.getElementById("app"));
-```
-
-
 ## Custom widgets
 
 In addition to [ArrayFieldTemplate](../advanced-customization/custom-templates.md#arrayfieldtemplate) you use your own widget by providing it to the providing it via uiSchema property of `ui:widget`. 
