@@ -4227,6 +4227,24 @@ describe("utils", () => {
       ];
       expect(getMatchingOption(undefined, options, rootSchema)).eql(0);
     });
+    it("should infer correct anyOf schema based on data if passing null and option 2 is {type: null}", () => {
+      const rootSchema = {
+        defs: {
+          a: { type: "object", properties: { id: { enum: ["a"] } } },
+          nested: {
+            type: "object",
+            properties: {
+              id: { enum: ["nested"] },
+              child: { $ref: "#/defs/any" },
+            },
+          },
+          any: { anyOf: [{ $ref: "#/defs/a" }, { $ref: "#/defs/nested" }] },
+        },
+        $ref: "#/defs/any",
+      };
+      const options = [{type: "string"}, {type: "string"}, {type: "null"}];
+      expect(getMatchingOption(null, options, rootSchema)).eql(2);
+    });
     it("should infer correct anyOf schema based on data", () => {
       const rootSchema = {
         defs: {
