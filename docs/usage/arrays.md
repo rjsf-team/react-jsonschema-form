@@ -202,7 +202,7 @@ render((
 
 ## Custom widgets
 
-In addition to [ArrayFieldTemplate](../advanced-customization/custom-templates.md#arrayfieldtemplate) you use your own widget by providing it to the providing it via uiSchema property of `ui:widget`. 
+In addition to [ArrayFieldTemplate](../advanced-customization/custom-templates.md#arrayfieldtemplate) you use your own widget by providing it to the uiSchema with the property of `ui:widget`. 
 
 Example: 
 
