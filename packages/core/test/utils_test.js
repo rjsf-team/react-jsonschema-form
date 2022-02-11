@@ -29,6 +29,7 @@ import {
   schemaRequiresTrueValue,
   canExpand,
   optionsList,
+  isCustomWidget,
   getMatchingOption,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
@@ -2716,6 +2717,27 @@ describe("utils", () => {
       });
     });
 
+    it("should handle idSeparator parameter", () => {
+      const schema = {
+        definitions: {
+          testdef: {
+            type: "object",
+            properties: {
+              foo: { type: "string" },
+              bar: { type: "string" },
+            },
+          },
+        },
+        $ref: "#/definitions/testdef",
+      };
+
+      expect(toIdSchema(schema, undefined, schema, {}, "rjsf", "/")).eql({
+        $id: "rjsf",
+        foo: { $id: "rjsf/foo" },
+        bar: { $id: "rjsf/bar" },
+      });
+    });
+
     it("should handle null form data for object schemas", () => {
       const schema = {
         type: "object",
@@ -3652,6 +3674,24 @@ describe("utils", () => {
           getDisplayLabel({ type: "array" }, { "ui:widget": "files" })
         ).eql(true);
       });
+      it("custom type", () => {
+        expect(
+          getDisplayLabel(
+            { type: "array", title: "myAwesomeTitle" },
+            { "ui:widget": "MyAwesomeWidget" }
+          )
+        ).eql(true);
+      });
+    });
+  });
+
+  describe("isCustomWidget()", () => {
+    it("When the function is called with a custom widget in the uiSchema it returns true", () => {
+      expect(isCustomWidget({ "ui:widget": "MyAwesomeWidget" })).eql(true);
+    });
+
+    it("When the function is called without a custom widget in the schema it returns false", () => {
+      expect(isCustomWidget({ "ui:fields": "randomString" })).eql(false);
     });
   });
 

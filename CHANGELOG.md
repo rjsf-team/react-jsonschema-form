@@ -40,6 +40,11 @@ should change the heading of the (upcoming) version to include a major version b
 - Differentiated the material-ui 4 and 5 themes
 - Added chakra-ui theme
 
+# v3.4.0
+## @rjsf/core
+- Introduce `idSeparator` prop to change the path separator used to generate field names (https://github.com/rjsf-team/react-jsonschema-form/pull/2628)
+- Array fields support custom widgets (previously, only multiple-choice arrays with `enums` or `uniqueItems` support it)
+
 # v3.3.0
 
 ## @rjsf/semantic-ui
