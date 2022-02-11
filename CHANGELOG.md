@@ -43,7 +43,7 @@ should change the heading of the (upcoming) version to include a major version b
 # v3.4.0
 ## @rjsf/core
 - Introduce `idSeparator` prop to change the path separator used to generate field names (https://github.com/rjsf-team/react-jsonschema-form/pull/2628)
-- Array fields support custom widgets (previously, only multiple-choice arrays with `enums` or `uniqueItems` support it)
+- Array fields support custom widgets (previously, only multiple-choice arrays with `enums` or `uniqueItems` support it) (https://github.com/rjsf-team/react-jsonschema-form/pull/2697)
 
 # v3.3.0
 
