@@ -1244,6 +1244,11 @@ export function rangeSpec(schema) {
 }
 
 export function getMatchingOption(formData, options, rootSchema) {
+  // For performance, skip validating subschemas if formData is undefined. We just
+  // want to get the first option in that case.
+  if (formData === undefined) {
+    return 0;
+  }
   for (let i = 0; i < options.length; i++) {
     const option = options[i];
 
@@ -1288,11 +1293,11 @@ export function getMatchingOption(formData, options, rootSchema) {
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
 
-      if (formData && isValid(augmentedSchema, formData, rootSchema)) {
+      if (isValid(augmentedSchema, formData, rootSchema)) {
         return i;
       }
     
-    } else if (formData && isValid(option, formData, rootSchema)) {
+    } else if (isValid(option, formData, rootSchema)) {
       return i;
     }
   }
