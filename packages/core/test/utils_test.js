@@ -4242,7 +4242,11 @@ describe("utils", () => {
         },
         $ref: "#/defs/any",
       };
-      const options = [{type: "string"}, {type: "string"}, {type: "null"}];
+      const options = [
+        { type: "string" },
+        { type: "string" },
+        { type: "null" },
+      ];
       expect(getMatchingOption(null, options, rootSchema)).eql(2);
     });
     it("should infer correct anyOf schema based on data", () => {
