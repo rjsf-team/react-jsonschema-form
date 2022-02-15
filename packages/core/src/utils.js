@@ -368,7 +368,6 @@ export function getUiOptions(uiSchema) {
     .filter(key => key.indexOf("ui:") === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
-
       if (key === "ui:widget" && isObject(value)) {
         console.warn(
           "Setting options via ui:widget object is deprecated, use ui:options instead"
@@ -396,6 +395,7 @@ export function getDisplayLabel(schema, uiSchema, rootSchema) {
       isMultiSelect(schema, rootSchema) ||
       isFilesArray(schema, uiSchema, rootSchema);
   }
+
   if (schemaType === "object") {
     displayLabel = false;
   }
@@ -633,6 +633,9 @@ export function stubExistingAdditionalProperties(
     ...schema,
     properties: { ...schema.properties },
   };
+
+  // make sure formData is an object
+  formData = isObject(formData) ? formData : {};
 
   Object.keys(formData).forEach(key => {
     if (schema.properties.hasOwnProperty(key)) {
@@ -1023,24 +1026,32 @@ export function toIdSchema(
   id,
   rootSchema,
   formData = {},
-  idPrefix = "root"
+  idPrefix = "root",
+  idSeparator = "_"
 ) {
   const idSchema = {
     $id: id || idPrefix,
   };
   if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
-    return toIdSchema(_schema, id, rootSchema, formData, idPrefix);
+    return toIdSchema(_schema, id, rootSchema, formData, idPrefix, idSeparator);
   }
   if ("items" in schema && !schema.items.$ref) {
-    return toIdSchema(schema.items, id, rootSchema, formData, idPrefix);
+    return toIdSchema(
+      schema.items,
+      id,
+      rootSchema,
+      formData,
+      idPrefix,
+      idSeparator
+    );
   }
   if (schema.type !== "object") {
     return idSchema;
   }
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
+    const fieldId = idSchema.$id + idSeparator + name;
     idSchema[name] = toIdSchema(
       isObject(field) ? field : {},
       fieldId,
@@ -1048,7 +1059,8 @@ export function toIdSchema(
       // It's possible that formData is not an object -- this can happen if an
       // array item has just been added, but not populated with data yet
       (formData || {})[name],
-      idPrefix
+      idPrefix,
+      idSeparator
     );
   }
   return idSchema;

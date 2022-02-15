@@ -1,4 +1,4 @@
-import { utils } from '@rjsf/core';
+import { utils, withTheme } from '@rjsf/core';
 
 import DescriptionField from './fields/DescriptionField';
 import TitleField from './fields/TitleField';
@@ -63,3 +63,7 @@ export const Theme = {
   widgets: { ...widgets, ...Widgets },
   ErrorList,
 };
+
+export const Form = withTheme(Theme);
+
+export default Form;

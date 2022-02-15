@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
+import { utils } from "@rjsf/core";
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-
+const { getDisplayLabel } = utils;
 function CheckboxWidget(props) {
   const {
     id,
@@ -17,8 +18,23 @@ function CheckboxWidget(props) {
     options,
     onFocus,
     formContext,
+    schema,
+    uiSchema,
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options });
+  const semanticProps = getSemanticProps({
+    options,
+    formContext,
+    schema,
+    uiSchema,
+    defaultSchemaProps: {
+      inverted: false,
+    },
+   });
+   const displayLabel = getDisplayLabel(
+    schema,
+    uiSchema
+    /* TODO: , rootSchema */
+  );
   const _onChange = (event, data) => onChange && onChange(data.checked);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
@@ -34,17 +50,8 @@ function CheckboxWidget(props) {
       onBlur={_onBlur}
       onFocus={_onFocus}
       required={required}
-      label={label}
+      label={displayLabel ? label || schema.title : false}
     />
   );
 }
-
-CheckboxWidget.defaultProps = {
-  options: {
-    semantic: {
-      inverted: false,
-    },
-  },
-};
-
 export default CheckboxWidget;

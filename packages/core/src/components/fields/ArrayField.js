@@ -469,6 +469,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       idPrefix,
+      idSeparator,
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
@@ -488,7 +489,8 @@ class ArrayField extends Component {
           itemIdPrefix,
           rootSchema,
           item,
-          idPrefix
+          idPrefix,
+          idSeparator
         );
         return this.renderArrayFieldItem({
           key,
@@ -539,17 +541,18 @@ class ArrayField extends Component {
       disabled,
       readonly,
       required,
-      label,
       placeholder,
       autofocus,
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
       rawErrors,
+      name,
     } = this.props;
     const items = this.props.formData;
     const { widgets, rootSchema, formContext } = registry;
     const itemsSchema = retrieveSchema(schema.items, rootSchema, formData);
+    const title = schema.title || name;
     const enumOptions = optionsList(itemsSchema);
     const { widget = "select", ...options } = {
       ...getUiOptions(uiSchema),
@@ -570,7 +573,7 @@ class ArrayField extends Component {
         disabled={disabled}
         readonly={readonly}
         required={required}
-        label={label}
+        label={title}
         placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
@@ -625,6 +628,7 @@ class ArrayField extends Component {
       formData,
       errorSchema,
       idPrefix,
+      idSeparator,
       idSchema,
       name,
       required,
@@ -672,7 +676,8 @@ class ArrayField extends Component {
           itemIdPrefix,
           rootSchema,
           item,
-          idPrefix
+          idPrefix,
+          idSeparator
         );
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}
