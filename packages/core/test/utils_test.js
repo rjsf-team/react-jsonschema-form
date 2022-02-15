@@ -2389,7 +2389,7 @@ describe("utils", () => {
       });
     });
 
-    describe("ifElseThen", () => {
+    describe("ifThenElse", () => {
       it("should resolve if, then", () => {
         const schema = {
           type: "object",
