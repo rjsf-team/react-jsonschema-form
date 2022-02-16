@@ -202,7 +202,7 @@ exports[`object fields additionalProperties 1`] = `
     className="MuiBox-root MuiBox-root-2"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -344,7 +344,7 @@ exports[`object fields object 1`] = `
     className="MuiBox-root MuiBox-root-1"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}

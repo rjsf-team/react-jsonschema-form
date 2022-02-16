@@ -30,6 +30,7 @@ import {
   canExpand,
   optionsList,
   getMatchingOption,
+  getSubmitButtonOptions,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3672,6 +3673,72 @@ describe("utils", () => {
         expect(
           getDisplayLabel({ type: "array" }, { "ui:widget": "files" })
         ).eql(true);
+      });
+    });
+  });
+
+  describe("getSubmitButtonOptions", () => {
+    it("default props", () => {
+      expect(getSubmitButtonOptions({})).eql({
+        props: { disabled: false },
+        submitText: "Submit",
+        removed: false,
+      });
+    });
+
+    it("allowed option should be false", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { removed: false } },
+        })
+      ).eql({
+        props: {
+          disabled: false,
+        },
+        submitText: "Submit",
+        removed: false,
+      });
+    });
+
+    it("hidden option should be true", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { props: { hidden: true } } },
+        })
+      ).eql({
+        props: {
+          hidden: true,
+        },
+        submitText: "Submit",
+        removed: false,
+      });
+    });
+
+    it("disabled option should be true", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { props: { disabled: true } } },
+        })
+      ).eql({
+        props: {
+          disabled: true,
+        },
+        submitText: "Submit",
+        removed: false,
+      });
+    });
+
+    it("submitText option should be confirm", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { submitText: "Confirm" } },
+        })
+      ).eql({
+        props: {
+          disabled: false,
+        },
+        submitText: "Confirm",
+        removed: false,
       });
     });
   });

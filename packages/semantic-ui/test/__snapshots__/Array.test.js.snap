@@ -41,7 +41,7 @@ exports[`array fields array 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -151,7 +151,7 @@ exports[`array fields checkboxes 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -269,7 +269,7 @@ exports[`array fields fixed array 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
