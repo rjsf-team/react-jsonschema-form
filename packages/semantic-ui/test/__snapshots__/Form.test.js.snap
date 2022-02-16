@@ -9,14 +9,13 @@ exports[`single fields null field 1`] = `
   <div
     className="grouped equal width fields"
   />
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -50,14 +49,13 @@ exports[`single fields number field 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -83,14 +81,13 @@ exports[`single fields string field format data-url 1`] = `
       </p>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -123,14 +120,13 @@ exports[`single fields string field format email 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -163,14 +159,13 @@ exports[`single fields string field format uri 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -204,14 +199,13 @@ exports[`single fields string field regular 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -340,14 +334,13 @@ exports[`single fields uiSchema theme props 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;
 
@@ -383,13 +376,12 @@ exports[`single fields unsupported field 1`] = `
       </pre>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
+  <button
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
 </form>
 `;

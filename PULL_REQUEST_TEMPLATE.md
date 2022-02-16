@@ -4,6 +4,8 @@
 
 If this is related to existing tickets, include links to them as well. Use the syntax `fixes #[issue number]` (ex: `fixes #123`).
 
+If your PR is non-trivial and you'd like to schedule a synchronous review, please add it to the weekly meeting agenda: https://docs.google.com/document/d/12PjTvv21k6LIky6bNQVnsplMLLnmEuypTLQF8a-8Wss/edit
+
 ### Checklist
 
 * [ ] **I'm updating documentation**
