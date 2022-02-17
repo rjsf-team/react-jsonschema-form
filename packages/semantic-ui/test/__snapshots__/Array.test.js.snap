@@ -7,36 +7,32 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="grouped equal width fields"
+    className="field field-array field-array-of-string sortable-form-fields"
   >
-    <div
-      className="field field-array field-array-of-string sortable-form-fields"
-    >
-      <div>
-        <div
-          className="row array-item-list"
-        />
-        <div
-          style={
-            Object {
-              "marginTop": "1rem",
-              "position": "relative",
-              "textAlign": "right",
-            }
+    <div>
+      <div
+        className="row array-item-list"
+      />
+      <div
+        style={
+          Object {
+            "marginTop": "1rem",
+            "position": "relative",
+            "textAlign": "right",
           }
+        }
+      >
+        <button
+          className="ui tiny icon left labeled button"
+          onClick={[Function]}
         >
-          <button
-            className="ui tiny icon left labeled button"
+          <i
+            aria-hidden="true"
+            className="plus icon"
             onClick={[Function]}
-          >
-            <i
-              aria-hidden="true"
-              className="plus icon"
-              onClick={[Function]}
-            />
-            Add Item
-          </button>
-        </div>
+          />
+          Add Item
+        </button>
       </div>
     </div>
   </div>
@@ -57,95 +53,91 @@ exports[`array fields checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="grouped equal width fields"
+    className="field"
   >
     <div
-      className="field"
+      aria-describedby={null}
+      aria-disabled={false}
+      aria-expanded={false}
+      aria-multiselectable={true}
+      autoFocus={false}
+      className="ui fluid multiple selection scrolling dropdown"
+      inverted="false"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onMouseDown={[Function]}
+      readOnly={false}
+      required={false}
+      role="listbox"
+      tabIndex={0}
     >
-      <div
-        aria-describedby={null}
-        aria-disabled={false}
-        aria-expanded={false}
-        aria-multiselectable={true}
-        autoFocus={false}
-        className="ui fluid multiple selection scrolling dropdown"
-        inverted="false"
-        onBlur={[Function]}
-        onChange={[Function]}
+      <i
+        aria-hidden="true"
+        className="dropdown icon"
         onClick={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onMouseDown={[Function]}
-        readOnly={false}
-        required={false}
-        role="listbox"
-        tabIndex={0}
+      />
+      <div
+        className="menu transition"
       >
-        <i
-          aria-hidden="true"
-          className="dropdown icon"
-          onClick={[Function]}
-        />
         <div
-          className="menu transition"
+          aria-checked={false}
+          aria-disabled={false}
+          aria-selected={true}
+          className="selected item"
+          onClick={[Function]}
+          role="option"
+          style={
+            Object {
+              "pointerEvents": "all",
+            }
+          }
         >
-          <div
-            aria-checked={false}
-            aria-disabled={false}
-            aria-selected={true}
-            className="selected item"
-            onClick={[Function]}
-            role="option"
-            style={
-              Object {
-                "pointerEvents": "all",
-              }
-            }
+          <span
+            className="text"
           >
-            <span
-              className="text"
-            >
-              a
-            </span>
-          </div>
-          <div
-            aria-checked={false}
-            aria-disabled={false}
-            aria-selected={false}
-            className="item"
-            onClick={[Function]}
-            role="option"
-            style={
-              Object {
-                "pointerEvents": "all",
-              }
+            a
+          </span>
+        </div>
+        <div
+          aria-checked={false}
+          aria-disabled={false}
+          aria-selected={false}
+          className="item"
+          onClick={[Function]}
+          role="option"
+          style={
+            Object {
+              "pointerEvents": "all",
             }
+          }
+        >
+          <span
+            className="text"
           >
-            <span
-              className="text"
-            >
-              b
-            </span>
-          </div>
-          <div
-            aria-checked={false}
-            aria-disabled={false}
-            aria-selected={false}
-            className="item"
-            onClick={[Function]}
-            role="option"
-            style={
-              Object {
-                "pointerEvents": "all",
-              }
+            b
+          </span>
+        </div>
+        <div
+          aria-checked={false}
+          aria-disabled={false}
+          aria-selected={false}
+          className="item"
+          onClick={[Function]}
+          role="option"
+          style={
+            Object {
+              "pointerEvents": "all",
             }
+          }
+        >
+          <span
+            className="text"
           >
-            <span
-              className="text"
-            >
-              c
-            </span>
-          </div>
+            c
+          </span>
         </div>
       </div>
     </div>
@@ -167,98 +159,94 @@ exports[`array fields fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="grouped equal width fields"
+    className="field field-array field-array-fixed-items"
   >
-    <div
-      className="field field-array field-array-fixed-items"
-    >
-      <div>
+    <div>
+      <div
+        className="row array-item-list"
+      >
         <div
-          className="row array-item-list"
+          className="array-item"
         >
           <div
-            className="array-item"
+            className="ui grid"
+            style={
+              Object {
+                "alignItems": "center",
+                "display": "grid",
+                "gridTemplateColumns": "1fr 65px",
+              }
+            }
           >
             <div
-              className="ui grid"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "display": "grid",
-                  "gridTemplateColumns": "1fr 65px",
-                }
-              }
+              className="middle aligned sixteen wide column"
             >
               <div
-                className="middle aligned sixteen wide column"
+                className="grouped equal width fields"
               >
                 <div
-                  className="grouped equal width fields"
+                  className="required field"
                 >
                   <div
-                    className="required field"
+                    className="ui fluid input"
                   >
-                    <div
-                      className="ui fluid input"
-                    >
-                      <input
-                        aria-describedby={null}
-                        autoFocus={false}
-                        disabled={false}
-                        id="root_0"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        required={true}
-                        type="text"
-                        value=""
-                      />
-                    </div>
+                    <input
+                      aria-describedby={null}
+                      autoFocus={false}
+                      disabled={false}
+                      id="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={true}
+                      type="text"
+                      value=""
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div
+          className="array-item"
+        >
           <div
-            className="array-item"
+            className="ui grid"
+            style={
+              Object {
+                "alignItems": "center",
+                "display": "grid",
+                "gridTemplateColumns": "1fr 65px",
+              }
+            }
           >
             <div
-              className="ui grid"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "display": "grid",
-                  "gridTemplateColumns": "1fr 65px",
-                }
-              }
+              className="middle aligned sixteen wide column"
             >
               <div
-                className="middle aligned sixteen wide column"
+                className="grouped equal width fields"
               >
                 <div
-                  className="grouped equal width fields"
+                  className="required field"
                 >
                   <div
-                    className="required field"
+                    className="ui fluid input"
                   >
-                    <div
-                      className="ui fluid input"
-                    >
-                      <input
-                        aria-describedby={null}
-                        autoFocus={false}
-                        disabled={false}
-                        id="root_1"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        required={true}
-                        type="number"
-                        value=""
-                      />
-                    </div>
+                    <input
+                      aria-describedby={null}
+                      autoFocus={false}
+                      disabled={false}
+                      id="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={true}
+                      type="number"
+                      value=""
+                    />
                   </div>
                 </div>
               </div>
