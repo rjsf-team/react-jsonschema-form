@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`UpDownWidget renders 0 as 0 and not '' 1`] = `
+exports[`renders 0 as 0 and not '' 1`] = `
 <div
   className="MuiFormControl-root MuiFormControl-fullWidth"
 >
@@ -10,6 +10,7 @@ exports[`UpDownWidget renders 0 as 0 and not '' 1`] = `
   >
     Some simple label
     <span
+      aria-hidden={true}
       className="MuiFormLabel-asterisk MuiInputLabel-asterisk"
     >
        

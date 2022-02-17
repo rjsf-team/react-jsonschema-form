@@ -10,7 +10,7 @@ exports[`single fields null field 1`] = `
     className="grouped equal width fields"
   />
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -35,6 +35,7 @@ exports[`single fields number field 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby={null}
           autoFocus={false}
           disabled={false}
           id="root"
@@ -49,7 +50,7 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -81,7 +82,7 @@ exports[`single fields string field format data-url 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -106,6 +107,7 @@ exports[`single fields string field format email 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby={null}
           autoFocus={false}
           disabled={false}
           id="root"
@@ -119,7 +121,7 @@ exports[`single fields string field format email 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -144,6 +146,7 @@ exports[`single fields string field format uri 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby={null}
           autoFocus={false}
           disabled={false}
           id="root"
@@ -157,7 +160,7 @@ exports[`single fields string field format uri 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -182,6 +185,7 @@ exports[`single fields string field regular 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby={null}
           autoFocus={false}
           disabled={false}
           id="root"
@@ -196,7 +200,142 @@ exports[`single fields string field regular 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields uiSchema theme props 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="grouped equal width fields"
+  >
+    <h5
+      className="ui dividing header"
+    >
+      A registration form
+    </h5>
+    <p
+      className="sui-description"
+    >
+      A simple test theme form example.
+    </p>
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="required field"
+      >
+        <label>
+          test
+        </label>
+        <div
+          aria-describedby={null}
+          aria-disabled={false}
+          aria-expanded={false}
+          aria-multiselectable={false}
+          autoFocus={false}
+          className="ui fluid selection scrolling dropdown"
+          inverted="false"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          readOnly={false}
+          required={true}
+          role="listbox"
+          tabIndex={0}
+        >
+          <div
+            aria-atomic={true}
+            aria-live="polite"
+            className="divider text"
+            role="alert"
+          >
+            
+          </div>
+          <i
+            aria-hidden="true"
+            className="dropdown icon"
+            onClick={[Function]}
+          />
+          <div
+            className="menu transition"
+          >
+            <div
+              aria-checked={false}
+              aria-disabled={false}
+              aria-selected={true}
+              className="selected item"
+              onClick={[Function]}
+              role="option"
+              style={
+                Object {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              >
+                1
+              </span>
+            </div>
+            <div
+              aria-checked={false}
+              aria-disabled={false}
+              aria-selected={false}
+              className="item"
+              onClick={[Function]}
+              role="option"
+              style={
+                Object {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              >
+                2
+              </span>
+            </div>
+            <div
+              aria-checked={false}
+              aria-disabled={false}
+              aria-selected={false}
+              className="item"
+              onClick={[Function]}
+              role="option"
+              style={
+                Object {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              >
+                3
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -238,7 +377,7 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >

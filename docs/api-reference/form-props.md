@@ -112,6 +112,7 @@ React component used to customize each field of the form. See [Custom Templates]
 ## formContext
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
+Setting `{readonlyAsDisabled: false}` on the formContext will make the antd theme treat readOnly fields as disabled.
 
 ## formData
 
@@ -137,6 +138,30 @@ render((
 ```
 
 This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key">`
+
+## idSeparator
+
+To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (the default is `_`).
+
+```jsx
+const schema = {
+  type: "object",
+  properties: {
+    first: {
+      type: "string"
+    }
+  }
+};
+
+render((
+  <Form schema={schema}
+        idSeparator={"/"}/>
+), document.getElementById("app"));
+```
+
+This will render `<input id="root/first">` instead of `<input
+id="root_first">` when rendering `first`.
+
 
 ## liveOmit
 
