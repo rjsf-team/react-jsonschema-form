@@ -35,8 +35,8 @@ module.exports = {
   },
   plugins: [
     new MonacoWebpackPlugin({
+      languages: ['json'],
       features: ['!gotoSymbol'],
-      languages: ['json']
     }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
