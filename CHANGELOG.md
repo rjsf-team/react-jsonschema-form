@@ -25,11 +25,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/material-ui
 - Added React 17 as an optional peer dependency
-- Minimum version of react required to use package is now React 16.3
+- Minimum version of React required to use package is now React 16.3
 - Bumped required minimum versions of `@material-ui/core` and `@material-ui/icons` to the latest (`4.12.0` and `4.11.1`)
   - New exports: `MuiForm4` and `Theme4` are aliases to the material-ui version 4 `MuiForm` and `Theme`
   - The Material-UI 4 theme will fallback to a form with a message indicating `@material-ui` is not available when one (or both) of the libraries are not installed
 - Added support for material-ui version 5 on top of React 17
+  - Requires React 17 so will need to upgrade project
   - Added `@mui/material`, `@mui/icons-material`, `@emotion/react` and `@emotion/styled` as optional peer dependencies
   - New exports: `MuiForm5` and `Theme5` support using the Material UI 5 libraries instead of version 4
   - The Material-UI 5 theme will fallback to a form with a message indicating `@mui` is not available when one (or both) of the libraries are not installed
