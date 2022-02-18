@@ -562,7 +562,8 @@ export function isCustomWidget(uiSchema) {
   return (
     // TODO: Remove the `&& uiSchema["ui:widget"] !== "hidden"` once we support hidden widgets for arrays.
     // https://react-jsonschema-form.readthedocs.io/en/latest/usage/widgets/#hidden-widgets
-    "widget" in getUiOptions(uiSchema) && getUiOptions(uiSchema)["widget"] !== "hidden"
+    "widget" in getUiOptions(uiSchema) &&
+    getUiOptions(uiSchema)["widget"] !== "hidden"
   );
 }
 
