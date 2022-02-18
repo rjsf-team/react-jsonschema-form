@@ -118,38 +118,12 @@ exports[`object fields object 1`] = `
     </div>
   </div>
   <div>
-    <br />
-    <div
-      className="ms-Grid-col ms-sm12"
+    <button
+      className="btn btn-info"
+      type="submit"
     >
-      <button
-        className="ms-Button ms-Button--primary btn btn-info root-51"
-        data-is-focusable={true}
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        onKeyPress={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseUp={[Function]}
-        type="submit"
-      >
-        <span
-          className="ms-Button-flexContainer flexContainer-52"
-          data-automationid="splitbuttonprimary"
-        >
-          <span
-            className="ms-Button-textContainer textContainer-53"
-          >
-            <span
-              className="ms-Button-label label-55"
-              id="id__7"
-            >
-              Submit
-            </span>
-          </span>
-        </span>
-      </button>
-    </div>
+      Submit
+    </button>
   </div>
 </form>
 `;

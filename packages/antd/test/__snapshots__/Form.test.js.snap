@@ -95,16 +95,14 @@ exports[`single fields field with description 1`] = `
       </div>
     </fieldset>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -203,16 +201,14 @@ exports[`single fields field with description in uiSchema 1`] = `
       </div>
     </fieldset>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -239,16 +235,14 @@ exports[`single fields hidden field 1`] = `
       />
     </fieldset>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -261,16 +255,14 @@ exports[`single fields null field 1`] = `
   <div
     className="form-group field field-null"
   />
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -392,16 +384,14 @@ exports[`single fields number field 1`] = `
       </div>
     </div>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -427,16 +417,14 @@ exports[`single fields string field format data-url 1`] = `
       </p>
     </div>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -468,16 +456,14 @@ exports[`single fields string field format email 1`] = `
       value=""
     />
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -509,16 +495,14 @@ exports[`single fields string field format uri 1`] = `
       value=""
     />
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -550,16 +534,14 @@ exports[`single fields string field regular 1`] = `
       value=""
     />
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -595,15 +577,13 @@ exports[`single fields unsupported field 1`] = `
       </pre>
     </div>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;

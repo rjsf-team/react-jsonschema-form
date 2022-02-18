@@ -1,7 +1,10 @@
-import React, { useContext } from 'react';
-import { WidgetProps } from '@rjsf/core';
+import React from 'react';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+
+import { WidgetProps } from '@rjsf/core';
 
 const UpDownWidget = ({
   id,
@@ -15,7 +18,6 @@ const UpDownWidget = ({
   onFocus,
   autofocus,
 }: WidgetProps) => {
-  const { FormControl, InputLabel, Input } = useContext(MuiComponentContext);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(value);
@@ -28,6 +30,7 @@ const UpDownWidget = ({
   return (
     <FormControl
       fullWidth={true}
+      //error={!!rawErrors}
       required={required}
     >
       <InputLabel>{label}</InputLabel>

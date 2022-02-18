@@ -1,7 +1,7 @@
-import React from 'react';
-import { WidgetProps } from '@rjsf/core';
+import React from "react";
+import { TextWidgetProps } from "../TextWidget";
 
-const DateWidget = (props: WidgetProps) => {
+const DateWidget = (props: TextWidgetProps) => {
   const { registry } = props;
   const { TextWidget } = registry.widgets;
   return (

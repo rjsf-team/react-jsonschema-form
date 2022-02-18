@@ -469,7 +469,6 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       idPrefix,
-      idSeparator,
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
@@ -489,8 +488,7 @@ class ArrayField extends Component {
           itemIdPrefix,
           rootSchema,
           item,
-          idPrefix,
-          idSeparator
+          idPrefix
         );
         return this.renderArrayFieldItem({
           key,
@@ -628,7 +626,6 @@ class ArrayField extends Component {
       formData,
       errorSchema,
       idPrefix,
-      idSeparator,
       idSchema,
       name,
       required,
@@ -676,8 +673,7 @@ class ArrayField extends Component {
           itemIdPrefix,
           rootSchema,
           item,
-          idPrefix,
-          idSeparator
+          idPrefix
         );
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}

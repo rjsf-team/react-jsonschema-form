@@ -1014,32 +1014,24 @@ export function toIdSchema(
   id,
   rootSchema,
   formData = {},
-  idPrefix = "root",
-  idSeparator = "_"
+  idPrefix = "root"
 ) {
   const idSchema = {
     $id: id || idPrefix,
   };
   if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
-    return toIdSchema(_schema, id, rootSchema, formData, idPrefix, idSeparator);
+    return toIdSchema(_schema, id, rootSchema, formData, idPrefix);
   }
   if ("items" in schema && !schema.items.$ref) {
-    return toIdSchema(
-      schema.items,
-      id,
-      rootSchema,
-      formData,
-      idPrefix,
-      idSeparator
-    );
+    return toIdSchema(schema.items, id, rootSchema, formData, idPrefix);
   }
   if (schema.type !== "object") {
     return idSchema;
   }
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + idSeparator + name;
+    const fieldId = idSchema.$id + "_" + name;
     idSchema[name] = toIdSchema(
       isObject(field) ? field : {},
       fieldId,
@@ -1047,8 +1039,7 @@ export function toIdSchema(
       // It's possible that formData is not an object -- this can happen if an
       // array item has just been added, but not populated with data yet
       (formData || {})[name],
-      idPrefix,
-      idSeparator
+      idPrefix
     );
   }
   return idSchema;

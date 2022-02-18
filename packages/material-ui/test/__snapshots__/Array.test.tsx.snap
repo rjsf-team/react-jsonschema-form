@@ -13,19 +13,19 @@ exports[`array fields array 1`] = `
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
       <div
-        className="MuiBox-root MuiBox-root-1"
+        className="MuiBox-root MuiBox-root-33"
       >
         <div
           className="MuiGrid-root MuiGrid-container"
         >
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
+            className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-flex-end"
           >
             <div
               className="MuiGrid-root MuiGrid-item"
             >
               <div
-                className="MuiBox-root MuiBox-root-2"
+                className="MuiBox-root MuiBox-root-137"
               >
                 <button
                   className="MuiButtonBase-root MuiButton-root MuiButton-text array-item-add MuiButton-textSecondary"
@@ -49,9 +49,10 @@ exports[`array fields array 1`] = `
                     className="MuiButton-label"
                   >
                     <svg
-                      aria-hidden={true}
+                      aria-hidden="true"
                       className="MuiSvgIcon-root"
                       focusable="false"
+                      role="presentation"
                       viewBox="0 0 24 24"
                     >
                       <path
@@ -68,31 +69,12 @@ exports[`array fields array 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-3"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      className="btn btn-info"
       type="submit"
     >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
+      Submit
     </button>
   </div>
 </form>
@@ -111,7 +93,7 @@ exports[`array fields array icons 1`] = `
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
       <div
-        className="MuiBox-root MuiBox-root-11"
+        className="MuiBox-root MuiBox-root-240"
       >
         <div
           className="MuiGrid-root MuiGrid-container"
@@ -128,13 +110,13 @@ exports[`array fields array icons 1`] = `
               }
             >
               <div
-                className="MuiBox-root MuiBox-root-12"
+                className="MuiBox-root MuiBox-root-241"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-13"
+                    className="MuiBox-root MuiBox-root-242"
                   >
                     <div
                       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -172,7 +154,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root array-item-move-up Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall Mui-disabled Mui-disabled"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -199,12 +181,13 @@ exports[`array fields array icons 1`] = `
                 type="button"
               >
                 <span
-                  className="MuiIconButton-label"
+                  className="MuiButton-label"
                 >
                   <svg
-                    aria-hidden={true}
+                    aria-hidden="true"
                     className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                     focusable="false"
+                    role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -214,7 +197,7 @@ exports[`array fields array icons 1`] = `
                 </span>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -241,12 +224,13 @@ exports[`array fields array icons 1`] = `
                 type="button"
               >
                 <span
-                  className="MuiIconButton-label"
+                  className="MuiButton-label"
                 >
                   <svg
-                    aria-hidden={true}
+                    aria-hidden="true"
                     className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                     focusable="false"
+                    role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -254,12 +238,9 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -286,12 +267,13 @@ exports[`array fields array icons 1`] = `
                 type="button"
               >
                 <span
-                  className="MuiIconButton-label"
+                  className="MuiButton-label"
                 >
                   <svg
-                    aria-hidden={true}
+                    aria-hidden="true"
                     className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                     focusable="false"
+                    role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -299,9 +281,6 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
             </div>
           </div>
@@ -317,13 +296,13 @@ exports[`array fields array icons 1`] = `
               }
             >
               <div
-                className="MuiBox-root MuiBox-root-14"
+                className="MuiBox-root MuiBox-root-243"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-15"
+                    className="MuiBox-root MuiBox-root-244"
                   >
                     <div
                       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -361,7 +340,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root array-item-move-up MuiIconButton-sizeSmall"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -388,12 +367,13 @@ exports[`array fields array icons 1`] = `
                 type="button"
               >
                 <span
-                  className="MuiIconButton-label"
+                  className="MuiButton-label"
                 >
                   <svg
-                    aria-hidden={true}
+                    aria-hidden="true"
                     className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                     focusable="false"
+                    role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -401,12 +381,9 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall Mui-disabled Mui-disabled"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -433,12 +410,13 @@ exports[`array fields array icons 1`] = `
                 type="button"
               >
                 <span
-                  className="MuiIconButton-label"
+                  className="MuiButton-label"
                 >
                   <svg
-                    aria-hidden={true}
+                    aria-hidden="true"
                     className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                     focusable="false"
+                    role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -448,7 +426,7 @@ exports[`array fields array icons 1`] = `
                 </span>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -475,12 +453,13 @@ exports[`array fields array icons 1`] = `
                 type="button"
               >
                 <span
-                  className="MuiIconButton-label"
+                  className="MuiButton-label"
                 >
                   <svg
-                    aria-hidden={true}
+                    aria-hidden="true"
                     className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                     focusable="false"
+                    role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -488,20 +467,17 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
+            className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-flex-end"
           >
             <div
               className="MuiGrid-root MuiGrid-item"
             >
               <div
-                className="MuiBox-root MuiBox-root-16"
+                className="MuiBox-root MuiBox-root-245"
               >
                 <button
                   className="MuiButtonBase-root MuiButton-root MuiButton-text array-item-add MuiButton-textSecondary"
@@ -525,9 +501,10 @@ exports[`array fields array icons 1`] = `
                     className="MuiButton-label"
                   >
                     <svg
-                      aria-hidden={true}
+                      aria-hidden="true"
                       className="MuiSvgIcon-root"
                       focusable="false"
+                      role="presentation"
                       viewBox="0 0 24 24"
                     >
                       <path
@@ -536,9 +513,6 @@ exports[`array fields array icons 1`] = `
                     </svg>
                      Add Item
                   </span>
-                  <span
-                    className="MuiTouchRipple-root"
-                  />
                 </button>
               </div>
             </div>
@@ -547,34 +521,12 @@ exports[`array fields array icons 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-17"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      className="btn btn-info"
       type="submit"
     >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
+      Submit
     </button>
   </div>
 </form>
@@ -598,13 +550,13 @@ exports[`array fields checkboxes 1`] = `
       >
         <div
           aria-haspopup="listbox"
-          aria-labelledby="root"
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+          aria-labelledby=" root"
+          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
           id="root"
           onBlur={[Function]}
+          onClick={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
-          onMouseDown={[Function]}
           role="button"
           tabIndex={0}
         >
@@ -617,19 +569,16 @@ exports[`array fields checkboxes 1`] = `
           />
         </div>
         <input
-          aria-hidden={true}
           autoFocus={false}
-          className="MuiSelect-nativeInput"
           onAnimationStart={[Function]}
-          onChange={[Function]}
-          required={false}
-          tabIndex={-1}
+          type="hidden"
           value=""
         />
         <svg
-          aria-hidden={true}
+          aria-hidden="true"
           className="MuiSvgIcon-root MuiSelect-icon"
           focusable="false"
+          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -639,31 +588,12 @@ exports[`array fields checkboxes 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-10"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      className="btn btn-info"
       type="submit"
     >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
+      Submit
     </button>
   </div>
 </form>
@@ -682,7 +612,7 @@ exports[`array fields fixed array 1`] = `
       className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
     >
       <div
-        className="MuiBox-root MuiBox-root-4"
+        className="MuiBox-root MuiBox-root-178"
       >
         <div
           className="MuiGrid-root MuiGrid-container"
@@ -699,13 +629,13 @@ exports[`array fields fixed array 1`] = `
               }
             >
               <div
-                className="MuiBox-root MuiBox-root-5"
+                className="MuiBox-root MuiBox-root-179"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-6"
+                    className="MuiBox-root MuiBox-root-180"
                   >
                     <div
                       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -752,13 +682,13 @@ exports[`array fields fixed array 1`] = `
               }
             >
               <div
-                className="MuiBox-root MuiBox-root-7"
+                className="MuiBox-root MuiBox-root-214"
               >
                 <div
                   className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-8"
+                    className="MuiBox-root MuiBox-root-215"
                   >
                     <div
                       className="MuiFormControl-root MuiFormControl-fullWidth"
@@ -797,34 +727,12 @@ exports[`array fields fixed array 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-9"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      className="btn btn-info"
       type="submit"
     >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
+      Submit
     </button>
   </div>
 </form>

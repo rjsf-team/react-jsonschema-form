@@ -2717,27 +2717,6 @@ describe("utils", () => {
       });
     });
 
-    it("should handle idSeparator parameter", () => {
-      const schema = {
-        definitions: {
-          testdef: {
-            type: "object",
-            properties: {
-              foo: { type: "string" },
-              bar: { type: "string" },
-            },
-          },
-        },
-        $ref: "#/definitions/testdef",
-      };
-
-      expect(toIdSchema(schema, undefined, schema, {}, "rjsf", "/")).eql({
-        $id: "rjsf",
-        foo: { $id: "rjsf/foo" },
-        bar: { $id: "rjsf/bar" },
-      });
-    });
-
     it("should handle null form data for object schemas", () => {
       const schema = {
         type: "object",

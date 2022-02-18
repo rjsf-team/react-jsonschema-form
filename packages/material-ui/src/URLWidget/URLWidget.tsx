@@ -1,7 +1,7 @@
-import React from 'react';
-import { WidgetProps } from '@rjsf/core';
+import React from "react";
+import { TextWidgetProps } from "../TextWidget";
 
-const URLWidget = (props: WidgetProps) => {
+const URLWidget = (props: TextWidgetProps) => {
   const { registry } = props;
   const { TextWidget } = registry.widgets;
   return <TextWidget type="url" {...props} />;

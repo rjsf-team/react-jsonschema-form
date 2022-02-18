@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import { WidgetProps } from '@rjsf/core';
+import { TextWidgetProps } from "../TextWidget";
 
-const PasswordWidget = (props: WidgetProps) => {
+const PasswordWidget = (props: TextWidgetProps) => {
   const { registry } = props;
   const { TextWidget } = registry.widgets;
   return <TextWidget type="password" {...props} />;

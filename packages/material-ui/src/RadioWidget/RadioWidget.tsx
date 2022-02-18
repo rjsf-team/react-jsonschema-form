@@ -1,7 +1,11 @@
-import React, { useContext } from 'react';
-import { WidgetProps } from '@rjsf/core';
+import React from "react";
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+
+import { WidgetProps } from "@rjsf/core";
 
 const RadioWidget = ({
   id,
@@ -16,11 +20,10 @@ const RadioWidget = ({
   onBlur,
   onFocus,
 }: WidgetProps) => {
-  const { FormControlLabel, FormLabel, Radio, RadioGroup } = useContext(MuiComponentContext);
   const { enumOptions, enumDisabled } = options;
 
   const _onChange = ({}, value: any) =>
-    onChange(schema.type == 'boolean' ? value !== 'false' : value);
+    onChange(schema.type == "boolean" ? value !== "false" : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -46,7 +49,7 @@ const RadioWidget = ({
 
           const radio = (
             <FormControlLabel
-              control={<Radio name={`${id}-${i}`} color="primary" key={i} />}
+              control={<Radio color="primary" key={i} />}
               label={`${option.label}`}
               value={`${option.value}`}
               key={i}

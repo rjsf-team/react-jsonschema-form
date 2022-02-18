@@ -29,7 +29,6 @@ declare module '@rjsf/core' {
         formData?: T;
         id?: string;
         idPrefix?: string;
-        idSeparator?: string;
         liveOmit?: boolean;
         liveValidate?: boolean;
         method?: string;

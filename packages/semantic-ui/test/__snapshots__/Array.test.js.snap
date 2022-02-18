@@ -40,13 +40,14 @@ exports[`array fields array 1`] = `
       </div>
     </div>
   </div>
-  <button
-    className="ui primary button btn btn-info"
-    onClick={[Function]}
-    type="submit"
-  >
-    Submit
-  </button>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
 </form>
 `;
 
@@ -150,13 +151,14 @@ exports[`array fields checkboxes 1`] = `
       </div>
     </div>
   </div>
-  <button
-    className="ui primary button btn btn-info"
-    onClick={[Function]}
-    type="submit"
-  >
-    Submit
-  </button>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
 </form>
 `;
 
@@ -268,12 +270,13 @@ exports[`array fields fixed array 1`] = `
       </div>
     </div>
   </div>
-  <button
-    className="ui primary button btn btn-info"
-    onClick={[Function]}
-    type="submit"
-  >
-    Submit
-  </button>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
 </form>
 `;
