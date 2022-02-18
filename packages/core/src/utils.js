@@ -694,14 +694,17 @@ const resolveCondition = (schema, rootSchema, formData) => {
   }
 };
 
+/**
+ * Resolves references and dependencies within a schema and its 'allOf' children.
+ *
+ * Called internally by retrieveSchema.
+ */
 export function resolveSchema(schema, rootSchema = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
     return resolveReference(schema, rootSchema, formData);
   } else if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, rootSchema, formData);
     return retrieveSchema(resolvedSchema, rootSchema, formData);
-  } else if (schema.hasOwnProperty("if")) {
-    return resolveCondition(schema, rootSchema, formData);
   } else if (schema.hasOwnProperty("allOf")) {
     return {
       ...schema,
@@ -733,6 +736,11 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
     return {};
   }
   let resolvedSchema = resolveSchema(schema, rootSchema, formData);
+
+  if (schema.hasOwnProperty("if")) {
+    return resolveCondition(schema, rootSchema, formData);
+  }
+
   if ("allOf" in schema) {
     try {
       resolvedSchema = mergeAllOf({

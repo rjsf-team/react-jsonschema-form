@@ -2686,7 +2686,37 @@ describe("utils", () => {
               enum: ["New York City", "Buffalo", "Rochester"],
             },
           },
-          required: ["state", "country"],
+          required: ["country", "state"],
+        });
+      });
+      it("overrides the base schema with a conditional branch when merged", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            myString: {
+              type: "string",
+              minLength: 5,
+            },
+          },
+          if: true,
+          then: {
+            properties: {
+              myString: {
+                minLength: 10, // This value of minLength should override the original value
+              },
+            },
+          },
+        };
+        const definitions = {};
+        const formData = {};
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            myString: {
+              type: "string",
+              minLength: 10,
+            },
+          },
         });
       });
     });
