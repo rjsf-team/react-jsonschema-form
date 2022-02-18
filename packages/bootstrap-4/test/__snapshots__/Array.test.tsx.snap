@@ -80,7 +80,7 @@ exports[`array fields array 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-primary"
+      className="btn btn-info btn btn-primary"
       disabled={false}
       type="submit"
     >
@@ -144,7 +144,7 @@ exports[`array fields checkboxes 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-primary"
+      className="btn btn-info btn btn-primary"
       disabled={false}
       type="submit"
     >
@@ -256,7 +256,7 @@ exports[`array fields fixed array 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-primary"
+      className="btn btn-info btn btn-primary"
       disabled={false}
       type="submit"
     >

@@ -63,9 +63,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/bootstrap-4
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
-## @rjsf/material-ui
-- SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
-
 ## @rjsf/semantic-ui
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 

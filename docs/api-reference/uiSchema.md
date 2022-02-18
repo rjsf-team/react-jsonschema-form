@@ -251,12 +251,12 @@ You can use this option to change the text of the submit button. Set to "submit"
 
 ### `props` section
 
-You can pass any other prop to the submit button if you want, via this section. by default the `disabled` and `className` prop are set.
+You can pass any other prop to the submit button if you want, via this section.
 
 
 ####  `disabled` prop
 
-You can use this option to disable the submit button. Set to `false` by default.
+You can use this option to disable the submit button.
 
 #### `className` prop
 
