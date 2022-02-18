@@ -393,7 +393,8 @@ export function getDisplayLabel(schema, uiSchema, rootSchema) {
   if (schemaType === "array") {
     displayLabel =
       isMultiSelect(schema, rootSchema) ||
-      isFilesArray(schema, uiSchema, rootSchema);
+      isFilesArray(schema, uiSchema, rootSchema) ||
+      isCustomWidget(uiSchema);
   }
 
   if (schemaType === "object") {
@@ -554,6 +555,15 @@ export function isFixedItems(schema) {
     Array.isArray(schema.items) &&
     schema.items.length > 0 &&
     schema.items.every(item => isObject(item))
+  );
+}
+
+export function isCustomWidget(uiSchema) {
+  return (
+    // TODO: Remove the `&& uiSchema["ui:widget"] !== "hidden"` once we support hidden widgets for arrays.
+    // https://react-jsonschema-form.readthedocs.io/en/latest/usage/widgets/#hidden-widgets
+    "widget" in getUiOptions(uiSchema) &&
+    getUiOptions(uiSchema)["widget"] !== "hidden"
   );
 }
 

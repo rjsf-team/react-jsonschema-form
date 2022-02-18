@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 - Add React 17 as a supported peer-dependency
 - Introduce `idSeparator` prop to change the path separator used to generate field names (https://github.com/rjsf-team/react-jsonschema-form/pull/2628)
+- Array fields support custom widgets (previously, only multiple-choice arrays with `enums` or `uniqueItems` support it) (https://github.com/rjsf-team/react-jsonschema-form/pull/2697)
 
 ## @rjsf/material-ui
 - Added React 17 as an optional peer dependency
