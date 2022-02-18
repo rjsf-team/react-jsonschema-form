@@ -1,5 +1,4 @@
 import { ObjectFieldTemplateProps } from "@rjsf/core";
-import cn from "clsx";
 import React from "react";
 
 const ObjectFieldTemplate = ({
@@ -31,7 +30,7 @@ const ObjectFieldTemplate = ({
         {properties.map((element: any, index: number) => (
           <div
             key={index}
-            className={cn("mb-2", element.hidden ? "d-none" : undefined)}
+            className={element.hidden ? "d-none" : undefined}
           >
             {element.content}
           </div>

@@ -27,7 +27,7 @@ const ColorWidget: FunctionComponent<WidgetProps> = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <div className="mb-2">
+    <div>
       <label htmlFor={id} className={cn("block", rawErrors.length > 0 ? "text-color-danger" : undefined)}>
         {uiSchema["ui:title"] || schema.title || label}
         {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}

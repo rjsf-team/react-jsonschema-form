@@ -39,7 +39,7 @@ const CheckboxesWidget = ({
   };
 
   return (
-    <div className="mb-2">
+    <div>
       <label htmlFor={id}>{label || schema.title}</label>
       <div>
         {(enumOptions as any).map((option: any, index: number) => {

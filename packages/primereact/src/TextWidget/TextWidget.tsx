@@ -33,7 +33,7 @@ const TextWidget = ({
   const inputType = (type || schema.type) === "string" ? "text" : `${type || schema.type}`
 
   return (
-    <div className="mb-2">
+    <div>
       <label htmlFor={id} className={cn("block", rawErrors.length > 0 ? "text-color-danger" : undefined)}>
         {uiSchema["ui:title"] || schema.title || label}
         {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
@@ -45,7 +45,7 @@ const TextWidget = ({
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={rawErrors.length > 0 ? "p-invalid" : ""}
+        className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
         list={schema.examples ? `examples_${id}` : undefined}
         type={inputType}
         value={value || value === 0 ? value : ""}

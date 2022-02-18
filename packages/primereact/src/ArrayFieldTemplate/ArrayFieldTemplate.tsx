@@ -2,7 +2,6 @@ import React from "react";
 import { utils } from "@rjsf/core";
 import { ArrayFieldTemplateProps, IdSchema } from "@rjsf/core";
 
-import AddButton from "../AddButton/AddButton";
 import IconButton from "../IconButton/IconButton";
 
 const { isMultiSelect, getDefaultRegistry } = utils;
@@ -34,7 +33,9 @@ const ArrayFieldTitle = ({
   }
 
   const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} required={required}/>;
+  return (
+    <TitleField id={id} title={title} required={required} />
+  );
 };
 
 type ArrayFieldDescriptionProps = {
@@ -53,67 +54,63 @@ const ArrayFieldDescription = ({
   }
 
   const id = `${idSchema.$id}__description`;
-  return <DescriptionField id={id} description={description}/>;
+  return (
+    <DescriptionField id={id} description={description} />
+  );
 };
 
 // Used in the two templates
 const DefaultArrayItem = (props: any) => {
-  const btnStyle = {
-    flex: 1,
-    paddingLeft: 6,
-    paddingRight: 6,
-    fontWeight: "bold",
-  };
+  const canMoveItems = props.hasMoveUp || props.hasMoveDown;
   return (
-    <div key={props.key}>
-      <div className="mb-2 flex align-items-center">
-        <div className="col-10">{props.children}</div>
-        <div className="col-2 py-4">
-          {props.hasToolbar && (
-            <div className="flex flex-row">
-              {(props.hasMoveUp || props.hasMoveDown) && (
-                <div className="m-0 p-0">
-                  <IconButton
-                    icon="arrow-up"
-                    className="array-item-move-up"
-                    tabIndex={-1}
-                    style={btnStyle as any}
-                    disabled={
-                      props.disabled || props.readonly || !props.hasMoveUp
-                    }
-                    onClick={props.onReorderClick(props.index, props.index - 1)}
-                  />
-                </div>
-              )}
+    <div key={props.key} className="flex align-items-start gap-2 p-2 border border-round">
+      <div className="flex-grow-1">{props.children}</div>
+      <div>
+        {props.hasToolbar && (
+          <div className="flex flex-row">
+            {canMoveItems && (
+              <>
+                <IconButton
+                  icon="arrow-up"
+                  className="array-item-move-up"
+                  style={props.hasRemove ? {
+                    borderTopRightRadius: 0,
+                    borderBottomRightRadius: 0,
+                  } : undefined}
+                  disabled={props.disabled || props.readonly || !props.hasMoveUp}
+                  onClick={props.onReorderClick(props.index, props.index - 1)}
+                />
+                <IconButton
+                  icon="arrow-down"
+                  style={{
+                    borderLeft: 0,
+                    borderTopLeftRadius: 0,
+                    borderBottomLeftRadius: 0,
+                    ...(props.hasRemove ? {
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                    } : {}),
+                  }}
+                  disabled={props.disabled || props.readonly || !props.hasMoveDown}
+                  onClick={props.onReorderClick(props.index, props.index + 1)}
+                />
+              </>
+            )}
 
-              {(props.hasMoveUp || props.hasMoveDown) && (
-                <div className="m-0 p-0">
-                  <IconButton
-                    icon="arrow-down"
-                    tabIndex={-1}
-                    style={btnStyle as any}
-                    disabled={
-                      props.disabled || props.readonly || !props.hasMoveDown
-                    }
-                    onClick={props.onReorderClick(props.index, props.index + 1)}
-                  />
-                </div>
-              )}
-
-              {props.hasRemove && (
-                <div className="m-0 p-0">
-                  <IconButton
-                    icon="remove"
-                    tabIndex={-1}
-                    style={btnStyle as any}
-                    disabled={props.disabled || props.readonly}
-                    onClick={props.onDropIndexClick(props.index)}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+            {props.hasRemove && (
+              <IconButton
+                icon="remove"
+                style={canMoveItems ? {
+                  borderLeft: 0,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                } : undefined}
+                disabled={props.disabled || props.readonly}
+                onClick={props.onDropIndexClick(props.index)}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -139,14 +136,16 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       )}
 
       <div
-        className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}>
+        className="array-item-list flex flex-column gap-2"
+        key={`array-item-list-${props.idSchema.$id}`}
+      >
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 
       {props.canAdd && (
-        <AddButton
-          className="array-item-add"
+        <IconButton
+          icon="plus"
+          className="mt-3 mb-3 array-item-add"
           onClick={props.onAddClick}
           disabled={props.disabled || props.readonly}
         />
@@ -157,7 +156,7 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   return (
-    <div>
+    <>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -177,23 +176,19 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         />
       )}
 
-      <div key={`array-item-list-${props.idSchema.$id}`}>
+      <div key={`array-item-list-${props.idSchema.$id}`} className="flex flex-column gap-2">
         {props.items && props.items.map(p => DefaultArrayItem(p))}
 
         {props.canAdd && (
-          <div className="mt-2 px-2">
-            <div className="col-10"/>
-            <div className="col-2 py-3">
-              <AddButton
-                className="array-item-add"
-                onClick={props.onAddClick}
-                disabled={props.disabled || props.readonly}
-              />
-            </div>
-          </div>
+          <IconButton
+            icon="plus"
+            className="mt-1 mb-3 array-item-add"
+            onClick={props.onAddClick}
+            disabled={props.disabled || props.readonly}
+          />
         )}
       </div>
-    </div>
+    </>
   );
 };
 

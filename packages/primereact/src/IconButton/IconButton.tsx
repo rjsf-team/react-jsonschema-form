@@ -3,15 +3,15 @@ import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import cn from "clsx";
 
-const mappings: any = {
-  remove: <i className={PrimeIcons.TIMES}/>,
-  plus: <i className={PrimeIcons.PLUS}/>,
-  "arrow-up": <i className={PrimeIcons.ARROW_UP}/>,
-  "arrow-down": <i className={PrimeIcons.ARROW_DOWN}/>,
+const mappings = {
+  remove: <i className={PrimeIcons.TIMES} />,
+  plus: <i className={PrimeIcons.PLUS} />,
+  "arrow-up": <i className={PrimeIcons.ARROW_UP} />,
+  "arrow-down": <i className={PrimeIcons.ARROW_DOWN} />,
 };
 
 type IconButtonProps = {
-  icon: string;
+  icon: keyof typeof mappings;
   className?: string;
   tabIndex?: number;
   style?: any;
@@ -24,6 +24,7 @@ const IconButton = (props: IconButtonProps) => {
   return (
     <Button
       {...otherProps}
+      type="button"
       icon={mappings[icon]}
       className={cn("p-button-outlined p-button-sm", props.className)}
     />

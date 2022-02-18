@@ -31,7 +31,7 @@ const RangeWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <div className="mb-2">
+    <div>
       <label htmlFor={id} className="block">
         {uiSchema["ui:title"] || schema.title || label}
         {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}

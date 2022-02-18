@@ -43,6 +43,7 @@ const TextareaWidget = ({
       </label>
       <InputTextarea
         id={id}
+        className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
         placeholder={placeholder}
         disabled={disabled}
         readOnly={readonly}

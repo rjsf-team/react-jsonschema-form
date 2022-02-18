@@ -1,12 +1,8 @@
 import React from "react";
 import { FieldProps } from "@rjsf/core";
 
-export interface TitleFieldProps extends Partial<FieldProps> {
-  title: string;
-}
-
-const TitleField = ({ title, uiSchema }: TitleFieldProps) => (
-  <div className="my-1 border-bottom-1 border-500">
+const TitleField = ({ title, uiSchema }: FieldProps) => (
+  <div className="border-bottom-1 border-500 mb-2">
     <h5>{(uiSchema && uiSchema["ui:title"]) || title}</h5>
   </div>
 );

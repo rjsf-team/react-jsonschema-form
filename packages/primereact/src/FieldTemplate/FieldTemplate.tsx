@@ -19,7 +19,7 @@ const FieldTemplate = ({
     <div>
       {children}
       {displayLabel && rawDescription && (
-        <div className={rawErrors.length > 0 ? "text-color-danger" : "text-color-muted"}>
+        <div className={cn("text-sm", rawErrors.length > 0 ? "text-color-danger" : "text-color-muted")}>
           {rawDescription}
         </div>
       )}
@@ -35,12 +35,12 @@ const FieldTemplate = ({
         </ul>
       )}
       {rawHelp && (
-        <small
+        <div
           id={id}
-          className={cn("block", rawErrors.length > 0 ? "text-color-danger" : "text-color-muted")}
+          className={cn("text-sm", rawErrors.length > 0 ? "text-color-danger" : "text-color-muted")}
         >
           {rawHelp}
-        </small>
+        </div>
       )}
     </div>
   );

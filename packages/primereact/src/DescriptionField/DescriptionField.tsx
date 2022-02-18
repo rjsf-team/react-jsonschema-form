@@ -1,13 +1,9 @@
 import React from "react";
 import { FieldProps } from "@rjsf/core";
 
-export interface DescriptionFieldProps extends Partial<FieldProps> {
-  description?: string;
-}
-
-const DescriptionField = ({ description }: DescriptionFieldProps) => {
+const DescriptionField = ({ description }: FieldProps) => {
   if (description) {
-    return <div className="mt-1 mb-3">{description}</div>;
+    return <div className="text-sm mt-1 mb-3">{description}</div>;
   }
 
   return null;
