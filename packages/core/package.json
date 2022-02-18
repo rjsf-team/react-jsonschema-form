@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
@@ -18,7 +18,7 @@
     "test": "cross-env BABEL_ENV=test NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
     "test:form": "cross-env BABEL_ENV=test NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js test/**/Form_test.js",
     "test-coverage": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --require @babel/register --require ./test/setup-jsdom.js test/**/*_test.js",
-    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --debug-brk --inspect test/Form_test.js"
+    "test-debug": "cross-env NODE_ENV=test mocha --require @babel/register --require ./test/setup-jsdom.js --inspect-brk --inspect test/Form_test.js"
   },
   "lint-staged": {
     "{src,test}/**/*.js": [
@@ -38,7 +38,7 @@
     "node": ">=12"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16 || >=17"
   },
   "dependencies": {
     "@types/json-schema": "^7.0.7",
@@ -66,7 +66,6 @@
     "babel-loader": "^8.0.6",
     "chai": "^3.3.0",
     "concurrently": "^5.1.0",
-    "create-react-ref": "^0.1.0",
     "cross-env": "^7.0.2",
     "css-loader": "^0.23.1",
     "eslint": "^4.9.0",
