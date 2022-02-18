@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArrayFieldTemplate simple 1`] = `
+<div
+  className="flex flex-column gap-2"
+>
+  <button
+    className="p-button p-component p-button-outlined p-button-sm mt-1 mb-3 array-item-add p-button-icon-only"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <i
+      className="pi pi-plus"
+    />
+    <span
+      className="p-button-label p-c"
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "&nbsp;",
+        }
+      }
+    />
+  </button>
+</div>
+`;

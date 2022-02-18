@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UpDownWidget renders 0 as 0 and not '' 1`] = `
+<div>
+  <label
+    className="block"
+    htmlFor="_id"
+  >
+    Some simple label
+    *
+  </label>
+  <span
+    className="p-inputnumber p-component p-inputwrapper p-inputwrapper-filled"
+    id="_id"
+    style={null}
+  >
+    <input
+      aria-labelledby={null}
+      aria-valuemax={null}
+      aria-valuemin={null}
+      aria-valuenow={0}
+      autoFocus={true}
+      className="p-inputtext p-component p-filled p-inputnumber-input"
+      defaultValue="0"
+      disabled={false}
+      id={null}
+      inputMode="numeric"
+      max={null}
+      min={null}
+      name={null}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onInput={[Function]}
+      onKeyDown={[Function]}
+      onKeyPress={[Function]}
+      onPaste={[Function]}
+      pattern={null}
+      placeholder={null}
+      readOnly={true}
+      required={true}
+      role="spinbutton"
+      size={null}
+      style={null}
+      tabIndex={null}
+      type="text"
+    />
+  </span>
+</div>
+`;

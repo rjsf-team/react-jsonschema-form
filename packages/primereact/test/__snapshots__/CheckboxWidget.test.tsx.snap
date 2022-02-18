@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckboxWidget simple 1`] = `
+<div
+  className="flex align-items-start"
+>
+  <div
+    className="p-checkbox p-component p-checkbox-disabled"
+    id={null}
+    onClick={[Function]}
+    onContextMenu={null}
+    onMouseDown={null}
+    style={null}
+  >
+    <div
+      className="p-hidden-accessible"
+    >
+      <input
+        aria-labelledby={null}
+        defaultChecked={false}
+        disabled={true}
+        id="_id"
+        name={null}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        readOnly={false}
+        required={true}
+        tabIndex={null}
+        type="checkbox"
+      />
+    </div>
+    <div
+      aria-checked={false}
+      className="p-checkbox-box p-disabled"
+      role="checkbox"
+    />
+  </div>
+  <label
+    className="ml-2"
+    htmlFor="_id"
+  >
+    Some simple label
+  </label>
+</div>
+`;

@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IconButton disable 1`] = `
+<button
+  className="p-button p-component p-button-outlined p-button-sm p-button-icon-only p-disabled"
+  disabled={true}
+  type="button"
+>
+  <i
+    className="pi pi-times"
+  />
+  <span
+    className="p-button-label p-c"
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "&nbsp;",
+      }
+    }
+  />
+</button>
+`;
+
+exports[`IconButton simple 1`] = `
+<button
+  className="p-button p-component p-button-outlined p-button-sm someClass p-button-icon-only"
+  disabled={false}
+  onClick={[Function]}
+  type="button"
+>
+  <i
+    className="pi pi-plus"
+  />
+  <span
+    className="p-button-label p-c"
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "&nbsp;",
+      }
+    }
+  />
+</button>
+`;
