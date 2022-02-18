@@ -64,7 +64,9 @@ Docs are automatically released using [Read The Docs](https://readthedocs.org/) 
 
 ### Releasing the playground
 
-In order to publish the latest playground to [https://rjsf-team.github.io/react-jsonschema-form/](https://rjsf-team.github.io/react-jsonschema-form/) after a new rjsf release, run:
+The playground automatically gets deployed from GitHub Pages.
+
+If you need to manually publish the latest playground to [https://rjsf-team.github.io/react-jsonschema-form/](https://rjsf-team.github.io/react-jsonschema-form/), though, run:
 
 ```bash
 cd packages/playground
