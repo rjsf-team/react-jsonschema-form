@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - Add React 17 as a supported peer-dependency
+- Introduce `idSeparator` prop to change the path separator used to generate field names (https://github.com/rjsf-team/react-jsonschema-form/pull/2628)
 
 ## @rjsf/material-ui
 - Added React 17 as an optional peer dependency
@@ -39,9 +40,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Upgraded playground to use React 17
 - Differentiated the material-ui 4 and 5 themes
 - Added chakra-ui theme
-
-## @rjsf/core
-- Introduce `idSeparator` prop to change the path separator used to generate field names (https://github.com/rjsf-team/react-jsonschema-form/pull/2628)
 
 # v3.3.0
 

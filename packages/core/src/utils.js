@@ -683,8 +683,8 @@ const resolveCondition = (schema, rootSchema, formData) => {
   if (conditionalSchema) {
     return retrieveSchema(
       mergeSchemas(
-        retrieveSchema(conditionalSchema, rootSchema, formData),
-        resolvedSchemaLessConditional
+        resolvedSchemaLessConditional,
+        retrieveSchema(conditionalSchema, rootSchema, formData)
       ),
       rootSchema,
       formData
