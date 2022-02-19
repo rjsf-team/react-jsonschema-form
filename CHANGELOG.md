@@ -15,7 +15,19 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# v4.0.1 (upcoming)
+# v4.0.2 (upcoming)
+
+# v4.0.1
+
+## @rjsf/core
+- Added new `_internalFormWrapper` prop to `Form` that supports the `semantic-ui` and `material-ui` themes to work when `tagName` is provided
+
+## @rjsf/material-ui
+- Fixed up the `Theme` and `Theme5` implementation to use `_internalFormWrapper` rather than `tagName` for the themes to pass their form wrapper implementations
+- Only `console.log()` the import error in `MaterialUIContext` and `Mui5Context` when not in `production` to eliminate ton's of warnings for released code
+
+## @rjsf/semantic-ui
+- Fixed up the `Theme` implementation to use `_internalFormWrapper` rather than `tagName` for the theme to pass its form wrapper implementation
 
 # v4.0.0
 
