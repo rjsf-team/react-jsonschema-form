@@ -36,23 +36,23 @@ const WrapIfAdditional = ({
   const handleBlur = ({ target }) => onKeyChange(target.value);
 
   return (
-    <div className={classNames}>
+    <div className={classNames} key={`${id}-key`}>
       <Grid columns='equal'>
       <Grid.Row>
         <Grid.Column className="form-additional">
-        <Form.Group key={id} widths="equal" grouped>
+        <Form.Group  widths="equal" grouped>
             <Form.Input
               className="form-group"
               hasFeedback
               fluid
-              htmlFor={`${id}-key`}
+              htmlFor={`${id}`}
               label={keyLabel}
               required={required}
               style={wrapperStyle}
               defaultValue={label}
               disabled={disabled || (readonlyAsDisabled && readonly)}
-              id={`${id}-key`}
-              name={`${id}-key`}
+              id={`${id}`}
+              name={`${id}`}
               onBlur={!readonly ? handleBlur : undefined}
               style={INPUT_STYLE}
               type="text"
