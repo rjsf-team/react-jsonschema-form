@@ -12,8 +12,9 @@ _ | Custom Field  | Custom Template | Custom Widget
 
 ## ArrayFieldTemplate
 
-You can use an `ArrayFieldTemplate` to customize how your arrays are rendered.
-This allows you to customize your array, and each element in the array.
+You can use an `ArrayFieldTemplate` to customize how your arrays are rendered. 
+This allows you to customize your array, and each element in the array. You can also customize arrays by specifying a widget in the relevant `ui:widget` schema, more details over on [Custom Widgets](../usage/arrays.md#custom-widgets). 
+
 
 ```jsx
 const schema = {
