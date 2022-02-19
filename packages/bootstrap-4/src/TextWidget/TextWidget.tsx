@@ -20,7 +20,6 @@ const TextWidget = ({
   options,
   schema,
   rawErrors = [],
-  uiSchema,
 
 }: WidgetProps) => {
   const _onChange = ({
@@ -38,8 +37,8 @@ const TextWidget = ({
   return (
     <Form.Group className="mb-0">
       <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
+        {label || schema.title}
+        {(label || schema.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
         id={id}

@@ -1,221 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`single fields field with description 1`] = `
-<form
-  className="rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="form-group field field-object"
-  >
-    <fieldset
-      id="root"
-    >
-      <div
-        className="ant-row"
-        style={
-          Object {
-            "marginLeft": -12,
-            "marginRight": -12,
-          }
-        }
-      >
-        <div
-          className="ant-col ant-col-24"
-          style={
-            Object {
-              "paddingLeft": 12,
-              "paddingRight": 12,
-            }
-          }
-        >
-          <div
-            className="form-group field field-string"
-          >
-            <div
-              className="ant-row ant-form-item"
-              style={Object {}}
-            >
-              <div
-                className="ant-col ant-col-24 ant-form-item-label"
-                style={Object {}}
-              >
-                <label
-                  className=""
-                  htmlFor="root_my-field"
-                  title="my-field"
-                >
-                  my-field
-                </label>
-              </div>
-              <div
-                className="ant-col ant-col-24 ant-form-item-control"
-                style={Object {}}
-              >
-                <div
-                  className="ant-form-item-control-input"
-                >
-                  <div
-                    className="ant-form-item-control-input-content"
-                  >
-                    <input
-                      className="ant-input"
-                      disabled={false}
-                      id="root_my-field"
-                      name="root_my-field"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder=""
-                      style={
-                        Object {
-                          "width": "100%",
-                        }
-                      }
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  className="ant-form-item-extra"
-                >
-                  <span
-                    id="root_my-field__description"
-                  >
-                    some description
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-  </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
-      Submit
-    </span>
-  </button>
-</form>
-`;
-
-exports[`single fields field with description in uiSchema 1`] = `
-<form
-  className="rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="form-group field field-object"
-  >
-    <fieldset
-      id="root"
-    >
-      <div
-        className="ant-row"
-        style={
-          Object {
-            "marginLeft": -12,
-            "marginRight": -12,
-          }
-        }
-      >
-        <div
-          className="ant-col ant-col-24"
-          style={
-            Object {
-              "paddingLeft": 12,
-              "paddingRight": 12,
-            }
-          }
-        >
-          <div
-            className="form-group field field-string"
-          >
-            <div
-              className="ant-row ant-form-item"
-              style={Object {}}
-            >
-              <div
-                className="ant-col ant-col-24 ant-form-item-label"
-                style={Object {}}
-              >
-                <label
-                  className=""
-                  htmlFor="root_my-field"
-                  title="my-field"
-                >
-                  my-field
-                </label>
-              </div>
-              <div
-                className="ant-col ant-col-24 ant-form-item-control"
-                style={Object {}}
-              >
-                <div
-                  className="ant-form-item-control-input"
-                >
-                  <div
-                    className="ant-form-item-control-input-content"
-                  >
-                    <input
-                      className="ant-input"
-                      disabled={false}
-                      id="root_my-field"
-                      name="root_my-field"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder=""
-                      style={
-                        Object {
-                          "width": "100%",
-                        }
-                      }
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  className="ant-form-item-extra"
-                >
-                  <span
-                    id="root_my-field__description"
-                  >
-                    some other description
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-  </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
-      Submit
-    </span>
-  </button>
-</form>
-`;
-
 exports[`single fields hidden field 1`] = `
 <form
   className="rjsf"
@@ -239,16 +23,14 @@ exports[`single fields hidden field 1`] = `
       />
     </fieldset>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -261,16 +43,14 @@ exports[`single fields null field 1`] = `
   <div
     className="form-group field field-null"
   />
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -392,16 +172,14 @@ exports[`single fields number field 1`] = `
       </div>
     </div>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -427,16 +205,14 @@ exports[`single fields string field format data-url 1`] = `
       </p>
     </div>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -468,16 +244,14 @@ exports[`single fields string field format email 1`] = `
       value=""
     />
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -509,16 +283,14 @@ exports[`single fields string field format uri 1`] = `
       value=""
     />
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -550,16 +322,14 @@ exports[`single fields string field regular 1`] = `
       value=""
     />
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;
 
@@ -595,15 +365,13 @@ exports[`single fields unsupported field 1`] = `
       </pre>
     </div>
   </div>
-  <button
-    className="ant-btn btn btn-info ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="button"
-  >
-    <span>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
       Submit
-    </span>
-  </button>
+    </button>
+  </div>
 </form>
 `;

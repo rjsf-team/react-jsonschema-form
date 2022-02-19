@@ -1,11 +1,7 @@
 import React from "react";
-import { CssBaseline } from "@mui/material";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
 import { create } from "jss";
 import { jssPreset, StylesProvider } from "@material-ui/core/styles";
-import Frame, { FrameContextConsumer } from "react-frame-component";
-import { __createChakraFrameProvider } from "@rjsf/chakra-ui";
+import Frame from "react-frame-component";
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -55,39 +51,14 @@ function DemoFrame(props) {
         insertionPoint: instanceRef.current.contentWindow["demo-frame-jss"],
       }),
       sheetsManager: new Map(),
-      emotionCache: createCache({
-        key: "css",
-        prepend: true,
-        container: instanceRef.current.contentWindow["demo-frame-jss"],
-      }),
       container: instanceRef.current.contentDocument.body,
       window: () => instanceRef.current.contentWindow,
     });
   };
-  let body = children;
-  if (theme === "material-ui-4") {
-    body = state.ready ? (
-      <StylesProvider jss={state.jss} sheetsManager={state.sheetsManager}>
-        {React.cloneElement(children, {
-          container: state.container,
-          window: state.window,
-        })}
-      </StylesProvider>
-    ) : null;
-  } else if (theme === "material-ui-5") {
-    body = state.ready ? (
-      <CacheProvider value={state.emotionCache}>
-        <CssBaseline />
-        {React.cloneElement(children, {
-          container: state.container,
-          window: state.window,
-        })}
-      </CacheProvider>
-    ) : null;
-  } else if (theme === "fluent-ui") {
+  if (theme === "fluent-ui") {
     // TODO: find a better way to render fluent-ui in an iframe, if we need to do so.
     const { head } = props;
-    body = (
+    return (
       <>
         <style
           dangerouslySetInnerHTML={{ __html: "label { font-weight: normal; }" }}
@@ -96,17 +67,24 @@ function DemoFrame(props) {
         {children}
       </>
     );
-  } else if (theme === "chakra-ui") {
-    body = (
-      <FrameContextConsumer>
-        {__createChakraFrameProvider(props)}
-      </FrameContextConsumer>
-    );
   }
   return (
     <Frame ref={handleRef} contentDidMount={onContentDidMount} {...other}>
       <div id="demo-frame-jss" />
-      {body}
+      {/* We need to wrap the material-ui form in a custom StylesProvider
+            so that styles are injected into the iframe, not the parent window. */}
+      {theme === "material-ui" ? (
+        state.ready ? (
+          <StylesProvider jss={state.jss} sheetsManager={state.sheetsManager}>
+            {React.cloneElement(children, {
+              container: state.container,
+              window: state.window,
+            })}
+          </StylesProvider>
+        ) : null
+      ) : (
+        children
+      )}
     </Frame>
   );
 }

@@ -24,13 +24,9 @@ module.exports = {
   },
   resolve: {
     alias: {
-      // The following is needed to allow the material ui v4 theme to properly load the css into the iframe
       "@material-ui/styles": path.resolve("node_modules", "@material-ui/styles"),
       react: path.resolve('./node_modules/react'),
-      'react-dom': path.resolve('./node_modules/react-dom'),
-      // The following two are needed to allow the material ui v5 theme to properly load the css into the iframe
-      '@emotion/react': path.resolve('./node_modules/@emotion/react'),
-      '@emotion/styled': path.resolve('./node_modules/@emotion/styled'),
+      'react-dom': path.resolve('./node_modules/react-dom')
     }
   },
   plugins: [
@@ -94,20 +90,6 @@ module.exports = {
           },
         ],
       },
-      {
-        test: /\.ttf$/,
-        use: ['file-loader'],
-        include: [
-          path.join(__dirname, "src"),
-          path.join(__dirname, "playground"),
-          path.join(__dirname, "node_modules", "monaco-editor"),
-        ]
-      },
-      {
-        type: 'javascript/auto',
-        test: /\.mjs$/,
-        use: []
-      }
     ]
   }
 };

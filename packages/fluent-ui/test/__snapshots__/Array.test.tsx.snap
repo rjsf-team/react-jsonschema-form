@@ -75,7 +75,7 @@ exports[`array fields array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -172,7 +172,7 @@ exports[`array fields checkboxes 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -541,7 +541,7 @@ exports[`array fields fixed array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}

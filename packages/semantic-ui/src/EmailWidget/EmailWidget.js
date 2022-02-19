@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 import {  utils } from "@rjsf/core";
@@ -22,12 +23,7 @@ function EmailWidget(props) {
     options,
     formContext,
   } = props;
-  const semanticProps = getSemanticProps({
-    schema,
-    uiSchema,
-    formContext,
-    options,
- });
+  const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange(value === "" ? options.emptyValue : value);
@@ -56,4 +52,31 @@ function EmailWidget(props) {
     />
   );
 }
+
+EmailWidget.defaultProps = {
+  options: {
+    semantic: {
+      fluid: true,
+      inverted: false,
+    },
+  },
+};
+
+
+
+
+EmailWidget.defaultProps = {
+  options: {
+    semantic: {
+      fluid: true,
+      inverted: false,
+    },
+  },
+};
+
+
+EmailWidget.propTypes = {
+  options: PropTypes.object,
+};
+
 export default EmailWidget;

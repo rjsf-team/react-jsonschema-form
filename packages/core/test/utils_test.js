@@ -30,7 +30,6 @@ import {
   canExpand,
   optionsList,
   getMatchingOption,
-  getSubmitButtonOptions,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -1771,21 +1770,6 @@ describe("utils", () => {
       });
     });
 
-    it("should handle null formData for schema which contains additionalProperties", () => {
-      const schema = {
-        additionalProperties: {
-          type: "string",
-        },
-        type: "object",
-      };
-
-      const formData = null;
-      expect(retrieveSchema(schema, {}, formData)).eql({
-        ...schema,
-        properties: {},
-      });
-    });
-
     it("should priorize local definitions over foreign ones", () => {
       const schema = {
         $ref: "#/definitions/address",
@@ -2714,27 +2698,6 @@ describe("utils", () => {
         $id: "rjsf",
         foo: { $id: "rjsf_foo" },
         bar: { $id: "rjsf_bar" },
-      });
-    });
-
-    it("should handle idSeparator parameter", () => {
-      const schema = {
-        definitions: {
-          testdef: {
-            type: "object",
-            properties: {
-              foo: { type: "string" },
-              bar: { type: "string" },
-            },
-          },
-        },
-        $ref: "#/definitions/testdef",
-      };
-
-      expect(toIdSchema(schema, undefined, schema, {}, "rjsf", "/")).eql({
-        $id: "rjsf",
-        foo: { $id: "rjsf/foo" },
-        bar: { $id: "rjsf/bar" },
       });
     });
 
@@ -3673,72 +3636,6 @@ describe("utils", () => {
         expect(
           getDisplayLabel({ type: "array" }, { "ui:widget": "files" })
         ).eql(true);
-      });
-    });
-  });
-
-  describe("getSubmitButtonOptions", () => {
-    it("default props", () => {
-      expect(getSubmitButtonOptions({})).eql({
-        props: { disabled: false },
-        submitText: "Submit",
-        removed: false,
-      });
-    });
-
-    it("allowed option should be false", () => {
-      expect(
-        getSubmitButtonOptions({
-          "ui:options": { submitButtonOptions: { removed: false } },
-        })
-      ).eql({
-        props: {
-          disabled: false,
-        },
-        submitText: "Submit",
-        removed: false,
-      });
-    });
-
-    it("hidden option should be true", () => {
-      expect(
-        getSubmitButtonOptions({
-          "ui:options": { submitButtonOptions: { props: { hidden: true } } },
-        })
-      ).eql({
-        props: {
-          hidden: true,
-        },
-        submitText: "Submit",
-        removed: false,
-      });
-    });
-
-    it("disabled option should be true", () => {
-      expect(
-        getSubmitButtonOptions({
-          "ui:options": { submitButtonOptions: { props: { disabled: true } } },
-        })
-      ).eql({
-        props: {
-          disabled: true,
-        },
-        submitText: "Submit",
-        removed: false,
-      });
-    });
-
-    it("submitText option should be confirm", () => {
-      expect(
-        getSubmitButtonOptions({
-          "ui:options": { submitButtonOptions: { submitText: "Confirm" } },
-        })
-      ).eql({
-        props: {
-          disabled: false,
-        },
-        submitText: "Confirm",
-        removed: false,
       });
     });
   });

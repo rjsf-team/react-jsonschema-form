@@ -188,7 +188,6 @@ class ObjectField extends Component {
       disabled,
       readonly,
       idPrefix,
-      idSeparator,
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
@@ -246,7 +245,6 @@ class ObjectField extends Component {
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
-              idSeparator={idSeparator}
               formData={(formData || {})[name]}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}
               onKeyChange={this.onKeyChange(name)}

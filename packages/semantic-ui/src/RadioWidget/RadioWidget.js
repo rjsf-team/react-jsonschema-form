@@ -1,34 +1,29 @@
 /* eslint-disable react/jsx-no-undef,react/no-array-index-key,react/prop-types */
 import React from "react";
 import { Form, Radio } from "semantic-ui-react";
+import PropTypes from "prop-types";
 import { getSemanticProps } from "../util";
 
-function RadioWidget(props) {
-  const {
-    id,
-    value,
-    required,
-    disabled,
-    readonly,
-    onChange,
-    onBlur,
-    onFocus,
-    schema,
-    options,
-    formContext,
-    uiSchema,
-  } = props;
+function RadioWidget({
+  id,
+  schema,
+  options,
+  value,
+  required,
+  disabled,
+  readonly,
+  onChange,
+  onBlur,
+  onFocus,
+  formContext,
+}) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   const { enumOptions, enumDisabled } = options;
-  const semanticProps = getSemanticProps(
-    { formContext,
-      options,
-      uiSchema,
-    });
+  const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
-  const _onChange = (event, { value : eventValue }) => {
-    return onChange &&  onChange(schema.type === "boolean" ? eventValue !== "false" : eventValue);};
+  const _onChange = (event, { value }) =>
+    onChange && onChange(schema.type === "boolean" ? value !== "false" : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const inlineOption = options.inline ? { inline: true } : { grouped: true };
@@ -48,7 +43,7 @@ function RadioWidget(props) {
             label={`${option.label}`}
             value={`${option.value}`}
             key={`${option.value}-${i}`}
-            checked={value == option.value}
+            checked={value === option.value}
             onChange={_onChange}
             disabled={disabled || itemDisabled || readonly}
           />
@@ -57,4 +52,18 @@ function RadioWidget(props) {
     </Form.Group>
   );
 }
+
+RadioWidget.defaultProps = {
+  options: {
+    semantic: {
+      inverted: false,
+      fluid: true,
+    },
+  },
+};
+
+RadioWidget.propTypes = {
+  options: PropTypes.object,
+};
+
 export default RadioWidget;

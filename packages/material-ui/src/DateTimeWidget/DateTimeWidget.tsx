@@ -1,10 +1,10 @@
-import React from 'react';
-import { utils } from '@rjsf/core';
-import { WidgetProps } from '@rjsf/core';
+import React from "react";
+import { utils } from "@rjsf/core";
+import { TextWidgetProps } from "../TextWidget";
 
 const { localToUTC, utcToLocal } = utils;
 
-const DateTimeWidget = (props: WidgetProps) => {
+const DateTimeWidget = (props: TextWidgetProps) => {
   const { registry } = props;
   const { TextWidget } = registry.widgets;
   const value = utcToLocal(props.value);

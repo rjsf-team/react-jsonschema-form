@@ -23,7 +23,6 @@ const TextareaWidget = ({
   options,
   schema,
   rawErrors = [],
-  uiSchema,
 }: CustomWidgetProps) => {
   const _onChange = ({
     target: { value },
@@ -39,7 +38,7 @@ const TextareaWidget = ({
   return (
     <>
       <label htmlFor={id}>
-        {uiSchema["ui:title"] || schema.title || label}
+        {label || schema.title}
         {required && (
           <span
             aria-hidden

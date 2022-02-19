@@ -1,10 +1,9 @@
 import React from "react";
-import { Theme4 as MuiV4Theme, Theme5 as MuiV5Theme } from "@rjsf/material-ui";
+import { Theme as MuiTheme } from "@rjsf/material-ui";
 import { Theme as FluentUITheme } from "@rjsf/fluent-ui";
 import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
-import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
 import Playground from "./app";
 import { render } from "react-dom";
 
@@ -88,13 +87,9 @@ const themes = {
       },
     },
   },
-  "material-ui-4": {
+  "material-ui": {
     stylesheet: "",
-    theme: MuiV4Theme,
-  },
-  "material-ui-5": {
-    stylesheet: "",
-    theme: MuiV5Theme,
+    theme: MuiTheme,
   },
   antd: {
     stylesheet: "//cdnjs.cloudflare.com/ajax/libs/antd/4.1.4/antd.min.css",
@@ -114,10 +109,6 @@ const themes = {
     stylesheet:
       "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css",
     theme: Bootstrap4Theme,
-  },
-  "chakra-ui": {
-    stylesheet: "",
-    theme: ChakraUITheme,
   },
 };
 

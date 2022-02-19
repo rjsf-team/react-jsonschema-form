@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
+import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 import {  utils } from "@rjsf/core";
@@ -22,12 +23,7 @@ function PasswordWidget(props) {
     uiSchema,
     formContext,
   } = props;
-  const semanticProps = getSemanticProps({
-    schema,
-    uiSchema,
-    formContext,
-    options,
- });
+  const semanticProps = getSemanticProps({ formContext, options });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange && onChange(value === "" ? options.emptyValue : value);
@@ -56,5 +52,18 @@ function PasswordWidget(props) {
     />
   );
 }
+
+PasswordWidget.defaultProps = {
+  options: {
+    semantic: {
+      inverted: false,
+      fluid: true,
+    },
+  },
+};
+
+PasswordWidget.propTypes = {
+  options: PropTypes.object,
+};
 
 export default PasswordWidget;

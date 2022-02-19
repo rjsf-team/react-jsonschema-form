@@ -71,39 +71,4 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-
-  test("uiSchema theme props", () => {
-    const schema = {
-      "title": "A registration form",
-      "description": "A simple test theme form example.",
-      "type": "object",
-      "required": [
-        "test"
-      ],
-      "properties": {
-        "test": {
-           "enum": [
-            1,
-            2,
-            3
-          ],
-          "title": "test"
-        }
-      }
-    };
-    const uiSchema = {
-      "test": {
-        "ui:options": {
-          "semantic":{
-            "fluid":true
-          }
-        }
-      }
-    };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
 });

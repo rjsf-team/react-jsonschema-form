@@ -23,12 +23,7 @@ function DateWidget(props) {
     schema,
     uiSchema,
   } = props;
-  const semanticProps = getSemanticProps({
-    uiSchema,
-    schema,
-    formContext,
-    options,
-  });
+  const semanticProps = getSemanticProps({ formContext, options });
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
@@ -55,4 +50,14 @@ function DateWidget(props) {
   />
   );
 }
+
+DateWidget.defaultProps = {
+  options: {
+    semantic: {
+      fluid: true,
+      inverted: false,
+    },
+  },
+};
+
 export default DateWidget;

@@ -21,7 +21,7 @@ const ObjectFieldTemplate = ({
       {(uiSchema["ui:title"] || title) && (
         <TitleField
           id={`${idSchema.$id}-title`}
-          title={uiSchema["ui:title"] || title}
+          title={title}
           required={required}
         />
       )}

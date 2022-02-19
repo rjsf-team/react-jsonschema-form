@@ -29,19 +29,10 @@ function CheckboxesWidget(props) {
     onFocus,
     formContext,
     schema,
-    uiSchema,
   } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const { title } = schema;
-  const semanticProps = getSemanticProps({
-    options,
-    formContext,
-    schema,
-    uiSchema,
-    defaultSchemaProps: {
-      inverted: false,
-    },
-   });
+  const semanticProps = getSemanticProps({ formContext, options });
   const _onChange = option => ({ target: { checked } }) => {
     // eslint-disable-next-line no-shadow
     const all = enumOptions.map(({ value }) => value);
@@ -82,4 +73,13 @@ function CheckboxesWidget(props) {
     </React.Fragment>
   );
 }
+
+CheckboxesWidget.defaultProps = {
+  options: {
+    semantic: {
+      inverted: false,
+    },
+  },
+};
+
 export default CheckboxesWidget;

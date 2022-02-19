@@ -1,8 +1,14 @@
-import React, { useContext } from 'react';
-import { utils } from '@rjsf/core';
-import { JSONSchema7 } from 'json-schema';
+import React from "react";
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { utils } from "@rjsf/core";
+import { JSONSchema7 } from "json-schema";
+
+import Grid from "@material-ui/core/Grid";
+import FormControl from "@material-ui/core/FormControl";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+
+import IconButton from "../IconButton/IconButton";
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 
@@ -30,14 +36,13 @@ const WrapIfAdditional = ({
   required,
   schema,
 }: WrapIfAdditionalProps) => {
-  const { Grid, FormControl, IconButton, InputLabel, Input, RemoveIcon } = useContext(MuiComponentContext);
   const keyLabel = `${label} Key`; // i18n ?
   const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
   const btnStyle = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   };
 
   if (!additional) {
@@ -67,14 +72,12 @@ const WrapIfAdditional = ({
       </Grid>
       <Grid item={true}>
         <IconButton
-          size="small"
+          icon="remove"
           tabIndex={-1}
           style={btnStyle as any}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
-        >
-          <RemoveIcon />
-        </IconButton>
+        />
       </Grid>
     </Grid>
   );

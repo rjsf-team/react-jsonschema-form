@@ -13,14 +13,6 @@ In other words, the following uiSchemas are equivalent:
 {
   "ui:title": "Title",
   "ui:description": "Description"
-  "ui:submitButtonOptions": {
-    "props": {
-      "disabled": false,
-      "className": "btn btn-info",
-    },
-      "removed": false,
-      "submitText": "Submit"
-    },
 }
 ```
 
@@ -28,15 +20,7 @@ In other words, the following uiSchemas are equivalent:
 {
   "ui:options": {
     "title": "Title",
-    "description": "Description",
-    "submitButtonOptions": {
-      "props": {
-        "disabled": false,
-        "className": "btn btn-info",
-      },
-      "removed": false,
-      "submitText": "Submit"
-    },
+    "description": "Description"
   }
 }
 ```
@@ -232,46 +216,6 @@ const schema = {type: "string"};
 const uiSchema = {
   "ui:widget": "password",
   "ui:title": "Your password"
-};
-```
-
-## submitButtonOptions
-
-Sometimes it's convenient to change the behavior of the submit button for the form. This is the purpose of the `ui:submitButtonOptions` uiSchema directive:
-
-You can pass any other prop to the submit button if you want, by default, this library will set the following options / props mentioned below for all submit buttons:
-
-### `removed` option
-
-You can set this property to `true` to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes.
-
-### `submitText` option
-
-You can use this option to change the text of the submit button. Set to "submit" by default.
-
-### `props` section
-
-You can pass any other prop to the submit button if you want, via this section. by default the `disabled` and `className` prop are set.
-
-
-####  `disabled` prop
-
-You can use this option to disable the submit button. Set to `false` by default.
-
-#### `className` prop
-
-You can use this option to specify a class name for the submit button.
-
-```js
-const uiSchema = {
- "submitButtonOptions": {
-   "props": {
-      "disabled": false,
-      "className": "btn btn-info",
-   },
-    "removed": false,
-    "submitText": "Submit"
-  }
 };
 ```
 ## Theme Options

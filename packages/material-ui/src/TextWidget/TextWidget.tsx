@@ -1,9 +1,14 @@
-import React, { useContext } from 'react';
-import { WidgetProps, utils } from '@rjsf/core';
+import React from "react";
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import TextField, {
+  StandardTextFieldProps as TextFieldProps,
+} from "@material-ui/core/TextField";
+
+import { WidgetProps, utils } from "@rjsf/core";
 
 const { getDisplayLabel } = utils;
+
+export type TextWidgetProps = WidgetProps & Pick<TextFieldProps, Exclude<keyof TextFieldProps, 'onBlur' | 'onFocus'>>;
 
 const TextWidget = ({
   id,
@@ -23,10 +28,9 @@ const TextWidget = ({
   uiSchema,
   rawErrors = [],
   formContext,
-  registry,
+  registry, // pull out the registry so it doesn't end up in the textFieldProps
   ...textFieldProps
-}: WidgetProps) => {
-  const { TextField } = useContext(MuiComponentContext);
+}: TextWidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -37,8 +41,11 @@ const TextWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const { rootSchema } = registry;
-  const displayLabel = getDisplayLabel(schema, uiSchema, rootSchema);
+  const displayLabel = getDisplayLabel(
+    schema,
+    uiSchema
+    /* TODO: , rootSchema */
+  );
   const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
 
   return (
@@ -50,12 +57,12 @@ const TextWidget = ({
       required={required}
       disabled={disabled || readonly}
       type={inputType as string}
-      value={value || value === 0 ? value : ''}
+      value={value || value === 0 ? value : ""}
       error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      {...textFieldProps}
+      {...(textFieldProps as TextFieldProps)}
     />
   );
 };

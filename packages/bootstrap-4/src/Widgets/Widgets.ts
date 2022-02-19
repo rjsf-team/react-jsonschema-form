@@ -13,7 +13,6 @@ import TextWidget from "../TextWidget/TextWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
 import URLWidget from "../URLWidget/URLWidget";
 import FileWidget from "../FileWidget/FileWidget";
-import SubmitButton from "../SubmitButton/SubmitButton";
 
 export default {
   CheckboxWidget,
@@ -30,6 +29,5 @@ export default {
   TextWidget,
   UpDownWidget,
   URLWidget,
-  FileWidget,
-  SubmitButton
+  FileWidget
 };

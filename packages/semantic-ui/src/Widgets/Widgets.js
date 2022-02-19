@@ -11,7 +11,6 @@ import DateWidget from "../DateWidget/DateWidget";
 import DateTimeWidget from "../DateTimeWidget/DateTimeWidget";
 import EmailWidget from "../EmailWidget/EmailWidget";
 import URLWidget from "../URLWidget/URLWidget";
-import SubmitButton from "../SubmitButton/SubmitButton";
 
 export default {
   CheckboxWidget,
@@ -27,5 +26,4 @@ export default {
   TextareaWidget,
   TextWidget,
   UpDownWidget,
-  SubmitButton,
 };

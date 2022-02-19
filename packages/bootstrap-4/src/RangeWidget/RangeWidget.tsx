@@ -19,7 +19,6 @@ const RangeWidget = ({
   required,
   label,
   id,
-  uiSchema,
 }: WidgetProps) => {
   let sliderProps = { value, label, id, ...rangeSpec(schema) };
 
@@ -36,8 +35,8 @@ const RangeWidget = ({
   return (
     <Form.Group className="mb-0">
       <Form.Label>
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
+        {label}
+        {label && required ? "*" : null}
       </Form.Label>
       <Form.Control
         type="range"

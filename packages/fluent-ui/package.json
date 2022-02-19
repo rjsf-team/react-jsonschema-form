@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/fluent-ui",
-  "version": "3.2.1",
+  "version": "3.2.0",
   "main": "dist/index.js",
   "module": "dist/fluent-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -11,8 +11,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build",
-    "test": "tsdx test",
-    "test:update": "tsdx test --u"
+    "test": "tsdx test"
   },
   "engineStrict": false,
   "engines": {
@@ -20,7 +19,7 @@
   },
   "peerDependencies": {
     "@fluentui/react": "^7.114.2",
-    "@rjsf/core": "^3.2.0",
+    "@rjsf/core": "^3.0.0",
     "react": ">=16"
   },
   "devDependencies": {
@@ -32,7 +31,7 @@
     "@fluentui/react": "^7.114.2",
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^3.2.1",
+    "@rjsf/core": "^3.2.0",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.7",
     "@types/lodash": "^4.14.152",

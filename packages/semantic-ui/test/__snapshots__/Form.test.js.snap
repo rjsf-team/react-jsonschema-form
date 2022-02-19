@@ -7,7 +7,7 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <button
-    className="ui primary button btn btn-info"
+    className="ui primary button"
     onClick={[Function]}
     type="submit"
   >
@@ -43,7 +43,7 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button btn btn-info"
+    className="ui primary button"
     onClick={[Function]}
     type="submit"
   >
@@ -71,7 +71,7 @@ exports[`single fields string field format data-url 1`] = `
     </p>
   </div>
   <button
-    className="ui primary button btn btn-info"
+    className="ui primary button"
     onClick={[Function]}
     type="submit"
   >
@@ -106,7 +106,7 @@ exports[`single fields string field format email 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button btn btn-info"
+    className="ui primary button"
     onClick={[Function]}
     type="submit"
   >
@@ -141,7 +141,7 @@ exports[`single fields string field format uri 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button btn btn-info"
+    className="ui primary button"
     onClick={[Function]}
     type="submit"
   >
@@ -236,7 +236,7 @@ exports[`single fields uiSchema theme props 1`] = `
           className="divider text"
           role="alert"
         >
-          
+
         </div>
         <i
           aria-hidden="true"
@@ -330,13 +330,13 @@ exports[`single fields unsupported field 1`] = `
       Unsupported field schema
       <span>
          for
-         field 
+         field
         <code>
           root
         </code>
       </span>
       <em>
-        : 
+        :
         Unknown field type undefined
       </em>
       .
@@ -346,7 +346,7 @@ exports[`single fields unsupported field 1`] = `
     </pre>
   </div>
   <button
-    className="ui primary button btn btn-info"
+    className="ui primary button"
     onClick={[Function]}
     type="submit"
   >
