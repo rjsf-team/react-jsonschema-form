@@ -15,7 +15,10 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# v4.0.1 (upcoming)
+# v4.1.0 (upcoming)
+
+## @rjsf/primereact
+- Add support for the PrimeReact component library.
 
 # v4.0.0
 

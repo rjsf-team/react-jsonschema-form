@@ -422,7 +422,7 @@ class Playground extends Component {
 
   onThemeSelected = (
     theme,
-    { subthemes, stylesheet, theme: themeObj } = {}
+    { subthemes, stylesheet, stylesheets, theme: themeObj } = {}
   ) => {
     this.setState({
       theme,
@@ -430,6 +430,7 @@ class Playground extends Component {
       subtheme: null,
       FormComponent: withTheme(themeObj),
       stylesheet,
+      stylesheets,
     });
   };
 
@@ -501,6 +502,14 @@ class Playground extends Component {
     }
     if (extraErrors) {
       templateProps.extraErrors = extraErrors;
+    }
+
+    const stylesheets = [];
+    if (this.state.stylesheet) {
+      stylesheets.push(this.state.stylesheet);
+    }
+    if (this.state.stylesheets?.length) {
+      stylesheets.push(...this.state.stylesheets);
     }
 
     return (
@@ -576,11 +585,14 @@ class Playground extends Component {
             <DemoFrame
               head={
                 <React.Fragment>
-                  <link
-                    rel="stylesheet"
-                    id="theme"
-                    href={this.state.stylesheet || ""}
-                  />
+                  {stylesheets.map(url => (
+                    <link
+                      key={url}
+                      rel="stylesheet"
+                      id="theme"
+                      href={url}
+                    />
+                  ))}
                   {theme === "antd" && (
                     <div
                       dangerouslySetInnerHTML={{
