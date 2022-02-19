@@ -5,6 +5,7 @@ import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
+import { Theme as PrimeReactTheme } from "@rjsf/primereact";
 import Playground from "./app";
 import { render } from "react-dom";
 
@@ -118,6 +119,15 @@ const themes = {
   "chakra-ui": {
     stylesheet: "",
     theme: ChakraUITheme,
+  },
+  primereact: {
+    stylesheets: [
+      "https://unpkg.com/primeicons@5.0.0/primeicons.css",
+      "https://unpkg.com/primereact@7.2.0/resources/themes/lara-light-indigo/theme.css",
+      "https://unpkg.com/primereact@7.2.0/resources/primereact.min.css",
+      "https://unpkg.com/primeflex@3.1.3/primeflex.min.css",
+    ],
+    theme: PrimeReactTheme,
   },
 };
 

@@ -586,12 +586,7 @@ class Playground extends Component {
               head={
                 <React.Fragment>
                   {stylesheets.map(url => (
-                    <link
-                      key={url}
-                      rel="stylesheet"
-                      id="theme"
-                      href={url}
-                    />
+                    <link key={url} rel="stylesheet" id="theme" href={url} />
                   ))}
                   {theme === "antd" && (
                     <div

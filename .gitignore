@@ -119,6 +119,7 @@ build
 _build
 site
 dist
+!packages/primereact/dist
 lib
 yarn.lock
 
