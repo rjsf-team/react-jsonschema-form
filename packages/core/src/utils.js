@@ -582,7 +582,7 @@ export function optionsList(schema) {
     });
   } else {
     const altSchemas = schema.oneOf || schema.anyOf;
-    return altSchemas.map((schema, i) => {
+    return altSchemas.map(schema => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
       return {
@@ -675,6 +675,40 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
+/**
+ * Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch with the rest of the schema
+ */
+const resolveCondition = (schema, rootSchema, formData) => {
+  let {
+    if: expression,
+    then,
+    else: otherwise,
+    ...resolvedSchemaLessConditional
+  } = schema;
+
+  const conditionalSchema = isValid(expression, formData, rootSchema)
+    ? then
+    : otherwise;
+
+  if (conditionalSchema) {
+    return retrieveSchema(
+      mergeSchemas(
+        resolvedSchemaLessConditional,
+        retrieveSchema(conditionalSchema, rootSchema, formData)
+      ),
+      rootSchema,
+      formData
+    );
+  } else {
+    return retrieveSchema(resolvedSchemaLessConditional, rootSchema, formData);
+  }
+};
+
+/**
+ * Resolves references and dependencies within a schema and its 'allOf' children.
+ *
+ * Called internally by retrieveSchema.
+ */
 export function resolveSchema(schema, rootSchema = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
     return resolveReference(schema, rootSchema, formData);
@@ -712,6 +746,11 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
     return {};
   }
   let resolvedSchema = resolveSchema(schema, rootSchema, formData);
+
+  if (schema.hasOwnProperty("if")) {
+    return resolveCondition(schema, rootSchema, formData);
+  }
+
   if ("allOf" in schema) {
     try {
       resolvedSchema = mergeAllOf({
