@@ -22,7 +22,8 @@
     "primeflex": "^3.1.3",
     "primeicons": "^5.0.0",
     "primereact": "^7.2.0",
-    "react": ">=17"
+    "react": ">=17",
+    "react-transition-group": "^4.4.2"
   },
   "engineStrict": false,
   "engines": {
@@ -47,6 +48,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
+    "react-transition-group": "^4.4.2",
     "rimraf": "^3.0.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",

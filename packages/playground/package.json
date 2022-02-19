@@ -67,7 +67,8 @@
     "react-app-polyfill": "^1.0.4",
     "react-bootstrap": "^1.0.1",
     "react-frame-component": "^4.1.1",
-    "react-is": "^16.9.0"
+    "react-is": "^16.9.0",
+    "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
