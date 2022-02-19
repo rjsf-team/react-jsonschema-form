@@ -4,21 +4,61 @@ import React from "react";
  * Extract props meant for semantic UI components from props that are
  * passed to Widgets, Templates and Fields.
  * @param {Object} params
- * @param {Object} params.formContext
- * @param {Object} params.uiSchema
- * @param {Object} params.options
+ * @param {Object?} params.formContext
+ * @param {Object?} params.uiSchema
+ * @param {Object?} params.options
+ * @param {Object?} params.defaultSchemaProps
+ * @param {Object?} params.defaultContextProps
  * @returns {any}
  */
 export function getSemanticProps({
   formContext = {},
   uiSchema = {},
   options = {},
+  defaultSchemaProps = { fluid: true , inverted: false },
+  defaultContextProps= { }
 }) {
+
+   const formContextProps = formContext.semantic;
+   let schemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic;
+   let optionProps = options.semantic;
+   // formContext props should overide other props
+   return Object.assign(
+    {},
+    { ...(defaultSchemaProps && defaultSchemaProps) },
+    { ...(defaultContextProps && defaultContextProps) },
+    schemaProps,
+    optionProps,
+    formContextProps,
+  );
+}
+
+/**
+ * Extract error props meant for semantic UI components from props that are
+ * passed to Widgets, Templates and Fields.
+ * @param {Object} params
+ * @param {Object?} params.formContext
+ * @param {Object?} params.uiSchema
+ * @param {Object?} params.defaultProps
+ * @returns {any}
+ */
+export function getSemanticErrorProps({
+  formContext = {},
+  uiSchema = {},
+  options = {},
+  defaultProps = { size: 'small', pointing:'above' }
+}) {
+
+  const formContextProps = formContext.semantic && formContext.semantic.errorOptions;
+  const schemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic && uiSchema["ui:options"].semantic.errorOptions;
+  const optionProps = options.semantic && options.semantic.errorOptionse;
+
   return Object.assign(
     {},
-    formContext.semantic || {},
-    uiSchema["ui:options"] ? uiSchema["ui:options"].semantic : {},
-    options.semantic || {}
+    { ...(defaultProps && defaultProps) },
+    schemaProps,
+    optionProps,
+    formContextProps,
   );
 }
 
@@ -48,9 +88,9 @@ export function cleanClassNames(classNameArr, omit = []) {
 
 /**
  *
- * @param wrap
+ * @param {boolean} wrap
  * @param Component
- * @param props
+ * @param {Object} props
  * @returns {*}
  * @constructor
  */

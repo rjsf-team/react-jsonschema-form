@@ -4,8 +4,9 @@ import { Form } from "semantic-ui-react";
 import DescriptionField from "../DescriptionField";
 import HelpField from "../HelpField";
 import RawErrors from "../RawErrors";
-import { getSemanticProps, MaybeWrap } from "../util";
 import WrapIfAdditional from './WrapIfAdditional';
+import { getSemanticProps, MaybeWrap } from "../util";
+
 function FieldTemplate({
   id,
   children,
