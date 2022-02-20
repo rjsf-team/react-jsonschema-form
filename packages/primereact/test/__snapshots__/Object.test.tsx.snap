@@ -69,7 +69,7 @@ exports[`object fields object 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >

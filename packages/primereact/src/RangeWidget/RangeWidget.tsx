@@ -1,6 +1,6 @@
 import React from "react";
 import { utils, WidgetProps } from "@rjsf/core";
-import { InputText } from "primereact/inputtext";
+import { Slider, SliderChangeParams } from "primereact/slider";
 
 const { rangeSpec } = utils;
 
@@ -8,9 +8,6 @@ const RangeWidget = ({
   value,
   readonly,
   disabled,
-  onBlur,
-  onFocus,
-  options,
   schema,
   onChange,
   required,
@@ -18,17 +15,10 @@ const RangeWidget = ({
   id,
   uiSchema,
 }: WidgetProps) => {
-  let sliderProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderProps = { value, label, id, ...rangeSpec(schema) };
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onChange = ({ value }: SliderChangeParams) =>
+    onChange(value as number);
 
   return (
     <div>
@@ -36,17 +26,12 @@ const RangeWidget = ({
         {uiSchema["ui:title"] || schema.title || label}
         {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
       </label>
-      <InputText
-        type="range"
-        required={required}
-        disabled={disabled}
-        readOnly={readonly}
+      <Slider
+        disabled={disabled || readonly}
         onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
         {...sliderProps}
+        range={false}
       />
-      <span className="range-view">{value}</span>
     </div>
   );
 };

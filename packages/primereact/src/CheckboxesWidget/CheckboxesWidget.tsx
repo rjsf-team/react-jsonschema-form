@@ -41,7 +41,7 @@ const CheckboxesWidget = ({
   return (
     <div>
       <label htmlFor={id}>{label || schema.title}</label>
-      <div>
+      <div className={cn("flex", inline ? "gap-3" : "gap-2")}>
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = Array.isArray(value) ? value.includes(option.value) : value === option.value;
           const itemDisabled = Array.isArray(enumDisabled) && (enumDisabled as string[]).includes(option.value);

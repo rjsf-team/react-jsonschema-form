@@ -31,7 +31,7 @@ exports[`array fields array 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -103,7 +103,7 @@ exports[`array fields checkboxes 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -195,7 +195,7 @@ exports[`array fields fixed array 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >

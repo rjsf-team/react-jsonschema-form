@@ -28,27 +28,27 @@ const RadioWidget = ({
         {uiSchema["ui:title"] || schema.title || label}
         {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
       </label>
-      {(enumOptions as any).map((option: any, i: number) => {
-        const itemDisabled =
-          Array.isArray(enumDisabled) &&
-          enumDisabled.indexOf(option.value) !== -1;
-        const checked = option.value == value;
+      <div className={cn("flex", inline ? "gap-3" : "gap-2")}>
+        {(enumOptions as any[]).map((option, i) => {
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const checked = option.value == value;
 
-        return (
-          <div key={i} className={cn(inline ? "inline-flex" : "flex", "align-items-start")}>
-            <RadioButton
-              inputId={option.id}
-              name={id}
-              disabled={disabled || itemDisabled || readonly}
-              checked={checked}
-              required={required}
-              value={option.value}
-              onChange={_onChange}
-            />
-            <label htmlFor={option.id} className="ml-2">{option.label}</label>
-          </div>
-        );
-      })}
+          return (
+            <div key={i} className={cn(inline ? "inline-flex" : "flex", "align-items-start")}>
+              <RadioButton
+                inputId={option.id}
+                name={id}
+                disabled={disabled || itemDisabled || readonly}
+                checked={checked}
+                required={required}
+                value={option.value}
+                onChange={_onChange}
+              />
+              <label htmlFor={option.id} className="ml-2">{option.label}</label>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -49,7 +49,7 @@ exports[`single fields checkbox field 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -111,7 +111,7 @@ exports[`single fields checkbox field 2`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -135,7 +135,9 @@ exports[`single fields checkboxes field 1`] = `
       <label
         htmlFor="root"
       />
-      <div>
+      <div
+        className="flex gap-2"
+      >
         <div
           className="flex align-items-start"
         >
@@ -308,7 +310,7 @@ exports[`single fields checkboxes field 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -354,7 +356,7 @@ exports[`single fields format color 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -397,7 +399,7 @@ exports[`single fields format date 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -440,7 +442,7 @@ exports[`single fields format datetime 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -475,7 +477,7 @@ exports[`single fields hidden field 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -496,7 +498,7 @@ exports[`single fields null field 1`] = `
 >
   <div />
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -539,7 +541,7 @@ exports[`single fields number field 0 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -582,7 +584,7 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -632,7 +634,7 @@ exports[`single fields password field 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -658,91 +660,95 @@ exports[`single fields radio field 1`] = `
         htmlFor="root"
       />
       <div
-        className="flex align-items-start"
+        className="flex gap-2"
       >
         <div
-          className="p-radiobutton p-component"
-          id={null}
-          onClick={[Function]}
-          style={null}
+          className="flex align-items-start"
         >
           <div
-            className="p-hidden-accessible"
-          >
-            <input
-              aria-labelledby={null}
-              defaultChecked={false}
-              disabled={false}
-              id={null}
-              name="root"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              required={false}
-              tabIndex={null}
-              type="radio"
-            />
-          </div>
-          <div
-            aria-checked={false}
-            className="p-radiobutton-box"
-            role="radio"
+            className="p-radiobutton p-component"
+            id={null}
+            onClick={[Function]}
+            style={null}
           >
             <div
-              className="p-radiobutton-icon"
-            />
+              className="p-hidden-accessible"
+            >
+              <input
+                aria-labelledby={null}
+                defaultChecked={false}
+                disabled={false}
+                id={null}
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                required={false}
+                tabIndex={null}
+                type="radio"
+              />
+            </div>
+            <div
+              aria-checked={false}
+              className="p-radiobutton-box"
+              role="radio"
+            >
+              <div
+                className="p-radiobutton-icon"
+              />
+            </div>
           </div>
+          <label
+            className="ml-2"
+          >
+            Yes
+          </label>
         </div>
-        <label
-          className="ml-2"
-        >
-          Yes
-        </label>
-      </div>
-      <div
-        className="flex align-items-start"
-      >
         <div
-          className="p-radiobutton p-component"
-          id={null}
-          onClick={[Function]}
-          style={null}
+          className="flex align-items-start"
         >
           <div
-            className="p-hidden-accessible"
-          >
-            <input
-              aria-labelledby={null}
-              defaultChecked={false}
-              disabled={false}
-              id={null}
-              name="root"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              required={false}
-              tabIndex={null}
-              type="radio"
-            />
-          </div>
-          <div
-            aria-checked={false}
-            className="p-radiobutton-box"
-            role="radio"
+            className="p-radiobutton p-component"
+            id={null}
+            onClick={[Function]}
+            style={null}
           >
             <div
-              className="p-radiobutton-icon"
-            />
+              className="p-hidden-accessible"
+            >
+              <input
+                aria-labelledby={null}
+                defaultChecked={false}
+                disabled={false}
+                id={null}
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                required={false}
+                tabIndex={null}
+                type="radio"
+              />
+            </div>
+            <div
+              aria-checked={false}
+              className="p-radiobutton-box"
+              role="radio"
+            >
+              <div
+                className="p-radiobutton-icon"
+              />
+            </div>
           </div>
+          <label
+            className="ml-2"
+          >
+            No
+          </label>
         </div>
-        <label
-          className="ml-2"
-        >
-          No
-        </label>
       </div>
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -829,7 +835,69 @@ exports[`single fields select field 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields slider field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div>
+    <div>
+      <label
+        className="block"
+        htmlFor="root"
+      />
+      <div
+        className="p-slider p-component p-slider-horizontal"
+        id="root"
+        onClick={[Function]}
+        style={null}
+      >
+        <span
+          className="p-slider-range"
+          style={
+            Object {
+              "width": "0%",
+            }
+          }
+        />
+        <span
+          aria-labelledby={null}
+          aria-valuemax={100}
+          aria-valuemin={42}
+          aria-valuenow={null}
+          className="p-slider-handle"
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          onTouchStart={[Function]}
+          role="slider"
+          style={
+            Object {
+              "bottom": null,
+              "left": "0%",
+              "transition": null,
+            }
+          }
+          tabIndex={0}
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -872,7 +940,7 @@ exports[`single fields string field format data-url 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -915,7 +983,7 @@ exports[`single fields string field format email 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -958,7 +1026,7 @@ exports[`single fields string field format uri 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -1001,7 +1069,7 @@ exports[`single fields string field regular 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -1044,7 +1112,7 @@ exports[`single fields string field with placeholder 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -1084,7 +1152,7 @@ exports[`single fields textarea field 1`] = `
     />
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -1145,7 +1213,7 @@ exports[`single fields title field 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
@@ -1189,7 +1257,7 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <button
-    className="p-button p-component"
+    className="p-button p-component mt-3"
     disabled={false}
     type="submit"
   >
