@@ -102,6 +102,27 @@ function DemoFrame(props) {
         {__createChakraFrameProvider(props)}
       </FrameContextConsumer>
     );
+  } else if (theme === "primereact") {
+    body = (
+      <>
+        <style
+          // See https://www.primefaces.org/primereact/theming/
+          // The theme CSS itself doesn't apply any global styling.
+          dangerouslySetInnerHTML={{
+            __html: `
+              html {
+                font-size: 16px;
+              }
+              body {
+                margin: 0px;
+                font-family: var(--font-family);
+                color: var(--text-color);
+              }`
+          }}
+        />
+        {children}
+      </>
+    );
   }
   return (
     <Frame ref={handleRef} contentDidMount={onContentDidMount} {...other}>

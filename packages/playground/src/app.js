@@ -485,6 +485,8 @@ class Playground extends Component {
       validate,
       theme,
       subtheme,
+      stylesheet,
+      stylesheets,
       FormComponent,
       ArrayFieldTemplate,
       ObjectFieldTemplate,
@@ -504,12 +506,12 @@ class Playground extends Component {
       templateProps.extraErrors = extraErrors;
     }
 
-    const stylesheets = [];
-    if (this.state.stylesheet) {
-      stylesheets.push(this.state.stylesheet);
+    const stylesheetUrls = [];
+    if (stylesheet) {
+      stylesheetUrls.push(stylesheet);
     }
-    if (this.state.stylesheets?.length) {
-      stylesheets.push(...this.state.stylesheets);
+    if (stylesheets?.length) {
+      stylesheetUrls.push(...stylesheets);
     }
 
     return (
@@ -585,7 +587,7 @@ class Playground extends Component {
             <DemoFrame
               head={
                 <React.Fragment>
-                  {stylesheets.map(url => (
+                  {stylesheetUrls.map(url => (
                     <link key={url} rel="stylesheet" id="theme" href={url} />
                   ))}
                   {theme === "antd" && (

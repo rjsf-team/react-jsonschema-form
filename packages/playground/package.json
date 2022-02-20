@@ -48,7 +48,7 @@
     "@rjsf/core": "^4.0.0",
     "@rjsf/fluent-ui": "^4.0.0",
     "@rjsf/material-ui": "^4.0.0",
-    "@rjsf/primereact": "https://gitpkg.now.sh/dchenk/react-jsonschema-form/packages/primereact?8a7eb51f2f92d691dd2901476c54dd88245fb9d3",
+    "@rjsf/primereact": "https://gitpkg.now.sh/dchenk/react-jsonschema-form/packages/primereact?886b4b554d155103f185bb209f0a0b2a7d8a5b58",
     "@rjsf/semantic-ui": "^4.0.0",
     "ajv": "^6.7.0",
     "antd": "^4.3.5",

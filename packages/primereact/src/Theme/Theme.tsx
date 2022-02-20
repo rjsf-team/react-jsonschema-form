@@ -17,7 +17,7 @@ const { getDefaultRegistry } = utils;
 const { fields, widgets } = getDefaultRegistry();
 
 const DefaultChildren = (
-  <Button type="submit" label="Submit"/>
+  <Button className="mt-3" type="submit" label="Submit" />
 );
 
 const Theme: ThemeProps = {
