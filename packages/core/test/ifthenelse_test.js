@@ -100,7 +100,7 @@ describe("conditional items", () => {
     expect(node.querySelector("input[label=postal_code]")).not.eql(null);
   });
 
-  it("should should render control when data has not been filled in", () => {
+  it("should render control when data has not been filled in", () => {
     const formData = {};
 
     const { node } = createFormComponent({
@@ -108,7 +108,7 @@ describe("conditional items", () => {
       formData,
     });
 
-    // This feels backwards but is basically because undefined equates to true when field is validated
+    // An empty formData will make the conditional evaluate to true because no properties are required in the if statement
     // Please see https://github.com/epoberezkin/ajv/issues/913
     expect(node.querySelector("input[label=zipcode]")).not.eql(null);
     expect(node.querySelector("input[label=postal_code]")).to.eql(null);
@@ -286,109 +286,6 @@ describe("conditional items", () => {
 
       expect(node.querySelector("input[label=postcode]")).not.eql(null);
     });
-  });
-
-  it("handles nested if then else", () => {
-    const schemaWithNested = {
-      $schema: "http://json-schema.org/draft-07/schema#",
-      type: "object",
-      properties: {
-        country: {
-          enum: ["USA"],
-        },
-      },
-      required: ["country"],
-      if: {
-        properties: {
-          country: {
-            const: "USA",
-          },
-        },
-        required: ["country"],
-      },
-      then: {
-        properties: {
-          state: {
-            type: "string",
-            anyOf: [
-              {
-                const: "California",
-              },
-              {
-                const: "New York",
-              },
-            ],
-          },
-        },
-        required: ["state"],
-        if: {
-          properties: {
-            state: {
-              const: "New York",
-            },
-          },
-          required: ["state"],
-        },
-        then: {
-          properties: {
-            city: {
-              type: "string",
-              anyOf: [
-                {
-                  const: "New York City",
-                },
-                {
-                  const: "Buffalo",
-                },
-                {
-                  const: "Rochester",
-                },
-              ],
-            },
-          },
-        },
-        else: {
-          if: {
-            properties: {
-              state: {
-                const: "California",
-              },
-            },
-            required: ["state"],
-          },
-          then: {
-            properties: {
-              city: {
-                type: "string",
-                anyOf: [
-                  {
-                    const: "Los Angeles",
-                  },
-                  {
-                    const: "San Diego",
-                  },
-                  {
-                    const: "San Jose",
-                  },
-                ],
-              },
-            },
-          },
-        },
-      },
-    };
-
-    const formData = {
-      country: "USA",
-      state: "California",
-    };
-    const { node } = createFormComponent({
-      schema: schemaWithNested,
-      formData,
-    });
-    expect(node.querySelector("select[id=root_country]")).not.eql(null);
-    expect(node.querySelector("select[id=root_state]")).not.eql(null);
-    expect(node.querySelector("select[id=root_city]")).not.eql(null);
   });
 
   it("handles additionalProperties with if then else", () => {

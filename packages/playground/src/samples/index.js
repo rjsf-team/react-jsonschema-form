@@ -29,7 +29,7 @@ import defaults from "./defaults";
 import ifthenelse from "./ifthenelse";
 import ifthenelserefs from "./ifthenelserefs";
 import allofifthenelse from "./allofifthenelse";
-import ifElseThen from "./ifElseThen";
+import ifThenElse from "./ifThenElse";
 
 export const samples = {
   Simple: simple,
@@ -56,12 +56,12 @@ export const samples = {
   "Any Of": anyOf,
   "One Of": oneOf,
   "All Of": allOf,
-  "If Else Then": ifElseThen,
+  "If Then Else 1": ifThenElse,
   "Null fields": nullField,
   Nullable: nullable,
   ErrorSchema: errorSchema,
   Defaults: defaults,
-  "If Then Else": ifthenelse,
+  "If Then Else 2": ifthenelse,
   "If Then Else ($ref)": ifthenelserefs,
   "All of If Then Else": allofifthenelse,
 };

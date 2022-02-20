@@ -200,6 +200,43 @@ render((
 ), document.getElementById("app"));
 ```
 
+## Custom widgets
+
+In addition to [ArrayFieldTemplate](../advanced-customization/custom-templates.md#arrayfieldtemplate) you use your own widget by providing it to the uiSchema with the property of `ui:widget`. 
+
+Example: 
+
+```jsx
+const CustomSelectComponent = props => {
+  return (
+    <select>
+      {props.value.map((item, index) => (
+        <option key={index} id="custom-select">
+          {item}
+        </option>
+      ))}
+    </select>
+  );
+};
+
+const schema = {
+  type: "array",
+  title: "A multiple-choice list",
+  items: {
+    type: "string",
+  },
+};
+
+const uiSchema = {
+  "ui:widget": "CustomSelect"
+};
+
+const widgets = {
+  CustomSelect: CustomSelectComponent,
+},
+
+render((<Form schema={schema} uiSchema={uiSchema} widgets={widgets} />), document.getElementById("app"));
+```
 
 ## Specifying the minimum or maximum number of items
 

@@ -29,6 +29,7 @@ import {
   schemaRequiresTrueValue,
   canExpand,
   optionsList,
+  isCustomWidget,
   getMatchingOption,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
@@ -2404,7 +2405,7 @@ describe("utils", () => {
       });
     });
 
-    describe("ifElseThen", () => {
+    describe("Conditional schemas (If, Then, Else)", () => {
       it("should resolve if, then", () => {
         const schema = {
           type: "object",
@@ -2538,7 +2539,7 @@ describe("utils", () => {
           required: ["animal", "food"],
         });
       });
-      it.only("should resolve $ref", () => {
+      it("should resolve $ref", () => {
         const schema = {
           type: "object",
           properties: {
@@ -2604,6 +2605,119 @@ describe("utils", () => {
             food: { type: "string", enum: ["meat", "grass", "fish"] },
           },
           required: ["animal", "food"],
+        });
+      });
+      it("handles nested if then else", () => {
+        const schemaWithNested = {
+          type: "object",
+          properties: {
+            country: {
+              enum: ["USA"],
+            },
+          },
+          required: ["country"],
+          if: {
+            properties: {
+              country: {
+                const: "USA",
+              },
+            },
+            required: ["country"],
+          },
+          then: {
+            properties: {
+              state: {
+                type: "string",
+                enum: ["California", "New York"],
+              },
+            },
+            required: ["state"],
+            if: {
+              properties: {
+                state: {
+                  const: "New York",
+                },
+              },
+              required: ["state"],
+            },
+            then: {
+              properties: {
+                city: {
+                  type: "string",
+                  enum: ["New York City", "Buffalo", "Rochester"],
+                },
+              },
+            },
+            else: {
+              if: {
+                properties: {
+                  state: {
+                    const: "California",
+                  },
+                },
+                required: ["state"],
+              },
+              then: {
+                properties: {
+                  city: {
+                    type: "string",
+                    enum: ["Los Angeles", "San Diego", "San Jose"],
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        const definitions = {};
+        const formData = {
+          country: "USA",
+          state: "New York",
+        };
+
+        expect(retrieveSchema(schemaWithNested, definitions, formData)).eql({
+          type: "object",
+          properties: {
+            country: {
+              enum: ["USA"],
+            },
+            state: { type: "string", enum: ["California", "New York"] },
+            city: {
+              type: "string",
+              enum: ["New York City", "Buffalo", "Rochester"],
+            },
+          },
+          required: ["country", "state"],
+        });
+      });
+      it("overrides the base schema with a conditional branch when merged", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            myString: {
+              type: "string",
+              minLength: 5,
+            },
+          },
+          if: true,
+          then: {
+            properties: {
+              myString: {
+                minLength: 10, // This value of minLength should override the original value
+              },
+            },
+          },
+        };
+        const definitions = {};
+        const formData = {};
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            myString: {
+              type: "string",
+              minLength: 10,
+            },
+          },
         });
       });
     });
@@ -3877,6 +3991,24 @@ describe("utils", () => {
           getDisplayLabel({ type: "array" }, { "ui:widget": "files" })
         ).eql(true);
       });
+      it("custom type", () => {
+        expect(
+          getDisplayLabel(
+            { type: "array", title: "myAwesomeTitle" },
+            { "ui:widget": "MyAwesomeWidget" }
+          )
+        ).eql(true);
+      });
+    });
+  });
+
+  describe("isCustomWidget()", () => {
+    it("When the function is called with a custom widget in the uiSchema it returns true", () => {
+      expect(isCustomWidget({ "ui:widget": "MyAwesomeWidget" })).eql(true);
+    });
+
+    it("When the function is called without a custom widget in the schema it returns false", () => {
+      expect(isCustomWidget({ "ui:fields": "randomString" })).eql(false);
     });
   });
 
