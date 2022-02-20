@@ -1173,7 +1173,7 @@ exports[`single fields title field 1`] = `
 >
   <div>
     <div
-      className="border-bottom-1 border-500 mb-2"
+      className="border-bottom-1 mb-2"
     >
       <h5>
         Titre 1

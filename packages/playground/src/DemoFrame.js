@@ -117,6 +117,9 @@ function DemoFrame(props) {
                 margin: 0px;
                 font-family: var(--font-family);
                 color: var(--text-color);
+              }
+              * {
+                border-color: #ced4da;
               }`,
           }}
         />

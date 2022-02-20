@@ -2,7 +2,7 @@
 
 exports[`TitleField simple 1`] = `
 <div
-  className="border-bottom-1 border-500 mb-2"
+  className="border-bottom-1 mb-2"
 >
   <h5>
     Hello

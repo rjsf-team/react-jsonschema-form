@@ -127,7 +127,7 @@ exports[`array fields fixed array 1`] = `
       className="flex flex-column gap-2"
     >
       <div
-        className="flex align-items-start gap-2 p-2 border border-round"
+        className="flex align-items-start gap-2 p-2 border-1 border-round"
       >
         <div
           className="flex-grow-1"
@@ -160,7 +160,7 @@ exports[`array fields fixed array 1`] = `
         <div />
       </div>
       <div
-        className="flex align-items-start gap-2 p-2 border border-round"
+        className="flex align-items-start gap-2 p-2 border-1 border-round"
       >
         <div
           className="flex-grow-1"

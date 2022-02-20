@@ -63,7 +63,7 @@ const ArrayFieldDescription = ({
 const DefaultArrayItem = (props: any) => {
   const canMoveItems = props.hasMoveUp || props.hasMoveDown;
   return (
-    <div key={props.key} className="flex align-items-start gap-2 p-2 border border-round">
+    <div key={props.key} className="flex align-items-start gap-2 p-2 border-1 border-round">
       <div className="flex-grow-1">{props.children}</div>
       <div>
         {props.hasToolbar && (
