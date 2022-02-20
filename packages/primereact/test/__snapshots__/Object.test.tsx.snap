@@ -6,104 +6,78 @@ exports[`object fields object 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
+  <div>
     <div
-      className="p-0 container-fluid"
+      className="flex flex-column gap-2"
     >
-      <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
-      >
-        <div
-          className="col-12"
-        >
-           
-          <div
-            className="form-group"
-          >
-            <div
-              className="mb-0 form-group"
+      <div>
+        <div>
+          <div>
+            <label
+              className="block"
+              htmlFor="root_a"
             >
-              <label
-                className="form-label"
-              >
-                a
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_a"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="text"
-                value=""
-              />
-            </div>
+              a
+            </label>
+            <input
+              autoFocus={false}
+              className="p-inputtext p-component w-full"
+              disabled={false}
+              id="root_a"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyPress={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value=""
+            />
           </div>
         </div>
       </div>
-      <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
-      >
-        <div
-          className="col-12"
-        >
-           
-          <div
-            className="form-group"
-          >
-            <div
-              className="mb-0 form-group"
+      <div>
+        <div>
+          <div>
+            <label
+              className="block"
+              htmlFor="root_b"
             >
-              <label
-                className="form-label"
-              >
-                b
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_b"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="number"
-                value=""
-              />
-            </div>
+              b
+            </label>
+            <input
+              autoFocus={false}
+              className="p-inputtext p-component w-full"
+              disabled={false}
+              id="root_b"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyPress={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="number"
+              value=""
+            />
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;

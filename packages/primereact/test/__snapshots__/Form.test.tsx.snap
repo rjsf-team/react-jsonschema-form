@@ -6,38 +6,59 @@ exports[`single fields checkbox field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
+  <div>
     <div
-      className="checkbox  form-group"
+      className="flex align-items-start"
     >
       <div
-        className="form-check"
+        className="p-checkbox p-component"
+        id={null}
+        onClick={[Function]}
+        onContextMenu={null}
+        onMouseDown={null}
+        style={null}
       >
-        <input
-          autoFocus={false}
-          checked={false}
-          className="form-check-input position-static"
-          disabled={false}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
+        <div
+          className="p-hidden-accessible"
+        >
+          <input
+            aria-labelledby={null}
+            defaultChecked={false}
+            disabled={false}
+            id="root"
+            name={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+        </div>
+        <div
+          aria-checked={false}
+          className="p-checkbox-box"
+          role="checkbox"
         />
       </div>
+      <label
+        className="ml-2"
+        htmlFor="root"
+      />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -47,38 +68,59 @@ exports[`single fields checkbox field 2`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
+  <div>
     <div
-      className="checkbox  form-group"
+      className="flex align-items-start"
     >
       <div
-        className="form-check"
+        className="p-checkbox p-component"
+        id={null}
+        onClick={[Function]}
+        onContextMenu={null}
+        onMouseDown={null}
+        style={null}
       >
-        <input
-          autoFocus={false}
-          checked={false}
-          className="form-check-input position-static"
-          disabled={false}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
+        <div
+          className="p-hidden-accessible"
+        >
+          <input
+            aria-labelledby={null}
+            defaultChecked={false}
+            disabled={false}
+            id="root"
+            name={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+        </div>
+        <div
+          aria-checked={false}
+          className="p-checkbox-box"
+          role="checkbox"
         />
       </div>
+      <label
+        className="ml-2"
+        htmlFor="root"
+      />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -88,135 +130,194 @@ exports[`single fields checkboxes field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <label
-      className="form-label"
-      htmlFor="root"
-    />
-    <div
-      className="form-group"
-    >
-      <form
-        className=""
-      >
+  <div>
+    <div>
+      <label
+        htmlFor="root"
+      />
+      <div>
         <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+          className="flex align-items-start"
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="custom-control-input"
-            disabled={false}
-            id="root_0"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={false}
-            type="checkbox"
-          />
+          <div
+            className="p-checkbox p-component"
+            id={null}
+            onClick={[Function]}
+            onContextMenu={null}
+            onMouseDown={null}
+            style={null}
+          >
+            <div
+              className="p-hidden-accessible"
+            >
+              <input
+                aria-labelledby={null}
+                defaultChecked={false}
+                disabled={false}
+                id="root_0"
+                name={null}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                readOnly={false}
+                required={false}
+                tabIndex={null}
+                type="checkbox"
+              />
+            </div>
+            <div
+              aria-checked={false}
+              className="p-checkbox-box"
+              role="checkbox"
+            />
+          </div>
           <label
-            className="custom-control-label"
+            className="ml-2"
             htmlFor="root_0"
-            title=""
           >
             foo
           </label>
         </div>
-      </form>
-      <form
-        className=""
-      >
         <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+          className="flex align-items-start"
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="custom-control-input"
-            disabled={false}
-            id="root_1"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={false}
-            type="checkbox"
-          />
+          <div
+            className="p-checkbox p-component"
+            id={null}
+            onClick={[Function]}
+            onContextMenu={null}
+            onMouseDown={null}
+            style={null}
+          >
+            <div
+              className="p-hidden-accessible"
+            >
+              <input
+                aria-labelledby={null}
+                defaultChecked={false}
+                disabled={false}
+                id="root_1"
+                name={null}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                readOnly={false}
+                required={false}
+                tabIndex={null}
+                type="checkbox"
+              />
+            </div>
+            <div
+              aria-checked={false}
+              className="p-checkbox-box"
+              role="checkbox"
+            />
+          </div>
           <label
-            className="custom-control-label"
+            className="ml-2"
             htmlFor="root_1"
-            title=""
           >
             bar
           </label>
         </div>
-      </form>
-      <form
-        className=""
-      >
         <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+          className="flex align-items-start"
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="custom-control-input"
-            disabled={false}
-            id="root_2"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={false}
-            type="checkbox"
-          />
+          <div
+            className="p-checkbox p-component"
+            id={null}
+            onClick={[Function]}
+            onContextMenu={null}
+            onMouseDown={null}
+            style={null}
+          >
+            <div
+              className="p-hidden-accessible"
+            >
+              <input
+                aria-labelledby={null}
+                defaultChecked={false}
+                disabled={false}
+                id="root_2"
+                name={null}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                readOnly={false}
+                required={false}
+                tabIndex={null}
+                type="checkbox"
+              />
+            </div>
+            <div
+              aria-checked={false}
+              className="p-checkbox-box"
+              role="checkbox"
+            />
+          </div>
           <label
-            className="custom-control-label"
+            className="ml-2"
             htmlFor="root_2"
-            title=""
           >
             fuzz
           </label>
         </div>
-      </form>
-      <form
-        className=""
-      >
         <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+          className="flex align-items-start"
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="custom-control-input"
-            disabled={false}
-            id="root_3"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={false}
-            type="checkbox"
-          />
+          <div
+            className="p-checkbox p-component"
+            id={null}
+            onClick={[Function]}
+            onContextMenu={null}
+            onMouseDown={null}
+            style={null}
+          >
+            <div
+              className="p-hidden-accessible"
+            >
+              <input
+                aria-labelledby={null}
+                defaultChecked={false}
+                disabled={false}
+                id="root_3"
+                name={null}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                readOnly={false}
+                required={false}
+                tabIndex={null}
+                type="checkbox"
+              />
+            </div>
+            <div
+              aria-checked={false}
+              className="p-checkbox-box"
+              role="checkbox"
+            />
+          </div>
           <label
-            className="custom-control-label"
+            className="ml-2"
             htmlFor="root_3"
-            title=""
           >
             qux
           </label>
         </div>
-      </form>
+      </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -226,39 +327,43 @@ exports[`single fields format color 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="color"
-        value=""
-      />
+      <div
+        className="p-colorpicker p-component p-colorpicker-overlay"
+        id={null}
+        style={null}
+      >
+        <input
+          className="p-colorpicker-preview p-inputtext"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          readOnly={false}
+          tabIndex={null}
+          type="text"
+        />
+      </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -268,23 +373,22 @@ exports[`single fields format date 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control"
+        className="p-inputtext p-component w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder=""
         readOnly={false}
         type="date"
@@ -292,15 +396,17 @@ exports[`single fields format date 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -310,23 +416,22 @@ exports[`single fields format datetime 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control"
+        className="p-inputtext p-component w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder=""
         readOnly={false}
         type="datetime-local"
@@ -334,15 +439,17 @@ exports[`single fields format datetime 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -352,46 +459,32 @@ exports[`single fields hidden field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
+  <div>
     <div
-      className="p-0 container-fluid"
+      className="flex flex-column gap-2"
     >
       <div
-        className="d-none row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="d-none"
       >
-        <div
-          className="col-12"
-        >
-           
-          <div
-            className="form-group"
-          >
-            <input
-              id="root_my-field"
-              type="hidden"
-              value=""
-            />
-          </div>
-        </div>
+        <input
+          id="root_my-field"
+          type="hidden"
+          value=""
+        />
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -401,18 +494,18 @@ exports[`single fields null field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  />
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <div />
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -422,23 +515,22 @@ exports[`single fields number field 0 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control"
+        className="p-inputtext p-component p-filled w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder=""
         readOnly={false}
         type="number"
@@ -446,15 +538,17 @@ exports[`single fields number field 0 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -464,23 +558,22 @@ exports[`single fields number field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control"
+        className="p-inputtext p-component w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder=""
         readOnly={false}
         type="number"
@@ -488,15 +581,17 @@ exports[`single fields number field 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -506,38 +601,47 @@ exports[`single fields password field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        readOnly={false}
-        type="password"
-        value=""
-      />
+      <div
+        className="p-password p-component p-inputwrapper"
+        id={null}
+        style={null}
+      >
+        <input
+          autoFocus={false}
+          className="p-inputtext p-component p-password-input"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onInput={[Function]}
+          onKeyPress={[Function]}
+          onKeyUp={[Function]}
+          readOnly={false}
+          style={null}
+          type="password"
+          value=""
+        />
+      </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -547,72 +651,107 @@ exports[`single fields radio field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="d-block form-label"
+        className="block"
+        htmlFor="root"
       />
       <div
-        className="form-check"
+        className="flex align-items-start"
       >
-        <input
-          checked={false}
-          className="form-check-input"
-          disabled={false}
-          id="Yes"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="radio"
-          value={true}
-        />
+        <div
+          className="p-radiobutton p-component"
+          id={null}
+          onClick={[Function]}
+          style={null}
+        >
+          <div
+            className="p-hidden-accessible"
+          >
+            <input
+              aria-labelledby={null}
+              defaultChecked={false}
+              disabled={false}
+              id={null}
+              name="root"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+          </div>
+          <div
+            aria-checked={false}
+            className="p-radiobutton-box"
+            role="radio"
+          >
+            <div
+              className="p-radiobutton-icon"
+            />
+          </div>
+        </div>
         <label
-          className="form-check-label"
-          htmlFor="Yes"
-          title=""
+          className="ml-2"
         >
           Yes
         </label>
       </div>
       <div
-        className="form-check"
+        className="flex align-items-start"
       >
-        <input
-          checked={false}
-          className="form-check-input"
-          disabled={false}
-          id="No"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="radio"
-          value={false}
-        />
+        <div
+          className="p-radiobutton p-component"
+          id={null}
+          onClick={[Function]}
+          style={null}
+        >
+          <div
+            className="p-hidden-accessible"
+          >
+            <input
+              aria-labelledby={null}
+              defaultChecked={false}
+              disabled={false}
+              id={null}
+              name="root"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+          </div>
+          <div
+            aria-checked={false}
+            className="p-radiobutton-box"
+            role="radio"
+          >
+            <div
+              className="p-radiobutton-icon"
+            />
+          </div>
+        </div>
         <label
-          className="form-check-label"
-          htmlFor="No"
-          title=""
+          className="ml-2"
         >
           No
         </label>
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -622,57 +761,84 @@ exports[`single fields select field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
+  <div>
     <div
-      className="form-group"
+      className="mb-2"
     >
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
-      <select
-        autoFocus={false}
-        className="custom-select"
-        disabled={false}
+      <div
+        className="p-dropdown p-component p-inputwrapper"
         id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        readOnly={false}
-        value=""
+        onClick={[Function]}
+        onContextMenu={null}
+        onMouseDown={null}
+        style={null}
       >
-        <option
-          value=""
+        <div
+          className="p-hidden-accessible"
         >
-          
-        </option>
-        <option
-          disabled={false}
-          id="foo"
-          value="foo"
+          <input
+            aria-haspopup="listbox"
+            aria-label={null}
+            aria-labelledby={null}
+            disabled={false}
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            readOnly={true}
+            tabIndex={null}
+            type="text"
+          />
+        </div>
+        <div
+          className="p-hidden-accessible p-dropdown-hidden-select"
         >
-          foo
-        </option>
-        <option
-          disabled={false}
-          id="bar"
-          value="bar"
+          <select
+            aria-hidden="true"
+            name={null}
+            required={false}
+            tabIndex={-1}
+          >
+            <option
+              value=""
+            >
+              
+            </option>
+          </select>
+        </div>
+        <span
+          className="p-dropdown-label p-inputtext p-dropdown-label-empty"
         >
-          bar
-        </option>
-      </select>
+          empty
+        </span>
+        <div
+          aria-expanded={false}
+          aria-haspopup="listbox"
+          className="p-dropdown-trigger"
+          role="button"
+        >
+          <span
+            className="p-dropdown-trigger-icon p-clickable pi pi-chevron-down"
+          />
+        </div>
+      </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -682,23 +848,22 @@ exports[`single fields string field format data-url 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control-file"
+        className="p-inputtext p-component w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder=""
         readOnly={false}
         type="file"
@@ -706,15 +871,17 @@ exports[`single fields string field format data-url 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -724,23 +891,22 @@ exports[`single fields string field format email 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control"
+        className="p-inputtext p-component w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder=""
         readOnly={false}
         type="email"
@@ -748,15 +914,17 @@ exports[`single fields string field format email 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -766,23 +934,22 @@ exports[`single fields string field format uri 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control"
+        className="p-inputtext p-component w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder=""
         readOnly={false}
         type="url"
@@ -790,15 +957,17 @@ exports[`single fields string field format uri 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -808,23 +977,22 @@ exports[`single fields string field regular 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control"
+        className="p-inputtext p-component w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder=""
         readOnly={false}
         type="text"
@@ -832,15 +1000,17 @@ exports[`single fields string field regular 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -850,23 +1020,22 @@ exports[`single fields string field with placeholder 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
-    <div
-      className="mb-0 form-group"
-    >
+  <div>
+    <div>
       <label
-        className="form-label"
+        className="block"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
-        className="form-control"
+        className="p-inputtext p-component w-full"
         disabled={false}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onInput={[Function]}
+        onKeyPress={[Function]}
         placeholder="placeholder"
         readOnly={false}
         type="text"
@@ -874,15 +1043,17 @@ exports[`single fields string field with placeholder 1`] = `
       />
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -892,38 +1063,37 @@ exports[`single fields textarea field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
+  <div>
     <label
+      className="block"
       htmlFor="root"
     />
-    <div
-      className="input-group"
-    >
-      <textarea
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        rows={5}
-      />
-    </div>
-  </div>
-  <div>
-    <button
-      className="btn btn-primary"
+    <textarea
+      autoFocus={false}
+      className="p-inputtextarea p-inputtext p-component p-inputtextarea-resizable w-full"
       disabled={false}
-      type="submit"
+      id="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onInput={[Function]}
+      onKeyUp={[Function]}
+      placeholder=""
+      readOnly={false}
+      rows={5}
+    />
+  </div>
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -933,79 +1103,58 @@ exports[`single fields title field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
+  <div>
     <div
-      className="my-1"
+      className="border-bottom-1 border-500 mb-2"
     >
       <h5>
         Titre 1
       </h5>
-      <hr
-        className="border-0 bg-secondary"
-        style={
-          Object {
-            "height": "1px",
-          }
-        }
-      />
     </div>
     <div
-      className="p-0 container-fluid"
+      className="flex flex-column gap-2"
     >
-      <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
-      >
-        <div
-          className="col-12"
-        >
-           
-          <div
-            className="form-group"
-          >
-            <div
-              className="mb-0 form-group"
+      <div>
+        <div>
+          <div>
+            <label
+              className="block"
+              htmlFor="root_title"
             >
-              <label
-                className="form-label"
-              >
-                Titre 2
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_title"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="text"
-                value=""
-              />
-            </div>
+              Titre 2
+            </label>
+            <input
+              autoFocus={false}
+              className="p-inputtext p-component w-full"
+              disabled={false}
+              id="root_title"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyPress={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value=""
+            />
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -1015,9 +1164,7 @@ exports[`single fields unsupported field 1`] = `
   noValidate={false}
   onSubmit={[Function]}
 >
-  <div
-    className="form-group"
-  >
+  <div>
     <div
       className="unsupported-field"
     >
@@ -1041,14 +1188,16 @@ exports[`single fields unsupported field 1`] = `
       </pre>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={false}
-      type="submit"
+  <button
+    className="p-button p-component"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
     >
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;

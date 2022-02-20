@@ -35,10 +35,9 @@ const RadioWidget = ({
         const checked = option.value == value;
 
         return (
-          <div className={cn(inline ? "inline-flex" : "flex", "align-items-start")}>
+          <div key={i} className={cn(inline ? "inline-flex" : "flex", "align-items-start")}>
             <RadioButton
               inputId={option.id}
-              key={i}
               name={id}
               disabled={disabled || itemDisabled || readonly}
               checked={checked}
