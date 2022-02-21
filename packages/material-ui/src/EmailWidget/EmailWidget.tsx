@@ -1,7 +1,7 @@
-import React from "react";
-import { TextWidgetProps } from "../TextWidget";
+import React from 'react';
+import { WidgetProps } from '@rjsf/core';
 
-const EmailWidget = (props: TextWidgetProps) => {
+const EmailWidget = (props: WidgetProps) => {
   const { registry } = props;
   const { TextWidget } = registry.widgets;
   return <TextWidget type="email" {...props} />;

@@ -12,6 +12,7 @@ import {
   isFilesArray,
   isFixedItems,
   allowAdditionalItems,
+  isCustomWidget,
   optionsList,
   retrieveSchema,
   toIdSchema,
@@ -442,14 +443,18 @@ class ArrayField extends Component {
         />
       );
     }
+    if (isMultiSelect(schema, rootSchema)) {
+      // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
+      return this.renderMultiSelect();
+    }
+    if (isCustomWidget(uiSchema)) {
+      return this.renderCustomWidget();
+    }
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
     if (isFilesArray(schema, uiSchema, rootSchema)) {
       return this.renderFiles();
-    }
-    if (isMultiSelect(schema, rootSchema)) {
-      return this.renderMultiSelect();
     }
     return this.renderNormalArray();
   }
@@ -469,6 +474,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       idPrefix,
+      idSeparator,
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
@@ -488,7 +494,8 @@ class ArrayField extends Component {
           itemIdPrefix,
           rootSchema,
           item,
-          idPrefix
+          idPrefix,
+          idSeparator
         );
         return this.renderArrayFieldItem({
           key,
@@ -528,6 +535,53 @@ class ArrayField extends Component {
       ArrayFieldTemplate ||
       DefaultNormalArrayFieldTemplate;
     return <Component {...arrayProps} />;
+  }
+
+  renderCustomWidget() {
+    const {
+      schema,
+      idSchema,
+      uiSchema,
+      disabled,
+      readonly,
+      required,
+      placeholder,
+      autofocus,
+      onBlur,
+      onFocus,
+      formData: items,
+      registry = getDefaultRegistry(),
+      rawErrors,
+      name,
+    } = this.props;
+    const { widgets, formContext } = registry;
+    const title = schema.title || name;
+
+    const { widget, ...options } = {
+      ...getUiOptions(uiSchema),
+    };
+    const Widget = getWidget(schema, widget, widgets);
+    return (
+      <Widget
+        id={idSchema && idSchema.$id}
+        multiple
+        onChange={this.onSelectChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        options={options}
+        schema={schema}
+        registry={registry}
+        value={items}
+        disabled={disabled}
+        readonly={readonly}
+        required={required}
+        label={title}
+        placeholder={placeholder}
+        formContext={formContext}
+        autofocus={autofocus}
+        rawErrors={rawErrors}
+      />
+    );
   }
 
   renderMultiSelect() {
@@ -626,6 +680,7 @@ class ArrayField extends Component {
       formData,
       errorSchema,
       idPrefix,
+      idSeparator,
       idSchema,
       name,
       required,
@@ -673,7 +728,8 @@ class ArrayField extends Component {
           itemIdPrefix,
           rootSchema,
           item,
-          idPrefix
+          idPrefix,
+          idSeparator
         );
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}

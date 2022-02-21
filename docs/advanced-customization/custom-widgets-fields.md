@@ -94,6 +94,7 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 - `number`
 - `integer`
 - `boolean`
+- `array`
 
 ```jsx
 const schema = {

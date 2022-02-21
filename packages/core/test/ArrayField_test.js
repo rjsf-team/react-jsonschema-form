@@ -89,6 +89,18 @@ describe("ArrayField", () => {
     return <div id="custom">{props.rawErrors}</div>;
   };
 
+  const CustomSelectComponent = props => {
+    return (
+      <select>
+        {props.value.map((item, index) => (
+          <option key={index} id="custom-select">
+            {item}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
   beforeEach(() => {
     sandbox = createSandbox();
   });
@@ -1800,6 +1812,59 @@ describe("ArrayField", () => {
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: [1, 2],
       });
+    });
+  });
+
+  describe("Custom Widget", () => {
+    it("if it does not contain enums or uniqueItems=true, it should still render the custom widget.", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "CustomSelect",
+        },
+        formData: ["foo", "bar"],
+        widgets: {
+          CustomSelect: CustomSelectComponent,
+        },
+      });
+
+      expect(node.querySelectorAll("#custom-select")).to.have.length.of(2);
+    });
+
+    it("if the schema has fixed items, it should still render the custom widget.", () => {
+      const schema = {
+        type: "array",
+        items: [
+          {
+            type: "string",
+            title: "Some text",
+          },
+          {
+            type: "number",
+            title: "A number",
+          },
+        ],
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "CustomSelect",
+        },
+        formData: ["foo", "bar"],
+        widgets: {
+          CustomSelect: CustomSelectComponent,
+        },
+      });
+
+      expect(node.querySelectorAll("#custom-select")).to.have.length.of(2);
     });
   });
 
