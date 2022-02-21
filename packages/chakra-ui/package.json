@@ -1,0 +1,70 @@
+{
+  "name": "@rjsf/chakra-ui",
+  "version": "4.0.0",
+  "description": "Chakra UI theme, fields, and widgets for react-jsonschema-form",
+  "main": "dist/index.js",
+  "module": "dist/chakra-ui.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "rimraf dist && tsdx build",
+    "test": "tsdx test",
+    "test:watch": "tsdx test --watch"
+  },
+  "engineStrict": false,
+  "engines": {
+    "node": ">=12"
+  },
+  "peerDependencies": {
+    "@chakra-ui/icons": ">=1.1.1",
+    "@chakra-ui/react": ">=1.7.3",
+    "@rjsf/core": "^3.0.0",
+    "framer-motion": ">=5.5.5",
+    "react": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Jonathan Blair <jonathanbblair@gmail.com>",
+  "contributors": [
+    "jzander <jeremy.zander@gmail.com>",
+    "Rodrigo Fuentes <rodrigofuentes@users.noreply.github.com>",
+    "U.M Andrew <me@andrewmiracle.com>"
+  ],
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.10.1",
+    "@chakra-ui/icons": "^1.1.1",
+    "@chakra-ui/react": "^1.7.3",
+    "@emotion/jest": "^11.7.1",
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@rjsf/core": "^4.0.0",
+    "@types/jest": "^24.0.15",
+    "@types/json-schema": "^7.0.7",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "@types/react-test-renderer": "^16.9.2",
+    "babel-loader": "^8.2.3",
+    "framer-motion": "^5.5.5",
+    "react": "^17.0.2",
+    "react-dom": "^16.13.0",
+    "react-is": "^17.0.2",
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^2.6.3",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "chakra-react-select": "^3.0.2",
+    "react-select": "^5.2.2"
+  }
+}

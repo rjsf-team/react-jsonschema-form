@@ -21,8 +21,16 @@ function CheckboxWidget(props) {
     schema,
     uiSchema,
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options });
-  const displayLabel = getDisplayLabel(
+  const semanticProps = getSemanticProps({
+    options,
+    formContext,
+    schema,
+    uiSchema,
+    defaultSchemaProps: {
+      inverted: false,
+    },
+   });
+   const displayLabel = getDisplayLabel(
     schema,
     uiSchema
     /* TODO: , rootSchema */
@@ -46,13 +54,4 @@ function CheckboxWidget(props) {
     />
   );
 }
-
-CheckboxWidget.defaultProps = {
-  options: {
-    semantic: {
-      inverted: false,
-    },
-  },
-};
-
 export default CheckboxWidget;

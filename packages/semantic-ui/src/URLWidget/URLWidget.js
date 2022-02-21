@@ -22,7 +22,11 @@ function URLWidget(props) {
     uiSchema,
     formContext,
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options });
+  const semanticProps = getSemanticProps(
+    { formContext,
+      options,
+      uiSchema,
+  });
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange(value === "" ? options.emptyValue : value);
@@ -51,14 +55,4 @@ function URLWidget(props) {
     />
   );
 }
-
-URLWidget.defaultProps = {
-  options: {
-    semantic: {
-      fluid: true,
-      inverted: false,
-    },
-  },
-};
-
 export default URLWidget;

@@ -29,6 +29,7 @@ declare module '@rjsf/core' {
         formData?: T;
         id?: string;
         idPrefix?: string;
+        idSeparator?: string;
         liveOmit?: boolean;
         liveValidate?: boolean;
         localizeErrors?: (errors: AjvError[]) => AjvError[];

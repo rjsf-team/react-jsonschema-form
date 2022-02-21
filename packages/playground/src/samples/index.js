@@ -27,6 +27,12 @@ import simple from "./simple";
 import single from "./single";
 import validation from "./validation";
 import widgets from "./widgets";
+import additionalProperties from "./additionalProperties";
+import nullable from "./nullable";
+import nullField from "./null";
+import errorSchema from "./errorSchema";
+import defaults from "./defaults";
+import ifThenElse from "./ifThenElse";
 
 export const samples = {
   Simple: simple,
@@ -54,6 +60,7 @@ export const samples = {
   "Any Of": anyOf,
   "One Of": oneOf,
   "All Of": allOf,
+  "If Then Else": ifThenElse,
   "Null fields": nullField,
   Nullable: nullable,
   ErrorSchema: errorSchema,
