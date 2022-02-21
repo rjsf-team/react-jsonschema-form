@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TextareaWidget simple with errors 1`] = `
-Array [
+<div>
   <label
-    className="block text-color-danger"
+    className="block mb-1 text-color-danger"
     htmlFor="_id"
   >
     Some simple label
     *
-  </label>,
+  </label>
   <textarea
     autoFocus={true}
     className="p-inputtextarea p-inputtext p-component p-filled p-inputtextarea-resizable w-full p-invalid"
@@ -24,19 +24,19 @@ Array [
     required={true}
     rows={5}
     value="value"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`TextareaWidget simple without errors 1`] = `
-Array [
+<div>
   <label
-    className="block text-color-danger"
+    className="block mb-1 text-color-danger"
     htmlFor="_id"
   >
     Some simple label
     *
-  </label>,
+  </label>
   <textarea
     autoFocus={true}
     className="p-inputtextarea p-inputtext p-component p-filled p-inputtextarea-resizable w-full p-invalid"
@@ -52,18 +52,18 @@ Array [
     required={true}
     rows={5}
     value="value"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`TextareaWidget simple without required 1`] = `
-Array [
+<div>
   <label
-    className="block text-color-danger"
+    className="block mb-1 text-color-danger"
     htmlFor="_id"
   >
     Some simple label
-  </label>,
+  </label>
   <textarea
     autoFocus={true}
     className="p-inputtextarea p-inputtext p-component p-filled p-inputtextarea-resizable w-full p-invalid"
@@ -79,6 +79,6 @@ Array [
     required={false}
     rows={5}
     value="value"
-  />,
-]
+  />
+</div>
 `;

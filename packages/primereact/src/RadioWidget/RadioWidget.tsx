@@ -21,20 +21,23 @@ const RadioWidget = ({
     onChange(schema.type == "boolean" ? value !== "false" : value);
 
   const inline = Boolean(options && options.inline);
+  const labelValue = uiSchema["ui:title"] || schema.title || label;
 
   return (
     <div>
-      <label htmlFor={id} className="block">
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
-      </label>
+      {labelValue && (
+        <label htmlFor={id} className="block mb-1">
+          {labelValue}
+          {required ? "*" : null}
+        </label>
+      )}
       <div className={cn("flex", inline ? "gap-3" : "gap-2")}>
         {(enumOptions as any[]).map((option, i) => {
           const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           const checked = option.value == value;
 
           return (
-            <div key={i} className={cn(inline ? "inline-flex" : "flex", "align-items-start")}>
+            <div key={i} className={cn(inline ? "inline-flex" : "flex", "align-items-start gap-2")}>
               <RadioButton
                 inputId={option.id}
                 name={id}
@@ -44,7 +47,7 @@ const RadioWidget = ({
                 value={option.value}
                 onChange={_onChange}
               />
-              <label htmlFor={option.id} className="ml-2">{option.label}</label>
+              <label htmlFor={option.id}>{option.label}</label>
             </div>
           );
         })}

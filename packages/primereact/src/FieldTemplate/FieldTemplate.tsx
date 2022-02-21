@@ -24,12 +24,10 @@ const FieldTemplate = ({
         </div>
       )}
       {rawErrors.length > 0 && (
-        <ul>
+        <ul className="error-detail">
           {rawErrors.map((error: string) => (
-            <li key={error} className="m-0 p-0">
-              <small className="m-0 text-color-danger">
-                {error}
-              </small>
+            <li key={error} className="text-sm text-color-danger m-0 p-0">
+              {error}
             </li>
           ))}
         </ul>

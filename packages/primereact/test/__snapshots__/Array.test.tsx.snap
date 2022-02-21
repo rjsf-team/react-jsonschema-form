@@ -54,10 +54,6 @@ exports[`array fields checkboxes 1`] = `
     <div
       className="mb-2"
     >
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <div
         className="p-multiselect p-component p-inputwrapper"
         id="root"
@@ -134,10 +130,6 @@ exports[`array fields fixed array 1`] = `
         >
           <div>
             <div>
-              <label
-                className="block"
-                htmlFor="root_0"
-              />
               <input
                 autoFocus={false}
                 className="p-inputtext p-component w-full"
@@ -167,10 +159,6 @@ exports[`array fields fixed array 1`] = `
         >
           <div>
             <div>
-              <label
-                className="block"
-                htmlFor="root_1"
-              />
               <input
                 autoFocus={false}
                 className="p-inputtext p-component w-full"

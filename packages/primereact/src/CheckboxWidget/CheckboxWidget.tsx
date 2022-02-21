@@ -18,7 +18,7 @@ const CheckboxWidget = (props: WidgetProps) => {
 
   const desc = label || schema.description;
   return (
-    <div className="flex align-items-start">
+    <div className="flex align-items-start gap-2">
       <Checkbox
         inputId={id}
         checked={typeof value === "undefined" ? false : value}
@@ -26,7 +26,7 @@ const CheckboxWidget = (props: WidgetProps) => {
         disabled={disabled || readonly}
         onChange={_onChange}
       />
-      <label htmlFor={id} className="ml-2">{desc}</label>
+      <label htmlFor={id}>{desc}</label>
     </div>
   );
 };

@@ -3,7 +3,7 @@
 exports[`TextWidget simple 1`] = `
 <div>
   <label
-    className="block text-color-danger"
+    className="block mb-1 text-color-danger"
     htmlFor="_id"
   >
     Some simple label

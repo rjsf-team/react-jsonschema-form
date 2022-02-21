@@ -22,13 +22,16 @@ const UpDownWidget = ({
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const labelValue = uiSchema["ui:title"] || schema.title || label;
 
   return (
     <div>
-      <label htmlFor={id} className="block">
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
-      </label>
+      {labelValue && (
+        <label htmlFor={id} className="block mb-1">
+          {labelValue}
+          {required ? "*" : null}
+        </label>
+      )}
       <InputNumber
         id={id}
         autoFocus={autofocus}

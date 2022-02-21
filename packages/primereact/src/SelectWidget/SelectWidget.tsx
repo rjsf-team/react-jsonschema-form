@@ -81,13 +81,16 @@ const SelectWidget = ({
     }
     return (event as DropdownChangeParams).value;
   }
+  const labelValue = label || schema.title;
 
   return (
     <div className="mb-2">
-      <label htmlFor={id} className={cn("block", rawErrors.length > 0 ? "text-color-danger" : undefined)}>
-        {label || schema.title}
-        {(label || schema.title) && required ? "*" : null}
-      </label>
+      {labelValue && (
+        <label htmlFor={id} className={cn("block mb-1", rawErrors.length > 0 && "text-color-danger")}>
+          {labelValue}
+          {required ? "*" : null}
+        </label>
+      )}
       {multiple ? (
         <MultiSelect
           id={id}

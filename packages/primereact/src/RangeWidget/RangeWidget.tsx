@@ -19,13 +19,16 @@ const RangeWidget = ({
 
   const _onChange = ({ value }: SliderChangeParams) =>
     onChange(value as number);
+  const labelValue = uiSchema["ui:title"] || schema.title || label;
 
   return (
     <div>
-      <label htmlFor={id} className="block">
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
-      </label>
+      {labelValue && (
+        <label htmlFor={id} className="block mb-1">
+          {labelValue}
+          {required ? "*" : null}
+        </label>
+      )}
       <Slider
         disabled={disabled || readonly}
         onChange={_onChange}

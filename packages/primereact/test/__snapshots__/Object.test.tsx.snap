@@ -14,7 +14,7 @@ exports[`object fields object 1`] = `
         <div>
           <div>
             <label
-              className="block"
+              className="block mb-1"
               htmlFor="root_a"
             >
               a
@@ -42,7 +42,7 @@ exports[`object fields object 1`] = `
         <div>
           <div>
             <label
-              className="block"
+              className="block mb-1"
               htmlFor="root_b"
             >
               b

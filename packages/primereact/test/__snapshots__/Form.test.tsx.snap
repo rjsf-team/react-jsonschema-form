@@ -8,7 +8,7 @@ exports[`single fields checkbox field 1`] = `
 >
   <div>
     <div
-      className="flex align-items-start"
+      className="flex align-items-start gap-2"
     >
       <div
         className="p-checkbox p-component"
@@ -43,7 +43,6 @@ exports[`single fields checkbox field 1`] = `
         />
       </div>
       <label
-        className="ml-2"
         htmlFor="root"
       />
     </div>
@@ -70,7 +69,7 @@ exports[`single fields checkbox field 2`] = `
 >
   <div>
     <div
-      className="flex align-items-start"
+      className="flex align-items-start gap-2"
     >
       <div
         className="p-checkbox p-component"
@@ -105,7 +104,6 @@ exports[`single fields checkbox field 2`] = `
         />
       </div>
       <label
-        className="ml-2"
         htmlFor="root"
       />
     </div>
@@ -132,14 +130,11 @@ exports[`single fields checkboxes field 1`] = `
 >
   <div>
     <div>
-      <label
-        htmlFor="root"
-      />
       <div
         className="flex gap-2"
       >
         <div
-          className="flex align-items-start"
+          className="flex align-items-start gap-2"
         >
           <div
             className="p-checkbox p-component"
@@ -174,14 +169,13 @@ exports[`single fields checkboxes field 1`] = `
             />
           </div>
           <label
-            className="ml-2"
             htmlFor="root_0"
           >
             foo
           </label>
         </div>
         <div
-          className="flex align-items-start"
+          className="flex align-items-start gap-2"
         >
           <div
             className="p-checkbox p-component"
@@ -216,14 +210,13 @@ exports[`single fields checkboxes field 1`] = `
             />
           </div>
           <label
-            className="ml-2"
             htmlFor="root_1"
           >
             bar
           </label>
         </div>
         <div
-          className="flex align-items-start"
+          className="flex align-items-start gap-2"
         >
           <div
             className="p-checkbox p-component"
@@ -258,14 +251,13 @@ exports[`single fields checkboxes field 1`] = `
             />
           </div>
           <label
-            className="ml-2"
             htmlFor="root_2"
           >
             fuzz
           </label>
         </div>
         <div
-          className="flex align-items-start"
+          className="flex align-items-start gap-2"
         >
           <div
             className="p-checkbox p-component"
@@ -300,7 +292,6 @@ exports[`single fields checkboxes field 1`] = `
             />
           </div>
           <label
-            className="ml-2"
             htmlFor="root_3"
           >
             qux
@@ -331,10 +322,6 @@ exports[`single fields format color 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <div
         className="p-colorpicker p-component p-colorpicker-overlay"
         id={null}
@@ -377,10 +364,6 @@ exports[`single fields format date 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component w-full"
@@ -420,10 +403,6 @@ exports[`single fields format datetime 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component w-full"
@@ -519,10 +498,6 @@ exports[`single fields number field 0 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component p-filled w-full"
@@ -562,10 +537,6 @@ exports[`single fields number field 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component w-full"
@@ -605,10 +576,6 @@ exports[`single fields password field 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <div
         className="p-password p-component p-inputwrapper"
         id={null}
@@ -655,15 +622,11 @@ exports[`single fields radio field 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <div
         className="flex gap-2"
       >
         <div
-          className="flex align-items-start"
+          className="flex align-items-start gap-2"
         >
           <div
             className="p-radiobutton p-component"
@@ -697,14 +660,12 @@ exports[`single fields radio field 1`] = `
               />
             </div>
           </div>
-          <label
-            className="ml-2"
-          >
+          <label>
             Yes
           </label>
         </div>
         <div
-          className="flex align-items-start"
+          className="flex align-items-start gap-2"
         >
           <div
             className="p-radiobutton p-component"
@@ -738,9 +699,7 @@ exports[`single fields radio field 1`] = `
               />
             </div>
           </div>
-          <label
-            className="ml-2"
-          >
+          <label>
             No
           </label>
         </div>
@@ -771,10 +730,6 @@ exports[`single fields select field 1`] = `
     <div
       className="mb-2"
     >
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <div
         className="p-dropdown p-component p-inputwrapper"
         id="root"
@@ -856,10 +811,6 @@ exports[`single fields slider field 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <div
         className="p-slider p-component p-slider-horizontal"
         id="root"
@@ -918,10 +869,6 @@ exports[`single fields string field format data-url 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component w-full"
@@ -961,10 +908,6 @@ exports[`single fields string field format email 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component w-full"
@@ -1004,10 +947,6 @@ exports[`single fields string field format uri 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component w-full"
@@ -1047,10 +986,6 @@ exports[`single fields string field regular 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component w-full"
@@ -1090,10 +1025,6 @@ exports[`single fields string field with placeholder 1`] = `
 >
   <div>
     <div>
-      <label
-        className="block"
-        htmlFor="root"
-      />
       <input
         autoFocus={false}
         className="p-inputtext p-component w-full"
@@ -1132,24 +1063,22 @@ exports[`single fields textarea field 1`] = `
   onSubmit={[Function]}
 >
   <div>
-    <label
-      className="block"
-      htmlFor="root"
-    />
-    <textarea
-      autoFocus={false}
-      className="p-inputtextarea p-inputtext p-component p-inputtextarea-resizable w-full"
-      disabled={false}
-      id="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onInput={[Function]}
-      onKeyUp={[Function]}
-      placeholder=""
-      readOnly={false}
-      rows={5}
-    />
+    <div>
+      <textarea
+        autoFocus={false}
+        className="p-inputtextarea p-inputtext p-component p-inputtextarea-resizable w-full"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyUp={[Function]}
+        placeholder=""
+        readOnly={false}
+        rows={5}
+      />
+    </div>
   </div>
   <button
     className="p-button p-component mt-3"
@@ -1186,7 +1115,7 @@ exports[`single fields title field 1`] = `
         <div>
           <div>
             <label
-              className="block"
+              className="block mb-1"
               htmlFor="root_title"
             >
               Titre 2

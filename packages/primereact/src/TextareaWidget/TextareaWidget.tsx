@@ -34,13 +34,16 @@ const TextareaWidget = ({
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLTextAreaElement>) => onFocus(id, value);
+  const labelValue = uiSchema["ui:title"] || schema.title || label;
 
   return (
-    <>
-      <label htmlFor={id} className={cn("block", rawErrors.length > 0 ? "text-color-danger" : undefined)}>
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
-      </label>
+    <div>
+      {labelValue && (
+        <label htmlFor={id} className={cn("block mb-1", rawErrors.length > 0 && "text-color-danger")}>
+          {labelValue}
+          {required ? "*" : null}
+        </label>
+      )}
       <InputTextarea
         id={id}
         className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
@@ -56,7 +59,7 @@ const TextareaWidget = ({
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
-    </>
+    </div>
   );
 };
 

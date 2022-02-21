@@ -3,6 +3,7 @@
 exports[`CheckboxesWidget inline 1`] = `
 <div>
   <label
+    className="mb-1"
     htmlFor="_id"
   >
     Some simple label
@@ -11,7 +12,7 @@ exports[`CheckboxesWidget inline 1`] = `
     className="flex gap-3"
   >
     <div
-      className="inline-flex align-items-start"
+      className="inline-flex align-items-start gap-2"
     >
       <div
         className="p-checkbox p-component p-checkbox-disabled"
@@ -46,7 +47,6 @@ exports[`CheckboxesWidget inline 1`] = `
         />
       </div>
       <label
-        className="ml-2"
         htmlFor="_id_0"
       />
     </div>
@@ -57,6 +57,7 @@ exports[`CheckboxesWidget inline 1`] = `
 exports[`CheckboxesWidget simple 1`] = `
 <div>
   <label
+    className="mb-1"
     htmlFor="_id"
   >
     Some simple label
@@ -65,7 +66,7 @@ exports[`CheckboxesWidget simple 1`] = `
     className="flex gap-2"
   >
     <div
-      className="flex align-items-start"
+      className="flex align-items-start gap-2"
     >
       <div
         className="p-checkbox p-component p-checkbox-disabled"
@@ -100,7 +101,6 @@ exports[`CheckboxesWidget simple 1`] = `
         />
       </div>
       <label
-        className="ml-2"
         htmlFor="_id_0"
       />
     </div>

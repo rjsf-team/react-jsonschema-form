@@ -3,7 +3,7 @@
 exports[`UpDownWidget renders 0 as 0 and not '' 1`] = `
 <div>
   <label
-    className="block"
+    className="block mb-1"
     htmlFor="_id"
   >
     Some simple label

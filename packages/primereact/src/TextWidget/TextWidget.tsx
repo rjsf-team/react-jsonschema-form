@@ -31,13 +31,16 @@ const TextWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
   const inputType = (type || schema.type) === "string" ? "text" : `${type || schema.type}`
+  const labelValue = uiSchema["ui:title"] || schema.title || label;
 
   return (
     <div>
-      <label htmlFor={id} className={cn("block", rawErrors.length > 0 ? "text-color-danger" : undefined)}>
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
-      </label>
+      {labelValue && (
+        <label htmlFor={id} className={cn("block mb-1", rawErrors.length > 0 && "text-color-danger")}>
+          {labelValue}
+          {required ? "*" : null}
+        </label>
+      )}
       <InputText
         id={id}
         placeholder={placeholder}
@@ -58,7 +61,7 @@ const TextWidget = ({
           {(schema.examples as string[])
             .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example: any) => (
-              <option key={example} value={example}/>
+              <option key={example} value={example} />
             ))}
         </datalist>
       ) : null}

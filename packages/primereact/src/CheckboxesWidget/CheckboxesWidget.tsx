@@ -37,17 +37,22 @@ const CheckboxesWidget = ({
       onChange(deselectValue(option.value, value));
     }
   };
+  const labelValue = label || schema.title;
 
   return (
     <div>
-      <label htmlFor={id}>{label || schema.title}</label>
+      {labelValue && (
+        <label htmlFor={id} className="mb-1">
+          {labelValue}
+        </label>
+      )}
       <div className={cn("flex", inline ? "gap-3" : "gap-2")}>
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = Array.isArray(value) ? value.includes(option.value) : value === option.value;
           const itemDisabled = Array.isArray(enumDisabled) && (enumDisabled as string[]).includes(option.value);
 
           return (
-            <div key={index} className={cn(inline ? "inline-flex" : "flex", "align-items-start")}>
+            <div key={index} className={cn(inline ? "inline-flex" : "flex", "align-items-start gap-2")}>
               <Checkbox
                 inputId={`${id}_${index}`}
                 checked={checked}
@@ -55,7 +60,7 @@ const CheckboxesWidget = ({
                 disabled={disabled || itemDisabled || readonly}
                 onChange={_onChange(option)}
               />
-              <label htmlFor={`${id}_${index}`} className="ml-2">{option.label}</label>
+              <label htmlFor={`${id}_${index}`}>{option.label}</label>
             </div>
           );
         })}

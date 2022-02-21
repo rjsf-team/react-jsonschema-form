@@ -2,7 +2,7 @@
 
 exports[`CheckboxWidget simple 1`] = `
 <div
-  className="flex align-items-start"
+  className="flex align-items-start gap-2"
 >
   <div
     className="p-checkbox p-component p-checkbox-disabled"
@@ -37,7 +37,6 @@ exports[`CheckboxWidget simple 1`] = `
     />
   </div>
   <label
-    className="ml-2"
     htmlFor="_id"
   >
     Some simple label
