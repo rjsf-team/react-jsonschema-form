@@ -51,7 +51,7 @@ declare module '@rjsf/core' {
         uiSchema?: UiSchema;
         validate?: (formData: T, errors: FormValidation) => FormValidation;
         widgets?: { [name: string]: Widget };
-        // WARNING: This exists for internal react-jsonschema-form purposes only. Use ONLY if you know what you are doing
+        /** WARNING: This exists for internal react-jsonschema-form purposes only. Use ONLY if you know what you are doing */
         _internalFormWrapper?: React.ElementType;
     }
 
