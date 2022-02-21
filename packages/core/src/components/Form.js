@@ -443,6 +443,19 @@ export default class Form extends Component {
       disabled,
       readonly,
       formContext,
+      /**
+       * _internalFormWrapper is currently used by the material-ui and semantic-ui themes to provide a custom wrapper
+       * around the `form` that supports the proper rendering of those themes. To use this prop, one must pass a
+       * component that takes two props: `children` and `as`. That component, at minimum, will render the `children`
+       * inside of a <form /> tag unless `as` is provided, in which case, use the `as` prop in place of the `form`.
+       * i.e.:
+       * ```
+       * export default function InternalForm({ children, as}) {
+       *   const FormTag = as || 'form';
+       *   return <FormTag>{children}</FormTag>;
+       * }
+       * ```
+       */
       _internalFormWrapper,
     } = this.props;
 
