@@ -1296,7 +1296,6 @@ export function getMatchingOption(formData, options, rootSchema) {
       if (isValid(augmentedSchema, formData, rootSchema)) {
         return i;
       }
-    
     } else if (isValid(option, formData, rootSchema)) {
       return i;
     }
