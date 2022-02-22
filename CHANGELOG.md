@@ -26,6 +26,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - Updated `Form` to support the `semantic-ui` and `material-ui` themes to allow them work when `tagName` is provided
+- Support if/then/else (#2700)
 
 ## @rjsf/material-ui
 - Fixed up the `Theme` and `Theme5` implementations to deal with a regression in which adding `tagName` caused the 2 themes to not work
