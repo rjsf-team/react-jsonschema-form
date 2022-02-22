@@ -9,7 +9,9 @@ try {
   mui = require('@material-ui/core');
   icons = require('@material-ui/icons');
 } catch (err) {
-  console.log(err);
+  if (process.env.NODE_ENV !== 'PRODUCTION') {
+    console.log(err);
+  }
 }
 
 export let MaterialUIContext: MaterialUIContextProps;

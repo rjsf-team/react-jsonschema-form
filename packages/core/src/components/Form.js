@@ -443,12 +443,30 @@ export default class Form extends Component {
       disabled,
       readonly,
       formContext,
+      /**
+       * _internalFormWrapper is currently used by the material-ui and semantic-ui themes to provide a custom wrapper
+       * around `<Form />` that supports the proper rendering of those themes. To use this prop, one must pass a
+       * component that takes two props: `children` and `as`. That component, at minimum, should render the `children`
+       * inside of a <form /> tag unless `as` is provided, in which case, use the `as` prop in place of `<form />`.
+       * i.e.:
+       * ```
+       * export default function InternalForm({ children, as}) {
+       *   const FormTag = as || 'form';
+       *   return <FormTag>{children}</FormTag>;
+       * }
+       * ```
+       */
+      _internalFormWrapper,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
-    const FormTag = tagName ? tagName : "form";
+    // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
+    // PropTypes.elementType to use for the inner tag so we'll need to pass `tagName` along if it is provided.
+    // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
+    const as = _internalFormWrapper ? tagName : undefined;
+    const FormTag = _internalFormWrapper || tagName || "form";
     if (deprecatedAutocomplete) {
       console.warn(
         "Using autocomplete property of Form is deprecated, use autoComplete instead."
@@ -471,6 +489,7 @@ export default class Form extends Component {
         acceptCharset={acceptcharset}
         noValidate={noHtml5Validate}
         onSubmit={this.onSubmit}
+        as={as}
         ref={form => {
           this.formElement = form;
         }}>
@@ -527,6 +546,7 @@ if (process.env.NODE_ENV !== "production") {
     id: PropTypes.string,
     className: PropTypes.string,
     tagName: PropTypes.elementType,
+    _internalFormWrapper: PropTypes.elementType,
     name: PropTypes.string,
     method: PropTypes.string,
     target: PropTypes.string,

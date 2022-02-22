@@ -587,3 +587,42 @@ exports[`single fields unsupported field 1`] = `
   </div>
 </form>
 `;
+
+exports[`single fields using custom tagName 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      disabled={false}
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</div>
+`;
