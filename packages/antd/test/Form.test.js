@@ -134,7 +134,7 @@ describe("single fields", () => {
       type: "string"
     };
     const tree = renderer
-      .create(<Form schema={schema} tagName="div"/>)
+      .create(<Form schema={schema} tagName="div" />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
