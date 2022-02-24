@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/semantic-ui",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
@@ -27,7 +27,7 @@
     "test:update": "cross-env NODE_ENV=test BABEL_ENV=test jest --u"
   },
   "peerDependencies": {
-    "@rjsf/core": "^3.0.0",
+    "@rjsf/core": "^4.0.1",
     "lodash": "^4.17.15",
     "nanoid": "^3.1.23",
     "react": ">=16",
@@ -42,7 +42,7 @@
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@rjsf/core": "^4.0.0",
+    "@rjsf/core": "^4.0.1",
     "atob": "^2.0.3",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",

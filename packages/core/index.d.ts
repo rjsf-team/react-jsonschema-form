@@ -51,6 +51,11 @@ declare module '@rjsf/core' {
         uiSchema?: UiSchema;
         validate?: (formData: T, errors: FormValidation) => FormValidation;
         widgets?: { [name: string]: Widget };
+        /**
+         * WARNING: This exists for internal react-jsonschema-form purposes only. No guarantees of backwards
+         * compatibility. Use ONLY if you know what you are doing
+         */
+        _internalFormWrapper?: React.ElementType;
     }
 
     export default class Form<T> extends React.Component<FormProps<T>> {
