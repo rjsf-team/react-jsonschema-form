@@ -368,7 +368,6 @@ export function getUiOptions(uiSchema) {
     .filter(key => key.indexOf("ui:") === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
-
       if (key === "ui:widget" && isObject(value)) {
         console.warn(
           "Setting options via ui:widget object is deprecated, use ui:options instead"
@@ -389,15 +388,19 @@ export function getUiOptions(uiSchema) {
 export function getDisplayLabel(schema, uiSchema, rootSchema) {
   const uiOptions = getUiOptions(uiSchema);
   let { label: displayLabel = true } = uiOptions;
-  if (schema.type === "array") {
+  const schemaType = getSchemaType(schema);
+
+  if (schemaType === "array") {
     displayLabel =
       isMultiSelect(schema, rootSchema) ||
-      isFilesArray(schema, uiSchema, rootSchema);
+      isFilesArray(schema, uiSchema, rootSchema) ||
+      isCustomWidget(uiSchema);
   }
-  if (schema.type === "object") {
+
+  if (schemaType === "object") {
     displayLabel = false;
   }
-  if (schema.type === "boolean" && !uiSchema["ui:widget"]) {
+  if (schemaType === "boolean" && !uiSchema["ui:widget"]) {
     displayLabel = false;
   }
   if (uiSchema["ui:field"]) {
@@ -555,6 +558,15 @@ export function isFixedItems(schema) {
   );
 }
 
+export function isCustomWidget(uiSchema) {
+  return (
+    // TODO: Remove the `&& uiSchema["ui:widget"] !== "hidden"` once we support hidden widgets for arrays.
+    // https://react-jsonschema-form.readthedocs.io/en/latest/usage/widgets/#hidden-widgets
+    "widget" in getUiOptions(uiSchema) &&
+    getUiOptions(uiSchema)["widget"] !== "hidden"
+  );
+}
+
 export function allowAdditionalItems(schema) {
   if (schema.additionalItems === true) {
     console.warn("additionalItems=true is currently not supported");
@@ -570,7 +582,7 @@ export function optionsList(schema) {
     });
   } else {
     const altSchemas = schema.oneOf || schema.anyOf;
-    return altSchemas.map((schema, i) => {
+    return altSchemas.map(schema => {
       const value = toConstant(schema);
       const label = schema.title || String(value);
       return {
@@ -632,6 +644,9 @@ export function stubExistingAdditionalProperties(
     properties: { ...schema.properties },
   };
 
+  // make sure formData is an object
+  formData = isObject(formData) ? formData : {};
+
   Object.keys(formData).forEach(key => {
     if (schema.properties.hasOwnProperty(key)) {
       // No need to stub, our schema already has the property
@@ -660,6 +675,40 @@ export function stubExistingAdditionalProperties(
   return schema;
 }
 
+/**
+ * Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch with the rest of the schema
+ */
+const resolveCondition = (schema, rootSchema, formData) => {
+  let {
+    if: expression,
+    then,
+    else: otherwise,
+    ...resolvedSchemaLessConditional
+  } = schema;
+
+  const conditionalSchema = isValid(expression, formData, rootSchema)
+    ? then
+    : otherwise;
+
+  if (conditionalSchema) {
+    return retrieveSchema(
+      mergeSchemas(
+        resolvedSchemaLessConditional,
+        retrieveSchema(conditionalSchema, rootSchema, formData)
+      ),
+      rootSchema,
+      formData
+    );
+  } else {
+    return retrieveSchema(resolvedSchemaLessConditional, rootSchema, formData);
+  }
+};
+
+/**
+ * Resolves references and dependencies within a schema and its 'allOf' children.
+ *
+ * Called internally by retrieveSchema.
+ */
 export function resolveSchema(schema, rootSchema = {}, formData = {}) {
   if (schema.hasOwnProperty("$ref")) {
     return resolveReference(schema, rootSchema, formData);
@@ -697,6 +746,11 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
     return {};
   }
   let resolvedSchema = resolveSchema(schema, rootSchema, formData);
+
+  if (schema.hasOwnProperty("if")) {
+    return resolveCondition(schema, rootSchema, formData);
+  }
+
   if ("allOf" in schema) {
     try {
       resolvedSchema = mergeAllOf({
@@ -993,24 +1047,32 @@ export function toIdSchema(
   id,
   rootSchema,
   formData = {},
-  idPrefix = "root"
+  idPrefix = "root",
+  idSeparator = "_"
 ) {
   const idSchema = {
     $id: id || idPrefix,
   };
   if ("$ref" in schema || "dependencies" in schema || "allOf" in schema) {
     const _schema = retrieveSchema(schema, rootSchema, formData);
-    return toIdSchema(_schema, id, rootSchema, formData, idPrefix);
+    return toIdSchema(_schema, id, rootSchema, formData, idPrefix, idSeparator);
   }
   if ("items" in schema && !schema.items.$ref) {
-    return toIdSchema(schema.items, id, rootSchema, formData, idPrefix);
+    return toIdSchema(
+      schema.items,
+      id,
+      rootSchema,
+      formData,
+      idPrefix,
+      idSeparator
+    );
   }
   if (schema.type !== "object") {
     return idSchema;
   }
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
+    const fieldId = idSchema.$id + idSeparator + name;
     idSchema[name] = toIdSchema(
       isObject(field) ? field : {},
       fieldId,
@@ -1018,7 +1080,8 @@ export function toIdSchema(
       // It's possible that formData is not an object -- this can happen if an
       // array item has just been added, but not populated with data yet
       (formData || {})[name],
-      idPrefix
+      idPrefix,
+      idSeparator
     );
   }
   return idSchema;

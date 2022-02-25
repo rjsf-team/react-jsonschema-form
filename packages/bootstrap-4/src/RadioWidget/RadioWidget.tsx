@@ -16,6 +16,7 @@ const RadioWidget = ({
   onChange,
   onBlur,
   onFocus,
+  uiSchema,
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
@@ -34,8 +35,8 @@ const RadioWidget = ({
   return (
     <Form.Group className="mb-0">
       <Form.Label className="d-block">
-        {label || schema.title}
-        {(label || schema.title) && required ? "*" : null}
+        {uiSchema["ui:title"] || schema.title || label}
+        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
       </Form.Label>
       {(enumOptions as any).map((option: any, i: number) => {
         const itemDisabled =

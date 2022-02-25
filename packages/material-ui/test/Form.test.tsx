@@ -1,8 +1,8 @@
 import React from "react";
-import Form from "../src/index";
 import { JSONSchema7 } from "json-schema";
 import renderer from "react-test-renderer";
 import { UiSchema } from "@rjsf/core";
+import { MuiForm4 as Form } from "../src/index";
 
 describe("single fields", () => {
   describe("string field", () => {
@@ -228,6 +228,13 @@ describe("single fields", () => {
     const tree = renderer
       .create(<Form schema={schema} uiSchema={uiSchema} />)
       .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("using custom tagName", () => {
+    const schema: JSONSchema7 = {
+      type: "string",
+    };
+    const tree = renderer.create(<Form schema={schema} tagName="div" />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

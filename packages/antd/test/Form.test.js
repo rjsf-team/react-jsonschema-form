@@ -1,13 +1,10 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { withTheme } from '@rjsf/core';
 
 import '../__mocks__/matchMedia.mock';
-import { Theme } from '../src';
+import Form from '../src';
 
 const { describe, expect, test } = global;
-
-const Form = withTheme(Theme);
 
 describe("single fields", () => {
   describe("string field", () => {
@@ -94,6 +91,50 @@ describe("single fields", () => {
     };
     const tree = renderer
       .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("field with description", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string",
+          description: "some description",
+        }
+      }
+    };
+    const tree = renderer
+      .create(<Form schema={schema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("field with description in uiSchema", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string",
+          description: "some description",
+        }
+      }
+    };
+    const uiSchema = {
+      "my-field": {
+        "ui:description": "some other description",
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("using custom tagName", () => {
+    const schema = {
+      type: "string"
+    };
+    const tree = renderer
+      .create(<Form schema={schema} tagName="div" />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

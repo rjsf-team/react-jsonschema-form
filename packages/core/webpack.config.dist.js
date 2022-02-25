@@ -1,6 +1,5 @@
 var path = require("path");
 var webpack = require("webpack");
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
   mode: "production",
@@ -15,9 +14,6 @@ module.exports = {
     libraryTarget: "umd"
   },
   plugins: [
-    new MonacoWebpackPlugin({
-      languages: ['json']
-    }),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("production")
@@ -25,10 +21,21 @@ module.exports = {
     })
   ],
   devtool: "source-map",
-  externals: [
-    'react',
-    'react-dom'
-  ],
+  externals: {
+    react: {
+      root: "React",
+      commonjs: "react",
+      commonjs2: "react",
+      amd: "react"
+    },
+    'react-dom': {
+      root: "ReactDOM",
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+      umd: 'react-dom',
+    }
+  },
   module: {
     rules: [
       {

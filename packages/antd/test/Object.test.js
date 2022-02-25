@@ -1,13 +1,10 @@
 import React from 'react';
 import renderer from "react-test-renderer";
-import { withTheme } from '@rjsf/core';
 
 import '../__mocks__/matchMedia.mock';
-import { Theme } from '../src';
+import Form from '../src';
 
 const { describe, expect, test } = global;
-
-const Form = withTheme(Theme);
 
 describe("object fields", () => {
   test("object", () => {

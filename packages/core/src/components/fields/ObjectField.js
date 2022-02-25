@@ -66,7 +66,7 @@ class ObjectField extends Component {
 
   onPropertyChange = (name, addedByAdditionalProperties = false) => {
     return (value, errorSchema) => {
-      if (!value && addedByAdditionalProperties) {
+      if (value === undefined && addedByAdditionalProperties) {
         // Don't set value = undefined for fields added by
         // additionalProperties. Doing so removes them from the
         // formData, which causes them to completely disappear
@@ -188,6 +188,7 @@ class ObjectField extends Component {
       disabled,
       readonly,
       idPrefix,
+      idSeparator,
       onBlur,
       onFocus,
       registry = getDefaultRegistry(),
@@ -245,6 +246,7 @@ class ObjectField extends Component {
               errorSchema={errorSchema[name]}
               idSchema={idSchema[name]}
               idPrefix={idPrefix}
+              idSeparator={idSeparator}
               formData={(formData || {})[name]}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}
               onKeyChange={this.onKeyChange(name)}

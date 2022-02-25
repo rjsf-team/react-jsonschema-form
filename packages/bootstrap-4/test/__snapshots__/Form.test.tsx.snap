@@ -927,6 +927,88 @@ exports[`single fields textarea field 1`] = `
 </form>
 `;
 
+exports[`single fields title field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="my-1"
+    >
+      <h5>
+        Titre 1
+      </h5>
+      <hr
+        className="border-0 bg-secondary"
+        style={
+          Object {
+            "height": "1px",
+          }
+        }
+      />
+    </div>
+    <div
+      className="p-0 container-fluid"
+    >
+      <div
+        className="row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="form-group"
+          >
+            <div
+              className="mb-0 form-group"
+            >
+              <label
+                className="form-label"
+              >
+                Titre 2
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_title"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields unsupported field 1`] = `
 <form
   className="rjsf"
@@ -969,4 +1051,46 @@ exports[`single fields unsupported field 1`] = `
     </button>
   </div>
 </form>
+`;
+
+exports[`single fields using custom tagName 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</div>
 `;

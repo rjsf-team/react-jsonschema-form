@@ -65,6 +65,7 @@ class AltDateWidget extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
+      prevProps.value &&
       prevProps.value !== parseDateString(this.props.value, this.props.time)
     ) {
       this.setState(parseDateString(this.props.value, this.props.time));

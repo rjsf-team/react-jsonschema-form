@@ -216,4 +216,33 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("title field", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        "title": {
+          type: "string",
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      "ui:title": "Titre 1",
+      "title": {
+        "ui:title": "Titre 2",
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("using custom tagName", () => {
+    const schema: JSONSchema7 = {
+      type: "string"
+    };
+    const tree = renderer
+      .create(<Form schema={schema} tagName="div"/>)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
