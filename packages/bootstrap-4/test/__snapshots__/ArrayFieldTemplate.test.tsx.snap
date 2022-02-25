@@ -25,7 +25,7 @@ exports[`ArrayFieldTemplate simple 1`] = `
             >
                
               <button
-                className="array-item-add ml-1 btn btn-primary"
+                className="ml-1 array-item-add btn btn-primary"
                 disabled={false}
                 onClick={[Function]}
                 style={

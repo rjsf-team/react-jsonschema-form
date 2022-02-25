@@ -62,7 +62,6 @@ const ObjectFieldTemplate = ({
           </Row>
         ) : null }
       </Container> 
-
     </>
   );
 };
