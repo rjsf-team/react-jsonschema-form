@@ -19,6 +19,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # v4.0.2 (upcoming)
 
+## @rjsf/core
+
+- For performance, skip validating subschemas if formData is undefined (#2676)
+
 # v4.0.1
 
 - Bumped the peer dependencies of `@rjsf/core` to `^4.0.0` for all of themes in `package.json`
