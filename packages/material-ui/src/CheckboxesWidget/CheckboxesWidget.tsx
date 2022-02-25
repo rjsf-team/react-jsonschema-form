@@ -55,8 +55,8 @@ const CheckboxesWidget = ({
 
   return (
     <FormControl component="fieldset">
+      <legend style={{position: 'absolute', clip: 'rect(0,0,0,0)'}}>{label}</legend>
       <FormGroup row={!!inline}>
-        <legend style={{position: 'absolute', clip: 'rect(0,0,0,0)'}}>{label}</legend>
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
