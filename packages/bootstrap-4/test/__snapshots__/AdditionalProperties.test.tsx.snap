@@ -121,7 +121,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
           className="py-4 col-3 offset-9"
         >
           <button
-            className="object-property-expand ml-1 btn btn-primary"
+            className="ml-1 object-property-expand btn btn-primary"
             disabled={false}
             onClick={[Function]}
             style={
