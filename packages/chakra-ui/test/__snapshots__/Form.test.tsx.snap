@@ -333,39 +333,6 @@ exports[`single fields using custom tagName 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-3 {
-  margin-top: 3px;
-}
-
-.emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
 <div
   className="rjsf"
   noValidate={false}
@@ -396,11 +363,10 @@ exports[`single fields using custom tagName 1`] = `
       />
     </div>
   </div>
-  <div
-    className="emotion-3"
-  >
+  <div>
     <button
-      className="chakra-button emotion-4"
+      className="btn btn-info"
+      disabled={false}
       type="submit"
     >
       Submit

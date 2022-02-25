@@ -2,7 +2,7 @@
 
 exports[`object fields object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >

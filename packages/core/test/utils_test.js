@@ -4018,21 +4018,21 @@ describe("utils", () => {
       expect(getSubmitButtonOptions({})).eql({
         props: { disabled: false },
         submitText: "Submit",
-        removed: false,
+        norender: false,
       });
     });
 
     it("allowed option should be false", () => {
       expect(
         getSubmitButtonOptions({
-          "ui:options": { submitButtonOptions: { removed: false } },
+          "ui:options": { submitButtonOptions: { norender: false } },
         })
       ).eql({
         props: {
           disabled: false,
         },
         submitText: "Submit",
-        removed: false,
+        norender: false,
       });
     });
 
@@ -4046,7 +4046,7 @@ describe("utils", () => {
           hidden: true,
         },
         submitText: "Submit",
-        removed: false,
+        norender: false,
       });
     });
 
@@ -4060,7 +4060,7 @@ describe("utils", () => {
           disabled: true,
         },
         submitText: "Submit",
-        removed: false,
+        norender: false,
       });
     });
 
@@ -4074,7 +4074,7 @@ describe("utils", () => {
           disabled: false,
         },
         submitText: "Confirm",
-        removed: false,
+        norender: false,
       });
     });
   });

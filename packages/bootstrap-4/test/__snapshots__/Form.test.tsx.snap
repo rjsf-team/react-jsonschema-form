@@ -1085,7 +1085,7 @@ exports[`single fields using custom tagName 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-primary"
+      className="btn btn-info btn btn-primary"
       disabled={false}
       type="submit"
     >
