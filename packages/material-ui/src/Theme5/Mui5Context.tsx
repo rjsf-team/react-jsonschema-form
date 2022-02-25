@@ -10,9 +10,7 @@ try {
   mui = require('@mui/material');
   icons = require('@mui/icons-material');
 } catch (err) {
-  if (process.env.NODE_ENV !== 'PRODUCTION') {
-    console.log(err);
-  }
+  // purposely a no-op
 }
 
 export let Mui5Context: Mui5ContextProps;

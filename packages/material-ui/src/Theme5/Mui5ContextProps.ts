@@ -1,4 +1,14 @@
-import {
+/** Use require for loading these libraries in case they are not available in order to perform a useful fallback
+ */
+let mui = {};
+try {
+  mui = require('@mui/material');
+} catch (err) {
+  // purposely a no-op
+}
+
+// @ts-ignore What we are doing here isn't really good Typescript, but it works
+const {
   Box,
   Button,
   Checkbox,
@@ -24,11 +34,11 @@ import {
   SvgIcon,
   TextField,
   Typography,
-} from '@mui/material';
+} = mui;
 
 export default interface Mui5ContextProps {
-  Button?: Button;
   Box?: Box;
+  Button?: Button;
   Checkbox?: Checkbox;
   Divider?: Divider;
   Grid?: Grid;
