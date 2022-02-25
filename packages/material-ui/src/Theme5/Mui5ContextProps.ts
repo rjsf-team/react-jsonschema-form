@@ -1,6 +1,6 @@
 /** Use require for loading these libraries in case they are not available in order to perform a useful fallback
  */
-let mui;
+let mui = {};
 try {
   mui = require('@mui/material');
 } catch (err) {
