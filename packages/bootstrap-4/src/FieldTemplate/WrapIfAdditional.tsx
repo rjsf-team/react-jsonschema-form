@@ -62,11 +62,14 @@ const WrapIfAdditional = ({
           />
         </Form.Group>
       </Col>
-      <Col xs={6}>
+      <Col xs={5}>
         {children}
       </Col>
-      <Col xs={1} className="py-4">
+      <Col xs={2} className="py-4">
         <IconButton
+          block={true}
+          className="w-100"
+          variant="danger"
           icon="remove"
           tabIndex={-1}
           disabled={disabled || readonly}
