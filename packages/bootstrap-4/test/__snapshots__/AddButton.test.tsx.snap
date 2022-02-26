@@ -2,8 +2,7 @@
 
 exports[`AddButton simple 1`] = `
 <button
-  className="ml-1 btn btn-primary"
-  color="primary"
+  className="ml-1 someClass btn btn-primary"
   disabled={false}
   onClick={[Function]}
   style={
