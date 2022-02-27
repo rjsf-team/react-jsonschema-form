@@ -59,10 +59,7 @@ export default class Form extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (
-      Object.keys(props).length !== Object.keys(state.lastProps).length ||
-      Object.keys(props).some(key => state.lastProps[key] != props[key])
-    ) {
+    if (!deepEquals(props, state.lastProps)) {
       return getStateFromProps(props, props.formData, state);
     }
     return null;
