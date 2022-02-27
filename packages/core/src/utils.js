@@ -2,11 +2,11 @@ import React from "react";
 import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js-pure/features/array/fill";
-import validateFormData, { isValid, toErrorList } from "./validate";
 import union from "lodash/union";
 import jsonpointer from "jsonpointer";
 import fields from "./components/fields";
 import widgets from "./components/widgets";
+import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
 
@@ -1264,116 +1264,4 @@ export function schemaRequiresTrueValue(schema) {
   }
 
   return false;
-}
-
-export function getRegistry(props) {
-  const { fields, widgets } = getDefaultRegistry();
-  return {
-    fields: { ...fields, ...props.fields },
-    widgets: { ...widgets, ...props.widgets },
-    ArrayFieldTemplate: props.ArrayFieldTemplate,
-    ObjectFieldTemplate: props.ObjectFieldTemplate,
-    FieldTemplate: props.FieldTemplate,
-    definitions: props.schema.definitions || {},
-    rootSchema: props.schema,
-    formContext: props.formContext || {},
-  };
-}
-
-export function validate(
-  formData,
-  props,
-  schema = props.schema,
-  additionalMetaSchemas = props.additionalMetaSchemas,
-  customFormats = props.customFormats
-) {
-  const { validate, transformErrors } = props;
-  const { rootSchema } = getRegistry(props);
-  const resolvedSchema = retrieveSchema(schema, rootSchema, formData);
-  return validateFormData(
-    formData,
-    resolvedSchema,
-    validate,
-    transformErrors,
-    additionalMetaSchemas,
-    customFormats
-  );
-}
-
-export function getStateFromProps(props, inputFormData, state = {}) {
-  const edit = typeof inputFormData !== "undefined";
-  const mustValidate = edit && !props.noValidate && props.liveValidate;
-  const formData = getDefaultFormState(
-    props.schema,
-    inputFormData,
-    props.schema
-  );
-  const retrievedSchema = retrieveSchema(props.schema, props.schema, formData);
-
-  const getCurrentErrors = () => {
-    if (props.noValidate) {
-      return { errors: [], errorSchema: {} };
-    } else if (!props.liveValidate) {
-      return {
-        errors: state.schemaValidationErrors || [],
-        errorSchema: state.schemaValidationErrorSchema || {},
-      };
-    }
-    return {
-      errors: state.errors || [],
-      errorSchema: state.errorSchema || {},
-    };
-  };
-
-  let errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema;
-  if (mustValidate) {
-    const schemaValidation = validate(
-      formData,
-      props,
-      props.schema,
-      props.additionalMetaSchemas,
-      props.customFormats
-    );
-    errors = schemaValidation.errors;
-    errorSchema = schemaValidation.errorSchema;
-    schemaValidationErrors = errors;
-    schemaValidationErrorSchema = errorSchema;
-  } else {
-    const currentErrors = getCurrentErrors();
-    errors = currentErrors.errors;
-    errorSchema = currentErrors.errorSchema;
-    schemaValidationErrors = state.schemaValidationErrors;
-    schemaValidationErrorSchema = state.schemaValidationErrorSchema;
-  }
-  if (props.extraErrors) {
-    errorSchema = mergeObjects(
-      errorSchema,
-      props.extraErrors,
-      !!"concat arrays"
-    );
-    errors = toErrorList(errorSchema);
-  }
-  const idSchema = toIdSchema(
-    retrievedSchema,
-    props.uiSchema["ui:rootFieldId"],
-    props.schema,
-    formData,
-    props.idPrefix
-  );
-  const nextState = {
-    schema: props.schema,
-    uiSchema: props.uiSchema,
-    idSchema,
-    formData,
-    edit,
-    errors,
-    errorSchema,
-    additionalMetaSchemas: props.additionalMetaSchemas,
-    lastProps: props,
-  };
-  if (schemaValidationErrors) {
-    nextState.schemaValidationErrors = schemaValidationErrors;
-    nextState.schemaValidationErrorSchema = schemaValidationErrorSchema;
-  }
-  return nextState;
 }
