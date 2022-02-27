@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "2.5.1",
+  "version": "3.0.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "npm run dist:build:umd && npm run build:cjs && npm run build:es && npm run build:es:lib",
@@ -46,9 +46,9 @@
     "json-schema-merge-allof": "^0.6.0",
     "jsonpointer": "^4.0.1",
     "lodash": "^4.17.15",
+    "nanoid": "^3.1.23",
     "prop-types": "^15.7.2",
-    "react-is": "^16.9.0",
-    "shortid": "^2.2.14"
+    "react-is": "^16.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -86,13 +86,10 @@
     "loader-utils": "^1.2.3",
     "mini-css-extract-plugin": "^0.4.3",
     "mocha": "^5.2.0",
-    "monaco-editor-webpack-plugin": "^1.7.0",
     "nyc": "^13.2.0",
     "prettier": "^1.15.1",
     "react": "^16.9.0",
-    "react-codemirror2": "^4.1.0",
     "react-dom": "^16.9.0",
-    "react-monaco-editor": "^0.26.2",
     "react-portal": "^4.2.0",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",

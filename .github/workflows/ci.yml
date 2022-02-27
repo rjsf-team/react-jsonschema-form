@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2.1.2
+      uses: actions/setup-node@v2.1.5
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
@@ -71,7 +71,7 @@ jobs:
           name: dist
           path: dist
       - name: Deploy playground
-        uses: crazy-max/ghaction-github-pages@v2.2.0
+        uses: crazy-max/ghaction-github-pages@v2.5.0
         with:
           keep_history: true
           target-branch: gh-pages
@@ -79,6 +79,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
+  deploy_canary:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    name: Deploy canary version of packages to npm
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.x
+      - run: npm ci
+      - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npx lerna publish from-package --yes --no-verify-access --canary
+      - if: always()
+        run: rm .npmrc
+
   docs:
     runs-on: ubuntu-latest
     steps:

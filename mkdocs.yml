@@ -25,12 +25,11 @@ nav:
     - Other Internals: advanced-customization/internals.md
     - Contributing: contributing.md
   - API Reference:
-    - uiSchema:
-      - General Reference: api-reference/uiSchema.md
-      - Theme-Specific Reference:
-        - semantic-ui: api-reference/themes/semantic-ui/uiSchema.md
+    - General uiSchema Reference: api-reference/uiSchema.md
+    - semantic-ui uiSchema Reference: api-reference/themes/semantic-ui/uiSchema.md
     - "&lt;Form /&gt; props": api-reference/form-props.md
   - 3.x Migration: 3.x upgrade guide.md
+  - 2.x Migration: 2.x upgrade guide.md
 
 markdown_extensions:
   - toc:
