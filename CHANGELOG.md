@@ -21,7 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- For performance, skip validating subschemas if formData is undefined (#2676)
+- To improve performance, skip validating subschemas in oneOf / anyOf if formData is undefined (#2676)
 
 # v4.0.1
 
