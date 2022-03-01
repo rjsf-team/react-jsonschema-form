@@ -20,6 +20,10 @@ function BaseInput(props) {
   const _onChange = ({target: {value}}) => {
     return props.onChange(value === "" ? undefined : value);
   };
+  // see https://github.com/rjsf-team/react-jsonschema-form/pull/1705
+  if (options.autocomplete) {
+    inputProps.autoComplete = options.autocomplete;
+  }
   return (
     <input
       {...inputProps}
