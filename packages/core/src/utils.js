@@ -1260,6 +1260,11 @@ export function rangeSpec(schema) {
 }
 
 export function getMatchingOption(formData, options, rootSchema) {
+  // For performance, skip validating subschemas if formData is undefined. We just
+  // want to get the first option in that case.
+  if (formData === undefined) {
+    return 0;
+  }
   for (let i = 0; i < options.length; i++) {
     const option = options[i];
 
