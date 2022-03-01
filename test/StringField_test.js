@@ -90,7 +90,7 @@ describe("StringField", () => {
 
       expect(onBlur.calledWith(input.id, "yo")).to.be.true;
     });
-    
+
     it("should handle an empty string change event", () => {
       const {comp, node} = createFormComponent({
         schema: {type: "string"},
@@ -148,6 +148,17 @@ describe("StringField", () => {
 
       expect(node.querySelector("#custom"))
         .to.exist;
+    });
+    it("should create and set autocomplete attribute", () => {
+      const { node } = createFormComponent({
+        schema: { type: "string" },
+        uiSchema: { "ui:autocomplete": "family-name" },
+        formData: undefined,
+      });
+
+      expect(node.querySelector("input").getAttribute("autocomplete")).eql(
+        "family-name"
+      );
     });
   });
 
