@@ -36,6 +36,12 @@ exports[`object fields object 1`] = `
             <div
               className="ant-row ant-form-item"
               style={Object {}}
+              tooltip={
+                <DescriptionField
+                  formContext={Object {}}
+                  id="root_a__description"
+                />
+              }
             >
               <div
                 className="ant-col ant-col-24 ant-form-item-label"
@@ -79,13 +85,6 @@ exports[`object fields object 1`] = `
                     />
                   </div>
                 </div>
-                <div
-                  className="ant-form-item-extra"
-                >
-                  <span
-                    id="root_a__description"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -105,6 +104,12 @@ exports[`object fields object 1`] = `
             <div
               className="ant-row ant-form-item"
               style={Object {}}
+              tooltip={
+                <DescriptionField
+                  formContext={Object {}}
+                  id="root_b__description"
+                />
+              }
             >
               <div
                 className="ant-col ant-col-24 ant-form-item-label"
@@ -237,13 +242,6 @@ exports[`object fields object 1`] = `
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="ant-form-item-extra"
-                >
-                  <span
-                    id="root_b__description"
-                  />
                 </div>
               </div>
             </div>

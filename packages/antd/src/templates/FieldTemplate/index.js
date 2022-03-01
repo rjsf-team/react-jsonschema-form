@@ -63,7 +63,7 @@ const FieldTemplate = ({
       ) : (
         <Form.Item
           colon={colon}
-          extra={description}
+          tooltip={description}
           hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
           help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
           htmlFor={id}

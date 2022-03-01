@@ -36,6 +36,13 @@ exports[`single fields field with description 1`] = `
             <div
               className="ant-row ant-form-item"
               style={Object {}}
+              tooltip={
+                <DescriptionField
+                  description="some description"
+                  formContext={Object {}}
+                  id="root_my-field__description"
+                />
+              }
             >
               <div
                 className="ant-col ant-col-24 ant-form-item-label"
@@ -78,15 +85,6 @@ exports[`single fields field with description 1`] = `
                       value=""
                     />
                   </div>
-                </div>
-                <div
-                  className="ant-form-item-extra"
-                >
-                  <span
-                    id="root_my-field__description"
-                  >
-                    some description
-                  </span>
                 </div>
               </div>
             </div>
@@ -144,6 +142,13 @@ exports[`single fields field with description in uiSchema 1`] = `
             <div
               className="ant-row ant-form-item"
               style={Object {}}
+              tooltip={
+                <DescriptionField
+                  description="some other description"
+                  formContext={Object {}}
+                  id="root_my-field__description"
+                />
+              }
             >
               <div
                 className="ant-col ant-col-24 ant-form-item-label"
@@ -186,15 +191,6 @@ exports[`single fields field with description in uiSchema 1`] = `
                       value=""
                     />
                   </div>
-                </div>
-                <div
-                  className="ant-form-item-extra"
-                >
-                  <span
-                    id="root_my-field__description"
-                  >
-                    some other description
-                  </span>
                 </div>
               </div>
             </div>

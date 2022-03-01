@@ -254,6 +254,12 @@ exports[`array fields fixed array 1`] = `
                 <div
                   className="ant-row ant-form-item"
                   style={Object {}}
+                  tooltip={
+                    <DescriptionField
+                      formContext={Object {}}
+                      id="root_0__description"
+                    />
+                  }
                 >
                   <div
                     className="ant-col ant-col-24 ant-form-item-control"
@@ -285,13 +291,6 @@ exports[`array fields fixed array 1`] = `
                         />
                       </div>
                     </div>
-                    <div
-                      className="ant-form-item-extra"
-                    >
-                      <span
-                        id="root_0__description"
-                      />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -322,6 +321,12 @@ exports[`array fields fixed array 1`] = `
                 <div
                   className="ant-row ant-form-item"
                   style={Object {}}
+                  tooltip={
+                    <DescriptionField
+                      formContext={Object {}}
+                      id="root_1__description"
+                    />
+                  }
                 >
                   <div
                     className="ant-col ant-col-24 ant-form-item-control"
@@ -442,13 +447,6 @@ exports[`array fields fixed array 1`] = `
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="ant-form-item-extra"
-                    >
-                      <span
-                        id="root_1__description"
-                      />
                     </div>
                   </div>
                 </div>
