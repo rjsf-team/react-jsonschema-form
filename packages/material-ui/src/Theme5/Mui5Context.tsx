@@ -10,7 +10,7 @@ try {
   mui = require('@mui/material');
   icons = require('@mui/icons-material');
 } catch (err) {
-  console.log(err);
+  // purposely a no-op
 }
 
 export let Mui5Context: Mui5ContextProps;

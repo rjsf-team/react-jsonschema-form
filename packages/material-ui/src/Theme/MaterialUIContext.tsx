@@ -1,5 +1,5 @@
 import React from 'react';
-import MaterialUIContextProps from 'Theme/MaterialUIContextProps';
+import MaterialUIContextProps from './MaterialUIContextProps';
 
 /** Use require for loading these libraries in case they are not available in order to perform a useful fallback
  */
@@ -9,7 +9,7 @@ try {
   mui = require('@material-ui/core');
   icons = require('@material-ui/icons');
 } catch (err) {
-  console.log(err);
+  // purposely a no-op. If it is not here, don't make noise like we used to
 }
 
 export let MaterialUIContext: MaterialUIContextProps;

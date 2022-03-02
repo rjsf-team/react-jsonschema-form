@@ -1,0 +1,174 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdditionalProperties tests show add button and fields if additionalProperties is true 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="p-0 container-fluid"
+    >
+      <div
+        className="row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="row"
+          >
+            <div
+              className="col-5"
+            >
+              <div
+                className="form-group"
+              >
+                <label
+                  className="form-label"
+                >
+                  additionalProperty Key
+                </label>
+                <input
+                  className="form-control"
+                  defaultValue="additionalProperty"
+                  disabled={false}
+                  id="root-key"
+                  name="root-key"
+                  onBlur={[Function]}
+                  required={false}
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              className="col-5"
+            >
+              <div
+                className="form-group"
+              >
+                <div
+                  className="mb-0 form-group"
+                >
+                  <label
+                    className="form-label"
+                  >
+                    additionalProperty
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="should appear"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="py-4 col-2"
+            >
+              <button
+                className="btn btn-danger btn-block btn-sm"
+                disabled={false}
+                onClick={[Function]}
+                tabIndex={-1}
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <div
+          className="py-4 col-3 offset-9"
+        >
+          <button
+            className="ml-1 object-property-expand btn btn-primary"
+            disabled={false}
+            onClick={[Function]}
+            style={
+              Object {
+                "width": "100%",
+              }
+            }
+            type="button"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
+              }
+              viewBox="0 0 16 16"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clipRule="evenodd"
+                d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                fillRule="evenodd"
+              />
+              <path
+                clipRule="evenodd"
+                d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                fillRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
