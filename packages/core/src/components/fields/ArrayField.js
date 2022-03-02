@@ -741,8 +741,6 @@ class ArrayField extends Component {
         return this.renderArrayFieldItem({
           key,
           index,
-          idPrefix,
-          idSeparator,
           canRemove: additional,
           canMoveUp: index >= itemSchemas.length + 1,
           canMoveDown: additional && index < items.length - 1,
@@ -779,8 +777,6 @@ class ArrayField extends Component {
     const {
       key,
       index,
-      idPrefix,
-      idSeparator,
       canRemove = true,
       canMoveUp = true,
       canMoveDown = true,
@@ -823,8 +819,8 @@ class ArrayField extends Component {
           uiSchema={itemUiSchema}
           formData={itemData}
           errorSchema={itemErrorSchema}
-          idPrefix={idPrefix}
-          idSeparator={idSeparator}
+          idPrefix={this.props.idPrefix}
+          idSeparator={this.props.idSeparator}
           idSchema={itemIdSchema}
           required={this.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}
