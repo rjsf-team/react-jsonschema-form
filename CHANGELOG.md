@@ -17,11 +17,14 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0 (coming soon)
 
-# v4.0.2 (upcoming)
+# v4.0.3 (upcoming)
+
+# v4.0.2
 
 ## @rjsf/core
 
 - To improve performance, skip validating subschemas in oneOf / anyOf if formData is undefined (#2676)
+- Fixed the definition of the `toIdSchema()` typescript definition to add new `idSeparator` prop
 
 # v4.0.1
 
