@@ -34,14 +34,8 @@ exports[`object fields object 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-row ant-form-item"
+              className="ant-row ant-form-item ant-form-item-with-help"
               style={Object {}}
-              tooltip={
-                <DescriptionField
-                  formContext={Object {}}
-                  id="root_a__description"
-                />
-              }
             >
               <div
                 className="ant-col ant-col-24 ant-form-item-label"
@@ -85,6 +79,14 @@ exports[`object fields object 1`] = `
                     />
                   </div>
                 </div>
+                <div
+                  className="ant-form-item-explain ant-form-item-explain-connected"
+                >
+                  <div
+                    className=""
+                    role="alert"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -102,14 +104,8 @@ exports[`object fields object 1`] = `
             className="form-group field field-number"
           >
             <div
-              className="ant-row ant-form-item"
+              className="ant-row ant-form-item ant-form-item-with-help"
               style={Object {}}
-              tooltip={
-                <DescriptionField
-                  formContext={Object {}}
-                  id="root_b__description"
-                />
-              }
             >
               <div
                 className="ant-col ant-col-24 ant-form-item-label"
@@ -135,6 +131,12 @@ exports[`object fields object 1`] = `
                   >
                     <div
                       className="ant-input-number"
+                      onBlur={[Function]}
+                      onCompositionEnd={[Function]}
+                      onCompositionStart={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
                       style={
                         Object {
                           "width": "100%",
@@ -147,16 +149,12 @@ exports[`object fields object 1`] = `
                         <span
                           aria-disabled={false}
                           aria-label="Increase Value"
-                          className="ant-input-number-handler ant-input-number-handler-up "
+                          className="ant-input-number-handler ant-input-number-handler-up"
                           onMouseDown={[Function]}
                           onMouseLeave={[Function]}
                           onMouseUp={[Function]}
-                          onTouchCancel={[Function]}
-                          onTouchEnd={[Function]}
-                          onTouchMove={[Function]}
-                          onTouchStart={[Function]}
                           role="button"
-                          unselectable="unselectable"
+                          unselectable="on"
                         >
                           <span
                             aria-label="up"
@@ -165,7 +163,6 @@ exports[`object fields object 1`] = `
                           >
                             <svg
                               aria-hidden="true"
-                              className=""
                               data-icon="up"
                               fill="currentColor"
                               focusable="false"
@@ -182,16 +179,12 @@ exports[`object fields object 1`] = `
                         <span
                           aria-disabled={false}
                           aria-label="Decrease Value"
-                          className="ant-input-number-handler ant-input-number-handler-down "
+                          className="ant-input-number-handler ant-input-number-handler-down"
                           onMouseDown={[Function]}
                           onMouseLeave={[Function]}
                           onMouseUp={[Function]}
-                          onTouchCancel={[Function]}
-                          onTouchEnd={[Function]}
-                          onTouchMove={[Function]}
-                          onTouchStart={[Function]}
                           role="button"
-                          unselectable="unselectable"
+                          unselectable="on"
                         >
                           <span
                             aria-label="down"
@@ -200,7 +193,6 @@ exports[`object fields object 1`] = `
                           >
                             <svg
                               aria-hidden="true"
-                              className=""
                               data-icon="down"
                               fill="currentColor"
                               focusable="false"
@@ -219,21 +211,16 @@ exports[`object fields object 1`] = `
                         className="ant-input-number-input-wrap"
                       >
                         <input
-                          aria-valuemin={-9007199254740991}
+                          aria-valuenow={null}
                           autoComplete="off"
                           className="ant-input-number-input"
                           disabled={false}
                           id="root_b"
-                          min={-9007199254740991}
                           name="root_b"
                           onBlur={[Function]}
                           onChange={[Function]}
                           onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          onKeyUp={[Function]}
-                          onMouseUp={[Function]}
                           placeholder=""
-                          required={false}
                           role="spinbutton"
                           step={1}
                           type="number"
@@ -242,6 +229,14 @@ exports[`object fields object 1`] = `
                       </div>
                     </div>
                   </div>
+                </div>
+                <div
+                  className="ant-form-item-explain ant-form-item-explain-connected"
+                >
+                  <div
+                    className=""
+                    role="alert"
+                  />
                 </div>
               </div>
             </div>

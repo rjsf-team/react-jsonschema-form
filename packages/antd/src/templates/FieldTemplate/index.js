@@ -11,6 +11,7 @@ const FieldTemplate = ({
   children,
   classNames,
   description,
+  rawDescription,
   disabled,
   displayLabel,
   // errors,
@@ -63,7 +64,7 @@ const FieldTemplate = ({
       ) : (
         <Form.Item
           colon={colon}
-          tooltip={description}
+          tooltip={!!rawDescription && description}
           hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
           help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
           htmlFor={id}
