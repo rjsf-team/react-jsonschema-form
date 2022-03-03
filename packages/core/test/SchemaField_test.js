@@ -428,4 +428,128 @@ describe("SchemaField", () => {
       });
     });
   });
+  describe("hideError flag and errors", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+      },
+    };
+
+    const uiSchema = {
+      "ui:hideError": true,
+      "ui:field": props => {
+        const { uiSchema, ...fieldProps } = props; //eslint-disable-line
+        return <SchemaField {...fieldProps} />;
+      },
+    };
+
+    function validate(formData, errors) {
+      errors.addError("container");
+      errors.foo.addError("test");
+      return errors;
+    }
+
+    it("should not render its own default errors", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        validate,
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form > .form-group > div > .error-detail .text-danger"
+      );
+      expect(matches).to.have.length.of(0);
+    });
+
+    it("should not show default errors in child component", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        validate,
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form .form-group .form-group .text-danger"
+      );
+      expect(matches).to.have.length.of(0);
+    });
+
+    describe("Custom error rendering", () => {
+      const customStringWidget = props => {
+        return <div className="custom-text-widget">{props.rawErrors}</div>;
+      };
+
+      it("should pass rawErrors down to custom widgets and render them", () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema,
+          validate,
+          widgets: { BaseInput: customStringWidget },
+        });
+        Simulate.submit(node);
+
+        const matches = node.querySelectorAll(".custom-text-widget");
+        expect(matches).to.have.length.of(1);
+        expect(matches[0].textContent).to.eql("test");
+      });
+    });
+  });
+  describe("hideError flag false for child and has errors", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+      },
+    };
+
+    const uiSchema = {
+      "ui:hideError": true,
+      "ui:field": props => {
+        const { uiSchema, ...fieldProps } = props; //eslint-disable-line
+        // Pass the children schema in after removing the global one
+        return (
+          <SchemaField {...fieldProps} uiSchema={{ "ui:hideError": false }} />
+        );
+      },
+    };
+
+    function validate(formData, errors) {
+      errors.addError("container");
+      errors.foo.addError("test");
+      return errors;
+    }
+
+    it("should not render its own errors", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        validate,
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form > .form-group > div > .error-detail .text-danger"
+      );
+      expect(matches).to.have.length.of(0);
+    });
+
+    it("should show errors on child component", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        validate,
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form .form-group .form-group .text-danger"
+      );
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.contain("test");
+    });
+  });
 });

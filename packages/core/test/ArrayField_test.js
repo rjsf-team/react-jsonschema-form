@@ -1943,4 +1943,62 @@ describe("ArrayField", () => {
       expect(inputs[3].id).eql("base/foo_1/baz");
     });
   });
+
+  describe("should handle nested 'hideError: true' uiSchema value", () => {
+    const complexSchema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      },
+    };
+    function validate(formData, errors) {
+      errors.foo[0].bar.addError("test");
+      errors.foo[1].bar.addError("test");
+      return errors;
+    }
+
+    it("should render nested error decorated input widgets with the expected ids", () => {
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        formData: {
+          foo: [{ bar: "bar1" }, { bar: "bar2" }],
+        },
+        validate,
+      });
+      Simulate.submit(node);
+
+      const inputs = node.querySelectorAll(
+        ".form-group.field-error input[type=text]"
+      );
+      expect(inputs[0].id).eql("root_foo_0_bar");
+      expect(inputs[1].id).eql("root_foo_1_bar");
+    });
+    it("should NOT render nested error decorated input widgets", () => {
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        uiSchema: {
+          "ui:hideError": true,
+        },
+        formData: {
+          foo: [{ bar: "bar1" }, { bar: "bar2" }],
+        },
+        validate,
+        showErrorList: false,
+      });
+      Simulate.submit(node);
+
+      const inputsNoError = node.querySelectorAll(
+        ".form-group.field-error input[type=text]"
+      );
+      expect(inputsNoError.length).eql(0);
+    });
+  });
 });

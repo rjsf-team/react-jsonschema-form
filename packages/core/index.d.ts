@@ -20,6 +20,7 @@ declare module '@rjsf/core' {
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
         readonly?: boolean;
+        hideError?: boolean;
         enctype?: string;
         extraErrors?: any;
         ErrorList?: React.StatelessComponent<ErrorListProps>;
