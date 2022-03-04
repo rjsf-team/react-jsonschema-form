@@ -482,7 +482,7 @@ describe("SchemaField", () => {
         });
       });
     });
-    describe("hideError flag false for child and has errors", () => {
+    describe("hideError flag false for child should show errors", () => {
       const hideUiSchema = {
         "ui:hideError": true,
         "ui:field": props => {
