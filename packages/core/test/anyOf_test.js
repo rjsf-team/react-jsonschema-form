@@ -1084,4 +1084,93 @@ describe("anyOf", () => {
       expect(idSelects[3].value).eql("to_absolute");
     });
   });
+  describe("hideError works with anyOf", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        userId: {
+          anyOf: [
+            {
+              type: "number",
+            },
+            {
+              type: "string",
+            },
+          ],
+        },
+      },
+    };
+    function validate(formData, errors) {
+      errors.userId.addError("test");
+      return errors;
+    }
+
+    it("should show error on options with different types", () => {
+      const { node } = createFormComponent({
+        schema,
+        validate,
+      });
+
+      Simulate.change(node.querySelector("input#root_userId"), {
+        target: { value: 12345 },
+      });
+      Simulate.submit(node);
+
+      let inputs = node.querySelectorAll(
+        ".form-group.field-error input[type=number]"
+      );
+      expect(inputs[0].id).eql("root_userId");
+
+      const $select = node.querySelector("select");
+
+      Simulate.change($select, {
+        target: { value: $select.options[1].value },
+      });
+
+      Simulate.change(node.querySelector("input#root_userId"), {
+        target: { value: "Lorem ipsum dolor sit amet" },
+      });
+      Simulate.submit(node);
+
+      inputs = node.querySelectorAll(
+        ".form-group.field-error input[type=text]"
+      );
+      expect(inputs[0].id).eql("root_userId");
+    });
+    it("should NOT show error on options with different types when hideError: true", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:hideError": true,
+        },
+        validate,
+      });
+
+      Simulate.change(node.querySelector("input#root_userId"), {
+        target: { value: 12345 },
+      });
+      Simulate.submit(node);
+
+      let inputs = node.querySelectorAll(
+        ".form-group.field-error input[type=number]"
+      );
+      expect(inputs).to.have.length.of(0);
+
+      const $select = node.querySelector("select");
+
+      Simulate.change($select, {
+        target: { value: $select.options[1].value },
+      });
+
+      Simulate.change(node.querySelector("input#root_userId"), {
+        target: { value: "Lorem ipsum dolor sit amet" },
+      });
+      Simulate.submit(node);
+
+      inputs = node.querySelectorAll(
+        ".form-group.field-error input[type=text]"
+      );
+      expect(inputs).to.have.length.of(0);
+    });
+  });
 });

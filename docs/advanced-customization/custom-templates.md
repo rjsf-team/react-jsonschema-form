@@ -141,6 +141,7 @@ The following props are passed to a custom field template component:
 - `hidden`: A boolean value stating if the field should be hidden.
 - `required`: A boolean value stating if the field is required.
 - `readonly`: A boolean value stating if the field is read-only.
+- `hideError`: A boolean value stating if the field is hiding its errors
 - `disabled`: A boolean value stating if the field is disabled.
 - `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where you don't want to clutter the UI.
 - `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.

@@ -101,6 +101,8 @@ class AnyOfField extends Component {
     const {
       baseType,
       disabled,
+      readonly,
+      hideError,
       errorSchema,
       formData,
       idPrefix,
@@ -168,6 +170,8 @@ class AnyOfField extends Component {
             onFocus={onFocus}
             registry={registry}
             disabled={disabled}
+            readonly={readonly}
+            hideError={hideError}
           />
         )}
       </div>
@@ -177,6 +181,8 @@ class AnyOfField extends Component {
 
 AnyOfField.defaultProps = {
   disabled: false,
+  readonly: false,
+  hideError: false,
   errorSchema: {},
   idSchema: {},
   uiSchema: {},
