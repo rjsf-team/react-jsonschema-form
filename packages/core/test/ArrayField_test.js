@@ -1909,4 +1909,38 @@ describe("ArrayField", () => {
       expect(node.querySelector("#title-")).to.be.null;
     });
   });
+
+  describe("should handle nested idPrefix and idSeparator parameter", () => {
+    it("should render nested input widgets with the expected ids", () => {
+      const complexSchema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                bar: { type: "string" },
+                baz: { type: "string" },
+              },
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        formData: {
+          foo: [{ bar: "bar1", baz: "baz1" }, { bar: "bar2", baz: "baz2" }],
+        },
+        idSeparator: "/",
+        idPrefix: "base",
+      });
+
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs[0].id).eql("base/foo_0/bar");
+      expect(inputs[1].id).eql("base/foo_0/baz");
+      expect(inputs[2].id).eql("base/foo_1/bar");
+      expect(inputs[3].id).eql("base/foo_1/baz");
+    });
+  });
 });

@@ -819,6 +819,8 @@ class ArrayField extends Component {
           uiSchema={itemUiSchema}
           formData={itemData}
           errorSchema={itemErrorSchema}
+          idPrefix={this.props.idPrefix}
+          idSeparator={this.props.idSeparator}
           idSchema={itemIdSchema}
           required={this.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}

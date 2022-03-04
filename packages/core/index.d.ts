@@ -412,7 +412,8 @@ declare module '@rjsf/core' {
             id: string,
             definitions: Registry['definitions'],
             formData?: T,
-            idPredix?: string,
+            idPrefix?: string,
+            idSeparator?: string,
         ): IdSchema | IdSchema[];
 
         export function toPathSchema<T = any>(

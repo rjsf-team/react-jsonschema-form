@@ -368,6 +368,7 @@ function SchemaFieldRender(props) {
             formData={formData}
             idPrefix={idPrefix}
             idSchema={idSchema}
+            idSeparator={idSeparator}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
@@ -388,6 +389,7 @@ function SchemaFieldRender(props) {
             formData={formData}
             idPrefix={idPrefix}
             idSchema={idSchema}
+            idSeparator={idSeparator}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
