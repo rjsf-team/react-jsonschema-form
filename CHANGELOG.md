@@ -17,9 +17,9 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0 (coming soon)
 
-# v4.0.3 (upcoming)
+# v4.1.1 (upcoming)
 
-# v4.0.2
+# v4.1.0
 
 ## @rjsf/core
 
