@@ -469,6 +469,7 @@ class ArrayField extends Component {
       required,
       disabled,
       readonly,
+      hideError,
       autofocus,
       registry = getDefaultRegistry(),
       onBlur,
@@ -519,6 +520,7 @@ class ArrayField extends Component {
       uiSchema,
       onAddClick: this.onAddClick,
       readonly,
+      hideError,
       required,
       schema,
       title,
@@ -544,6 +546,7 @@ class ArrayField extends Component {
       uiSchema,
       disabled,
       readonly,
+      hideError,
       required,
       placeholder,
       autofocus,
@@ -574,6 +577,7 @@ class ArrayField extends Component {
         value={items}
         disabled={disabled}
         readonly={readonly}
+        hideError={hideError}
         required={required}
         label={title}
         placeholder={placeholder}
@@ -829,6 +833,7 @@ class ArrayField extends Component {
           registry={this.props.registry}
           disabled={this.props.disabled}
           readonly={this.props.readonly}
+          hideError={this.props.hideError}
           autofocus={autofocus}
           rawErrors={rawErrors}
         />
