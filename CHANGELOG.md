@@ -30,7 +30,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added support for the new `ui:hideError` feature, which allows you to hide errors at a field level
 
 ## @rjsf/material-ui
-- Remove `console.log()` the import error in `MaterialUIContext` and `Mui5Context`
+- Remove `console.log()` of the import error in `MaterialUIContext` and `Mui5Context`
 - Export the `MaterialComponentContext` (#2724)
 
 ## Dev / docs / playground
