@@ -1154,7 +1154,7 @@ describe("anyOf", () => {
       let inputs = node.querySelectorAll(
         ".form-group.field-error input[type=number]"
       );
-      expect(inputs.length).eql(0);
+      expect(inputs).to.have.length.of(0);
 
       const $select = node.querySelector("select");
 
@@ -1170,7 +1170,7 @@ describe("anyOf", () => {
       inputs = node.querySelectorAll(
         ".form-group.field-error input[type=text]"
       );
-      expect(inputs.length).eql(0);
+      expect(inputs).to.have.length.of(0);
     });
   });
 });

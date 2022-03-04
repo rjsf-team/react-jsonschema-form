@@ -1998,7 +1998,7 @@ describe("ArrayField", () => {
       const inputsNoError = node.querySelectorAll(
         ".form-group.field-error input[type=text]"
       );
-      expect(inputsNoError.length).eql(0);
+      expect(inputsNoError).to.have.length.of(0);
     });
   });
 });
