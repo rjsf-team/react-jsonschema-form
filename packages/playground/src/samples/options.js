@@ -24,7 +24,7 @@ module.exports = {
   uiSchema: {
     "ui:submitButtonOptions": {
       submitText: "Confirm Details",
-      removed: false,
+      norender: false,
       props: {
         disabled: false,
         className: "btn btn-info",

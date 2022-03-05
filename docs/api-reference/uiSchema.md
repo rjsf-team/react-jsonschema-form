@@ -18,7 +18,7 @@ In other words, the following uiSchemas are equivalent:
       "disabled": false,
       "className": "btn btn-info",
     },
-      "removed": false,
+      "norender": false,
       "submitText": "Submit"
     },
 }
@@ -34,7 +34,7 @@ In other words, the following uiSchemas are equivalent:
         "disabled": false,
         "className": "btn btn-info",
       },
-      "removed": false,
+      "norender": false,
       "submitText": "Submit"
     },
   }
