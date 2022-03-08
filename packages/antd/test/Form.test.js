@@ -129,6 +129,21 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("descriptionLocation in formContext", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string",
+          description: "some description",
+        }
+      }
+    };
+    const tree = renderer
+      .create(<Form schema={schema} formContext={{ descriptionLocation: 'below' }} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("using custom tagName", () => {
     const schema = {
       type: "string"
