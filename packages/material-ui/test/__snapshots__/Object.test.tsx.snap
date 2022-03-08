@@ -41,12 +41,12 @@ exports[`object fields additionalProperties 1`] = `
                 foo Key
               </label>
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl"
                 onClick={[Function]}
               >
                 <input
                   aria-invalid={false}
-                  className="MuiInputBase-input MuiInput-input"
+                  className="MuiInputBase-input MuiOutlinedInput-input"
                   defaultValue="foo"
                   disabled={false}
                   id="root_foo-key"
@@ -58,6 +58,32 @@ exports[`object fields additionalProperties 1`] = `
                   required={false}
                   type="text"
                 />
+                <fieldset
+                  aria-hidden={true}
+                  className="PrivateNotchedOutline-root-2 MuiOutlinedInput-notchedOutline"
+                  style={
+                    Object {
+                      "paddingLeft": 8,
+                    }
+                  }
+                >
+                  <legend
+                    className="PrivateNotchedOutline-legend-3"
+                    style={
+                      Object {
+                        "width": 0.01,
+                      }
+                    }
+                  >
+                    <span
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "&#8203;",
+                        }
+                      }
+                    />
+                  </legend>
+                </fieldset>
               </div>
             </div>
           </div>
@@ -199,7 +225,7 @@ exports[`object fields additionalProperties 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-2"
+    className="MuiBox-root MuiBox-root-6"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

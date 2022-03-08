@@ -41,16 +41,13 @@ exports[`renders 0 as 0 and not '' 1`] = `
       className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
     >
       <legend
-        className="css-nnbavb"
+        className="css-hdw1oc"
       >
         <span
           className="notranslate"
-          dangerouslySetInnerHTML={
-            Object {
-              "__html": "&#8203;",
-            }
-          }
-        />
+        >
+          ​
+        </span>
       </legend>
     </fieldset>
   </div>

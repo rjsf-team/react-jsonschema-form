@@ -445,16 +445,13 @@ exports[`single fields format color 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -526,16 +523,13 @@ exports[`single fields format date 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -604,16 +598,13 @@ exports[`single fields format datetime 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -712,6 +703,11 @@ exports[`single fields hidden label 1`] = `
     <div
       className="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
     >
+      <label
+        className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+        data-shrink={false}
+        htmlFor="root"
+      />
       <div
         className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
         onClick={[Function]}
@@ -736,16 +732,9 @@ exports[`single fields hidden label 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-173wfxe"
+            className="css-1g8cwq9"
           >
-            <span
-              className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            <span />
           </legend>
         </fieldset>
       </div>
@@ -856,16 +845,13 @@ exports[`single fields number field 0 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -934,16 +920,13 @@ exports[`single fields number field 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -1015,16 +998,13 @@ exports[`single fields password field 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -1251,6 +1231,7 @@ exports[`single fields select field 1`] = `
       <div
         className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
         onClick={[Function]}
+        variant="outlined"
       >
         <div
           aria-expanded="false"
@@ -1267,12 +1248,9 @@ exports[`single fields select field 1`] = `
         >
           <span
             className="notranslate"
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": "&#8203;",
-              }
-            }
-          />
+          >
+            ​
+          </span>
         </div>
         <input
           aria-hidden={true}
@@ -1301,16 +1279,13 @@ exports[`single fields select field 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -1434,16 +1409,13 @@ exports[`single fields string field format email 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -1515,16 +1487,13 @@ exports[`single fields string field format uri 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -1593,16 +1562,13 @@ exports[`single fields string field regular 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -1671,16 +1637,13 @@ exports[`single fields string field with placeholder 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -1874,16 +1837,13 @@ exports[`single fields using custom tagName 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>

@@ -1,69 +1,69 @@
-/** Use require for loading these libraries in case they are not available in order to perform a useful fallback
- */
-let mui = {};
-try {
-  mui = require('@mui/material');
-} catch (err) {
-  // purposely a no-op
-}
-
-// @ts-ignore What we are doing here isn't really good Typescript, but it works
-const {
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  IconButton,
-  InputLabel,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Paper,
-  Radio,
-  RadioGroup,
-  Slider,
-  SvgIcon,
-  TextField,
-  Typography,
-} = mui;
+import { ComponentType } from "react";
 
 export default interface Mui5ContextProps {
-  Box?: Box;
-  Button?: Button;
-  Checkbox?: Checkbox;
-  Divider?: Divider;
-  Grid?: Grid;
-  FormControl?: FormControl;
-  FormControlLabel?: FormControlLabel;
-  FormGroup?: FormGroup;
-  FormHelperText?: FormHelperText;
-  FormLabel?: FormLabel;
-  IconButton?: IconButton;
-  Input?: OutlinedInput;
-  InputLabel?: InputLabel;
-  List?: List;
-  ListItem?: ListItem;
-  ListItemIcon?: ListItemIcon;
-  ListItemText?: ListItemText;
-  MenuItem?: MenuItem;
-  Paper?: Paper;
-  Radio?: Radio;
-  RadioGroup?: RadioGroup;
-  Slider?: Slider;
-  TextField?: TextField;
-  Typography?: Typography;
-  AddIcon?: SvgIcon;
-  ArrowDownwardIcon?: SvgIcon;
-  ArrowUpwardIcon?: SvgIcon;
-  ErrorIcon?: SvgIcon;
-  RemoveIcon?: SvgIcon;
+  AddIcon: ComponentType<any>;
+  ArrowDownwardIcon: ComponentType<any>;
+  ArrowUpwardIcon: ComponentType<any>;
+  Box: ComponentType<any>;
+  Button: ComponentType<any>;
+  Checkbox: ComponentType<any>;
+  Divider: ComponentType<any>;
+  ErrorIcon: ComponentType<any>;
+  FormControl: ComponentType<any>;
+  FormControlLabel: ComponentType<any>;
+  FormGroup: ComponentType<any>;
+  FormHelperText: ComponentType<any>;
+  FormLabel: ComponentType<any>;
+  Grid: ComponentType<any>;
+  IconButton: ComponentType<any>;
+  Input: ComponentType<any>;
+  InputLabel: ComponentType<any>;
+  List: ComponentType<any>;
+  ListItem: ComponentType<any>;
+  ListItemIcon: ComponentType<any>;
+  ListItemText: ComponentType<any>;
+  MenuItem: ComponentType<any>;
+  Paper: ComponentType<any>;
+  Radio: ComponentType<any>;
+  RadioGroup: ComponentType<any>;
+  RemoveIcon: ComponentType<any>;
+  Slider: ComponentType<any>;
+  SvgIcon: ComponentType<any>;
+  TextField: ComponentType<any>;
+  Typography: ComponentType<any>;
 }
+
+const NullComponent = () => null;
+
+export const defaultMui5Context: Mui5ContextProps = {
+  AddIcon: NullComponent,
+  ArrowDownwardIcon: NullComponent,
+  ArrowUpwardIcon: NullComponent,
+  Box: NullComponent,
+  Button: NullComponent,
+  Checkbox: NullComponent,
+  Divider: NullComponent,
+  ErrorIcon: NullComponent,
+  FormControl: NullComponent,
+  FormControlLabel: NullComponent,
+  FormGroup: NullComponent,
+  FormHelperText: NullComponent,
+  FormLabel: NullComponent,
+  Grid: NullComponent,
+  IconButton: NullComponent,
+  Input: NullComponent,
+  InputLabel: NullComponent,
+  List: NullComponent,
+  ListItem: NullComponent,
+  ListItemIcon: NullComponent,
+  ListItemText: NullComponent,
+  MenuItem: NullComponent,
+  Paper: NullComponent,
+  Radio: NullComponent,
+  RadioGroup: NullComponent,
+  RemoveIcon: NullComponent,
+  Slider: NullComponent,
+  SvgIcon: NullComponent,
+  TextField: NullComponent,
+  Typography: NullComponent,
+};

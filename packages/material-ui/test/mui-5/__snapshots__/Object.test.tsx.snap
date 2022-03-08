@@ -63,16 +63,13 @@ exports[`object fields additionalProperties 1`] = `
                   className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                 >
                   <legend
-                    className="css-nnbavb"
+                    className="css-hdw1oc"
                   >
                     <span
                       className="notranslate"
-                      dangerouslySetInnerHTML={
-                        Object {
-                          "__html": "&#8203;",
-                        }
-                      }
-                    />
+                    >
+                      ​
+                    </span>
                   </legend>
                 </fieldset>
               </div>
@@ -119,7 +116,7 @@ exports[`object fields additionalProperties 1`] = `
                     className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                   >
                     <legend
-                      className="css-173wfxe"
+                      className="css-1g8cwq9"
                     >
                       <span>
                         foo
@@ -316,7 +313,7 @@ exports[`object fields object 1`] = `
                 className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
                 <legend
-                  className="css-173wfxe"
+                  className="css-1g8cwq9"
                 >
                   <span>
                     a
@@ -373,7 +370,7 @@ exports[`object fields object 1`] = `
                 className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
                 <legend
-                  className="css-173wfxe"
+                  className="css-1g8cwq9"
                 >
                   <span>
                     b
