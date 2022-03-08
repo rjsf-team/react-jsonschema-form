@@ -104,7 +104,7 @@ try {
 
 export const DefaultChildren = () => {
   if (
-    Object.keys(MaterialUIContext).length &&
+    MaterialUIContext !== defaultMaterialUIContext &&
     MaterialUIContext.Box &&
     MaterialUIContext.Button &&
     MaterialUIContext.AddIcon
