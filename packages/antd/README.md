@@ -56,8 +56,8 @@ Ant Design theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `antd >= 4.7.0`
-- `@ant-design/icons >= 4.7.0`
+- `antd >= 4.0.0`
+- `@ant-design/icons >= 4.0.0`
 - `dayjs >= 1.8.0`
 - `@rjsf/core >= 2.0.0`
 

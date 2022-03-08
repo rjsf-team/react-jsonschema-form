@@ -275,7 +275,7 @@ exports[`array fields fixed array 1`] = `
                 className="form-group field field-string"
               >
                 <div
-                  className="ant-row ant-form-item ant-form-item-with-help"
+                  className="ant-row ant-form-item"
                   style={Object {}}
                 >
                   <div
@@ -309,11 +309,10 @@ exports[`array fields fixed array 1`] = `
                       </div>
                     </div>
                     <div
-                      className="ant-form-item-explain ant-form-item-explain-connected"
+                      className="ant-form-item-extra"
                     >
-                      <div
-                        className=""
-                        role="alert"
+                      <span
+                        id="root_0__description"
                       />
                     </div>
                   </div>
@@ -344,7 +343,7 @@ exports[`array fields fixed array 1`] = `
                 className="form-group field field-number"
               >
                 <div
-                  className="ant-row ant-form-item ant-form-item-with-help"
+                  className="ant-row ant-form-item"
                   style={Object {}}
                 >
                   <div
@@ -459,11 +458,10 @@ exports[`array fields fixed array 1`] = `
                       </div>
                     </div>
                     <div
-                      className="ant-form-item-explain ant-form-item-explain-connected"
+                      className="ant-form-item-extra"
                     >
-                      <div
-                        className=""
-                        role="alert"
+                      <span
+                        id="root_1__description"
                       />
                     </div>
                   </div>

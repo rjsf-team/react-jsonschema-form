@@ -35,7 +35,10 @@ const FieldTemplate = ({
     labelCol = VERTICAL_LABEL_COL,
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
+    antd
   } = formContext;
+
+  const descriptionLocation= antd?.descriptionLocation || 'below';
 
   if (hidden) {
     return <div className="field-hidden">{children}</div>;
@@ -64,9 +67,10 @@ const FieldTemplate = ({
       ) : (
         <Form.Item
           colon={colon}
-          tooltip={!!rawDescription && description}
+          tooltip={descriptionLocation === 'tooltip' && (!!rawDescription && description)}
+          extra={descriptionLocation === 'below' && description}
           hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-          help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
+          help={(rawHelp ? help : undefined) || (rawErrors ? renderFieldErrors() : undefined)}
           htmlFor={id}
           label={displayLabel && label}
           labelCol={labelCol}

@@ -97,7 +97,7 @@ const themes = {
     theme: MuiV5Theme,
   },
   antd: {
-    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/antd/4.7.0/antd.min.css",
+    stylesheet: "//cdnjs.cloudflare.com/ajax/libs/antd/4.1.4/antd.min.css",
     theme: AntdTheme,
   },
   "semantic-ui": {
