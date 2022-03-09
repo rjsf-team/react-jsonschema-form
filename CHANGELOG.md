@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/material-ui
 - Remove `console.log()` of the import error in `MaterialUIContext` and `Mui5Context`
 - Export the `MaterialComponentContext` (#2724)
+- Use component-level `require()` along with webpack magic comment to support tree-shaking again
 
 ## Dev / docs / playground
 - Added documentation for the new `ui:hideError` feature
