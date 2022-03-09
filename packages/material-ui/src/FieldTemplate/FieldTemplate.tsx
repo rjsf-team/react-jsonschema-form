@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { FieldTemplateProps } from '@rjsf/core';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 import WrapIfAdditional from './WrapIfAdditional';
 
 const FieldTemplate = ({
@@ -24,7 +24,7 @@ const FieldTemplate = ({
   if (hidden) {
     return children;
   }
-  const { FormControl, FormHelperText, List, ListItem, Typography } = useContext(MuiComponentContext);
+  const { FormControl, FormHelperText, List, ListItem, Typography } = useMuiComponent();
   return (
     <WrapIfAdditional
       classNames={classNames}
@@ -35,14 +35,12 @@ const FieldTemplate = ({
       onKeyChange={onKeyChange}
       readonly={readonly}
       required={required}
-      schema={schema}>
-      <FormControl
-        fullWidth={true}
-        error={rawErrors.length ? true : false}
-        required={required}>
+      schema={schema}
+    >
+      <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
         {children}
         {displayLabel && rawDescription ? (
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant='caption' color='textSecondary'>
             {rawDescription}
           </Typography>
         ) : null}

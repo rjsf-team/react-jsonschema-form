@@ -1,14 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { ArrayFieldTemplateProps, IdSchema, utils } from '@rjsf/core';
 
 import AddButton from '../AddButton/AddButton';
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 
-const {
-  isMultiSelect,
-  getDefaultRegistry,
-} = utils;
+const { isMultiSelect, getDefaultRegistry } = utils;
 
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { schema, registry = getDefaultRegistry() } = props;
@@ -27,12 +24,7 @@ type ArrayFieldTitleProps = {
   required: boolean;
 };
 
-const ArrayFieldTitle = ({
-  TitleField,
-  idSchema,
-  title,
-  required,
-}: ArrayFieldTitleProps) => {
+const ArrayFieldTitle = ({ TitleField, idSchema, title, required }: ArrayFieldTitleProps) => {
   if (!title) {
     return null;
   }
@@ -47,11 +39,7 @@ type ArrayFieldDescriptionProps = {
   description: string;
 };
 
-const ArrayFieldDescription = ({
-  DescriptionField,
-  idSchema,
-  description,
-}: ArrayFieldDescriptionProps) => {
+const ArrayFieldDescription = ({ DescriptionField, idSchema, description }: ArrayFieldDescriptionProps) => {
   if (!description) {
     return null;
   }
@@ -62,16 +50,16 @@ const ArrayFieldDescription = ({
 
 // Used in the two templates
 const DefaultArrayItem = (props: any) => {
-  const { ArrowDownwardIcon, ArrowUpwardIcon, Box, Grid, IconButton, Paper, RemoveIcon } = useContext(MuiComponentContext);
+  const { ArrowDownwardIcon, ArrowUpwardIcon, Box, Grid, IconButton, Paper, RemoveIcon } = useMuiComponent();
   const btnStyle = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
     fontWeight: 'bold',
-    minWidth: 0
+    minWidth: 0,
   };
   return (
-    <Grid container={true} key={props.key} alignItems="center">
+    <Grid container={true} key={props.key} alignItems='center'>
       <Grid item={true} xs style={{ overflow: 'auto' }}>
         <Box mb={2}>
           <Paper elevation={2}>
@@ -84,38 +72,38 @@ const DefaultArrayItem = (props: any) => {
         <Grid item={true}>
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
-              size="small"
-              className="array-item-move-up"
+              size='small'
+              className='array-item-move-up'
               tabIndex={-1}
               style={btnStyle as any}
               disabled={props.disabled || props.readonly || !props.hasMoveUp}
               onClick={props.onReorderClick(props.index, props.index - 1)}
             >
-              <ArrowUpwardIcon fontSize="small" />
+              <ArrowUpwardIcon fontSize='small' />
             </IconButton>
           )}
 
           {(props.hasMoveUp || props.hasMoveDown) && (
             <IconButton
-              size="small"
+              size='small'
               tabIndex={-1}
               style={btnStyle as any}
               disabled={props.disabled || props.readonly || !props.hasMoveDown}
               onClick={props.onReorderClick(props.index, props.index + 1)}
             >
-              <ArrowDownwardIcon fontSize="small" />
+              <ArrowDownwardIcon fontSize='small' />
             </IconButton>
           )}
 
           {props.hasRemove && (
             <IconButton
-              size="small"
+              size='small'
               tabIndex={-1}
               style={btnStyle as any}
               disabled={props.disabled || props.readonly}
               onClick={props.onDropIndexClick(props.index)}
             >
-              <RemoveIcon fontSize="small" />
+              <RemoveIcon fontSize='small' />
             </IconButton>
           )}
         </Grid>
@@ -136,24 +124,18 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       />
 
       {(props.uiSchema['ui:description'] || props.schema.description) && (
-        <div
-          className="field-description"
-          key={`field-description-${props.idSchema.$id}`}
-        >
+        <div className='field-description' key={`field-description-${props.idSchema.$id}`}>
           {props.uiSchema['ui:description'] || props.schema.description}
         </div>
       )}
 
-      <div
-        className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}
-      >
+      <div className='row array-item-list' key={`array-item-list-${props.idSchema.$id}`}>
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 
       {props.canAdd && (
         <AddButton
-          className="array-item-add"
+          className='array-item-add'
           onClick={props.onAddClick}
           disabled={props.disabled || props.readonly}
         />
@@ -163,7 +145,7 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 };
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-  const { Box, Grid, Paper } = useContext(MuiComponentContext);
+  const { Box, Grid, Paper } = useMuiComponent();
   return (
     <Paper elevation={2}>
       <Box p={2}>
@@ -180,9 +162,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             key={`array-field-description-${props.idSchema.$id}`}
             DescriptionField={props.DescriptionField}
             idSchema={props.idSchema}
-            description={
-              props.uiSchema['ui:description'] || props.schema.description
-            }
+            description={props.uiSchema['ui:description'] || props.schema.description}
           />
         )}
 
@@ -190,11 +170,11 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           {props.items && props.items.map(p => DefaultArrayItem(p))}
 
           {props.canAdd && (
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent='flex-end'>
               <Grid item={true}>
                 <Box mt={2}>
                   <AddButton
-                    className="array-item-add"
+                    className='array-item-add'
                     onClick={props.onAddClick}
                     disabled={props.disabled || props.readonly}
                   />

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/material-ui",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "main": "dist/index.js",
   "module": "dist/material-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -11,7 +11,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build",
-    "test": "tsdx test"
+    "test": "tsdx test",
+    "updateSnapshot": "tsdx test -u"
   },
   "peerDependencies": {
     "@emotion/react": "^11.7.0",
