@@ -27,7 +27,7 @@ const UpDownWidget = ({
         id={id}
         autoFocus={autofocus}
         required={required}
-        type='number'
+        type="number"
         disabled={disabled || readonly}
         value={value || value === 0 ? value : ''}
         onChange={_onChange}

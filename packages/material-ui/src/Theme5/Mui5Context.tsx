@@ -112,7 +112,7 @@ export let DefaultChildren = () => {
   if (Mui5Context.Box && Mui5Context.Button && Mui5Context.AddIcon) {
     return (
       <Mui5Context.Box marginTop={3}>
-        <Mui5Context.Button type='submit' variant='contained' color='primary'>
+        <Mui5Context.Button type="submit" variant="contained" color="primary">
           Submit
         </Mui5Context.Button>
       </Mui5Context.Box>

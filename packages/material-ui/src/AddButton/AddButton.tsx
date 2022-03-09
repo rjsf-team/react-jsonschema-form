@@ -7,7 +7,7 @@ const AddButton: React.FC<AddButtonProps> = props => {
   const { AddIcon, Button } = useMuiComponent();
 
   return (
-    <Button {...props} color='secondary'>
+    <Button {...props} color="secondary">
       <AddIcon /> Add Item
     </Button>
   );

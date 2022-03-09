@@ -39,7 +39,7 @@ const RangeWidget = ({
         onChange={(_onChange as unknown) as OnSliderChangeEvtHdlr}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        valueLabelDisplay='auto'
+        valueLabelDisplay="auto"
         {...sliderProps}
       />
     </>

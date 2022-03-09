@@ -42,7 +42,7 @@ const RadioWidget = ({
 
           const radio = (
             <FormControlLabel
-              control={<Radio name={`${id}-${i}`} color='primary' key={i} />}
+              control={<Radio name={`${id}-${i}`} color="primary" key={i} />}
               label={`${option.label}`}
               value={`${option.value}`}
               key={i}

@@ -112,7 +112,7 @@ export let DefaultChildren = () => {
   if (MaterialUIContext.Box && MaterialUIContext.Button && MaterialUIContext.AddIcon) {
     return (
       <MaterialUIContext.Box marginTop={3}>
-        <MaterialUIContext.Button type='submit' variant='contained' color='primary'>
+        <MaterialUIContext.Button type="submit" variant="contained" color="primary">
           Submit
         </MaterialUIContext.Button>
       </MaterialUIContext.Box>

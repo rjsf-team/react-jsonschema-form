@@ -40,7 +40,7 @@ const FieldTemplate = ({
       <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
         {children}
         {displayLabel && rawDescription ? (
-          <Typography variant='caption' color='textSecondary'>
+          <Typography variant="caption" color="textSecondary">
             {rawDescription}
           </Typography>
         ) : null}
