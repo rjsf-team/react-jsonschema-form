@@ -53,8 +53,8 @@ try {
   import('@material-ui/core/IconButton').then(IconButton => {
     MaterialUIContext.IconButton = IconButton.default;
   });
-  import('@material-ui/core/OutlinedInput').then(OutlinedInput => {
-    MaterialUIContext.Input = OutlinedInput.default;
+  import('@material-ui/core/Input').then(Input => {
+    MaterialUIContext.Input = Input.default;
   });
   import('@material-ui/core/InputLabel').then(InputLabel => {
     MaterialUIContext.InputLabel = InputLabel.default;

@@ -66,29 +66,8 @@ exports[`array fields array 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root css-178yklu"
-  >
-    <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-sghohy-MuiButtonBase-root-MuiButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onContextMenu={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="submit"
-    >
-      Submit
-    </button>
+  <div>
+    @mui not available
   </div>
 </form>
 `;
@@ -259,9 +238,6 @@ exports[`array fields array icons 1`] = `
                     d="m20 12-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
                   />
                 </svg>
-                <span
-                  className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
               </button>
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
@@ -302,9 +278,6 @@ exports[`array fields array icons 1`] = `
                     d="M19 13H5v-2h14v2z"
                   />
                 </svg>
-                <span
-                  className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
               </button>
             </div>
           </div>
@@ -416,9 +389,6 @@ exports[`array fields array icons 1`] = `
                     d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
                   />
                 </svg>
-                <span
-                  className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
               </button>
               <button
                 className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
@@ -499,9 +469,6 @@ exports[`array fields array icons 1`] = `
                     d="M19 13H5v-2h14v2z"
                   />
                 </svg>
-                <span
-                  className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
               </button>
             </div>
           </div>
@@ -545,9 +512,6 @@ exports[`array fields array icons 1`] = `
                     />
                   </svg>
                    Add Item
-                  <span
-                    className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                  />
                 </button>
               </div>
             </div>
@@ -556,32 +520,8 @@ exports[`array fields array icons 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root css-178yklu"
-  >
-    <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-sghohy-MuiButtonBase-root-MuiButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onContextMenu={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="submit"
-    >
-      Submit
-      <span
-        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+  <div>
+    @mui not available
   </div>
 </form>
 `;
@@ -661,29 +601,8 @@ exports[`array fields checkboxes 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root css-178yklu"
-  >
-    <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-sghohy-MuiButtonBase-root-MuiButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onContextMenu={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="submit"
-    >
-      Submit
-    </button>
+  <div>
+    @mui not available
   </div>
 </form>
 `;
@@ -844,32 +763,8 @@ exports[`array fields fixed array 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root css-178yklu"
-  >
-    <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-sghohy-MuiButtonBase-root-MuiButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onContextMenu={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="submit"
-    >
-      Submit
-      <span
-        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+  <div>
+    @mui not available
   </div>
 </form>
 `;

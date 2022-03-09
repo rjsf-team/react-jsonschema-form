@@ -35,18 +35,18 @@ exports[`object fields additionalProperties 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth"
             >
               <label
-                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                data-shrink={false}
+                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                data-shrink={true}
               >
                 foo Key
               </label>
               <div
-                className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl"
+                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
                 onClick={[Function]}
               >
                 <input
                   aria-invalid={false}
-                  className="MuiInputBase-input MuiOutlinedInput-input"
+                  className="MuiInputBase-input MuiInput-input"
                   defaultValue="foo"
                   disabled={false}
                   id="root_foo-key"
@@ -58,32 +58,6 @@ exports[`object fields additionalProperties 1`] = `
                   required={false}
                   type="text"
                 />
-                <fieldset
-                  aria-hidden={true}
-                  className="PrivateNotchedOutline-root-2 MuiOutlinedInput-notchedOutline"
-                  style={
-                    Object {
-                      "paddingLeft": 8,
-                    }
-                  }
-                >
-                  <legend
-                    className="PrivateNotchedOutline-legend-3"
-                    style={
-                      Object {
-                        "width": 0.01,
-                      }
-                    }
-                  >
-                    <span
-                      dangerouslySetInnerHTML={
-                        Object {
-                          "__html": "&#8203;",
-                        }
-                      }
-                    />
-                  </legend>
-                </fieldset>
               </div>
             </div>
           </div>
@@ -97,8 +71,8 @@ exports[`object fields additionalProperties 1`] = `
                 className="MuiFormControl-root MuiTextField-root"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                  data-shrink={false}
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                  data-shrink={true}
                   htmlFor="root_foo"
                   id="root_foo-label"
                 >
@@ -170,9 +144,6 @@ exports[`object fields additionalProperties 1`] = `
                   />
                 </svg>
               </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
             </button>
           </div>
         </div>
@@ -216,43 +187,13 @@ exports[`object fields additionalProperties 1`] = `
               </svg>
                Add Item
             </span>
-            <span
-              className="MuiTouchRipple-root"
-            />
           </button>
         </div>
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-6"
-  >
-    <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="submit"
-    >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
-    </button>
+  <div>
+    @material-ui not available
   </div>
 </form>
 `;
@@ -366,32 +307,8 @@ exports[`object fields object 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root MuiBox-root-1"
-  >
-    <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="submit"
-    >
-      <span
-        className="MuiButton-label"
-      >
-        Submit
-      </span>
-    </button>
+  <div>
+    @material-ui not available
   </div>
 </form>
 `;

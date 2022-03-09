@@ -1,240 +1,222 @@
-import React from "react";
-import { JSONSchema7 } from "json-schema";
-import renderer from "react-test-renderer";
-import { UiSchema } from "@rjsf/core";
-import { MuiForm4 as Form } from "../src/index";
+import React from 'react';
+import { JSONSchema7 } from 'json-schema';
+import renderer from 'react-test-renderer';
+import { UiSchema } from '@rjsf/core';
+import { MuiForm4 as Form } from '../src/index';
 
-describe("single fields", () => {
-  describe("string field", () => {
-    test("regular", () => {
+describe('single fields', () => {
+  describe('string field', () => {
+    test('regular', () => {
       const schema: JSONSchema7 = {
-        type: "string",
+        type: 'string',
       };
       const tree = renderer.create(<Form schema={schema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
-    test("format email", () => {
+    test('format email', () => {
       const schema: JSONSchema7 = {
-        type: "string",
-        format: "email",
+        type: 'string',
+        format: 'email',
       };
       const tree = renderer.create(<Form schema={schema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
-    test("format uri", () => {
+    test('format uri', () => {
       const schema: JSONSchema7 = {
-        type: "string",
-        format: "uri",
+        type: 'string',
+        format: 'uri',
       };
       const tree = renderer.create(<Form schema={schema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
-    test("format data-url", () => {
+    test('format data-url', () => {
       const schema: JSONSchema7 = {
-        type: "string",
-        format: "data-url",
+        type: 'string',
+        format: 'data-url',
       };
       const tree = renderer.create(<Form schema={schema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
   });
-  test("string field with placeholder", () => {
+  test('string field with placeholder', () => {
     const schema: JSONSchema7 = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:placeholder": "placeholder",
+      'ui:placeholder': 'placeholder',
     };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("number field", () => {
+  test('number field', () => {
     const schema: JSONSchema7 = {
-      type: "number",
+      type: 'number',
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("number field 0", () => {
+  test('number field 0', () => {
     const schema: JSONSchema7 = {
-      type: "number",
+      type: 'number',
     };
     const formData = 0;
-    const tree = renderer
-      .create(<Form schema={schema} formData={formData} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} formData={formData} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("null field", () => {
+  test('null field', () => {
     const schema: JSONSchema7 = {
-      type: "null",
+      type: 'null',
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("unsupported field", () => {
+  test('unsupported field', () => {
     const schema: JSONSchema7 = {
       type: undefined,
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("format color", () => {
+  test('format color', () => {
     const schema: JSONSchema7 = {
-      type: "string",
-      format: "color",
+      type: 'string',
+      format: 'color',
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("format date", () => {
+  test('format date', () => {
     const schema: JSONSchema7 = {
-      type: "string",
-      format: "date",
+      type: 'string',
+      format: 'date',
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("format datetime", () => {
+  test('format datetime', () => {
     const schema: JSONSchema7 = {
-      type: "string",
-      format: "datetime",
+      type: 'string',
+      format: 'datetime',
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("password field", () => {
+  test('password field', () => {
     const schema: JSONSchema7 = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "password",
+      'ui:widget': 'password',
     };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("textarea field", () => {
+  test('textarea field', () => {
     const schema: JSONSchema7 = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "textarea",
+      'ui:widget': 'textarea',
     };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("select field", () => {
+  test('select field', () => {
     const schema: JSONSchema7 = {
-      type: "string",
-      enum: ["foo", "bar"],
+      type: 'string',
+      enum: ['foo', 'bar'],
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkbox field", () => {
+  test('checkbox field', () => {
     const schema: JSONSchema7 = {
-      type: "boolean",
+      type: 'boolean',
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkbox field", () => {
+  test('checkbox field', () => {
     const schema: JSONSchema7 = {
-      type: "boolean",
+      type: 'boolean',
     };
     const tree = renderer.create(<Form schema={schema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkboxes field", () => {
+  test('checkboxes field', () => {
     const schema: JSONSchema7 = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "string",
-        enum: ["foo", "bar", "fuzz", "qux"],
+        type: 'string',
+        enum: ['foo', 'bar', 'fuzz', 'qux'],
       },
       uniqueItems: true,
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "checkboxes",
+      'ui:widget': 'checkboxes',
     };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("radio field", () => {
+  test('radio field', () => {
     const schema: JSONSchema7 = {
-      type: "boolean",
+      type: 'boolean',
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "radio",
+      'ui:widget': 'radio',
     };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   // There is a bug in the Material UI <Slider /> component that prevents this from working.
   // Error: `TypeError: Cannot read property 'addEventListener' of null`
   // From: https://github.com/mui-org/material-ui/blob/v4.5.2/packages/material-ui/src/Slider/Slider.js#L622
-  test.skip("slider field", () => {
+  test.skip('slider field', () => {
     const schema: JSONSchema7 = {
-      type: "integer",
+      type: 'integer',
       minimum: 42,
       maximum: 100,
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "range",
+      'ui:widget': 'range',
     };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("hidden field", () => {
+  test('hidden field', () => {
     const schema: JSONSchema7 = {
-      type: "object",
+      type: 'object',
       properties: {
-        "my-field": {
-          type: "string",
+        'my-field': {
+          type: 'string',
         },
       },
     };
     const uiSchema: UiSchema = {
-      "my-field": {
-        "ui:widget": "hidden",
+      'my-field': {
+        'ui:widget': 'hidden',
       },
     };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("hidden label", () => {
+  test('hidden label', () => {
     const schema: JSONSchema7 = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:options": {
+      'ui:options': {
         label: false,
       },
     };
-    const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("using custom tagName", () => {
+  test('using custom tagName', () => {
     const schema: JSONSchema7 = {
-      type: "string",
+      type: 'string',
     };
-    const tree = renderer.create(<Form schema={schema} tagName="div" />).toJSON();
+    const tree = renderer.create(<Form schema={schema} tagName='div' />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

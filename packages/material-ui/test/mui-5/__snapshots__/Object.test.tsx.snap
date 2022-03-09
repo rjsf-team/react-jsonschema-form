@@ -35,8 +35,8 @@ exports[`object fields additionalProperties 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
             >
               <label
-                className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-                data-shrink={false}
+                className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1sumxir-MuiFormLabel-root-MuiInputLabel-root"
+                data-shrink={true}
               >
                 foo Key
               </label>
@@ -85,8 +85,8 @@ exports[`object fields additionalProperties 1`] = `
                 className="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
               >
                 <label
-                  className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-                  data-shrink={false}
+                  className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1sumxir-MuiFormLabel-root-MuiInputLabel-root"
+                  data-shrink={true}
                   htmlFor="root_foo"
                   id="root_foo-label"
                 >
@@ -116,7 +116,7 @@ exports[`object fields additionalProperties 1`] = `
                     className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                   >
                     <legend
-                      className="css-1g8cwq9"
+                      className="css-7nxzgd"
                     >
                       <span>
                         foo
@@ -168,9 +168,6 @@ exports[`object fields additionalProperties 1`] = `
                   d="M19 13H5v-2h14v2z"
                 />
               </svg>
-              <span
-                className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-              />
             </button>
           </div>
         </div>
@@ -212,40 +209,13 @@ exports[`object fields additionalProperties 1`] = `
               />
             </svg>
              Add Item
-            <span
-              className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
           </button>
         </div>
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root css-178yklu"
-  >
-    <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-sghohy-MuiButtonBase-root-MuiButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onContextMenu={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="submit"
-    >
-      Submit
-      <span
-        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+  <div>
+    @mui not available
   </div>
 </form>
 `;
@@ -383,29 +353,8 @@ exports[`object fields object 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="MuiBox-root css-178yklu"
-  >
-    <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-sghohy-MuiButtonBase-root-MuiButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onContextMenu={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="submit"
-    >
-      Submit
-    </button>
+  <div>
+    @mui not available
   </div>
 </form>
 `;

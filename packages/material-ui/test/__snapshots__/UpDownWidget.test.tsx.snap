@@ -18,14 +18,14 @@ exports[`renders 0 as 0 and not '' 1`] = `
     </span>
   </label>
   <div
-    className="MuiInputBase-root MuiOutlinedInput-root Mui-disabled Mui-disabled MuiInputBase-formControl"
+    className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
     onClick={[Function]}
     required={true}
   >
     <input
       aria-invalid={false}
       autoFocus={true}
-      className="MuiInputBase-input MuiOutlinedInput-input Mui-disabled Mui-disabled"
+      className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
       disabled={true}
       id="_id"
       onAnimationStart={[Function]}
@@ -36,32 +36,6 @@ exports[`renders 0 as 0 and not '' 1`] = `
       type="number"
       value={0}
     />
-    <fieldset
-      aria-hidden={true}
-      className="PrivateNotchedOutline-root-1 MuiOutlinedInput-notchedOutline"
-      style={
-        Object {
-          "paddingLeft": 8,
-        }
-      }
-    >
-      <legend
-        className="PrivateNotchedOutline-legend-2"
-        style={
-          Object {
-            "width": 0.01,
-          }
-        }
-      >
-        <span
-          dangerouslySetInnerHTML={
-            Object {
-              "__html": "&#8203;",
-            }
-          }
-        />
-      </legend>
-    </fieldset>
   </div>
 </div>
 `;
