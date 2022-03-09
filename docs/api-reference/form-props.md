@@ -112,7 +112,8 @@ React component used to customize each field of the form. See [Custom Templates]
 ## formContext
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
-Setting `{readonlyAsDisabled: false}` on the formContext will make the antd theme treat readOnly fields as disabled.
+
+see [AntD Customization](./themes/antd/uiSchema.md) for formContext customizations for the antd theme.
 
 ## formData
 

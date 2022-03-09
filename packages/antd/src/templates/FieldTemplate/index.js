@@ -40,6 +40,19 @@ const FieldTemplate = ({
 
   const descriptionLocation= antd?.descriptionLocation || 'below';
 
+  const descriptionProps = {};
+
+  switch (descriptionLocation) {
+    case 'tooltip':
+      descriptionProps.tooltip = rawDescription ? description : undefined;
+      break;
+    case 'below':
+      descriptionProps.extra = description;
+      break;
+    default:
+      break;
+  }
+
   if (hidden) {
     return <div className="field-hidden">{children}</div>;
   }
@@ -67,8 +80,6 @@ const FieldTemplate = ({
       ) : (
         <Form.Item
           colon={colon}
-          tooltip={descriptionLocation === 'tooltip' && (!!rawDescription && description)}
-          extra={descriptionLocation === 'below' && description}
           hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
           help={(rawHelp ? help : undefined) || (rawErrors ? renderFieldErrors() : undefined)}
           htmlFor={id}
@@ -78,6 +89,7 @@ const FieldTemplate = ({
           style={wrapperStyle}
           validateStatus={rawErrors ? 'error' : undefined}
           wrapperCol={wrapperCol}
+          {...descriptionProps}
         >
           {children}
         </Form.Item>

@@ -391,12 +391,6 @@ exports[`single fields number field 1`] = `
   >
     <div
       className="ant-input-number"
-      onBlur={[Function]}
-      onCompositionEnd={[Function]}
-      onCompositionStart={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
       style={
         Object {
           "width": "100%",
@@ -409,12 +403,16 @@ exports[`single fields number field 1`] = `
         <span
           aria-disabled={false}
           aria-label="Increase Value"
-          className="ant-input-number-handler ant-input-number-handler-up"
+          className="ant-input-number-handler ant-input-number-handler-up "
           onMouseDown={[Function]}
           onMouseLeave={[Function]}
           onMouseUp={[Function]}
+          onTouchCancel={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
           role="button"
-          unselectable="on"
+          unselectable="unselectable"
         >
           <span
             aria-label="up"
@@ -423,6 +421,7 @@ exports[`single fields number field 1`] = `
           >
             <svg
               aria-hidden="true"
+              className=""
               data-icon="up"
               fill="currentColor"
               focusable="false"
@@ -439,12 +438,16 @@ exports[`single fields number field 1`] = `
         <span
           aria-disabled={false}
           aria-label="Decrease Value"
-          className="ant-input-number-handler ant-input-number-handler-down"
+          className="ant-input-number-handler ant-input-number-handler-down "
           onMouseDown={[Function]}
           onMouseLeave={[Function]}
           onMouseUp={[Function]}
+          onTouchCancel={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
           role="button"
-          unselectable="on"
+          unselectable="unselectable"
         >
           <span
             aria-label="down"
@@ -453,6 +456,7 @@ exports[`single fields number field 1`] = `
           >
             <svg
               aria-hidden="true"
+              className=""
               data-icon="down"
               fill="currentColor"
               focusable="false"
@@ -471,16 +475,21 @@ exports[`single fields number field 1`] = `
         className="ant-input-number-input-wrap"
       >
         <input
-          aria-valuenow={null}
+          aria-valuemin={-9007199254740991}
           autoComplete="off"
           className="ant-input-number-input"
           disabled={false}
           id="root"
+          min={-9007199254740991}
           name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseUp={[Function]}
           placeholder=""
+          required={false}
           role="spinbutton"
           step={1}
           type="number"
