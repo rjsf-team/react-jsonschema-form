@@ -47,7 +47,7 @@ const WrapIfAdditional = ({
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
   return (
-    <Grid container={true} key={`${id}-key`} alignItems='center' spacing={2}>
+    <Grid container={true} key={`${id}-key`} alignItems="center" spacing={2}>
       <Grid item={true} xs>
         <FormControl fullWidth={true} required={required}>
           <InputLabel>{keyLabel}</InputLabel>
@@ -57,7 +57,7 @@ const WrapIfAdditional = ({
             id={`${id}-key`}
             name={`${id}-key`}
             onBlur={!readonly ? handleBlur : undefined}
-            type='text'
+            type="text"
           />
         </FormControl>
       </Grid>
@@ -66,7 +66,7 @@ const WrapIfAdditional = ({
       </Grid>
       <Grid item={true}>
         <IconButton
-          size='small'
+          size="small"
           tabIndex={-1}
           style={btnStyle as any}
           disabled={disabled || readonly}
