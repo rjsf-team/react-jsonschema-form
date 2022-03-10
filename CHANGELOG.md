@@ -32,7 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/material-ui
 - Remove `console.log()` of the import error in `MaterialUIContext` and `Mui5Context`
 - Export the `MaterialComponentContext` (#2724)
-- Individually require all MUI packages to fix bloated bundle size to address [@rjsf/material-ui breaks tree shaking #2748](https://github.com/rjsf-team/react-jsonschema-form/issues/2748)
+- Individually require all MUI components to fix bloated bundle size to address [@rjsf/material-ui breaks tree shaking #2748](https://github.com/rjsf-team/react-jsonschema-form/issues/2748)
 - Add new `useMuiComponent()` hook to abstract context consumption of MUI components to one place in code
 
 ## Dev / docs / playground
