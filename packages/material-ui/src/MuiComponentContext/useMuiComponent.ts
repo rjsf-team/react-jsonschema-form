@@ -8,7 +8,7 @@ export function useMuiComponent(): MaterialUIContextProps | Mui5ContextProps {
 
   if (!muiComponents) {
     throw new Error(
-      'Either v4 or v5 of material components and icons must be installed as peer dependencies'
+      'Either v4 or v5 of material-ui components and icons must be installed as dependencies'
     );
   }
 

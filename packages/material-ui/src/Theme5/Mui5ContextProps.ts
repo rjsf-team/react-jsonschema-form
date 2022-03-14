@@ -27,7 +27,7 @@ import type {
   TypographyProps,
 } from '@mui/material';
 
-export default interface MaterialUIContextProps {
+export default interface Mui5ContextProps {
   Box: ComponentType<BoxProps>;
   Button: ComponentType<ButtonProps>;
   Checkbox: ComponentType<CheckboxProps>;

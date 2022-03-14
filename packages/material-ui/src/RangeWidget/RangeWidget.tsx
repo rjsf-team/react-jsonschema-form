@@ -3,10 +3,6 @@ import { WidgetProps, utils } from '@rjsf/core';
 
 import { useMuiComponent } from '../MuiComponentContext';
 
-type OnSliderChangeEvtHdlr = ((event: React.ChangeEvent<{}>, value: number | number[]) => void) &
-  React.FormEventHandler<HTMLSpanElement> &
-  ((event: Event, value: number | number[], activeThumb: number) => void);
-
 const { rangeSpec } = utils;
 
 const RangeWidget = ({
@@ -36,7 +32,7 @@ const RangeWidget = ({
       </FormLabel>
       <Slider
         disabled={disabled || readonly}
-        onChange={(_onChange as unknown) as OnSliderChangeEvtHdlr}
+        onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         valueLabelDisplay="auto"

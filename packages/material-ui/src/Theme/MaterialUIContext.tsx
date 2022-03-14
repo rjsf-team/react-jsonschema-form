@@ -108,7 +108,7 @@ if (Box && AddIcon) {
   };
 }
 
-export let DefaultChildren = () => {
+export const DefaultChildren = () => {
   if (MaterialUIContext.Box && MaterialUIContext.Button && MaterialUIContext.AddIcon) {
     return (
       <MaterialUIContext.Box marginTop={3}>

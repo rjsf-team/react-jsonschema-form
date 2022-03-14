@@ -19,6 +19,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # v4.1.1 (upcoming)
 
+## @rjsf/material-ui
+- Fix bloated bundle size by individually requiring all MUI components (#2754)
+- Add new `useMuiComponent()` hook as a shortcut for `useContext(MuiComponentContext)`
+
 # v4.1.0
 
 ## @rjsf/core
@@ -32,8 +36,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/material-ui
 - Remove `console.log()` of the import error in `MaterialUIContext` and `Mui5Context`
 - Export the `MaterialComponentContext` (#2724)
-- Individually require all MUI components to fix bloated bundle size to address [@rjsf/material-ui breaks tree shaking #2748](https://github.com/rjsf-team/react-jsonschema-form/issues/2748)
-- Add new `useMuiComponent()` hook to abstract context consumption of MUI components to one place in code
 
 ## Dev / docs / playground
 - Added documentation for the new `ui:hideError` feature
