@@ -2,7 +2,7 @@
 
 exports[`single fields null field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -10,7 +10,7 @@ exports[`single fields null field 1`] = `
     className="grouped equal width fields"
   />
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -21,7 +21,7 @@ exports[`single fields null field 1`] = `
 
 exports[`single fields number field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -50,7 +50,7 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -61,7 +61,7 @@ exports[`single fields number field 1`] = `
 
 exports[`single fields string field format data-url 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -82,7 +82,7 @@ exports[`single fields string field format data-url 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -93,7 +93,7 @@ exports[`single fields string field format data-url 1`] = `
 
 exports[`single fields string field format email 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -121,7 +121,7 @@ exports[`single fields string field format email 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -132,7 +132,7 @@ exports[`single fields string field format email 1`] = `
 
 exports[`single fields string field format uri 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -160,7 +160,7 @@ exports[`single fields string field format uri 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -171,7 +171,7 @@ exports[`single fields string field format uri 1`] = `
 
 exports[`single fields string field regular 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -200,7 +200,7 @@ exports[`single fields string field regular 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -211,7 +211,7 @@ exports[`single fields string field regular 1`] = `
 
 exports[`single fields testing with tagName 1`] = `
 <div
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -240,7 +240,7 @@ exports[`single fields testing with tagName 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -251,7 +251,7 @@ exports[`single fields testing with tagName 1`] = `
 
 exports[`single fields uiSchema theme props 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -375,7 +375,7 @@ exports[`single fields uiSchema theme props 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >
@@ -386,7 +386,7 @@ exports[`single fields uiSchema theme props 1`] = `
 
 exports[`single fields unsupported field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -417,7 +417,7 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <button
-    className="ui primary button"
+    className="ui primary button btn btn-info"
     onClick={[Function]}
     type="submit"
   >

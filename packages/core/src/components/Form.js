@@ -462,11 +462,13 @@ export default class Form extends Component {
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
+
     // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
     // PropTypes.elementType to use for the inner tag so we'll need to pass `tagName` along if it is provided.
     // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || "form";
+    const SubmitButton = registry.widgets.SubmitButton;
     if (deprecatedAutocomplete) {
       console.warn(
         "Using autocomplete property of Form is deprecated, use autoComplete instead."
@@ -510,15 +512,7 @@ export default class Form extends Component {
           disabled={disabled}
           readonly={readonly}
         />
-        {children ? (
-          children
-        ) : (
-          <div>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </div>
-        )}
+        {children ? children : <SubmitButton uiSchema={uiSchema} />}
       </FormTag>
     );
   }

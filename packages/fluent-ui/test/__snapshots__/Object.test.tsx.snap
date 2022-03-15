@@ -123,7 +123,7 @@ exports[`object fields object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-51"
+        className="ms-Button ms-Button--primary btn btn-info root-51"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
