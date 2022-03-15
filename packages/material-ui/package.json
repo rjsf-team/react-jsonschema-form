@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/material-ui",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "main": "dist/index.js",
   "module": "dist/material-ui.esm.js",
   "typings": "dist/index.d.ts",
@@ -58,7 +58,7 @@
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.2.0",
     "@mui/material": "^5.2.2",
-    "@rjsf/core": "^4.0.1",
+    "@rjsf/core": "^4.1.0",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.9",
     "@types/material-ui": "^0.21.12",
