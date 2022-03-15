@@ -41,12 +41,38 @@ exports[`single fields hidden field 1`] = `
     </div>
   </div>
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__34"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -67,12 +93,38 @@ exports[`single fields null field 1`] = `
     }
   />
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__28"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -121,12 +173,38 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__25"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -160,12 +238,38 @@ exports[`single fields string field format data-url 1`] = `
     </div>
   </div>
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__19"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -214,12 +318,38 @@ exports[`single fields string field format email 1`] = `
     </div>
   </div>
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__10"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -268,12 +398,38 @@ exports[`single fields string field format uri 1`] = `
     </div>
   </div>
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__16"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -322,12 +478,38 @@ exports[`single fields string field regular 1`] = `
     </div>
   </div>
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__4"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -371,12 +553,38 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__31"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </form>
 `;
@@ -425,12 +633,38 @@ exports[`single fields using custom tagName 1`] = `
     </div>
   </div>
   <div>
-    <button
-      className="btn btn-info"
-      type="submit"
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
     >
-      Submit
-    </button>
+      <button
+        className="ms-Button ms-Button--primary btn btn-info root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-51"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-52"
+          >
+            <span
+              className="ms-Button-label label-54"
+              id="id__40"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;

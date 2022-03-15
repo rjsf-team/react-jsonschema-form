@@ -124,6 +124,7 @@ exports[`array fields array 1`] = `
   <div>
     <button
       className="btn btn-info"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -403,6 +404,7 @@ exports[`array fields checkboxes 1`] = `
   <div>
     <button
       className="btn btn-info"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -542,6 +544,7 @@ exports[`array fields fixed array 1`] = `
   <div>
     <button
       className="btn btn-info"
+      disabled={false}
       type="submit"
     >
       Submit
