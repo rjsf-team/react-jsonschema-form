@@ -103,7 +103,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python
-      uses: actions/setup-python@v2.3.1
+      uses: actions/setup-python@v3
       with:
         python-version: 3.6
     - run: pip install -r requirements.docs.txt
