@@ -5,8 +5,8 @@ import { utils,WidgetProps } from "@rjsf/core";
 const {getSubmitButtonOptions} = utils;
 const SubmitButton = ({ uiSchema }: WidgetProps) => {
 
-  const { submitText, removed, props: submitButtonProps }= getSubmitButtonOptions(uiSchema);
-  if (removed) {return null;}
+  const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(uiSchema);
+  if (norender) {return null;}
 
   return (
     <Box marginTop={3}>
