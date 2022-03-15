@@ -31,8 +31,7 @@ exports[`single fields checkbox field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -72,8 +71,7 @@ exports[`single fields checkbox field 2`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -210,8 +208,7 @@ exports[`single fields checkboxes field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -252,8 +249,7 @@ exports[`single fields format color 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -294,8 +290,7 @@ exports[`single fields format date 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -336,8 +331,7 @@ exports[`single fields format datetime 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -385,8 +379,7 @@ exports[`single fields hidden field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -406,8 +399,7 @@ exports[`single fields null field 1`] = `
   />
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -448,8 +440,7 @@ exports[`single fields number field 0 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -490,8 +481,7 @@ exports[`single fields number field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -531,8 +521,7 @@ exports[`single fields password field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -606,8 +595,7 @@ exports[`single fields radio field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -666,8 +654,7 @@ exports[`single fields select field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -708,8 +695,7 @@ exports[`single fields string field format data-url 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -750,8 +736,7 @@ exports[`single fields string field format email 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -792,8 +777,7 @@ exports[`single fields string field format uri 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -834,8 +818,7 @@ exports[`single fields string field regular 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -876,8 +859,7 @@ exports[`single fields string field with placeholder 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -917,8 +899,7 @@ exports[`single fields textarea field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -999,8 +980,7 @@ exports[`single fields title field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -1043,8 +1023,7 @@ exports[`single fields unsupported field 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit
@@ -1085,8 +1064,7 @@ exports[`single fields using custom tagName 1`] = `
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
-      disabled={false}
+      className="btn btn-info"
       type="submit"
     >
       Submit

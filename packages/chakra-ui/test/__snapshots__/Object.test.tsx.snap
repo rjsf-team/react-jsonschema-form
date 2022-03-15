@@ -105,7 +105,6 @@ exports[`object fields object 1`] = `
   <div>
     <button
       className="btn btn-info"
-      disabled={false}
       type="submit"
     >
       Submit
