@@ -15,8 +15,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build",
-    "test": "tsdx test",
-    "test:update": "tsdx test --u"
+    "test": "tsdx test"
   },
   "peerDependencies": {
     "@rjsf/core": "^4.0.0",

@@ -8,7 +8,6 @@
     "publish": "lerna publish",
     "changed": "lerna changed",
     "test": "lerna run --stream test",
-    "test:update": "lerna run --stream test:update",
     "lint": "lerna run lint",
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",

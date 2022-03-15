@@ -23,8 +23,7 @@
     "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/es",
     "dist:build:umd": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
     "lint": "eslint src test",
-    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest",
-    "test:update": "cross-env NODE_ENV=test BABEL_ENV=test jest --u"
+    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest"
   },
   "peerDependencies": {
     "@rjsf/core": "^4.0.1",
