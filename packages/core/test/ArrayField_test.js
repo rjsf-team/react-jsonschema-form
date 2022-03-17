@@ -1838,6 +1838,41 @@ describe("ArrayField", () => {
       expect(node.querySelectorAll("#custom-select")).to.have.length.of(2);
     });
 
+    it("should pass uiSchema to custom widget", () => {
+      const CustomWidget = ({ uiSchema }) => {
+        return (
+          <div id="custom-ui-option-value">
+            {uiSchema.custom_field_key["ui:options"].test}
+          </div>
+        );
+      };
+
+      const { node } = createFormComponent({
+        schema: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+        },
+        widgets: {
+          CustomWidget: CustomWidget,
+        },
+        uiSchema: {
+          "ui:widget": "CustomWidget",
+          custom_field_key: {
+            "ui:options": {
+              test: "foo",
+            },
+          },
+        },
+        formData: ["foo", "bar"],
+      });
+
+      expect(node.querySelector("#custom-ui-option-value").textContent).to.eql(
+        "foo"
+      );
+    });
+
     it("if the schema has fixed items, it should still render the custom widget.", () => {
       const schema = {
         type: "array",
