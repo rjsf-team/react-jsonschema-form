@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { WidgetProps } from '@rjsf/core';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 
 const UpDownWidget = ({
   id,
@@ -15,21 +15,13 @@ const UpDownWidget = ({
   onFocus,
   autofocus,
 }: WidgetProps) => {
-  const { FormControl, InputLabel, Input } = useContext(MuiComponentContext);
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => onChange(value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const { FormControl, InputLabel, Input } = useMuiComponent();
+  const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => onChange(value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <FormControl
-      fullWidth={true}
-      required={required}
-    >
+    <FormControl fullWidth={true} required={required}>
       <InputLabel>{label}</InputLabel>
       <Input
         id={id}

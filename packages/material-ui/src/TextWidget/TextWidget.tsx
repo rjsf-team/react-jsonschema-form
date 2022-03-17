@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { WidgetProps, utils } from '@rjsf/core';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 
 const { getDisplayLabel } = utils;
 
@@ -26,20 +26,15 @@ const TextWidget = ({
   registry,
   ...textFieldProps
 }: WidgetProps) => {
-  const { TextField } = useContext(MuiComponentContext);
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const { TextField } = useMuiComponent();
+  const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
+    onChange(value === '' ? options.emptyValue : value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const { rootSchema } = registry;
   const displayLabel = getDisplayLabel(schema, uiSchema, rootSchema);
-  const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
+  const inputType = (type || schema.type) === 'string' ? 'text' : `${type || schema.type}`;
 
   return (
     <TextField

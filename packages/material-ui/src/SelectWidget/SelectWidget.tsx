@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { WidgetProps, utils } from '@rjsf/core';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 
 const { asNumber, guessType } = utils;
 
@@ -53,20 +53,16 @@ const SelectWidget = ({
   onFocus,
   rawErrors = [],
 }: WidgetProps) => {
-  const { TextField, MenuItem } = useContext(MuiComponentContext);
+  const { TextField, MenuItem } = useMuiComponent();
   const { enumOptions, enumDisabled } = options;
 
   const emptyValue = multiple ? [] : '';
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
+  const _onChange = ({ target: { value } }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
     onChange(processValue(schema, value));
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, processValue(schema, value));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onFocus(id, processValue(schema, value));
 
   return (
@@ -87,10 +83,10 @@ const SelectWidget = ({
       }}
       SelectProps={{
         multiple: typeof multiple === 'undefined' ? false : multiple,
-      }}>
+      }}
+    >
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any =
-          enumDisabled && (enumDisabled as any).indexOf(value) != -1;
+        const disabled: any = enumDisabled && (enumDisabled as any).indexOf(value) != -1;
         return (
           <MenuItem key={i} value={value} disabled={disabled}>
             {label}

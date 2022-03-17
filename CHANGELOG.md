@@ -19,6 +19,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # v4.1.1 (upcoming)
 
+## @rjsf/material-ui
+- Fix bloated bundle size by individually requiring all MUI components (#2754)
+- Add new `useMuiComponent()` hook as a shortcut for `useContext(MuiComponentContext)`
+
 # v4.1.0
 
 ## @rjsf/core
