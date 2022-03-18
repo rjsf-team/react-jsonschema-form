@@ -960,13 +960,16 @@ function isArguments(object) {
   return Object.prototype.toString.call(object) === "[object Arguments]";
 }
 
-export function deepEquals(a, b, ca = [], cb = []) {
+export function deepEquals(a, b, ca = [], cb = [], options) {
   // Partially extracted from node-deeper and adapted to exclude comparison
   // checks for functions.
   // https://github.com/othiym23/node-deeper
   if (a === b) {
     return true;
-  } else if (typeof a === "function" || typeof b === "function") {
+  } else if (
+    (typeof a === "function" || typeof b === "function") &&
+    !options?.compareFunctions
+  ) {
     // Assume all functions are equivalent
     // see https://github.com/rjsf-team/react-jsonschema-form/issues/255
     return true;

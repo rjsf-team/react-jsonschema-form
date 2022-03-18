@@ -419,7 +419,9 @@ function SchemaFieldRender(props) {
 
 class SchemaField extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
-    return !deepEquals(this.props, nextProps);
+    return !deepEquals(this.props, nextProps, {
+      compareFunctions: this.props.shouldUpdateOnFuncChange,
+    });
   }
 
   render() {
