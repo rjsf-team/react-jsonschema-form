@@ -27,6 +27,7 @@ const FieldTemplate = ({
   readonly,
   required,
   schema,
+  rawDescription,
   // uiSchema,
 }) => {
   const {
@@ -44,7 +45,6 @@ const FieldTemplate = ({
     [...new Set(rawErrors)].map((error) => (
       <div key={`field-${id}-error-${error}`}>{error}</div>
     ));
-
   return (
     <WrapIfAdditional
       classNames={classNames}
@@ -63,7 +63,7 @@ const FieldTemplate = ({
       ) : (
         <Form.Item
           colon={colon}
-          extra={description}
+          extra={rawDescription&&description}
           hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
           help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
           htmlFor={id}
