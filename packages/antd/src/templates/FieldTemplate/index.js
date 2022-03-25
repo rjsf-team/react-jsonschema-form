@@ -65,7 +65,7 @@ const FieldTemplate = ({
           colon={colon}
           extra={description}
           hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-          help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
+          help={rawHelp ? help : rawErrors ? randerFieldErrors() : undefined}
           htmlFor={id}
           label={displayLabel && label}
           labelCol={labelCol}
