@@ -51,7 +51,8 @@ export default class Form extends Component {
     if (
       this.props.onChange &&
       !deepEquals(this.props.formData, this.state.formData) &&
-      !deepEquals(prevState.formData, this.state.formData)
+      !deepEquals(prevState.formData, this.state.formData) &&
+      !deepEquals(this.props.formData, prevProps.formData)
     ) {
       this.props.onChange(this.state);
     }
