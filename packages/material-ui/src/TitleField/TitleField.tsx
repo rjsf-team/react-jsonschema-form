@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { FieldProps } from '@rjsf/core';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 
 const TitleField = ({ title }: FieldProps) => {
-  const { Box, Divider, Typography } = useContext(MuiComponentContext);
+  const { Box, Divider, Typography } = useMuiComponent();
   return (
     <Box mb={1} mt={1}>
       <Typography variant="h5">{title}</Typography>
-      <Divider/>
+      <Divider />
     </Box>
   );
-}
+};
 
 export default TitleField;

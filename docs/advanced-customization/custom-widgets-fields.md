@@ -121,12 +121,12 @@ render((
 
 The following props are passed to custom widget components:
 
-- `id`: The generated id for this field;
-- `schema`: The JSONSchema subschema object for this field;
-- `uiSchema`: The uiSchema for this field;
-- `value`: The current value for this field;
+- `id`: The generated id for this widget;
+- `schema`: The JSONSchema subschema object for this widget;
+- `uiSchema`: The uiSchema for this widget;
+- `value`: The current value for this widget;
 - `placeholder`: the placeholder for the field, if any;
-- `required`: The required status of this field;
+- `required`: The required status of this widget;
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
 - `autofocus`: `true` if the widget should autofocus;
