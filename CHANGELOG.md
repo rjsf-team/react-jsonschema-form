@@ -17,7 +17,13 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0 (coming soon)
 
-# v4.1.1 (upcoming)
+# v4.1.2 (upcoming)
+
+## @rjsf/core
+
+- Fix `ui:orderable` and `ui:removable` in arrays
+
+# v4.1.1
 
 ## @rjsf/material-ui
 - Fix bloated bundle size by individually requiring all MUI components (#2754)
