@@ -44,14 +44,17 @@ export default class Form extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const nextState = this.getStateFromProps(nextProps, nextProps.formData);
-    if (
-      !deepEquals(nextState.formData, nextProps.formData) &&
-      !deepEquals(nextState.formData, this.state.formData) &&
-      this.props.onChange
-    ) {
-      this.props.onChange(nextState);
-    }
     this.setState(nextState);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.onChange &&
+      !deepEquals(this.props.formData, this.state.formData) &&
+      !deepEquals(prevState.formData, this.state.formData)
+    ) {
+      this.props.onChange(this.state);
+    }
   }
 
   getStateFromProps(props, inputFormData) {
