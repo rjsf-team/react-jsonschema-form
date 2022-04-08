@@ -475,7 +475,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       idPrefix,
-      idSeparator,
+      idSeparator = "_",
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
@@ -489,7 +489,7 @@ class ArrayField extends Component {
         const { key, item } = keyedItem;
         const itemSchema = retrieveSchema(schema.items, rootSchema, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
@@ -684,7 +684,7 @@ class ArrayField extends Component {
       formData,
       errorSchema,
       idPrefix,
-      idSeparator,
+      idSeparator = "_",
       idSchema,
       name,
       required,
@@ -726,7 +726,7 @@ class ArrayField extends Component {
         const itemSchema = additional
           ? retrieveSchema(schema.additionalItems, rootSchema, item)
           : itemSchemas[index];
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
