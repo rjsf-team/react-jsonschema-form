@@ -21,7 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Fix `ui:orderable` and `ui:removable` in arrays
+- Fix `ui:orderable` and `ui:removable` in arrays (#2797)
 
 # v4.1.1
 

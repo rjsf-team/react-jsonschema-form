@@ -710,6 +710,19 @@ describe("ArrayField", () => {
       expect(moveDownBtns).to.be.null;
     });
 
+    it("should not show move up/down buttons if ui:orderable is false", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar"],
+        uiSchema: { "ui:orderable": false } },
+      });
+      const moveUpBtns = node.querySelector(".array-item-move-up");
+      const moveDownBtns = node.querySelector(".array-item-move-down");
+
+      expect(moveUpBtns).to.be.null;
+      expect(moveDownBtns).to.be.null;
+    });
+
     it("should remove a field from the list", () => {
       const { node } = createFormComponent({
         schema,
@@ -766,6 +779,17 @@ describe("ArrayField", () => {
         schema,
         formData: ["foo", "bar"],
         uiSchema: { "ui:options": { removable: false } },
+      });
+      const dropBtn = node.querySelector(".array-item-remove");
+
+      expect(dropBtn).to.be.null;
+    });
+
+    it("should not show remove button if ui:removable is false", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar"],
+        uiSchema: { "ui:removable": false } },
       });
       const dropBtn = node.querySelector(".array-item-remove");
 
