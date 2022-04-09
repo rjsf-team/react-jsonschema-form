@@ -1,0 +1,14 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "include": ["src", "types"],
+    "compilerOptions": {
+      "target": "es5",
+      "rootDir": "./src",
+      "baseUrl": "./",
+      "paths": {
+        "*": ["src/*", "node_modules/*"]
+      },
+      "jsx": "react",
+    }
+  }
+  

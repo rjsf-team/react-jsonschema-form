@@ -1,8 +1,8 @@
 {
   "name": "@rjsf/semantic-ui",
   "version": "4.1.1",
-  "main": "dist/cjs/index.js",
-  "module": "dist/es/index.js",
+  "main": "dist/index.js",
+  "module": "dist/semantic-ui.esm.js",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
   "lint-staged": {
     "{src,test}/**/*.js": [
@@ -18,16 +18,14 @@
     "node": ">=12"
   },
   "scripts": {
-    "build": "npm run build:cjs && npm run build:es",
-    "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/cjs",
-    "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/es",
-    "dist:build:umd": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
+    "build": "rimraf dist && tsdx build",
     "lint": "eslint src test",
-    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest"
+    "test": "tsdx test"
   },
   "peerDependencies": {
     "@rjsf/core": "^4.0.1",
     "lodash": "^4.17.15",
+    "lodash-es": "^4.17.15",
     "nanoid": "^3.1.23",
     "react": ">=16",
     "semantic-ui-css": "^2.4.1",
@@ -85,6 +83,9 @@
     "rimraf": "^2.6.3",
     "sinon": "^7.5.0",
     "style-loader": "^2.0.0",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.5",
     "webpack": "^5.33.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
