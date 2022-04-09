@@ -1972,10 +1972,10 @@ describe("ArrayField", () => {
       });
 
       const inputs = node.querySelectorAll("input[type=text]");
-      expect(inputs[0].id).eql("base/foo_0/bar");
-      expect(inputs[1].id).eql("base/foo_0/baz");
-      expect(inputs[2].id).eql("base/foo_1/bar");
-      expect(inputs[3].id).eql("base/foo_1/baz");
+      expect(inputs[0].id).eql("base/foo/0/bar");
+      expect(inputs[1].id).eql("base/foo/0/baz");
+      expect(inputs[2].id).eql("base/foo/1/bar");
+      expect(inputs[3].id).eql("base/foo/1/baz");
     });
   });
 
