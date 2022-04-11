@@ -1,0 +1,14 @@
+name: issue-triage-removal-automation
+
+on:
+  issues:
+    types: [assigned]
+
+jobs:
+  automate-issues-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: andymckay/labeler@master
+        with:
+          remove-labels: "needs triage"
+          ignore-if-assigned: false
