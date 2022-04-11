@@ -3,7 +3,6 @@ import { WidgetProps } from "@rjsf/core";
 import {
   DatePicker,
   DayOfWeek,
-  IDatePickerStrings,
   mergeStyleSets,
 } from "@fluentui/react";
 import _pick from "lodash/pick";
@@ -86,18 +85,18 @@ const parseDate = (dateStr?: string) => {
 const DateWidget = ({
   id,
   required,
-  readonly,
-  disabled,
+  // readonly,
+  // disabled,
   label,
   value,
   onChange,
   onBlur,
   onFocus,
-  autofocus,
+  // autofocus,
   options,
   placeholder,
-  schema,
-  rawErrors,
+  // schema,
+  // rawErrors,
 }: WidgetProps) => {
   const _onSelectDate = (date: Date | null | undefined) => {
     if (date) {
