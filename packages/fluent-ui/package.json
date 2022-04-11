@@ -42,10 +42,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.0",
     "react-test-renderer": "^16.13.1",
-    "rimraf": "^2.6.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.0.0",
-    "typescript": "^3.5.3"
+    "rimraf": "^2.6.3"
   },
   "publishConfig": {
     "access": "public"

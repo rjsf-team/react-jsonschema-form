@@ -29,7 +29,10 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
     "husky": "^3.1.0",
-    "source-map-loader": "^1.1.2"
+    "source-map-loader": "^1.1.2",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.5"
   },
   "husky": {
     "hooks": {

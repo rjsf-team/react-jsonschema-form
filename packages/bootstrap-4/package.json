@@ -43,10 +43,7 @@
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.8.6",
     "react-test-renderer": "^16.13.1",
-    "rimraf": "^2.6.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^1.10.0",
-    "typescript": "^3.5.3"
+    "rimraf": "^2.6.3"
   },
   "publishConfig": {
     "access": "public"
