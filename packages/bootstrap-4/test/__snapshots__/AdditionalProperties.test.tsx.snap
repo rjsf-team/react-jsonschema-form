@@ -163,7 +163,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
   </div>
   <div>
     <button
-      className="btn btn-info btn btn-primary"
+      className="btn btn-primary"
       disabled={false}
       type="submit"
     >
