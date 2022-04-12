@@ -46,7 +46,7 @@ exports[`single fields hidden field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -98,7 +98,7 @@ exports[`single fields null field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -178,7 +178,7 @@ exports[`single fields number field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -243,7 +243,7 @@ exports[`single fields string field format data-url 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -323,7 +323,7 @@ exports[`single fields string field format email 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -403,7 +403,7 @@ exports[`single fields string field format uri 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -483,7 +483,7 @@ exports[`single fields string field regular 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -558,7 +558,7 @@ exports[`single fields unsupported field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -638,7 +638,7 @@ exports[`single fields using custom tagName 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary btn btn-info root-50"
+        className="ms-Button ms-Button--primary root-50"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
