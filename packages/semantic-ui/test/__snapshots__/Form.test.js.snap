@@ -2,7 +2,7 @@
 
 exports[`single fields null field 1`] = `
 <form
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -21,7 +21,7 @@ exports[`single fields null field 1`] = `
 
 exports[`single fields number field 1`] = `
 <form
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -61,7 +61,7 @@ exports[`single fields number field 1`] = `
 
 exports[`single fields string field format data-url 1`] = `
 <form
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -93,7 +93,7 @@ exports[`single fields string field format data-url 1`] = `
 
 exports[`single fields string field format email 1`] = `
 <form
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -132,7 +132,7 @@ exports[`single fields string field format email 1`] = `
 
 exports[`single fields string field format uri 1`] = `
 <form
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -171,7 +171,7 @@ exports[`single fields string field format uri 1`] = `
 
 exports[`single fields string field regular 1`] = `
 <form
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -211,7 +211,7 @@ exports[`single fields string field regular 1`] = `
 
 exports[`single fields testing with tagName 1`] = `
 <div
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -251,7 +251,7 @@ exports[`single fields testing with tagName 1`] = `
 
 exports[`single fields uiSchema theme props 1`] = `
 <form
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -386,7 +386,7 @@ exports[`single fields uiSchema theme props 1`] = `
 
 exports[`single fields unsupported field 1`] = `
 <form
-  className="rjsf"
+  className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
