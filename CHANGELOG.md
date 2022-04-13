@@ -29,7 +29,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - To improve performance, skip validating subschemas in oneOf / anyOf if formData is undefined (#2676)
 - Fixed the `toIdSchema()` typescript definition to add new `idSeparator` prop along with the spelling of `idPrefix`
-  - Also passed the new `idSeparator` prop through to the `AnyOfField` and `OneOfField` inside of `SchemaField` 
+  - Also passed the new `idSeparator` prop through to the `AnyOfField` and `OneOfField` inside of `SchemaField`
   - Updated `ArrayField` in `@rjsf/core` to pass `idSeparator` and `idPrefix` through to `SchemaField`, fixing a small bug
 - Added support for the new `ui:hideError` feature, which allows you to hide errors at a field level
 
@@ -100,9 +100,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Enable ui options in playground, to demonstrate submit button options (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 ## @rjsf/bootstrap-4
-- SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
-
-## @rjsf/material-ui
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
 ## @rjsf/semantic-ui
