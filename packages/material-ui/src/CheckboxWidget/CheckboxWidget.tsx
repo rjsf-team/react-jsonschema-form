@@ -1,37 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { WidgetProps } from '@rjsf/core';
 import { utils } from '@rjsf/core';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 
 const { schemaRequiresTrueValue } = utils;
 
 const CheckboxWidget = (props: WidgetProps) => {
-  const {
-    schema,
-    id,
-    value,
-    disabled,
-    readonly,
-    label,
-    autofocus,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
-  const { Checkbox, FormControlLabel } = useContext(MuiComponentContext);
+  const { schema, id, value, disabled, readonly, label, autofocus, onChange, onBlur, onFocus } = props;
+  const { Checkbox, FormControlLabel } = useMuiComponent();
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
 
   const _onChange = ({}, checked: boolean) => onChange(checked);
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
     <FormControlLabel

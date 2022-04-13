@@ -15,7 +15,7 @@ const Theme = {
   fields: { ...fields, ...Fields },
   FieldTemplate,
   ObjectFieldTemplate,
-  tagName: SuiForm,
+  _internalFormWrapper: SuiForm,
   widgets: { ...widgets, ...Widgets },
 };
 

@@ -12,6 +12,7 @@ import {
   isFilesArray,
   isFixedItems,
   allowAdditionalItems,
+  isCustomWidget,
   optionsList,
   retrieveSchema,
   toIdSchema,
@@ -442,14 +443,18 @@ class ArrayField extends Component {
         />
       );
     }
+    if (isMultiSelect(schema, rootSchema)) {
+      // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
+      return this.renderMultiSelect();
+    }
+    if (isCustomWidget(uiSchema)) {
+      return this.renderCustomWidget();
+    }
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
     if (isFilesArray(schema, uiSchema, rootSchema)) {
       return this.renderFiles();
-    }
-    if (isMultiSelect(schema, rootSchema)) {
-      return this.renderMultiSelect();
     }
     return this.renderNormalArray();
   }
@@ -464,12 +469,13 @@ class ArrayField extends Component {
       required,
       disabled,
       readonly,
+      hideError,
       autofocus,
       registry = getDefaultRegistry(),
       onBlur,
       onFocus,
       idPrefix,
-      idSeparator,
+      idSeparator = "_",
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
@@ -483,7 +489,7 @@ class ArrayField extends Component {
         const { key, item } = keyedItem;
         const itemSchema = retrieveSchema(schema.items, rootSchema, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
@@ -514,6 +520,7 @@ class ArrayField extends Component {
       uiSchema,
       onAddClick: this.onAddClick,
       readonly,
+      hideError,
       required,
       schema,
       title,
@@ -530,6 +537,55 @@ class ArrayField extends Component {
       ArrayFieldTemplate ||
       DefaultNormalArrayFieldTemplate;
     return <Component {...arrayProps} />;
+  }
+
+  renderCustomWidget() {
+    const {
+      schema,
+      idSchema,
+      uiSchema,
+      disabled,
+      readonly,
+      hideError,
+      required,
+      placeholder,
+      autofocus,
+      onBlur,
+      onFocus,
+      formData: items,
+      registry = getDefaultRegistry(),
+      rawErrors,
+      name,
+    } = this.props;
+    const { widgets, formContext } = registry;
+    const title = schema.title || name;
+
+    const { widget, ...options } = {
+      ...getUiOptions(uiSchema),
+    };
+    const Widget = getWidget(schema, widget, widgets);
+    return (
+      <Widget
+        id={idSchema && idSchema.$id}
+        multiple
+        onChange={this.onSelectChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        options={options}
+        schema={schema}
+        registry={registry}
+        value={items}
+        disabled={disabled}
+        readonly={readonly}
+        hideError={hideError}
+        required={required}
+        label={title}
+        placeholder={placeholder}
+        formContext={formContext}
+        autofocus={autofocus}
+        rawErrors={rawErrors}
+      />
+    );
   }
 
   renderMultiSelect() {
@@ -628,7 +684,7 @@ class ArrayField extends Component {
       formData,
       errorSchema,
       idPrefix,
-      idSeparator,
+      idSeparator = "_",
       idSchema,
       name,
       required,
@@ -670,7 +726,7 @@ class ArrayField extends Component {
         const itemSchema = additional
           ? retrieveSchema(schema.additionalItems, rootSchema, item)
           : itemSchemas[index];
-        const itemIdPrefix = idSchema.$id + "_" + index;
+        const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = toIdSchema(
           itemSchema,
           itemIdPrefix,
@@ -767,6 +823,8 @@ class ArrayField extends Component {
           uiSchema={itemUiSchema}
           formData={itemData}
           errorSchema={itemErrorSchema}
+          idPrefix={this.props.idPrefix}
+          idSeparator={this.props.idSeparator}
           idSchema={itemIdSchema}
           required={this.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}
@@ -775,6 +833,7 @@ class ArrayField extends Component {
           registry={this.props.registry}
           disabled={this.props.disabled}
           readonly={this.props.readonly}
+          hideError={this.props.hideError}
           autofocus={autofocus}
           rawErrors={rawErrors}
         />

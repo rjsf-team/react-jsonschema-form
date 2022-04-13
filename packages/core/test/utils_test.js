@@ -29,6 +29,7 @@ import {
   schemaRequiresTrueValue,
   canExpand,
   optionsList,
+  isCustomWidget,
   getMatchingOption,
   getSubmitButtonOptions,
 } from "../src/utils";
@@ -2404,6 +2405,323 @@ describe("utils", () => {
         });
       });
     });
+
+    describe("Conditional schemas (If, Then, Else)", () => {
+      it("should resolve if, then", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            country: {
+              default: "United States of America",
+              enum: ["United States of America", "Canada"],
+            },
+          },
+          if: {
+            properties: { country: { const: "United States of America" } },
+          },
+          then: {
+            properties: { postal_code: { pattern: "[0-9]{5}(-[0-9]{4})?" } },
+          },
+          else: {
+            properties: {
+              postal_code: { pattern: "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]" },
+            },
+          },
+        };
+        const definitions = {};
+        const formData = {
+          country: "United States of America",
+          postal_code: "20500",
+        };
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            country: {
+              default: "United States of America",
+              enum: ["United States of America", "Canada"],
+            },
+            postal_code: { pattern: "[0-9]{5}(-[0-9]{4})?" },
+          },
+        });
+      });
+      it("should resolve if, else", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            country: {
+              default: "United States of America",
+              enum: ["United States of America", "Canada"],
+            },
+          },
+          if: {
+            properties: { country: { const: "United States of America" } },
+          },
+          then: {
+            properties: { postal_code: { pattern: "[0-9]{5}(-[0-9]{4})?" } },
+          },
+          else: {
+            properties: {
+              postal_code: { pattern: "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]" },
+            },
+          },
+        };
+        const definitions = {};
+        const formData = {
+          country: "Canada",
+          postal_code: "K1M 1M4",
+        };
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            country: {
+              default: "United States of America",
+              enum: ["United States of America", "Canada"],
+            },
+            postal_code: { pattern: "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]" },
+          },
+        });
+      });
+      it("should resolve multiple conditions", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            animal: {
+              enum: ["Cat", "Fish"],
+            },
+          },
+          allOf: [
+            {
+              if: {
+                properties: { animal: { const: "Cat" } },
+              },
+              then: {
+                properties: {
+                  food: { type: "string", enum: ["meat", "grass", "fish"] },
+                },
+              },
+              required: ["food"],
+            },
+            {
+              if: {
+                properties: { animal: { const: "Fish" } },
+              },
+              then: {
+                properties: {
+                  food: {
+                    type: "string",
+                    enum: ["insect", "worms"],
+                  },
+                  water: {
+                    type: "string",
+                    enum: ["lake", "sea"],
+                  },
+                },
+                required: ["food", "water"],
+              },
+            },
+            {
+              required: ["animal"],
+            },
+          ],
+        };
+        const definitions = {};
+        const formData = {
+          animal: "Cat",
+        };
+
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            animal: {
+              enum: ["Cat", "Fish"],
+            },
+            food: { type: "string", enum: ["meat", "grass", "fish"] },
+          },
+          required: ["animal", "food"],
+        });
+      });
+      it("should resolve $ref", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            animal: {
+              enum: ["Cat", "Fish"],
+            },
+          },
+          allOf: [
+            {
+              if: {
+                properties: { animal: { const: "Cat" } },
+              },
+              then: {
+                $ref: "#/definitions/cat",
+              },
+              required: ["food"],
+            },
+            {
+              if: {
+                properties: { animal: { const: "Fish" } },
+              },
+              then: {
+                $ref: "#/definitions/fish",
+              },
+            },
+            {
+              required: ["animal"],
+            },
+          ],
+        };
+
+        const definitions = {
+          cat: {
+            properties: {
+              food: { type: "string", enum: ["meat", "grass", "fish"] },
+            },
+          },
+          fish: {
+            properties: {
+              food: {
+                type: "string",
+                enum: ["insect", "worms"],
+              },
+              water: {
+                type: "string",
+                enum: ["lake", "sea"],
+              },
+            },
+            required: ["food", "water"],
+          },
+        };
+
+        const formData = {
+          animal: "Cat",
+        };
+
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            animal: {
+              enum: ["Cat", "Fish"],
+            },
+            food: { type: "string", enum: ["meat", "grass", "fish"] },
+          },
+          required: ["animal", "food"],
+        });
+      });
+      it("handles nested if then else", () => {
+        const schemaWithNested = {
+          type: "object",
+          properties: {
+            country: {
+              enum: ["USA"],
+            },
+          },
+          required: ["country"],
+          if: {
+            properties: {
+              country: {
+                const: "USA",
+              },
+            },
+            required: ["country"],
+          },
+          then: {
+            properties: {
+              state: {
+                type: "string",
+                enum: ["California", "New York"],
+              },
+            },
+            required: ["state"],
+            if: {
+              properties: {
+                state: {
+                  const: "New York",
+                },
+              },
+              required: ["state"],
+            },
+            then: {
+              properties: {
+                city: {
+                  type: "string",
+                  enum: ["New York City", "Buffalo", "Rochester"],
+                },
+              },
+            },
+            else: {
+              if: {
+                properties: {
+                  state: {
+                    const: "California",
+                  },
+                },
+                required: ["state"],
+              },
+              then: {
+                properties: {
+                  city: {
+                    type: "string",
+                    enum: ["Los Angeles", "San Diego", "San Jose"],
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        const definitions = {};
+        const formData = {
+          country: "USA",
+          state: "New York",
+        };
+
+        expect(retrieveSchema(schemaWithNested, definitions, formData)).eql({
+          type: "object",
+          properties: {
+            country: {
+              enum: ["USA"],
+            },
+            state: { type: "string", enum: ["California", "New York"] },
+            city: {
+              type: "string",
+              enum: ["New York City", "Buffalo", "Rochester"],
+            },
+          },
+          required: ["country", "state"],
+        });
+      });
+      it("overrides the base schema with a conditional branch when merged", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            myString: {
+              type: "string",
+              minLength: 5,
+            },
+          },
+          if: true,
+          then: {
+            properties: {
+              myString: {
+                minLength: 10, // This value of minLength should override the original value
+              },
+            },
+          },
+        };
+        const definitions = {};
+        const formData = {};
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            myString: {
+              type: "string",
+              minLength: 10,
+            },
+          },
+        });
+      });
+    });
   });
 
   describe("shouldRender", () => {
@@ -3674,6 +3992,24 @@ describe("utils", () => {
           getDisplayLabel({ type: "array" }, { "ui:widget": "files" })
         ).eql(true);
       });
+      it("custom type", () => {
+        expect(
+          getDisplayLabel(
+            { type: "array", title: "myAwesomeTitle" },
+            { "ui:widget": "MyAwesomeWidget" }
+          )
+        ).eql(true);
+      });
+    });
+  });
+
+  describe("isCustomWidget()", () => {
+    it("When the function is called with a custom widget in the uiSchema it returns true", () => {
+      expect(isCustomWidget({ "ui:widget": "MyAwesomeWidget" })).eql(true);
+    });
+
+    it("When the function is called without a custom widget in the schema it returns false", () => {
+      expect(isCustomWidget({ "ui:fields": "randomString" })).eql(false);
     });
   });
 
@@ -3930,6 +4266,55 @@ describe("utils", () => {
           value: schema.const,
         }))
       );
+    });
+    it("should infer correct anyOf schema based on data if passing undefined", () => {
+      const rootSchema = {
+        defs: {
+          a: { type: "object", properties: { id: { enum: ["a"] } } },
+          nested: {
+            type: "object",
+            properties: {
+              id: { enum: ["nested"] },
+              child: { $ref: "#/defs/any" },
+            },
+          },
+          any: { anyOf: [{ $ref: "#/defs/a" }, { $ref: "#/defs/nested" }] },
+        },
+        $ref: "#/defs/any",
+      };
+      const options = [
+        { type: "object", properties: { id: { enum: ["a"] } } },
+        {
+          type: "object",
+          properties: {
+            id: { enum: ["nested"] },
+            child: { $ref: "#/defs/any" },
+          },
+        },
+      ];
+      expect(getMatchingOption(undefined, options, rootSchema)).eql(0);
+    });
+    it("should infer correct anyOf schema based on data if passing null and option 2 is {type: null}", () => {
+      const rootSchema = {
+        defs: {
+          a: { type: "object", properties: { id: { enum: ["a"] } } },
+          nested: {
+            type: "object",
+            properties: {
+              id: { enum: ["nested"] },
+              child: { $ref: "#/defs/any" },
+            },
+          },
+          any: { anyOf: [{ $ref: "#/defs/a" }, { $ref: "#/defs/nested" }] },
+        },
+        $ref: "#/defs/any",
+      };
+      const options = [
+        { type: "string" },
+        { type: "string" },
+        { type: "null" },
+      ];
+      expect(getMatchingOption(null, options, rootSchema)).eql(2);
     });
     it("should infer correct anyOf schema based on data", () => {
       const rootSchema = {

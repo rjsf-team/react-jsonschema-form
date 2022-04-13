@@ -187,6 +187,7 @@ class ObjectField extends Component {
       required,
       disabled,
       readonly,
+      hideError,
       idPrefix,
       idSeparator,
       onBlur,
@@ -259,6 +260,7 @@ class ObjectField extends Component {
               registry={registry}
               disabled={disabled}
               readonly={readonly}
+              hideError={hideError}
               onDropPropertyClick={this.onDropPropertyClick}
             />
           ),

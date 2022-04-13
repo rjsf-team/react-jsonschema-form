@@ -89,6 +89,18 @@ describe("ArrayField", () => {
     return <div id="custom">{props.rawErrors}</div>;
   };
 
+  const CustomSelectComponent = props => {
+    return (
+      <select>
+        {props.value.map((item, index) => (
+          <option key={index} id="custom-select">
+            {item}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
   beforeEach(() => {
     sandbox = createSandbox();
   });
@@ -1803,6 +1815,59 @@ describe("ArrayField", () => {
     });
   });
 
+  describe("Custom Widget", () => {
+    it("if it does not contain enums or uniqueItems=true, it should still render the custom widget.", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "CustomSelect",
+        },
+        formData: ["foo", "bar"],
+        widgets: {
+          CustomSelect: CustomSelectComponent,
+        },
+      });
+
+      expect(node.querySelectorAll("#custom-select")).to.have.length.of(2);
+    });
+
+    it("if the schema has fixed items, it should still render the custom widget.", () => {
+      const schema = {
+        type: "array",
+        items: [
+          {
+            type: "string",
+            title: "Some text",
+          },
+          {
+            type: "number",
+            title: "A number",
+          },
+        ],
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "CustomSelect",
+        },
+        formData: ["foo", "bar"],
+        widgets: {
+          CustomSelect: CustomSelectComponent,
+        },
+      });
+
+      expect(node.querySelectorAll("#custom-select")).to.have.length.of(2);
+    });
+  });
+
   describe("Title", () => {
     const TitleField = props => <div id={`title-${props.title}`} />;
 
@@ -1842,6 +1907,98 @@ describe("ArrayField", () => {
       };
       const { node } = createFormComponent({ schema, fields });
       expect(node.querySelector("#title-")).to.be.null;
+    });
+  });
+
+  describe("should handle nested idPrefix and idSeparator parameter", () => {
+    it("should render nested input widgets with the expected ids", () => {
+      const complexSchema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                bar: { type: "string" },
+                baz: { type: "string" },
+              },
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        formData: {
+          foo: [{ bar: "bar1", baz: "baz1" }, { bar: "bar2", baz: "baz2" }],
+        },
+        idSeparator: "/",
+        idPrefix: "base",
+      });
+
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs[0].id).eql("base/foo/0/bar");
+      expect(inputs[1].id).eql("base/foo/0/baz");
+      expect(inputs[2].id).eql("base/foo/1/bar");
+      expect(inputs[3].id).eql("base/foo/1/baz");
+    });
+  });
+
+  describe("should handle nested 'hideError: true' uiSchema value", () => {
+    const complexSchema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      },
+    };
+    function validate(formData, errors) {
+      errors.foo[0].bar.addError("test");
+      errors.foo[1].bar.addError("test");
+      return errors;
+    }
+
+    it("should render nested error decorated input widgets with the expected ids", () => {
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        formData: {
+          foo: [{ bar: "bar1" }, { bar: "bar2" }],
+        },
+        validate,
+      });
+      Simulate.submit(node);
+
+      const inputs = node.querySelectorAll(
+        ".form-group.field-error input[type=text]"
+      );
+      expect(inputs[0].id).eql("root_foo_0_bar");
+      expect(inputs[1].id).eql("root_foo_1_bar");
+    });
+    it("should NOT render nested error decorated input widgets", () => {
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        uiSchema: {
+          "ui:hideError": true,
+        },
+        formData: {
+          foo: [{ bar: "bar1" }, { bar: "bar2" }],
+        },
+        validate,
+        showErrorList: false,
+      });
+      Simulate.submit(node);
+
+      const inputsNoError = node.querySelectorAll(
+        ".form-group.field-error input[type=text]"
+      );
+      expect(inputsNoError).to.have.length.of(0);
     });
   });
 });

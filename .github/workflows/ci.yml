@@ -14,9 +14,9 @@ jobs:
         node-version: [12.x, 14.x]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2.5.1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
@@ -85,9 +85,9 @@ jobs:
   #   name: Deploy canary version of packages to npm
   #   needs: [build]
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #     - name: Use Node.js 14.x
-  #       uses: actions/setup-node@v2.5.1
+  #       uses: actions/setup-node@v3
   #       with:
   #         node-version: 14.x
   #     - run: npm ci
@@ -101,9 +101,9 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup Python
-      uses: actions/setup-python@v2.3.1
+      uses: actions/setup-python@v3
       with:
         python-version: 3.6
     - run: pip install -r requirements.docs.txt

@@ -20,6 +20,7 @@ declare module '@rjsf/core' {
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
         readonly?: boolean;
+        hideError?: boolean;
         enctype?: string;
         extraErrors?: any;
         ErrorList?: React.StatelessComponent<ErrorListProps>;
@@ -51,6 +52,11 @@ declare module '@rjsf/core' {
         uiSchema?: UiSchema;
         validate?: (formData: T, errors: FormValidation) => FormValidation;
         widgets?: { [name: string]: Widget };
+        /**
+         * WARNING: This exists for internal react-jsonschema-form purposes only. No guarantees of backwards
+         * compatibility. Use ONLY if you know what you are doing
+         */
+        _internalFormWrapper?: React.ElementType;
     }
 
     export default class Form<T> extends React.Component<FormProps<T>> {
@@ -407,7 +413,8 @@ declare module '@rjsf/core' {
             id: string,
             definitions: Registry['definitions'],
             formData?: T,
-            idPredix?: string,
+            idPrefix?: string,
+            idSeparator?: string,
         ): IdSchema | IdSchema[];
 
         export function toPathSchema<T = any>(
