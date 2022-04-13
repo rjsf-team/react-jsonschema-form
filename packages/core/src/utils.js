@@ -233,22 +233,48 @@ function computeDefaults(
 
   switch (getSchemaType(schema)) {
     // We need to recur for object schema inner default values.
-    case "object":
-      return Object.keys(schema.properties || {}).reduce((acc, key) => {
-        // Compute the defaults for this node, with the parent defaults we might
-        // have from a previous run: defaults[key].
-        let computedDefault = computeDefaults(
-          schema.properties[key],
-          (defaults || {})[key],
-          rootSchema,
-          (formData || {})[key],
-          includeUndefinedValues
-        );
-        if (includeUndefinedValues || computedDefault !== undefined) {
-          acc[key] = computedDefault;
-        }
-        return acc;
-      }, {});
+    case "object": {
+      const objectDefaults = Object.keys(schema.properties || {}).reduce(
+        (acc, key) => {
+          // Compute the defaults for this node, with the parent defaults we might
+          // have from a previous run: defaults[key].
+          let computedDefault = computeDefaults(
+            schema.properties[key],
+            (defaults || {})[key],
+            rootSchema,
+            (formData || {})[key],
+            includeUndefinedValues
+          );
+          if (includeUndefinedValues || computedDefault !== undefined) {
+            acc[key] = computedDefault;
+          }
+          return acc;
+        },
+        {}
+      );
+      if (!schema.additionalProperties || !isObject(defaults)) {
+        return objectDefaults;
+      }
+      const additionalPropertiesSchema = isObject(schema.additionalProperties)
+        ? schema.additionalProperties
+        : {}; // as per spec additionalProperties may be either schema or boolean
+      Object.keys(defaults)
+        .filter(key => !schema.properties || !schema.properties[key])
+        .forEach(key => {
+          let computedDefault = computeDefaults(
+            additionalPropertiesSchema,
+            defaults[key],
+            rootSchema,
+            (formData || {})[key],
+            includeUndefinedValues
+          );
+          if (includeUndefinedValues || computedDefault !== undefined) {
+            objectDefaults[key] = computedDefault;
+          }
+        });
+
+      return objectDefaults;
+    }
 
     case "array":
       // Inject defaults into existing array defaults

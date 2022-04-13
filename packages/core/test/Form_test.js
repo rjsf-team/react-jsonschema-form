@@ -2,7 +2,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import React, { createRef } from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
-import { render, findDOMNode } from "react-dom";
+import { findDOMNode, render } from "react-dom";
 import { Portal } from "react-portal";
 
 import Form from "../src";
@@ -873,6 +873,200 @@ describeRepeated("Form common", createFormComponent => {
               },
             ],
           },
+        },
+      });
+    });
+  });
+
+  describe("Defaults additionalProperties propagation", () => {
+    it("should submit string string map defaults", () => {
+      const schema = {
+        type: "object",
+        additionalProperties: {
+          type: "string",
+        },
+        default: {
+          foo: "bar",
+        },
+      };
+
+      const { node, onSubmit } = createFormComponent({ schema });
+      Simulate.submit(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          foo: "bar",
+        },
+      });
+    });
+
+    it("should submit a combination of properties and additional properties defaults", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          x: {
+            type: "string",
+          },
+        },
+        additionalProperties: {
+          type: "string",
+        },
+        default: {
+          x: "x default value",
+          y: "y default value",
+        },
+      };
+
+      const { node, onSubmit } = createFormComponent({ schema });
+      Simulate.submit(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          x: "x default value",
+          y: "y default value",
+        },
+      });
+    });
+
+    it("should submit a properties and additional properties defaults when properties default is nested", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          x: {
+            type: "string",
+            default: "x default value",
+          },
+        },
+        additionalProperties: {
+          type: "string",
+        },
+        default: {
+          y: "y default value",
+        },
+      };
+
+      const { node, onSubmit } = createFormComponent({ schema });
+      Simulate.submit(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          x: "x default value",
+          y: "y default value",
+        },
+      });
+    });
+
+    it("should submit defaults when nested map has map values", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          x: {
+            additionalProperties: {
+              $ref: "#/definitions/objectDef",
+            },
+          },
+        },
+        definitions: {
+          objectDef: {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
+          },
+        },
+        default: {
+          x: {
+            y: {
+              z: "x.y.z default value",
+            },
+          },
+        },
+      };
+
+      const { node, onSubmit } = createFormComponent({ schema });
+      Simulate.submit(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          x: {
+            y: {
+              z: "x.y.z default value",
+            },
+          },
+        },
+      });
+    });
+
+    it("should submit defaults when they are defined in a nested additionalProperties", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          x: {
+            additionalProperties: {
+              type: "string",
+              default: "x.y default value",
+            },
+          },
+        },
+        default: {
+          x: {
+            y: {},
+          },
+        },
+      };
+
+      const { node, onSubmit } = createFormComponent({ schema });
+      Simulate.submit(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          x: {
+            y: "x.y default value",
+          },
+        },
+      });
+    });
+
+    it("should submit defaults when additionalProperties is a boolean value", () => {
+      const schema = {
+        type: "object",
+        additionalProperties: true,
+        default: {
+          foo: "bar",
+        },
+      };
+
+      const { node, onSubmit } = createFormComponent({ schema });
+      Simulate.submit(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          foo: "bar",
+        },
+      });
+    });
+
+    it("should NOT submit default values when additionalProperties is false", () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+          },
+        },
+        additionalProperties: false,
+        default: {
+          foo: "I'm the only one",
+          bar: "I don't belong here",
+        },
+      };
+
+      const { node, onSubmit } = createFormComponent({ schema });
+      Simulate.submit(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          foo: "I'm the only one",
         },
       });
     });
