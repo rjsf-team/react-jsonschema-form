@@ -462,7 +462,7 @@ export default class Form extends Component {
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
     const _SchemaField = registry.fields.SchemaField;
-    const SubmitButton = registry.widgets.SubmitButton;
+
     // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
     // PropTypes.elementType to use for the inner tag so we'll need to pass `tagName` along if it is provided.
     // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
