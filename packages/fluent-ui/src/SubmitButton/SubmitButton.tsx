@@ -3,8 +3,8 @@ import { utils, WidgetProps } from '@rjsf/core';
 import { PrimaryButton } from "@fluentui/react";
 const { getSubmitButtonOptions } = utils;
 export default ({uiSchema}: WidgetProps) => {
-  const { submitText, removed, props: submitButtonProps }= getSubmitButtonOptions(uiSchema);
-  if(removed) return null;
+  const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(uiSchema);
+  if(norender) return null;
   return (
     <div>
       <br />

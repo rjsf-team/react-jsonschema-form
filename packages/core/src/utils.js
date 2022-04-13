@@ -392,7 +392,7 @@ export function getSubmitButtonOptions(uiSchema) {
       disabled: false,
     },
     submitText: "Submit",
-    removed: false,
+    norender: false,
   };
   if (uiOptions && uiOptions["submitButtonOptions"]) {
     return Object.assign({}, defaultOptions, uiOptions["submitButtonOptions"]);

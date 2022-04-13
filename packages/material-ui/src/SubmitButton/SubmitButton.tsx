@@ -6,8 +6,8 @@ import Button from '@material-ui/core/Button';
 
 const { getSubmitButtonOptions } = utils;
 const SubmitButton: React.FC<WidgetProps> = props => {
-  const { submitText, removed, props: submitButtonProps }= getSubmitButtonOptions(props.uiSchema);
-  if(removed) return null;
+  const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(props.uiSchema);
+  if(norender) return null;
   return (
     <Box marginTop={3}>
       <Button type="submit" variant="contained" color="primary" {...submitButtonProps}>

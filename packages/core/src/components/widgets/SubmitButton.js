@@ -4,12 +4,12 @@ import { getSubmitButtonOptions } from ".././../utils";
 export default function SubmitButton({ uiSchema }) {
   const {
     submitText,
-    removed,
+    norender,
     props: submitButtonProps,
   } = getSubmitButtonOptions(uiSchema);
   return (
     <div>
-      {!removed && (
+      {!norender && (
         <button type="submit" {...submitButtonProps} className="btn btn-info">
           {submitText}
         </button>
