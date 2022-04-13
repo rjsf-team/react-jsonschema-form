@@ -20,7 +20,6 @@ const Theme: ThemeProps = {
   ObjectFieldTemplate,
   widgets: { ...widgets, ...Widgets },
   ErrorList,
-  children: React.createElement(SubmitButton)
 };
 
 export default Theme;
