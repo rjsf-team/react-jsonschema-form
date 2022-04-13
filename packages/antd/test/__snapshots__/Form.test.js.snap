@@ -95,14 +95,16 @@ exports[`single fields field with description 1`] = `
       </div>
     </fieldset>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -201,14 +203,16 @@ exports[`single fields field with description in uiSchema 1`] = `
       </div>
     </fieldset>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -235,14 +239,16 @@ exports[`single fields hidden field 1`] = `
       />
     </fieldset>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -255,14 +261,16 @@ exports[`single fields null field 1`] = `
   <div
     className="form-group field field-null"
   />
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -384,14 +392,16 @@ exports[`single fields number field 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -417,14 +427,16 @@ exports[`single fields string field format data-url 1`] = `
       </p>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -456,14 +468,16 @@ exports[`single fields string field format email 1`] = `
       value=""
     />
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -495,14 +509,16 @@ exports[`single fields string field format uri 1`] = `
       value=""
     />
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -534,14 +550,16 @@ exports[`single fields string field regular 1`] = `
       value=""
     />
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -577,14 +595,16 @@ exports[`single fields unsupported field 1`] = `
       </pre>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -616,13 +636,15 @@ exports[`single fields using custom tagName 1`] = `
       value=""
     />
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </div>
 `;
