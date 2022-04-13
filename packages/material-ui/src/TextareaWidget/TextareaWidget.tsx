@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { WidgetProps } from '@rjsf/core';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 
 const TextareaWidget = ({
   id,
@@ -19,16 +19,11 @@ const TextareaWidget = ({
   schema,
   rawErrors = [],
 }: WidgetProps) => {
-  const { TextField } = useContext(MuiComponentContext);
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
+  const { TextField } = useMuiComponent();
+  const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   let rows: string | number = 5;
   if (typeof options.rows === 'string' || typeof options.rows === 'number') {

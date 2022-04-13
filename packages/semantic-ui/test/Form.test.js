@@ -105,5 +105,14 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("testing with tagName", () => {
+    const schema = {
+      type: "string"
+    };
+    const tree = renderer
+      .create(<Form schema={schema} tagName="div" />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 
 });

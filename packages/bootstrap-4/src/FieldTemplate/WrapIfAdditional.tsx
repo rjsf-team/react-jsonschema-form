@@ -1,8 +1,14 @@
-import React from 'react';
-import { utils } from '@rjsf/core';
-import { JSONSchema7 } from 'json-schema';
 
-import { useMuiComponent } from '../MuiComponentContext';
+import React from "react";
+
+import { utils } from "@rjsf/core";
+import { JSONSchema7 } from "json-schema";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+
+import IconButton from "../IconButton/IconButton";
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 
@@ -30,28 +36,23 @@ const WrapIfAdditional = ({
   required,
   schema,
 }: WrapIfAdditionalProps) => {
-  const { Grid, FormControl, IconButton, InputLabel, Input, RemoveIcon } = useMuiComponent();
   const keyLabel = `${label} Key`; // i18n ?
   const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
-  const btnStyle = {
-    flex: 1,
-    paddingLeft: 6,
-    paddingRight: 6,
-    fontWeight: 'bold',
-  };
 
   if (!additional) {
-    return <>{children}</>;
+    return children;
   }
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
+  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onKeyChange(target.value);
 
   return (
-    <Grid container={true} key={`${id}-key`} alignItems="center" spacing={2}>
-      <Grid item={true} xs>
-        <FormControl fullWidth={true} required={required}>
-          <InputLabel>{keyLabel}</InputLabel>
-          <Input
+    <Row key={`${id}-key`}>
+      <Col xs={5}>
+        <Form.Group>
+          <Form.Label>{keyLabel}</Form.Label>
+          <Form.Control
+            required={required}
             defaultValue={label}
             disabled={disabled || readonly}
             id={`${id}-key`}
@@ -59,23 +60,23 @@ const WrapIfAdditional = ({
             onBlur={!readonly ? handleBlur : undefined}
             type="text"
           />
-        </FormControl>
-      </Grid>
-      <Grid item={true} xs>
+        </Form.Group>
+      </Col>
+      <Col xs={5}>
         {children}
-      </Grid>
-      <Grid item={true}>
+      </Col>
+      <Col xs={2} className="py-4">
         <IconButton
-          size="small"
+          block={true}
+          className="w-100"
+          variant="danger"
+          icon="remove"
           tabIndex={-1}
-          style={btnStyle as any}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
-        >
-          <RemoveIcon />
-        </IconButton>
-      </Grid>
-    </Grid>
+        />
+      </Col>
+    </Row>
   );
 };
 

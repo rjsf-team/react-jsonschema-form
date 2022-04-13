@@ -15,7 +15,46 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# v4.0.1 (upcoming)
+# v5.0.0 (coming soon)
+
+# v4.1.1 (upcoming)
+
+## @rjsf/material-ui
+- Fix bloated bundle size by individually requiring all MUI components (#2754)
+- Add new `useMuiComponent()` hook as a shortcut for `useContext(MuiComponentContext)`
+
+# v4.1.0
+
+## @rjsf/core
+
+- To improve performance, skip validating subschemas in oneOf / anyOf if formData is undefined (#2676)
+- Fixed the `toIdSchema()` typescript definition to add new `idSeparator` prop along with the spelling of `idPrefix`
+  - Also passed the new `idSeparator` prop through to the `AnyOfField` and `OneOfField` inside of `SchemaField` 
+  - Updated `ArrayField` in `@rjsf/core` to pass `idSeparator` and `idPrefix` through to `SchemaField`, fixing a small bug
+- Added support for the new `ui:hideError` feature, which allows you to hide errors at a field level
+
+## @rjsf/material-ui
+- Remove `console.log()` of the import error in `MaterialUIContext` and `Mui5Context`
+- Export the `MaterialComponentContext` (#2724)
+
+## Dev / docs / playground
+- Added documentation for the new `ui:hideError` feature
+
+# v4.0.1
+
+- Bumped the peer dependencies of `@rjsf/core` to `^4.0.0` for all of themes in `package.json`
+- Also, added tests to all themes to verify that the `tagName` prop works as expected
+
+## @rjsf/core
+- Updated `Form` to support the `semantic-ui` and `material-ui` themes to allow them work when `tagName` is provided
+- Support if/then/else (#2700)
+
+## @rjsf/material-ui
+- Fixed up the `Theme` and `Theme5` implementations to deal with a regression in which adding `tagName` caused the 2 themes to not work
+- Only `console.log()` the import error in `MaterialUIContext` and `Mui5Context` when not in `production` to eliminate tons of warnings for released code
+
+## @rjsf/semantic-ui
+- Fixed up the `Theme` implementation to deal with a regression in which adding `tagName` caused the theme to not work
 
 # v4.0.0
 
