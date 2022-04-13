@@ -10,63 +10,59 @@ exports[`object fields object 1`] = `
     className="grouped equal width fields"
   >
     <div
-      className="grouped equal width fields"
+      className="field"
     >
-      <div
-        className="field"
+      <label
+        htmlFor="root_a"
       >
-        <label
-          htmlFor="root_a"
-        >
-          a
-        </label>
-        <div
-          className="ui fluid input"
-        >
-          <input
-            aria-describedby={null}
-            autoFocus={false}
-            disabled={false}
-            id="root_a"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder=""
-            required={false}
-            type="text"
-            value=""
-          />
-        </div>
+        a
+      </label>
+      <div
+        className="ui fluid input"
+      >
+        <input
+          aria-describedby={null}
+          autoFocus={false}
+          disabled={false}
+          id="root_a"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          required={false}
+          type="text"
+          value=""
+        />
       </div>
     </div>
+  </div>
+  <div
+    className="grouped equal width fields"
+  >
     <div
-      className="grouped equal width fields"
+      className="field"
     >
-      <div
-        className="field"
+      <label
+        htmlFor="root_b"
       >
-        <label
-          htmlFor="root_b"
-        >
-          b
-        </label>
-        <div
-          className="ui fluid input"
-        >
-          <input
-            aria-describedby={null}
-            autoFocus={false}
-            disabled={false}
-            id="root_b"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder=""
-            required={false}
-            type="number"
-            value=""
-          />
-        </div>
+        b
+      </label>
+      <div
+        className="ui fluid input"
+      >
+        <input
+          aria-describedby={null}
+          autoFocus={false}
+          disabled={false}
+          id="root_b"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          required={false}
+          type="number"
+          value=""
+        />
       </div>
     </div>
   </div>
