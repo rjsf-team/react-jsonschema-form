@@ -4,10 +4,6 @@ import { Button, Form, Grid } from "semantic-ui-react";
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 
-const INPUT_STYLE = {
-  width: '100%',
-};
-
 const WrapIfAdditional = ({
   children,
   classNames,
