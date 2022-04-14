@@ -285,13 +285,6 @@ exports[`array fields fixed array 1`] = `
                         />
                       </div>
                     </div>
-                    <div
-                      className="ant-form-item-extra"
-                    >
-                      <span
-                        id="root_0__description"
-                      />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -442,13 +435,6 @@ exports[`array fields fixed array 1`] = `
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="ant-form-item-extra"
-                    >
-                      <span
-                        id="root_1__description"
-                      />
                     </div>
                   </div>
                 </div>

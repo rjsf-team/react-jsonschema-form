@@ -47,7 +47,7 @@ const FieldTemplate = ({
       descriptionProps.tooltip = rawDescription ? description : undefined;
       break;
     case 'below':
-      descriptionProps.extra = description;
+      descriptionProps.extra = rawDescription ? description : undefined;
       break;
     default:
       break;
