@@ -71,6 +71,16 @@ declare module '@rjsf/core' {
         submit: () => void;
     }
 
+    export type UISchemaSubmitButtonOptions = {
+      submitText: string;
+      norender: boolean;
+      props: {
+        disabled?:boolean;
+        className?:string;
+        [name: string]: any;
+      };
+    }
+
     export type UiSchema = {
         'ui:field'?: Field | string;
         'ui:widget'?: Widget | string;
@@ -80,6 +90,7 @@ declare module '@rjsf/core' {
         'ui:ArrayFieldTemplate'?: React.StatelessComponent<ArrayFieldTemplateProps>;
         'ui:ObjectFieldTemplate'?: React.StatelessComponent<ObjectFieldTemplateProps>;
         [name: string]: any;
+        'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
     };
 
     export type FieldId = {
@@ -336,6 +347,8 @@ declare module '@rjsf/core' {
         ): T | JSONSchema7['default'][];
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
+
+        export function getSubmitButtonOptions(uiSchema: UiSchema): UISchemaSubmitButtonOptions;
 
         export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
 
