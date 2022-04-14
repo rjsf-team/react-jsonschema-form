@@ -6,7 +6,6 @@ import FixedArrayFieldTemplate from './FixedArrayFieldTemplate';
 import NormalArrayFieldTemplate from './NormalArrayFieldTemplate';
 
 const {
-  getDefaultRegistry,
   getUiOptions,
   getWidget,
   isFilesArray,
@@ -36,7 +35,7 @@ const ArrayFieldTemplate = ({
   placeholder,
   rawErrors,
   readonly,
-  registry = getDefaultRegistry(),
+  registry,
   required,
   schema,
   title,
