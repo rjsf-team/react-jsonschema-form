@@ -28,12 +28,8 @@ function FieldTemplate({
     return children;
   }
 
-  return (<WrapIfAdditional
-      classNames={classNames}
-      id={id}
-      label={label}
-      {...props}
-    >
+  return (
+    <WrapIfAdditional classNames={classNames} id={id} label={label} {...props}>
       <Form.Group key={id} widths="equal" grouped>
         <MaybeWrap wrap={wrapContent} className="sui-field-content">
           {children}
@@ -48,7 +44,8 @@ function FieldTemplate({
           <RawErrors errors={rawErrors} options={errorOptions} />
         </MaybeWrap>
       </Form.Group>
-  </WrapIfAdditional>);
+    </WrapIfAdditional>
+  );
 }
 
 export default FieldTemplate;
