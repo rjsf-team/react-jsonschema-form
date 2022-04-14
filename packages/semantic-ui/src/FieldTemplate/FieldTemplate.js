@@ -23,7 +23,7 @@ function FieldTemplate({
   const semanticProps = getSemanticProps(props);
   const { wrapLabel, wrapContent } = semanticProps;
   const errorOptions = getSemanticErrorProps(props);
-  
+
   if (hidden) {
     return children;
   }
@@ -34,9 +34,6 @@ function FieldTemplate({
       label={label}
       {...props}
     >
-      {id === 'root' ? (
-        children
-      ) : (
       <Form.Group key={id} widths="equal" grouped>
         <MaybeWrap wrap={wrapContent} className="sui-field-content">
           {children}
@@ -50,8 +47,7 @@ function FieldTemplate({
           <HelpField helpText={rawHelp} id={id + "__help"} />
           <RawErrors errors={rawErrors} options={errorOptions} />
         </MaybeWrap>
-      </Form.Group>)
-    }
+      </Form.Group>
   </WrapIfAdditional>);
 }
 
