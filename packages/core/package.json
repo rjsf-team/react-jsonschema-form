@@ -47,7 +47,7 @@
     "lodash-es": "^4.17.15",
     "nanoid": "^3.1.23",
     "prop-types": "^15.7.2",
-    "react-is": "^16.9.0"
+    "react-is": "16.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
