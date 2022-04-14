@@ -72,7 +72,7 @@ exports[`array fields array 1`] = `
     className="MuiBox-root MuiBox-root-3"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -551,7 +551,7 @@ exports[`array fields array icons 1`] = `
     className="MuiBox-root MuiBox-root-17"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -643,7 +643,7 @@ exports[`array fields checkboxes 1`] = `
     className="MuiBox-root MuiBox-root-10"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -801,7 +801,7 @@ exports[`array fields fixed array 1`] = `
     className="MuiBox-root MuiBox-root-9"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}

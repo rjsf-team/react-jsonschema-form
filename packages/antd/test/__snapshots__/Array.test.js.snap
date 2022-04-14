@@ -175,7 +175,7 @@ exports[`array fields checkboxes 1`] = `
             aria-hidden={true}
             className="ant-select-selection-search-mirror"
           >
-
+            
              
           </span>
         </span>

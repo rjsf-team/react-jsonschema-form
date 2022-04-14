@@ -68,7 +68,7 @@ exports[`single fields checkbox field 1`] = `
     className="MuiBox-root MuiBox-root-20"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -162,7 +162,7 @@ exports[`single fields checkbox field 2`] = `
     className="MuiBox-root MuiBox-root-21"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -422,7 +422,7 @@ exports[`single fields checkboxes field 1`] = `
     className="MuiBox-root MuiBox-root-22"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -489,7 +489,7 @@ exports[`single fields format color 1`] = `
     className="MuiBox-root MuiBox-root-10"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -556,7 +556,7 @@ exports[`single fields format date 1`] = `
     className="MuiBox-root MuiBox-root-11"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -620,7 +620,7 @@ exports[`single fields format datetime 1`] = `
     className="MuiBox-root MuiBox-root-12"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -677,7 +677,7 @@ exports[`single fields hidden field 1`] = `
     className="MuiBox-root MuiBox-root-27"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -744,7 +744,7 @@ exports[`single fields hidden label 1`] = `
     className="MuiBox-root MuiBox-root-28"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -783,7 +783,7 @@ exports[`single fields null field 1`] = `
     className="MuiBox-root MuiBox-root-8"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -850,7 +850,7 @@ exports[`single fields number field 0 1`] = `
     className="MuiBox-root MuiBox-root-7"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -914,7 +914,7 @@ exports[`single fields number field 1`] = `
     className="MuiBox-root MuiBox-root-6"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -981,7 +981,7 @@ exports[`single fields password field 1`] = `
     className="MuiBox-root MuiBox-root-13"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1158,7 +1158,7 @@ exports[`single fields radio field 1`] = `
     className="MuiBox-root MuiBox-root-26"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1247,7 +1247,7 @@ exports[`single fields select field 1`] = `
     className="MuiBox-root MuiBox-root-15"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1299,7 +1299,7 @@ exports[`single fields string field format data-url 1`] = `
     className="MuiBox-root MuiBox-root-4"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1366,7 +1366,7 @@ exports[`single fields string field format email 1`] = `
     className="MuiBox-root MuiBox-root-2"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1433,7 +1433,7 @@ exports[`single fields string field format uri 1`] = `
     className="MuiBox-root MuiBox-root-3"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1497,7 +1497,7 @@ exports[`single fields string field regular 1`] = `
     className="MuiBox-root MuiBox-root-1"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1561,7 +1561,7 @@ exports[`single fields string field with placeholder 1`] = `
     className="MuiBox-root MuiBox-root-5"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1624,7 +1624,7 @@ exports[`single fields textarea field 1`] = `
     className="MuiBox-root MuiBox-root-14"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}
@@ -1689,7 +1689,7 @@ exports[`single fields unsupported field 1`] = `
     className="MuiBox-root MuiBox-root-9"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained btn btn-info MuiButton-containedPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
       disabled={false}
       onBlur={[Function]}
       onDragLeave={[Function]}

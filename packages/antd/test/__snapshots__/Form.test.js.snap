@@ -579,13 +579,13 @@ exports[`single fields unsupported field 1`] = `
         Unsupported field schema
         <span>
            for
-           field
+           field 
           <code>
             root
           </code>
         </span>
         <em>
-          :
+          : 
           Unknown field type undefined
         </em>
         .
