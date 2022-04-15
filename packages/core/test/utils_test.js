@@ -31,6 +31,7 @@ import {
   optionsList,
   isCustomWidget,
   getMatchingOption,
+  getSubmitButtonOptions,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -4009,6 +4010,72 @@ describe("utils", () => {
 
     it("When the function is called without a custom widget in the schema it returns false", () => {
       expect(isCustomWidget({ "ui:fields": "randomString" })).eql(false);
+    });
+  });
+
+  describe("getSubmitButtonOptions", () => {
+    it("default props", () => {
+      expect(getSubmitButtonOptions({})).eql({
+        props: { disabled: false },
+        submitText: "Submit",
+        norender: false,
+      });
+    });
+
+    it("allowed option should be false", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { norender: false } },
+        })
+      ).eql({
+        props: {
+          disabled: false,
+        },
+        submitText: "Submit",
+        norender: false,
+      });
+    });
+
+    it("hidden option should be true", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { props: { hidden: true } } },
+        })
+      ).eql({
+        props: {
+          hidden: true,
+        },
+        submitText: "Submit",
+        norender: false,
+      });
+    });
+
+    it("disabled option should be true", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { props: { disabled: true } } },
+        })
+      ).eql({
+        props: {
+          disabled: true,
+        },
+        submitText: "Submit",
+        norender: false,
+      });
+    });
+
+    it("submitText option should be confirm", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { submitText: "Confirm" } },
+        })
+      ).eql({
+        props: {
+          disabled: false,
+        },
+        submitText: "Confirm",
+        norender: false,
+      });
     });
   });
 
