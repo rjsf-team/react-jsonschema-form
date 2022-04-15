@@ -129,6 +129,25 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("field with help in uiSchema", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string"
+        }
+      }
+    };
+    const uiSchema = {
+      "my-field": {
+        "ui:help": "some help message",
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("descriptionLocation in formContext", () => {
     const schema = {
       type: "object",
