@@ -41,13 +41,16 @@ const FieldTemplate = ({
   const descriptionLocation= antd?.descriptionLocation || 'below';
 
   const descriptionProps = {};
+  // check to see if there is rawDescription(string) before using description(ReactNode)
+  // to prevent showing a blank description area
+  const descriptionNode = rawDescription ? description : undefined;
 
   switch (descriptionLocation) {
     case 'tooltip':
-      descriptionProps.tooltip = rawDescription ? description : undefined;
+      descriptionProps.tooltip = descriptionNode;
       break;
     case 'below':
-      descriptionProps.extra = rawDescription ? description : undefined;
+      descriptionProps.extra = descriptionNode;
       break;
     default:
       break;
