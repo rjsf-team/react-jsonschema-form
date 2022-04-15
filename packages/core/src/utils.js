@@ -373,6 +373,22 @@ export function getUiOptions(uiSchema) {
     }, {});
 }
 
+export function getSubmitButtonOptions(uiSchema) {
+  const uiOptions = getUiOptions(uiSchema);
+  const defaultOptions = {
+    props: {
+      disabled: false,
+    },
+    submitText: "Submit",
+    norender: false,
+  };
+  if (uiOptions && uiOptions["submitButtonOptions"]) {
+    return Object.assign({}, defaultOptions, uiOptions["submitButtonOptions"]);
+  }
+
+  return defaultOptions;
+}
+
 export function getDisplayLabel(schema, uiSchema, rootSchema) {
   const uiOptions = getUiOptions(uiSchema);
   let { label: displayLabel = true } = uiOptions;

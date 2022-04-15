@@ -12,7 +12,8 @@
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build",
     "test": "tsdx test",
-    "test:watch": "tsdx test --watch"
+    "test:watch": "tsdx test --watch",
+    "test:update": "tsdx test --u"
   },
   "engineStrict": false,
   "engines": {

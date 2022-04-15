@@ -69,10 +69,6 @@ exports[`array fields array 1`] = `
   vertical-align: middle;
 }
 
-.emotion-9 {
-  margin-top: 3px;
-}
-
 <form
   className="rjsf"
   noValidate={false}
@@ -125,11 +121,10 @@ exports[`array fields array 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="emotion-9"
-  >
+  <div>
     <button
-      className="chakra-button emotion-6"
+      className="btn btn-info"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -302,39 +297,6 @@ exports[`array fields checkboxes 1`] = `
   vertical-align: middle;
 }
 
-.emotion-14 {
-  margin-top: 3px;
-}
-
-.emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
 <form
   className="rjsf"
   noValidate={false}
@@ -439,11 +401,10 @@ exports[`array fields checkboxes 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="emotion-14"
-  >
+  <div>
     <button
-      className="chakra-button emotion-15"
+      className="btn btn-info"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -488,39 +449,6 @@ exports[`array fields fixed array 1`] = `
 
 .emotion-7 {
   margin-bottom: 1px;
-}
-
-.emotion-14 {
-  margin-top: 3px;
-}
-
-.emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
 }
 
 <form
@@ -613,11 +541,10 @@ exports[`array fields fixed array 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="emotion-14"
-  >
+  <div>
     <button
-      className="chakra-button emotion-15"
+      className="btn btn-info"
+      disabled={false}
       type="submit"
     >
       Submit

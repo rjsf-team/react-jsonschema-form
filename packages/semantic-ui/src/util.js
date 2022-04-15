@@ -51,7 +51,7 @@ export function getSemanticErrorProps({
 
   const formContextProps = formContext.semantic && formContext.semantic.errorOptions;
   const schemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic && uiSchema["ui:options"].semantic.errorOptions;
-  const optionProps = options.semantic && options.semantic.errorOptionse;
+  const optionProps = options.semantic && options.semantic.errorOptions;
 
   return Object.assign(
     {},

@@ -20,7 +20,8 @@
   "scripts": {
     "build": "rimraf dist && tsdx build",
     "lint": "eslint src test",
-    "test": "tsdx test"
+    "test": "tsdx test",
+    "test:update": "tsdx test --u"
   },
   "peerDependencies": {
     "@rjsf/core": "^4.0.1",
