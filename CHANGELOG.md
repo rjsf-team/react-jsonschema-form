@@ -23,6 +23,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix bloated bundle size by individually requiring all MUI components (#2754)
 - Add new `useMuiComponent()` hook as a shortcut for `useContext(MuiComponentContext)`
 
+## @rjsf/semantic-ui
+- Added support for additionalProperties schema property (https://github.com/rjsf-team/react-jsonschema-form/pull/2817)
 # v4.1.0
 
 ## @rjsf/core
