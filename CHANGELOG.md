@@ -23,13 +23,15 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix bloated bundle size by individually requiring all MUI components (#2754)
 - Add new `useMuiComponent()` hook as a shortcut for `useContext(MuiComponentContext)`
 
+## @rjsf/semantic-ui
+- Added support for additionalProperties schema property (https://github.com/rjsf-team/react-jsonschema-form/pull/2817)
 # v4.1.0
 
 ## @rjsf/core
 
 - To improve performance, skip validating subschemas in oneOf / anyOf if formData is undefined (#2676)
 - Fixed the `toIdSchema()` typescript definition to add new `idSeparator` prop along with the spelling of `idPrefix`
-  - Also passed the new `idSeparator` prop through to the `AnyOfField` and `OneOfField` inside of `SchemaField` 
+  - Also passed the new `idSeparator` prop through to the `AnyOfField` and `OneOfField` inside of `SchemaField`
   - Updated `ArrayField` in `@rjsf/core` to pass `idSeparator` and `idPrefix` through to `SchemaField`, fixing a small bug
 - Added support for the new `ui:hideError` feature, which allows you to hide errors at a field level
 
