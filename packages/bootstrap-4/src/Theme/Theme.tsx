@@ -1,7 +1,3 @@
-import React from "react";
-
-import Button from "react-bootstrap/Button";
-
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
 import ErrorList from "../ErrorList";
 import Fields from "../Fields";
@@ -15,16 +11,7 @@ const { getDefaultRegistry } = utils;
 
 const { fields, widgets } = getDefaultRegistry();
 
-const DefaultChildren = () => (
-  <div>
-    <Button variant="primary" type="submit">
-      Submit
-    </Button>
-  </div>
-);
-
 const Theme: ThemeProps = {
-  children: <DefaultChildren />,
   ArrayFieldTemplate,
   fields: { ...fields, ...Fields },
   FieldTemplate,

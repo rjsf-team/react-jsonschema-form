@@ -11,7 +11,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build --format cjs,es,umd",
-    "test": "tsdx test"
+    "test": "tsdx test",
+    "test:update": "tsdx test --u"
   },
   "peerDependencies": {
     "@emotion/react": "^11.7.0",
