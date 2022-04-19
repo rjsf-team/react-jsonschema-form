@@ -18,7 +18,7 @@
     "node": ">=12"
   },
   "scripts": {
-    "build": "rimraf dist && tsdx build",
+    "build": "rimraf dist && tsdx build --format cjs,es,umd",
     "lint": "eslint src test",
     "test": "tsdx test",
     "test:update": "tsdx test --u"

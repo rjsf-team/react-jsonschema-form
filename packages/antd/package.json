@@ -6,7 +6,7 @@
   "module": "dist/antd.esm.js",
   "scripts": {
     "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build",
+    "build": "rimraf dist && tsdx build --format cjs,es,umd",
     "test": "tsdx test",
     "test:update": "tsdx test --u"
    },
