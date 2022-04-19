@@ -62,6 +62,7 @@ const ArrayFieldTemplate = ({
         options={options}
         rawErrors={rawErrors}
         readonly={readonly}
+        registry={registry}
         schema={schema}
         title={schema.title || name} // Why not props.title?
         value={formData}

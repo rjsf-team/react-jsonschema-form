@@ -664,6 +664,7 @@ class ArrayField extends Component {
         value={items}
         disabled={disabled}
         readonly={readonly}
+        registry={registry}
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
@@ -755,6 +756,7 @@ class ArrayField extends Component {
       onAddClick: this.onAddClick,
       readonly,
       required,
+      registry,
       schema,
       uiSchema,
       title,
