@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { AddButtonProps } from '@rjsf/core';
 
-import MuiComponentContext from '../MuiComponentContext/MuiComponentContext';
+import { useMuiComponent } from '../MuiComponentContext';
 
 const AddButton: React.FC<AddButtonProps> = props => {
-  const { AddIcon, Button } = useContext(MuiComponentContext);
+  const { AddIcon, Button } = useMuiComponent();
 
   return (
     <Button {...props} color="secondary">
       <AddIcon /> Add Item
     </Button>
   );
-}
+};
 
 export default AddButton;

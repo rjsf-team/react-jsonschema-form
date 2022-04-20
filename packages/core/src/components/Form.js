@@ -472,6 +472,7 @@ export default class Form extends Component {
     // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || "form";
+    const SubmitButton = registry.widgets.SubmitButton;
     if (deprecatedAutocomplete) {
       console.warn(
         "Using autocomplete property of Form is deprecated, use autoComplete instead."
@@ -515,15 +516,7 @@ export default class Form extends Component {
           disabled={disabled}
           readonly={readonly}
         />
-        {children ? (
-          children
-        ) : (
-          <div>
-            <button type="submit" className="btn btn-info">
-              Submit
-            </button>
-          </div>
-        )}
+        {children ? children : <SubmitButton uiSchema={uiSchema} />}
       </FormTag>
     );
   }

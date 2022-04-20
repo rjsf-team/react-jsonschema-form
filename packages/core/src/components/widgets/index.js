@@ -17,7 +17,7 @@ import TextareaWidget from "./TextareaWidget";
 import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
-
+import SubmitButton from "./SubmitButton";
 export default {
   BaseInput,
   PasswordWidget,
@@ -38,4 +38,5 @@ export default {
   FileWidget,
   CheckboxWidget,
   CheckboxesWidget,
+  SubmitButton,
 };

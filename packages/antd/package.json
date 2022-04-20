@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "4.0.1",
+  "version": "4.1.1",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
@@ -12,7 +12,8 @@
     "clean": "rimraf dist",
     "lint": "eslint src test",
     "start": "concurrently \"npm:build:* -- --watch\"",
-    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest"
+    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest",
+    "test:update": "cross-env NODE_ENV=test BABEL_ENV=test jest --u"
   },
   "files": [
     "dist"
@@ -44,7 +45,7 @@
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@rjsf/core": "^4.0.1",
+    "@rjsf/core": "^4.1.1",
     "antd": "^4.0.0",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",

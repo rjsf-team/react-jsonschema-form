@@ -20,6 +20,7 @@ declare module '@rjsf/core' {
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
         readonly?: boolean;
+        hideError?: boolean;
         enctype?: string;
         extraErrors?: any;
         ErrorList?: React.StatelessComponent<ErrorListProps>;
@@ -71,6 +72,16 @@ declare module '@rjsf/core' {
         submit: () => void;
     }
 
+    export type UISchemaSubmitButtonOptions = {
+      submitText: string;
+      norender: boolean;
+      props: {
+        disabled?:boolean;
+        className?:string;
+        [name: string]: any;
+      };
+    }
+
     export type UiSchema = {
         'ui:field'?: Field | string;
         'ui:widget'?: Widget | string;
@@ -80,6 +91,7 @@ declare module '@rjsf/core' {
         'ui:ArrayFieldTemplate'?: React.StatelessComponent<ArrayFieldTemplateProps>;
         'ui:ObjectFieldTemplate'?: React.StatelessComponent<ObjectFieldTemplateProps>;
         [name: string]: any;
+        'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
     };
 
     export type FieldId = {
@@ -337,6 +349,8 @@ declare module '@rjsf/core' {
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
 
+        export function getSubmitButtonOptions(uiSchema: UiSchema): UISchemaSubmitButtonOptions;
+
         export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
 
         export function isObject(thing: any): boolean;
@@ -400,7 +414,8 @@ declare module '@rjsf/core' {
             id: string,
             definitions: Registry['definitions'],
             formData?: T,
-            idPredix?: string,
+            idPrefix?: string,
+            idSeparator?: string,
         ): IdSchema | IdSchema[];
 
         export function toPathSchema<T = any>(
