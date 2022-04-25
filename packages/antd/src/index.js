@@ -23,6 +23,7 @@ import TextareaWidget from './widgets/TextareaWidget';
 import TextWidget from './widgets/TextWidget';
 import UpDownWidget from './widgets/UpDownWidget';
 import URLWidget from './widgets/URLWidget';
+import SubmitButton from './widgets/SubmitButton';
 
 import ErrorList from './ErrorList';
 
@@ -53,6 +54,7 @@ export const Widgets = {
   TextWidget,
   UpDownWidget,
   URLWidget,
+  SubmitButton,
 };
 
 export const Theme = {

@@ -14,7 +14,7 @@ import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import TextWidget from "../TextWidget/TextWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
 import URLWidget from "../URLWidget/URLWidget";
-
+import SubmitButton from "../SubmitButton/SubmitButton";
 export default {
   AltDateWidget,
   AltDateTimeWidget,
@@ -32,4 +32,5 @@ export default {
   TextWidget,
   UpDownWidget,
   URLWidget,
+  SubmitButton,
 };
