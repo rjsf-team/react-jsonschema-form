@@ -98,7 +98,6 @@
     "rimraf": "^2.5.4",
     "sinon": "^9.0.2",
     "style-loader": "^2.0.0",
-    "webpack": "^4.42.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.13.2"
