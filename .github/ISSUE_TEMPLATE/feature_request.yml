@@ -1,0 +1,49 @@
+name: 🚀 Feature
+description: File a Feature
+title: "<title>"
+labels: [feature, needs triage]
+assignees: 
+  - epicfaace
+  - jacqueswho
+  - heath-freenome
+body:
+- type: checkboxes
+  attributes:
+    label: Prerequisites
+    options:
+    - label: I have read the [documentation](https://react-jsonschema-form.readthedocs.io/)
+      required: true
+- type: dropdown
+  id: theme
+  attributes:
+    label: What theme are you using?
+    options:
+      - core
+      - antd
+      - bootstrap-4
+      - chakra-ui
+      - fluent-ui
+      - material-ui
+      - semantic-ui
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Is your feature request related to a problem? Please describe.
+    description: A clear and concise description of what the problem is.
+    placeholder: |
+      Ex. I'm always frustrated when [...]
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Describe the solution you'd like
+    description: A clear and concise description of what you want to happen.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Describe alternatives you've considered
+    description: A clear and concise description of any alternative solutions or features you've considered.
+  validations:
+    required: false
