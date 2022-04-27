@@ -1,0 +1,64 @@
+{
+	"name": "@rjsf/utils",
+	"version": "5.0.0",
+	"main": "dist/index.js",
+	"module": "dist/utils.esm.js",
+	"typings": "dist/index.d.ts",
+	"description": "utility functions for @rjsf/core",
+	"files": [
+		"dist"
+	],
+	"engineStrict": false,
+	"engines": {
+		"node": ">=12"
+	},
+	"peerDependencies": {
+		"react": ">=16 || >=17"
+	},
+	"dependencies": {
+		"core-js-pure": "^3.6.5",
+		"json-schema-merge-allof": "^0.6.0",
+		"jsonpointer": "^5.0.0",
+		"lodash": "^4.17.15",
+		"react-is": "^16.9.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.16.0",
+		"@babel/plugin-proposal-class-properties": "^7.16.0",
+		"@babel/plugin-transform-modules-commonjs": "^7.16.0",
+		"@babel/plugin-transform-react-jsx": "^7.16.0",
+		"@babel/preset-env": "^7.16.4",
+		"@babel/preset-react": "^7.16.0",
+		"@types/jest": "^24.0.15",
+		"@types/json-schema": "^7.0.9",
+		"@types/lodash": "^4.14.182",
+		"@types/react": "^16.14.25",
+		"@types/react-is": "^16.7.2",
+		"@types/sinon": "^9.0.0",
+		"react": "^16.14.0",
+		"react-dom": "^16.14.0",
+		"rimraf": "^2.6.3",
+		"tsdx": "^0.14.1",
+		"tslib": "^2.3.1",
+		"typescript": "^4.6.3"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"author": "Heath Chiavettone <heath.chiavettone@freenome.com",
+	"contributors": [],
+	"keywords": [
+		"react-jsonschema-form",
+		"jsonschema",
+		"json-schema",
+		"json",
+		"schema",
+		"react",
+		"rjsf-utils"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+	},
+	"license": "Apache-2.0"
+}
