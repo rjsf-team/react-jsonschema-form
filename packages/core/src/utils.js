@@ -767,6 +767,26 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
     return resolveCondition(schema, rootSchema, formData);
   }
 
+  if (resolvedSchema.properties) {
+    var properties = {};
+
+    Object.entries(resolvedSchema.properties).forEach(entries => {
+      var propName = entries[0];
+      var propSchema = entries[1];
+      var propData = formData && formData[propName];
+      var resolvedPropSchema = retrieveSchema(propSchema, rootSchema, propData);
+
+      properties[propName] = resolvedPropSchema;
+
+      if (
+        propSchema !== resolvedPropSchema &&
+        resolvedSchema.properties !== properties
+      ) {
+        resolvedSchema = { ...resolvedSchema, properties };
+      }
+    });
+  }
+
   if ("allOf" in schema) {
     try {
       resolvedSchema = mergeAllOf({
