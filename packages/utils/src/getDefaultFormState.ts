@@ -10,7 +10,7 @@ export default function getDefaultFormState<T = any>(
   includeUndefinedValues: boolean = false
 ) {
   if (!isObject(_schema)) {
-    throw new Error("Invalid schema: " + _schema);
+    throw new Error('Invalid schema: ' + _schema);
   }
   const schema = retrieveSchema(_schema, rootSchema, formData);
   const defaults = computeDefaults(
@@ -20,7 +20,7 @@ export default function getDefaultFormState<T = any>(
     formData,
     includeUndefinedValues
   );
-  if (typeof formData === "undefined" || formData === null) {
+  if (typeof formData === 'undefined' || formData === null) {
     // No form data? Use schema defaults.
     return defaults;
   }
