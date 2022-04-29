@@ -768,19 +768,25 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
   }
 
   if (resolvedSchema.properties) {
-    var properties = {};
+    const properties = {};
 
     Object.entries(resolvedSchema.properties).forEach(entries => {
-      var propName = entries[0];
-      var propSchema = entries[1];
-      var propData = formData && formData[propName];
-      var resolvedPropSchema = retrieveSchema(propSchema, rootSchema, propData);
+      const propName = entries[0];
+      const propSchema = entries[1];
+      const rawPropData = formData && formData[propName];
+      const propData = isObject(rawPropData) ? rawPropData : {};
+      const resolvedPropSchema = retrieveSchema(
+        propSchema,
+        rootSchema,
+        propData
+      );
 
       properties[propName] = resolvedPropSchema;
 
       if (
         propSchema !== resolvedPropSchema &&
-        resolvedSchema.properties !== properties
+        resolvedSchema.properties !== properties &&
+        properties !== null
       ) {
         resolvedSchema = { ...resolvedSchema, properties };
       }
