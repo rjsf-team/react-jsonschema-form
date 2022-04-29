@@ -785,8 +785,7 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
 
       if (
         propSchema !== resolvedPropSchema &&
-        resolvedSchema.properties !== properties &&
-        properties !== null
+        resolvedSchema.properties !== properties
       ) {
         resolvedSchema = { ...resolvedSchema, properties };
       }
