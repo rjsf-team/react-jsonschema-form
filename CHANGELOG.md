@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 - Enable ui options in playground, to demonstrate submit button options (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- Document the `material-ui` context and hook (#2757)
 
 ## @rjsf/material-ui
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2833)
