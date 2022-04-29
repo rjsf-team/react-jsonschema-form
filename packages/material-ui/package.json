@@ -4,9 +4,18 @@
   "module": "./dist/material-ui.esm.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./v4": "./dist/v4.js",
-    "./v5": "./dist/v5.js",
+    ".": {
+      "import": "./dist/material-ui.esm.js",
+      "require": "./dist/index.js"
+    },
+    "./v4": {
+      "import": "./dist/material-ui-v4.esm.js",
+      "require": "./dist/v4.js"
+    },
+    "./v5": {
+      "import": "./dist/material-ui-v5.esm.js",
+      "require": "./dist/v5.js"
+    },
     "./package.json": "./package.json"
   },
   "description": "Material UI theme, fields and widgets for react-jsonschema-form",
