@@ -27,7 +27,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/material-ui
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2833)
-- Fixed bundler (#2762) warning issue by exporting a `@rjsf/material-ui/v4` and `@rjsf/material-ui/v5` sub-package
+- Fixed bundler warning issue (#2762) by exporting a `@rjsf/material-ui/v4` and `@rjsf/material-ui/v5` sub-package
   - NOTE: `@rjsf/material-ui` was retained to avoid a breaking change, but using it will continue to cause bundler warnings
   - See the `README.md` for the `@rjsf/material-ui` package for updated usage information
   
