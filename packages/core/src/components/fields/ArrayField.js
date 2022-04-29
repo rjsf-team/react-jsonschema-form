@@ -803,11 +803,7 @@ class ArrayField extends Component {
     const {
       fields: { SchemaField },
     } = registry;
-    const { orderable, removable } = {
-      orderable: true,
-      removable: true,
-      ...uiSchema["ui:options"],
-    };
+    const { orderable = true, removable = true } = getUiOptions(uiSchema);
     const has = {
       moveUp: orderable && canMoveUp,
       moveDown: orderable && canMoveDown,

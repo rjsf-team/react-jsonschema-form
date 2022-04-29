@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - Feature for ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- Fix `ui:orderable` and `ui:removable` in arrays (#2797)
 
 ## Dev / docs / playground
 - Enable ui options in playground, to demonstrate submit button options (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
@@ -44,7 +45,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/fluent-ui
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
-# v4.1.1 (upcoming)
+# v4.1.1
 
 ## @rjsf/material-ui
 - Fix bloated bundle size by individually requiring all MUI components (#2754)
