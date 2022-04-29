@@ -21,10 +21,10 @@ const schema = {
 import { useMuiComponent } from '@rjsf/material-ui/v4';
 
 function MyCustomWidget(props) {
-  const {options, ...otherProps} = props;
-  const {color, backgroundColor} = options;
+  const { options, ...otherProps } = props;
+  const { color, backgroundColor } = options;
   const { TextInput } = useMuiComponent();
-  return <TextInput {...otherProps} style={{color, backgroundColor}} />;
+  return <TextInput {...otherProps} style={{ color, backgroundColor }} />;
 }
 
 MyCustomWidget.defaultProps = {
@@ -44,5 +44,63 @@ const uiSchema = {
 render((
   <Form schema={schema}
         uiSchema={uiSchema} />
+), document.getElementById("app"));
+```
+
+## Example of a custom field for `@rjsf/material-ui`
+
+Here is an update to the `GeoPosition` for the `material-ui` theme
+
+```jsx
+const schema = {
+  type: "object",
+  required: ["lat", "lon"],
+  properties: {
+    lat: { type: "number"},
+    lon: { type: "number" }
+  }
+};
+
+import { useMuiComponent } from '@rjsf/material-ui/v4';
+
+// Define a custom component for handling the root position object
+function GeoPosition(props) {
+  const { lat, lon } = props.formData;
+  const { Box, TextInput } = useMuiComponent();
+
+  const onChangeLat = (event) => {
+    const { target: { value } } = event;
+    const newData = { ...props.formData, lat: value };
+    props.onChange(newData);
+  };
+
+  const onChangeLon = (event) => {
+    const { target: { value } } = event;
+    const newData = { ...props.formData, lon: value };
+    props.onChange(newData);
+  };
+
+  return (
+    <Box>
+      <TextInput type="number" value={lat} onChange={onChangeLat} />
+      <TextInput type="number" value={lon} onChange={onChangeLon} />
+    </Box>
+  );
+}
+
+// Define the custom field component to use for the root object
+const uiSchema = { "ui:field": "geo" };
+
+// Define the custom field components to register; here our "geo"
+// custom field component
+const fields = { geo: GeoPosition };
+
+// Render the form with all the properties we just defined passed
+// as props
+render((
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    fields={fields} />
 ), document.getElementById("app"));
 ```
