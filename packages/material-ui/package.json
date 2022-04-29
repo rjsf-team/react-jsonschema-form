@@ -106,6 +106,5 @@
     "type": "git",
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
-  "license": "Apache-2.0",
-  "dependencies": {}
+  "license": "Apache-2.0"
 }
