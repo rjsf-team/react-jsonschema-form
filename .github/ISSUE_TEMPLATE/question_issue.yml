@@ -29,6 +29,6 @@ body:
     required: true
 - type: textarea
   attributes:
-    label: What is your question?.
+    label: What is your question?
   validations:
     required: false
