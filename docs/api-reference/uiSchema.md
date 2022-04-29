@@ -284,3 +284,4 @@ const uiSchema = {
 ```
 ## Theme Options
 [Semantic UI](themes/semantic-ui/uiSchema.md)
+[Chakra UI](themes/chakra-ui/uiSchema.md)
