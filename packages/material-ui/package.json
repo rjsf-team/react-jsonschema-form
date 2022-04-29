@@ -1,16 +1,21 @@
 {
   "name": "@rjsf/material-ui",
   "version": "4.1.1",
-  "main": "dist/index.js",
-  "module": "dist/material-ui.esm.js",
-  "typings": "dist/index.d.ts",
+  "module": "./dist/material-ui.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./v4": "./dist/v4.js",
+    "./v5": "./dist/v5.js",
+    "./package.json": "./package.json"
+  },
   "description": "Material UI theme, fields and widgets for react-jsonschema-form",
   "files": [
     "dist"
   ],
   "scripts": {
     "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build",
+    "build": "rimraf dist && rimraf dist-temp && tsdx build -i ./src/v5.ts --name @rjsf/material-ui-v5 && tsdx build -i ./src/v4.ts --name @rjsf/material-ui-v4 && tsdx build && rimraf dist-temp",
     "test": "tsdx test",
     "test:update": "tsdx test --u"
   },
@@ -71,6 +76,7 @@
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
     "rimraf": "^2.6.3",
+    "rollup-plugin-copy": "^3.4.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
     "typescript": "^3.5.3"
@@ -100,5 +106,6 @@
     "type": "git",
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {}
 }
