@@ -714,7 +714,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar"],
-        uiSchema: { "ui:orderable": false } },
+        uiSchema: { "ui:orderable": false },
       });
       const moveUpBtns = node.querySelector(".array-item-move-up");
       const moveDownBtns = node.querySelector(".array-item-move-down");
@@ -789,7 +789,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar"],
-        uiSchema: { "ui:removable": false } },
+        uiSchema: { "ui:removable": false },
       });
       const dropBtn = node.querySelector(".array-item-remove");
 
