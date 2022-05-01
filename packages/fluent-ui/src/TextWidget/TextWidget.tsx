@@ -41,7 +41,7 @@ const allowedProps = [
   "maskChar",
   "maskFormat",
   "type",
-  "list"
+  "list",
 ];
 
 const TextWidget = ({
