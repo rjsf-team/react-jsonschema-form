@@ -123,8 +123,8 @@ If you are experiencing an error that is similar to `TS2307: Cannot find module 
   ...
   "compilerOptions": {
     ...
+    "baseUrl": ".",
     "paths": {
-      "baseUrl": ".",
       "@rjsf/material-ui/*": ["node_modules/@rjsf/material-ui/dist/*"]
     }
   }
@@ -173,8 +173,8 @@ If you are experiencing an error that is similar to `TS2307: Cannot find module 
   ...
   "compilerOptions": {
     ...
+    "baseUrl": ".",
     "paths": {
-      "baseUrl": ".",
       "@rjsf/material-ui/*": ["node_modules/@rjsf/material-ui/dist/*"]
     }
   }
