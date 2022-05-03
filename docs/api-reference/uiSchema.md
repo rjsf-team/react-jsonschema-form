@@ -12,7 +12,7 @@ In other words, the following uiSchemas are equivalent:
 ```json
 {
   "ui:title": "Title",
-  "ui:description": "Description"
+  "ui:description": "Description",
   "ui:submitButtonOptions": {
     "props": {
       "disabled": false,
@@ -284,3 +284,4 @@ const uiSchema = {
 ```
 ## Theme Options
 [Semantic UI](themes/semantic-ui/uiSchema.md)
+[Chakra UI](themes/chakra-ui/uiSchema.md)

@@ -12,8 +12,8 @@
     "start": "tsdx watch",
     "build": "rimraf dist && tsdx build --format cjs,es,umd",
     "test": "tsdx test",
-    "test:watch": "tsdx test --watch",
-    "test:update": "tsdx test --u"
+    "test:update": "tsdx test --u",
+    "test:watch": "tsdx test --watch"
   },
   "engineStrict": false,
   "engines": {
