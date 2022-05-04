@@ -477,6 +477,14 @@ declare module '@rjsf/core/lib/components/fields/SchemaField' {
     export default class SchemaField extends React.Component<SchemaFieldProps> {}
 }
 
+declare module '@rjsf/core/lib/components/fields/ObjectField' {
+  import { FieldProps } from '@rjsf/core';
+
+  export type ObjectFieldProps<T = any> = FieldProps<T>;
+
+  export default class ObjectField extends React.Component<ObjectFieldProps> {}
+}
+
 declare module '@rjsf/core/lib/validate' {
     import { JSONSchema7Definition } from 'json-schema';
     import { AjvError, ErrorSchema, FormProps } from '@rjsf/core';
