@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   IconButton,
   IconButtonProps as ChakraIconButtonProps,
@@ -26,9 +26,11 @@ type IconButtonProps = Omit<ChakraIconButtonProps, "aria-label" | "icon"> & {
  * props used in Template:
  * icon, tabIndex, disabled, onClick
  */
-const ChakraIconButton = (props: IconButtonProps) => {
+const ChakraIconButton = memo((props: IconButtonProps) => {
   const { icon, ...otherProps } = props;
   return <IconButton {...otherProps} icon={mappings[icon]} aria-label={icon} />;
-};
+});
+
+ChakraIconButton.displayName = 'ChakraIconButton';
 
 export default ChakraIconButton;

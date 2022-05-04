@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { utils } from "@rjsf/core";
 
@@ -62,42 +62,51 @@ const ArrayFieldDescription = ({
 };
 
 // Used in the two templates
-const DefaultArrayItem = (props: any) => {
+const DefaultArrayItem = ({
+  index, readonly, disabled, children, hasToolbar, hasRemove, hasMoveUp, hasMoveDown, onReorderClick, onDropIndexClick
+}: any) => {
+
+  const onRemoveClick = useMemo(() => onDropIndexClick(index), [index, onDropIndexClick]);
+
+  const onArrowUpClick = useMemo(() => onReorderClick(index, index - 1), [index, onReorderClick]);
+
+  const onArrowDownClick = useMemo(() => onReorderClick(index, index + 1), [index, onReorderClick]);
+
   return (
-    <HStack key={props.key} alignItems={"flex-end"} py={1}>
+    <HStack alignItems={"flex-end"} py={1}>
       <Box w="100%">
-        {props.children}
+        {children}
       </Box>
 
-      {props.hasToolbar && (
+      {hasToolbar && (
         <Box>
           <ButtonGroup isAttached mb={1}>
-            {(props.hasMoveUp || props.hasMoveDown) && (
+            {(hasMoveUp || hasMoveDown) && (
               <IconButton
                 icon="arrow-up"
                 tabIndex={-1}
-                disabled={props.disabled || props.readonly || !props.hasMoveUp}
-                onClick={props.onReorderClick(props.index, props.index - 1)}
+                disabled={disabled || readonly || !hasMoveUp}
+                onClick={onArrowUpClick}
               />
             )}
 
-            {(props.hasMoveUp || props.hasMoveDown) && (
+            {(hasMoveUp || hasMoveDown) && (
               <IconButton
                 icon="arrow-down"
                 tabIndex={-1}
                 disabled={
-                  props.disabled || props.readonly || !props.hasMoveDown
+                  disabled || readonly || !hasMoveDown
                 }
-                onClick={props.onReorderClick(props.index, props.index + 1)}
+                onClick={onArrowDownClick}
               />
             )}
 
-            {props.hasRemove && (
+            {hasRemove && (
               <IconButton
                 icon="remove"
                 tabIndex={-1}
-                disabled={props.disabled || props.readonly}
-                onClick={props.onDropIndexClick(props.index)}
+                disabled={disabled || readonly}
+                onClick={onRemoveClick}
               />
             )}
           </ButtonGroup>
@@ -131,7 +140,10 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => (
       className="row array-item-list"
       key={`array-item-list-${props.idSchema.$id}`}
     >
-      {props.items && props.items.map(DefaultArrayItem)}
+      {props.items && props.items.map((p) => {
+        const { key, ...itemProps } = p;
+        return <DefaultArrayItem key={key} {...itemProps}></DefaultArrayItem>;
+      })}
     </div>
 
     {props.canAdd && (
@@ -168,7 +180,10 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => (
 
     <Grid key={`array-item-list-${props.idSchema.$id}`}>
       <GridItem>
-        {props.items.length > 0 && props.items.map(p => DefaultArrayItem(p))}
+        {props.items.length > 0 && props.items.map((p) => {
+          const { key, ...itemProps } = p;
+          return <DefaultArrayItem key={key} {...itemProps}></DefaultArrayItem>;
+        })}
       </GridItem>
       {props.canAdd && (
         <GridItem justifySelf={"flex-end"}>
