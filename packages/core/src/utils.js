@@ -767,7 +767,7 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
     return resolveCondition(schema, rootSchema, formData);
   }
 
-  // For each level of the dependency, we need to recursively determine the appropriate resolved schema given the current state of formData. 
+  // For each level of the dependency, we need to recursively determine the appropriate resolved schema given the current state of formData.
   // Otherwise, nested allOf subschemas will not be correctly displayed.
   if (resolvedSchema.properties) {
     const properties = {};
