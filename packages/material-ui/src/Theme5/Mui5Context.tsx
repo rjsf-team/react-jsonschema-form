@@ -1,4 +1,3 @@
-import React from 'react';
 import Mui5ContextProps from './Mui5ContextProps';
 
 /** Use require for loading these libraries in case they are not available in order to perform a useful fallback */
@@ -107,17 +106,3 @@ if (Box && AddIcon) {
     RemoveIcon,
   };
 }
-
-export let DefaultChildren = () => {
-  if (Mui5Context.Box && Mui5Context.Button && Mui5Context.AddIcon) {
-    return (
-      <Mui5Context.Box marginTop={3}>
-        <Mui5Context.Button type="submit" variant="contained" color="primary">
-          Submit
-        </Mui5Context.Button>
-      </Mui5Context.Box>
-    );
-  }
-
-  return <div>@mui not available</div>;
-};
