@@ -340,3 +340,5 @@ render((
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
 Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
+
+NOTE: If you are using the `material-ui` theme and are considering customizing a widget or a field, checkout this [guide](material-ui/customizing-material-ui.md).

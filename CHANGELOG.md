@@ -21,13 +21,18 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - Feature for ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
-- Fix for nested allOf blocks with multiple if/then/else statements failing to render correctly (https://github.com/rjsf-team/react-jsonschema-form/pull/2839)
+- Fix `ui:orderable` and `ui:removable` in arrays (#2797)
+- - Fix for nested allOf blocks with multiple if/then/else statements failing to render correctly (https://github.com/rjsf-team/react-jsonschema-form/pull/2839)
 
 ## Dev / docs / playground
 - Enable ui options in playground, to demonstrate submit button options (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
+- Document the `material-ui` context and hook (#2757)
 
 ## @rjsf/material-ui
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2833)
+- Fixed bundler warning issue (#2762) by exporting a `@rjsf/material-ui/v4` and `@rjsf/material-ui/v5` sub-package
+  - NOTE: `@rjsf/material-ui` was retained to avoid a breaking change, but using it will continue to cause bundler warnings
+  - See the `README.md` for the `@rjsf/material-ui` package for updated usage information
   
 ## @rjsf/bootstrap-4
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
@@ -41,14 +46,14 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/fluent-ui
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
-# v4.1.1 (upcoming)
+# v4.1.1
 
 ## @rjsf/material-ui
 - Fix bloated bundle size by individually requiring all MUI components (#2754)
 - Add new `useMuiComponent()` hook as a shortcut for `useContext(MuiComponentContext)`
 
 ## @rjsf/semantic-ui
-- Added support for additionalProperties schema property (https://github.com/rjsf-team/react-jsonschema-form/pull/2817)
+- Added support for additionalProperties schema property (#2817)
 # v4.1.0
 
 ## @rjsf/core
