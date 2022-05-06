@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 - Feature for ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 - Fix `ui:orderable` and `ui:removable` in arrays (#2797)
+- - Fix for nested allOf blocks with multiple if/then/else statements failing to render correctly (https://github.com/rjsf-team/react-jsonschema-form/pull/2839)
 
 ## Dev / docs / playground
 - Enable ui options in playground, to demonstrate submit button options (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
