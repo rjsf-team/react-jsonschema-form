@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build",
+    "build": "rimraf dist && tsdx build --format cjs,es,umd",
     "test": "tsdx test",
     "test:update": "tsdx test --u",
     "test:watch": "tsdx test --watch"
@@ -59,10 +59,7 @@
     "react-dom": "^16.13.0",
     "react-is": "^17.0.2",
     "react-test-renderer": "^16.13.1",
-    "rimraf": "^2.6.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.3.1",
-    "typescript": "^3.5.3"
+    "rimraf": "^2.6.3"
   },
   "dependencies": {
     "chakra-react-select": "^3.0.2",

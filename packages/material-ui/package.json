@@ -86,10 +86,7 @@
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
     "rimraf": "^2.6.3",
-    "rollup-plugin-copy": "^3.4.0",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.3.1",
-    "typescript": "^3.5.3"
+    "rollup-plugin-copy": "^3.4.0"
   },
   "publishConfig": {
     "access": "public"
