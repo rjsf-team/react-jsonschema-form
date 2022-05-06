@@ -22,8 +22,6 @@ const RadioWidget = ({
   options,
   value,
   required,
-  // disabled,
-  // readonly,
   label,
   onChange,
   onBlur,
