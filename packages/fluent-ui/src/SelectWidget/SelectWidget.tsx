@@ -59,7 +59,6 @@ const SelectWidget = ({
   readonly,
   value,
   multiple,
-  // autofocus,
   onChange,
   onBlur,
   onFocus,

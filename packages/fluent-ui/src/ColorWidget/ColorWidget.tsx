@@ -40,12 +40,8 @@ const ColorWidget = ({
   options,
   value,
   required,
-  // disabled,
-  // readonly,
   label,
   onChange,
-  // onBlur,
-  // onFocus,
 }: WidgetProps) => {
   const updateColor = (_ev: any, colorObj: IColor) => {
     onChange(colorObj.hex);

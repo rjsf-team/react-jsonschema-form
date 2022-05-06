@@ -85,18 +85,13 @@ const parseDate = (dateStr?: string) => {
 const DateWidget = ({
   id,
   required,
-  // readonly,
-  // disabled,
   label,
   value,
   onChange,
   onBlur,
   onFocus,
-  // autofocus,
   options,
   placeholder,
-  // schema,
-  // rawErrors,
 }: WidgetProps) => {
   const _onSelectDate = (date: Date | null | undefined) => {
     if (date) {
