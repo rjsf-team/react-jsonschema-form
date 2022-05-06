@@ -17,11 +17,14 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0 (coming soon)
 
+# 4.2.1 (upcoming)
+
 # 4.2.0
 
 ## @rjsf/core
 - Feature for ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 - Fix `ui:orderable` and `ui:removable` in arrays (#2797)
+- - Fix for nested allOf blocks with multiple if/then/else statements failing to render correctly (https://github.com/rjsf-team/react-jsonschema-form/pull/2839)
 
 ## Dev / docs / playground
 - Enable ui options in playground, to demonstrate submit button options (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
@@ -32,6 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed bundler warning issue (#2762) by exporting a `@rjsf/material-ui/v4` and `@rjsf/material-ui/v5` sub-package
   - NOTE: `@rjsf/material-ui` was retained to avoid a breaking change, but using it will continue to cause bundler warnings
   - See the `README.md` for the `@rjsf/material-ui` package for updated usage information
+- Fixed (#2831) for `material-ui` by removing the `DefaultChildren` passed into the themes
   
 ## @rjsf/bootstrap-4
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
