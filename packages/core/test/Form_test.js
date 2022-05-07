@@ -3210,6 +3210,64 @@ describe("Form omitExtraData and liveOmit", () => {
     });
   });
 
+  it("should omit extra properties within additionalProperties, if it's an object and omitExtraData=true and liveOmit=true are set", () => {
+    const schema = {
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        properties: {
+          food: {
+            type: "string",
+          },
+        },
+        if: {
+          required: ["food"],
+          properties: {
+            food: {
+              const: "vegetable",
+            },
+          },
+        },
+        then: {
+          properties: {
+            organic: {
+              type: "boolean",
+            },
+          },
+        },
+      },
+    };
+
+    const formData = {
+      newKey: {
+        food: "vegetable",
+        organic: true,
+      },
+    };
+
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData,
+      omitExtraData: true,
+      liveOmit: true,
+    });
+
+    const textNode = node.querySelector("#root_newKey_food");
+
+    Simulate.change(textNode, {
+      target: { value: "meet" },
+    });
+
+    // Check than organic: true was properly removed
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        newKey: {
+          food: "meet",
+        },
+      },
+    });
+  });
+
   it("should not omit additionalProperties on change with omitExtraData=true and liveOmit=true", () => {
     const omitExtraData = true;
     const liveOmit = true;
