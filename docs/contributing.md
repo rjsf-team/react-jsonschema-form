@@ -64,7 +64,7 @@ is stored as the `NPM_TOKEN` secret on GitHub Actions.
 
 ### Releasing docs
 
-Docs are automatically released using [Read The Docs](https://readthedocs.org/) based on the latest commits from the `master` branch.
+Docs are automatically published using [Read The Docs](https://readthedocs.org/) upon a new Release.
 
 You can also publish the latest release of the docs by running the [Release Latest Documentation](https://github.com/rjsf-team/react-jsonschema-form/actions/workflows/release.yml) workflow.
 
