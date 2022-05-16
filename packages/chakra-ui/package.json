@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/chakra-ui",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "description": "Chakra UI theme, fields, and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "dist/chakra-ui.esm.js",
@@ -10,8 +10,9 @@
   ],
   "scripts": {
     "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build",
+    "build": "rimraf dist && tsdx build --format cjs,es,umd",
     "test": "tsdx test",
+    "test:update": "tsdx test --u",
     "test:watch": "tsdx test --watch"
   },
   "engineStrict": false,
@@ -46,7 +47,7 @@
     "@emotion/jest": "^11.7.1",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
-    "@rjsf/core": "^4.1.1",
+    "@rjsf/core": "^4.2.0",
     "@types/jest": "^24.0.15",
     "@types/json-schema": "^7.0.7",
     "@types/react": "^16.9.23",
@@ -58,10 +59,7 @@
     "react-dom": "^16.13.0",
     "react-is": "^17.0.2",
     "react-test-renderer": "^16.13.1",
-    "rimraf": "^2.6.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.3.1",
-    "typescript": "^3.5.3"
+    "rimraf": "^2.6.3"
   },
   "dependencies": {
     "chakra-react-select": "^3.0.2",

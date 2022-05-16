@@ -31,6 +31,7 @@ import {
   optionsList,
   isCustomWidget,
   getMatchingOption,
+  getSubmitButtonOptions,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -2539,6 +2540,151 @@ describe("utils", () => {
           required: ["animal", "food"],
         });
       });
+      it("should resolve multiple conditions in nested allOf blocks", () => {
+        const schema = {
+          type: "object",
+          properties: {
+            Animal: {
+              default: "Cat",
+              enum: ["Cat", "Dog"],
+              title: "Animal",
+              type: "string",
+            },
+          },
+          allOf: [
+            {
+              if: {
+                required: ["Animal"],
+                properties: {
+                  Animal: {
+                    const: "Cat",
+                  },
+                },
+              },
+              then: {
+                properties: {
+                  Tail: {
+                    default: "Long",
+                    enum: ["Long", "Short", "None"],
+                    title: "Tail length",
+                    type: "string",
+                  },
+                },
+                required: ["Tail"],
+              },
+            },
+            {
+              if: {
+                required: ["Animal"],
+                properties: {
+                  Animal: {
+                    const: "Dog",
+                  },
+                },
+              },
+              then: {
+                properties: {
+                  Breed: {
+                    title: "Breed",
+                    properties: {
+                      BreedName: {
+                        default: "Alsatian",
+                        enum: ["Alsatian", "Dalmation"],
+                        title: "Breed name",
+                        type: "string",
+                      },
+                    },
+                    allOf: [
+                      {
+                        if: {
+                          required: ["BreedName"],
+                          properties: {
+                            BreedName: {
+                              const: "Alsatian",
+                            },
+                          },
+                        },
+                        then: {
+                          properties: {
+                            Fur: {
+                              default: "brown",
+                              enum: ["black", "brown"],
+                              title: "Fur",
+                              type: "string",
+                            },
+                          },
+                          required: ["Fur"],
+                        },
+                      },
+                      {
+                        if: {
+                          required: ["BreedName"],
+                          properties: {
+                            BreedName: {
+                              const: "Dalmation",
+                            },
+                          },
+                        },
+                        then: {
+                          properties: {
+                            Spots: {
+                              default: "small",
+                              enum: ["large", "small"],
+                              title: "Spots",
+                              type: "string",
+                            },
+                          },
+                          required: ["Spots"],
+                        },
+                      },
+                    ],
+                    required: ["BreedName"],
+                  },
+                },
+              },
+            },
+          ],
+          required: ["Animal"],
+        };
+        const definitions = {};
+        const formData = {
+          Animal: "Dog",
+          Breed: {
+            BreedName: "Dalmation",
+          },
+        };
+
+        expect(retrieveSchema(schema, { definitions }, formData)).eql({
+          type: "object",
+          properties: {
+            Animal: {
+              default: "Cat",
+              enum: ["Cat", "Dog"],
+              title: "Animal",
+              type: "string",
+            },
+            Breed: {
+              properties: {
+                BreedName: {
+                  default: "Alsatian",
+                  enum: ["Alsatian", "Dalmation"],
+                  title: "Breed name",
+                  type: "string",
+                },
+                Spots: {
+                  default: "small",
+                  enum: ["large", "small"],
+                  title: "Spots",
+                  type: "string",
+                },
+              },
+              required: ["BreedName", "Spots"],
+              title: "Breed",
+            },
+          },
+          required: ["Animal"],
+        });
+      });
       it("should resolve $ref", () => {
         const schema = {
           type: "object",
@@ -4009,6 +4155,72 @@ describe("utils", () => {
 
     it("When the function is called without a custom widget in the schema it returns false", () => {
       expect(isCustomWidget({ "ui:fields": "randomString" })).eql(false);
+    });
+  });
+
+  describe("getSubmitButtonOptions", () => {
+    it("default props", () => {
+      expect(getSubmitButtonOptions({})).eql({
+        props: { disabled: false },
+        submitText: "Submit",
+        norender: false,
+      });
+    });
+
+    it("allowed option should be false", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { norender: false } },
+        })
+      ).eql({
+        props: {
+          disabled: false,
+        },
+        submitText: "Submit",
+        norender: false,
+      });
+    });
+
+    it("hidden option should be true", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { props: { hidden: true } } },
+        })
+      ).eql({
+        props: {
+          hidden: true,
+        },
+        submitText: "Submit",
+        norender: false,
+      });
+    });
+
+    it("disabled option should be true", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { props: { disabled: true } } },
+        })
+      ).eql({
+        props: {
+          disabled: true,
+        },
+        submitText: "Submit",
+        norender: false,
+      });
+    });
+
+    it("submitText option should be confirm", () => {
+      expect(
+        getSubmitButtonOptions({
+          "ui:options": { submitButtonOptions: { submitText: "Confirm" } },
+        })
+      ).eql({
+        props: {
+          disabled: false,
+        },
+        submitText: "Confirm",
+        norender: false,
+      });
     });
   });
 

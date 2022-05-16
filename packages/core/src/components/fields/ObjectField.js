@@ -5,7 +5,6 @@ import * as types from "../../types";
 import {
   orderProperties,
   retrieveSchema,
-  getDefaultRegistry,
   canExpand,
   ADDITIONAL_PROPERTY_FLAG,
 } from "../../utils";
@@ -160,7 +159,7 @@ class ObjectField extends Component {
     const newFormData = { ...this.props.formData };
 
     if (schema.additionalProperties.hasOwnProperty("$ref")) {
-      const { registry = getDefaultRegistry() } = this.props;
+      const { registry } = this.props;
       const refSchema = retrieveSchema(
         { $ref: schema.additionalProperties["$ref"] },
         registry.rootSchema,
@@ -192,7 +191,7 @@ class ObjectField extends Component {
       idSeparator,
       onBlur,
       onFocus,
-      registry = getDefaultRegistry(),
+      registry,
     } = this.props;
 
     const { rootSchema, fields, formContext } = registry;
