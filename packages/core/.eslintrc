@@ -1,5 +1,5 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "rules": {
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": 2,
@@ -18,20 +18,19 @@
         }],
         "no-console": [0],
         "object-curly-spacing": [2, "always"],
-        "keyword-spacing": ["error"]
+        "keyword-spacing": ["error"],
+        "no-prototype-builtins": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/no-var-requires": "warn"
     },
     "env": {
         "es6": true,
         "browser": true,
         "node": true
     },
-    "extends": "eslint:recommended",
-    "ecmaFeatures": {
-        "modules": true,
-        "jsx": true,
-        "experimentalObjectRestSpread": true
-    },
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "plugins": [
+        "@typescript-eslint",
         "jsx-a11y",
         "react"
     ]

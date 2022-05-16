@@ -1,14 +1,6 @@
 import React from "react";
 import { MessageBar, MessageBarType } from "@fluentui/react";
-import { Label } from "@fluentui/react";
 import { ErrorListProps } from "@rjsf/core";
-const styles = {
-  root: [
-    {
-      fontSize: 24,
-    },
-  ],
-};
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <>

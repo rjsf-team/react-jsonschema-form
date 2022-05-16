@@ -1,0 +1,34 @@
+name: ❔ Question
+description: Ask a Question
+title: "<title>"
+labels: [question, needs triage]
+assignees: 
+  - epicfaace
+  - jacqueswho
+  - heath-freenome
+body:
+- type: checkboxes
+  attributes:
+    label: Prerequisites
+    options:
+    - label: I have read the [documentation](https://react-jsonschema-form.readthedocs.io/)
+      required: true
+- type: dropdown
+  id: theme
+  attributes:
+    label: What theme are you using?
+    options:
+      - core
+      - antd
+      - bootstrap-4
+      - chakra-ui
+      - fluent-ui
+      - material-ui
+      - semantic-ui
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: What is your question?
+  validations:
+    required: false

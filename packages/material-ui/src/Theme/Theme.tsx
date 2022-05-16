@@ -3,7 +3,7 @@ import { ThemeProps } from '@rjsf/core';
 
 import MuiComponentContext from '../MuiComponentContext';
 import ThemeCommon from '../ThemeCommon';
-import { MaterialUIContext, DefaultChildren } from './MaterialUIContext';
+import { MaterialUIContext } from './MaterialUIContext';
 
 /** Create a component that will wrap a ref-able HTML "form" with a `MuiComponentContext.Provider` so that all of the
  * `@material-ui` fields, widgets and helpers will be rendered using the Material UI version 4 components. If the
@@ -24,11 +24,10 @@ const Mui4FormWrapper = React.forwardRef(
   }
 );
 
-/** The Material UI 4 theme, with the `Mui4FormWrapper` and `DefaultChildren`
+/** The Material UI 4 theme, with the `Mui4FormWrapper`
  */
 const Theme: ThemeProps = {
   _internalFormWrapper: Mui4FormWrapper,
-  children: <DefaultChildren />,
   ...ThemeCommon,
 };
 

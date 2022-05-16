@@ -4,8 +4,6 @@ import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js-pure/features/array/fill";
 import union from "lodash/union";
 import jsonpointer from "jsonpointer";
-import fields from "./components/fields";
-import widgets from "./components/widgets";
 import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
@@ -76,16 +74,6 @@ export function canExpand(schema, uiSchema, formData) {
     return Object.keys(formData).length < schema.maxProperties;
   }
   return true;
-}
-
-export function getDefaultRegistry() {
-  return {
-    fields,
-    widgets,
-    definitions: {},
-    rootSchema: {},
-    formContext: {},
-  };
 }
 
 /* Gets the type of a given schema. */
@@ -765,6 +753,33 @@ export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
 
   if (schema.hasOwnProperty("if")) {
     return resolveCondition(schema, rootSchema, formData);
+  }
+
+  // For each level of the dependency, we need to recursively determine the appropriate resolved schema given the current state of formData.
+  // Otherwise, nested allOf subschemas will not be correctly displayed.
+  if (resolvedSchema.properties) {
+    const properties = {};
+
+    Object.entries(resolvedSchema.properties).forEach(entries => {
+      const propName = entries[0];
+      const propSchema = entries[1];
+      const rawPropData = formData && formData[propName];
+      const propData = isObject(rawPropData) ? rawPropData : {};
+      const resolvedPropSchema = retrieveSchema(
+        propSchema,
+        rootSchema,
+        propData
+      );
+
+      properties[propName] = resolvedPropSchema;
+
+      if (
+        propSchema !== resolvedPropSchema &&
+        resolvedSchema.properties !== properties
+      ) {
+        resolvedSchema = { ...resolvedSchema, properties };
+      }
+    });
   }
 
   if ("allOf" in schema) {
