@@ -276,7 +276,9 @@ describe("ArrayField", () => {
         formData: ["foo", "barr"],
       });
 
-      expect(node.querySelectorAll("input[placeholder='Placeholder...']")).to.have.length.of(2);
+      expect(
+        node.querySelectorAll("input[placeholder='Placeholder...']")
+      ).to.have.length.of(2);
     });
 
     it("should pass rawErrors down to custom array field templates", () => {
@@ -1460,7 +1462,7 @@ describe("ArrayField", () => {
           items: {
             "ui:widget": "file",
             "ui:options": { accept: ".pdf" },
-          }
+          },
         },
         formData: [
           "data:text/plain;name=file1.pdf;base64,dGVzdDE=",
@@ -1790,8 +1792,8 @@ describe("ArrayField", () => {
         },
         uiSchema: {
           items: {
-            "ui:widget": "textarea"
-          }
+            "ui:widget": "textarea",
+          },
         },
         formData: ["foo", "bar"],
       });
