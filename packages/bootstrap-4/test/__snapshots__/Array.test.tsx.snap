@@ -153,6 +153,106 @@ exports[`array fields checkboxes 1`] = `
 </form>
 `;
 
+exports[`array fields customize array title and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="field field-array field-array-of-boolean"
+      id="custom-tpl"
+    >
+      <div
+        id="custom-title"
+      >
+        my-title
+      </div>
+      <div
+        id="custom-description"
+      >
+        my-description
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields customize fixed array title and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="field field-array field-array-fixed-items"
+      id="custom-tpl"
+    >
+      <div
+        id="custom-title"
+      >
+        my-title
+      </div>
+      <div
+        id="custom-description"
+      >
+        my-description
+      </div>
+      <div>
+        <div
+          className="form-group"
+        >
+          <div
+            className="checkbox  form-group"
+          >
+            <div
+              className="form-check"
+            >
+              <input
+                autoFocus={false}
+                checked={true}
+                className="form-check-input position-static"
+                disabled={false}
+                id="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                required={true}
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`array fields fixed array 1`] = `
 <form
   className="rjsf"
