@@ -567,6 +567,7 @@ class ArrayField extends Component {
         onFocus={onFocus}
         options={options}
         schema={schema}
+        uiSchema={uiSchema}
         registry={registry}
         value={items}
         disabled={disabled}
@@ -618,6 +619,7 @@ class ArrayField extends Component {
         onFocus={onFocus}
         options={options}
         schema={schema}
+        uiSchema={uiSchema}
         registry={registry}
         value={items}
         disabled={disabled}
@@ -660,6 +662,7 @@ class ArrayField extends Component {
         onBlur={onBlur}
         onFocus={onFocus}
         schema={schema}
+        uiSchema={uiSchema}
         title={title}
         value={items}
         disabled={disabled}
