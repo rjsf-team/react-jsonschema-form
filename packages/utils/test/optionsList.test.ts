@@ -64,4 +64,22 @@ describe('optionsList()', () => {
       }))
     );
   });
+  it('should generate options for a oneOf schema uses value as fallback title', () => {
+    const oneOfSchema = {
+      title: 'string',
+      oneOf: [
+        {
+          const: 'Option',
+          description: 'Option description',
+        },
+      ],
+    };
+    expect(optionsList(oneOfSchema)).toEqual(
+      oneOfSchema.oneOf.map(schema => ({
+        schema,
+        label: schema.const,
+        value: schema.const,
+      }))
+    );
+  });
 });

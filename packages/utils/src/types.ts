@@ -5,6 +5,21 @@ export type GenericObjectType = {
   [name: string]: any;
 };
 
+export interface DateObject {
+  year: number;
+  month: number;
+  day: number;
+  hour?: number;
+  minute?: number;
+  second?: number;
+}
+
+export type RangeSpecType = {
+  step?: number;
+  min?: number;
+  max?: number;
+};
+
 export type FieldId = {
   $id: string;
 };
@@ -272,13 +287,4 @@ export interface ValidatorType<T = any> {
   ) => ValidationData;
   toErrorList: (errorSchema?: ErrorSchema, fieldName?: string) => RJSFValidationError[];
   isValid: (schema: JSONSchema7, formData: T, rootSchema: JSONSchema7) => boolean;
-}
-
-export interface DateObject {
-  year: number;
-  month: number;
-  day: number;
-  hour?: number;
-  minute?: number;
-  second?: number;
 }

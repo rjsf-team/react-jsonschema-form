@@ -1,6 +1,11 @@
 import { orderProperties } from '../src';
 
 describe('orderProperties()', () => {
+  it('returns properties when order array is not specified', () => {
+    const properties = ['foo', 'baz'];
+    expect(orderProperties(properties)).toBe(properties);
+  });
+
   it('should remove from order elements that are not in properties', () => {
     const properties = ['foo', 'baz'];
     const order = ['foo', 'bar', 'baz', 'qux'];
@@ -28,5 +33,20 @@ describe('orderProperties()', () => {
       'bar',
       'baz',
     ]);
+  });
+  it('throws error when * is missing and there is one more prop than ordered', () => {
+    const properties = ['foo', 'bar', 'baz'];
+    const order = ['foo', 'baz'];
+    expect(() => orderProperties(properties, order)).toThrowError("uiSchema order list does not contain property 'bar'");
+  });
+  it('throws error when * is missing and there are a few more props than ordered', () => {
+    const properties = ['foo', 'bar', 'baz'];
+    const order = ['foo'];
+    expect(() => orderProperties(properties, order)).toThrowError("uiSchema order list does not contain properties 'bar', 'baz'");
+  });
+  it('throws error when there are multiple *s in order', () => {
+    const properties = ['foo', 'bar', 'baz'];
+    const order = ['*', 'foo', '*'];
+    expect(() => orderProperties(properties, order)).toThrowError('uiSchema order list contains more than one wildcard item');
   });
 });

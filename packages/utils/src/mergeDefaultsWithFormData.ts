@@ -23,6 +23,7 @@ export default function mergeDefaultsWithFormData<T = any>(defaults: T, formData
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
+    // eslint-disable-next-line no-unused-vars
     const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
     return Object.keys(formData).reduce((acc, key) => {
       acc[key as keyof T] = mergeDefaultsWithFormData<T>(defaults ? get(defaults, key) : {}, get(formData, key));

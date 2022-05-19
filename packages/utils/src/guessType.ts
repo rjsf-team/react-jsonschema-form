@@ -4,17 +4,22 @@
 export default function guessType(value: any) {
   if (Array.isArray(value)) {
     return 'array';
-  } else if (typeof value === 'string') {
+  }
+  if (typeof value === 'string') {
     return 'string';
-  } else if (value == null) {
+  }
+  if (value == null) {
     return 'null';
-  } else if (typeof value === 'boolean') {
+  }
+  if (typeof value === 'boolean') {
     return 'boolean';
-  } else if (!isNaN(value)) {
+  }
+  if (!isNaN(value)) {
     return 'number';
-  } else if (typeof value === 'object') {
+  }
+  if (typeof value === 'object') {
     return 'object';
   }
   // Default to string if we can't figure it out
   return 'string';
-};
+}

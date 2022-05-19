@@ -1,6 +1,6 @@
 import { GenericObjectType } from './types';
 
-export default function orderProperties(properties: string[], order: string[]): GenericObjectType {
+export default function orderProperties(properties: string[], order?: string[]): GenericObjectType {
   if (!Array.isArray(order)) {
     return properties;
   }

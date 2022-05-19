@@ -24,4 +24,8 @@ describe('guessType()', () => {
   it('should guess the type of object values', () => {
     expect(guessType({})).toEqual('object');
   });
+
+  it('falls through to string', () => {
+    expect(guessType(NaN)).toEqual('string');
+  });
 });

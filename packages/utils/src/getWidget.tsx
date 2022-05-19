@@ -73,7 +73,7 @@ export function mergeWidgetOptions<T = any, F = any>(AWidget: Widget<T, F>) {
   return MergedWidget;
 }
 
-export default function getWidget<T = any, F = any>(schema: JSONSchema7, widget: any, registeredWidgets: RegistryWidgetsType<T, F> = {}): Widget<T, F> {
+export default function getWidget<T = any, F = any>(schema: JSONSchema7, widget: Widget<T, F> | string, registeredWidgets: RegistryWidgetsType<T, F> = {}): Widget<T, F> {
   const type = getSchemaType(schema);
 
   if (
@@ -81,7 +81,7 @@ export default function getWidget<T = any, F = any>(schema: JSONSchema7, widget:
     ReactIs.isForwardRef(React.createElement(widget)) ||
     ReactIs.isMemo(widget)
   ) {
-    return mergeWidgetOptions<T, F>(widget);
+    return mergeWidgetOptions<T, F>(widget as Widget<T, F>);
   }
 
   if (typeof widget !== 'string') {

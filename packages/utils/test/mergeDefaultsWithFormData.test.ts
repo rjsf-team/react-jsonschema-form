@@ -13,6 +13,10 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(array1).toEqual([1]);
   });
 
+  it('should return data in formData when no defaults', () => {
+    expect(mergeDefaultsWithFormData(undefined, [2])).toEqual([2]);
+  });
+
   it('should merge two one-level deep objects', () => {
     expect(mergeDefaultsWithFormData({ a: 1 }, { b: 2 })).toEqual({ a: 1, b: 2 });
   });
@@ -35,8 +39,8 @@ describe('mergeDefaultsWithFormData()', () => {
   });
 
   it('should deeply merge arrays with overlapping entries', () => {
-    expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }])).toEqual([
-      { a: 1, b: 2 },
+    expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }])).toEqual([
+      { a: 1, b: 2 }, { c: 3 },
     ]);
   });
 

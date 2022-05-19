@@ -1,10 +1,6 @@
 import { JSONSchema7 } from 'json-schema';
 
-export type RangeSpecType = {
-  step?: number;
-  min?: number;
-  max?: number;
-};
+import { RangeSpecType } from './types';
 
 export default function rangeSpec(schema: JSONSchema7) {
   const spec: RangeSpecType = {};

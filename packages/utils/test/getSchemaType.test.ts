@@ -57,6 +57,10 @@ const cases: { schema: object; expected: string }[] = [
     schema: { additionalProperties: {} },
     expected: 'object',
   },
+  {
+    schema: { enum: ['foo'] },
+    expected: 'string',
+  }
 ];
 
 describe('getSchemaType()', () => {
