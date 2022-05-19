@@ -3,11 +3,11 @@ import { JSONSchema7 } from 'json-schema';
 import { UiSchema } from './types';
 import getUiOptions from './getUiOptions';
 
-export default function canExpand<T = any>(schema: JSONSchema7, uiSchema: UiSchema<T>, formData: T) {
+export default function canExpand<T = any, F = any>(schema: JSONSchema7, uiSchema: UiSchema<T, F>, formData: T) {
   if (!schema.additionalProperties) {
     return false;
   }
-  const { expandable = true } = getUiOptions<T>(uiSchema);
+  const { expandable = true } = getUiOptions<T, F>(uiSchema);
   if (expandable === false) {
     return expandable;
   }

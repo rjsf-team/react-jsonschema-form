@@ -1,32 +1,13 @@
 {
+  "extends": "../../tsconfig.base.json",
   "include": ["src", "types"],
   "compilerOptions": {
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
-    "importHelpers": true,
-    "declaration": true,
-    "sourceMap": true,
+    "target": "es6", // consider adding to tsconfig.base.json
     "rootDir": "./src",
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
       "*": ["src/*", "node_modules/*"]
     },
     "jsx": "react",
-    "esModuleInterop": true,
-    "allowJs": true
   }
 }

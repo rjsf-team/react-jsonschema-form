@@ -25,7 +25,7 @@ export default function mergeDefaultsWithFormData<T = any>(defaults: T, formData
   if (isObject(formData)) {
     const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
     return Object.keys(formData).reduce((acc, key) => {
-      acc[key as keyof T] = mergeDefaultsWithFormData(defaults ? get(defaults, key) : {}, get(formData, key));
+      acc[key as keyof T] = mergeDefaultsWithFormData<T>(defaults ? get(defaults, key) : {}, get(formData, key));
       return acc;
     }, acc);
   }

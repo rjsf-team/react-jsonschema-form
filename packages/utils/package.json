@@ -1,10 +1,10 @@
 {
 	"name": "@rjsf/utils",
-	"version": "5.0.0",
+	"version": "4.2.0",
 	"main": "dist/index.js",
 	"module": "dist/utils.esm.js",
 	"typings": "dist/index.d.ts",
-	"description": "utility functions for @rjsf/core",
+	"description": "Utility functions for @rjsf/core",
 	"files": [
 		"dist"
 	],
@@ -12,14 +12,19 @@
 	"engines": {
 		"node": ">=12"
 	},
+	"scripts": {
+		"build": "rimraf dist && tsdx build",
+		"test": "tsdx test",
+		"test:update": "tsdx test --u"
+	},
 	"peerDependencies": {
 		"react": ">=16 || >=17"
 	},
 	"dependencies": {
-		"core-js-pure": "^3.6.5",
 		"json-schema-merge-allof": "^0.6.0",
 		"jsonpointer": "^5.0.0",
 		"lodash": "^4.17.15",
+		"lodash-es": "^4.17.15",
 		"react-is": "^16.9.0"
 	},
 	"devDependencies": {
@@ -30,17 +35,24 @@
 		"@babel/preset-env": "^7.16.4",
 		"@babel/preset-react": "^7.16.0",
 		"@types/jest": "^24.0.15",
+		"@types/jest-expect-message": "^1.0.3",
 		"@types/json-schema": "^7.0.9",
+		"@types/json-schema-merge-allof": "^0.6.1",
 		"@types/lodash": "^4.14.182",
 		"@types/react": "^16.14.25",
 		"@types/react-is": "^16.7.2",
 		"@types/sinon": "^9.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.25.0",
+		"@typescript-eslint/parser": "^5.25.0",
+		"babel-jest": "^28.1.0",
+		"babel-preset-jest": "^28.0.2",
+		"eslint": "^8.15.0",
+		"eslint-plugin-import": "^2.26.0",
+		"jest": "^28.1.0",
+		"jest-expect-message": "^1.0.2",
 		"react": "^16.14.0",
 		"react-dom": "^16.14.0",
-		"rimraf": "^2.6.3",
-		"tsdx": "^0.14.1",
-		"tslib": "^2.3.1",
-		"typescript": "^4.6.3"
+		"rimraf": "^2.6.3"
 	},
 	"publishConfig": {
 		"access": "public"
@@ -53,12 +65,19 @@
 		"json-schema",
 		"json",
 		"schema",
-		"react",
 		"rjsf-utils"
 	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+	},
+	"jest": {
+		"verbose": true,
+		"setupFilesAfterEnv": ["jest-expect-message"],
+		"testMatch": ["**/test/**/*.test.[jt]s?(x)"],
+		"coverageDirectory": "<rootDir>/coverage/",
+		"collectCoverage": true,
+		"coveragePathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/test"]
 	},
 	"license": "Apache-2.0"
 }
