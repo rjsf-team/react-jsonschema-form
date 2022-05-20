@@ -7,7 +7,7 @@ export default function hasWidget<T = any, F = any>(schema: JSONSchema7, widget:
   try {
     getWidget(schema, widget, registeredWidgets);
     return true;
-  } catch (e: any) {
+  } catch (e) {
     if (
       e.message &&
       (e.message.startsWith('No widget') ||

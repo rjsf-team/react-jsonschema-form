@@ -1,5 +1,5 @@
 import getUiOptions from './getUiOptions';
-import { UiSchema } from './types';
+import { UiSchema, UISchemaSubmitButtonOptions } from './types';
 
 export default function getSubmitButtonOptions<T = any, F = any>(uiSchema: UiSchema<T, F>) {
   const uiOptions = getUiOptions<T, F>(uiSchema);
@@ -11,7 +11,8 @@ export default function getSubmitButtonOptions<T = any, F = any>(uiSchema: UiSch
     norender: false,
   };
   if (uiOptions && uiOptions['submitButtonOptions']) {
-    return { ...defaultOptions, ...uiOptions['submitButtonOptions'] };
+    const options = uiOptions['submitButtonOptions'] as UISchemaSubmitButtonOptions;
+    return { ...defaultOptions, ...options };
   }
 
   return defaultOptions;
