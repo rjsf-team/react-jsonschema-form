@@ -1,10 +1,8 @@
-import { JSONSchema7 } from 'json-schema';
-
-import { optionsList } from '../src';
+import { RJSFSchema, optionsList } from '../src';
 
 describe('optionsList()', () => {
   it('should generate options for an enum schema', () => {
-    const enumSchema: JSONSchema7 = {
+    const enumSchema: RJSFSchema = {
       type: 'string',
       enum: ['Opt1', 'Opt2', 'Opt3'],
     };

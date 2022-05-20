@@ -1,13 +1,11 @@
-import { JSONSchema7 } from 'json-schema';
+import { RJSFSchema, allowAdditionalItems } from '../src';
 
-import { allowAdditionalItems } from '../src';
-
-const schema1: JSONSchema7 = {
+const schema1: RJSFSchema = {
   type: 'string',
   additionalItems: true,
 };
 
-const schema2: JSONSchema7 = {
+const schema2: RJSFSchema = {
   type: 'string',
   additionalItems: { type: 'number' },
 };

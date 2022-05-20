@@ -1,13 +1,11 @@
-import { JSONSchema7 } from 'json-schema';
-
-import { canExpand } from '../src';
+import { RJSFSchema, canExpand } from '../src';
 
 describe('canExpand()', () => {
   it('no additional properties', () => {
     expect(canExpand({}, {}, {})).toBe(false);
   });
   it('has additional properties', () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       additionalProperties: {
         type: 'string',
       },
@@ -15,7 +13,7 @@ describe('canExpand()', () => {
     expect(canExpand(schema, {}, {})).toBe(true);
   });
   it('has uiSchema expandable false', () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       additionalProperties: {
         type: 'string',
       },
@@ -28,7 +26,7 @@ describe('canExpand()', () => {
     expect(canExpand(schema, uiSchema, {})).toBe(false);
   });
   it('does not exceed maxProperties', () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       maxProperties: 1,
       additionalProperties: {
         type: 'string',
@@ -37,7 +35,7 @@ describe('canExpand()', () => {
     expect(canExpand(schema, {}, {})).toBe(true);
   });
   it('already exceeds maxProperties', () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       maxProperties: 1,
       additionalProperties: {
         type: 'string',

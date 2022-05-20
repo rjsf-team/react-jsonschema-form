@@ -1,6 +1,4 @@
-import { JSONSchema7 } from 'json-schema';
-
-import { Widget, hasWidget } from '../src';
+import { RJSFSchema, Widget, hasWidget } from '../src';
 
 // Mock the getWidget() function for the purposes of this test
 jest.mock('../src/getWidget', () => jest.fn()
@@ -16,7 +14,7 @@ jest.mock('../src/getWidget', () => jest.fn()
   .mockImplementation(() => true)
 );
 
-const schema: JSONSchema7 = {
+const schema: RJSFSchema = {
   type: 'string',
 };
 

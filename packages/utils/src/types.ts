@@ -5,6 +5,8 @@ export type GenericObjectType = {
   [name: string]: any;
 };
 
+export type RJSFSchema = JSONSchema7;
+
 export interface DateObject {
   year: number;
   month: number;
@@ -67,7 +69,7 @@ export type ErrorListProps<T = any, F = any> = {
   errorSchema: FormValidation;
   errors: RJSFValidationError[];
   formContext: F;
-  schema: JSONSchema7;
+  schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
 };
 
@@ -84,7 +86,7 @@ export interface Registry<T = any, F = any> {
   widgets: RegistryWidgetsType<T, F>;
   definitions: GenericObjectType;
   formContext: F;
-  rootSchema: JSONSchema7;
+  rootSchema: RJSFSchema;
 }
 
 export interface IChangeEvent<T = any, F = any> {
@@ -93,7 +95,7 @@ export interface IChangeEvent<T = any, F = any> {
   errors: RJSFValidationError[];
   errorSchema: FormValidation;
   idSchema: IdSchema;
-  schema: JSONSchema7;
+  schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
   status?: string;
 }
@@ -103,7 +105,7 @@ export interface FieldProps<T = any, F = any>
     React.HTMLAttributes<HTMLElement>,
     Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>
   > {
-  schema: JSONSchema7;
+  schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
   idSchema: IdSchema;
   formData: T;
@@ -139,7 +141,7 @@ export type FieldTemplateProps<T = any, F = any> = {
   disabled: boolean;
   displayLabel: boolean;
   fields: Field<T, F>[];
-  schema: JSONSchema7;
+  schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
   formContext: F;
   formData: T;
@@ -187,7 +189,7 @@ export type ArrayFieldTemplateProps<T = any, F = any> = {
   onAddClick: (event?: any) => void;
   readonly: boolean;
   required: boolean;
-  schema: JSONSchema7;
+  schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
   title: string;
   formContext: F;
@@ -210,10 +212,10 @@ export type ObjectFieldTemplateProps<T = any, F = any> = {
   description: string;
   disabled: boolean;
   properties: ObjectFieldTemplatePropertyType[];
-  onAddClick: (schema: JSONSchema7) => () => void;
+  onAddClick: (schema: RJSFSchema) => () => void;
   readonly: boolean;
   required: boolean;
-  schema: JSONSchema7;
+  schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
   idSchema: IdSchema;
   formData: T;
@@ -227,7 +229,7 @@ export interface WidgetProps<T = any, F = any>
     Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>
   > {
   id: string;
-  schema: JSONSchema7;
+  schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
   value: any;
   required: boolean;
@@ -281,10 +283,10 @@ export type ValidationData = { errors: RJSFValidationError[]; errorSchema: Error
 export interface ValidatorType<T = any> {
   validateFormData: (
     formData: T,
-    schema: JSONSchema7,
+    schema: RJSFSchema,
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer,
   ) => ValidationData;
   toErrorList: (errorSchema?: ErrorSchema, fieldName?: string) => RJSFValidationError[];
-  isValid: (schema: JSONSchema7, formData: T, rootSchema: JSONSchema7) => boolean;
+  isValid: (schema: RJSFSchema, formData: T, rootSchema: RJSFSchema) => boolean;
 }

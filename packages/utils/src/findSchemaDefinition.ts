@@ -1,9 +1,9 @@
-import { JSONSchema7 } from 'json-schema';
 import jsonpointer from 'jsonpointer';
 
 import { REF_NAME } from './constants';
+import { RJSFSchema } from './types';
 
-export default function findSchemaDefinition($ref: string, rootSchema: JSONSchema7 = {}): JSONSchema7 {
+export default function findSchemaDefinition($ref: string, rootSchema: RJSFSchema = {}): RJSFSchema {
   let ref = $ref;
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.
@@ -11,7 +11,7 @@ export default function findSchemaDefinition($ref: string, rootSchema: JSONSchem
   } else {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
-  const current: JSONSchema7 = jsonpointer.get(rootSchema, ref);
+  const current: RJSFSchema = jsonpointer.get(rootSchema, ref);
   if (current === undefined) {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }

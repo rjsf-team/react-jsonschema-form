@@ -1,15 +1,14 @@
 import React from 'react';
 import TestRenderer from 'react-test-renderer';
-import { JSONSchema7 } from 'json-schema';
 
-import { IdSchema, Registry, Widget, WidgetProps, getWidget } from '../src';
+import { IdSchema, Registry, RJSFSchema, Widget, WidgetProps, getWidget } from '../src';
 
-const subschema: JSONSchema7 = {
+const subschema: RJSFSchema = {
   type: 'boolean',
   default: true,
 };
 
-const schema: JSONSchema7 = {
+const schema: RJSFSchema = {
   type: 'object',
   properties: {
     anObject: {
@@ -68,7 +67,7 @@ const widgetProps: WidgetProps = {
   readonly: false,
   required: false,
   idSchema: {} as IdSchema,
-  schema: {} as JSONSchema7,
+  schema: {} as RJSFSchema,
   uiSchema: {},
   options: {},
   value: undefined,

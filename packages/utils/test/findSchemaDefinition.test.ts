@@ -1,7 +1,6 @@
-import { findSchemaDefinition } from '../src';
-import { JSONSchema7 } from 'json-schema';
+import { RJSFSchema, findSchemaDefinition } from '../src';
 
-const schema: JSONSchema7 = {
+const schema: RJSFSchema = {
   type: 'object',
   definitions: {
     stringRef: {

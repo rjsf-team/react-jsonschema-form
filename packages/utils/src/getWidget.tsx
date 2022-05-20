@@ -3,9 +3,7 @@ import ReactIs from 'react-is';
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import { JSONSchema7 } from 'json-schema';
-
-import { Widget, RegistryWidgetsType } from './types';
+import { RJSFSchema, Widget, RegistryWidgetsType } from './types';
 import getSchemaType from './getSchemaType';
 
 export const widgetMap: { [k: string]: { [j: string]: string } } = {
@@ -73,7 +71,7 @@ export function mergeWidgetOptions<T = any, F = any>(AWidget: Widget<T, F>) {
   return MergedWidget;
 }
 
-export default function getWidget<T = any, F = any>(schema: JSONSchema7, widget: Widget<T, F> | string, registeredWidgets: RegistryWidgetsType<T, F> = {}): Widget<T, F> {
+export default function getWidget<T = any, F = any>(schema: RJSFSchema, widget: Widget<T, F> | string, registeredWidgets: RegistryWidgetsType<T, F> = {}): Widget<T, F> {
   const type = getSchemaType(schema);
 
   if (
