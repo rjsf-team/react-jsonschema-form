@@ -65,7 +65,7 @@ export function mergeWidgetOptions<T = any, F = any>(AWidget: Widget<T, F>) {
   // cache return value as property of widget for proper react reconciliation
   if (!MergedWidget) {
     const defaultOptions = (AWidget.defaultProps && AWidget.defaultProps.options) || {};
-    MergedWidget = ({ options = {}, ...props }) => {
+    MergedWidget = ({ options, ...props }) => {
       return <AWidget options={{ ...defaultOptions, ...options }} {...props} />;
     };
     set(AWidget, 'MergedWidget', MergedWidget);

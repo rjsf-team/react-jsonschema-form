@@ -235,10 +235,10 @@ export interface WidgetProps<T = any, F = any>
   readonly: boolean;
   autofocus: boolean;
   placeholder: string;
-  onChange: (value: any) => void;
   options: NonNullable<UIOptionsType>;
   formContext: F;
   onBlur: (id: string, value: any) => void;
+  onChange: (value: any) => void;
   onFocus: (id: string, value: any) => void;
   label: string;
   multiple: boolean;

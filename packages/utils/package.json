@@ -41,6 +41,7 @@
 		"@types/lodash": "^4.14.182",
 		"@types/react": "^16.14.25",
 		"@types/react-is": "^16.7.2",
+		"@types/react-test-renderer": "^16.9.5",
 		"@types/sinon": "^9.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.25.0",
 		"@typescript-eslint/parser": "^5.25.0",
@@ -52,6 +53,7 @@
 		"jest-expect-message": "^1.0.2",
 		"react": "^16.14.0",
 		"react-dom": "^16.14.0",
+		"react-test-renderer": "^16.14.0",
 		"rimraf": "^2.6.3"
 	},
 	"publishConfig": {
@@ -73,11 +75,18 @@
 	},
 	"jest": {
 		"verbose": true,
-		"setupFilesAfterEnv": ["jest-expect-message"],
-		"testMatch": ["**/test/**/*.test.[jt]s?(x)"],
+		"setupFilesAfterEnv": [
+			"jest-expect-message"
+		],
+		"testMatch": [
+			"**/test/**/*.test.[jt]s?(x)"
+		],
 		"coverageDirectory": "<rootDir>/coverage/",
 		"collectCoverage": true,
-		"coveragePathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/test"]
+		"coveragePathIgnorePatterns": [
+			"<rootDir>/node_modules/",
+			"<rootDir>/test"
+		]
 	},
 	"license": "Apache-2.0"
 }

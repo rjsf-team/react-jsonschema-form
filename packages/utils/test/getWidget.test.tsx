@@ -1,7 +1,8 @@
 import React from 'react';
+import TestRenderer from 'react-test-renderer';
 import { JSONSchema7 } from 'json-schema';
 
-import { GenericObjectType, getWidget } from '../src';
+import { IdSchema, Registry, Widget, WidgetProps, getWidget } from '../src';
 
 const subschema: JSONSchema7 = {
   type: 'boolean',
@@ -27,43 +28,126 @@ const schema: JSONSchema7 = {
   },
 };
 
+const TestRefWidget = React.forwardRef(function TestRefWidget(props: WidgetProps, ref: React.ForwardedRef<any>) {
+  const { options } = props;
+  return <span {...options} ref={ref}>test</span>;
+});
+
+TestRefWidget.defaultProps = {
+  options: { id: 'test-id' },
+};
+
+function TestWidget(props: WidgetProps) {
+  const { options } = props;
+  return <div {...options}>test</div>;
+}
+
+TestWidget.defaultProps = {
+  id: 'foo'
+};
+
+function TestWidgetDefaults(props: WidgetProps) {
+  const { options } = props;
+  return <div {...options}>test</div>;
+}
+
+TestWidgetDefaults.defaultProps = {
+  options: { color: 'yellow' },
+};
+
+const widgetProps: WidgetProps = {
+  id: '',
+  autofocus: false,
+  disabled: false,
+  errorSchema: {},
+  formContext: undefined,
+  formData: undefined,
+  onBlur: jest.fn(),
+  onChange: jest.fn(),
+  onFocus: jest.fn(),
+  readonly: false,
+  required: false,
+  idSchema: {} as IdSchema,
+  schema: {} as JSONSchema7,
+  uiSchema: {},
+  options: {},
+  value: undefined,
+  multiple: false,
+  label: '',
+  placeholder: '',
+  rawErrors: [],
+  registry: {} as Registry,
+};
+
 describe('getWidget()', () => {
   it('should fail if widget has incorrect type', () => {
-    const Widget = new Number(1);
-    expect(() => getWidget(schema, Widget)).toThrowError(
+    const AWidget = new Number(1);
+    expect(() => getWidget(schema, AWidget as unknown as Widget)).toThrowError(
       'Unsupported widget definition: object'
     );
   });
 
   it('should fail if widget has no type property', () => {
-    const Widget = 'blabla';
-    expect(() => getWidget(schema, Widget)).toThrowError(
+    expect(() => getWidget(schema, 'blabla')).toThrowError(
       `No widget for type 'object'`
     );
   });
 
+  it('should fail if schema has no type property', () => {
+    expect(() => getWidget({}, 'blabla')).toThrowError(
+      `No widget 'blabla' for type 'string'`
+    );
+  });
+
+  it('should return widget if in registered widgets', () => {
+    const registry = { blabla: TestWidget };
+    const TheWidget = getWidget(schema, 'blabla', registry);
+    const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
+    expect(rendered.toJSON()).toEqual({
+      children: ['test'],
+      props: {},
+      type: 'div'
+    });
+  });
+
   it('should return `SelectWidget` for boolean type', () => {
-    const Widget = (props: GenericObjectType) => <div {...props} />;
-    const registry = { SelectWidget: Widget };
+    const registry = { SelectWidget: TestWidgetDefaults };
     const TheWidget = getWidget(subschema, 'select', registry);
-    console.log({ TheWidget });
-    expect(TheWidget({})).toEqual(<Widget options={{}} />);
+    const rendered = TestRenderer.create(<TheWidget {...widgetProps} options={{ color: 'green' }} />);
+    expect(rendered.toJSON()).toEqual({
+      children: ['test'],
+      props: { color: 'green' },
+      type: 'div'
+    });
   });
 
   it('should not fail on correct component', () => {
-    const Widget = (props: GenericObjectType) => <div {...props} />;
-    expect(getWidget(schema, Widget)({})).toEqual(<Widget options={{}} />);
+    const TheWidget = getWidget(schema, TestWidgetDefaults);
+    const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
+    expect(rendered.toJSON()).toEqual({
+      children: ['test'],
+      props: { color: 'yellow' },
+      type: 'div'
+    });
   });
 
   it('should not fail on forwarded ref component', () => {
-    const Widget = React.forwardRef((props: GenericObjectType, ref: React.ForwardedRef<any>) => (
-      <div {...props} ref={ref} />
-  ));
-    expect(getWidget(schema, Widget)({})).toEqual(<Widget options={{}} />);
+    const TheWidget = getWidget(schema, TestRefWidget);
+    const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
+    expect(rendered.toJSON()).toEqual({
+      children: ['test'],
+      props: { id: 'test-id' },
+      type: 'span'
+    });
   });
 
   it('should not fail on memo component', () => {
-    const Widget = React.memo((props: GenericObjectType) => <div {...props} />);
-    expect(getWidget(schema, Widget)({})).toEqual(<Widget options={{}} />);
+    const TheWidget = React.memo(TestWidget);
+    const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
+    expect(rendered.toJSON()).toEqual({
+      children: ['test'],
+      props: {},
+      type: 'div'
+    });
   });
 });
