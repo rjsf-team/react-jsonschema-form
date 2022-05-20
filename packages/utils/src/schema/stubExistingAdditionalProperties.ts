@@ -5,10 +5,11 @@ import set from 'lodash/set';
 import { REF_NAME, ADDITIONAL_PROPERTY_FLAG } from '../constants';
 import guessType from '../guessType';
 import isObject from '../isObject';
-import { GenericObjectType } from '../types';
+import { GenericObjectType, ValidatorType } from '../types';
 
 // This function will create new 'properties' items for each key in our formData
 export default function stubExistingAdditionalProperties<T = any>(
+  validator: ValidatorType,
   aSchema: JSONSchema7,
   rootSchema: JSONSchema7 = {},
   aFormData: T
@@ -32,6 +33,7 @@ export default function stubExistingAdditionalProperties<T = any>(
     if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
       if (schema.additionalProperties.hasOwnProperty(REF_NAME)) {
         additionalProperties = retrieveSchema(
+          validator,
           { $ref: get(schema.additionalProperties, [REF_NAME]) },
           rootSchema,
           formData

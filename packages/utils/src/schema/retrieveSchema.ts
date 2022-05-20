@@ -1,5 +1,9 @@
 import { JSONSchema7 } from 'json-schema';
 import mergeAllOf from 'json-schema-merge-allof';
+
+import { ALL_OF_NAME, DEPENDENCIES_NAME, REF_NAME } from '../constants';
+import { GenericObjectType, ValidatorType } from '../types';
+
 /**
  * Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch with the rest of the schema
  */
@@ -28,7 +32,6 @@ function resolveCondition<T>(schema: JSONSchema7, rootSchema: JSONSchema7, formD
     return retrieveSchema(resolvedSchemaLessConditional, rootSchema, formData);
   }
 }
-import { ALL_OF_NAME, DEPENDENCIES_NAME, REF_NAME } from '../constants';
 
 /**
  * Resolves references and dependencies within a schema and its 'allOf' children.
@@ -67,16 +70,17 @@ function resolveReference(schema, rootSchema, formData) {
   );
 }
 
-export function retrieveSchema(schema, rootSchema = {}, formData = {}) {
+export function retrieveSchema<T = any>(validator: ValidatorType, schema: JSONSchema7, rootSchema: JSONSchema7 = {}, rawFormData: T) {
   if (!isObject(schema)) {
     return {};
   }
-  let resolvedSchema = resolveSchema(schema, rootSchema, formData);
+  let resolvedSchema = resolveSchema(schema, rootSchema, rawFormData);
 
   if (schema.hasOwnProperty('if')) {
-    return resolveCondition(schema, rootSchema, formData);
+    return resolveCondition(schema, rootSchema, rawFormData);
   }
 
+  const formData: GenericObjectType = rawFormData || {};
   // For each level of the dependency, we need to recursively determine the appropriate resolved schema given the current state of formData.
   // Otherwise, nested allOf subschemas will not be correctly displayed.
   if (resolvedSchema.properties) {
