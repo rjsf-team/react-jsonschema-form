@@ -8,10 +8,10 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/validator-ajv6/logo.png" alt="Logo" width="120" height="120">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/utils/logo.png" alt="Logo" width="120" height="120">
   </a>
 
-  <h3 align="center">@rjsf/validator-ajv6</h3>
+  <h3 align="center">@rjsf/utils</h3>
 
   <p align="center">
   AJV-6 based validator plugin for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -44,7 +44,7 @@
 
 ## About The Project
 
-Exports `validator-ajv6` plugin for `react-jsonschema-form`.
+Exports `utils` plugin for `react-jsonschema-form`.
 
 ### Built With
 
@@ -56,105 +56,18 @@ Exports `validator-ajv6` plugin for `react-jsonschema-form`.
 
 ## Getting Started
 
-### Prerequisites
-
-#### React JsonSchema Form
-
-- `@rjsf/core >= 5.0.0`
-
-```bash
-yarn add @rjsf/core
-```
-
 ### Installation
 
 ```bash
-yarn add @rjsf/validator-ajv6
+yarn add @rjsf/utils
 ```
 
 <!-- USAGE EXAMPLES -->
 
 ## Usage
 
-### Material UI version 4
-
 ```jsx
-import Form from '@rjsf/core';
-import validator from '@rjsf/validator-ajv6';
-
-const schema = {
-  type: 'string',
-};
-
-<Form schema={schema} validator={validator} />
-```
-
-or, using a more complex example using custom validator with custom formats
-
-```jsx
-import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
-
-const customFormats = {
-  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
-};
-
-const validator = customizeValidator({
-  customFormats,
-});
-
-const schema = {
-  type: 'string',
-  format: 'phone-us'
-};
-
-<Form schema={schema} validator={validator} />
-```
-
-or, using a more complex example using a custom with additional meta schema
-
-```jsx
-import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
-
-const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
-
-const validator = customizeValidator({
-  additionalMetaSchemas: [metaSchemaDraft04],
-});
-
-const schema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  type: 'string',
-};
-
-<Form schema={schema} validator={validator} />
-```
-
-Finally, you can combine both additional meta schemas and custom formats.
-
-```jsx
-import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
-
-const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
-
-const customFormats = {
-  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
-};
-
-const validator = customizeValidator({
-  additionalMetaSchemas: [metaSchemaDraft04],
-  customFormats,
-});
-
-const schema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  type: 'string',
-  format: 'phone-us'
-};
-
-<Form schema={schema} validator={validator} />
+import * as Utils from '@rjsf/utils';
 ```
 
 <!-- ROADMAP -->
