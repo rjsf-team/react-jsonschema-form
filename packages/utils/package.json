@@ -34,7 +34,7 @@
     "@babel/plugin-transform-react-jsx": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
-    "@types/jest": "^24.0.15",
+    "@types/jest": "^25.2.3",
     "@types/jest-expect-message": "^1.0.3",
     "@types/json-schema": "^7.0.9",
     "@types/json-schema-merge-allof": "^0.6.1",
@@ -54,7 +54,8 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-test-renderer": "^16.14.0",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.6.3",
+    "tsdx": "^0.14.1"
   },
   "publishConfig": {
     "access": "public"
@@ -86,7 +87,15 @@
     "coveragePathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "<rootDir>/test"
-    ]
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   },
   "license": "Apache-2.0"
 }
