@@ -8,9 +8,15 @@ const schema: RJSFSchema = {
     },
     nestedRef: {
       $ref: '#/definitions/stringRef'
+    },
+    extraNestedRef: {
+      $ref: '#/definitions/stringRef',
+      title: 'foo',
     }
   }
 };
+
+const EXTRA_EXPECTED = { type: 'string', title: 'foo' };
 
 describe('findSchemaDefinition()', () => {
   it('throws error when ref is malformed', () => {
@@ -28,5 +34,8 @@ describe('findSchemaDefinition()', () => {
   });
   it('returns the string ref from its nested definition', () => {
     expect(findSchemaDefinition('#/definitions/nestedRef', schema)).toBe(schema.definitions!.stringRef);
+  });
+  it('returns a combined schema made from its nested definition with the extra props', () => {
+    expect(findSchemaDefinition('#/definitions/extraNestedRef', schema)).toEqual(EXTRA_EXPECTED);
   });
 });

@@ -1,25 +1,19 @@
 import { getSubmitButtonOptions } from '../src';
+import { DEFAULT_OPTIONS } from '../src/getSubmitButtonOptions';
 
 describe('getSubmitButtonOptions', () => {
   it('default props', () => {
-    expect(getSubmitButtonOptions({})).toEqual({
-      props: { disabled: false },
-      submitText: 'Submit',
-      norender: false,
-    });
+    expect(getSubmitButtonOptions({})).toBe(DEFAULT_OPTIONS);
   });
 
   it('allowed option should be false', () => {
     expect(
       getSubmitButtonOptions({
-        'ui:options': { submitButtonOptions: { norender: false } },
+        'ui:options': { submitButtonOptions: { norender: true } },
       })
     ).toEqual({
-      props: {
-        disabled: false,
-      },
-      submitText: 'Submit',
-      norender: false,
+      ...DEFAULT_OPTIONS,
+      norender: true,
     });
   });
 
@@ -29,11 +23,10 @@ describe('getSubmitButtonOptions', () => {
         'ui:options': { submitButtonOptions: { props: { hidden: true } } },
       })
     ).toEqual({
+      ...DEFAULT_OPTIONS,
       props: {
         hidden: true,
       },
-      submitText: 'Submit',
-      norender: false,
     });
   });
 
@@ -43,11 +36,10 @@ describe('getSubmitButtonOptions', () => {
         'ui:options': { submitButtonOptions: { props: { disabled: true } } },
       })
     ).toEqual({
+      ...DEFAULT_OPTIONS,
       props: {
         disabled: true,
       },
-      submitText: 'Submit',
-      norender: false,
     });
   });
 
@@ -57,11 +49,8 @@ describe('getSubmitButtonOptions', () => {
         'ui:options': { submitButtonOptions: { submitText: 'Confirm' } },
       })
     ).toEqual({
-      props: {
-        disabled: false,
-      },
+      ...DEFAULT_OPTIONS,
       submitText: 'Confirm',
-      norender: false,
     });
   });
 });

@@ -27,7 +27,7 @@ const uiSchema: UiSchema = {
 
 const results: { [key: string]: UIOptionsType } = {
   widgetText: { widget: 'select' },
-  widgetObject: { widget: 'radio' },
+  widgetObject: {},
   optionsObject: { widget: 'hidden', disabled: true },
   multiOptions: {
     submitButtonProps: { norender: true },
@@ -37,28 +37,30 @@ const results: { [key: string]: UIOptionsType } = {
 };
 
 describe('getUiOptions()', () => {
-  let consoleWarnSpy: jest.SpyInstance;
+  let consoleErrorSpy: jest.SpyInstance;
   beforeAll(() => {
-    // spy on console.warn() and make it do nothing to avoid making noise in the test
-    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+    // spy on console.error() and make it do nothing to avoid making noise in the test
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
   });
   afterAll(() => {
-    consoleWarnSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
   it('returns widget text as options', () => {
     expect(getUiOptions(uiSchema.widgetText)).toEqual(results.widgetText);
-    expect(consoleWarnSpy).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
-  it('returns widget object as options, with warning', () => {
+  it('returns widget object as empty, with error', () => {
     expect(getUiOptions(uiSchema.widgetObject)).toEqual(results.widgetObject);
-    expect(consoleWarnSpy).toHaveBeenCalledWith('Setting options via ui:widget object is deprecated, use ui:options instead');
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Setting options via ui:widget object is no longer supported, use ui:options instead'
+    );
   });
   it('returns options object as options', () => {
     expect(getUiOptions(uiSchema.optionsObject)).toEqual(results.optionsObject);
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
   it('returns multiple options as options', () => {
     expect(getUiOptions(uiSchema.multiOptions)).toEqual(results.multiOptions);
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -79,11 +79,20 @@ const widgetProps: WidgetProps = {
 };
 
 describe('getWidget()', () => {
+  let consoleErrorSpy: jest.SpyInstance;
+  beforeAll(() => {
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(); // Disable the output
+  });
+  afterAll(() => {
+    consoleErrorSpy.mockRestore();
+  });
   it('should fail if widget has incorrect type', () => {
     const AWidget = new Number(1);
     expect(() => getWidget(schema, AWidget as unknown as Widget)).toThrowError(
       'Unsupported widget definition: object'
     );
+    // The force cast of the number to a Widget causes `React.createElement()` to log an error to the console
+    expect(consoleErrorSpy).toHaveBeenCalled();
   });
 
   it('should fail if widget has no type property', () => {

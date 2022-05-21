@@ -14,7 +14,7 @@ type MyComponentState = {
   };
 };
 
-describe('shouldRender', () => {
+describe('shouldRender()', () => {
   describe('single level comparison checks', () => {
     let initial: React.Component<MyComponentProps, MyComponentState>;
     beforeAll(() => {
