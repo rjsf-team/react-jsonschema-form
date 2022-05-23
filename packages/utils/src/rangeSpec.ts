@@ -1,8 +1,13 @@
-import { JSONSchema7 } from 'json-schema';
-
 import { RangeSpecType } from './types';
+import { RJSFSchema } from './types';
 
-export default function rangeSpec(schema: JSONSchema7) {
+/** Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML
+ * input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
+ *
+ * @param schema - The schema from which to extract the range spec
+ * @returns - A range specification from the schema
+ */
+export default function rangeSpec(schema: RJSFSchema) {
   const spec: RangeSpecType = {};
   if (schema.multipleOf) {
     spec.step = schema.multipleOf;

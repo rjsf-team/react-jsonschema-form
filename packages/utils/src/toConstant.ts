@@ -1,8 +1,7 @@
-import { JSONSchema7 } from 'json-schema';
-
 import { CONST_NAME } from './constants';
+import { RJSFSchema } from './types';
 
-export default function toConstant(schema: JSONSchema7) {
+export default function toConstant(schema: RJSFSchema) {
   if (Array.isArray(schema.enum) && schema.enum.length === 1) {
     return schema.enum[0];
   } else if (schema.hasOwnProperty(CONST_NAME)) {

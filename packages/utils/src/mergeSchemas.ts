@@ -4,13 +4,15 @@ import getSchemaType from './getSchemaType';
 import isObject from './isObject';
 import { GenericObjectType } from 'types';
 
-// Recursively merge deeply nested schemas.
-// The difference between mergeSchemas and mergeObjects
-// is that mergeSchemas only concats arrays for
-// values under the 'required' keyword, and when it does,
-// it doesn't include duplicate values.
+/** Recursively merge deeply nested schemas. The difference between mergeSchemas and mergeObjects is that mergeSchemas
+ * only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values.
+ *
+ * @param obj1 - The first schema object to merge
+ * @param obj2 - The second schema object to merge
+ * @returns - The merged schema object
+ */
 export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
-  var acc = Object.assign({}, obj1); // Prevent mutation of source object.
+  const acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1 ? obj1[key] : {},
       right = obj2[key];
@@ -24,8 +26,7 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
       Array.isArray(left) &&
       Array.isArray(right)
     ) {
-      // Don't include duplicate values when merging
-      // 'required' fields.
+      // Don't include duplicate values when merging 'required' fields.
       acc[key] = union(left, right);
     } else {
       acc[key] = right;

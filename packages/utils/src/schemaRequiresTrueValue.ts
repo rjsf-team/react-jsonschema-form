@@ -1,7 +1,15 @@
-import { JSONSchema7, JSONSchema7Definition } from 'json-schema';
+import { RJSFSchema, RJSFSchemaDefinition } from './types';
 
-// Check to see if a schema specifies that a value must be true
-export default function schemaRequiresTrueValue(schema: JSONSchema7): boolean {
+/** Check to see if a `schema` specifies that a value must be true. This happens when:
+ * - `schema.const` is truthy
+ * - `schema.enum` == `[true]`
+ * - `schema.anyOf` or `schema.oneOf` has a single value which recursively returns true
+ * - `schema.allOf` has at least one value which recursively returns true
+ *
+ * @param schema - The schema to check
+ * @returns - True if the schema specifies a value that must be true, false otherwise
+ */
+export default function schemaRequiresTrueValue(schema: RJSFSchema): boolean {
   // Check if const is a truthy value
   if (schema.const) {
     return true;
@@ -14,17 +22,17 @@ export default function schemaRequiresTrueValue(schema: JSONSchema7): boolean {
 
   // If anyOf has a single value, evaluate the subschema
   if (schema.anyOf && schema.anyOf.length === 1) {
-    return schemaRequiresTrueValue(schema.anyOf[0] as JSONSchema7);
+    return schemaRequiresTrueValue(schema.anyOf[0] as RJSFSchema);
   }
 
   // If oneOf has a single value, evaluate the subschema
   if (schema.oneOf && schema.oneOf.length === 1) {
-    return schemaRequiresTrueValue(schema.oneOf[0] as JSONSchema7);
+    return schemaRequiresTrueValue(schema.oneOf[0] as RJSFSchema);
   }
 
   // Evaluate each subschema in allOf, to see if one of them requires a true value
   if (schema.allOf) {
-    const schemaSome = (subSchema: JSONSchema7Definition) => schemaRequiresTrueValue(subSchema as JSONSchema7);
+    const schemaSome = (subSchema: RJSFSchemaDefinition) => schemaRequiresTrueValue(subSchema as RJSFSchema);
     return schema.allOf.some(schemaSome);
   }
 

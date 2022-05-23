@@ -1,11 +1,13 @@
 import React from 'react';
-import { JSONSchema7 } from 'json-schema';
+import { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 
 export type GenericObjectType = {
   [name: string]: any;
 };
 
 export type RJSFSchema = JSONSchema7;
+
+export type RJSFSchemaDefinition = JSONSchema7Definition;
 
 export interface DateObject {
   year: number;

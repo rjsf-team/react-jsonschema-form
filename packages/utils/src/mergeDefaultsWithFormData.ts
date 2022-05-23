@@ -2,7 +2,9 @@ import get from 'lodash/get';
 import map from 'lodash/map';
 
 import isObject from './isObject';
-/**
+
+/** Merges the `defaults` object of type `T` into the `formData` of type `T`
+ *
  * When merging defaults and form data, we want to merge in this specific way:
  * - objects are deeply merged
  * - arrays are merged in such a way that:
@@ -10,6 +12,10 @@ import isObject from './isObject';
  *     are deeply merged; additional entries from the defaults are ignored
  *   - when the array is not set in form data, the default is copied over
  * - scalars are overwritten/set by form data
+ *
+ * @param defaults - The defaults to merge
+ * @param formData - The form data into which the defaults will be merged
+ * @returns - The resulting merged form data with defaults
  */
 export default function mergeDefaultsWithFormData<T = any>(defaults: T, formData: T): T {
   if (Array.isArray(formData)) {
