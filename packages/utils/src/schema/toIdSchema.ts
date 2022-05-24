@@ -1,4 +1,3 @@
-import { JSONSchema7 } from 'json-schema';
 import get from 'lodash/get';
 
 import {
@@ -9,26 +8,26 @@ import {
   REF_NAME,
 } from '../constants';
 import isObject from '../isObject';
-import { IdSchema } from '../types';
+import { IdSchema, RJSFSchema, ValidatorType } from '../types';
+import { retrieveSchema } from './retrieveSchema';
 
 export default function toIdSchema<T>(
-  schema: JSONSchema7,
+  validator: ValidatorType,
+  schema: RJSFSchema,
   id: string,
-  rootSchema: JSONSchema7,
+  rootSchema: RJSFSchema,
   formData: T,
   idPrefix = 'root',
   idSeparator = '_'
-): IdSchema | IdSchema[] {
-  const idSchema: IdSchema = {
-    $id: id || idPrefix,
-  };
+): IdSchema {
   if (REF_NAME in schema || DEPENDENCIES_NAME in schema || ALL_OF_NAME in schema) {
-    const _schema = retrieveSchema(schema, rootSchema, formData);
-    return toIdSchema(_schema, id, rootSchema, formData, idPrefix, idSeparator);
+    const _schema = retrieveSchema(validator, schema, rootSchema, formData);
+    return toIdSchema(validator, _schema, id, rootSchema, formData, idPrefix, idSeparator);
   }
   if (ITEMS_NAME in schema && !get(schema, [ITEMS_NAME, REF_NAME])) {
     return toIdSchema(
-      get(schema, ITEMS_NAME) as JSONSchema7,
+      validator,
+      get(schema, ITEMS_NAME) as RJSFSchema,
       id,
       rootSchema,
       formData,
@@ -36,22 +35,24 @@ export default function toIdSchema<T>(
       idSeparator
     );
   }
-  if (schema.type !== 'object' || !(PROPERTIES_NAME in schema)) {
-    return idSchema;
-  }
-  for (const name in schema.properties || {}) {
-    const field = get(schema, [PROPERTIES_NAME, name]);
-    const fieldId = idSchema.$id + idSeparator + name;
-    idSchema[name] = toIdSchema(
-      isObject(field) ? field : {},
-      fieldId,
-      rootSchema,
-      // It's possible that formData is not an object -- this can happen if an
-      // array item has just been added, but not populated with data yet
-      (formData || {})[name],
-      idPrefix,
-      idSeparator
-    );
+  const $id = id || idPrefix;
+  const idSchema: IdSchema = { $id } as IdSchema;
+  if (schema.type === 'object' && PROPERTIES_NAME in schema) {
+    for (const name in schema.properties || {}) {
+      const field = get(schema, [PROPERTIES_NAME, name]);
+      const fieldId = idSchema.$id + idSeparator + name;
+      idSchema[name] = toIdSchema(
+        validator,
+        isObject(field) ? field : {},
+        fieldId,
+        rootSchema,
+        // It's possible that formData is not an object -- this can happen if an
+        // array item has just been added, but not populated with data yet
+        (formData || {})[name],
+        idPrefix,
+        idSeparator
+      );
+    }
   }
   return idSchema;
 }

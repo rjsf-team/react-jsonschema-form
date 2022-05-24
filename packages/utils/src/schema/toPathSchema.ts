@@ -1,4 +1,3 @@
-import { JSONSchema7 } from 'json-schema';
 import get from 'lodash/get';
 import set from 'lodash/set';
 
@@ -10,30 +9,35 @@ import {
   PROPERTIES_NAME,
   REF_NAME,
 } from '../constants';
-import { PathSchema } from '../types';
+import { PathSchema, RJSFSchema, ValidatorType } from '../types';
+import { retrieveSchema } from './retrieveSchema';
 
 export default function toPathSchema<T = any>(
-  schema: JSONSchema7,
+  validator: ValidatorType,
+  schema: RJSFSchema,
   name: string,
-  rootSchema: JSONSchema7,
+  rootSchema: RJSFSchema,
   formData: T
-): PathSchema | PathSchema[] {
+): PathSchema {
+  if (REF_NAME in schema || DEPENDENCIES_NAME in schema || ALL_OF_NAME in schema) {
+    const _schema = retrieveSchema(validator, schema, rootSchema, formData);
+    return toPathSchema(validator, _schema, name, rootSchema, formData);
+  }
+
   const pathSchema: PathSchema = {
     $name: name.replace(/^\./, ''),
-  };
-  if (REF_NAME in schema || DEPENDENCIES_NAME in schema || ALL_OF_NAME in schema) {
-    const _schema = retrieveSchema(schema, rootSchema, formData);
-    return toPathSchema(_schema, name, rootSchema, formData);
-  }
+  } as PathSchema;
 
   if (schema.hasOwnProperty(ADDITIONAL_PROPERTIES_NAME)) {
     set(pathSchema, '__rjsf_additionalProperties', true);
   }
 
   if (schema.hasOwnProperty(ITEMS_NAME) && Array.isArray(formData)) {
-    formData.forEach((element, i) => {
+    formData.forEach((element, i: number) => {
+      const item = get(schema, [ITEMS_NAME, i], {});
       pathSchema[i] = toPathSchema(
-        schema.items,
+        validator,
+        item as RJSFSchema,
         `${name}.${i}`,
         rootSchema,
         element
@@ -41,8 +45,10 @@ export default function toPathSchema<T = any>(
     });
   } else if (schema.hasOwnProperty(PROPERTIES_NAME)) {
     for (const property in schema.properties) {
+      const field = get(schema, [PROPERTIES_NAME, property]);
       pathSchema[property] = toPathSchema(
-        schema.properties[property],
+        validator,
+        field,
         `${name}.${property}`,
         rootSchema,
         // It's possible that formData is not an object -- this can happen if an

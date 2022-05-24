@@ -1,6 +1,8 @@
-import { JSONSchema7 } from 'json-schema';
+import { RJSFSchema, ValidatorType } from '../types';
 
-export default function getMatchingOption<T = any>(formData: T, options: JSONSchema7[], rootSchema: JSONSchema7) {
+export default function getMatchingOption<T = any>(
+  validator: ValidatorType, formData: T, options: RJSFSchema[], rootSchema: RJSFSchema
+) {
   // For performance, skip validating subschemas if formData is undefined. We just
   // want to get the first option in that case.
   if (formData === undefined) {
@@ -50,10 +52,10 @@ export default function getMatchingOption<T = any>(formData: T, options: JSONSch
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
 
-      if (isValid(augmentedSchema, formData, rootSchema)) {
+      if (validator.isValid(augmentedSchema, formData, rootSchema)) {
         return i;
       }
-    } else if (isValid(option, formData, rootSchema)) {
+    } else if (validator.isValid(option, formData, rootSchema)) {
       return i;
     }
   }

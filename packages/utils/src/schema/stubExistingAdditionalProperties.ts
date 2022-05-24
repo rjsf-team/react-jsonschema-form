@@ -1,17 +1,17 @@
-import { JSONSchema7 } from 'json-schema';
 import get from 'lodash/get';
 import set from 'lodash/set';
 
 import { REF_NAME, ADDITIONAL_PROPERTY_FLAG } from '../constants';
 import guessType from '../guessType';
 import isObject from '../isObject';
-import { GenericObjectType, ValidatorType } from '../types';
+import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
+import { retrieveSchema } from './retrieveSchema';
 
 // This function will create new 'properties' items for each key in our formData
 export default function stubExistingAdditionalProperties<T = any>(
   validator: ValidatorType,
-  aSchema: JSONSchema7,
-  rootSchema: JSONSchema7 = {},
+  aSchema: RJSFSchema,
+  rootSchema: RJSFSchema = {},
   aFormData: T
 ) {
   // Clone the schema so we don't ruin the consumer's original
@@ -43,7 +43,6 @@ export default function stubExistingAdditionalProperties<T = any>(
       } else {
         additionalProperties = { type: guessType(get(formData, [key])) };
       }
-
     }
 
     // The type of our new key should match the additionalProperties value;
