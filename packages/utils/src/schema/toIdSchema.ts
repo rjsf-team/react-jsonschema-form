@@ -9,23 +9,23 @@ import {
 } from '../constants';
 import isObject from '../isObject';
 import { IdSchema, RJSFSchema, ValidatorType } from '../types';
-import { retrieveSchema } from './retrieveSchema';
+import retrieveSchema from './retrieveSchema';
 
 export default function toIdSchema<T>(
   validator: ValidatorType,
   schema: RJSFSchema,
   id: string,
   rootSchema: RJSFSchema,
-  formData: T,
+  formData?: T,
   idPrefix = 'root',
   idSeparator = '_'
 ): IdSchema {
   if (REF_NAME in schema || DEPENDENCIES_NAME in schema || ALL_OF_NAME in schema) {
-    const _schema = retrieveSchema(validator, schema, rootSchema, formData);
-    return toIdSchema(validator, _schema, id, rootSchema, formData, idPrefix, idSeparator);
+    const _schema = retrieveSchema<T>(validator, schema, rootSchema, formData);
+    return toIdSchema<T>(validator, _schema, id, rootSchema, formData, idPrefix, idSeparator);
   }
   if (ITEMS_NAME in schema && !get(schema, [ITEMS_NAME, REF_NAME])) {
-    return toIdSchema(
+    return toIdSchema<T>(
       validator,
       get(schema, ITEMS_NAME) as RJSFSchema,
       id,
@@ -41,14 +41,14 @@ export default function toIdSchema<T>(
     for (const name in schema.properties || {}) {
       const field = get(schema, [PROPERTIES_NAME, name]);
       const fieldId = idSchema.$id + idSeparator + name;
-      idSchema[name] = toIdSchema(
+      idSchema[name] = toIdSchema<T>(
         validator,
         isObject(field) ? field : {},
         fieldId,
         rootSchema,
         // It's possible that formData is not an object -- this can happen if an
         // array item has just been added, but not populated with data yet
-        (formData || {})[name],
+        get(formData, [name]),
         idPrefix,
         idSeparator
       );

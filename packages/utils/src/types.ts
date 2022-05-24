@@ -283,12 +283,25 @@ export type ErrorTransformer = (errors: RJSFValidationError[]) => RJSFValidation
 export type ValidationData = { errors: RJSFValidationError[]; errorSchema: ErrorSchema };
 
 export interface ValidatorType<T = any> {
-  validateFormData: (
+  validateFormData(
     formData: T,
     schema: RJSFSchema,
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer,
-  ) => ValidationData;
-  toErrorList: (errorSchema?: ErrorSchema, fieldName?: string) => RJSFValidationError[];
-  isValid: (schema: RJSFSchema, formData: T, rootSchema: RJSFSchema) => boolean;
+  ): ValidationData;
+  toErrorList(errorSchema?: ErrorSchema, fieldName?: string): RJSFValidationError[];
+  isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema): boolean;
+}
+
+export interface SchemaUtilsType<T = any> {
+  getDefaultFormState(schema: RJSFSchema, formData?: T, includeUndefinedValues?: boolean): T | T[] | undefined;
+  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>): boolean;
+  getMatchingOption(formData: T, options: RJSFSchema[]): number;
+  isFilesArray<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>): boolean;
+  isMultiSelect(schema: RJSFSchema): boolean;
+  isSelect(schema: RJSFSchema): boolean;
+  retrieveSchema(schema: RJSFSchema, formData: T): RJSFSchema;
+  stubExistingAdditionalProperties(schema: RJSFSchema, formData: T): RJSFSchema;
+  toIdSchema(schema: RJSFSchema, id: string, formData?: T, idPrefix?: string, idSeparator?: string): IdSchema;
+  toPathSchema(schema: RJSFSchema, name: string, formData?: T): PathSchema;
 }

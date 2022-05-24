@@ -13,18 +13,18 @@ import stubExistingAdditionalProperties from './stubExistingAdditionalProperties
  * Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch with the rest of the schema
  */
 function resolveCondition<T = any>(validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T) {
-  let {
+  const {
     if: expression,
     then,
     else: otherwise,
     ...resolvedSchemaLessConditional
   } = schema;
 
-  const conditionalSchema = validator.isValid(expression, formData, rootSchema)
+  const conditionalSchema = validator.isValid(expression as RJSFSchema, formData, rootSchema)
     ? then
     : otherwise;
 
-  if (conditionalSchema) {
+  if (conditionalSchema && typeof conditionalSchema !== 'boolean') {
     return retrieveSchema<T>(
       validator,
       mergeSchemas(
@@ -34,9 +34,8 @@ function resolveCondition<T = any>(validator: ValidatorType, schema: RJSFSchema,
       rootSchema,
       formData
     );
-  } else {
-    return retrieveSchema(validator, resolvedSchemaLessConditional, rootSchema, formData);
   }
+  return retrieveSchema<T>(validator, resolvedSchemaLessConditional, rootSchema, formData);
 }
 
 /**
@@ -48,17 +47,17 @@ function resolveSchema<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, formData?: T
 ): RJSFSchema {
   if (schema.hasOwnProperty(REF_NAME)) {
-    return resolveReference(validator, schema, rootSchema, formData);
+    return resolveReference<T>(validator, schema, rootSchema, formData);
   }
   if (schema.hasOwnProperty(DEPENDENCIES_NAME)) {
-    const resolvedSchema = resolveDependencies(validator, schema, rootSchema, formData);
-    return retrieveSchema(validator, resolvedSchema, rootSchema, formData);
+    const resolvedSchema = resolveDependencies<T>(validator, schema, rootSchema, formData);
+    return retrieveSchema<T>(validator, resolvedSchema, rootSchema, formData);
   }
   if (schema.hasOwnProperty(ALL_OF_NAME)) {
     return {
       ...schema,
-      allOf: schema.allOf!.map(allOfSubschema =>
-        retrieveSchema(validator, allOfSubschema, rootSchema, formData)
+      allOf: schema.allOf!.map((allOfSubschema) =>
+        retrieveSchema<T>(validator, allOfSubschema as RJSFSchema, rootSchema, formData)
       )
     };
   }
@@ -67,14 +66,14 @@ function resolveSchema<T = any>(
 }
 
 function resolveReference<T = any>(
-  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T
+  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData?: T
 ): RJSFSchema {
   // Retrieve the referenced schema definition.
   const $refSchema = findSchemaDefinition(schema.$ref, rootSchema);
   // Drop the $ref property of the source schema.
   const { $ref, ...localSchema } = schema;
   // Update referenced schema definition with local schema properties.
-  return retrieveSchema(
+  return retrieveSchema<T>(
     validator,
     { ...$refSchema, ...localSchema },
     rootSchema,
@@ -82,7 +81,7 @@ function resolveReference<T = any>(
   );
 }
 
-export function retrieveSchema<T = any>(
+export default function retrieveSchema<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, rawFormData?: T
 ): RJSFSchema {
   if (!isObject(schema)) {
@@ -105,7 +104,7 @@ export function retrieveSchema<T = any>(
       const propSchema = entries[1] as RJSFSchema;
       const rawPropData = formData[propName];
       const propData = isObject(rawPropData) ? rawPropData : {};
-      const resolvedPropSchema = retrieveSchema(
+      const resolvedPropSchema = retrieveSchema<T>(
         validator,
         propSchema,
         rootSchema,
@@ -150,7 +149,7 @@ export function retrieveSchema<T = any>(
 }
 
 export function resolveDependencies<T = any>(
-  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T
+  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData?: T
 ): RJSFSchema {
   // Drop the dependencies from the source schema.
   const { dependencies = {}, ...remainingSchema } = schema;
@@ -180,7 +179,7 @@ function processDependencies<T = any>(
   dependencies: RJSFSchema['dependencies'],
   resolvedSchema: RJSFSchema,
   rootSchema: RJSFSchema,
-  formData: T
+  formData?: T
 ): RJSFSchema {
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
@@ -206,9 +205,9 @@ function processDependencies<T = any>(
         validator,
         resolvedSchema,
         rootSchema,
-        formData,
         dependencyKey,
-        dependencyValue as RJSFSchema
+        dependencyValue as RJSFSchema,
+        formData
       );
     }
     return processDependencies<T>(
@@ -236,9 +235,9 @@ function withDependentSchema<T>(
   validator: ValidatorType,
   schema: RJSFSchema,
   rootSchema: RJSFSchema,
-  formData: T,
   dependencyKey: string,
-  dependencyValue: RJSFSchema
+  dependencyValue: RJSFSchema,
+  formData?: T,
 ) {
   const { oneOf, ...dependentSchema } = retrieveSchema<T>(validator, dependencyValue, rootSchema, formData);
   schema = mergeSchemas(schema, dependentSchema);
@@ -259,9 +258,9 @@ function withDependentSchema<T>(
     validator,
     schema,
     rootSchema,
-    formData,
     dependencyKey,
-    resolvedOneOf
+    resolvedOneOf,
+    formData,
   );
 }
 
@@ -269,9 +268,9 @@ function withExactlyOneSubschema<T = any>(
   validator: ValidatorType,
   schema: RJSFSchema,
   rootSchema: RJSFSchema,
-  formData: T,
   dependencyKey: string,
-  oneOf: RJSFSchemaDefinition[]
+  oneOf: RJSFSchemaDefinition[],
+  formData?: T,
 ) {
   const validSubschemas = oneOf.filter((subschema) => {
     if (typeof subschema === 'boolean' || !subschema.properties) {

@@ -5,7 +5,7 @@ import { REF_NAME, ADDITIONAL_PROPERTY_FLAG } from '../constants';
 import guessType from '../guessType';
 import isObject from '../isObject';
 import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
-import { retrieveSchema } from './retrieveSchema';
+import retrieveSchema from './retrieveSchema';
 
 // This function will create new 'properties' items for each key in our formData
 export default function stubExistingAdditionalProperties<T = any>(
@@ -23,20 +23,20 @@ export default function stubExistingAdditionalProperties<T = any>(
   // make sure formData is an object
   const formData: GenericObjectType = isObject(aFormData) ? aFormData : {};
 
-  Object.keys(formData).forEach(key => {
+  Object.keys(formData).forEach((key) => {
     if (schema.properties.hasOwnProperty(key)) {
       // No need to stub, our schema already has the property
       return;
     }
 
-    let additionalProperties;
+    let additionalProperties: RJSFSchema = {};
     if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
       if (schema.additionalProperties.hasOwnProperty(REF_NAME)) {
-        additionalProperties = retrieveSchema(
+        additionalProperties = retrieveSchema<T>(
           validator,
           { $ref: get(schema.additionalProperties, [REF_NAME]) },
           rootSchema,
-          formData
+          formData as T
         );
       } else if (schema.additionalProperties.hasOwnProperty('type')) {
         additionalProperties = { ...schema.additionalProperties };

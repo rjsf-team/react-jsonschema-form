@@ -1,7 +1,7 @@
 import { RJSFSchema, ValidatorType } from '../types';
 
 export default function getMatchingOption<T = any>(
-  validator: ValidatorType, formData: T, options: RJSFSchema[], rootSchema: RJSFSchema
+  validator: ValidatorType, formData: T | undefined, options: RJSFSchema[], rootSchema: RJSFSchema
 ) {
   // For performance, skip validating subschemas if formData is undefined. We just
   // want to get the first option in that case.

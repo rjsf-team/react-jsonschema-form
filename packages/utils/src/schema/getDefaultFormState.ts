@@ -7,11 +7,11 @@ import getMatchingOption from './getMatchingOption';
 import getSchemaType from '../getSchemaType';
 import isObject from '../isObject';
 import isFixedItems from '../isFixedItems';
-import isMultiSelect from './isMultiSelect';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
 import mergeObjects from '../mergeObjects';
 import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
-import { retrieveSchema, resolveDependencies } from './retrieveSchema';
+import isMultiSelect from './isMultiSelect';
+import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 
 export function getSchemaItem(schema: RJSFSchema, idx = -1) {
   let schemaItem: RJSFSchema;
@@ -141,7 +141,7 @@ export function computeDefaults<T = any>(
         }) as T[];
       }
       if (schema.minItems) {
-        if (!isMultiSelect(validator, schema, rootSchema)) {
+        if (!isMultiSelect<T>(validator, schema, rootSchema)) {
           const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
           if (schema.minItems > defaultsLength) {
             const defaultEntries: T[] = (defaults || []) as T[];
@@ -166,14 +166,14 @@ export function computeDefaults<T = any>(
 export default function getDefaultFormState<T = any>(
   validator: ValidatorType,
   _schema: RJSFSchema,
-  formData: T,
+  formData?: T,
   rootSchema: RJSFSchema = {},
   includeUndefinedValues = false
 ) {
   if (!isObject(_schema)) {
     throw new Error('Invalid schema: ' + _schema);
   }
-  const schema = retrieveSchema(validator, _schema, rootSchema, formData);
+  const schema = retrieveSchema<T>(validator, _schema, rootSchema, formData);
   const defaults = computeDefaults<T>(
     validator,
     schema,

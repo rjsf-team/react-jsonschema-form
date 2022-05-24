@@ -1,6 +1,7 @@
 import allowAdditionalItems from './allowAdditionalItems';
 import asNumber from './asNumber';
 import canExpand from './canExpand';
+import createSchemaUtils from './createSchemaUtils';
 import dataURItoBlob from './dataURItoBlob';
 import deepEquals from './deepEquals';
 import findSchemaDefinition from './findSchemaDefinition';
@@ -110,11 +111,13 @@ export type {
 };
 
 export * from './constants';
+export * from './schema';
 
 export {
   allowAdditionalItems,
   asNumber,
   canExpand,
+  createSchemaUtils,
   dataURItoBlob,
   deepEquals,
   findSchemaDefinition,
