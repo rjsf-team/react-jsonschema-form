@@ -87,7 +87,7 @@ function mergeWidgetOptions<T = any, F = any>(AWidget: Widget<T, F>) {
  *
  * @param schema - The schema for the field
  * @param widget - Either the name of the widget OR a `Widget` implementation to use
- * @param registeredWidgets - A registry of widget name to `Widget` implementation
+ * @param [registeredWidgets={}] - A registry of widget name to `Widget` implementation
  * @returns - The `Widget` component to use
  * @throws - An error if there is no `Widget` component that can be returned
  */

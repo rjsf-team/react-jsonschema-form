@@ -9,11 +9,11 @@ import { RJSFSchema } from './types';
  * the schema, then throw an Error. Otherwise return the sub-schema. Also deals with nested `$ref`s in the sub-schema.
  *
  * @param $ref - The ref string for which the schema definition is desired
- * @param rootSchema - The root schema in which to search for the definition
+ * @param [rootSchema={}] - The root schema in which to search for the definition
  * @throws - Error indicating that no schema for that reference exists
  */
-export default function findSchemaDefinition($ref: string, rootSchema: RJSFSchema = {}): RJSFSchema {
-  let ref = $ref;
+export default function findSchemaDefinition($ref?: string, rootSchema: RJSFSchema = {}): RJSFSchema {
+  let ref = $ref || '';
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.
     ref = decodeURIComponent(ref.substring(1));

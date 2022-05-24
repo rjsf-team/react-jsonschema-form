@@ -6,7 +6,7 @@ import { RegistryWidgetsType, RJSFSchema, Widget } from './types';
  *
  * @param schema - The schema for the field
  * @param widget - Either the name of the widget OR a `Widget` implementation to use
- * @param registeredWidgets - A registry of widget name to `Widget` implementation
+ * @param [registeredWidgets={}] - A registry of widget name to `Widget` implementation
  * @returns - True if the widget exists, false otherwise
  */
 export default function hasWidget<T = any, F = any>(

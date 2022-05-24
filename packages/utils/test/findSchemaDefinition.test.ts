@@ -19,6 +19,11 @@ const schema: RJSFSchema = {
 const EXTRA_EXPECTED = { type: 'string', title: 'foo' };
 
 describe('findSchemaDefinition()', () => {
+  it('throws error when ref is missing', () => {
+    expect(() => findSchemaDefinition()).toThrowError(
+      'Could not find a definition for undefined'
+    );
+  });
   it('throws error when ref is malformed', () => {
     expect(() => findSchemaDefinition('definitions/missing')).toThrowError(
       'Could not find a definition for definitions/missing'
