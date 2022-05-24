@@ -5,7 +5,7 @@ const { getSubmitButtonOptions } = utils;
 export default ({ uiSchema }) => {
   const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(uiSchema);
   if (norender) {return null;}
-  return (<Button  htmlType="submit" {...submitButtonProps}>
+  return (<Button htmlType="submit" {...submitButtonProps}>
     {submitText}
   </Button>);
 };
