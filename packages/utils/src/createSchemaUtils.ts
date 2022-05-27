@@ -12,7 +12,7 @@ import {
   toPathSchema,
 } from './schema';
 
-export class CreateSchemaUtils<T = any> implements SchemaUtilsType<T> {
+export class SchemaUtils<T = any> implements SchemaUtilsType<T> {
   rootSchema: RJSFSchema;
   validator: ValidatorType;
 
@@ -65,5 +65,5 @@ export class CreateSchemaUtils<T = any> implements SchemaUtilsType<T> {
 export default function createSchemaUtils<T = any>(
   validator: ValidatorType, rootSchema: RJSFSchema
 ): SchemaUtilsType<T> {
-  return new CreateSchemaUtils<T>(validator, rootSchema);
+  return new SchemaUtils<T>(validator, rootSchema);
 }

@@ -1,7 +1,14 @@
 import get from 'lodash/get';
 import fill from 'lodash/fill';
 
-import { DEPENDENCIES_NAME, PROPERTIES_NAME, REF_NAME } from '../constants';
+import {
+  ANY_OF_NAME,
+  DEFAULT_NAME,
+  DEPENDENCIES_NAME,
+  PROPERTIES_NAME,
+  ONE_OF_NAME,
+  REF_NAME,
+} from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getMatchingOption from './getMatchingOption';
 import getSchemaType from '../getSchemaType';
@@ -14,17 +21,16 @@ import isMultiSelect from './isMultiSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 
 export function getSchemaItem(schema: RJSFSchema, idx = -1) {
-  let schemaItem: RJSFSchema;
-  if (Array.isArray(schema.items) && idx >= 0 && idx <= schema.items.length) {
-    schemaItem = schema.items[idx] as RJSFSchema;
-  } if (schema.items && !Array.isArray(schema.items)) {
-    return schema.items as RJSFSchema;
-  } else if (isObject(schema.additionalItems)) {
-    schemaItem = schema.additionalItems as RJSFSchema;
-  } else {
-    schemaItem = {};
+  if (Array.isArray(schema.items) && idx >= 0 && idx < schema.items.length) {
+    return schema.items[idx] as RJSFSchema;
   }
-  return schemaItem;
+  if (schema.items && !Array.isArray(schema.items)) {
+    return schema.items as RJSFSchema;
+  }
+  if (isObject(schema.additionalItems)) {
+    return schema.additionalItems as RJSFSchema;
+  }
+  return {};
 }
 
 export function computeDefaults<T = any>(
@@ -43,16 +49,8 @@ export function computeDefaults<T = any>(
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
     defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
-  } else if (schema.default !== undefined && defaults === undefined) {
-    // Use schema defaults for this node
-    return computeDefaults<any>(
-      validator,
-      schema,
-      schema.default,
-      rootSchema,
-      rawFormData,
-      includeUndefinedValues
-    );
+  } else if (DEFAULT_NAME in schema) {
+    defaults = schema.default as unknown as T;
   } else if (REF_NAME in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema[REF_NAME]!, rootSchema);
@@ -85,14 +83,19 @@ export function computeDefaults<T = any>(
         includeUndefinedValues
       )
     ) as T[];
-  } else if ('oneOf' in schema) {
+  } else if (ONE_OF_NAME in schema) {
     schema = schema.oneOf![
       getMatchingOption(validator,undefined, schema.oneOf as RJSFSchema[], rootSchema)
     ] as RJSFSchema;
-  } else if ('anyOf' in schema) {
+  } else if (ANY_OF_NAME in schema) {
     schema = schema.anyOf![
       getMatchingOption(validator,undefined, schema.anyOf as RJSFSchema[], rootSchema)
     ] as RJSFSchema;
+  }
+
+  // Not defaults defined for this node, fallback to generic typed ones.
+  if (typeof defaults === 'undefined') {
+    defaults = schema.default as unknown as T;
   }
 
   switch (getSchemaType(schema)) {
@@ -119,9 +122,10 @@ export function computeDefaults<T = any>(
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
         defaults = defaults.map((item, idx) => {
+          const schemaItem = getSchemaItem(schema, idx);
           return computeDefaults<T>(
             validator,
-            getSchemaItem(schema, idx),
+            schemaItem,
             item,
             rootSchema
           );
@@ -182,7 +186,7 @@ export default function getDefaultFormState<T = any>(
     formData,
     includeUndefinedValues
   );
-  if (typeof formData === 'undefined' || formData === null) {
+  if (typeof formData === 'undefined' || formData === null || (typeof formData === 'number' && isNaN(formData))) {
     // No form data? Use schema defaults.
     return defaults;
   }

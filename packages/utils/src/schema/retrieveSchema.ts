@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import mergeAllOf from 'json-schema-merge-allof';
 
-import { ALL_OF_NAME, DEPENDENCIES_NAME, REF_NAME } from '../constants';
+import { ADDITIONAL_PROPERTIES_NAME, ALL_OF_NAME, DEPENDENCIES_NAME, REF_NAME } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import isObject from '../isObject';
 import mergeSchemas from '../mergeSchemas';
@@ -12,7 +12,7 @@ import stubExistingAdditionalProperties from './stubExistingAdditionalProperties
 /**
  * Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch with the rest of the schema
  */
-function resolveCondition<T = any>(validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T) {
+export function resolveCondition<T = any>(validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T) {
   const {
     if: expression,
     then,
@@ -43,7 +43,7 @@ function resolveCondition<T = any>(validator: ValidatorType, schema: RJSFSchema,
  *
  * Called internally by retrieveSchema.
  */
-function resolveSchema<T = any>(
+export function resolveSchema<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, formData?: T
 ): RJSFSchema {
   if (schema.hasOwnProperty(REF_NAME)) {
@@ -65,7 +65,7 @@ function resolveSchema<T = any>(
   return schema;
 }
 
-function resolveReference<T = any>(
+export function resolveReference<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData?: T
 ): RJSFSchema {
   // Retrieve the referenced schema definition.
@@ -122,7 +122,7 @@ export default function retrieveSchema<T = any>(
     });
   }
 
-  if ('allOf' in schema) {
+  if (ALL_OF_NAME in schema) {
     try {
       resolvedSchema = mergeAllOf({
         ...resolvedSchema,
@@ -135,7 +135,7 @@ export default function retrieveSchema<T = any>(
     }
   }
   const hasAdditionalProperties =
-    resolvedSchema.hasOwnProperty('additionalProperties') &&
+    resolvedSchema.hasOwnProperty(ADDITIONAL_PROPERTIES_NAME) &&
     resolvedSchema.additionalProperties !== false;
   if (hasAdditionalProperties) {
     return stubExistingAdditionalProperties<T>(
@@ -174,7 +174,7 @@ export function resolveDependencies<T = any>(
   );
 }
 
-function processDependencies<T = any>(
+export function processDependencies<T = any>(
   validator: ValidatorType,
   dependencies: RJSFSchema['dependencies'],
   resolvedSchema: RJSFSchema,
@@ -221,7 +221,7 @@ function processDependencies<T = any>(
   return resolvedSchema;
 }
 
-function withDependentProperties(schema: RJSFSchema, additionallyRequired: string[]) {
+export function withDependentProperties(schema: RJSFSchema, additionallyRequired: string[]) {
   if (!additionallyRequired) {
     return schema;
   }
@@ -231,7 +231,7 @@ function withDependentProperties(schema: RJSFSchema, additionallyRequired: strin
   return { ...schema, required: required };
 }
 
-function withDependentSchema<T>(
+export function withDependentSchema<T>(
   validator: ValidatorType,
   schema: RJSFSchema,
   rootSchema: RJSFSchema,
@@ -264,7 +264,7 @@ function withDependentSchema<T>(
   );
 }
 
-function withExactlyOneSubschema<T = any>(
+export function withExactlyOneSubschema<T = any>(
   validator: ValidatorType,
   schema: RJSFSchema,
   rootSchema: RJSFSchema,

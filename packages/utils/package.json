@@ -80,7 +80,7 @@
       "jest-expect-message"
     ],
     "testMatch": [
-      "**/test/**/*.test.[jt]s?(x)"
+      "**/test/**/*.test.ts?(x)"
     ],
     "coverageDirectory": "<rootDir>/coverage/",
     "collectCoverage": true,

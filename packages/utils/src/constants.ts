@@ -1,9 +1,12 @@
 export const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
 export const ADDITIONAL_PROPERTIES_NAME = 'additionalProperties';
 export const ALL_OF_NAME = 'allOf';
+export const ANY_OF_NAME = 'anyOf';
 export const CONST_NAME = 'const';
+export const DEFAULT_NAME = 'default';
 export const DEPENDENCIES_NAME = 'dependencies';
 export const ITEMS_NAME = 'items';
+export const ONE_OF_NAME = 'oneOf';
 export const PROPERTIES_NAME = 'properties';
 export const SUBMIT_BTN_OPTIONS_NAME = 'submitButtonOptions';
 export const REF_NAME = '$ref';
