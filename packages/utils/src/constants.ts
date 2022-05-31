@@ -1,0 +1,12 @@
+export const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
+export const ADDITIONAL_PROPERTIES_NAME = 'additionalProperties';
+export const ALL_OF_NAME = 'allOf';
+export const CONST_NAME = 'const';
+export const DEPENDENCIES_NAME = 'dependencies';
+export const ITEMS_NAME = 'items';
+export const PROPERTIES_NAME = 'properties';
+export const SUBMIT_BTN_OPTIONS_NAME = 'submitButtonOptions';
+export const REF_NAME = '$ref';
+export const UI_FIELD_NAME = 'ui:field';
+export const UI_WIDGET_NAME = 'ui:widget';
+export const UI_OPTIONS_NAME = 'ui:options';
