@@ -1,8 +1,6 @@
-import { createSchemaUtils, getDefaultFormState, RJSFSchema, RJSFValidationError } from '../../src';
-import { computeDefaults } from '../../src/schema/getDefaultFormState';
+import { createSchemaUtils, getDefaultFormState, RJSFSchema } from '../../src';
+// import { computeDefaults } from '../../src/schema/getDefaultFormState';
 import getTestValidator, { TestValidatorType } from '../testUtils/getTestValidator';
-
-const TEST_VALIDATION_ERROR: RJSFValidationError = { stack: 'test error' };
 
 describe('getDefaultFormState()', () => {
   let testValidator: TestValidatorType;
@@ -906,11 +904,11 @@ describe('getDefaultFormState()', () => {
     it('should populate defaults for nested dependencies in arrays when matching enum values in oneOf', () => {
       // Mock errors so that withExactlyOneSubschema works as expected
       testValidator.setReturnValues({
-        data: [
-          { errors: [], errorSchema: {} }, // First oneOf no error
-          { errors: [TEST_VALIDATION_ERROR], errorSchema: {} }, // Second oneOf error
-          { errors: [TEST_VALIDATION_ERROR], errorSchema: {} }, // First oneOf error
-          { errors: [], errorSchema: {} }, // Second oneOf no error
+        isValid: [
+          true, // First oneOf... first === first
+          false, // Second oneOf... second !== first
+          false, // First oneOf... first !== second
+          true, // Second oneOf... second === second
         ]
       });
       const schema: RJSFSchema = {

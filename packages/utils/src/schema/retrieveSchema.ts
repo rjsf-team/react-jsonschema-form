@@ -87,10 +87,10 @@ export default function retrieveSchema<T = any>(
   if (!isObject(schema)) {
     return {};
   }
-  let resolvedSchema = resolveSchema(validator, schema, rootSchema, rawFormData);
+  let resolvedSchema = resolveSchema<T>(validator, schema, rootSchema, rawFormData);
 
   if (schema.hasOwnProperty('if')) {
-    return resolveCondition(validator, schema, rootSchema, rawFormData);
+    return resolveCondition<T>(validator, schema, rootSchema, rawFormData as T);
   }
 
   const formData: GenericObjectType = rawFormData || {};
@@ -284,8 +284,7 @@ export function withExactlyOneSubschema<T = any>(
           [dependencyKey]: conditionPropertySchema,
         },
       };
-      const { errors } = validator.validateFormData(formData, conditionSchema);
-      return errors.length === 0;
+      return validator.isValid(conditionSchema, formData, rootSchema);
     }
     return false;
   });

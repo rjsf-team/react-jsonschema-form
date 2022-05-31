@@ -21,7 +21,7 @@ export default function toPathSchema<T = any>(
 ): PathSchema {
   if (REF_NAME in schema || DEPENDENCIES_NAME in schema || ALL_OF_NAME in schema) {
     const _schema = retrieveSchema<T>(validator, schema, rootSchema, formData);
-    return toPathSchema(validator, _schema, name, rootSchema, formData);
+    return toPathSchema<T>(validator, _schema, name, rootSchema, formData);
   }
 
   const pathSchema: PathSchema = {
