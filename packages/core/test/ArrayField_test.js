@@ -265,6 +265,22 @@ describe("ArrayField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
+    it("should pass uiSchema to normal array field", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          items: {
+            "ui:placeholder": "Placeholder...",
+          },
+        },
+        formData: ["foo", "barr"],
+      });
+
+      expect(
+        node.querySelectorAll("input[placeholder='Placeholder...']")
+      ).to.have.length.of(2);
+    });
+
     it("should pass rawErrors down to custom array field templates", () => {
       const schema = {
         type: "array",
@@ -1240,6 +1256,17 @@ describe("ArrayField", () => {
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.eql(schema.title);
       });
+
+      it("should pass uiSchema to multiselect", () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            "ui:enumDisabled": ["bar"],
+          },
+        });
+
+        expect(node.querySelector("option[value=bar]").disabled).to.eql(true);
+      });
     });
 
     describe("CheckboxesWidget", () => {
@@ -1343,6 +1370,27 @@ describe("ArrayField", () => {
           "should NOT have fewer than 3 items"
         );
       });
+
+      it("should pass uiSchema to checkboxes", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "array",
+            items: {
+              enum: ["foo", "bar", "fuzz"],
+              type: "string",
+            },
+            uniqueItems: true,
+          },
+          uiSchema: {
+            "ui:widget": "checkboxes",
+            "ui:options": {
+              inline: true,
+            },
+          },
+        });
+
+        expect(node.querySelectorAll(".checkbox-inline")).to.have.length.of(3);
+      });
     });
   });
 
@@ -1424,6 +1472,29 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({ schema });
 
       expect(node.querySelector("input[type=file]").id).eql("root");
+    });
+
+    it("should pass uiSchema to files array", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+        },
+        uiSchema: {
+          items: {
+            "ui:widget": "file",
+            "ui:options": { accept: ".pdf" },
+          },
+        },
+        formData: [
+          "data:text/plain;name=file1.pdf;base64,dGVzdDE=",
+          "data:image/png;name=file2.pdf;base64,ZmFrZXBuZw==",
+        ],
+      });
+
+      expect(node.querySelector("input[type=file]").accept).eql(".pdf");
     });
 
     it("should pass rawErrors down to custom widgets", () => {
@@ -1730,6 +1801,29 @@ describe("ArrayField", () => {
       expect(node.querySelector(".array-item-add button")).to.be.null;
     });
 
+    it("[fixed] should pass uiSchema to fixed array", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "array",
+          items: [
+            {
+              type: "string",
+            },
+            {
+              type: "string",
+            },
+          ],
+        },
+        uiSchema: {
+          items: {
+            "ui:widget": "textarea",
+          },
+        },
+        formData: ["foo", "bar"],
+      });
+      expect(node.querySelectorAll("textarea").length).to.eql(2);
+    });
+
     describe("operations for additional items", () => {
       const { node, onChange } = createFormComponent({
         schema: schemaAdditional,
@@ -1860,6 +1954,41 @@ describe("ArrayField", () => {
       });
 
       expect(node.querySelectorAll("#custom-select")).to.have.length.of(2);
+    });
+
+    it("should pass uiSchema to custom widget", () => {
+      const CustomWidget = ({ uiSchema }) => {
+        return (
+          <div id="custom-ui-option-value">
+            {uiSchema.custom_field_key["ui:options"].test}
+          </div>
+        );
+      };
+
+      const { node } = createFormComponent({
+        schema: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+        },
+        widgets: {
+          CustomWidget: CustomWidget,
+        },
+        uiSchema: {
+          "ui:widget": "CustomWidget",
+          custom_field_key: {
+            "ui:options": {
+              test: "foo",
+            },
+          },
+        },
+        formData: ["foo", "bar"],
+      });
+
+      expect(node.querySelector("#custom-ui-option-value").textContent).to.eql(
+        "foo"
+      );
     });
 
     it("if the schema has fixed items, it should still render the custom widget.", () => {

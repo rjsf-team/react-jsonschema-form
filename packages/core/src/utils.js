@@ -4,8 +4,6 @@ import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js-pure/features/array/fill";
 import union from "lodash/union";
 import jsonpointer from "jsonpointer";
-import fields from "./components/fields";
-import widgets from "./components/widgets";
 import validateFormData, { isValid } from "./validate";
 
 export const ADDITIONAL_PROPERTY_FLAG = "__additional_property";
@@ -76,16 +74,6 @@ export function canExpand(schema, uiSchema, formData) {
     return Object.keys(formData).length < schema.maxProperties;
   }
   return true;
-}
-
-export function getDefaultRegistry() {
-  return {
-    fields,
-    widgets,
-    definitions: {},
-    rootSchema: {},
-    formContext: {},
-  };
 }
 
 /* Gets the type of a given schema. */

@@ -43,8 +43,6 @@ const RangeWidget = ({
   value,
   readonly,
   disabled,
-  onBlur,
-  onFocus,
   options,
   schema,
   //formContext,
