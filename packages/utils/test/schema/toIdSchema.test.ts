@@ -1,7 +1,7 @@
-import { toIdSchema, RJSFSchema } from '../../src';
+import { toIdSchema, RJSFSchema, createSchemaUtils } from '../../src';
 import getTestValidator, { TestValidatorType } from '../testUtils/getTestValidator';
 
-describe('toIdSchema', () => {
+describe('toIdSchema()', () => {
   let testValidator: TestValidatorType;
   beforeAll(() => {
     testValidator = getTestValidator({});
@@ -10,6 +10,28 @@ describe('toIdSchema', () => {
     const schema: RJSFSchema = { type: 'string' };
 
     expect(toIdSchema(testValidator, schema)).toEqual({ $id: 'root' });
+  });
+
+  it('should return an idSchema for nested objects without a proper field', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        level1: {
+          type: 'object',
+          properties: {
+            level2: false,
+          },
+        },
+      },
+    };
+
+    expect(toIdSchema(testValidator, schema)).toEqual({
+      $id: 'root',
+      level1: {
+        $id: 'root_level1',
+        level2: { $id: 'root_level1_level2' },
+      },
+    });
   });
 
   it('should return an idSchema for nested objects', () => {
@@ -125,7 +147,8 @@ describe('toIdSchema', () => {
       $ref: '#/definitions/testdef',
     };
 
-    expect(toIdSchema(testValidator, schema, undefined, schema)).toEqual({
+    const schemaUtils = createSchemaUtils(testValidator, schema);
+    expect(schemaUtils.toIdSchema(schema, undefined)).toEqual({
       $id: 'root',
       foo: { $id: 'root_foo' },
       bar: { $id: 'root_bar' },

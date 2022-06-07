@@ -1,7 +1,7 @@
 import { createSchemaUtils, getDisplayLabel, RJSFSchema } from '../../src';
 import getTestValidator, { TestValidatorType } from '../testUtils/getTestValidator';
 
-describe('getDisplayLabel', () => {
+describe('getDisplayLabel()', () => {
   let testValidator: TestValidatorType;
   beforeAll(() => {
     testValidator = getTestValidator({});

@@ -2,7 +2,7 @@ import get from 'lodash/get';
 import mergeAllOf from 'json-schema-merge-allof';
 
 import { ADDITIONAL_PROPERTIES_NAME, ALL_OF_NAME, DEPENDENCIES_NAME, REF_NAME } from '../constants';
-import findSchemaDefinition from '../findSchemaDefinition';
+import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
 import isObject from '../isObject';
 import mergeSchemas from '../mergeSchemas';
 import { GenericObjectType, RJSFSchema, RJSFSchemaDefinition, ValidatorType } from '../types';
@@ -152,7 +152,7 @@ export function resolveDependencies<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData?: T
 ): RJSFSchema {
   // Drop the dependencies from the source schema.
-  const { dependencies = {}, ...remainingSchema } = schema;
+  const { dependencies, ...remainingSchema } = schema;
   let resolvedSchema =  remainingSchema;
   if (Array.isArray(resolvedSchema.oneOf)) {
     resolvedSchema =
@@ -194,10 +194,8 @@ export function processDependencies<T = any>(
     ) {
       continue;
     }
-    const {
-      [dependencyKey]: dependencyValue,
-      ...remainingDependencies
-    } = dependencies;
+    const [remainingDependencies, dependencyValue] =
+      splitKeyElementFromObject(dependencyKey, dependencies as GenericObjectType);
     if (Array.isArray(dependencyValue)) {
       resolvedSchema = withDependentProperties(resolvedSchema, dependencyValue);
     } else if (isObject(dependencyValue)) {
@@ -221,7 +219,7 @@ export function processDependencies<T = any>(
   return resolvedSchema;
 }
 
-export function withDependentProperties(schema: RJSFSchema, additionallyRequired: string[]) {
+export function withDependentProperties(schema: RJSFSchema, additionallyRequired?: string[]) {
   if (!additionallyRequired) {
     return schema;
   }
@@ -244,8 +242,6 @@ export function withDependentSchema<T>(
   // Since it does not contain oneOf, we return the original schema.
   if (oneOf === undefined) {
     return schema;
-  } else if (!Array.isArray(oneOf)) {
-    throw new Error(`invalid: it is some ${typeof oneOf} instead of an array`);
   }
   // Resolve $refs inside oneOf.
   const resolvedOneOf = oneOf.map((subschema) => {
@@ -297,10 +293,8 @@ export function withExactlyOneSubschema<T = any>(
     return schema;
   }
   const subschema: RJSFSchema = validSubschemas[0] as RJSFSchema;
-  const {
-    [dependencyKey]: conditionPropertySchema,
-    ...dependentSubschema
-  } = subschema.properties!;
+  const [dependentSubschema] =
+    splitKeyElementFromObject(dependencyKey, subschema.properties as GenericObjectType);
   const dependentSchema = { ...subschema, properties: dependentSubschema };
   return mergeSchemas(
     schema,

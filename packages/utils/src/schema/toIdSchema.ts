@@ -38,7 +38,7 @@ export default function toIdSchema<T>(
   const $id = id || idPrefix;
   const idSchema: IdSchema = { $id } as IdSchema;
   if (schema.type === 'object' && PROPERTIES_NAME in schema) {
-    for (const name in schema.properties || {}) {
+    for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_NAME, name]);
       const fieldId = idSchema.$id + idSeparator + name;
       idSchema[name] = toIdSchema<T>(

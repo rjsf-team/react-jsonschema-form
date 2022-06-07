@@ -1,7 +1,18 @@
-import { retrieveSchema, RJSFSchema, createSchemaUtils, ADDITIONAL_PROPERTY_FLAG } from '../../src';
+import {
+  retrieveSchema,
+  RJSFSchema,
+  createSchemaUtils,
+  ADDITIONAL_PROPERTY_FLAG,
+  RJSFSchemaDefinition
+} from '../../src';
+import {
+  resolveSchema,
+  withDependentProperties,
+  withExactlyOneSubschema,
+} from '../../src/schema/retrieveSchema';
 import getTestValidator, { TestValidatorType } from '../testUtils/getTestValidator';
 
-describe('retrieveSchema(testValidator, )', () => {
+describe('retrieveSchema()', () => {
   let testValidator: TestValidatorType;
   let consoleWarnSpy: jest.SpyInstance;
   beforeAll(() => {
@@ -13,6 +24,9 @@ describe('retrieveSchema(testValidator, )', () => {
   });
   afterEach(() => {
     consoleWarnSpy.mockClear();
+  });
+  it('returns empty object when schema is not an object', () => {
+    expect(retrieveSchema(testValidator, [] as RJSFSchema)).toEqual({});
   });
   it('should `resolve` a schema which contains definitions', () => {
     const schema: RJSFSchema = { $ref: '#/definitions/address' };
@@ -1333,6 +1347,31 @@ describe('retrieveSchema(testValidator, )', () => {
           },
         },
       });
+    });
+  });
+  describe('resolveSchema()', () => {
+    it('defaults rootSchema when missing', () => {
+      const schema = {};
+      expect(resolveSchema(testValidator, schema)).toEqual(schema);
+    });
+  });
+  describe('withDependentProperties()', () => {
+    it('returns the schema when additionally required is falsey', () => {
+      const schema: RJSFSchema = { type: 'string' };
+      expect(withDependentProperties(schema)).toEqual(schema);
+    });
+  });
+  describe('withExactlyOneSubschema()', () => {
+    it('Handle conditions with falsy subschema, subschema.properties, or condition schema', () => {
+      const schema: RJSFSchema = {
+        type: 'integer',
+      };
+      const oneOf: RJSFSchemaDefinition[] = [
+        true,
+        { properties: undefined },
+        { properties: { foo: { type: 'string' } } }
+      ];
+      expect(withExactlyOneSubschema(testValidator, schema, schema, 'bar', oneOf)).toEqual(schema);
     });
   });
 });

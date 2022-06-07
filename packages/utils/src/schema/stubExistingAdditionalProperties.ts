@@ -11,8 +11,8 @@ import retrieveSchema from './retrieveSchema';
 export default function stubExistingAdditionalProperties<T = any>(
   validator: ValidatorType,
   aSchema: RJSFSchema,
-  rootSchema: RJSFSchema = {},
-  aFormData: T
+  rootSchema?: RJSFSchema,
+  aFormData?: T
 ) {
   // Clone the schema so we don't ruin the consumer's original
   const schema = {
@@ -21,7 +21,7 @@ export default function stubExistingAdditionalProperties<T = any>(
   };
 
   // make sure formData is an object
-  const formData: GenericObjectType = isObject(aFormData) ? aFormData : {};
+  const formData: GenericObjectType = aFormData && isObject(aFormData) ? aFormData : {};
 
   Object.keys(formData).forEach((key) => {
     if (schema.properties.hasOwnProperty(key)) {

@@ -1,7 +1,7 @@
 import { toPathSchema, RJSFSchema, createSchemaUtils } from '../../src';
 import getTestValidator, { TestValidatorType } from '../testUtils/getTestValidator';
 
-describe('toPathSchema', () => {
+describe('toPathSchema()', () => {
   let testValidator: TestValidatorType;
   beforeAll(() => {
     testValidator = getTestValidator({});
