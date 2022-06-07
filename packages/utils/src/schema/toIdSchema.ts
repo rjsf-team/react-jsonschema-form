@@ -14,8 +14,8 @@ import retrieveSchema from './retrieveSchema';
 export default function toIdSchema<T>(
   validator: ValidatorType,
   schema: RJSFSchema,
-  id: string,
-  rootSchema: RJSFSchema,
+  id?: string | null,
+  rootSchema?: RJSFSchema,
   formData?: T,
   idPrefix = 'root',
   idSeparator = '_'

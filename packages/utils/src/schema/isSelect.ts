@@ -7,7 +7,8 @@ export default function isSelect<T = any>(validator: ValidatorType, _schema: RJS
   const altSchemas = schema.oneOf || schema.anyOf;
   if (Array.isArray(schema.enum)) {
     return true;
-  } else if (Array.isArray(altSchemas)) {
+  }
+  if (Array.isArray(altSchemas)) {
     return altSchemas.every(altSchemas => typeof altSchemas !== 'boolean' && isConstant(altSchemas));
   }
   return false;

@@ -1,14 +1,43 @@
 import { createSchemaUtils, getDefaultFormState, RJSFSchema } from '../../src';
-// import { computeDefaults } from '../../src/schema/getDefaultFormState';
+import { computeDefaults } from '../../src/schema/getDefaultFormState';
 import getTestValidator, { TestValidatorType } from '../testUtils/getTestValidator';
 
 describe('getDefaultFormState()', () => {
   let testValidator: TestValidatorType;
+  let consoleWarnSpy: jest.SpyInstance;
   beforeAll(() => {
+    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(); // mock this to avoid actually warning in the tests
     testValidator = getTestValidator({});
   });
-  describe('throws error when schema is not an object', () => {
+  afterAll(() => {
+    consoleWarnSpy.mockRestore();
+  });
+  it('throws error when schema is not an object', () => {
     expect(() => getDefaultFormState(testValidator, null as unknown as RJSFSchema)).toThrowError('Invalid schema:');
+  });
+  describe('computeDefaults()', () => {
+    it('test computeDefaults that is passed a schema with a ref', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          foo: {
+            type: 'number',
+            default: 42,
+          },
+          testdef: {
+            type: 'object',
+            properties: {
+              foo: {
+                $ref: '#/definitions/foo'
+              }
+            },
+          },
+        },
+        $ref: '#/definitions/testdef',
+      };
+      expect(computeDefaults(testValidator, schema, undefined, schema)).toEqual({
+        foo: 42,
+      });
+    });
   });
   describe('root default', () => {
     it('should map root schema default to form state, if any', () => {
@@ -606,6 +635,25 @@ describe('getDefaultFormState()', () => {
         array: ['foo', 'qux'],
       });
     });
+    it('returns empty defaults when no item defaults are defined', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          array: {
+            type: 'array',
+            minItems: 1,
+            uniqueItems: true,
+            items: {
+              type: 'string',
+              enum: ['foo', 'bar', 'fuzz', 'qux'],
+            },
+          },
+        },
+      };
+      expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+        array: [],
+      });
+    });
   });
 
   describe('defaults with oneOf', () => {
@@ -904,11 +952,11 @@ describe('getDefaultFormState()', () => {
     it('should populate defaults for nested dependencies in arrays when matching enum values in oneOf', () => {
       // Mock errors so that withExactlyOneSubschema works as expected
       testValidator.setReturnValues({
-        isValid: [
-          true, // First oneOf... first === first
-          false, // Second oneOf... second !== first
-          false, // First oneOf... first !== second
-          true, // Second oneOf... second === second
+        data: [
+          { errors: [], errorSchema: {} }, // First oneOf... first === first
+          { errors: [{ stack: 'error' }], errorSchema: {} }, // Second oneOf... second !== first
+          { errors: [{ stack: 'error' }], errorSchema: {} }, // First oneOf... first !== second
+          { errors: [], errorSchema: {} }, // Second oneOf... second === second
         ]
       });
       const schema: RJSFSchema = {
@@ -979,6 +1027,9 @@ describe('getDefaultFormState()', () => {
           },
         },
       ]);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'ignoring oneOf in dependencies because there isn\'t exactly one subschema that is valid'
+      );
     });
 
     it('should populate defaults for nested oneOf + dependencies', () => {

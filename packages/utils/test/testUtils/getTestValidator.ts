@@ -20,12 +20,14 @@ export default function createTestValidator(
     _isValid: isValid,
     validator: {
       validateFormData: jest.fn().mockImplementation(() => {
+        // console.warn('validateFormData', JSON.stringify(args));
         if (!isEmpty(testValidator._data)) {
           return testValidator._data.shift();
         }
         return { errors: [], errorSchema: {} };
       }),
       isValid: jest.fn().mockImplementation(() => {
+        // console.warn('isValid',  JSON.stringify(args));
         if (!isEmpty(testValidator._isValid)) {
           return testValidator._isValid.shift();
         }

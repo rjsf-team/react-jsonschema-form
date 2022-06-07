@@ -35,13 +35,12 @@ export function getSchemaItem(schema: RJSFSchema, idx = -1) {
 
 export function computeDefaults<T = any>(
   validator: ValidatorType,
-  _schema: RJSFSchema,
+  schema: RJSFSchema,
   parentDefaults?: T,
   rootSchema: RJSFSchema = {},
   rawFormData?: T,
   includeUndefinedValues = false
 ): T | T[] | undefined {
-  let schema = isObject(_schema) ? _schema : {};
   const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults: T | T[] | undefined = parentDefaults;
@@ -171,7 +170,7 @@ export default function getDefaultFormState<T = any>(
   validator: ValidatorType,
   _schema: RJSFSchema,
   formData?: T,
-  rootSchema: RJSFSchema = {},
+  rootSchema?: RJSFSchema,
   includeUndefinedValues = false
 ) {
   if (!isObject(_schema)) {

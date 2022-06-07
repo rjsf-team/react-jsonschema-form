@@ -249,7 +249,7 @@ export function withDependentSchema<T>(
   }
   // Resolve $refs inside oneOf.
   const resolvedOneOf = oneOf.map((subschema) => {
-    if (typeof subschema !== 'boolean' || !subschema.hasOwnProperty(REF_NAME)) {
+    if (typeof subschema === 'boolean' || !subschema.hasOwnProperty(REF_NAME)) {
       return subschema;
     }
     return resolveReference<T>(validator, subschema as RJSFSchema, rootSchema, formData);
@@ -284,7 +284,8 @@ export function withExactlyOneSubschema<T = any>(
           [dependencyKey]: conditionPropertySchema,
         },
       };
-      return validator.isValid(conditionSchema, formData, rootSchema);
+      const { errors } = validator.validateFormData(formData, conditionSchema);
+      return errors.length === 0;
     }
     return false;
   });

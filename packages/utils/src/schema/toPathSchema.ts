@@ -15,8 +15,8 @@ import retrieveSchema from './retrieveSchema';
 export default function toPathSchema<T = any>(
   validator: ValidatorType,
   schema: RJSFSchema,
-  name: string,
-  rootSchema: RJSFSchema,
+  name = '',
+  rootSchema?: RJSFSchema,
   formData?: T
 ): PathSchema {
   if (REF_NAME in schema || DEPENDENCIES_NAME in schema || ALL_OF_NAME in schema) {
@@ -34,10 +34,9 @@ export default function toPathSchema<T = any>(
 
   if (schema.hasOwnProperty(ITEMS_NAME) && Array.isArray(formData)) {
     formData.forEach((element, i: number) => {
-      const item = get(schema, [ITEMS_NAME, i], {});
       pathSchema[i] = toPathSchema<T>(
         validator,
-        item as RJSFSchema,
+        schema.items as RJSFSchema,
         `${name}.${i}`,
         rootSchema,
         element

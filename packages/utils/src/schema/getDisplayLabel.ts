@@ -7,7 +7,7 @@ import isFilesArray from './isFilesArray';
 import isMultiSelect from './isMultiSelect';
 
 export default function getDisplayLabel<T = any, F = any>(
-  validator: ValidatorType, schema: RJSFSchema, uiSchema: UiSchema<T, F>, rootSchema: RJSFSchema
+  validator: ValidatorType, schema: RJSFSchema, uiSchema: UiSchema<T, F>, rootSchema?: RJSFSchema
 ): boolean {
   const uiOptions = getUiOptions<T, F>(uiSchema);
   const { label = true } = uiOptions;
