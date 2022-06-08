@@ -20,6 +20,14 @@ import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
 import isMultiSelect from './isMultiSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 
+/** Given a `schema` will return an inner schema that represents either an element in a `schema.items` array (when
+ * provided a valid `idx`), `schema.items` if it is not an array, `schema.additionalItems` when it is an object or
+ * an empty schema if no previous condition passes.
+ *
+ * @param schema - The schema from which to get the particular item
+ * @param [idx=-1] - Index, if non-negative, will be used to return the idx-th element in a `schema.items` array
+ * @returns - The best fit schema object from the `schema`
+ */
 export function getSchemaItem(schema: RJSFSchema, idx = -1) {
   if (Array.isArray(schema.items) && idx >= 0 && idx < schema.items.length) {
     return schema.items[idx] as RJSFSchema;
@@ -33,6 +41,17 @@ export function getSchemaItem(schema: RJSFSchema, idx = -1) {
   return {};
 }
 
+/** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
+ * the each level of the schema, recursively, to fill out every level of defaults provided by the schema.
+ *
+ * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
+ * @param schema - The schema for which the default state is desired
+ * @param [parentDefaults] - Any defaults provided by the parent field in the schema
+ * @param [rootSchema] - The options root schema, used to primarily to look up `$ref`s
+ * @param [rawFormData] - The current formData, if any, onto which to provide any missing defaults
+ * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
+ * @returns - The resulting `formData` with all the defaults provided
+ */
 export function computeDefaults<T = any>(
   validator: ValidatorType,
   schema: RJSFSchema,
@@ -166,17 +185,27 @@ export function computeDefaults<T = any>(
   return defaults;
 }
 
+/** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
+ * computed to have defaults provided in the `schema`.
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param theSchema - The schema for which the default state is desired
+ * @param [formData] - The current formData, if any, onto which to provide any missing defaults
+ * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
+ * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
+ * @returns - The resulting `formData` with all the defaults provided
+ */
 export default function getDefaultFormState<T = any>(
   validator: ValidatorType,
-  _schema: RJSFSchema,
+  theSchema: RJSFSchema,
   formData?: T,
   rootSchema?: RJSFSchema,
   includeUndefinedValues = false
 ) {
-  if (!isObject(_schema)) {
-    throw new Error('Invalid schema: ' + _schema);
+  if (!isObject(theSchema)) {
+    throw new Error('Invalid schema: ' + theSchema);
   }
-  const schema = retrieveSchema<T>(validator, _schema, rootSchema, formData);
+  const schema = retrieveSchema<T>(validator, theSchema, rootSchema, formData);
   const defaults = computeDefaults<T>(
     validator,
     schema,

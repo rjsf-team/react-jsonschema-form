@@ -12,6 +12,15 @@ import {
 import { PathSchema, RJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
 
+/** Generates an `PathSchema` object for the `schema`, recursively
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param schema - The schema for which the `PathSchema` is desired
+ * @param [name=''] - The base name for the schema
+ * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
+ * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @returns - The `PathSchema` object for the `schema`
+ */
 export default function toPathSchema<T = any>(
   validator: ValidatorType,
   schema: RJSFSchema,

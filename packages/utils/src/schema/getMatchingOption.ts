@@ -1,8 +1,16 @@
 import { RJSFSchema, ValidatorType } from '../types';
 
+/** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param formData - The current formData, if any, used to figure out a match
+ * @param options - The list of options to find a matching options from
+ * @param rootSchema - The root schema, used to primarily to look up `$ref`s
+ * @returns - The index of the matched option or 0 if none is available
+ */
 export default function getMatchingOption<T = any>(
   validator: ValidatorType, formData: T | undefined, options: RJSFSchema[], rootSchema: RJSFSchema
-) {
+): number {
   // For performance, skip validating subschemas if formData is undefined. We just
   // want to get the first option in that case.
   if (formData === undefined) {

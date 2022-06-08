@@ -7,17 +7,24 @@ import isObject from '../isObject';
 import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
 
-// This function will create new 'properties' items for each key in our formData
+/** Creates new 'properties' items for each key in the `formData`
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param theSchema - The schema for which the existing additional properties is desired
+ * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s * @param validator
+ * @param [aFormData] - The current formData, if any, to assist retrieving a schema
+ * @returns - The updated schema with additional properties stubbed
+ */
 export default function stubExistingAdditionalProperties<T = any>(
   validator: ValidatorType,
-  aSchema: RJSFSchema,
+  theSchema: RJSFSchema,
   rootSchema?: RJSFSchema,
   aFormData?: T
-) {
+): RJSFSchema {
   // Clone the schema so we don't ruin the consumer's original
   const schema = {
-    ...aSchema,
-    properties: { ...aSchema.properties },
+    ...theSchema,
+    properties: { ...theSchema.properties },
   };
 
   // make sure formData is an object

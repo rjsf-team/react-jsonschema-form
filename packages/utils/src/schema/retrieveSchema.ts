@@ -12,7 +12,9 @@ import stubExistingAdditionalProperties from './stubExistingAdditionalProperties
 /**
  * Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch with the rest of the schema
  */
-export function resolveCondition<T = any>(validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T) {
+export function resolveCondition<T = any>(
+  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T
+) {
   const {
     if: expression,
     then,

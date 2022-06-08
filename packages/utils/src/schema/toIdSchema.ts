@@ -11,6 +11,17 @@ import isObject from '../isObject';
 import { IdSchema, RJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
 
+/** Generates an `IdSchema` object for the `schema`, recursively
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param schema - The schema for which the `IdSchema` is desired
+ * @param [id] - The base id for the schema
+ * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
+ * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [idPrefix='root'] - The prefix to use for the id
+ * @param [idSeparator='_'] - The separator to use for the path segments in the id
+ * @returns - The `IdSchema` object for the `schema`
+ */
 export default function toIdSchema<T>(
   validator: ValidatorType,
   schema: RJSFSchema,
