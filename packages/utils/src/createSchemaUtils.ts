@@ -92,6 +92,14 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
     return isSelect<T>(this.validator, schema, this.rootSchema);
   }
 
+  /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
+   * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
+   * recursive resolution.
+   *
+   * @param schema - The schema for which retrieving a schema is desired
+   * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
+   * @returns - The schema having its conditions, additional properties, references and dependencies resolved
+   */
   retrieveSchema(schema: RJSFSchema, rawFormData: T) {
     return retrieveSchema<T>(this.validator, schema, this.rootSchema, rawFormData);
   }

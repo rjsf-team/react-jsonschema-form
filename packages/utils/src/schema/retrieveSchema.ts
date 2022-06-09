@@ -9,8 +9,14 @@ import { GenericObjectType, RJSFSchema, RJSFSchemaDefinition, ValidatorType } fr
 import getMatchingOption from './getMatchingOption';
 import stubExistingAdditionalProperties from './stubExistingAdditionalProperties';
 
-/**
- * Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch with the rest of the schema
+/** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
+ * with the rest of the schema
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
+ * @param schema - The schema for which resolving a condition is desired
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param formData - The current formData to assist retrieving a schema
+ * @returns - A schema with the appropriate condition resolved
  */
 export function resolveCondition<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T
@@ -40,10 +46,14 @@ export function resolveCondition<T = any>(
   return retrieveSchema<T>(validator, resolvedSchemaLessConditional, rootSchema, formData);
 }
 
-/**
- * Resolves references and dependencies within a schema and its 'allOf' children.
- *
+/** Resolves references and dependencies within a schema and its 'allOf' children.
  * Called internally by retrieveSchema.
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param schema - The schema for which resolving a schema is desired
+ * @param [rootSchema={}] - The root schema that will be forwarded to all the APIs
+ * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @returns - The schema having its references and dependencies resolved
  */
 export function resolveSchema<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, formData?: T
@@ -67,6 +77,14 @@ export function resolveSchema<T = any>(
   return schema;
 }
 
+/** Resolves references within a schema and its 'allOf' children.
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param schema - The schema for which resolving a reference is desired
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @returns - The schema having its references resolved
+ */
 export function resolveReference<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData?: T
 ): RJSFSchema {
@@ -83,6 +101,16 @@ export function resolveReference<T = any>(
   );
 }
 
+/** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
+ * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
+ * potentially recursive resolution.
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param schema - The schema for which retrieving a schema is desired
+ * @param [rootSchema={}] - The root schema that will be forwarded to all the APIs
+ * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
+ * @returns - The schema having its conditions, additional properties, references and dependencies resolved
+ */
 export default function retrieveSchema<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, rawFormData?: T
 ): RJSFSchema {
@@ -150,6 +178,14 @@ export default function retrieveSchema<T = any>(
   return resolvedSchema;
 }
 
+/** Resolves dependencies within a schema and its 'allOf' children.
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param schema - The schema for which resolving a dependency is desired
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @returns - The schema with its dependencies resolved
+ */
 export function resolveDependencies<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData?: T
 ): RJSFSchema {
@@ -176,6 +212,15 @@ export function resolveDependencies<T = any>(
   );
 }
 
+/** Processes all the `dependencies` recursively into the `resolvedSchema` as needed
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param dependencies - The set of dependencies that needs to be processed
+ * @param resolvedSchema - The schema for which processing dependencies is desired
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @returns - The schema with the `dependencies` resolved into it
+ */
 export function processDependencies<T = any>(
   validator: ValidatorType,
   dependencies: RJSFSchema['dependencies'],
@@ -183,6 +228,7 @@ export function processDependencies<T = any>(
   rootSchema: RJSFSchema,
   formData?: T
 ): RJSFSchema {
+  let schema = resolvedSchema;
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     // Skip this dependency if its trigger property is not present.
@@ -191,19 +237,19 @@ export function processDependencies<T = any>(
     }
     // Skip this dependency if it is not included in the schema (such as when dependencyKey is itself a hidden dependency.)
     if (
-      resolvedSchema.properties &&
-      !(dependencyKey in resolvedSchema.properties)
+      schema.properties &&
+      !(dependencyKey in schema.properties)
     ) {
       continue;
     }
     const [remainingDependencies, dependencyValue] =
       splitKeyElementFromObject(dependencyKey, dependencies as GenericObjectType);
     if (Array.isArray(dependencyValue)) {
-      resolvedSchema = withDependentProperties(resolvedSchema, dependencyValue);
+      schema = withDependentProperties(schema, dependencyValue);
     } else if (isObject(dependencyValue)) {
-      resolvedSchema = withDependentSchema<T>(
+      schema = withDependentSchema<T>(
         validator,
-        resolvedSchema,
+        schema,
         rootSchema,
         dependencyKey,
         dependencyValue as RJSFSchema,
@@ -213,14 +259,20 @@ export function processDependencies<T = any>(
     return processDependencies<T>(
       validator,
       remainingDependencies,
-      resolvedSchema,
+      schema,
       rootSchema,
       formData
     );
   }
-  return resolvedSchema;
+  return schema;
 }
 
+/** Updates a schema with additionally required properties added
+ *
+ * @param schema - The schema for which resolving a dependent properties is desired
+ * @param [additionallyRequired] - An optional array of additionally required names
+ * @returns - The schema with the additional required values merged in
+ */
 export function withDependentProperties(schema: RJSFSchema, additionallyRequired?: string[]) {
   if (!additionallyRequired) {
     return schema;
@@ -231,6 +283,16 @@ export function withDependentProperties(schema: RJSFSchema, additionallyRequired
   return { ...schema, required: required };
 }
 
+/** Merges a dependent schema into the `schema` dealing with oneOfs and references
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param schema - The schema for which resolving a dependent schema is desired
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param dependencyKey - The key name of the dependency
+ * @param dependencyValue - The potentially dependent schema
+ * @param formData- The current formData to assist retrieving a schema
+ * @returns - The schema with the dependent schema resolved into it
+ */
 export function withDependentSchema<T>(
   validator: ValidatorType,
   schema: RJSFSchema,
@@ -262,6 +324,16 @@ export function withDependentSchema<T>(
   );
 }
 
+/** Returns a `schema` with the best choice from the `oneOf` options merged into it
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be used to validate oneOf options
+ * @param schema - The schema for which resolving a oneOf subschema is desired
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param dependencyKey - The key name of the oneOf dependency
+ * @param oneOf - The list of schemas representing the oneOf options
+ * @param [formData] - The current formData to assist retrieving a schema
+ * @returns  The schema with best choice of oneOf schemas merged into
+ */
 export function withExactlyOneSubschema<T = any>(
   validator: ValidatorType,
   schema: RJSFSchema,
