@@ -1,7 +1,7 @@
 import jsonpointer from 'jsonpointer';
 import omit from 'lodash/omit';
 
-import { REF_NAME } from './constants';
+import { REF_KEY } from './constants';
 import { GenericObjectType, RJSFSchema } from './types';
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
@@ -38,8 +38,8 @@ export default function findSchemaDefinition($ref?: string, rootSchema: RJSFSche
   if (current === undefined) {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
-  if (current[REF_NAME]) {
-    const [remaining, theRef] = splitKeyElementFromObject(REF_NAME, current);
+  if (current[REF_KEY]) {
+    const [remaining, theRef] = splitKeyElementFromObject(REF_KEY, current);
     const subSchema = findSchemaDefinition(theRef, rootSchema);
     if (Object.keys(remaining).length > 0) {
       return { ...remaining, ...subSchema };

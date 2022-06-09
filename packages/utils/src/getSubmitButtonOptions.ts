@@ -1,4 +1,4 @@
-import { SUBMIT_BTN_OPTIONS_NAME } from './constants';
+import { SUBMIT_BTN_OPTIONS_KEY } from './constants';
 import getUiOptions from './getUiOptions';
 import { UiSchema, UISchemaSubmitButtonOptions } from './types';
 
@@ -19,8 +19,8 @@ export const DEFAULT_OPTIONS = {
  */
 export default function getSubmitButtonOptions<T = any, F = any>(uiSchema: UiSchema<T, F>) {
   const uiOptions = getUiOptions<T, F>(uiSchema);
-  if (uiOptions && uiOptions[SUBMIT_BTN_OPTIONS_NAME]) {
-    const options = uiOptions[SUBMIT_BTN_OPTIONS_NAME] as UISchemaSubmitButtonOptions;
+  if (uiOptions && uiOptions[SUBMIT_BTN_OPTIONS_KEY]) {
+    const options = uiOptions[SUBMIT_BTN_OPTIONS_KEY] as UISchemaSubmitButtonOptions;
     return { ...DEFAULT_OPTIONS, ...options };
   }
 

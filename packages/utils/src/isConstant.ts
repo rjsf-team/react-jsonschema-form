@@ -1,4 +1,4 @@
-import { CONST_NAME } from './constants';
+import { CONST_KEY } from './constants';
 import { RJSFSchema } from './types';
 
 /**
@@ -9,5 +9,5 @@ import { RJSFSchema } from './types';
  * @returns - True if the `schema` has a single constant value, false otherwise
  */
 export default function isConstant(schema: RJSFSchema) {
-  return (Array.isArray(schema.enum) && schema.enum.length === 1) || schema.hasOwnProperty(CONST_NAME);
+  return (Array.isArray(schema.enum) && schema.enum.length === 1) || schema.hasOwnProperty(CONST_KEY);
 }

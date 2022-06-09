@@ -1,4 +1,4 @@
-import { UI_WIDGET_NAME } from '../constants';
+import { UI_WIDGET_KEY } from '../constants';
 import { RJSFSchema, UiSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
 
@@ -13,7 +13,7 @@ import retrieveSchema from './retrieveSchema';
 export default function isFilesArray<T = any, F = any>(
   validator: ValidatorType, schema: RJSFSchema, uiSchema: UiSchema<T, F>, rootSchema?: RJSFSchema
 ) {
-  if (uiSchema[UI_WIDGET_NAME] === 'files') {
+  if (uiSchema[UI_WIDGET_KEY] === 'files') {
     return true;
   }
   if (schema.items) {

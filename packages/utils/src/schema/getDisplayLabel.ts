@@ -1,4 +1,4 @@
-import { UI_FIELD_NAME, UI_WIDGET_NAME } from '../constants';
+import { UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants';
 import getSchemaType from '../getSchemaType';
 import getUiOptions from '../getUiOptions';
 import isCustomWidget from '../isCustomWidget';
@@ -33,10 +33,10 @@ export default function getDisplayLabel<T = any, F = any>(
   if (schemaType === 'object') {
     displayLabel = false;
   }
-  if (schemaType === 'boolean' && !uiSchema[UI_WIDGET_NAME]) {
+  if (schemaType === 'boolean' && !uiSchema[UI_WIDGET_KEY]) {
     displayLabel = false;
   }
-  if (uiSchema[UI_FIELD_NAME]) {
+  if (uiSchema[UI_FIELD_KEY]) {
     displayLabel = false;
   }
   return displayLabel;

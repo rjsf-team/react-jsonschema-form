@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import mergeAllOf from 'json-schema-merge-allof';
 
-import { ADDITIONAL_PROPERTIES_NAME, ALL_OF_NAME, DEPENDENCIES_NAME, REF_NAME } from '../constants';
+import { ADDITIONAL_PROPERTIES_KEY, ALL_OF_KEY, DEPENDENCIES_KEY, REF_KEY } from '../constants';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
 import isObject from '../isObject';
 import mergeSchemas from '../mergeSchemas';
@@ -58,14 +58,14 @@ export function resolveCondition<T = any>(
 export function resolveSchema<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, formData?: T
 ): RJSFSchema {
-  if (schema.hasOwnProperty(REF_NAME)) {
+  if (schema.hasOwnProperty(REF_KEY)) {
     return resolveReference<T>(validator, schema, rootSchema, formData);
   }
-  if (schema.hasOwnProperty(DEPENDENCIES_NAME)) {
+  if (schema.hasOwnProperty(DEPENDENCIES_KEY)) {
     const resolvedSchema = resolveDependencies<T>(validator, schema, rootSchema, formData);
     return retrieveSchema<T>(validator, resolvedSchema, rootSchema, formData);
   }
-  if (schema.hasOwnProperty(ALL_OF_NAME)) {
+  if (schema.hasOwnProperty(ALL_OF_KEY)) {
     return {
       ...schema,
       allOf: schema.allOf!.map((allOfSubschema) =>
@@ -152,7 +152,7 @@ export default function retrieveSchema<T = any>(
     });
   }
 
-  if (ALL_OF_NAME in schema) {
+  if (ALL_OF_KEY in schema) {
     try {
       resolvedSchema = mergeAllOf({
         ...resolvedSchema,
@@ -165,7 +165,7 @@ export default function retrieveSchema<T = any>(
     }
   }
   const hasAdditionalProperties =
-    resolvedSchema.hasOwnProperty(ADDITIONAL_PROPERTIES_NAME) &&
+    resolvedSchema.hasOwnProperty(ADDITIONAL_PROPERTIES_KEY) &&
     resolvedSchema.additionalProperties !== false;
   if (hasAdditionalProperties) {
     return stubExistingAdditionalProperties<T>(
@@ -309,7 +309,7 @@ export function withDependentSchema<T>(
   }
   // Resolve $refs inside oneOf.
   const resolvedOneOf = oneOf.map((subschema) => {
-    if (typeof subschema === 'boolean' || !subschema.hasOwnProperty(REF_NAME)) {
+    if (typeof subschema === 'boolean' || !subschema.hasOwnProperty(REF_KEY)) {
       return subschema;
     }
     return resolveReference<T>(validator, subschema as RJSFSchema, rootSchema, formData);

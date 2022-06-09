@@ -1,4 +1,4 @@
-import { UI_OPTIONS_NAME, UI_WIDGET_NAME } from './constants';
+import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants';
 import isObject from './isObject';
 import { UIOptionsType, UiSchema } from './types';
 
@@ -13,11 +13,11 @@ export default function getUiOptions<T = any, F = any>(uiSchema: UiSchema<T, F>)
     .filter(key => key.indexOf('ui:') === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
-      if (key === UI_WIDGET_NAME && isObject(value)) {
+      if (key === UI_WIDGET_KEY && isObject(value)) {
         console.error('Setting options via ui:widget object is no longer supported, use ui:options instead');
         return options;
       }
-      if (key === UI_OPTIONS_NAME && isObject(value)) {
+      if (key === UI_OPTIONS_KEY && isObject(value)) {
         return { ...options, ...value };
       }
       return { ...options, [key.substring(3)]: value };

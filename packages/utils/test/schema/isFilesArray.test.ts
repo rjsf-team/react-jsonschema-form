@@ -1,4 +1,4 @@
-import { UI_WIDGET_NAME, isFilesArray, RJSFSchema, createSchemaUtils } from '../../src';
+import { UI_WIDGET_KEY, isFilesArray, RJSFSchema, createSchemaUtils } from '../../src';
 import getTestValidator, { TestValidatorType } from '../testUtils/getTestValidator';
 
 describe('isFilesArray()', () => {
@@ -8,7 +8,7 @@ describe('isFilesArray()', () => {
   });
   it ('returns true if the uiSchema has the "files" widget', () => {
     const schema: RJSFSchema = {};
-    const uiSchema = { [UI_WIDGET_NAME]: 'files' };
+    const uiSchema = { [UI_WIDGET_KEY]: 'files' };
     expect(isFilesArray(testValidator, schema, uiSchema)).toBe(true);
   });
   it('should be true if items have data-url format', () => {

@@ -2,12 +2,12 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 
 import {
-  ALL_OF_NAME,
-  ADDITIONAL_PROPERTIES_NAME,
-  DEPENDENCIES_NAME,
-  ITEMS_NAME,
-  PROPERTIES_NAME,
-  REF_NAME,
+  ALL_OF_KEY,
+  ADDITIONAL_PROPERTIES_KEY,
+  DEPENDENCIES_KEY,
+  ITEMS_KEY,
+  PROPERTIES_KEY,
+  REF_KEY,
 } from '../constants';
 import { PathSchema, RJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
@@ -28,7 +28,7 @@ export default function toPathSchema<T = any>(
   rootSchema?: RJSFSchema,
   formData?: T
 ): PathSchema {
-  if (REF_NAME in schema || DEPENDENCIES_NAME in schema || ALL_OF_NAME in schema) {
+  if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T>(validator, schema, rootSchema, formData);
     return toPathSchema<T>(validator, _schema, name, rootSchema, formData);
   }
@@ -37,11 +37,11 @@ export default function toPathSchema<T = any>(
     $name: name.replace(/^\./, ''),
   } as PathSchema;
 
-  if (schema.hasOwnProperty(ADDITIONAL_PROPERTIES_NAME)) {
+  if (schema.hasOwnProperty(ADDITIONAL_PROPERTIES_KEY)) {
     set(pathSchema, '__rjsf_additionalProperties', true);
   }
 
-  if (schema.hasOwnProperty(ITEMS_NAME) && Array.isArray(formData)) {
+  if (schema.hasOwnProperty(ITEMS_KEY) && Array.isArray(formData)) {
     formData.forEach((element, i: number) => {
       pathSchema[i] = toPathSchema<T>(
         validator,
@@ -51,9 +51,9 @@ export default function toPathSchema<T = any>(
         element
       );
     });
-  } else if (schema.hasOwnProperty(PROPERTIES_NAME)) {
+  } else if (schema.hasOwnProperty(PROPERTIES_KEY)) {
     for (const property in schema.properties) {
-      const field = get(schema, [PROPERTIES_NAME, property]);
+      const field = get(schema, [PROPERTIES_KEY, property]);
       pathSchema[property] = toPathSchema<T>(
         validator,
         field,

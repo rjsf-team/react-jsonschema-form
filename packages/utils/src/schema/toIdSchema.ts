@@ -1,11 +1,11 @@
 import get from 'lodash/get';
 
 import {
-  ALL_OF_NAME,
-  DEPENDENCIES_NAME,
-  ITEMS_NAME,
-  PROPERTIES_NAME,
-  REF_NAME,
+  ALL_OF_KEY,
+  DEPENDENCIES_KEY,
+  ITEMS_KEY,
+  PROPERTIES_KEY,
+  REF_KEY,
 } from '../constants';
 import isObject from '../isObject';
 import { IdSchema, RJSFSchema, ValidatorType } from '../types';
@@ -31,14 +31,14 @@ export default function toIdSchema<T>(
   idPrefix = 'root',
   idSeparator = '_'
 ): IdSchema {
-  if (REF_NAME in schema || DEPENDENCIES_NAME in schema || ALL_OF_NAME in schema) {
+  if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T>(validator, schema, rootSchema, formData);
     return toIdSchema<T>(validator, _schema, id, rootSchema, formData, idPrefix, idSeparator);
   }
-  if (ITEMS_NAME in schema && !get(schema, [ITEMS_NAME, REF_NAME])) {
+  if (ITEMS_KEY in schema && !get(schema, [ITEMS_KEY, REF_KEY])) {
     return toIdSchema<T>(
       validator,
-      get(schema, ITEMS_NAME) as RJSFSchema,
+      get(schema, ITEMS_KEY) as RJSFSchema,
       id,
       rootSchema,
       formData,
@@ -48,9 +48,9 @@ export default function toIdSchema<T>(
   }
   const $id = id || idPrefix;
   const idSchema: IdSchema = { $id } as IdSchema;
-  if (schema.type === 'object' && PROPERTIES_NAME in schema) {
+  if (schema.type === 'object' && PROPERTIES_KEY in schema) {
     for (const name in schema.properties) {
-      const field = get(schema, [PROPERTIES_NAME, name]);
+      const field = get(schema, [PROPERTIES_KEY, name]);
       const fieldId = idSchema.$id + idSeparator + name;
       idSchema[name] = toIdSchema<T>(
         validator,

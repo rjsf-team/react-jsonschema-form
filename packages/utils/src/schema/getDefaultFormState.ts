@@ -2,12 +2,12 @@ import get from 'lodash/get';
 import fill from 'lodash/fill';
 
 import {
-  ANY_OF_NAME,
-  DEFAULT_NAME,
-  DEPENDENCIES_NAME,
-  PROPERTIES_NAME,
-  ONE_OF_NAME,
-  REF_NAME,
+  ANY_OF_KEY,
+  DEFAULT_KEY,
+  DEPENDENCIES_KEY,
+  PROPERTIES_KEY,
+  ONE_OF_KEY,
+  REF_KEY,
 } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getMatchingOption from './getMatchingOption';
@@ -67,11 +67,11 @@ export function computeDefaults<T = any>(
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
     defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
-  } else if (DEFAULT_NAME in schema) {
+  } else if (DEFAULT_KEY in schema) {
     defaults = schema.default as unknown as T;
-  } else if (REF_NAME in schema) {
+  } else if (REF_KEY in schema) {
     // Use referenced schema defaults for this node.
-    const refSchema = findSchemaDefinition(schema[REF_NAME]!, rootSchema);
+    const refSchema = findSchemaDefinition(schema[REF_KEY]!, rootSchema);
     return computeDefaults<T>(
       validator,
       refSchema,
@@ -80,7 +80,7 @@ export function computeDefaults<T = any>(
       formData as T,
       includeUndefinedValues
     );
-  } else if (DEPENDENCIES_NAME in schema) {
+  } else if (DEPENDENCIES_KEY in schema) {
     const resolvedSchema = resolveDependencies(validator, schema, rootSchema, formData);
     return computeDefaults<T>(
       validator,
@@ -101,11 +101,11 @@ export function computeDefaults<T = any>(
         includeUndefinedValues
       )
     ) as T[];
-  } else if (ONE_OF_NAME in schema) {
+  } else if (ONE_OF_KEY in schema) {
     schema = schema.oneOf![
       getMatchingOption(validator,undefined, schema.oneOf as RJSFSchema[], rootSchema)
     ] as RJSFSchema;
-  } else if (ANY_OF_NAME in schema) {
+  } else if (ANY_OF_KEY in schema) {
     schema = schema.anyOf![
       getMatchingOption(validator,undefined, schema.anyOf as RJSFSchema[], rootSchema)
     ] as RJSFSchema;
@@ -124,7 +124,7 @@ export function computeDefaults<T = any>(
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T>(
           validator,
-          get(schema, [PROPERTIES_NAME, key]),
+          get(schema, [PROPERTIES_KEY, key]),
           get(defaults, [key]),
           rootSchema,
           get(formData, [key]),

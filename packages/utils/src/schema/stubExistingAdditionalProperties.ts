@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import { REF_NAME, ADDITIONAL_PROPERTY_FLAG } from '../constants';
+import { REF_KEY, ADDITIONAL_PROPERTY_FLAG } from '../constants';
 import guessType from '../guessType';
 import isObject from '../isObject';
 import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
@@ -38,10 +38,10 @@ export default function stubExistingAdditionalProperties<T = any>(
 
     let additionalProperties: RJSFSchema = {};
     if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
-      if (schema.additionalProperties.hasOwnProperty(REF_NAME)) {
+      if (schema.additionalProperties.hasOwnProperty(REF_KEY)) {
         additionalProperties = retrieveSchema<T>(
           validator,
-          { $ref: get(schema.additionalProperties, [REF_NAME]) },
+          { $ref: get(schema.additionalProperties, [REF_KEY]) },
           rootSchema,
           formData as T
         );
