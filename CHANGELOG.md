@@ -19,6 +19,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 4.2.1 (upcoming)
 
+## @rjsf/core
+- Optional object with empty values are now trimmed to avoid "required" errors (#675)
+
 # 4.2.0
 
 ## @rjsf/core
