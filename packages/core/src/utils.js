@@ -1390,8 +1390,8 @@ function trimArray(array) {
 
 export function trimEmptyValues(value) {
   return Array.isArray(value)
-    ? trimArray(value)
+    ? trimArray(value) || []
     : typeof value === "object"
-    ? trimObject(value)
+    ? trimObject(value) || {}
     : value;
 }
