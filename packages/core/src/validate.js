@@ -206,7 +206,7 @@ export default function validateFormData(
   let validationError = null;
   try {
     // 675 - deal with optional objects with required values
-    const trimmedData = trimEmptyValues(formData);
+    const trimmedData = trimEmptyValues(schema, formData);
     ajv.validate(schema, trimmedData);
   } catch (err) {
     validationError = err;
@@ -303,7 +303,7 @@ export function withIdRefPrefix(schemaNode) {
 export function isValid(schema, data, rootSchema) {
   try {
     // 675 - deal with optional objects with required values
-    const trimmedData = trimEmptyValues(data);
+    const trimmedData = trimEmptyValues(schema, data);
 
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // then rewrite the schema ref's to point to the rootSchema

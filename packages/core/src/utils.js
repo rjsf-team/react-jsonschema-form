@@ -1365,9 +1365,9 @@ export function schemaRequiresTrueValue(schema) {
   return false;
 }
 
-function trimObject(object) {
-  return Object.entries(object).reduce((acc, [key, value]) => {
-    const trimmed = trimEmptyValues(value);
+function trimObject(schema, object) {
+  return Object.entries(schema.properties).reduce((acc, [key, value]) => {
+    const trimmed = trimEmptyValues(value, object[key]);
     if (trimmed || trimmed === false) {
       if (!acc) {
         acc = {};
@@ -1378,9 +1378,9 @@ function trimObject(object) {
   }, undefined);
 }
 
-function trimArray(array) {
+function trimArray(schema, array) {
   return array.reduce((acc, value) => {
-    const trimmed = trimEmptyValues(value);
+    const trimmed = trimEmptyValues(schema.items, value);
     if (trimmed || trimmed === false) {
       acc.push(trimmed);
     }
@@ -1388,10 +1388,10 @@ function trimArray(array) {
   }, []);
 }
 
-export function trimEmptyValues(value) {
-  return Array.isArray(value)
-    ? trimArray(value) || []
-    : typeof value === "object"
-    ? trimObject(value) || {}
+export function trimEmptyValues(schema, value) {
+  return schema.type === "array"
+    ? trimArray(schema, value) || []
+    : schema.type === "object"
+    ? trimObject(schema, value) || {}
     : value;
 }
