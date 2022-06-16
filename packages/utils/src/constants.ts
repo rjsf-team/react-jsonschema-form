@@ -5,6 +5,7 @@ export const ANY_OF_KEY = 'anyOf';
 export const CONST_KEY = 'const';
 export const DEFAULT_KEY = 'default';
 export const DEPENDENCIES_KEY = 'dependencies';
+export const ERRORS_KEY = '__errors';
 export const ITEMS_KEY = 'items';
 export const ONE_OF_KEY = 'oneOf';
 export const PROPERTIES_KEY = 'properties';
