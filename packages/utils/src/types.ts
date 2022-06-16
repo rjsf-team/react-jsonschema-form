@@ -74,7 +74,7 @@ export type FormValidation<T = any> = FieldValidation & {
 };
 
 export type ErrorListProps<T = any, F = any> = {
-  errorSchema: FormValidation;
+  errorSchema: FormValidation<T>;
   errors: RJSFValidationError[];
   formContext: F;
   schema: RJSFSchema;
@@ -102,7 +102,7 @@ export interface IChangeEvent<T = any, F = any> {
   edit: boolean;
   formData: T;
   errors: RJSFValidationError[];
-  errorSchema: FormValidation;
+  errorSchema: FormValidation<T>;
   idSchema: IdSchema;
   schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
@@ -118,8 +118,8 @@ export interface FieldProps<T = any, F = any>
   uiSchema: UiSchema<T, F>;
   idSchema: IdSchema;
   formData: T;
-  errorSchema: ErrorSchema;
-  onChange: (e: IChangeEvent<T, F> | any, es?: ErrorSchema) => any;
+  errorSchema: ErrorSchema<T>;
+  onChange: (e: IChangeEvent<T, F> | any, es?: ErrorSchema<T>) => any;
   onBlur: (id: string, value: any) => void;
   onFocus: (id: string, value: any) => void;
   formContext: F;
@@ -283,7 +283,7 @@ export type UiSchema<T = any, F = any> = GenericObjectType & {
   'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
 };
 
-export type CustomValidator<T = any> = (formData: T, errors: FormValidation) => FormValidation;
+export type CustomValidator<T = any> = (formData: T, errors: FormValidation<T>) => FormValidation<T>;
 
 export type ErrorTransformer = (errors: RJSFValidationError[]) => RJSFValidationError[];
 
@@ -296,7 +296,7 @@ export interface ValidatorType<T = any> {
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer,
   ): ValidationData;
-  toErrorList(errorSchema?: ErrorSchema, fieldName?: string): RJSFValidationError[];
+  toErrorList(errorSchema?: ErrorSchema<T>, fieldName?: string): RJSFValidationError[];
   isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema): boolean;
 }
 
