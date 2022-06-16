@@ -1,16 +1,6 @@
-import { FormProps, FieldErrors, FieldValidation } from '@rjsf/core';
-
-export interface CustomValidatorOptionsType<T = any> {
-  additionalMetaSchemas?: FormProps<T>['additionalMetaSchemas'];
-  customFormats?: FormProps<T>['customFormats'];
+export interface CustomValidatorOptionsType {
+  additionalMetaSchemas?: ReadonlyArray<object>;
+  customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
 }
-
-export type AjvErrorSchema = FieldErrors & {
-  [k: string]: AjvErrorSchema;
-};
-
-export type AjvFormValidation = FieldValidation & {
-  [fieldName: string]: AjvFormValidation;
-};
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv6",
-  "version": "5.0.0",
+  "version": "4.2.0",
   "main": "dist/index.js",
   "module": "dist/validator-ajv6.esm.js",
   "typings": "dist/index.d.ts",
@@ -15,12 +15,12 @@
     "test:update": "tsdx test --u"
   },
   "dependencies": {
-    "@rjsf/core": "^4.0.1",
+    "@rjsf/utils": "^4.0.1",
     "ajv": "^6.7.0",
     "lodash": "^4.17.15"
   },
   "peerDependencies": {
-    "@rjsf/core": "^4.0.1"
+    "@rjsf/utils": "^4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
