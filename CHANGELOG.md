@@ -19,6 +19,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 4.2.1 (upcoming)
 
+## @rjsf/material-ui
+- Add unique id on each rendered object fields to ease specific CSS selector [#2884](https://github.com/rjsf-team/react-jsonschema-form/pull/2884)
+
 # 4.2.0
 
 ## @rjsf/core
