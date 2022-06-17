@@ -5,19 +5,22 @@ import {
   CustomValidator,
   ErrorSchema,
   ErrorTransformer,
+  FieldValidation,
   FormValidation,
+  GenericObjectType,
   RJSFSchema,
   RJSFValidationError,
   ValidatorType,
   getDefaultFormState,
   mergeObjects,
+  ERRORS_KEY,
+  REF_KEY,
 } from '@rjsf/utils';
 
 import { CustomValidatorOptionsType } from './types';
 import createAjvInstance from './createAjvInstance';
-import { ValidationError } from 'json-schema';
 
-const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
+const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
 
 export default class AJV6Validator<T = any> implements ValidatorType<T> {
   private ajv: Ajv;
@@ -34,36 +37,36 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       params: undefined,
       property: '',
       stack,
-    }
+    };
   }
 
-  private toErrorSchema(errors: ValidationError[]): ErrorSchema {
+  private toErrorSchema(errors: RJSFValidationError[]): ErrorSchema<T> {
     // Transforms a ajv validation errors list:
     // [
-    //   {property: ".level1.level2[2].level3", message: "err a"},
-    //   {property: ".level1.level2[2].level3", message: "err b"},
-    //   {property: ".level1.level2[4].level3", message: "err b"},
+    //   {property: '.level1.level2[2].level3', message: 'err a'},
+    //   {property: '.level1.level2[2].level3', message: 'err b'},
+    //   {property: '.level1.level2[4].level3', message: 'err b'},
     // ]
     // Into an error tree:
     // {
     //   level1: {
     //     level2: {
-    //       2: {level3: {errors: ["err a", "err b"]}},
-    //       4: {level3: {errors: ["err b"]}},
+    //       2: {level3: {errors: ['err a', 'err b']}},
+    //       4: {level3: {errors: ['err b']}},
     //     }
     //   }
     // };
     if (!errors.length) {
-      return {};
+      return {} as ErrorSchema<T>;
     }
-    return errors.reduce((errorSchema: ErrorSchema, error): ErrorSchema => {
+    return errors.reduce((errorSchema: ErrorSchema<T>, error): ErrorSchema<T> => {
       const { property, message } = error;
       const path = toPath(property);
-      let parent = errorSchema;
+      let parent: GenericObjectType = errorSchema;
 
       // If the property is at the root (.level1) then toPath creates
       // an empty array element at the first index. Remove it.
-      if (path.length > 0 && path[0] === "") {
+      if (path.length > 0 && path[0] === '') {
         path.splice(0, 1);
       }
 
@@ -77,41 +80,41 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       if (Array.isArray(parent.__errors)) {
         // We store the list of errors for this node in a property named __errors
         // to avoid name collision with a possible sub schema field named
-        // "errors" (see `validate.createErrorHandler`).
-        parent.__errors = parent.__errors.concat(message);
+        // 'errors' (see `validate.createErrorHandler`).
+        parent.__errors = parent.__errors.concat(message!);
       } else {
         if (message) {
           parent.__errors = [message];
         }
       }
       return errorSchema;
-    }, {});
+    }, {} as ErrorSchema<T>);
   }
 
-  toErrorList(errorSchema?: ErrorSchema, fieldName = "root") {
+  toErrorList(errorSchema?: ErrorSchema<T>, fieldName = 'root') {
     // XXX: We should transform fieldName as a full field path string.
     if (!errorSchema) {
       return [];
     }
     let errorList: RJSFValidationError[] = [];
-    if ("__errors" in errorSchema) {
+    if (ERRORS_KEY in errorSchema) {
       errorList = errorList.concat(
         errorSchema.__errors!.map((stack: string) => this.stackToRJSFValidationError(`${fieldName}: ${stack}`))
       );
     }
     return Object.keys(errorSchema).reduce((acc, key) => {
-      if (key !== "__errors") {
-        acc = acc.concat(this.toErrorList(errorSchema[key], key));
+      if (key !== ERRORS_KEY) {
+        acc = acc.concat(this.toErrorList((errorSchema as GenericObjectType)[key], key));
       }
       return acc;
     }, errorList);
   }
 
   private createErrorHandler(formData: T): FormValidation<T> {
-    const handler: FormValidation<T> = {
+    const handler: FieldValidation = {
       // We store the list of errors for this node in a property named __errors
       // to avoid name collision with a possible sub schema field named
-      // "errors" (see `utils.toErrorSchema`).
+      // 'errors' (see `utils.toErrorSchema`).
       __errors: [],
       addError(message: string) {
         this.__errors.push(message);
@@ -121,25 +124,25 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       const formObject: { [k: string]: any } = formData;
       return Object.keys(formData).reduce((acc, key) => {
         return { ...acc, [key]: this.createErrorHandler(formObject[key]) };
-      }, handler);
+      }, handler as FormValidation<T>);
     }
     if (Array.isArray(formData)) {
       return formData.reduce((acc, value, key) => {
         return { ...acc, [key]: this.createErrorHandler(value) };
       }, handler);
     }
-    return handler;
+    return handler as FormValidation<T>;
   }
 
-  private unwrapErrorHandler(errorHandler: FormValidation<T>) {
+  private unwrapErrorHandler(errorHandler: FormValidation<T>): ErrorSchema<T> {
     return Object.keys(errorHandler).reduce((acc, key) => {
-      if (key === "addError") {
+      if (key === 'addError') {
         return acc;
-      } else if (key === "__errors") {
-        return { ...acc, [key]: errorHandler[key] };
+      } else if (key === ERRORS_KEY) {
+        return { ...acc, [key]: (errorHandler as GenericObjectType)[key] };
       }
-      return { ...acc, [key]: this.unwrapErrorHandler(errorHandler[key]) };
-    }, {});
+      return { ...acc, [key]: this.unwrapErrorHandler((errorHandler as GenericObjectType)[key]) };
+    }, {} as ErrorSchema<T>);
   }
 
   /**
@@ -153,7 +156,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
 
     return errors.map((e: ErrorObject) => {
       const { dataPath, keyword, message = '', params, schemaPath } = e;
-      let property = `${dataPath}`;
+      const property = `${dataPath}`;
 
       // put data in expected format
       return {
@@ -178,7 +181,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     schema: RJSFSchema,
     customValidate?: CustomValidator<T>,
     transformErrors?:  ErrorTransformer,
-  ): { errors: RJSFValidationError[]; errorSchema: ErrorSchema } {
+  ): { errors: RJSFValidationError[]; errorSchema: ErrorSchema<T> } {
     // Include form data with undefined values, which is required for validation.
     const rootSchema = schema;
     const newFormData = getDefaultFormState(this, schema, formData, rootSchema, true);
@@ -198,8 +201,8 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     const noProperMetaSchema =
       validationError &&
       validationError.message &&
-      typeof validationError.message === "string" &&
-      validationError.message.includes("no schema with key or ref ");
+      typeof validationError.message === 'string' &&
+      validationError.message.includes('no schema with key or ref ');
 
     if (noProperMetaSchema) {
       errors = [
@@ -207,7 +210,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
         this.stackToRJSFValidationError(validationError!.message),
       ];
     }
-    if (typeof transformErrors === "function") {
+    if (typeof transformErrors === 'function') {
       errors = transformErrors(errors);
     }
 
@@ -218,19 +221,19 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
         ...errorSchema,
         ...{
           $schema: {
-            __errors: [validationError.message],
+            __errors: [validationError!.message],
           },
         },
       };
     }
 
-    if (typeof customValidate !== "function") {
+    if (typeof customValidate !== 'function') {
       return { errors, errorSchema };
     }
 
     const errorHandler = customValidate(formData, this.createErrorHandler(formData));
     const userErrorSchema = this.unwrapErrorHandler(errorHandler);
-    const newErrorSchema: ErrorSchema = mergeObjects(errorSchema, userErrorSchema, true);
+    const newErrorSchema: ErrorSchema<T> = mergeObjects(errorSchema, userErrorSchema, true) as ErrorSchema<T>;
     // XXX: The errors list produced is not fully compliant with the format
     // exposed by the jsonschema lib, which contains full field paths and other
     // properties.
@@ -238,7 +241,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
 
     return {
       errors: newErrors,
-      errorSchema: newErrorSchema as ErrorSchema,
+      errorSchema: newErrorSchema as ErrorSchema<T>,
     };
   }
 
@@ -247,9 +250,9 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       const realObj: { [k: string]: any } = node;
       const value = realObj[key];
       if (
-        key === "$ref" &&
-        typeof value === "string" &&
-        value.startsWith("#")
+        key === REF_KEY &&
+        typeof value === 'string' &&
+        value.startsWith('#')
       ) {
         realObj[key] = ROOT_SCHEMA_PREFIX + value;
       } else {
@@ -260,7 +263,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
   }
 
   private withIdRefPrefixArray(node: object[]): RJSFSchema {
-    for (var i = 0; i < node.length; i++) {
+    for (let i = 0; i < node.length; i++) {
       node[i] = this.withIdRefPrefix(node[i]);
     }
     return node as RJSFSchema;
@@ -290,9 +293,10 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
-      return this.ajv
+      const result = this.ajv
         .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
         .validate(this.withIdRefPrefix(schema), formData);
+      return result as boolean;
     } catch (e) {
       return false;
     } finally {

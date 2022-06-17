@@ -17,7 +17,8 @@
   "dependencies": {
     "@rjsf/utils": "^4.0.1",
     "ajv": "^6.7.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "lodash-es": "^4.17.15"
   },
   "peerDependencies": {
     "@rjsf/utils": "^4.0.1"
@@ -29,14 +30,19 @@
     "@babel/plugin-transform-react-jsx": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
-    "@types/jest": "^24.0.15",
+    "@types/jest": "^25.2.3",
     "@types/json-schema": "^7.0.9",
     "@types/lodash": "^4.14.182",
     "@types/sinon": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "babel-jest": "^28.1.0",
+    "babel-preset-jest": "^28.0.2",
+    "eslint": "^8.15.0",
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^28.1.0",
     "rimraf": "^2.6.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.3.1",
-    "typescript": "^4.6.3"
+    "tsdx": "^0.14.1"
   },
   "publishConfig": {
     "access": "public"
@@ -57,6 +63,26 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "jest": {
+    "verbose": true,
+    "testMatch": [
+      "**/test/**/*.test.ts?(x)"
+    ],
+    "coverageDirectory": "<rootDir>/coverage/",
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/test"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   },
   "license": "Apache-2.0"
 }
