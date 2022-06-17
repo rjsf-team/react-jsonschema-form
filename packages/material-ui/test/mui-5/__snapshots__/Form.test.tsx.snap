@@ -660,6 +660,7 @@ exports[`single fields hidden field 1`] = `
   >
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-mhc70k-MuiGrid-root"
+      id="root"
       style={
         Object {
           "marginTop": "10px",

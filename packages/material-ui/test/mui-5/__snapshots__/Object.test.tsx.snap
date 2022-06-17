@@ -11,6 +11,7 @@ exports[`object fields additionalProperties 1`] = `
   >
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-mhc70k-MuiGrid-root"
+      id="root"
       style={
         Object {
           "marginTop": "10px",
@@ -19,6 +20,7 @@ exports[`object fields additionalProperties 1`] = `
     >
       <div
         className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+        id="root-foo"
         style={
           Object {
             "marginBottom": "10px",
@@ -264,6 +266,7 @@ exports[`object fields object 1`] = `
   >
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-mhc70k-MuiGrid-root"
+      id="root"
       style={
         Object {
           "marginTop": "10px",
@@ -272,6 +275,7 @@ exports[`object fields object 1`] = `
     >
       <div
         className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+        id="root-a"
         style={
           Object {
             "marginBottom": "10px",
@@ -329,6 +333,7 @@ exports[`object fields object 1`] = `
       </div>
       <div
         className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+        id="root-b"
         style={
           Object {
             "marginBottom": "10px",
