@@ -1,0 +1,68 @@
+{
+  "name": "@rjsf/bootstrap-5",
+  "version": "4.2.0",
+  "main": "dist/index.js",
+  "module": "dist/bootstrap-5.esm.js",
+  "typings": "dist/index.d.ts",
+  "description": "Bootstrap 5 theme, fields and widgets for react-jsonschema-form",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "rimraf dist && tsdx build --format cjs,es,umd",
+    "test": "tsdx test",
+    "test:update": "tsdx test --u"
+  },
+  "peerDependencies": {
+    "@rjsf/core": "^4.0.0",
+    "react": ">=16",
+    "react-bootstrap": "^2.4.0"
+  },
+  "engineStrict": false,
+  "engines": {
+    "node": ">=12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@rjsf/core": "^4.2.0",
+    "@types/jest": "^24.0.15",
+    "@types/json-schema": "^7.0.7",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "@types/react-test-renderer": "^16.9.2",
+    "@types/sinon": "^9.0.0",
+    "react": "^16.8.6",
+    "react-bootstrap": "^2.4.0",
+    "react-dom": "^16.8.6",
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^2.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "Bootstrap 5",
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "bootstrap-5",
+    "rjsf-bootstrap-5"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "react-icons": "^4.4.0"
+  }
+}

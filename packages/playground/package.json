@@ -44,6 +44,7 @@
     "@mui/material": "^5.2.2",
     "@rjsf/antd": "^4.2.0",
     "@rjsf/bootstrap-4": "^4.2.0",
+    "@rjsf/bootstrap-5": "^4.2.0",
     "@rjsf/chakra-ui": "^4.2.0",
     "@rjsf/core": "^4.2.0",
     "@rjsf/fluent-ui": "^4.2.0",
