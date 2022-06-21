@@ -51,6 +51,7 @@ export type RJSFValidationError = {
   name?: string;
   params?: any;
   property?: string;
+  schemaPath?: string;
   stack: string;
 };
 
@@ -61,16 +62,15 @@ export type FieldErrors = {
 }
 
 export type ErrorSchema<T = any> = FieldErrors & {
-  [key in keyof T]: ErrorSchema<T[key]>;
+  [key in keyof T]?: ErrorSchema<T[key]>;
 };
 
-export type FieldValidation = {
-  __errors: FieldError[];
+export type FieldValidation = FieldErrors & {
   addError: (message: string) => void;
 };
 
 export type FormValidation<T = any> = FieldValidation & {
-  [key in keyof T]: FormValidation<T[key]>;
+  [key in keyof T]?: FormValidation<T[key]>;
 };
 
 export type ErrorListProps<T = any, F = any> = {
