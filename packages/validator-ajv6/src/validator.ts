@@ -17,7 +17,7 @@ import {
   REF_KEY,
 } from '@rjsf/utils';
 
-import { CustomValidatorOptionsType } from './types';
+import { CustomValidatorOptionsType, ValidateFormDataReturnType } from './types';
 import createAjvInstance from './createAjvInstance';
 
 const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
@@ -117,7 +117,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       // 'errors' (see `utils.toErrorSchema`).
       __errors: [],
       addError(message: string) {
-        this.__errors.push(message);
+        this.__errors!.push(message);
       },
     };
     if (isObject(formData)) {
@@ -170,7 +170,6 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     });
   }
 
-
   /**
    * This function processes the formData with a user `validate` contributed
    * function, which receives the form data and an `errorHandler` object that
@@ -181,7 +180,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     schema: RJSFSchema,
     customValidate?: CustomValidator<T>,
     transformErrors?:  ErrorTransformer,
-  ): { errors: RJSFValidationError[]; errorSchema: ErrorSchema<T> } {
+  ): ValidateFormDataReturnType<T> {
     // Include form data with undefined values, which is required for validation.
     const rootSchema = schema;
     const newFormData = getDefaultFormState(this, schema, formData, rootSchema, true);
@@ -270,19 +269,6 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
   }
 
   /**
-   * Recursively prefixes all $ref's in a schema with `ROOT_SCHEMA_PREFIX`
-   * This is used in isValid to make references to the rootSchema
-   */
-  private withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
-    if (schemaNode.constructor === Object) {
-      return this.withIdRefPrefixObject({ ...schemaNode });
-    } else if (Array.isArray(schemaNode)) {
-      return this.withIdRefPrefixArray([...schemaNode]);
-    }
-    return schemaNode;
-  }
-
-  /**
    * Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
    * false.
@@ -303,5 +289,18 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       // make sure we remove the rootSchema from the global ajv instance
       this.ajv.removeSchema(ROOT_SCHEMA_PREFIX);
     }
+  }
+
+  /**
+   * Recursively prefixes all $ref's in a schema with `ROOT_SCHEMA_PREFIX`
+   * This is used in isValid to make references to the rootSchema
+   */
+  protected withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
+    if (schemaNode.constructor === Object) {
+      return this.withIdRefPrefixObject({ ...schemaNode });
+    } else if (Array.isArray(schemaNode)) {
+      return this.withIdRefPrefixArray([...schemaNode]);
+    }
+    return schemaNode;
   }
 }
