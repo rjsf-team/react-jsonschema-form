@@ -1,4 +1,3 @@
-// import { Simulate } from 'react-dom/test-utils';
 import { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, ValidatorType } from '@rjsf/utils';
 
 import AJV6Validator from '../src/validator';

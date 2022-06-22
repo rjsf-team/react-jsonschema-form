@@ -9,6 +9,7 @@ import {
   GenericObjectType,
   RJSFSchema,
   RJSFValidationError,
+  ValidationData,
   ValidatorType,
   getDefaultFormState,
   isObject,
@@ -17,7 +18,7 @@ import {
   REF_KEY,
 } from '@rjsf/utils';
 
-import { CustomValidatorOptionsType, ValidateFormDataReturnType } from './types';
+import { CustomValidatorOptionsType } from './types';
 import createAjvInstance from './createAjvInstance';
 
 const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
@@ -222,7 +223,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     schema: RJSFSchema,
     customValidate?: CustomValidator<T>,
     transformErrors?:  ErrorTransformer,
-  ): ValidateFormDataReturnType<T> {
+  ): ValidationData<T> {
     // Include form data with undefined values, which is required for validation.
     const rootSchema = schema;
     const newFormData = getDefaultFormState(this, schema, formData, rootSchema, true);
