@@ -287,7 +287,7 @@ export type CustomValidator<T = any> = (formData: T, errors: FormValidation<T>) 
 
 export type ErrorTransformer = (errors: RJSFValidationError[]) => RJSFValidationError[];
 
-export type ValidationData = { errors: RJSFValidationError[]; errorSchema: ErrorSchema };
+export type ValidationData<T> = { errors: RJSFValidationError[]; errorSchema: ErrorSchema<T> };
 
 export interface ValidatorType<T = any> {
   validateFormData(
@@ -295,7 +295,7 @@ export interface ValidatorType<T = any> {
     schema: RJSFSchema,
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer,
-  ): ValidationData;
+  ): ValidationData<T>;
   toErrorList(errorSchema?: ErrorSchema<T>, fieldName?: string): RJSFValidationError[];
   isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema): boolean;
 }
