@@ -297,7 +297,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
         render the selection and let `StringField` component handle
         rendering
       */}
-        {schema.anyOf && !schemaUtils.isSelect(schema) && (
+        {schema.anyOf && !uiSchema?.["ui:field"] && !schemaUtils.isSelect(schema) && (
           <_AnyOfField
             name={name}
             disabled={disabled}
@@ -323,7 +323,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
             uiSchema={uiSchema}
           />
         )}
-        {schema.oneOf && !schemaUtils.isSelect(schema) && (
+        {schema.oneOf && !uiSchema?.["ui:field"] && !schemaUtils.isSelect(schema) && (
           <_OneOfField
             name={name}
             disabled={disabled}
