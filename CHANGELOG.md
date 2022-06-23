@@ -23,6 +23,12 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix missing error class on fields (https://github.com/rjsf-team/react-jsonschema-form/issues/2666)
 # 4.2.1 (upcoming)
 
+## @rjsf/core
+- Fix `ui:field` with anyOf or oneOf no longer rendered twice (#2890)
+
+## Dev / docs / playground
+- Demonstrate use of `ui:field` with `anyOf` (#2890)
+
 # 4.2.0
 
 ## @rjsf/core
