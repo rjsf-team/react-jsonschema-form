@@ -260,9 +260,9 @@ export interface WidgetProps<T = any, F = any>
 export type Widget<T = any, F = any> = React.FunctionComponent<WidgetProps<T, F>> | React.ComponentClass<WidgetProps<T, F>>;
 
 export type UISchemaSubmitButtonOptions = {
-  submitText: string;
-  norender: boolean;
-  props: GenericObjectType & {
+  submitText?: string;
+  norender?: boolean;
+  props?: GenericObjectType & {
     disabled?: boolean;
     className?: string;
   };
