@@ -2,9 +2,9 @@ import isEmpty from 'lodash/isEmpty';
 
 import { ValidationData, ValidatorType } from '../../src';
 
-export interface TestValidatorParams {
+export interface TestValidatorParams<T = any> {
   isValid?: boolean[];
-  data?: ValidationData[];
+  data?: ValidationData<T>[];
 }
 
 export interface TestValidatorType extends ValidatorType {
@@ -12,10 +12,10 @@ export interface TestValidatorType extends ValidatorType {
   setReturnValues(params?: TestValidatorParams): void;
 }
 
-export default function createTestValidator(
+export default function createTestValidator<T = any>(
   { isValid = [], data = [] }: TestValidatorParams
 ): TestValidatorType  {
-  const testValidator: { _data: ValidationData[], _isValid: boolean[], validator: TestValidatorType } = {
+  const testValidator: { _data: ValidationData<T>[], _isValid: boolean[], validator: TestValidatorType } = {
     _data: data,
     _isValid: isValid,
     validator: {
