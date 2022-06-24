@@ -58,9 +58,9 @@ Exports `validator-ajv6` plugin for `react-jsonschema-form`.
 
 ### Prerequisites
 
-#### React JsonSchema Form
+#### React JsonSchema Form Utils
 
-- `@rjsf/core >= 5.0.0`
+- `@rjsf/utils >= 5.0.0`
 
 ```bash
 yarn add @rjsf/core
@@ -75,8 +75,6 @@ yarn add @rjsf/validator-ajv6
 <!-- USAGE EXAMPLES -->
 
 ## Usage
-
-### Material UI version 4
 
 ```jsx
 import Form from '@rjsf/core';

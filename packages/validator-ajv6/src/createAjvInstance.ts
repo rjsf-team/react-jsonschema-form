@@ -31,12 +31,12 @@ export default function createAjvInstance(
   ajv.addFormat('color', COLOR_FORMAT_REGEX);
 
   // add more schemas to validate against
-  if (additionalMetaSchemas && Array.isArray(additionalMetaSchemas)) {
+  if (Array.isArray(additionalMetaSchemas)) {
     ajv.addMetaSchema(additionalMetaSchemas);
   }
 
   // add more custom formats to validate against
-  if (customFormats && isObject(customFormats)) {
+  if (isObject(customFormats)) {
     Object.keys(customFormats).forEach(formatName => {
       ajv.addFormat(formatName, customFormats[formatName]);
     });
