@@ -1173,7 +1173,10 @@ describe("anyOf", () => {
       expect(inputs).to.have.length.of(0);
     });
   });
+<<<<<<< HEAD
 
+=======
+>>>>>>> a3f932c (Verify custom field is only rendered once with anyOf/oneOf)
   describe("Custom Field", function() {
     const schema = {
       anyOf: [
