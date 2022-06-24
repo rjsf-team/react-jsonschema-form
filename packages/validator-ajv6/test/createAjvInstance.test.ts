@@ -61,8 +61,8 @@ describe('createAjvInstance()', () => {
       expect(ajv.addFormat).toHaveBeenNthCalledWith(2, 'color', COLOR_FORMAT_REGEX);
     });
     it('the remaining addForma() calls were for custom formats', () => {
-      Object.keys(CUSTOM_OPTIONS!.customFormats).forEach((key: string, i: number) => {
-        expect(ajv.addFormat).toHaveBeenNthCalledWith(3 + i, key, CUSTOM_OPTIONS!.customFormats[key]);
+      Object.keys(CUSTOM_OPTIONS.customFormats!).forEach((key: string, i: number) => {
+        expect(ajv.addFormat).toHaveBeenNthCalledWith(3 + i, key, CUSTOM_OPTIONS.customFormats![key]);
       });
     });
     it('addMetaSchema was not called', () => {
