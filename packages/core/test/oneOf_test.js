@@ -795,5 +795,10 @@ describe("oneOf", () => {
       const fields = node.querySelectorAll(".custom-field");
       expect(fields).to.have.length.of(1);
     });
+    it("should not render <select>", function() {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const selects = node.querySelectorAll("select");
+      expect(selects).to.have.length.of(0);
+    });
   });
 });
