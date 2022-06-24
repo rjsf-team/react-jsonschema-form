@@ -1,8 +1,22 @@
 import jsonpointer from 'jsonpointer';
 import omit from 'lodash/omit';
 
-import { REF_NAME } from './constants';
-import { RJSFSchema } from './types';
+import { REF_KEY } from './constants';
+import { GenericObjectType, RJSFSchema } from './types';
+
+/** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
+ * location, the `object` minus the `key: value` and in the second location the `value`.
+ *
+ * @param key - The key from the object to extract
+ * @param object - The object from which to extract the element
+ * @returns - An array with the first value being the object minus the `key` element and the second element being the
+ *      value from `object[key]`
+ */
+export function splitKeyElementFromObject(key: string, object: GenericObjectType) {
+  const value = object[key];
+  const remaining = omit(object, [key]);
+  return [remaining, value];
+}
 
 /** Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the
  * path provided by that reference. If `#` is not the first character of the reference, or the path does not exist in
@@ -24,10 +38,11 @@ export default function findSchemaDefinition($ref?: string, rootSchema: RJSFSche
   if (current === undefined) {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
-  if (current[REF_NAME]) {
-    const subSchema = findSchemaDefinition(current[REF_NAME]!, rootSchema);
-    if (Object.keys(current).length > 1) {
-      return { ...omit(current, [REF_NAME]), ...subSchema };
+  if (current[REF_KEY]) {
+    const [remaining, theRef] = splitKeyElementFromObject(REF_KEY, current);
+    const subSchema = findSchemaDefinition(theRef, rootSchema);
+    if (Object.keys(remaining).length > 0) {
+      return { ...remaining, ...subSchema };
     }
     return subSchema;
   }

@@ -1,6 +1,7 @@
 import allowAdditionalItems from './allowAdditionalItems';
 import asNumber from './asNumber';
 import canExpand from './canExpand';
+import createSchemaUtils from './createSchemaUtils';
 import dataURItoBlob from './dataURItoBlob';
 import deepEquals from './deepEquals';
 import findSchemaDefinition from './findSchemaDefinition';
@@ -29,92 +30,16 @@ import toConstant from './toConstant';
 import toDateString from './toDateString';
 import utcToLocal from './utcToLocal';
 
-import {
-  ArrayFieldTemplateItemType,
-  ArrayFieldTemplateProps,
-  CustomValidator,
-  DateObject,
-  DescriptionFieldProps,
-  ErrorListProps,
-  ErrorSchema,
-  ErrorTransformer,
-  Field,
-  FieldError,
-  FieldErrors,
-  FieldId,
-  FieldPath,
-  FieldProps,
-  FieldTemplateProps,
-  FieldValidation,
-  FormValidation,
-  GenericObjectType,
-  IChangeEvent,
-  IdSchema,
-  ObjectFieldTemplatePropertyType,
-  ObjectFieldTemplateProps,
-  PathSchema,
-  RangeSpecType,
-  Registry,
-  RegistryFieldsType,
-  RegistryWidgetsType,
-  RJSFSchema,
-  RJSFValidationError,
-  TitleFieldProps,
-  UiSchema,
-  UIOptionsType,
-  UISchemaSubmitButtonOptions,
-  ValidationData,
-  ValidatorType,
-  Widget,
-  WidgetProps,
-} from './types';
-
-export type {
-  ArrayFieldTemplateItemType,
-  ArrayFieldTemplateProps,
-  CustomValidator,
-  DateObject,
-  DescriptionFieldProps,
-  ErrorListProps,
-  ErrorSchema,
-  ErrorTransformer,
-  Field,
-  FieldError,
-  FieldErrors,
-  FieldId,
-  FieldPath,
-  FieldProps,
-  FieldTemplateProps,
-  FieldValidation,
-  FormValidation,
-  GenericObjectType,
-  IChangeEvent,
-  IdSchema,
-  ObjectFieldTemplatePropertyType,
-  ObjectFieldTemplateProps,
-  PathSchema,
-  RangeSpecType,
-  Registry,
-  RegistryFieldsType,
-  RegistryWidgetsType,
-  RJSFSchema,
-  RJSFValidationError,
-  TitleFieldProps,
-  UiSchema,
-  UIOptionsType,
-  UISchemaSubmitButtonOptions,
-  ValidationData,
-  ValidatorType,
-  Widget,
-  WidgetProps,
-};
+export * from './types';
 
 export * from './constants';
+export * from './schema';
 
 export {
   allowAdditionalItems,
   asNumber,
   canExpand,
+  createSchemaUtils,
   dataURItoBlob,
   deepEquals,
   findSchemaDefinition,

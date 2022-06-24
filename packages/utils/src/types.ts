@@ -5,8 +5,14 @@ export type GenericObjectType = {
   [name: string]: any;
 };
 
+/** Map the JSONSchema7 to our own type so that we can easily bump to JSONSchema8 at some future date and only have to
+ * update this one type.
+ */
 export type RJSFSchema = JSONSchema7;
 
+/** Map the JSONSchema7Definition to our own type so that we can easily bump to JSONSchema8Definition at some future
+ * date and only have to update this one type.
+ */
 export type RJSFSchemaDefinition = JSONSchema7Definition;
 
 export interface DateObject {
@@ -29,7 +35,7 @@ export type FieldId = {
 };
 
 export type IdSchema<T = any> = FieldId & {
-  [key in keyof T]: IdSchema<T[key]>;
+  [key in keyof T]?: IdSchema<T[key]>;
 };
 
 export type FieldPath = {
@@ -37,7 +43,7 @@ export type FieldPath = {
 };
 
 export type PathSchema<T = any> = FieldPath & {
-  [key in keyof T]: PathSchema<T[key]>;
+  [key in keyof T]?: PathSchema<T[key]>;
 };
 
 export type RJSFValidationError = {
@@ -45,6 +51,7 @@ export type RJSFValidationError = {
   name?: string;
   params?: any;
   property?: string;
+  schemaPath?: string;
   stack: string;
 };
 
@@ -55,20 +62,19 @@ export type FieldErrors = {
 }
 
 export type ErrorSchema<T = any> = FieldErrors & {
-  [key in keyof T]: ErrorSchema<T[key]>;
+  [key in keyof T]?: ErrorSchema<T[key]>;
 };
 
-export type FieldValidation = {
-  __errors: FieldError[];
+export type FieldValidation = FieldErrors & {
   addError: (message: string) => void;
 };
 
 export type FormValidation<T = any> = FieldValidation & {
-  [key in keyof T]: FormValidation<T[key]>;
+  [key in keyof T]?: FormValidation<T[key]>;
 };
 
 export type ErrorListProps<T = any, F = any> = {
-  errorSchema: FormValidation;
+  errorSchema: FormValidation<T>;
   errors: RJSFValidationError[];
   formContext: F;
   schema: RJSFSchema;
@@ -89,13 +95,14 @@ export interface Registry<T = any, F = any> {
   definitions: GenericObjectType;
   formContext: F;
   rootSchema: RJSFSchema;
+  schemaUtils: SchemaUtilsType<T>;
 }
 
 export interface IChangeEvent<T = any, F = any> {
   edit: boolean;
   formData: T;
   errors: RJSFValidationError[];
-  errorSchema: FormValidation;
+  errorSchema: FormValidation<T>;
   idSchema: IdSchema;
   schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
@@ -111,8 +118,8 @@ export interface FieldProps<T = any, F = any>
   uiSchema: UiSchema<T, F>;
   idSchema: IdSchema;
   formData: T;
-  errorSchema: ErrorSchema;
-  onChange: (e: IChangeEvent<T, F> | any, es?: ErrorSchema) => any;
+  errorSchema: ErrorSchema<T>;
+  onChange: (e: IChangeEvent<T, F> | any, es?: ErrorSchema<T>) => any;
   onBlur: (id: string, value: any) => void;
   onFocus: (id: string, value: any) => void;
   formContext: F;
@@ -253,9 +260,9 @@ export interface WidgetProps<T = any, F = any>
 export type Widget<T = any, F = any> = React.FunctionComponent<WidgetProps<T, F>> | React.ComponentClass<WidgetProps<T, F>>;
 
 export type UISchemaSubmitButtonOptions = {
-  submitText: string;
-  norender: boolean;
-  props: GenericObjectType & {
+  submitText?: string;
+  norender?: boolean;
+  props?: GenericObjectType & {
     disabled?: boolean;
     className?: string;
   };
@@ -276,19 +283,32 @@ export type UiSchema<T = any, F = any> = GenericObjectType & {
   'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
 };
 
-export type CustomValidator<T = any> = (formData: T, errors: FormValidation) => FormValidation;
+export type CustomValidator<T = any> = (formData: T, errors: FormValidation<T>) => FormValidation<T>;
 
 export type ErrorTransformer = (errors: RJSFValidationError[]) => RJSFValidationError[];
 
-export type ValidationData = { errors: RJSFValidationError[]; errorSchema: ErrorSchema };
+export type ValidationData<T> = { errors: RJSFValidationError[]; errorSchema: ErrorSchema<T> };
 
 export interface ValidatorType<T = any> {
-  validateFormData: (
+  validateFormData(
     formData: T,
     schema: RJSFSchema,
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer,
-  ) => ValidationData;
-  toErrorList: (errorSchema?: ErrorSchema, fieldName?: string) => RJSFValidationError[];
-  isValid: (schema: RJSFSchema, formData: T, rootSchema: RJSFSchema) => boolean;
+  ): ValidationData<T>;
+  toErrorList(errorSchema?: ErrorSchema<T>, fieldName?: string): RJSFValidationError[];
+  isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema): boolean;
+}
+
+export interface SchemaUtilsType<T = any> {
+  getDefaultFormState(schema: RJSFSchema, formData?: T, includeUndefinedValues?: boolean): T | T[] | undefined;
+  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>): boolean;
+  getMatchingOption(formData: T, options: RJSFSchema[]): number;
+  isFilesArray<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>): boolean;
+  isMultiSelect(schema: RJSFSchema): boolean;
+  isSelect(schema: RJSFSchema): boolean;
+  retrieveSchema(schema: RJSFSchema, formData: T): RJSFSchema;
+  stubExistingAdditionalProperties(schema: RJSFSchema, formData: T): RJSFSchema;
+  toIdSchema(schema: RJSFSchema, id?: string, formData?: T, idPrefix?: string, idSeparator?: string): IdSchema<T>;
+  toPathSchema(schema: RJSFSchema, name?: string, formData?: T): PathSchema<T>;
 }
