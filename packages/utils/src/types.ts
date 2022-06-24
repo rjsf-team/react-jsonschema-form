@@ -35,7 +35,7 @@ export type FieldId = {
 };
 
 export type IdSchema<T = any> = FieldId & {
-  [key in keyof T]: IdSchema<T[key]>;
+  [key in keyof T]?: IdSchema<T[key]>;
 };
 
 export type FieldPath = {
@@ -43,7 +43,7 @@ export type FieldPath = {
 };
 
 export type PathSchema<T = any> = FieldPath & {
-  [key in keyof T]: PathSchema<T[key]>;
+  [key in keyof T]?: PathSchema<T[key]>;
 };
 
 export type RJSFValidationError = {
@@ -309,6 +309,6 @@ export interface SchemaUtilsType<T = any> {
   isSelect(schema: RJSFSchema): boolean;
   retrieveSchema(schema: RJSFSchema, formData: T): RJSFSchema;
   stubExistingAdditionalProperties(schema: RJSFSchema, formData: T): RJSFSchema;
-  toIdSchema(schema: RJSFSchema, id?: string, formData?: T, idPrefix?: string, idSeparator?: string): IdSchema;
-  toPathSchema(schema: RJSFSchema, name?: string, formData?: T): PathSchema;
+  toIdSchema(schema: RJSFSchema, id?: string, formData?: T, idPrefix?: string, idSeparator?: string): IdSchema<T>;
+  toPathSchema(schema: RJSFSchema, name?: string, formData?: T): PathSchema<T>;
 }

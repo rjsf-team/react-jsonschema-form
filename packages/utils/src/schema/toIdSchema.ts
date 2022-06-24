@@ -30,7 +30,7 @@ export default function toIdSchema<T>(
   formData?: T,
   idPrefix = 'root',
   idSeparator = '_'
-): IdSchema {
+): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T>(validator, schema, rootSchema, formData);
     return toIdSchema<T>(validator, _schema, id, rootSchema, formData, idPrefix, idSeparator);
@@ -47,7 +47,7 @@ export default function toIdSchema<T>(
     );
   }
   const $id = id || idPrefix;
-  const idSchema: IdSchema = { $id } as IdSchema;
+  const idSchema: IdSchema = { $id } as IdSchema<T>;
   if (schema.type === 'object' && PROPERTIES_KEY in schema) {
     for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, name]);
@@ -65,5 +65,5 @@ export default function toIdSchema<T>(
       );
     }
   }
-  return idSchema;
+  return idSchema as IdSchema<T>;
 }

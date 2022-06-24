@@ -1,4 +1,4 @@
-import { RJSFSchema, SchemaUtilsType, UiSchema, ValidatorType } from './types';
+import { IdSchema, PathSchema, RJSFSchema, SchemaUtilsType, UiSchema, ValidatorType } from './types';
 import {
   getDefaultFormState,
   getDisplayLabel,
@@ -123,7 +123,9 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param [idSeparator='_'] - The separator to use for the path segments in the id
    * @returns - The `IdSchema` object for the `schema`
    */
-  toIdSchema(schema: RJSFSchema, id?: string | null, formData?: T, idPrefix = 'root', idSeparator = '_') {
+  toIdSchema(
+    schema: RJSFSchema, id?: string | null, formData?: T, idPrefix = 'root', idSeparator = '_'
+  ): IdSchema<T> {
     return toIdSchema<T>(this.validator, schema, id, this.rootSchema, formData, idPrefix, idSeparator);
   }
 
@@ -134,7 +136,7 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
    * @returns - The `PathSchema` object for the `schema`
    */
-  toPathSchema(schema: RJSFSchema, name?: string, formData?: T) {
+  toPathSchema(schema: RJSFSchema, name?: string, formData?: T): PathSchema<T> {
     return toPathSchema<T>(this.validator, schema, name, this.rootSchema, formData);
   }
 }

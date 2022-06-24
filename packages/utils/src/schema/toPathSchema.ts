@@ -27,7 +27,7 @@ export default function toPathSchema<T = any>(
   name = '',
   rootSchema?: RJSFSchema,
   formData?: T
-): PathSchema {
+): PathSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T>(validator, schema, rootSchema, formData);
     return toPathSchema<T>(validator, _schema, name, rootSchema, formData);
@@ -65,5 +65,5 @@ export default function toPathSchema<T = any>(
       );
     }
   }
-  return pathSchema;
+  return pathSchema as PathSchema<T>;
 }
