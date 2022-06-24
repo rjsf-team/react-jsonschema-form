@@ -72,9 +72,9 @@ declare module '@rjsf/core' {
     }
 
     export type UISchemaSubmitButtonOptions = {
-      submitText: string;
-      norender: boolean;
-      props: {
+      submitText?: string;
+      norender?: boolean;
+      props?: {
         disabled?:boolean;
         className?:string;
         [name: string]: any;
