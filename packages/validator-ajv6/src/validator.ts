@@ -41,22 +41,6 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     this.ajv = createAjvInstance(additionalMetaSchemas, customFormats);
   }
 
-  /** Creates an RJSFValidationError from a `stack` string
-   *
-   * @param stack - The stack trace string
-   * @protected
-   */
-  protected stackToRJSFValidationError(stack: string): RJSFValidationError {
-    return {
-      message: '',
-      name: '',
-      params: undefined,
-      property: '',
-      schemaPath: undefined,
-      stack,
-    };
-  }
-
   /** Transforms a ajv validation errors list:
    * [
    *   {property: '.level1.level2[2].level3', message: 'err a'},
@@ -125,7 +109,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     let errorList: RJSFValidationError[] = [];
     if (ERRORS_KEY in errorSchema) {
       errorList = errorList.concat(
-        errorSchema.__errors!.map((stack: string) => this.stackToRJSFValidationError(`${fieldName}: ${stack}`))
+        errorSchema.__errors!.map((stack: string) => ({ stack: `${fieldName}: ${stack}` }))
       );
     }
     return Object.keys(errorSchema).reduce((acc, key) => {
@@ -249,7 +233,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     if (noProperMetaSchema) {
       errors = [
         ...errors,
-        this.stackToRJSFValidationError(validationError!.message),
+        { stack: validationError!.message },
       ];
     }
     if (typeof transformErrors === 'function') {

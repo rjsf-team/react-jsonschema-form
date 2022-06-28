@@ -6,9 +6,6 @@ class TestValidator extends AJV6Validator {
   withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
     return super.withIdRefPrefix(schemaNode);
   }
-  stackToRJSFValidationError(stack: string) {
-    return super.stackToRJSFValidationError(stack);
-  }
 }
 
 const illFormedKey = 'bar.`\'[]()=+*&^%$#@!';
@@ -120,11 +117,11 @@ describe('AJV6Validator', () => {
           } as ErrorSchema,
         } as unknown as ErrorSchema;
         expect(validator.toErrorList(errorSchema)).toEqual([
-          validator.stackToRJSFValidationError('root: err1'),
-          validator.stackToRJSFValidationError('root: err2'),
-          validator.stackToRJSFValidationError('b: err3'),
-          validator.stackToRJSFValidationError('b: err4'),
-          validator.stackToRJSFValidationError('c: err5'),
+          { stack: 'root: err1' },
+          { stack: 'root: err2' },
+          { stack: 'b: err3' },
+          { stack: 'b: err4' },
+          { stack: 'c: err5' },
         ]);
       });
     });
@@ -375,7 +372,7 @@ describe('AJV6Validator', () => {
       const errMessage =
         'no schema with key or ref "http://json-schema.org/draft-04/schema#"';
       expect(errors.errors).toEqual([
-        validator.stackToRJSFValidationError(errMessage),
+        { stack: errMessage },
       ]);
       expect(errors.errorSchema).toEqual({
         $schema: { __errors: [errMessage] },
