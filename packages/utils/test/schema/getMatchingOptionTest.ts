@@ -35,7 +35,7 @@ export default function getMatchingOptionTest(testValidator: TestValidatorType) 
     });
     it('should infer correct anyOf schema with properties also having anyOf/allOf', () => {
       // Mock isValid to iterate through both options by failing the first
-      testValidator.setReturnValues({ isValid: [false] });
+      testValidator.setReturnValues({ isValid: [false, false] });
       const options: RJSFSchema[] = [
         {
           type: 'object',
@@ -52,17 +52,17 @@ export default function getMatchingOptionTest(testValidator: TestValidatorType) 
           allOf: [{ type: 'string' }],
         },
       ];
-      expect(getMatchingOption(testValidator, null, options, rootSchema)).toEqual(1);
+      expect(getMatchingOption(testValidator, null, options, rootSchema)).toEqual(0);
     });
     it('returns 0 if no options match', () => {
       // Mock isValid fail all the tests to trigger the fall-through
-      testValidator.setReturnValues({ isValid: [false, false, false] });
+      testValidator.setReturnValues({ isValid: [false, false, true] });
       const options: RJSFSchema[] = [
         { type: 'string' },
         { type: 'string' },
         { type: 'null' },
       ];
-      expect(getMatchingOption(testValidator, null, options, rootSchema)).toEqual(0);
+      expect(getMatchingOption(testValidator, null, options, rootSchema)).toEqual(2);
     });
     it('should infer correct anyOf schema based on data if passing null and option 2 is {type: null}', () => {
       // Mock isValid fail the first two, non-null values
