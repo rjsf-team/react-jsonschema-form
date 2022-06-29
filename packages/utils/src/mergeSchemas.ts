@@ -2,7 +2,7 @@ import union from 'lodash/union';
 
 import getSchemaType from './getSchemaType';
 import isObject from './isObject';
-import { GenericObjectType } from 'types';
+import { GenericObjectType } from './types';
 
 /** Recursively merge deeply nested schemas. The difference between mergeSchemas and mergeObjects is that mergeSchemas
  * only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values.

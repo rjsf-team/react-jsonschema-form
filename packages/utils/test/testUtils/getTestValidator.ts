@@ -1,18 +1,9 @@
 import isEmpty from 'lodash/isEmpty';
 
-import { ValidationData, ValidatorType } from '../../src';
+import { ValidationData } from '../../src';
+import { TestValidatorParams, TestValidatorType } from '../schema/types';
 
-export interface TestValidatorParams<T = any> {
-  isValid?: boolean[];
-  data?: ValidationData<T>[];
-}
-
-export interface TestValidatorType extends ValidatorType {
-  // eslint-disable-next-line no-unused-vars
-  setReturnValues(params?: TestValidatorParams): void;
-}
-
-export default function createTestValidator<T = any>(
+export default function getTestValidator<T = any>(
   { isValid = [], data = [] }: TestValidatorParams
 ): TestValidatorType  {
   const testValidator: { _data: ValidationData<T>[], _isValid: boolean[], validator: TestValidatorType } = {
