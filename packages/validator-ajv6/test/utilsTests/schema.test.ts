@@ -1,5 +1,4 @@
-import getTestValidator from './getTestValidator';
-// YES, this is ugly and breaks the "lerna wall" but it works
+// With Lerna active, the test world has access to the test suite via the symlink
 import {
   getDefaultFormStateTest,
   getDisplayLabelTest,
@@ -9,8 +8,10 @@ import {
   isSelectTest,
   retrieveSchemaTest,
   stubExistingAdditionalPropertiesTest,
-  toIdSchemaTest, toPathSchemaTest
-} from '../../../utils/test/schema';
+  toIdSchemaTest,
+  toPathSchemaTest
+} from '@rjsf/utils/test/schema';
+import getTestValidator from './getTestValidator';
 
 const testValidator = getTestValidator({});
 

@@ -6,9 +6,9 @@ import {
   RJSFValidationError,
   ValidationData
 } from '@rjsf/utils';
+// With Lerna active, the test world has access to the test suite via the symlink
+import { TestValidatorType } from '@rjsf/utils/test/schema';
 import { customizeValidator, CustomValidatorOptionsType } from '../../src';
-// YES, this is ugly and breaks the "lerna wall" but it works
-import { TestValidatorType } from '../../../utils/test/schema';
 
 export default function getTestValidator<T = any>(options: CustomValidatorOptionsType): TestValidatorType {
   const validator = customizeValidator<T>(options);
