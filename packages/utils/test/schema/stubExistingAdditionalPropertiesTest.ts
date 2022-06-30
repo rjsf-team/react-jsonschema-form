@@ -17,7 +17,30 @@ export default function stubExistingAdditionalPropertiesTest(testValidator: Test
         properties: {}
       });
     });
-    it('has property keys that match formData, additonalProperties is boolean', () => {
+    it('has property keys that match formData, additionalProperties is boolean', () => {
+      const schema: RJSFSchema = {
+        additionalProperties: true,
+      };
+      const formData = { bar: 1, baz: false, foo: 'str' };
+      expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        ...schema,
+        properties: {
+          bar: {
+            type: 'number',
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+          baz: {
+            type: 'boolean',
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+          foo: {
+            type: 'string',
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          }
+        }
+      });
+    });
+    it('has property keys that match schema AND formData, additionalProperties is boolean', () => {
       const schema: RJSFSchema = {
         properties: {
           foo: { type: 'string' },
@@ -31,6 +54,7 @@ export default function stubExistingAdditionalPropertiesTest(testValidator: Test
         properties: {
           ...schema.properties,
           baz: {
+            type: 'boolean',
             [ADDITIONAL_PROPERTY_FLAG]: true,
           }
         }

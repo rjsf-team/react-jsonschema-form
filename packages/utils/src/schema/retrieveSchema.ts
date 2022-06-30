@@ -58,14 +58,14 @@ export function resolveCondition<T = any>(
 export function resolveSchema<T = any>(
   validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, formData?: T
 ): RJSFSchema {
-  if (schema.hasOwnProperty(REF_KEY)) {
+  if (REF_KEY in schema) {
     return resolveReference<T>(validator, schema, rootSchema, formData);
   }
-  if (schema.hasOwnProperty(DEPENDENCIES_KEY)) {
+  if (DEPENDENCIES_KEY in schema) {
     const resolvedSchema = resolveDependencies<T>(validator, schema, rootSchema, formData);
     return retrieveSchema<T>(validator, resolvedSchema, rootSchema, formData);
   }
-  if (schema.hasOwnProperty(ALL_OF_KEY)) {
+  if (ALL_OF_KEY in schema) {
     return {
       ...schema,
       allOf: schema.allOf!.map((allOfSubschema) =>
@@ -119,7 +119,7 @@ export default function retrieveSchema<T = any>(
   }
   let resolvedSchema = resolveSchema<T>(validator, schema, rootSchema, rawFormData);
 
-  if (schema.hasOwnProperty('if')) {
+  if ('if' in schema) {
     return resolveCondition<T>(validator, schema, rootSchema, rawFormData as T);
   }
 
@@ -165,7 +165,7 @@ export default function retrieveSchema<T = any>(
     }
   }
   const hasAdditionalProperties =
-    resolvedSchema.hasOwnProperty(ADDITIONAL_PROPERTIES_KEY) &&
+    ADDITIONAL_PROPERTIES_KEY in resolvedSchema &&
     resolvedSchema.additionalProperties !== false;
   if (hasAdditionalProperties) {
     return stubExistingAdditionalProperties<T>(
@@ -309,7 +309,7 @@ export function withDependentSchema<T>(
   }
   // Resolve $refs inside oneOf.
   const resolvedOneOf = oneOf.map((subschema) => {
-    if (typeof subschema === 'boolean' || !subschema.hasOwnProperty(REF_KEY)) {
+    if (typeof subschema === 'boolean' || !(REF_KEY in subschema)) {
       return subschema;
     }
     return resolveReference<T>(validator, subschema as RJSFSchema, rootSchema, formData);

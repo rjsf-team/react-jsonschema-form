@@ -12,7 +12,7 @@ export default function mergeObjects(obj1: GenericObjectType, obj2: GenericObjec
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1 ? obj1[key] : {},
       right = obj2[key];
-    if (obj1 && obj1.hasOwnProperty(key) && isObject(right)) {
+    if (obj1 && key in obj1 && isObject(right)) {
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
       acc[key] = left.concat(right);

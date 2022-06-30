@@ -29,29 +29,30 @@ export default function stubExistingAdditionalProperties<T = any>(
 
   // make sure formData is an object
   const formData: GenericObjectType = aFormData && isObject(aFormData) ? aFormData : {};
-
   Object.keys(formData).forEach((key) => {
-    if (schema.properties.hasOwnProperty(key)) {
+    if (key in schema.properties) {
       // No need to stub, our schema already has the property
       return;
     }
 
     let additionalProperties: RJSFSchema = {};
-    if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
-      if (schema.additionalProperties.hasOwnProperty(REF_KEY)) {
+    if (typeof schema.additionalProperties !== 'boolean') {
+      if (REF_KEY in schema.additionalProperties!) {
         additionalProperties = retrieveSchema<T>(
           validator,
           { $ref: get(schema.additionalProperties, [REF_KEY]) },
           rootSchema,
           formData as T
         );
-      } else if (schema.additionalProperties.hasOwnProperty('type')) {
+      } else if ('type' in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
       } else {
         additionalProperties = { type: guessType(get(formData, [key])) };
       }
+    } else {
+      additionalProperties = { type: guessType(get(formData, [key])) };
     }
-
+    console.log({ key, additionalProperties })
     // The type of our new key should match the additionalProperties value;
     schema.properties[key] = additionalProperties;
     // Set our additional property flag so we know it was dynamically added
