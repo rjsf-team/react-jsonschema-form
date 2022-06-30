@@ -210,7 +210,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
   ): ValidationData<T> {
     // Include form data with undefined values, which is required for validation.
     const rootSchema = schema;
-    const newFormData = getDefaultFormState(this, schema, formData, rootSchema, true);
+    const newFormData = getDefaultFormState(this, schema, formData, rootSchema, true) as T;
 
     let validationError: Error | null = null;
     try {
@@ -257,7 +257,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       return { errors, errorSchema };
     }
 
-    const errorHandler = customValidate(formData, this.createErrorHandler(formData));
+    const errorHandler = customValidate(newFormData, this.createErrorHandler(newFormData));
     const userErrorSchema = this.unwrapErrorHandler(errorHandler);
     const newErrorSchema: ErrorSchema<T> = mergeObjects(errorSchema, userErrorSchema, true) as ErrorSchema<T>;
     // XXX: The errors list produced is not fully compliant with the format

@@ -247,36 +247,66 @@ describe('AJV6Validator', () => {
       describe('Custom validate function', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
+        describe('formData is provided', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              required: ['pass1', 'pass2'],
+              properties: {
+                pass1: { type: 'string' },
+                pass2: { type: 'string' },
+                foo: { type: 'array', items: { type: 'string' } } // Adding an array for test coverage
+              },
+            };
 
-        beforeAll(() => {
-          const schema: RJSFSchema = {
-            type: 'object',
-            required: ['pass1', 'pass2'],
-            properties: {
-              pass1: { type: 'string' },
-              pass2: { type: 'string' },
-              foo: { type: 'array', items: { type: 'string' } } // Adding an array for test coverage
-            },
-          };
-
-          const validate = (formData: any, errors: FormValidation<any>) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          };
-          const formData = { pass1: 'a', pass2: 'b', foo: ['a'] };
-          const result = validator.validateFormData(formData, schema, validate);
-          errors = result.errors;
-          errorSchema = result.errorSchema;
+            const validate = (formData: any, errors: FormValidation<any>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2!.addError('passwords don`t match.');
+              }
+              return errors;
+            };
+            const formData = { pass1: 'a', pass2: 'b', foo: ['a'] };
+            const result = validator.validateFormData(formData, schema, validate);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(1);
+            expect(errors[0].stack).toEqual('pass2: passwords don`t match.');
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.pass2!.__errors).toHaveLength(1);
+            expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
+          });
         });
-        it('should return an error list', () => {
-          expect(errors).toHaveLength(1);
-          expect(errors[0].stack).toEqual('pass2: passwords don`t match.');
-        });
-        it('should return an errorSchema', () => {
-          expect(errorSchema.pass2!.__errors).toHaveLength(1);
-          expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
+        describe('formData is missing data', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                pass1: { type: 'string' },
+                pass2: { type: 'string' },
+              },
+            };
+            const validate = (formData: any, errors: FormValidation<any>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2!.addError('passwords don`t match.');
+              }
+              return errors;
+            };
+            const formData = { pass1: 'a' };
+            const result = validator.validateFormData(formData, schema, validate);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(1);
+            expect(errors[0].stack).toEqual('pass2: passwords don`t match.');
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.pass2!.__errors).toHaveLength(1);
+            expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
+          });
         });
       });
       describe('Data-Url validation', () => {
