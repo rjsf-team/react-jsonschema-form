@@ -7,7 +7,6 @@ import {
   isMultiSelectTest,
   isSelectTest,
   retrieveSchemaTest,
-  stubExistingAdditionalPropertiesTest,
   toIdSchemaTest,
   toPathSchemaTest
 } from '@rjsf/utils/test/schema';
@@ -22,6 +21,5 @@ isFilesArrayTest(testValidator);
 isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
 retrieveSchemaTest(testValidator);
-stubExistingAdditionalPropertiesTest(testValidator);
 toIdSchemaTest(testValidator);
 toPathSchemaTest(testValidator);
