@@ -52,7 +52,7 @@ export default function stubExistingAdditionalProperties<T = any>(
     } else {
       additionalProperties = { type: guessType(get(formData, [key])) };
     }
-    console.log({ key, additionalProperties })
+
     // The type of our new key should match the additionalProperties value;
     schema.properties[key] = additionalProperties;
     // Set our additional property flag so we know it was dynamically added
