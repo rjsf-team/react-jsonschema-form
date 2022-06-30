@@ -7,7 +7,6 @@ import {
   isMultiSelectTest,
   isSelectTest,
   retrieveSchemaTest,
-  stubExistingAdditionalPropertiesTest,
   toIdSchemaTest,
   toPathSchemaTest,
 } from './schema';
@@ -21,6 +20,5 @@ isFilesArrayTest(testValidator);
 isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
 retrieveSchemaTest(testValidator);
-stubExistingAdditionalPropertiesTest(testValidator);
 toIdSchemaTest(testValidator);
 toPathSchemaTest(testValidator);

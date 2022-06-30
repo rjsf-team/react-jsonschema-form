@@ -5,7 +5,6 @@ import isFilesArrayTest from './isFilesArrayTest';
 import isMultiSelectTest from './isMultiSelectTest';
 import isSelectTest from './isSelectTest';
 import retrieveSchemaTest from './retrieveSchemaTest';
-import stubExistingAdditionalPropertiesTest from './stubExistingAdditionalPropertiesTest';
 import toIdSchemaTest from './toIdSchemaTest';
 import toPathSchemaTest from './toPathSchemaTest';
 
@@ -19,7 +18,6 @@ export {
   isMultiSelectTest,
   isSelectTest,
   retrieveSchemaTest,
-  stubExistingAdditionalPropertiesTest,
   toIdSchemaTest,
   toPathSchemaTest
 };

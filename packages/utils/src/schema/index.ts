@@ -5,7 +5,6 @@ import isFilesArray from './isFilesArray';
 import isMultiSelect from './isMultiSelect';
 import isSelect from './isSelect';
 import retrieveSchema from './retrieveSchema';
-import stubExistingAdditionalProperties from './stubExistingAdditionalProperties';
 import toIdSchema from './toIdSchema';
 import toPathSchema from './toPathSchema';
 
@@ -17,7 +16,6 @@ export {
   isMultiSelect,
   isSelect,
   retrieveSchema,
-  stubExistingAdditionalProperties,
   toIdSchema,
   toPathSchema,
 };
