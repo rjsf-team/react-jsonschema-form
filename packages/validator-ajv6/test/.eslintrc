@@ -1,0 +1,16 @@
+{
+  "env": {
+    "jest": true
+  },
+  "globals": {
+    "expect": true
+  },
+  "rules": {
+    "no-unused-vars": [
+      2,
+      {
+        "varsIgnorePattern": "^d$"
+      }
+    ]
+  }
+}
