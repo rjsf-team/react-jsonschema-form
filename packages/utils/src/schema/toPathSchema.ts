@@ -37,11 +37,11 @@ export default function toPathSchema<T = any>(
     $name: name.replace(/^\./, ''),
   } as PathSchema;
 
-  if (schema.hasOwnProperty(ADDITIONAL_PROPERTIES_KEY)) {
+  if (ADDITIONAL_PROPERTIES_KEY in schema) {
     set(pathSchema, '__rjsf_additionalProperties', true);
   }
 
-  if (schema.hasOwnProperty(ITEMS_KEY) && Array.isArray(formData)) {
+  if (ITEMS_KEY in schema && Array.isArray(formData)) {
     formData.forEach((element, i: number) => {
       pathSchema[i] = toPathSchema<T>(
         validator,
@@ -51,7 +51,7 @@ export default function toPathSchema<T = any>(
         element
       );
     });
-  } else if (schema.hasOwnProperty(PROPERTIES_KEY)) {
+  } else if (PROPERTIES_KEY in schema) {
     for (const property in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, property]);
       pathSchema[property] = toPathSchema<T>(

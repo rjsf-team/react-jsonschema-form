@@ -308,7 +308,6 @@ export interface SchemaUtilsType<T = any> {
   isMultiSelect(schema: RJSFSchema): boolean;
   isSelect(schema: RJSFSchema): boolean;
   retrieveSchema(schema: RJSFSchema, formData: T): RJSFSchema;
-  stubExistingAdditionalProperties(schema: RJSFSchema, formData: T): RJSFSchema;
   toIdSchema(schema: RJSFSchema, id?: string, formData?: T, idPrefix?: string, idSeparator?: string): IdSchema<T>;
   toPathSchema(schema: RJSFSchema, name?: string, formData?: T): PathSchema<T>;
 }

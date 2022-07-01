@@ -7,7 +7,6 @@ import {
   isMultiSelect,
   isSelect,
   retrieveSchema,
-  stubExistingAdditionalProperties,
   toIdSchema,
   toPathSchema,
 } from './schema';
@@ -102,16 +101,6 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    */
   retrieveSchema(schema: RJSFSchema, rawFormData: T) {
     return retrieveSchema<T>(this.validator, schema, this.rootSchema, rawFormData);
-  }
-
-  /** Creates new 'properties' items for each key in the `formData`
-   *
-   * @param schema - The schema for which the existing additional properties is desired
-   * @param [formData] - The current formData, if any, to assist retrieving a schema
-   * @returns - The updated schema with additional properties stubbed
-   */
-  stubExistingAdditionalProperties(schema: RJSFSchema, formData?: T) {
-    return stubExistingAdditionalProperties<T>(this.validator, schema, this.rootSchema, formData);
   }
 
   /** Generates an `IdSchema` object for the `schema`, recursively
