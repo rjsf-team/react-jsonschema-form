@@ -108,17 +108,17 @@ export default function getWidget<T = any, F = any>(
     throw new Error(`Unsupported widget definition: ${typeof widget}`);
   }
 
-  if (registeredWidgets.hasOwnProperty(widget)) {
+  if (widget in registeredWidgets) {
     const registeredWidget = registeredWidgets[widget];
     return getWidget<T, F>(schema, registeredWidget, registeredWidgets);
   }
 
   if (typeof type === 'string') {
-    if (!widgetMap.hasOwnProperty(type)) {
+    if (!(type in widgetMap)) {
       throw new Error(`No widget for type '${type}'`);
     }
 
-    if (widgetMap[type].hasOwnProperty(widget)) {
+    if (widget in widgetMap[type]) {
       const registeredWidget = registeredWidgets[widgetMap[type][widget]];
       return getWidget<T, F>(schema, registeredWidget, registeredWidgets);
     }
