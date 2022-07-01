@@ -24,7 +24,7 @@ export default function getTestValidator<T = any>(options: CustomValidatorOption
     isValid (schema: RJSFSchema, formData: T, rootSchema: RJSFSchema): boolean {
       return validator.isValid(schema, formData, rootSchema);
     },
-    setReturnValues() {
-    }
+    // This is intentionally a no-op as we are using the real validator here
+    setReturnValues() {},
   };
 }

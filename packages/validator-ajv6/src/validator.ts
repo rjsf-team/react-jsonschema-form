@@ -210,7 +210,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
   ): ValidationData<T> {
     // Include form data with undefined values, which is required for validation.
     const rootSchema = schema;
-    const newFormData = getDefaultFormState(this, schema, formData, rootSchema, true) as T;
+    const newFormData = getDefaultFormState<T>(this, schema, formData, rootSchema, true) as T;
 
     let validationError: Error | null = null;
     try {

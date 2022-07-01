@@ -1,7 +1,7 @@
 import Ajv, { Ajv as AjvType } from 'ajv';
 
 import createAjvInstance, { AJV_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from '../src/createAjvInstance';
-import { CustomValidatorOptionsType } from '../dist/types';
+import { CustomValidatorOptionsType } from '../src';
 
 jest.mock('ajv');
 
