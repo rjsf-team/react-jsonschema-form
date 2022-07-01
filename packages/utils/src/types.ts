@@ -74,9 +74,9 @@ export type FormValidation<T = any> = FieldValidation & {
 };
 
 export type ErrorListProps<T = any, F = any> = {
-  errorSchema: FormValidation<T>;
+  errorSchema: ErrorSchema<T>;
   errors: RJSFValidationError[];
-  formContext: F;
+  formContext?: F;
   schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
 };
@@ -92,17 +92,19 @@ export type RegistryWidgetsType<T = any, F = any> = {
 export interface Registry<T = any, F = any> {
   fields: RegistryFieldsType<T, F>;
   widgets: RegistryWidgetsType<T, F>;
-  definitions: GenericObjectType;
   formContext: F;
   rootSchema: RJSFSchema;
   schemaUtils: SchemaUtilsType<T>;
+  ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
+  ObjectFieldTemplate?: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
+  FieldTemplate?: React.ComponentType<FieldTemplateProps<T, F>>;
 }
 
 export interface IChangeEvent<T = any, F = any> {
   edit: boolean;
   formData: T;
   errors: RJSFValidationError[];
-  errorSchema: FormValidation<T>;
+  errorSchema: ErrorSchema<T>;
   idSchema: IdSchema;
   schema: RJSFSchema;
   uiSchema: UiSchema<T, F>;
@@ -115,48 +117,48 @@ export interface FieldProps<T = any, F = any>
     Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>
   > {
   schema: RJSFSchema;
-  uiSchema: UiSchema<T, F>;
+  uiSchema?: UiSchema<T, F>;
   idSchema: IdSchema;
   formData: T;
-  errorSchema: ErrorSchema<T>;
+  errorSchema?: ErrorSchema<T>;
   onChange: (e: IChangeEvent<T, F> | any, es?: ErrorSchema<T>) => any;
   onBlur: (id: string, value: any) => void;
   onFocus: (id: string, value: any) => void;
-  formContext: F;
-  autofocus: boolean;
+  formContext?: F;
+  autofocus?: boolean;
   disabled: boolean;
   readonly: boolean;
-  required: boolean;
+  required?: boolean;
   name: string;
   registry: Registry<T, F>;
 }
 
-export type Field<T = any, F = any> = React.FunctionComponent<FieldProps<T, F>> | React.ComponentClass<FieldProps<T, F>>;
+export type Field<T = any, F = any> = React.ComponentType<FieldProps<T, F>>;
 
 export type FieldTemplateProps<T = any, F = any> = {
-  id: string;
-  classNames: string;
-  label: string;
-  description: React.ReactElement;
-  rawDescription: string;
+  id?: string;
+  classNames?: string;
+  label?: string;
+  description?: React.ReactElement;
+  rawDescription?: string;
   children: React.ReactElement;
-  errors: React.ReactElement;
-  rawErrors: string[];
-  help: React.ReactElement;
-  rawHelp: string;
-  hidden: boolean;
-  required: boolean;
+  errors?: React.ReactElement;
+  rawErrors?: string[];
+  help?: React.ReactElement;
+  rawHelp?: string;
+  hidden?: boolean;
+  required?: boolean;
   readonly: boolean;
   disabled: boolean;
-  displayLabel: boolean;
+  displayLabel?: boolean;
   fields: Field<T, F>[];
   schema: RJSFSchema;
-  uiSchema: UiSchema<T, F>;
-  formContext: F;
+  uiSchema?: UiSchema<T, F>;
+  formContext?: F;
   formData: T;
   onChange: (value: T) => void;
-  onKeyChange: (value: string) => () => void;
-  onDropPropertyClick: (value: string) => () => void;
+  onKeyChange?: (value: string) => () => void;
+  onDropPropertyClick?: (value: string) => () => void;
   registry: Registry<T, F>;
 };
 
@@ -188,20 +190,20 @@ export type ArrayFieldTemplateItemType = {
 };
 
 export type ArrayFieldTemplateProps<T = any, F = any> = {
-  DescriptionField: React.FunctionComponent<DescriptionFieldProps>;
-  TitleField: React.FunctionComponent<TitleFieldProps>;
-  canAdd: boolean;
-  className: string;
-  disabled: boolean;
+  DescriptionField: React.ComponentType<DescriptionFieldProps>;
+  TitleField: React.ComponentType<TitleFieldProps>;
+  canAdd?: boolean;
+  className?: string;
+  disabled?: boolean;
   idSchema: IdSchema;
   items: ArrayFieldTemplateItemType[];
   onAddClick: (event?: any) => void;
-  readonly: boolean;
-  required: boolean;
+  readonly?: boolean;
+  required?: boolean;
   schema: RJSFSchema;
-  uiSchema: UiSchema<T, F>;
+  uiSchema?: UiSchema<T, F>;
   title: string;
-  formContext: F;
+  formContext?: F;
   formData: T;
   registry: Registry<T, F>;
 };
@@ -215,20 +217,20 @@ export type ObjectFieldTemplatePropertyType = {
 };
 
 export type ObjectFieldTemplateProps<T = any, F = any> = {
-  DescriptionField: React.FunctionComponent<DescriptionFieldProps>;
-  TitleField: React.FunctionComponent<TitleFieldProps>;
+  DescriptionField: React.ComponentType<DescriptionFieldProps>;
+  TitleField: React.ComponentType<TitleFieldProps>;
   title: string;
-  description: string;
-  disabled: boolean;
+  description?: string;
+  disabled?: boolean;
   properties: ObjectFieldTemplatePropertyType[];
   onAddClick: (schema: RJSFSchema) => () => void;
-  readonly: boolean;
-  required: boolean;
+  readonly?: boolean;
+  required?: boolean;
   schema: RJSFSchema;
-  uiSchema: UiSchema<T, F>;
+  uiSchema?: UiSchema<T, F>;
   idSchema: IdSchema;
   formData: T;
-  formContext: F;
+  formContext?: F;
   registry: Registry<T, F>;
 };
 
@@ -237,27 +239,27 @@ export interface WidgetProps<T = any, F = any>
     React.HTMLAttributes<HTMLElement>,
     Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>
   > {
-  id: string;
+  id?: string;
   schema: RJSFSchema;
-  uiSchema: UiSchema<T, F>;
+  uiSchema?: UiSchema<T, F>;
   value: any;
-  required: boolean;
-  disabled: boolean;
-  readonly: boolean;
-  autofocus: boolean;
-  placeholder: string;
+  required?: boolean;
+  disabled?: boolean;
+  readonly?: boolean;
+  autofocus?: boolean;
+  placeholder?: string;
   options: NonNullable<UIOptionsType>;
-  formContext: F;
+  formContext?: F;
   onBlur: (id: string, value: any) => void;
   onChange: (value: any) => void;
   onFocus: (id: string, value: any) => void;
-  label: string;
-  multiple: boolean;
-  rawErrors: string[];
+  label?: string;
+  multiple?: boolean;
+  rawErrors?: string[];
   registry: Registry<T, F>;
 }
 
-export type Widget<T = any, F = any> = React.FunctionComponent<WidgetProps<T, F>> | React.ComponentClass<WidgetProps<T, F>>;
+export type Widget<T = any, F = any> = React.ComponentType<WidgetProps<T, F>>;
 
 export type UISchemaSubmitButtonOptions = {
   submitText?: string;
@@ -277,9 +279,9 @@ export type UiSchema<T = any, F = any> = GenericObjectType & {
   'ui:widget'?: Widget<T, F> | string;
   'ui:options'?: UIOptionsType;
   'ui:order'?: string[];
-  'ui:FieldTemplate'?: React.FunctionComponent<FieldTemplateProps<T, F>>;
-  'ui:ArrayFieldTemplate'?: React.FunctionComponent<ArrayFieldTemplateProps<T, F>>;
-  'ui:ObjectFieldTemplate'?: React.FunctionComponent<ObjectFieldTemplateProps<T, F>>;
+  'ui:FieldTemplate'?: React.ComponentType<FieldTemplateProps<T, F>>;
+  'ui:ArrayFieldTemplate'?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
+  'ui:ObjectFieldTemplate'?: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
   'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
 };
 
@@ -301,6 +303,8 @@ export interface ValidatorType<T = any> {
 }
 
 export interface SchemaUtilsType<T = any> {
+  getValidator(): ValidatorType<T>;
+  doesSchemaUtilsDiffer(validator: ValidatorType, rootSchema: RJSFSchema): boolean;
   getDefaultFormState(schema: RJSFSchema, formData?: T, includeUndefinedValues?: boolean): T | T[] | undefined;
   getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>): boolean;
   getMatchingOption(formData: T, options: RJSFSchema[]): number;

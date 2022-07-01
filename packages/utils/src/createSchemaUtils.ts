@@ -1,3 +1,4 @@
+import deepEquals from './deepEquals';
 import { IdSchema, PathSchema, RJSFSchema, SchemaUtilsType, UiSchema, ValidatorType } from './types';
 import {
   getDefaultFormState,
@@ -28,6 +29,29 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
   constructor(validator: ValidatorType, rootSchema: RJSFSchema) {
     this.rootSchema = rootSchema;
     this.validator = validator;
+  }
+
+  /** Returns the `ValidatorType` in the `SchemaUtilsType`
+   *
+   * @returns - The `ValidatorType`
+   */
+  getValidator() {
+    return this.validator;
+  }
+
+  /** Determines whether either the `validator` and `rootSchema` differ from the ones associated with this instance of
+   * the `SchemaUtilsType`. If either `validator` or `rootSchema` are falsy, then return false to prevent the creation
+   * of a new `SchemaUtilsType` with incomplete properties.
+   *
+   * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
+   * @param rootSchema - The root schema that will be compared against the current one
+   * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
+   */
+  doesSchemaUtilsDiffer(validator: ValidatorType, rootSchema: RJSFSchema): boolean {
+    if (!validator || !rootSchema) {
+      return false;
+    }
+    return this.validator !== validator || !deepEquals(this.rootSchema, rootSchema);
   }
 
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
