@@ -24,9 +24,11 @@
   },
   "main": "dist/index.js",
   "module": "dist/core.esm.js",
+  "typings": "index.d.ts",
   "files": [
     "dist",
-    "lib"
+    "lib",
+    "index.d.ts"
   ],
   "engineStrict": false,
   "engines": {
