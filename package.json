@@ -34,7 +34,7 @@
     "ts-loader": "^8.4.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.4",
+    "typescript": "^4.6.4",
     "webpack": "^4.46.0"
   },
   "husky": {
