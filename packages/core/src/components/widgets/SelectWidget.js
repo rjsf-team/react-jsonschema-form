@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-
-import { asNumber, guessType } from "../../utils";
+import { asNumber, guessType } from "@rjsf/utils";
 
 const nums = new Set(["number", "integer"]);
 

@@ -2,8 +2,8 @@ import React from "react";
 import { expect } from "chai";
 import { act, Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
+import { parseDateString, toDateString, utcToLocal } from "@rjsf/utils";
 
-import { parseDateString, toDateString, utcToLocal } from "../src/utils";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("StringField", () => {

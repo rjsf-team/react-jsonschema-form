@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { shouldRender, parseDateString, toDateString, pad } from "../../utils";
+import { shouldRender, parseDateString, toDateString, pad } from "@rjsf/utils";
 
 function rangeOptions(start, stop) {
   let options = [];
@@ -63,7 +63,7 @@ class AltDateWidget extends Component {
     this.state = parseDateString(props.value, props.time);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (
       prevProps.value &&
       prevProps.value !== parseDateString(this.props.value, this.props.time)

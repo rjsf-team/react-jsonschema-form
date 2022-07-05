@@ -4,6 +4,7 @@ import React, { createRef } from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
 import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
+import validator, { customizeValidator } from "@rjsf/validator-ajv6";
 
 import Form from "../src";
 import {
@@ -40,7 +41,7 @@ describeRepeated("Form common", createFormComponent => {
     });
 
     it("should render children buttons", () => {
-      const props = { schema: {} };
+      const props = { schema: {}, validator };
       const comp = renderIntoDocument(
         <Form {...props}>
           <button type="submit">Submit</button>
@@ -53,6 +54,7 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should render errors if schema isn't object", () => {
       const props = {
+        validator,
         schema: {
           type: "object",
           title: "object",
@@ -88,7 +90,11 @@ describeRepeated("Form common", createFormComponent => {
 
     function createComponent() {
       renderIntoDocument(
-        <Form schema={schema} onChange={onChangeProp} formData={formData}>
+        <Form
+          schema={schema}
+          onChange={onChangeProp}
+          formData={formData}
+          validator={validator}>
           <button type="submit">Submit</button>
           <button type="submit">Another submit</button>
         </Form>
@@ -128,7 +134,9 @@ describeRepeated("Form common", createFormComponent => {
           edit: true,
           uiSchema: {},
           idSchema: { $id: "root", count: { $id: "root_count" } },
-          additionalMetaSchemas: undefined,
+          schemaValidationErrors: undefined,
+          schemaValidationErrorSchema: undefined,
+          schemaUtils: sinon.match.object,
         });
       });
     });
@@ -159,7 +167,9 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
-      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const comp = renderIntoDocument(
+        <Form schema={schema} idPrefix="rjsf" validator={validator} />
+      );
       const node = findDOMNode(comp);
       const inputs = node.querySelectorAll("input");
       const ids = [];
@@ -184,7 +194,9 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
-      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const comp = renderIntoDocument(
+        <Form schema={schema} idPrefix="rjsf" validator={validator} />
+      );
       const node = findDOMNode(comp);
       const inputs = node.querySelectorAll("input");
       const ids = [];
@@ -240,7 +252,9 @@ describeRepeated("Form common", createFormComponent => {
         },
       };
 
-      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const comp = renderIntoDocument(
+        <Form schema={schema} idPrefix="rjsf" validator={validator} />
+      );
       const node = findDOMNode(comp);
       const inputs = node.querySelectorAll("input");
       const ids = [];
@@ -264,7 +278,9 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
-      const comp = renderIntoDocument(<Form schema={schema} idSeparator="." />);
+      const comp = renderIntoDocument(
+        <Form schema={schema} idSeparator="." validator={validator} />
+      );
       const node = findDOMNode(comp);
       const inputs = node.querySelectorAll("input");
       const ids = [];
@@ -400,6 +416,7 @@ describeRepeated("Form common", createFormComponent => {
   describe("ui options submitButtonOptions", () => {
     it("should not render a submit button", () => {
       const props = {
+        validator,
         schema: {},
         uiSchema: { "ui:submitButtonOptions": { norender: true } },
       };
@@ -411,6 +428,7 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should render a submit button with text Confirm", () => {
       const props = {
+        validator,
         schema: {},
         uiSchema: { "ui:submitButtonOptions": { submitText: "Confirm" } },
       };
@@ -444,7 +462,7 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       const comp = render(
-        <Form onSubmit={onSubmit} schema={{}}>
+        <Form onSubmit={onSubmit} schema={{}} validator={validator}>
           <button type="submit" value="Submit button" />
           <button type="submit" value="Another submit button" />
         </Form>,
@@ -1094,7 +1112,6 @@ describeRepeated("Form common", createFormComponent => {
       it("should call onChange", () => {
         sinon.assert.calledOnce(onChangeProp);
         sinon.assert.calledWith(onChangeProp, {
-          additionalMetaSchemas: undefined,
           edit: true,
           errorSchema: {},
           errors: [],
@@ -1102,6 +1119,9 @@ describeRepeated("Form common", createFormComponent => {
           idSchema: { $id: "root" },
           schema: formProps.schema,
           uiSchema: {},
+          schemaValidationErrors: undefined,
+          schemaValidationErrorSchema: undefined,
+          schemaUtils: sinon.match.object,
         });
       });
     });
@@ -1195,6 +1215,7 @@ describeRepeated("Form common", createFormComponent => {
               onChange={this.onChange}
               schema={schema}
               formData={this.state.formData}
+              validator={validator}
             />
           );
         }
@@ -1628,8 +1649,6 @@ describeRepeated("Form common", createFormComponent => {
         sinon.assert.calledWithMatch(onSubmit.lastCall, {
           errors: [],
           errorSchema: {},
-          schemaValidationErrors: [],
-          schemaValidationErrorSchema: {},
         });
       });
 
@@ -2399,10 +2418,6 @@ describeRepeated("Form common", createFormComponent => {
       expect(node.getAttribute("action")).eql(formProps.action);
     });
 
-    it("should set attr autocomplete of form", () => {
-      expect(node.getAttribute("autocomplete")).eql(formProps.autoComplete);
-    });
-
     it("should set attr enctype of form", () => {
       expect(node.getAttribute("enctype")).eql(formProps.enctype);
     });
@@ -2413,40 +2428,6 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should set attr novalidate of form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
-    });
-  });
-
-  describe("Deprecated autocomplete attribute", () => {
-    it("should set attr autocomplete of form", () => {
-      const formProps = {
-        schema: {},
-        autocomplete: "off",
-      };
-      const node = createFormComponent(formProps).node;
-      expect(node.getAttribute("autocomplete")).eql(formProps.autocomplete);
-    });
-
-    it("should log deprecation warning when it is used", () => {
-      sandbox.stub(console, "warn");
-      createFormComponent({
-        schema: {},
-        autocomplete: "off",
-      });
-      expect(
-        console.warn.calledWithMatch(
-          /Using autocomplete property of Form is deprecated/
-        )
-      ).to.be.true;
-    });
-
-    it("should use autoComplete value if both autocomplete and autoComplete are used", () => {
-      const formProps = {
-        schema: {},
-        autocomplete: "off",
-        autoComplete: "on",
-      };
-      const node = createFormComponent(formProps).node;
-      expect(node.getAttribute("autocomplete")).eql(formProps.autoComplete);
     });
   });
 
@@ -2475,6 +2456,11 @@ describeRepeated("Form common", createFormComponent => {
           "area-code": () => <div id="custom" />,
         },
       };
+      const customValidator = customizeValidator({
+        customFormats: {
+          "area-code": /^\d{3}$/,
+        },
+      });
 
       const { comp, node, onError } = createFormComponent(formProps);
 
@@ -2484,9 +2470,7 @@ describeRepeated("Form common", createFormComponent => {
       setProps(comp, {
         ...formProps,
         onError,
-        customFormats: {
-          "area-code": /^\d{3}$/,
-        },
+        validator: customValidator,
       });
 
       submitForm(node);
@@ -2514,7 +2498,6 @@ describeRepeated("Form common", createFormComponent => {
           pattern: "d+",
         },
         formData: "short",
-        additionalMetaSchemas: [],
       };
 
       const { comp, node, onError } = createFormComponent(formProps);
@@ -2526,12 +2509,16 @@ describeRepeated("Form common", createFormComponent => {
         },
       ]);
 
-      setProps(comp, {
-        ...formProps,
-        onError,
+      const customValidator = customizeValidator({
         additionalMetaSchemas: [
           require("ajv/lib/refs/json-schema-draft-04.json"),
         ],
+      });
+
+      setProps(comp, {
+        ...formProps,
+        onError,
+        validator: customValidator,
       });
 
       submitForm(node);
@@ -2551,16 +2538,6 @@ describeRepeated("Form common", createFormComponent => {
           property: "",
           schemaPath: "#/pattern",
           stack: 'should match pattern "d+"',
-        },
-      ]);
-
-      setProps(comp, { ...formProps, onError });
-
-      submitForm(node);
-      sinon.assert.calledWithMatch(onError.lastCall, [
-        {
-          stack:
-            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
         },
       ]);
     });
@@ -2594,6 +2571,7 @@ describeRepeated("Form common", createFormComponent => {
 
         render() {
           const innerFormProps = {
+            validator,
             schema: {},
             onSubmit: innerOnSubmit,
           };

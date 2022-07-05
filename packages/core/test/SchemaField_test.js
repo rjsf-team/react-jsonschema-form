@@ -1,13 +1,15 @@
 import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
+import { createSchemaUtils } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv6";
 
 import SchemaField from "../src/components/fields/SchemaField";
 import TitleField from "../src/components/fields/TitleField";
 import DescriptionField from "../src/components/fields/DescriptionField";
 
 import { createFormComponent, createSandbox } from "./test_utils";
-import { getDefaultRegistry } from "../src/defaultRegistry";
+import getDefaultRegistry from "../src/getDefaultRegistry";
 
 describe("SchemaField", () => {
   let sandbox;
@@ -29,6 +31,8 @@ describe("SchemaField", () => {
           a: { type: "string" },
         },
       };
+      const schemaUtils = createSchemaUtils(validator, schema);
+
       createFormComponent({
         schema,
         uiSchema: {
@@ -41,41 +45,14 @@ describe("SchemaField", () => {
 
       const { registry } = receivedProps;
       expect(registry).eql({
-        widgets: getDefaultRegistry().widgets,
-        fields: getDefaultRegistry().fields,
-        definitions: schema.definitions,
+        widgets: getDefaultRegistry(schemaUtils).widgets,
+        fields: getDefaultRegistry(schemaUtils).fields,
         rootSchema: schema,
         ArrayFieldTemplate: undefined,
         FieldTemplate: undefined,
         ObjectFieldTemplate: undefined,
         formContext: {},
-      });
-    });
-    it("should set definitions to empty object if it is undefined", () => {
-      let receivedProps;
-      const schema = {
-        type: "object",
-      };
-      createFormComponent({
-        schema,
-        uiSchema: {
-          "ui:field": props => {
-            receivedProps = props;
-            return null;
-          },
-        },
-      });
-
-      const { registry } = receivedProps;
-      expect(registry).eql({
-        widgets: getDefaultRegistry().widgets,
-        fields: getDefaultRegistry().fields,
-        definitions: {},
-        rootSchema: schema,
-        ArrayFieldTemplate: undefined,
-        FieldTemplate: undefined,
-        ObjectFieldTemplate: undefined,
-        formContext: {},
+        schemaUtils,
       });
     });
   });

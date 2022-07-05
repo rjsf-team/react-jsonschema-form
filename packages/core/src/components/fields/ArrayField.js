@@ -1,23 +1,19 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
-import includes from "core-js-pure/es/array/includes";
-import * as types from "../../types";
-
+import includes from "lodash/includes";
 import {
   getWidget,
-  getDefaultFormState,
   getUiOptions,
-  isMultiSelect,
-  isFilesArray,
   isFixedItems,
   allowAdditionalItems,
   isCustomWidget,
   optionsList,
-  retrieveSchema,
-  toIdSchema,
-} from "../../utils";
+  ITEMS_KEY,
+} from "@rjsf/utils";
 import { nanoid } from "nanoid";
+
+import * as types from "../../types";
 
 function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
   if (!title) {
@@ -272,12 +268,12 @@ class ArrayField extends Component {
 
   _getNewFormDataRow = () => {
     const { schema, registry } = this.props;
-    const { rootSchema } = registry;
+    const { schemaUtils } = registry;
     let itemSchema = schema.items;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
       itemSchema = schema.additionalItems;
     }
-    return getDefaultFormState(itemSchema, undefined, rootSchema);
+    return schemaUtils.getDefaultFormState(itemSchema, undefined);
   };
 
   onAddClick = event => {
@@ -424,8 +420,8 @@ class ArrayField extends Component {
 
   render() {
     const { schema, uiSchema, idSchema, registry } = this.props;
-    const { rootSchema } = registry;
-    if (!schema.hasOwnProperty("items")) {
+    const { schemaUtils } = registry;
+    if (!(ITEMS_KEY in schema)) {
       const { fields } = registry;
       const { UnsupportedField } = fields;
 
@@ -437,7 +433,7 @@ class ArrayField extends Component {
         />
       );
     }
-    if (isMultiSelect(schema, rootSchema)) {
+    if (schemaUtils.isMultiSelect(schema)) {
       // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
       return this.renderMultiSelect();
     }
@@ -447,7 +443,7 @@ class ArrayField extends Component {
     if (isFixedItems(schema)) {
       return this.renderFixedArray();
     }
-    if (isFilesArray(schema, uiSchema, rootSchema)) {
+    if (schemaUtils.isFilesArray(schema, uiSchema)) {
       return this.renderFiles();
     }
     return this.renderNormalArray();
@@ -473,21 +469,20 @@ class ArrayField extends Component {
       rawErrors,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
-    const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
+    const { ArrayFieldTemplate, schemaUtils, fields, formContext } = registry;
     const { TitleField, DescriptionField } = fields;
-    const itemsSchema = retrieveSchema(schema.items, rootSchema);
+    const itemsSchema = schemaUtils.retrieveSchema(schema.items);
     const formData = keyedToPlainFormData(this.state.keyedFormData);
     const arrayProps = {
       canAdd: this.canAddItem(formData),
       items: this.state.keyedFormData.map((keyedItem, index) => {
         const { key, item } = keyedItem;
-        const itemSchema = retrieveSchema(schema.items, rootSchema, item);
+        const itemSchema = schemaUtils.retrieveSchema(schema.items, item);
         const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
         const itemIdPrefix = idSchema.$id + idSeparator + index;
-        const itemIdSchema = toIdSchema(
+        const itemIdSchema = schemaUtils.toIdSchema(
           itemSchema,
           itemIdPrefix,
-          rootSchema,
           item,
           idPrefix,
           idSeparator
@@ -601,8 +596,8 @@ class ArrayField extends Component {
       name,
     } = this.props;
     const items = this.props.formData;
-    const { widgets, rootSchema, formContext } = registry;
-    const itemsSchema = retrieveSchema(schema.items, rootSchema, formData);
+    const { widgets, schemaUtils, formContext } = registry;
+    const itemsSchema = schemaUtils.retrieveSchema(schema.items, formData);
     const title = schema.title || name;
     const enumOptions = optionsList(itemsSchema);
     const { widget = "select", ...options } = {
@@ -696,13 +691,13 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
-    const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
+    const { ArrayFieldTemplate, schemaUtils, fields, formContext } = registry;
     const { TitleField } = fields;
     const itemSchemas = schema.items.map((item, index) =>
-      retrieveSchema(item, rootSchema, formData[index])
+      schemaUtils.retrieveSchema(item, formData[index])
     );
     const additionalSchema = allowAdditionalItems(schema)
-      ? retrieveSchema(schema.additionalItems, rootSchema, formData)
+      ? schemaUtils.retrieveSchema(schema.additionalItems, formData)
       : null;
 
     if (!items || items.length < itemSchemas.length) {
@@ -722,13 +717,12 @@ class ArrayField extends Component {
         const { key, item } = keyedItem;
         const additional = index >= itemSchemas.length;
         const itemSchema = additional
-          ? retrieveSchema(schema.additionalItems, rootSchema, item)
+          ? schemaUtils.retrieveSchema(schema.additionalItems, item)
           : itemSchemas[index];
         const itemIdPrefix = idSchema.$id + idSeparator + index;
-        const itemIdSchema = toIdSchema(
+        const itemIdSchema = schemaUtils.toIdSchema(
           itemSchema,
           itemIdPrefix,
-          rootSchema,
           item,
           idPrefix,
           idSeparator

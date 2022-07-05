@@ -1,15 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { getUiOptions, getWidget, guessType, deepEquals } from "@rjsf/utils";
+
 import * as types from "../../types";
-import {
-  getUiOptions,
-  getWidget,
-  guessType,
-  retrieveSchema,
-  getDefaultFormState,
-  getMatchingOption,
-  deepEquals,
-} from "../../utils";
 
 class AnyOfField extends Component {
   constructor(props) {
@@ -43,9 +36,9 @@ class AnyOfField extends Component {
   }
 
   getMatchingOption(formData, options) {
-    const { rootSchema } = this.props.registry;
+    const { schemaUtils } = this.props.registry;
 
-    let option = getMatchingOption(formData, options, rootSchema);
+    let option = schemaUtils.getMatchingOption(formData, options);
     if (option !== 0) {
       return option;
     }
@@ -57,10 +50,9 @@ class AnyOfField extends Component {
   onOptionChange = option => {
     const selectedOption = parseInt(option, 10);
     const { formData, onChange, options, registry } = this.props;
-    const { rootSchema } = registry;
-    const newOption = retrieveSchema(
+    const { schemaUtils } = registry;
+    const newOption = schemaUtils.retrieveSchema(
       options[selectedOption],
-      rootSchema,
       formData
     );
 
@@ -80,7 +72,7 @@ class AnyOfField extends Component {
       for (const option of optionsToDiscard) {
         if (option.properties) {
           for (const key in option.properties) {
-            if (newFormData.hasOwnProperty(key)) {
+            if (key in newFormData) {
               delete newFormData[key];
             }
           }
@@ -89,7 +81,7 @@ class AnyOfField extends Component {
     }
     // Call getDefaultFormState to make sure defaults are populated on change.
     onChange(
-      getDefaultFormState(options[selectedOption], newFormData, rootSchema)
+      schemaUtils.getDefaultFormState(options[selectedOption], newFormData)
     );
 
     this.setState({
