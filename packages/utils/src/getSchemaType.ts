@@ -10,9 +10,9 @@ import { RJSFSchema } from './types';
  * - type is an array with a length of 2 and one type is 'null': Returns the other type
  *
  * @param schema - The schema for which to get the type
- * @returns - The type of the schema, defaulting to `string` if not available
+ * @returns - The type of the schema
  */
-export default function getSchemaType(schema: RJSFSchema): string | string[] {
+export default function getSchemaType(schema: RJSFSchema): string | string[] | undefined {
   let { type } = schema;
 
   if (!type && schema.const) {
@@ -31,5 +31,5 @@ export default function getSchemaType(schema: RJSFSchema): string | string[] {
     type =  type.find(type => type !== 'null');
   }
 
-  return type || 'string';
+  return type;
 }
