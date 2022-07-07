@@ -157,8 +157,8 @@ export type FieldTemplateProps<T = any, F = any> = {
   formContext?: F;
   formData: T;
   onChange: (value: T) => void;
-  onKeyChange?: (value: string) => () => void;
-  onDropPropertyClick?: (value: string) => () => void;
+  onKeyChange: (value: string) => () => void;
+  onDropPropertyClick: (value: string) => () => void;
   registry: Registry<T, F>;
 };
 
