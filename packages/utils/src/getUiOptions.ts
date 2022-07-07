@@ -5,10 +5,10 @@ import { UIOptionsType, UiSchema } from './types';
 /** Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:`
  * stripped off.
  *
- * @param uiSchema - The UI Schema from which to get any `ui:xxx` options
+ * @param [uiSchema={}] - The UI Schema from which to get any `ui:xxx` options
  * @returns - An object containing all of the `ui:xxx` options with the stripped off
  */
-export default function getUiOptions<T = any, F = any>(uiSchema: UiSchema<T, F>): UIOptionsType {
+export default function getUiOptions<T = any, F = any>(uiSchema: UiSchema<T, F> = {}): UIOptionsType {
   return Object.keys(uiSchema)
     .filter(key => key.indexOf('ui:') === 0)
     .reduce((options, key) => {

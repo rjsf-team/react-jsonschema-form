@@ -3,7 +3,7 @@ import { DEFAULT_OPTIONS } from '../src/getSubmitButtonOptions';
 
 describe('getSubmitButtonOptions', () => {
   it('default props', () => {
-    expect(getSubmitButtonOptions({})).toBe(DEFAULT_OPTIONS);
+    expect(getSubmitButtonOptions()).toBe(DEFAULT_OPTIONS);
   });
 
   it('allowed option should be false', () => {

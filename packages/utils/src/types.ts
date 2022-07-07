@@ -136,7 +136,7 @@ export interface FieldProps<T = any, F = any>
 export type Field<T = any, F = any> = React.ComponentType<FieldProps<T, F>>;
 
 export type FieldTemplateProps<T = any, F = any> = {
-  id?: string;
+  id: string;
   classNames?: string;
   label?: string;
   description?: React.ReactElement;
@@ -165,7 +165,7 @@ export type FieldTemplateProps<T = any, F = any> = {
 export type TitleFieldProps = {
   id: string;
   title: string;
-  required: boolean;
+  required?: boolean;
 };
 
 export type DescriptionFieldProps = {
@@ -239,7 +239,7 @@ export interface WidgetProps<T = any, F = any>
     React.HTMLAttributes<HTMLElement>,
     Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>
   > {
-  id?: string;
+  id: string;
   schema: RJSFSchema;
   uiSchema?: UiSchema<T, F>;
   value: any;
