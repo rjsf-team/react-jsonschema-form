@@ -3,10 +3,13 @@ import { RegistryFieldsType, RegistryWidgetsType } from '@rjsf/utils';
 
 import Form, { FormProps } from './components/Form';
 
-export interface WithThemeProps<T = any, F = any> {
+export type WithThemeProps<T = any, F = any> = {
   fields:  RegistryFieldsType<T, F>;
   widgets: RegistryWidgetsType<T, F>;
-}
+} & Pick<
+  FormProps,
+  'ArrayFieldTemplate' | 'ObjectFieldTemplate' | 'FieldTemplate' | 'ErrorList'
+>
 
 export default function withTheme<T = any, F = any>(themeProps: WithThemeProps<T, F>) {
   return forwardRef(({ fields, widgets, ...directProps }: FormProps<T, F>, ref: ForwardedRef<Form<T, F>>) => {
