@@ -23,6 +23,7 @@ import optionsList from './optionsList';
 import orderProperties from './orderProperties';
 import pad from './pad';
 import parseDateString from './parseDateString';
+import processSelectValue from './processSelectValue';
 import rangeSpec from './rangeSpec';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue';
 import shouldRender from './shouldRender';
@@ -61,6 +62,7 @@ export {
   orderProperties,
   pad,
   parseDateString,
+  processSelectValue,
   rangeSpec,
   schemaRequiresTrueValue,
   shouldRender,

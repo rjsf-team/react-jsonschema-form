@@ -271,7 +271,11 @@ export type UISchemaSubmitButtonOptions = {
 }
 
 export type UIOptionsType = {
-  [key: string]: boolean | number | string | object | any[] | null;
+  /** We know that for title, it will be a string, if it is provided */
+  title?: string;
+  /** We know that for description, it will be a string, if it is provided */
+  description?: string;
+  [key: string]: boolean | number | string | object | any[] | null | undefined;
 };
 
 export type UiSchema<T = any, F = any> = GenericObjectType & {
