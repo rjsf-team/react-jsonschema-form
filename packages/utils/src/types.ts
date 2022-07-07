@@ -275,6 +275,7 @@ export type UIOptionsType = {
   title?: string;
   /** We know that for description, it will be a string, if it is provided */
   description?: string;
+  /** Anything else will be one of these types */
   [key: string]: boolean | number | string | object | any[] | null | undefined;
 };
 
