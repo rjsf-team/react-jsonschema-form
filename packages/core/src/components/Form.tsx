@@ -20,6 +20,7 @@ import {
   UiSchema,
   ValidationData,
   ValidatorType,
+  WidgetProps,
   createSchemaUtils,
   deepEquals,
   isObject,
@@ -32,7 +33,6 @@ import _isEmpty from 'lodash/isEmpty';
 
 import getDefaultRegistry from '../getDefaultRegistry';
 import DefaultErrorList from './ErrorList';
-import { SubmitButtonProps } from './widgets/SubmitButton';
 
 export interface FormProps<T = any, F = any> {
   schema: RJSFSchema;
@@ -422,7 +422,7 @@ export default class Form<T = any, F = any> extends Component<FormProps<T, F>, F
     const { schemaUtils } = this.state;
     // For BC, accept passed SchemaField and TitleField props and pass them to
     // the 'fields' registry one.
-    const { fields, widgets } = getDefaultRegistry(schemaUtils);
+    const { fields, widgets } = getDefaultRegistry();
     return {
       fields: { ...fields, ...this.props.fields },
       widgets: { ...widgets, ...this.props.widgets },
@@ -488,7 +488,7 @@ export default class Form<T = any, F = any> extends Component<FormProps<T, F>, F
     // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || 'form';
-    const SubmitButton = registry.widgets.SubmitButton as React.ComponentType<SubmitButtonProps<T, F>>;
+    const SubmitButton = registry.widgets.SubmitButton as React.ComponentType<Partial<WidgetProps<T, F>>>;
 
     return (
       <FormTag

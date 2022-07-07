@@ -3,7 +3,7 @@ import { RegistryFieldsType, RegistryWidgetsType } from '@rjsf/utils';
 
 import Form, { FormProps } from './components/Form';
 
-export interface WithThemeProps<T, F> {
+export interface WithThemeProps<T = any, F = any> {
   fields:  RegistryFieldsType<T, F>;
   widgets: RegistryWidgetsType<T, F>;
 }

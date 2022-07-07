@@ -1,11 +1,7 @@
 import React from 'react';
-import { getSubmitButtonOptions, UiSchema } from '@rjsf/utils';
+import { getSubmitButtonOptions, WidgetProps } from '@rjsf/utils';
 
-export interface SubmitButtonProps<T, F> {
-  uiSchema: UiSchema<T, F>;
-}
-
-export default function SubmitButton<T, F>({ uiSchema }: SubmitButtonProps<T, F>) {
+export default function SubmitButton<T, F>({ uiSchema }: Partial<WidgetProps<T, F>>) {
   const {
     submitText,
     norender,
