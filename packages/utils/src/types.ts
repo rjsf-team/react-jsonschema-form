@@ -78,7 +78,7 @@ export type ErrorListProps<T = any, F = any> = {
   errors: RJSFValidationError[];
   formContext?: F;
   schema: RJSFSchema;
-  uiSchema: UiSchema<T, F>;
+  uiSchema?: UiSchema<T, F>;
 };
 
 export type RegistryFieldsType<T = any, F = any> = {
@@ -107,7 +107,7 @@ export interface IChangeEvent<T = any, F = any> {
   errorSchema: ErrorSchema<T>;
   idSchema: IdSchema;
   schema: RJSFSchema;
-  uiSchema: UiSchema<T, F>;
+  uiSchema?: UiSchema<T, F>;
   status?: string;
 }
 
@@ -306,9 +306,9 @@ export interface SchemaUtilsType<T = any> {
   getValidator(): ValidatorType<T>;
   doesSchemaUtilsDiffer(validator: ValidatorType, rootSchema: RJSFSchema): boolean;
   getDefaultFormState(schema: RJSFSchema, formData?: T, includeUndefinedValues?: boolean): T | T[] | undefined;
-  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>): boolean;
+  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>): boolean;
   getMatchingOption(formData: T, options: RJSFSchema[]): number;
-  isFilesArray<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>): boolean;
+  isFilesArray<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>): boolean;
   isMultiSelect(schema: RJSFSchema): boolean;
   isSelect(schema: RJSFSchema): boolean;
   retrieveSchema(schema: RJSFSchema, formData: T): RJSFSchema;

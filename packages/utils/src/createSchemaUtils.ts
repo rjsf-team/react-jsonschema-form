@@ -70,10 +70,10 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * should be displayed in a UI.
    *
    * @param schema - The schema for which the display label flag is desired
-   * @param uiSchema - The UI schema from which to derive potentially displayable information
+   * @param [uiSchema] - The UI schema from which to derive potentially displayable information
    * @returns - True if the label should be displayed or false if it should not
    */
-  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>) {
+  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>) {
     return getDisplayLabel<T, F>(this.validator, schema, uiSchema, this.rootSchema);
   }
 
@@ -90,10 +90,10 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
    *
    * @param schema - The schema for which check for array of files flag is desired
-   * @param uiSchema - The UI schema from which to check the widget
+   * @param [uiSchema] - The UI schema from which to check the widget
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
-  isFilesArray<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>) {
+  isFilesArray<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>) {
     return isFilesArray<T, F>(this.validator, schema, uiSchema, this.rootSchema);
   }
 

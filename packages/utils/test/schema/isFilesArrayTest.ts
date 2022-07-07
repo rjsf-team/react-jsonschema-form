@@ -10,14 +10,12 @@ export default function isFilesArrayTest(testValidator: TestValidatorType) {
     });
     it('should be true if items have data-url format', () => {
       const schema: RJSFSchema = { items: { type: 'string', format: 'data-url' } };
-      const uiSchema = {};
       const schemaUtils = createSchemaUtils(testValidator, schema);
-      expect(schemaUtils.isFilesArray(schema, uiSchema)).toBe(true);
+      expect(schemaUtils.isFilesArray(schema)).toBe(true);
     });
     it('should be false if items is undefined', () => {
       const schema: RJSFSchema = {};
-      const uiSchema = {};
-      expect(isFilesArray(testValidator, schema, uiSchema)).toBe(false);
+      expect(isFilesArray(testValidator, schema)).toBe(false);
     });
   });
 }
