@@ -138,7 +138,7 @@ export type Field<T = any, F = any> = React.ComponentType<FieldProps<T, F>>;
 export type FieldTemplateProps<T = any, F = any> = {
   id: string;
   classNames?: string;
-  label?: string;
+  label: string;
   description?: React.ReactElement;
   rawDescription?: string;
   children: React.ReactElement;
@@ -253,7 +253,7 @@ export interface WidgetProps<T = any, F = any>
   onBlur: (id: string, value: any) => void;
   onChange: (value: any) => void;
   onFocus: (id: string, value: any) => void;
-  label?: string;
+  label: string;
   multiple?: boolean;
   rawErrors?: string[];
   registry: Registry<T, F>;
