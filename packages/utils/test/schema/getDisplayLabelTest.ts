@@ -4,10 +4,10 @@ import { TestValidatorType } from './types';
 export default function getDisplayLabelTest(testValidator: TestValidatorType) {
   describe('getDisplayLabel()', () => {
     it('object type', () => {
-      expect(getDisplayLabel(testValidator, { type: 'object' }, {})).toEqual(false);
+      expect(getDisplayLabel(testValidator, { type: 'object' })).toEqual(false);
     });
     it('boolean type without widget', () => {
-      expect(getDisplayLabel(testValidator, { type: 'boolean' }, {})).toEqual(false);
+      expect(getDisplayLabel(testValidator, { type: 'boolean' })).toEqual(false);
     });
     it('boolean type with widget', () => {
       expect(getDisplayLabel(testValidator, { type: 'boolean' }, { 'ui:widget': 'test' })).toEqual(

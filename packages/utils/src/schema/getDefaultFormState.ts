@@ -20,22 +20,43 @@ import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
 import isMultiSelect from './isMultiSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 
-/** Given a `schema` will return an inner schema that represents either an element in a `schema.items` array (when
- * provided a valid `idx`), `schema.items` if it is not an array, `schema.additionalItems` when it is an object or
- * an empty schema if no previous condition passes.
+/** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
+ */
+export enum AdditionalItemsHandling {
+  Ignore,
+  Invert,
+  Fallback,
+}
+
+/** Given a `schema` will return an inner schema that for an array item. This is computed differently based on the
+ * `additionalItems` enum and the value of `idx`. There are four possible returns:
+ * 1. If `idx` is >= 0, then if `schema.items` is an array the `idx`th element of the array is returned if it is a valid
+ *    index and not a boolean, otherwise it falls through to 3.
+ * 2. If `schema.items` is not an array AND truthy and not a boolean, then `schema.items` is returned since it actually
+ *    is a schema, otherwise it falls through to 3.
+ * 3. If `additionalItems` is not `AdditionalItemsHandling.Ignore` and `schema.additionalItems` is an object, then
+ *    `schema.additionalItems` is returned since it actually is a schema, otherwise it falls through to 4.
+ * 4. {} is returned representing an empty schema
  *
  * @param schema - The schema from which to get the particular item
+ * @param [additionalItems=AdditionalItemsHandling.Ignore] - How do we want to handle additional items?
  * @param [idx=-1] - Index, if non-negative, will be used to return the idx-th element in a `schema.items` array
- * @returns - The best fit schema object from the `schema`
+ * @returns - The best fit schema object from the `schema` given the `additionalItems` and `idx` modifiers
  */
-export function getSchemaItem(schema: RJSFSchema, idx = -1) {
-  if (Array.isArray(schema.items) && idx >= 0 && idx < schema.items.length) {
-    return schema.items[idx] as RJSFSchema;
+export function getInnerSchemaForArrayItem(
+  schema: RJSFSchema, additionalItems: AdditionalItemsHandling = AdditionalItemsHandling.Ignore, idx = -1
+): RJSFSchema {
+  if (idx >= 0) {
+    if (Array.isArray(schema.items) && idx < schema.items.length) {
+      const item = schema.items[idx];
+      if (typeof item !== 'boolean') {
+        return item;
+      }
+    }
+  } else if (schema.items && !Array.isArray(schema.items) && typeof schema.items !== 'boolean') {
+    return schema.items;
   }
-  if (schema.items && !Array.isArray(schema.items)) {
-    return schema.items as RJSFSchema;
-  }
-  if (isObject(schema.additionalItems)) {
+  if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(schema.additionalItems)) {
     return schema.additionalItems as RJSFSchema;
   }
   return {};
@@ -140,7 +161,7 @@ export function computeDefaults<T = any>(
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
         defaults = defaults.map((item, idx) => {
-          const schemaItem = getSchemaItem(schema, idx);
+          const schemaItem: RJSFSchema = getInnerSchemaForArrayItem(schema, AdditionalItemsHandling.Fallback, idx);
           return computeDefaults<T>(
             validator,
             schemaItem,
@@ -152,10 +173,11 @@ export function computeDefaults<T = any>(
 
       // Deeply inject defaults into already existing form data
       if (Array.isArray(rawFormData)) {
+        const schemaItem: RJSFSchema = getInnerSchemaForArrayItem(schema);
         defaults = rawFormData.map((item: T, idx: number) => {
           return computeDefaults<T>(
             validator,
-            getSchemaItem(schema, idx),
+            schemaItem,
             get(defaults, [idx]),
             rootSchema,
             item
@@ -168,14 +190,13 @@ export function computeDefaults<T = any>(
           if (schema.minItems > defaultsLength) {
             const defaultEntries: T[] = (defaults || []) as T[];
             // populate the array with the defaults
-            const fillerSchema: RJSFSchema = getSchemaItem(schema);
+            const fillerSchema: RJSFSchema = getInnerSchemaForArrayItem(schema, AdditionalItemsHandling.Invert);
             const fillerDefault = fillerSchema.default;
             const fillerEntries: T[] = fill(
               new Array(schema.minItems - defaultsLength),
               computeDefaults<any>(validator, fillerSchema, fillerDefault, rootSchema)
             ) as T[];
             // then fill up the rest with either the item default or empty, up to minItems
-
             return defaultEntries.concat(fillerEntries);
           }
         }

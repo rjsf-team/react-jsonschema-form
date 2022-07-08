@@ -630,6 +630,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           array: [],
         });
       });
+      it('returns explicit defaults along with auto-fill when provided', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            turtles: {
+              type: 'array',
+              minItems: 4,
+              default: ['Raphael', 'Michaelangelo'],
+              items: {
+                type: 'string',
+                default: 'Unknown',
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+          turtles: ['Raphael', 'Michaelangelo', 'Unknown', 'Unknown'],
+        });
+      });
     });
     describe('defaults with oneOf', () => {
       it('should populate defaults for oneOf', () => {

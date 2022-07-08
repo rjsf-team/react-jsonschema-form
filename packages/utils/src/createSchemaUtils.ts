@@ -1,3 +1,4 @@
+import deepEquals from './deepEquals';
 import { IdSchema, PathSchema, RJSFSchema, SchemaUtilsType, UiSchema, ValidatorType } from './types';
 import {
   getDefaultFormState,
@@ -30,6 +31,29 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
     this.validator = validator;
   }
 
+  /** Returns the `ValidatorType` in the `SchemaUtilsType`
+   *
+   * @returns - The `ValidatorType`
+   */
+  getValidator() {
+    return this.validator;
+  }
+
+  /** Determines whether either the `validator` and `rootSchema` differ from the ones associated with this instance of
+   * the `SchemaUtilsType`. If either `validator` or `rootSchema` are falsy, then return false to prevent the creation
+   * of a new `SchemaUtilsType` with incomplete properties.
+   *
+   * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
+   * @param rootSchema - The root schema that will be compared against the current one
+   * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
+   */
+  doesSchemaUtilsDiffer(validator: ValidatorType, rootSchema: RJSFSchema): boolean {
+    if (!validator || !rootSchema) {
+      return false;
+    }
+    return this.validator !== validator || !deepEquals(this.rootSchema, rootSchema);
+  }
+
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
    * computed to have defaults provided in the `schema`.
    *
@@ -46,10 +70,10 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * should be displayed in a UI.
    *
    * @param schema - The schema for which the display label flag is desired
-   * @param uiSchema - The UI schema from which to derive potentially displayable information
+   * @param [uiSchema] - The UI schema from which to derive potentially displayable information
    * @returns - True if the label should be displayed or false if it should not
    */
-  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>) {
+  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>) {
     return getDisplayLabel<T, F>(this.validator, schema, uiSchema, this.rootSchema);
   }
 
@@ -66,10 +90,10 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
    *
    * @param schema - The schema for which check for array of files flag is desired
-   * @param uiSchema - The UI schema from which to check the widget
+   * @param [uiSchema] - The UI schema from which to check the widget
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
-  isFilesArray<F = any>(schema: RJSFSchema, uiSchema: UiSchema<T, F>) {
+  isFilesArray<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>) {
     return isFilesArray<T, F>(this.validator, schema, uiSchema, this.rootSchema);
   }
 
