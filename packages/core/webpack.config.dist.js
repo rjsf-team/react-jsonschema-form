@@ -36,12 +36,15 @@ module.exports = {
       umd: 'react-dom',
     }
   },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.[tj]sx?$/,
         use: [
-          "babel-loader",
+          "ts-loader",
         ],
       },
     ]

@@ -65,7 +65,7 @@ Exports `material-ui` version 4 and 5 themes, fields and widgets for `react-json
 
 - `@material-ui/core >= 4.12.0` (in 4.12.0, the library developers made it forward compatible with Material-UI V5)
 - `@material-ui/icons >= 4.11.0` (in 4.11.0, the library developers made it forward compatible with Material-UI V5)
-- `@rjsf/core >= 3.3.0`
+- `@rjsf/core >= 4.0.0`
 
 ```bash
 yarn add @material-ui/core @material-ui/icons @rjsf/core
@@ -73,13 +73,13 @@ yarn add @material-ui/core @material-ui/icons @rjsf/core
 
 #### Material UI version 5
 
-NOTE: Material UI 5 requires React 17 so you will need to upgrade
+NOTE: Material UI 5 requires React 17, so you will need to upgrade
 
 - `@mui/material`
 - `@mui/icons-material`
 - `@emotion/react`
 - `@emotion/styled`
-- `@rjsf/core >= 3.3.0`
+- `@rjsf/core >= 4.0.0`
 
 ```bash
 yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core
@@ -98,39 +98,101 @@ yarn add @rjsf/material-ui
 ### Material UI version 4
 
 ```js
-import Form from '@rjsf/material-ui';
-// One could also use the `MuiForm4` alias
-// import { MuiForm4 as Form } from '@rjsf/material-ui';
+import Form from '@rjsf/material-ui/v4';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as MaterialUITheme } from '@rjsf/material-ui';
-// One could also use the `Theme4` alias
-// import { Theme4 as MaterialUITheme } from '@rjsf/material-ui';
+import Theme from '@rjsf/material-ui/v4';
 
 // Make modifications to the theme with your own fields and widgets
 
-const Form = withTheme(MaterialUITheme);
+const Form = withTheme(Theme);
+```
+
+### Typescript configuration adjustments
+
+If you are using Typescript you may have to update your `tsconfig.json` file in to avoid problems with import aliasing.
+
+If you are experiencing an error that is similar to `TS2307: Cannot find module '@rjsf/material-ui/v4' or its corresponding type declarations.` you can add the following:
+
+```
+{
+  ...
+  "compilerOptions": {
+    ...
+    "baseUrl": ".",
+    "paths": {
+      "@rjsf/material-ui/*": ["node_modules/@rjsf/material-ui/dist/*"]
+    }
+  }
+}
+```
+
+### Jest configuration adjustments
+
+If you are using Jest you may have to update your `jest.config.json` file in to avoid problems with import aliasing.
+
+If you are experiencing an error that is similar to `Cannot find module '@rjsf/material-ui/v4' from '<file path>'` you can add the following:
+
+```
+{
+  "moduleNameMapper": {
+    "@rjsf/material-ui/v4": "<rootDir>/node_modules/@rjsf/material-ui/dist/v4.js"
+  },
+}
 ```
 
 ### Material UI version 5
 
 ```js
-import { MuiForm5 as Form } from '@rjsf/material-ui';
+import Form from '@rjsf/material-ui/v5';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
+import Theme from '@rjsf/material-ui/v5';
 
 // Make modifications to the theme with your own fields and widgets
 
-const Form = withTheme(Mui5Theme);
+const Form = withTheme(Theme);
+```
+
+### Typescript configuration adjustments
+
+If you are using Typescript you may have to update your `tsconfig.json` file in to avoid problems with import aliasing.
+
+If you are experiencing an error that is similar to `TS2307: Cannot find module '@rjsf/material-ui/v5' or its corresponding type declarations.` you can add the following:
+
+```
+{
+  ...
+  "compilerOptions": {
+    ...
+    "baseUrl": ".",
+    "paths": {
+      "@rjsf/material-ui/*": ["node_modules/@rjsf/material-ui/dist/*"]
+    }
+  }
+}
+```
+
+### Jest configuration adjustments
+
+If you are using Jest you may have to update your `jest.config.json` file in to avoid problems with import aliasing.
+
+If you are experiencing an error that is similar to `Cannot find module '@rjsf/material-ui/v5' from '<file path>'` you can add the following:
+
+```
+{
+  "moduleNameMapper": {
+    "@rjsf/material-ui/v5": "<rootDir>/node_modules/@rjsf/material-ui/dist/v5.js"
+  },
+}
 ```
 
 <!-- ROADMAP -->

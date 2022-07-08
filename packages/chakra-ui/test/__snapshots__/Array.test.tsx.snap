@@ -130,6 +130,7 @@ exports[`array fields array 1`] = `
   >
     <button
       className="chakra-button emotion-6"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -444,6 +445,7 @@ exports[`array fields checkboxes 1`] = `
   >
     <button
       className="chakra-button emotion-15"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -618,6 +620,7 @@ exports[`array fields fixed array 1`] = `
   >
     <button
       className="chakra-button emotion-15"
+      disabled={false}
       type="submit"
     >
       Submit

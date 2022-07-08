@@ -64,6 +64,7 @@ exports[`single fields hidden field 1`] = `
   >
     <button
       className="chakra-button emotion-3"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -120,6 +121,7 @@ exports[`single fields null field 1`] = `
   >
     <button
       className="chakra-button emotion-2"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -201,6 +203,7 @@ exports[`single fields number field 1`] = `
   >
     <button
       className="chakra-button emotion-4"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -270,6 +273,7 @@ exports[`single fields string field format data-url 1`] = `
   >
     <button
       className="chakra-button emotion-2"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -351,6 +355,7 @@ exports[`single fields string field format email 1`] = `
   >
     <button
       className="chakra-button emotion-4"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -432,6 +437,7 @@ exports[`single fields string field format uri 1`] = `
   >
     <button
       className="chakra-button emotion-4"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -513,6 +519,7 @@ exports[`single fields string field regular 1`] = `
   >
     <button
       className="chakra-button emotion-4"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -592,6 +599,7 @@ exports[`single fields unsupported field 1`] = `
   >
     <button
       className="chakra-button emotion-2"
+      disabled={false}
       type="submit"
     >
       Submit
@@ -673,6 +681,7 @@ exports[`single fields using custom tagName 1`] = `
   >
     <button
       className="chakra-button emotion-4"
+      disabled={false}
       type="submit"
     >
       Submit

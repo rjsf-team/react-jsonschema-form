@@ -1,4 +1,3 @@
-import React from 'react';
 import MaterialUIContextProps from './MaterialUIContextProps';
 
 /** Use require for loading these libraries in case they are not available in order to perform a useful fallback */
@@ -107,17 +106,3 @@ if (Box && AddIcon) {
     RemoveIcon,
   };
 }
-
-export const DefaultChildren = () => {
-  if (MaterialUIContext.Box && MaterialUIContext.Button && MaterialUIContext.AddIcon) {
-    return (
-      <MaterialUIContext.Box marginTop={3}>
-        <MaterialUIContext.Button type="submit" variant="contained" color="primary">
-          Submit
-        </MaterialUIContext.Button>
-      </MaterialUIContext.Box>
-    );
-  }
-
-  return <div>@material-ui not available</div>;
-};

@@ -140,6 +140,7 @@ exports[`object fields object 1`] = `
   >
     <button
       className="chakra-button emotion-13"
+      disabled={false}
       type="submit"
     >
       Submit

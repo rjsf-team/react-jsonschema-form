@@ -108,3 +108,9 @@ Apache 2
 |  <img style="height: 100px !important" src="https://avatars1.githubusercontent.com/u/1066228?s=200&v=4"> |  <img style="height: 100px !important" src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png"></a> | <img style="height: 100px !important" src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" />  |
 |---|---|---|
 |This project initially started as a [mozilla-services](https://github.com/mozilla-services) project. |Testing is powered by [BrowserStack](https://www.browserstack.com/).|Deploy Previews are provided by [Netlify](https://www.netlify.com).|
+
+## Who uses react-jsonschema-form?
+
+- ...
+
+Add your own company / organization by making a [pull request](https://github.com/rjsf-team/react-jsonschema-form/pulls).
