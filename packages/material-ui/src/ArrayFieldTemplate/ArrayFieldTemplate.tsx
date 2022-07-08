@@ -49,7 +49,7 @@ const ArrayFieldDescription = ({ DescriptionField, idSchema, description }: Arra
 };
 
 // Used in the two templates
-const DefaultArrayItem = (props: any) => {
+const DefaultArrayItem = (props: { extra: any }) => {
   const { ArrowDownwardIcon, ArrowUpwardIcon, Box, Grid, IconButton, Paper, RemoveIcon } = useMuiComponent();
   const btnStyle = {
     flex: 1,
@@ -59,49 +59,49 @@ const DefaultArrayItem = (props: any) => {
     minWidth: 0,
   };
   return (
-    <Grid container={true} key={props.key} alignItems="center">
+    <Grid container={true} key={props.extra.key} alignItems="center">
       <Grid item={true} xs style={{ overflow: 'auto' }}>
         <Box mb={2}>
           <Paper elevation={2}>
-            <Box p={2}>{props.children}</Box>
+            <Box p={2}>{props.extra.children}</Box>
           </Paper>
         </Box>
       </Grid>
 
-      {props.hasToolbar && (
+      {props.extra.hasToolbar && (
         <Grid item={true}>
-          {(props.hasMoveUp || props.hasMoveDown) && (
+          {(props.extra.hasMoveUp || props.extra.hasMoveDown) && (
             <IconButton
               size="small"
               className="array-item-move-up"
               tabIndex={-1}
               style={btnStyle as any}
-              disabled={props.disabled || props.readonly || !props.hasMoveUp}
-              onClick={props.onReorderClick(props.index, props.index - 1)}
+              disabled={props.extra.disabled || props.extra.readonly || !props.extra.hasMoveUp}
+              onClick={props.extra.onReorderClick(props.extra.index, props.extra.index - 1)}
             >
               <ArrowUpwardIcon fontSize="small" />
             </IconButton>
           )}
 
-          {(props.hasMoveUp || props.hasMoveDown) && (
+          {(props.extra.hasMoveUp || props.extra.hasMoveDown) && (
             <IconButton
               size="small"
               tabIndex={-1}
               style={btnStyle as any}
-              disabled={props.disabled || props.readonly || !props.hasMoveDown}
-              onClick={props.onReorderClick(props.index, props.index + 1)}
+              disabled={props.extra.disabled || props.extra.readonly || !props.extra.hasMoveDown}
+              onClick={props.extra.onReorderClick(props.extra.index, props.extra.index + 1)}
             >
               <ArrowDownwardIcon fontSize="small" />
             </IconButton>
           )}
 
-          {props.hasRemove && (
+          {props.extra.hasRemove && (
             <IconButton
               size="small"
               tabIndex={-1}
               style={btnStyle as any}
-              disabled={props.disabled || props.readonly}
-              onClick={props.onDropIndexClick(props.index)}
+              disabled={props.extra.disabled || props.extra.readonly}
+              onClick={props.extra.onDropIndexClick(props.extra.index)}
             >
               <RemoveIcon fontSize="small" />
             </IconButton>
@@ -130,7 +130,7 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       )}
 
       <div className="row array-item-list" key={`array-item-list-${props.idSchema.$id}`}>
-        {props.items && props.items.map(DefaultArrayItem)}
+        {props.items && props.items.map((p) => <DefaultArrayItem extra={p} key={p.key} />)}
       </div>
 
       {props.canAdd && (
@@ -167,7 +167,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         )}
 
         <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
-          {props.items && props.items.map(p => DefaultArrayItem(p))}
+          {props.items && props.items.map(p => <DefaultArrayItem extra={p} key={p.key} />)}
 
           {props.canAdd && (
             <Grid container justifyContent="flex-end">
