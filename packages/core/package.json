@@ -3,7 +3,8 @@
   "version": "4.2.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "build": "rimraf dist && tsdx build --format cjs,es && cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
+    "build-umd": "cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
+    "build": "rimraf dist && tsdx build --format cjs,es && npm run build-umd",
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
@@ -24,11 +25,10 @@
   },
   "main": "dist/index.js",
   "module": "dist/core.esm.js",
-  "typings": "index.d.ts",
+  "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "lib",
-    "index.d.ts"
+    "lib"
   ],
   "engineStrict": false,
   "engines": {
@@ -54,8 +54,8 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
+    "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
-    "@types/json-schema": "^7.0.7",
     "@types/lodash": "^4.14.182",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",

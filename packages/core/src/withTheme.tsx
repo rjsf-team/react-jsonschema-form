@@ -8,7 +8,7 @@ export type WithThemeProps<T = any, F = any> = {
   widgets: RegistryWidgetsType<T, F>;
 } & Pick<
   FormProps,
-  'ArrayFieldTemplate' | 'ObjectFieldTemplate' | 'FieldTemplate' | 'ErrorList'
+  'ArrayFieldTemplate' | 'ObjectFieldTemplate' | 'FieldTemplate' | 'ErrorList' | '_internalFormWrapper'
 >
 
 export default function withTheme<T = any, F = any>(themeProps: WithThemeProps<T, F>) {

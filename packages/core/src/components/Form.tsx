@@ -72,7 +72,7 @@ export interface FormProps<T = any, F = any> {
   transformErrors?: ErrorTransformer;
   formContext?: F;
   omitExtraData?: boolean;
-  extraErrors: ErrorSchema<T>;
+  extraErrors?: ErrorSchema<T>;
   idPrefix?: string;
   idSeparator?: string;
 }
