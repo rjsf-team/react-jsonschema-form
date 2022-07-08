@@ -30,7 +30,7 @@ export default function processSelectValue(schema: RJSFSchema, value?: any) {
   // If type is undefined, but an enum is present, try and infer the type from
   // the enum values
   if (Array.isArray(schemaEnum)) {
-    if (schemaEnum.every((x: any) => guessType(x) === 'number')) {
+    if (schemaEnum.every((x: any) => nums.has(guessType(x)))) {
       return asNumber(value);
     }
     if (schemaEnum.every((x: any) => guessType(x) === 'boolean')) {

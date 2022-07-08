@@ -12,6 +12,14 @@ describe('processSelectValue', () => {
     const value = ['1', '1.2'];
     expect(processSelectValue(schema, value)).toEqual([1, 1.2]);
   });
+  it('returns an array of numbers when the type is array and items represents an integer', () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: { type: 'integer' }
+    };
+    const value = ['1', '2'];
+    expect(processSelectValue(schema, value)).toEqual([1, 2]);
+  });
   it('returns an array of strings when the type is array and items do not represent a number', () => {
     const schema: RJSFSchema = {
       type: 'array',
@@ -45,9 +53,21 @@ describe('processSelectValue', () => {
     };
     expect(processSelectValue(schema, '1')).toEqual(1);
   });
+  it('number type is converted', () => {
+    const schema: RJSFSchema = {
+      type: 'number',
+    };
+    expect(processSelectValue(schema, '1.2')).toEqual(1.2);
+  });
   it('enum of number is converted', () => {
     const schema: RJSFSchema = {
-      enum: [1, 2.1, 3],
+      enum: [1.1, 2.1, 3.1],
+    };
+    expect(processSelectValue(schema, '2.1')).toEqual(2.1);
+  });
+  it('enum of integer is converted', () => {
+    const schema: RJSFSchema = {
+      enum: [1, 2, 3],
     };
     expect(processSelectValue(schema, '1')).toEqual(1);
   });

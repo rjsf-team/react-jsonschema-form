@@ -20,6 +20,8 @@ import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
 import isMultiSelect from './isMultiSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 
+/** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
+ */
 export enum AdditionalItemsHandling {
   Ignore,
   Invert,
