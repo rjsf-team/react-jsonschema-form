@@ -1,9 +1,7 @@
 import React from "react";
 import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
-import { WidgetProps, utils } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
-
-const { getDisplayLabel } = utils;
 
 const TextareaWidget = ({
   id,
@@ -21,10 +19,12 @@ const TextareaWidget = ({
   uiSchema,
   required,
   rawErrors,
+  registry,
 }: WidgetProps) => {
   const chakraProps = getChakra({ uiSchema });
+  const { schemaUtils } = registry;
   const displayLabel =
-    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+    schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const _onChange = ({
     target: { value },

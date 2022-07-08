@@ -1,9 +1,5 @@
 import { ChakraProps, shouldForwardProp } from "@chakra-ui/react";
-import { FormProps, UiSchema } from "@rjsf/core";
-
-export type ThemeProps<T = any> = Omit<FormProps<T>, "schema" | "uiSchema"> & {
-  uiSchema?: ChakraUiSchema;
-};
+import { UiSchema } from "@rjsf/utils";
 
 export interface ChakraUiSchema extends Omit<UiSchema, "ui:options"> {
   "ui:options"?: ChakraUiOptions;

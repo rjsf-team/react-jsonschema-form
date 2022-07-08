@@ -9,7 +9,7 @@ export { default as Theme } from "./Theme";
 export { default as Widgets } from "./Widgets";
 export { __createChakraFrameProvider } from "./ChakraFrameProvider";
 
-export type { ChakraUiSchema as UiSchema , ThemeProps} from "./utils"
+export type { ChakraUiSchema as UiSchema } from "./utils"
 
 
 export default Form;

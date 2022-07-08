@@ -1,9 +1,7 @@
 import * as React from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { WidgetProps, utils } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
-
-const { getDisplayLabel } = utils;
 
 const TextWidget = (props: WidgetProps) => {
   const {
@@ -23,8 +21,10 @@ const TextWidget = (props: WidgetProps) => {
     autofocus,
     placeholder,
     disabled,
+    registry,
   } = props;
   const chakraProps = getChakra({ uiSchema });
+  const { schemaUtils } = registry;
 
   const _onChange = ({
     target: { value },
@@ -37,7 +37,7 @@ const TextWidget = (props: WidgetProps) => {
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const displayLabel =
-    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+    schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const inputType =
     (type || schema.type) === "string" ? "text" : `${type || schema.type}`;

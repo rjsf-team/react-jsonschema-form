@@ -1,8 +1,6 @@
 import React, { MouseEvent, useEffect, useState } from "react";
-import { utils, WidgetProps } from "@rjsf/core";
+import { DateObject, pad, parseDateString, toDateString, WidgetProps } from "@rjsf/utils";
 import { Box, Button } from "@chakra-ui/react";
-
-const { pad, parseDateString, toDateString } = utils;
 
 const rangeOptions = (start: number, stop: number) => {
   let options = [];
@@ -12,15 +10,8 @@ const rangeOptions = (start: number, stop: number) => {
   return options;
 };
 
-interface AltDateStateType {
-  [x: string]: number;
-
-  year: number;
-  month: number;
-  day: number;
-  hour: number;
-  minute: number;
-  second: number;
+interface AltDateStateType extends DateObject {
+  [x: string]: number | undefined;
 }
 
 const readyForChange = (state: AltDateStateType) => {
@@ -82,7 +73,7 @@ const AltDateWidget = (props: any) => {
   const dateElementProps = () => {
     const { year, month, day, hour, minute, second } = state;
 
-    const data = [
+    const data: {type: string, range: any, value?: number}[] = [
       { type: "year", range: options.yearsRange, value: year },
       { type: "month", range: [1, 12], value: month },
       { type: "day", range: [1, 31], value: day },

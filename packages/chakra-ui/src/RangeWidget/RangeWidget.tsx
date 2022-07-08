@@ -7,10 +7,8 @@ import {
   SliderThumb,
   SliderTrack,
 } from "@chakra-ui/react";
-import { utils, WidgetProps } from "@rjsf/core";
+import { rangeSpec, WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
-
-const { rangeSpec, getDisplayLabel } = utils;
 
 const RangeWidget = ({
   value,
@@ -24,13 +22,15 @@ const RangeWidget = ({
   onChange,
   label,
   id,
+  registry,
 }: WidgetProps) => {
+  const { schemaUtils } = registry;
   const chakraProps = getChakra({ uiSchema });
 
   let sliderWidgetProps = { value, label, id, ...rangeSpec(schema) };
 
   const displayLabel =
-    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+    schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const _onChange = (value: undefined | number) =>
     onChange(value === undefined ? options.emptyValue : value);
