@@ -1,6 +1,6 @@
 import { getSchemaType } from '../src';
 
-const cases: { schema: object; expected: string }[] = [
+const cases: { schema: object; expected: string | undefined }[] = [
   {
     schema: { type: 'string' },
     expected: 'string',
@@ -60,6 +60,10 @@ const cases: { schema: object; expected: string }[] = [
   {
     schema: { enum: ['foo'] },
     expected: 'string',
+  },
+  {
+    schema: {},
+    expected: undefined,
   }
 ];
 

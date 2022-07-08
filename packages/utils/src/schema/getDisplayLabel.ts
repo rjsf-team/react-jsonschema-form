@@ -11,12 +11,12 @@ import isMultiSelect from './isMultiSelect';
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
  * @param schema - The schema for which the display label flag is desired
- * @param uiSchema - The UI schema from which to derive potentially displayable information
+ * @param [uiSchema={}] - The UI schema from which to derive potentially displayable information
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @returns - True if the label should be displayed or false if it should not
  */
 export default function getDisplayLabel<T = any, F = any>(
-  validator: ValidatorType, schema: RJSFSchema, uiSchema: UiSchema<T, F>, rootSchema?: RJSFSchema
+  validator: ValidatorType, schema: RJSFSchema, uiSchema: UiSchema<T, F> = {}, rootSchema?: RJSFSchema
 ): boolean {
   const uiOptions = getUiOptions<T, F>(uiSchema);
   const { label = true } = uiOptions;

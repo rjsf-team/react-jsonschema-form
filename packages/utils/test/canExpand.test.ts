@@ -10,7 +10,7 @@ describe('canExpand()', () => {
         type: 'string',
       },
     };
-    expect(canExpand(schema, {}, {})).toBe(true);
+    expect(canExpand(schema)).toBe(true);
   });
   it('has uiSchema expandable false', () => {
     const schema: RJSFSchema = {
@@ -23,7 +23,7 @@ describe('canExpand()', () => {
         expandable: false,
       },
     };
-    expect(canExpand(schema, uiSchema, {})).toBe(false);
+    expect(canExpand(schema, uiSchema)).toBe(false);
   });
   it('does not exceed maxProperties', () => {
     const schema: RJSFSchema = {
@@ -32,7 +32,7 @@ describe('canExpand()', () => {
         type: 'string',
       },
     };
-    expect(canExpand(schema, {}, {})).toBe(true);
+    expect(canExpand(schema)).toBe(true);
   });
   it('already exceeds maxProperties', () => {
     const schema: RJSFSchema = {

@@ -14,10 +14,10 @@ export const DEFAULT_OPTIONS = {
 
 /** Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto the `DEFAULT_OPTIONS`
  *
- * @param uiSchema - the UI Schema from which to extract submit button props
+ * @param [uiSchema={}] - the UI Schema from which to extract submit button props
  * @returns - The merging of the `DEFAULT_OPTIONS` with any custom ones
  */
-export default function getSubmitButtonOptions<T = any, F = any>(uiSchema: UiSchema<T, F>) {
+export default function getSubmitButtonOptions<T = any, F = any>(uiSchema: UiSchema<T, F> = {}) {
   const uiOptions = getUiOptions<T, F>(uiSchema);
   if (uiOptions && uiOptions[SUBMIT_BTN_OPTIONS_KEY]) {
     const options = uiOptions[SUBMIT_BTN_OPTIONS_KEY] as UISchemaSubmitButtonOptions;

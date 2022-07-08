@@ -45,6 +45,9 @@ describe('getUiOptions()', () => {
   afterAll(() => {
     consoleErrorSpy.mockRestore();
   });
+  it('returns empty options with no uiSchema', () => {
+    expect(getUiOptions()).toEqual({});
+  });
   it('returns widget text as options', () => {
     expect(getUiOptions(uiSchema.widgetText)).toEqual(results.widgetText);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
