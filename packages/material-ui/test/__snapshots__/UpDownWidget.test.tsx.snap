@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders 0 as 0 and not '' 1`] = `
+exports[`UpDownWidget renders 0 as 0 and not '' 1`] = `
 <div
   className="MuiFormControl-root MuiFormControl-fullWidth"
 >

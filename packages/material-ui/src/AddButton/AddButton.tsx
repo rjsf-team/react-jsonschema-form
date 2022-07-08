@@ -3,7 +3,7 @@ import { AddButtonProps } from '@rjsf/core';
 
 import { useMuiComponent } from '../MuiComponentContext';
 
-const AddButton: React.FC<AddButtonProps> = props => {
+const AddButton: React.ComponentType<AddButtonProps> = props => {
   const { AddIcon, Button } = useMuiComponent();
 
   return (

@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, Ref } from 'react';
-import { ThemeProps } from '@rjsf/core';
+import { WithThemeProps } from '@rjsf/core';
 
 import MuiComponentContext from '../MuiComponentContext';
 import ThemeCommon from '../ThemeCommon';
@@ -26,7 +26,7 @@ const Mui5FormWrapper = React.forwardRef(
 
 /** The Material UI 5 theme, with the `Mui5FormWrapper
  */
-const Theme5: ThemeProps = {
+const Theme5: WithThemeProps = {
   _internalFormWrapper: Mui5FormWrapper,
   ...ThemeCommon,
 };

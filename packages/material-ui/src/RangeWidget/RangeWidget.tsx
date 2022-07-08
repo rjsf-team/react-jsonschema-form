@@ -1,9 +1,7 @@
 import React from 'react';
-import { WidgetProps, utils } from '@rjsf/core';
+import { WidgetProps, rangeSpec } from '@rjsf/utils';
 
 import { useMuiComponent } from '../MuiComponentContext';
-
-const { rangeSpec } = utils;
 
 const RangeWidget = ({
   value,

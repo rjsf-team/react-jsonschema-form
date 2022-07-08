@@ -1,11 +1,12 @@
 import React from 'react';
-import { JSONSchema7 } from "json-schema";
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 import { MuiForm5 as Form } from "../../src";
 
 describe("object fields", () => {
   test("object", () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         a: {type: "string"},
@@ -13,17 +14,17 @@ describe("object fields", () => {
       }
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("additionalProperties", () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       type: "object",
       additionalProperties: true
     };
     const tree = renderer
-      .create(<Form schema={schema} formData={{foo: 'foo'}} />)
+      .create(<Form schema={schema} validator={validator} formData={{foo: 'foo'}} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

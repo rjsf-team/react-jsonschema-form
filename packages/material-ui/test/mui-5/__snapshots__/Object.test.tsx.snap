@@ -9,6 +9,7 @@ exports[`object fields additionalProperties 1`] = `
   <div
     className="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
   >
+    
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-mhc70k-MuiGrid-root"
       style={
@@ -63,16 +64,13 @@ exports[`object fields additionalProperties 1`] = `
                   className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                 >
                   <legend
-                    className="css-nnbavb"
+                    className="css-hdw1oc"
                   >
                     <span
                       className="notranslate"
-                      dangerouslySetInnerHTML={
-                        Object {
-                          "__html": "&#8203;",
-                        }
-                      }
-                    />
+                    >
+                      ​
+                    </span>
                   </legend>
                 </fieldset>
               </div>
@@ -119,7 +117,7 @@ exports[`object fields additionalProperties 1`] = `
                     className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                   >
                     <legend
-                      className="css-173wfxe"
+                      className="css-1ftyaf0"
                     >
                       <span>
                         foo
@@ -262,6 +260,7 @@ exports[`object fields object 1`] = `
   <div
     className="MuiFormControl-root MuiFormControl-fullWidth css-q8hpuo-MuiFormControl-root"
   >
+    
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-mhc70k-MuiGrid-root"
       style={
@@ -316,7 +315,7 @@ exports[`object fields object 1`] = `
                 className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
                 <legend
-                  className="css-173wfxe"
+                  className="css-1ftyaf0"
                 >
                   <span>
                     a
@@ -373,7 +372,7 @@ exports[`object fields object 1`] = `
                 className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
                 <legend
-                  className="css-173wfxe"
+                  className="css-1ftyaf0"
                 >
                   <span>
                     b
