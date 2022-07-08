@@ -1,10 +1,12 @@
 import React from "react";
-import { utils, WidgetProps } from '@rjsf/core';
+import { getSubmitButtonOptions, WidgetProps } from '@rjsf/utils';
 import { PrimaryButton } from "@fluentui/react";
-const { getSubmitButtonOptions } = utils;
+
 export default ({uiSchema}: WidgetProps) => {
   const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(uiSchema);
-  if(norender) return null;
+  if (norender) {
+    return null;
+  }
   return (
     <div>
       <br />

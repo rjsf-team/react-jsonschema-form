@@ -1,5 +1,5 @@
 import React from "react";
-import { ObjectFieldTemplateProps } from "@rjsf/core";
+import { getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
 
 const ObjectFieldTemplate = ({
   DescriptionField,
@@ -11,9 +11,10 @@ const ObjectFieldTemplate = ({
   uiSchema,
   idSchema,
 }: ObjectFieldTemplateProps) => {
+  const uiOptions = getUiOptions(uiSchema);
   return (
     <>
-      {(uiSchema["ui:title"] || title) && (
+      {(uiOptions.title || title) && (
         <TitleField
           id={`${idSchema.$id}-title`}
           title={title}

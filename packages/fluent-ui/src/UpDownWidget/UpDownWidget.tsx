@@ -1,11 +1,9 @@
 import React from "react";
 import { Label } from "@fluentui/react";
 import { SpinButton } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
-import { utils } from "@rjsf/core";
-
-const { rangeSpec } = utils;
+import { rangeSpec } from "@rjsf/utils";
 
 // Keys of ISpinButtonProps from @fluentui/react
 const allowedProps = [

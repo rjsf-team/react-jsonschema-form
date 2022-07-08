@@ -1,6 +1,6 @@
 import React from "react";
 import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of IDropdownProps from @fluentui/react

@@ -1,6 +1,6 @@
 import React from "react";
 import { MessageBar, MessageBarType } from "@fluentui/react";
-import { ErrorListProps } from "@rjsf/core";
+import { ErrorListProps } from "@rjsf/utils";
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <>
