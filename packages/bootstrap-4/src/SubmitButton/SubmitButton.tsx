@@ -1,8 +1,8 @@
-import { utils, WidgetProps } from "@rjsf/core";
 import React from "react";
 import Button from "react-bootstrap/Button";
-const { getSubmitButtonOptions } = utils;
-const SubmitButton: React.FC<WidgetProps> = props => {
+import { getSubmitButtonOptions, WidgetProps } from "@rjsf/utils";
+
+const SubmitButton: React.ComponentType<WidgetProps> = props => {
   const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(props.uiSchema);
   if(norender) return null;
   return ( <div>

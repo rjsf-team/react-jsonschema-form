@@ -23,7 +23,6 @@ exports[`ArrayFieldTemplate simple 1`] = `
             <div
               className="py-4 col-lg-3 col-3 col-3"
             >
-               
               <button
                 className="ml-1 array-item-add btn btn-primary"
                 disabled={false}

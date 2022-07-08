@@ -1,11 +1,11 @@
 import React from "react";
+import renderer from "react-test-renderer";
+
+import Theme from '../src/Theme';
 import ArrayFieldTemplate from "../src/ArrayFieldTemplate";
 import DescriptionField from "../src/DescriptionField";
-import renderer from "react-test-renderer";
 import TitleField from "../src/TitleField";
-import { mockSchema } from "./helpers/createMocks";
-import { utils } from "@rjsf/core";
-const { getDefaultRegistry } = utils;
+import { mockSchema, mockSchemaUtils } from "./helpers/createMocks";
 
 describe("ArrayFieldTemplate", () => {
   test("simple", () => {
@@ -25,7 +25,7 @@ describe("ArrayFieldTemplate", () => {
           title=""
           formContext={{}}
           formData={{}}
-          registry={{ ...getDefaultRegistry() }}
+          registry={{ ...Theme, schemaUtils: mockSchemaUtils, formContext: {}, rootSchema: mockSchema }}
           // TODO : isSchema should be fixed here
           // @ts-ignore
           idSchema={{}}
