@@ -2,8 +2,7 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-import {  utils } from "@rjsf/core";
-const { getDisplayLabel } = utils;
+
 function TextareaWidget(props) {
   const {
     id,
@@ -22,22 +21,20 @@ function TextareaWidget(props) {
     schema,
     uiSchema,
     formContext,
+    registry,
   } = props;
   const semanticProps = getSemanticProps({
     formContext,
     options,
     defaultSchemaProps: { inverted: false }
   });
+  const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange && onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const displayLabel = getDisplayLabel(
-    schema,
-    uiSchema
-    /* TODO: , rootSchema */
-  );
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   return (
     <Form.TextArea
       id={id}

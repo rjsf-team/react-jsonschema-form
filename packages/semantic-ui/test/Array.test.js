@@ -1,6 +1,8 @@
 import React from 'react';
-import Form from "../src/index";
+import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
+
+import Form from "../src/index";
 
 describe("array fields", () => {
   test("array", () => {
@@ -11,7 +13,7 @@ describe("array fields", () => {
       }
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -28,7 +30,7 @@ describe("array fields", () => {
       ]
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -42,7 +44,7 @@ describe("array fields", () => {
       uniqueItems: true
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

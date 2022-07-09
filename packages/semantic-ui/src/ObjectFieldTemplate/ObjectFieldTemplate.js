@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Grid } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
+import { canExpand, getUiOptions } from '@rjsf/utils';
 import AddButton from '../AddButton/AddButton';
-const { canExpand } = utils;
 
 function ObjectFieldTemplate({
   DescriptionField,
@@ -20,15 +19,16 @@ function ObjectFieldTemplate({
   formData,
   idSchema,
 }) {
-  const fieldTitle = uiSchema["ui:title"] || title;
-  const fieldDescription = uiSchema["ui:description"] || description;
+  const uiOptions = getUiOptions(uiSchema);
+  const fieldTitle = uiOptions.title || title;
+  const fieldDescription = uiOptions.description || description;
   return (
     <React.Fragment>
       {(fieldTitle) && (
         <TitleField
           id={`${idSchema.$id}-title`}
           title={fieldTitle}
-          options={uiSchema["ui:options"]}
+          options={uiOptions.options}
           required={required}
         />
       )}

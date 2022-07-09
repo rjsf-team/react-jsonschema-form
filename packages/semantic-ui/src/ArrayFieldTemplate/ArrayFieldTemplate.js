@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types,react/destructuring-assignment */
 import React from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
+import { isFixedItems, getUiOptions } from '@rjsf/utils';
+
 import AddButton from "../AddButton";
 import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
-
-const { isFixedItems } = utils;
 
 const ArrayFieldTitle = ({ TitleField, idSchema, uiSchema, title }) => {
   if (!title) {
@@ -123,8 +122,9 @@ function DefaultFixedArrayFieldTemplate({
   TitleField,
   itemProps,
 }) {
-  const fieldTitle = uiSchema["ui:title"] || title;
-  const fieldDescription = uiSchema["ui:description"] || schema.description;
+  const uiOptions = getUiOptions(uiSchema);
+  const fieldTitle = uiOptions.title || title;
+  const fieldDescription = uiOptions.description || schema.description;
 
   return (
     <div className={cleanClassNames([className, classNames])}>
@@ -182,8 +182,9 @@ function DefaultNormalArrayFieldTemplate({
   TitleField,
   itemProps,
 }) {
-  const fieldTitle = uiSchema["ui:title"] || title;
-  const fieldDescription = uiSchema["ui:description"] || schema.description;
+  const uiOptions = getUiOptions(uiSchema);
+  const fieldTitle = uiOptions.title || title;
+  const fieldDescription = uiOptions.description || schema.description;
   return (
     <div
       className={cleanClassNames([
