@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react';
+import { WidgetProps } from '@rjsf/core';
 
-import FormLabel from "@material-ui/core/FormLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-
-import { WidgetProps } from "@rjsf/core";
+import { useMuiComponent } from '../MuiComponentContext';
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -34,11 +30,10 @@ const CheckboxesWidget = ({
   onBlur,
   onFocus,
 }: WidgetProps) => {
+  const { FormLabel, FormGroup, FormControlLabel, Checkbox } = useMuiComponent();
   const { enumOptions, enumDisabled, inline } = options;
 
-  const _onChange = (option: any) => ({
-    target: { checked },
-  }: React.ChangeEvent<HTMLInputElement>) => {
+  const _onChange = (option: any) => ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
     const all = (enumOptions as any).map(({ value }: any) => value);
 
     if (checked) {
@@ -48,12 +43,8 @@ const CheckboxesWidget = ({
     }
   };
 
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
     <>
@@ -63,8 +54,7 @@ const CheckboxesWidget = ({
       <FormGroup row={!!inline}>
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = value.indexOf(option.value) !== -1;
-          const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
+          const itemDisabled = enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
           const checkbox = (
             <Checkbox
               id={`${id}_${index}`}
@@ -76,13 +66,7 @@ const CheckboxesWidget = ({
               onFocus={_onFocus}
             />
           );
-          return (
-            <FormControlLabel
-              control={checkbox}
-              key={index}
-              label={option.label}
-            />
-          );
+          return <FormControlLabel control={checkbox} key={index} label={option.label} />;
         })}
       </FormGroup>
     </>

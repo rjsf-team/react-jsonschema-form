@@ -1,53 +1,100 @@
 {
   "name": "@rjsf/material-ui",
-  "version": "3.2.1",
-  "main": "dist/index.js",
-  "module": "dist/material-ui.esm.js",
-  "typings": "dist/index.d.ts",
+  "version": "4.2.0",
+  "module": "./dist/material-ui.esm.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/material-ui.esm.js",
+      "require": "./dist/index.js"
+    },
+    "./v4": {
+      "import": "./dist/material-ui-v4.esm.js",
+      "require": "./dist/v4.js"
+    },
+    "./v5": {
+      "import": "./dist/material-ui-v5.esm.js",
+      "require": "./dist/v5.js"
+    },
+    "./package.json": "./package.json"
+  },
   "description": "Material UI theme, fields and widgets for react-jsonschema-form",
   "files": [
     "dist"
   ],
   "scripts": {
     "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build",
-    "test": "tsdx test"
+    "build": "rimraf dist && rimraf dist-temp && tsdx build -i ./src/v5.ts --name @rjsf/material-ui-v5 && tsdx build -i ./src/v4.ts --name @rjsf/material-ui-v4 && tsdx build && rimraf dist-temp",
+    "test": "tsdx test",
+    "test:update": "tsdx test --u"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.2.0",
-    "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^3.0.0",
-    "react": ">=16"
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@mui/icons-material": "^5.2.0",
+    "@mui/material": "^5.2.2",
+    "@rjsf/core": "^4.0.1",
+    "@types/react": "^16.8.6 || ^17.0.0",
+    "react": "^16.8.0 || ^17.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@material-ui/core": {
+      "optional": true
+    },
+    "@material-ui/icons": {
+      "optional": true
+    },
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    },
+    "@mui/icons-material": {
+      "optional": true
+    },
+    "@mui/material": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-0",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
-    "@material-ui/core": "^4.2.0",
-    "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^3.2.1",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
+    "@babel/plugin-transform-react-jsx": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.16.0",
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@mui/icons-material": "^5.2.0",
+    "@mui/material": "^5.2.2",
+    "@rjsf/core": "^4.2.0",
     "@types/jest": "^24.0.15",
-    "@types/json-schema": "^7.0.7",
-    "@types/react": "^16.9.23",
-    "@types/react-dom": "^16.9.5",
-    "@types/react-test-renderer": "^16.9.2",
+    "@types/json-schema": "^7.0.9",
+    "@types/material-ui": "^0.21.12",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-test-renderer": "^17.0.1",
     "@types/sinon": "^9.0.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.13.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
     "rimraf": "^2.6.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.0.0",
-    "typescript": "^3.5.3"
+    "rollup-plugin-copy": "^3.4.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "author": "Agustin N. R. Ramirez <agustin.ramirez@cybertec.at>",
   "contributors": [
-    "Lorenz Henk <lorenz.henk@cybertec.at>"
+    "Lorenz Henk <lorenz.henk@cybertec.at>",
+    "Heath Chiavettone <heath.chiavettone@freenome.com>"
   ],
   "keywords": [
     "Material UI",
@@ -59,6 +106,7 @@
     "form",
     "react",
     "material-ui",
+    "mui",
     "rjsf-material-ui"
   ],
   "repository": {

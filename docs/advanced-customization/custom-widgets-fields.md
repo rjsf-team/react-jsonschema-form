@@ -94,6 +94,7 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 - `number`
 - `integer`
 - `boolean`
+- `array`
 
 ```jsx
 const schema = {
@@ -120,12 +121,12 @@ render((
 
 The following props are passed to custom widget components:
 
-- `id`: The generated id for this field;
-- `schema`: The JSONSchema subschema object for this field;
-- `uiSchema`: The uiSchema for this field;
-- `value`: The current value for this field;
+- `id`: The generated id for this widget;
+- `schema`: The JSONSchema subschema object for this widget;
+- `uiSchema`: The uiSchema for this widget;
+- `value`: The current value for this widget;
 - `placeholder`: the placeholder for the field, if any;
-- `required`: The required status of this field;
+- `required`: The required status of this widget;
 - `disabled`: `true` if the widget is disabled;
 - `readonly`: `true` if the widget is read-only;
 - `autofocus`: `true` if the widget should autofocus;
@@ -137,6 +138,7 @@ The following props are passed to custom widget components:
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.
 - `formContext`: The `formContext` object that you passed to Form.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
+ - `registry`: A [registry](#the-registry-object) object (read next).
 
 ### Custom component registration
 
@@ -295,13 +297,13 @@ A field component will always be passed the following props:
 
 The `registry` is an object containing the registered custom fields and widgets as well as the root schema definitions.
 
- - `fields`: The [custom registered fields](#custom-field-components). By default this object contains the standard `SchemaField`, `TitleField` and `DescriptionField` components;
- - `widgets`: The [custom registered widgets](#custom-widget-components), if any;
+ - `fields`: All fields, including [custom registered fields](#custom-field-components), if any;
+ - `widgets`: All widgets, including, [custom registered widgets](#custom-widget-components), if any;
  - `rootSchema`: The root schema, which can contain referenced [definitions](#schema-definitions-and-references);
  - `formContext`: The [formContext](#the-formcontext-object) object;
  - `definitions` (deprecated since v2): Equal to `rootSchema.definitions`.
 
-The registry is passed down the component tree, so you can access it from your custom field and `SchemaField` components.
+The registry is passed down the component tree, so you can access it from your custom field, custom widget, and `SchemaField` components.
 
 ### Custom SchemaField
 
@@ -339,3 +341,5 @@ render((
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
 Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
+
+NOTE: If you are using the `material-ui` theme and are considering customizing a widget or a field, checkout this [guide](material-ui/customizing-material-ui.md).

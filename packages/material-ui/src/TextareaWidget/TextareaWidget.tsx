@@ -1,12 +1,7 @@
-import React from "react";
+import React from 'react';
+import { WidgetProps } from '@rjsf/core';
 
-import { WidgetProps } from "@rjsf/core";
-
-import TextField from "@material-ui/core/TextField";
-
-type CustomWidgetProps = WidgetProps & {
-  options: any;
-};
+import { useMuiComponent } from '../MuiComponentContext';
 
 const TextareaWidget = ({
   id,
@@ -23,16 +18,17 @@ const TextareaWidget = ({
   options,
   schema,
   rawErrors = [],
-}: CustomWidgetProps) => {
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+}: WidgetProps) => {
+  const { TextField } = useMuiComponent();
+  const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
+    onChange(value === '' ? options.emptyValue : value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+
+  let rows: string | number = 5;
+  if (typeof options.rows === 'string' || typeof options.rows === 'number') {
+    rows = options.rows;
+  }
 
   return (
     <TextField
@@ -44,7 +40,7 @@ const TextareaWidget = ({
       required={required}
       autoFocus={autofocus}
       multiline={true}
-      rows={options.rows || 5}
+      rows={rows}
       error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}

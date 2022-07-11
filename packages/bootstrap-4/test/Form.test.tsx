@@ -236,4 +236,13 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("using custom tagName", () => {
+    const schema: JSONSchema7 = {
+      type: "string"
+    };
+    const tree = renderer
+      .create(<Form schema={schema} tagName="div"/>)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

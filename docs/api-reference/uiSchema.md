@@ -12,7 +12,15 @@ In other words, the following uiSchemas are equivalent:
 ```json
 {
   "ui:title": "Title",
-  "ui:description": "Description"
+  "ui:description": "Description",
+  "ui:submitButtonOptions": {
+    "props": {
+      "disabled": false,
+      "className": "btn btn-info",
+    },
+      "norender": false,
+      "submitText": "Submit"
+    },
 }
 ```
 
@@ -20,7 +28,15 @@ In other words, the following uiSchemas are equivalent:
 {
   "ui:options": {
     "title": "Title",
-    "description": "Description"
+    "description": "Description",
+    "submitButtonOptions": {
+      "props": {
+        "disabled": false,
+        "className": "btn btn-info",
+      },
+      "norender": false,
+      "submitText": "Submit"
+    },
   }
 }
 ```
@@ -108,6 +124,14 @@ const uiSchema = {
 ![](https://i.imgur.com/scJUuZo.png)
 
 Help texts work for any kind of field at any level, and will always be rendered immediately below the field component widget(s) (after contextualized errors, if any).
+
+## hideError
+
+The `ui:hideError` uiSchema directive will, if set to `true`, hide the default error display for the given field AND all of its child fields in the hierarchy.
+
+If you need to enable the default error display of a child in the hierarchy after setting `hideError: true` on the parent field, simply set `hideError: false` on the child.
+
+This is useful when you have a custom field or widget that utilizes either the `rawErrors` or the `errorSchema` to manipulate and/or show the error(s) for the field/widget itself.
 
 ## inputType
 
@@ -218,5 +242,46 @@ const uiSchema = {
   "ui:title": "Your password"
 };
 ```
+
+## submitButtonOptions
+
+Sometimes it's convenient to change the behavior of the submit button for the form. This is the purpose of the `ui:submitButtonOptions` uiSchema directive:
+
+You can pass any other prop to the submit button if you want, by default, this library will set the following options / props mentioned below for all submit buttons:
+
+### `norender` option
+
+You can set this property to `true` to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes.
+
+### `submitText` option
+
+You can use this option to change the text of the submit button. Set to "Submit" by default.
+
+### `props` section
+
+You can pass any other prop to the submit button if you want, via this section.
+
+
+####  `disabled` prop
+
+You can use this option to disable the submit button.
+
+#### `className` prop
+
+You can use this option to specify a class name for the submit button.
+
+```js
+const uiSchema = {
+ "ui:submitButtonOptions": {
+   "props": {
+      "disabled": false,
+      "className": "btn btn-info",
+   },
+    "norender": false,
+    "submitText": "Submit"
+  }
+};
+```
 ## Theme Options
 [Semantic UI](themes/semantic-ui/uiSchema.md)
+[Chakra UI](themes/chakra-ui/uiSchema.md)

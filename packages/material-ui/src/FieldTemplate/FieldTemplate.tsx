@@ -1,14 +1,8 @@
-import React from "react";
+import React from 'react';
+import { FieldTemplateProps } from '@rjsf/core';
 
-import { FieldTemplateProps } from "@rjsf/core";
-
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Typography from "@material-ui/core/Typography";
-
-import WrapIfAdditional from "./WrapIfAdditional";
+import { useMuiComponent } from '../MuiComponentContext';
+import WrapIfAdditional from './WrapIfAdditional';
 
 const FieldTemplate = ({
   id,
@@ -30,7 +24,7 @@ const FieldTemplate = ({
   if (hidden) {
     return children;
   }
-
+  const { FormControl, FormHelperText, List, ListItem, Typography } = useMuiComponent();
   return (
     <WrapIfAdditional
       classNames={classNames}
@@ -41,11 +35,9 @@ const FieldTemplate = ({
       onKeyChange={onKeyChange}
       readonly={readonly}
       required={required}
-      schema={schema}>
-      <FormControl
-        fullWidth={true}
-        error={rawErrors.length ? true : false}
-        required={required}>
+      schema={schema}
+    >
+      <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
         {children}
         {displayLabel && rawDescription ? (
           <Typography variant="caption" color="textSecondary">

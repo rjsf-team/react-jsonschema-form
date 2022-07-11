@@ -44,11 +44,15 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 To release, go to the master branch and then run:
 
 ```bash
-lerna version
+npx lerna version
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
-The command above will create a new version tag and push it to GitHub. Then, create a release in
+The command above will create a new version tag and push it to GitHub.
+
+Note that if you are releasing a new major version, you should bump the peer dependency `@rjsf/core` in the `package.json` files of other packages accordingly.
+
+Then, create a release in
 the Github "Releases" tab and add a description of the changes in the new release. You can copy
 the latest changelog entry in `CHANGELOG.md` to make the release notes, and update as necessary.
 
@@ -64,7 +68,9 @@ Docs are automatically released using [Read The Docs](https://readthedocs.org/) 
 
 ### Releasing the playground
 
-In order to publish the latest playground to [https://rjsf-team.github.io/react-jsonschema-form/](https://rjsf-team.github.io/react-jsonschema-form/) after a new rjsf release, run:
+The playground automatically gets deployed from GitHub Pages.
+
+If you need to manually publish the latest playground to [https://rjsf-team.github.io/react-jsonschema-form/](https://rjsf-team.github.io/react-jsonschema-form/), though, run:
 
 ```bash
 cd packages/playground

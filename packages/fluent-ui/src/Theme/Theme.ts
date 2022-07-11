@@ -1,10 +1,8 @@
-import React from 'react';
 import ArrayFieldTemplate from '../ArrayFieldTemplate';
 import ErrorList from '../ErrorList';
 import Fields from '../Fields';
 import FieldTemplate from '../FieldTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
-import SubmitButton from '../SubmitButton';
 import Widgets from '../Widgets';
 
 import { ThemeProps } from '@rjsf/core';
@@ -20,7 +18,6 @@ const Theme: ThemeProps = {
   ObjectFieldTemplate,
   widgets: { ...widgets, ...Widgets },
   ErrorList,
-  children: React.createElement(SubmitButton)
 };
 
 export default Theme;

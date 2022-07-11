@@ -1,46 +1,29 @@
-import React from "react";
+import React from 'react';
+import { WidgetProps } from '@rjsf/core';
+import { utils } from '@rjsf/core';
 
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-
-import { WidgetProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import { useMuiComponent } from '../MuiComponentContext';
 
 const { schemaRequiresTrueValue } = utils;
 
 const CheckboxWidget = (props: WidgetProps) => {
-  const {
-    schema,
-    id,
-    value,
-    disabled,
-    readonly,
-    label,
-    autofocus,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
-
+  const { schema, id, value, disabled, readonly, label, autofocus, onChange, onBlur, onFocus } = props;
+  const { Checkbox, FormControlLabel } = useMuiComponent();
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
 
   const _onChange = ({}, checked: boolean) => onChange(checked);
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   return (
     <FormControlLabel
       control={
         <Checkbox
           id={id}
-          checked={typeof value === "undefined" ? false : value}
+          checked={typeof value === 'undefined' ? false : Boolean(value)}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
@@ -49,7 +32,7 @@ const CheckboxWidget = (props: WidgetProps) => {
           onFocus={_onFocus}
         />
       }
-      label={label}
+      label={label || ''}
     />
   );
 };

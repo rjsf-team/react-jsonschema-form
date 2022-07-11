@@ -12,7 +12,7 @@ declare module '@rjsf/core' {
         acceptcharset?: string;
         action?: string;
         additionalMetaSchemas?: ReadonlyArray<object>;
-        ArrayFieldTemplate?: React.StatelessComponent<ArrayFieldTemplateProps>;
+        ArrayFieldTemplate?: React.FunctionComponent<ArrayFieldTemplateProps>;
         autoComplete?: string;
         autocomplete?: string; // deprecated
         children?: React.ReactNode;
@@ -20,22 +20,24 @@ declare module '@rjsf/core' {
         customFormats?: { [k: string]: string | RegExp | ((data: string) => boolean) };
         disabled?: boolean;
         readonly?: boolean;
+        hideError?: boolean;
         enctype?: string;
         extraErrors?: any;
-        ErrorList?: React.StatelessComponent<ErrorListProps>;
+        ErrorList?: React.FunctionComponent<ErrorListProps>;
         fields?: { [name: string]: Field };
-        FieldTemplate?: React.StatelessComponent<FieldTemplateProps>;
+        FieldTemplate?: React.FunctionComponent<FieldTemplateProps>;
         formContext?: any;
         formData?: T;
         id?: string;
         idPrefix?: string;
+        idSeparator?: string;
         liveOmit?: boolean;
         liveValidate?: boolean;
         method?: string;
         name?: string;
         noHtml5Validate?: boolean;
         noValidate?: boolean;
-        ObjectFieldTemplate?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        ObjectFieldTemplate?: React.FunctionComponent<ObjectFieldTemplateProps>;
         omitExtraData?: boolean;
         onBlur?: (id: string, value: any) => void;
         onChange?: (e: IChangeEvent<T>, es?: ErrorSchema) => any;
@@ -50,6 +52,11 @@ declare module '@rjsf/core' {
         uiSchema?: UiSchema;
         validate?: (formData: T, errors: FormValidation) => FormValidation;
         widgets?: { [name: string]: Widget };
+        /**
+         * WARNING: This exists for internal react-jsonschema-form purposes only. No guarantees of backwards
+         * compatibility. Use ONLY if you know what you are doing
+         */
+        _internalFormWrapper?: React.ElementType;
     }
 
     export default class Form<T> extends React.Component<FormProps<T>> {
@@ -64,15 +71,26 @@ declare module '@rjsf/core' {
         submit: () => void;
     }
 
+    export type UISchemaSubmitButtonOptions = {
+      submitText?: string;
+      norender?: boolean;
+      props?: {
+        disabled?:boolean;
+        className?:string;
+        [name: string]: any;
+      };
+    }
+
     export type UiSchema = {
         'ui:field'?: Field | string;
         'ui:widget'?: Widget | string;
         'ui:options'?: { [key: string]: boolean | number | string | object | any[] | null };
         'ui:order'?: string[];
-        'ui:FieldTemplate'?: React.StatelessComponent<FieldTemplateProps>;
-        'ui:ArrayFieldTemplate'?: React.StatelessComponent<ArrayFieldTemplateProps>;
-        'ui:ObjectFieldTemplate'?: React.StatelessComponent<ObjectFieldTemplateProps>;
+        'ui:FieldTemplate'?: React.FunctionComponent<FieldTemplateProps>;
+        'ui:ArrayFieldTemplate'?: React.FunctionComponent<ArrayFieldTemplateProps>;
+        'ui:ObjectFieldTemplate'?: React.FunctionComponent<ObjectFieldTemplateProps>;
         [name: string]: any;
+        'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
     };
 
     export type FieldId = {
@@ -119,7 +137,7 @@ declare module '@rjsf/core' {
         [prop: string]: any; // Allow for other props
     }
 
-    export type Widget = React.StatelessComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
+    export type Widget = React.FunctionComponent<WidgetProps> | React.ComponentClass<WidgetProps>;
 
     export interface Registry {
         fields: { [name: string]: Field };
@@ -149,7 +167,7 @@ declare module '@rjsf/core' {
         [prop: string]: any; // Allow for other props
     }
 
-    export type Field = React.StatelessComponent<FieldProps> | React.ComponentClass<FieldProps>;
+    export type Field = React.FunctionComponent<FieldProps> | React.ComponentClass<FieldProps>;
 
     export type FieldTemplateProps<T = any> = {
         id: string;
@@ -179,8 +197,8 @@ declare module '@rjsf/core' {
     };
 
     export type ArrayFieldTemplateProps<T = any> = {
-        DescriptionField: React.StatelessComponent<{ id: string; description: string | React.ReactElement }>;
-        TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
+        DescriptionField: React.FunctionComponent<{ id: string; description: string | React.ReactElement }>;
+        TitleField: React.FunctionComponent<{ id: string; title: string; required: boolean }>;
         canAdd: boolean;
         className: string;
         disabled: boolean;
@@ -212,8 +230,8 @@ declare module '@rjsf/core' {
     };
 
     export type ObjectFieldTemplateProps<T = any> = {
-        DescriptionField: React.StatelessComponent<{ id: string; description: string | React.ReactElement }>;
-        TitleField: React.StatelessComponent<{ id: string; title: string; required: boolean }>;
+        DescriptionField: React.FunctionComponent<{ id: string; description: string | React.ReactElement }>;
+        TitleField: React.FunctionComponent<{ id: string; title: string; required: boolean }>;
         title: string;
         description: string;
         disabled: boolean;
@@ -283,7 +301,7 @@ declare module '@rjsf/core' {
 
     export function withTheme<T = any>(
         themeProps: ThemeProps<T>,
-    ): React.ComponentClass<FormProps<T>> | React.StatelessComponent<FormProps<T>>;
+    ): React.ComponentClass<FormProps<T>> | React.FunctionComponent<FormProps<T>>;
 
     export type AddButtonProps = {
         className: string;
@@ -329,6 +347,8 @@ declare module '@rjsf/core' {
         ): T | JSONSchema7['default'][];
 
         export function getUiOptions(uiSchema: UiSchema): UiSchema['ui:options'];
+
+        export function getSubmitButtonOptions(uiSchema: UiSchema): UISchemaSubmitButtonOptions;
 
         export function getDisplayLabel(schema: JSONSchema7, uiSchema: UiSchema, rootSchema?: JSONSchema7): boolean;
 
@@ -393,7 +413,8 @@ declare module '@rjsf/core' {
             id: string,
             definitions: Registry['definitions'],
             formData?: T,
-            idPredix?: string,
+            idPrefix?: string,
+            idSeparator?: string,
         ): IdSchema | IdSchema[];
 
         export function toPathSchema<T = any>(
@@ -454,6 +475,14 @@ declare module '@rjsf/core/lib/components/fields/SchemaField' {
     >;
 
     export default class SchemaField extends React.Component<SchemaFieldProps> {}
+}
+
+declare module '@rjsf/core/lib/components/fields/ObjectField' {
+  import { FieldProps } from '@rjsf/core';
+
+  export type ObjectFieldProps<T = any> = FieldProps<T>;
+
+  export default class ObjectField extends React.Component<ObjectFieldProps> {}
 }
 
 declare module '@rjsf/core/lib/validate' {

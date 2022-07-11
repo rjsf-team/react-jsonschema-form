@@ -98,14 +98,16 @@ exports[`array fields array 1`] = `
       </div>
     </fieldset>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -183,14 +185,16 @@ exports[`array fields checkboxes 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;
 
@@ -280,6 +284,13 @@ exports[`array fields fixed array 1`] = `
                           value=""
                         />
                       </div>
+                    </div>
+                    <div
+                      className="ant-form-item-extra"
+                    >
+                      <span
+                        id="root_0__description"
+                      />
                     </div>
                   </div>
                 </div>
@@ -432,6 +443,13 @@ exports[`array fields fixed array 1`] = `
                         </div>
                       </div>
                     </div>
+                    <div
+                      className="ant-form-item-extra"
+                    >
+                      <span
+                        id="root_1__description"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -441,13 +459,15 @@ exports[`array fields fixed array 1`] = `
       </div>
     </fieldset>
   </div>
-  <div>
-    <button
-      className="btn btn-info"
-      type="submit"
-    >
+  <button
+    className="ant-btn"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
       Submit
-    </button>
-  </div>
+    </span>
+  </button>
 </form>
 `;

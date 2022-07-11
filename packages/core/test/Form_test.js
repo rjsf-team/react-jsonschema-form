@@ -1,10 +1,9 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import React from "react";
+import React, { createRef } from "react";
 import { renderIntoDocument, Simulate } from "react-dom/test-utils";
 import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
-import { createRef } from "create-react-ref";
 
 import Form from "../src";
 import {
@@ -253,6 +252,30 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
+  describe("Option idSeparator", function() {
+    it("should change the rendered ids", function() {
+      const schema = {
+        type: "object",
+        title: "root object",
+        required: ["foo"],
+        properties: {
+          count: {
+            type: "number",
+          },
+        },
+      };
+      const comp = renderIntoDocument(<Form schema={schema} idSeparator="." />);
+      const node = findDOMNode(comp);
+      const inputs = node.querySelectorAll("input");
+      const ids = [];
+      for (var i = 0, len = inputs.length; i < len; i++) {
+        const input = inputs[i];
+        ids.push(input.getAttribute("id"));
+      }
+      expect(ids).to.eql(["root.count"]);
+    });
+  });
+
   describe("Custom field template", () => {
     const schema = {
       type: "object",
@@ -370,6 +393,31 @@ describeRepeated("Form common", createFormComponent => {
     it("should pass rawHelp as a string", () => {
       expect(node.querySelector(".raw-help").textContent).eql(
         "this is help rendered from the raw format"
+      );
+    });
+  });
+
+  describe("ui options submitButtonOptions", () => {
+    it("should not render a submit button", () => {
+      const props = {
+        schema: {},
+        uiSchema: { "ui:submitButtonOptions": { norender: true } },
+      };
+      const comp = renderIntoDocument(<Form {...props} />);
+      const node = findDOMNode(comp);
+
+      expect(node.querySelectorAll("button[type=submit]")).to.have.length.of(0);
+    });
+
+    it("should render a submit button with text Confirm", () => {
+      const props = {
+        schema: {},
+        uiSchema: { "ui:submitButtonOptions": { submitText: "Confirm" } },
+      };
+      const comp = renderIntoDocument(<Form {...props} />);
+      const node = findDOMNode(comp);
+      expect(node.querySelector("button[type=submit]").textContent).eql(
+        "Confirm"
       );
     });
   });

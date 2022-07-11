@@ -26,9 +26,12 @@ import nullable from "./nullable";
 import nullField from "./null";
 import errorSchema from "./errorSchema";
 import defaults from "./defaults";
+import options from "./options";
+import ifThenElse from "./ifThenElse";
 
 export const samples = {
   Simple: simple,
+  "UI Options": options,
   Nested: nested,
   Arrays: arrays,
   Numbers: numbers,
@@ -52,6 +55,7 @@ export const samples = {
   "Any Of": anyOf,
   "One Of": oneOf,
   "All Of": allOf,
+  "If Then Else": ifThenElse,
   "Null fields": nullField,
   Nullable: nullable,
   ErrorSchema: errorSchema,

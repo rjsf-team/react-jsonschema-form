@@ -8,7 +8,6 @@ import {
   isSelect,
   retrieveSchema,
   toIdSchema,
-  getDefaultRegistry,
   mergeObjects,
   deepEquals,
   getSchemaType,
@@ -237,12 +236,13 @@ function SchemaFieldRender(props) {
     formData,
     errorSchema,
     idPrefix,
+    idSeparator,
     name,
     onChange,
     onKeyChange,
     onDropPropertyClick,
     required,
-    registry = getDefaultRegistry(),
+    registry,
     wasPropertyKeyModified = false,
   } = props;
   const { rootSchema, fields, formContext } = registry;
@@ -251,7 +251,7 @@ function SchemaFieldRender(props) {
   let idSchema = props.idSchema;
   const schema = retrieveSchema(props.schema, rootSchema, formData);
   idSchema = mergeObjects(
-    toIdSchema(schema, null, rootSchema, formData, idPrefix),
+    toIdSchema(schema, null, rootSchema, formData, idPrefix, idSeparator),
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
@@ -263,6 +263,12 @@ function SchemaFieldRender(props) {
       props.schema.readOnly ||
       schema.readOnly
   );
+  const uiSchemaHideError = uiSchema["ui:hideError"];
+  // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
+  const hideError =
+    uiSchemaHideError === undefined
+      ? props.hideError
+      : Boolean(uiSchemaHideError);
   const autofocus = Boolean(props.autofocus || uiSchema["ui:autofocus"]);
   if (Object.keys(schema).length === 0) {
     return null;
@@ -281,6 +287,7 @@ function SchemaFieldRender(props) {
       uiSchema={{ ...uiSchema, classNames: undefined }}
       disabled={disabled}
       readonly={readonly}
+      hideError={hideError}
       autofocus={autofocus}
       errorSchema={fieldErrorSchema}
       formContext={formContext}
@@ -305,15 +312,13 @@ function SchemaFieldRender(props) {
   const errors = __errors;
   const help = uiSchema["ui:help"];
   const hidden = uiSchema["ui:widget"] === "hidden";
-  const classNames = [
-    "form-group",
-    "field",
-    `field-${schema.type}`,
-    errors && errors.length > 0 ? "field-error has-error has-danger" : "",
-    uiSchema.classNames,
-  ]
-    .join(" ")
-    .trim();
+
+  let classNames = ["form-group", "field", `field-${schema.type}`];
+  if (!hideError && errors && errors.length > 0) {
+    classNames.push("field-error has-error has-danger");
+  }
+  classNames.push(uiSchema.classNames);
+  classNames = classNames.join(" ").trim();
 
   const fieldProps = {
     description: (
@@ -326,8 +331,8 @@ function SchemaFieldRender(props) {
     rawDescription: description,
     help: <Help id={id + "__help"} help={help} />,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: <ErrorList errors={errors} />,
-    rawErrors: errors,
+    errors: hideError ? undefined : <ErrorList errors={errors} />,
+    rawErrors: hideError ? undefined : errors,
     id,
     label,
     hidden,
@@ -337,6 +342,7 @@ function SchemaFieldRender(props) {
     required,
     disabled,
     readonly,
+    hideError,
     displayLabel,
     classNames,
     formContext,
@@ -363,10 +369,13 @@ function SchemaFieldRender(props) {
         {schema.anyOf && !isSelect(schema) && (
           <_AnyOfField
             disabled={disabled}
+            readonly={readonly}
+            hideError={hideError}
             errorSchema={errorSchema}
             formData={formData}
             idPrefix={idPrefix}
             idSchema={idSchema}
+            idSeparator={idSeparator}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
@@ -383,10 +392,13 @@ function SchemaFieldRender(props) {
         {schema.oneOf && !isSelect(schema) && (
           <_OneOfField
             disabled={disabled}
+            readonly={readonly}
+            hideError={hideError}
             errorSchema={errorSchema}
             formData={formData}
             idPrefix={idPrefix}
             idSchema={idSchema}
+            idSeparator={idSeparator}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
@@ -421,6 +433,7 @@ SchemaField.defaultProps = {
   disabled: false,
   readonly: false,
   autofocus: false,
+  hideError: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
