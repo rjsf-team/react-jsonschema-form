@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { utils } from '@rjsf/core';
+import { pad, parseDateString, toDateString } from '@rjsf/utils';
 import Button from 'antd/lib/button';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
-
-const { pad, parseDateString, toDateString } = utils;
 
 const rangeOptions = (start, stop) => {
   let options = [];

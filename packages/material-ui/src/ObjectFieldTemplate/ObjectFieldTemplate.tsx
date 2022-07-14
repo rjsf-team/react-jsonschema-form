@@ -1,10 +1,8 @@
 import React from 'react';
-import { ObjectFieldTemplateProps, utils } from '@rjsf/core';
+import { ObjectFieldTemplateProps, canExpand, getUiOptions } from '@rjsf/utils';
 
 import { useMuiComponent } from '../MuiComponentContext';
 import AddButton from '../AddButton/AddButton';
-
-const { canExpand } = utils;
 
 const ObjectFieldTemplate = ({
   DescriptionField,
@@ -22,9 +20,10 @@ const ObjectFieldTemplate = ({
   onAddClick,
 }: ObjectFieldTemplateProps) => {
   const { Grid } = useMuiComponent();
+  const uiOptions = getUiOptions(uiSchema);
   return (
     <>
-      {(uiSchema['ui:title'] || title) && (
+      {(uiOptions.title || title) && (
         <TitleField id={`${idSchema.$id}-title`} title={title} required={required} />
       )}
       {description && <DescriptionField id={`${idSchema.$id}-description`} description={description} />}

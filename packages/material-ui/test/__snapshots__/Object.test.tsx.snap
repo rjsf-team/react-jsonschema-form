@@ -9,6 +9,7 @@ exports[`object fields additionalProperties 1`] = `
   <div
     className="MuiFormControl-root MuiFormControl-fullWidth"
   >
+    
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
       style={
@@ -240,6 +241,7 @@ exports[`object fields object 1`] = `
   <div
     className="MuiFormControl-root MuiFormControl-fullWidth"
   >
+    
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
       style={

@@ -1,12 +1,10 @@
 {
   "name": "@rjsf/core",
-  "version": "4.2.3",
+  "version": "4.2.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "build": "rimraf dist && tsdx build --format cjs,es && cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js && npm run deprecated:build:cjs && npm run deprecated:build:es && npm run deprecated:build:es:lib",
-    "deprecated:build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/cjs",
-    "deprecated:build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./dist/es",
-    "deprecated:build:es:lib": "rimraf lib && cross-env NODE_ENV=production BABEL_ENV=es babel --extensions \".js,.jsx,.ts,.tsx\" ./src --out-dir ./lib",
+    "build-umd": "cross-env NODE_ENV=production BABEL_ENV=umd webpack --config webpack.config.dist.js",
+    "build": "rimraf dist && tsdx build --format cjs,es && npm run build-umd",
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
@@ -27,11 +25,10 @@
   },
   "main": "dist/index.js",
   "module": "dist/core.esm.js",
-  "typings": "index.d.ts",
+  "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "lib",
-    "index.d.ts"
+    "lib"
   ],
   "engineStrict": false,
   "engines": {
@@ -41,16 +38,11 @@
     "react": ">=16 || >=17"
   },
   "dependencies": {
-    "@types/json-schema": "^7.0.7",
-    "ajv": "^6.7.0",
-    "core-js-pure": "^3.6.5",
-    "json-schema-merge-allof": "^0.6.0",
-    "jsonpointer": "^5.0.0",
+    "@rjsf/utils": "^4.2.0",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "nanoid": "^3.1.23",
-    "prop-types": "^15.7.2",
-    "react-is": "16.9.0"
+    "prop-types": "^15.7.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -62,10 +54,14 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
+    "@rjsf/utils": "^4.2.0",
+    "@rjsf/validator-ajv6": "^4.2.0",
+    "@types/lodash": "^4.14.182",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
+    "ajv": "^6.7.0",
     "atob": "^2.0.3",
     "babel-loader": "^8.0.6",
     "chai": "^3.3.0",
@@ -100,6 +96,8 @@
     "rimraf": "^2.5.4",
     "sinon": "^9.0.2",
     "style-loader": "^2.0.0",
+    "tsdx": "^0.14.1",
+    "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.13.2"
   },

@@ -1,10 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { utils } from "@rjsf/core";
-import { getSemanticProps } from "../util";
+import { localToUTC, utcToLocal, getDisplayLabel } from "@rjsf/utils";
 import { Form } from "semantic-ui-react";
-
-const { localToUTC, utcToLocal, getDisplayLabel } = utils;
+import { getSemanticProps } from "../util";
 
 function DateTimeWidget(props) {
   const {

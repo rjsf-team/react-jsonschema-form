@@ -1,10 +1,8 @@
 /* eslint-disable no-else-return */
 import React from 'react';
 
-import { utils } from '@rjsf/core';
+import { rangeSpec } from '@rjsf/utils';
 import Slider from 'antd/lib/slider';
-
-const { rangeSpec } = utils;
 
 const RangeWidget = ({
   autofocus,

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { rangeSpec } from "../../utils";
+import { rangeSpec } from "@rjsf/utils";
 
 function RangeWidget(props) {
   const {

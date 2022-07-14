@@ -1,8 +1,6 @@
-import { utils } from '@rjsf/core';
+import { ADDITIONAL_PROPERTY_FLAG } from '@rjsf/utils';
 import React from 'react';
 import { Button, Form, Grid } from "semantic-ui-react";
-
-const { ADDITIONAL_PROPERTY_FLAG } = utils;
 
 const WrapIfAdditional = ({
   children,
@@ -23,7 +21,7 @@ const WrapIfAdditional = ({
   } = formContext;
 
   const keyLabel = `${label} Key`; // i18n ?
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
     return <>{children}</>;

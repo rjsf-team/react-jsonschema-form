@@ -1,10 +1,8 @@
 import React from 'react';
-import { WidgetProps } from '@rjsf/core';
-import { utils } from '@rjsf/core';
+import { WidgetProps } from '@rjsf/utils';
+import { schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { useMuiComponent } from '../MuiComponentContext';
-
-const { schemaRequiresTrueValue } = utils;
 
 const CheckboxWidget = (props: WidgetProps) => {
   const { schema, id, value, disabled, readonly, label, autofocus, onChange, onBlur, onFocus } = props;

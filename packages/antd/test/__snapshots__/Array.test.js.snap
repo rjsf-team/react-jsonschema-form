@@ -22,6 +22,7 @@ exports[`array fields array 1`] = `
           }
         }
       >
+        
         <div
           className="ant-col ant-col-24 row array-item-list"
           style={
@@ -220,6 +221,7 @@ exports[`array fields fixed array 1`] = `
           }
         }
       >
+        
         <div
           className="ant-col ant-col-24 row array-item-list"
           style={

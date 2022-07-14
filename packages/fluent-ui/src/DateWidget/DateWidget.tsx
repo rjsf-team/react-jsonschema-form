@@ -1,14 +1,12 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import {
   DatePicker,
   DayOfWeek,
   mergeStyleSets,
 } from "@fluentui/react";
 import _pick from "lodash/pick";
-import { utils } from "@rjsf/core";
-
-const { pad } = utils;
+import { pad } from "@rjsf/utils";
 
 // Keys of IDropdownProps from @fluentui/react
 const allowedProps = [
@@ -67,8 +65,8 @@ const formatDate = (date?: Date) => {
   if (!date) {
     return "";
   }
-  const yyyy = pad(date.getFullYear(), 4);	
-  const MM = pad(date.getMonth() + 1, 2);	
+  const yyyy = pad(date.getFullYear(), 4);
+  const MM = pad(date.getMonth() + 1, 2);
   const dd = pad(date.getDate(), 2);
   return `${yyyy}-${MM}-${dd}`
 }

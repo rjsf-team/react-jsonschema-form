@@ -1,13 +1,7 @@
 import React from "react";
-import * as types from "../../types";
+import { getWidget, getUiOptions, optionsList, hasWidget } from "@rjsf/utils";
 
-import {
-  getWidget,
-  getUiOptions,
-  isSelect,
-  optionsList,
-  hasWidget,
-} from "../../utils";
+import * as types from "../../types";
 
 function StringField(props) {
   const {
@@ -27,8 +21,8 @@ function StringField(props) {
     rawErrors,
   } = props;
   const { title, format } = schema;
-  const { widgets, formContext } = registry;
-  const enumOptions = isSelect(schema) && optionsList(schema);
+  const { widgets, formContext, schemaUtils } = registry;
+  const enumOptions = schemaUtils.isSelect(schema) && optionsList(schema);
   let defaultWidget = enumOptions ? "select" : "text";
   if (format && hasWidget(schema, format, widgets)) {
     defaultWidget = format;

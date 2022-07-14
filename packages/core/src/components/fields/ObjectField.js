@@ -1,13 +1,13 @@
 import AddButton from "../AddButton";
 import React, { Component } from "react";
-import * as types from "../../types";
-
 import {
   orderProperties,
-  retrieveSchema,
   canExpand,
   ADDITIONAL_PROPERTY_FLAG,
-} from "../../utils";
+  REF_KEY,
+} from "@rjsf/utils";
+
+import * as types from "../../types";
 
 function DefaultObjectFieldTemplate(props) {
   const { TitleField, DescriptionField } = props;
@@ -100,7 +100,7 @@ class ObjectField extends Component {
   getAvailableKey = (preferredKey, formData) => {
     var index = 0;
     var newKey = preferredKey;
-    while (formData.hasOwnProperty(newKey)) {
+    while (newKey in formData) {
       newKey = `${preferredKey}-${++index}`;
     }
     return newKey;
@@ -158,11 +158,11 @@ class ObjectField extends Component {
     let type = schema.additionalProperties.type;
     const newFormData = { ...this.props.formData };
 
-    if (schema.additionalProperties.hasOwnProperty("$ref")) {
+    if (REF_KEY in schema.additionalProperties) {
       const { registry } = this.props;
-      const refSchema = retrieveSchema(
-        { $ref: schema.additionalProperties["$ref"] },
-        registry.rootSchema,
+      const { schemaUtils } = registry;
+      const refSchema = schemaUtils.retrieveSchema(
+        { $ref: schema.additionalProperties[REF_KEY] },
         this.props.formData
       );
 
@@ -194,9 +194,9 @@ class ObjectField extends Component {
       registry,
     } = this.props;
 
-    const { rootSchema, fields, formContext } = registry;
+    const { fields, formContext, schemaUtils } = registry;
     const { SchemaField, TitleField, DescriptionField } = fields;
-    const schema = retrieveSchema(this.props.schema, rootSchema, formData);
+    const schema = schemaUtils.retrieveSchema(this.props.schema, formData);
 
     const title = schema.title === undefined ? name : schema.title;
     const description = uiSchema["ui:description"] || schema.description;
@@ -227,9 +227,8 @@ class ObjectField extends Component {
       TitleField,
       DescriptionField,
       properties: orderedProperties.map(name => {
-        const addedByAdditionalProperties = schema.properties[
-          name
-        ].hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+        const addedByAdditionalProperties =
+          ADDITIONAL_PROPERTY_FLAG in schema.properties[name];
         const fieldUiSchema = addedByAdditionalProperties
           ? uiSchema.additionalProperties
           : uiSchema[name];

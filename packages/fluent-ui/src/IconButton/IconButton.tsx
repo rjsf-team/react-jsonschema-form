@@ -17,10 +17,10 @@ export default (props: IconButtonProps) => {
   const iconProps: IIconProps = {
     iconName: mappings[props.icon]
   }
-  
+
  return <IconButton
     disabled={props.disabled}
-    onClick={e => props.onClick(e as any)}
+    onClick={props.onClick}
     iconProps={iconProps}
     color="secondary" />
 }

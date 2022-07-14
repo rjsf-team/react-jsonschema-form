@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorListProps } from "@rjsf/core";
+import { ErrorListProps } from "@rjsf/utils";
 import {
   List,
   ListIcon,

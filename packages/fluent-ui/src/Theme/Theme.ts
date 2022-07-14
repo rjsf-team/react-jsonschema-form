@@ -5,13 +5,11 @@ import FieldTemplate from '../FieldTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
 import Widgets from '../Widgets';
 
-import { ThemeProps } from '@rjsf/core';
-import { utils } from '@rjsf/core';
-const { getDefaultRegistry } = utils;
+import { WithThemeProps, getDefaultRegistry } from '@rjsf/core';
 
 const { fields, widgets } = getDefaultRegistry();
 
-const Theme: ThemeProps = {
+const Theme: WithThemeProps = {
   ArrayFieldTemplate,
   fields: { ...fields, ...Fields },
   FieldTemplate,

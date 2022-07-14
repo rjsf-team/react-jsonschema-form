@@ -2,7 +2,7 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-import { WidgetProps } from "@rjsf/core";
+import { getUiOptions, WidgetProps } from "@rjsf/utils";
 
 const UpDownWidget = ({
   id,
@@ -18,6 +18,7 @@ const UpDownWidget = ({
   schema,
   uiSchema
 }: WidgetProps) => {
+  const uiOptions = getUiOptions(uiSchema);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(value);
@@ -30,8 +31,8 @@ const UpDownWidget = ({
   return (
     <Form.Group  className="mb-0">
       <Form.Label>
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
+        {uiOptions.title || schema.title || label}
+        {(label || uiOptions.title || schema.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
         id={id}

@@ -1,5 +1,6 @@
 import React from 'react';
 import renderer from "react-test-renderer";
+import validator from "@rjsf/validator-ajv6";
 
 import '../__mocks__/matchMedia.mock';
 import Form from '../src';
@@ -16,7 +17,7 @@ describe("object fields", () => {
       }
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

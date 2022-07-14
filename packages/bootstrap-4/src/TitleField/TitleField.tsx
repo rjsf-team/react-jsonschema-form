@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldProps } from "@rjsf/core";
+import { FieldProps } from "@rjsf/utils";
 
 export interface TitleFieldProps extends Partial<FieldProps> {
   title: string;

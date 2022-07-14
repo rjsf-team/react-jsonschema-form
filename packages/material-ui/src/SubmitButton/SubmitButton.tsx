@@ -1,9 +1,8 @@
 import React from 'react';
-import { WidgetProps, utils } from '@rjsf/core';
+import { WidgetProps, getSubmitButtonOptions } from '@rjsf/utils';
 import { useMuiComponent } from '../MuiComponentContext';
 
-const { getSubmitButtonOptions } = utils;
-const SubmitButton: React.FC<WidgetProps> = props => {
+const SubmitButton: React.ComponentType<WidgetProps> = props => {
   const { Box, Button } = useMuiComponent();
   const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(props.uiSchema);
   if(norender) return null;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldTemplateProps } from '@rjsf/core';
+import { FieldTemplateProps } from '@rjsf/utils';
 
 import { useMuiComponent } from '../MuiComponentContext';
 import WrapIfAdditional from './WrapIfAdditional';

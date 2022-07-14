@@ -2,7 +2,7 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-import { WidgetProps } from "@rjsf/core";
+import { getUiOptions, WidgetProps } from "@rjsf/utils";
 
 const TextWidget = ({
   id,
@@ -23,6 +23,7 @@ const TextWidget = ({
   uiSchema,
 
 }: WidgetProps) => {
+  const uiOptions = getUiOptions(uiSchema);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -38,8 +39,8 @@ const TextWidget = ({
   return (
     <Form.Group className="mb-0">
       <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
+        {uiOptions.title || schema.title || label}
+        {(label || uiOptions.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
         id={id}

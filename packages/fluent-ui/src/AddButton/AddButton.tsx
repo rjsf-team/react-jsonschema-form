@@ -12,7 +12,7 @@ const AddButton = (props: AddButtonProps) => (
     iconProps={addIcon}
     text="Add item"
     className={props.className}
-    onClick={e => props.onClick(e as any)}
+    onClick={props.onClick}
     disabled={props.disabled}
     />
 

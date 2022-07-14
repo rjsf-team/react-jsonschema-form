@@ -1,7 +1,7 @@
 import React from "react";
+import { asNumber } from "@rjsf/utils";
 
 import * as types from "../../types";
-import { asNumber } from "../../utils";
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
 // digits followed by any number of 0 characters up until the end of the line.
