@@ -1,18 +1,14 @@
 import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
-import * as types from "../../types";
-
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  isSelect,
-  retrieveSchema,
-  toIdSchema,
   mergeObjects,
   deepEquals,
   getSchemaType,
-  getDisplayLabel,
-} from "../../utils";
+} from "@rjsf/utils";
+
+import * as types from "../../types";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
@@ -191,7 +187,7 @@ function WrapIfAdditional(props) {
     schema,
   } = props;
   const keyLabel = `${label} Key`; // i18n ?
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
     return <div className={classNames}>{props.children}</div>;
@@ -245,13 +241,13 @@ function SchemaFieldRender(props) {
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { rootSchema, fields, formContext } = registry;
+  const { fields, formContext, schemaUtils } = registry;
   const FieldTemplate =
     uiSchema["ui:FieldTemplate"] || registry.FieldTemplate || DefaultTemplate;
   let idSchema = props.idSchema;
-  const schema = retrieveSchema(props.schema, rootSchema, formData);
+  const schema = schemaUtils.retrieveSchema(props.schema, formData);
   idSchema = mergeObjects(
-    toIdSchema(schema, null, rootSchema, formData, idPrefix, idSeparator),
+    schemaUtils.toIdSchema(schema, null, formData, idPrefix, idSeparator),
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
@@ -274,7 +270,7 @@ function SchemaFieldRender(props) {
     return null;
   }
 
-  const displayLabel = getDisplayLabel(schema, uiSchema, rootSchema);
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
 
   const { __errors, ...fieldErrorSchema } = errorSchema;
 
@@ -366,7 +362,7 @@ function SchemaFieldRender(props) {
         render the selection and let `StringField` component handle
         rendering
       */}
-        {schema.anyOf && !isSelect(schema) && (
+        {schema.anyOf && !schemaUtils.isSelect(schema) && (
           <_AnyOfField
             disabled={disabled}
             readonly={readonly}
@@ -380,7 +376,7 @@ function SchemaFieldRender(props) {
             onChange={props.onChange}
             onFocus={props.onFocus}
             options={schema.anyOf.map(_schema =>
-              retrieveSchema(_schema, rootSchema, formData)
+              schemaUtils.retrieveSchema(_schema, formData)
             )}
             baseType={schema.type}
             registry={registry}
@@ -389,7 +385,7 @@ function SchemaFieldRender(props) {
           />
         )}
 
-        {schema.oneOf && !isSelect(schema) && (
+        {schema.oneOf && !schemaUtils.isSelect(schema) && (
           <_OneOfField
             disabled={disabled}
             readonly={readonly}
@@ -403,7 +399,7 @@ function SchemaFieldRender(props) {
             onChange={props.onChange}
             onFocus={props.onFocus}
             options={schema.oneOf.map(_schema =>
-              retrieveSchema(_schema, rootSchema, formData)
+              schemaUtils.retrieveSchema(_schema, formData)
             )}
             baseType={schema.type}
             registry={registry}

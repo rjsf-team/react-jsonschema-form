@@ -1,6 +1,6 @@
 import React from "react";
 import { ChoiceGroup, IChoiceGroupOption, IChoiceGroupProps } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const allowedProps: (keyof IChoiceGroupProps)[] = [

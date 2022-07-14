@@ -58,6 +58,7 @@ exports[`object fields object 1`] = `
     className="chakra-form-control emotion-0"
     role="group"
   >
+    
     <div
       className="emotion-1"
     >

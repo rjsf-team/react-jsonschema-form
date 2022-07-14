@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Input } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
+import { rangeSpec } from "@rjsf/utils";
 import { getSemanticProps } from "../util";
 
-const { rangeSpec } = utils;
 function RangeWidget(props) {
   const {
     id,

@@ -234,7 +234,9 @@ exports[`single fields format color 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -276,7 +278,9 @@ exports[`single fields format date 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -318,7 +322,9 @@ exports[`single fields format datetime 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -355,6 +361,7 @@ exports[`single fields hidden field 1`] = `
   <div
     className="form-group"
   >
+    
     <div
       className="p-0 container-fluid"
     >
@@ -430,7 +437,9 @@ exports[`single fields number field 0 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -472,7 +481,9 @@ exports[`single fields number field 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -555,7 +566,9 @@ exports[`single fields radio field 1`] = `
     >
       <label
         className="d-block form-label"
-      />
+      >
+        
+      </label>
       <div
         className="form-check"
       >
@@ -690,7 +703,9 @@ exports[`single fields string field format data-url 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control-file"
@@ -732,7 +747,9 @@ exports[`single fields string field format email 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -774,7 +791,9 @@ exports[`single fields string field format uri 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -816,7 +835,9 @@ exports[`single fields string field regular 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -858,7 +879,9 @@ exports[`single fields string field with placeholder 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"
@@ -897,7 +920,9 @@ exports[`single fields textarea field 1`] = `
   >
     <label
       htmlFor="root"
-    />
+    >
+      
+    </label>
     <div
       className="input-group"
     >
@@ -1067,7 +1092,9 @@ exports[`single fields using custom tagName 1`] = `
     >
       <label
         className="form-label"
-      />
+      >
+        
+      </label>
       <input
         autoFocus={false}
         className="form-control"

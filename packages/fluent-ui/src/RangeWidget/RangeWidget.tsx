@@ -1,11 +1,9 @@
 import React from "react";
 import { Slider, Label } from "@fluentui/react";
 
-import { utils } from "@rjsf/core";
-import { WidgetProps } from "@rjsf/core";
+import { rangeSpec } from "@rjsf/utils";
+import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
-
-const { rangeSpec } = utils;
 
 const styles_red = {
   // TODO: get this color from theme.

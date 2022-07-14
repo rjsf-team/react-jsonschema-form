@@ -1,9 +1,7 @@
 import React from 'react';
-import { WidgetProps, utils } from '@rjsf/core';
+import { WidgetProps } from '@rjsf/utils';
 
 import { useMuiComponent } from '../MuiComponentContext';
-
-const { getDisplayLabel } = utils;
 
 const TextWidget = ({
   id,
@@ -32,8 +30,8 @@ const TextWidget = ({
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
   const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const { rootSchema } = registry;
-  const displayLabel = getDisplayLabel(schema, uiSchema, rootSchema);
+  const { schemaUtils } = registry;
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   const inputType = (type || schema.type) === 'string' ? 'text' : `${type || schema.type}`;
 
   return (

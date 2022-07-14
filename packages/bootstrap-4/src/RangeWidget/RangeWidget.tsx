@@ -2,10 +2,7 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-import { utils } from "@rjsf/core";
-import { WidgetProps } from "@rjsf/core";
-
-const { rangeSpec } = utils;
+import { getUiOptions, rangeSpec, WidgetProps } from "@rjsf/utils";
 
 const RangeWidget = ({
   value,
@@ -22,6 +19,7 @@ const RangeWidget = ({
   uiSchema,
 }: WidgetProps) => {
   let sliderProps = { value, label, id, ...rangeSpec(schema) };
+  const uiOptions = getUiOptions(uiSchema);
 
   const _onChange = ({
     target: { value },
@@ -36,8 +34,8 @@ const RangeWidget = ({
   return (
     <Form.Group className="mb-0">
       <Form.Label>
-        {uiSchema["ui:title"] || schema.title || label}
-        {(label || uiSchema["ui:title"] || schema.title) && required ? "*" : null}
+        {uiOptions.title || schema.title || label}
+        {(label || uiOptions.title || schema.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
         type="range"

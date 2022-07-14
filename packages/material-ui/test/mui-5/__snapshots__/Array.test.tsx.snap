@@ -161,16 +161,13 @@ exports[`array fields array icons 1`] = `
                             className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                           >
                             <legend
-                              className="css-nnbavb"
+                              className="css-hdw1oc"
                             >
                               <span
                                 className="notranslate"
-                                dangerouslySetInnerHTML={
-                                  Object {
-                                    "__html": "&#8203;",
-                                  }
-                                }
-                              />
+                              >
+                                ​
+                              </span>
                             </legend>
                           </fieldset>
                         </div>
@@ -361,16 +358,13 @@ exports[`array fields array icons 1`] = `
                             className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                           >
                             <legend
-                              className="css-nnbavb"
+                              className="css-hdw1oc"
                             >
                               <span
                                 className="notranslate"
-                                dangerouslySetInnerHTML={
-                                  Object {
-                                    "__html": "&#8203;",
-                                  }
-                                }
-                              />
+                              >
+                                ​
+                              </span>
                             </legend>
                           </fieldset>
                         </div>
@@ -607,6 +601,7 @@ exports[`array fields checkboxes 1`] = `
       <div
         className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
         onClick={[Function]}
+        variant="outlined"
       >
         <div
           aria-expanded="false"
@@ -623,12 +618,9 @@ exports[`array fields checkboxes 1`] = `
         >
           <span
             className="notranslate"
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": "&#8203;",
-              }
-            }
-          />
+          >
+            ​
+          </span>
         </div>
         <input
           aria-hidden={true}
@@ -657,16 +649,13 @@ exports[`array fields checkboxes 1`] = `
           className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            className="css-nnbavb"
+            className="css-hdw1oc"
           >
             <span
               className="notranslate"
-              dangerouslySetInnerHTML={
-                Object {
-                  "__html": "&#8203;",
-                }
-              }
-            />
+            >
+              ​
+            </span>
           </legend>
         </fieldset>
       </div>
@@ -767,16 +756,13 @@ exports[`array fields fixed array 1`] = `
                             className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                           >
                             <legend
-                              className="css-nnbavb"
+                              className="css-hdw1oc"
                             >
                               <span
                                 className="notranslate"
-                                dangerouslySetInnerHTML={
-                                  Object {
-                                    "__html": "&#8203;",
-                                  }
-                                }
-                              />
+                              >
+                                ​
+                              </span>
                             </legend>
                           </fieldset>
                         </div>
@@ -837,16 +823,13 @@ exports[`array fields fixed array 1`] = `
                             className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                           >
                             <legend
-                              className="css-nnbavb"
+                              className="css-hdw1oc"
                             >
                               <span
                                 className="notranslate"
-                                dangerouslySetInnerHTML={
-                                  Object {
-                                    "__html": "&#8203;",
-                                  }
-                                }
-                              />
+                              >
+                                ​
+                              </span>
                             </legend>
                           </fieldset>
                         </div>

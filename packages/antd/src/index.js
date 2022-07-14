@@ -1,4 +1,4 @@
-import { utils, withTheme } from '@rjsf/core';
+import { withTheme, getDefaultRegistry } from '@rjsf/core';
 
 import DescriptionField from './fields/DescriptionField';
 import TitleField from './fields/TitleField';
@@ -29,7 +29,6 @@ import ErrorList from './ErrorList';
 
 // import './index.less';
 
-const { getDefaultRegistry } = utils;
 const { fields, widgets } = getDefaultRegistry();
 
 export const Fields = {

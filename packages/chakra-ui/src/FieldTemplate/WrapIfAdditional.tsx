@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { utils } from "@rjsf/core";
-import { JSONSchema7 } from "json-schema";
+import { FieldTemplateProps, ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
 
 import {
   FormControl,
@@ -13,20 +12,11 @@ import {
 
 import IconButton from "../IconButton";
 
-const { ADDITIONAL_PROPERTY_FLAG } = utils;
-
-interface WrapIfAdditionalProps {
-  children: React.ReactElement;
-  classNames: string;
-  disabled: boolean;
-  id: string;
-  label: string;
-  onDropPropertyClick: (index: string) => (event?: any) => void;
-  onKeyChange: (index: string) => (event?: any) => void;
-  readonly: boolean;
-  required: boolean;
-  schema: JSONSchema7;
-}
+type WrapIfAdditionalProps = { children: React.ReactElement; } &
+  Pick<
+    FieldTemplateProps,
+    'classNames' | 'disabled' | 'id' | 'label' | 'onDropPropertyClick' | 'onKeyChange' | 'readonly' | 'required' | 'schema'
+  >;
 
 const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
   const {

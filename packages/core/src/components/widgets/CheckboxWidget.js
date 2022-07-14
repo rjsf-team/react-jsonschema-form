@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { schemaRequiresTrueValue } from "../../utils";
+import { schemaRequiresTrueValue } from "@rjsf/utils";
 
 function CheckboxWidget(props) {
   const {

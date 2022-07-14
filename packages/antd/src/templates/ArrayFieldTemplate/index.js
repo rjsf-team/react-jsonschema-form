@@ -1,19 +1,9 @@
 import React from 'react';
 
-import { utils } from '@rjsf/core';
+import { getUiOptions, getWidget, isFixedItems, optionsList, ITEMS_KEY } from '@rjsf/utils';
 
 import FixedArrayFieldTemplate from './FixedArrayFieldTemplate';
 import NormalArrayFieldTemplate from './NormalArrayFieldTemplate';
-
-const {
-  getUiOptions,
-  getWidget,
-  isFilesArray,
-  isFixedItems,
-  isMultiSelect,
-  optionsList,
-  retrieveSchema,
-} = utils;
 
 const ArrayFieldTemplate = ({
   DescriptionField,
@@ -41,7 +31,7 @@ const ArrayFieldTemplate = ({
   title,
   uiSchema,
 }) => {
-  const { fields, rootSchema, widgets } = registry;
+  const { fields, schemaUtils, widgets } = registry;
   const { UnsupportedField } = fields;
 
   const renderFiles = () => {
@@ -71,7 +61,7 @@ const ArrayFieldTemplate = ({
   };
 
   const renderMultiSelect = () => {
-    const itemsSchema = retrieveSchema(schema.items, rootSchema, formData);
+    const itemsSchema = schemaUtils.retrieveSchema(schema.items, formData);
     const enumOptions = optionsList(itemsSchema);
     const { widget = 'select', ...options } = {
       ...getUiOptions(uiSchema),
@@ -103,7 +93,7 @@ const ArrayFieldTemplate = ({
     );
   };
 
-  if (!Object.prototype.hasOwnProperty.call(schema, 'items')) {
+  if (!(ITEMS_KEY in schema)) {
     return (
       <UnsupportedField
         idSchema={idSchema}
@@ -135,10 +125,10 @@ const ArrayFieldTemplate = ({
       />
     );
   }
-  if (isFilesArray(schema, uiSchema, rootSchema)) {
+  if (schemaUtils.isFilesArray(schema, uiSchema)) {
     return renderFiles();
   }
-  if (isMultiSelect(schema, rootSchema)) {
+  if (schemaUtils.isMultiSelect(schema)) {
     return renderMultiSelect();
   }
 

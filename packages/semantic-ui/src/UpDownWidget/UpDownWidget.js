@@ -1,10 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Form } from "semantic-ui-react";
-import { getSemanticProps } from
-'../util';
-import {  utils } from "@rjsf/core";
-const { getDisplayLabel } = utils;
+import { getSemanticProps } from '../util';
+
 function UpDownWidget(props) {
   const {
     id,
@@ -22,21 +20,19 @@ function UpDownWidget(props) {
     schema,
     uiSchema,
     formContext,
+    registry,
   } = props;
   const semanticProps = getSemanticProps(
     { formContext,
       options,
       uiSchema,
   });
+  const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const displayLabel = getDisplayLabel(
-    schema,
-    uiSchema
-    /* TODO: , rootSchema */
-  );
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   return (
     <React.Fragment>
       <Form.Input

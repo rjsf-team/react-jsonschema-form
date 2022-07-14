@@ -1,14 +1,12 @@
 import React from 'react';
 
-import { utils } from '@rjsf/core';
+import { ADDITIONAL_PROPERTY_FLAG } from '@rjsf/utils';
 import Button from 'antd/lib/button';
 import Col from 'antd/lib/col';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Row from 'antd/lib/row';
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
-
-const { ADDITIONAL_PROPERTY_FLAG } = utils;
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };

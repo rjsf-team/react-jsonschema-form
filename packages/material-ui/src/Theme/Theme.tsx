@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, Ref } from 'react';
-import { ThemeProps } from '@rjsf/core';
+import { WithThemeProps } from '@rjsf/core';
 
 import MuiComponentContext from '../MuiComponentContext';
 import ThemeCommon from '../ThemeCommon';
@@ -26,7 +26,7 @@ const Mui4FormWrapper = React.forwardRef(
 
 /** The Material UI 4 theme, with the `Mui4FormWrapper`
  */
-const Theme: ThemeProps = {
+const Theme: WithThemeProps = {
   _internalFormWrapper: Mui4FormWrapper,
   ...ThemeCommon,
 };

@@ -1,9 +1,9 @@
-import { WidgetProps } from "@rjsf/core";
-import { JSONSchema7 } from "json-schema";
+import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv6";
 
 import TextWidget from "../../src/TextWidget/TextWidget";
 
-export const mockSchema: JSONSchema7 = {
+export const mockSchema: RJSFSchema = {
   type: "array",
   items: {
     type: "string",
@@ -11,6 +11,8 @@ export const mockSchema: JSONSchema7 = {
 };
 
 export const mockEventHandlers = (): void => void 0;
+
+export const mockSchemaUtils = createSchemaUtils(validator, mockSchema);
 
 export function makeWidgetMockProps(
   props: Partial<WidgetProps> = {}
@@ -37,8 +39,8 @@ export function makeWidgetMockProps(
       fields: {},
       widgets: { TextWidget },
       formContext: {},
-      definitions: {},
       rootSchema: {},
+      schemaUtils: mockSchemaUtils,
     },
     ...props,
   };

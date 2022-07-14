@@ -1,8 +1,6 @@
-
 import React from "react";
 
-import { utils } from "@rjsf/core";
-import { JSONSchema7 } from "json-schema";
+import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,20 +8,11 @@ import Form from "react-bootstrap/Form";
 
 import IconButton from "../IconButton/IconButton";
 
-const { ADDITIONAL_PROPERTY_FLAG } = utils;
-
-type WrapIfAdditionalProps = {
-  children: React.ReactElement;
-  classNames: string;
-  disabled: boolean;
-  id: string;
-  label: string;
-  onDropPropertyClick: (index: string) => (event?: any) => void;
-  onKeyChange: (index: string) => (event?: any) => void;
-  readonly: boolean;
-  required: boolean;
-  schema: JSONSchema7;
-};
+type WrapIfAdditionalProps = { children: React.ReactElement; } &
+  Pick<
+    FieldTemplateProps,
+    'classNames' | 'disabled' | 'id' | 'label' | 'onDropPropertyClick' | 'onKeyChange' | 'readonly' | 'required' | 'schema'
+  >;
 
 const WrapIfAdditional = ({
   children,

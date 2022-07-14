@@ -21,6 +21,7 @@ exports[`single fields field with description 1`] = `
           }
         }
       >
+        
         <div
           className="ant-col ant-col-24"
           style={
@@ -129,6 +130,7 @@ exports[`single fields field with description in uiSchema 1`] = `
           }
         }
       >
+        
         <div
           className="ant-col ant-col-24"
           style={
@@ -236,7 +238,9 @@ exports[`single fields hidden field 1`] = `
             "marginRight": -12,
           }
         }
-      />
+      >
+        
+      </div>
     </fieldset>
   </div>
   <button

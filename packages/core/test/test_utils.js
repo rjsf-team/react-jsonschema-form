@@ -4,6 +4,7 @@ import React from "react";
 import sinon from "sinon";
 import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
 import { findDOMNode, render } from "react-dom";
+import validator from "@rjsf/validator-ajv6";
 
 import Form from "../src";
 
@@ -24,7 +25,7 @@ export function createComponent(Component, props) {
 }
 
 export function createFormComponent(props) {
-  return createComponent(Form, { ...props });
+  return createComponent(Form, { validator, ...props });
 }
 
 export function createSandbox() {

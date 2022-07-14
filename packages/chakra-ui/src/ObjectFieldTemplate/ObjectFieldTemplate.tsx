@@ -2,12 +2,9 @@ import * as React from "react";
 
 import { Grid, GridItem } from "@chakra-ui/react";
 
-import { ObjectFieldTemplateProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import { canExpand, getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
 
 import AddButton from "../AddButton";
-
-const { canExpand } = utils;
 
 const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   const {
@@ -25,13 +22,14 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     formData,
     onAddClick,
   } = props;
+  const uiOptions = getUiOptions(uiSchema);
 
   return (
     <React.Fragment>
-      {(uiSchema["ui:title"] || title) && (
+      {(uiOptions.title || title) && (
         <TitleField
           id={`${idSchema.$id}-title`}
-          title={title}
+          title={uiOptions.title || title}
           required={required}
         />
       )}

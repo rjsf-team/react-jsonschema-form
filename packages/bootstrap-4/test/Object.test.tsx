@@ -1,11 +1,13 @@
 import React from 'react';
-import Form from "../src/index";
-import { JSONSchema7 } from "json-schema";
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
+
+import Form from "../src/index";
 
 describe("object fields", () => {
   test("object", () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         a: {type: "string"},
@@ -13,7 +15,7 @@ describe("object fields", () => {
       }
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

@@ -1,8 +1,6 @@
 import React from 'react';
-import { utils } from '@rjsf/core';
-import { WidgetProps } from '@rjsf/core';
-
-const { localToUTC, utcToLocal } = utils;
+import { localToUTC, utcToLocal } from '@rjsf/utils';
+import { WidgetProps } from '@rjsf/utils';
 
 const DateTimeWidget = (props: WidgetProps) => {
   const { registry } = props;

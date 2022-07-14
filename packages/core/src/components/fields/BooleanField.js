@@ -1,7 +1,7 @@
 import React from "react";
-import * as types from "../../types";
+import { getWidget, getUiOptions, optionsList } from "@rjsf/utils";
 
-import { getWidget, getUiOptions, optionsList } from "../../utils";
+import * as types from "../../types";
 
 function BooleanField(props) {
   const {

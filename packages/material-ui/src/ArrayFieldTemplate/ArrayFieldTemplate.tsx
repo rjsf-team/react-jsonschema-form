@@ -1,16 +1,15 @@
 import React from 'react';
 
-import { ArrayFieldTemplateProps, IdSchema, utils } from '@rjsf/core';
+import { ArrayFieldTemplateProps, getUiOptions, IdSchema } from '@rjsf/utils';
 
 import AddButton from '../AddButton/AddButton';
 import { useMuiComponent } from '../MuiComponentContext';
 
-const { isMultiSelect, getDefaultRegistry } = utils;
-
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-  const { schema, registry = getDefaultRegistry() } = props;
+  const { schema, registry } = props;
+  const { schemaUtils } = registry;
 
-  if (isMultiSelect(schema, registry.rootSchema)) {
+  if (schemaUtils.isMultiSelect(schema)) {
     return <DefaultFixedArrayFieldTemplate {...props} />;
   } else {
     return <DefaultNormalArrayFieldTemplate {...props} />;
@@ -20,8 +19,8 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 type ArrayFieldTitleProps = {
   TitleField: any;
   idSchema: IdSchema;
-  title: string;
-  required: boolean;
+  title?: string;
+  required?: boolean;
 };
 
 const ArrayFieldTitle = ({ TitleField, idSchema, title, required }: ArrayFieldTitleProps) => {
@@ -36,7 +35,7 @@ const ArrayFieldTitle = ({ TitleField, idSchema, title, required }: ArrayFieldTi
 type ArrayFieldDescriptionProps = {
   DescriptionField: any;
   idSchema: IdSchema;
-  description: string;
+  description?: string;
 };
 
 const ArrayFieldDescription = ({ DescriptionField, idSchema, description }: ArrayFieldDescriptionProps) => {
@@ -113,19 +112,20 @@ const DefaultArrayItem = (props: any) => {
 };
 
 const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
+  const uiOptions = getUiOptions(props.uiSchema);
   return (
     <fieldset className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
         idSchema={props.idSchema}
-        title={props.uiSchema['ui:title'] || props.title}
+        title={uiOptions.title || props.title}
         required={props.required}
       />
 
-      {(props.uiSchema['ui:description'] || props.schema.description) && (
+      {(uiOptions.description || props.schema.description) && (
         <div className="field-description" key={`field-description-${props.idSchema.$id}`}>
-          {props.uiSchema['ui:description'] || props.schema.description}
+          {uiOptions.description || props.schema.description}
         </div>
       )}
 
@@ -146,6 +146,7 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { Box, Grid, Paper } = useMuiComponent();
+  const uiOptions = getUiOptions(props.uiSchema);
   return (
     <Paper elevation={2}>
       <Box p={2}>
@@ -153,16 +154,16 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           key={`array-field-title-${props.idSchema.$id}`}
           TitleField={props.TitleField}
           idSchema={props.idSchema}
-          title={props.uiSchema['ui:title'] || props.title}
+          title={uiOptions.title || props.title}
           required={props.required}
         />
 
-        {(props.uiSchema['ui:description'] || props.schema.description) && (
+        {(uiOptions.description || props.schema.description) && (
           <ArrayFieldDescription
             key={`array-field-description-${props.idSchema.$id}`}
             DescriptionField={props.DescriptionField}
             idSchema={props.idSchema}
-            description={props.uiSchema['ui:description'] || props.schema.description}
+            description={uiOptions.description || props.schema.description}
           />
         )}
 

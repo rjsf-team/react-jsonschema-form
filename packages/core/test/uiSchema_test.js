@@ -3,6 +3,8 @@ import React from "react";
 import sinon from "sinon";
 import { render } from "react-dom";
 import { Simulate } from "react-dom/test-utils";
+import validator from "@rjsf/validator-ajv6";
+
 import SelectWidget from "../src/components/widgets/SelectWidget";
 import RadioWidget from "../src/components/widgets/RadioWidget";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
@@ -83,7 +85,7 @@ describe("uiSchema", () => {
       let widget, widgets, schema, uiSchema;
 
       beforeEach(() => {
-        sandbox.stub(console, "warn");
+        sandbox.stub(console, "error");
 
         widget = ({ label, options }) => <div id={label} style={options} />;
         widget.defaultProps = {
@@ -123,14 +125,10 @@ describe("uiSchema", () => {
         uiSchema = {
           // pass widget as function
           funcAll: {
-            "ui:widget": {
-              component: widget,
-              options: {
-                background: "purple",
-              },
-            },
+            "ui:widget": widget,
             "ui:options": {
               margin: "7px",
+              background: "purple",
             },
             "ui:padding": "42px",
           },
@@ -140,14 +138,10 @@ describe("uiSchema", () => {
 
           // pass widget as string
           stringAll: {
-            "ui:widget": {
-              component: "widget",
-              options: {
-                background: "blue",
-              },
-            },
+            "ui:widget": "widget",
             "ui:options": {
               margin: "19px",
+              background: "blue",
             },
             "ui:padding": "41px",
           },
@@ -162,7 +156,7 @@ describe("uiSchema", () => {
         };
       });
 
-      it("should log warning when deprecated ui:widget: {component, options} api is used", () => {
+      it("should log error when unsupported ui:widget: {component, options} api is used", () => {
         createFormComponent({
           schema: {
             type: "string",
@@ -174,8 +168,11 @@ describe("uiSchema", () => {
           },
           widgets,
         });
-        expect(console.warn.calledWithMatch(/ui:widget object is deprecated/))
-          .to.be.true;
+        expect(
+          console.error.calledWithMatch(
+            /ui:widget object is no longer supported/
+          )
+        ).to.be.true;
       });
 
       it("should cache MergedWidget instance", () => {
@@ -538,6 +535,7 @@ describe("uiSchema", () => {
   describe("ui:focus", () => {
     const shouldFocus = (schema, uiSchema, selector = "input", formData) => {
       const props = {
+        validator,
         schema,
         uiSchema,
       };

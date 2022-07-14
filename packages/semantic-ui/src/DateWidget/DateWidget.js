@@ -1,10 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { getSemanticProps } from "../util";
 import { Form } from "semantic-ui-react";
-import {  utils } from "@rjsf/core";
+import { getSemanticProps } from "../util";
 
-const { getDisplayLabel } = utils;
 function DateWidget(props) {
   const {
     id,
@@ -22,6 +20,7 @@ function DateWidget(props) {
     formContext,
     schema,
     uiSchema,
+    registry,
   } = props;
   const semanticProps = getSemanticProps({
     uiSchema,
@@ -29,14 +28,11 @@ function DateWidget(props) {
     formContext,
     options,
   });
+  const { schemaUtils } = registry;
   const _onChange = ({ target: { value } }) => onChange && onChange(value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const displayLabel = getDisplayLabel(
-    schema,
-    uiSchema
-    /* TODO: , rootSchema */
-  );
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   return (
     <Form.Input
     key={id}
