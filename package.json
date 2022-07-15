@@ -17,10 +17,10 @@
   },
   "dependencies": {
     "lerna": "^4.0.0",
-    "prettier": "^1.18.2"
+    "prettier": "^2.7.1"
   },
   "prettier": {
-    "jsxBracketSameLine": true,
+    "bracketSameLine": false,
     "trailingComma": "es5",
     "useTabs": false,
     "semi": true,
