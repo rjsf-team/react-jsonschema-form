@@ -12,6 +12,10 @@ export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
   customFormats: {
     'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
     'area-code': /\d{3}/,
+  },
+  ajvOptionsOverrides: {
+    $data: true,
+    verbose: true,
   }
 };
 
@@ -43,13 +47,17 @@ describe('createAjvInstance()', () => {
   describe('no additional meta schemas or custom formats', () => {
     let ajv: AjvType;
     beforeAll(() => {
-      ajv = createAjvInstance(CUSTOM_OPTIONS.additionalMetaSchemas, CUSTOM_OPTIONS.customFormats);
+      ajv = createAjvInstance(
+        CUSTOM_OPTIONS.additionalMetaSchemas,
+        CUSTOM_OPTIONS.customFormats,
+        CUSTOM_OPTIONS.ajvOptionsOverrides
+      );
     });
     afterAll(() => {
       (Ajv as unknown as jest.Mock).mockClear();
     });
     it('expect a new Ajv to be constructed with the AJV_CONFIG', () => {
-      expect(Ajv).toHaveBeenCalledWith(AJV_CONFIG);
+      expect(Ajv).toHaveBeenCalledWith({ ...AJV_CONFIG, ...CUSTOM_OPTIONS.ajvOptionsOverrides });
     });
     it('addFormat() was called twice', () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(4);

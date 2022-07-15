@@ -15,16 +15,20 @@ export const DATA_URL_FORMAT_REGEX = /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*)
 
 /** Creates an Ajv version 6 implementation object with standard support for the 'color` and `data-url` custom formats.
  * If `additionalMetaSchemas` are provided then the Ajv instance is modified to add each of the meta schemas in the
- * list. If `customFormats` are provided then those additional formats are added to the list of supported formats.
+ * list. If `customFormats` are provided then those additional formats are added to the list of supported formats. If
+ * `ajvOptionsOverrides` are provided then they are spread on top of the default `AJV_CONFIG` options when constructing
+ * the `Ajv` instance.
  *
  * @param [additionalMetaSchemas] - The list of additional meta schemas that the validator can access
  * @param [customFormats] - The set of additional custom formats that the validator will support
+ * @param [ajvOptionsOverrides={}] - The set of validator config override options
  */
 export default function createAjvInstance(
   additionalMetaSchemas?: CustomValidatorOptionsType['additionalMetaSchemas'],
   customFormats?: CustomValidatorOptionsType['customFormats'],
+  ajvOptionsOverrides: CustomValidatorOptionsType['ajvOptionsOverrides'] = {},
 ) {
-  const ajv = new Ajv(AJV_CONFIG);
+  const ajv = new Ajv({ ...AJV_CONFIG, ...ajvOptionsOverrides });
 
   // add custom formats
   ajv.addFormat('data-url', DATA_URL_FORMAT_REGEX);
