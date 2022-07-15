@@ -1,10 +1,10 @@
-import React from 'react';
-import dayjs from 'dayjs';
+import React from "react";
+import dayjs from "dayjs";
 
-import DatePicker from '../../components/DatePicker';
+import DatePicker from "../../components/DatePicker";
 
 const DATE_PICKER_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const DateWidget = ({
@@ -25,14 +25,14 @@ const DateWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = (nextValue) =>
-    onChange(nextValue && nextValue.format('YYYY-MM-DD'));
+  const handleChange = nextValue =>
+    onChange(nextValue && nextValue.format("YYYY-MM-DD"));
 
   const handleBlur = () => onBlur(id, value);
 
   const handleFocus = () => onFocus(id, value);
 
-  const getPopupContainer = (node) => node.parentNode;
+  const getPopupContainer = node => node.parentNode;
 
   return (
     <DatePicker

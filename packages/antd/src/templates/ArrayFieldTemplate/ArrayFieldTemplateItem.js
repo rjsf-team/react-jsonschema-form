@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
-import ArrowDownOutlined from '@ant-design/icons/ArrowDownOutlined';
-import ArrowUpOutlined from '@ant-design/icons/ArrowUpOutlined';
-import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
+import Button from "antd/lib/button";
+import Col from "antd/lib/col";
+import Row from "antd/lib/row";
+import ArrowDownOutlined from "@ant-design/icons/ArrowDownOutlined";
+import ArrowUpOutlined from "@ant-design/icons/ArrowUpOutlined";
+import DeleteOutlined from "@ant-design/icons/DeleteOutlined";
 
 const BTN_GRP_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const BTN_STYLE = {
-  width: 'calc(100% / 3)',
+  width: "calc(100% / 3)",
 };
 
 const ArrayFieldTemplateItem = ({
@@ -28,7 +28,7 @@ const ArrayFieldTemplateItem = ({
   onReorderClick,
   readonly,
 }) => {
-  const { rowGutter = 24, toolbarAlign = 'top' } = formContext;
+  const { rowGutter = 24, toolbarAlign = "top" } = formContext;
 
   return (
     <Row align={toolbarAlign} key={`array-item-${index}`} gutter={rowGutter}>

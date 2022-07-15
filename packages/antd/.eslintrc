@@ -1,5 +1,10 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "babelOptions": {
+            "presets": ["@babel/preset-react"]
+        }
+    },
     "rules": {
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": 2,

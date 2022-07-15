@@ -1,9 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import { getUiOptions, getWidget, isFixedItems, optionsList, ITEMS_KEY } from '@rjsf/utils';
+import {
+  getUiOptions,
+  getWidget,
+  isFixedItems,
+  optionsList,
+  ITEMS_KEY,
+} from "@rjsf/utils";
 
-import FixedArrayFieldTemplate from './FixedArrayFieldTemplate';
-import NormalArrayFieldTemplate from './NormalArrayFieldTemplate';
+import FixedArrayFieldTemplate from "./FixedArrayFieldTemplate";
+import NormalArrayFieldTemplate from "./NormalArrayFieldTemplate";
 
 const ArrayFieldTemplate = ({
   DescriptionField,
@@ -35,7 +41,7 @@ const ArrayFieldTemplate = ({
   const { UnsupportedField } = fields;
 
   const renderFiles = () => {
-    const { widget = 'files', ...options } = getUiOptions(uiSchema);
+    const { widget = "files", ...options } = getUiOptions(uiSchema);
 
     const Widget = getWidget(schema, widget, widgets);
 
@@ -63,7 +69,7 @@ const ArrayFieldTemplate = ({
   const renderMultiSelect = () => {
     const itemsSchema = schemaUtils.retrieveSchema(schema.items, formData);
     const enumOptions = optionsList(itemsSchema);
-    const { widget = 'select', ...options } = {
+    const { widget = "select", ...options } = {
       ...getUiOptions(uiSchema),
       enumOptions,
     };

@@ -1,11 +1,11 @@
 /* eslint-disable no-else-return */
-import React from 'react';
+import React from "react";
 
-import { processSelectValue } from '@rjsf/utils';
-import Select from 'antd/lib/select';
+import { processSelectValue } from "@rjsf/utils";
+import Select from "antd/lib/select";
 
 const SELECT_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const SelectWidget = ({
@@ -29,15 +29,16 @@ const SelectWidget = ({
 
   const { enumOptions, enumDisabled } = options;
 
-  const handleChange = (nextValue) => onChange(processSelectValue(schema, nextValue));
+  const handleChange = nextValue =>
+    onChange(processSelectValue(schema, nextValue));
 
   const handleBlur = () => onBlur(id, processSelectValue(schema, value));
 
   const handleFocus = () => onFocus(id, processSelectValue(schema, value));
 
-  const getPopupContainer = (node) => node.parentNode;
+  const getPopupContainer = node => node.parentNode;
 
-  const stringify = (currentValue) =>
+  const stringify = currentValue =>
     Array.isArray(currentValue) ? value.map(String) : String(value);
 
   return (
@@ -46,14 +47,14 @@ const SelectWidget = ({
       disabled={disabled || (readonlyAsDisabled && readonly)}
       getPopupContainer={getPopupContainer}
       id={id}
-      mode={typeof multiple !== 'undefined' ? 'multiple' : undefined}
+      mode={typeof multiple !== "undefined" ? "multiple" : undefined}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={SELECT_STYLE}
-      value={typeof value !== 'undefined' ? stringify(value) : undefined}
+      value={typeof value !== "undefined" ? stringify(value) : undefined}
     >
       {enumOptions.map(({ value: optionValue, label: optionLabel }) => (
         <Select.Option
