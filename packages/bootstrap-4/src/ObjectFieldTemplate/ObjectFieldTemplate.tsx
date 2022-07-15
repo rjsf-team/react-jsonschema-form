@@ -21,7 +21,7 @@ const ObjectFieldTemplate = ({
   formData,
   onAddClick,
   disabled,
-  readonly
+  readonly,
 }: ObjectFieldTemplateProps) => {
   const uiOptions = getUiOptions(uiSchema);
   return (
@@ -44,7 +44,8 @@ const ObjectFieldTemplate = ({
           <Row
             key={index}
             style={{ marginBottom: "10px" }}
-            className={element.hidden ? "d-none" : undefined}>
+            className={element.hidden ? "d-none" : undefined}
+          >
             <Col xs={12}> {element.content}</Col>
           </Row>
         ))}
@@ -58,7 +59,7 @@ const ObjectFieldTemplate = ({
               />
             </Col>
           </Row>
-        ) : null }
+        ) : null}
       </Container>
     </>
   );
