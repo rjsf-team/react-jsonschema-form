@@ -24,6 +24,7 @@ describe("ArrayFieldTemplate", () => {
           schema={mockSchema}
           uiSchema={{}}
           title=""
+          items={[]}
           formContext={{}}
           formData={{}}
           registry={{
