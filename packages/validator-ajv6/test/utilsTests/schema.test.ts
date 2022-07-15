@@ -8,9 +8,9 @@ import {
   isSelectTest,
   retrieveSchemaTest,
   toIdSchemaTest,
-  toPathSchemaTest
-} from '@rjsf/utils/test/schema';
-import getTestValidator from './getTestValidator';
+  toPathSchemaTest,
+} from "@rjsf/utils/test/schema";
+import getTestValidator from "./getTestValidator";
 
 const testValidator = getTestValidator({});
 
