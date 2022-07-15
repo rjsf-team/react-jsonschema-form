@@ -60,20 +60,35 @@ const ArrayFieldDescription = ({
 
 // Used in the two templates
 const DefaultArrayItem = ({
-  index, readonly, disabled, children, hasToolbar, hasRemove, hasMoveUp, hasMoveDown, onReorderClick, onDropIndexClick
+  index,
+  readonly,
+  disabled,
+  children,
+  hasToolbar,
+  hasRemove,
+  hasMoveUp,
+  hasMoveDown,
+  onReorderClick,
+  onDropIndexClick,
 }: any) => {
+  const onRemoveClick = useMemo(
+    () => onDropIndexClick(index),
+    [index, onDropIndexClick]
+  );
 
-  const onRemoveClick = useMemo(() => onDropIndexClick(index), [index, onDropIndexClick]);
+  const onArrowUpClick = useMemo(
+    () => onReorderClick(index, index - 1),
+    [index, onReorderClick]
+  );
 
-  const onArrowUpClick = useMemo(() => onReorderClick(index, index - 1), [index, onReorderClick]);
-
-  const onArrowDownClick = useMemo(() => onReorderClick(index, index + 1), [index, onReorderClick]);
+  const onArrowDownClick = useMemo(
+    () => onReorderClick(index, index + 1),
+    [index, onReorderClick]
+  );
 
   return (
     <HStack alignItems={"flex-end"} py={1}>
-      <Box w="100%">
-        {children}
-      </Box>
+      <Box w="100%">{children}</Box>
 
       {hasToolbar && (
         <Box>
@@ -91,9 +106,7 @@ const DefaultArrayItem = ({
               <IconButton
                 icon="arrow-down"
                 tabIndex={-1}
-                disabled={
-                  disabled || readonly || !hasMoveDown
-                }
+                disabled={disabled || readonly || !hasMoveDown}
                 onClick={onArrowDownClick}
               />
             )}
@@ -139,10 +152,13 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         className="row array-item-list"
         key={`array-item-list-${props.idSchema.$id}`}
       >
-        {props.items && props.items.map((p) => {
-          const { key, ...itemProps } = p;
-          return <DefaultArrayItem key={key} {...itemProps}></DefaultArrayItem>;
-        })}
+        {props.items &&
+          props.items.map((p) => {
+            const { key, ...itemProps } = p;
+            return (
+              <DefaultArrayItem key={key} {...itemProps}></DefaultArrayItem>
+            );
+          })}
       </div>
 
       {props.canAdd && (
@@ -155,7 +171,7 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       )}
     </fieldset>
   );
-}
+};
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const uiOptions = getUiOptions(props.uiSchema);
@@ -180,10 +196,13 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
       <Grid key={`array-item-list-${props.idSchema.$id}`}>
         <GridItem>
-          {props.items.length > 0 && props.items.map((p) => {
-            const { key, ...itemProps } = p;
-            return <DefaultArrayItem key={key} {...itemProps}></DefaultArrayItem>;
-          })}
+          {props.items.length > 0 &&
+            props.items.map((p) => {
+              const { key, ...itemProps } = p;
+              return (
+                <DefaultArrayItem key={key} {...itemProps}></DefaultArrayItem>
+              );
+            })}
         </GridItem>
         {props.canAdd && (
           <GridItem justifySelf={"flex-end"}>
@@ -199,6 +218,6 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       </Grid>
     </Box>
   );
-}
+};
 
 export default ArrayFieldTemplate;

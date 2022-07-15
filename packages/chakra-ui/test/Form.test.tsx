@@ -12,7 +12,9 @@ describe("single fields", () => {
       const schema: RJSFSchema = {
         type: "string",
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} />)
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test("format email", () => {
@@ -20,7 +22,9 @@ describe("single fields", () => {
         type: "string",
         format: "email",
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} />)
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test("format uri", () => {
@@ -28,7 +32,9 @@ describe("single fields", () => {
         type: "string",
         format: "uri",
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} />)
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test("format data-url", () => {
@@ -36,7 +42,9 @@ describe("single fields", () => {
         type: "string",
         format: "data-url",
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} />)
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
   });
@@ -44,21 +52,27 @@ describe("single fields", () => {
     const schema: RJSFSchema = {
       type: "number",
     };
-    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("null field", () => {
     const schema: RJSFSchema = {
       type: "null",
     };
-    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("unsupported field", () => {
     const schema: RJSFSchema = {
       type: undefined,
     };
-    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("hidden field", () => {
@@ -76,16 +90,18 @@ describe("single fields", () => {
       },
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />)
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("using custom tagName", () => {
     const schema: RJSFSchema = {
-      type: "string"
+      type: "string",
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} tagName="div"/>)
+      .create(<Form schema={schema} validator={validator} tagName="div" />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

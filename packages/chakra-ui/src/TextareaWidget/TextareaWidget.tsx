@@ -24,7 +24,8 @@ const TextareaWidget = ({
   const chakraProps = getChakra({ uiSchema });
   const { schemaUtils } = registry;
   const displayLabel =
-    schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+    schemaUtils.getDisplayLabel(schema, uiSchema) &&
+    (!!label || !!schema.title);
 
   const _onChange = ({
     target: { value },

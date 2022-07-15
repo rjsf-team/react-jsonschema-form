@@ -8,7 +8,7 @@ import {
   AddIcon,
   ArrowUpIcon,
   ArrowDownIcon,
-  DeleteIcon
+  DeleteIcon,
 } from "@chakra-ui/icons";
 
 const mappings = {
@@ -31,6 +31,6 @@ const ChakraIconButton = memo((props: IconButtonProps) => {
   return <IconButton {...otherProps} icon={mappings[icon]} aria-label={icon} />;
 });
 
-ChakraIconButton.displayName = 'ChakraIconButton';
+ChakraIconButton.displayName = "ChakraIconButton";
 
 export default ChakraIconButton;

@@ -37,7 +37,8 @@ const TextWidget = (props: WidgetProps) => {
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const displayLabel =
-    schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+    schemaUtils.getDisplayLabel(schema, uiSchema) &&
+    (!!label || !!schema.title);
 
   const inputType =
     (type || schema.type) === "string" ? "text" : `${type || schema.type}`;

@@ -1,9 +1,15 @@
 import React, { MouseEvent, useEffect, useState } from "react";
-import { DateObject, pad, parseDateString, toDateString, WidgetProps } from "@rjsf/utils";
+import {
+  DateObject,
+  pad,
+  parseDateString,
+  toDateString,
+  WidgetProps,
+} from "@rjsf/utils";
 import { Box, Button } from "@chakra-ui/react";
 
 const rangeOptions = (start: number, stop: number) => {
-  let options = [];
+  const options = [];
   for (let i = start; i <= stop; i++) {
     options.push({ value: i, label: pad(i, 2) });
   }
@@ -16,7 +22,7 @@ interface AltDateStateType extends DateObject {
 
 const readyForChange = (state: AltDateStateType) => {
   return Object.keys(state).every(
-    key => typeof state[key] !== "undefined" && state[key] !== -1
+    (key) => typeof state[key] !== "undefined" && state[key] !== -1
   );
 };
 
@@ -73,7 +79,7 @@ const AltDateWidget = (props: any) => {
   const dateElementProps = () => {
     const { year, month, day, hour, minute, second } = state;
 
-    const data: {type: string, range: any, value?: number}[] = [
+    const data: { type: string; range: any; value?: number }[] = [
       { type: "year", range: options.yearsRange, value: year },
       { type: "month", range: [1, 12], value: month },
       { type: "day", range: [1, 31], value: day },
@@ -91,7 +97,7 @@ const AltDateWidget = (props: any) => {
   };
 
   const renderDateElement = (elemProps: WidgetProps) => {
-    const value = Boolean(elemProps.value) ? elemProps.value : undefined;
+    const value = elemProps.value ? elemProps.value : undefined;
     return (
       <SelectWidget
         {...elemProps}

@@ -32,7 +32,7 @@ const SelectWidget = (props: WidgetProps) => {
 
   // TODO: Default emptyValue should be string when multi select is implemented
   // const emptyValue = multiple ? [] : "";
-  const emptyValue: string = "";
+  const emptyValue = "";
 
   const _onMultiChange = (e: any) => {
     return onChange(

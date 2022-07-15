@@ -12,11 +12,18 @@ import {
 
 import IconButton from "../IconButton";
 
-type WrapIfAdditionalProps = { children: React.ReactElement; } &
-  Pick<
-    FieldTemplateProps,
-    'classNames' | 'disabled' | 'id' | 'label' | 'onDropPropertyClick' | 'onKeyChange' | 'readonly' | 'required' | 'schema'
-  >;
+type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
+  FieldTemplateProps,
+  | "classNames"
+  | "disabled"
+  | "id"
+  | "label"
+  | "onDropPropertyClick"
+  | "onKeyChange"
+  | "readonly"
+  | "required"
+  | "schema"
+>;
 
 const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
   const {
