@@ -41,7 +41,7 @@ class NumberField extends React.Component {
     };
   }
 
-  handleChange = value => {
+  handleChange = (value) => {
     // Cache the original value in component state
     this.setState({ lastValue: value });
 

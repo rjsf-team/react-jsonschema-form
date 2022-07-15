@@ -10,7 +10,7 @@ function selectValue(value, selected, all) {
 }
 
 function deselectValue(value, selected) {
-  return selected.filter(v => v !== value);
+  return selected.filter((v) => v !== value);
 }
 
 function CheckboxesWidget(props) {
@@ -32,7 +32,7 @@ function CheckboxesWidget(props) {
               checked={checked}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && index === 0}
-              onChange={event => {
+              onChange={(event) => {
                 const all = enumOptions.map(({ value }) => value);
                 if (event.target.checked) {
                   onChange(selectValue(option.value, value, all));

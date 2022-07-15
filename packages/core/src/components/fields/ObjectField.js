@@ -28,7 +28,7 @@ function DefaultObjectFieldTemplate(props) {
           formContext={props.formContext}
         />
       )}
-      {props.properties.map(prop => prop.content)}
+      {props.properties.map((prop) => prop.content)}
       {canExpand(props.schema, props.uiSchema, props.formData) && (
         <AddButton
           className="object-property-expand"
@@ -87,8 +87,8 @@ class ObjectField extends Component {
     };
   };
 
-  onDropPropertyClick = key => {
-    return event => {
+  onDropPropertyClick = (key) => {
+    return (event) => {
       event.preventDefault();
       const { onChange, formData } = this.props;
       const copiedFormData = { ...formData };
@@ -106,7 +106,7 @@ class ObjectField extends Component {
     return newKey;
   };
 
-  onKeyChange = oldValue => {
+  onKeyChange = (oldValue) => {
     return (value, errorSchema) => {
       if (oldValue === value) {
         return;
@@ -115,7 +115,7 @@ class ObjectField extends Component {
       value = this.getAvailableKey(value, this.props.formData);
       const newFormData = { ...this.props.formData };
       const newKeys = { [oldValue]: value };
-      const keyValues = Object.keys(newFormData).map(key => {
+      const keyValues = Object.keys(newFormData).map((key) => {
         const newKey = newKeys[key] || key;
         return { [newKey]: newFormData[key] };
       });
@@ -154,7 +154,7 @@ class ObjectField extends Component {
     }
   }
 
-  handleAddClick = schema => () => {
+  handleAddClick = (schema) => () => {
     let type = schema.additionalProperties.type;
     const newFormData = { ...this.props.formData };
 
@@ -169,9 +169,8 @@ class ObjectField extends Component {
       type = refSchema.type;
     }
 
-    newFormData[
-      this.getAvailableKey("newKey", newFormData)
-    ] = this.getDefaultValue(type);
+    newFormData[this.getAvailableKey("newKey", newFormData)] =
+      this.getDefaultValue(type);
 
     this.props.onChange(newFormData);
   };
@@ -226,7 +225,7 @@ class ObjectField extends Component {
       description,
       TitleField,
       DescriptionField,
-      properties: orderedProperties.map(name => {
+      properties: orderedProperties.map((name) => {
         const addedByAdditionalProperties =
           ADDITIONAL_PROPERTY_FLAG in schema.properties[name];
         const fieldUiSchema = addedByAdditionalProperties

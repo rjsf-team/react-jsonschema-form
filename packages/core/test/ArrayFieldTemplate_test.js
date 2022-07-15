@@ -21,7 +21,7 @@ describe("ArrayFieldTemplate", () => {
       return (
         <div className={props.uiSchema.classNames}>
           {props.canAdd && <button className="custom-array-add" />}
-          {props.items.map(element => {
+          {props.items.map((element) => {
             return (
               <div className="custom-array-item" key={element.index}>
                 {element.hasMoveUp && (

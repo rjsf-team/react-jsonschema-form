@@ -7,15 +7,16 @@ import sinon from "sinon";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 const ArrayKeyDataAttr = "data-rjsf-itemkey";
-const ExposedArrayKeyTemplate = function(props) {
+const ExposedArrayKeyTemplate = function (props) {
   return (
     <div className="array">
       {props.items &&
-        props.items.map(element => (
+        props.items.map((element) => (
           <div
             key={element.key}
             className="array-item"
-            data-rjsf-itemkey={element.key}>
+            data-rjsf-itemkey={element.key}
+          >
             <div>{element.children}</div>
             {(element.hasMoveUp || element.hasMoveDown) && (
               <button
@@ -23,7 +24,8 @@ const ExposedArrayKeyTemplate = function(props) {
                 onClick={element.onReorderClick(
                   element.index,
                   element.index + 1
-                )}>
+                )}
+              >
                 Down
               </button>
             )}
@@ -33,14 +35,16 @@ const ExposedArrayKeyTemplate = function(props) {
                 onClick={element.onReorderClick(
                   element.index,
                   element.index - 1
-                )}>
+                )}
+              >
                 Up
               </button>
             )}
             {element.hasRemove && (
               <button
                 className="array-item-remove"
-                onClick={element.onDropIndexClick(element.index)}>
+                onClick={element.onDropIndexClick(element.index)}
+              >
                 Remove
               </button>
             )}
@@ -62,11 +66,11 @@ const ExposedArrayKeyTemplate = function(props) {
   );
 };
 
-const CustomOnAddClickTemplate = function(props) {
+const CustomOnAddClickTemplate = function (props) {
   return (
     <div className="array">
       {props.items &&
-        props.items.map(element => (
+        props.items.map((element) => (
           <div key={element.key} className="array-item">
             <div>{element.children}</div>
           </div>
@@ -85,11 +89,11 @@ const CustomOnAddClickTemplate = function(props) {
 
 describe("ArrayField", () => {
   let sandbox;
-  const CustomComponent = props => {
+  const CustomComponent = (props) => {
     return <div id="custom">{props.rawErrors}</div>;
   };
 
-  const CustomSelectComponent = props => {
+  const CustomSelectComponent = (props) => {
     return (
       <select>
         {props.value.map((item, index) => (
@@ -119,7 +123,7 @@ describe("ArrayField", () => {
     });
 
     it("should be able to be overwritten with a custom UnsupportedField component", () => {
-      const CustomUnsupportedField = function() {
+      const CustomUnsupportedField = function () {
         return <span id="custom">Custom UnsupportedField</span>;
       };
 
@@ -410,7 +414,8 @@ describe("ArrayField", () => {
             className={
               "array-item-move-before array-item-move-before-to-" + beforeIndex
             }
-            onClick={item.onAddIndexClick(beforeIndex)}>
+            onClick={item.onAddIndexClick(beforeIndex)}
+          >
             {"Add Item Above"}
           </button>
         );
@@ -422,7 +427,8 @@ describe("ArrayField", () => {
             className={
               "array-item-move-after array-item-move-after-to-" + afterIndex
             }
-            onClick={item.onAddIndexClick(afterIndex)}>
+            onClick={item.onAddIndexClick(afterIndex)}
+          >
             {"Add Item Below"}
           </button>
         );
@@ -431,7 +437,8 @@ describe("ArrayField", () => {
           <div
             key={item.key}
             data-rjsf-itemkey={item.key}
-            className={`array-item item-${item.index}`}>
+            className={`array-item item-${item.index}`}
+          >
             <div>{addBeforeButton}</div>
             {item.children}
             <div>{addAfterButton}</div>
@@ -642,7 +649,8 @@ describe("ArrayField", () => {
             <button
               key={i}
               className={"array-item-move-to-" + i}
-              onClick={props.onReorderClick(props.index, i)}>
+              onClick={props.onReorderClick(props.index, i)}
+            >
               {"Move item to index " + i}
             </button>
           );
@@ -651,7 +659,8 @@ describe("ArrayField", () => {
           <div
             key={props.key}
             data-rjsf-itemkey={props.key}
-            className={`array-item item-${props.index}`}>
+            className={`array-item item-${props.index}`}
+          >
             {props.children}
             {buttons}
           </div>
@@ -915,7 +924,10 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema: complexSchema,
         formData: {
-          foo: [{ bar: "bar1", baz: "baz1" }, { bar: "bar2", baz: "baz2" }],
+          foo: [
+            { bar: "bar1", baz: "baz1" },
+            { bar: "bar2", baz: "baz2" },
+          ],
         },
       });
 
@@ -1285,7 +1297,7 @@ describe("ArrayField", () => {
 
         const labels = [].map.call(
           node.querySelectorAll(".checkbox label"),
-          node => node.textContent
+          (node) => node.textContent
         );
         expect(labels).eql(["foo", "bar", "fuzz"]);
       });
@@ -1317,7 +1329,7 @@ describe("ArrayField", () => {
 
         const labels = [].map.call(
           node.querySelectorAll("[type=checkbox]"),
-          node => node.checked
+          (node) => node.checked
         );
         expect(labels).eql([true, false, true]);
       });
@@ -1541,7 +1553,10 @@ describe("ArrayField", () => {
     it("should render two lists of inputs inside of a list", () => {
       const { node } = createFormComponent({
         schema,
-        formData: [[1, 2], [3, 4]],
+        formData: [
+          [1, 2],
+          [3, 4],
+        ],
       });
       expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(2);
     });
@@ -1556,8 +1571,10 @@ describe("ArrayField", () => {
     });
 
     it("should pass rawErrors down to every level of custom widgets", () => {
-      const CustomItem = props => <div id="custom-item">{props.children}</div>;
-      const CustomTemplate = props => {
+      const CustomItem = (props) => (
+        <div id="custom-item">{props.children}</div>
+      );
+      const CustomTemplate = (props) => {
         return (
           <div id="custom">
             {props.items &&
@@ -2022,7 +2039,7 @@ describe("ArrayField", () => {
   });
 
   describe("Title", () => {
-    const TitleField = props => <div id={`title-${props.title}`} />;
+    const TitleField = (props) => <div id={`title-${props.title}`} />;
 
     const fields = { TitleField };
 
@@ -2083,7 +2100,10 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema: complexSchema,
         formData: {
-          foo: [{ bar: "bar1", baz: "baz1" }, { bar: "bar2", baz: "baz2" }],
+          foo: [
+            { bar: "bar1", baz: "baz1" },
+            { bar: "bar2", baz: "baz2" },
+          ],
         },
         idSeparator: "/",
         idPrefix: "base",

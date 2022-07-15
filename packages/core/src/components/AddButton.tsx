@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import IconButton from './IconButton';
+import IconButton from "./IconButton";
 
 export interface AddButtonProps {
   className?: string;
@@ -8,7 +8,11 @@ export interface AddButtonProps {
   disabled?: boolean;
 }
 
-export default function AddButton({ className, onClick, disabled }: AddButtonProps) {
+export default function AddButton({
+  className,
+  onClick,
+  disabled,
+}: AddButtonProps) {
   return (
     <div className="row">
       <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>
