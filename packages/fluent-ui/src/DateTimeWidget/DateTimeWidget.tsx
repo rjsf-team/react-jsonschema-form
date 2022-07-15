@@ -11,7 +11,7 @@ const DateTimeWidget = (props: WidgetProps) => {
   const onChange = (value: any) => {
     props.onChange(localToUTC(value));
   };
-  let options = {
+  const options = {
     ...props.options,
     props: {
       type: "datetime-local",
@@ -19,7 +19,14 @@ const DateTimeWidget = (props: WidgetProps) => {
     },
   };
   // TODO: rows and columns.
-  return <TextWidget {...props} options={options} value={value} onChange={onChange} />;
+  return (
+    <TextWidget
+      {...props}
+      options={options}
+      value={value}
+      onChange={onChange}
+    />
+  );
 };
 
 export default DateTimeWidget;

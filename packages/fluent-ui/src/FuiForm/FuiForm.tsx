@@ -1,7 +1,7 @@
-import { ComponentType } from 'react';
-import { withTheme, FormProps } from '@rjsf/core';
+import { ComponentType } from "react";
+import { withTheme, FormProps } from "@rjsf/core";
 
-import Theme from '../Theme';
+import Theme from "../Theme";
 
 const FuiForm: ComponentType<FormProps> = withTheme(Theme);
 

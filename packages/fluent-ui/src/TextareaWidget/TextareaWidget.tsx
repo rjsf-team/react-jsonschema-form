@@ -6,17 +6,15 @@ const TextareaWidget = (props: WidgetProps) => {
   const { registry } = props;
   const { TextWidget } = registry.widgets;
   const uiProps: any = props.options["props"] || {};
-  let options = {
+  const options = {
     ...props.options,
-    "props": {
+    props: {
       multiline: true,
-      ...uiProps
-    }
+      ...uiProps,
+    },
   };
   // TODO: rows and columns.
-  return (
-    <TextWidget {...props} options={options} />
-  );
-}
+  return <TextWidget {...props} options={options} />;
+};
 
 export default TextareaWidget;

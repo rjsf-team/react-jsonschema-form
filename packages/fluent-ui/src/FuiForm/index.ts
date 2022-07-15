@@ -1,2 +1,2 @@
-export { default } from './FuiForm';
-export * from './FuiForm';
+export { default } from "./FuiForm";
+export * from "./FuiForm";

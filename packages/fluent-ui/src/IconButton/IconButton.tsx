@@ -3,7 +3,7 @@ import React from "react";
 import { IconButton, IIconProps } from "@fluentui/react";
 import { AddButtonProps as FuiIconButtonProps } from "@rjsf/core";
 
-const mappings: {[x: string]: string} = {
+const mappings: { [x: string]: string } = {
   remove: "Delete",
   "arrow-up": "Up",
   "arrow-down": "Down",
@@ -15,12 +15,15 @@ type IconButtonProps = FuiIconButtonProps & {
 
 export default (props: IconButtonProps) => {
   const iconProps: IIconProps = {
-    iconName: mappings[props.icon]
-  }
+    iconName: mappings[props.icon],
+  };
 
- return <IconButton
-    disabled={props.disabled}
-    onClick={props.onClick}
-    iconProps={iconProps}
-    color="secondary" />
-}
+  return (
+    <IconButton
+      disabled={props.disabled}
+      onClick={props.onClick}
+      iconProps={iconProps}
+      color="secondary"
+    />
+  );
+};

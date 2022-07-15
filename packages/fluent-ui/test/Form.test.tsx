@@ -1,5 +1,5 @@
-import React from 'react';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import React from "react";
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
@@ -9,7 +9,7 @@ describe("single fields", () => {
   describe("string field", () => {
     test("regular", () => {
       const schema: RJSFSchema = {
-        type: "string"
+        type: "string",
       };
       const tree = renderer
         .create(<Form schema={schema} validator={validator} />)
@@ -19,7 +19,7 @@ describe("single fields", () => {
     test("format email", () => {
       const schema: RJSFSchema = {
         type: "string",
-        format: "email"
+        format: "email",
       };
       const tree = renderer
         .create(<Form schema={schema} validator={validator} />)
@@ -29,7 +29,7 @@ describe("single fields", () => {
     test("format uri", () => {
       const schema: RJSFSchema = {
         type: "string",
-        format: "uri"
+        format: "uri",
       };
       const tree = renderer
         .create(<Form schema={schema} validator={validator} />)
@@ -39,7 +39,7 @@ describe("single fields", () => {
     test("format data-url", () => {
       const schema: RJSFSchema = {
         type: "string",
-        format: "data-url"
+        format: "data-url",
       };
       const tree = renderer
         .create(<Form schema={schema} validator={validator} />)
@@ -49,7 +49,7 @@ describe("single fields", () => {
   });
   test("number field", () => {
     const schema: RJSFSchema = {
-      type: "number"
+      type: "number",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -58,7 +58,7 @@ describe("single fields", () => {
   });
   test("null field", () => {
     const schema: RJSFSchema = {
-      type: "null"
+      type: "null",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -67,7 +67,7 @@ describe("single fields", () => {
   });
   test("unsupported field", () => {
     const schema: RJSFSchema = {
-      type: undefined
+      type: undefined,
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -89,16 +89,18 @@ describe("single fields", () => {
       },
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />)
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("using custom tagName", () => {
     const schema: RJSFSchema = {
-      type: "string"
+      type: "string",
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} tagName="div"/>)
+      .create(<Form schema={schema} validator={validator} tagName="div" />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
