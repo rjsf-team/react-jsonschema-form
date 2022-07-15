@@ -18,7 +18,7 @@ describe("FormContext", () => {
 
   const formContext = { foo: "bar" };
 
-  const CustomComponent = function(props) {
+  const CustomComponent = function (props) {
     return <div id={props.formContext.foo} />;
   };
 

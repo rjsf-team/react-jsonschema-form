@@ -12,7 +12,7 @@ function DateWidget(props) {
     <BaseInput
       type="date"
       {...props}
-      onChange={value => onChange(value || undefined)}
+      onChange={(value) => onChange(value || undefined)}
     />
   );
 }

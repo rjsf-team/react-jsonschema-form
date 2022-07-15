@@ -27,9 +27,11 @@ function StringField(props) {
   if (format && hasWidget(schema, format, widgets)) {
     defaultWidget = format;
   }
-  const { widget = defaultWidget, placeholder = "", ...options } = getUiOptions(
-    uiSchema
-  );
+  const {
+    widget = defaultWidget,
+    placeholder = "",
+    ...options
+  } = getUiOptions(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
   return (
     <Widget

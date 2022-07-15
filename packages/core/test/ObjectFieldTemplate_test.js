@@ -18,13 +18,8 @@ describe("ObjectFieldTemplate", () => {
 
   class ObjectFieldTemplate extends PureComponent {
     render() {
-      const {
-        TitleField,
-        DescriptionField,
-        properties,
-        title,
-        description,
-      } = this.props;
+      const { TitleField, DescriptionField, properties, title, description } =
+        this.props;
       return (
         <div className="root">
           <TitleField title={title} />

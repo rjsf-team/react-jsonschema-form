@@ -73,7 +73,7 @@ function LabelInput(props) {
       className="form-control"
       type="text"
       id={id}
-      onBlur={event => onChange(event.target.value)}
+      onBlur={(event) => onChange(event.target.value)}
       defaultValue={label}
     />
   );
@@ -108,7 +108,7 @@ function ErrorList(props) {
     <div>
       <ul className="error-detail bs-callout bs-callout-info">
         {errors
-          .filter(elem => !!elem)
+          .filter((elem) => !!elem)
           .map((error, index) => {
             return (
               <li className="text-danger" key={index}>
@@ -375,7 +375,7 @@ function SchemaFieldRender(props) {
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.anyOf.map(_schema =>
+            options={schema.anyOf.map((_schema) =>
               schemaUtils.retrieveSchema(_schema, formData)
             )}
             baseType={schema.type}
@@ -398,7 +398,7 @@ function SchemaFieldRender(props) {
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.oneOf.map(_schema =>
+            options={schema.oneOf.map((_schema) =>
               schemaUtils.retrieveSchema(_schema, formData)
             )}
             baseType={schema.type}

@@ -1,7 +1,7 @@
-import Form, { FormProps, FormState } from './components/Form';
-import { AddButtonProps } from './components/AddButton';
-import withTheme, { WithThemeProps } from './withTheme';
-import getDefaultRegistry from './getDefaultRegistry';
+import Form, { FormProps, FormState } from "./components/Form";
+import { AddButtonProps } from "./components/AddButton";
+import withTheme, { WithThemeProps } from "./withTheme";
+import getDefaultRegistry from "./getDefaultRegistry";
 
 export type { AddButtonProps, FormProps, FormState, WithThemeProps };
 
