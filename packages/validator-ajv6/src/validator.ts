@@ -37,8 +37,8 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
    * @param options - The `CustomValidatorOptionsType` options that are used to create the AJV instance
    */
   constructor (options: CustomValidatorOptionsType) {
-    const { additionalMetaSchemas, customFormats } = options;
-    this.ajv = createAjvInstance(additionalMetaSchemas, customFormats);
+    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides } = options;
+    this.ajv = createAjvInstance(additionalMetaSchemas, customFormats, ajvOptionsOverrides);
   }
 
   /** Transforms a ajv validation errors list:
