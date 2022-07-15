@@ -1,19 +1,19 @@
-import { toIdSchema, RJSFSchema, createSchemaUtils } from '../../src';
-import { TestValidatorType } from './types';
+import { toIdSchema, RJSFSchema, createSchemaUtils } from "../../src";
+import { TestValidatorType } from "./types";
 
 export default function toIdSchemaTest(testValidator: TestValidatorType) {
-  describe('toIdSchema()', () => {
-    it('should return an idSchema for root field', () => {
-      const schema: RJSFSchema = { type: 'string' };
+  describe("toIdSchema()", () => {
+    it("should return an idSchema for root field", () => {
+      const schema: RJSFSchema = { type: "string" };
 
-      expect(toIdSchema(testValidator, schema)).toEqual({ $id: 'root' });
+      expect(toIdSchema(testValidator, schema)).toEqual({ $id: "root" });
     });
-    it('should return an idSchema for nested objects without a proper field', () => {
+    it("should return an idSchema for nested objects without a proper field", () => {
       const schema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
           level1: {
-            type: 'object',
+            type: "object",
             properties: {
               level2: false,
             },
@@ -22,166 +22,168 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
       };
 
       expect(toIdSchema(testValidator, schema)).toEqual({
-        $id: 'root',
+        $id: "root",
         level1: {
-          $id: 'root_level1',
-          level2: { $id: 'root_level1_level2' },
+          $id: "root_level1",
+          level2: { $id: "root_level1_level2" },
         },
       });
     });
-    it('should return an idSchema for nested objects', () => {
+    it("should return an idSchema for nested objects", () => {
       const schema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
           level1: {
-            type: 'object',
+            type: "object",
             properties: {
-              level2: { type: 'string' },
+              level2: { type: "string" },
             },
           },
         },
       };
 
       expect(toIdSchema(testValidator, schema)).toEqual({
-        $id: 'root',
+        $id: "root",
         level1: {
-          $id: 'root_level1',
-          level2: { $id: 'root_level1_level2' },
+          $id: "root_level1",
+          level2: { $id: "root_level1_level2" },
         },
       });
     });
-    it('should return an idSchema for multiple nested objects', () => {
+    it("should return an idSchema for multiple nested objects", () => {
       const schema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
           level1a: {
-            type: 'object',
+            type: "object",
             properties: {
-              level1a2a: { type: 'string' },
-              level1a2b: { type: 'string' },
+              level1a2a: { type: "string" },
+              level1a2b: { type: "string" },
             },
           },
           level1b: {
-            type: 'object',
+            type: "object",
             properties: {
-              level1b2a: { type: 'string' },
-              level1b2b: { type: 'string' },
+              level1b2a: { type: "string" },
+              level1b2b: { type: "string" },
             },
           },
         },
       };
 
       expect(toIdSchema(testValidator, schema)).toEqual({
-        $id: 'root',
+        $id: "root",
         level1a: {
-          $id: 'root_level1a',
-          level1a2a: { $id: 'root_level1a_level1a2a' },
-          level1a2b: { $id: 'root_level1a_level1a2b' },
+          $id: "root_level1a",
+          level1a2a: { $id: "root_level1a_level1a2a" },
+          level1a2b: { $id: "root_level1a_level1a2b" },
         },
         level1b: {
-          $id: 'root_level1b',
-          level1b2a: { $id: 'root_level1b_level1b2a' },
-          level1b2b: { $id: 'root_level1b_level1b2b' },
+          $id: "root_level1b",
+          level1b2a: { $id: "root_level1b_level1b2a" },
+          level1b2b: { $id: "root_level1b_level1b2b" },
         },
       });
     });
-    it('schema with an id property must not corrupt the idSchema', () => {
+    it("schema with an id property must not corrupt the idSchema", () => {
       const schema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
           metadata: {
-            type: 'object',
+            type: "object",
             properties: {
               id: {
-                type: 'string',
+                type: "string",
               },
             },
-            required: ['id'],
+            required: ["id"],
           },
         },
       };
       expect(toIdSchema(testValidator, schema)).toEqual({
-        $id: 'root',
+        $id: "root",
         metadata: {
-          $id: 'root_metadata',
-          id: { $id: 'root_metadata_id' },
+          $id: "root_metadata",
+          id: { $id: "root_metadata_id" },
         },
       });
     });
-    it('should return an idSchema for array item objects', () => {
+    it("should return an idSchema for array item objects", () => {
       const schema: RJSFSchema = {
-        type: 'array',
+        type: "array",
         items: {
-          type: 'object',
+          type: "object",
           properties: {
-            foo: { type: 'string' },
+            foo: { type: "string" },
           },
         },
       };
 
       expect(toIdSchema(testValidator, schema)).toEqual({
-        $id: 'root',
-        foo: { $id: 'root_foo' },
+        $id: "root",
+        foo: { $id: "root_foo" },
       });
     });
-    it('should retrieve referenced schema definitions', () => {
+    it("should retrieve referenced schema definitions", () => {
       const schema: RJSFSchema = {
         definitions: {
           testdef: {
-            type: 'object',
+            type: "object",
             properties: {
-              foo: { type: 'string' },
-              bar: { type: 'string' },
+              foo: { type: "string" },
+              bar: { type: "string" },
             },
           },
         },
-        $ref: '#/definitions/testdef',
+        $ref: "#/definitions/testdef",
       };
 
       const schemaUtils = createSchemaUtils(testValidator, schema);
       expect(schemaUtils.toIdSchema(schema, undefined)).toEqual({
-        $id: 'root',
-        foo: { $id: 'root_foo' },
-        bar: { $id: 'root_bar' },
+        $id: "root",
+        foo: { $id: "root_foo" },
+        bar: { $id: "root_bar" },
       });
     });
-    it('should return an idSchema for property dependencies', () => {
+    it("should return an idSchema for property dependencies", () => {
       const schema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
-          foo: { type: 'string' },
+          foo: { type: "string" },
         },
         dependencies: {
           foo: {
             properties: {
-              bar: { type: 'string' },
+              bar: { type: "string" },
             },
           },
         },
       };
       const formData = {
-        foo: 'test',
+        foo: "test",
       };
 
-      expect(toIdSchema(testValidator, schema, undefined, schema, formData)).toEqual({
-        $id: 'root',
-        foo: { $id: 'root_foo' },
-        bar: { $id: 'root_bar' },
+      expect(
+        toIdSchema(testValidator, schema, undefined, schema, formData)
+      ).toEqual({
+        $id: "root",
+        foo: { $id: "root_foo" },
+        bar: { $id: "root_bar" },
       });
     });
-    it('should return an idSchema for nested property dependencies', () => {
+    it("should return an idSchema for nested property dependencies", () => {
       const schema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
           obj: {
-            type: 'object',
+            type: "object",
             properties: {
-              foo: { type: 'string' },
+              foo: { type: "string" },
             },
             dependencies: {
               foo: {
                 properties: {
-                  bar: { type: 'string' },
+                  bar: { type: "string" },
                 },
               },
             },
@@ -190,29 +192,31 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
       };
       const formData = {
         obj: {
-          foo: 'test',
+          foo: "test",
         },
       };
 
-      expect(toIdSchema(testValidator, schema, undefined, schema, formData)).toEqual({
-        $id: 'root',
+      expect(
+        toIdSchema(testValidator, schema, undefined, schema, formData)
+      ).toEqual({
+        $id: "root",
         obj: {
-          $id: 'root_obj',
-          foo: { $id: 'root_obj_foo' },
-          bar: { $id: 'root_obj_bar' },
+          $id: "root_obj",
+          foo: { $id: "root_obj_foo" },
+          bar: { $id: "root_obj_bar" },
         },
       });
     });
-    it('should return an idSchema for unmet property dependencies', () => {
+    it("should return an idSchema for unmet property dependencies", () => {
       const schema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
-          foo: { type: 'string' },
+          foo: { type: "string" },
         },
         dependencies: {
           foo: {
             properties: {
-              bar: { type: 'string' },
+              bar: { type: "string" },
             },
           },
         },
@@ -220,66 +224,79 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
 
       const formData = {};
 
-      expect(toIdSchema(testValidator, schema, undefined, schema, formData)).toEqual({
-        $id: 'root',
-        foo: { $id: 'root_foo' },
+      expect(
+        toIdSchema(testValidator, schema, undefined, schema, formData)
+      ).toEqual({
+        $id: "root",
+        foo: { $id: "root_foo" },
       });
     });
-    it('should handle idPrefix parameter', () => {
+    it("should handle idPrefix parameter", () => {
       const schema: RJSFSchema = {
         definitions: {
           testdef: {
-            type: 'object',
+            type: "object",
             properties: {
-              foo: { type: 'string' },
-              bar: { type: 'string' },
+              foo: { type: "string" },
+              bar: { type: "string" },
             },
           },
         },
-        $ref: '#/definitions/testdef',
+        $ref: "#/definitions/testdef",
       };
 
-      expect(toIdSchema(testValidator, schema, undefined, schema, {}, 'rjsf')).toEqual({
-        $id: 'rjsf',
-        foo: { $id: 'rjsf_foo' },
-        bar: { $id: 'rjsf_bar' },
+      expect(
+        toIdSchema(testValidator, schema, undefined, schema, {}, "rjsf")
+      ).toEqual({
+        $id: "rjsf",
+        foo: { $id: "rjsf_foo" },
+        bar: { $id: "rjsf_bar" },
       });
     });
-    it('should handle idSeparator parameter', () => {
+    it("should handle idSeparator parameter", () => {
       const schema: RJSFSchema = {
         definitions: {
           testdef: {
-            type: 'object',
+            type: "object",
             properties: {
-              foo: { type: 'string' },
-              bar: { type: 'string' },
+              foo: { type: "string" },
+              bar: { type: "string" },
             },
           },
         },
-        $ref: '#/definitions/testdef',
+        $ref: "#/definitions/testdef",
       };
 
-      expect(toIdSchema(testValidator, schema, undefined, schema, {}, 'rjsf', '/')).toEqual({
-        $id: 'rjsf',
-        foo: { $id: 'rjsf/foo' },
-        bar: { $id: 'rjsf/bar' },
+      expect(
+        toIdSchema(testValidator, schema, undefined, schema, {}, "rjsf", "/")
+      ).toEqual({
+        $id: "rjsf",
+        foo: { $id: "rjsf/foo" },
+        bar: { $id: "rjsf/bar" },
       });
     });
-    it('should handle null form data for object schemas', () => {
+    it("should handle null form data for object schemas", () => {
       const schema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
-          foo: { type: 'string' },
-          bar: { type: 'string' },
+          foo: { type: "string" },
+          bar: { type: "string" },
         },
       };
       const formData = null;
-      const result = toIdSchema(testValidator, schema, null, {}, formData, 'rjsf');
+      const result = toIdSchema(
+        testValidator,
+        schema,
+        null,
+        {},
+        formData,
+        "rjsf"
+      );
 
       expect(result).toEqual({
-        $id: 'rjsf',
-        foo: { $id: 'rjsf_foo' },
-        bar: { $id: 'rjsf_bar' },
+        $id: "rjsf",
+        foo: { $id: "rjsf_foo" },
+        bar: { $id: "rjsf_bar" },
       });
     });
   });

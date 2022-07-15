@@ -1,5 +1,5 @@
-import get from 'lodash/get';
-import set from 'lodash/set';
+import get from "lodash/get";
+import set from "lodash/set";
 
 import {
   ALL_OF_KEY,
@@ -8,9 +8,9 @@ import {
   ITEMS_KEY,
   PROPERTIES_KEY,
   REF_KEY,
-} from '../constants';
-import { PathSchema, RJSFSchema, ValidatorType } from '../types';
-import retrieveSchema from './retrieveSchema';
+} from "../constants";
+import { PathSchema, RJSFSchema, ValidatorType } from "../types";
+import retrieveSchema from "./retrieveSchema";
 
 /** Generates an `PathSchema` object for the `schema`, recursively
  *
@@ -24,7 +24,7 @@ import retrieveSchema from './retrieveSchema';
 export default function toPathSchema<T = any>(
   validator: ValidatorType,
   schema: RJSFSchema,
-  name = '',
+  name = "",
   rootSchema?: RJSFSchema,
   formData?: T
 ): PathSchema<T> {
@@ -34,11 +34,11 @@ export default function toPathSchema<T = any>(
   }
 
   const pathSchema: PathSchema = {
-    $name: name.replace(/^\./, ''),
+    $name: name.replace(/^\./, ""),
   } as PathSchema;
 
   if (ADDITIONAL_PROPERTIES_KEY in schema) {
-    set(pathSchema, '__rjsf_additionalProperties', true);
+    set(pathSchema, "__rjsf_additionalProperties", true);
   }
 
   if (ITEMS_KEY in schema && Array.isArray(formData)) {

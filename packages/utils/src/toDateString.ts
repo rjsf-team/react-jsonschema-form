@@ -1,4 +1,4 @@
-import { DateObject } from './types';
+import { DateObject } from "./types";
 
 /** Returns a UTC date string for the given `dateObject`. If `time` is false, then the time portion of the string is
  * removed.

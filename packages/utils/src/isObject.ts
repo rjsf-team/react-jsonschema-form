@@ -5,8 +5,8 @@
  * @returns - True if is is a non-null, non-array, non-File object
  */
 export default function isObject(thing: any) {
-  if (typeof File !== 'undefined' && thing instanceof File) {
+  if (typeof File !== "undefined" && thing instanceof File) {
     return false;
   }
-  return typeof thing === 'object' && thing !== null && !Array.isArray(thing);
+  return typeof thing === "object" && thing !== null && !Array.isArray(thing);
 }

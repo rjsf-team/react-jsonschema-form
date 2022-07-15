@@ -8,7 +8,7 @@
  * @returns - The `value` converted to a number when appropriate, otherwise the `value`
  */
 export default function asNumber(value: string | null) {
-  if (value === '') {
+  if (value === "") {
     return undefined;
   }
   if (value === null) {
@@ -32,7 +32,7 @@ export default function asNumber(value: string | null) {
   }
 
   const n = Number(value);
-  const valid = typeof n === 'number' && !Number.isNaN(n);
+  const valid = typeof n === "number" && !Number.isNaN(n);
 
   return valid ? n : value;
 }
