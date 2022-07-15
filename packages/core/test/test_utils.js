@@ -47,7 +47,7 @@ export function describeRepeated(title, fn) {
     { omitExtraData: true, liveOmit: true },
   ];
   for (let formExtraProps of formExtraPropsList) {
-    const createFormComponentFn = props =>
+    const createFormComponentFn = (props) =>
       createFormComponent({ ...props, ...formExtraProps });
     describe(title + " " + JSON.stringify(formExtraProps), () =>
       fn(createFormComponentFn)

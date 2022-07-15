@@ -12,7 +12,7 @@ function rangeOptions(start, stop) {
 }
 
 function readyForChange(state) {
-  return Object.keys(state).every(key => state[key] !== -1);
+  return Object.keys(state).every((key) => state[key] !== -1);
 }
 
 function DateElement(props) {
@@ -41,7 +41,7 @@ function DateElement(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={value => select(type, value)}
+      onChange={(value) => select(type, value)}
       onBlur={onBlur}
     />
   );
@@ -88,7 +88,7 @@ class AltDateWidget extends Component {
     );
   };
 
-  setNow = event => {
+  setNow = (event) => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
@@ -98,7 +98,7 @@ class AltDateWidget extends Component {
     this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
   };
 
-  clear = event => {
+  clear = (event) => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
@@ -130,15 +130,8 @@ class AltDateWidget extends Component {
   }
 
   render() {
-    const {
-      id,
-      disabled,
-      readonly,
-      autofocus,
-      registry,
-      onBlur,
-      options,
-    } = this.props;
+    const { id, disabled, readonly, autofocus, registry, onBlur, options } =
+      this.props;
     return (
       <ul className="list-inline">
         {this.dateElementProps.map((elemProps, i) => (
@@ -171,7 +164,8 @@ class AltDateWidget extends Component {
             <a
               href="#"
               className="btn btn-warning btn-clear"
-              onClick={this.clear}>
+              onClick={this.clear}
+            >
               Clear
             </a>
           </li>

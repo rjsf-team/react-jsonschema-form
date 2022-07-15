@@ -36,7 +36,7 @@ describe("SchemaField", () => {
       createFormComponent({
         schema,
         uiSchema: {
-          "ui:field": props => {
+          "ui:field": (props) => {
             receivedProps = props;
             return null;
           },
@@ -69,7 +69,7 @@ describe("SchemaField", () => {
     });
 
     it("should be able to be overwritten with a custom UnsupportedField component", () => {
-      const CustomUnsupportedField = function() {
+      const CustomUnsupportedField = function () {
         return <span id="custom">Custom UnsupportedField</span>;
       };
 
@@ -86,7 +86,7 @@ describe("SchemaField", () => {
   });
 
   describe("Custom SchemaField component", () => {
-    const CustomSchemaField = function(props) {
+    const CustomSchemaField = function (props) {
       return (
         <div id="custom">
           <SchemaField {...props} />
@@ -155,7 +155,7 @@ describe("SchemaField", () => {
       createFormComponent({
         schema,
         uiSchema: {
-          "ui:field": props => {
+          "ui:field": (props) => {
             receivedProps = props;
             return null;
           },
@@ -202,7 +202,7 @@ describe("SchemaField", () => {
     });
 
     it("should not pass classNames to child component", () => {
-      const CustomSchemaField = function(props) {
+      const CustomSchemaField = function (props) {
         return (
           <SchemaField
             {...props}
@@ -343,7 +343,7 @@ describe("SchemaField", () => {
     };
 
     const uiSchema = {
-      "ui:field": props => {
+      "ui:field": (props) => {
         const { uiSchema, ...fieldProps } = props; //eslint-disable-line
         return <SchemaField {...fieldProps} />;
       },
@@ -386,7 +386,7 @@ describe("SchemaField", () => {
     });
 
     describe("Custom error rendering", () => {
-      const customStringWidget = props => {
+      const customStringWidget = (props) => {
         return <div className="custom-text-widget">{props.rawErrors}</div>;
       };
 
@@ -440,7 +440,7 @@ describe("SchemaField", () => {
       });
 
       describe("Custom error rendering", () => {
-        const customStringWidget = props => {
+        const customStringWidget = (props) => {
           return <div className="custom-text-widget">{props.rawErrors}</div>;
         };
 
@@ -462,7 +462,7 @@ describe("SchemaField", () => {
     describe("hideError flag false for child should show errors", () => {
       const hideUiSchema = {
         "ui:hideError": true,
-        "ui:field": props => {
+        "ui:field": (props) => {
           const { uiSchema, ...fieldProps } = props; //eslint-disable-line
           // Pass the children schema in after removing the global one
           return (

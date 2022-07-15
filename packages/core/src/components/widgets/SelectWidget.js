@@ -6,8 +6,8 @@ function getValue(event, multiple) {
   if (multiple) {
     return [].slice
       .call(event.target.options)
-      .filter(o => o.selected)
-      .map(o => o.value);
+      .filter((o) => o.selected)
+      .map((o) => o.value);
   } else {
     return event.target.value;
   }
@@ -42,22 +42,23 @@ function SelectWidget(props) {
       autoFocus={autofocus}
       onBlur={
         onBlur &&
-        (event => {
+        ((event) => {
           const newValue = getValue(event, multiple);
           onBlur(id, processSelectValue(schema, newValue));
         })
       }
       onFocus={
         onFocus &&
-        (event => {
+        ((event) => {
           const newValue = getValue(event, multiple);
           onFocus(id, processSelectValue(schema, newValue));
         })
       }
-      onChange={event => {
+      onChange={(event) => {
         const newValue = getValue(event, multiple);
         onChange(processSelectValue(schema, newValue));
-      }}>
+      }}
+    >
       {!multiple && schema.default === undefined && (
         <option value="">{placeholder}</option>
       )}

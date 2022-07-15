@@ -16,7 +16,7 @@ import {
   submitForm,
 } from "./test_utils";
 
-describeRepeated("Form common", createFormComponent => {
+describeRepeated("Form common", (createFormComponent) => {
   let sandbox;
 
   beforeEach(() => {
@@ -94,7 +94,8 @@ describeRepeated("Form common", createFormComponent => {
           schema={schema}
           onChange={onChangeProp}
           formData={formData}
-          validator={validator}>
+          validator={validator}
+        >
           <button type="submit">Submit</button>
           <button type="submit">Another submit</button>
         </Form>
@@ -155,8 +156,8 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("Option idPrefix", function() {
-    it("should change the rendered ids", function() {
+  describe("Option idPrefix", function () {
+    it("should change the rendered ids", function () {
       const schema = {
         type: "object",
         title: "root object",
@@ -182,8 +183,8 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("Changing idPrefix", function() {
-    it("should work with simple example", function() {
+  describe("Changing idPrefix", function () {
+    it("should work with simple example", function () {
       const schema = {
         type: "object",
         title: "root object",
@@ -208,7 +209,7 @@ describeRepeated("Form common", createFormComponent => {
       expect(node.querySelector("fieldset").id).to.eql("rjsf");
     });
 
-    it("should work with oneOf", function() {
+    it("should work with oneOf", function () {
       const schema = {
         $schema: "http://json-schema.org/draft-06/schema#",
         type: "object",
@@ -266,8 +267,8 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("Option idSeparator", function() {
-    it("should change the rendered ids", function() {
+  describe("Option idSeparator", function () {
+    it("should change the rendered ids", function () {
       const schema = {
         type: "object",
         title: "root object",
@@ -452,7 +453,7 @@ describeRepeated("Form common", createFormComponent => {
     afterEach(() => {
       document.body.removeChild(domNode);
     });
-    it("should submit the form when clicked", done => {
+    it("should submit the form when clicked", (done) => {
       let submitCount = 0;
       const onSubmit = () => {
         submitCount++;
@@ -1223,7 +1224,7 @@ describeRepeated("Form common", createFormComponent => {
 
       const falseyValues = [0, false, null, undefined, NaN];
 
-      falseyValues.forEach(falseyValue => {
+      falseyValues.forEach((falseyValue) => {
         it("Should not crash due to 'Maximum call stack size exceeded...'", () => {
           // It is expected that this will throw an error due to non-matching propTypes,
           // so the error message needs to be inspected
@@ -1609,7 +1610,7 @@ describeRepeated("Form common", createFormComponent => {
 
         sinon.assert.calledWithMatch(
           onError,
-          sinon.match(value => {
+          sinon.match((value) => {
             return (
               value.length === 1 &&
               value[0].message === "should NOT be shorter than 8 characters"
@@ -1751,7 +1752,7 @@ describeRepeated("Form common", createFormComponent => {
         const { node } = createFormComponent(formProps);
 
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
-        const errors = [].map.call(liNodes, li => li.textContent);
+        const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql([
           "should NOT be shorter than 8 characters",
@@ -1853,7 +1854,7 @@ describeRepeated("Form common", createFormComponent => {
         const liNodes = fieldNodes[1].querySelectorAll(
           ".field-string .error-detail li"
         );
-        const errors = [].map.call(liNodes, li => li.textContent);
+        const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
@@ -1921,7 +1922,7 @@ describeRepeated("Form common", createFormComponent => {
         });
 
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
-        const errors = [].map.call(liNodes, li => li.textContent);
+        const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
@@ -1945,7 +1946,10 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       const formData = {
-        outer: [["good", "bad"], ["bad", "good"]],
+        outer: [
+          ["good", "bad"],
+          ["bad", "good"],
+        ],
       };
 
       const formProps = { schema, formData, liveValidate: true };
@@ -1977,7 +1981,7 @@ describeRepeated("Form common", createFormComponent => {
       it("should denote the error in the nested item field in error", () => {
         const { node } = createFormComponent(formProps);
         const fields = node.querySelectorAll(".field-string");
-        const errors = [].map.call(fields, field => {
+        const errors = [].map.call(fields, (field) => {
           const li = field.querySelector(".error-detail li");
           return li && li.textContent;
         });
@@ -2034,7 +2038,7 @@ describeRepeated("Form common", createFormComponent => {
         const liNodes = fieldNodes[1].querySelectorAll(
           ".field-string .error-detail li"
         );
-        const errors = [].map.call(liNodes, li => li.textContent);
+        const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
@@ -2551,7 +2555,7 @@ describeRepeated("Form common", createFormComponent => {
     });
 
     it("should render the component using a ComponentType", () => {
-      const Component = props => <div {...props} id="test" />;
+      const Component = (props) => <div {...props} id="test" />;
       const { node } = createFormComponent({ schema: {}, tagName: Component });
       expect(node.id).eql("test");
     });
@@ -3039,7 +3043,7 @@ describe("Form omitExtraData and liveOmit", () => {
       const pathSchema = {
         $name: "",
         address_list: {
-          "0": {
+          0: {
             $name: "address_list.0",
             city: {
               $name: "address_list.0.city",
@@ -3051,7 +3055,7 @@ describe("Form omitExtraData and liveOmit", () => {
               $name: "address_list.0.street_address",
             },
           },
-          "1": {
+          1: {
             $name: "address_list.1",
             city: {
               $name: "address_list.1.city",

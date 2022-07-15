@@ -243,7 +243,8 @@ class Selector extends Component {
             <li
               key={i}
               role="presentation"
-              className={this.state.current === label ? "active" : ""}>
+              className={this.state.current === label ? "active" : ""}
+            >
               <a href="#" onClick={this.onLabelClick(label)}>
                 {label}
               </a>
@@ -272,7 +273,8 @@ function ThemeSelector({ theme, themes, select }) {
       formData={theme}
       onChange={({ formData }) =>
         formData && select(formData, themes[formData])
-      }>
+      }
+    >
       <div />
     </Form>
   );
@@ -295,7 +297,8 @@ function SubthemeSelector({ subtheme, subthemes, select }) {
       formData={subtheme}
       onChange={({ formData }) =>
         formData && select(formData, subthemes[formData])
-      }>
+      }
+    >
       <div />
     </Form>
   );
@@ -328,7 +331,8 @@ class CopyLink extends Component {
           <button
             className="btn btn-default"
             type="button"
-            onClick={this.onCopyClick}>
+            onClick={this.onCopyClick}
+          >
             <i className="glyphicon glyphicon-copy" />
           </button>
         </span>
@@ -516,7 +520,8 @@ class Playground extends Component {
                 idPrefix="rjsf_options"
                 schema={liveSettingsSchema}
                 formData={liveSettings}
-                onChange={this.setLiveSettings}>
+                onChange={this.setLiveSettings}
+              >
                 <div />
               </Form>
             </div>
@@ -596,7 +601,8 @@ class Playground extends Component {
                 height: 1000,
                 border: 0,
               }}
-              theme={theme}>
+              theme={theme}
+            >
               <FormComponent
                 {...templateProps}
                 liveValidate={liveSettings.validate}
