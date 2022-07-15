@@ -123,7 +123,6 @@
     "sinon": "^7.5.0",
     "style-loader": "^2.0.0",
     "webpack": "^4.20.2",
-    "webpack-cli": "^4.6.0",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-hot-middleware": "^2.13.2"
