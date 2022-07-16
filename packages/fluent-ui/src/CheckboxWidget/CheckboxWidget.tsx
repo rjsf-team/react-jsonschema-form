@@ -54,7 +54,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     target: { value },
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
-  const uiProps = _pick(options.props as object || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
     <>
