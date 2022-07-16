@@ -20,8 +20,17 @@
   "scripts": {
     "build": "rimraf dist && tsdx build --format cjs,es,umd",
     "lint": "eslint src test",
+    "cs-check": "prettier -l \"{src,test}/**/*.js\"",
+    "cs-format": "prettier \"{src,test}/**/*.js\" --write",
+    "lint": "eslint src test",
     "test": "tsdx test",
     "test:update": "tsdx test --u"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "peerDependencies": {
     "@rjsf/core": "^4.2.0",
@@ -43,7 +52,6 @@
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
     "atob": "^2.0.3",
-    "babel-eslint": "^10.1.0",
     "eslint": "^8.19.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-flowtype": "^8.0.3",

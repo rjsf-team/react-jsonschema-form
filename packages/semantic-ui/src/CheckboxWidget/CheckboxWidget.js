@@ -29,7 +29,7 @@ function CheckboxWidget(props) {
     defaultSchemaProps: {
       inverted: false,
     },
-   });
+  });
   const { schemaUtils } = registry;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   const _onChange = (event, data) => onChange && onChange(data.checked);

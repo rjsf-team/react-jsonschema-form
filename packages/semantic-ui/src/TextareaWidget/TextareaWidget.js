@@ -26,7 +26,7 @@ function TextareaWidget(props) {
   const semanticProps = getSemanticProps({
     formContext,
     options,
-    defaultSchemaProps: { inverted: false }
+    defaultSchemaProps: { inverted: false },
   });
   const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow

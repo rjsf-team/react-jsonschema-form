@@ -1,2 +1,2 @@
-export { default } from './URLWidget';
-export * from './URLWidget';
+export { default } from "./URLWidget";
+export * from "./URLWidget";
