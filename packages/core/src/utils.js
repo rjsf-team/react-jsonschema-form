@@ -233,7 +233,21 @@ function computeDefaults(
           includeUndefinedValues
         );
         if (includeUndefinedValues || computedDefault !== undefined) {
-          acc[key] = computedDefault;
+          if (schema.required && isObject(computedDefault)) {
+            if (
+              schema.required.includes(key) ||
+              (isObject(computedDefault) &&
+                Boolean(
+                  Object.values(computedDefault).filter(
+                    item => item !== undefined
+                  ).length
+                ))
+            ) {
+              acc[key] = computedDefault;
+            }
+          } else {
+            acc[key] = computedDefault;
+          }
         }
         return acc;
       }, {});
