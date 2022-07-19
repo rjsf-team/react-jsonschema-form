@@ -10,7 +10,7 @@ import Playground from "./app";
 import { render } from "react-dom";
 
 const validators = {
-  "AJV6": validator,
+  AJV6: validator,
 };
 
 const themes = {
@@ -126,4 +126,7 @@ const themes = {
   },
 };
 
-render(<Playground themes={themes} validators={validators} />, document.getElementById("app"));
+render(
+  <Playground themes={themes} validators={validators} />,
+  document.getElementById("app")
+);
