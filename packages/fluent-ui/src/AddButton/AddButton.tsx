@@ -14,8 +14,7 @@ const AddButton = (props: AddButtonProps) => (
     className={props.className}
     onClick={props.onClick}
     disabled={props.disabled}
-    />
-
+  />
 );
 
 export default AddButton;

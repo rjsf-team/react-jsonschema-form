@@ -75,11 +75,15 @@ WidgetProps) => {
   }
 
   const _onIncrement = (value: string) => {
-    if (Number(value) + step! <= max!) onChange(Number(value) + step!);
+    if (Number(value) + step! <= max!) {
+      onChange(Number(value) + step!);
+    }
   };
 
   const _onDecrement = (value: string) => {
-    if (Number(value) - step! >= min!) onChange(Number(value) - step!);
+    if (Number(value) - step! >= min!) {
+      onChange(Number(value) - step!);
+    }
   };
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>

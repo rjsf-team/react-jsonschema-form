@@ -1,11 +1,11 @@
-import ArrayFieldTemplate from '../ArrayFieldTemplate';
-import ErrorList from '../ErrorList';
-import Fields from '../Fields';
-import FieldTemplate from '../FieldTemplate';
-import ObjectFieldTemplate from '../ObjectFieldTemplate';
-import Widgets from '../Widgets';
+import ArrayFieldTemplate from "../ArrayFieldTemplate";
+import ErrorList from "../ErrorList";
+import Fields from "../Fields";
+import FieldTemplate from "../FieldTemplate";
+import ObjectFieldTemplate from "../ObjectFieldTemplate";
+import Widgets from "../Widgets";
 
-import { WithThemeProps, getDefaultRegistry } from '@rjsf/core';
+import { WithThemeProps, getDefaultRegistry } from "@rjsf/core";
 
 const { fields, widgets } = getDefaultRegistry();
 

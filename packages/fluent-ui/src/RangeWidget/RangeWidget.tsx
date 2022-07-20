@@ -51,7 +51,7 @@ const RangeWidget = ({
   label,
   id,
 }: WidgetProps) => {
-  let sliderProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderProps = { value, label, id, ...rangeSpec(schema) };
 
   const _onChange = (value: number) => onChange(value);
 

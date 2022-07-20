@@ -8,7 +8,7 @@ const FieldTemplate = ({
   rawErrors = [],
   rawHelp,
   rawDescription,
-  classNames = '',
+  classNames = "",
   hidden,
 }: FieldTemplateProps) => {
   // TODO: do this better by not returning the form-group class from master.
@@ -16,7 +16,8 @@ const FieldTemplate = ({
   return (
     <div
       className={classNames}
-      style={{ marginBottom: 15, display: hidden ? "none" : undefined }}>
+      style={{ marginBottom: 15, display: hidden ? "none" : undefined }}
+    >
       {children}
       {rawDescription && <Text>{rawDescription}</Text>}
       {rawErrors.length > 0 && <List items={rawErrors} />}
