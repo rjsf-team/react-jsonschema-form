@@ -1,7 +1,7 @@
-import React from 'react';
-import _ from 'lodash';
+import React from "react";
+import _ from "lodash";
 
-import Checkbox from 'antd/lib/checkbox';
+import Checkbox from "antd/lib/checkbox";
 
 const CheckboxesWidget = ({
   autofocus,
@@ -23,7 +23,7 @@ const CheckboxesWidget = ({
 
   const { enumOptions, enumDisabled, inline } = options;
 
-  const handleChange = (nextValue) => onChange(nextValue);
+  const handleChange = nextValue => onChange(nextValue);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 

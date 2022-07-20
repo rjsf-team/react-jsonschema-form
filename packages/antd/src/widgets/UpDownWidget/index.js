@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import InputNumber from 'antd/lib/input-number';
+import InputNumber from "antd/lib/input-number";
 
 const INPUT_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const UpDownWidget = ({
@@ -23,7 +23,7 @@ const UpDownWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = (nextValue) => onChange(nextValue);
+  const handleChange = nextValue => onChange(nextValue);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 

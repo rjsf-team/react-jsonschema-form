@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import Input from 'antd/lib/checkbox';
+import Input from "antd/lib/checkbox";
 
 const INPUT_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const ColorWidget = ({

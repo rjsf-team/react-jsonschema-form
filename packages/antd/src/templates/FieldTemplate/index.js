@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import Form from 'antd/lib/form';
+import Form from "antd/lib/form";
 
-import WrapIfAdditional from './WrapIfAdditional';
+import WrapIfAdditional from "./WrapIfAdditional";
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
@@ -42,7 +42,7 @@ const FieldTemplate = ({
   }
 
   const renderFieldErrors = () =>
-    [...new Set(rawErrors)].map((error) => (
+    [...new Set(rawErrors)].map(error => (
       <div key={`field-${id}-error-${error}`}>{error}</div>
     ));
 
@@ -59,20 +59,20 @@ const FieldTemplate = ({
       required={required}
       schema={schema}
     >
-      {id === 'root' ? (
+      {id === "root" ? (
         children
       ) : (
         <Form.Item
           colon={colon}
           extra={description}
-          hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
+          hasFeedback={schema.type !== "array" && schema.type !== "object"}
           help={(!!rawHelp && help) || (!!rawErrors && renderFieldErrors())}
           htmlFor={id}
           label={displayLabel && label}
           labelCol={labelCol}
           required={required}
           style={wrapperStyle}
-          validateStatus={rawErrors ? 'error' : undefined}
+          validateStatus={rawErrors ? "error" : undefined}
           wrapperCol={wrapperCol}
         >
           {children}
