@@ -10,9 +10,18 @@
   ],
   "scripts": {
     "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build",
+    "build": "rimraf dist && tsdx build --format cjs,es,umd",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
+    "lint": "eslint src test",
     "test": "tsdx test",
     "test:update": "tsdx test --u"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts?(x)": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@rjsf/utils": "^4.2.0",
